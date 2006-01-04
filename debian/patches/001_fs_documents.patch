@@ -1,73 +1,345 @@
-diff -Nur gtk+-2.8.7.orig/gtk/gtkfilechooserdefault.c gtk+-2.8.7/gtk/gtkfilechooserdefault.c
---- gtk+-2.8.7.orig/gtk/gtkfilechooserdefault.c	2005-11-11 20:50:21.000000000 +0100
-+++ gtk+-2.8.7/gtk/gtkfilechooserdefault.c	2005-11-16 11:59:33.000000000 +0100
-@@ -222,6 +222,7 @@
+diff -Nur gtk+-2.8.9.orig/gtk/gtkfilechooserbutton.c gtk+-2.8.9/gtk/gtkfilechooserbutton.c
+--- gtk+-2.8.9.orig/gtk/gtkfilechooserbutton.c	2005-10-26 21:42:36.000000000 +0200
++++ gtk+-2.8.9/gtk/gtkfilechooserbutton.c	2006-01-05 12:20:11.000000000 +0100
+@@ -67,6 +67,7 @@
+ #define DEFAULT_TITLE		N_("Select A File")
+ #define HOME_DISPLAY_NAME	N_("Home")
+ #define DESKTOP_DISPLAY_NAME	N_("Desktop")
++#define DOCUMENTS_DISPLAY_NAME  N_("Documents")
+ #define FALLBACK_DISPLAY_NAME	N_("(None)")
+ #define FALLBACK_ICON_NAME	"stock_unknown"
+ #define FALLBACK_ICON_SIZE	16
+@@ -1323,6 +1324,7 @@
+ {
+   const gchar *homedir;
+   gchar *desktopdir = NULL;
++  gchar *documentsdir = NULL;
+   GtkListStore *store;
+   GtkTreeIter iter;
+   GtkFilePath *path;
+@@ -1354,10 +1356,32 @@
+       button->priv->n_special++;
  
-   GtkTooltips *tooltips;
+ #ifndef G_OS_WIN32
++      documentsdir = g_build_filename (homedir, DOCUMENTS_DISPLAY_NAME, NULL);
+       desktopdir = g_build_filename (homedir, DESKTOP_DISPLAY_NAME, NULL);
+ #endif
+     }
  
-+  gboolean has_documents;
++  if (documentsdir)
++    {
++      path = gtk_file_system_filename_to_path (button->priv->fs, documentsdir);
++      g_free (documentsdir);
++      pixbuf = gtk_file_system_render_icon (button->priv->fs, path,
++                                            GTK_WIDGET (button),
++                                            button->priv->icon_size, NULL);
++      gtk_list_store_insert (store, &iter, pos);
++      pos++;
++      gtk_list_store_set (store, &iter,
++                          TYPE_COLUMN, ROW_TYPE_SPECIAL,
++                          ICON_COLUMN, pixbuf,
++                          DISPLAY_NAME_COLUMN, _(DOCUMENTS_DISPLAY_NAME),
++                          DATA_COLUMN, path,
++                          -1);
++
++      if (pixbuf)
++        g_object_unref (pixbuf);
++      button->priv->n_special++;
++    }
++
+ #ifdef G_OS_WIN32
+   desktopdir = _gtk_file_system_win32_get_desktop ();
+ #endif
+diff -Nur gtk+-2.8.9.orig/gtk/gtkfilechooserdefault.c gtk+-2.8.9/gtk/gtkfilechooserdefault.c
+--- gtk+-2.8.9.orig/gtk/gtkfilechooserdefault.c	2005-12-06 04:11:51.000000000 +0100
++++ gtk+-2.8.9/gtk/gtkfilechooserdefault.c	2006-01-05 12:20:11.000000000 +0100
+@@ -224,6 +224,7 @@
+ 
    gboolean has_home;
    gboolean has_desktop;
++  gboolean has_documents;
  
-@@ -343,6 +344,7 @@
- 
- /* Interesting places in the shortcuts bar */
+   int num_volumes;
+   int num_shortcuts;
+@@ -345,6 +346,7 @@
  typedef enum {
-+  SHORTCUTS_DOCUMENTS,
    SHORTCUTS_HOME,
    SHORTCUTS_DESKTOP,
++  SHORTCUTS_DOCUMENTS,
    SHORTCUTS_VOLUMES,
-@@ -1476,6 +1478,33 @@
+   SHORTCUTS_SHORTCUTS,
+   SHORTCUTS_BOOKMARKS_SEPARATOR,
+@@ -1476,6 +1478,39 @@
    profile_end ("end", NULL);
  }
  
-+
 +/* Appends the ~/Documents directory to the shortcuts model */
 +static void
 +shortcuts_append_documents (GtkFileChooserDefault *impl)
 +{
-+  char *name;
++  gchar *name;
++  const gchar *home;
++  const gchar *envvar;
 +  GtkFilePath *path;
 +
-+  name = g_build_filename (g_get_home_dir (), "Documents", NULL);
++  profile_start ("start", NULL);
++
++  home = g_get_home_dir ();
++  if (home == NULL)
++    {
++      profile_end ("end - no home directory!?", NULL);
++      return;
++    }
++  
++  name = g_build_filename (home, "Documents", NULL);
++      
 +  path = gtk_file_system_filename_to_path (impl->file_system, name);
 +  g_free (name);
 +
 +  impl->has_documents = shortcuts_insert_path (impl, -1, FALSE, NULL, path, _("Documents"), FALSE, NULL);
-+  /* We do not actually pop up an error dialog if there is no document directory
++  /* We do not actually pop up an error dialog if there is no documents directory
 +   * because some people may really not want to have one.
 +   */
 +
 +  gtk_file_path_free (path);
++
++  profile_end ("end", NULL);
 +}
-+
-+
-+
-+
-+
-+
-+
 +
  /* Appends a list of GtkFilePath to the shortcuts model; returns how many were inserted */
  static int
  shortcuts_append_paths (GtkFileChooserDefault *impl,
-@@ -1527,6 +1556,11 @@
+@@ -1532,6 +1567,11 @@
  
-   n = 0;
+   n += impl->has_home ? 1 : 0;
  
 +  if (where == SHORTCUTS_DOCUMENTS)
 +    goto out;
 +
 +  n += impl->has_documents ? 1 : 0;
 +
-   if (where == SHORTCUTS_HOME)
+   if (where == SHORTCUTS_DESKTOP)
      goto out;
  
-@@ -1875,6 +1909,7 @@
- 
+@@ -1876,6 +1916,7 @@
    if (impl->file_system)
      {
-+      shortcuts_append_documents (impl);
        shortcuts_append_home (impl);
++      shortcuts_append_documents (impl);
        shortcuts_append_desktop (impl);
        shortcuts_add_volumes (impl);
+     }
+@@ -4773,7 +4814,8 @@
+ gtk_file_chooser_default_map (GtkWidget *widget)
+ {
+   GtkFileChooserDefault *impl;
+-  char *current_working_dir;
++  const gchar *envvar;
++  gchar *default_dir;
+ 
+   profile_start ("start", NULL);
+ 
+@@ -4784,10 +4826,17 @@
+   switch (impl->reload_state)
+     {
+     case RELOAD_EMPTY:
+-      /* The user didn't explicitly give us a folder to display, so we'll use the cwd */
+-      current_working_dir = g_get_current_dir ();
+-      gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (impl), current_working_dir);
+-      g_free (current_working_dir);
++      /* The user didn't explicitly give us a folder to display, so we'll use
++       * GTK_DEFAULT_FILECHOOSER_DIR, or ~/Documents, or the cwd */
++      envvar = g_getenv ("GTK_DEFAULT_FILECHOOSER_DIR");
++      if (envvar && g_path_is_absolute (envvar) && g_file_test (envvar, G_FILE_TEST_IS_DIR))
++          default_dir = g_strdup (envvar);
++      else if (impl->has_documents)
++          default_dir = g_build_filename (g_get_home_dir (), "Documents", NULL);
++      else
++          default_dir = g_get_current_dir ();
++      gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (impl), default_dir);
++      g_free (default_dir);
+       break;
+ 
+     case RELOAD_HAS_FOLDER:
+@@ -5443,16 +5492,23 @@
+ 
+   if (impl->reload_state == RELOAD_EMPTY)
+     {
+-      char *current_working_dir;
++      const gchar *envvar;
++      gchar *default_dir;
+       GtkFilePath *path;
+ 
+-      /* We are unmapped, or we had an error while loading the last folder.  We'll return
+-       * the $cwd since once we get (re)mapped, we'll load $cwd anyway unless the caller
+-       * explicitly calls set_current_folder() on us.
++      /* We are unmapped, or we had an error while loading the last folder.  We'll do the
++       * same as in the map method, since that's what will happen when we get (re)mapped, 
++       * unless the caller explicitly calls set_current_folder() on us.
+        */
+-      current_working_dir = g_get_current_dir ();
+-      path = gtk_file_system_filename_to_path (impl->file_system, current_working_dir);
+-      g_free (current_working_dir);
++      envvar = g_getenv ("GTK_DEFAULT_FILECHOOSER_DIR");
++      if (envvar && g_path_is_absolute (envvar) && g_file_test (envvar, G_FILE_TEST_IS_DIR))
++          default_dir = g_strdup (envvar);
++      else if (impl->has_documents)
++          default_dir = g_build_filename (g_get_home_dir (), "Documents", NULL);
++      else
++          default_dir = g_get_current_dir ();
++      path = gtk_file_system_filename_to_path (impl->file_system, default_dir);
++      g_free (default_dir);
+       return path;
+     }
+ 
+diff -Nur gtk+-2.8.9.orig/gtk/gtkfilesystemunix.c gtk+-2.8.9/gtk/gtkfilesystemunix.c
+--- gtk+-2.8.9.orig/gtk/gtkfilesystemunix.c	2005-12-07 15:02:18.000000000 +0100
++++ gtk+-2.8.9/gtk/gtkfilesystemunix.c	2006-01-05 12:20:11.000000000 +0100
+@@ -1159,17 +1159,28 @@
+ get_icon_name_for_directory (const char *path)
+ {
+   static char *desktop_path = NULL;
++  static char *documents_path = NULL;
++  char *default_documents_path;
+ 
+   if (!g_get_home_dir ())
+     return "gnome-fs-directory";
+ 
+   if (!desktop_path)
+       desktop_path = g_build_filename (g_get_home_dir (), "Desktop", NULL);
++  if (!documents_path)
++    {
++      default_documents_path = g_build_filename (g_get_home_dir (), "Documents", NULL);
++      if (g_file_test (default_documents_path, G_FILE_TEST_IS_DIR))
++          documents_path = g_strdup (default_documents_path);
++      g_free (default_documents_path);
++    }
+ 
+   if (strcmp (g_get_home_dir (), path) == 0)
+     return "gnome-fs-home";
+   else if (strcmp (desktop_path, path) == 0)
+     return "gnome-fs-desktop";
++  else if (strcmp (documents_path, path) == 0)
++    return "gnome-fs-documents";
+   else
+     return "gnome-fs-directory";
+ }
+diff -Nur gtk+-2.8.9.orig/gtk/gtkpathbar.c gtk+-2.8.9/gtk/gtkpathbar.c
+--- gtk+-2.8.9.orig/gtk/gtkpathbar.c	2005-11-19 04:35:29.000000000 +0100
++++ gtk+-2.8.9/gtk/gtkpathbar.c	2006-01-05 12:25:22.000000000 +0100
+@@ -43,7 +43,8 @@
+   NORMAL_BUTTON,
+   ROOT_BUTTON,
+   HOME_BUTTON,
+-  DESKTOP_BUTTON
++  DESKTOP_BUTTON,
++  DOCUMENTS_BUTTON
+ } ButtonType;
+ 
+ #define BUTTON_DATA(x) ((ButtonData *)(x))
+@@ -217,6 +218,8 @@
+     gtk_file_path_free (path_bar->home_path);
+   if (path_bar->desktop_path)
+     gtk_file_path_free (path_bar->desktop_path);
++  if (path_bar->documents_path)
++    gtk_file_path_free (path_bar->documents_path);
+ 
+   if (path_bar->root_icon)
+     g_object_unref (path_bar->root_icon);
+@@ -224,6 +227,8 @@
+     g_object_unref (path_bar->home_icon);
+   if (path_bar->desktop_icon)
+     g_object_unref (path_bar->desktop_icon);
++  if (path_bar->documents_icon)
++    g_object_unref (path_bar->documents_icon);
+ 
+   if (path_bar->file_system)
+     g_object_unref (path_bar->file_system);
+@@ -861,6 +866,11 @@
+       g_object_unref (path_bar->desktop_icon);
+       path_bar->desktop_icon = NULL;
+     }
++  if (path_bar->documents_icon)
++    {
++      g_object_unref (path_bar->documents_icon);
++      path_bar->documents_icon = NULL;
++    }
+ 
+   for (list = path_bar->button_list; list; list = list->next)
+     {
+@@ -1017,6 +1027,16 @@
+ 							    path_bar->icon_size,
+ 							    NULL);
+       return path_bar->desktop_icon;
++    case DOCUMENTS_BUTTON:
++      if (path_bar->documents_icon != NULL)
++	return path_bar->documents_icon;
++
++      path_bar->documents_icon = gtk_file_system_render_icon (path_bar->file_system,
++							    path_bar->documents_path,
++							    GTK_WIDGET (path_bar),
++							    path_bar->icon_size,
++							    NULL);
++      return path_bar->documents_icon;
+     default:
+       return NULL;
+     }
+@@ -1115,6 +1135,9 @@
+   if (path_bar->desktop_path != NULL &&
+       ! gtk_file_path_compare (path, path_bar->desktop_path))
+     return DESKTOP_BUTTON;
++  if (path_bar->documents_path != NULL &&
++      ! gtk_file_path_compare (path, path_bar->documents_path))
++    return DOCUMENTS_BUTTON;
+ 
+  return NORMAL_BUTTON;
+ }
+@@ -1179,6 +1202,7 @@
+       break;
+     case HOME_BUTTON:
+     case DESKTOP_BUTTON:
++    case DOCUMENTS_BUTTON:
+       button_data->image = gtk_image_new ();
+       button_data->label = gtk_label_new (NULL);
+       label_alignment = gtk_alignment_new (0.5, 0.5, 1.0, 1.0);
+@@ -1418,6 +1442,7 @@
+ {
+   const char *home;
+   char *desktop;
++  char *documents;
+ 
+   g_return_if_fail (GTK_IS_PATH_BAR (path_bar));
+ 
+@@ -1435,11 +1460,16 @@
+       desktop = g_build_filename (home, "Desktop", NULL);
+       path_bar->desktop_path = gtk_file_system_filename_to_path (path_bar->file_system, desktop);
+       g_free (desktop);
++      documents = g_build_filename (g_get_home_dir (), "Documents", NULL);
++      if (g_file_test (documents, G_FILE_TEST_IS_DIR))
++          path_bar->documents_path = gtk_file_system_filename_to_path (path_bar->file_system, documents);
++      g_free (documents);
+     }
+   else
+     {
+       path_bar->home_path = NULL;
+       path_bar->desktop_path = NULL;
++      path_bar->documents_path = NULL;
+     }
+   path_bar->root_path = gtk_file_system_filename_to_path (path_bar->file_system, "/");
+ }
+diff -Nur gtk+-2.8.9.orig/gtk/gtkpathbar.h gtk+-2.8.9/gtk/gtkpathbar.h
+--- gtk+-2.8.9.orig/gtk/gtkpathbar.h	2005-11-19 04:35:29.000000000 +0100
++++ gtk+-2.8.9/gtk/gtkpathbar.h	2006-01-05 12:20:11.000000000 +0100
+@@ -44,10 +44,12 @@
+   GtkFilePath *root_path;
+   GtkFilePath *home_path;
+   GtkFilePath *desktop_path;
++  GtkFilePath *documents_path;
+ 
+   GdkPixbuf *root_icon;
+   GdkPixbuf *home_icon;
+   GdkPixbuf *desktop_icon;
++  GdkPixbuf *documents_icon;
+ 
+   GList *button_list;
+   GList *first_scrolled_button;
