@@ -1,36 +1,38 @@
-gtk+2.0 (2.8.12-1ubuntu1) dapper; urgency=low
+gtk+2.0 (2.8.13-1ubuntu1) dapper; urgency=low
 
   * Sync with Debian
-  * New version:
-    - The font selection dialog can now select fractional font sizes 
-    - Updates for the windows theme
-    - Workaround for cairo hitting a slow path in the X server
-    Bugs fixed:
-     - root window drag FROM testdnd not working 
-     - Pointer grabs misbehave on Win32
-     - Buggy RTL support in ellipsized labels 
-     - enter_notify_event are not received on popup window in Win32 
-     - set_decorations() is overridden by window type hint
-     - accept_focus isn't respected
-     - they keypad '/' key should open the "open location" dialog
-     - critical in gtk_widget_event 
-     - distclean removes README 
-     - unsetting the "active" property of GtkToggleToolButton 
-       doesn't work properly 
-     - Crash in gtktreemodelfilter.c when using gtk-demo with file picker
-     - gtk_misc_set_padding fails with labels in RTL locales 
-     - Wrong pixel values in rsvg_cairo_render_image 
-     - gtk_entry_completion_match_selected generates a critical
-       warning when completion model is empty 
-     - gtk_file_info_copy corrupts memory 
-     - image loaders don't check callbacks for NULL 
-    - Documentation improvements
-    - Translation updates
+    New upstream version:
+    - gtk.Notebook.get_current_page() returns incorrect page number 
+      when pages hidden (Ubuntu: #30348)
+  * debian/control.in:
+    - clear the Build-Depends on xlibs-static-pic | xlibs-pic, not required
   * debian/patches/001_fs_documents.patch:
     - use GTK_DEFAULT_FILECHOOSER_DIR by default
     - if GTK_DEFAULT_FILECHOOSER_DIR is not defined use the "Documents" folder
+  * debian/patches/001_default_fallback_icon_theme.patch:
+    - set the default fallback icon theme to "gnome", fixes the issues with
+      the moves of icons from hicolor to gnome
 
- -- Sebastien Bacher <seb128@canonical.com>  Sun, 12 Feb 2006 16:53:02 +0100
+ -- Sebastien Bacher <seb128@canonical.com>  Sun, 26 Feb 2006 00:04:38 +0100
+
+gtk+2.0 (2.8.13-1) unstable; urgency=low
+
+  * New upstream version:
+    * Bugs fixed:
+    - Can't select some items in GtkIconView 
+    - gtk_icon_theme_list_icons: example contexts don't work
+    - gnopernicus crashes on changing display screen source for magnifier
+    - evince crashes in gdk_region_union_with_rect 
+    - Small error in _gdk_gc_update_context 
+    - gtk.Notebook.get_current_page() returns incorrect page number 
+      when pages hidden
+    - GtkAboutDialog not responsive to Escape key
+    - GtkNotebook popup menu not keynavigatable
+    - GtkRadioButton does not issue notify::active
+    - Make more use of G_DISABLE_ASSERT in TextView code  
+    * Updated translations 
+
+ -- Sebastien Bacher <seb128@debian.org>  Sat, 25 Feb 2006 23:56:58 +0100
 
 gtk+2.0 (2.8.12-1) unstable; urgency=low
 
