@@ -1,0 +1,80 @@
+--- gtkfilechooserbutton.c.orig	2006-05-13 23:49:21.000000000 +0100
++++ gtk+-2.8.17/gtk/gtkfilechooserbutton.c	2006-05-13 23:54:47.000000000 +0100
+@@ -1115,13 +1115,23 @@ change_icon_theme (GtkFileChooserButton 
+ 	case ROW_TYPE_SHORTCUT:
+ 	case ROW_TYPE_BOOKMARK:
+ 	case ROW_TYPE_CURRENT_FOLDER:
+-	  if (data)
+-	    pixbuf = gtk_file_system_render_icon (priv->fs, data,
+-						  GTK_WIDGET (button),
+-						  priv->icon_size, NULL);
++	  /* Hack to avoid filechooser hanging on network I/O. See bug 319532 */
++	  if (data && gtk_file_system_path_is_local (priv->fs, data))
++	    {
++	      pixbuf = gtk_file_system_render_icon (priv->fs, data,
++						    GTK_WIDGET (button),
++						    priv->icon_size, NULL);
++	    }
+ 	  else
+-	    pixbuf = gtk_icon_theme_load_icon (theme, FALLBACK_ICON_NAME,
+-					       priv->icon_size, 0, NULL);
++	    {
++	      GtkFilePath *path;
++
++	      path = gtk_file_system_filename_to_path (priv->fs, "/");
++	      pixbuf = gtk_file_system_render_icon (priv->fs, path,
++						    GTK_WIDGET (button),
++						    priv->icon_size, NULL);
++	      gtk_file_path_free (path);
++	    }
+ 	  break;
+ 	case ROW_TYPE_VOLUME:
+ 	  if (data)
+@@ -1488,11 +1498,31 @@ model_add_bookmarks (GtkFileChooserButto
+       gchar *display_name;
+ 
+       pos++;
+-      pixbuf = gtk_file_system_render_icon (button->priv->fs, bookmarks->data,
+-					    GTK_WIDGET (button),
+-					    button->priv->icon_size, NULL);
+-      display_name = get_display_name_for_path (button->priv->fs,
+-						bookmarks->data);
++      
++      /* Hack to avoid filechooser hanging on network I/O. See bug 319532 */
++      if (gtk_file_system_path_is_local (button->priv->fs, bookmarks->data))
++	{
++	  pixbuf = gtk_file_system_render_icon (button->priv->fs,
++						bookmarks->data,
++						GTK_WIDGET (button),
++						button->priv->icon_size, NULL);
++
++	  display_name = get_display_name_for_path (button->priv->fs,
++						    bookmarks->data);
++        }
++      else
++        {
++	  GtkFilePath *path;
++
++	  path = gtk_file_system_filename_to_path (button->priv->fs, "/");
++	  pixbuf = gtk_file_system_render_icon (button->priv->fs,
++						path,
++						GTK_WIDGET (button),
++						button->priv->icon_size, NULL);
++	  gtk_file_path_free (path);
++
++	  display_name = g_strdup (bookmarks->data);
++	}
+ 
+       gtk_list_store_insert (store, &iter, pos);
+       gtk_list_store_set (store, &iter,
+@@ -1640,6 +1670,10 @@ test_if_path_is_visible (GtkFileSystem  
+   parent_path = NULL;
+   gtk_file_system_get_parent (fs, path, &parent_path, NULL);
+ 
++  /* Hack to avoid filechooser hanging on network I/O. See bug 319532 */
++  if (!gtk_file_system_path_is_local(fs, parent_path ? parent_path : path))
++    return TRUE;
++
+   folder = gtk_file_system_get_folder (fs, parent_path ? parent_path : path,
+ 				       GTK_FILE_INFO_IS_FOLDER, NULL);
+   gtk_file_path_free (parent_path);
