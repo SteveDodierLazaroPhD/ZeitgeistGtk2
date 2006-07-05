@@ -1,51 +1,115 @@
-gtk+2.0 (2.8.17-1ubuntu5) dapper; urgency=low
-
-  * debian/patches/010_from_cvs_fix_shift_dnd_lock_on_calendar.patch:
-    - patch from CVS, fix mouse cursor being blocked to dnd mode when using
-      shift and dnd on a calendar widget (Ubuntu: #39836)
-  * debian/patches/009_other_no_io_for_network_bookmark.patch:
-    - patch by Gary Coady <garycoady@ubuntu.com>
-    - change filechooserbutton too to not do network I/O when remote 
-      directories are bookmarked (Ubuntu: #43366)
-  
- -- Sebastien Bacher <seb128@canonical.com>  Fri, 19 May 2006 00:36:29 +0200
-
-gtk+2.0 (2.8.17-1ubuntu4) dapper; urgency=low
-
-  * debian/patches/009_no_io_for_network_bookmark.patch:
-    - patch from CVS, hack to stop the file chooser blocking on network I/O 
-      when remote directories are bookmarked (Ubuntu: #32873)
-
- -- Sebastien Bacher <seb128@canonical.com>  Wed,  3 May 2006 23:38:03 +0200
-
-gtk+2.0 (2.8.17-1ubuntu3) dapper; urgency=low
-
-  * debian/patches/008_rounding_fix.patch:
-    - patch from CVS, fix a gnomecanvas rendering issue (Ubuntu: #23436)
-
- -- Sebastien Bacher <seb128@canonical.com>  Fri, 28 Apr 2006 12:26:40 +0200
-
-gtk+2.0 (2.8.17-1ubuntu2) dapper; urgency=low
-
-  * debian/patches/007_password_char.patch:
-    - change the default password char (Ubuntu: #36190)
-
- -- Sebastien Bacher <seb128@canonical.com>  Mon, 10 Apr 2006 16:24:23 +0200
-
-gtk+2.0 (2.8.17-1ubuntu1) dapper; urgency=low
+gtk+2.0 (2.10.0-0ubuntu1) edgy; urgency=low
 
   * Sync with Debian
   * New upstream version:
-    Bugs fixed:  
-    - GtkTreeItem broken (Ubuntu: #37062)
-    - Nautilus crashes when dragging icons to another screen (Ubuntu: #36052)
-  * debian/patches/001_fs_documents.patch:
-    - use GTK_DEFAULT_FILECHOOSER_DIR by default
-    - if GTK_DEFAULT_FILECHOOSER_DIR is not defined use the "Documents" folder
+    - Printing support
+    - Recent files support
+    - Drag-and-drop support in notebooks
+    - New widgets and cell renderers
+      * GtkStatusIcon, a cross-platform "tray icon" API
+      * GtkAssistant, a widget for creating multi-step wizards
+      * GtkLinkButton, a widget that displays a clickable hyperlink
+      * GtkCellRendererAccel, a cell renderer for key combinations
+      * GtkCellRendererSpin, a cell renderer for numeric values
+    - Changes in the filechooser:
+      Communication with backends is now asynchronous to avoid
+      blocking on filesystem operations. The location entry 
+      (popped up by C-L) has been integrated in the main dialog.
+    - Changes in the tree view widget
+      The GtkTreeView has been made more customizable with the
+      show-expanders and level-indentation properties, and with
+      the addition of grid lines. The positioning of the 
+      search popup has been improved, and the search entry
+      can be embedded in another window. Rubberband selection
+      is now supported.
+    - Changes in the text view and entry widgets
+      A framework for rich text copy-and-paste and drag-and-drop
+      has been added. Password entries can optionally show the 
+      last entered character for a short while.
+    - Themability improvements
+      * GTK+ supports symbolic colors
+      * GTK+ sets window type hints on override-redirect windows
+      * Paths in rc files can refer to all subclasses of a class
+      * Scrolling menus can be themed to always display both arrows
+      * GtkRange steppers will appear insensitive when the slider
+        is at the end; applications which need to handle this case
+        (e.g. to extend the range) can opt out of this.
+      * There are style properties for the color of hyperlinks,
+        GtkWidget::link-color and GtkWidget::visited-link-color
+      * New style properties allow more flexible theming of
+        range widgets, notebooks, menus tree view, separators
+        and buttons.
+      * The pixbuf theme engines supports customized drawing 
+        of expanders and resize grips.
+    - Other GTK+ changes
+      * GtkProgressbar supports text in activity mode 
+      * GtkLabel allows to set the wrap mode
+      * GtkAction works with named icons in addition to stock icons
+      * Animations can be globally controlled by settings
+      * The gtk-touchscreen-mode setting controls a number of changes
+        that make GTK+ work better on touchscreens
+      * GTK+ can consult an additional fallback icon theme before
+        falling back to hicolor
+      * GtkImage has an image property
+      * GtkTextBuffer has a cursor-position property
+      * GtkCellView has a model property
+      * GtkButton has an image-position property 
+    - GDK changes
+      * OS X backend, still experimental
+      * DirectFB backend, still experimental
+      * Closing displays works
+      * gdk_screen_is_composited to check for a running
+        compositing manager
+      * Support for Super, Hyper and Meta modifiers
+      * GDK keysyms have be synched with Xorg 7.1
+      * Running as an untrusted X client works
+    - gdk-pixbuf changes
+      * TIFF files can be saved
+      * 16-bit PNM files can be loaded
+      * GIF animations are not loaded completely if
+        only the first frame is needed
+  * debian/control.in:
+    - updated the requirements according to configure for atk cairo glib pango
+  * debian/patches/007_password_char.patch:
+    - change the default password char (Ubuntu: #36190)
+  * debian/patches/008_dont_build_perf_directory.patch:
+    - don't list the perf directory to build, it breaks the static build
   * debian/patches/0815_ia32-hack.patch:
     - patch for ia32-libs package
+  * debian/rules:
+    - updated the shver number
+  * debian/update-gdkpixbuf-loaders.in, debian/update-gtk-immodules.in:
+    - update VERSION number to 2.10.0
 
- -- Sebastien Bacher <seb128@canonical.com>  Sun,  9 Apr 2006 22:10:51 +0200
+ -- Sebastien Bacher <seb128@canonical.com>  Wed,  5 Jul 2006 11:11:04 +0200
+
+gtk+2.0 (2.8.18-1) unstable; urgency=low
+
+  * New upstream version:
+    Bugs fixed:
+    - search box positioning has some bugs
+    - Gdk does not translate VK_NUMPADx to GDK_KP_x  
+    - sanely handle late (re)setting of dnd image   
+    - Text is shifted off-by-one in Add to panel 
+    - gtk_widget_create_pango_layout docs typo
+    - GtkLayout In GtkScrolledWindow does not receive the scroll_event
+    - gtktreeview has RTL problems with toggle buttons if using gtktreestore 
+      as a model    
+    - Wrong drop location in GtkEntry     
+    - GtkImage animation CRITICALS on switching themes 
+    - DnD: Conditional jump or move depends on uninitialised value
+    - cursor blocked to dnd mode after using shift and dnd on a GtkCalendar
+    - Crashes while creating source code w/GtkFontSelection
+    - the right edge tab does not appear when switching tab
+    - Warning in gtk_paned_compute_position 
+    - gdk should set resolution on PangoCairoFontmap, not PangoCairoContext
+    - GtkTreeView does not resize correctly
+    - gtk_tree_view_get_cell_area() forgets depth-one expander
+    - expander animation not working in RTL mode
+    - Multiple issues discovered by Coverity  
+    - Make gtk_file_chooser_button_new() friendlier for language bindings
+
+ -- Sebastien Bacher <seb128@debian.org>  Tue, 30 May 2006 17:02:26 +0200
 
 gtk+2.0 (2.8.17-1) unstable; urgency=low
 
@@ -61,7 +125,7 @@ gtk+2.0 (2.8.17-1) unstable; urgency=low
     - Gtk-Criticals occur when scrolling a text_view that is not realized
     - Hidden menubar still activates submenus with kbd
     - GtkTreeItem broken 
-    - Clean up button press handling (use one-grab-op-at-a-time pattern)   
+    -  Clean up button press handling (use one-grab-op-at-a-time pattern)   
     - broken scrolling when selecting
     - GTK+ File-chooser dialog crashes
     - Nautilus crashes when dragging icons to another screen
@@ -72,6 +136,8 @@ gtk+2.0 (2.8.17-1) unstable; urgency=low
     - Fix a problem which caused grab-notify signal to be missed in some cases
   * debian/control.in:
     - clear the Build-Depends on xlibs-static-pic | xlibs-pic, not required
+    - updated the Build-Depends on libpango1.0-dev so it build with 
+      the xorg transitioned version
   * * debian/patches/001_default_fallback_icon_theme.patch:
     - set the default fallback icon theme to "gnome", fixes the issues with
       the moves of icons from hicolor to gnome
