@@ -2,7 +2,7 @@
 
 set -e
 
-TMPFILE=`mktemp /tmp/gtk+-2.10.0.XXXXXXXXXX`
+TMPFILE=`mktemp /tmp/gtk+-2.10.1.XXXXXXXXXX`
 apiver=2.0
 defaultver=2.10.0
 
@@ -19,7 +19,7 @@ if ! test -d /usr/lib/gtk-$apiver/$VERSION/immodules; then
 fi
 
 echo -n "Updating the IM modules list for GTK+-$VERSION..."
-/usr/bin/gtk-query-immodules-$apiver `find /usr/lib/gtk-$apiver/2.4.0/immodules -name '*.so'` > $TMPFILE
+/usr/bin/gtk-query-immodules-$apiver `find /usr/lib/gtk-$apiver/$VERSION/immodules -name '*.so'` > $TMPFILE
 if [ "x`cat $TMPFILE | grep -v '^#'`" = "x" ]; then
 	echo "the GTK+ IM modules was not found."
 else
