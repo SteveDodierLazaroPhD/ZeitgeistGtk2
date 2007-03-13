@@ -1,0 +1,23 @@
+--- branches/gtk-2-10/gtk/gtknotebook.c	2007/03/09 04:54:12	17435
++++ gtk-2-10/gtk/gtknotebook.c	2007/03/13 15:17:05	17506
+@@ -3926,9 +3926,6 @@
+   else  
+     g_object_ref_sink (page->menu_label);
+ 
+-  /* child visible will be turned on by switch_page below */
+-  gtk_widget_set_child_visible (child, FALSE);
+-
+   if (notebook->menu)
+     gtk_notebook_menu_item_create (notebook,
+ 				   g_list_find (notebook->children, page));
+@@ -3942,6 +3939,10 @@
+   if (!notebook->first_tab)
+     notebook->first_tab = notebook->children;
+ 
++  /* child visible will be turned on by switch_page below */
++  if (notebook->cur_page != page)
++    gtk_widget_set_child_visible (child, FALSE);
++
+   if (tab_label)
+     {
+       if (notebook->show_tabs && GTK_WIDGET_VISIBLE (child))
