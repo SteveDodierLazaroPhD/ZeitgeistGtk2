@@ -27,7 +27,7 @@
 #include "gtkmain.h"
 #include "gtkradiomenuitem.h"
 #include "gtkintl.h"
-#include "gtkprivate.h"
+#include "gtkprivate.h" /* To get redefinition of GTK_LOCALE_DIR on Win32 */
 #include "gtkalias.h"
 
 struct _GtkIMMulticontextPrivate

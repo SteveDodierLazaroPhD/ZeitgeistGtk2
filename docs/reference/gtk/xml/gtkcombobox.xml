@@ -109,23 +109,25 @@ GtkComboBox implements
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkComboBox--active">active</link>&quot;                   <link linkend="gint">gint</link>                  : Read / Write
-  &quot;<link linkend="GtkComboBox--add-tearoffs">add-tearoffs</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkComboBox--column-span-column">column-span-column</link>&quot;       <link linkend="gint">gint</link>                  : Read / Write
-  &quot;<link linkend="GtkComboBox--focus-on-click">focus-on-click</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkComboBox--has-frame">has-frame</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkComboBox--model">model</link>&quot;                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write
-  &quot;<link linkend="GtkComboBox--popup-shown">popup-shown</link>&quot;              <link linkend="gboolean">gboolean</link>              : Read
-  &quot;<link linkend="GtkComboBox--row-span-column">row-span-column</link>&quot;          <link linkend="gint">gint</link>                  : Read / Write
-  &quot;<link linkend="GtkComboBox--tearoff-title">tearoff-title</link>&quot;            <link linkend="gchararray">gchararray</link>            : Read / Write
-  &quot;<link linkend="GtkComboBox--wrap-width">wrap-width</link>&quot;               <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkComboBox--active">active</link>                   <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkComboBox--add-tearoffs">add-tearoffs</link>             <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkComboBox--column-span-column">column-span-column</link>       <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkComboBox--focus-on-click">focus-on-click</link>           <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkComboBox--has-frame">has-frame</link>                <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkComboBox--model">model</link>                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write
+  <link linkend="GtkComboBox--popup-shown">popup-shown</link>              <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkComboBox--row-span-column">row-span-column</link>          <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkComboBox--tearoff-title">tearoff-title</link>            <link linkend="gchararray">gchararray</link>            : Read / Write
+  <link linkend="GtkComboBox--wrap-width">wrap-width</link>               <link linkend="gint">gint</link>                  : Read / Write
 </synopsis>
 </refsect1>
 <refsect1 role="style_properties">
 <title role="style_properties.title">Style Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkComboBox--appears-as-list">appears-as-list</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkComboBox--appears-as-list">appears-as-list</link>          <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkComboBox--arrow-size">arrow-size</link>               <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkComboBox--shadow-type">shadow-type</link>              <link linkend="GtkShadowType">GtkShadowType</link>         : Read
 </synopsis>
 </refsect1>
 
@@ -133,7 +135,10 @@ GtkComboBox implements
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  &quot;<link linkend="GtkComboBox-changed">changed</link>&quot;                                        : Run Last
+  <link linkend="GtkComboBox-changed">changed</link>                                        : Run Last
+  <link linkend="GtkComboBox-move-active">move-active</link>                                    : Run Last / Action
+  <link linkend="GtkComboBox-popdown">popdown</link>                                        : Run Last / Action
+  <link linkend="GtkComboBox-popup">popup</link>                                          : Run Last / Action
 </synopsis>
 </refsect1>
 
@@ -211,14 +216,14 @@ Creates a new <link linkend="GtkComboBox"><type>GtkComboBox</type></link> with t
 <title><anchor id="gtk-combo-box-get-wrap-width" role="function" condition="since:2.6"/>gtk_combo_box_get_wrap_width ()</title>
 <indexterm role="2.6"><primary>gtk_combo_box_get_wrap_width</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_combo_box_get_wrap_width        (<link linkend="GtkComboBox">GtkComboBox</link> *combo_box);</programlisting>
 <para>
-Returns the wrap width which is used to determine the number
-of columns for the popup menu. If the wrap width is larger than
-1, the combo box is in table mode.</para>
+Returns the wrap width which is used to determine the number of columns 
+for the popup menu. If the wrap width is larger than 1, the combo box 
+is in table mode.</para>
 <para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the wrap width.
 
@@ -237,10 +242,10 @@ in a table.</para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>width</parameter>&nbsp;:</term>
-<listitem><simpara> Preferred number of columns.
+<listitem><simpara> Preferred number of columns
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -253,7 +258,7 @@ Returns the column with row span information for <parameter>combo_box</parameter
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the row span column.
 
@@ -289,7 +294,7 @@ Returns the column with column span information for <parameter>combo_box</parame
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the column span column.
 
@@ -309,10 +314,10 @@ how many columns an item should span.</para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>column_span</parameter>&nbsp;:</term>
-<listitem><simpara> A column in the model passed during construction.
+<listitem><simpara> A column in the model passed during construction
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -329,10 +334,10 @@ is not an immediate child of the root of the tree, this function returns
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> An integer which is the index of the currently active item, or
--1 if there's no active item.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> An integer which is the index of the currently active item, 
+    or -1 if there's no active item.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
@@ -347,11 +352,11 @@ Sets the active item of <parameter>combo_box</parameter> to be the item at <para
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>index_</parameter>&nbsp;:</term>
 <listitem><simpara> An index in the model passed during construction, or -1 to have
-no active item.
+no active item
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -368,7 +373,7 @@ Sets <parameter>iter</parameter> to point to the current active item, if it exis
 <listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
-<listitem><simpara> The uninitialized <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link>.
+<listitem><simpara> The uninitialized <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, if <parameter>iter</parameter> was set
 
@@ -389,7 +394,7 @@ Sets the current active item to be the one referenced by <parameter>iter</parame
 <listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
-<listitem><simpara> The <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link>.
+<listitem><simpara> The <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -402,7 +407,7 @@ Returns the <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> which 
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> which was passed during construction.
 
@@ -419,16 +424,16 @@ model (if applicable). If model is <link linkend="NULL:CAPS"><literal>NULL</lite
 </para>
 <para>
 Note that this function does not clear the cell renderers, you have to 
-call <link linkend="gtk-combo-box-cell-layout-clear"><function>gtk_combo_box_cell_layout_clear()</function></link> yourself if you need to set up 
-different cell renderers for the new model.</para>
+call <link linkend="gtk-cell-layout-clear"><function>gtk_cell_layout_clear()</function></link> yourself if you need to set up different 
+cell renderers for the new model.</para>
 <para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>model</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>.
+<listitem><simpara> A <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -462,10 +467,10 @@ you can only use this function with combo boxes constructed with
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed using <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed using <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>text</parameter>&nbsp;:</term>
-<listitem><simpara> A string.
+<listitem><simpara> A string
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -482,13 +487,13 @@ with <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed using <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed using <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>position</parameter>&nbsp;:</term>
-<listitem><simpara> An index to insert <parameter>text</parameter>.
+<listitem><simpara> An index to insert <parameter>text</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>text</parameter>&nbsp;:</term>
-<listitem><simpara> A string.
+<listitem><simpara> A string
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -504,10 +509,10 @@ you can only use this function with combo boxes constructed with
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed with <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed with <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>text</parameter>&nbsp;:</term>
-<listitem><simpara> A string.
+<listitem><simpara> A string
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -522,10 +527,10 @@ this function with combo boxes constructed with <link linkend="gtk-combo-box-new
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed with <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed with <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>position</parameter>&nbsp;:</term>
-<listitem><simpara> Index of the item to remove.
+<listitem><simpara> Index of the item to remove
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
@@ -541,7 +546,7 @@ boxes constructed with <link linkend="gtk-combo-box-new-text"><function>gtk_comb
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
-<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed with <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>.
+<listitem><simpara> A <link linkend="GtkComboBox"><type>GtkComboBox</type></link> constructed with <link linkend="gtk-combo-box-new-text"><function>gtk_combo_box_new_text()</function></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly allocated string containing the currently active text.
 
@@ -692,7 +697,7 @@ Sets the menu's title in tearoff mode.</para>
 <listitem><simpara> a <link linkend="GtkComboBox"><type>GtkComboBox</type></link> 
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>title</parameter>&nbsp;:</term>
-<listitem><simpara> a title for the menu in tearoff mode.
+<listitem><simpara> a title for the menu in tearoff mode
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
@@ -757,12 +762,13 @@ with the mouse. See <link linkend="gtk-combo-box-set-focus-on-click"><function>g
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkComboBox--active"/>The &quot;<literal>active</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkComboBox:active</primary></indexterm><programlisting>  &quot;active&quot;                   <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--active"/>The :<literal>active</literal> property</title>
+<indexterm role="2.4"><primary>GtkComboBox:active</primary></indexterm><programlisting>  active                   <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 The item which is currently active. If the model is a non-flat treemodel,
 and the active item is not an immediate child of the root of the tree,
-this property has the value <literal>gtk_tree_path_get_indices (path)[0]</literal>,
+this property has the value 
+<literal>gtk_tree_path_get_indices (path)[0]</literal>,
 where <literal>path</literal> is the <link linkend="GtkTreePath"><type>GtkTreePath</type></link> of the active item.</para>
 <para>
 
@@ -771,8 +777,8 @@ where <literal>path</literal> is the <link linkend="GtkTreePath"><type>GtkTreePa
 <para>Since  2.4
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--add-tearoffs"/>The &quot;<literal>add-tearoffs</literal>&quot; property</title>
-<indexterm role="2.6"><primary>GtkComboBox:add-tearoffs</primary></indexterm><programlisting>  &quot;add-tearoffs&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--add-tearoffs"/>The :<literal>add-tearoffs</literal> property</title>
+<indexterm role="2.6"><primary>GtkComboBox:add-tearoffs</primary></indexterm><programlisting>  add-tearoffs             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 The add-tearoffs property controls whether generated menus 
 have tearoff menu items. 
@@ -785,8 +791,8 @@ Note that this only affects menu style combo boxes.</para>
 <para>Since  2.6
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--column-span-column"/>The &quot;<literal>column-span-column</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkComboBox:column-span-column</primary></indexterm><programlisting>  &quot;column-span-column&quot;       <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--column-span-column"/>The :<literal>column-span-column</literal> property</title>
+<indexterm role="2.4"><primary>GtkComboBox:column-span-column</primary></indexterm><programlisting>  column-span-column       <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 If this is set to a non-negative value, it must be the index of a column 
 of type <link linkend="G-TYPE-INT:CAPS"><literal>G_TYPE_INT</literal></link> in the model. 
@@ -801,12 +807,12 @@ in the list will span.</para>
 <para>Since  2.4
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--focus-on-click"/>The &quot;<literal>focus-on-click</literal>&quot; property</title>
-<indexterm><primary>GtkComboBox:focus-on-click</primary></indexterm><programlisting>  &quot;focus-on-click&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--focus-on-click"/>The :<literal>focus-on-click</literal> property</title>
+<indexterm><primary>GtkComboBox:focus-on-click</primary></indexterm><programlisting>  focus-on-click           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the combo box grabs focus when it is clicked with the mouse.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--has-frame"/>The &quot;<literal>has-frame</literal>&quot; property</title>
-<indexterm role="2.6"><primary>GtkComboBox:has-frame</primary></indexterm><programlisting>  &quot;has-frame&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--has-frame"/>The :<literal>has-frame</literal> property</title>
+<indexterm role="2.6"><primary>GtkComboBox:has-frame</primary></indexterm><programlisting>  has-frame                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 The has-frame property controls whether a frame
 is drawn around the entry.</para>
@@ -816,8 +822,8 @@ is drawn around the entry.</para>
 <para>Since  2.6
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--model"/>The &quot;<literal>model</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkComboBox:model</primary></indexterm><programlisting>  &quot;model&quot;                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--model"/>The :<literal>model</literal> property</title>
+<indexterm role="2.4"><primary>GtkComboBox:model</primary></indexterm><programlisting>  model                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write</programlisting>
 <para>
 The model from which the combo box takes the values shown
 in the list.</para>
@@ -826,8 +832,8 @@ in the list.</para>
 </para><para>Since  2.4
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--popup-shown"/>The &quot;<literal>popup-shown</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkComboBox:popup-shown</primary></indexterm><programlisting>  &quot;popup-shown&quot;              <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkComboBox--popup-shown"/>The :<literal>popup-shown</literal> property</title>
+<indexterm role="2.10"><primary>GtkComboBox:popup-shown</primary></indexterm><programlisting>  popup-shown              <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>
 Whether the combo boxes dropdown is popped up. 
 Note that this property is mainly useful, because
@@ -838,16 +844,16 @@ it allows you to connect to notify::popup-shown.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--row-span-column"/>The &quot;<literal>row-span-column</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkComboBox:row-span-column</primary></indexterm><programlisting>  &quot;row-span-column&quot;          <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--row-span-column"/>The :<literal>row-span-column</literal> property</title>
+<indexterm role="2.4"><primary>GtkComboBox:row-span-column</primary></indexterm><programlisting>  row-span-column          <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 If this is set to a non-negative value, it must be the index of a column 
 of type <link linkend="G-TYPE-INT:CAPS"><literal>G_TYPE_INT</literal></link> in the model. 
 </para>
 <para>
-The values of that column are used to determine how many rows a value 
-in the list will span. Therefore, the values in the model column pointed 
-to by this property must be greater than zero and not larger than wrap-width.</para>
+The values of that column are used to determine how many rows a value in 
+the list will span. Therefore, the values in the model column pointed to 
+by this property must be greater than zero and not larger than wrap-width.</para>
 <para>
 
 </para><para>Allowed values: &gt;= -1</para>
@@ -855,8 +861,8 @@ to by this property must be greater than zero and not larger than wrap-width.</p
 <para>Since  2.4
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--tearoff-title"/>The &quot;<literal>tearoff-title</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkComboBox:tearoff-title</primary></indexterm><programlisting>  &quot;tearoff-title&quot;            <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--tearoff-title"/>The :<literal>tearoff-title</literal> property</title>
+<indexterm role="2.10"><primary>GtkComboBox:tearoff-title</primary></indexterm><programlisting>  tearoff-title            <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 A title that may be displayed by the window manager 
 when the popup is torn-off.</para>
@@ -866,8 +872,8 @@ when the popup is torn-off.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkComboBox--wrap-width"/>The &quot;<literal>wrap-width</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkComboBox:wrap-width</primary></indexterm><programlisting>  &quot;wrap-width&quot;               <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkComboBox--wrap-width"/>The :<literal>wrap-width</literal> property</title>
+<indexterm role="2.4"><primary>GtkComboBox:wrap-width</primary></indexterm><programlisting>  wrap-width               <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 If wrap-width is set to a positive value, the list will be
 displayed in multiple columns, the number of columns is
@@ -883,16 +889,40 @@ determined by wrap-width.</para>
 </refsect1>
 <refsect1 role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
-<refsect2><title><anchor id="GtkComboBox--appears-as-list"/>The &quot;<literal>appears-as-list</literal>&quot; style property</title>
-<indexterm><primary>GtkComboBox:appears-as-list</primary></indexterm><programlisting>  &quot;appears-as-list&quot;          <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkComboBox--appears-as-list"/>The :<literal>appears-as-list</literal> style property</title>
+<indexterm><primary>GtkComboBox:appears-as-list</primary></indexterm><programlisting>  appears-as-list          <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Whether dropdowns should look like lists rather than menus.</para><para>Default value: FALSE</para>
+</refsect2>
+<refsect2><title><anchor id="GtkComboBox--arrow-size"/>The :<literal>arrow-size</literal> style property</title>
+<indexterm role="2.12"><primary>GtkComboBox:arrow-size</primary></indexterm><programlisting>  arrow-size               <link linkend="gint">gint</link>                  : Read</programlisting>
+<para>
+Sets the minimum size of the arrow in the combo box.  Note
+that the arrow size is coupled to the font size, so in case
+a larger font is used, the arrow will be larger than set
+by arrow size.</para>
+<para>
+
+</para><para>Allowed values: &gt;= 0</para>
+<para>Default value: 15</para>
+<para>Since  2.12
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkComboBox--shadow-type"/>The :<literal>shadow-type</literal> style property</title>
+<indexterm role="2.12"><primary>GtkComboBox:shadow-type</primary></indexterm><programlisting>  shadow-type              <link linkend="GtkShadowType">GtkShadowType</link>         : Read</programlisting>
+<para>
+Which kind of shadow to draw around the combo box.</para>
+<para>
+
+</para><para>Default value: GTK_SHADOW_NONE</para>
+<para>Since  2.12
+</para>
 </refsect2>
 
 </refsect1>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkComboBox-changed"/>The &quot;changed&quot; signal</title>
+<refsect2><title><anchor id="GtkComboBox-changed"/>The <literal>::changed</literal> signal</title>
 <indexterm role="2.4"><primary>GtkComboBox::changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkComboBox">GtkComboBox</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
 <para>
@@ -911,7 +941,49 @@ as well as when selecting an item from the GtkComboBoxEntry's list.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.4
-</para></refsect2>
+</para></refsect2><refsect2><title><anchor id="GtkComboBox-move-active"/>The <literal>::move-active</literal> signal</title>
+<indexterm><primary>GtkComboBox::move-active</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkComboBox">GtkComboBox</link>  *combobox,
+                                                        <link linkend="GtkScrollType">GtkScrollType</link> arg1,
+                                                        <link linkend="gpointer">gpointer</link>      user_data)      : Run Last / Action</programlisting>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>combobox</parameter>&nbsp;:</term>
+<listitem><simpara>the object which received the signal.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
+<listitem><simpara>
+
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2><title><anchor id="GtkComboBox-popdown"/>The <literal>::popdown</literal> signal</title>
+<indexterm><primary>GtkComboBox::popdown</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkComboBox">GtkComboBox</link> *combobox,
+                                                        <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>combobox</parameter>&nbsp;:</term>
+<listitem><simpara>the object which received the signal.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2><title><anchor id="GtkComboBox-popup"/>The <literal>::popup</literal> signal</title>
+<indexterm><primary>GtkComboBox::popup</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkComboBox">GtkComboBox</link> *combobox,
+                                                        <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>combobox</parameter>&nbsp;:</term>
+<listitem><simpara>the object which received the signal.
+
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 </refsect1>
 
 

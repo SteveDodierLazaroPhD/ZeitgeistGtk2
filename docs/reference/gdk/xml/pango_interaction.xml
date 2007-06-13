@@ -39,7 +39,9 @@
 <link linkend="void">void</link>                <link linkend="gdk-pango-context-set-colormap">gdk_pango_context_set_colormap</link>      (<link linkend="PangoContext">PangoContext</link> *context,
                                                          <link linkend="GdkColormap">GdkColormap</link> *colormap);
                     <link linkend="GdkPangoAttrEmbossed">GdkPangoAttrEmbossed</link>;
+                    <link linkend="GdkPangoAttrEmbossColor">GdkPangoAttrEmbossColor</link>;
                     <link linkend="GdkPangoAttrStipple">GdkPangoAttrStipple</link>;
+<link linkend="PangoAttribute">PangoAttribute</link>*     <link linkend="gdk-pango-attr-emboss-color-new">gdk_pango_attr_emboss_color_new</link>     (const <link linkend="GdkColor">GdkColor</link> *color);
 <link linkend="PangoAttribute">PangoAttribute</link>*     <link linkend="gdk-pango-attr-embossed-new">gdk_pango_attr_embossed_new</link>         (<link linkend="gboolean">gboolean</link> embossed);
 <link linkend="PangoAttribute">PangoAttribute</link>*     <link linkend="gdk-pango-attr-stipple-new">gdk_pango_attr_stipple_new</link>          (<link linkend="GdkBitmap">GdkBitmap</link> *stipple);
 <link linkend="GdkRegion">GdkRegion</link>*          <link linkend="gdk-pango-layout-get-clip-region">gdk_pango_layout_get_clip_region</link>    (<link linkend="PangoLayout">PangoLayout</link> *layout,
@@ -77,7 +79,7 @@
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GdkPangoRenderer--screen">screen</link>&quot;                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write / Construct Only
+  <link linkend="GdkPangoRenderer--screen">screen</link>                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write / Construct Only
 </synopsis>
 </refsect1>
 
@@ -480,6 +482,28 @@ rendering the text.
 </varlistentry>
 </variablelist></refsect2>
 <refsect2>
+<title><anchor id="GdkPangoAttrEmbossColor" role="struct"/>GdkPangoAttrEmbossColor</title>
+<indexterm><primary>GdkPangoAttrEmbossColor</primary></indexterm><programlisting>typedef struct {
+  PangoAttribute attr;
+  PangoColor color;
+} GdkPangoAttrEmbossColor;
+</programlisting>
+<para>
+A Pango text attribute specifying the color to emboss text with.
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="PangoAttribute">PangoAttribute</link>&nbsp;<structfield>attr</structfield>;</term>
+<listitem><simpara>the <link linkend="PangoAttribute"><type>PangoAttribute</type></link>
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="PangoColor">PangoColor</link>&nbsp;<structfield>color</structfield>;</term>
+<listitem><simpara>the color
+
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2>
 <title><anchor id="GdkPangoAttrStipple" role="struct"/>GdkPangoAttrStipple</title>
 <indexterm><primary>GdkPangoAttrStipple</primary></indexterm><programlisting>typedef struct {
   PangoAttribute attr;
@@ -503,16 +527,31 @@ rendering the text.
 </varlistentry>
 </variablelist></refsect2>
 <refsect2>
+<title><anchor id="gdk-pango-attr-emboss-color-new" role="function" condition="since:2.12"/>gdk_pango_attr_emboss_color_new ()</title>
+<indexterm role="2.12"><primary>gdk_pango_attr_emboss_color_new</primary></indexterm><programlisting><link linkend="PangoAttribute">PangoAttribute</link>*     gdk_pango_attr_emboss_color_new     (const <link linkend="GdkColor">GdkColor</link> *color);</programlisting>
+<para>
+Creates a new attribute specifying the color to emboss text with.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara> a GdkColor representing the color to emboss with
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="PangoAttribute"><type>PangoAttribute</type></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gdk-pango-attr-embossed-new" role="function"/>gdk_pango_attr_embossed_new ()</title>
 <indexterm><primary>gdk_pango_attr_embossed_new</primary></indexterm><programlisting><link linkend="PangoAttribute">PangoAttribute</link>*     gdk_pango_attr_embossed_new         (<link linkend="gboolean">gboolean</link> embossed);</programlisting>
 <para>
-Creates a new attribute containing a embossed bitmap to be used when
-rendering the text.</para>
+Creates a new attribute flagging a region as embossed or not.</para>
 <para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>embossed</parameter>&nbsp;:</term>
-<listitem><simpara> a bitmap to be set as embossed
+<listitem><simpara> if the region should be embossed
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="PangoAttribute"><type>PangoAttribute</type></link>
 </simpara></listitem></varlistentry>
@@ -620,8 +659,8 @@ of text, such as when text is selected.</para>
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GdkPangoRenderer--screen"/>The &quot;<literal>screen</literal>&quot; property</title>
-<indexterm><primary>GdkPangoRenderer:screen</primary></indexterm><programlisting>  &quot;screen&quot;                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GdkPangoRenderer--screen"/>The :<literal>screen</literal> property</title>
+<indexterm><primary>GdkPangoRenderer:screen</primary></indexterm><programlisting>  screen                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write / Construct Only</programlisting>
 <para>the GdkScreen for the renderer.</para></refsect2>
 
 </refsect1>

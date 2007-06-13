@@ -249,6 +249,16 @@ extern __typeof (gdk_pixbuf_simple_anim_add_frame) IA__gdk_pixbuf_simple_anim_ad
 
 #endif
 #endif
+#if IN_HEADER(GDK_PIXBUF_SCALED_ANIM_H)
+#if IN_FILE(__GDK_PIXBUF_SCALED_ANIM_C__)
+extern __typeof (gdk_pixbuf_scaled_anim_get_type) IA__gdk_pixbuf_scaled_anim_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gdk_pixbuf_scaled_anim_get_type IA__gdk_pixbuf_scaled_anim_get_type
+
+extern __typeof (gdk_pixbuf_scaled_anim_iter_get_type) IA__gdk_pixbuf_scaled_anim_iter_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gdk_pixbuf_scaled_anim_iter_get_type IA__gdk_pixbuf_scaled_anim_iter_get_type
+
+#endif
+#endif
 #if IN_HEADER(GDK_PIXBUF_IO_H)
 #if IN_FILE(__GDK_PIXBUF_IO_C__)
 extern __typeof (gdk_pixbuf_get_formats) IA__gdk_pixbuf_get_formats __attribute((visibility("hidden")));

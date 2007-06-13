@@ -57,6 +57,10 @@ enum                <link linkend="GdkWindowAttributesType">GdkWindowAttributesT
                                                          <link linkend="gboolean">gboolean</link> setting);
 <link linkend="void">void</link>                <link linkend="gdk-window-set-keep-below">gdk_window_set_keep_below</link>           (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gboolean">gboolean</link> setting);
+<link linkend="void">void</link>                <link linkend="gdk-window-set-opacity">gdk_window_set_opacity</link>              (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="gdouble">gdouble</link> opacity);
+<link linkend="void">void</link>                <link linkend="gdk-window-set-composited">gdk_window_set_composited</link>           (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="gboolean">gboolean</link> composited);
 <link linkend="void">void</link>                <link linkend="gdk-window-move">gdk_window_move</link>                     (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gint">gint</link> x,
                                                          <link linkend="gint">gint</link> y);
@@ -113,6 +117,7 @@ enum                <link linkend="GdkWindowAttributesType">GdkWindowAttributesT
                                                          <link linkend="gint">gint</link> height,
                                                          <link linkend="gint">gint</link> *new_width,
                                                          <link linkend="gint">gint</link> *new_height);
+<link linkend="void">void</link>                <link linkend="gdk-window-beep">gdk_window_beep</link>                     (<link linkend="GdkWindow">GdkWindow</link> *window);
 
 <link linkend="void">void</link>                <link linkend="gdk-window-begin-paint-rect">gdk_window_begin_paint_rect</link>         (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *rectangle);
@@ -270,6 +275,8 @@ enum                <link linkend="GdkModifierType">GdkModifierType</link>;
                                                          <link linkend="GdkWindow">GdkWindow</link> *parent);
 <link linkend="void">void</link>                <link linkend="gdk-window-set-role">gdk_window_set_role</link>                 (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          const <link linkend="gchar">gchar</link> *role);
+<link linkend="void">void</link>                <link linkend="gdk-window-set-startup-id">gdk_window_set_startup_id</link>           (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *startup_id);
 <link linkend="void">void</link>                <link linkend="gdk-window-set-group">gdk_window_set_group</link>                (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkWindow">GdkWindow</link> *leader);
 <link linkend="GdkWindow">GdkWindow</link>*          <link linkend="gdk-window-get-group">gdk_window_get_group</link>                (<link linkend="GdkWindow">GdkWindow</link> *window);
@@ -317,6 +324,164 @@ used to implement high-level objects such as <link linkend="GtkWidget"><type>Gtk
 GTK+ level. A <link linkend="GtkWindow"><type>GtkWindow</type></link> is a toplevel window, the thing a user might think of 
 as a "window" with a titlebar and so on; a <link linkend="GtkWindow"><type>GtkWindow</type></link> may contain many <link linkend="GdkWindow"><type>GdkWindow</type></link>. 
 For example, each <link linkend="GtkButton"><type>GtkButton</type></link> has a <link linkend="GdkWindow"><type>GdkWindow</type></link> associated with it.
+</para>
+<example id="composited-window-example"><title>Composited windows</title>
+<programlisting><![CDATA[
+#include <gtk/gtk.h>
+
+/* The expose event handler for the event box.
+ *
+ * This function simply draws a transparency onto a widget on the area
+ * for which it receives expose events.  This is intended to give the
+ * event box a "transparent" background.
+ *
+ * In order for this to work properly, the widget must have an RGBA
+ * colourmap.  The widget should also be set as app-paintable since it
+ * doesn't make sense for GTK+ to draw a background if we are drawing it
+ * (and because GTK+ might actually replace our transparency with its
+ * default background colour).
+ */
+static gboolean
+transparent_expose (GtkWidget      *widget,
+                    GdkEventExpose *event)
+{
+  cairo_t *cr;
+
+  cr = gdk_cairo_create (widget->window);
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+  gdk_cairo_region (cr, event->region);
+  cairo_fill (cr);
+  cairo_destroy (cr);
+
+  return FALSE;
+}
+
+/* The expose event handler for the window.
+ *
+ * This function performs the actual compositing of the event box onto
+ * the already-existing background of the window at 50% normal opacity.
+ *
+ * In this case we do not want app-paintable to be set on the widget
+ * since we want it to draw its own (red) background. Because of this,
+ * however, we must ensure that we use g_signal_register_after so that
+ * this handler is called after the red has been drawn. If it was
+ * called before then GTK would just blindly paint over our work.
+ *
+ * Note: if the child window has children, then you need a cairo 1.16
+ * feature to make this work correctly.
+ */
+static gboolean
+window_expose_event (GtkWidget      *widget,
+                     GdkEventExpose *event)
+{
+  GdkRegion *region;
+  GtkWidget *child;
+  cairo_t *cr;
+
+  /* get our child (in this case, the event box) */ 
+  child = gtk_bin_get_child (GTK_BIN (widget));
+
+  /* create a cairo context to draw to the window */
+  cr = gdk_cairo_create (widget->window);
+
+  /* the source data is the (composited) event box */
+  gdk_cairo_set_source_pixmap (cr, child->window,
+                               child->allocation.x,
+                               child->allocation.y);
+
+  /* draw no more than our expose event intersects our child */
+  region = gdk_region_rectangle (&child->allocation);
+  gdk_region_intersect (region, event->region);
+  gdk_cairo_region (cr, region);
+  cairo_clip (cr);
+
+  /* composite, with a 50% opacity */
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+  cairo_paint_with_alpha (cr, 0.5);
+
+  /* we're done */
+  cairo_destroy (cr);
+
+  return FALSE;
+}
+
+int
+main (int argc, char **argv)
+{
+  GtkWidget *window, *event, *button;
+  GdkScreen *screen;
+  GdkColormap *rgba;
+  GdkColor red;
+
+  gtk_init (&argc, &argv);
+
+  /* Make the widgets */
+  button = gtk_button_new_with_label ("A Button");
+  event = gtk_event_box_new ();
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+  /* Put a red background on the window */
+  gdk_color_parse ("red", &red);
+  gtk_widget_modify_bg (window, GTK_STATE_NORMAL, &red);
+
+  /* Set the colourmap for the event box.
+   * Must be done before the event box is realised.
+   */
+  screen = gtk_widget_get_screen (event);
+  rgba = gdk_screen_get_rgba_colormap (screen);
+  gtk_widget_set_colormap (event, rgba);
+
+  /* Set our event box to have a fully-transparent background
+   * drawn on it. Currently there is no way to simply tell GTK+
+   * that "transparency" is the background colour for a widget.
+   */
+  gtk_widget_set_app_paintable (GTK_WIDGET (event), TRUE);
+  g_signal_connect (event, "expose-event",
+                    G_CALLBACK (transparent_expose), NULL);
+
+  /* Put them inside one another */
+  gtk_container_set_border_width (GTK_CONTAINER (window), 10);
+  gtk_container_add (GTK_CONTAINER (window), event);
+  gtk_container_add (GTK_CONTAINER (event), button);
+
+  /* Realise and show everything */
+  gtk_widget_show_all (window);
+
+  /* Set the event box GdkWindow to be composited.
+   * Obviously must be performed after event box is realised.
+   */
+  gdk_window_set_composited (event->window, TRUE);
+
+  /* Set up the compositing handler.
+   * Note that we do _after_ so that the normal (red) background is drawn
+   * by gtk before our compositing occurs.
+   */
+  g_signal_connect_after (window, "expose-event",
+                          G_CALLBACK (window_expose_event), NULL);
+
+  gtk_main (<!-- -->);
+
+  return 0;
+}
+]]>
+</programlisting></example>
+<para>
+In the example <xref linkend="composited-window-example"/>, a button is 
+placed inside of an event box inside of a window. The event box is 
+set as composited and therefore is no longer automatically drawn to 
+the screen. 
+</para>
+<para>
+When the contents of the event box change, an expose event is
+generated on its parent window (which, in this case, belongs to
+the toplevel <link linkend="GtkWindow"><type>GtkWindow</type></link>). The expose handler for this widget is
+responsible for merging the changes back on the screen in the way
+that it wishes.
+</para>
+<para>
+In our case, we merge the contents with a 50% transparency. We
+also set the background colour of the window to red. The effect is
+that the background shows through the button. 
 </para>
 </refsect1>
 
@@ -790,7 +955,8 @@ window types.
 </varlistentry>
 <varlistentry>
 <term><anchor id="GDK-WINDOW-TYPE-HINT-MENU:CAPS" role="constant"/><literal>GDK_WINDOW_TYPE_HINT_MENU</literal></term>
-<listitem><simpara>Window used to implement a menu.
+<listitem><simpara>Window used to implement a menu; GTK+ uses 
+  this hint only for torn-off menus, see <link linkend="GtkTearoffMenuItem"><type>GtkTearoffMenuItem</type></link>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
@@ -823,32 +989,34 @@ window.
 </varlistentry>
 <varlistentry>
 <term><anchor id="GDK-WINDOW-TYPE-HINT-DROPDOWN-MENU:CAPS" role="constant"/><literal>GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU</literal></term>
-<listitem><simpara>
+<listitem><simpara>A menu that belongs to a menubar.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GDK-WINDOW-TYPE-HINT-POPUP-MENU:CAPS" role="constant"/><literal>GDK_WINDOW_TYPE_HINT_POPUP_MENU</literal></term>
-<listitem><simpara>
+<listitem><simpara>A menu that does not belong to a menubar, 
+  e.g. a context menu.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GDK-WINDOW-TYPE-HINT-TOOLTIP:CAPS" role="constant"/><literal>GDK_WINDOW_TYPE_HINT_TOOLTIP</literal></term>
-<listitem><simpara>
+<listitem><simpara>A tooltip.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GDK-WINDOW-TYPE-HINT-NOTIFICATION:CAPS" role="constant"/><literal>GDK_WINDOW_TYPE_HINT_NOTIFICATION</literal></term>
-<listitem><simpara>
+<listitem><simpara>A notification - typically a "bubble" 
+  that belongs to a status icon.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GDK-WINDOW-TYPE-HINT-COMBO:CAPS" role="constant"/><literal>GDK_WINDOW_TYPE_HINT_COMBO</literal></term>
-<listitem><simpara>
+<listitem><simpara>A popup from a combo box.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GDK-WINDOW-TYPE-HINT-DND:CAPS" role="constant"/><literal>GDK_WINDOW_TYPE_HINT_DND</literal></term>
-<listitem><simpara>
+<listitem><simpara>A window that is used to implement a DND cursor.
 
 </simpara></listitem>
 </varlistentry>
@@ -1462,6 +1630,76 @@ and GDK makes a best effort to get it to happen.</para>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
 <refsect2>
+<title><anchor id="gdk-window-set-opacity" role="function" condition="since:2.12"/>gdk_window_set_opacity ()</title>
+<indexterm role="2.12"><primary>gdk_window_set_opacity</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_set_opacity              (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="gdouble">gdouble</link> opacity);</programlisting>
+<para>
+Request the windowing system to make <parameter>window</parameter> partially transparent,
+with opacity 0 being fully transparent and 1 fully opaque. (Values
+of the opacity parameter are clamped to the [0,1] range.) 
+</para>
+<para>
+On X11, this works only on X screens with a compositing manager 
+running.
+</para>
+<para>
+For setting up per-pixel alpha, see <link linkend="gdk-screen-get-rgba-colormap"><function>gdk_screen_get_rgba_colormap()</function></link>.
+For making non-toplevel windows translucent, see 
+<link linkend="gdk-window-set-composited"><function>gdk_window_set_composited()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a top-level <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>opacity</parameter>&nbsp;:</term>
+<listitem><simpara> opacity
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gdk-window-set-composited" role="function" condition="since:2.12"/>gdk_window_set_composited ()</title>
+<indexterm role="2.12"><primary>gdk_window_set_composited</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_set_composited           (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="gboolean">gboolean</link> composited);</programlisting>
+<para>
+Sets a <link linkend="GdkWindow"><type>GdkWindow</type></link> as composited, or unsets it. Composited 
+windows do not automatically have their contents drawn to 
+the screen. Drawing is redirected to an offscreen buffer 
+and an expose event is emitted on the parent of the composited 
+window. It is the responsibility of the parent's expose handler
+to manually merge the off-screen content onto the screen in
+whatever way it sees fit. See <xref linkend="composited-window-example"/>
+for an example.
+</para>
+<para>
+It only makes sense for child windows to be composited; see
+<link linkend="gdk-window-set-opacity"><function>gdk_window_set_opacity()</function></link> if you need translucent toplevel
+windows.
+</para>
+<para>
+An additional effect of this call is that the area of this
+window is no longer clipped from regions marked for
+invalidation on its parent. Draws done on the parent
+window are also no longer clipped by the child.
+</para>
+<para>
+This call is only supported on some systems (currently,
+only X11 with new enough Xcomposite and Xdamage extensions). 
+You must call <link linkend="gdk-display-supports-composite"><function>gdk_display_supports_composite()</function></link> to check if
+setting a window as composited is supported before
+attempting to do so.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>composited</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to set the window as composited
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gdk-window-move" role="function"/>gdk_window_move ()</title>
 <indexterm><primary>gdk_window_move</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_move                     (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gint">gint</link> x,
@@ -1907,6 +2145,21 @@ set of geometry hints (such as minimum and maximum size).</para>
 <listitem><simpara> location to store resulting height
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gdk-window-beep" role="function" condition="since:2.12"/>gdk_window_beep ()</title>
+<indexterm role="2.12"><primary>gdk_window_beep</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_beep                     (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Emits a short beep associated to <parameter>window</parameter> in the appropriate
+display, if supported. Otherwise, emits a short beep on
+the display just as <link linkend="gdk-display-beep"><function>gdk_display_beep()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a toplevel <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gdk-window-begin-paint-rect" role="function"/>gdk_window_begin_paint_rect ()</title>
 <indexterm><primary>gdk_window_begin_paint_rect</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_begin_paint_rect         (<link linkend="GdkWindow">GdkWindow</link> *window,
@@ -2399,7 +2652,11 @@ Adds an event filter to <parameter>window</parameter>, allowing you to intercept
 before they reach GDK. This is a low-level operation and makes it
 easy to break GDK and/or GTK+, so you have to know what you're
 doing. Pass <link linkend="NULL:CAPS"><literal>NULL</literal></link> for <parameter>window</parameter> to get all events for all windows,
-instead of events for a specific window.</para>
+instead of events for a specific window.
+</para>
+<para>
+See <link linkend="gdk-display-add-client-message-filter"><function>gdk_display_add_client_message_filter()</function></link> if you are interested
+in X ClientMessage events.</para>
 <para>
 
 </para><variablelist role="params">
@@ -3743,6 +4000,25 @@ non-interchangeable kind of window.</para>
 <listitem><simpara> a string indicating its role
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gdk-window-set-startup-id" role="function" condition="since:2.12"/>gdk_window_set_startup_id ()</title>
+<indexterm role="2.12"><primary>gdk_window_set_startup_id</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_set_startup_id           (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *startup_id);</programlisting>
+<para>
+When using GTK+, typically you should use <link linkend="gtk-window-set-startup-id"><function>gtk_window_set_startup_id()</function></link>
+instead of this low-level function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a toplevel <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>startup_id</parameter>&nbsp;:</term>
+<listitem><simpara> a string with startup-notification identifier
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+
+</para></refsect2>
 <refsect2>
 <title><anchor id="gdk-window-set-group" role="function"/>gdk_window_set_group ()</title>
 <indexterm><primary>gdk_window_set_group</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_set_group                (<link linkend="GdkWindow">GdkWindow</link> *window,

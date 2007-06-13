@@ -30,7 +30,6 @@
 #include "gdk.h"		/* For gdk_rectangle_union() */
 #include "gdkpixmap.h"
 #include "gdkdrawable.h"
-#include "gdkpixmap.h"
 #include "gdkscreen.h"
 #include "gdkalias.h"
 
@@ -676,7 +675,9 @@ gdk_window_peek_children (GdkWindow *window)
  * easy to break GDK and/or GTK+, so you have to know what you're
  * doing. Pass %NULL for @window to get all events for all windows,
  * instead of events for a specific window.
- * 
+ *
+ * See gdk_display_add_client_message_filter() if you are interested
+ * in X ClientMessage events.
  **/
 void          
 gdk_window_add_filter (GdkWindow     *window,
@@ -1041,6 +1042,7 @@ gdk_window_end_paint (GdkWindow *window)
 {
 #ifdef USE_BACKING_STORE
   GdkWindowObject *private = (GdkWindowObject *)window;
+  GdkWindowObject *composited;
   GdkWindowPaint *paint;
   GdkGC *tmp_gc;
   GdkRectangle clip_box;
@@ -1093,6 +1095,34 @@ gdk_window_end_paint (GdkWindow *window)
   g_object_unref (paint->pixmap);
   gdk_region_destroy (paint->region);
   g_free (paint);
+
+  /* find a composited window in our hierarchy to signal its
+   * parent to redraw, calculating the clip box as we go...
+   *
+   * stop if parent becomes NULL since then we'd have nowhere
+   * to draw (ie: 'composited' will always be non-NULL here).
+   */
+  for (composited = private;
+       composited->parent;
+       composited = composited->parent)
+    {
+      int width, height;
+
+      gdk_drawable_get_size (GDK_DRAWABLE (composited->parent),
+			     &width, &height);
+
+      clip_box.x += composited->x;
+      clip_box.y += composited->y;
+      clip_box.width = MIN (clip_box.width, width - clip_box.x);
+      clip_box.height = MIN (clip_box.height, height - clip_box.y);
+
+      if (composited->composited)
+	{
+	  gdk_window_invalidate_rect (GDK_WINDOW (composited->parent),
+				      &clip_box, FALSE);
+	  break;
+	}
+    }
 #endif /* USE_BACKING_STORE */
 }
 
@@ -2131,8 +2161,7 @@ gdk_window_draw_trapezoids (GdkDrawable   *drawable,
   else
     gdk_draw_trapezoids (private->impl, gc, trapezoids, n_trapezoids);
   
-  if (new_trapezoids)
-    g_free (new_trapezoids);
+  g_free (new_trapezoids);
 
   RESTORE_GC (gc);
 }
@@ -2255,9 +2284,7 @@ static gboolean debug_updates = FALSE;
 static gboolean
 gdk_window_update_idle (gpointer data)
 {
-  GDK_THREADS_ENTER ();
   gdk_window_process_all_updates ();
-  GDK_THREADS_LEAVE ();
   
   return FALSE;
 }
@@ -2270,7 +2297,7 @@ gdk_window_schedule_update (GdkWindow *window)
 
   if (!update_idle)
     {
-      update_idle = g_idle_add_full (GDK_PRIORITY_REDRAW,
+      update_idle = gdk_threads_add_idle_full (GDK_PRIORITY_REDRAW,
 				     gdk_window_update_idle, NULL, NULL);
     }
 }
@@ -2603,7 +2630,8 @@ gdk_window_invalidate_maybe_recurse (GdkWindow *window,
 	  child_region = gdk_region_rectangle (&child_rect);
 	  
 	  /* remove child area from the invalid area of the parent */
-	  if (GDK_WINDOW_IS_MAPPED (child) && !child->shaped)
+	  if (GDK_WINDOW_IS_MAPPED (child) && !child->shaped &&
+	      !child->composited)
 	    gdk_region_subtract (visible_region, child_region);
 	  
 	  if (child_func && (*child_func) ((GdkWindow *)child, user_data))
@@ -3056,6 +3084,66 @@ GdkWindow *
 gdk_window_foreign_new (GdkNativeWindow anid)
 {
   return gdk_window_foreign_new_for_display (gdk_display_get_default (), anid);
+}
+
+/**
+ * gdk_window_set_composited:
+ * @window: a #GdkWindow
+ * @composited: %TRUE to set the window as composited
+ *
+ * Sets a #GdkWindow as composited, or unsets it. Composited 
+ * windows do not automatically have their contents drawn to 
+ * the screen. Drawing is redirected to an offscreen buffer 
+ * and an expose event is emitted on the parent of the composited 
+ * window. It is the responsibility of the parent's expose handler
+ * to manually merge the off-screen content onto the screen in
+ * whatever way it sees fit. See <xref linkend="composited-window-example"/>
+ * for an example.
+ *
+ * It only makes sense for child windows to be composited; see
+ * gdk_window_set_opacity() if you need translucent toplevel
+ * windows.
+ *
+ * An additional effect of this call is that the area of this
+ * window is no longer clipped from regions marked for
+ * invalidation on its parent. Draws done on the parent
+ * window are also no longer clipped by the child.
+ *
+ * This call is only supported on some systems (currently,
+ * only X11 with new enough Xcomposite and Xdamage extensions). 
+ * You must call gdk_display_supports_composite() to check if
+ * setting a window as composited is supported before
+ * attempting to do so.
+ *
+ * Since: 2.12
+ */
+void
+gdk_window_set_composited (GdkWindow *window,
+                           gboolean   composited)
+{
+  GdkWindowObject *private = (GdkWindowObject *)window;
+  GdkDisplay *display;
+
+  g_return_if_fail (window != NULL);
+  g_return_if_fail (GDK_IS_WINDOW (window));
+
+  composited = composited != FALSE;
+
+  if (private->composited == composited)
+    return;
+
+  display = gdk_drawable_get_display (GDK_DRAWABLE (window));
+
+  if (!gdk_display_supports_composite (display) && composited)
+    {
+      g_warning ("gdk_window_set_composited called but "
+		 "compositing is not supported");
+      return;
+    }
+
+  _gdk_windowing_window_set_composited (window, composited);
+
+  private->composited = composited;
 }
 
 #define __GDK_WINDOW_C__

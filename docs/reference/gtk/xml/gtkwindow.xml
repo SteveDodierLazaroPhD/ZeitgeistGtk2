@@ -135,6 +135,10 @@
                                                          <link linkend="gboolean">gboolean</link> setting);
 <link linkend="void">void</link>                <link linkend="gtk-window-set-focus-on-map">gtk_window_set_focus_on_map</link>         (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                          <link linkend="gboolean">gboolean</link> setting);
+<link linkend="void">void</link>                <link linkend="gtk-window-set-startup-id">gtk_window_set_startup_id</link>           (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *startup_id);
+<link linkend="void">void</link>                <link linkend="gtk-window-set-role">gtk_window_set_role</link>                 (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *role);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-window-get-decorated">gtk_window_get_decorated</link>            (<link linkend="GtkWindow">GtkWindow</link> *window);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-window-get-deletable">gtk_window_get_deletable</link>            (<link linkend="GtkWindow">GtkWindow</link> *window);
 <link linkend="GList">GList</link>*              <link linkend="gtk-window-get-default-icon-list">gtk_window_get_default_icon_list</link>    (void);
@@ -195,19 +199,10 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-window-get-t
                                                          const <link linkend="gchar">gchar</link> *name);
 <link linkend="void">void</link>                <link linkend="gtk-window-set-auto-startup-notification">gtk_window_set_auto_startup_notification</link>
                                                         (<link linkend="gboolean">gboolean</link> setting);
+<link linkend="gdouble">gdouble</link>             <link linkend="gtk-window-get-opacity">gtk_window_get_opacity</link>              (<link linkend="GtkWindow">GtkWindow</link> *window);
+<link linkend="void">void</link>                <link linkend="gtk-window-set-opacity">gtk_window_set_opacity</link>              (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         <link linkend="gdouble">gdouble</link> opacity);
 
-
-<link linkend="void">void</link>                <link linkend="gtk-decorated-window-init">gtk_decorated_window_init</link>           (<link linkend="GtkWindow">GtkWindow</link> *window);
-<link linkend="void">void</link>                <link linkend="gtk-decorated-window-calculate-frame-size">gtk_decorated_window_calculate_frame_size</link>
-                                                        (<link linkend="GtkWindow">GtkWindow</link> *window);
-<link linkend="void">void</link>                <link linkend="gtk-decorated-window-set-title">gtk_decorated_window_set_title</link>      (<link linkend="GtkWindow">GtkWindow</link> *window,
-                                                         const <link linkend="gchar">gchar</link> *title);
-<link linkend="void">void</link>                <link linkend="gtk-decorated-window-move-resize-window">gtk_decorated_window_move_resize_window</link>
-                                                        (<link linkend="GtkWindow">GtkWindow</link> *window,
-                                                         <link linkend="gint">gint</link> x,
-                                                         <link linkend="gint">gint</link> y,
-                                                         <link linkend="gint">gint</link> width,
-                                                         <link linkend="gint">gint</link> height);
 
 </synopsis>
 </refsynopsisdiv>
@@ -245,32 +240,34 @@ GtkWindow implements
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkWindow--accept-focus">accept-focus</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--allow-grow">allow-grow</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--allow-shrink">allow-shrink</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--decorated">decorated</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--default-height">default-height</link>&quot;           <link linkend="gint">gint</link>                  : Read / Write
-  &quot;<link linkend="GtkWindow--default-width">default-width</link>&quot;            <link linkend="gint">gint</link>                  : Read / Write
-  &quot;<link linkend="GtkWindow--deletable">deletable</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--destroy-with-parent">destroy-with-parent</link>&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--focus-on-map">focus-on-map</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--gravity">gravity</link>&quot;                  <link linkend="GdkGravity">GdkGravity</link>            : Read / Write
-  &quot;<link linkend="GtkWindow--has-toplevel-focus">has-toplevel-focus</link>&quot;       <link linkend="gboolean">gboolean</link>              : Read
-  &quot;<link linkend="GtkWindow--icon">icon</link>&quot;                     <link linkend="GdkPixbuf">GdkPixbuf</link>             : Read / Write
-  &quot;<link linkend="GtkWindow--icon-name">icon-name</link>&quot;                <link linkend="gchararray">gchararray</link>            : Read / Write
-  &quot;<link linkend="GtkWindow--is-active">is-active</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read
-  &quot;<link linkend="GtkWindow--modal">modal</link>&quot;                    <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--resizable">resizable</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--role">role</link>&quot;                     <link linkend="gchararray">gchararray</link>            : Read / Write
-  &quot;<link linkend="GtkWindow--screen">screen</link>&quot;                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write
-  &quot;<link linkend="GtkWindow--skip-pager-hint">skip-pager-hint</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--skip-taskbar-hint">skip-taskbar-hint</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--title">title</link>&quot;                    <link linkend="gchararray">gchararray</link>            : Read / Write
-  &quot;<link linkend="GtkWindow--transient-for">transient-for</link>&quot;            <link linkend="GtkWindow">GtkWindow</link>             : Read / Write / Construct
-  &quot;<link linkend="GtkWindow--type">type</link>&quot;                     <link linkend="GtkWindowType">GtkWindowType</link>         : Read / Write / Construct Only
-  &quot;<link linkend="GtkWindow--type-hint">type-hint</link>&quot;                <link linkend="GdkWindowTypeHint">GdkWindowTypeHint</link>     : Read / Write
-  &quot;<link linkend="GtkWindow--urgency-hint">urgency-hint</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkWindow--window-position">window-position</link>&quot;          <link linkend="GtkWindowPosition">GtkWindowPosition</link>     : Read / Write
+  <link linkend="GtkWindow--accept-focus">accept-focus</link>             <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--allow-grow">allow-grow</link>               <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--allow-shrink">allow-shrink</link>             <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--decorated">decorated</link>                <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--default-height">default-height</link>           <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkWindow--default-width">default-width</link>            <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkWindow--deletable">deletable</link>                <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--destroy-with-parent">destroy-with-parent</link>      <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--focus-on-map">focus-on-map</link>             <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--gravity">gravity</link>                  <link linkend="GdkGravity">GdkGravity</link>            : Read / Write
+  <link linkend="GtkWindow--has-toplevel-focus">has-toplevel-focus</link>       <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkWindow--icon">icon</link>                     <link linkend="GdkPixbuf">GdkPixbuf</link>             : Read / Write
+  <link linkend="GtkWindow--icon-name">icon-name</link>                <link linkend="gchararray">gchararray</link>            : Read / Write
+  <link linkend="GtkWindow--is-active">is-active</link>                <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkWindow--modal">modal</link>                    <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--opacity">opacity</link>                  <link linkend="gdouble">gdouble</link>               : Read / Write
+  <link linkend="GtkWindow--resizable">resizable</link>                <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--role">role</link>                     <link linkend="gchararray">gchararray</link>            : Read / Write
+  <link linkend="GtkWindow--screen">screen</link>                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write
+  <link linkend="GtkWindow--skip-pager-hint">skip-pager-hint</link>          <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--skip-taskbar-hint">skip-taskbar-hint</link>        <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--startup-id">startup-id</link>               <link linkend="gchararray">gchararray</link>            : Write
+  <link linkend="GtkWindow--title">title</link>                    <link linkend="gchararray">gchararray</link>            : Read / Write
+  <link linkend="GtkWindow--transient-for">transient-for</link>            <link linkend="GtkWindow">GtkWindow</link>             : Read / Write / Construct
+  <link linkend="GtkWindow--type">type</link>                     <link linkend="GtkWindowType">GtkWindowType</link>         : Read / Write / Construct Only
+  <link linkend="GtkWindow--type-hint">type-hint</link>                <link linkend="GdkWindowTypeHint">GdkWindowTypeHint</link>     : Read / Write
+  <link linkend="GtkWindow--urgency-hint">urgency-hint</link>             <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkWindow--window-position">window-position</link>          <link linkend="GtkWindowPosition">GtkWindowPosition</link>     : Read / Write
 </synopsis>
 </refsect1>
 
@@ -278,12 +275,11 @@ GtkWindow implements
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  &quot;<link linkend="GtkWindow-activate-default">activate-default</link>&quot;                               : Run Last / Action
-  &quot;<link linkend="GtkWindow-activate-focus">activate-focus</link>&quot;                                 : Run Last / Action
-  &quot;<link linkend="GtkWindow-frame-event">frame-event</link>&quot;                                    : Run Last
-  &quot;<link linkend="GtkWindow-keys-changed">keys-changed</link>&quot;                                   : Run First
-  &quot;<link linkend="GtkWindow-move-focus">move-focus</link>&quot;                                     : Run Last / Action
-  &quot;<link linkend="GtkWindow-set-focus">set-focus</link>&quot;                                      : Run Last
+  <link linkend="GtkWindow-activate-default">activate-default</link>                               : Run Last / Action
+  <link linkend="GtkWindow-activate-focus">activate-focus</link>                                 : Run Last / Action
+  <link linkend="GtkWindow-frame-event">frame-event</link>                                    : Run Last
+  <link linkend="GtkWindow-keys-changed">keys-changed</link>                                   : Run First
+  <link linkend="GtkWindow-set-focus">set-focus</link>                                      : Run Last
 </synopsis>
 </refsect1>
 
@@ -742,9 +738,8 @@ functions in GTK+ will sometimes call
 <link linkend="gtk-window-set-transient-for"><function>gtk_window_set_transient_for()</function></link> on your behalf.
 </para>
 <para>
-On Windows, this function will and put the child window
-on top of the parent, much as the window manager would have
-done on X.</para>
+On Windows, this function puts the child window on top of the parent, 
+much as the window manager would have done on X.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1703,6 +1698,62 @@ hint.</para>
 </variablelist><para role="since">Since  2.6
 </para></refsect2>
 <refsect2>
+<title><anchor id="gtk-window-set-startup-id" role="function" condition="since:2.12"/>gtk_window_set_startup_id ()</title>
+<indexterm role="2.12"><primary>gtk_window_set_startup_id</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_window_set_startup_id           (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *startup_id);</programlisting>
+<para>
+Startup notification identifiers are used by desktop environment to 
+track application startup, to provide user feedback and other 
+features. This function changes the corresponding property on the
+underlying GdkWindow. Normally, startup identifier is managed 
+automatically and you should only use this function in special cases
+like transferring focus from other processes. You should use this
+function before calling <link linkend="gtk-window-present"><function>gtk_window_present()</function></link> or any equivalent
+function generating a window map event.
+</para>
+<para>
+This function is only useful on X11, not with other GTK+ targets.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWindow"><type>GtkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>startup_id</parameter>&nbsp;:</term>
+<listitem><simpara> a string with startup-notification identifier
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-window-set-role" role="function"/>gtk_window_set_role ()</title>
+<indexterm><primary>gtk_window_set_role</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_window_set_role                 (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *role);</programlisting>
+<para>
+This function is only useful on X11, not with other GTK+ targets.
+</para>
+<para>
+In combination with the window title, the window role allows a
+<link linkend="gtk-X11-arch">window manager</link> to identify "the
+same" window when an application is restarted. So for example you
+might set the "toolbox" role on your app's toolbox window, so that
+when the user restarts their session, the window manager can put
+the toolbox back in the same place.
+</para>
+<para>
+If a window already has a unique title, you don't need to set the
+role, since the WM can use the title to identify the window when
+restoring the session.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWindow"><type>GtkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>role</parameter>&nbsp;:</term>
+<listitem><simpara> unique identifier for the window to be used when restoring a session
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
 <title><anchor id="gtk-window-get-decorated" role="function"/>gtk_window_get_decorated ()</title>
 <indexterm><primary>gtk_window_get_decorated</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_window_get_decorated            (<link linkend="GtkWindow">GtkWindow</link> *window);</programlisting>
 <para>
@@ -2628,93 +2679,66 @@ showing the main window would automatically result in notification.</para>
 </variablelist><para role="since">Since  2.2
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-decorated-window-init" role="function"/>gtk_decorated_window_init ()</title>
-<indexterm><primary>gtk_decorated_window_init</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_decorated_window_init           (<link linkend="GtkWindow">GtkWindow</link> *window);</programlisting>
+<title><anchor id="gtk-window-get-opacity" role="function" condition="since:2.12"/>gtk_window_get_opacity ()</title>
+<indexterm role="2.12"><primary>gtk_window_get_opacity</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_window_get_opacity              (<link linkend="GtkWindow">GtkWindow</link> *window);</programlisting>
+<para>
+Fetches the requested opacity for this window. See
+<link linkend="gtk-window-set-opacity"><function>gtk_window_set_opacity()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>window</parameter>&nbsp;:</term>
-<listitem><simpara>
-
+<listitem><simpara> a <link linkend="GtkWindow"><type>GtkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the requested opacity for this window.
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
-<title><anchor id="gtk-decorated-window-calculate-frame-size" role="function"/>gtk_decorated_window_calculate_frame_size ()</title>
-<indexterm><primary>gtk_decorated_window_calculate_frame_size</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_decorated_window_calculate_frame_size
-                                                        (<link linkend="GtkWindow">GtkWindow</link> *window);</programlisting>
+<title><anchor id="gtk-window-set-opacity" role="function" condition="since:2.12"/>gtk_window_set_opacity ()</title>
+<indexterm role="2.12"><primary>gtk_window_set_opacity</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_window_set_opacity              (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         <link linkend="gdouble">gdouble</link> opacity);</programlisting>
+<para>
+Request the windowing system to make <parameter>window</parameter> partially transparent,
+with opacity 0 being fully transparent and 1 fully opaque. (Values
+of the opacity parameter are clamped to the [0,1] range.) On X11
+this has any effect only on X screens with a compositing manager
+running. See <link linkend="gtk-widget-is-composited"><function>gtk_widget_is_composited()</function></link>. On Windows it should work
+always.
+</para>
+<para>
+Note that setting a window's opacity after the window has been
+shown causes it to flicker once on Windows.</para>
 <para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>window</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-
+<listitem><simpara> a <link linkend="GtkWindow"><type>GtkWindow</type></link>
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2>
-<title><anchor id="gtk-decorated-window-set-title" role="function"/>gtk_decorated_window_set_title ()</title>
-<indexterm><primary>gtk_decorated_window_set_title</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_decorated_window_set_title      (<link linkend="GtkWindow">GtkWindow</link> *window,
-                                                         const <link linkend="gchar">gchar</link> *title);</programlisting>
-<para>
-
-</para><variablelist role="params">
-<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>opacity</parameter>&nbsp;:</term>
+<listitem><simpara> desired opacity, between 0 and 1
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>title</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-
-</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2>
-<title><anchor id="gtk-decorated-window-move-resize-window" role="function"/>gtk_decorated_window_move_resize_window ()</title>
-<indexterm><primary>gtk_decorated_window_move_resize_window</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_decorated_window_move_resize_window
-                                                        (<link linkend="GtkWindow">GtkWindow</link> *window,
-                                                         <link linkend="gint">gint</link> x,
-                                                         <link linkend="gint">gint</link> y,
-                                                         <link linkend="gint">gint</link> width,
-                                                         <link linkend="gint">gint</link> height);</programlisting>
-<para>
-
-</para><variablelist role="params">
-<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
-<listitem><simpara>
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
-<listitem><simpara>
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
-<listitem><simpara>
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>width</parameter>&nbsp;:</term>
-<listitem><simpara>
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>height</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-
-</simpara></listitem></varlistentry>
-</variablelist></refsect2>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkWindow--accept-focus"/>The &quot;<literal>accept-focus</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:accept-focus</primary></indexterm><programlisting>  &quot;accept-focus&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--accept-focus"/>The :<literal>accept-focus</literal> property</title>
+<indexterm><primary>GtkWindow:accept-focus</primary></indexterm><programlisting>  accept-focus             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>TRUE if the window should receive the input focus.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--allow-grow"/>The &quot;<literal>allow-grow</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:allow-grow</primary></indexterm><programlisting>  &quot;allow-grow&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--allow-grow"/>The :<literal>allow-grow</literal> property</title>
+<indexterm><primary>GtkWindow:allow-grow</primary></indexterm><programlisting>  allow-grow               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If TRUE, users can expand the window beyond its minimum size.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--allow-shrink"/>The &quot;<literal>allow-shrink</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:allow-shrink</primary></indexterm><programlisting>  &quot;allow-shrink&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--allow-shrink"/>The :<literal>allow-shrink</literal> property</title>
+<indexterm><primary>GtkWindow:allow-shrink</primary></indexterm><programlisting>  allow-shrink             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If TRUE, the window has no mimimum size. Setting this to TRUE is 99% of the time a bad idea.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--decorated"/>The &quot;<literal>decorated</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkWindow:decorated</primary></indexterm><programlisting>  &quot;decorated&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--decorated"/>The :<literal>decorated</literal> property</title>
+<indexterm role="2.4"><primary>GtkWindow:decorated</primary></indexterm><programlisting>  decorated                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Whether the window should be decorated by the window manager.</para>
 <para>
@@ -2723,18 +2747,18 @@ Whether the window should be decorated by the window manager.</para>
 <para>Since  2.4
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--default-height"/>The &quot;<literal>default-height</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:default-height</primary></indexterm><programlisting>  &quot;default-height&quot;           <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--default-height"/>The :<literal>default-height</literal> property</title>
+<indexterm><primary>GtkWindow:default-height</primary></indexterm><programlisting>  default-height           <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>The default height of the window, used when initially showing the window.</para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--default-width"/>The &quot;<literal>default-width</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:default-width</primary></indexterm><programlisting>  &quot;default-width&quot;            <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--default-width"/>The :<literal>default-width</literal> property</title>
+<indexterm><primary>GtkWindow:default-width</primary></indexterm><programlisting>  default-width            <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>The default width of the window, used when initially showing the window.</para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--deletable"/>The &quot;<literal>deletable</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkWindow:deletable</primary></indexterm><programlisting>  &quot;deletable&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--deletable"/>The :<literal>deletable</literal> property</title>
+<indexterm role="2.10"><primary>GtkWindow:deletable</primary></indexterm><programlisting>  deletable                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Whether the window frame should have a close button.</para>
 <para>
@@ -2743,16 +2767,16 @@ Whether the window frame should have a close button.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--destroy-with-parent"/>The &quot;<literal>destroy-with-parent</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:destroy-with-parent</primary></indexterm><programlisting>  &quot;destroy-with-parent&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--destroy-with-parent"/>The :<literal>destroy-with-parent</literal> property</title>
+<indexterm><primary>GtkWindow:destroy-with-parent</primary></indexterm><programlisting>  destroy-with-parent      <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If this window should be destroyed when the parent is destroyed.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--focus-on-map"/>The &quot;<literal>focus-on-map</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:focus-on-map</primary></indexterm><programlisting>  &quot;focus-on-map&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--focus-on-map"/>The :<literal>focus-on-map</literal> property</title>
+<indexterm><primary>GtkWindow:focus-on-map</primary></indexterm><programlisting>  focus-on-map             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>TRUE if the window should receive the input focus when mapped.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--gravity"/>The &quot;<literal>gravity</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkWindow:gravity</primary></indexterm><programlisting>  &quot;gravity&quot;                  <link linkend="GdkGravity">GdkGravity</link>            : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--gravity"/>The :<literal>gravity</literal> property</title>
+<indexterm role="2.4"><primary>GtkWindow:gravity</primary></indexterm><programlisting>  gravity                  <link linkend="GdkGravity">GdkGravity</link>            : Read / Write</programlisting>
 <para>
 The window gravity of the window. See <link linkend="gtk-window-move"><function>gtk_window_move()</function></link> and <link linkend="GdkGravity"><type>GdkGravity</type></link> for
 more details about window gravity.</para>
@@ -2762,15 +2786,15 @@ more details about window gravity.</para>
 <para>Since  2.4
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--has-toplevel-focus"/>The &quot;<literal>has-toplevel-focus</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:has-toplevel-focus</primary></indexterm><programlisting>  &quot;has-toplevel-focus&quot;       <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkWindow--has-toplevel-focus"/>The :<literal>has-toplevel-focus</literal> property</title>
+<indexterm><primary>GtkWindow:has-toplevel-focus</primary></indexterm><programlisting>  has-toplevel-focus       <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Whether the input focus is within this GtkWindow.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--icon"/>The &quot;<literal>icon</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:icon</primary></indexterm><programlisting>  &quot;icon&quot;                     <link linkend="GdkPixbuf">GdkPixbuf</link>             : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--icon"/>The :<literal>icon</literal> property</title>
+<indexterm><primary>GtkWindow:icon</primary></indexterm><programlisting>  icon                     <link linkend="GdkPixbuf">GdkPixbuf</link>             : Read / Write</programlisting>
 <para>Icon for this window.</para></refsect2>
-<refsect2><title><anchor id="GtkWindow--icon-name"/>The &quot;<literal>icon-name</literal>&quot; property</title>
-<indexterm role="2.6"><primary>GtkWindow:icon-name</primary></indexterm><programlisting>  &quot;icon-name&quot;                <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--icon-name"/>The :<literal>icon-name</literal> property</title>
+<indexterm role="2.6"><primary>GtkWindow:icon-name</primary></indexterm><programlisting>  icon-name                <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 The :icon-name property specifies the name of the themed icon to
 use as the window icon. See <link linkend="GtkIconTheme"><type>GtkIconTheme</type></link> for more details.</para>
@@ -2780,39 +2804,63 @@ use as the window icon. See <link linkend="GtkIconTheme"><type>GtkIconTheme</typ
 <para>Since  2.6
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--is-active"/>The &quot;<literal>is-active</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:is-active</primary></indexterm><programlisting>  &quot;is-active&quot;                <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkWindow--is-active"/>The :<literal>is-active</literal> property</title>
+<indexterm><primary>GtkWindow:is-active</primary></indexterm><programlisting>  is-active                <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Whether the toplevel is the current active window.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--modal"/>The &quot;<literal>modal</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:modal</primary></indexterm><programlisting>  &quot;modal&quot;                    <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--modal"/>The :<literal>modal</literal> property</title>
+<indexterm><primary>GtkWindow:modal</primary></indexterm><programlisting>  modal                    <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If TRUE, the window is modal (other windows are not usable while this one is up).</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--resizable"/>The &quot;<literal>resizable</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:resizable</primary></indexterm><programlisting>  &quot;resizable&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--opacity"/>The :<literal>opacity</literal> property</title>
+<indexterm role="2.12"><primary>GtkWindow:opacity</primary></indexterm><programlisting>  opacity                  <link linkend="gdouble">gdouble</link>               : Read / Write</programlisting>
+<para>
+The requested opacity of the window. See <link linkend="gtk-window-set-opacity"><function>gtk_window_set_opacity()</function></link> for
+more details about window opacity.</para>
+<para>
+
+</para><para>Allowed values: [0,1]</para>
+<para>Default value: 1</para>
+<para>Since  2.12
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkWindow--resizable"/>The :<literal>resizable</literal> property</title>
+<indexterm><primary>GtkWindow:resizable</primary></indexterm><programlisting>  resizable                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If TRUE, users can resize the window.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--role"/>The &quot;<literal>role</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:role</primary></indexterm><programlisting>  &quot;role&quot;                     <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--role"/>The :<literal>role</literal> property</title>
+<indexterm><primary>GtkWindow:role</primary></indexterm><programlisting>  role                     <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>Unique identifier for the window to be used when restoring a session.</para><para>Default value: NULL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--screen"/>The &quot;<literal>screen</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:screen</primary></indexterm><programlisting>  &quot;screen&quot;                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--screen"/>The :<literal>screen</literal> property</title>
+<indexterm><primary>GtkWindow:screen</primary></indexterm><programlisting>  screen                   <link linkend="GdkScreen">GdkScreen</link>             : Read / Write</programlisting>
 <para>The screen where this window will be displayed.</para></refsect2>
-<refsect2><title><anchor id="GtkWindow--skip-pager-hint"/>The &quot;<literal>skip-pager-hint</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:skip-pager-hint</primary></indexterm><programlisting>  &quot;skip-pager-hint&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--skip-pager-hint"/>The :<literal>skip-pager-hint</literal> property</title>
+<indexterm><primary>GtkWindow:skip-pager-hint</primary></indexterm><programlisting>  skip-pager-hint          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>TRUE if the window should not be in the pager.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--skip-taskbar-hint"/>The &quot;<literal>skip-taskbar-hint</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:skip-taskbar-hint</primary></indexterm><programlisting>  &quot;skip-taskbar-hint&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--skip-taskbar-hint"/>The :<literal>skip-taskbar-hint</literal> property</title>
+<indexterm><primary>GtkWindow:skip-taskbar-hint</primary></indexterm><programlisting>  skip-taskbar-hint        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>TRUE if the window should not be in the task bar.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--title"/>The &quot;<literal>title</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:title</primary></indexterm><programlisting>  &quot;title&quot;                    <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--startup-id"/>The :<literal>startup-id</literal> property</title>
+<indexterm role="2.12"><primary>GtkWindow:startup-id</primary></indexterm><programlisting>  startup-id               <link linkend="gchararray">gchararray</link>            : Write</programlisting>
+<para>
+The :startup-id is a write-only property for setting window's
+startup notification identifier. See <link linkend="gtk-window-set-startup-id"><function>gtk_window_set_startup_id()</function></link>
+for more details.</para>
+<para>
+
+</para><para>Default value: NULL</para>
+<para>Since  2.12
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkWindow--title"/>The :<literal>title</literal> property</title>
+<indexterm><primary>GtkWindow:title</primary></indexterm><programlisting>  title                    <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>The title of the window.</para><para>Default value: NULL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--transient-for"/>The &quot;<literal>transient-for</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkWindow:transient-for</primary></indexterm><programlisting>  &quot;transient-for&quot;            <link linkend="GtkWindow">GtkWindow</link>             : Read / Write / Construct</programlisting>
+<refsect2><title><anchor id="GtkWindow--transient-for"/>The :<literal>transient-for</literal> property</title>
+<indexterm role="2.10"><primary>GtkWindow:transient-for</primary></indexterm><programlisting>  transient-for            <link linkend="GtkWindow">GtkWindow</link>             : Read / Write / Construct</programlisting>
 <para>
 The transient parent of the window. See <link linkend="gtk-window-set-transient-for"><function>gtk_window_set_transient_for()</function></link> for
 more details about transient windows.</para>
@@ -2821,20 +2869,20 @@ more details about transient windows.</para>
 </para><para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--type"/>The &quot;<literal>type</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:type</primary></indexterm><programlisting>  &quot;type&quot;                     <link linkend="GtkWindowType">GtkWindowType</link>         : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GtkWindow--type"/>The :<literal>type</literal> property</title>
+<indexterm><primary>GtkWindow:type</primary></indexterm><programlisting>  type                     <link linkend="GtkWindowType">GtkWindowType</link>         : Read / Write / Construct Only</programlisting>
 <para>The type of the window.</para><para>Default value: GTK_WINDOW_TOPLEVEL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--type-hint"/>The &quot;<literal>type-hint</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:type-hint</primary></indexterm><programlisting>  &quot;type-hint&quot;                <link linkend="GdkWindowTypeHint">GdkWindowTypeHint</link>     : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--type-hint"/>The :<literal>type-hint</literal> property</title>
+<indexterm><primary>GtkWindow:type-hint</primary></indexterm><programlisting>  type-hint                <link linkend="GdkWindowTypeHint">GdkWindowTypeHint</link>     : Read / Write</programlisting>
 <para>Hint to help the desktop environment understand what kind of window this is and how to treat it.</para><para>Default value: GDK_WINDOW_TYPE_HINT_NORMAL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--urgency-hint"/>The &quot;<literal>urgency-hint</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:urgency-hint</primary></indexterm><programlisting>  &quot;urgency-hint&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--urgency-hint"/>The :<literal>urgency-hint</literal> property</title>
+<indexterm><primary>GtkWindow:urgency-hint</primary></indexterm><programlisting>  urgency-hint             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>TRUE if the window should be brought to the user's attention.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWindow--window-position"/>The &quot;<literal>window-position</literal>&quot; property</title>
-<indexterm><primary>GtkWindow:window-position</primary></indexterm><programlisting>  &quot;window-position&quot;          <link linkend="GtkWindowPosition">GtkWindowPosition</link>     : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkWindow--window-position"/>The :<literal>window-position</literal> property</title>
+<indexterm><primary>GtkWindow:window-position</primary></indexterm><programlisting>  window-position          <link linkend="GtkWindowPosition">GtkWindowPosition</link>     : Read / Write</programlisting>
 <para>The initial position of the window.</para><para>Default value: GTK_WIN_POS_NONE</para>
 </refsect2>
 
@@ -2842,7 +2890,7 @@ more details about transient windows.</para>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkWindow-activate-default"/>The &quot;activate-default&quot; signal</title>
+<refsect2><title><anchor id="GtkWindow-activate-default"/>The <literal>::activate-default</literal> signal</title>
 <indexterm><primary>GtkWindow::activate-default</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
 <para>
@@ -2854,7 +2902,7 @@ more details about transient windows.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-activate-focus"/>The &quot;activate-focus&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-activate-focus"/>The <literal>::activate-focus</literal> signal</title>
 <indexterm><primary>GtkWindow::activate-focus</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
 <para>
@@ -2866,7 +2914,7 @@ more details about transient windows.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-frame-event"/>The &quot;frame-event&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-frame-event"/>The <literal>::frame-event</literal> signal</title>
 <indexterm><primary>GtkWindow::frame-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -2884,7 +2932,7 @@ more details about transient windows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-keys-changed"/>The &quot;keys-changed&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-keys-changed"/>The <literal>::keys-changed</literal> signal</title>
 <indexterm><primary>GtkWindow::keys-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run First</programlisting>
 <para>
@@ -2896,23 +2944,7 @@ more details about transient windows.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-move-focus"/>The &quot;move-focus&quot; signal</title>
-<indexterm><primary>GtkWindow::move-focus</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWindow">GtkWindow</link>       *window,
-                                                        <link linkend="GtkDirectionType">GtkDirectionType</link> arg1,
-                                                        <link linkend="gpointer">gpointer</link>         user_data)      : Run Last / Action</programlisting>
-<para>
-
-</para><variablelist role="params">
-<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
-<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-set-focus"/>The &quot;set-focus&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWindow-set-focus"/>The <literal>::set-focus</literal> signal</title>
 <indexterm><primary>GtkWindow::set-focus</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                         <link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>

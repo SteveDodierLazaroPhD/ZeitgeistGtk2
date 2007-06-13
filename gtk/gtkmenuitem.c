@@ -79,7 +79,7 @@ static void gtk_real_menu_item_toggle_size_allocate (GtkMenuItem *menu_item,
 static gboolean gtk_menu_item_mnemonic_activate     (GtkWidget   *widget,
 						     gboolean     group_cycling);
 
-static gint gtk_menu_item_select_timeout (gpointer          data);
+static gint gtk_menu_item_popup_timeout  (gpointer          data);
 static void gtk_menu_item_position_menu  (GtkMenu          *menu,
 					  gint             *x,
 					  gint             *y,
@@ -385,16 +385,38 @@ void
 gtk_menu_item_select (GtkMenuItem *menu_item)
 {
   g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
-  
+
   gtk_item_select (GTK_ITEM (menu_item));
+
+  /* Enable themeing of the parent menu item depending on whether
+   * something is selected in its submenu
+   */
+  if (GTK_IS_MENU (GTK_WIDGET (menu_item)->parent))
+    {
+      GtkMenu *menu = GTK_MENU (GTK_WIDGET (menu_item)->parent);
+
+      if (menu->parent_menu_item)
+        gtk_widget_queue_draw (GTK_WIDGET (menu->parent_menu_item));
+    }
 }
 
 void
 gtk_menu_item_deselect (GtkMenuItem *menu_item)
 {
   g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
-  
+
   gtk_item_deselect (GTK_ITEM (menu_item));
+
+  /* Enable themeing of the parent menu item depending on whether
+   * something is selected in its submenu
+   */
+  if (GTK_IS_MENU (GTK_WIDGET (menu_item)->parent))
+    {
+      GtkMenu *menu = GTK_MENU (GTK_WIDGET (menu_item)->parent);
+
+      if (menu->parent_menu_item)
+        gtk_widget_queue_draw (GTK_WIDGET (menu->parent_menu_item));
+    }
 }
 
 void
@@ -853,72 +875,28 @@ gtk_menu_item_expose (GtkWidget      *widget,
   return FALSE;
 }
 
-static gint
-get_popup_delay (GtkMenuItem *menu_item)
-{
-  GtkWidget *parent = GTK_WIDGET (menu_item)->parent;
-
-  if (GTK_IS_MENU_SHELL (parent))
-    {
-      return _gtk_menu_shell_get_popup_delay (GTK_MENU_SHELL (parent));
-    }
-  else
-    {
-      gint popup_delay;
-      
-      g_object_get (gtk_widget_get_settings (GTK_WIDGET (menu_item)),
-		    "gtk-menu-popup-delay", &popup_delay,
-		    NULL);
-
-      return popup_delay;
-    }
-}
-
 static void
 gtk_real_menu_item_select (GtkItem *item)
 {
   GtkMenuItem *menu_item;
+  gboolean touchscreen_mode;
 
   g_return_if_fail (GTK_IS_MENU_ITEM (item));
 
   menu_item = GTK_MENU_ITEM (item);
 
-  if (menu_item->submenu &&
+  g_object_get (gtk_widget_get_settings (GTK_WIDGET (item)),
+                "gtk-touchscreen-mode", &touchscreen_mode,
+                NULL);
+
+  if (!touchscreen_mode &&
+      menu_item->submenu &&
       (!GTK_WIDGET_MAPPED (menu_item->submenu) ||
        GTK_MENU (menu_item->submenu)->tearoff_active))
     {
-      gint popup_delay;
-
-      if (menu_item->timer)
-	{
-	  g_source_remove (menu_item->timer);
-	  menu_item->timer = 0;
-	  popup_delay = 0;
-	}
-      else
-	popup_delay = get_popup_delay (menu_item);
-      
-      if (popup_delay > 0)
-	{
-	  GdkEvent *event = gtk_get_current_event ();
-	  
-	  menu_item->timer = g_timeout_add (popup_delay,
-					    gtk_menu_item_select_timeout,
-					    menu_item);
-	  if (event &&
-	      event->type != GDK_BUTTON_PRESS &&
-	      event->type != GDK_ENTER_NOTIFY)
-	    menu_item->timer_from_keypress = TRUE;
-	  else
-	    menu_item->timer_from_keypress = FALSE;
-
-	  if (event)
-	    gdk_event_free (event);
-	}
-      else
-	_gtk_menu_item_popup_submenu (GTK_WIDGET (menu_item));
+      _gtk_menu_item_popup_submenu (GTK_WIDGET (menu_item), TRUE);
     }
-  
+
   gtk_widget_set_state (GTK_WIDGET (menu_item), GTK_STATE_PRELIGHT);
   gtk_widget_queue_draw (GTK_WIDGET (menu_item));
 }
@@ -933,15 +911,7 @@ gtk_real_menu_item_deselect (GtkItem *item)
   menu_item = GTK_MENU_ITEM (item);
 
   if (menu_item->submenu)
-    {
-      if (menu_item->timer)
-	{
-	  g_source_remove (menu_item->timer);
-	  menu_item->timer = 0;
-	}
-      else
-	gtk_menu_popdown (GTK_MENU (menu_item->submenu));
-    }
+    _gtk_menu_item_popdown_submenu (GTK_WIDGET (menu_item));
 
   gtk_widget_set_state (GTK_WIDGET (menu_item), GTK_STATE_NORMAL);
   gtk_widget_queue_draw (GTK_WIDGET (menu_item));
@@ -965,7 +935,6 @@ gtk_menu_item_mnemonic_activate (GtkWidget *widget,
   return TRUE;
 }
 
-
 static void
 gtk_real_menu_item_activate_item (GtkMenuItem *menu_item)
 {
@@ -987,13 +956,14 @@ gtk_real_menu_item_activate_item (GtkMenuItem *menu_item)
 
 	  _gtk_menu_shell_activate (menu_shell);
 
-	  gtk_menu_shell_select_item (GTK_MENU_SHELL (widget->parent), widget); 
-	  _gtk_menu_item_popup_submenu (widget); 
+	  gtk_menu_shell_select_item (GTK_MENU_SHELL (widget->parent), widget);
+	  _gtk_menu_item_popup_submenu (widget, FALSE);
 
 	  gtk_menu_shell_select_first (GTK_MENU_SHELL (menu_item->submenu), TRUE);
 	}
     }
 }
+
 static void
 gtk_real_menu_item_toggle_size_request (GtkMenuItem *menu_item,
 					gint        *requisition)
@@ -1012,41 +982,11 @@ gtk_real_menu_item_toggle_size_allocate (GtkMenuItem *menu_item,
   menu_item->toggle_size = allocation;
 }
 
-static gint
-gtk_menu_item_select_timeout (gpointer data)
+static void
+gtk_menu_item_real_popup_submenu (GtkWidget *widget,
+                                  gboolean   remember_exact_time)
 {
-  GtkMenuItem *menu_item;
-  GtkWidget *parent;
-  
-  GDK_THREADS_ENTER ();
-
-  menu_item = GTK_MENU_ITEM (data);
-
-  parent = GTK_WIDGET (menu_item)->parent;
-
-  if ((GTK_IS_MENU_SHELL (parent) && GTK_MENU_SHELL (parent)->active) || 
-      (GTK_IS_MENU (parent) && GTK_MENU (parent)->torn_off))
-    {
-      _gtk_menu_item_popup_submenu (GTK_WIDGET (menu_item));
-      if (menu_item->timer_from_keypress && menu_item->submenu)
-	GTK_MENU_SHELL (menu_item->submenu)->ignore_enter = TRUE;
-    }
-
-  GDK_THREADS_LEAVE ();
-
-  return FALSE;  
-}
-
-void
-_gtk_menu_item_popup_submenu (GtkWidget *widget)
-{
-  GtkMenuItem *menu_item;
-
-  menu_item = GTK_MENU_ITEM (widget);
-
-  if (menu_item->timer)
-    g_source_remove (menu_item->timer);
-  menu_item->timer = 0;
+  GtkMenuItem *menu_item = GTK_MENU_ITEM (widget);
 
   if (GTK_WIDGET_IS_SENSITIVE (menu_item->submenu))
     {
@@ -1056,6 +996,22 @@ _gtk_menu_item_popup_submenu (GtkWidget *widget)
       gtk_menu_shell_set_take_focus (GTK_MENU_SHELL (menu_item->submenu),
                                      take_focus);
 
+      if (remember_exact_time)
+        {
+          GTimeVal *popup_time = g_new0 (GTimeVal, 1);
+
+          g_get_current_time (popup_time);
+
+          g_object_set_data_full (G_OBJECT (menu_item->submenu),
+                                  "gtk-menu-exact-popup-time", popup_time,
+                                  (GDestroyNotify) g_free);
+        }
+      else
+        {
+          g_object_set_data (G_OBJECT (menu_item->submenu),
+                             "gtk-menu-exact-popup-time", NULL);
+        }
+
       gtk_menu_popup (GTK_MENU (menu_item->submenu),
                       widget->parent,
                       widget,
@@ -1063,6 +1019,119 @@ _gtk_menu_item_popup_submenu (GtkWidget *widget)
                       menu_item,
                       GTK_MENU_SHELL (widget->parent)->button,
                       0);
+    }
+
+  /* Enable themeing of the parent menu item depending on whether
+   * its submenu is shown or not.
+   */
+  gtk_widget_queue_draw (widget);
+}
+
+static gint
+gtk_menu_item_popup_timeout (gpointer data)
+{
+  GtkMenuItem *menu_item;
+  GtkWidget *parent;
+  
+  menu_item = GTK_MENU_ITEM (data);
+
+  parent = GTK_WIDGET (menu_item)->parent;
+
+  if ((GTK_IS_MENU_SHELL (parent) && GTK_MENU_SHELL (parent)->active) || 
+      (GTK_IS_MENU (parent) && GTK_MENU (parent)->torn_off))
+    {
+      gtk_menu_item_real_popup_submenu (GTK_WIDGET (menu_item), TRUE);
+      if (menu_item->timer_from_keypress && menu_item->submenu)
+	GTK_MENU_SHELL (menu_item->submenu)->ignore_enter = TRUE;
+    }
+
+  menu_item->timer = 0;
+
+  return FALSE;  
+}
+
+static gint
+get_popup_delay (GtkWidget *widget)
+{
+  if (GTK_IS_MENU_SHELL (widget->parent))
+    {
+      return _gtk_menu_shell_get_popup_delay (GTK_MENU_SHELL (widget->parent));
+    }
+  else
+    {
+      gint popup_delay;
+
+      g_object_get (gtk_widget_get_settings (widget),
+		    "gtk-menu-popup-delay", &popup_delay,
+		    NULL);
+
+      return popup_delay;
+    }
+}
+
+void
+_gtk_menu_item_popup_submenu (GtkWidget *widget,
+                              gboolean   with_delay)
+{
+  GtkMenuItem *menu_item = GTK_MENU_ITEM (widget);
+
+  if (menu_item->timer)
+    {
+      g_source_remove (menu_item->timer);
+      menu_item->timer = 0;
+      with_delay = FALSE;
+    }
+
+  if (with_delay)
+    {
+      gint popup_delay = get_popup_delay (widget);
+
+      if (popup_delay > 0)
+	{
+	  GdkEvent *event = gtk_get_current_event ();
+
+	  menu_item->timer = gdk_threads_add_timeout (popup_delay,
+                                                      gtk_menu_item_popup_timeout,
+                                                      menu_item);
+
+	  if (event &&
+	      event->type != GDK_BUTTON_PRESS &&
+	      event->type != GDK_ENTER_NOTIFY)
+	    menu_item->timer_from_keypress = TRUE;
+	  else
+	    menu_item->timer_from_keypress = FALSE;
+
+	  if (event)
+	    gdk_event_free (event);
+
+          return;
+        }
+    }
+
+  gtk_menu_item_real_popup_submenu (widget, FALSE);
+}
+
+void
+_gtk_menu_item_popdown_submenu (GtkWidget *widget)
+{
+  GtkMenuItem *menu_item;
+
+  menu_item = GTK_MENU_ITEM (widget);
+
+  if (menu_item->submenu)
+    {
+      g_object_set_data (G_OBJECT (menu_item->submenu),
+                         "gtk-menu-exact-popup-time", NULL);
+
+      if (menu_item->timer)
+        {
+          g_source_remove (menu_item->timer);
+          menu_item->timer = 0;
+        }
+      else
+        gtk_menu_popdown (GTK_MENU (menu_item->submenu));
+
+      gtk_widget_queue_draw (widget);
     }
 }
 
@@ -1105,6 +1174,7 @@ gtk_menu_item_position_menu (GtkMenu  *menu,
   gint horizontal_offset;
   gint vertical_offset;
   gint parent_xthickness;
+  gint available_left, available_right;
 
   g_return_if_fail (menu != NULL);
   g_return_if_fail (x != NULL);
@@ -1137,6 +1207,9 @@ gtk_menu_item_position_menu (GtkMenu  *menu,
   ty += widget->allocation.y;
 
   get_offsets (menu, &horizontal_offset, &vertical_offset);
+
+  available_left = tx - monitor.x;
+  available_right = monitor.x + monitor.width - (tx + widget->allocation.width);
 
   if (GTK_IS_MENU_BAR (widget->parent))
     {
@@ -1197,7 +1270,8 @@ gtk_menu_item_position_menu (GtkMenu  *menu,
       switch (menu_item->submenu_direction)
 	{
 	case GTK_DIRECTION_LEFT:
-	  if ((tx - twidth - parent_xthickness - horizontal_offset) >= monitor.x)
+	  if (tx - twidth - parent_xthickness - horizontal_offset >= monitor.x ||
+	      available_left >= available_right)
 	    tx -= twidth + parent_xthickness + horizontal_offset;
 	  else
 	    {
@@ -1207,7 +1281,8 @@ gtk_menu_item_position_menu (GtkMenu  *menu,
 	  break;
 
 	case GTK_DIRECTION_RIGHT:
-	  if ((tx + widget->allocation.width + parent_xthickness + horizontal_offset + twidth) <= monitor.x + monitor.width)
+	  if (tx + widget->allocation.width + parent_xthickness + horizontal_offset + twidth <= monitor.x + monitor.width ||
+	      available_right >= available_left)
 	    tx += widget->allocation.width + parent_xthickness + horizontal_offset;
 	  else
 	    {

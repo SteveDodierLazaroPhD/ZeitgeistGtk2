@@ -65,6 +65,7 @@
 #include "gtksettings.h"
 #include "gtkwidget.h"
 #include "gtkwindow.h"
+#include "gtktooltip.h"
 #include "gtkprivate.h"
 #include "gtkdebug.h"
 #include "gtkalias.h"
@@ -168,8 +169,8 @@ static const GDebugKey gtk_debug_keys[] = {
 /**
  * gtk_check_version:
  * @required_major: the required major version.
- * @required_minor: the required major version.
- * @required_micro: the required major version.
+ * @required_minor: the required minor version.
+ * @required_micro: the required micro version.
  * 
  * Checks that the GTK+ library in use is compatible with the
  * given version. Generally you would pass in the constants
@@ -1095,8 +1096,10 @@ _gtk_get_lc_ctype (void)
  * effect. (Note that this can change over the life of an
  * application.)  The default language is derived from the current
  * locale. It determines, for example, whether GTK+ uses the
- * right-to-left or left-to-right text direction. See
- * _gtk_get_lc_ctype() for notes on behaviour on Windows.
+ * right-to-left or left-to-right text direction.
+ *
+ * This function is equivalent to pango_language_get_default().  See
+ * that function for details.
  * 
  * Return value: the default language as a #PangoLanguage, must not be
  * freed
@@ -1104,22 +1107,7 @@ _gtk_get_lc_ctype (void)
 PangoLanguage *
 gtk_get_default_language (void)
 {
-  gchar *lang;
-  PangoLanguage *result;
-  gchar *p;
-  
-  lang = _gtk_get_lc_ctype ();
-  p = strchr (lang, '.');
-  if (p)
-    *p = '\0';
-  p = strchr (lang, '@');
-  if (p)
-    *p = '\0';
-
-  result = pango_language_from_string (lang);
-  g_free (lang);
-  
-  return result;
+  return pango_language_get_default ();
 }
 
 void
@@ -1611,6 +1599,20 @@ gtk_main_do_event (GdkEvent *event)
     default:
       g_assert_not_reached ();
       break;
+    }
+
+  if (event->type == GDK_ENTER_NOTIFY
+      || event->type == GDK_LEAVE_NOTIFY
+      || event->type == GDK_BUTTON_PRESS
+      || event->type == GDK_2BUTTON_PRESS
+      || event->type == GDK_3BUTTON_PRESS
+      || event->type == GDK_KEY_PRESS
+      || event->type == GDK_DRAG_ENTER
+      || event->type == GDK_GRAB_BROKEN
+      || event->type == GDK_MOTION_NOTIFY
+      || event->type == GDK_SCROLL)
+    {
+      _gtk_tooltip_handle_event (event);
     }
   
   tmp_list = current_events;

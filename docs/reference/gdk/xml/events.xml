@@ -45,6 +45,7 @@ enum                <link linkend="GdkEventMask">GdkEventMask</link>;
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-event-get-root-coords">gdk_event_get_root_coords</link>           (<link linkend="GdkEvent">GdkEvent</link> *event,
                                                          <link linkend="gdouble">gdouble</link> *x_root,
                                                          <link linkend="gdouble">gdouble</link> *y_root);
+<link linkend="void">void</link>                <link linkend="gdk-event-request-motions">gdk_event_request_motions</link>           (<link linkend="GdkEventMotion">GdkEventMotion</link> *event);
 
 <link linkend="void">void</link>                <link linkend="gdk-event-handler-set">gdk_event_handler_set</link>               (<link linkend="GdkEventFunc">GdkEventFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data,
@@ -742,6 +743,23 @@ Extract the root window relative x/y coordinates from an event.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event delivered root window coordinates
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gdk-event-request-motions" role="function" condition="since:2.12"/>gdk_event_request_motions ()</title>
+<indexterm role="2.12"><primary>gdk_event_request_motions</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_event_request_motions           (<link linkend="GdkEventMotion">GdkEventMotion</link> *event);</programlisting>
+<para>
+Request more motion notifies if <link linkend="event"><type>event</type></link> is a motion notify hint event.
+This function should be used instead of <link linkend="gdk-window-get-pointer"><function>gdk_window_get_pointer()</function></link> to
+request further motion notifies, because it also works for extension
+events where motion notifies are provided for devices other than the
+core pointer.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>event</parameter>&nbsp;:</term>
+<listitem><simpara> a valid <link linkend="GdkEvent"><type>GdkEvent</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gdk-event-handler-set" role="function"/>gdk_event_handler_set ()</title>
 <indexterm><primary>gdk_event_handler_set</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_event_handler_set               (<link linkend="GdkEventFunc">GdkEventFunc</link> func,

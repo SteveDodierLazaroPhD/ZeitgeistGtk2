@@ -98,6 +98,12 @@ static void gtk_path_bar_scroll_up                (GtkWidget        *button,
 static void gtk_path_bar_scroll_down              (GtkWidget        *button,
 						   GtkPathBar       *path_bar);
 static void gtk_path_bar_stop_scrolling           (GtkPathBar       *path_bar);
+static gboolean gtk_path_bar_slider_up_defocus    (GtkWidget        *widget,
+						   GdkEventButton   *event,
+						   GtkPathBar       *path_bar);
+static gboolean gtk_path_bar_slider_down_defocus  (GtkWidget        *widget,
+						   GdkEventButton   *event,
+						   GtkPathBar       *path_bar);
 static gboolean gtk_path_bar_slider_button_press  (GtkWidget        *widget,
 						   GdkEventButton   *event,
 						   GtkPathBar       *path_bar);
@@ -132,10 +138,17 @@ get_slider_button (GtkPathBar  *path_bar,
 		   GtkArrowType arrow_type)
 {
   GtkWidget *button;
+  AtkObject *atk_obj;
 
   gtk_widget_push_composite_child ();
 
   button = gtk_button_new ();
+  atk_obj = gtk_widget_get_accessible (button);
+  if (arrow_type == GTK_ARROW_LEFT)
+    atk_object_set_name (atk_obj, _("Up Path"));
+  else
+    atk_object_set_name (atk_obj, _("Down Path"));
+
   gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);
   gtk_container_add (GTK_CONTAINER (button), gtk_arrow_new (arrow_type, GTK_SHADOW_OUT));
   gtk_container_add (GTK_CONTAINER (path_bar), button);
@@ -164,6 +177,9 @@ gtk_path_bar_init (GtkPathBar *path_bar)
   
   g_signal_connect (path_bar->up_slider_button, "clicked", G_CALLBACK (gtk_path_bar_scroll_up), path_bar);
   g_signal_connect (path_bar->down_slider_button, "clicked", G_CALLBACK (gtk_path_bar_scroll_down), path_bar);
+
+  g_signal_connect (path_bar->up_slider_button, "focus_out_event", G_CALLBACK (gtk_path_bar_slider_up_defocus), path_bar);
+  g_signal_connect (path_bar->down_slider_button, "focus_out_event", G_CALLBACK (gtk_path_bar_slider_down_defocus), path_bar);
 
   g_signal_connect (path_bar->up_slider_button, "button_press_event", G_CALLBACK (gtk_path_bar_slider_button_press), path_bar);
   g_signal_connect (path_bar->up_slider_button, "button_release_event", G_CALLBACK (gtk_path_bar_slider_button_release), path_bar);
@@ -264,7 +280,6 @@ remove_settings_signal (GtkPathBar *path_bar,
 static void
 gtk_path_bar_dispose (GObject *object)
 {
-  GList *list;
   GtkPathBar *path_bar = GTK_PATH_BAR (object);
 
   remove_settings_signal (path_bar, gtk_widget_get_screen (GTK_WIDGET (object)));
@@ -707,7 +722,10 @@ gtk_path_bar_scroll_down (GtkWidget *button, GtkPathBar *path_bar)
 	}
     }
 
-  space_needed = BUTTON_DATA (down_button->data)->button->allocation.width + path_bar->spacing;
+  /* We check if down_button might be NULL in cases where the pathbar's horizontal size is smaller
+   * than the button and it doesn't get displayed. e.g., on Windows it might be "My Documents and Settings"
+   */
+  space_needed = down_button ? BUTTON_DATA (down_button->data)->button->allocation.width : 0 + path_bar->spacing;
   if (direction == GTK_TEXT_DIR_RTL)
     space_available = path_bar->down_slider_button->allocation.x - GTK_WIDGET (path_bar)->allocation.x;
   else
@@ -756,8 +774,6 @@ gtk_path_bar_scroll_timeout (GtkPathBar *path_bar)
 {
   gboolean retval = FALSE;
 
-  GDK_THREADS_ENTER ();
-
   if (path_bar->timer)
     {
       if (path_bar->scrolling_up)
@@ -774,15 +790,13 @@ gtk_path_bar_scroll_timeout (GtkPathBar *path_bar)
 
 	  path_bar->need_timer = FALSE;
 
-	  path_bar->timer = g_timeout_add (timeout * SCROLL_DELAY_FACTOR,
+	  path_bar->timer = gdk_threads_add_timeout (timeout * SCROLL_DELAY_FACTOR,
 					   (GSourceFunc)gtk_path_bar_scroll_timeout,
 					   path_bar);
 	}
       else
 	retval = TRUE;
     }
-
-  GDK_THREADS_LEAVE ();
 
   return retval;
 }
@@ -796,6 +810,62 @@ gtk_path_bar_stop_scrolling (GtkPathBar *path_bar)
       path_bar->timer = 0;
       path_bar->need_timer = FALSE;
     }
+}
+
+static gboolean
+gtk_path_bar_slider_up_defocus (GtkWidget      *widget,
+                                    GdkEventButton *event,
+                                    GtkPathBar     *path_bar)
+{
+  GList *list;
+  GList *up_button = NULL;
+
+  if (event->type != GDK_FOCUS_CHANGE)
+    return FALSE;
+
+  for (list = g_list_last (path_bar->button_list); list; list = list->prev)
+    {
+      if (gtk_widget_get_child_visible (BUTTON_DATA (list->data)->button))
+        {
+          up_button = list;
+          break;
+        }
+    }
+
+  /* don't let the focus vanish */
+  if ((!GTK_WIDGET_IS_SENSITIVE (path_bar->up_slider_button)) || 
+      (!gtk_widget_get_child_visible (path_bar->up_slider_button)))
+    gtk_widget_grab_focus (BUTTON_DATA (up_button->data)->button);
+
+  return FALSE;
+}
+
+static gboolean
+gtk_path_bar_slider_down_defocus (GtkWidget      *widget,
+                                    GdkEventButton *event,
+                                    GtkPathBar     *path_bar)
+{
+  GList *list;
+  GList *down_button = NULL;
+
+  if (event->type != GDK_FOCUS_CHANGE)
+    return FALSE;
+
+  for (list = path_bar->button_list; list; list = list->next)
+    {
+      if (gtk_widget_get_child_visible (BUTTON_DATA (list->data)->button))
+        {
+          down_button = list;
+          break;
+        }
+    }
+
+  /* don't let the focus vanish */
+  if ((!GTK_WIDGET_IS_SENSITIVE (path_bar->down_slider_button)) || 
+      (!gtk_widget_get_child_visible (path_bar->down_slider_button)))
+    gtk_widget_grab_focus (BUTTON_DATA (down_button->data)->button);
+
+  return FALSE;
 }
 
 static gboolean
@@ -829,7 +899,7 @@ gtk_path_bar_slider_button_press (GtkWidget      *widget,
       g_object_get (settings, "gtk-timeout-initial", &timeout, NULL);
 
       path_bar->need_timer = TRUE;
-      path_bar->timer = g_timeout_add (timeout,
+      path_bar->timer = gdk_threads_add_timeout (timeout,
 				       (GSourceFunc)gtk_path_bar_scroll_timeout,
 				       path_bar);
     }
@@ -1149,8 +1219,7 @@ button_data_free (ButtonData *button_data)
     gtk_file_path_free (button_data->path);
   button_data->path = NULL;
 
-  if (button_data->dir_name)
-    g_free (button_data->dir_name);
+  g_free (button_data->dir_name);
   button_data->dir_name = NULL;
 
   button_data->button = NULL;
@@ -1285,6 +1354,7 @@ make_directory_button (GtkPathBar  *path_bar,
     { "text/uri-list", 0, 0 }
   };
 
+  AtkObject *atk_obj;
   GtkWidget *child = NULL;
   GtkWidget *label_alignment = NULL;
   ButtonData *button_data;
@@ -1295,6 +1365,7 @@ make_directory_button (GtkPathBar  *path_bar,
 
   button_data->type = find_button_type (path_bar, path);
   button_data->button = gtk_toggle_button_new ();
+  atk_obj = gtk_widget_get_accessible (button_data->button);
   gtk_button_set_focus_on_click (GTK_BUTTON (button_data->button), FALSE);
 
   switch (button_data->type)
@@ -1302,7 +1373,8 @@ make_directory_button (GtkPathBar  *path_bar,
     case ROOT_BUTTON:
       button_data->image = gtk_image_new ();
       child = button_data->image;
-      button_data->label = NULL;
+      button_data->label = gtk_label_new (NULL);
+      atk_object_set_name (atk_obj, _("File System Root"));
       break;
     case HOME_BUTTON:
     case DESKTOP_BUTTON:

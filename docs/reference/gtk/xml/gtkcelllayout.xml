@@ -32,6 +32,7 @@
 <link linkend="void">void</link>                <link linkend="gtk-cell-layout-pack-end">gtk_cell_layout_pack_end</link>            (<link linkend="GtkCellLayout">GtkCellLayout</link> *cell_layout,
                                                          <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell,
                                                          <link linkend="gboolean">gboolean</link> expand);
+<link linkend="GList">GList</link>*              <link linkend="gtk-cell-layout-get-cells">gtk_cell_layout_get_cells</link>           (<link linkend="GtkCellLayout">GtkCellLayout</link> *cell_layout);
 <link linkend="void">void</link>                <link linkend="gtk-cell-layout-reorder">gtk_cell_layout_reorder</link>             (<link linkend="GtkCellLayout">GtkCellLayout</link> *cell_layout,
                                                          <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell,
                                                          <link linkend="gint">gint</link> position);
@@ -142,6 +143,7 @@ of the attribute for each cell that is rendered.
   void (* reorder)            (GtkCellLayout         *cell_layout,
                                GtkCellRenderer       *cell,
                                gint                   position);
+  GList* (* get_cells)        (GtkCellLayout         *cell_layout);
 } GtkCellLayoutIface;
 </programlisting>
 <para>
@@ -227,6 +229,24 @@ Note that reusing the same cell renderer is not supported.</para>
 <listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>cell</parameter> is to be given extra space allocated to <parameter>cell_layout</parameter>.
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-cell-layout-get-cells" role="function" condition="since:2.12"/>gtk_cell_layout_get_cells ()</title>
+<indexterm role="2.12"><primary>gtk_cell_layout_get_cells</primary></indexterm><programlisting><link linkend="GList">GList</link>*              gtk_cell_layout_get_cells           (<link linkend="GtkCellLayout">GtkCellLayout</link> *cell_layout);</programlisting>
+<para>
+Returns the cell renderers which have been added to <parameter>cell_layout</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>cell_layout</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCellLayout"><type>GtkCellLayout</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a list of cell renderers. The list, but not the
+  renderers has been newly allocated and should be freed with
+  <link linkend="g-list-free"><function>g_list_free()</function></link> when no longer needed.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-cell-layout-reorder" role="function" condition="since:2.4"/>gtk_cell_layout_reorder ()</title>

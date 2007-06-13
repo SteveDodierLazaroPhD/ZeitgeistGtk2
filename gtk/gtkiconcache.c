@@ -89,7 +89,6 @@ _gtk_icon_cache_new_for_path (const gchar *path)
   gint fd = -1;
   struct stat st;
   struct stat path_st;
-  gchar *buffer = NULL;
   CacheInfo info;
 
    /* Check if we have a cache file */
@@ -435,7 +434,7 @@ _gtk_icon_cache_get_icon (GtkIconCache *cache,
   if (type != 0)
     {
       GTK_NOTE (ICONTHEME,
-		g_print ("invalid pixel data type %d\n", type));
+		g_print ("invalid pixel data type %u\n", type));
       return NULL;
     }
 

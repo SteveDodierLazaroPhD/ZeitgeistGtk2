@@ -54,6 +54,7 @@
 <link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
+<link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -64,16 +65,16 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-Keyboard-Accelerators.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2630618" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2689953" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id2631993" class="shortcut">Description</a></nobr></td></tr>
+                  <a href="#id2691329" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gtk-General"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id2630618"></a><span class="refentrytitle">Main loop and Events</span>
+<a name="id2689953"></a><span class="refentrytitle">Main loop and Events</span>
 </h2>
 <p>Main loop and Events &#8212; Library initialization, main event loop, and events</p>
 </td>
@@ -209,7 +210,7 @@ href="../gdk/gdk-Event-Structures.html#GdkEvent"
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2631993"></a><h2>Description</h2>
+<a name="id2691329"></a><h2>Description</h2>
 <p>
 Before using GTK+, you need to initialize it; initialization connects
 to the window system display, and parses some standard command line
@@ -240,7 +241,7 @@ When your callbacks are invoked, you would typically take some action
 to the main loop and await more user input.
 </p>
 <div class="example">
-<a name="id2632109"></a><p class="title"><b>Example&#160;1.&#160;Typical <code class="function">main</code> function for a GTK+ application</b></p>
+<a name="id2691444"></a><p class="title"><b>Example&#160;1.&#160;Typical <code class="function">main</code> function for a GTK+ application</b></p>
 <div class="example-contents"><pre class="programlisting">
 int 
 main (int argc, char **argv)
@@ -275,11 +276,11 @@ documentation.
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2632173"></a><h2>Details</h2>
+<a name="id2691509"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2632183"></a><h3>
+<a name="id2691519"></a><h3>
 <a name="gtk-set-locale"></a>gtk_set_locale ()</h3>
-<a class="indexterm" name="id2632196"></a><pre class="programlisting">gchar*              gtk_set_locale                      (void);</pre>
+<a class="indexterm" name="id2691532"></a><pre class="programlisting">gchar*              gtk_set_locale                      (void);</pre>
 <p>
 Initializes internationalization support for GTK+. <a href="gtk-General.html#gtk-init"><code class="function">gtk_init()</code></a>
 automatically does this, so there is typically no point
@@ -315,9 +316,9 @@ owned by GTK+ and should not be modified or freed.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2632286"></a><h3>
+<a name="id2691622"></a><h3>
 <a name="gtk-disable-setlocale"></a>gtk_disable_setlocale ()</h3>
-<a class="indexterm" name="id2632298"></a><pre class="programlisting">void                gtk_disable_setlocale               (void);</pre>
+<a class="indexterm" name="id2691634"></a><pre class="programlisting">void                gtk_disable_setlocale               (void);</pre>
 <p>
 Prevents <a href="gtk-General.html#gtk-init"><code class="function">gtk_init()</code></a>, <a href="gtk-General.html#gtk-init-check"><code class="function">gtk_init_check()</code></a>, <a href="gtk-General.html#gtk-init-with-args"><code class="function">gtk_init_with_args()</code></a> and
 <a href="gtk-General.html#gtk-parse-args"><code class="function">gtk_parse_args()</code></a> from automatically
@@ -334,16 +335,19 @@ Most programs should not need to call this function.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2632382"></a><h3>
+<a name="id2691718"></a><h3>
 <a name="gtk-get-default-language"></a>gtk_get_default_language ()</h3>
-<a class="indexterm" name="id2632395"></a><pre class="programlisting">PangoLanguage*      gtk_get_default_language            (void);</pre>
+<a class="indexterm" name="id2691731"></a><pre class="programlisting">PangoLanguage*      gtk_get_default_language            (void);</pre>
 <p>
 Returns the <span class="type">PangoLanguage</span> for the default language currently in
 effect. (Note that this can change over the life of an
 application.)  The default language is derived from the current
 locale. It determines, for example, whether GTK+ uses the
-right-to-left or left-to-right text direction. See
-<code class="function">_gtk_get_lc_ctype()</code> for notes on behaviour on Windows.</p>
+right-to-left or left-to-right text direction.
+</p>
+<p>
+This function is equivalent to <code class="function">pango_language_get_default()</code>.  See
+that function for details.</p>
 <p>
 
 </p>
@@ -359,9 +363,9 @@ freed
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2632470"></a><h3>
+<a name="id2691811"></a><h3>
 <a name="gtk-parse-args"></a>gtk_parse_args ()</h3>
-<a class="indexterm" name="id2632483"></a><pre class="programlisting">gboolean            gtk_parse_args                      (int *argc,
+<a class="indexterm" name="id2691645"></a><pre class="programlisting">gboolean            gtk_parse_args                      (int *argc,
                                                          char ***argv);</pre>
 <p>
 Parses command line arguments, and initializes global
@@ -405,9 +409,9 @@ You shouldn't call this function explicitely if you are using
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2632653"></a><h3>
+<a name="id2691993"></a><h3>
 <a name="gtk-init"></a>gtk_init ()</h3>
-<a class="indexterm" name="id2632665"></a><pre class="programlisting">void                gtk_init                            (int *argc,
+<a class="indexterm" name="id2692005"></a><pre class="programlisting">void                gtk_init                            (int *argc,
                                                          char ***argv);</pre>
 <p>
 Call this function before using any other GTK+ functions in your GUI
@@ -460,9 +464,9 @@ textual interface you want to call <a href="gtk-General.html#gtk-init-check"><co
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2632898"></a><h3>
+<a name="id2692238"></a><h3>
 <a name="gtk-init-check"></a>gtk_init_check ()</h3>
-<a class="indexterm" name="id2632910"></a><pre class="programlisting">gboolean            gtk_init_check                      (int *argc,
+<a class="indexterm" name="id2692251"></a><pre class="programlisting">gboolean            gtk_init_check                      (int *argc,
                                                          char ***argv);</pre>
 <p>
 This function does the same work as <a href="gtk-General.html#gtk-init"><code class="function">gtk_init()</code></a> with only 
@@ -500,9 +504,9 @@ with the user - for example a curses or command line interface.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633086"></a><h3>
+<a name="id2692427"></a><h3>
 <a name="gtk-init-with-args"></a>gtk_init_with_args ()</h3>
-<a class="indexterm" name="id2633102"></a><pre class="programlisting">gboolean            gtk_init_with_args                  (int *argc,
+<a class="indexterm" name="id2692442"></a><pre class="programlisting">gboolean            gtk_init_with_args                  (int *argc,
                                                          char ***argv,
                                                          char *parameter_string,
                                                          GOptionEntry *entries,
@@ -573,9 +577,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633383"></a><h3>
+<a name="id2692723"></a><h3>
 <a name="gtk-get-option-group"></a>gtk_get_option_group ()</h3>
-<a class="indexterm" name="id2633398"></a><pre class="programlisting">GOptionGroup*       gtk_get_option_group                (gboolean open_default_display);</pre>
+<a class="indexterm" name="id2692738"></a><pre class="programlisting">GOptionGroup*       gtk_get_option_group                (gboolean open_default_display);</pre>
 <p>
 Returns a <span class="type">GOptionGroup</span> for the commandline arguments recognized
 by GTK+ and GDK. You should add this group to your <span class="type">GOptionContext</span> 
@@ -607,9 +611,9 @@ with <code class="function">g_option_context_add_group()</code>, if you are usin
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633519"></a><h3>
+<a name="id2692860"></a><h3>
 <a name="gtk-exit"></a>gtk_exit ()</h3>
-<a class="indexterm" name="id2633534"></a><pre class="programlisting">void                gtk_exit                            (gint error_code);</pre>
+<a class="indexterm" name="id2692875"></a><pre class="programlisting">void                gtk_exit                            (gint error_code);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_exit</code> is deprecated and should not be used in newly-written code. Use the standard <code class="function">exit()</code> function instead.</p>
@@ -631,15 +635,15 @@ target system but at least on Unix systems <code class="literal">0</code> means 
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633620"></a><h3>
+<a name="id2692960"></a><h3>
 <a name="gtk-events-pending"></a>gtk_events_pending ()</h3>
-<a class="indexterm" name="id2633633"></a><pre class="programlisting">gboolean            gtk_events_pending                  (void);</pre>
+<a class="indexterm" name="id2692973"></a><pre class="programlisting">gboolean            gtk_events_pending                  (void);</pre>
 <p>
 Checks if any events are pending. This can be used to update the GUI 
 and invoke timeouts etc. while doing some time intensive computation.
 </p>
 <div class="example">
-<a name="id2633656"></a><p class="title"><b>Example&#160;2.&#160;Updating the GUI during a long computation.</b></p>
+<a name="id2692997"></a><p class="title"><b>Example&#160;2.&#160;Updating the GUI during a long computation.</b></p>
 <div class="example-contents"><pre class="programlisting">
 	/* computation going on */
 ...
@@ -663,9 +667,9 @@ and invoke timeouts etc. while doing some time intensive computation.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633711"></a><h3>
+<a name="id2693052"></a><h3>
 <a name="gtk-main"></a>gtk_main ()</h3>
-<a class="indexterm" name="id2633723"></a><pre class="programlisting">void                gtk_main                            (void);</pre>
+<a class="indexterm" name="id2693064"></a><pre class="programlisting">void                gtk_main                            (void);</pre>
 <p>
 Runs the main loop until <a href="gtk-General.html#gtk-main-quit"><code class="function">gtk_main_quit()</code></a> is called. You can nest calls to
 <a href="gtk-General.html#gtk-main"><code class="function">gtk_main()</code></a>. In that case <a href="gtk-General.html#gtk-main-quit"><code class="function">gtk_main_quit()</code></a> will make the innermost invocation
@@ -674,9 +678,9 @@ of the main loop return.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633778"></a><h3>
+<a name="id2693118"></a><h3>
 <a name="gtk-main-level"></a>gtk_main_level ()</h3>
-<a class="indexterm" name="id2633790"></a><pre class="programlisting">guint               gtk_main_level                      (void);</pre>
+<a class="indexterm" name="id2693131"></a><pre class="programlisting">guint               gtk_main_level                      (void);</pre>
 <p>
 Asks for the current nesting level of the main loop. This can be useful
 when calling <a href="gtk-General.html#gtk-quit-add"><code class="function">gtk_quit_add()</code></a>.
@@ -694,9 +698,9 @@ when calling <a href="gtk-General.html#gtk-quit-add"><code class="function">gtk_
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633839"></a><h3>
+<a name="id2693180"></a><h3>
 <a name="gtk-main-quit"></a>gtk_main_quit ()</h3>
-<a class="indexterm" name="id2633852"></a><pre class="programlisting">void                gtk_main_quit                       (void);</pre>
+<a class="indexterm" name="id2693192"></a><pre class="programlisting">void                gtk_main_quit                       (void);</pre>
 <p>
 Makes the innermost invocation of the main loop return when it regains 
 control.
@@ -704,9 +708,9 @@ control.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633874"></a><h3>
+<a name="id2693215"></a><h3>
 <a name="gtk-main-iteration"></a>gtk_main_iteration ()</h3>
-<a class="indexterm" name="id2633887"></a><pre class="programlisting">gboolean            gtk_main_iteration                  (void);</pre>
+<a class="indexterm" name="id2693228"></a><pre class="programlisting">gboolean            gtk_main_iteration                  (void);</pre>
 <p>
 Runs a single iteration of the mainloop. If no events are waiting to be
 processed GTK+ will block until the next event is noticed. If you don't
@@ -727,9 +731,9 @@ pending with <a href="gtk-General.html#gtk-events-pending"><code class="function
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2633969"></a><h3>
+<a name="id2693309"></a><h3>
 <a name="gtk-main-iteration-do"></a>gtk_main_iteration_do ()</h3>
-<a class="indexterm" name="id2633981"></a><pre class="programlisting">gboolean            gtk_main_iteration_do               (gboolean blocking);</pre>
+<a class="indexterm" name="id2693322"></a><pre class="programlisting">gboolean            gtk_main_iteration_do               (gboolean blocking);</pre>
 <p>
 Runs a single iteration of the mainloop. If no events are available either
 return or block dependent on the value of <em class="parameter"><code>blocking</code></em>. 
@@ -756,9 +760,9 @@ return or block dependent on the value of <em class="parameter"><code>blocking</
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634076"></a><h3>
+<a name="id2693417"></a><h3>
 <a name="gtk-main-do-event"></a>gtk_main_do_event ()</h3>
-<a class="indexterm" name="id2634089"></a><pre class="programlisting">void                gtk_main_do_event                   (<a
+<a class="indexterm" name="id2693430"></a><pre class="programlisting">void                gtk_main_do_event                   (<a
 href="../gdk/gdk-Event-Structures.html#GdkEvent"
 >GdkEvent</a> *event);</pre>
 <p>
@@ -835,9 +839,9 @@ the event:
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634252"></a><h3>
+<a name="id2693593"></a><h3>
 <a name="GtkModuleInitFunc"></a>GtkModuleInitFunc ()</h3>
-<a class="indexterm" name="id2634266"></a><pre class="programlisting">void                (*GtkModuleInitFunc)                (gint *argc,
+<a class="indexterm" name="id2693606"></a><pre class="programlisting">void                (*GtkModuleInitFunc)                (gint *argc,
                                                          gchar ***argv);</pre>
 <p>
 Each GTK+ module must have a function <code class="function">gtk_module_init()</code> with this prototype.
@@ -864,9 +868,9 @@ cleaned from any arguments that GTK+ handles itself.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634371"></a><h3>
+<a name="id2693712"></a><h3>
 <a name="GtkModuleDisplayInitFunc"></a>GtkModuleDisplayInitFunc ()</h3>
-<a class="indexterm" name="id2634386"></a><pre class="programlisting">void                (*GtkModuleDisplayInitFunc)         (<a
+<a class="indexterm" name="id2693727"></a><pre class="programlisting">void                (*GtkModuleDisplayInitFunc)         (<a
 href="../gdk/GdkDisplay.html"
 >GdkDisplay</a> *display);</pre>
 <p>
@@ -887,9 +891,9 @@ href="../gdk/GdkDisplay.html"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634439"></a><h3>
+<a name="id2693780"></a><h3>
 <a name="gtk-true"></a>gtk_true ()</h3>
-<a class="indexterm" name="id2634451"></a><pre class="programlisting">gboolean            gtk_true                            (void);</pre>
+<a class="indexterm" name="id2693792"></a><pre class="programlisting">gboolean            gtk_true                            (void);</pre>
 <p>
 All this function does it to return <code class="literal">TRUE</code>. This can be useful for example
 if you want to inhibit the deletion of a window. Of course you should 
@@ -897,7 +901,7 @@ not do this as the user expects a reaction from clicking the close
 icon of the window...
 </p>
 <div class="example">
-<a name="id2634487"></a><p class="title"><b>Example&#160;3.&#160;A persistent window</b></p>
+<a name="id2693827"></a><p class="title"><b>Example&#160;3.&#160;A persistent window</b></p>
 <div class="example-contents"><pre class="programlisting">
 ##include &lt;gtk/gtk.h&gt;
 
@@ -939,9 +943,9 @@ main (int argc, char **argv)
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634548"></a><h3>
+<a name="id2693889"></a><h3>
 <a name="gtk-false"></a>gtk_false ()</h3>
-<a class="indexterm" name="id2634560"></a><pre class="programlisting">gboolean            gtk_false                           (void);</pre>
+<a class="indexterm" name="id2693901"></a><pre class="programlisting">gboolean            gtk_false                           (void);</pre>
 <p>
 Analogical to <a href="gtk-General.html#gtk-true"><code class="function">gtk_true()</code></a> this function does nothing 
 but always returns <code class="literal">FALSE</code>.
@@ -960,9 +964,9 @@ but always returns <code class="literal">FALSE</code>.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634626"></a><h3>
+<a name="id2693967"></a><h3>
 <a name="gtk-grab-add"></a>gtk_grab_add ()</h3>
-<a class="indexterm" name="id2634639"></a><pre class="programlisting">void                gtk_grab_add                        (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2693979"></a><pre class="programlisting">void                gtk_grab_add                        (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Makes <em class="parameter"><code>widget</code></em> the current grabbed widget. This means that interaction with 
 other widgets in the same application is blocked and mouse as well as 
@@ -981,9 +985,9 @@ keyboard events are delivered to this widget.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634695"></a><h3>
+<a name="id2694036"></a><h3>
 <a name="gtk-grab-get-current"></a>gtk_grab_get_current ()</h3>
-<a class="indexterm" name="id2634708"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_grab_get_current                (void);</pre>
+<a class="indexterm" name="id2694048"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_grab_get_current                (void);</pre>
 <p>
 Queries the current grab of the default window group. 
 </p>
@@ -1002,9 +1006,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634756"></a><h3>
+<a name="id2694097"></a><h3>
 <a name="gtk-grab-remove"></a>gtk_grab_remove ()</h3>
-<a class="indexterm" name="id2634769"></a><pre class="programlisting">void                gtk_grab_remove                     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2694109"></a><pre class="programlisting">void                gtk_grab_remove                     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Removes the grab from the given widget. You have to pair calls to <a href="gtk-General.html#gtk-grab-add"><code class="function">gtk_grab_add()</code></a>
 and <a href="gtk-General.html#gtk-grab-remove"><code class="function">gtk_grab_remove()</code></a>.
@@ -1022,9 +1026,9 @@ and <a href="gtk-General.html#gtk-grab-remove"><code class="function">gtk_grab_r
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634838"></a><h3>
+<a name="id2694178"></a><h3>
 <a name="gtk-init-add"></a>gtk_init_add ()</h3>
-<a class="indexterm" name="id2634850"></a><pre class="programlisting">void                gtk_init_add                        (<a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
+<a class="indexterm" name="id2694191"></a><pre class="programlisting">void                gtk_init_add                        (<a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          gpointer data);</pre>
 <p>
 Registers a function to be called when the mainloop is started.
@@ -1049,9 +1053,9 @@ Registers a function to be called when the mainloop is started.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2634931"></a><h3>
+<a name="id2694271"></a><h3>
 <a name="gtk-quit-add-destroy"></a>gtk_quit_add_destroy ()</h3>
-<a class="indexterm" name="id2634943"></a><pre class="programlisting">void                gtk_quit_add_destroy                (guint main_level,
+<a class="indexterm" name="id2694284"></a><pre class="programlisting">void                gtk_quit_add_destroy                (guint main_level,
                                                          <a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
 <p>
 Trigger destruction of <em class="parameter"><code>object</code></em> in case the mainloop at level <em class="parameter"><code>main_level</code></em>
@@ -1077,9 +1081,9 @@ is quit.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2635026"></a><h3>
+<a name="id2694366"></a><h3>
 <a name="gtk-quit-add"></a>gtk_quit_add ()</h3>
-<a class="indexterm" name="id2635038"></a><pre class="programlisting">guint               gtk_quit_add                        (guint main_level,
+<a class="indexterm" name="id2694379"></a><pre class="programlisting">guint               gtk_quit_add                        (guint main_level,
                                                          <a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          gpointer data);</pre>
 <p>
@@ -1121,9 +1125,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2635178"></a><h3>
+<a name="id2694519"></a><h3>
 <a name="gtk-quit-add-full"></a>gtk_quit_add_full ()</h3>
-<a class="indexterm" name="id2635192"></a><pre class="programlisting">guint               gtk_quit_add_full                   (guint main_level,
+<a class="indexterm" name="id2694533"></a><pre class="programlisting">guint               gtk_quit_add_full                   (guint main_level,
                                                          <a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          <a href="gtk-Types.html#GtkCallbackMarshal">GtkCallbackMarshal</a> marshal,
                                                          gpointer data,
@@ -1188,9 +1192,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2635437"></a><h3>
+<a name="id2694778"></a><h3>
 <a name="gtk-quit-remove"></a>gtk_quit_remove ()</h3>
-<a class="indexterm" name="id2635450"></a><pre class="programlisting">void                gtk_quit_remove                     (guint quit_handler_id);</pre>
+<a class="indexterm" name="id2694790"></a><pre class="programlisting">void                gtk_quit_remove                     (guint quit_handler_id);</pre>
 <p>
 Removes a quit handler by its identifier.
 </p>
@@ -1207,9 +1211,9 @@ Removes a quit handler by its identifier.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2635498"></a><h3>
+<a name="id2694839"></a><h3>
 <a name="gtk-quit-remove-by-data"></a>gtk_quit_remove_by_data ()</h3>
-<a class="indexterm" name="id2635511"></a><pre class="programlisting">void                gtk_quit_remove_by_data             (gpointer data);</pre>
+<a class="indexterm" name="id2694852"></a><pre class="programlisting">void                gtk_quit_remove_by_data             (gpointer data);</pre>
 <p>
 Removes a quit handler identified by its <em class="parameter"><code>data</code></em> field.
 </p>
@@ -1226,9 +1230,9 @@ Removes a quit handler identified by its <em class="parameter"><code>data</code>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2635592"></a><h3>
+<a name="id2694932"></a><h3>
 <a name="gtk-timeout-add-full"></a>gtk_timeout_add_full ()</h3>
-<a class="indexterm" name="id2635608"></a><pre class="programlisting">guint               gtk_timeout_add_full                (guint32 interval,
+<a class="indexterm" name="id2694948"></a><pre class="programlisting">guint               gtk_timeout_add_full                (guint32 interval,
                                                          <a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          <a href="gtk-Types.html#GtkCallbackMarshal">GtkCallbackMarshal</a> marshal,
                                                          gpointer data,
@@ -1285,9 +1289,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2635821"></a><h3>
+<a name="id2695161"></a><h3>
 <a name="gtk-timeout-add"></a>gtk_timeout_add ()</h3>
-<a class="indexterm" name="id2635836"></a><pre class="programlisting">guint               gtk_timeout_add                     (guint32 interval,
+<a class="indexterm" name="id2695177"></a><pre class="programlisting">guint               gtk_timeout_add                     (guint32 interval,
                                                          <a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          gpointer data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
@@ -1328,9 +1332,9 @@ point the timeout is destroyed and will not be called again.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2635983"></a><h3>
+<a name="id2695323"></a><h3>
 <a name="gtk-timeout-remove"></a>gtk_timeout_remove ()</h3>
-<a class="indexterm" name="id2635998"></a><pre class="programlisting">void                gtk_timeout_remove                  (guint timeout_handler_id);</pre>
+<a class="indexterm" name="id2695339"></a><pre class="programlisting">void                gtk_timeout_remove                  (guint timeout_handler_id);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_timeout_remove</code> has been deprecated since version 2.4 and should not be used in newly-written code. Use <code class="function">g_source_remove()</code> instead.</p>
@@ -1349,9 +1353,9 @@ Removes the given timeout destroying all information about it.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2636071"></a><h3>
+<a name="id2695412"></a><h3>
 <a name="gtk-idle-add"></a>gtk_idle_add ()</h3>
-<a class="indexterm" name="id2636087"></a><pre class="programlisting">guint               gtk_idle_add                        (<a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
+<a class="indexterm" name="id2695427"></a><pre class="programlisting">guint               gtk_idle_add                        (<a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          gpointer data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1385,9 +1389,9 @@ higher priority are to be processed. The default priority is
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2636205"></a><h3>
+<a name="id2695546"></a><h3>
 <a name="gtk-idle-add-priority"></a>gtk_idle_add_priority ()</h3>
-<a class="indexterm" name="id2636221"></a><pre class="programlisting">guint               gtk_idle_add_priority               (gint priority,
+<a class="indexterm" name="id2695562"></a><pre class="programlisting">guint               gtk_idle_add_priority               (gint priority,
                                                          <a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          gpointer data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
@@ -1429,9 +1433,9 @@ Note that you will interfere with GTK+ if you use a priority above
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2636396"></a><h3>
+<a name="id2695737"></a><h3>
 <a name="gtk-idle-add-full"></a>gtk_idle_add_full ()</h3>
-<a class="indexterm" name="id2636412"></a><pre class="programlisting">guint               gtk_idle_add_full                   (gint priority,
+<a class="indexterm" name="id2695753"></a><pre class="programlisting">guint               gtk_idle_add_full                   (gint priority,
                                                          <a href="gtk-Types.html#GtkFunction">GtkFunction</a> function,
                                                          <a href="gtk-Types.html#GtkCallbackMarshal">GtkCallbackMarshal</a> marshal,
                                                          gpointer data,
@@ -1489,9 +1493,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2636650"></a><h3>
+<a name="id2695991"></a><h3>
 <a name="gtk-idle-remove"></a>gtk_idle_remove ()</h3>
-<a class="indexterm" name="id2636666"></a><pre class="programlisting">void                gtk_idle_remove                     (guint idle_handler_id);</pre>
+<a class="indexterm" name="id2696007"></a><pre class="programlisting">void                gtk_idle_remove                     (guint idle_handler_id);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_idle_remove</code> has been deprecated since version 2.4 and should not be used in newly-written code. Use <code class="function">g_source_remove()</code> instead.</p>
@@ -1510,9 +1514,9 @@ Removes the idle function with the given id.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2636738"></a><h3>
+<a name="id2696078"></a><h3>
 <a name="gtk-idle-remove-by-data"></a>gtk_idle_remove_by_data ()</h3>
-<a class="indexterm" name="id2636754"></a><pre class="programlisting">void                gtk_idle_remove_by_data             (gpointer data);</pre>
+<a class="indexterm" name="id2696094"></a><pre class="programlisting">void                gtk_idle_remove_by_data             (gpointer data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_idle_remove_by_data</code> has been deprecated since version 2.4 and should not be used in newly-written code. Use <code class="function">g_idle_remove_by_data()</code> instead.</p>
@@ -1531,9 +1535,9 @@ Removes the idle function identified by the user data.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2636828"></a><h3>
+<a name="id2696168"></a><h3>
 <a name="gtk-input-add-full"></a>gtk_input_add_full ()</h3>
-<a class="indexterm" name="id2636844"></a><pre class="programlisting">guint               gtk_input_add_full                  (gint source,
+<a class="indexterm" name="id2696184"></a><pre class="programlisting">guint               gtk_input_add_full                  (gint source,
                                                          <a
 href="../gdk/gdk-Input.html#GdkInputCondition"
 >GdkInputCondition</a> condition,
@@ -1599,9 +1603,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637082"></a><h3>
+<a name="id2696423"></a><h3>
 <a name="gtk-input-remove"></a>gtk_input_remove ()</h3>
-<a class="indexterm" name="id2637097"></a><pre class="programlisting">void                gtk_input_remove                    (guint input_handler_id);</pre>
+<a class="indexterm" name="id2696438"></a><pre class="programlisting">void                gtk_input_remove                    (guint input_handler_id);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_input_remove</code> has been deprecated since version 2.4 and should not be used in newly-written code. Use <code class="function">g_source_remove()</code> instead.</p>
@@ -1620,9 +1624,9 @@ Removes the function with the given id.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637169"></a><h3>
+<a name="id2696509"></a><h3>
 <a name="GTK-PRIORITY-REDRAW:CAPS"></a>GTK_PRIORITY_REDRAW</h3>
-<a class="indexterm" name="id2637186"></a><pre class="programlisting">#define GTK_PRIORITY_REDRAW     (G_PRIORITY_HIGH_IDLE + 20)
+<a class="indexterm" name="id2696527"></a><pre class="programlisting">#define GTK_PRIORITY_REDRAW     (G_PRIORITY_HIGH_IDLE + 20)
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1639,9 +1643,9 @@ it again).
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637242"></a><h3>
+<a name="id2696583"></a><h3>
 <a name="GTK-PRIORITY-RESIZE:CAPS"></a>GTK_PRIORITY_RESIZE</h3>
-<a class="indexterm" name="id2637255"></a><pre class="programlisting">#define GTK_PRIORITY_RESIZE     (G_PRIORITY_HIGH_IDLE + 10)
+<a class="indexterm" name="id2696596"></a><pre class="programlisting">#define GTK_PRIORITY_RESIZE     (G_PRIORITY_HIGH_IDLE + 10)
 </pre>
 <p>
 Use this priority for resizing related stuff. It is used internally by
@@ -1651,9 +1655,9 @@ GTK+ to compute the sizes of widgets. This priority is higher than
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637285"></a><h3>
+<a name="id2696626"></a><h3>
 <a name="GTK-PRIORITY-HIGH:CAPS"></a>GTK_PRIORITY_HIGH</h3>
-<a class="indexterm" name="id2637301"></a><pre class="programlisting">#define GTK_PRIORITY_HIGH       G_PRIORITY_HIGH
+<a class="indexterm" name="id2696642"></a><pre class="programlisting">#define GTK_PRIORITY_HIGH       G_PRIORITY_HIGH
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1667,9 +1671,9 @@ inside the toolkit.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637345"></a><h3>
+<a name="id2696686"></a><h3>
 <a name="GTK-PRIORITY-INTERNAL:CAPS"></a>GTK_PRIORITY_INTERNAL</h3>
-<a class="indexterm" name="id2637360"></a><pre class="programlisting">#define GTK_PRIORITY_INTERNAL   GTK_PRIORITY_REDRAW
+<a class="indexterm" name="id2696701"></a><pre class="programlisting">#define GTK_PRIORITY_INTERNAL   GTK_PRIORITY_REDRAW
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1681,9 +1685,9 @@ This priority is for GTK+ internal stuff. Don't use it in your applications.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637390"></a><h3>
+<a name="id2696731"></a><h3>
 <a name="GTK-PRIORITY-DEFAULT:CAPS"></a>GTK_PRIORITY_DEFAULT</h3>
-<a class="indexterm" name="id2637407"></a><pre class="programlisting">#define GTK_PRIORITY_DEFAULT	G_PRIORITY_DEFAULT_IDLE
+<a class="indexterm" name="id2696748"></a><pre class="programlisting">#define GTK_PRIORITY_DEFAULT	G_PRIORITY_DEFAULT_IDLE
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1695,9 +1699,9 @@ Default priority for idle functions.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637450"></a><h3>
+<a name="id2696791"></a><h3>
 <a name="GTK-PRIORITY-LOW:CAPS"></a>GTK_PRIORITY_LOW</h3>
-<a class="indexterm" name="id2637467"></a><pre class="programlisting">#define GTK_PRIORITY_LOW	G_PRIORITY_LOW
+<a class="indexterm" name="id2696808"></a><pre class="programlisting">#define GTK_PRIORITY_LOW	G_PRIORITY_LOW
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1709,9 +1713,9 @@ Priority for very unimportant background tasks.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637508"></a><h3>
+<a name="id2696849"></a><h3>
 <a name="gtk-key-snooper-install"></a>gtk_key_snooper_install ()</h3>
-<a class="indexterm" name="id2637521"></a><pre class="programlisting">guint               gtk_key_snooper_install             (<a href="gtk-General.html#GtkKeySnoopFunc">GtkKeySnoopFunc</a> snooper,
+<a class="indexterm" name="id2696862"></a><pre class="programlisting">guint               gtk_key_snooper_install             (<a href="gtk-General.html#GtkKeySnoopFunc">GtkKeySnoopFunc</a> snooper,
                                                          gpointer func_data);</pre>
 <p>
 Installs a key snooper function, which will get called on all key events
@@ -1742,9 +1746,9 @@ before delivering them normally.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637628"></a><h3>
+<a name="id2696968"></a><h3>
 <a name="GtkKeySnoopFunc"></a>GtkKeySnoopFunc ()</h3>
-<a class="indexterm" name="id2637640"></a><pre class="programlisting">gint                (*GtkKeySnoopFunc)                  (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *grab_widget,
+<a class="indexterm" name="id2696981"></a><pre class="programlisting">gint                (*GtkKeySnoopFunc)                  (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *grab_widget,
                                                          <a
 href="../gdk/gdk-Event-Structures.html#GdkEventKey"
 >GdkEventKey</a> *event,
@@ -1784,9 +1788,9 @@ They can be used to implement custom key event handling.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637785"></a><h3>
+<a name="id2697126"></a><h3>
 <a name="gtk-key-snooper-remove"></a>gtk_key_snooper_remove ()</h3>
-<a class="indexterm" name="id2637798"></a><pre class="programlisting">void                gtk_key_snooper_remove              (guint snooper_handler_id);</pre>
+<a class="indexterm" name="id2697138"></a><pre class="programlisting">void                gtk_key_snooper_remove              (guint snooper_handler_id);</pre>
 <p>
 Removes the key snooper function with the given id.
 </p>
@@ -1803,9 +1807,9 @@ Removes the key snooper function with the given id.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637846"></a><h3>
+<a name="id2697187"></a><h3>
 <a name="gtk-get-current-event"></a>gtk_get_current_event ()</h3>
-<a class="indexterm" name="id2637860"></a><pre class="programlisting"><a
+<a class="indexterm" name="id2697200"></a><pre class="programlisting"><a
 href="../gdk/gdk-Event-Structures.html#GdkEvent"
 >GdkEvent</a>*           gtk_get_current_event               (void);</pre>
 <p>
@@ -1836,9 +1840,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2637954"></a><h3>
+<a name="id2697295"></a><h3>
 <a name="gtk-get-current-event-time"></a>gtk_get_current_event_time ()</h3>
-<a class="indexterm" name="id2637968"></a><pre class="programlisting">guint32             gtk_get_current_event_time          (void);</pre>
+<a class="indexterm" name="id2697309"></a><pre class="programlisting">guint32             gtk_get_current_event_time          (void);</pre>
 <p>
 If there is a current event and it has a timestamp, return that
 timestamp, otherwise return <a
@@ -1860,9 +1864,9 @@ href="../gdk/gdk-Events.html#GDK-CURRENT-TIME:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2638033"></a><h3>
+<a name="id2697373"></a><h3>
 <a name="gtk-get-current-event-state"></a>gtk_get_current_event_state ()</h3>
-<a class="indexterm" name="id2638046"></a><pre class="programlisting">gboolean            gtk_get_current_event_state         (<a
+<a class="indexterm" name="id2697387"></a><pre class="programlisting">gboolean            gtk_get_current_event_state         (<a
 href="../gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> *state);</pre>
 <p>
@@ -1890,9 +1894,9 @@ that state field in <em class="parameter"><code>state</code></em> and return <co
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2638146"></a><h3>
+<a name="id2697486"></a><h3>
 <a name="gtk-get-event-widget"></a>gtk_get_event_widget ()</h3>
-<a class="indexterm" name="id2638158"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_get_event_widget                (<a
+<a class="indexterm" name="id2697499"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_get_event_widget                (<a
 href="../gdk/gdk-Event-Structures.html#GdkEvent"
 >GdkEvent</a> *event);</pre>
 <p>
@@ -1928,9 +1932,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2638271"></a><h3>
+<a name="id2697612"></a><h3>
 <a name="gtk-propagate-event"></a>gtk_propagate_event ()</h3>
-<a class="indexterm" name="id2638284"></a><pre class="programlisting">void                gtk_propagate_event                 (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2697624"></a><pre class="programlisting">void                gtk_propagate_event                 (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a
 href="../gdk/gdk-Event-Structures.html#GdkEvent"
 >GdkEvent</a> *event);</pre>
@@ -1975,7 +1979,7 @@ href="../gdk/gdk-Windows.html#gdk-window-invalidate-rect"
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2638469"></a><h2>See Also</h2>
+<a name="id2697810"></a><h2>See Also</h2>
 <p>
 See the GLib manual, especially <span class="type">GMainLoop</span> and signal-related
 functions such as <code class="function">g_signal_connect()</code>.

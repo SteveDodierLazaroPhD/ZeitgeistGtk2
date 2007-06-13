@@ -103,6 +103,8 @@ static cairo_surface_t *    file_printer_create_cairo_surface      (GtkPrinter  
 								    gdouble                  height,
 								    GIOChannel              *cache_io);
 
+static GList *              file_printer_list_papers               (GtkPrinter              *printer);
+
 static void
 gtk_print_backend_file_register_type (GTypeModule *module)
 {
@@ -179,6 +181,7 @@ gtk_print_backend_file_class_init (GtkPrintBackendFileClass *class)
   backend_class->printer_get_options = file_printer_get_options;
   backend_class->printer_get_settings_from_options = file_printer_get_settings_from_options;
   backend_class->printer_prepare_for_print = file_printer_prepare_for_print;
+  backend_class->printer_list_papers = file_printer_list_papers;
 }
 
 /* return N_FORMATS if no explicit format in the settings */
@@ -477,7 +480,8 @@ file_printer_get_options (GtkPrinter           *printer,
 {
   GtkPrinterOptionSet *set;
   GtkPrinterOption *option;
-  const gchar *n_up[] = { "1" };
+  const gchar *n_up[] = {"1", "2", "4", "6", "9", "16" };
+  const gchar *pages_per_sheet = NULL;
   const gchar *format_names[N_FORMATS] = { N_("PDF"), N_("Postscript") };
   const gchar *supported_formats[N_FORMATS];
   gchar *display_format_names[N_FORMATS];
@@ -493,7 +497,12 @@ file_printer_get_options (GtkPrinter           *printer,
   option = gtk_printer_option_new ("gtk-n-up", _("Pages per _sheet:"), GTK_PRINTER_OPTION_TYPE_PICKONE);
   gtk_printer_option_choices_from_array (option, G_N_ELEMENTS (n_up),
 					 (char **) n_up, (char **) n_up /* FIXME i18n (localised digits)! */);
-  gtk_printer_option_set (option, "1");
+  if (settings)
+    pages_per_sheet = gtk_print_settings_get (settings, GTK_PRINT_SETTINGS_NUMBER_UP);
+  if (pages_per_sheet)
+    gtk_printer_option_set (option, pages_per_sheet);
+  else
+    gtk_printer_option_set (option, "1");
   gtk_printer_option_set_add (set, option);
   g_object_unref (option);
 
@@ -569,7 +578,10 @@ file_printer_get_settings_from_options (GtkPrinter          *printer,
   option = gtk_printer_option_set_lookup (options, "output-file-format");
   if (option)
     gtk_print_settings_set (settings, GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT, option->value);
-    
+
+  option = gtk_printer_option_set_lookup (options, "gtk-n-up");
+  if (option)
+    gtk_print_settings_set (settings, GTK_PRINT_SETTINGS_NUMBER_UP, option->value);
 }
 
 static void
@@ -599,4 +611,28 @@ file_printer_prepare_for_print (GtkPrinter       *printer,
 
   print_job->page_set = gtk_print_settings_get_page_set (settings);
   print_job->rotate_to_orientation = TRUE;
+}
+
+static GList *
+file_printer_list_papers (GtkPrinter *printer)
+{
+  GList *result = NULL;
+  GList *papers, *p;
+  GtkPageSetup *page_setup;
+
+  papers = gtk_paper_size_get_paper_sizes (TRUE);
+
+  for (p = papers; p; p = p->next)
+    {
+      GtkPaperSize *paper_size = p->data;
+
+      page_setup = gtk_page_setup_new ();
+      gtk_page_setup_set_paper_size (page_setup, paper_size);
+      gtk_paper_size_free (paper_size);
+      result = g_list_prepend (result, page_setup);
+    }
+
+  g_list_free (papers);
+
+  return g_list_reverse (result);
 }

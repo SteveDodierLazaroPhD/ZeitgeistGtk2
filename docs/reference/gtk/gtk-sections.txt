@@ -8,6 +8,8 @@ GtkAboutDialog
 gtk_about_dialog_new
 gtk_about_dialog_get_name
 gtk_about_dialog_set_name
+gtk_about_dialog_get_program_name
+gtk_about_dialog_set_program_name
 gtk_about_dialog_get_version
 gtk_about_dialog_set_version
 gtk_about_dialog_get_copyright
@@ -178,6 +180,7 @@ gtk_action_activate
 gtk_action_create_icon
 gtk_action_create_menu_item
 gtk_action_create_tool_item
+gtk_action_create_menu
 gtk_action_connect_proxy
 gtk_action_disconnect_proxy
 gtk_action_get_proxies
@@ -1138,6 +1141,8 @@ gtk_entry_get_max_length
 gtk_entry_get_visibility
 gtk_entry_set_completion
 gtk_entry_get_completion
+gtk_entry_set_cursor_hadjustment
+gtk_entry_get_cursor_hadjustment
 <SUBSECTION Standard>
 GTK_ENTRY
 GTK_IS_ENTRY
@@ -1162,6 +1167,7 @@ gtk_entry_completion_set_match_func
 gtk_entry_completion_set_minimum_key_length
 gtk_entry_completion_get_minimum_key_length
 gtk_entry_completion_complete
+gtk_entry_completion_get_completion_prefix
 gtk_entry_completion_insert_prefix
 gtk_entry_completion_insert_action_text
 gtk_entry_completion_insert_action_markup
@@ -1170,6 +1176,8 @@ gtk_entry_completion_set_text_column
 gtk_entry_completion_get_text_column
 gtk_entry_completion_set_inline_completion
 gtk_entry_completion_get_inline_completion
+gtk_entry_completion_set_inline_selection
+gtk_entry_completion_get_inline_selection
 gtk_entry_completion_set_popup_completion
 gtk_entry_completion_get_popup_completion
 gtk_entry_completion_set_popup_set_width
@@ -2413,6 +2421,8 @@ gtk_notebook_get_tab_detachable
 gtk_notebook_set_current_page
 gtk_notebook_set_group_id
 gtk_notebook_get_group_id
+gtk_notebook_set_group
+gtk_notebook_get_group
 GtkNotebookWindowCreationFunc
 gtk_notebook_set_window_creation_hook
 <SUBSECTION Standard>
@@ -2731,6 +2741,12 @@ gtk_radio_menu_item_get_type
 <FILE>gtkrange</FILE>
 <TITLE>GtkRange</TITLE>
 GtkRange
+gtk_range_get_fill_level
+gtk_range_get_restrict_to_fill_level
+gtk_range_get_show_fill_level
+gtk_range_set_fill_level
+gtk_range_set_restrict_to_fill_level
+gtk_range_set_show_fill_level
 gtk_range_get_adjustment
 gtk_range_set_update_policy
 gtk_range_set_adjustment
@@ -2961,6 +2977,26 @@ gtk_recent_manager_error_quark
 </SECTION>
 
 <SECTION>
+<FILE>gtkrecentaction</FILE>
+<TITLE>GtkRecentAction</TITLE>
+GtkRecentAction
+gtk_recent_action_new
+gtk_recent_action_new_for_manager
+gtk_recent_action_get_show_numbers
+gtk_recent_action_set_show_numbers
+<SUBSECTION Standard>
+GTK_TYPE_RECENT_ACTION
+GTK_RECENT_ACTION
+GTK_IS_RECENT_ACTION
+GTK_RECENT_ACTION_CLASS
+GTK_IS_RECENT_ACTION_CLASS
+GTK_RECENT_ACTION_GET_CLASS
+<SUBSECTION Private>
+GtkRecentActionPrivate
+gtk_recent_action_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gtkruler</FILE>
 <TITLE>GtkRuler</TITLE>
 GtkRuler
@@ -3004,6 +3040,27 @@ GTK_IS_SCALE_CLASS
 GTK_SCALE_GET_CLASS
 <SUBSECTION Private>
 gtk_scale_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gtkscalebutton</FILE>
+<TITLE>GtkScaleButton</TITLE>
+GtkScaleButton
+gtk_scale_button_new
+gtk_scale_button_set_adjustment
+gtk_scale_button_set_icons
+gtk_scale_button_set_value
+gtk_scale_button_get_adjustment
+gtk_scale_button_get_value
+<SUBSECTION Standard>
+GTK_SCALE_BUTTON
+GTK_IS_SCALE_BUTTON
+GTK_TYPE_SCALE_BUTTON
+GTK_SCALE_BUTTON_CLASS
+GTK_IS_SCALE_BUTTON_CLASS
+GTK_SCALE_BUTTON_GET_CLASS
+<SUBSECTION Private>
+gtk_scale_button_get_type
 </SECTION>
 
 <SECTION>
@@ -3240,6 +3297,8 @@ gtk_status_icon_get_pixbuf
 gtk_status_icon_get_stock
 gtk_status_icon_get_icon_name
 gtk_status_icon_get_size
+gtk_status_icon_set_screen
+gtk_status_icon_get_screen
 gtk_status_icon_set_tooltip
 gtk_status_icon_set_visible
 gtk_status_icon_get_visible
@@ -3374,6 +3433,7 @@ gtk_text_buffer_create_child_anchor
 gtk_text_buffer_create_mark
 gtk_text_buffer_move_mark
 gtk_text_buffer_move_mark_by_name
+gtk_text_buffer_add_mark
 gtk_text_buffer_delete_mark
 gtk_text_buffer_delete_mark_by_name
 gtk_text_buffer_get_mark
@@ -3560,6 +3620,7 @@ gtk_text_iter_get_type
 <FILE>gtktextmark</FILE>
 <TITLE>GtkTextMark</TITLE>
 GtkTextMark
+gtk_text_mark_new
 gtk_text_mark_set_visible
 gtk_text_mark_get_visible
 gtk_text_mark_get_deleted
@@ -3713,8 +3774,6 @@ GTK_TEXT_CHILD_ANCHOR_GET_CLASS
 gtk_text_view_get_type
 gtk_text_child_anchor_get_type
 GtkTextBTree
-GtkTextChildBody
-GtkTextPixbuf
 GtkTextWindow
 GtkTextPendingScroll
 </SECTION>
@@ -4031,6 +4090,20 @@ GTK_IS_TOOLTIPS_CLASS
 GTK_TOOLTIPS_GET_CLASS
 <SUBSECTION Private>
 gtk_tooltips_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gtktooltip</FILE>
+<TITLE>GtkTooltip</TITLE>
+gtk_tooltip_set_markup
+gtk_tooltip_set_icon
+gtk_tooltip_set_icon_from_stock
+gtk_tooltip_set_custom
+gtk_tooltip_trigger_tooltip_query
+<SUBSECTION Standard>
+GTK_TYPE_TOOLTIP
+<SUBSECTION Private>
+gtk_tooltip_get_type
 </SECTION>
 
 <SECTION>
@@ -4426,6 +4499,10 @@ GtkTreeViewColumnDropFunc
 GtkTreeViewMappingFunc
 GtkTreeViewSearchEqualFunc
 gtk_tree_view_new
+gtk_tree_view_get_level_indentation
+gtk_tree_view_get_show_expanders
+gtk_tree_view_set_level_indentation
+gtk_tree_view_set_show_expanders
 gtk_tree_view_new_with_model
 gtk_tree_view_get_model
 gtk_tree_view_set_model
@@ -4560,6 +4637,7 @@ GtkCellLayoutIface
 GtkCellLayoutDataFunc
 gtk_cell_layout_pack_start
 gtk_cell_layout_pack_end
+gtk_cell_layout_get_cells
 gtk_cell_layout_reorder
 gtk_cell_layout_clear
 gtk_cell_layout_set_attributes
@@ -4834,6 +4912,22 @@ gtk_viewport_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gtkvolumebutton</FILE>
+<TITLE>GtkVolumeButton</TITLE>
+GtkVolumeButton
+gtk_volume_button_new
+<SUBSECTION Standard>
+GTK_VOLUME_BUTTON
+GTK_IS_VOLUME_BUTTON
+GTK_TYPE_VOLUME_BUTTON
+GTK_VOLUME_BUTTON_CLASS
+GTK_IS_VOLUME_BUTTON_CLASS
+GTK_VOLUME_BUTTON_GET_CLASS
+<SUBSECTION Private>
+gtk_volume_button_get_type
+</SECTION>
+
+<SECTION>
 <FILE>gtkvpaned</FILE>
 <TITLE>GtkVPaned</TITLE>
 GtkVPaned
@@ -5092,6 +5186,11 @@ gtk_widget_add_mnemonic_label
 gtk_widget_remove_mnemonic_label
 gtk_widget_get_action
 gtk_widget_is_composited
+gtk_widget_error_bell
+gtk_widget_keynav_failed
+gtk_widget_get_tooltip_window
+gtk_widget_set_tooltip_window
+gtk_widget_trigger_tooltip_query
 <SUBSECTION>
 gtk_requisition_copy
 gtk_requisition_free
@@ -5171,6 +5270,8 @@ gtk_window_set_skip_pager_hint
 gtk_window_set_urgency_hint
 gtk_window_set_accept_focus
 gtk_window_set_focus_on_map
+gtk_window_set_startup_id
+gtk_window_set_role
 gtk_window_get_decorated
 gtk_window_get_deletable
 gtk_window_get_default_icon_list
@@ -5208,6 +5309,8 @@ gtk_window_set_icon_list
 gtk_window_set_icon_from_file
 gtk_window_set_icon_name
 gtk_window_set_auto_startup_notification
+gtk_window_get_opacity
+gtk_window_set_opacity
 <SUBSECTION Standard>
 GTK_WINDOW
 GTK_IS_WINDOW
@@ -5215,12 +5318,6 @@ GTK_TYPE_WINDOW
 GTK_WINDOW_CLASS
 GTK_IS_WINDOW_CLASS
 GTK_WINDOW_GET_CLASS
-
-<SUBSECTION>
-gtk_decorated_window_init
-gtk_decorated_window_calculate_frame_size
-gtk_decorated_window_set_title
-gtk_decorated_window_move_resize_window
 
 <SUBSECTION Private>
 gtk_window_get_type
@@ -5443,19 +5540,6 @@ GTK_TYPE_BORDER
 <SUBSECTION Private>
 gtk_style_get_type
 gtk_border_get_type
-</SECTION>
-
-<SECTION>
-<FILE>gtkthemes</FILE>
-<TITLE>Themes</TITLE>
-<SUBSECTION Private>
-GtkThemeEngine
-gtk_theme_engine_get
-gtk_theme_engine_create_rc_style
-GTK_THEME_ENGINE
-GTK_IS_THEME_ENGINE
-GTK_TYPE_THEME_ENGINE
-gtk_theme_engine_get_type
 </SECTION>
 
 <SECTION>
@@ -5790,19 +5874,20 @@ GtkBindingSet
 GtkBindingEntry
 GtkBindingSignal
 GtkBindingArg
+gtk_binding_entry_add
+gtk_binding_entry_add_signall
+gtk_binding_entry_clear
+gtk_binding_parse_binding
 gtk_binding_set_new
 gtk_binding_set_by_class
 gtk_binding_set_find
 gtk_bindings_activate
 gtk_bindings_activate_event
 gtk_binding_set_activate
-gtk_binding_entry_add
-gtk_binding_entry_clear
 gtk_binding_entry_add_signal
-gtk_binding_set_add_path
+gtk_binding_entry_skip
 gtk_binding_entry_remove
-gtk_binding_entry_add_signall
-gtk_binding_parse_binding
+gtk_binding_set_add_path
 </SECTION>
 
 <SECTION>
@@ -5847,6 +5932,7 @@ GtkVisibility
 GtkWindowPosition
 GtkWindowType
 GtkSortType
+GtkDragResult
 
 <SUBSECTION Private>
 GtkMenuCallback
@@ -5985,7 +6071,9 @@ gtk_icon_theme_prepend_search_path
 gtk_icon_theme_set_custom_theme
 gtk_icon_theme_has_icon
 gtk_icon_theme_lookup_icon
+gtk_icon_theme_choose_icon
 gtk_icon_theme_load_icon
+gtk_icon_theme_list_contexts
 gtk_icon_theme_list_icons
 gtk_icon_theme_get_icon_sizes
 gtk_icon_theme_get_example_icon_name
@@ -6167,7 +6255,7 @@ GTK_PRINT_UNIX_DIALOG_CLASS
 GTK_IS_PRINT_UNIX_DIALOG
 GTK_IS_PRINT_UNIX_DIALOG_CLASS
 GTK_PRINT_UNIX_DIALOG_GET_CLASS
-
+GTK_TYPE_PRINT_CAPABILITIES
 <SUBSECTION Private>
 GtkPrintUnixDialogPrivate
 gtk_print_unix_dialog_get_type
@@ -6193,7 +6281,11 @@ gtk_printer_is_virtual
 gtk_printer_is_default
 gtk_printer_accepts_ps
 gtk_printer_accepts_pdf
+gtk_printer_list_papers
 gtk_printer_compare
+gtk_printer_has_details
+gtk_printer_request_details
+gtk_printer_get_capabilities
 GtkPrinterFunc
 gtk_enumerate_printers
 
@@ -6310,6 +6402,11 @@ GTK_PRINT_SETTINGS_OUTPUT_URI
 GTK_PRINT_SETTINGS_WIN32_DRIVER_EXTRA
 GTK_PRINT_SETTINGS_WIN32_DRIVER_VERSION
 
+<SUBSECTION Serialization>
+gtk_print_settings_new_from_file
+gtk_print_settings_new_from_key_file
+gtk_print_settings_to_file
+gtk_print_settings_to_key_file
 
 <SUBSECTION Standard>
 GTK_TYPE_PRINT_SETTINGS
@@ -6339,6 +6436,7 @@ gtk_paper_size_new_custom
 gtk_paper_size_copy
 gtk_paper_size_free
 gtk_paper_size_is_equal
+gtk_paper_size_get_paper_sizes
 gtk_paper_size_get_name
 gtk_paper_size_get_display_name
 gtk_paper_size_get_ppd_name
@@ -6351,6 +6449,10 @@ gtk_paper_size_get_default_bottom_margin
 gtk_paper_size_get_default_left_margin
 gtk_paper_size_get_default_right_margin
 gtk_paper_size_get_default
+
+<SUBSECTION Serialization>
+gtk_paper_size_new_from_key_file
+gtk_paper_size_to_key_file
 
 <SUBSECTION Standard>
 GTK_TYPE_PAPER_SIZE
@@ -6382,6 +6484,12 @@ gtk_page_setup_get_paper_width
 gtk_page_setup_get_paper_height
 gtk_page_setup_get_page_width
 gtk_page_setup_get_page_height
+
+<SUBSECTION Serialization>
+gtk_page_setup_new_from_file
+gtk_page_setup_new_from_key_file
+gtk_page_setup_to_file
+gtk_page_setup_to_key_file
 
 <SUBSECTION Standard>
 GTK_TYPE_PAGE_SETUP

@@ -1799,14 +1799,12 @@ gtk_assistant_set_page_title (GtkAssistant *assistant,
 			      GtkWidget    *page,
 			      const gchar  *title)
 {
-  GtkAssistantPrivate *priv;
   GtkAssistantPage *page_info;
   GList *child;
 
   g_return_if_fail (GTK_IS_ASSISTANT (assistant));
   g_return_if_fail (GTK_IS_WIDGET (page));
 
-  priv = assistant->priv;
   child = find_page (assistant, page);
 
   g_return_if_fail (child != NULL);
@@ -1833,14 +1831,12 @@ G_CONST_RETURN gchar*
 gtk_assistant_get_page_title (GtkAssistant *assistant,
 			      GtkWidget    *page)
 {
-  GtkAssistantPrivate *priv;
   GtkAssistantPage *page_info;
   GList *child;
 
   g_return_val_if_fail (GTK_IS_ASSISTANT (assistant), NULL);
   g_return_val_if_fail (GTK_IS_WIDGET (page), NULL);
 
-  priv = assistant->priv;
   child = find_page (assistant, page);
 
   g_return_val_if_fail (child != NULL, NULL);
@@ -1908,14 +1904,12 @@ GtkAssistantPageType
 gtk_assistant_get_page_type (GtkAssistant *assistant,
 			     GtkWidget    *page)
 {
-  GtkAssistantPrivate *priv;
   GtkAssistantPage *page_info;
   GList *child;
 
   g_return_val_if_fail (GTK_IS_ASSISTANT (assistant), GTK_ASSISTANT_PAGE_CONTENT);
   g_return_val_if_fail (GTK_IS_WIDGET (page), GTK_ASSISTANT_PAGE_CONTENT);
 
-  priv = assistant->priv;
   child = find_page (assistant, page);
 
   g_return_val_if_fail (child != NULL, GTK_ASSISTANT_PAGE_CONTENT);
@@ -1990,14 +1984,12 @@ GdkPixbuf*
 gtk_assistant_get_page_header_image (GtkAssistant *assistant,
 				     GtkWidget    *page)
 {
-  GtkAssistantPrivate *priv;
   GtkAssistantPage *page_info;
   GList *child;
 
   g_return_val_if_fail (GTK_IS_ASSISTANT (assistant), NULL);
   g_return_val_if_fail (GTK_IS_WIDGET (page), NULL);
 
-  priv = assistant->priv;
   child = find_page (assistant, page);
 
   g_return_val_if_fail (child != NULL, NULL);
@@ -2072,14 +2064,12 @@ GdkPixbuf*
 gtk_assistant_get_page_side_image (GtkAssistant *assistant,
 				   GtkWidget    *page)
 {
-  GtkAssistantPrivate *priv;
   GtkAssistantPage *page_info;
   GList *child;
 
   g_return_val_if_fail (GTK_IS_ASSISTANT (assistant), NULL);
   g_return_val_if_fail (GTK_IS_WIDGET (page), NULL);
 
-  priv = assistant->priv;
   child = find_page (assistant, page);
 
   g_return_val_if_fail (child != NULL, NULL);
@@ -2147,14 +2137,12 @@ gboolean
 gtk_assistant_get_page_complete (GtkAssistant *assistant,
 				 GtkWidget    *page)
 {
-  GtkAssistantPrivate *priv;
   GtkAssistantPage *page_info;
   GList *child;
 
   g_return_val_if_fail (GTK_IS_ASSISTANT (assistant), FALSE);
   g_return_val_if_fail (GTK_IS_WIDGET (page), FALSE);
 
-  priv = assistant->priv;
   child = find_page (assistant, page);
 
   g_return_val_if_fail (child != NULL, FALSE);
@@ -2277,7 +2265,7 @@ gtk_assistant_accessible_get_type (void)
       g_type_query (derived_atk_type, &query);
       
       type = g_type_register_static_simple (derived_atk_type, 
-					    "GtkAssistantAccessible", 
+					    I_("GtkAssistantAccessible"), 
 					    query.class_size,
 					    (GClassInitFunc) gtk_assistant_accessible_class_init,
 					    query.instance_size,
@@ -2327,7 +2315,7 @@ gtk_assistant_accessible_factory_get_type (void)
   if (!type) 
     {
       type = g_type_register_static_simple (ATK_TYPE_OBJECT_FACTORY, 
-					    "GtkAssistantAccessibleFactory",
+					    I_("GtkAssistantAccessibleFactory"),
 					    sizeof (AtkObjectFactoryClass),
 					    (GClassInitFunc) gtk_assistant_accessible_factory_class_init,
 					    sizeof (AtkObjectFactory),

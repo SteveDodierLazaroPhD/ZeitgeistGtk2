@@ -30,6 +30,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gdk-get-display-
 <link linkend="void">void</link>                <link linkend="gdk-set-sm-client-id">gdk_set_sm_client_id</link>                (const <link linkend="gchar">gchar</link> *sm_client_id);
 <link linkend="void">void</link>                <link linkend="gdk-exit">gdk_exit</link>                            (<link linkend="gint">gint</link> error_code);
 <link linkend="void">void</link>                <link linkend="gdk-notify-startup-complete">gdk_notify_startup_complete</link>         (void);
+<link linkend="void">void</link>                <link linkend="gdk-notify-startup-complete-with-id">gdk_notify_startup_complete_with_id</link> (const <link linkend="gchar">gchar</link> *startup_id);
 
 const <link linkend="char">char</link>*         <link linkend="gdk-get-program-class">gdk_get_program_class</link>               (void);
 <link linkend="void">void</link>                <link linkend="gdk-set-program-class">gdk_set_program_class</link>               (const <link linkend="char">char</link> *program_class);
@@ -271,6 +272,27 @@ to disable that feature.</para>
 </para><para role="since">Since  2.2
 </para></refsect2>
 <refsect2>
+<title><anchor id="gdk-notify-startup-complete-with-id" role="function" condition="since:2.12"/>gdk_notify_startup_complete_with_id ()</title>
+<indexterm role="2.12"><primary>gdk_notify_startup_complete_with_id</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_notify_startup_complete_with_id (const <link linkend="gchar">gchar</link> *startup_id);</programlisting>
+<para>
+Indicates to the GUI environment that the application has finished
+loading, using a given identifier.
+</para>
+<para>
+GTK+ will call this function automatically for <link linkend="GtkWindow"><type>GtkWindow</type></link> with custom
+startup-notification identifier unless
+<link linkend="gtk-window-set-auto-startup-notification"><function>gtk_window_set_auto_startup_notification()</function></link> is called to disable
+that feature.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>startup_id</parameter>&nbsp;:</term>
+<listitem><simpara> a startup-notification identifier, for which notification
+             process should be completed
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gdk-get-program-class" role="function"/>gdk_get_program_class ()</title>
 <indexterm><primary>gdk_get_program_class</primary></indexterm><programlisting>const <link linkend="char">char</link>*         gdk_get_program_class               (void);</programlisting>
 <para>
@@ -481,7 +503,8 @@ success or the reason for the failure of the grab attempt.
 <title><anchor id="gdk-pointer-ungrab" role="function"/>gdk_pointer_ungrab ()</title>
 <indexterm><primary>gdk_pointer_ungrab</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_pointer_ungrab                  (<link linkend="guint32">guint32</link> time_);</programlisting>
 <para>
-Ungrabs the pointer, if it is grabbed by this application.</para>
+Ungrabs the pointer on the default display, if it is grabbed by this 
+application.</para>
 <para>
 
 </para><variablelist role="params">
@@ -494,7 +517,8 @@ Ungrabs the pointer, if it is grabbed by this application.</para>
 <title><anchor id="gdk-pointer-is-grabbed" role="function"/>gdk_pointer_is_grabbed ()</title>
 <indexterm><primary>gdk_pointer_is_grabbed</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_pointer_is_grabbed              (void);</programlisting>
 <para>
-Returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the pointer is currently grabbed by this application.
+Returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the pointer on the default display is currently 
+grabbed by this application.
 </para>
 <para>
 Note that this does not take the inmplicit pointer grab on button
@@ -560,7 +584,8 @@ available.
 <title><anchor id="gdk-keyboard-ungrab" role="function"/>gdk_keyboard_ungrab ()</title>
 <indexterm><primary>gdk_keyboard_ungrab</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_keyboard_ungrab                 (<link linkend="guint32">guint32</link> time_);</programlisting>
 <para>
-Ungrabs the keyboard, if it is grabbed by this application.</para>
+Ungrabs the keyboard on the default display, if it is grabbed by this 
+application.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>time_</parameter>&nbsp;:</term>

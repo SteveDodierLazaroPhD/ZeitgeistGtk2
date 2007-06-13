@@ -1020,7 +1020,7 @@ gtk_icon_size_register_alias (const gchar *alias,
   init_icon_sizes ();
 
   if (!icon_size_lookup_intern (NULL, target, NULL, NULL))
-    g_warning ("gtk_icon_size_register_alias: Icon size %d does not exist", target);
+    g_warning ("gtk_icon_size_register_alias: Icon size %u does not exist", target);
 
   ia = g_hash_table_lookup (icon_aliases, alias);
   if (ia)
@@ -1453,7 +1453,7 @@ render_icon_name_pixbuf (GtkIconSource    *icon_source,
 	}
       else
 	{
-	  g_warning ("Invalid icon size %d\n", size);
+	  g_warning ("Invalid icon size %u\n", size);
 	  width = height = 24;
 	}
     }
@@ -1467,7 +1467,8 @@ render_icon_name_pixbuf (GtkIconSource    *icon_source,
 
   if (!tmp_pixbuf)
     {
-      g_warning ("Error loading theme icon for stock: %s", error->message);
+      g_warning ("Error loading theme icon '%s' for stock: %s", 
+                 icon_source->source.icon_name, error->message);
       g_error_free (error);
       return NULL;
     }
@@ -1928,7 +1929,7 @@ gtk_icon_source_get_type (void)
   static GType our_type = 0;
   
   if (our_type == 0)
-    our_type = g_boxed_type_register_static ("GtkIconSource",
+    our_type = g_boxed_type_register_static (I_("GtkIconSource"),
 					     (GBoxedCopyFunc) gtk_icon_source_copy,
 					     (GBoxedFreeFunc) gtk_icon_source_free);
 
@@ -2658,24 +2659,6 @@ _gtk_icon_set_invalidate_caches (void)
   ++cache_serial;
 }
 
-static void
-listify_foreach (gpointer key, gpointer value, gpointer data)
-{
-  GSList **list = data;
-
-  *list = g_slist_prepend (*list, key);
-}
-
-static GSList *
-hash_table_get_keys (GHashTable *table)
-{
-  GSList *list = NULL;
-
-  g_hash_table_foreach (table, listify_foreach, &list);
-
-  return list;
-}
-
 /**
  * _gtk_icon_factory_list_ids:
  * 
@@ -2685,11 +2668,11 @@ hash_table_get_keys (GHashTable *table)
  * 
  * Return value: List of ids in icon factories
  **/
-GSList*
+GList*
 _gtk_icon_factory_list_ids (void)
 {
   GSList *tmp_list;
-  GSList *ids;
+  GList *ids;
 
   ids = NULL;
 
@@ -2698,13 +2681,13 @@ _gtk_icon_factory_list_ids (void)
   tmp_list = all_icon_factories;
   while (tmp_list != NULL)
     {
-      GSList *these_ids;
+      GList *these_ids;
       
       GtkIconFactory *factory = GTK_ICON_FACTORY (tmp_list->data);
 
-      these_ids = hash_table_get_keys (factory->icons);
+      these_ids = g_hash_table_get_keys (factory->icons);
       
-      ids = g_slist_concat (ids, these_ids);
+      ids = g_list_concat (ids, these_ids);
       
       tmp_list = g_slist_next (tmp_list);
     }

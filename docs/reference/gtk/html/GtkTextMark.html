@@ -54,6 +54,7 @@
 <link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
+<link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -64,18 +65,20 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkTextBuffer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3062464" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3137383" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3062654" class="shortcut">Description</a>
+                  <a href="#id3137652" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3062630" class="shortcut">Object Hierarchy</a></nobr></td></tr>
+                  <a href="#id3137579" class="shortcut">Object Hierarchy</a>
+                  &#160;|&#160;
+                  <a href="#id3137603" class="shortcut">Properties</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkTextMark"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3062464"></a><span class="refentrytitle">GtkTextMark</span>
+<a name="id3137383"></a><span class="refentrytitle">GtkTextMark</span>
 </h2>
 <p>GtkTextMark &#8212; 
 A position in the buffer preserved across buffer modifications</p>
@@ -90,6 +93,8 @@ A position in the buffer preserved across buffer modifications</p>
 
 
                     <a href="GtkTextMark.html#GtkTextMark-struct">GtkTextMark</a>;
+<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a>*        <a href="GtkTextMark.html#gtk-text-mark-new">gtk_text_mark_new</a>                   (const gchar *name,
+                                                         gboolean left_gravity);
 void                <a href="GtkTextMark.html#gtk-text-mark-set-visible">gtk_text_mark_set_visible</a>           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark,
                                                          gboolean setting);
 gboolean            <a href="GtkTextMark.html#gtk-text-mark-get-visible">gtk_text_mark_get_visible</a>           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);
@@ -102,7 +107,7 @@ gboolean            <a href="GtkTextMark.html#gtk-text-mark-get-left-gravity">gt
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3062630"></a><h2>Object Hierarchy</h2>
+<a name="id3137579"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   GObject
@@ -110,7 +115,15 @@ gboolean            <a href="GtkTextMark.html#gtk-text-mark-get-left-gravity">gt
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3062654"></a><h2>Description</h2>
+<a name="id3137603"></a><h2>Properties</h2>
+<pre class="synopsis">
+
+  <a href="GtkTextMark.html#GtkTextMark--left-gravity">left-gravity</a>             gboolean              : Read / Write / Construct Only
+  <a href="GtkTextMark.html#GtkTextMark--name">name</a>                     gchararray            : Read / Write / Construct Only
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3137652"></a><h2>Description</h2>
 <p>
 You may wish to begin by reading the <a href="TextWidget.html" title="Text Widget Overview">text widget
 conceptual overview</a> which gives an overview of all the objects and data
@@ -127,7 +140,7 @@ mark, a mark with <em class="firstterm">left gravity</em> will be moved to the
 beginning of the newly-inserted text, and a mark with <em class="firstterm">right
 gravity</em> will be moved to the end. 
 
-<sup>[<a name="id3062716" href="#ftn.id3062716">3</a>]</sup>
+<sup>[<a name="id3137714" href="#ftn.id3137714">3</a>]</sup>
 </p>
 <p>
 Marks are reference counted, but the reference count only controls the validity
@@ -144,20 +157,67 @@ Marks are typically created using the <a href="GtkTextBuffer.html#gtk-text-buffe
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3062777"></a><h2>Details</h2>
+<a name="id3137774"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3062787"></a><h3>
+<a name="id3137784"></a><h3>
 <a name="GtkTextMark-struct"></a>GtkTextMark</h3>
-<a class="indexterm" name="id3062799"></a><pre class="programlisting">typedef struct _GtkTextMark GtkTextMark;</pre>
+<a class="indexterm" name="id3137797"></a><pre class="programlisting">typedef struct _GtkTextMark GtkTextMark;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3062814"></a><h3>
+<a name="id3137812"></a><h3>
+<a name="gtk-text-mark-new"></a>gtk_text_mark_new ()</h3>
+<a class="indexterm" name="id3137827"></a><pre class="programlisting"><a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a>*        gtk_text_mark_new                   (const gchar *name,
+                                                         gboolean left_gravity);</pre>
+<p>
+Creates a text mark. Add it to a buffer using <a href="GtkTextBuffer.html#gtk-text-buffer-add-mark"><code class="function">gtk_text_buffer_add_mark()</code></a>.
+If <em class="parameter"><code>name</code></em> is <a
+href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a>, the mark is anonymous; otherwise, the mark can be 
+retrieved by name using <a href="GtkTextBuffer.html#gtk-text-buffer-get-mark"><code class="function">gtk_text_buffer_get_mark()</code></a>. If a mark has left 
+gravity, and text is inserted at the mark's current location, the mark 
+will be moved to the left of the newly-inserted text. If the mark has 
+right gravity (<em class="parameter"><code>left_gravity</code></em> = <code class="literal">FALSE</code>), the mark will end up on the 
+right of newly-inserted text. The standard left-to-right cursor is a 
+mark with right gravity (when you type, the cursor stays on the right
+side of the text you're typing).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>name</code></em>&#160;:</span></td>
+<td> mark name or <a
+href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>left_gravity</code></em>&#160;:</span></td>
+<td> whether the mark should have left gravity
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> new <a href="GtkTextMark.html" title="GtkTextMark"><span class="type">GtkTextMark</span></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3138000"></a><h3>
 <a name="gtk-text-mark-set-visible"></a>gtk_text_mark_set_visible ()</h3>
-<a class="indexterm" name="id3062828"></a><pre class="programlisting">void                gtk_text_mark_set_visible           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark,
+<a class="indexterm" name="id3138014"></a><pre class="programlisting">void                gtk_text_mark_set_visible           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark,
                                                          gboolean setting);</pre>
 <p>
 Sets the visibility of <em class="parameter"><code>mark</code></em>; the insertion point is normally
@@ -186,12 +246,12 @@ Marks are not visible by default.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3062918"></a><h3>
+<a name="id3138103"></a><h3>
 <a name="gtk-text-mark-get-visible"></a>gtk_text_mark_get_visible ()</h3>
-<a class="indexterm" name="id3062931"></a><pre class="programlisting">gboolean            gtk_text_mark_get_visible           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
+<a class="indexterm" name="id3138117"></a><pre class="programlisting">gboolean            gtk_text_mark_get_visible           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
 Returns <code class="literal">TRUE</code> if the mark is visible (i.e. a cursor is displayed
-for it)</p>
+for it).</p>
 <p>
 
 </p>
@@ -213,13 +273,13 @@ for it)</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3063019"></a><h3>
+<a name="id3138205"></a><h3>
 <a name="gtk-text-mark-get-deleted"></a>gtk_text_mark_get_deleted ()</h3>
-<a class="indexterm" name="id3063033"></a><pre class="programlisting">gboolean            gtk_text_mark_get_deleted           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
+<a class="indexterm" name="id3138219"></a><pre class="programlisting">gboolean            gtk_text_mark_get_deleted           (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
 Returns <code class="literal">TRUE</code> if the mark has been removed from its buffer
-with <a href="GtkTextBuffer.html#gtk-text-buffer-delete-mark"><code class="function">gtk_text_buffer_delete_mark()</code></a>. Marks can't be used
-once deleted.</p>
+with <a href="GtkTextBuffer.html#gtk-text-buffer-delete-mark"><code class="function">gtk_text_buffer_delete_mark()</code></a>. See <a href="GtkTextBuffer.html#gtk-text-buffer-add-mark"><code class="function">gtk_text_buffer_add_mark()</code></a>
+for a way to add it to a buffer again.</p>
 <p>
 
 </p>
@@ -241,9 +301,9 @@ once deleted.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3063124"></a><h3>
+<a name="id3138321"></a><h3>
 <a name="gtk-text-mark-get-name"></a>gtk_text_mark_get_name ()</h3>
-<a class="indexterm" name="id3063136"></a><pre class="programlisting">const gchar*        gtk_text_mark_get_name              (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
+<a class="indexterm" name="id3138334"></a><pre class="programlisting">const gchar*        gtk_text_mark_get_name              (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
 Returns the mark name; returns NULL for anonymous marks.</p>
 <p>
@@ -267,12 +327,14 @@ Returns the mark name; returns NULL for anonymous marks.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3063206"></a><h3>
+<a name="id3138403"></a><h3>
 <a name="gtk-text-mark-get-buffer"></a>gtk_text_mark_get_buffer ()</h3>
-<a class="indexterm" name="id3063219"></a><pre class="programlisting"><a href="GtkTextBuffer.html" title="GtkTextBuffer">GtkTextBuffer</a>*      gtk_text_mark_get_buffer            (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
+<a class="indexterm" name="id3138416"></a><pre class="programlisting"><a href="GtkTextBuffer.html" title="GtkTextBuffer">GtkTextBuffer</a>*      gtk_text_mark_get_buffer            (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
 Gets the buffer this mark is located inside,
-or NULL if the mark is deleted.</p>
+or <a
+href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the mark is deleted.</p>
 <p>
 
 </p>
@@ -294,9 +356,9 @@ or NULL if the mark is deleted.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3063297"></a><h3>
+<a name="id3138504"></a><h3>
 <a name="gtk-text-mark-get-left-gravity"></a>gtk_text_mark_get_left_gravity ()</h3>
-<a class="indexterm" name="id3063310"></a><pre class="programlisting">gboolean            gtk_text_mark_get_left_gravity      (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
+<a class="indexterm" name="id3138517"></a><pre class="programlisting">gboolean            gtk_text_mark_get_left_gravity      (<a href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
 Determines whether the mark has left gravity.</p>
 <p>
@@ -319,9 +381,27 @@ Determines whether the mark has left gravity.</p>
 </table></div>
 </div>
 </div>
+<div class="refsect1" lang="en">
+<a name="id3138607"></a><h2>Property Details</h2>
+<div class="refsect2" lang="en">
+<a name="id3138618"></a><h3>
+<a name="GtkTextMark--left-gravity"></a>The :<code class="literal">left-gravity</code> property</h3>
+<a class="indexterm" name="id3138634"></a><pre class="programlisting">  left-gravity             gboolean              : Read / Write / Construct Only</pre>
+<p>Whether the mark has left gravity.</p>
+<p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3138661"></a><h3>
+<a name="GtkTextMark--name"></a>The :<code class="literal">name</code> property</h3>
+<a class="indexterm" name="id3138676"></a><pre class="programlisting">  name                     gchararray            : Read / Write / Construct Only</pre>
+<p>Mark name.</p>
+<p>Default value: NULL</p>
+</div>
+</div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id3062716" href="#id3062716">3</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3137714" href="#id3137714">3</a>] </sup>
 "left" and "right" here refer to logical direction (left is the toward the start
 of the buffer); in some languages such as Hebrew the logically-leftmost text is
 not actually on the left when displayed.

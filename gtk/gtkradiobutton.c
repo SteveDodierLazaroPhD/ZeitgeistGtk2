@@ -100,7 +100,7 @@ gtk_radio_button_class_init (GtkRadioButtonClass *class)
    * Emitted when the group of radio buttons that a radio button belongs
    * to changes. This is emitted when a radio button switches from
    * being alone to being part of a group of 2 or more buttons, or
-   * vice-versa, and when a buttton is moved from one group of 2 or
+   * vice-versa, and when a button is moved from one group of 2 or
    * more buttons to a different one, but not when the composition
    * of the group that a button belongs to changes.
    *
@@ -144,10 +144,13 @@ gtk_radio_button_set_property (GObject      *object,
   switch (prop_id)
     {
       GSList *slist;
+      GtkRadioButton *button;
 
     case PROP_GROUP:
-      if (G_VALUE_HOLDS_OBJECT (value))
-	slist = gtk_radio_button_get_group ((GtkRadioButton*) g_value_get_object (value));
+        button = g_value_get_object (value);
+
+      if (button)
+	slist = gtk_radio_button_get_group (button);
       else
 	slist = NULL;
       gtk_radio_button_set_group (radio_button, slist);
@@ -445,9 +448,12 @@ gtk_radio_button_focus (GtkWidget         *widget,
   
   if (gtk_widget_is_focus (widget))
     {
+      GtkSettings *settings = gtk_widget_get_settings (widget);
       GSList *focus_list, *tmp_list;
       GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
       GtkWidget *new_focus = NULL;
+      gboolean cursor_only;
+      gboolean wrap_around;
 
       switch (direction)
 	{
@@ -464,7 +470,7 @@ gtk_radio_button_focus (GtkWidget         *widget,
 	case GTK_DIR_TAB_FORWARD:
 	case GTK_DIR_TAB_BACKWARD:
           /* fall through */
-	default:
+        default:
 	  return FALSE;
 	}
 
@@ -491,8 +497,26 @@ gtk_radio_button_focus (GtkWidget         *widget,
 	    }
 	}
 
+      g_object_get (settings,
+                    "gtk-keynav-cursor-only", &cursor_only,
+                    "gtk-keynav-wrap-around", &wrap_around,
+                    NULL);
+
       if (!new_focus)
 	{
+          if (cursor_only)
+            {
+              g_slist_free (focus_list);
+              return FALSE;
+            }
+
+          if (!wrap_around)
+            {
+              g_slist_free (focus_list);
+              gtk_widget_error_bell (widget);
+              return TRUE;
+            }
+
 	  tmp_list = focus_list;
 
 	  while (tmp_list)
@@ -514,7 +538,9 @@ gtk_radio_button_focus (GtkWidget         *widget,
       if (new_focus)
 	{
 	  gtk_widget_grab_focus (new_focus);
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (new_focus), TRUE);
+
+          if (!cursor_only)
+            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (new_focus), TRUE);
 	}
 
       return TRUE;

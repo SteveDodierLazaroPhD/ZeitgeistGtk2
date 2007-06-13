@@ -320,6 +320,8 @@ gtk_target_flags_get_type (void)
     static const GFlagsValue values[] = {
       { GTK_TARGET_SAME_APP, "GTK_TARGET_SAME_APP", "same-app" },
       { GTK_TARGET_SAME_WIDGET, "GTK_TARGET_SAME_WIDGET", "same-widget" },
+      { GTK_TARGET_OTHER_APP, "GTK_TARGET_OTHER_APP", "other-app" },
+      { GTK_TARGET_OTHER_WIDGET, "GTK_TARGET_OTHER_WIDGET", "other-widget" },
       { 0, NULL, NULL }
     };
     etype = g_flags_register_static (g_intern_static_string ("GtkTargetFlags"), values);
@@ -400,6 +402,7 @@ gtk_button_box_style_get_type (void)
       { GTK_BUTTONBOX_EDGE, "GTK_BUTTONBOX_EDGE", "edge" },
       { GTK_BUTTONBOX_START, "GTK_BUTTONBOX_START", "start" },
       { GTK_BUTTONBOX_END, "GTK_BUTTONBOX_END", "end" },
+      { GTK_BUTTONBOX_CENTER, "GTK_BUTTONBOX_CENTER", "center" },
       { 0, NULL, NULL }
     };
     etype = g_enum_register_static (g_intern_static_string ("GtkButtonBoxStyle"), values);
@@ -1184,6 +1187,24 @@ gtk_tree_view_grid_lines_get_type (void)
   }
   return etype;
 }
+GType
+gtk_drag_result_get_type (void)
+{
+  static GType etype = 0;
+  if (etype == 0) {
+    static const GEnumValue values[] = {
+      { GTK_DRAG_RESULT_SUCCESS, "GTK_DRAG_RESULT_SUCCESS", "success" },
+      { GTK_DRAG_RESULT_NO_TARGET, "GTK_DRAG_RESULT_NO_TARGET", "no-target" },
+      { GTK_DRAG_RESULT_USER_CANCELLED, "GTK_DRAG_RESULT_USER_CANCELLED", "user-cancelled" },
+      { GTK_DRAG_RESULT_TIMEOUT_EXPIRED, "GTK_DRAG_RESULT_TIMEOUT_EXPIRED", "timeout-expired" },
+      { GTK_DRAG_RESULT_GRAB_BROKEN, "GTK_DRAG_RESULT_GRAB_BROKEN", "grab-broken" },
+      { GTK_DRAG_RESULT_ERROR, "GTK_DRAG_RESULT_ERROR", "error" },
+      { 0, NULL, NULL }
+    };
+    etype = g_enum_register_static (g_intern_static_string ("GtkDragResult"), values);
+  }
+  return etype;
+}
 
 /* enumerations from "gtkfilechooser.h" */
 GType
@@ -1261,6 +1282,7 @@ gtk_icon_lookup_flags_get_type (void)
       { GTK_ICON_LOOKUP_NO_SVG, "GTK_ICON_LOOKUP_NO_SVG", "no-svg" },
       { GTK_ICON_LOOKUP_FORCE_SVG, "GTK_ICON_LOOKUP_FORCE_SVG", "force-svg" },
       { GTK_ICON_LOOKUP_USE_BUILTIN, "GTK_ICON_LOOKUP_USE_BUILTIN", "use-builtin" },
+      { GTK_ICON_LOOKUP_GENERIC_FALLBACK, "GTK_ICON_LOOKUP_GENERIC_FALLBACK", "generic-fallback" },
       { 0, NULL, NULL }
     };
     etype = g_flags_register_static (g_intern_static_string ("GtkIconLookupFlags"), values);
@@ -1475,6 +1497,7 @@ gtk_print_error_get_type (void)
       { GTK_PRINT_ERROR_GENERAL, "GTK_PRINT_ERROR_GENERAL", "general" },
       { GTK_PRINT_ERROR_INTERNAL_ERROR, "GTK_PRINT_ERROR_INTERNAL_ERROR", "internal-error" },
       { GTK_PRINT_ERROR_NOMEM, "GTK_PRINT_ERROR_NOMEM", "nomem" },
+      { GTK_PRINT_ERROR_INVALID_FILE, "GTK_PRINT_ERROR_INVALID_FILE", "invalid-file" },
       { 0, NULL, NULL }
     };
     etype = g_enum_register_static (g_intern_static_string ("GtkPrintError"), values);
@@ -1601,6 +1624,7 @@ gtk_rc_token_type_get_type (void)
       { GTK_RC_TOKEN_LTR, "GTK_RC_TOKEN_LTR", "ltr" },
       { GTK_RC_TOKEN_RTL, "GTK_RC_TOKEN_RTL", "rtl" },
       { GTK_RC_TOKEN_COLOR, "GTK_RC_TOKEN_COLOR", "color" },
+      { GTK_RC_TOKEN_UNBIND, "GTK_RC_TOKEN_UNBIND", "unbind" },
       { GTK_RC_TOKEN_LAST, "GTK_RC_TOKEN_LAST", "last" },
       { 0, NULL, NULL }
     };

@@ -58,6 +58,7 @@ enum                <link linkend="GtkVisibility">GtkVisibility</link>;
 enum                <link linkend="GtkWindowPosition">GtkWindowPosition</link>;
 enum                <link linkend="GtkWindowType">GtkWindowType</link>;
 enum                <link linkend="GtkSortType">GtkSortType</link>;
+enum                <link linkend="GtkDragResult">GtkDragResult</link>;
 
 </synopsis>
 </refsynopsisdiv>
@@ -197,7 +198,8 @@ container that has been allocated.
   GTK_BUTTONBOX_SPREAD,
   GTK_BUTTONBOX_EDGE,
   GTK_BUTTONBOX_START,
-  GTK_BUTTONBOX_END
+  GTK_BUTTONBOX_END,
+  GTK_BUTTONBOX_CENTER
 } GtkButtonBoxStyle;
 </programlisting>
 <para>
@@ -211,24 +213,29 @@ contains. (See also: <link linkend="GtkVButtonBox"><type>GtkVButtonBox</type></l
 </varlistentry>
 <varlistentry>
 <term><anchor id="GTK-BUTTONBOX-SPREAD:CAPS" role="constant"/><literal>GTK_BUTTONBOX_SPREAD</literal></term>
-<listitem><simpara>Buttons are evenly spread across the ButtonBox.
+<listitem><simpara>Buttons are evenly spread across the box.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GTK-BUTTONBOX-EDGE:CAPS" role="constant"/><literal>GTK_BUTTONBOX_EDGE</literal></term>
-<listitem><simpara>Buttons are placed at the edges of the ButtonBox.
+<listitem><simpara>Buttons are placed at the edges of the box.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GTK-BUTTONBOX-START:CAPS" role="constant"/><literal>GTK_BUTTONBOX_START</literal></term>
-<listitem><simpara>Buttons are grouped towards the start of box, (on the
-left for a HBox, or the top for a VBox).
+<listitem><simpara>Buttons are grouped towards the start of the box, 
+  (on the left for a HBox, or the top for a VBox).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><anchor id="GTK-BUTTONBOX-END:CAPS" role="constant"/><literal>GTK_BUTTONBOX_END</literal></term>
-<listitem><simpara>Buttons are grouped towards the end of a box, (on the
-right for a HBox, or the bottom for a VBox).
+<listitem><simpara>Buttons are grouped towards the end of the box, 
+  (on the right for a HBox, or the bottom for a VBox).
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="GTK-BUTTONBOX-CENTER:CAPS" role="constant"/><literal>GTK_BUTTONBOX_CENTER</literal></term>
+<listitem><simpara>Buttons are centered in the box. Since 2.12
 
 </simpara></listitem>
 </varlistentry>
@@ -1106,6 +1113,56 @@ Determines the direction of a sort.
 <varlistentry>
 <term><anchor id="GTK-SORT-DESCENDING:CAPS" role="constant"/><literal>GTK_SORT_DESCENDING</literal></term>
 <listitem><simpara>Sorting is in descending order.
+
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="GtkDragResult" role="enum"/>enum GtkDragResult</title>
+<indexterm><primary>GtkDragResult</primary></indexterm><programlisting>typedef enum {
+  GTK_DRAG_RESULT_SUCCESS,
+  GTK_DRAG_RESULT_NO_TARGET,
+  GTK_DRAG_RESULT_USER_CANCELLED,
+  GTK_DRAG_RESULT_TIMEOUT_EXPIRED,
+  GTK_DRAG_RESULT_GRAB_BROKEN,
+  GTK_DRAG_RESULT_ERROR
+} GtkDragResult;
+</programlisting>
+<para>
+Gives an indication why a drag operation failed. 
+The value can by obtained by connecting to the
+<link linkend="GtkWidget-drag-failed"><type>::drag-failed</type></link> signal.
+</para><variablelist role="enum">
+<varlistentry>
+<term><anchor id="GTK-DRAG-RESULT-SUCCESS:CAPS" role="constant"/><literal>GTK_DRAG_RESULT_SUCCESS</literal></term>
+<listitem><simpara>The drag operation was successful
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="GTK-DRAG-RESULT-NO-TARGET:CAPS" role="constant"/><literal>GTK_DRAG_RESULT_NO_TARGET</literal></term>
+<listitem><simpara>No suitable drag target
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="GTK-DRAG-RESULT-USER-CANCELLED:CAPS" role="constant"/><literal>GTK_DRAG_RESULT_USER_CANCELLED</literal></term>
+<listitem><simpara>The user cancelled the drag operation
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="GTK-DRAG-RESULT-TIMEOUT-EXPIRED:CAPS" role="constant"/><literal>GTK_DRAG_RESULT_TIMEOUT_EXPIRED</literal></term>
+<listitem><simpara>The drag operation timed out
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="GTK-DRAG-RESULT-GRAB-BROKEN:CAPS" role="constant"/><literal>GTK_DRAG_RESULT_GRAB_BROKEN</literal></term>
+<listitem><simpara>The pointer or keyboard grab used
+   for the drag operation was broken
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="GTK-DRAG-RESULT-ERROR:CAPS" role="constant"/><literal>GTK_DRAG_RESULT_ERROR</literal></term>
+<listitem><simpara>The drag operation failed due to some 
+   unspecified error
 
 </simpara></listitem>
 </varlistentry>

@@ -89,6 +89,12 @@ const <link linkend="char">char</link>*         <link linkend="gdk-x11-screen-ge
 <link linkend="Display">Display</link>*            <link linkend="gdk-x11-colormap-get-xdisplay">gdk_x11_colormap_get_xdisplay</link>       (<link linkend="GdkColormap">GdkColormap</link> *colormap);
 <link linkend="Cursor">Cursor</link>              <link linkend="gdk-x11-cursor-get-xcursor">gdk_x11_cursor_get_xcursor</link>          (<link linkend="GdkCursor">GdkCursor</link> *cursor);
 <link linkend="Display">Display</link>*            <link linkend="gdk-x11-cursor-get-xdisplay">gdk_x11_cursor_get_xdisplay</link>         (<link linkend="GdkCursor">GdkCursor</link> *cursor);
+<link linkend="void">void</link>                <link linkend="gdk-x11-display-broadcast-startup-message">gdk_x11_display_broadcast_startup_message</link>
+                                                        (<link linkend="GdkDisplay">GdkDisplay</link> *display,
+                                                         const <link linkend="char">char</link> *message_type,
+                                                         ...);
+const <link linkend="gchar">gchar</link>*        <link linkend="gdk-x11-display-get-startup-notification-id">gdk_x11_display_get_startup_notification_id</link>
+                                                        (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="Display">Display</link>*            <link linkend="gdk-x11-display-get-xdisplay">gdk_x11_display_get_xdisplay</link>        (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="void">void</link>                <link linkend="gdk-x11-display-grab">gdk_x11_display_grab</link>                (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="void">void</link>                <link linkend="gdk-x11-display-ungrab">gdk_x11_display_ungrab</link>              (<link linkend="GdkDisplay">GdkDisplay</link> *display);
@@ -1101,6 +1107,57 @@ Returns the display of a <link linkend="GdkCursor"><type>GdkCursor</type></link>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> an Xlib <type>Display*</type>.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gdk-x11-display-broadcast-startup-message" role="function" condition="since:2.12"/>gdk_x11_display_broadcast_startup_message ()</title>
+<indexterm role="2.12"><primary>gdk_x11_display_broadcast_startup_message</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_x11_display_broadcast_startup_message
+                                                        (<link linkend="GdkDisplay">GdkDisplay</link> *display,
+                                                         const <link linkend="char">char</link> *message_type,
+                                                         ...);</programlisting>
+<para>
+Sends a startup notification message of type <parameter>message_type</parameter> to
+<parameter>display</parameter>. 
+</para>
+<para>
+This is a convenience function for use by code that implements the
+freedesktop startup notification specification. Applications should
+not normally need to call it directly. See the <ulink
+url="http://standards.freedesktop.org/startup-notification-spec/startup-notification-latest.txt">Startup
+Notification Protocol specification</ulink> for
+definitions of the message types and keys that can be used.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkDisplay"><type>GdkDisplay</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>message_type</parameter>&nbsp;:</term>
+<listitem><simpara> startup notification message type ("new", "change",
+or "remove")
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&nbsp;:</term>
+<listitem><simpara> a list of key/value pairs (as strings), terminated by a
+<link linkend="NULL:CAPS"><literal>NULL</literal></link> key. (A <link linkend="NULL:CAPS"><literal>NULL</literal></link> value for a key will cause that key to be
+skipped in the output.)
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gdk-x11-display-get-startup-notification-id" role="function" condition="since:2.12"/>gdk_x11_display_get_startup_notification_id ()</title>
+<indexterm role="2.12"><primary>gdk_x11_display_get_startup_notification_id</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gdk_x11_display_get_startup_notification_id
+                                                        (<link linkend="GdkDisplay">GdkDisplay</link> *display);</programlisting>
+<para>
+Gets the startup notification ID for a display.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkDisplay"><type>GdkDisplay</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the startup notification ID for <parameter>display</parameter>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gdk-x11-display-get-xdisplay" role="function" condition="since:2.2"/>gdk_x11_display_get_xdisplay ()</title>
 <indexterm role="2.2"><primary>gdk_x11_display_get_xdisplay</primary></indexterm><programlisting><link linkend="Display">Display</link>*            gdk_x11_display_get_xdisplay        (<link linkend="GdkDisplay">GdkDisplay</link> *display);</programlisting>

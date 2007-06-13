@@ -121,6 +121,7 @@ struct _GtkTreeViewPrivate
   /* we cache it for simplicity of the code */
   gint dy;
   gint drag_column_x;
+  gint cursor_offset;
 
   GtkTreeViewColumn *expander_column;
   GtkTreeViewColumn *edited_column;
@@ -408,6 +409,10 @@ void		  _gtk_tree_view_column_cell_render      (GtkTreeViewColumn *tree_column,
 							  GdkRectangle      *cell_area,
 							  GdkRectangle      *expose_area,
 							  guint              flags);
+void		  _gtk_tree_view_column_get_focus_area   (GtkTreeViewColumn *tree_column,
+							  GdkRectangle      *background_area,
+							  GdkRectangle      *cell_area,
+							  GdkRectangle      *focus_area);
 gboolean	  _gtk_tree_view_column_cell_focus       (GtkTreeViewColumn *tree_column,
 							  gint               direction,
 							  gboolean           left,

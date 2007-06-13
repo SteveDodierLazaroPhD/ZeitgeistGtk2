@@ -28,12 +28,12 @@ TESTS = floatingtest
 
 noinst_PROGRAMS =			\
 	autotestfilechooser		\
-	autotestfilesystem		\
 	floatingtest			\
 	simple				\
 	print-editor			\
 	testaccel			\
 	testassistant			\
+	testbbox			\
 	testcairo			\
 	testcalendar			\
 	testcombo			\
@@ -84,10 +84,11 @@ noinst_PROGRAMS =			\
 	pixbuf-threads			\
 	testmerge			\
 	testactions			\
-	testgrouping
+	testgrouping			\
+	testtooltips			\
+	testvolumebutton
 
 autotestfilechooser_DEPENDENCIES = $(TEST_DEPS)
-autotestfilesystem_DEPENDENCIES = $(TEST_DEPS)
 simple_DEPENDENCIES = $(TEST_DEPS)
 floatingtest_DEPENDENCIES = $(TEST_DEPS)
 print_editor_DEPENDENCIES = $(TEST_DEPS)
@@ -95,6 +96,7 @@ testicontheme_DEPENDENCIES = $(TEST_DEPS)
 testiconview_DEPENDENCIES = $(TEST_DEPS)
 testaccel_DEPENDENCIES = $(TEST_DEPS)
 testassistant_DEPENDENCIES = $(TEST_DEPS)
+testbbox_DEPENDENCIES = $(TEST_DEPS)
 testcairo_DEPENDENCIES = $(TEST_DEPS)
 testcalendar_DEPENDENCIES = $(TEST_DEPS)
 testcombo_DEPENDENCIES = $(TEST_DEPS)
@@ -138,14 +140,16 @@ testxinerama_DEPENDENCIES = $(TEST_DEPS)
 testmerge_DEPENDENCIES = $(TEST_DEPS)
 testactions_DEPENDENCIES = $(TEST_DEPS)
 testgrouping_DEPENDENCIES = $(TEST_DEPS)
+testtooltips_DEPENDENCIES = $(TEST_DEPS)
+testvolumebutton_DEPENDENCIES = $(TEST_DEPS)
 
 autotestfilechooser_LDADD = $(LDADDS)
-autotestfilesystem_LDADD = $(LDADDS)
 simple_LDADD = $(LDADDS)
 floatingtest_LDADD = $(LDADDS)
 print_editor_LDADD = $(LDADDS)
 testaccel_LDADD = $(LDADDS)
 testassistant_LDADD = $(LDADDS)
+testbbox_LDADD = $(LDADDS)
 testcairo_LDADD = $(LDADDS)
 testcalendar_LDADD = $(LDADDS)
 testcombo_LDADD = $(LDADDS)
@@ -198,12 +202,11 @@ pixbuf_threads_LDADD = $(LDADDS) $(GLIB_LIBS)
 testmerge_LDADD = $(LDADDS)
 testactions_LDADD = $(LDADDS)
 testgrouping_LDADD = $(LDADDS)
+testtooltips_LDADD = $(LDADDS)
+testvolumebutton_LDADD = $(LDADDS)
 
 autotestfilechooser_SOURCES =	\
 	autotestfilechooser.c
-
-autotestfilesystem_SOURCES =	\
-	autotestfilesystem.c
 
 testentrycompletion_SOURCES = 	\
 	prop-editor.c		\
@@ -256,6 +259,7 @@ testspinbutton_SOURCES =    	\
 	testspinbutton.c
 
 teststatusicon_SOURCES =    	\
+	prop-editor.c		\
 	teststatusicon.c
 
 testmerge_SOURCES = 		\
@@ -263,6 +267,9 @@ testmerge_SOURCES = 		\
 
 testactions_SOURCES = 		\
 	testactions.c
+
+testbbox_SOURCES = 		\
+	testbbox.c
 
 testiconview_SOURCES = 		\
 	testiconview.c		\
@@ -275,8 +282,14 @@ testrecentchooser_SOURCES = 	\
 testgrouping_SOURCES =		\
 	testgrouping.c
 
+testtooltips_SOURCES =		\
+	testtooltips.c
+
 testrecentchoosermenu_SOURCES =	\
 	testrecentchoosermenu.c
+
+testvolumebutton_SOURCES =	\
+	testvolumebutton.c
 
 EXTRA_DIST = 			\
 	prop-editor.h		\

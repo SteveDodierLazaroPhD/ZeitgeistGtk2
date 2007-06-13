@@ -29,59 +29,9 @@
 #include <config.h>
 #include <stdlib.h>
 
-#ifndef _MSC_VER
-#define _WIN32_WINNT 0x0500
-#define WINVER _WIN32_WINNT
-#endif
-
 #include "gdk.h"
 #include "gdkprivate-win32.h"
 #include "gdkinput-win32.h"
-
-#if defined(_MSC_VER) && (WINVER < 0x0500)
-
-typedef struct
-{
-  UINT cbSize;
-  HWND hwnd;
-  DWORD dwFlags;
-  UINT uCount;
-  DWORD dwTimeout;
-} FLASHWINFO;
-
-#define FLASHW_STOP 0
-#define FLASHW_CAPTION 1
-#define FLASHW_TRAY 2
-#define FLASHW_ALL (FLASHW_CAPTION|FLASHW_TRAY)
-#define FLASHW_TIMER 4
-
-#define GetAncestor(hwnd,what) _gdk_win32_get_ancestor_parent (hwnd)
-
-static HWND
-_gdk_win32_get_ancestor_parent (HWND hwnd)
-{
-#ifndef GA_PARENT
-#  define GA_PARENT 1 
-#endif
-  typedef HWND (WINAPI *PFN_GetAncestor) (HWND,UINT);
-  static PFN_GetAncestor p_GetAncestor = NULL;
-  static gboolean once = FALSE;
-  
-  if (!once)
-    {
-      HMODULE user32;
-
-      user32 = GetModuleHandle ("user32.dll");
-      p_GetAncestor = (PFN_GetAncestor)GetProcAddress (user32, "GetAncestor");
-      once = TRUE;
-    }
-  if (p_GetAncestor)
-    return p_GetAncestor (hwnd, GA_PARENT);
-  else /* not completely right, but better than nothing ? */
-    return GetParent (hwnd);
-}
-
-#endif
 
 #if 0
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -370,7 +320,7 @@ RegisterGdkClass (GdkWindowType wtype, GdkWindowTypeHint wtype_hint)
   static ATOM klassTEMPSHADOW = 0;
   static HICON hAppIcon = NULL;
   static HICON hAppIconSm = NULL;
-  static WNDCLASSEX wcl; 
+  static WNDCLASSEXW wcl; 
   ATOM klass = 0;
 
   wcl.cbSize = sizeof (WNDCLASSEX);
@@ -431,10 +381,10 @@ RegisterGdkClass (GdkWindowType wtype, GdkWindowTypeHint wtype_hint)
     case GDK_WINDOW_TOPLEVEL:
       if (0 == klassTOPLEVEL)
 	{
-	  wcl.lpszClassName = "gdkWindowToplevel";
+	  wcl.lpszClassName = L"gdkWindowToplevel";
 	  
 	  ONCE_PER_CLASS ();
-	  klassTOPLEVEL = RegisterClassEx (&wcl);
+	  klassTOPLEVEL = RegisterClassExW (&wcl);
 	}
       klass = klassTOPLEVEL;
       break;
@@ -442,11 +392,11 @@ RegisterGdkClass (GdkWindowType wtype, GdkWindowTypeHint wtype_hint)
     case GDK_WINDOW_CHILD:
       if (0 == klassCHILD)
 	{
-	  wcl.lpszClassName = "gdkWindowChild";
+	  wcl.lpszClassName = L"gdkWindowChild";
 	  
 	  wcl.style |= CS_PARENTDC; /* MSDN: ... enhances system performance. */
 	  ONCE_PER_CLASS ();
-	  klassCHILD = RegisterClassEx (&wcl);
+	  klassCHILD = RegisterClassExW (&wcl);
 	}
       klass = klassCHILD;
       break;
@@ -454,42 +404,44 @@ RegisterGdkClass (GdkWindowType wtype, GdkWindowTypeHint wtype_hint)
     case GDK_WINDOW_DIALOG:
       if (0 == klassDIALOG)
 	{
-	  wcl.lpszClassName = "gdkWindowDialog";
+	  wcl.lpszClassName = L"gdkWindowDialog";
 	  wcl.style |= CS_SAVEBITS;
 	  ONCE_PER_CLASS ();
-	  klassDIALOG = RegisterClassEx (&wcl);
+	  klassDIALOG = RegisterClassExW (&wcl);
 	}
       klass = klassDIALOG;
       break;
       
     case GDK_WINDOW_TEMP:
       if ((wtype_hint == GDK_WINDOW_TYPE_HINT_MENU) ||
-	  (wtype_hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU) ||
-	  (wtype_hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU) ||
-	  (wtype_hint == GDK_WINDOW_TYPE_HINT_TOOLTIP))
-	{
-	  if (klassTEMPSHADOW == 0)
-	    {
-	      wcl.lpszClassName = "gdkWindowTempShadow";
-	      wcl.style |= CS_SAVEBITS;
-	      if (_winver >= 0x0501) /* Windows XP (5.1) or above */
-		wcl.style |= 0x00020000; /* CS_DROPSHADOW */
-	      ONCE_PER_CLASS ();
-	      klassTEMPSHADOW = RegisterClassEx (&wcl);
-	    }
-	  klass = klassTEMPSHADOW;
-	}
-      else
-	{
-	  if (0 == klassTEMP)
-	    {
-	      wcl.lpszClassName = "gdkWindowTemp";
-	      wcl.style |= CS_SAVEBITS;
-	      ONCE_PER_CLASS ();
-	      klassTEMP = RegisterClassEx (&wcl);
-	    }
-	  klass = klassTEMP;
-	}
+          (wtype_hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU) ||
+          (wtype_hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU) ||
+          (wtype_hint == GDK_WINDOW_TYPE_HINT_TOOLTIP))
+        {
+          if (klassTEMPSHADOW == 0)
+            {
+              wcl.lpszClassName = "gdkWindowTempShadow";
+              wcl.style |= CS_SAVEBITS;
+              if (_winver >= 0x0501) /* Windows XP (5.1) or above */
+                wcl.style |= 0x00020000; /* CS_DROPSHADOW */
+              ONCE_PER_CLASS ();
+              klassTEMPSHADOW = RegisterClassEx (&wcl);
+            }
+
+          klass = klassTEMPSHADOW;
+        }
+       else
+        {
+          if (klassTEMP == 0)
+            {
+              wcl.lpszClassName = "gdkWindowTemp";
+              wcl.style |= CS_SAVEBITS;
+              ONCE_PER_CLASS ();
+              klassTEMP = RegisterClassEx (&wcl);
+            }
+
+          klass = klassTEMP;
+        }
       break;
       
     default:
@@ -499,7 +451,7 @@ RegisterGdkClass (GdkWindowType wtype, GdkWindowTypeHint wtype_hint)
   
   if (klass == 0)
     {
-      WIN32_API_FAILED ("RegisterClassEx");
+      WIN32_API_FAILED ("RegisterClassExW");
       g_error ("That is a fatal error");
     }
   return klass;
@@ -523,7 +475,7 @@ gdk_window_new_internal (GdkWindow     *parent,
   GdkDrawableImplWin32 *draw_impl;
   GdkVisual *visual;
   const gchar *title;
-  char *mbtitle;
+  wchar_t *wtitle;
   gint window_width, window_height;
   gint offset_x = 0, offset_y = 0;
 
@@ -620,6 +572,10 @@ gdk_window_new_internal (GdkWindow     *parent,
     }
   else
     {
+      /* I very much doubt using WS_EX_TRANSPARENT actually
+       * corresponds to how X11 InputOnly windows work, but it appears
+       * to work well enough for the actual use cases in gtk.
+       */
       dwExStyle = WS_EX_TRANSPARENT;
       private->depth = 0;
       private->input_only = TRUE;
@@ -714,20 +670,20 @@ gdk_window_new_internal (GdkWindow     *parent,
 
   klass = RegisterGdkClass (private->window_type, impl->type_hint);
 
-  mbtitle = g_locale_from_utf8 (title, -1, NULL, NULL, NULL);
+  wtitle = g_utf8_to_utf16 (title, -1, NULL, NULL, NULL);
   
-  hwndNew = CreateWindowEx (dwExStyle,
-			    MAKEINTRESOURCE (klass),
-			    mbtitle,
-			    dwStyle,
-			    ((attributes_mask & GDK_WA_X) ?
-			     impl->position_info.x - offset_x : CW_USEDEFAULT),
-			    impl->position_info.y - offset_y, 
-			    window_width, window_height,
-			    hparent,
-			    NULL,
-			    _gdk_app_hmodule,
-			    window);
+  hwndNew = CreateWindowExW (dwExStyle,
+			     MAKEINTRESOURCEW (klass),
+			     wtitle,
+			     dwStyle,
+			     ((attributes_mask & GDK_WA_X) ?
+			      impl->position_info.x - offset_x : CW_USEDEFAULT),
+			     impl->position_info.y - offset_y, 
+			     window_width, window_height,
+			     hparent,
+			     NULL,
+			     _gdk_app_hmodule,
+			     window);
   if (GDK_WINDOW_HWND (window) != hwndNew)
     {
       g_warning ("gdk_window_new: gdk_event_translate::WM_CREATE (%p, %p) HWND mismatch.",
@@ -754,7 +710,7 @@ gdk_window_new_internal (GdkWindow     *parent,
   gdk_win32_handle_table_insert (&GDK_WINDOW_HWND (window), window);
 
   GDK_NOTE (MISC, g_print ("... \"%s\" %dx%d@%+d%+d %p = %p\n",
-			   mbtitle,
+			   title,
 			   window_width, window_height,
 			   ((attributes_mask & GDK_WA_X) ?
 			    impl->position_info.x - offset_x: CW_USEDEFAULT),
@@ -762,11 +718,11 @@ gdk_window_new_internal (GdkWindow     *parent,
 			   hparent,
 			   GDK_WINDOW_HWND (window)));
 
-  g_free (mbtitle);
+  g_free (wtitle);
 
   if (draw_impl->handle == NULL)
     {
-      WIN32_API_FAILED ("CreateWindowEx");
+      WIN32_API_FAILED ("CreateWindowExW");
       g_object_unref (window);
       return NULL;
     }
@@ -1607,7 +1563,6 @@ _gdk_windowing_window_clear_area (GdkWindow *window,
       hdc = GetDC (GDK_WINDOW_HWND (window));
       IntersectClipRect (hdc, x, y, x + width, y + height);
       erase_background (window, hdc);
-
       GDI_CALL (ReleaseDC, (GDK_WINDOW_HWND (window), hdc));
     }
 }
@@ -1917,6 +1872,8 @@ void
 gdk_window_set_title (GdkWindow   *window,
 		      const gchar *title)
 {
+  wchar_t *wtitle;
+
   g_return_if_fail (GDK_IS_WINDOW (window));
   g_return_if_fail (title != NULL);
 
@@ -1930,18 +1887,9 @@ gdk_window_set_title (GdkWindow   *window,
   GDK_NOTE (MISC, g_print ("gdk_window_set_title: %p: %s\n",
 			   GDK_WINDOW_HWND (window), title));
   
-  if (G_WIN32_HAVE_WIDECHAR_API ())
-    {
-      wchar_t *wtitle = g_utf8_to_utf16 (title, -1, NULL, NULL, NULL);
-      API_CALL (SetWindowTextW, (GDK_WINDOW_HWND (window), wtitle));
-      g_free (wtitle);
-    }
-  else
-    {
-      char *cptitle = g_locale_from_utf8 (title, -1, NULL, NULL, NULL);
-      API_CALL (SetWindowTextA, (GDK_WINDOW_HWND (window), cptitle));
-      g_free (cptitle);
-    }
+  wtitle = g_utf8_to_utf16 (title, -1, NULL, NULL, NULL);
+  API_CALL (SetWindowTextW, (GDK_WINDOW_HWND (window), wtitle));
+  g_free (wtitle);
 }
 
 void          
@@ -2692,10 +2640,10 @@ gdk_window_set_icon_list (GdkWindow *window,
   small_hicon = _gdk_win32_pixbuf_to_hicon (small_pixbuf);
 
   /* Set the icons */
-  SendMessage (GDK_WINDOW_HWND (window), WM_SETICON, ICON_BIG,
-	       (LPARAM)big_hicon);
-  SendMessage (GDK_WINDOW_HWND (window), WM_SETICON, ICON_SMALL,
-  	       (LPARAM)small_hicon);
+  SendMessageW (GDK_WINDOW_HWND (window), WM_SETICON, ICON_BIG,
+		(LPARAM)big_hicon);
+  SendMessageW (GDK_WINDOW_HWND (window), WM_SETICON, ICON_SMALL,
+		(LPARAM)small_hicon);
 
   /* Store the icons, destroying any previous icons */
   if (impl->hicon_big)
@@ -2721,6 +2669,13 @@ void
 gdk_window_set_icon_name (GdkWindow   *window, 
 			  const gchar *name)
 {
+  /* In case I manage to confuse this again (or somebody else does):
+   * Please note that "icon name" here really *does* mean the name or
+   * title of an window minimized as an icon on the desktop, or in the
+   * taskbar. It has nothing to do with the freedesktop.org icon
+   * naming stuff.
+   */
+
   g_return_if_fail (GDK_IS_WINDOW (window));
 
   if (GDK_WINDOW_DESTROYED (window))
@@ -3124,8 +3079,8 @@ gdk_window_begin_resize_drag (GdkWindow     *window,
       break;
     }
 
-  DefWindowProc (GDK_WINDOW_HWND (window), WM_NCLBUTTONDOWN, winedge,
-		 MAKELPARAM (root_x - _gdk_offset_x, root_y - _gdk_offset_y));
+  DefWindowProcW (GDK_WINDOW_HWND (window), WM_NCLBUTTONDOWN, winedge,
+		  MAKELPARAM (root_x - _gdk_offset_x, root_y - _gdk_offset_y));
 }
 
 void
@@ -3154,8 +3109,8 @@ gdk_window_begin_move_drag (GdkWindow *window,
    */
   gdk_display_pointer_ungrab (_gdk_display, 0);
 
-  DefWindowProc (GDK_WINDOW_HWND (window), WM_NCLBUTTONDOWN, HTCAPTION,
-		 MAKELPARAM (root_x - _gdk_offset_x, root_y - _gdk_offset_y));
+  DefWindowProcW (GDK_WINDOW_HWND (window), WM_NCLBUTTONDOWN, HTCAPTION,
+		  MAKELPARAM (root_x - _gdk_offset_x, root_y - _gdk_offset_y));
 }
 
 
@@ -3579,4 +3534,45 @@ void
 gdk_window_configure_finished (GdkWindow *window)
 {
   g_return_if_fail (GDK_IS_WINDOW (window));
+}
+
+void
+gdk_window_beep (GdkWindow *window)
+{
+  gdk_display_beep (_gdk_display);
+}
+
+void
+gdk_window_set_opacity (GdkWindow *window,
+			gdouble    opacity)
+{
+  LONG exstyle;
+
+  g_return_if_fail (GDK_IS_WINDOW (window));
+  g_return_if_fail (WINDOW_IS_TOPLEVEL (window));
+
+  if (GDK_WINDOW_DESTROYED (window))
+    return;
+
+  if (opacity < 0)
+    opacity = 0;
+  else if (opacity > 1)
+    opacity = 1;
+
+  exstyle = GetWindowLong (GDK_WINDOW_HWND (window), GWL_EXSTYLE);
+
+  if (!(exstyle & WS_EX_LAYERED))
+    API_CALL (SetWindowLong, (GDK_WINDOW_HWND (window),
+			      GWL_EXSTYLE,
+			      exstyle | WS_EX_LAYERED));
+
+  API_CALL (SetLayeredWindowAttributes, (GDK_WINDOW_HWND (window),
+					 0,
+					 opacity * 0xff,
+					 LWA_ALPHA));
+}
+
+void
+_gdk_windowing_window_set_composited (GdkWindow *window, gboolean composited)
+{
 }

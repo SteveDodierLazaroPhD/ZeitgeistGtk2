@@ -36,8 +36,12 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-is-default">gtk_printer_is_default</link>              (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-accepts-ps">gtk_printer_accepts_ps</link>              (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-accepts-pdf">gtk_printer_accepts_pdf</link>             (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
+<link linkend="GList">GList</link>*              <link linkend="gtk-printer-list-papers">gtk_printer_list_papers</link>             (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gint">gint</link>                <link linkend="gtk-printer-compare">gtk_printer_compare</link>                 (<link linkend="GtkPrinter">GtkPrinter</link> *a,
                                                          <link linkend="GtkPrinter">GtkPrinter</link> *b);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-has-details">gtk_printer_has_details</link>             (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
+<link linkend="void">void</link>                <link linkend="gtk-printer-request-details">gtk_printer_request_details</link>         (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
+<link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link> <link linkend="gtk-printer-get-capabilities">gtk_printer_get_capabilities</link>       (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            (<link linkend="GtkPrinterFunc">*GtkPrinterFunc</link>)                   (<link linkend="GtkPrinter">GtkPrinter</link> *printer,
                                                          <link linkend="gpointer">gpointer</link> data);
 <link linkend="void">void</link>                <link linkend="gtk-enumerate-printers">gtk_enumerate_printers</link>              (<link linkend="GtkPrinterFunc">GtkPrinterFunc</link> func,
@@ -72,15 +76,15 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkPrinter--accepts-pdf">accepts-pdf</link>&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
-  &quot;<link linkend="GtkPrinter--accepts-ps">accepts-ps</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
-  &quot;<link linkend="GtkPrinter--backend">backend</link>&quot;                  <link linkend="GtkPrintBackend">GtkPrintBackend</link>       : Read / Write / Construct Only
-  &quot;<link linkend="GtkPrinter--icon-name">icon-name</link>&quot;                <link linkend="gchararray">gchararray</link>            : Read
-  &quot;<link linkend="GtkPrinter--is-virtual">is-virtual</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
-  &quot;<link linkend="GtkPrinter--job-count">job-count</link>&quot;                <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkPrinter--location">location</link>&quot;                 <link linkend="gchararray">gchararray</link>            : Read
-  &quot;<link linkend="GtkPrinter--name">name</link>&quot;                     <link linkend="gchararray">gchararray</link>            : Read / Write / Construct Only
-  &quot;<link linkend="GtkPrinter--state-message">state-message</link>&quot;            <link linkend="gchararray">gchararray</link>            : Read
+  <link linkend="GtkPrinter--accepts-pdf">accepts-pdf</link>              <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
+  <link linkend="GtkPrinter--accepts-ps">accepts-ps</link>               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
+  <link linkend="GtkPrinter--backend">backend</link>                  <link linkend="GtkPrintBackend">GtkPrintBackend</link>       : Read / Write / Construct Only
+  <link linkend="GtkPrinter--icon-name">icon-name</link>                <link linkend="gchararray">gchararray</link>            : Read
+  <link linkend="GtkPrinter--is-virtual">is-virtual</link>               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
+  <link linkend="GtkPrinter--job-count">job-count</link>                <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkPrinter--location">location</link>                 <link linkend="gchararray">gchararray</link>            : Read
+  <link linkend="GtkPrinter--name">name</link>                     <link linkend="gchararray">gchararray</link>            : Read / Write / Construct Only
+  <link linkend="GtkPrinter--state-message">state-message</link>            <link linkend="gchararray">gchararray</link>            : Read
 </synopsis>
 </refsect1>
 
@@ -88,7 +92,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  &quot;<link linkend="GtkPrinter-details-acquired">details-acquired</link>&quot;                               : Run Last
+  <link linkend="GtkPrinter-details-acquired">details-acquired</link>                               : Run Last
 </synopsis>
 </refsect1>
 
@@ -219,7 +223,7 @@ Gets the description of the printer.</para>
 <title><anchor id="gtk-printer-get-location" role="function" condition="since:2.10"/>gtk_printer_get_location ()</title>
 <indexterm role="2.10"><primary>gtk_printer_get_location</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_printer_get_location            (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
 <para>
-Returns a  description of the location of the printer.</para>
+Returns a description of the location of the printer.</para>
 <para>
 
 </para><variablelist role="params">
@@ -349,6 +353,24 @@ PDF format.</para>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
 <refsect2>
+<title><anchor id="gtk-printer-list-papers" role="function" condition="since:2.12"/>gtk_printer_list_papers ()</title>
+<indexterm role="2.12"><primary>gtk_printer_list_papers</primary></indexterm><programlisting><link linkend="GList">GList</link>*              gtk_printer_list_papers             (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
+<para>
+Lists all the paper sizes <parameter>printer</parameter> supports.
+This will return and empty list unless the printer's details are 
+available, see <link linkend="gtk-printer-has-details"><function>gtk_printer_has_details()</function></link> and <link linkend="gtk-printer-request-details"><function>gtk_printer_request_details()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrinter"><type>GtkPrinter</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly allocated list of newly allocated <link linkend="GtkPageSetup"><type>GtkPageSetup</type></link> s.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-printer-compare" role="function" condition="since:2.10"/>gtk_printer_compare ()</title>
 <indexterm role="2.10"><primary>gtk_printer_compare</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_printer_compare                 (<link linkend="GtkPrinter">GtkPrinter</link> *a,
                                                          <link linkend="GtkPrinter">GtkPrinter</link> *b);</programlisting>
@@ -368,6 +390,62 @@ Compares two printers.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-printer-has-details" role="function" condition="since:2.12"/>gtk_printer_has_details ()</title>
+<indexterm role="2.12"><primary>gtk_printer_has_details</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_printer_has_details             (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
+<para>
+Returns whether the printer details are available.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrinter"><type>GtkPrinter</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>printer</parameter> details are available
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-printer-request-details" role="function" condition="since:2.12"/>gtk_printer_request_details ()</title>
+<indexterm role="2.12"><primary>gtk_printer_request_details</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_printer_request_details         (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
+<para>
+Requests the printer details. When the details are available,
+the <link linkend="GtkPrinter-details-acquired"><type>::details-acquired</type></link> signal will be emitted on <parameter>printer</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrinter"><type>GtkPrinter</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-printer-get-capabilities" role="function" condition="since:2.12"/>gtk_printer_get_capabilities ()</title>
+<indexterm role="2.12"><primary>gtk_printer_get_capabilities</primary></indexterm><programlisting><link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link> gtk_printer_get_capabilities       (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
+<para>
+Returns the printer's capabilities.
+</para>
+<para>
+This is useful when you're using <link linkend="GtkPrintUnixDialog"><type>GtkPrintUnixDialog</type></link>'s manual-capabilities 
+setting and need to know which settings the printer can handle and which 
+you must handle yourself.
+</para>
+<para>
+This will return 0 unless the printer's details are available, see
+<link linkend="gtk-printer-has-details"><function>gtk_printer_has_details()</function></link> and <link linkend="gtk-printer-request-details"><function>gtk_printer_request_details()</function></link>.
+ *</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrinter"><type>GtkPrinter</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the printer's capabilities
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
 <title><anchor id="GtkPrinterFunc" role="function"/>GtkPrinterFunc ()</title>
@@ -420,40 +498,40 @@ If <parameter>func</parameter> returns <link linkend="TRUE:CAPS"><literal>TRUE</
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkPrinter--accepts-pdf"/>The &quot;<literal>accepts-pdf</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:accepts-pdf</primary></indexterm><programlisting>  &quot;accepts-pdf&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GtkPrinter--accepts-pdf"/>The :<literal>accepts-pdf</literal> property</title>
+<indexterm><primary>GtkPrinter:accepts-pdf</primary></indexterm><programlisting>  accepts-pdf              <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
 <para>TRUE if this printer can accept PDF.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrinter--accepts-ps"/>The &quot;<literal>accepts-ps</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:accepts-ps</primary></indexterm><programlisting>  &quot;accepts-ps&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GtkPrinter--accepts-ps"/>The :<literal>accepts-ps</literal> property</title>
+<indexterm><primary>GtkPrinter:accepts-ps</primary></indexterm><programlisting>  accepts-ps               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
 <para>TRUE if this printer can accept PostScript.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrinter--backend"/>The &quot;<literal>backend</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:backend</primary></indexterm><programlisting>  &quot;backend&quot;                  <link linkend="GtkPrintBackend">GtkPrintBackend</link>       : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GtkPrinter--backend"/>The :<literal>backend</literal> property</title>
+<indexterm><primary>GtkPrinter:backend</primary></indexterm><programlisting>  backend                  <link linkend="GtkPrintBackend">GtkPrintBackend</link>       : Read / Write / Construct Only</programlisting>
 <para>Backend for the printer.</para></refsect2>
-<refsect2><title><anchor id="GtkPrinter--icon-name"/>The &quot;<literal>icon-name</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:icon-name</primary></indexterm><programlisting>  &quot;icon-name&quot;                <link linkend="gchararray">gchararray</link>            : Read</programlisting>
+<refsect2><title><anchor id="GtkPrinter--icon-name"/>The :<literal>icon-name</literal> property</title>
+<indexterm><primary>GtkPrinter:icon-name</primary></indexterm><programlisting>  icon-name                <link linkend="gchararray">gchararray</link>            : Read</programlisting>
 <para>The icon name to use for the printer.</para><para>Default value: NULL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrinter--is-virtual"/>The &quot;<literal>is-virtual</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:is-virtual</primary></indexterm><programlisting>  &quot;is-virtual&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GtkPrinter--is-virtual"/>The :<literal>is-virtual</literal> property</title>
+<indexterm><primary>GtkPrinter:is-virtual</primary></indexterm><programlisting>  is-virtual               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
 <para>FALSE if this represents a real hardware printer.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrinter--job-count"/>The &quot;<literal>job-count</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:job-count</primary></indexterm><programlisting>  &quot;job-count&quot;                <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkPrinter--job-count"/>The :<literal>job-count</literal> property</title>
+<indexterm><primary>GtkPrinter:job-count</primary></indexterm><programlisting>  job-count                <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Number of jobs queued in the printer.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrinter--location"/>The &quot;<literal>location</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:location</primary></indexterm><programlisting>  &quot;location&quot;                 <link linkend="gchararray">gchararray</link>            : Read</programlisting>
+<refsect2><title><anchor id="GtkPrinter--location"/>The :<literal>location</literal> property</title>
+<indexterm><primary>GtkPrinter:location</primary></indexterm><programlisting>  location                 <link linkend="gchararray">gchararray</link>            : Read</programlisting>
 <para>The location of the printer.</para><para>Default value: NULL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrinter--name"/>The &quot;<literal>name</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:name</primary></indexterm><programlisting>  &quot;name&quot;                     <link linkend="gchararray">gchararray</link>            : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GtkPrinter--name"/>The :<literal>name</literal> property</title>
+<indexterm><primary>GtkPrinter:name</primary></indexterm><programlisting>  name                     <link linkend="gchararray">gchararray</link>            : Read / Write / Construct Only</programlisting>
 <para>Name of the printer.</para><para>Default value: NULL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrinter--state-message"/>The &quot;<literal>state-message</literal>&quot; property</title>
-<indexterm><primary>GtkPrinter:state-message</primary></indexterm><programlisting>  &quot;state-message&quot;            <link linkend="gchararray">gchararray</link>            : Read</programlisting>
+<refsect2><title><anchor id="GtkPrinter--state-message"/>The :<literal>state-message</literal> property</title>
+<indexterm><primary>GtkPrinter:state-message</primary></indexterm><programlisting>  state-message            <link linkend="gchararray">gchararray</link>            : Read</programlisting>
 <para>String giving the current state of the printer.</para><para>Default value: NULL</para>
 </refsect2>
 
@@ -461,7 +539,7 @@ If <parameter>func</parameter> returns <link linkend="TRUE:CAPS"><literal>TRUE</
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkPrinter-details-acquired"/>The &quot;details-acquired&quot; signal</title>
+<refsect2><title><anchor id="GtkPrinter-details-acquired"/>The <literal>::details-acquired</literal> signal</title>
 <indexterm role="2.10"><primary>GtkPrinter::details-acquired</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrinter">GtkPrinter</link> *printer,
                                                         <link linkend="gboolean">gboolean</link>    success,
                                                         <link linkend="gpointer">gpointer</link>    user_data)      : Run Last</programlisting>

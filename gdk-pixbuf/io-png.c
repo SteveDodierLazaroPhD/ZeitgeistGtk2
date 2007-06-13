@@ -283,8 +283,7 @@ gdk_pixbuf__png_image_load (FILE *f, GError **error)
 	}
 
 	if (setjmp (png_ptr->jmpbuf)) {
-	    	if (rows)
-		  	g_free (rows);
+	    	g_free (rows);
 
 		if (pixbuf)
 			g_object_unref (pixbuf);
@@ -676,7 +675,7 @@ png_row_callback   (png_structp png_read_ptr,
         if (lc->fatal_error_occurred)
                 return;
 
-        if (row_num < 0 || row_num >= lc->pixbuf->height) {
+        if (row_num >= lc->pixbuf->height) {
                 lc->fatal_error_occurred = TRUE;
                 if (lc->error && *lc->error == NULL) {
                         g_set_error (lc->error,
@@ -1009,6 +1008,12 @@ gdk_pixbuf__png_image_save_to_callback (GdkPixbufSaveFunc   save_func,
         return real_save_png (pixbuf, keys, values, error,
                               TRUE, NULL, save_func, user_data);
 }
+
+#ifndef INCLUDE_png
+#define MODULE_ENTRY(type,function) function
+#else
+#define MODULE_ENTRY(type,function) _gdk_pixbuf__ ## type ## _ ## function
+#endif
 
 void
 MODULE_ENTRY (png, fill_vtable) (GdkPixbufModule *module)

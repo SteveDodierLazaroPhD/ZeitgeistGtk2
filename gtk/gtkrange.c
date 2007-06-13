@@ -33,7 +33,6 @@
 #include "gtkmain.h"
 #include "gtkmarshalers.h"
 #include "gtkrange.h"
-#include "gtkintl.h"
 #include "gtkscrollbar.h"
 #include "gtkprivate.h"
 #include "gtkalias.h"
@@ -47,7 +46,10 @@ enum {
   PROP_ADJUSTMENT,
   PROP_INVERTED,
   PROP_LOWER_STEPPER_SENSITIVITY,
-  PROP_UPPER_STEPPER_SENSITIVITY
+  PROP_UPPER_STEPPER_SENSITIVITY,
+  PROP_SHOW_FILL_LEVEL,
+  PROP_RESTRICT_TO_FILL_LEVEL,
+  PROP_FILL_LEVEL
 };
 
 enum {
@@ -68,6 +70,8 @@ typedef enum {
   MOUSE_SLIDER,
   MOUSE_WIDGET /* inside widget but not in any of the above GUI elements */
 } MouseLocation;
+
+#define GTK_RANGE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_RANGE, GtkRangeLayout))
 
 struct _GtkRangeLayout
 {
@@ -97,8 +101,14 @@ struct _GtkRangeLayout
   guint lower_sensitive : 1;
   guint upper_sensitive : 1;
 
+  /* Fill level */
+  guint show_fill_level : 1;
+  guint restrict_to_fill_level : 1;
+
   GtkSensitivityType lower_sensitivity;
   GtkSensitivityType upper_sensitivity;
+
+  gdouble fill_level;
 };
 
 
@@ -111,7 +121,6 @@ static void gtk_range_get_property   (GObject          *object,
                                       GValue           *value,
                                       GParamSpec       *pspec);
 static void gtk_range_destroy        (GtkObject        *object);
-static void gtk_range_finalize       (GObject          *object);
 static void gtk_range_size_request   (GtkWidget        *widget,
                                       GtkRequisition   *requisition);
 static void gtk_range_size_allocate  (GtkWidget        *widget,
@@ -138,7 +147,7 @@ static void gtk_range_grab_notify    (GtkWidget          *widget,
 				      gboolean            was_grabbed);
 static void gtk_range_state_changed  (GtkWidget          *widget,
 				      GtkStateType        previous_state);
-static gint gtk_range_scroll_event   (GtkWidget        *widget,
+static gboolean gtk_range_scroll_event   (GtkWidget        *widget,
                                       GdkEventScroll   *event);
 static void gtk_range_style_set      (GtkWidget        *widget,
                                       GtkStyle         *previous_style);
@@ -153,7 +162,7 @@ static void gtk_range_move_slider              (GtkRange         *range,
                                                 GtkScrollType     scroll);
 
 /* Internals */
-static void          gtk_range_scroll                   (GtkRange      *range,
+static gboolean      gtk_range_scroll                   (GtkRange      *range,
                                                          GtkScrollType  scroll);
 static gboolean      gtk_range_update_mouse_location    (GtkRange      *range);
 static void          gtk_range_calc_layout              (GtkRange      *range,
@@ -215,7 +224,6 @@ gtk_range_class_init (GtkRangeClass *class)
 
   gobject_class->set_property = gtk_range_set_property;
   gobject_class->get_property = gtk_range_get_property;
-  gobject_class->finalize = gtk_range_finalize;
   object_class->destroy = gtk_range_destroy;
 
   widget_class->size_request = gtk_range_size_request;
@@ -352,6 +360,58 @@ gtk_range_class_init (GtkRangeClass *class)
 						      GTK_SENSITIVITY_AUTO,
 						      GTK_PARAM_READWRITE));
 
+  /**
+   * GtkRange:show-fill-level:
+   *
+   * The show-fill-level property controls wether fill level indicator
+   * graphics are displayed on the trough. See
+   * gtk_range_set_show_fill_level().
+   *
+   * Since: 2.12
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_SHOW_FILL_LEVEL,
+                                   g_param_spec_boolean ("show-fill-level",
+                                                         P_("Show Fill Level"),
+                                                         P_("Whether to display a fill level indicator graphics on trough."),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE));
+
+  /**
+   * GtkRange:restrict-to-fill-level:
+   *
+   * The restrict-to-fill-level proeprty controls whether slider
+   * movement is restricted to an upper boundary set by the
+   * fill-level. See gtk_range_set_restrict_to_fill_level().
+   *
+   * Since: 2.12
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_RESTRICT_TO_FILL_LEVEL,
+                                   g_param_spec_boolean ("restrict-to-fill-level",
+                                                         P_("Restrict to Fill Level"),
+                                                         P_("Whether to restrict the upper boundary to the fill level."),
+                                                         TRUE,
+                                                         GTK_PARAM_READWRITE));
+
+  /**
+   * GtkRange:fill-level:
+   *
+   * The fill level (e.g. prebuffering of a network stream).
+   * See gtk_range_set_fill_level().
+   *
+   * Since: 2.12
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_FILL_LEVEL,
+                                   g_param_spec_double ("fill-level",
+							P_("Fill Level"),
+							P_("The fill level."),
+							-G_MAXDOUBLE,
+							G_MAXDOUBLE,
+                                                        G_MAXDOUBLE,
+                                                        GTK_PARAM_READWRITE));
+
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("slider-width",
 							     P_("Slider Width"),
@@ -441,9 +501,11 @@ gtk_range_class_init (GtkRangeClass *class)
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_boolean ("trough-under-steppers",
                                                                  P_("Trough Under Steppers"),
-                                                                 P_("Whether to draw trought for full length of range or exclude the steppers and spacing"),
+                                                                 P_("Whether to draw trough for full length of range or exclude the steppers and spacing"),
                                                                  TRUE,
                                                                  GTK_PARAM_READABLE));
+
+  g_type_class_add_private (class, sizeof (GtkRangeLayout));
 }
 
 static void
@@ -472,6 +534,15 @@ gtk_range_set_property (GObject      *object,
       break;
     case PROP_UPPER_STEPPER_SENSITIVITY:
       gtk_range_set_upper_stepper_sensitivity (range, g_value_get_enum (value));
+      break;
+    case PROP_SHOW_FILL_LEVEL:
+      gtk_range_set_show_fill_level (range, g_value_get_boolean (value));
+      break;
+    case PROP_RESTRICT_TO_FILL_LEVEL:
+      gtk_range_set_restrict_to_fill_level (range, g_value_get_boolean (value));
+      break;
+    case PROP_FILL_LEVEL:
+      gtk_range_set_fill_level (range, g_value_get_double (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -506,6 +577,15 @@ gtk_range_get_property (GObject      *object,
     case PROP_UPPER_STEPPER_SENSITIVITY:
       g_value_set_enum (value, gtk_range_get_upper_stepper_sensitivity (range));
       break;
+    case PROP_SHOW_FILL_LEVEL:
+      g_value_set_boolean (value, gtk_range_get_show_fill_level (range));
+      break;
+    case PROP_RESTRICT_TO_FILL_LEVEL:
+      g_value_set_boolean (value, gtk_range_get_restrict_to_fill_level (range));
+      break;
+    case PROP_FILL_LEVEL:
+      g_value_set_double (value, gtk_range_get_fill_level (range));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -528,7 +608,7 @@ gtk_range_init (GtkRange *range)
   range->has_stepper_d = FALSE;
   range->need_recalc = TRUE;
   range->round_digits = -1;
-  range->layout = g_new0 (GtkRangeLayout, 1);
+  range->layout = GTK_RANGE_GET_PRIVATE (range);
   range->layout->mouse_location = MOUSE_OUTSIDE;
   range->layout->mouse_x = -1;
   range->layout->mouse_y = -1;
@@ -538,6 +618,9 @@ gtk_range_init (GtkRange *range)
   range->layout->upper_sensitivity = GTK_SENSITIVITY_AUTO;
   range->layout->lower_sensitive = TRUE;
   range->layout->upper_sensitive = TRUE;
+  range->layout->show_fill_level = FALSE;
+  range->layout->restrict_to_fill_level = TRUE;
+  range->layout->fill_level = G_MAXDOUBLE;
   range->timer = NULL;  
 }
 
@@ -845,8 +928,13 @@ gtk_range_set_range (GtkRange *range,
   range->adjustment->lower = min;
   range->adjustment->upper = max;
 
-  value = CLAMP (range->adjustment->value,
-                 range->adjustment->lower,
+  value = range->adjustment->value;
+
+  if (range->layout->restrict_to_fill_level)
+    value = MIN (value, MAX (range->adjustment->lower,
+                             range->layout->fill_level));
+
+  value = CLAMP (value, range->adjustment->lower,
                  (range->adjustment->upper - range->adjustment->page_size));
 
   gtk_adjustment_set_value (range->adjustment, value);
@@ -869,7 +957,11 @@ gtk_range_set_value (GtkRange *range,
                      gdouble   value)
 {
   g_return_if_fail (GTK_IS_RANGE (range));
-  
+
+  if (range->layout->restrict_to_fill_level)
+    value = MIN (value, MAX (range->adjustment->lower,
+                             range->layout->fill_level));
+
   value = CLAMP (value, range->adjustment->lower,
                  (range->adjustment->upper - range->adjustment->page_size));
 
@@ -892,6 +984,159 @@ gtk_range_get_value (GtkRange *range)
   return range->adjustment->value;
 }
 
+/**
+ * gtk_range_set_show_fill_level:
+ * @range:           A #GtkRange
+ * @show_fill_level: Whether a fill level indicator graphics is shown.
+ *
+ * Sets whether a graphical fill level is show on the trough. See
+ * gtk_range_set_fill_level() for a general description of the fill
+ * level concept.
+ *
+ * Since: 2.12
+ **/
+void
+gtk_range_set_show_fill_level (GtkRange *range,
+                               gboolean  show_fill_level)
+{
+  g_return_if_fail (GTK_IS_RANGE (range));
+
+  show_fill_level = show_fill_level ? TRUE : FALSE;
+
+  if (show_fill_level != range->layout->show_fill_level)
+    {
+      range->layout->show_fill_level = show_fill_level;
+      g_object_notify (G_OBJECT (range), "show-fill-level");
+      gtk_widget_queue_draw (GTK_WIDGET (range));
+    }
+}
+
+/**
+ * gtk_range_get_show_fill_level:
+ * @range: A #GtkRange
+ *
+ * Gets whether the range displays the fill level graphically.
+ *
+ * Return value: %TRUE if @range shows the fill level.
+ *
+ * Since: 2.12
+ **/
+gboolean
+gtk_range_get_show_fill_level (GtkRange *range)
+{
+  g_return_val_if_fail (GTK_IS_RANGE (range), FALSE);
+
+  return range->layout->show_fill_level;
+}
+
+/**
+ * gtk_range_set_restrict_to_fill_level:
+ * @range:                  A #GtkRange
+ * @restrict_to_fill_level: Whether the fill level restricts slider movement.
+ *
+ * Sets whether the slider is restricted to the fill level. See
+ * gtk_range_set_fill_level() for a general description of the fill
+ * level concept.
+ *
+ * Since: 2.12
+ **/
+void
+gtk_range_set_restrict_to_fill_level (GtkRange *range,
+                                      gboolean  restrict_to_fill_level)
+{
+  g_return_if_fail (GTK_IS_RANGE (range));
+
+  restrict_to_fill_level = restrict_to_fill_level ? TRUE : FALSE;
+
+  if (restrict_to_fill_level != range->layout->restrict_to_fill_level)
+    {
+      range->layout->restrict_to_fill_level = restrict_to_fill_level;
+      g_object_notify (G_OBJECT (range), "restrict-to-fill-level");
+
+      gtk_range_set_value (range, gtk_range_get_value (range));
+    }
+}
+
+/**
+ * gtk_range_get_restrict_to_fill_level:
+ * @range: A #GtkRange
+ *
+ * Gets whether the range is restricted to the fill level.
+ *
+ * Return value: %TRUE if @range is restricted to the fill level.
+ *
+ * Since: 2.12
+ **/
+gboolean
+gtk_range_get_restrict_to_fill_level (GtkRange *range)
+{
+  g_return_val_if_fail (GTK_IS_RANGE (range), FALSE);
+
+  return range->layout->restrict_to_fill_level;
+}
+
+/**
+ * gtk_range_set_fill_level:
+ * @range: a #GtkRange
+ * @fill_level: the new position of the fill level indicator
+ *
+ * Set the new position of the fill level indicator.
+ *
+ * The "fill level" is probably best described by its most prominent
+ * use case, which is an indicator for the amount of pre-buffering in
+ * a streaming media player. In that use case, the value of the range
+ * would indicate the current play position, and the fill level would
+ * be the position up to which the file/stream has been downloaded.
+ *
+ * This amount of prebuffering can be displayed on the range's trough
+ * and is themeable separately from the trough. To enable fill level
+ * display, use gtk_range_set_show_fill_level(). The range defaults
+ * to not showing the fill level.
+ *
+ * Additionally, it's possible to restrict the range's slider position
+ * to values which are smaller than the fill level. This is controller
+ * by gtk_range_set_restrict_to_fill_level() and is by default
+ * enabled.
+ *
+ * Since: 2.12
+ **/
+void
+gtk_range_set_fill_level (GtkRange *range,
+                          gdouble   fill_level)
+{
+  g_return_if_fail (GTK_IS_RANGE (range));
+
+  if (fill_level != range->layout->fill_level)
+    {
+      range->layout->fill_level = fill_level;
+      g_object_notify (G_OBJECT (range), "fill-level");
+
+      if (range->layout->show_fill_level)
+        gtk_widget_queue_draw (GTK_WIDGET (range));
+
+      if (range->layout->restrict_to_fill_level)
+        gtk_range_set_value (range, gtk_range_get_value (range));
+    }
+}
+
+/**
+ * gtk_range_get_fill_level:
+ * @range : A #GtkRange
+ *
+ * Gets the current position of the fill level indicator.
+ *
+ * Return value: The current fill level
+ *
+ * Since: 2.12
+ **/
+gdouble
+gtk_range_get_fill_level (GtkRange *range)
+{
+  g_return_val_if_fail (GTK_IS_RANGE (range), 0.0);
+
+  return range->layout->fill_level;
+}
+
 static gboolean
 should_invert (GtkRange *range)
 {  
@@ -902,16 +1147,6 @@ should_invert (GtkRange *range)
       (!range->inverted && range->flippable && gtk_widget_get_direction (GTK_WIDGET (range)) == GTK_TEXT_DIR_RTL);
   else
     return range->inverted;
-}
-
-static void
-gtk_range_finalize (GObject *object)
-{
-  GtkRange *range = GTK_RANGE (object);
-
-  g_free (range->layout);
-
-  (* G_OBJECT_CLASS (gtk_range_parent_class)->finalize) (object);
 }
 
 static void
@@ -1314,6 +1549,64 @@ gtk_range_expose (GtkWidget      *widget,
                          width - trough_change_pos_x,
                          height - trough_change_pos_y);
         }
+
+      if (range->layout->show_fill_level &&
+          range->adjustment->upper - range->adjustment->page_size -
+          range->adjustment->lower != 0)
+	{
+          gdouble  fill_level  = range->layout->fill_level;
+	  gint     fill_x      = x;
+	  gint     fill_y      = y;
+	  gint     fill_width  = width;
+	  gint     fill_height = height;
+	  gchar   *fill_detail;
+
+          fill_level = CLAMP (fill_level, range->adjustment->lower,
+                              range->adjustment->upper -
+                              range->adjustment->page_size);
+
+	  if (range->orientation == GTK_ORIENTATION_HORIZONTAL)
+	    {
+	      fill_x     = widget->allocation.x + range->layout->trough.x;
+	      fill_width = (range->layout->slider.width +
+                            (fill_level - range->adjustment->lower) /
+                            (range->adjustment->upper -
+                             range->adjustment->lower -
+                             range->adjustment->page_size) *
+                            (range->layout->trough.width -
+                             range->layout->slider.width));
+
+              if (should_invert (range))
+                fill_x += range->layout->trough.width - fill_width;
+	    }
+	  else
+	    {
+	      fill_y      = widget->allocation.y + range->layout->trough.y;
+	      fill_height = (range->layout->slider.height +
+                             (fill_level - range->adjustment->lower) /
+                             (range->adjustment->upper -
+                              range->adjustment->lower -
+                              range->adjustment->page_size) *
+                             (range->layout->trough.height -
+                              range->layout->slider.height));
+
+              if (should_invert (range))
+                fill_y += range->layout->trough.height - fill_height;
+	    }
+
+	  if (fill_level < range->adjustment->upper - range->adjustment->page_size)
+	    fill_detail = "trough-fill-level-full";
+	  else
+	    fill_detail = "trough-fill-level";
+
+          gtk_paint_box (widget->style,
+                         widget->window,
+                         sensitive ? GTK_STATE_ACTIVE : GTK_STATE_INSENSITIVE,
+                         GTK_SHADOW_OUT,
+                         &area, GTK_WIDGET (range), fill_detail,
+                         fill_x, fill_y,
+                         fill_width, fill_height);
+	}
 
       if (sensitive &&
           GTK_WIDGET_HAS_FOCUS (range))
@@ -1749,7 +2042,7 @@ gtk_range_grab_broken (GtkWidget          *widget,
   return FALSE;
 }
 
-static gboolean
+static gint
 gtk_range_button_release (GtkWidget      *widget,
 			  GdkEventButton *event)
 {
@@ -1814,7 +2107,7 @@ _gtk_range_get_wheel_delta (GtkRange           *range,
   return delta;
 }
       
-static gint
+static gboolean
 gtk_range_scroll_event (GtkWidget      *widget,
 			GdkEventScroll *event)
 {
@@ -2070,10 +2363,12 @@ scroll_end (GtkRange *range)
                  &handled);
 }
 
-static void
+static gboolean
 gtk_range_scroll (GtkRange     *range,
                   GtkScrollType scroll)
 {
+  gdouble old_value = range->adjustment->value;
+
   switch (scroll)
     {
     case GTK_SCROLL_STEP_LEFT:
@@ -2163,13 +2458,52 @@ gtk_range_scroll (GtkRange     *range,
     case GTK_SCROLL_NONE:
       break;
     }
+
+  return range->adjustment->value != old_value;
 }
 
 static void
 gtk_range_move_slider (GtkRange     *range,
                        GtkScrollType scroll)
 {
-  gtk_range_scroll (range, scroll);
+  gboolean cursor_only;
+
+  g_object_get (gtk_widget_get_settings (GTK_WIDGET (range)),
+                "gtk-keynav-cursor-only", &cursor_only,
+                NULL);
+
+  if (cursor_only)
+    {
+      GtkWidget *toplevel = gtk_widget_get_toplevel (GTK_WIDGET (range));
+
+      if (range->orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          if (scroll == GTK_SCROLL_STEP_UP ||
+              scroll == GTK_SCROLL_STEP_DOWN)
+            {
+              if (toplevel)
+                gtk_widget_child_focus (toplevel,
+                                        scroll == GTK_SCROLL_STEP_UP ?
+                                        GTK_DIR_UP : GTK_DIR_DOWN);
+              return;
+            }
+        }
+      else
+        {
+          if (scroll == GTK_SCROLL_STEP_LEFT ||
+              scroll == GTK_SCROLL_STEP_RIGHT)
+            {
+              if (toplevel)
+                gtk_widget_child_focus (toplevel,
+                                        scroll == GTK_SCROLL_STEP_LEFT ?
+                                        GTK_DIR_LEFT : GTK_DIR_RIGHT);
+              return;
+            }
+        }
+    }
+
+  if (! gtk_range_scroll (range, scroll))
+    gtk_widget_error_bell (GTK_WIDGET (range));
 
   /* Policy DELAYED makes sense with key events,
    * but DISCONTINUOUS doesn't, so we update immediately
@@ -2901,6 +3235,10 @@ gtk_range_real_change_value (GtkRange     *range,
   /* potentially adjust the bounds _before we clamp */
   g_signal_emit (range, signals[ADJUST_BOUNDS], 0, value);
 
+  if (range->layout->restrict_to_fill_level)
+    value = MIN (value, MAX (range->adjustment->lower,
+                             range->layout->fill_level));
+
   value = CLAMP (value, range->adjustment->lower,
                  (range->adjustment->upper - range->adjustment->page_size));
 
@@ -2969,10 +3307,8 @@ second_timeout (gpointer data)
 {
   GtkRange *range;
 
-  GDK_THREADS_ENTER ();
   range = GTK_RANGE (data);
   gtk_range_scroll (range, range->timer->step);
-  GDK_THREADS_LEAVE ();
   
   return TRUE;
 }
@@ -2984,16 +3320,13 @@ initial_timeout (gpointer data)
   GtkSettings *settings;
   guint        timeout;
 
-  GDK_THREADS_ENTER ();
   settings = gtk_widget_get_settings (GTK_WIDGET (data));
   g_object_get (settings, "gtk-timeout-repeat", &timeout, NULL);
 
   range = GTK_RANGE (data);
-  range->timer->timeout_id = g_timeout_add (timeout * SCROLL_DELAY_FACTOR,
+  range->timer->timeout_id = gdk_threads_add_timeout (timeout * SCROLL_DELAY_FACTOR,
                                             second_timeout,
                                             range);
-  GDK_THREADS_LEAVE ();
-
   /* remove self */
   return FALSE;
 }
@@ -3013,7 +3346,7 @@ gtk_range_add_step_timer (GtkRange      *range,
 
   range->timer = g_new (GtkRangeStepTimer, 1);
 
-  range->timer->timeout_id = g_timeout_add (timeout,
+  range->timer->timeout_id = gdk_threads_add_timeout (timeout,
                                             initial_timeout,
                                             range);
   range->timer->step = step;
@@ -3040,11 +3373,9 @@ update_timeout (gpointer data)
 {
   GtkRange *range;
 
-  GDK_THREADS_ENTER ();
   range = GTK_RANGE (data);
   gtk_range_update_value (range);
   range->update_timeout_id = 0;
-  GDK_THREADS_LEAVE ();
 
   /* self-remove */
   return FALSE;
@@ -3055,7 +3386,7 @@ gtk_range_reset_update_timer (GtkRange *range)
 {
   gtk_range_remove_update_timer (range);
 
-  range->update_timeout_id = g_timeout_add (UPDATE_DELAY,
+  range->update_timeout_id = gdk_threads_add_timeout (UPDATE_DELAY,
                                             update_timeout,
                                             range);
 }

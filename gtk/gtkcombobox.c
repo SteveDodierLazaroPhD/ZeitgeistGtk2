@@ -39,6 +39,7 @@
 #include "gtkvseparator.h"
 #include "gtkwindow.h"
 #include "gtkprivate.h"
+#include "gtkmarshal.h"
 
 #include <gdk/gdkkeysyms.h>
 
@@ -79,6 +80,7 @@ struct _GtkComboBoxPrivate
   gint row_column;
 
   gint wrap_width;
+  GtkShadowType shadow_type;
 
   GtkTreeRowReference *active_row;
 
@@ -186,6 +188,9 @@ struct _GtkComboBoxPrivate
 
 enum {
   CHANGED,
+  MOVE_ACTIVE,
+  POPUP,
+  POPDOWN,
   LAST_SIGNAL
 };
 
@@ -212,6 +217,7 @@ static guint combo_box_signals[LAST_SIGNAL] = {0,};
 
 static void     gtk_combo_box_cell_layout_init     (GtkCellLayoutIface *iface);
 static void     gtk_combo_box_cell_editable_init   (GtkCellEditableIface *iface);
+static void     gtk_combo_box_dispose              (GObject          *object);
 static void     gtk_combo_box_finalize             (GObject          *object);
 static void     gtk_combo_box_destroy              (GtkObject        *object);
 
@@ -285,12 +291,13 @@ static gboolean gtk_combo_box_scroll_event         (GtkWidget        *widget,
                                                     GdkEventScroll   *event);
 static void     gtk_combo_box_set_active_internal  (GtkComboBox      *combo_box,
 						    GtkTreePath      *path);
-static gboolean gtk_combo_box_key_press            (GtkWidget        *widget,
-						    GdkEventKey      *event,
-						    gpointer          data);
 
 static void     gtk_combo_box_check_appearance     (GtkComboBox      *combo_box);
 static gchar *  gtk_combo_box_real_get_active_text (GtkComboBox      *combo_box);
+static void     gtk_combo_box_real_move_active     (GtkComboBox      *combo_box,
+                                                    GtkScrollType     scroll);
+static void     gtk_combo_box_real_popup           (GtkComboBox      *combo_box);
+static gboolean gtk_combo_box_real_popdown         (GtkComboBox      *combo_box);
 
 /* listening to the model */
 static void     gtk_combo_box_model_row_inserted   (GtkTreeModel     *model,
@@ -456,6 +463,7 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
   GtkObjectClass *gtk_object_class;
   GtkContainerClass *container_class;
   GtkWidgetClass *widget_class;
+  GtkBindingSet *binding_set;
 
   klass->get_active_text = gtk_combo_box_real_get_active_text;
 
@@ -478,6 +486,7 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
   gtk_object_class->destroy = gtk_combo_box_destroy;
 
   object_class = (GObjectClass *)klass;
+  object_class->dispose = gtk_combo_box_dispose;
   object_class->finalize = gtk_combo_box_finalize;
   object_class->set_property = gtk_combo_box_set_property;
   object_class->get_property = gtk_combo_box_get_property;
@@ -504,6 +513,87 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
                   NULL, NULL,
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
+
+  combo_box_signals[MOVE_ACTIVE] =
+    _gtk_binding_signal_new (I_("move-active"),
+                             G_OBJECT_CLASS_TYPE (klass),
+                             G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                             G_CALLBACK (gtk_combo_box_real_move_active),
+                             NULL, NULL,
+                             g_cclosure_marshal_VOID__ENUM,
+                             G_TYPE_NONE, 1,
+                             GTK_TYPE_SCROLL_TYPE);
+
+  combo_box_signals[POPUP] =
+    _gtk_binding_signal_new (I_("popup"),
+                             G_OBJECT_CLASS_TYPE (klass),
+                             G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                             G_CALLBACK (gtk_combo_box_real_popup),
+                             NULL, NULL,
+                             g_cclosure_marshal_VOID__VOID,
+                             G_TYPE_NONE, 0);
+
+  combo_box_signals[POPDOWN] =
+    _gtk_binding_signal_new (I_("popdown"),
+                             G_OBJECT_CLASS_TYPE (klass),
+                             G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                             G_CALLBACK (gtk_combo_box_real_popdown),
+                             NULL, NULL,
+                             gtk_marshal_BOOLEAN__VOID,
+                             G_TYPE_BOOLEAN, 0);
+
+  /* key bindings */
+  binding_set = gtk_binding_set_by_class (widget_class);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_Down, GDK_MOD1_MASK,
+				"popup", 0);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Down, GDK_MOD1_MASK,
+				"popup", 0);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_Up, GDK_MOD1_MASK,
+				"popdown", 0);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Up, GDK_MOD1_MASK,
+				"popdown", 0);
+  gtk_binding_entry_add_signal (binding_set, GDK_Escape, 0,
+				"popdown", 0);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_Up, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_UP);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Up, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_UP);
+  gtk_binding_entry_add_signal (binding_set, GDK_Page_Up, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_UP);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Page_Up, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_UP);
+  gtk_binding_entry_add_signal (binding_set, GDK_Home, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_START);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Home, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_START);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_Down, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_DOWN);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Down, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_DOWN);
+  gtk_binding_entry_add_signal (binding_set, GDK_Page_Down, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_DOWN);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Page_Down, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_DOWN);
+  gtk_binding_entry_add_signal (binding_set, GDK_End, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_END);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_End, 0,
+				"move-active", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_END);
 
   /* properties */
   /**
@@ -548,9 +638,9 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
    * If this is set to a non-negative value, it must be the index of a column 
    * of type %G_TYPE_INT in the model. 
    *
-   * The values of that column are used to determine how many rows a value 
-   * in the list will span. Therefore, the values in the model column pointed 
-   * to by this property must be greater than zero and not larger than wrap-width.
+   * The values of that column are used to determine how many rows a value in 
+   * the list will span. Therefore, the values in the model column pointed to 
+   * by this property must be greater than zero and not larger than wrap-width.
    *
    * Since: 2.4
    */
@@ -592,7 +682,8 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
    *
    * The item which is currently active. If the model is a non-flat treemodel,
    * and the active item is not an immediate child of the root of the tree,
-   * this property has the value <literal>gtk_tree_path_get_indices (path)[0]</literal>,
+   * this property has the value 
+   * <literal>gtk_tree_path_get_indices (path)[0]</literal>,
    * where <literal>path</literal> is the #GtkTreePath of the active item.
    *
    * Since: 2.4
@@ -682,13 +773,47 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
                                                          P_("Whether the combo's dropdown is shown"),
                                                          FALSE,
                                                          GTK_PARAM_READABLE));
-  
+
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_boolean ("appears-as-list",
                                                                  P_("Appears as list"),
                                                                  P_("Whether dropdowns should look like lists rather than menus"),
                                                                  FALSE,
                                                                  GTK_PARAM_READABLE));
+
+  /**
+   * GtkComboBox:arrow-size:
+   *
+   * Sets the minimum size of the arrow in the combo box.  Note
+   * that the arrow size is coupled to the font size, so in case
+   * a larger font is used, the arrow will be larger than set
+   * by arrow size.
+   *
+   * Since: 2.12
+   */
+  gtk_widget_class_install_style_property (widget_class,
+					   g_param_spec_int ("arrow-size",
+							     P_("Arrow Size"),
+							     P_("The minimum size of the arrow in the combo box"),
+							     0,
+							     G_MAXINT,
+							     15,
+							     GTK_PARAM_READABLE));
+
+  /**
+   * GtkComboBox:shadow-type:
+   *
+   * Which kind of shadow to draw around the combo box.
+   *
+   * Since: 2.12
+   */
+  gtk_widget_class_install_style_property (widget_class,
+                                           g_param_spec_enum ("shadow-type",
+                                                              P_("Shadow type"),
+                                                              P_("Which kind of shadow to draw around the combo box"),
+                                                              GTK_TYPE_SHADOW_TYPE,
+                                                              GTK_SHADOW_NONE,
+                                                              GTK_PARAM_READABLE));
 
   g_type_class_add_private (object_class, sizeof (GtkComboBoxPrivate));
 }
@@ -934,6 +1059,10 @@ gtk_combo_box_check_appearance (GtkComboBox *combo_box)
       if (!GTK_IS_MENU (combo_box->priv->popup_widget))
 	gtk_combo_box_menu_setup (combo_box, TRUE);
     }
+
+  gtk_widget_style_get (GTK_WIDGET (combo_box),
+			"shadow-type", &combo_box->priv->shadow_type,
+			NULL);
 }
 
 static void
@@ -947,6 +1076,11 @@ gtk_combo_box_style_set (GtkWidget *widget,
   if (combo_box->priv->tree_view && combo_box->priv->cell_view)
     gtk_cell_view_set_background_color (GTK_CELL_VIEW (combo_box->priv->cell_view), 
 					&widget->style->base[GTK_WIDGET_STATE (widget)]);
+
+  if (GTK_IS_ENTRY (GTK_BIN (combo_box)->child))
+    g_object_set (GTK_BIN (combo_box)->child, "shadow-type",
+                  GTK_SHADOW_NONE == combo_box->priv->shadow_type ?
+                  GTK_SHADOW_IN : GTK_SHADOW_NONE, NULL);
 }
 
 static void
@@ -1204,7 +1338,7 @@ gtk_combo_box_set_popup_widget (GtkComboBox *combo_box,
 
           combo_box->priv->popup_frame = gtk_frame_new (NULL);
           gtk_frame_set_shadow_type (GTK_FRAME (combo_box->priv->popup_frame),
-                                     GTK_SHADOW_ETCHED_IN);
+                                     GTK_SHADOW_NONE);
           gtk_container_add (GTK_CONTAINER (combo_box->priv->popup_window),
                              combo_box->priv->popup_frame);
 
@@ -1258,6 +1392,9 @@ gtk_combo_box_menu_position_below (GtkMenu  *menu,
 	sx += child->allocation.x;
 	sy += child->allocation.y;
       }
+
+   if (GTK_SHADOW_NONE != combo_box->priv->shadow_type)
+     sx -= GTK_WIDGET (combo_box)->style->xthickness;
 
    gtk_widget_size_request (GTK_WIDGET (menu), &req);
 
@@ -1395,14 +1532,15 @@ gtk_combo_box_list_position (GtkComboBox *combo_box,
 			     gint        *width,
 			     gint        *height)
 {
-  GtkWidget *sample;
   GdkScreen *screen;
   gint monitor_num;
   GdkRectangle monitor;
   GtkRequisition popup_req;
   GtkPolicyType hpolicy, vpolicy;
   
-  sample = GTK_BIN (combo_box)->child;
+  /* under windows, the drop down list is as wide as the combo box itself.
+     see bug #340204 */
+  GtkWidget *sample = GTK_WIDGET (combo_box);
 
   gdk_window_get_origin (sample->window, x, y);
 
@@ -1657,15 +1795,21 @@ popup_grab_on_window (GdkWindow *window,
  * applications should have little use for it.
  *
  * Since: 2.4
- **/
+ */
 void
 gtk_combo_box_popup (GtkComboBox *combo_box)
+{
+  g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
+
+  g_signal_emit (combo_box, combo_box_signals[POPUP], 0);
+}
+
+static void
+gtk_combo_box_real_popup (GtkComboBox *combo_box)
 {
   gint x, y, width, height;
   GtkTreePath *path = NULL, *ppath;
   GtkWidget *toplevel;
-
-  g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 
   if (!GTK_WIDGET_REALIZED (combo_box))
     return;
@@ -1729,6 +1873,18 @@ gtk_combo_box_popup (GtkComboBox *combo_box)
   gtk_grab_add (combo_box->priv->popup_window);
 }
 
+static gboolean
+gtk_combo_box_real_popdown (GtkComboBox *combo_box)
+{
+  if (combo_box->priv->popup_shown)
+    {
+      gtk_combo_box_popdown (combo_box);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
 /**
  * gtk_combo_box_popdown:
  * @combo_box: a #GtkComboBox
@@ -1739,7 +1895,7 @@ gtk_combo_box_popup (GtkComboBox *combo_box)
  * applications should have little use for it.
  *
  * Since: 2.4
- **/
+ */
 void
 gtk_combo_box_popdown (GtkComboBox *combo_box)
 {
@@ -1830,7 +1986,12 @@ gtk_combo_box_size_request (GtkWidget      *widget,
 {
   gint width, height;
   gint focus_width, focus_pad;
+  gint font_size;
+  gint arrow_size;
   GtkRequisition bin_req;
+  PangoContext *context;
+  PangoFontMetrics *metrics;
+  PangoFontDescription *font_desc;
 
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
  
@@ -1843,7 +2004,20 @@ gtk_combo_box_size_request (GtkWidget      *widget,
   gtk_widget_style_get (GTK_WIDGET (widget),
 			"focus-line-width", &focus_width,
 			"focus-padding", &focus_pad,
+			"arrow-size", &arrow_size,
 			NULL);
+
+  font_desc = GTK_BIN (widget)->child->style->font_desc;
+  context = gtk_widget_get_pango_context (widget);
+  metrics = pango_context_get_metrics (context, font_desc,
+				       pango_context_get_language (context));
+  font_size = PANGO_PIXELS (pango_font_metrics_get_ascent (metrics) +
+			    pango_font_metrics_get_descent (metrics));
+  pango_font_metrics_unref (metrics);
+
+  arrow_size = MAX (arrow_size, font_size);
+
+  gtk_widget_set_size_request (combo_box->priv->arrow, arrow_size, arrow_size);
 
   if (!combo_box->priv->tree_view)
     {
@@ -1916,13 +2090,36 @@ gtk_combo_box_size_request (GtkWidget      *widget,
       requisition->height = MAX (requisition->height, button_req.height);
       requisition->width += button_req.width;
     }
+
+  if (GTK_SHADOW_NONE != combo_box->priv->shadow_type)
+    {
+      requisition->height += 2 * widget->style->ythickness;
+      requisition->width += 2 * widget->style->xthickness;
+    }
 }
+
+#define GTK_COMBO_BOX_SIZE_ALLOCATE_BUTTON 					\
+  gtk_widget_size_request (combo_box->priv->button, &req); 			\
+  										\
+  if (is_rtl) 									\
+    child.x = allocation->x + shadow_width;					\
+  else										\
+    child.x = allocation->x + allocation->width - req.width - shadow_width;	\
+    										\
+  child.y = allocation->y + shadow_height;					\
+  child.width = req.width;							\
+  child.height = allocation->height - 2 * shadow_height;			\
+  child.width = MAX (1, child.width);						\
+  child.height = MAX (1, child.height);						\
+  										\
+  gtk_widget_size_allocate (combo_box->priv->button, &child);
 
 static void
 gtk_combo_box_size_allocate (GtkWidget     *widget,
                              GtkAllocation *allocation)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
+  gint shadow_width, shadow_height;
   gint focus_width, focus_pad;
   GtkAllocation child;
   GtkRequisition req;
@@ -1935,6 +2132,17 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
 			"focus-padding", &focus_pad,
 			NULL);
 
+  if (GTK_SHADOW_NONE != combo_box->priv->shadow_type)
+    {
+      shadow_width = widget->style->xthickness;
+      shadow_height = widget->style->ythickness;
+    }
+  else
+    {
+      shadow_width = 0;
+      shadow_height = 0;
+    }
+
   if (!combo_box->priv->tree_view)
     {
       if (combo_box->priv->cell_view)
@@ -1943,6 +2151,11 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
           gint width;
 
           /* menu mode */
+          allocation->x += shadow_width;
+          allocation->y += shadow_height;
+          allocation->width -= 2 * shadow_width;
+          allocation->height -= 2 * shadow_height;
+
           gtk_widget_size_allocate (combo_box->priv->button, allocation);
 
           /* set some things ready */
@@ -2003,24 +2216,14 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
         }
       else
         {
-          gtk_widget_size_request (combo_box->priv->button, &req);
-          if (is_rtl)
-            child.x = allocation->x;
-          else
-            child.x = allocation->x + allocation->width - req.width;
-          child.y = allocation->y;
-          child.width = req.width;
-          child.height = allocation->height;
-	  child.width = MAX (1, child.width);
-	  child.height = MAX (1, child.height);
-          gtk_widget_size_allocate (combo_box->priv->button, &child);
+          GTK_COMBO_BOX_SIZE_ALLOCATE_BUTTON
 
           if (is_rtl)
-            child.x = allocation->x + req.width;
+            child.x = allocation->x + req.width + shadow_width;
           else
-            child.x = allocation->x;
-          child.y = allocation->y;
-          child.width = allocation->width - req.width;
+            child.x = allocation->x + shadow_width;
+          child.y = allocation->y + shadow_height;
+          child.width = allocation->width - req.width - 2 * shadow_width;
 	  child.width = MAX (1, child.width);
 	  child.height = MAX (1, child.height);
           gtk_widget_size_allocate (GTK_BIN (widget)->child, &child);
@@ -2031,17 +2234,7 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
       /* list mode */
 
       /* button */
-      gtk_widget_size_request (combo_box->priv->button, &req);
-      if (is_rtl)
-        child.x = allocation->x;
-      else
-        child.x = allocation->x + allocation->width - req.width;
-      child.y = allocation->y;
-      child.width = req.width;
-      child.height = allocation->height;
-      child.width = MAX (1, child.width);
-      child.height = MAX (1, child.height);
-      gtk_widget_size_allocate (combo_box->priv->button, &child);
+      GTK_COMBO_BOX_SIZE_ALLOCATE_BUTTON
 
       /* frame */
       if (is_rtl)
@@ -2081,6 +2274,8 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
       gtk_widget_size_allocate (GTK_BIN (combo_box)->child, &child);
     }
 }
+
+#undef GTK_COMBO_BOX_ALLOCATE_BUTTON
 
 static void
 gtk_combo_box_unset_model (GtkComboBox *combo_box)
@@ -2167,19 +2362,24 @@ gtk_combo_box_expose_event (GtkWidget      *widget,
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
 
-  if (!combo_box->priv->tree_view)
+  if (GTK_WIDGET_DRAWABLE (widget) &&
+      GTK_SHADOW_NONE != combo_box->priv->shadow_type)
     {
-      gtk_container_propagate_expose (GTK_CONTAINER (widget),
-				      combo_box->priv->button, event);
+      gtk_paint_shadow (widget->style, widget->window,
+                        GTK_STATE_NORMAL, combo_box->priv->shadow_type,
+                        NULL, widget, "combobox",
+                        widget->allocation.x, widget->allocation.y,
+                        widget->allocation.width, widget->allocation.height);
     }
-  else
+
+  gtk_container_propagate_expose (GTK_CONTAINER (widget),
+				  combo_box->priv->button, event);
+
+  if (combo_box->priv->tree_view &&
+      combo_box->priv->cell_view_frame)
     {
       gtk_container_propagate_expose (GTK_CONTAINER (widget),
-                                      combo_box->priv->button, event);
-
-      if (combo_box->priv->cell_view_frame)
-        gtk_container_propagate_expose (GTK_CONTAINER (widget),
-                                        combo_box->priv->cell_view_frame, event);
+				      combo_box->priv->cell_view_frame, event);
     }
 
   gtk_container_propagate_expose (GTK_CONTAINER (widget),
@@ -2471,9 +2671,6 @@ gtk_combo_box_menu_setup (GtkComboBox *combo_box,
 
       g_signal_connect (combo_box->priv->button, "toggled",
                         G_CALLBACK (gtk_combo_box_button_toggled), combo_box);
-      g_signal_connect_after (combo_box->priv->button, 
-			      "key_press_event",
-			      G_CALLBACK (gtk_combo_box_key_press), combo_box);
       gtk_widget_set_parent (combo_box->priv->button,
                              GTK_BIN (combo_box)->child->parent);
 
@@ -2499,8 +2696,6 @@ gtk_combo_box_menu_setup (GtkComboBox *combo_box,
 
       g_signal_connect (combo_box->priv->button, "toggled",
                         G_CALLBACK (gtk_combo_box_button_toggled), combo_box);
-      g_signal_connect_after (combo_box, "key_press_event",
-			      G_CALLBACK (gtk_combo_box_key_press), combo_box);
       gtk_widget_set_parent (combo_box->priv->button,
                              GTK_BIN (combo_box)->child->parent);
 
@@ -2935,8 +3130,6 @@ list_popup_resize_idle (gpointer user_data)
   GtkComboBox *combo_box;
   gint x, y, width, height;
 
-  GDK_THREADS_ENTER ();
-
   combo_box = GTK_COMBO_BOX (user_data);
 
   if (combo_box->priv->tree_view &&
@@ -2950,8 +3143,6 @@ list_popup_resize_idle (gpointer user_data)
 
   combo_box->priv->resize_idle_id = 0;
 
-  GDK_THREADS_LEAVE ();
-
   return FALSE;
 }
 
@@ -2960,7 +3151,7 @@ gtk_combo_box_list_popup_resize (GtkComboBox *combo_box)
 {
   if (!combo_box->priv->resize_idle_id)
     combo_box->priv->resize_idle_id = 
-      g_idle_add (list_popup_resize_idle, combo_box);
+      gdk_threads_add_idle (list_popup_resize_idle, combo_box);
 }
 
 static void
@@ -3291,8 +3482,6 @@ gtk_combo_box_list_setup (GtkComboBox *combo_box)
                     G_CALLBACK (gtk_combo_box_list_button_pressed), combo_box);
   g_signal_connect (combo_box->priv->button, "toggled",
                     G_CALLBACK (gtk_combo_box_button_toggled), combo_box);
-  g_signal_connect_after (combo_box, "key_press_event",
-			  G_CALLBACK (gtk_combo_box_key_press), combo_box);
 
   combo_box->priv->arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
   gtk_container_add (GTK_CONTAINER (combo_box->priv->button),
@@ -3473,7 +3662,11 @@ gtk_combo_box_list_destroy (GtkComboBox *combo_box)
   gtk_widget_destroy (combo_box->priv->tree_view);
 
   combo_box->priv->tree_view = NULL;
-  combo_box->priv->popup_widget = NULL;
+  if (combo_box->priv->popup_widget)
+    {
+      g_object_unref (combo_box->priv->popup_widget);
+      combo_box->priv->popup_widget = NULL;
+    }
 }
 
 /* callbacks */
@@ -3505,7 +3698,7 @@ gtk_combo_box_list_button_pressed (GtkWidget      *widget,
 
   combo_box->priv->auto_scroll = FALSE;
   if (combo_box->priv->scroll_timer == 0)
-    combo_box->priv->scroll_timer = g_timeout_add (SCROLL_TIME, 
+    combo_box->priv->scroll_timer = gdk_threads_add_timeout (SCROLL_TIME, 
 						   (GSourceFunc) gtk_combo_box_list_scroll_timeout, 
 						   combo_box);
 
@@ -3587,90 +3780,21 @@ gtk_combo_box_list_button_released (GtkWidget      *widget,
 }
 
 static gboolean
-gtk_combo_box_key_press (GtkWidget   *widget,
-			 GdkEventKey *event,
-			 gpointer     data)
-{
-  GtkComboBox *combo_box = GTK_COMBO_BOX (data);
-  guint state = event->state & gtk_accelerator_get_default_mod_mask ();
-  gboolean found;
-  GtkTreeIter iter;
-  GtkTreeIter new_iter;
-
-  if (combo_box->priv->model == NULL)
-    return FALSE;
-
-  if ((event->keyval == GDK_Down || event->keyval == GDK_KP_Down) && 
-      state == GDK_MOD1_MASK)
-    {
-      gtk_combo_box_popup (combo_box);
-
-      return TRUE;
-    }
-
-  if (state != 0)
-    return FALSE;
-
-  switch (event->keyval) 
-    {
-    case GDK_Down:
-    case GDK_KP_Down:
-      if (gtk_combo_box_get_active_iter (combo_box, &iter))
-	{
-	  found = tree_next (combo_box, combo_box->priv->model, 
-			     &iter, &new_iter, FALSE);
-	  break;
-	}
-      /* else fall through */
-    case GDK_Page_Up:
-    case GDK_KP_Page_Up:
-    case GDK_Home: 
-    case GDK_KP_Home:
-      found = tree_first (combo_box, combo_box->priv->model, &new_iter, FALSE);
-      break;
-
-    case GDK_Up:
-    case GDK_KP_Up:
-      if (gtk_combo_box_get_active_iter (combo_box, &iter))
-	{
-	  found = tree_prev (combo_box, combo_box->priv->model, 
-			     &iter, &new_iter, FALSE);
-	  break;
-	}
-      /* else fall through */      
-    case GDK_Page_Down:
-    case GDK_KP_Page_Down:
-    case GDK_End: 
-    case GDK_KP_End:
-      found = tree_last (combo_box, combo_box->priv->model, &new_iter, FALSE);
-      break;
-    default:
-      return FALSE;
-    }
-      
-  if (found)
-    gtk_combo_box_set_active_iter (combo_box, &new_iter);
-  
-  return TRUE;
-}
-
-static gboolean
 gtk_combo_box_menu_key_press (GtkWidget   *widget,
 			      GdkEventKey *event,
 			      gpointer     data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (data);
-  guint state = event->state & gtk_accelerator_get_default_mod_mask ();
 
-  if ((event->keyval == GDK_Up || event->keyval == GDK_KP_Up) && 
-      state == GDK_MOD1_MASK)
+  if (!gtk_bindings_activate_event (GTK_OBJECT (widget), event))
     {
-      gtk_combo_box_popdown (combo_box);
-
-      return TRUE;
+      /* The menu hasn't managed the
+       * event, forward it to the combobox
+       */
+      gtk_bindings_activate_event (GTK_OBJECT (combo_box), event);
     }
-  
-  return FALSE;
+
+  return TRUE;
 }
 
 static gboolean
@@ -3680,25 +3804,10 @@ gtk_combo_box_list_key_press (GtkWidget   *widget,
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (data);
   GtkTreeIter iter;
-  guint state = event->state & gtk_accelerator_get_default_mod_mask ();
 
-  if (event->keyval == GDK_Escape ||
-      ((event->keyval == GDK_Up || event->keyval == GDK_KP_Up) && 
-       state == GDK_MOD1_MASK))
-    {
-      gtk_combo_box_popdown (combo_box);
-      
-      /* reset active item -- this is incredibly lame and ugly */
-      if (gtk_combo_box_get_active_iter (combo_box, &iter))
-	gtk_combo_box_set_active_iter (combo_box, &iter);
-      
-      return TRUE;
-    }
-    
   if (event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ||
       event->keyval == GDK_space || event->keyval == GDK_KP_Space) 
   {
-    GtkTreeIter iter;
     GtkTreeModel *model = NULL;
     
     gtk_combo_box_popdown (combo_box);
@@ -3716,7 +3825,15 @@ gtk_combo_box_list_key_press (GtkWidget   *widget,
     return TRUE;
   }
 
-  return FALSE;
+  if (!gtk_bindings_activate_event (GTK_OBJECT (widget), event))
+    {
+      /* The list hasn't managed the
+       * event, forward it to the combobox
+       */
+      gtk_bindings_activate_event (GTK_OBJECT (combo_box), event);
+    }
+
+  return TRUE;
 }
 
 static void
@@ -3768,16 +3885,12 @@ gtk_combo_box_list_scroll_timeout (GtkComboBox *combo_box)
 {
   gint x, y;
 
-  GDK_THREADS_ENTER ();
-
   if (combo_box->priv->auto_scroll)
     {
       gdk_window_get_pointer (combo_box->priv->tree_view->window, 
 			      &x, &y, NULL);
       gtk_combo_box_list_auto_scroll (combo_box, x, y);
     }
-
-  GDK_THREADS_LEAVE ();
 
   return TRUE;
 }
@@ -4349,11 +4462,11 @@ gtk_combo_box_new_with_model (GtkTreeModel *model)
 
 /**
  * gtk_combo_box_get_wrap_width:
- * @combo_box: A #GtkComboBox.
+ * @combo_box: A #GtkComboBox
  *
- * Returns the wrap width which is used to determine the number
- * of columns for the popup menu. If the wrap width is larger than
- * 1, the combo box is in table mode.
+ * Returns the wrap width which is used to determine the number of columns 
+ * for the popup menu. If the wrap width is larger than 1, the combo box 
+ * is in table mode.
  *
  * Returns: the wrap width.
  *
@@ -4369,8 +4482,8 @@ gtk_combo_box_get_wrap_width (GtkComboBox *combo_box)
 
 /**
  * gtk_combo_box_set_wrap_width:
- * @combo_box: A #GtkComboBox.
- * @width: Preferred number of columns.
+ * @combo_box: A #GtkComboBox
+ * @width: Preferred number of columns
  *
  * Sets the wrap width of @combo_box to be @width. The wrap width is basically
  * the preferred number of columns when you want the popup to be layed out
@@ -4398,7 +4511,7 @@ gtk_combo_box_set_wrap_width (GtkComboBox *combo_box,
 
 /**
  * gtk_combo_box_get_row_span_column:
- * @combo_box: A #GtkComboBox.
+ * @combo_box: A #GtkComboBox
  *
  * Returns the column with row span information for @combo_box.
  *
@@ -4448,7 +4561,7 @@ gtk_combo_box_set_row_span_column (GtkComboBox *combo_box,
 
 /**
  * gtk_combo_box_get_column_span_column:
- * @combo_box: A #GtkComboBox.
+ * @combo_box: A #GtkComboBox
  *
  * Returns the column with column span information for @combo_box.
  *
@@ -4466,8 +4579,8 @@ gtk_combo_box_get_column_span_column (GtkComboBox *combo_box)
 
 /**
  * gtk_combo_box_set_column_span_column:
- * @combo_box: A #GtkComboBox.
- * @column_span: A column in the model passed during construction.
+ * @combo_box: A #GtkComboBox
+ * @column_span: A column in the model passed during construction
  *
  * Sets the column with column span information for @combo_box to be
  * @column_span. The column span column contains integers which indicate
@@ -4498,7 +4611,7 @@ gtk_combo_box_set_column_span_column (GtkComboBox *combo_box,
 
 /**
  * gtk_combo_box_get_active:
- * @combo_box: A #GtkComboBox.
+ * @combo_box: A #GtkComboBox
  *
  * Returns the index of the currently active item, or -1 if there's no
  * active item. If the model is a non-flat treemodel, and the active item 
@@ -4506,8 +4619,8 @@ gtk_combo_box_set_column_span_column (GtkComboBox *combo_box,
  * <literal>gtk_tree_path_get_indices (path)[0]</literal>, where 
  * <literal>path</literal> is the #GtkTreePath of the active item.
  *
- * Return value: An integer which is the index of the currently active item, or
- * -1 if there's no active item.
+ * Return value: An integer which is the index of the currently active item, 
+ *     or -1 if there's no active item.
  *
  * Since: 2.4
  */
@@ -4533,9 +4646,9 @@ gtk_combo_box_get_active (GtkComboBox *combo_box)
 
 /**
  * gtk_combo_box_set_active:
- * @combo_box: A #GtkComboBox.
+ * @combo_box: A #GtkComboBox
  * @index_: An index in the model passed during construction, or -1 to have
- * no active item.
+ * no active item
  *
  * Sets the active item of @combo_box to be the item at @index.
  *
@@ -4625,14 +4738,14 @@ gtk_combo_box_set_active_internal (GtkComboBox *combo_box,
 /**
  * gtk_combo_box_get_active_iter:
  * @combo_box: A #GtkComboBox
- * @iter: The uninitialized #GtkTreeIter.
+ * @iter: The uninitialized #GtkTreeIter
  * 
  * Sets @iter to point to the current active item, if it exists.
  * 
  * Return value: %TRUE, if @iter was set
  *
  * Since: 2.4
- **/
+ */
 gboolean
 gtk_combo_box_get_active_iter (GtkComboBox     *combo_box,
                                GtkTreeIter     *iter)
@@ -4655,13 +4768,13 @@ gtk_combo_box_get_active_iter (GtkComboBox     *combo_box,
 /**
  * gtk_combo_box_set_active_iter:
  * @combo_box: A #GtkComboBox
- * @iter: The #GtkTreeIter.
+ * @iter: The #GtkTreeIter
  * 
  * Sets the current active item to be the one referenced by @iter. 
  * @iter must correspond to a path of depth one.
  * 
  * Since: 2.4
- **/
+ */
 void
 gtk_combo_box_set_active_iter (GtkComboBox     *combo_box,
                                GtkTreeIter     *iter)
@@ -4677,15 +4790,15 @@ gtk_combo_box_set_active_iter (GtkComboBox     *combo_box,
 
 /**
  * gtk_combo_box_set_model:
- * @combo_box: A #GtkComboBox.
- * @model: A #GtkTreeModel.
+ * @combo_box: A #GtkComboBox
+ * @model: A #GtkTreeModel
  *
  * Sets the model used by @combo_box to be @model. Will unset a previously set 
  * model (if applicable). If model is %NULL, then it will unset the model.
  *
  * Note that this function does not clear the cell renderers, you have to 
- * call gtk_combo_box_cell_layout_clear() yourself if you need to set up 
- * different cell renderers for the new model.
+ * call gtk_cell_layout_clear() yourself if you need to set up different 
+ * cell renderers for the new model.
  *
  * Since: 2.4
  */
@@ -4746,7 +4859,7 @@ gtk_combo_box_set_model (GtkComboBox  *combo_box,
 
 /**
  * gtk_combo_box_get_model
- * @combo_box: A #GtkComboBox.
+ * @combo_box: A #GtkComboBox
  *
  * Returns the #GtkTreeModel which is acting as data source for @combo_box.
  *
@@ -4801,8 +4914,8 @@ gtk_combo_box_new_text (void)
 
 /**
  * gtk_combo_box_append_text:
- * @combo_box: A #GtkComboBox constructed using gtk_combo_box_new_text().
- * @text: A string.
+ * @combo_box: A #GtkComboBox constructed using gtk_combo_box_new_text()
+ * @text: A string
  *
  * Appends @string to the list of strings stored in @combo_box. Note that
  * you can only use this function with combo boxes constructed with
@@ -4829,9 +4942,9 @@ gtk_combo_box_append_text (GtkComboBox *combo_box,
 
 /**
  * gtk_combo_box_insert_text:
- * @combo_box: A #GtkComboBox constructed using gtk_combo_box_new_text().
- * @position: An index to insert @text.
- * @text: A string.
+ * @combo_box: A #GtkComboBox constructed using gtk_combo_box_new_text()
+ * @position: An index to insert @text
+ * @text: A string
  *
  * Inserts @string at @position in the list of strings stored in @combo_box.
  * Note that you can only use this function with combo boxes constructed
@@ -4860,8 +4973,8 @@ gtk_combo_box_insert_text (GtkComboBox *combo_box,
 
 /**
  * gtk_combo_box_prepend_text:
- * @combo_box: A #GtkComboBox constructed with gtk_combo_box_new_text().
- * @text: A string.
+ * @combo_box: A #GtkComboBox constructed with gtk_combo_box_new_text()
+ * @text: A string
  *
  * Prepends @string to the list of strings stored in @combo_box. Note that
  * you can only use this function with combo boxes constructed with
@@ -4888,8 +5001,8 @@ gtk_combo_box_prepend_text (GtkComboBox *combo_box,
 
 /**
  * gtk_combo_box_remove_text:
- * @combo_box: A #GtkComboBox constructed with gtk_combo_box_new_text().
- * @position: Index of the item to remove.
+ * @combo_box: A #GtkComboBox constructed with gtk_combo_box_new_text()
+ * @position: Index of the item to remove
  *
  * Removes the string at @position from @combo_box. Note that you can only use
  * this function with combo boxes constructed with gtk_combo_box_new_text().
@@ -4916,7 +5029,7 @@ gtk_combo_box_remove_text (GtkComboBox *combo_box,
 
 /**
  * gtk_combo_box_get_active_text:
- * @combo_box: A #GtkComboBox constructed with gtk_combo_box_new_text().
+ * @combo_box: A #GtkComboBox constructed with gtk_combo_box_new_text()
  *
  * Returns the currently active string in @combo_box or %NULL if none
  * is selected.  Note that you can only use this function with combo
@@ -4955,6 +5068,90 @@ gtk_combo_box_real_get_active_text (GtkComboBox *combo_box)
 			0, &text, -1);
 
   return text;
+}
+
+static void
+gtk_combo_box_real_move_active (GtkComboBox   *combo_box,
+                                GtkScrollType  scroll)
+{
+  GtkTreeIter iter;
+  GtkTreeIter new_iter;
+  gboolean    active_iter;
+  gboolean    found;
+
+  if (!combo_box->priv->model)
+    {
+      gtk_widget_error_bell (GTK_WIDGET (combo_box));
+      return;
+    }
+
+  active_iter = gtk_combo_box_get_active_iter (combo_box, &iter);
+
+  switch (scroll)
+    {
+    case GTK_SCROLL_STEP_BACKWARD:
+    case GTK_SCROLL_STEP_UP:
+    case GTK_SCROLL_STEP_LEFT:
+      if (active_iter)
+        {
+	  found = tree_prev (combo_box, combo_box->priv->model,
+			     &iter, &new_iter, FALSE);
+	  break;
+        }
+      /* else fall through */
+
+    case GTK_SCROLL_PAGE_FORWARD:
+    case GTK_SCROLL_PAGE_DOWN:
+    case GTK_SCROLL_PAGE_RIGHT:
+    case GTK_SCROLL_END:
+      found = tree_last (combo_box, combo_box->priv->model, &new_iter, FALSE);
+      break;
+
+    case GTK_SCROLL_STEP_FORWARD:
+    case GTK_SCROLL_STEP_DOWN:
+    case GTK_SCROLL_STEP_RIGHT:
+      if (active_iter)
+        {
+	  found = tree_next (combo_box, combo_box->priv->model,
+			     &iter, &new_iter, FALSE);
+          break;
+        }
+      /* else fall through */
+
+    case GTK_SCROLL_PAGE_BACKWARD:
+    case GTK_SCROLL_PAGE_UP:
+    case GTK_SCROLL_PAGE_LEFT:
+    case GTK_SCROLL_START:
+      found = tree_first (combo_box, combo_box->priv->model, &new_iter, FALSE);
+      break;
+
+    default:
+      return;
+    }
+
+  if (found && active_iter)
+    {
+      GtkTreePath *old_path;
+      GtkTreePath *new_path;
+
+      old_path = gtk_tree_model_get_path (combo_box->priv->model, &iter);
+      new_path = gtk_tree_model_get_path (combo_box->priv->model, &new_iter);
+
+      if (gtk_tree_path_compare (old_path, new_path) == 0)
+        found = FALSE;
+
+      gtk_tree_path_free (old_path);
+      gtk_tree_path_free (new_path);
+    }
+
+  if (found)
+    {
+      gtk_combo_box_set_active_iter (combo_box, &new_iter);
+    }
+  else
+    {
+      gtk_widget_error_bell (GTK_WIDGET (combo_box));
+    }
 }
 
 static gboolean
@@ -5001,17 +5198,25 @@ gtk_combo_box_destroy (GtkObject *object)
 }
 
 static void
-gtk_combo_box_finalize (GObject *object)
+gtk_combo_box_dispose(GObject* object)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (object);
-  GSList *i;
-  
+
   if (GTK_IS_MENU (combo_box->priv->popup_widget))
     {
       gtk_combo_box_menu_destroy (combo_box);
       gtk_menu_detach (GTK_MENU (combo_box->priv->popup_widget));
       combo_box->priv->popup_widget = NULL;
     }
+
+  G_OBJECT_CLASS (gtk_combo_box_parent_class)->dispose (object);
+}
+
+static void
+gtk_combo_box_finalize (GObject *object)
+{
+  GtkComboBox *combo_box = GTK_COMBO_BOX (object);
+  GSList *i;
   
   if (GTK_IS_TREE_VIEW (combo_box->priv->tree_view))
     gtk_combo_box_list_destroy (combo_box);
@@ -5078,16 +5283,12 @@ popdown_idle (gpointer data)
 {
   GtkComboBox *combo_box;
 
-  GDK_THREADS_ENTER ();
-
   combo_box = GTK_COMBO_BOX (data);
   
   gtk_cell_editable_editing_done (GTK_CELL_EDITABLE (combo_box));
   gtk_cell_editable_remove_widget (GTK_CELL_EDITABLE (combo_box));
 
   g_object_unref (combo_box);
-
-  GDK_THREADS_LEAVE ();
 
   return FALSE;
 }
@@ -5096,15 +5297,13 @@ static void
 popdown_handler (GtkWidget *widget,
 		 gpointer   data)
 {
-  g_idle_add (popdown_idle, g_object_ref (data));
+  gdk_threads_add_idle (popdown_idle, g_object_ref (data));
 }
 
 static gboolean
 popup_idle (gpointer data)
 {
   GtkComboBox *combo_box;
-
-  GDK_THREADS_ENTER ();
 
   combo_box = GTK_COMBO_BOX (data);
 
@@ -5119,8 +5318,6 @@ popup_idle (gpointer data)
   gtk_combo_box_popup (combo_box);
 
   combo_box->priv->popup_idle_id = 0;
-
-  GDK_THREADS_LEAVE ();
 
   return FALSE;
 }
@@ -5156,7 +5353,7 @@ gtk_combo_box_start_editing (GtkCellEditable *cell_editable,
    */  
   if (combo_box->priv->is_cell_renderer && 
       combo_box->priv->cell_view && !combo_box->priv->tree_view)
-    combo_box->priv->popup_idle_id = g_idle_add (popup_idle, combo_box);
+    combo_box->priv->popup_idle_id = gdk_threads_add_idle (popup_idle, combo_box);
 }
 
 
@@ -5167,7 +5364,7 @@ gtk_combo_box_start_editing (GtkCellEditable *cell_editable,
  * Gets the current value of the :add-tearoffs property.
  * 
  * Return value: the current value of the :add-tearoffs property.
- **/
+ */
 gboolean
 gtk_combo_box_get_add_tearoffs (GtkComboBox *combo_box)
 {
@@ -5185,7 +5382,7 @@ gtk_combo_box_get_add_tearoffs (GtkComboBox *combo_box)
  * menu item.
  *
  * Since: 2.6
- **/
+ */
 void
 gtk_combo_box_set_add_tearoffs (GtkComboBox *combo_box,
 				gboolean     add_tearoffs)
@@ -5237,7 +5434,7 @@ gtk_combo_box_update_title (GtkComboBox *combo_box)
 /**
  * gtk_combo_box_set_title:
  * @combo_box: a #GtkComboBox 
- * @title: a title for the menu in tearoff mode.
+ * @title: a title for the menu in tearoff mode
  *  
  * Sets the menu's title in tearoff mode.
  *
@@ -5281,7 +5478,7 @@ _gtk_combo_box_editing_canceled (GtkComboBox *combo_box)
  * Returns: the accessible object corresponding to the combo box's popup.
  *
  * Since: 2.6
- **/
+ */
 AtkObject*
 gtk_combo_box_get_popup_accessible (GtkComboBox *combo_box)
 {
@@ -5307,7 +5504,7 @@ gtk_combo_box_get_popup_accessible (GtkComboBox *combo_box)
  * Return value: the current row separator function.
  *
  * Since: 2.6
- **/
+ */
 GtkTreeViewRowSeparatorFunc 
 gtk_combo_box_get_row_separator_func (GtkComboBox *combo_box)
 {
@@ -5328,7 +5525,7 @@ gtk_combo_box_get_row_separator_func (GtkComboBox *combo_box)
  * function is %NULL, no separators are drawn. This is the default value.
  *
  * Since: 2.6
- **/
+ */
 void
 gtk_combo_box_set_row_separator_func (GtkComboBox                 *combo_box,
 				      GtkTreeViewRowSeparatorFunc  func,
@@ -5366,7 +5563,7 @@ gtk_combo_box_set_row_separator_func (GtkComboBox                 *combo_box,
  * the main area of the application.
  *
  * Since: 2.6
- **/
+ */
 void
 gtk_combo_box_set_focus_on_click (GtkComboBox *combo_box,
 				  gboolean     focus_on_click)
@@ -5398,7 +5595,7 @@ gtk_combo_box_set_focus_on_click (GtkComboBox *combo_box,
  *     clicked with the mouse.
  *
  * Since: 2.6
- **/
+ */
 gboolean
 gtk_combo_box_get_focus_on_click (GtkComboBox *combo_box)
 {

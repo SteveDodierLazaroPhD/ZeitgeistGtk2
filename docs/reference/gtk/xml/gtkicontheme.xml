@@ -47,11 +47,16 @@ enum                <link linkend="GtkIconThemeError">GtkIconThemeError</link>;
                                                          const <link linkend="gchar">gchar</link> *icon_name,
                                                          <link linkend="gint">gint</link> size,
                                                          <link linkend="GtkIconLookupFlags">GtkIconLookupFlags</link> flags);
+<link linkend="GtkIconInfo">GtkIconInfo</link>*        <link linkend="gtk-icon-theme-choose-icon">gtk_icon_theme_choose_icon</link>          (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme,
+                                                         const <link linkend="gchar">gchar</link> *icon_names[],
+                                                         <link linkend="gint">gint</link> size,
+                                                         <link linkend="GtkIconLookupFlags">GtkIconLookupFlags</link> flags);
 <link linkend="GdkPixbuf">GdkPixbuf</link>*          <link linkend="gtk-icon-theme-load-icon">gtk_icon_theme_load_icon</link>            (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme,
                                                          const <link linkend="gchar">gchar</link> *icon_name,
                                                          <link linkend="gint">gint</link> size,
                                                          <link linkend="GtkIconLookupFlags">GtkIconLookupFlags</link> flags,
                                                          <link linkend="GError">GError</link> **error);
+<link linkend="GList">GList</link>*              <link linkend="gtk-icon-theme-list-contexts">gtk_icon_theme_list_contexts</link>        (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme);
 <link linkend="GList">GList</link>*              <link linkend="gtk-icon-theme-list-icons">gtk_icon_theme_list_icons</link>           (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme,
                                                          const <link linkend="gchar">gchar</link> *context);
 <link linkend="gint">gint</link>*               <link linkend="gtk-icon-theme-get-icon-sizes">gtk_icon_theme_get_icon_sizes</link>       (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme,
@@ -101,7 +106,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-icon-info-ge
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  &quot;<link linkend="GtkIconTheme-changed">changed</link>&quot;                                        : Run Last
+  <link linkend="GtkIconTheme-changed">changed</link>                                        : Run Last
 </synopsis>
 </refsect1>
 
@@ -226,7 +231,8 @@ object and set the icon theme name explicitely using
 {
   GTK_ICON_LOOKUP_NO_SVG = 1 &lt;&lt; 0,
   GTK_ICON_LOOKUP_FORCE_SVG = 1 &lt;&lt; 1,
-  GTK_ICON_LOOKUP_USE_BUILTIN = 1 &lt;&lt; 2
+  GTK_ICON_LOOKUP_USE_BUILTIN = 1 &lt;&lt; 2,
+  GTK_ICON_LOOKUP_GENERIC_FALLBACK = 1 &lt;&lt; 3
 } GtkIconLookupFlags;
 </programlisting>
 <para>
@@ -253,6 +259,13 @@ Used to specify options for <link linkend="gtk-icon-theme-lookup-icon"><function
   <link linkend="gtk-icon-theme-lookup-icon"><function>gtk_icon_theme_lookup_icon()</function></link> includes builtin icons
   as well as files. For a builtin icon, <link linkend="gtk-icon-info-get-filename"><function>gtk_icon_info_get_filename()</function></link>
   returns <link linkend="NULL:CAPS"><literal>NULL</literal></link> and you need to call <link linkend="gtk-icon-info-get-builtin-pixbuf"><function>gtk_icon_info_get_builtin_pixbuf()</function></link>.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><anchor id="GTK-ICON-LOOKUP-GENERIC-FALLBACK:CAPS" role="constant"/><literal>GTK_ICON_LOOKUP_GENERIC_FALLBACK</literal></term>
+<listitem><simpara> Try to shorten icon name at '-'
+  characters before looking at inherited themes. For more general
+  fallback, see <link linkend="gtk-icon-theme-choose-icon"><function>gtk_icon_theme_choose_icon()</function></link>. Since 2.12.
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
@@ -537,6 +550,45 @@ about the icon, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if t
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
 <refsect2>
+<title><anchor id="gtk-icon-theme-choose-icon" role="function" condition="since:2.12"/>gtk_icon_theme_choose_icon ()</title>
+<indexterm role="2.12"><primary>gtk_icon_theme_choose_icon</primary></indexterm><programlisting><link linkend="GtkIconInfo">GtkIconInfo</link>*        gtk_icon_theme_choose_icon          (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme,
+                                                         const <link linkend="gchar">gchar</link> *icon_names[],
+                                                         <link linkend="gint">gint</link> size,
+                                                         <link linkend="GtkIconLookupFlags">GtkIconLookupFlags</link> flags);</programlisting>
+<para>
+Looks up a named icon and returns a structure containing
+information such as the filename of the icon. The icon
+can then be rendered into a pixbuf using
+<link linkend="gtk-icon-info-load-icon"><function>gtk_icon_info_load_icon()</function></link>. (<link linkend="gtk-icon-theme-load-icon"><function>gtk_icon_theme_load_icon()</function></link>
+combines these two steps if all you need is the pixbuf.)
+</para>
+<para>
+If <parameter>icon_names</parameter> contains more than one name, this function 
+tries them all in the given order before falling back to 
+inherited icon themes.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_theme</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkIconTheme"><type>GtkIconTheme</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon_names</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="NULL:CAPS"><literal>NULL</literal></link>-terminated array of icon names to lookup
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> desired icon size
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>flags</parameter>&nbsp;:</term>
+<listitem><simpara> flags modifying the behavior of the icon lookup
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="GtkIconInfo"><type>GtkIconInfo</type></link> structure containing information
+about the icon, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if the icon wasn't found. Free with
+<link linkend="gtk-icon-info-free"><function>gtk_icon_info_free()</function></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-icon-theme-load-icon" role="function" condition="since:2.4"/>gtk_icon_theme_load_icon ()</title>
 <indexterm role="2.4"><primary>gtk_icon_theme_load_icon</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link>*          gtk_icon_theme_load_icon            (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme,
                                                          const <link linkend="gchar">gchar</link> *icon_name,
@@ -583,6 +635,26 @@ icon theme loaded, which would be a waste of memory.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-icon-theme-list-contexts" role="function" condition="since:2.12"/>gtk_icon_theme_list_contexts ()</title>
+<indexterm role="2.12"><primary>gtk_icon_theme_list_contexts</primary></indexterm><programlisting><link linkend="GList">GList</link>*              gtk_icon_theme_list_contexts        (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme);</programlisting>
+<para>
+Gets the list of contexts available within the current
+hierarchy of icon themes</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_theme</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkIconTheme"><type>GtkIconTheme</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="GList"><type>GList</type></link> list holding the names of all the
+ contexts in the theme. You must first free each element
+ in the list with <link linkend="g-free"><function>g_free()</function></link>, then free the list itself
+ with <link linkend="g-list-free"><function>g_list_free()</function></link>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-icon-theme-list-icons" role="function" condition="since:2.4"/>gtk_icon_theme_list_icons ()</title>
@@ -954,7 +1026,7 @@ visible context like a list of icons.</para>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkIconTheme-changed"/>The &quot;changed&quot; signal</title>
+<refsect2><title><anchor id="GtkIconTheme-changed"/>The <literal>::changed</literal> signal</title>
 <indexterm><primary>GtkIconTheme::changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkIconTheme">GtkIconTheme</link> *icon_theme,
                                                         <link linkend="gpointer">gpointer</link>      user_data)       : Run Last</programlisting>
 <para>

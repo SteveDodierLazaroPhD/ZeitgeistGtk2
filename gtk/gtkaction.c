@@ -147,10 +147,11 @@ static void gtk_action_sync_tooltip     (GtkAction      *action,
 
 static GtkWidget *create_menu_item    (GtkAction *action);
 static GtkWidget *create_tool_item    (GtkAction *action);
-static void       connect_proxy       (GtkAction     *action,
-				       GtkWidget     *proxy);
+static void       connect_proxy       (GtkAction *action,
+				       GtkWidget *proxy);
 static void       disconnect_proxy    (GtkAction *action,
 				       GtkWidget *proxy);
+
 static void       closure_accel_activate (GClosure     *closure,
 					  GValue       *return_value,
 					  guint         n_param_values,
@@ -179,6 +180,7 @@ gtk_action_class_init (GtkActionClass *klass)
 
   klass->create_menu_item = create_menu_item;
   klass->create_tool_item = create_tool_item;
+  klass->create_menu = NULL;
   klass->connect_proxy = connect_proxy;
   klass->disconnect_proxy = disconnect_proxy;
 
@@ -193,6 +195,14 @@ gtk_action_class_init (GtkActionClass *klass)
 							NULL,
 							GTK_PARAM_READWRITE | 
 							G_PARAM_CONSTRUCT_ONLY));
+
+  /**
+   * GtkAction:label:
+   *
+   * The label used for menu items and buttons that activate
+   * this action. If the label is %NULL, GTK+ uses the stock 
+   * label specified via the stock-id property.
+   */
   g_object_class_install_property (gobject_class,
 				   PROP_LABEL,
 				   g_param_spec_string ("label",
@@ -397,7 +407,7 @@ gtk_action_new (const gchar *name,
 			 "name", name,
 			 "label", label,
 			 "tooltip", tooltip,
-			 "stock_id", stock_id,
+			 "stock-id", stock_id,
 			 NULL);
 
   return action;
@@ -731,26 +741,13 @@ connect_proxy (GtkAction     *action,
     }
   else if (GTK_IS_TOOL_ITEM (proxy))
     {
-      /* toolbar item specific synchronisers ... */
-
-      g_object_set (proxy,
-		    "visible-horizontal", action->private_data->visible_horizontal,
-		    "visible-vertical",	action->private_data->visible_vertical,
-		    "is-important", action->private_data->is_important,
-		    NULL);
-
-      gtk_action_sync_tooltip (action, proxy);
-
-      g_signal_connect_object (proxy, "create_menu_proxy",
-			       G_CALLBACK (gtk_action_create_menu_proxy),
-			       action, 0);
-
-      gtk_tool_item_rebuild_menu (GTK_TOOL_ITEM (proxy));
-
       /* toolbar button specific synchronisers ... */
       if (GTK_IS_TOOL_BUTTON (proxy))
 	{
 	  g_object_set (proxy,
+		        "visible-horizontal", action->private_data->visible_horizontal,
+		        "visible-vertical", action->private_data->visible_vertical,
+		        "is-important", action->private_data->is_important,
 			"label", action->private_data->short_label,
 			"use-underline", TRUE,
 			"stock-id", action->private_data->stock_id,
@@ -760,7 +757,23 @@ connect_proxy (GtkAction     *action,
 	  g_signal_connect_object (proxy, "clicked",
 				   G_CALLBACK (gtk_action_activate), action,
 				   G_CONNECT_SWAPPED);
-	}
+        }
+      else 
+        {
+           g_object_set (proxy,
+	 	         "visible-horizontal", action->private_data->visible_horizontal,
+		         "visible-vertical", action->private_data->visible_vertical,
+		         "is-important", action->private_data->is_important,
+		         NULL);
+       }
+
+      gtk_action_sync_tooltip (action, proxy);
+
+      g_signal_connect_object (proxy, "create_menu_proxy",
+			       G_CALLBACK (gtk_action_create_menu_proxy),
+			       action, 0);
+
+      gtk_tool_item_rebuild_menu (GTK_TOOL_ITEM (proxy));
     }
   else if (GTK_IS_BUTTON (proxy))
     {
@@ -774,10 +787,6 @@ connect_proxy (GtkAction     *action,
 	}
       else 
 	{
-	  GtkWidget *image;
-
-	  image = gtk_button_get_image (GTK_BUTTON (proxy));
-
 	  if (GTK_BIN (proxy)->child == NULL || 
 	      GTK_IS_LABEL (GTK_BIN (proxy)->child))
 	    {
@@ -1335,7 +1344,7 @@ gtk_action_set_short_label (GtkAction	*action,
 
       if (GTK_IS_TOOL_BUTTON (proxy))
 	gtk_tool_button_set_label (GTK_TOOL_BUTTON (proxy), 
-				   action->private_data->label);
+				   action->private_data->short_label);
       else if (GTK_IS_BUTTON (proxy) &&
 	       !gtk_button_get_use_stock (GTK_BUTTON (proxy)))
 	{
@@ -1343,7 +1352,7 @@ gtk_action_set_short_label (GtkAction	*action,
 	  
 	  if (child == NULL || GTK_IS_LABEL (child))
 	    gtk_button_set_label (GTK_BUTTON (proxy), 
-				  action->private_data->label);
+				  action->private_data->short_label);
 	}
     }
 
@@ -1527,8 +1536,6 @@ gtk_action_set_icon_name (GtkAction   *action,
       else if (GTK_IS_BUTTON (proxy) &&
 	       !gtk_button_get_use_stock (GTK_BUTTON (proxy)))
 	{
-	  GtkWidget *image;
-
 	  image = gtk_button_get_image (GTK_BUTTON (proxy));
 	  
 	  if (GTK_IS_IMAGE (image) &&
@@ -1767,6 +1774,29 @@ gtk_action_disconnect_accelerator (GtkAction *action)
   if (action->private_data->accel_count == 0)
     gtk_accel_group_disconnect (action->private_data->accel_group,
 				action->private_data->accel_closure);
+}
+
+/**
+ * gtk_action_create_menu:
+ * @action: a #GtkAction
+ *
+ * If @action provides a #GtkMenu widget as a submenu for the menu
+ * item or the toolbar item it creates, this function returns an
+ * instance of that menu.
+ *
+ * Return value: the menu item provided by the action, or %NULL.
+ *
+ * Since: 2.12
+ */
+GtkWidget *
+gtk_action_create_menu (GtkAction *action)
+{
+  g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+
+  if (GTK_ACTION_GET_CLASS (action)->create_menu)
+    return GTK_ACTION_GET_CLASS (action)->create_menu (action);
+
+  return NULL;
 }
 
 #define __GTK_ACTION_C__

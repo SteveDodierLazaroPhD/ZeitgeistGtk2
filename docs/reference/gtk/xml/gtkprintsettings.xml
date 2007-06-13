@@ -174,6 +174,19 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-print-settin
 #define             <link linkend="GTK-PRINT-SETTINGS-WIN32-DRIVER-EXTRA:CAPS">GTK_PRINT_SETTINGS_WIN32_DRIVER_EXTRA</link>
 #define             <link linkend="GTK-PRINT-SETTINGS-WIN32-DRIVER-VERSION:CAPS">GTK_PRINT_SETTINGS_WIN32_DRIVER_VERSION</link>
 
+<link linkend="GtkPrintSettings">GtkPrintSettings</link>*   <link linkend="gtk-print-settings-new-from-file">gtk_print_settings_new_from_file</link>    (const <link linkend="gchar">gchar</link> *file_name,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="GtkPrintSettings">GtkPrintSettings</link>*   <link linkend="gtk-print-settings-new-from-key-file">gtk_print_settings_new_from_key_file</link>
+                                                        (<link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-settings-to-file">gtk_print_settings_to_file</link>          (<link linkend="GtkPrintSettings">GtkPrintSettings</link> *settings,
+                                                         const <link linkend="gchar">gchar</link> *file_name,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="void">void</link>                <link linkend="gtk-print-settings-to-key-file">gtk_print_settings_to_key_file</link>      (<link linkend="GtkPrintSettings">GtkPrintSettings</link> *settings,
+                                                         <link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name);
+
 
 </synopsis>
 </refsynopsisdiv>
@@ -1629,6 +1642,101 @@ only "file://" URIs.
 </programlisting>
 <para>
 
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-print-settings-new-from-file" role="function" condition="since:2.12"/>gtk_print_settings_new_from_file ()</title>
+<indexterm role="2.12"><primary>gtk_print_settings_new_from_file</primary></indexterm><programlisting><link linkend="GtkPrintSettings">GtkPrintSettings</link>*   gtk_print_settings_new_from_file    (const <link linkend="gchar">gchar</link> *file_name,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Reads the print settings from <parameter>filename</parameter>. Returns a new <link linkend="GtkPrintSettings"><type>GtkPrintSettings</type></link>
+object with the restored settings, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if an error occurred.
+See <link linkend="gtk-print-settings-to-file"><function>gtk_print_settings_to_file()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>file_name</parameter>&nbsp;:</term>
+<listitem><simpara> the filename to read the settings from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for errors, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the restored <link linkend="GtkPrintSettings"><type>GtkPrintSettings</type></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-print-settings-new-from-key-file" role="function" condition="since:2.12"/>gtk_print_settings_new_from_key_file ()</title>
+<indexterm role="2.12"><primary>gtk_print_settings_new_from_key_file</primary></indexterm><programlisting><link linkend="GtkPrintSettings">GtkPrintSettings</link>*   gtk_print_settings_new_from_key_file
+                                                        (<link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Reads the print settings from the group <parameter>group_name</parameter> in <parameter>key_file</parameter>. 
+Returns a new <link linkend="GtkPrintSettings"><type>GtkPrintSettings</type></link> object with the restored settings, 
+or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if an error occurred.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>key_file</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GKeyFile"><type>GKeyFile</type></link> to retrieve the settings from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>group_name</parameter>&nbsp;:</term>
+<listitem><simpara> the name of the group to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for errors, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the restored <link linkend="GtkPrintSettings"><type>GtkPrintSettings</type></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-print-settings-to-file" role="function" condition="since:2.12"/>gtk_print_settings_to_file ()</title>
+<indexterm role="2.12"><primary>gtk_print_settings_to_file</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_print_settings_to_file          (<link linkend="GtkPrintSettings">GtkPrintSettings</link> *settings,
+                                                         const <link linkend="gchar">gchar</link> *file_name,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+This function saves the print settings from <parameter>settings</parameter> to <parameter>file_name</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>settings</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrintSettings"><type>GtkPrintSettings</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>file_name</parameter>&nbsp;:</term>
+<listitem><simpara> the file to save to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for errors, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> on success
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-print-settings-to-key-file" role="function" condition="since:2.12"/>gtk_print_settings_to_key_file ()</title>
+<indexterm role="2.12"><primary>gtk_print_settings_to_key_file</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_settings_to_key_file      (<link linkend="GtkPrintSettings">GtkPrintSettings</link> *settings,
+                                                         <link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name);</programlisting>
+<para>
+This function adds the print settings from <parameter>settings</parameter> to <parameter>key_file</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>settings</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrintSettings"><type>GtkPrintSettings</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>key_file</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GKeyFile"><type>GKeyFile</type></link> to save the print settings to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>group_name</parameter>&nbsp;:</term>
+<listitem><simpara> the group to add the settings to in <parameter>key_file</parameter>, or 
+    <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default "Print Settings"
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 
 </refsect1>

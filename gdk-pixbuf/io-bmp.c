@@ -605,19 +605,19 @@ decode_bitmasks (guchar *buf,
                 }
 	}
 
-        if (State->r_bits > 8) { 
+        if (State->r_bits > 8) {
           State->r_shift += State->r_bits - 8;
           State->r_bits = 8;
         }
-        if (State->g_bits > 8) { 
+        if (State->g_bits > 8) {
           State->g_shift += State->g_bits - 8;
           State->g_bits = 8;
         }
-        if (State->b_bits > 8) { 
+        if (State->b_bits > 8) {
           State->b_shift += State->b_bits - 8;
           State->b_bits = 8;
         }
-        if (State->a_bits > 8) { 
+        if (State->a_bits > 8) {
           State->a_shift += State->a_bits - 8;
           State->a_bits = 8;
         }
@@ -691,8 +691,7 @@ static gboolean gdk_pixbuf__bmp_image_stop_load(gpointer data, GError **error)
 	
 	g_return_val_if_fail(context != NULL, TRUE);
 
-	if (context->Colormap != NULL)
-		g_free(context->Colormap);
+	g_free(context->Colormap);
 
 	if (context->pixbuf)
 		g_object_unref(context->pixbuf);
@@ -1363,6 +1362,12 @@ gdk_pixbuf__bmp_image_save (FILE          *f,
 						       f, pixbuf, keys,
 						       values, error);
 }
+
+#ifndef INCLUDE_bmp
+#define MODULE_ENTRY(type,function) function
+#else
+#define MODULE_ENTRY(type,function) _gdk_pixbuf__ ## type ## _ ## function
+#endif
 
 void
 MODULE_ENTRY (bmp, fill_vtable) (GdkPixbufModule *module)

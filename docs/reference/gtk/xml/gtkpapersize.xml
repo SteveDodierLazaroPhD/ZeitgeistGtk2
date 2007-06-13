@@ -42,6 +42,7 @@ enum                <link linkend="GtkUnit">GtkUnit</link>;
 <link linkend="void">void</link>                <link linkend="gtk-paper-size-free">gtk_paper_size_free</link>                 (<link linkend="GtkPaperSize">GtkPaperSize</link> *size);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-paper-size-is-equal">gtk_paper_size_is_equal</link>             (<link linkend="GtkPaperSize">GtkPaperSize</link> *size1,
                                                          <link linkend="GtkPaperSize">GtkPaperSize</link> *size2);
+<link linkend="GList">GList</link>*              <link linkend="gtk-paper-size-get-paper-sizes">gtk_paper_size_get_paper_sizes</link>      (<link linkend="gboolean">gboolean</link> include_custom);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-paper-size-get-name">gtk_paper_size_get_name</link>             (<link linkend="GtkPaperSize">GtkPaperSize</link> *size);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-paper-size-get-display-name">gtk_paper_size_get_display_name</link>     (<link linkend="GtkPaperSize">GtkPaperSize</link> *size);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-paper-size-get-ppd-name">gtk_paper_size_get_ppd_name</link>         (<link linkend="GtkPaperSize">GtkPaperSize</link> *size);
@@ -67,6 +68,13 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-paper-size-g
                                                         (<link linkend="GtkPaperSize">GtkPaperSize</link> *size,
                                                          <link linkend="GtkUnit">GtkUnit</link> unit);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-paper-size-get-default">gtk_paper_size_get_default</link>          (void);
+
+<link linkend="GtkPaperSize">GtkPaperSize</link>*       <link linkend="gtk-paper-size-new-from-key-file">gtk_paper_size_new_from_key_file</link>    (<link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="void">void</link>                <link linkend="gtk-paper-size-to-key-file">gtk_paper_size_to_key_file</link>          (<link linkend="GtkPaperSize">GtkPaperSize</link> *size,
+                                                         <link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name);
 
 
 </synopsis>
@@ -175,7 +183,7 @@ Name for the Legal paper size.
 <indexterm role="2.10"><primary>gtk_paper_size_new</primary></indexterm><programlisting><link linkend="GtkPaperSize">GtkPaperSize</link>*       gtk_paper_size_new                  (const <link linkend="gchar">gchar</link> *name);</programlisting>
 <para>
 Creates a new <link linkend="GtkPaperSize"><type>GtkPaperSize</type></link> object by parsing a 
-PWG 5101.1-2002 PWG <!-- FIXME link here -->
+<ulink url="ftp://ftp.pwg.org/pub/pwg/candidates/cs-pwgmsn10-20020226-5101.1.pdf">PWG 5101.1-2002</ulink>
 paper name. 
 </para>
 <para>
@@ -311,6 +319,24 @@ represent the same paper size
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-paper-size-get-paper-sizes" role="function" condition="since:2.12"/>gtk_paper_size_get_paper_sizes ()</title>
+<indexterm role="2.12"><primary>gtk_paper_size_get_paper_sizes</primary></indexterm><programlisting><link linkend="GList">GList</link>*              gtk_paper_size_get_paper_sizes      (<link linkend="gboolean">gboolean</link> include_custom);</programlisting>
+<para>
+Creates a list of known paper sizes.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>include_custom</parameter>&nbsp;:</term>
+<listitem><simpara> whether to include custom paper sizes
+    as defined in the page setup dialog
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly allocated list of newly 
+   allocated <link linkend="GtkPaperSize"><type>GtkPaperSize</type></link> objects
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-paper-size-get-name" role="function" condition="since:2.10"/>gtk_paper_size_get_name ()</title>
@@ -540,6 +566,54 @@ is owned by GTK+ and should not be modified.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-paper-size-new-from-key-file" role="function" condition="since:2.12"/>gtk_paper_size_new_from_key_file ()</title>
+<indexterm role="2.12"><primary>gtk_paper_size_new_from_key_file</primary></indexterm><programlisting><link linkend="GtkPaperSize">GtkPaperSize</link>*       gtk_paper_size_new_from_key_file    (<link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Reads a paper size from the group <parameter>group_name</parameter> in the key file
+<parameter>key_file</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>key_file</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GKeyFile"><type>GKeyFile</type></link> to retrieve the papersize from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>group_name</parameter>&nbsp;:</term>
+<listitem><simpara> the name ofthe group in the key file to read,
+    or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to read the first group
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for an error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkPaperSize"><type>GtkPaperSize</type></link> object with the restored
+         paper size, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if an error occurred.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-paper-size-to-key-file" role="function" condition="since:2.12"/>gtk_paper_size_to_key_file ()</title>
+<indexterm role="2.12"><primary>gtk_paper_size_to_key_file</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_paper_size_to_key_file          (<link linkend="GtkPaperSize">GtkPaperSize</link> *size,
+                                                         <link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name);</programlisting>
+<para>
+This function adds the paper size from <parameter>size</parameter> to <parameter>key_file</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPaperSize"><type>GtkPaperSize</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>key_file</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GKeyFile"><type>GKeyFile</type></link> to save the paper size to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>group_name</parameter>&nbsp;:</term>
+<listitem><simpara> the group to add the settings to in <parameter>key_file</parameter>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 
 </refsect1>

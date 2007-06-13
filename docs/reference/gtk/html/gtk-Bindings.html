@@ -54,6 +54,7 @@
 <link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
+<link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -64,16 +65,16 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-Standard-Enumerations.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2744001" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2806616" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id2744512" class="shortcut">Description</a></nobr></td></tr>
+                  <a href="#id2807167" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gtk-Bindings"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id2744001"></a><span class="refentrytitle">Bindings</span>
+<a name="id2806616"></a><span class="refentrytitle">Bindings</span>
 </h2>
 <p>Bindings &#8212; Key bindings for individual widgets</p>
 </td>
@@ -90,6 +91,20 @@
                     <a href="gtk-Bindings.html#GtkBindingEntry">GtkBindingEntry</a>;
                     <a href="gtk-Bindings.html#GtkBindingSignal">GtkBindingSignal</a>;
                     <a href="gtk-Bindings.html#GtkBindingArg">GtkBindingArg</a>;
+#define             <a href="gtk-Bindings.html#gtk-binding-entry-add">gtk_binding_entry_add</a>
+void                <a href="gtk-Bindings.html#gtk-binding-entry-add-signall">gtk_binding_entry_add_signall</a>       (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+                                                         guint keyval,
+                                                         <a
+href="../gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a> modifiers,
+                                                         const gchar *signal_name,
+                                                         GSList *binding_args);
+void                <a href="gtk-Bindings.html#gtk-binding-entry-clear">gtk_binding_entry_clear</a>             (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+                                                         guint keyval,
+                                                         <a
+href="../gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a> modifiers);
+guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_binding_parse_binding</a>           (GScanner *scanner);
 <a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      <a href="gtk-Bindings.html#gtk-binding-set-new">gtk_binding_set_new</a>                 (const gchar *set_name);
 <a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      <a href="gtk-Bindings.html#gtk-binding-set-by-class">gtk_binding_set_by_class</a>            (gpointer object_class);
 <a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      <a href="gtk-Bindings.html#gtk-binding-set-find">gtk_binding_set_find</a>                (const gchar *set_name);
@@ -108,12 +123,6 @@ gboolean            <a href="gtk-Bindings.html#gtk-binding-set-activate">gtk_bin
 href="../gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> modifiers,
                                                          <a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);
-#define             <a href="gtk-Bindings.html#gtk-binding-entry-add">gtk_binding_entry_add</a>
-void                <a href="gtk-Bindings.html#gtk-binding-entry-clear">gtk_binding_entry_clear</a>             (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
-                                                         guint keyval,
-                                                         <a
-href="../gdk/gdk-Windows.html#GdkModifierType"
->GdkModifierType</a> modifiers);
 void                <a href="gtk-Bindings.html#gtk-binding-entry-add-signal">gtk_binding_entry_add_signal</a>        (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          guint keyval,
                                                          <a
@@ -122,37 +131,121 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
                                                          const gchar *signal_name,
                                                          guint n_args,
                                                          ...);
-void                <a href="gtk-Bindings.html#gtk-binding-set-add-path">gtk_binding_set_add_path</a>            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
-                                                         <a href="gtk-Standard-Enumerations.html#GtkPathType">GtkPathType</a> path_type,
-                                                         const gchar *path_pattern,
-                                                         <a href="gtk-Standard-Enumerations.html#GtkPathPriorityType">GtkPathPriorityType</a> priority);
+void                <a href="gtk-Bindings.html#gtk-binding-entry-skip">gtk_binding_entry_skip</a>              (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+                                                         guint keyval,
+                                                         <a
+href="../gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a> modifiers);
 void                <a href="gtk-Bindings.html#gtk-binding-entry-remove">gtk_binding_entry_remove</a>            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          guint keyval,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> modifiers);
-void                <a href="gtk-Bindings.html#gtk-binding-entry-add-signall">gtk_binding_entry_add_signall</a>       (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
-                                                         guint keyval,
-                                                         <a
-href="../gdk/gdk-Windows.html#GdkModifierType"
->GdkModifierType</a> modifiers,
-                                                         const gchar *signal_name,
-                                                         GSList *binding_args);
-guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_binding_parse_binding</a>           (GScanner *scanner);
+void                <a href="gtk-Bindings.html#gtk-binding-set-add-path">gtk_binding_set_add_path</a>            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+                                                         <a href="gtk-Standard-Enumerations.html#GtkPathType">GtkPathType</a> path_type,
+                                                         const gchar *path_pattern,
+                                                         <a href="gtk-Standard-Enumerations.html#GtkPathPriorityType">GtkPathPriorityType</a> priority);
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2744512"></a><h2>Description</h2>
+<a name="id2807167"></a><h2>Description</h2>
 <p>
+GtkBinding provides a mechanism for configuring Gtk+ key bindings through RC files.
+This eases key binding adjustments for application developers as well as users and
+provides Gtk+ users or administrators with high key binding configurability which
+requires no application or toolkit side changes.
+</p>
+<div class="refsect2" lang="en">
+<a name="id2807185"></a><a name="gtk-bindings-install"></a><h3>Installing a key binding</h3>
+<p>
+A resource file binding consists of a 'binding' definition and a match statement to
+apply the binding to specific widget types. Details on the matching mechanism are
+described under <a href="gtk-Resource-Files.html#gtkrc-pathnames-and-patterns">Pathnames and patterns</a>.
+Inside the binding definition, key combinations are bound to specific signal emissions
+on the target widget. Key combinations are strings consisting of an optional <a
+href="../gdk/gdk-Windows.html#GdkModifierType"
+><span class="type">GdkModifierType</span></a>
+name and <a
+href="../gdk/gdk-Keyboard-Handling.html"
+>key names</a> such as those defined in
+<code class="filename">&lt;gdk/gdkkeysyms.h&gt;</code> or returned from <a
+href="../gdk/gdk-Keyboard-Handling.html#gdk-keyval-name"
+><code class="function">gdk_keyval_name()</code></a>, they have
+to be parsable by <a href="gtk-Keyboard-Accelerators.html#gtk-accelerator-parse"><code class="function">gtk_accelerator_parse()</code></a>.
+Specifications of signal emissions consist of a string identifying the signal name, and
+a list of signal specific arguments in parenthesis.
+
+For example for binding Control and the left or right cursor keys of a <a href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a> widget to the
+<a href="GtkEntry.html#GtkEntry-move-cursor"><span class="type">::move-cursor</span></a> signal, so movement occurs in 3 letter steps,
+the following binding can be used:
+
+</p>
+<div class="informalexample"><pre class="programlisting">
+binding "MoveCursor3" {
+  bind "&lt;Control&gt;Right" {
+    "move-cursor" (visual-positions, 3, 0)
+  }
+  bind "&lt;Control&gt;Left" {
+    "move-cursor" (visual-positions, -3, 0)
+  }
+}
+class "GtkEntry" binding "MoveCursor3"
+</pre></div>
+<p>
+</p>
+<a name="gtk-bindings-unbind"></a><h3>Unbinding existing key bindings</h3>
+<p>
+Gtk+ already defines a number of useful bindings for the widgets it provides.
+Because custom bindings set up in RC files take precedence over the default bindings
+shipped with Gtk+, overriding existing bindings as demonstrated in 
+<a href="gtk-Bindings.html#gtk-bindings-install">Installing a key binding</a>
+works as expected. The same mechanism can not be used to "unbind" existing bindings,
+however.
+
+</p>
+<div class="informalexample"><pre class="programlisting">
+binding "MoveCursor3" {
+  bind "&lt;Control&gt;Right" { }
+  bind "&lt;Control&gt;Left" { }
+}
+class "GtkEntry" binding "MoveCursor3"
+</pre></div>
+<p>
+
+The above example will not have the desired effect of causing "&lt;Control&gt;Right"
+and "&lt;Control&gt;Left" key presses to be ignored by Gtk+. Instead, it just causes
+any existing bindings from the bindings set "MoveCursor3" to be deleted, so when
+"&lt;Control&gt;Right" or "&lt;Control&gt;Left" are pressed, no binding for these keys
+is found in binding set "MoveCursor3". Gtk+ will thus continue to search for matching
+key bindings, and will eventually lookup and find the default Gtk+ bindings for entries
+which implement word movement. To keep Gtk+ from activating its default bindings, the
+"unbind" keyword can be used like this:
+
+</p>
+<div class="informalexample"><pre class="programlisting">
+binding "MoveCursor3" {
+  unbind "&lt;Control&gt;Right"
+  unbind "&lt;Control&gt;Left"
+}
+class "GtkEntry" binding "MoveCursor3"
+</pre></div>
+<p>
+
+Now, Gtk+ will find a match when looking up "&lt;Control&gt;Right" and "&lt;Control&gt;Left"
+key presses before it resorts to its default bindings, and the match instructs it to abort
+("unbind") the search, so the key presses are not consumed by this widget. 
+As usual, further processing of the key presses, e.g. by an entries parent widget,
+is now possible.
 
 </p>
 </div>
+</div>
 <div class="refsect1" lang="en">
-<a name="id2744526"></a><h2>Details</h2>
+<a name="id2807391"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2744536"></a><h3>
+<a name="id2807401"></a><h3>
 <a name="GtkBindingSet"></a>GtkBindingSet</h3>
-<a class="indexterm" name="id2744549"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2807414"></a><pre class="programlisting">typedef struct {
   gchar			*set_name;
   gint			 priority;
   GSList		*widget_path_pspecs;
@@ -164,14 +257,64 @@ guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_bi
 } GtkBindingSet;
 </pre>
 <p>
-
+A binding set maintains a list of activatable key bindings.
+A single binding set can match multiple types of widgets.
+Similar to styles, widgets can be mapped by widget name paths, widget class paths or widget class types.
+When a binding within a set is matched upon activation, an action signal is emitted on
+the target widget to carry out the actual activation.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term">gchar&#160;*<em class="structfield"><code>set_name</code></em>;</span></td>
+<td>		unique binding set name
+</td>
+</tr>
+<tr>
+<td><span class="term">gint&#160;<em class="structfield"><code>priority</code></em>;</span></td>
+<td>		unused
+</td>
+</tr>
+<tr>
+<td><span class="term">GSList&#160;*<em class="structfield"><code>widget_path_pspecs</code></em>;</span></td>
+<td>	widgets matched by path that this binding set applies to
+</td>
+</tr>
+<tr>
+<td><span class="term">GSList&#160;*<em class="structfield"><code>widget_class_pspecs</code></em>;</span></td>
+<td>	widgets matched by class path that this binding set applies to
+</td>
+</tr>
+<tr>
+<td><span class="term">GSList&#160;*<em class="structfield"><code>class_branch_pspecs</code></em>;</span></td>
+<td>	widgets matched by class that this binding set applies to
+</td>
+</tr>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingEntry">GtkBindingEntry</a>&#160;*<em class="structfield"><code>entries</code></em>;</span></td>
+<td>		the key binding entries in this binding set
+</td>
+</tr>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingEntry">GtkBindingEntry</a>&#160;*<em class="structfield"><code>current</code></em>;</span></td>
+<td>		implementation detail
+</td>
+</tr>
+<tr>
+<td><span class="term">guint&#160;<em class="structfield"><code>parsed</code></em>&#160;:&#160;1;</span></td>
+<td>		whether this binding set stems from an RC file and is reset upon theme changes
+
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744569"></a><h3>
+<a name="id2807613"></a><h3>
 <a name="GtkBindingEntry"></a>GtkBindingEntry</h3>
-<a class="indexterm" name="id2744582"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2807626"></a><pre class="programlisting">typedef struct {
   /* key portion
    */
   guint			 keyval;
@@ -180,20 +323,74 @@ guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_bi
   GtkBindingSet		*binding_set;
   guint			destroyed : 1;
   guint			in_emission : 1;
+  guint                 marks_unbound : 1;
   GtkBindingEntry	*set_next;
   GtkBindingEntry	*hash_next;
   GtkBindingSignal	*signals;
 } GtkBindingEntry;
 </pre>
 <p>
-
+Each key binding element of a binding sets binding list is represented by a <a href="gtk-Bindings.html#GtkBindingEntry"><span class="type">GtkBindingEntry</span></a>.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term">guint&#160;<em class="structfield"><code>keyval</code></em>;</span></td>
+<td>	key value to match
+</td>
+</tr>
+<tr>
+<td><span class="term"><a
+href="../gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a>&#160;<em class="structfield"><code>modifiers</code></em>;</span></td>
+<td>	key modifier to match
+</td>
+</tr>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>&#160;*<em class="structfield"><code>binding_set</code></em>;</span></td>
+<td>	binding set this entry belongs to
+</td>
+</tr>
+<tr>
+<td><span class="term">guint&#160;<em class="structfield"><code>destroyed</code></em>&#160;:&#160;1;</span></td>
+<td> 	implementation detail
+</td>
+</tr>
+<tr>
+<td><span class="term">guint&#160;<em class="structfield"><code>in_emission</code></em>&#160;:&#160;1;</span></td>
+<td>	implementation detail
+</td>
+</tr>
+<tr>
+<td><span class="term">guint&#160;<em class="structfield"><code>marks_unbound</code></em>&#160;:&#160;1;</span></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingEntry">GtkBindingEntry</a>&#160;*<em class="structfield"><code>set_next</code></em>;</span></td>
+<td>	linked list of entries maintained by binding set
+</td>
+</tr>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingEntry">GtkBindingEntry</a>&#160;*<em class="structfield"><code>hash_next</code></em>;</span></td>
+<td>	implementation detail
+</td>
+</tr>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingSignal">GtkBindingSignal</a>&#160;*<em class="structfield"><code>signals</code></em>;</span></td>
+<td>	action signals of this entry
+
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744601"></a><h3>
+<a name="id2807848"></a><h3>
 <a name="GtkBindingSignal"></a>GtkBindingSignal</h3>
-<a class="indexterm" name="id2744614"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2807861"></a><pre class="programlisting">typedef struct {
   GtkBindingSignal	*next;
   gchar 		*signal_name;
   guint			 n_args;
@@ -201,14 +398,41 @@ guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_bi
 } GtkBindingSignal;
 </pre>
 <p>
-
+A <a href="gtk-Bindings.html#GtkBindingSignal"><span class="type">GtkBindingSignal</span></a> stores the necessary information to activate a widget
+in response to a key press via a signal emission.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingSignal">GtkBindingSignal</a>&#160;*<em class="structfield"><code>next</code></em>;</span></td>
+<td>		implementation detail
+</td>
+</tr>
+<tr>
+<td><span class="term">gchar&#160;*<em class="structfield"><code>signal_name</code></em>;</span></td>
+<td>	the action signal to be emitted
+</td>
+</tr>
+<tr>
+<td><span class="term">guint&#160;<em class="structfield"><code>n_args</code></em>;</span></td>
+<td>	number of arguments specified for the signal
+</td>
+</tr>
+<tr>
+<td><span class="term"><a href="gtk-Bindings.html#GtkBindingArg">GtkBindingArg</a>&#160;*<em class="structfield"><code>args</code></em>;</span></td>
+<td>		the arguments specified for the signal
+
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744631"></a><h3>
+<a name="id2807976"></a><h3>
 <a name="GtkBindingArg"></a>GtkBindingArg</h3>
-<a class="indexterm" name="id2744644"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2807989"></a><pre class="programlisting">typedef struct {
   GType		 arg_type;
   union {
     glong	 long_data;
@@ -218,14 +442,50 @@ guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_bi
 } GtkBindingArg;
 </pre>
 <p>
+A <a href="gtk-Bindings.html#GtkBindingArg"><span class="type">GtkBindingArg</span></a> holds the data associated with an argument for a
+key binding signal emission as stored in <a href="gtk-Bindings.html#GtkBindingSignal"><span class="type">GtkBindingSignal</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><span class="term">GType&#160;<em class="structfield"><code>arg_type</code></em>;</span></td>
+<td>implementation detail
 
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2808049"></a><h3>
+<a name="gtk-binding-entry-add"></a>gtk_binding_entry_add</h3>
+<a class="indexterm" name="id2808064"></a><pre class="programlisting">#define	 gtk_binding_entry_add		gtk_binding_entry_clear
+</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_binding_entry_add</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Deprecated.
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744661"></a><h3>
-<a name="gtk-binding-set-new"></a>gtk_binding_set_new ()</h3>
-<a class="indexterm" name="id2744675"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_new                 (const gchar *set_name);</pre>
+<a name="id2808093"></a><h3>
+<a name="gtk-binding-entry-add-signall"></a>gtk_binding_entry_add_signall ()</h3>
+<a class="indexterm" name="id2808109"></a><pre class="programlisting">void                gtk_binding_entry_add_signall       (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+                                                         guint keyval,
+                                                         <a
+href="../gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a> modifiers,
+                                                         const gchar *signal_name,
+                                                         GSList *binding_args);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_binding_entry_add_signall</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Deprecated.</p>
 <p>
 
 </p>
@@ -233,15 +493,28 @@ guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_bi
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><span class="term"><em class="parameter"><code>set_name</code></em>&#160;:</span></td>
-<td>
+<td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
+<td>  binding set to add a signal to
 </td>
 </tr>
 <tr>
-<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
-<td>
-
-
+<td><span class="term"><em class="parameter"><code>keyval</code></em>&#160;:</span></td>
+<td>       key value
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>modifiers</code></em>&#160;:</span></td>
+<td>    key modifier
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>signal_name</code></em>&#160;:</span></td>
+<td>  signal name to be bound
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>binding_args</code></em>&#160;:</span></td>
+<td> list of <a href="gtk-Bindings.html#GtkBindingArg"><span class="type">GtkBindingArg</span></a> signal arguments
 </td>
 </tr>
 </tbody>
@@ -249,65 +522,19 @@ guint               <a href="gtk-Bindings.html#gtk-binding-parse-binding">gtk_bi
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744731"></a><h3>
-<a name="gtk-binding-set-by-class"></a>gtk_binding_set_by_class ()</h3>
-<a class="indexterm" name="id2744744"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_by_class            (gpointer object_class);</pre>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><span class="term"><em class="parameter"><code>object_class</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
-<td>
-
-
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="id2744801"></a><h3>
-<a name="gtk-binding-set-find"></a>gtk_binding_set_find ()</h3>
-<a class="indexterm" name="id2744814"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_find                (const gchar *set_name);</pre>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><span class="term"><em class="parameter"><code>set_name</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
-<td>
-
-
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="id2744871"></a><h3>
-<a name="gtk-bindings-activate"></a>gtk_bindings_activate ()</h3>
-<a class="indexterm" name="id2744885"></a><pre class="programlisting">gboolean            gtk_bindings_activate               (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a name="id2808270"></a><h3>
+<a name="gtk-binding-entry-clear"></a>gtk_binding_entry_clear ()</h3>
+<a class="indexterm" name="id2808285"></a><pre class="programlisting">void                gtk_binding_entry_clear             (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          guint keyval,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> modifiers);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_binding_entry_clear</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Use of this function is deprecated.</p>
 <p>
 
 </p>
@@ -315,7 +542,7 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></td>
+<td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
 <td>
 </td>
 </tr>
@@ -329,11 +556,34 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 <td>
 </td>
 </tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2808392"></a><h3>
+<a name="gtk-binding-parse-binding"></a>gtk_binding_parse_binding ()</h3>
+<a class="indexterm" name="id2808408"></a><pre class="programlisting">guint               gtk_binding_parse_binding           (GScanner *scanner);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_binding_parse_binding</code> is deprecated and should not be used in newly-written code.</p>
+</div>
+<p>
+Deprecated as public API, used only internally.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>scanner</code></em>&#160;:</span></td>
+<td> GtkRC scanner
+</td>
+</tr>
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
-<td>
-
-
+<td> expected token upon errors, <code class="literal">G_TOKEN_NONE</code> on success.
 </td>
 </tr>
 </tbody>
@@ -341,9 +591,135 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744984"></a><h3>
+<a name="id2808493"></a><h3>
+<a name="gtk-binding-set-new"></a>gtk_binding_set_new ()</h3>
+<a class="indexterm" name="id2808506"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_new                 (const gchar *set_name);</pre>
+<p>
+Gtk+ maintains a global list of binding sets. Each binding set has
+a unique name which needs to be specified upon creation.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>set_name</code></em>&#160;:</span></td>
+<td> unique name of this binding set
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> new binding set
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2808569"></a><h3>
+<a name="gtk-binding-set-by-class"></a>gtk_binding_set_by_class ()</h3>
+<a class="indexterm" name="id2808582"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_by_class            (gpointer object_class);</pre>
+<p>
+This function returns the binding set named after the type name of
+the passed in class structure. New binding sets are created on
+demand by this function.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>object_class</code></em>&#160;:</span></td>
+<td> a valid <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> class
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> the binding set corresponding to <em class="parameter"><code>object_class</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2808660"></a><h3>
+<a name="gtk-binding-set-find"></a>gtk_binding_set_find ()</h3>
+<a class="indexterm" name="id2808673"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_find                (const gchar *set_name);</pre>
+<p>
+Find a binding set by its globally unique name. The <em class="parameter"><code>set_name</code></em> can
+either be a name used for <a href="gtk-Bindings.html#gtk-binding-set-new"><code class="function">gtk_binding_set_new()</code></a> or the type name of
+a class used in <a href="gtk-Bindings.html#gtk-binding-set-by-class"><code class="function">gtk_binding_set_by_class()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>set_name</code></em>&#160;:</span></td>
+<td> unique binding set name
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> <a
+href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> or the specified binding set
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2808774"></a><h3>
+<a name="gtk-bindings-activate"></a>gtk_bindings_activate ()</h3>
+<a class="indexterm" name="id2808787"></a><pre class="programlisting">gboolean            gtk_bindings_activate               (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+                                                         guint keyval,
+                                                         <a
+href="../gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a> modifiers);</pre>
+<p>
+Find a key binding matching <em class="parameter"><code>keyval</code></em> and <em class="parameter"><code>modifiers</code></em> and activate the
+binding on <em class="parameter"><code>object</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></td>
+<td> object to activate when binding found
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>keyval</code></em>&#160;:</span></td>
+<td> key value of the binding
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>modifiers</code></em>&#160;:</span></td>
+<td> key modifier of the binding
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> <code class="literal">TRUE</code> if a binding was found and activated
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2808922"></a><h3>
 <a name="gtk-bindings-activate-event"></a>gtk_bindings_activate_event ()</h3>
-<a class="indexterm" name="id2744998"></a><pre class="programlisting">gboolean            gtk_bindings_activate_event         (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id2808935"></a><pre class="programlisting">gboolean            gtk_bindings_activate_event         (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
 href="../gdk/gdk-Event-Structures.html#GdkEventKey"
 >GdkEventKey</a> *event);</pre>
@@ -378,15 +754,18 @@ href="../gdk/gdk-Event-Structures.html#GdkEventKey"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745118"></a><h3>
+<a name="id2809058"></a><h3>
 <a name="gtk-binding-set-activate"></a>gtk_binding_set_activate ()</h3>
-<a class="indexterm" name="id2745131"></a><pre class="programlisting">gboolean            gtk_binding_set_activate            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2809072"></a><pre class="programlisting">gboolean            gtk_binding_set_activate            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          guint keyval,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> modifiers,
                                                          <a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
 <p>
+Find a key binding matching <em class="parameter"><code>keyval</code></em> and <em class="parameter"><code>modifiers</code></em> within
+<em class="parameter"><code>binding_set</code></em> and activate the binding on <em class="parameter"><code>object</code></em>.</p>
+<p>
 
 </p>
 <div class="variablelist"><table border="0">
@@ -394,29 +773,27 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 <tbody>
 <tr>
 <td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
-<td>
+<td> <em class="parameter"><code>binding_set</code></em> to activate
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>keyval</code></em>&#160;:</span></td>
-<td>
+<td>      key value of the binding
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>modifiers</code></em>&#160;:</span></td>
-<td>
+<td>   key modifier of the binding
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></td>
-<td>
+<td>      object to activate when binding found
 </td>
 </tr>
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
-<td>
-
-
+<td> <code class="literal">TRUE</code> if a binding was found and activated
 </td>
 </tr>
 </tbody>
@@ -424,54 +801,9 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745253"></a><h3>
-<a name="gtk-binding-entry-add"></a>gtk_binding_entry_add</h3>
-<a class="indexterm" name="id2745266"></a><pre class="programlisting">#define	 gtk_binding_entry_add		gtk_binding_entry_clear
-</pre>
-<p>
-
-</p>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="id2745282"></a><h3>
-<a name="gtk-binding-entry-clear"></a>gtk_binding_entry_clear ()</h3>
-<a class="indexterm" name="id2745295"></a><pre class="programlisting">void                gtk_binding_entry_clear             (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
-                                                         guint keyval,
-                                                         <a
-href="../gdk/gdk-Windows.html#GdkModifierType"
->GdkModifierType</a> modifiers);</pre>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><em class="parameter"><code>keyval</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><em class="parameter"><code>modifiers</code></em>&#160;:</span></td>
-<td>
-
-
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="id2745385"></a><h3>
+<a name="id2809240"></a><h3>
 <a name="gtk-binding-entry-add-signal"></a>gtk_binding_entry_add_signal ()</h3>
-<a class="indexterm" name="id2745398"></a><pre class="programlisting">void                gtk_binding_entry_add_signal        (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2809253"></a><pre class="programlisting">void                gtk_binding_entry_add_signal        (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          guint keyval,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
@@ -480,6 +812,11 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
                                                          guint n_args,
                                                          ...);</pre>
 <p>
+Override or install a new key binding for <em class="parameter"><code>keyval</code></em> with <em class="parameter"><code>modifiers</code></em> on
+<em class="parameter"><code>binding_set</code></em>.  When the binding is activated, <em class="parameter"><code>signal_name</code></em> will be
+emitted on the target widget, with <em class="parameter"><code>n_args</code></em> <em class="parameter"><code>Varargs</code></em> used as
+arguments.</p>
+<p>
 
 </p>
 <div class="variablelist"><table border="0">
@@ -487,27 +824,28 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 <tbody>
 <tr>
 <td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
-<td>
+<td> <em class="parameter"><code>binding_set</code></em> to install an entry for
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>keyval</code></em>&#160;:</span></td>
-<td>
+<td>      key value of binding to install
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>modifiers</code></em>&#160;:</span></td>
-<td>
+<td>   key modifier of binding to install
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>signal_name</code></em>&#160;:</span></td>
-<td>
+<td> signal to execute upon activation
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>n_args</code></em>&#160;:</span></td>
-<td>
+<td>      number of arguments to <em class="parameter"><code>signal_name</code></em>
+@:            arguments to <em class="parameter"><code>signal_name</code></em>
 </td>
 </tr>
 <tr>
@@ -522,53 +860,16 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745546"></a><h3>
-<a name="gtk-binding-set-add-path"></a>gtk_binding_set_add_path ()</h3>
-<a class="indexterm" name="id2745559"></a><pre class="programlisting">void                gtk_binding_set_add_path            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
-                                                         <a href="gtk-Standard-Enumerations.html#GtkPathType">GtkPathType</a> path_type,
-                                                         const gchar *path_pattern,
-                                                         <a href="gtk-Standard-Enumerations.html#GtkPathPriorityType">GtkPathPriorityType</a> priority);</pre>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><em class="parameter"><code>path_type</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><em class="parameter"><code>path_pattern</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><em class="parameter"><code>priority</code></em>&#160;:</span></td>
-<td>
-
-
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="id2745671"></a><h3>
-<a name="gtk-binding-entry-remove"></a>gtk_binding_entry_remove ()</h3>
-<a class="indexterm" name="id2745684"></a><pre class="programlisting">void                gtk_binding_entry_remove            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a name="id2809463"></a><h3>
+<a name="gtk-binding-entry-skip"></a>gtk_binding_entry_skip ()</h3>
+<a class="indexterm" name="id2809482"></a><pre class="programlisting">void                gtk_binding_entry_skip              (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          guint keyval,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> modifiers);</pre>
 <p>
+</p>
+<p>
 
 </p>
 <div class="variablelist"><table border="0">
@@ -576,35 +877,40 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 <tbody>
 <tr>
 <td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
-<td>
+<td> <em class="parameter"><code>binding_set</code></em> to skip an entry of
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>keyval</code></em>&#160;:</span></td>
-<td>
+<td>      key value of binding to skip
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>modifiers</code></em>&#160;:</span></td>
-<td>
-
-
+<td>   key modifier of binding to skip
 </td>
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since  2.12
+
+Install a binding on @binding_set which causes key lookups
+to be aborted, to prevent bindings from lower priority sets
+to be activated.
+</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745774"></a><h3>
-<a name="gtk-binding-entry-add-signall"></a>gtk_binding_entry_add_signall ()</h3>
-<a class="indexterm" name="id2745788"></a><pre class="programlisting">void                gtk_binding_entry_add_signall       (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a name="id2809591"></a><h3>
+<a name="gtk-binding-entry-remove"></a>gtk_binding_entry_remove ()</h3>
+<a class="indexterm" name="id2809604"></a><pre class="programlisting">void                gtk_binding_entry_remove            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          guint keyval,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
->GdkModifierType</a> modifiers,
-                                                         const gchar *signal_name,
-                                                         GSList *binding_args);</pre>
+>GdkModifierType</a> modifiers);</pre>
+<p>
+Remove a binding previously installed via
+<a href="gtk-Bindings.html#gtk-binding-entry-add-signal"><code class="function">gtk_binding_entry_add_signal()</code></a> on <em class="parameter"><code>binding_set</code></em>.</p>
 <p>
 
 </p>
@@ -613,29 +919,17 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 <tbody>
 <tr>
 <td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
-<td>
+<td> <em class="parameter"><code>binding_set</code></em> to remove an entry of
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>keyval</code></em>&#160;:</span></td>
-<td>
+<td>      key value of binding to remove
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>modifiers</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><em class="parameter"><code>signal_name</code></em>&#160;:</span></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><span class="term"><em class="parameter"><code>binding_args</code></em>&#160;:</span></td>
-<td>
-
-
+<td>   key modifier of binding to remove
 </td>
 </tr>
 </tbody>
@@ -643,9 +937,15 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745921"></a><h3>
-<a name="gtk-binding-parse-binding"></a>gtk_binding_parse_binding ()</h3>
-<a class="indexterm" name="id2745935"></a><pre class="programlisting">guint               gtk_binding_parse_binding           (GScanner *scanner);</pre>
+<a name="id2809723"></a><h3>
+<a name="gtk-binding-set-add-path"></a>gtk_binding_set_add_path ()</h3>
+<a class="indexterm" name="id2809737"></a><pre class="programlisting">void                gtk_binding_set_add_path            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+                                                         <a href="gtk-Standard-Enumerations.html#GtkPathType">GtkPathType</a> path_type,
+                                                         const gchar *path_pattern,
+                                                         <a href="gtk-Standard-Enumerations.html#GtkPathPriorityType">GtkPathPriorityType</a> priority);</pre>
+<p>
+This function is used internally by the GtkRC parsing mechanism to
+assign match patterns to <a href="gtk-Bindings.html#GtkBindingSet"><span class="type">GtkBindingSet</span></a> structures.</p>
 <p>
 
 </p>
@@ -653,20 +953,50 @@ href="../gdk/gdk-Windows.html#GdkModifierType"
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><span class="term"><em class="parameter"><code>scanner</code></em>&#160;:</span></td>
-<td>
+<td><span class="term"><em class="parameter"><code>binding_set</code></em>&#160;:</span></td>
+<td>  binding set to add a path to
 </td>
 </tr>
 <tr>
-<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
-<td>
-
-
+<td><span class="term"><em class="parameter"><code>path_type</code></em>&#160;:</span></td>
+<td>    path type the pattern applies to
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>path_pattern</code></em>&#160;:</span></td>
+<td> the actual match pattern
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>priority</code></em>&#160;:</span></td>
+<td>     binding priority
 </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+</div>
+<div class="refsect1" lang="en">
+<a name="id2809865"></a><h2>See Also</h2>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term">Keyboard Accelerators
+</span></td>
+<td><p>installing and using keyboard short-cuts.</p></td>
+</tr>
+<tr>
+<td><span class="term">Resource Files
+</span></td>
+<td><p>Gtk+ Resource Files - behavior and style definitions.</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>
+</p>
 </div>
 </div>
 </body>

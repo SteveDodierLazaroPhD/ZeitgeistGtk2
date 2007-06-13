@@ -84,21 +84,24 @@ gtk_accel_label_class_init (GtkAccelLabelClass *class)
    * that use the shift key. If the text on this key isn't typically
    * translated on keyboards used for your language, don't translate
    * this.
-   * And do not translate the part before the |.
+   * 
+   * Don't include the prefix "keyboard label|" in the translation.
    */
   class->mod_name_shift = g_strdup (Q_("keyboard label|Shift"));
   /* This is the text that should appear next to menu accelerators
    * that use the control key. If the text on this key isn't typically
    * translated on keyboards used for your language, don't translate
    * this.
-   * And do not translate the part before the |.
+   *
+   * Don't include the prefix "keyboard label|" in the translation.
    */
   class->mod_name_control = g_strdup (Q_("keyboard label|Ctrl"));
   /* This is the text that should appear next to menu accelerators
    * that use the alt key. If the text on this key isn't typically
    * translated on keyboards used for your language, don't translate
    * this.
-   * And do not translate the part before the |.
+   *
+   * Don't include the prefix "keyboard label|" in the translation.
    */
   class->mod_name_alt = g_strdup (Q_("keyboard label|Alt"));
   class->mod_separator = g_strdup ("+");
@@ -661,6 +664,8 @@ _gtk_accel_label_class_get_accelerator_label (GtkAccelLabelClass *klass,
 gboolean
 gtk_accel_label_refetch (GtkAccelLabel *accel_label)
 {
+  gboolean enable_accels;
+
   g_return_val_if_fail (GTK_IS_ACCEL_LABEL (accel_label), FALSE);
 
   if (accel_label->accel_string)
@@ -669,7 +674,11 @@ gtk_accel_label_refetch (GtkAccelLabel *accel_label)
       accel_label->accel_string = NULL;
     }
 
-  if (accel_label->accel_closure)
+  g_object_get (gtk_widget_get_settings (GTK_WIDGET (accel_label)),
+                "gtk-enable-accels", &enable_accels,
+                NULL);
+
+  if (enable_accels && accel_label->accel_closure)
     {
       GtkAccelKey *key = gtk_accel_group_find (accel_label->accel_group, find_accel, accel_label->accel_closure);
 

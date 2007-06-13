@@ -21,6 +21,7 @@
 #include "config.h"
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -45,6 +46,8 @@
 #include "gtkframe.h"
 #include "gtkalignment.h"
 #include "gtklabel.h"
+#include "gtktooltips.h"
+#include "gtkeventbox.h"
 
 #include "gtkprintbackend.h"
 #include "gtkprinter-private.h"
@@ -121,6 +124,7 @@ struct GtkPrintUnixDialogPrivate
 
   GtkPageSetup *page_setup;
 
+  GtkTooltips *tooltips;
   GtkWidget *all_pages_radio;
   GtkWidget *current_page_radio;
   GtkWidget *page_range_radio;
@@ -268,6 +272,9 @@ gtk_print_unix_dialog_init (GtkPrintUnixDialog *dialog)
   priv->print_backends = NULL;
   priv->current_page = -1;
 
+  priv->tooltips = gtk_tooltips_new ();
+  g_object_ref_sink (priv->tooltips);
+
   priv->page_setup = gtk_page_setup_new ();
 
   g_signal_connect (dialog, 
@@ -308,6 +315,12 @@ gtk_print_unix_dialog_finalize (GObject *object)
   GList *node;
 
   unschedule_idle_mark_conflicts (dialog);
+
+  if (priv->tooltips)
+    {
+      g_object_unref (priv->tooltips);
+      priv->tooltips = NULL;
+    }
 
   if (priv->request_details_tag)
     {
@@ -1045,6 +1058,8 @@ update_dialog_from_capabilities (GtkPrintUnixDialog *dialog)
 			    caps & GTK_PRINT_CAPABILITY_REVERSE);
   gtk_widget_set_sensitive (priv->scale_spin,
 			    caps & GTK_PRINT_CAPABILITY_SCALE);
+  gtk_widget_set_sensitive (GTK_WIDGET (priv->pages_per_sheet),
+			    caps & GTK_PRINT_CAPABILITY_NUMBER_UP);
 
   if (caps & GTK_PRINT_CAPABILITY_PREVIEW)
     gtk_widget_show (priv->preview_button);
@@ -1121,7 +1136,7 @@ schedule_idle_mark_conflicts (GtkPrintUnixDialog *dialog)
   if (priv->mark_conflicts_id != 0)
     return;
 
-  priv->mark_conflicts_id = g_idle_add (mark_conflicts_callback,
+  priv->mark_conflicts_id = gdk_threads_add_idle (mark_conflicts_callback,
 					dialog);
 }
 
@@ -1233,13 +1248,13 @@ selected_printer_changed (GtkTreeSelection   *selection,
 			  -1);
     }
   
-  if (printer != NULL && !_gtk_printer_has_details (printer))
+  if (printer != NULL && !gtk_printer_has_details (printer))
     {
       gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_OK, FALSE);
       priv->request_details_tag =
 	g_signal_connect (printer, "details-acquired",
 			  G_CALLBACK (printer_details_acquired), dialog);
-      _gtk_printer_request_details (printer);
+      gtk_printer_request_details (printer);
       g_object_unref (printer);
       return;
     }
@@ -1271,7 +1286,7 @@ selected_printer_changed (GtkTreeSelection   *selection,
 
   if (printer != NULL)
     {
-      priv->printer_capabilities = _gtk_printer_get_capabilities (printer);
+      priv->printer_capabilities = gtk_printer_get_capabilities (printer);
       priv->options = _gtk_printer_get_options (printer, 
 						priv->initial_settings,
 						priv->page_setup,
@@ -1525,8 +1540,10 @@ create_main_page (GtkPrintUnixDialog *dialog)
   gtk_table_attach (GTK_TABLE (table), radio,
 		    0, 2, 1, 2,  GTK_FILL, 0,
 		    0, 0);
-  radio = gtk_radio_button_new_with_mnemonic (gtk_radio_button_get_group (GTK_RADIO_BUTTON (radio)),
-					      _("Ra_nge: "));
+ 
+  radio = gtk_radio_button_new_with_mnemonic (gtk_radio_button_get_group (GTK_RADIO_BUTTON (radio)), _("Ra_nge"));
+  gtk_tooltips_set_tip (priv->tooltips, radio, _("Specify one or more page ranges,\n e.g. 1-3,7,11"), NULL);
+ 
   priv->page_range_radio = radio;
   gtk_widget_show (radio);
   gtk_table_attach (GTK_TABLE (table), radio,
@@ -1638,22 +1655,33 @@ dialog_get_page_ranges (GtkPrintUnixDialog *dialog,
   p = text;
   while (*p)
     {
-      start = (int)strtol (p, &next, 10);
-      if (start < 1)
-	start = 1;
+      while (isspace (*p)) p++;
+
+      if (*p == '-')
+        {
+          /* a half-open range like -2 */
+          start = 1;
+        }
+      else
+        {
+          start = (int)strtol (p, &next, 10);
+          if (start < 1)
+	    start = 1;
+          p = next;
+        }
+      
       end = start;
 
-      if (next != p)
-	{
-	  p = next;
+      while (isspace (*p)) p++;
 
-	  if (*p == '-')
-	    {
-	      p++;
-	      end = (int)strtol (p, NULL, 10);
-	      if (end < start)
-		end = start;
-	    }
+      if (*p == '-')
+	{
+	  p++;
+	  end = (int)strtol (p, &next, 10);
+          if (next == p) /* a half-open range like 2- */
+            end = 0;
+	  else if (end < start)
+	    end = start;
 	}
 
       ranges[i].start = start - 1;
@@ -1688,6 +1716,8 @@ dialog_set_page_ranges (GtkPrintUnixDialog *dialog,
       g_string_append_printf (s, "%d", ranges[i].start + 1);
       if (ranges[i].end > ranges[i].start)
 	g_string_append_printf (s, "-%d", ranges[i].end + 1);
+      else if (ranges[i].end == -1)
+        g_string_append (s, "-");
       
       if (i != n_ranges - 1)
 	g_string_append (s, ",");
@@ -1983,7 +2013,7 @@ create_page_setup_page (GtkPrintUnixDialog *dialog)
   gtk_box_pack_start (GTK_BOX (hbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (table);
 
-  label = gtk_label_new_with_mnemonic (_("Pages per _sheet:"));
+  label = gtk_label_new_with_mnemonic (_("Pages per _side:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_widget_show (label);
   gtk_table_attach (GTK_TABLE (table), label,

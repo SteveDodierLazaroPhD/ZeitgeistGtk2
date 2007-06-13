@@ -60,7 +60,6 @@
 #include "gtkseparatormenuitem.h"
 #include "gtksizegroup.h"
 #include "gtktable.h"
-#include "gtktreeview.h"
 #include "gtktreemodelsort.h"
 #include "gtktreemodelfilter.h"
 #include "gtktreeselection.h"
@@ -326,7 +325,7 @@ _gtk_recent_chooser_default_class_init (GtkRecentChooserDefaultClass *klass)
 static void
 _gtk_recent_chooser_default_init (GtkRecentChooserDefault *impl)
 {
-  gtk_box_set_spacing (GTK_BOX (impl), 12);
+  gtk_box_set_spacing (GTK_BOX (impl), 6);
 
   /* by default, we use the global manager */
   impl->local_manager = FALSE;
@@ -591,6 +590,7 @@ gtk_recent_chooser_default_dispose (GObject *object)
   if (impl->load_id)
     {
       g_source_remove (impl->load_id);
+      impl->load_state = LOAD_EMPTY;
       impl->load_id = 0;
     }
 
@@ -761,8 +761,6 @@ load_recent_items (gpointer user_data)
   const gchar *uri, *name;
   gboolean retval;
   
-  GDK_THREADS_ENTER ();
-  
   impl = GTK_RECENT_CHOOSER_DEFAULT (user_data);
   
   g_assert ((impl->load_state == LOAD_EMPTY) ||
@@ -774,8 +772,6 @@ load_recent_items (gpointer user_data)
       impl->recent_items = gtk_recent_chooser_get_items (GTK_RECENT_CHOOSER (impl));
       if (!impl->recent_items)
         {
-          GDK_THREADS_LEAVE ();
-
 	  impl->load_state = LOAD_FINISHED;
           
           return FALSE;
@@ -832,8 +828,6 @@ load_recent_items (gpointer user_data)
       retval = TRUE;
     }
   
-  GDK_THREADS_LEAVE ();
-  
   return retval;
 }
 
@@ -842,13 +836,12 @@ cleanup_after_load (gpointer user_data)
 {
   GtkRecentChooserDefault *impl;
   
-  GDK_THREADS_ENTER ();
-  
   impl = GTK_RECENT_CHOOSER_DEFAULT (user_data);
 
   if (impl->load_id != 0)
     {
-      g_assert ((impl->load_state == LOAD_PRELOAD) ||
+      g_assert ((impl->load_state == LOAD_EMPTY) ||
+                (impl->load_state == LOAD_PRELOAD) ||
 		(impl->load_state == LOAD_LOADING) ||
 		(impl->load_state == LOAD_FINISHED));
       
@@ -865,8 +858,6 @@ cleanup_after_load (gpointer user_data)
 	      (impl->load_state == LOAD_FINISHED));
 
   set_busy_cursor (impl, FALSE);
-  
-  GDK_THREADS_LEAVE ();
 }
 
 /* clears the current model and reloads the recently used resources */
@@ -889,10 +880,10 @@ reload_recent_items (GtkRecentChooserDefault *impl)
   set_busy_cursor (impl, TRUE);
 
   impl->load_state = LOAD_EMPTY;
-  impl->load_id = g_idle_add_full (G_PRIORITY_HIGH_IDLE + 30,
-		      		   load_recent_items,
-				   impl,
-				   cleanup_after_load);
+  impl->load_id = gdk_threads_add_idle_full (G_PRIORITY_HIGH_IDLE + 30,
+                                             load_recent_items,
+                                             impl,
+                                             cleanup_after_load);
 }
 
 /* taken form gtkfilechooserdialog.c */
@@ -982,11 +973,8 @@ recent_meta_data_func (GtkTreeViewColumn *tree_column,
 		       gpointer           user_data)
 {
   GtkRecentInfo *info = NULL;
-  gchar *uri;
-  gchar *name;
-  GString *data;
-  
-  data = g_string_new (NULL);
+  gchar *uri, *name;
+  gchar *str;
   
   gtk_tree_model_get (model, iter,
                       RECENT_DISPLAY_NAME_COLUMN, &name,
@@ -998,18 +986,13 @@ recent_meta_data_func (GtkTreeViewColumn *tree_column,
   
   if (!name)
     name = gtk_recent_info_get_short_name (info);
- 
-  g_string_append_printf (data,
-  			  "<b>%s</b>\n"
-  			  "<small>Location: %s</small>",
-  			  name,
-  			  uri);
+
+  str = g_strconcat ("<b>", name, "</b>\n",
+                     "<small>", _("Location:"), " ", uri, "</small>",
+                     NULL);
   
-  g_object_set (cell,
-                "markup", data->str,
-                NULL);
+  g_object_set (cell, "markup", str, NULL);
   
-  g_string_free (data, TRUE);
   g_free (uri);
   g_free (name);
   gtk_recent_info_unref (info);

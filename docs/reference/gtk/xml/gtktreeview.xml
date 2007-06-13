@@ -36,6 +36,12 @@ enum                <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosit
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                          <link linkend="gpointer">gpointer</link> search_data);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-tree-view-new">gtk_tree_view_new</link>                   (void);
+<link linkend="gint">gint</link>                <link linkend="gtk-tree-view-get-level-indentation">gtk_tree_view_get_level_indentation</link> (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-view-get-show-expanders">gtk_tree_view_get_show_expanders</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-set-level-indentation">gtk_tree_view_set_level_indentation</link> (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> indentation);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-set-show-expanders">gtk_tree_view_set_show_expanders</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gboolean">gboolean</link> enabled);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-tree-view-new-with-model">gtk_tree_view_new_with_model</link>        (<link linkend="GtkTreeModel">GtkTreeModel</link> *model);
 <link linkend="GtkTreeModel">GtkTreeModel</link>*       <link linkend="gtk-tree-view-get-model">gtk_tree_view_get_model</link>             (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-set-model">gtk_tree_view_set_model</link>             (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
@@ -288,42 +294,42 @@ GtkTreeView implements
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkTreeView--enable-grid-lines">enable-grid-lines</link>&quot;        <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</link>  : Read / Write
-  &quot;<link linkend="GtkTreeView--enable-search">enable-search</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--enable-tree-lines">enable-tree-lines</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--expander-column">expander-column</link>&quot;          <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link>     : Read / Write
-  &quot;<link linkend="GtkTreeView--fixed-height-mode">fixed-height-mode</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--hadjustment">hadjustment</link>&quot;              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write
-  &quot;<link linkend="GtkTreeView--headers-clickable">headers-clickable</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--headers-visible">headers-visible</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--hover-expand">hover-expand</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--hover-selection">hover-selection</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--level-indentation">level-indentation</link>&quot;        <link linkend="gint">gint</link>                  : Read / Write
-  &quot;<link linkend="GtkTreeView--model">model</link>&quot;                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write
-  &quot;<link linkend="GtkTreeView--reorderable">reorderable</link>&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--rubber-banding">rubber-banding</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--rules-hint">rules-hint</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--search-column">search-column</link>&quot;            <link linkend="gint">gint</link>                  : Read / Write
-  &quot;<link linkend="GtkTreeView--show-expanders">show-expanders</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkTreeView--vadjustment">vadjustment</link>&quot;              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write
+  <link linkend="GtkTreeView--enable-grid-lines">enable-grid-lines</link>        <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</link>  : Read / Write
+  <link linkend="GtkTreeView--enable-search">enable-search</link>            <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--enable-tree-lines">enable-tree-lines</link>        <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--expander-column">expander-column</link>          <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link>     : Read / Write
+  <link linkend="GtkTreeView--fixed-height-mode">fixed-height-mode</link>        <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--hadjustment">hadjustment</link>              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write
+  <link linkend="GtkTreeView--headers-clickable">headers-clickable</link>        <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--headers-visible">headers-visible</link>          <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--hover-expand">hover-expand</link>             <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--hover-selection">hover-selection</link>          <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--level-indentation">level-indentation</link>        <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkTreeView--model">model</link>                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write
+  <link linkend="GtkTreeView--reorderable">reorderable</link>              <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--rubber-banding">rubber-banding</link>           <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--rules-hint">rules-hint</link>               <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--search-column">search-column</link>            <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkTreeView--show-expanders">show-expanders</link>           <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--vadjustment">vadjustment</link>              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write
 </synopsis>
 </refsect1>
 <refsect1 role="style_properties">
 <title role="style_properties.title">Style Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkTreeView--allow-rules">allow-rules</link>&quot;              <link linkend="gboolean">gboolean</link>              : Read
-  &quot;<link linkend="GtkTreeView--even-row-color">even-row-color</link>&quot;           <link linkend="GdkColor">GdkColor</link>              : Read
-  &quot;<link linkend="GtkTreeView--expander-size">expander-size</link>&quot;            <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkTreeView--grid-line-pattern">grid-line-pattern</link>&quot;        <link linkend="gchararray">gchararray</link>            : Read
-  &quot;<link linkend="GtkTreeView--grid-line-width">grid-line-width</link>&quot;          <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkTreeView--horizontal-separator">horizontal-separator</link>&quot;     <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkTreeView--indent-expanders">indent-expanders</link>&quot;         <link linkend="gboolean">gboolean</link>              : Read
-  &quot;<link linkend="GtkTreeView--odd-row-color">odd-row-color</link>&quot;            <link linkend="GdkColor">GdkColor</link>              : Read
-  &quot;<link linkend="GtkTreeView--row-ending-details">row-ending-details</link>&quot;       <link linkend="gboolean">gboolean</link>              : Read
-  &quot;<link linkend="GtkTreeView--tree-line-pattern">tree-line-pattern</link>&quot;        <link linkend="gchararray">gchararray</link>            : Read
-  &quot;<link linkend="GtkTreeView--tree-line-width">tree-line-width</link>&quot;          <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkTreeView--vertical-separator">vertical-separator</link>&quot;       <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkTreeView--allow-rules">allow-rules</link>              <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkTreeView--even-row-color">even-row-color</link>           <link linkend="GdkColor">GdkColor</link>              : Read
+  <link linkend="GtkTreeView--expander-size">expander-size</link>            <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkTreeView--grid-line-pattern">grid-line-pattern</link>        <link linkend="gchararray">gchararray</link>            : Read
+  <link linkend="GtkTreeView--grid-line-width">grid-line-width</link>          <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkTreeView--horizontal-separator">horizontal-separator</link>     <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkTreeView--indent-expanders">indent-expanders</link>         <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkTreeView--odd-row-color">odd-row-color</link>            <link linkend="GdkColor">GdkColor</link>              : Read
+  <link linkend="GtkTreeView--row-ending-details">row-ending-details</link>       <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkTreeView--tree-line-pattern">tree-line-pattern</link>        <link linkend="gchararray">gchararray</link>            : Read
+  <link linkend="GtkTreeView--tree-line-width">tree-line-width</link>          <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkTreeView--vertical-separator">vertical-separator</link>       <link linkend="gint">gint</link>                  : Read
 </synopsis>
 </refsect1>
 
@@ -331,22 +337,22 @@ GtkTreeView implements
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  &quot;<link linkend="GtkTreeView-columns-changed">columns-changed</link>&quot;                                : Run Last
-  &quot;<link linkend="GtkTreeView-cursor-changed">cursor-changed</link>&quot;                                 : Run Last
-  &quot;<link linkend="GtkTreeView-expand-collapse-cursor-row">expand-collapse-cursor-row</link>&quot;                     : Run Last / Action
-  &quot;<link linkend="GtkTreeView-move-cursor">move-cursor</link>&quot;                                    : Run Last / Action
-  &quot;<link linkend="GtkTreeView-row-activated">row-activated</link>&quot;                                  : Run Last / Action
-  &quot;<link linkend="GtkTreeView-row-collapsed">row-collapsed</link>&quot;                                  : Run Last
-  &quot;<link linkend="GtkTreeView-row-expanded">row-expanded</link>&quot;                                   : Run Last
-  &quot;<link linkend="GtkTreeView-select-all">select-all</link>&quot;                                     : Run Last / Action
-  &quot;<link linkend="GtkTreeView-select-cursor-parent">select-cursor-parent</link>&quot;                           : Run Last / Action
-  &quot;<link linkend="GtkTreeView-select-cursor-row">select-cursor-row</link>&quot;                              : Run Last / Action
-  &quot;<link linkend="GtkTreeView-set-scroll-adjustments">set-scroll-adjustments</link>&quot;                         : Run Last / Action
-  &quot;<link linkend="GtkTreeView-start-interactive-search">start-interactive-search</link>&quot;                       : Run Last / Action
-  &quot;<link linkend="GtkTreeView-test-collapse-row">test-collapse-row</link>&quot;                              : Run Last
-  &quot;<link linkend="GtkTreeView-test-expand-row">test-expand-row</link>&quot;                                : Run Last
-  &quot;<link linkend="GtkTreeView-toggle-cursor-row">toggle-cursor-row</link>&quot;                              : Run Last / Action
-  &quot;<link linkend="GtkTreeView-unselect-all">unselect-all</link>&quot;                                   : Run Last / Action
+  <link linkend="GtkTreeView-columns-changed">columns-changed</link>                                : Run Last
+  <link linkend="GtkTreeView-cursor-changed">cursor-changed</link>                                 : Run Last
+  <link linkend="GtkTreeView-expand-collapse-cursor-row">expand-collapse-cursor-row</link>                     : Run Last / Action
+  <link linkend="GtkTreeView-move-cursor">move-cursor</link>                                    : Run Last / Action
+  <link linkend="GtkTreeView-row-activated">row-activated</link>                                  : Run Last / Action
+  <link linkend="GtkTreeView-row-collapsed">row-collapsed</link>                                  : Run Last
+  <link linkend="GtkTreeView-row-expanded">row-expanded</link>                                   : Run Last
+  <link linkend="GtkTreeView-select-all">select-all</link>                                     : Run Last / Action
+  <link linkend="GtkTreeView-select-cursor-parent">select-cursor-parent</link>                           : Run Last / Action
+  <link linkend="GtkTreeView-select-cursor-row">select-cursor-row</link>                              : Run Last / Action
+  <link linkend="GtkTreeView-set-scroll-adjustments">set-scroll-adjustments</link>                         : Run Last / Action
+  <link linkend="GtkTreeView-start-interactive-search">start-interactive-search</link>                       : Run Last / Action
+  <link linkend="GtkTreeView-test-collapse-row">test-collapse-row</link>                              : Run Last
+  <link linkend="GtkTreeView-test-expand-row">test-expand-row</link>                                : Run Last
+  <link linkend="GtkTreeView-toggle-cursor-row">toggle-cursor-row</link>                              : Run Last / Action
+  <link linkend="GtkTreeView-unselect-all">unselect-all</link>                                   : Run Last / Action
 </synopsis>
 </refsect1>
 
@@ -521,6 +527,85 @@ Creates a new <link linkend="GtkTreeView"><type>GtkTreeView</type></link> widget
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly created <link linkend="GtkTreeView"><type>GtkTreeView</type></link> widget.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-get-level-indentation" role="function" condition="since:2.12"/>gtk_tree_view_get_level_indentation ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_get_level_indentation</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_tree_view_get_level_indentation (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);</programlisting>
+<para>
+Returns the amount, in pixels, of extra indentation for child levels
+in <parameter>tree_view</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the amount of extra indentation for child levels in
+<parameter>tree_view</parameter>.  A return value of 0 means that this feature is disabled.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-get-show-expanders" role="function" condition="since:2.12"/>gtk_tree_view_get_show_expanders ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_get_show_expanders</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_view_get_show_expanders    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);</programlisting>
+<para>
+Returns whether or not expanders are drawn in <parameter>tree_view</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if expanders are drawn in <parameter>tree_view</parameter>, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>
+otherwise.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-set-level-indentation" role="function" condition="since:2.12"/>gtk_tree_view_set_level_indentation ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_set_level_indentation</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_set_level_indentation (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> indentation);</programlisting>
+<para>
+Sets the amount of extra indentation for child levels to use in <parameter>tree_view</parameter>
+in addition to the default indentation.  The value should be specified in
+pixels, a value of 0 disables this feature and in this case only the default
+indentation will be used.
+This does not have any visible effects for lists.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>indentation</parameter>&nbsp;:</term>
+<listitem><simpara> the amount, in pixels, of extra indentation in <parameter>tree_view</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-set-show-expanders" role="function" condition="since:2.12"/>gtk_tree_view_set_show_expanders ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_set_show_expanders</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_set_show_expanders    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gboolean">gboolean</link> enabled);</programlisting>
+<para>
+Sets whether to draw and enable expanders and indent child rows in
+<parameter>tree_view</parameter>.  When disabled there will be no expanders visible in trees
+and there will be no way to expand and collapse rows by default.  Also
+note that hiding the expanders will disable the default indentation.  You
+can set a custom indentation in this case using
+<link linkend="gtk-tree-view-set-level-indentation"><function>gtk_tree_view_set_level_indentation()</function></link>.
+This does not have any visible effects for lists.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>enabled</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to enable expander drawing, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gtk-tree-view-new-with-model" role="function"/>gtk_tree_view_new_with_model ()</title>
 <indexterm><primary>gtk_tree_view_new_with_model</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_tree_view_new_with_model        (<link linkend="GtkTreeModel">GtkTreeModel</link> *model);</programlisting>
@@ -2355,23 +2440,23 @@ enable.
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkTreeView--enable-grid-lines"/>The &quot;<literal>enable-grid-lines</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:enable-grid-lines</primary></indexterm><programlisting>  &quot;enable-grid-lines&quot;        <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</link>  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--enable-grid-lines"/>The :<literal>enable-grid-lines</literal> property</title>
+<indexterm><primary>GtkTreeView:enable-grid-lines</primary></indexterm><programlisting>  enable-grid-lines        <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</link>  : Read / Write</programlisting>
 <para>Whether grid lines should be drawn in the tree view.</para><para>Default value: GTK_TREE_VIEW_GRID_LINES_NONE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--enable-search"/>The &quot;<literal>enable-search</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:enable-search</primary></indexterm><programlisting>  &quot;enable-search&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--enable-search"/>The :<literal>enable-search</literal> property</title>
+<indexterm><primary>GtkTreeView:enable-search</primary></indexterm><programlisting>  enable-search            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>View allows user to search through columns interactively.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--enable-tree-lines"/>The &quot;<literal>enable-tree-lines</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:enable-tree-lines</primary></indexterm><programlisting>  &quot;enable-tree-lines&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--enable-tree-lines"/>The :<literal>enable-tree-lines</literal> property</title>
+<indexterm><primary>GtkTreeView:enable-tree-lines</primary></indexterm><programlisting>  enable-tree-lines        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether tree lines should be drawn in the tree view.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--expander-column"/>The &quot;<literal>expander-column</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:expander-column</primary></indexterm><programlisting>  &quot;expander-column&quot;          <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link>     : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--expander-column"/>The :<literal>expander-column</literal> property</title>
+<indexterm><primary>GtkTreeView:expander-column</primary></indexterm><programlisting>  expander-column          <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link>     : Read / Write</programlisting>
 <para>Set the column for the expander column.</para></refsect2>
-<refsect2><title><anchor id="GtkTreeView--fixed-height-mode"/>The &quot;<literal>fixed-height-mode</literal>&quot; property</title>
-<indexterm role="2.4"><primary>GtkTreeView:fixed-height-mode</primary></indexterm><programlisting>  &quot;fixed-height-mode&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--fixed-height-mode"/>The :<literal>fixed-height-mode</literal> property</title>
+<indexterm role="2.4"><primary>GtkTreeView:fixed-height-mode</primary></indexterm><programlisting>  fixed-height-mode        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Setting the ::fixed-height-mode property to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> speeds up 
 <link linkend="GtkTreeView"><type>GtkTreeView</type></link> by assuming that all rows have the same height. 
@@ -2384,19 +2469,19 @@ information on this option.</para>
 <para>Since  2.4
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--hadjustment"/>The &quot;<literal>hadjustment</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:hadjustment</primary></indexterm><programlisting>  &quot;hadjustment&quot;              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--hadjustment"/>The :<literal>hadjustment</literal> property</title>
+<indexterm><primary>GtkTreeView:hadjustment</primary></indexterm><programlisting>  hadjustment              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write</programlisting>
 <para>Horizontal Adjustment for the widget.</para></refsect2>
-<refsect2><title><anchor id="GtkTreeView--headers-clickable"/>The &quot;<literal>headers-clickable</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:headers-clickable</primary></indexterm><programlisting>  &quot;headers-clickable&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--headers-clickable"/>The :<literal>headers-clickable</literal> property</title>
+<indexterm><primary>GtkTreeView:headers-clickable</primary></indexterm><programlisting>  headers-clickable        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Column headers respond to click events.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--headers-visible"/>The &quot;<literal>headers-visible</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:headers-visible</primary></indexterm><programlisting>  &quot;headers-visible&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--headers-visible"/>The :<literal>headers-visible</literal> property</title>
+<indexterm><primary>GtkTreeView:headers-visible</primary></indexterm><programlisting>  headers-visible          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Show the column header buttons.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--hover-expand"/>The &quot;<literal>hover-expand</literal>&quot; property</title>
-<indexterm role="2.6"><primary>GtkTreeView:hover-expand</primary></indexterm><programlisting>  &quot;hover-expand&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--hover-expand"/>The :<literal>hover-expand</literal> property</title>
+<indexterm role="2.6"><primary>GtkTreeView:hover-expand</primary></indexterm><programlisting>  hover-expand             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Enables of disables the hover expansion mode of <parameter>tree_view</parameter>.
 Hover expansion makes rows expand or collaps if the pointer moves 
@@ -2411,8 +2496,8 @@ in <link linkend="GtkComboBox"><type>GtkComboBox</type></link> or <link linkend=
 <para>Since  2.6
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--hover-selection"/>The &quot;<literal>hover-selection</literal>&quot; property</title>
-<indexterm role="2.6"><primary>GtkTreeView:hover-selection</primary></indexterm><programlisting>  &quot;hover-selection&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--hover-selection"/>The :<literal>hover-selection</literal> property</title>
+<indexterm role="2.6"><primary>GtkTreeView:hover-selection</primary></indexterm><programlisting>  hover-selection          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Enables of disables the hover selection mode of <parameter>tree_view</parameter>.
 Hover selection makes the selected row follow the pointer.
@@ -2428,90 +2513,90 @@ in <link linkend="GtkComboBox"><type>GtkComboBox</type></link> or <link linkend=
 <para>Since  2.6
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--level-indentation"/>The &quot;<literal>level-indentation</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:level-indentation</primary></indexterm><programlisting>  &quot;level-indentation&quot;        <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--level-indentation"/>The :<literal>level-indentation</literal> property</title>
+<indexterm><primary>GtkTreeView:level-indentation</primary></indexterm><programlisting>  level-indentation        <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>Extra indentation for each level.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--model"/>The &quot;<literal>model</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:model</primary></indexterm><programlisting>  &quot;model&quot;                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--model"/>The :<literal>model</literal> property</title>
+<indexterm><primary>GtkTreeView:model</primary></indexterm><programlisting>  model                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write</programlisting>
 <para>The model for the tree view.</para></refsect2>
-<refsect2><title><anchor id="GtkTreeView--reorderable"/>The &quot;<literal>reorderable</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:reorderable</primary></indexterm><programlisting>  &quot;reorderable&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--reorderable"/>The :<literal>reorderable</literal> property</title>
+<indexterm><primary>GtkTreeView:reorderable</primary></indexterm><programlisting>  reorderable              <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>View is reorderable.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--rubber-banding"/>The &quot;<literal>rubber-banding</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:rubber-banding</primary></indexterm><programlisting>  &quot;rubber-banding&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--rubber-banding"/>The :<literal>rubber-banding</literal> property</title>
+<indexterm><primary>GtkTreeView:rubber-banding</primary></indexterm><programlisting>  rubber-banding           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether to enable selection of multiple items by dragging the mouse pointer.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--rules-hint"/>The &quot;<literal>rules-hint</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:rules-hint</primary></indexterm><programlisting>  &quot;rules-hint&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--rules-hint"/>The :<literal>rules-hint</literal> property</title>
+<indexterm><primary>GtkTreeView:rules-hint</primary></indexterm><programlisting>  rules-hint               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Set a hint to the theme engine to draw rows in alternating colors.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--search-column"/>The &quot;<literal>search-column</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:search-column</primary></indexterm><programlisting>  &quot;search-column&quot;            <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--search-column"/>The :<literal>search-column</literal> property</title>
+<indexterm><primary>GtkTreeView:search-column</primary></indexterm><programlisting>  search-column            <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>Model column to search through when searching through code.</para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--show-expanders"/>The &quot;<literal>show-expanders</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:show-expanders</primary></indexterm><programlisting>  &quot;show-expanders&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--show-expanders"/>The :<literal>show-expanders</literal> property</title>
+<indexterm><primary>GtkTreeView:show-expanders</primary></indexterm><programlisting>  show-expanders           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>View has expanders.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--vadjustment"/>The &quot;<literal>vadjustment</literal>&quot; property</title>
-<indexterm><primary>GtkTreeView:vadjustment</primary></indexterm><programlisting>  &quot;vadjustment&quot;              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTreeView--vadjustment"/>The :<literal>vadjustment</literal> property</title>
+<indexterm><primary>GtkTreeView:vadjustment</primary></indexterm><programlisting>  vadjustment              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write</programlisting>
 <para>Vertical Adjustment for the widget.</para></refsect2>
 
 </refsect1>
 <refsect1 role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
-<refsect2><title><anchor id="GtkTreeView--allow-rules"/>The &quot;<literal>allow-rules</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:allow-rules</primary></indexterm><programlisting>  &quot;allow-rules&quot;              <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--allow-rules"/>The :<literal>allow-rules</literal> style property</title>
+<indexterm><primary>GtkTreeView:allow-rules</primary></indexterm><programlisting>  allow-rules              <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Allow drawing of alternating color rows.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--even-row-color"/>The &quot;<literal>even-row-color</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:even-row-color</primary></indexterm><programlisting>  &quot;even-row-color&quot;           <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--even-row-color"/>The :<literal>even-row-color</literal> style property</title>
+<indexterm><primary>GtkTreeView:even-row-color</primary></indexterm><programlisting>  even-row-color           <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
 <para>Color to use for even rows.</para></refsect2>
-<refsect2><title><anchor id="GtkTreeView--expander-size"/>The &quot;<literal>expander-size</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:expander-size</primary></indexterm><programlisting>  &quot;expander-size&quot;            <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--expander-size"/>The :<literal>expander-size</literal> style property</title>
+<indexterm><primary>GtkTreeView:expander-size</primary></indexterm><programlisting>  expander-size            <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Size of the expander arrow.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 12</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--grid-line-pattern"/>The &quot;<literal>grid-line-pattern</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:grid-line-pattern</primary></indexterm><programlisting>  &quot;grid-line-pattern&quot;        <link linkend="gchararray">gchararray</link>            : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--grid-line-pattern"/>The :<literal>grid-line-pattern</literal> style property</title>
+<indexterm><primary>GtkTreeView:grid-line-pattern</primary></indexterm><programlisting>  grid-line-pattern        <link linkend="gchararray">gchararray</link>            : Read</programlisting>
 <para>Dash pattern used to draw the tree view grid lines.</para><para>Default value: "\001\001"</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--grid-line-width"/>The &quot;<literal>grid-line-width</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:grid-line-width</primary></indexterm><programlisting>  &quot;grid-line-width&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--grid-line-width"/>The :<literal>grid-line-width</literal> style property</title>
+<indexterm><primary>GtkTreeView:grid-line-width</primary></indexterm><programlisting>  grid-line-width          <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Width, in pixels, of the tree view grid lines.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--horizontal-separator"/>The &quot;<literal>horizontal-separator</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:horizontal-separator</primary></indexterm><programlisting>  &quot;horizontal-separator&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--horizontal-separator"/>The :<literal>horizontal-separator</literal> style property</title>
+<indexterm><primary>GtkTreeView:horizontal-separator</primary></indexterm><programlisting>  horizontal-separator     <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Horizontal space between cells.  Must be an even number.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 2</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--indent-expanders"/>The &quot;<literal>indent-expanders</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:indent-expanders</primary></indexterm><programlisting>  &quot;indent-expanders&quot;         <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--indent-expanders"/>The :<literal>indent-expanders</literal> style property</title>
+<indexterm><primary>GtkTreeView:indent-expanders</primary></indexterm><programlisting>  indent-expanders         <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Make the expanders indented.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--odd-row-color"/>The &quot;<literal>odd-row-color</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:odd-row-color</primary></indexterm><programlisting>  &quot;odd-row-color&quot;            <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--odd-row-color"/>The :<literal>odd-row-color</literal> style property</title>
+<indexterm><primary>GtkTreeView:odd-row-color</primary></indexterm><programlisting>  odd-row-color            <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
 <para>Color to use for odd rows.</para></refsect2>
-<refsect2><title><anchor id="GtkTreeView--row-ending-details"/>The &quot;<literal>row-ending-details</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:row-ending-details</primary></indexterm><programlisting>  &quot;row-ending-details&quot;       <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--row-ending-details"/>The :<literal>row-ending-details</literal> style property</title>
+<indexterm><primary>GtkTreeView:row-ending-details</primary></indexterm><programlisting>  row-ending-details       <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Enable extended row background theming.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--tree-line-pattern"/>The &quot;<literal>tree-line-pattern</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:tree-line-pattern</primary></indexterm><programlisting>  &quot;tree-line-pattern&quot;        <link linkend="gchararray">gchararray</link>            : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--tree-line-pattern"/>The :<literal>tree-line-pattern</literal> style property</title>
+<indexterm><primary>GtkTreeView:tree-line-pattern</primary></indexterm><programlisting>  tree-line-pattern        <link linkend="gchararray">gchararray</link>            : Read</programlisting>
 <para>Dash pattern used to draw the tree view lines.</para><para>Default value: "\001\001"</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--tree-line-width"/>The &quot;<literal>tree-line-width</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:tree-line-width</primary></indexterm><programlisting>  &quot;tree-line-width&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--tree-line-width"/>The :<literal>tree-line-width</literal> style property</title>
+<indexterm><primary>GtkTreeView:tree-line-width</primary></indexterm><programlisting>  tree-line-width          <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Width, in pixels, of the tree view lines.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkTreeView--vertical-separator"/>The &quot;<literal>vertical-separator</literal>&quot; style property</title>
-<indexterm><primary>GtkTreeView:vertical-separator</primary></indexterm><programlisting>  &quot;vertical-separator&quot;       <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkTreeView--vertical-separator"/>The :<literal>vertical-separator</literal> style property</title>
+<indexterm><primary>GtkTreeView:vertical-separator</primary></indexterm><programlisting>  vertical-separator       <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Vertical space between cells.  Must be an even number.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 2</para>
 </refsect2>
@@ -2520,7 +2605,7 @@ in <link linkend="GtkComboBox"><type>GtkComboBox</type></link> or <link linkend=
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkTreeView-columns-changed"/>The &quot;columns-changed&quot; signal</title>
+<refsect2><title><anchor id="GtkTreeView-columns-changed"/>The <literal>::columns-changed</literal> signal</title>
 <indexterm><primary>GtkTreeView::columns-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
 <para>
@@ -2533,7 +2618,7 @@ The number of columns of the treeview has changed.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-cursor-changed"/>The &quot;cursor-changed&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-cursor-changed"/>The <literal>::cursor-changed</literal> signal</title>
 <indexterm><primary>GtkTreeView::cursor-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
 <para>
@@ -2546,7 +2631,7 @@ The position of the cursor (focused cell) has changed.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-expand-collapse-cursor-row"/>The &quot;expand-collapse-cursor-row&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-expand-collapse-cursor-row"/>The <literal>::expand-collapse-cursor-row</literal> signal</title>
 <indexterm><primary>GtkTreeView::expand-collapse-cursor-row</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,
                                                         <link linkend="gboolean">gboolean</link>     arg1,
                                                         <link linkend="gboolean">gboolean</link>     arg2,
@@ -2572,7 +2657,7 @@ The position of the cursor (focused cell) has changed.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-move-cursor"/>The &quot;move-cursor&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-move-cursor"/>The <literal>::move-cursor</literal> signal</title>
 <indexterm><primary>GtkTreeView::move-cursor</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link>    *treeview,
                                                         <link linkend="GtkMovementStep">GtkMovementStep</link> arg1,
                                                         <link linkend="gint">gint</link>            arg2,
@@ -2594,7 +2679,7 @@ The position of the cursor (focused cell) has changed.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-row-activated"/>The &quot;row-activated&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-row-activated"/>The <literal>::row-activated</literal> signal</title>
 <indexterm><primary>GtkTreeView::row-activated</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeView">GtkTreeView</link>       *tree_view,
                                                         <link linkend="GtkTreePath">GtkTreePath</link>       *path,
                                                         <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *column,
@@ -2623,7 +2708,7 @@ widget conceptual overview</link> as well as <link linkend="GtkTreeSelection"><t
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-row-collapsed"/>The &quot;row-collapsed&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-row-collapsed"/>The <literal>::row-collapsed</literal> signal</title>
 <indexterm><primary>GtkTreeView::row-collapsed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
@@ -2644,7 +2729,7 @@ The given row has been collapsed (child nodes are hidden).</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-row-expanded"/>The &quot;row-expanded&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-row-expanded"/>The <literal>::row-expanded</literal> signal</title>
 <indexterm><primary>GtkTreeView::row-expanded</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
@@ -2665,7 +2750,7 @@ The given row has been expanded (child nodes are shown).</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-select-all"/>The &quot;select-all&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-select-all"/>The <literal>::select-all</literal> signal</title>
 <indexterm><primary>GtkTreeView::select-all</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
 <para>
@@ -2679,7 +2764,7 @@ The given row has been expanded (child nodes are shown).</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-select-cursor-parent"/>The &quot;select-cursor-parent&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-select-cursor-parent"/>The <literal>::select-cursor-parent</literal> signal</title>
 <indexterm><primary>GtkTreeView::select-cursor-parent</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
 <para>
@@ -2693,7 +2778,7 @@ The given row has been expanded (child nodes are shown).</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-select-cursor-row"/>The &quot;select-cursor-row&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-select-cursor-row"/>The <literal>::select-cursor-row</literal> signal</title>
 <indexterm><primary>GtkTreeView::select-cursor-row</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,
                                                         <link linkend="gboolean">gboolean</link>     arg1,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
@@ -2711,7 +2796,7 @@ The given row has been expanded (child nodes are shown).</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-set-scroll-adjustments"/>The &quot;set-scroll-adjustments&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-set-scroll-adjustments"/>The <literal>::set-scroll-adjustments</literal> signal</title>
 <indexterm><primary>GtkTreeView::set-scroll-adjustments</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeView">GtkTreeView</link>   *treeview,
                                                         <link linkend="GtkAdjustment">GtkAdjustment</link> *arg1,
                                                         <link linkend="GtkAdjustment">GtkAdjustment</link> *arg2,
@@ -2731,7 +2816,7 @@ The given row has been expanded (child nodes are shown).</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-start-interactive-search"/>The &quot;start-interactive-search&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-start-interactive-search"/>The <literal>::start-interactive-search</literal> signal</title>
 <indexterm><primary>GtkTreeView::start-interactive-search</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
 <para>
@@ -2745,7 +2830,7 @@ The given row has been expanded (child nodes are shown).</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-test-collapse-row"/>The &quot;test-collapse-row&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-test-collapse-row"/>The <literal>::test-collapse-row</literal> signal</title>
 <indexterm><primary>GtkTreeView::test-collapse-row</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
@@ -2769,7 +2854,7 @@ signal if you need to control the collapsibility of individual rows.</para>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to allow expansion, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to reject
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-test-expand-row"/>The &quot;test-expand-row&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-test-expand-row"/>The <literal>::test-expand-row</literal> signal</title>
 <indexterm><primary>GtkTreeView::test-expand-row</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
@@ -2793,7 +2878,7 @@ signal if you need to control the expandability of individual rows.</para>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to allow expansion, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to reject
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-toggle-cursor-row"/>The &quot;toggle-cursor-row&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-toggle-cursor-row"/>The <literal>::toggle-cursor-row</literal> signal</title>
 <indexterm><primary>GtkTreeView::toggle-cursor-row</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
 <para>
@@ -2807,7 +2892,7 @@ signal if you need to control the expandability of individual rows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-unselect-all"/>The &quot;unselect-all&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-unselect-all"/>The <literal>::unselect-all</literal> signal</title>
 <indexterm><primary>GtkTreeView::unselect-all</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
 <para>

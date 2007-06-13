@@ -54,6 +54,7 @@
 <link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
+<link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -64,16 +65,16 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkIconTheme.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2673209" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2732595" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id2674536" class="shortcut">Description</a></nobr></td></tr>
+                  <a href="#id2733921" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gtk-Drag-and-Drop"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id2673209"></a><span class="refentrytitle">Drag and Drop</span>
+<a name="id2732595"></a><span class="refentrytitle">Drag and Drop</span>
 </h2>
 <p>Drag and Drop &#8212; Functions for controlling drag and drop handling</p>
 </td>
@@ -248,7 +249,7 @@ void                <a href="gtk-Drag-and-Drop.html#gtk-drag-source-add-uri-targ
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2674536"></a><h2>Description</h2>
+<a name="id2733921"></a><h2>Description</h2>
 <p>
 GTK+ has a rich set of functions for doing inter-process
 communication via the drag-and-drop metaphor. GTK+
@@ -264,11 +265,11 @@ in the <a href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2674573"></a><h2>Details</h2>
+<a name="id2733958"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2674583"></a><h3>
+<a name="id2733969"></a><h3>
 <a name="GtkDestDefaults"></a>enum GtkDestDefaults</h3>
-<a class="indexterm" name="id2674596"></a><pre class="programlisting">typedef enum {
+<a class="indexterm" name="id2733982"></a><pre class="programlisting">typedef enum {
   GTK_DEST_DEFAULT_MOTION     = 1 &lt;&lt; 0, /* respond to "drag_motion" */
   GTK_DEST_DEFAULT_HIGHLIGHT  = 1 &lt;&lt; 1, /* auto-highlight */
   GTK_DEST_DEFAULT_DROP       = 1 &lt;&lt; 2, /* respond to "drag_drop" */
@@ -329,11 +330,13 @@ href="../gdk/gdk-Drag-and-Drop.html#gdk-drag-status"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2674794"></a><h3>
+<a name="id2734180"></a><h3>
 <a name="GtkTargetFlags"></a>enum GtkTargetFlags</h3>
-<a class="indexterm" name="id2674806"></a><pre class="programlisting">typedef enum {
+<a class="indexterm" name="id2734192"></a><pre class="programlisting">typedef enum {
   GTK_TARGET_SAME_APP = 1 &lt;&lt; 0,    /*&lt; nick=same-app &gt;*/
-  GTK_TARGET_SAME_WIDGET = 1 &lt;&lt; 1  /*&lt; nick=same-widget &gt;*/
+  GTK_TARGET_SAME_WIDGET = 1 &lt;&lt; 1, /*&lt; nick=same-widget &gt;*/
+  GTK_TARGET_OTHER_APP = 1 &lt;&lt; 2,   /*&lt; nick=other-app &gt;*/
+  GTK_TARGET_OTHER_WIDGET = 1 &lt;&lt; 3 /*&lt; nick=other-widget &gt;*/
 } GtkTargetFlags;
 </pre>
 <p>
@@ -355,6 +358,20 @@ constraints on an entry in a <span class="type">GtkTargetTable</span>.
 <td>
    If this is set, the target will only be selected
    for drags within a single widget.
+</td>
+</tr>
+<tr>
+<td><span class="term"><a name="GTK-TARGET-OTHER-APP:CAPS"></a><code class="literal">GTK_TARGET_OTHER_APP</code></span></td>
+<td>
+   If this is set, the target will not be selected
+   for drags within a single application. Since 2.12
+</td>
+</tr>
+<tr>
+<td><span class="term"><a name="GTK-TARGET-OTHER-WIDGET:CAPS"></a><code class="literal">GTK_TARGET_OTHER_WIDGET</code></span></td>
+<td>
+   If this is set, the target will not be selected
+   for drags withing a single widget. Since 2.12
 
 </td>
 </tr>
@@ -363,9 +380,9 @@ constraints on an entry in a <span class="type">GtkTargetTable</span>.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2674896"></a><h3>
+<a name="id2734334"></a><h3>
 <a name="gtk-drag-dest-set"></a>gtk_drag_dest_set ()</h3>
-<a class="indexterm" name="id2674909"></a><pre class="programlisting">void                gtk_drag_dest_set                   (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2734347"></a><pre class="programlisting">void                gtk_drag_dest_set                   (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a href="gtk-Drag-and-Drop.html#GtkDestDefaults">GtkDestDefaults</a> flags,
                                                          const <a href="gtk-Selections.html#GtkTargetEntry">GtkTargetEntry</a> *targets,
                                                          gint n_targets,
@@ -415,9 +432,9 @@ Sets a widget as a potential drop destination.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2675106"></a><h3>
+<a name="id2734545"></a><h3>
 <a name="gtk-drag-dest-set-proxy"></a>gtk_drag_dest_set_proxy ()</h3>
-<a class="indexterm" name="id2675119"></a><pre class="programlisting">void                gtk_drag_dest_set_proxy             (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2734558"></a><pre class="programlisting">void                gtk_drag_dest_set_proxy             (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkWindow"
 >GdkWindow</a> *proxy_window,
@@ -463,9 +480,9 @@ href="../gdk/gdk-Drag-and-Drop.html#gdk-drag-get-protocol"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2675272"></a><h3>
+<a name="id2734711"></a><h3>
 <a name="gtk-drag-dest-unset"></a>gtk_drag_dest_unset ()</h3>
-<a class="indexterm" name="id2675285"></a><pre class="programlisting">void                gtk_drag_dest_unset                 (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2734724"></a><pre class="programlisting">void                gtk_drag_dest_unset                 (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Clears information about a drop destination set with
 <a href="gtk-Drag-and-Drop.html#gtk-drag-dest-set"><code class="function">gtk_drag_dest_set()</code></a>. The widget will no longer receive
@@ -484,9 +501,9 @@ notification of drags.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2675351"></a><h3>
+<a name="id2734790"></a><h3>
 <a name="gtk-drag-dest-find-target"></a>gtk_drag_dest_find_target ()</h3>
-<a class="indexterm" name="id2675365"></a><pre class="programlisting"><a
+<a class="indexterm" name="id2734804"></a><pre class="programlisting"><a
 href="../gdk/gdk-Properties-and-Atoms.html#GdkAtom"
 >GdkAtom</a>             gtk_drag_dest_find_target           (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a
@@ -539,9 +556,9 @@ href="../gdk/gdk-Properties-and-Atoms.html#GDK-NONE:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2675543"></a><h3>
+<a name="id2734982"></a><h3>
 <a name="gtk-drag-dest-get-target-list"></a>gtk_drag_dest_get_target_list ()</h3>
-<a class="indexterm" name="id2675557"></a><pre class="programlisting"><a href="gtk-Selections.html#GtkTargetList">GtkTargetList</a>*      gtk_drag_dest_get_target_list       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2734995"></a><pre class="programlisting"><a href="gtk-Selections.html#GtkTargetList">GtkTargetList</a>*      gtk_drag_dest_get_target_list       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Returns the list of targets this widget can accept from
 drag-and-drop.</p>
@@ -568,9 +585,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2675644"></a><h3>
+<a name="id2735083"></a><h3>
 <a name="gtk-drag-dest-set-target-list"></a>gtk_drag_dest_set_target_list ()</h3>
-<a class="indexterm" name="id2675658"></a><pre class="programlisting">void                gtk_drag_dest_set_target_list       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2735096"></a><pre class="programlisting">void                gtk_drag_dest_set_target_list       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a href="gtk-Selections.html#GtkTargetList">GtkTargetList</a> *target_list);</pre>
 <p>
 Sets the target types that this widget can accept from drag-and-drop.
@@ -599,9 +616,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2675761"></a><h3>
+<a name="id2735200"></a><h3>
 <a name="gtk-drag-dest-add-text-targets"></a>gtk_drag_dest_add_text_targets ()</h3>
-<a class="indexterm" name="id2675776"></a><pre class="programlisting">void                gtk_drag_dest_add_text_targets      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2735215"></a><pre class="programlisting">void                gtk_drag_dest_add_text_targets      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Add the text targets supported by <span class="type">GtkSelection</span> to
 the target list of the drag destination. The targets
@@ -624,9 +641,9 @@ use <a href="gtk-Selections.html#gtk-target-list-add-text-targets"><code class="
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2675882"></a><h3>
+<a name="id2735320"></a><h3>
 <a name="gtk-drag-dest-add-image-targets"></a>gtk_drag_dest_add_image_targets ()</h3>
-<a class="indexterm" name="id2675897"></a><pre class="programlisting">void                gtk_drag_dest_add_image_targets     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2735336"></a><pre class="programlisting">void                gtk_drag_dest_add_image_targets     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Add the image targets supported by <span class="type">GtkSelection</span> to
 the target list of the drag destination. The targets
@@ -649,9 +666,9 @@ use <a href="gtk-Selections.html#gtk-target-list-add-image-targets"><code class=
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676003"></a><h3>
+<a name="id2735441"></a><h3>
 <a name="gtk-drag-dest-add-uri-targets"></a>gtk_drag_dest_add_uri_targets ()</h3>
-<a class="indexterm" name="id2676019"></a><pre class="programlisting">void                gtk_drag_dest_add_uri_targets       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2735457"></a><pre class="programlisting">void                gtk_drag_dest_add_uri_targets       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Add the URI targets supported by <span class="type">GtkSelection</span> to
 the target list of the drag destination. The targets
@@ -674,9 +691,9 @@ use <a href="gtk-Selections.html#gtk-target-list-add-uri-targets"><code class="f
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676123"></a><h3>
+<a name="id2735562"></a><h3>
 <a name="gtk-drag-dest-set-track-motion"></a>gtk_drag_dest_set_track_motion ()</h3>
-<a class="indexterm" name="id2676139"></a><pre class="programlisting">void                gtk_drag_dest_set_track_motion      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2735578"></a><pre class="programlisting">void                gtk_drag_dest_set_track_motion      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          gboolean track_motion);</pre>
 <p>
 Tells the widget to emit ::drag-motion and ::drag-leave
@@ -709,9 +726,9 @@ actions regardless of the targets that the source offers.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676244"></a><h3>
+<a name="id2735683"></a><h3>
 <a name="gtk-drag-dest-get-track-motion"></a>gtk_drag_dest_get_track_motion ()</h3>
-<a class="indexterm" name="id2676260"></a><pre class="programlisting">gboolean            gtk_drag_dest_get_track_motion      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2735698"></a><pre class="programlisting">gboolean            gtk_drag_dest_get_track_motion      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Returns whether the widget has been configured to always
 emit ::drag-motion signals.</p>
@@ -739,9 +756,9 @@ emit ::drag-motion signals.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676347"></a><h3>
+<a name="id2735786"></a><h3>
 <a name="gtk-drag-finish"></a>gtk_drag_finish ()</h3>
-<a class="indexterm" name="id2676360"></a><pre class="programlisting">void                gtk_drag_finish                     (<a
+<a class="indexterm" name="id2735798"></a><pre class="programlisting">void                gtk_drag_finish                     (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context,
                                                          gboolean success,
@@ -782,9 +799,9 @@ that the data of the drag will no longer be required.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676487"></a><h3>
+<a name="id2735926"></a><h3>
 <a name="gtk-drag-get-data"></a>gtk_drag_get_data ()</h3>
-<a class="indexterm" name="id2676500"></a><pre class="programlisting">void                gtk_drag_get_data                   (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2735939"></a><pre class="programlisting">void                gtk_drag_get_data                   (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context,
@@ -835,9 +852,9 @@ drops.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676649"></a><h3>
+<a name="id2736088"></a><h3>
 <a name="gtk-drag-get-source-widget"></a>gtk_drag_get_source_widget ()</h3>
-<a class="indexterm" name="id2676663"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_drag_get_source_widget          (<a
+<a class="indexterm" name="id2736101"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_drag_get_source_widget          (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context);</pre>
 <p>
@@ -866,9 +883,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676732"></a><h3>
+<a name="id2736171"></a><h3>
 <a name="gtk-drag-highlight"></a>gtk_drag_highlight ()</h3>
-<a class="indexterm" name="id2676746"></a><pre class="programlisting">void                gtk_drag_highlight                  (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2736184"></a><pre class="programlisting">void                gtk_drag_highlight                  (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Draws a highlight around a widget. This will attach
 handlers to  "expose_event" and "draw", so the highlight
@@ -888,9 +905,9 @@ is called.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676806"></a><h3>
+<a name="id2736244"></a><h3>
 <a name="gtk-drag-unhighlight"></a>gtk_drag_unhighlight ()</h3>
-<a class="indexterm" name="id2676819"></a><pre class="programlisting">void                gtk_drag_unhighlight                (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2736258"></a><pre class="programlisting">void                gtk_drag_unhighlight                (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Removes a highlight set by <a href="gtk-Drag-and-Drop.html#gtk-drag-highlight"><code class="function">gtk_drag_highlight()</code></a> from
 a widget.
@@ -908,9 +925,9 @@ a widget.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2676878"></a><h3>
+<a name="id2736316"></a><h3>
 <a name="gtk-drag-begin"></a>gtk_drag_begin ()</h3>
-<a class="indexterm" name="id2676891"></a><pre class="programlisting"><a
+<a class="indexterm" name="id2736329"></a><pre class="programlisting"><a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a>*     gtk_drag_begin                      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a href="gtk-Selections.html#GtkTargetList">GtkTargetList</a> *targets,
@@ -968,9 +985,9 @@ starting drags itself, and is not needed when
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2677056"></a><h3>
+<a name="id2736494"></a><h3>
 <a name="gtk-drag-set-icon-widget"></a>gtk_drag_set_icon_widget ()</h3>
-<a class="indexterm" name="id2677069"></a><pre class="programlisting">void                gtk_drag_set_icon_widget            (<a
+<a class="indexterm" name="id2736508"></a><pre class="programlisting">void                gtk_drag_set_icon_widget            (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
@@ -1012,9 +1029,9 @@ signal and destroy it yourself.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2677202"></a><h3>
+<a name="id2736641"></a><h3>
 <a name="gtk-drag-set-icon-pixmap"></a>gtk_drag_set_icon_pixmap ()</h3>
-<a class="indexterm" name="id2677215"></a><pre class="programlisting">void                gtk_drag_set_icon_pixmap            (<a
+<a class="indexterm" name="id2736654"></a><pre class="programlisting">void                gtk_drag_set_icon_pixmap            (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context,
                                                          <a
@@ -1074,9 +1091,9 @@ will be more convenient to use.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2677409"></a><h3>
+<a name="id2736848"></a><h3>
 <a name="gtk-drag-set-icon-pixbuf"></a>gtk_drag_set_icon_pixbuf ()</h3>
-<a class="indexterm" name="id2677423"></a><pre class="programlisting">void                gtk_drag_set_icon_pixbuf            (<a
+<a class="indexterm" name="id2736861"></a><pre class="programlisting">void                gtk_drag_set_icon_pixbuf            (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context,
                                                          <a
@@ -1120,9 +1137,9 @@ href="../gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2677567"></a><h3>
+<a name="id2737006"></a><h3>
 <a name="gtk-drag-set-icon-stock"></a>gtk_drag_set_icon_stock ()</h3>
-<a class="indexterm" name="id2677580"></a><pre class="programlisting">void                gtk_drag_set_icon_stock             (<a
+<a class="indexterm" name="id2737019"></a><pre class="programlisting">void                gtk_drag_set_icon_stock             (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context,
                                                          const gchar *stock_id,
@@ -1162,9 +1179,9 @@ Sets the icon for a given drag from a stock ID.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2677700"></a><h3>
+<a name="id2737139"></a><h3>
 <a name="gtk-drag-set-icon-name"></a>gtk_drag_set_icon_name ()</h3>
-<a class="indexterm" name="id2677716"></a><pre class="programlisting">void                gtk_drag_set_icon_name              (<a
+<a class="indexterm" name="id2737154"></a><pre class="programlisting">void                gtk_drag_set_icon_name              (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context,
                                                          const gchar *icon_name,
@@ -1210,9 +1227,9 @@ loaded at the symbolic size <span class="type">GTK_ICON_SIZE_DND</span>), thus
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2677876"></a><h3>
+<a name="id2737314"></a><h3>
 <a name="gtk-drag-set-icon-default"></a>gtk_drag_set_icon_default ()</h3>
-<a class="indexterm" name="id2677890"></a><pre class="programlisting">void                gtk_drag_set_icon_default           (<a
+<a class="indexterm" name="id2737328"></a><pre class="programlisting">void                gtk_drag_set_icon_default           (<a
 href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"
 >GdkDragContext</a> *context);</pre>
 <p>
@@ -1232,9 +1249,9 @@ icon.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2677942"></a><h3>
+<a name="id2737381"></a><h3>
 <a name="gtk-drag-set-default-icon"></a>gtk_drag_set_default_icon ()</h3>
-<a class="indexterm" name="id2677958"></a><pre class="programlisting">void                gtk_drag_set_default_icon           (<a
+<a class="indexterm" name="id2737397"></a><pre class="programlisting">void                gtk_drag_set_default_icon           (<a
 href="../gdk/gdk-Colormaps-and-Colors.html#GdkColormap"
 >GdkColormap</a> *colormap,
                                                          <a
@@ -1290,9 +1307,9 @@ via the stock system by changing the stock pixbuf for <a href="gtk-Stock-Items.h
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2678134"></a><h3>
+<a name="id2737573"></a><h3>
 <a name="gtk-drag-check-threshold"></a>gtk_drag_check_threshold ()</h3>
-<a class="indexterm" name="id2678147"></a><pre class="programlisting">gboolean            gtk_drag_check_threshold            (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2737586"></a><pre class="programlisting">gboolean            gtk_drag_check_threshold            (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          gint start_x,
                                                          gint start_y,
                                                          gint current_x,
@@ -1342,9 +1359,9 @@ should trigger the beginning of a drag-and-drop operation.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2678339"></a><h3>
+<a name="id2737778"></a><h3>
 <a name="gtk-drag-source-set"></a>gtk_drag_source_set ()</h3>
-<a class="indexterm" name="id2678353"></a><pre class="programlisting">void                gtk_drag_source_set                 (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2737791"></a><pre class="programlisting">void                gtk_drag_source_set                 (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> start_button_mask,
@@ -1394,9 +1411,9 @@ widget. The widget must have a window.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2678505"></a><h3>
+<a name="id2737944"></a><h3>
 <a name="gtk-drag-source-set-icon"></a>gtk_drag_source_set_icon ()</h3>
-<a class="indexterm" name="id2678518"></a><pre class="programlisting">void                gtk_drag_source_set_icon            (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2737956"></a><pre class="programlisting">void                gtk_drag_source_set_icon            (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a
 href="../gdk/gdk-Colormaps-and-Colors.html#GdkColormap"
 >GdkColormap</a> *colormap,
@@ -1441,9 +1458,9 @@ Use <a href="gtk-Drag-and-Drop.html#gtk-drag-source-set-icon-pixbuf"><code class
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2678656"></a><h3>
+<a name="id2738095"></a><h3>
 <a name="gtk-drag-source-set-icon-pixbuf"></a>gtk_drag_source_set_icon_pixbuf ()</h3>
-<a class="indexterm" name="id2678669"></a><pre class="programlisting">void                gtk_drag_source_set_icon_pixbuf     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2738108"></a><pre class="programlisting">void                gtk_drag_source_set_icon_pixbuf     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a
 href="../gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 >GdkPixbuf</a> *pixbuf);</pre>
@@ -1476,9 +1493,9 @@ href="../gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2678773"></a><h3>
+<a name="id2738211"></a><h3>
 <a name="gtk-drag-source-set-icon-stock"></a>gtk_drag_source_set_icon_stock ()</h3>
-<a class="indexterm" name="id2678786"></a><pre class="programlisting">void                gtk_drag_source_set_icon_stock      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2738224"></a><pre class="programlisting">void                gtk_drag_source_set_icon_stock      (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          const gchar *stock_id);</pre>
 <p>
 Sets the icon that will be used for drags from a particular source
@@ -1504,9 +1521,9 @@ to a stock icon.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2678867"></a><h3>
+<a name="id2738306"></a><h3>
 <a name="gtk-drag-source-set-icon-name"></a>gtk_drag_source_set_icon_name ()</h3>
-<a class="indexterm" name="id2678882"></a><pre class="programlisting">void                gtk_drag_source_set_icon_name       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2738321"></a><pre class="programlisting">void                gtk_drag_source_set_icon_name       (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          const gchar *icon_name);</pre>
 <p>
 Sets the icon that will be used for drags from a particular source
@@ -1534,9 +1551,9 @@ to a themed icon. See the docs for <a href="GtkIconTheme.html" title="GtkIconThe
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2678979"></a><h3>
+<a name="id2738418"></a><h3>
 <a name="gtk-drag-source-unset"></a>gtk_drag_source_unset ()</h3>
-<a class="indexterm" name="id2678992"></a><pre class="programlisting">void                gtk_drag_source_unset               (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2738431"></a><pre class="programlisting">void                gtk_drag_source_unset               (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Undoes the effects of <a href="gtk-Drag-and-Drop.html#gtk-drag-source-set"><code class="function">gtk_drag_source_set()</code></a>.
 </p>
@@ -1553,9 +1570,9 @@ Undoes the effects of <a href="gtk-Drag-and-Drop.html#gtk-drag-source-set"><code
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2679057"></a><h3>
+<a name="id2738496"></a><h3>
 <a name="gtk-drag-source-set-target-list"></a>gtk_drag_source_set_target_list ()</h3>
-<a class="indexterm" name="id2679073"></a><pre class="programlisting">void                gtk_drag_source_set_target_list     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
+<a class="indexterm" name="id2738512"></a><pre class="programlisting">void                gtk_drag_source_set_target_list     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          <a href="gtk-Selections.html#GtkTargetList">GtkTargetList</a> *target_list);</pre>
 <p>
 Changes the target types that this widget offers for drag-and-drop.
@@ -1586,9 +1603,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2679183"></a><h3>
+<a name="id2738622"></a><h3>
 <a name="gtk-drag-source-get-target-list"></a>gtk_drag_source_get_target_list ()</h3>
-<a class="indexterm" name="id2679198"></a><pre class="programlisting"><a href="gtk-Selections.html#GtkTargetList">GtkTargetList</a>*      gtk_drag_source_get_target_list     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2738637"></a><pre class="programlisting"><a href="gtk-Selections.html#GtkTargetList">GtkTargetList</a>*      gtk_drag_source_get_target_list     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Gets the list of targets this widget can provide for
 drag-and-drop.</p>
@@ -1618,9 +1635,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2679293"></a><h3>
+<a name="id2738732"></a><h3>
 <a name="gtk-drag-source-add-text-targets"></a>gtk_drag_source_add_text_targets ()</h3>
-<a class="indexterm" name="id2679308"></a><pre class="programlisting">void                gtk_drag_source_add_text_targets    (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2738747"></a><pre class="programlisting">void                gtk_drag_source_add_text_targets    (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Add the text targets supported by <span class="type">GtkSelection</span> to
 the target list of the drag source.  The targets
@@ -1643,9 +1660,9 @@ use <a href="gtk-Selections.html#gtk-target-list-add-text-targets"><code class="
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2679412"></a><h3>
+<a name="id2738851"></a><h3>
 <a name="gtk-drag-source-add-image-targets"></a>gtk_drag_source_add_image_targets ()</h3>
-<a class="indexterm" name="id2679429"></a><pre class="programlisting">void                gtk_drag_source_add_image_targets   (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2738868"></a><pre class="programlisting">void                gtk_drag_source_add_image_targets   (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Add the writable image targets supported by <span class="type">GtkSelection</span> to
 the target list of the drag source. The targets
@@ -1668,9 +1685,9 @@ use <a href="gtk-Selections.html#gtk-target-list-add-image-targets"><code class=
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2679532"></a><h3>
+<a name="id2738971"></a><h3>
 <a name="gtk-drag-source-add-uri-targets"></a>gtk_drag_source_add_uri_targets ()</h3>
-<a class="indexterm" name="id2679548"></a><pre class="programlisting">void                gtk_drag_source_add_uri_targets     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<a class="indexterm" name="id2738987"></a><pre class="programlisting">void                gtk_drag_source_add_uri_targets     (<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Add the URI targets supported by <span class="type">GtkSelection</span> to
 the target list of the drag source.  The targets

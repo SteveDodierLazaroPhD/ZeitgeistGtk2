@@ -69,6 +69,9 @@ extern __typeof (gdk_event_peek) gdk_event_peek __attribute((alias("IA__gdk_even
 #undef gdk_event_put 
 extern __typeof (gdk_event_put) gdk_event_put __attribute((alias("IA__gdk_event_put"), visibility("default")));
 
+#undef gdk_event_request_motions 
+extern __typeof (gdk_event_request_motions) gdk_event_request_motions __attribute((alias("IA__gdk_event_request_motions"), visibility("default")));
+
 #undef gdk_event_set_screen 
 extern __typeof (gdk_event_set_screen) gdk_event_set_screen __attribute((alias("IA__gdk_event_set_screen"), visibility("default")));
 
@@ -171,6 +174,9 @@ extern __typeof (gdk_flush) gdk_flush __attribute((alias("IA__gdk_flush"), visib
 #undef gdk_notify_startup_complete 
 extern __typeof (gdk_notify_startup_complete) gdk_notify_startup_complete __attribute((alias("IA__gdk_notify_startup_complete"), visibility("default")));
 
+#undef gdk_notify_startup_complete_with_id 
+extern __typeof (gdk_notify_startup_complete_with_id) gdk_notify_startup_complete_with_id __attribute((alias("IA__gdk_notify_startup_complete_with_id"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GDK_H__)
@@ -235,6 +241,18 @@ extern __typeof (gdk_threads_leave) gdk_threads_leave __attribute((alias("IA__gd
 
 #undef gdk_threads_set_lock_functions 
 extern __typeof (gdk_threads_set_lock_functions) gdk_threads_set_lock_functions __attribute((alias("IA__gdk_threads_set_lock_functions"), visibility("default")));
+
+#undef gdk_threads_add_idle 
+extern __typeof (gdk_threads_add_idle) gdk_threads_add_idle __attribute((alias("IA__gdk_threads_add_idle"), visibility("default")));
+
+#undef gdk_threads_add_idle_full 
+extern __typeof (gdk_threads_add_idle_full) gdk_threads_add_idle_full __attribute((alias("IA__gdk_threads_add_idle_full"), visibility("default")));
+
+#undef gdk_threads_add_timeout 
+extern __typeof (gdk_threads_add_timeout) gdk_threads_add_timeout __attribute((alias("IA__gdk_threads_add_timeout"), visibility("default")));
+
+#undef gdk_threads_add_timeout_full 
+extern __typeof (gdk_threads_add_timeout_full) gdk_threads_add_timeout_full __attribute((alias("IA__gdk_threads_add_timeout_full"), visibility("default")));
 
 #endif
 #endif
@@ -646,6 +664,9 @@ extern __typeof (gdk_colormap_unref) gdk_colormap_unref __attribute((alias("IA__
 #undef gdk_color_parse 
 extern __typeof (gdk_color_parse) gdk_color_parse __attribute((alias("IA__gdk_color_parse"), visibility("default")));
 
+#undef gdk_color_to_string 
+extern __typeof (gdk_color_to_string) gdk_color_to_string __attribute((alias("IA__gdk_color_to_string"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GDK_COLOR_H__)
@@ -910,6 +931,9 @@ extern __typeof (gdk_display_supports_shapes) gdk_display_supports_shapes __attr
 
 #undef gdk_display_supports_input_shapes 
 extern __typeof (gdk_display_supports_input_shapes) gdk_display_supports_input_shapes __attribute((alias("IA__gdk_display_supports_input_shapes"), visibility("default")));
+
+#undef gdk_display_supports_composite 
+extern __typeof (gdk_display_supports_composite) gdk_display_supports_composite __attribute((alias("IA__gdk_display_supports_composite"), visibility("default")));
 
 #endif
 #endif
@@ -1369,6 +1393,9 @@ extern __typeof (gdk_window_set_user_data) gdk_window_set_user_data __attribute(
 #undef gdk_window_thaw_updates 
 extern __typeof (gdk_window_thaw_updates) gdk_window_thaw_updates __attribute((alias("IA__gdk_window_thaw_updates"), visibility("default")));
 
+#undef gdk_window_set_composited 
+extern __typeof (gdk_window_set_composited) gdk_window_set_composited __attribute((alias("IA__gdk_window_set_composited"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GDK_WINDOW_H__)
@@ -1470,6 +1497,9 @@ extern __typeof (gdk_window_set_title) gdk_window_set_title __attribute((alias("
 #undef gdk_window_set_role 
 extern __typeof (gdk_window_set_role) gdk_window_set_role __attribute((alias("IA__gdk_window_set_role"), visibility("default")));
 
+#undef gdk_window_set_startup_id 
+extern __typeof (gdk_window_set_startup_id) gdk_window_set_startup_id __attribute((alias("IA__gdk_window_set_startup_id"), visibility("default")));
+
 #undef gdk_window_set_transient_for 
 extern __typeof (gdk_window_set_transient_for) gdk_window_set_transient_for __attribute((alias("IA__gdk_window_set_transient_for"), visibility("default")));
 
@@ -1529,6 +1559,12 @@ extern __typeof (gdk_window_set_icon) gdk_window_set_icon __attribute((alias("IA
 
 #undef gdk_window_set_icon_name 
 extern __typeof (gdk_window_set_icon_name) gdk_window_set_icon_name __attribute((alias("IA__gdk_window_set_icon_name"), visibility("default")));
+
+#undef gdk_window_beep 
+extern __typeof (gdk_window_beep) gdk_window_beep __attribute((alias("IA__gdk_window_beep"), visibility("default")));
+
+#undef gdk_window_set_opacity 
+extern __typeof (gdk_window_set_opacity) gdk_window_set_opacity __attribute((alias("IA__gdk_window_set_opacity"), visibility("default")));
 
 #undef gdk_window_iconify 
 extern __typeof (gdk_window_iconify) gdk_window_iconify __attribute((alias("IA__gdk_window_iconify"), visibility("default")));
@@ -1790,6 +1826,9 @@ extern __typeof (gdk_net_wm_supports) gdk_net_wm_supports __attribute((alias("IA
 #endif
 #if IN_HEADER(__GDK_PANGO_H__)
 #if IN_FILE(__GDK_PANGO_C__)
+#undef gdk_pango_attr_emboss_color_new 
+extern __typeof (gdk_pango_attr_emboss_color_new) gdk_pango_attr_emboss_color_new __attribute((alias("IA__gdk_pango_attr_emboss_color_new"), visibility("default")));
+
 #undef gdk_pango_attr_embossed_new 
 extern __typeof (gdk_pango_attr_embossed_new) gdk_pango_attr_embossed_new __attribute((alias("IA__gdk_pango_attr_embossed_new"), visibility("default")));
 
@@ -2359,6 +2398,12 @@ extern __typeof (gdk_x11_display_ungrab) gdk_x11_display_ungrab __attribute((ali
 
 #undef gdk_x11_lookup_xdisplay 
 extern __typeof (gdk_x11_lookup_xdisplay) gdk_x11_lookup_xdisplay __attribute((alias("IA__gdk_x11_lookup_xdisplay"), visibility("default")));
+
+#undef gdk_x11_display_broadcast_startup_message 
+extern __typeof (gdk_x11_display_broadcast_startup_message) gdk_x11_display_broadcast_startup_message __attribute((alias("IA__gdk_x11_display_broadcast_startup_message"), visibility("default")));
+
+#undef gdk_x11_display_get_startup_notification_id 
+extern __typeof (gdk_x11_display_get_startup_notification_id) gdk_x11_display_get_startup_notification_id __attribute((alias("IA__gdk_x11_display_get_startup_notification_id"), visibility("default")));
 
 #endif
 #if IN_FILE(__GDK_DRAWABLE_X11_C__)

@@ -678,10 +678,6 @@ gtk_style_new (void)
  * gtk_style_attach:
  * @style: a #GtkStyle.
  * @window: a #GdkWindow.
- * @returns: Either @style, or a newly-created #GtkStyle.
- *   If the style is newly created, the style parameter
- *   will be dereferenced, and the new style will have
- *   a reference count belonging to the caller.
  *
  * Attaches a style to a window; this process allocates the
  * colors and creates the GC's for the style - it specializes
@@ -692,7 +688,12 @@ gtk_style_new (void)
  * Since this function may return a new object, you have to use it 
  * in the following way: 
  * <literal>style = gtk_style_attach (style, window)</literal>
- **/
+ *
+ * Returns: Either @style, or a newly-created #GtkStyle.
+ *   If the style is newly created, the style parameter
+ *   will be unref'ed, and the new style will have
+ *   a reference count belonging to the caller.
+ */
 GtkStyle*
 gtk_style_attach (GtkStyle  *style,
                   GdkWindow *window)
@@ -3252,7 +3253,7 @@ option_menu_get_props (GtkWidget      *widget,
   if (tmp_spacing)
     {
       *indicator_spacing = *tmp_spacing;
-      g_free (tmp_spacing);
+      gtk_border_free (tmp_spacing);
     }
   else
     *indicator_spacing = default_option_indicator_spacing;
@@ -4938,7 +4939,7 @@ get_insensitive_layout (GdkDrawable *drawable,
       gboolean need_stipple = FALSE;
       ByteRange *br;
       
-      run = pango_layout_iter_get_run (iter);
+      run = pango_layout_iter_get_run_readonly (iter);
 
       if (run)
         {
@@ -6407,7 +6408,15 @@ gtk_paint_resize_grip (GtkStyle      *style,
 GtkBorder *
 gtk_border_copy (const GtkBorder *border)
 {
-  return (GtkBorder *)g_memdup (border, sizeof (GtkBorder));
+  GtkBorder *ret;
+
+  g_return_val_if_fail (border != NULL, NULL);
+
+  ret = g_slice_new (GtkBorder);
+
+  *ret = *border;
+
+  return ret;
 }
 
 /**
@@ -6419,7 +6428,7 @@ gtk_border_copy (const GtkBorder *border)
 void
 gtk_border_free (GtkBorder *border)
 {
-  g_free (border);
+  g_slice_free (GtkBorder, border);
 }
 
 GType
@@ -6632,24 +6641,26 @@ get_insertion_cursor_gc (GtkWidget *widget,
 	}
     }
 
+  /* Cursors in text widgets are drawn only in NORMAL state,
+   * so we can use text[GTK_STATE_NORMAL] as text color here */
   if (is_primary)
     {
       if (!cursor_info->primary_gc)
 	cursor_info->primary_gc = make_cursor_gc (widget,
 						  "cursor-color",
-						  &widget->style->black);
-	
+						  &widget->style->text[GTK_STATE_NORMAL]);
+
       return cursor_info->primary_gc;
     }
   else
     {
-      static const GdkColor gray = { 0, 0x8888, 0x8888, 0x8888 };
-      
       if (!cursor_info->secondary_gc)
 	cursor_info->secondary_gc = make_cursor_gc (widget,
 						    "secondary-cursor-color",
-						    &gray);
-	
+						    /* text_aa is the average of text and base colors,
+						     * in usual black-on-white case it's grey. */
+						    &widget->style->text_aa[GTK_STATE_NORMAL]);
+
       return cursor_info->secondary_gc;
     }
 }
@@ -6668,6 +6679,7 @@ draw_insertion_cursor (GtkWidget        *widget,
   gint i;
   gfloat cursor_aspect_ratio;
   gint offset;
+  gint window_width;
   
   /* When changing the shape or size of the cursor here,
    * propagate the changes to gtktextview.c:text_window_invalidate_cursors().
@@ -6684,6 +6696,13 @@ draw_insertion_cursor (GtkWidget        *widget,
   else
     offset = stem_width - stem_width / 2;
   
+  gdk_drawable_get_size (widget->window, &window_width, NULL);
+
+  if (location->x - offset < 0 && direction == GTK_TEXT_DIR_LTR)
+    location->x += ABS (location->x - offset);
+  else if (location->x + offset > window_width && direction == GTK_TEXT_DIR_RTL)
+    location->x -= location->x + offset - window_width;
+
   for (i = 0; i < stem_width; i++)
     gdk_draw_line (drawable, gc,
 		   location->x + i - offset, location->y,

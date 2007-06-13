@@ -106,6 +106,9 @@ linkend="GtkTextView">GtkTextView</link></refpurpose>
 <link linkend="void">void</link>                <link linkend="gtk-text-buffer-move-mark-by-name">gtk_text_buffer_move_mark_by_name</link>   (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          const <link linkend="gchar">gchar</link> *name,
                                                          const <link linkend="GtkTextIter">GtkTextIter</link> *where);
+<link linkend="void">void</link>                <link linkend="gtk-text-buffer-add-mark">gtk_text_buffer_add_mark</link>            (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
+                                                         <link linkend="GtkTextMark">GtkTextMark</link> *mark,
+                                                         const <link linkend="GtkTextIter">GtkTextIter</link> *where);
 <link linkend="void">void</link>                <link linkend="gtk-text-buffer-delete-mark">gtk_text_buffer_delete_mark</link>         (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          <link linkend="GtkTextMark">GtkTextMark</link> *mark);
 <link linkend="void">void</link>                <link linkend="gtk-text-buffer-delete-mark-by-name">gtk_text_buffer_delete_mark_by_name</link> (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
@@ -293,12 +296,12 @@ enum                <link linkend="GtkTextBufferTargetInfo">GtkTextBufferTargetI
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkTextBuffer--copy-target-list">copy-target-list</link>&quot;         <link linkend="GtkTargetList">GtkTargetList</link>         : Read
-  &quot;<link linkend="GtkTextBuffer--cursor-position">cursor-position</link>&quot;          <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkTextBuffer--has-selection">has-selection</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read
-  &quot;<link linkend="GtkTextBuffer--paste-target-list">paste-target-list</link>&quot;        <link linkend="GtkTargetList">GtkTargetList</link>         : Read
-  &quot;<link linkend="GtkTextBuffer--tag-table">tag-table</link>&quot;                <link linkend="GtkTextTagTable">GtkTextTagTable</link>       : Read / Write / Construct Only
-  &quot;<link linkend="GtkTextBuffer--text">text</link>&quot;                     <link linkend="gchararray">gchararray</link>            : Read / Write
+  <link linkend="GtkTextBuffer--copy-target-list">copy-target-list</link>         <link linkend="GtkTargetList">GtkTargetList</link>         : Read
+  <link linkend="GtkTextBuffer--cursor-position">cursor-position</link>          <link linkend="gint">gint</link>                  : Read
+  <link linkend="GtkTextBuffer--has-selection">has-selection</link>            <link linkend="gboolean">gboolean</link>              : Read
+  <link linkend="GtkTextBuffer--paste-target-list">paste-target-list</link>        <link linkend="GtkTargetList">GtkTargetList</link>         : Read
+  <link linkend="GtkTextBuffer--tag-table">tag-table</link>                <link linkend="GtkTextTagTable">GtkTextTagTable</link>       : Read / Write / Construct Only
+  <link linkend="GtkTextBuffer--text">text</link>                     <link linkend="gchararray">gchararray</link>            : Read / Write
 </synopsis>
 </refsect1>
 
@@ -306,18 +309,18 @@ enum                <link linkend="GtkTextBufferTargetInfo">GtkTextBufferTargetI
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  &quot;<link linkend="GtkTextBuffer-apply-tag">apply-tag</link>&quot;                                      : Run Last
-  &quot;<link linkend="GtkTextBuffer-begin-user-action">begin-user-action</link>&quot;                              : Run Last
-  &quot;<link linkend="GtkTextBuffer-changed">changed</link>&quot;                                        : Run Last
-  &quot;<link linkend="GtkTextBuffer-delete-range">delete-range</link>&quot;                                   : Run Last
-  &quot;<link linkend="GtkTextBuffer-end-user-action">end-user-action</link>&quot;                                : Run Last
-  &quot;<link linkend="GtkTextBuffer-insert-child-anchor">insert-child-anchor</link>&quot;                            : Run Last
-  &quot;<link linkend="GtkTextBuffer-insert-pixbuf">insert-pixbuf</link>&quot;                                  : Run Last
-  &quot;<link linkend="GtkTextBuffer-insert-text">insert-text</link>&quot;                                    : Run Last
-  &quot;<link linkend="GtkTextBuffer-mark-deleted">mark-deleted</link>&quot;                                   : Run Last
-  &quot;<link linkend="GtkTextBuffer-mark-set">mark-set</link>&quot;                                       : Run Last
-  &quot;<link linkend="GtkTextBuffer-modified-changed">modified-changed</link>&quot;                               : Run Last
-  &quot;<link linkend="GtkTextBuffer-remove-tag">remove-tag</link>&quot;                                     : Run Last
+  <link linkend="GtkTextBuffer-apply-tag">apply-tag</link>                                      : Run Last
+  <link linkend="GtkTextBuffer-begin-user-action">begin-user-action</link>                              : Run Last
+  <link linkend="GtkTextBuffer-changed">changed</link>                                        : Run Last
+  <link linkend="GtkTextBuffer-delete-range">delete-range</link>                                   : Run Last
+  <link linkend="GtkTextBuffer-end-user-action">end-user-action</link>                                : Run Last
+  <link linkend="GtkTextBuffer-insert-child-anchor">insert-child-anchor</link>                            : Run Last
+  <link linkend="GtkTextBuffer-insert-pixbuf">insert-pixbuf</link>                                  : Run Last
+  <link linkend="GtkTextBuffer-insert-text">insert-text</link>                                    : Run Last
+  <link linkend="GtkTextBuffer-mark-deleted">mark-deleted</link>                                   : Run Last
+  <link linkend="GtkTextBuffer-mark-set">mark-set</link>                                       : Run Last
+  <link linkend="GtkTextBuffer-modified-changed">modified-changed</link>                               : Run Last
+  <link linkend="GtkTextBuffer-remove-tag">remove-tag</link>                                     : Run Last
 </synopsis>
 </refsect1>
 
@@ -353,7 +356,7 @@ Creates a new text buffer.</para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>table</parameter>&nbsp;:</term>
-<listitem><simpara> a tag table, or NULL to create a new one
+<listitem><simpara> a tag table, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to create a new one
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new text buffer
 </simpara></listitem></varlistentry>
@@ -464,7 +467,7 @@ cursor position as the insertion point.</para>
                                                          <link linkend="gboolean">gboolean</link> default_editable);</programlisting>
 <para>
 Like <link linkend="gtk-text-buffer-insert"><function>gtk_text_buffer_insert()</function></link>, but the insertion will not occur if
-<parameter>iter</parameter> is at a non-editable location in the buffer.  Usually you
+<parameter>iter</parameter> is at a non-editable location in the buffer. Usually you
 want to prevent insertions at ineditable locations if the insertion
 results from a user action (is interactive).
 </para>
@@ -884,7 +887,7 @@ when obtaining the buffer contents as a string, will be represented
 by the Unicode "object replacement character" 0xFFFC. Note that the
 "slice" variants for obtaining portions of the buffer as a string
 include this character for child anchors, but the "text" variants do
-not. e.g. see <link linkend="gtk-text-buffer-get-slice"><function>gtk_text_buffer_get_slice()</function></link> and
+not. E.g. see <link linkend="gtk-text-buffer-get-slice"><function>gtk_text_buffer_get_slice()</function></link> and
 <link linkend="gtk-text-buffer-get-text"><function>gtk_text_buffer_get_text()</function></link>. Consider
 <link linkend="gtk-text-buffer-create-child-anchor"><function>gtk_text_buffer_create_child_anchor()</function></link> as a more convenient
 alternative to this function. The buffer will add a reference to
@@ -942,10 +945,10 @@ with right gravity (when you type, the cursor stays on the right
 side of the text you're typing).
 </para>
 <para>
-The caller of this function does <emphasis>not</emphasis> own a reference
-to the returned <link linkend="GtkTextMark"><type>GtkTextMark</type></link>, so you can ignore the return value
-if you like. Marks are owned by the buffer and go away when the
-buffer does.
+The caller of this function does <emphasis>not</emphasis> own a 
+reference to the returned <link linkend="GtkTextMark"><type>GtkTextMark</type></link>, so you can ignore the 
+return value if you like. Marks are owned by the buffer and go 
+away when the buffer does.
 </para>
 <para>
 Emits the "mark_set" signal as notification of the mark's initial
@@ -1011,6 +1014,33 @@ See <link linkend="gtk-text-buffer-move-mark"><function>gtk_text_buffer_move_mar
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
+<title><anchor id="gtk-text-buffer-add-mark" role="function" condition="since:2.12"/>gtk_text_buffer_add_mark ()</title>
+<indexterm role="2.12"><primary>gtk_text_buffer_add_mark</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_text_buffer_add_mark            (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
+                                                         <link linkend="GtkTextMark">GtkTextMark</link> *mark,
+                                                         const <link linkend="GtkTextIter">GtkTextIter</link> *where);</programlisting>
+<para>
+Adds the mark at position <parameter>where</parameter>. The mark must not be added to
+another buffer, and if its name is not <link linkend="NULL:CAPS"><literal>NULL</literal></link> then there must not
+be another mark in the buffer with the same name.
+</para>
+<para>
+Emits the "mark_set" signal as notification of the mark's initial
+placement.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>buffer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>mark</parameter>&nbsp;:</term>
+<listitem><simpara> the mark to add
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>where</parameter>&nbsp;:</term>
+<listitem><simpara> location to place mark
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-text-buffer-delete-mark" role="function"/>gtk_text_buffer_delete_mark ()</title>
 <indexterm><primary>gtk_text_buffer_delete_mark</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_text_buffer_delete_mark         (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          <link linkend="GtkTextMark">GtkTextMark</link> *mark);</programlisting>
@@ -1019,11 +1049,11 @@ Deletes <parameter>mark</parameter>, so that it's no longer located anywhere in 
 buffer. Removes the reference the buffer holds to the mark, so if
 you haven't called <link linkend="g-object-ref"><function>g_object_ref()</function></link> on the mark, it will be freed. Even
 if the mark isn't freed, most operations on <parameter>mark</parameter> become
-invalid. There is no way to undelete a
-mark. <link linkend="gtk-text-mark-get-deleted"><function>gtk_text_mark_get_deleted()</function></link> will return TRUE after this
-function has been called on a mark; <link linkend="gtk-text-mark-get-deleted"><function>gtk_text_mark_get_deleted()</function></link>
-indicates that a mark no longer belongs to a buffer. The "mark_deleted"
-signal will be emitted as notification after the mark is deleted.</para>
+invalid, until it gets added to a buffer again with 
+<link linkend="gtk-text-buffer-add-mark"><function>gtk_text_buffer_add_mark()</function></link>. Use <link linkend="gtk-text-mark-get-deleted"><function>gtk_text_mark_get_deleted()</function></link> to  
+find out if a mark has been removed from its buffer.
+The "mark_deleted" signal will be emitted as notification after 
+the mark is deleted.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1056,7 +1086,7 @@ Deletes the mark named <parameter>name</parameter>; the mark must exist. See
 <indexterm><primary>gtk_text_buffer_get_mark</primary></indexterm><programlisting><link linkend="GtkTextMark">GtkTextMark</link>*        gtk_text_buffer_get_mark            (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          const <link linkend="gchar">gchar</link> *name);</programlisting>
 <para>
-Returns the mark named <parameter>name</parameter> in buffer <parameter>buffer</parameter>, or NULL if no such
+Returns the mark named <parameter>name</parameter> in buffer <parameter>buffer</parameter>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if no such
 mark exists in the buffer.</para>
 <para>
 
@@ -1067,7 +1097,7 @@ mark exists in the buffer.</para>
 <varlistentry><term><parameter>name</parameter>&nbsp;:</term>
 <listitem><simpara> a mark name
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="GtkTextMark"><type>GtkTextMark</type></link>, or NULL
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="GtkTextMark"><type>GtkTextMark</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
@@ -1612,10 +1642,10 @@ uneditable text).</para>
                                                          <link linkend="GtkTextIter">GtkTextIter</link> *override_location,
                                                          <link linkend="gboolean">gboolean</link> default_editable);</programlisting>
 <para>
-Pastes the contents of a clipboard at the insertion point, or at <parameter>override_location</parameter>.
-(Note: pasting is asynchronous, that is, we'll ask for the paste data and
-return, and at some point later after the main loop runs, the paste
-data will be inserted.)</para>
+Pastes the contents of a clipboard at the insertion point, or at 
+<parameter>override_location</parameter>. (Note: pasting is asynchronous, that is, we'll 
+ask for the paste data and return, and at some point later after 
+the main loop runs, the paste data will be inserted.)</para>
 <para>
 
 </para><variablelist role="params">
@@ -1626,7 +1656,8 @@ data will be inserted.)</para>
 <listitem><simpara> the <link linkend="GtkClipboard"><type>GtkClipboard</type></link> to paste from
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>override_location</parameter>&nbsp;:</term>
-<listitem><simpara> location to insert pasted text, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> for at the cursor
+<listitem><simpara> location to insert pasted text, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> for 
+                    at the cursor
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>default_editable</parameter>&nbsp;:</term>
 <listitem><simpara> whether the buffer is editable by default
@@ -1645,7 +1676,7 @@ Copies the currently-selected text to a clipboard.</para>
 <listitem><simpara> a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> 
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>clipboard</parameter>&nbsp;:</term>
-<listitem><simpara> the <link linkend="GtkClipboard"><type>GtkClipboard</type></link> object to copy to.
+<listitem><simpara> the <link linkend="GtkClipboard"><type>GtkClipboard</type></link> object to copy to
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
@@ -1663,7 +1694,7 @@ said text if it's editable.</para>
 <listitem><simpara> a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>clipboard</parameter>&nbsp;:</term>
-<listitem><simpara> the <link linkend="GtkClipboard"><type>GtkClipboard</type></link> object to cut to.
+<listitem><simpara> the <link linkend="GtkClipboard"><type>GtkClipboard</type></link> object to cut to
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>default_editable</parameter>&nbsp;:</term>
 <listitem><simpara> default editability of the buffer
@@ -1708,9 +1739,10 @@ user-visible operation. The operations between
 <link linkend="gtk-text-buffer-end-user-action"><function>gtk_text_buffer_end_user_action()</function></link> can then be grouped when creating
 an undo stack. <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> maintains a count of calls to
 <link linkend="gtk-text-buffer-begin-user-action"><function>gtk_text_buffer_begin_user_action()</function></link> that have not been closed with
-a call to <link linkend="gtk-text-buffer-end-user-action"><function>gtk_text_buffer_end_user_action()</function></link>, and emits the "begin_user_action"
-and "end_user_action" signals only for the outermost pair of calls.
-This allows you to build user actions from other user actions.
+a call to <link linkend="gtk-text-buffer-end-user-action"><function>gtk_text_buffer_end_user_action()</function></link>, and emits the 
+"begin_user_action" and "end_user_action" signals only for the 
+outermost pair of calls. This allows you to build user actions 
+from other user actions.
 </para>
 <para>
 The "interactive" buffer mutation functions, such as
@@ -1744,9 +1776,9 @@ See that function for a full explanation.</para>
                                                         (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          <link linkend="GtkClipboard">GtkClipboard</link> *clipboard);</programlisting>
 <para>
-Adds <parameter>clipboard</parameter> to the list of clipboards in which the selection contents
-of <parameter>buffer</parameter> are available. In most cases, <parameter>clipboard</parameter> will be the <link linkend="GtkClipboard"><type>GtkClipboard</type></link>
-of type <link linkend="GDK-SELECTION-PRIMARY:CAPS"><literal>GDK_SELECTION_PRIMARY</literal></link> for a view of <parameter>buffer</parameter>.</para>
+Adds <parameter>clipboard</parameter> to the list of clipboards in which the selection 
+contents of <parameter>buffer</parameter> are available. In most cases, <parameter>clipboard</parameter> will be 
+the <link linkend="GtkClipboard"><type>GtkClipboard</type></link> of type <link linkend="GDK-SELECTION-PRIMARY:CAPS"><literal>GDK_SELECTION_PRIMARY</literal></link> for a view of <parameter>buffer</parameter>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1763,7 +1795,8 @@ of type <link linkend="GDK-SELECTION-PRIMARY:CAPS"><literal>GDK_SELECTION_PRIMAR
                                                         (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          <link linkend="GtkClipboard">GtkClipboard</link> *clipboard);</programlisting>
 <para>
-Removes a <link linkend="GtkClipboard"><type>GtkClipboard</type></link> added with <link linkend="gtk-text-buffer-add-selection-clipboard"><function>gtk_text_buffer_add_selection_clipboard()</function></link></para>
+Removes a <link linkend="GtkClipboard"><type>GtkClipboard</type></link> added with 
+<link linkend="gtk-text-buffer-add-selection-clipboard"><function>gtk_text_buffer_add_selection_clipboard()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1771,7 +1804,8 @@ Removes a <link linkend="GtkClipboard"><type>GtkClipboard</type></link> added wi
 <listitem><simpara> a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>clipboard</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GtkClipboard"><type>GtkClipboard</type></link> added to <parameter>buffer</parameter> by <link linkend="gtk-text-buffer-add-selection-clipboard"><function>gtk_text_buffer_add_selection_clipboard()</function></link>.
+<listitem><simpara> a <link linkend="GtkClipboard"><type>GtkClipboard</type></link> added to <parameter>buffer</parameter> by 
+            <link linkend="gtk-text-buffer-add-selection-clipboard"><function>gtk_text_buffer_add_selection_clipboard()</function></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
@@ -1797,33 +1831,34 @@ Removes a <link linkend="GtkClipboard"><type>GtkClipboard</type></link> added wi
                                                          <link linkend="gpointer">gpointer</link> user_data,
                                                          <link linkend="GError">GError</link> **error);</programlisting>
 <para>
-
+A function that is called to deserialize rich text that has been
+serialized with <link linkend="gtk-text-buffer-serialize"><function>gtk_text_buffer_serialize()</function></link>, and insert it at <parameter>iter</parameter>.
 </para><variablelist role="params">
 <varlistentry><term><parameter>register_buffer</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> the format is registered with
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>content_buffer</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> to deserialize into
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>insertion point for the deserialized text
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>data</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>data to deserialize
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>length</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>length of <link linkend="data"><literal>data</literal></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>create_tags</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if deserializing may create tags
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>user data that was specified when registering the format
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>error</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>return location for a <link linkend="GError"><type>GError</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> on success, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise
 
 
 </simpara></listitem></varlistentry>
@@ -1838,18 +1873,18 @@ Removes a <link linkend="GtkClipboard"><type>GtkClipboard</type></link> added wi
                                                          <link linkend="gsize">gsize</link> length,
                                                          <link linkend="GError">GError</link> **error);</programlisting>
 <para>
-This function deserializes rich text in format <link linkend="format"><literal>format</literal></link> and inserts
-it at <link linkend="iter"><literal>iter</literal></link>.
+This function deserializes rich text in format <parameter>format</parameter> and inserts
+it at <parameter>iter</parameter>.
 </para>
 <para>
-<link linkend="format"><literal>format</literal></link><!-- -->s to be used must be registered using
+<parameter>format</parameter><!-- -->s to be used must be registered using
 <link linkend="gtk-text-buffer-register-deserialize-format"><function>gtk_text_buffer_register_deserialize_format()</function></link> or
 <link linkend="gtk-text-buffer-register-deserialize-tagset"><function>gtk_text_buffer_register_deserialize_tagset()</function></link> beforehand.</para>
 <para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>register_buffer</parameter>&nbsp;:</term>
-<listitem><simpara> the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> <link linkend="format"><literal>format</literal></link> is registered with
+<listitem><simpara> the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> <parameter>format</parameter> is registered with
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>content_buffer</parameter>&nbsp;:</term>
 <listitem><simpara> the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> to deserialize into
@@ -1864,10 +1899,10 @@ it at <link linkend="iter"><literal>iter</literal></link>.
 <listitem><simpara> data to deserialize
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>length</parameter>&nbsp;:</term>
-<listitem><simpara> length of <link linkend="data"><literal>data</literal></link>
+<listitem><simpara> length of <parameter>data</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>error</parameter>&nbsp;:</term>
-<listitem><simpara> return loaction for a <link linkend="GError"><type>GError</type></link>
+<listitem><simpara> return location for a <link linkend="GError"><type>GError</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> on success, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise.
 
@@ -1945,7 +1980,7 @@ This function returns the list of targets this text buffer can
 provide for copying and as DND source. The targets in the list are
 added with <link linkend="info"><literal>info</literal></link> values from the <link linkend="GtkTextBufferTargetInfo"><type>GtkTextBufferTargetInfo</type></link> enum,
 using <link linkend="gtk-target-list-add-rich-text-targets"><function>gtk_target_list_add_rich_text_targets()</function></link> and
-<link linkend="gtk-target-list-add-text-targets"><function>gtk_target_list_add_text_targets()</function></link></para>
+<link linkend="gtk-target-list-add-text-targets"><function>gtk_target_list_add_text_targets()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1964,7 +1999,7 @@ using <link linkend="gtk-target-list-add-rich-text-targets"><function>gtk_target
                                                          <link linkend="gint">gint</link> *n_formats);</programlisting>
 <para>
 This function returns the rich text deserialize formats registered
-with <link linkend="buffer"><literal>buffer</literal></link> using <link linkend="gtk-text-buffer-register-deserialize-format"><function>gtk_text_buffer_register_deserialize_format()</function></link> or
+with <parameter>buffer</parameter> using <link linkend="gtk-text-buffer-register-deserialize-format"><function>gtk_text_buffer_register_deserialize_format()</function></link> or
 <link linkend="gtk-text-buffer-register-deserialize-tagset"><function>gtk_text_buffer_register_deserialize_tagset()</function></link></para>
 <para>
 
@@ -1990,7 +2025,7 @@ This function returns the list of targets this text buffer supports
 for pasting and as DND destination. The targets in the list are
 added with <link linkend="info"><literal>info</literal></link> values from the <link linkend="GtkTextBufferTargetInfo"><type>GtkTextBufferTargetInfo</type></link> enum,
 using <link linkend="gtk-target-list-add-rich-text-targets"><function>gtk_target_list_add_rich_text_targets()</function></link> and
-<link linkend="gtk-target-list-add-text-targets"><function>gtk_target_list_add_text_targets()</function></link></para>
+<link linkend="gtk-target-list-add-text-targets"><function>gtk_target_list_add_text_targets()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2009,7 +2044,7 @@ using <link linkend="gtk-target-list-add-rich-text-targets"><function>gtk_target
                                                          <link linkend="gint">gint</link> *n_formats);</programlisting>
 <para>
 This function returns the rich text serialize formats registered
-with <link linkend="buffer"><literal>buffer</literal></link> using <link linkend="gtk-text-buffer-register-serialize-format"><function>gtk_text_buffer_register_serialize_format()</function></link> or
+with <parameter>buffer</parameter> using <link linkend="gtk-text-buffer-register-serialize-format"><function>gtk_text_buffer_register_serialize_format()</function></link> or
 <link linkend="gtk-text-buffer-register-serialize-tagset"><function>gtk_text_buffer_register_serialize_tagset()</function></link></para>
 <para>
 
@@ -2035,8 +2070,8 @@ with <link linkend="buffer"><literal>buffer</literal></link> using <link linkend
                                                          <link linkend="gpointer">gpointer</link> user_data,
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> user_data_destroy);</programlisting>
 <para>
-This function registers a rich text deserialization <link linkend="function"><literal>function</literal></link> along with
-its <link linkend="mime-type"><literal>mime_type</literal></link> with the passed <link linkend="buffer"><literal>buffer</literal></link>.</para>
+This function registers a rich text deserialization <parameter>function</parameter> along with
+its <parameter>mime_type</parameter> with the passed <parameter>buffer</parameter>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2050,10 +2085,10 @@ its <link linkend="mime-type"><literal>mime_type</literal></link> with the passe
 <listitem><simpara> the deserialize function to register
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
-<listitem><simpara> <link linkend="function"><literal>function</literal></link>'s user_data
+<listitem><simpara> <parameter>function</parameter>'s user_data
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data_destroy</parameter>&nbsp;:</term>
-<listitem><simpara> a function to call when user_data is no longer needed
+<listitem><simpara> a function to call when <parameter>user_data</parameter> is no longer needed
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GdkAtom"><type>GdkAtom</type></link> that corresponds to the newly registered
               format's mime-type.
@@ -2068,7 +2103,7 @@ its <link linkend="mime-type"><literal>mime_type</literal></link> with the passe
                                                          const <link linkend="gchar">gchar</link> *tagset_name);</programlisting>
 <para>
 This function registers GTK+'s internal rich text serialization
-format with the passed <link linkend="buffer"><literal>buffer</literal></link>. See
+format with the passed <parameter>buffer</parameter>. See
 <link linkend="gtk-text-buffer-register-serialize-tagset"><function>gtk_text_buffer_register_serialize_tagset()</function></link> for details.</para>
 <para>
 
@@ -2094,8 +2129,8 @@ format with the passed <link linkend="buffer"><literal>buffer</literal></link>. 
                                                          <link linkend="gpointer">gpointer</link> user_data,
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> user_data_destroy);</programlisting>
 <para>
-This function registers a rich text serialization <link linkend="function"><literal>function</literal></link> along with
-its <link linkend="mime-type"><literal>mime_type</literal></link> with the passed <link linkend="buffer"><literal>buffer</literal></link>.</para>
+This function registers a rich text serialization <parameter>function</parameter> along with
+its <parameter>mime_type</parameter> with the passed <parameter>buffer</parameter>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2112,7 +2147,7 @@ its <link linkend="mime-type"><literal>mime_type</literal></link> with the passe
 <listitem><simpara> <link linkend="function"><literal>function</literal></link>'s user_data
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data_destroy</parameter>&nbsp;:</term>
-<listitem><simpara> a function to call when user_data is no longer needed
+<listitem><simpara> a function to call when <parameter>user_data</parameter> is no longer needed
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GdkAtom"><type>GdkAtom</type></link> that corresponds to the newly registered
               format's mime-type.
@@ -2127,20 +2162,20 @@ its <link linkend="mime-type"><literal>mime_type</literal></link> with the passe
                                                          const <link linkend="gchar">gchar</link> *tagset_name);</programlisting>
 <para>
 This function registers GTK+'s internal rich text serialization
-format with the passed <link linkend="buffer"><literal>buffer</literal></link>. The internal format does not comply
+format with the passed <parameter>buffer</parameter>. The internal format does not comply
 to any standard rich text format and only works between <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>
 instances. It is capable of serializing all of a text buffer's tags
 and embedded pixbufs.
 </para>
 <para>
 This function is just a wrapper around
-<link linkend="gtk-text-buffer-register-serialize-format"><function>gtk_text_buffer_register_serialize_format()</function></link>. The <link linkend="mime-type"><literal>mime_type</literal></link> used
+<link linkend="gtk-text-buffer-register-serialize-format"><function>gtk_text_buffer_register_serialize_format()</function></link>. The mime type used
 for registering is "application/x-gtk-text-buffer-rich-text", or
-"application/x-gtk-text-buffer-rich-text;format=<link linkend="tagset-name"><literal>tagset_name</literal></link>" if a
-<link linkend="tagset-name"><literal>tagset_name</literal></link> was passed.
+"application/x-gtk-text-buffer-rich-text;format=<parameter>tagset_name</parameter>" if a
+<parameter>tagset_name</parameter> was passed.
 </para>
 <para>
-The <link linkend="tagset-name"><literal>tagset_name</literal></link> can be used to restrict the transfer of rich text
+The <parameter>tagset_name</parameter> can be used to restrict the transfer of rich text
 to buffers with compatible sets of tags, in order to avoid unknown
 tags from being pasted. It is probably the common case to pass an
 identifier != <link linkend="NULL:CAPS"><literal>NULL</literal></link> here, since the <link linkend="NULL:CAPS"><literal>NULL</literal></link> tagset requires the
@@ -2169,27 +2204,29 @@ receiving buffer to deal with with pasting of arbitrary tags.</para>
                                                          <link linkend="gsize">gsize</link> *length,
                                                          <link linkend="gpointer">gpointer</link> user_data);</programlisting>
 <para>
-
+A function that is called to serialize the content of a text buffer.
+It must return the serialized form of the content.
 </para><variablelist role="params">
 <varlistentry><term><parameter>register_buffer</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> for which the format is registered
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>content_buffer</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>the <link linkend="GtkTextsBuffer"><type>GtkTextsBuffer</type></link> to serialize
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>start</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>start of the block of text to serialize
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>end</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>end of the block of text to serialize
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>length</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>Return location for the length of the serialized data
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>user data that was specified when registering the format
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a newly-allocated array of guint8 which contains the serialized
+          data, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if an error occurred
 
 
 </simpara></listitem></varlistentry>
@@ -2203,18 +2240,18 @@ receiving buffer to deal with with pasting of arbitrary tags.</para>
                                                          const <link linkend="GtkTextIter">GtkTextIter</link> *end,
                                                          <link linkend="gsize">gsize</link> *length);</programlisting>
 <para>
-This function serializes the portion of text between <link linkend="start"><literal>start</literal></link>
-and <link linkend="end"><literal>end</literal></link> in the rich text format represented by <link linkend="format"><literal>format</literal></link>.
+This function serializes the portion of text between <parameter>start</parameter>
+and <parameter>end</parameter> in the rich text format represented by <parameter>format</parameter>.
 </para>
 <para>
-<link linkend="format"><literal>format</literal></link><!-- -->s to be used must be registered using
+<parameter>format</parameter><!-- -->s to be used must be registered using
 <link linkend="gtk-text-buffer-register-serialize-format"><function>gtk_text_buffer_register_serialize_format()</function></link> or
 <link linkend="gtk-text-buffer-register-serialize-tagset"><function>gtk_text_buffer_register_serialize_tagset()</function></link> beforehand.</para>
 <para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>register_buffer</parameter>&nbsp;:</term>
-<listitem><simpara> the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> <link linkend="format"><literal>format</literal></link> is registered with
+<listitem><simpara> the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> <parameter>format</parameter> is registered with
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>content_buffer</parameter>&nbsp;:</term>
 <listitem><simpara> the <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> to serialize
@@ -2231,7 +2268,7 @@ and <link linkend="end"><literal>end</literal></link> in the rich text format re
 <varlistentry><term><parameter>length</parameter>&nbsp;:</term>
 <listitem><simpara> return location for the length of the serialized data
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the serialized data, encoded as <link linkend="format"><literal>format</literal></link>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the serialized data, encoded as <parameter>format</parameter>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
@@ -2244,7 +2281,7 @@ and <link linkend="end"><literal>end</literal></link> in the rich text format re
 <para>
 This function unregisters a rich text format that was previously
 registered using <link linkend="gtk-text-buffer-register-deserialize-format"><function>gtk_text_buffer_register_deserialize_format()</function></link> or
-<link linkend="gtk-text-buffer-register-deserialize-tagset"><function>gtk_text_buffer_register_deserialize_tagset()</function></link></para>
+<link linkend="gtk-text-buffer-register-deserialize-tagset"><function>gtk_text_buffer_register_deserialize_tagset()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2280,8 +2317,8 @@ registered using <link linkend="gtk-text-buffer-register-serialize-format"><func
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkTextBuffer--copy-target-list"/>The &quot;<literal>copy-target-list</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkTextBuffer:copy-target-list</primary></indexterm><programlisting>  &quot;copy-target-list&quot;         <link linkend="GtkTargetList">GtkTargetList</link>         : Read</programlisting>
+<refsect2><title><anchor id="GtkTextBuffer--copy-target-list"/>The :<literal>copy-target-list</literal> property</title>
+<indexterm role="2.10"><primary>GtkTextBuffer:copy-target-list</primary></indexterm><programlisting>  copy-target-list         <link linkend="GtkTargetList">GtkTargetList</link>         : Read</programlisting>
 <para>
 The list of targets this buffer supports for clipboard copying
 and as DND source.</para>
@@ -2290,11 +2327,12 @@ and as DND source.</para>
 </para><para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkTextBuffer--cursor-position"/>The &quot;<literal>cursor-position</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkTextBuffer:cursor-position</primary></indexterm><programlisting>  &quot;cursor-position&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkTextBuffer--cursor-position"/>The :<literal>cursor-position</literal> property</title>
+<indexterm role="2.10"><primary>GtkTextBuffer:cursor-position</primary></indexterm><programlisting>  cursor-position          <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>
-The position of the insert mark (as offset from the beginning of the buffer). 
-It is useful for getting notified when the cursor moves.</para>
+The position of the insert mark (as offset from the beginning 
+of the buffer). It is useful for getting notified when the 
+cursor moves.</para>
 <para>
 
 </para><para>Allowed values: &gt;= 0</para>
@@ -2302,8 +2340,8 @@ It is useful for getting notified when the cursor moves.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkTextBuffer--has-selection"/>The &quot;<literal>has-selection</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkTextBuffer:has-selection</primary></indexterm><programlisting>  &quot;has-selection&quot;            <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2><title><anchor id="GtkTextBuffer--has-selection"/>The :<literal>has-selection</literal> property</title>
+<indexterm role="2.10"><primary>GtkTextBuffer:has-selection</primary></indexterm><programlisting>  has-selection            <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>
 Whether the buffer has some text currently selected.</para>
 <para>
@@ -2312,8 +2350,8 @@ Whether the buffer has some text currently selected.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkTextBuffer--paste-target-list"/>The &quot;<literal>paste-target-list</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkTextBuffer:paste-target-list</primary></indexterm><programlisting>  &quot;paste-target-list&quot;        <link linkend="GtkTargetList">GtkTargetList</link>         : Read</programlisting>
+<refsect2><title><anchor id="GtkTextBuffer--paste-target-list"/>The :<literal>paste-target-list</literal> property</title>
+<indexterm role="2.10"><primary>GtkTextBuffer:paste-target-list</primary></indexterm><programlisting>  paste-target-list        <link linkend="GtkTargetList">GtkTargetList</link>         : Read</programlisting>
 <para>
 The list of targets this buffer supports for clipboard pasting
 and as DND destination.</para>
@@ -2322,11 +2360,11 @@ and as DND destination.</para>
 </para><para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkTextBuffer--tag-table"/>The &quot;<literal>tag-table</literal>&quot; property</title>
-<indexterm><primary>GtkTextBuffer:tag-table</primary></indexterm><programlisting>  &quot;tag-table&quot;                <link linkend="GtkTextTagTable">GtkTextTagTable</link>       : Read / Write / Construct Only</programlisting>
+<refsect2><title><anchor id="GtkTextBuffer--tag-table"/>The :<literal>tag-table</literal> property</title>
+<indexterm><primary>GtkTextBuffer:tag-table</primary></indexterm><programlisting>  tag-table                <link linkend="GtkTextTagTable">GtkTextTagTable</link>       : Read / Write / Construct Only</programlisting>
 <para>Text Tag Table.</para></refsect2>
-<refsect2><title><anchor id="GtkTextBuffer--text"/>The &quot;<literal>text</literal>&quot; property</title>
-<indexterm role="2.8"><primary>GtkTextBuffer:text</primary></indexterm><programlisting>  &quot;text&quot;                     <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkTextBuffer--text"/>The :<literal>text</literal> property</title>
+<indexterm role="2.8"><primary>GtkTextBuffer:text</primary></indexterm><programlisting>  text                     <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 The text content of the buffer. Without child widgets and images,
 see <link linkend="gtk-text-buffer-get-text"><function>gtk_text_buffer_get_text()</function></link> for more information.</para>
@@ -2341,7 +2379,7 @@ see <link linkend="gtk-text-buffer-get-text"><function>gtk_text_buffer_get_text(
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkTextBuffer-apply-tag"/>The &quot;apply-tag&quot; signal</title>
+<refsect2><title><anchor id="GtkTextBuffer-apply-tag"/>The <literal>::apply-tag</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::apply-tag</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="GtkTextTag">GtkTextTag</link>    *tag,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *start,
@@ -2378,7 +2416,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-begin-user-action"/>The &quot;begin-user-action&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-begin-user-action"/>The <literal>::begin-user-action</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::begin-user-action</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
@@ -2401,7 +2439,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-changed"/>The &quot;changed&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-changed"/>The <literal>::changed</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
@@ -2415,7 +2453,7 @@ has changed.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-delete-range"/>The &quot;delete-range&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-delete-range"/>The <literal>::delete-range</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::delete-range</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *start,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *end,
@@ -2433,8 +2471,7 @@ which run after the default handler (see <link linkend="g-signal-connect-after">
 do not have access to the deleted text.
 </para>
 <para>
-See also:
-<link linkend="gtk-text-buffer-delete"><function>gtk_text_buffer_delete()</function></link>.</para>
+See also: <link linkend="gtk-text-buffer-delete"><function>gtk_text_buffer_delete()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2449,7 +2486,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-end-user-action"/>The &quot;end-user-action&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-end-user-action"/>The <literal>::end-user-action</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::end-user-action</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
@@ -2473,7 +2510,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-insert-child-anchor"/>The &quot;insert-child-anchor&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-insert-child-anchor"/>The <literal>::insert-child-anchor</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::insert-child-anchor</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link>      *textbuffer,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>        *location,
                                                         <link linkend="GtkTextChildAnchor">GtkTextChildAnchor</link> *anchor,
@@ -2484,14 +2521,13 @@ The insert_child_anchor signal is emitted to insert a
 Insertion actually occurs in the default handler.
 </para>
 <para>
-Note that if your handler runs before the default handler it must not 
-invalidate the <parameter>location</parameter> iter (or has to revalidate it). 
+Note that if your handler runs before the default handler it must
+not invalidate the <parameter>location</parameter> iter (or has to revalidate it). 
 The default signal handler revalidates it to be placed after the 
 inserted <parameter>anchor</parameter>.
 </para>
 <para>
-See also:
-<link linkend="gtk-text-buffer-insert-child-anchor"><function>gtk_text_buffer_insert_child_anchor()</function></link>.</para>
+See also: <link linkend="gtk-text-buffer-insert-child-anchor"><function>gtk_text_buffer_insert_child_anchor()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2506,15 +2542,14 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-insert-pixbuf"/>The &quot;insert-pixbuf&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-insert-pixbuf"/>The <literal>::insert-pixbuf</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::insert-pixbuf</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *location,
                                                         <link linkend="GdkPixbuf">GdkPixbuf</link>     *pixbuf,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The insert_pixbuf signal is emitted to insert a
-<link linkend="GdkPixbuf"><type>GdkPixbuf</type></link> in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>.
-Insertion actually occurs in the default handler.
+The insert_pixbuf signal is emitted to insert a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link> 
+in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>. Insertion actually occurs in the default handler.
 </para>
 <para>
 Note that if your handler runs before the default handler it must not 
@@ -2523,8 +2558,7 @@ The default signal handler revalidates it to be placed after the
 inserted <parameter>pixbuf</parameter>.
 </para>
 <para>
-See also:
-<link linkend="gtk-text-buffer-insert-pixbuf"><function>gtk_text_buffer_insert_pixbuf()</function></link>.</para>
+See also: <link linkend="gtk-text-buffer-insert-pixbuf"><function>gtk_text_buffer_insert_pixbuf()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2539,7 +2573,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-insert-text"/>The &quot;insert-text&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-insert-text"/>The <literal>::insert-text</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::insert-text</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *location,
                                                         <link linkend="gchar">gchar</link>         *text,
@@ -2576,7 +2610,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-mark-deleted"/>The &quot;mark-deleted&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-mark-deleted"/>The <literal>::mark-deleted</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::mark-deleted</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="GtkTextMark">GtkTextMark</link>   *mark,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
@@ -2598,7 +2632,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-mark-set"/>The &quot;mark-set&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-mark-set"/>The <literal>::mark-set</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::mark-set</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *location,
                                                         <link linkend="GtkTextMark">GtkTextMark</link>   *mark,
@@ -2625,7 +2659,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-modified-changed"/>The &quot;modified-changed&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-modified-changed"/>The <literal>::modified-changed</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::modified-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
@@ -2643,7 +2677,7 @@ See also:
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-remove-tag"/>The &quot;remove-tag&quot; signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkTextBuffer-remove-tag"/>The <literal>::remove-tag</literal> signal</title>
 <indexterm><primary>GtkTextBuffer::remove-tag</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="GtkTextTag">GtkTextTag</link>    *tag,
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *start,

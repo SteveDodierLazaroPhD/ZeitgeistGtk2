@@ -146,6 +146,13 @@ created in grayscale and direct color modes, and the visual is changed
 in cases where a "better" visual than the default is available.
 </para>
 
+<para>
+If GDK is built with the Sun mediaLib library, the GdkRGB functions are
+accelerated using mediaLib, which provides hardware acceleration on Intel,
+AMD, and Sparc chipsets.  If desired, mediaLib support can be turned off
+by setting the GDK_DISABLE_MEDIALIB environment variable.
+</para>
+
 <example>
 <title>A simple example program using GdkRGB</title>
 <programlisting>
@@ -631,7 +638,19 @@ Frees the memory associated with a <link linkend="GdkRgbCmap"><type>GdkRgbCmap</
 <para>
 A private data structure which maps color indices to actual RGB
 colors. This is used only for <link linkend="gdk-draw-indexed-image"><function>gdk_draw_indexed_image()</function></link>.
-</para></refsect2>
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="guint32">guint32</link>&nbsp;<structfield>colors</structfield>[256];</term>
+<listitem><simpara>The colors, represented as 0xRRGGBB integer values.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="gint">gint</link>&nbsp;<structfield>n_colors</structfield>;</term>
+<listitem><simpara>The number of colors in the cmap.
+
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2>
 <title><anchor id="gdk-rgb-gc-set-foreground" role="function" condition="deprecated:"/>gdk_rgb_gc_set_foreground ()</title>
 <indexterm role="deprecated"><primary>gdk_rgb_gc_set_foreground</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_rgb_gc_set_foreground           (<link linkend="GdkGC">GdkGC</link> *gc,

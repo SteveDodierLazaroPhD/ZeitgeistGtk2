@@ -157,7 +157,7 @@ limit_layout_lines (PangoLayout *layout)
     {
       text  = pango_layout_get_text (layout);
       str   = g_string_new (NULL);
-      lines = pango_layout_get_lines (layout);
+      lines = pango_layout_get_lines_readonly (layout);
 
       /* get first lines */
       elem = lines;
@@ -327,15 +327,11 @@ _gtk_text_util_create_rich_drag_icon (GtkWidget     *widget,
    gtk_text_layout_validate (layout, DRAG_ICON_MAX_HEIGHT);
    gtk_text_layout_get_size (layout, &layout_width, &layout_height);
 
-   g_print ("%s: layout size %d %d\n", G_STRFUNC, layout_width, layout_height);
-
    layout_width = MIN (layout_width, DRAG_ICON_MAX_WIDTH);
    layout_height = MIN (layout_height, DRAG_ICON_MAX_HEIGHT);
 
    pixmap_width  = layout_width + DRAG_ICON_LAYOUT_BORDER * 2;
    pixmap_height = layout_height + DRAG_ICON_LAYOUT_BORDER * 2;
-
-   g_print ("%s: pixmap size %d %d\n", G_STRFUNC, pixmap_width, pixmap_height);
 
    drawable = gdk_pixmap_new (widget->window,
                               pixmap_width  + 2, pixmap_height + 2, -1);

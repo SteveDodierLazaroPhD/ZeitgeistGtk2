@@ -141,6 +141,7 @@
 #include <gtk/gtkradiotoolbutton.h>
 #include <gtk/gtkrange.h>
 #include <gtk/gtkrc.h>
+#include <gtk/gtkrecentaction.h>
 #include <gtk/gtkrecentchooser.h>
 #include <gtk/gtkrecentchooserdialog.h>
 #include <gtk/gtkrecentchoosermenu.h>
@@ -149,6 +150,7 @@
 #include <gtk/gtkrecentmanager.h>
 #include <gtk/gtkruler.h>
 #include <gtk/gtkscale.h>
+#include <gtk/gtkscalebutton.h>
 #include <gtk/gtkscrollbar.h>
 #include <gtk/gtkscrolledwindow.h>
 #include <gtk/gtkselection.h>
@@ -177,6 +179,7 @@
 #include <gtk/gtktoolbar.h>
 #include <gtk/gtktoolbutton.h>
 #include <gtk/gtktoolitem.h>
+#include <gtk/gtktooltip.h>
 #include <gtk/gtktooltips.h>
 #include <gtk/gtktree.h>
 #include <gtk/gtktreednd.h>
@@ -194,6 +197,7 @@
 #include <gtk/gtkvbox.h>
 #include <gtk/gtkversion.h>
 #include <gtk/gtkviewport.h>
+#include <gtk/gtkvolumebutton.h>
 #include <gtk/gtkvpaned.h>
 #include <gtk/gtkvruler.h>
 #include <gtk/gtkvscale.h>

@@ -18,6 +18,7 @@
 <link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
+<link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -28,16 +29,16 @@
 <th width="100%" align="center">GDK Reference Manual</th>
 <td><a accesskey="n" href="gdk-Event-Structures.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2740135" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2796983" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id2740850" class="shortcut">Description</a></nobr></td></tr>
+                  <a href="#id2797722" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gdk-Events"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id2740135"></a><span class="refentrytitle">Events</span>
+<a name="id2796983"></a><span class="refentrytitle">Events</span>
 </h2>
 <p>Events &#8212; Functions for handling events from the window system</p>
 </td>
@@ -76,6 +77,7 @@ gboolean            <a href="gdk-Events.html#gdk-event-get-coords">gdk_event_get
 gboolean            <a href="gdk-Events.html#gdk-event-get-root-coords">gdk_event_get_root_coords</a>           (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          gdouble *x_root,
                                                          gdouble *y_root);
+void                <a href="gdk-Events.html#gdk-event-request-motions">gdk_event_request_motions</a>           (<a href="gdk-Event-Structures.html#GdkEventMotion">GdkEventMotion</a> *event);
 
 void                <a href="gdk-Events.html#gdk-event-handler-set">gdk_event_handler_set</a>               (<a href="gdk-Events.html#GdkEventFunc">GdkEventFunc</a> func,
                                                          gpointer data,
@@ -106,7 +108,7 @@ gboolean            <a href="gdk-Events.html#gdk-setting-get">gdk_setting_get</a
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2740850"></a><h2>Description</h2>
+<a name="id2797722"></a><h2>Description</h2>
 <p>
 This section describes functions dealing with events from the window system.
 </p>
@@ -118,11 +120,11 @@ functions are rarely needed. Though some of the fields in the
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2740894"></a><h2>Details</h2>
+<a name="id2797766"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2740904"></a><h3>
+<a name="id2797776"></a><h3>
 <a name="GdkEventType"></a>enum GdkEventType</h3>
-<a class="indexterm" name="id2740916"></a><pre class="programlisting">typedef enum
+<a class="indexterm" name="id2797788"></a><pre class="programlisting">typedef enum
 {
   GDK_NOTHING		= -1,
   GDK_DELETE		= 0,
@@ -380,9 +382,9 @@ for the possible window states
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2741863"></a><h3>
+<a name="id2798735"></a><h3>
 <a name="GdkEventMask"></a>enum GdkEventMask</h3>
-<a class="indexterm" name="id2741875"></a><pre class="programlisting">typedef enum
+<a class="indexterm" name="id2798747"></a><pre class="programlisting">typedef enum
 {
   GDK_EXPOSURE_MASK		= 1 &lt;&lt; 1,
   GDK_POINTER_MOTION_MASK	= 1 &lt;&lt; 2,
@@ -543,9 +545,9 @@ asks for more, by calling <a href="gdk-Windows.html#gdk-window-get-pointer"><cod
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2742514"></a><h3>
+<a name="id2799386"></a><h3>
 <a name="GDK-CURRENT-TIME:CAPS"></a>GDK_CURRENT_TIME</h3>
-<a class="indexterm" name="id2742528"></a><pre class="programlisting">#define GDK_CURRENT_TIME     0L
+<a class="indexterm" name="id2799400"></a><pre class="programlisting">#define GDK_CURRENT_TIME     0L
 </pre>
 <p>
 Represents the current time, and can be used anywhere a time is expected.
@@ -553,9 +555,9 @@ Represents the current time, and can be used anywhere a time is expected.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2742544"></a><h3>
+<a name="id2799416"></a><h3>
 <a name="GDK-PRIORITY-EVENTS:CAPS"></a>GDK_PRIORITY_EVENTS</h3>
-<a class="indexterm" name="id2742558"></a><pre class="programlisting">#define             GDK_PRIORITY_EVENTS</pre>
+<a class="indexterm" name="id2799430"></a><pre class="programlisting">#define             GDK_PRIORITY_EVENTS</pre>
 <p>
 This is the priority that events from the X server are given in the
 GLib Main Loop.
@@ -563,9 +565,9 @@ GLib Main Loop.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2742583"></a><h3>
+<a name="id2799455"></a><h3>
 <a name="GDK-PRIORITY-REDRAW:CAPS"></a>GDK_PRIORITY_REDRAW</h3>
-<a class="indexterm" name="id2742596"></a><pre class="programlisting">#define GDK_PRIORITY_REDRAW     (G_PRIORITY_HIGH_IDLE + 20)
+<a class="indexterm" name="id2799468"></a><pre class="programlisting">#define GDK_PRIORITY_REDRAW     (G_PRIORITY_HIGH_IDLE + 20)
 </pre>
 <p>
 This is the priority that the idle handler processing window updates
@@ -574,9 +576,9 @@ is given in the GLib Main Loop.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2742621"></a><h3>
+<a name="id2799493"></a><h3>
 <a name="gdk-events-pending"></a>gdk_events_pending ()</h3>
-<a class="indexterm" name="id2742633"></a><pre class="programlisting">gboolean            gdk_events_pending                  (void);</pre>
+<a class="indexterm" name="id2799505"></a><pre class="programlisting">gboolean            gdk_events_pending                  (void);</pre>
 <p>
 Checks if any events are ready to be processed for any display.</p>
 <p>
@@ -592,9 +594,9 @@ Checks if any events are ready to be processed for any display.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2742684"></a><h3>
+<a name="id2799556"></a><h3>
 <a name="gdk-event-peek"></a>gdk_event_peek ()</h3>
-<a class="indexterm" name="id2742697"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_peek                      (void);</pre>
+<a class="indexterm" name="id2799569"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_peek                      (void);</pre>
 <p>
 If there is an event waiting in the event queue of some open
 display, returns a copy of it. See <a href="GdkDisplay.html#gdk-display-peek-event"><code class="function">gdk_display_peek_event()</code></a>.</p>
@@ -615,9 +617,9 @@ events are in any queues. The returned <a href="gdk-Event-Structures.html#GdkEve
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2742787"></a><h3>
+<a name="id2799659"></a><h3>
 <a name="gdk-event-get"></a>gdk_event_get ()</h3>
-<a class="indexterm" name="id2742800"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_get                       (void);</pre>
+<a class="indexterm" name="id2799672"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_get                       (void);</pre>
 <p>
 Checks all open displays for a <a href="gdk-Event-Structures.html#GdkEvent"><span class="type">GdkEvent</span></a> to process,to be processed
 on, fetching events from the windowing system if necessary.
@@ -638,9 +640,9 @@ are pending. The returned <a href="gdk-Event-Structures.html#GdkEvent"><span cla
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2742898"></a><h3>
+<a name="id2799770"></a><h3>
 <a name="gdk-event-get-graphics-expose"></a>gdk_event_get_graphics_expose ()</h3>
-<a class="indexterm" name="id2742912"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_get_graphics_expose       (<a href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);</pre>
+<a class="indexterm" name="id2799784"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_get_graphics_expose       (<a href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);</pre>
 <p>
 Waits for a GraphicsExpose or NoExpose event from the X server.
 This is used in the <span class="type">GtkText</span> and <span class="type">GtkCList</span> widgets in GTK+ to make sure any
@@ -668,9 +670,9 @@ NoExpose event was received.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743020"></a><h3>
+<a name="id2799892"></a><h3>
 <a name="gdk-event-put"></a>gdk_event_put ()</h3>
-<a class="indexterm" name="id2743033"></a><pre class="programlisting">void                gdk_event_put                       (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
+<a class="indexterm" name="id2799905"></a><pre class="programlisting">void                gdk_event_put                       (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
 <p>
 Appends a copy of the given event onto the front of the event
 queue for event-&gt;any.window's display, or the default event
@@ -690,9 +692,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743114"></a><h3>
+<a name="id2799986"></a><h3>
 <a name="gdk-event-new"></a>gdk_event_new ()</h3>
-<a class="indexterm" name="id2743129"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_new                       (<a href="gdk-Events.html#GdkEventType">GdkEventType</a> type);</pre>
+<a class="indexterm" name="id2800001"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_new                       (<a href="gdk-Events.html#GdkEventType">GdkEventType</a> type);</pre>
 <p>
 Creates a new event of the given type. All fields are set to 0.</p>
 <p>
@@ -720,9 +722,9 @@ should be freed with <a href="gdk-Events.html#gdk-event-free"><code class="funct
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743232"></a><h3>
+<a name="id2800104"></a><h3>
 <a name="gdk-event-copy"></a>gdk_event_copy ()</h3>
-<a class="indexterm" name="id2743245"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_copy                      (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
+<a class="indexterm" name="id2800117"></a><pre class="programlisting"><a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a>*           gdk_event_copy                      (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
 <p>
 Copies a <a href="gdk-Event-Structures.html#GdkEvent"><span class="type">GdkEvent</span></a>, copying or incrementing the reference count of the
 resources associated with it (e.g. <a href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>'s and strings).</p>
@@ -747,9 +749,9 @@ resources associated with it (e.g. <a href="gdk-Windows.html#GdkWindow"><span cl
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743355"></a><h3>
+<a name="id2800227"></a><h3>
 <a name="gdk-event-free"></a>gdk_event_free ()</h3>
-<a class="indexterm" name="id2743368"></a><pre class="programlisting">void                gdk_event_free                      (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
+<a class="indexterm" name="id2800240"></a><pre class="programlisting">void                gdk_event_free                      (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
 <p>
 Frees a <a href="gdk-Event-Structures.html#GdkEvent"><span class="type">GdkEvent</span></a>, freeing or decrementing any resources associated with it.
 Note that this function should only be called with events returned from
@@ -768,9 +770,9 @@ functions such as <a href="gdk-Events.html#gdk-event-peek"><code class="function
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743478"></a><h3>
+<a name="id2800350"></a><h3>
 <a name="gdk-event-get-time"></a>gdk_event_get_time ()</h3>
-<a class="indexterm" name="id2743492"></a><pre class="programlisting">guint32             gdk_event_get_time                  (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
+<a class="indexterm" name="id2800364"></a><pre class="programlisting">guint32             gdk_event_get_time                  (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
 <p>
 Returns the time stamp from <em class="parameter"><code>event</code></em>, if there is one; otherwise
 returns <a href="gdk-Events.html#GDK-CURRENT-TIME:CAPS"><span class="type">GDK_CURRENT_TIME</span></a>. If <em class="parameter"><code>event</code></em> is <a
@@ -796,9 +798,9 @@ href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743605"></a><h3>
+<a name="id2800477"></a><h3>
 <a name="gdk-event-get-state"></a>gdk_event_get_state ()</h3>
-<a class="indexterm" name="id2743619"></a><pre class="programlisting">gboolean            gdk_event_get_state                 (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
+<a class="indexterm" name="id2800491"></a><pre class="programlisting">gboolean            gdk_event_get_state                 (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          <a href="gdk-Windows.html#GdkModifierType">GdkModifierType</a> *state);</pre>
 <p>
 If the event contains a "state" field, puts that field in <em class="parameter"><code>state</code></em>. Otherwise
@@ -833,9 +835,9 @@ as if the event had no state field.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743755"></a><h3>
+<a name="id2800627"></a><h3>
 <a name="gdk-event-get-axis"></a>gdk_event_get_axis ()</h3>
-<a class="indexterm" name="id2743768"></a><pre class="programlisting">gboolean            gdk_event_get_axis                  (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
+<a class="indexterm" name="id2800640"></a><pre class="programlisting">gboolean            gdk_event_get_axis                  (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          <a href="gdk-Input-Devices.html#GdkAxisUse">GdkAxisUse</a> axis_use,
                                                          gdouble *value);</pre>
 <p>
@@ -872,9 +874,9 @@ an event structure.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2743901"></a><h3>
+<a name="id2800773"></a><h3>
 <a name="gdk-event-get-coords"></a>gdk_event_get_coords ()</h3>
-<a class="indexterm" name="id2743914"></a><pre class="programlisting">gboolean            gdk_event_get_coords                (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
+<a class="indexterm" name="id2800786"></a><pre class="programlisting">gboolean            gdk_event_get_coords                (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          gdouble *x_win,
                                                          gdouble *y_win);</pre>
 <p>
@@ -910,9 +912,9 @@ Extract the event window relative x/y coordinates from an event.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744038"></a><h3>
+<a name="id2800910"></a><h3>
 <a name="gdk-event-get-root-coords"></a>gdk_event_get_root_coords ()</h3>
-<a class="indexterm" name="id2744052"></a><pre class="programlisting">gboolean            gdk_event_get_root_coords           (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
+<a class="indexterm" name="id2800924"></a><pre class="programlisting">gboolean            gdk_event_get_root_coords           (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          gdouble *x_root,
                                                          gdouble *y_root);</pre>
 <p>
@@ -948,9 +950,34 @@ Extract the root window relative x/y coordinates from an event.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744175"></a><h3>
+<a name="id2801047"></a><h3>
+<a name="gdk-event-request-motions"></a>gdk_event_request_motions ()</h3>
+<a class="indexterm" name="id2801063"></a><pre class="programlisting">void                gdk_event_request_motions           (<a href="gdk-Event-Structures.html#GdkEventMotion">GdkEventMotion</a> *event);</pre>
+<p>
+Request more motion notifies if <span class="type">event</span> is a motion notify hint event.
+This function should be used instead of <a href="gdk-Windows.html#gdk-window-get-pointer"><code class="function">gdk_window_get_pointer()</code></a> to
+request further motion notifies, because it also works for extension
+events where motion notifies are provided for devices other than the
+core pointer.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><span class="term"><em class="parameter"><code>event</code></em>&#160;:</span></td>
+<td> a valid <a href="gdk-Event-Structures.html#GdkEvent"><span class="type">GdkEvent</span></a>
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id2801152"></a><h3>
 <a name="gdk-event-handler-set"></a>gdk_event_handler_set ()</h3>
-<a class="indexterm" name="id2744188"></a><pre class="programlisting">void                gdk_event_handler_set               (<a href="gdk-Events.html#GdkEventFunc">GdkEventFunc</a> func,
+<a class="indexterm" name="id2801166"></a><pre class="programlisting">void                gdk_event_handler_set               (<a href="gdk-Events.html#GdkEventFunc">GdkEventFunc</a> func,
                                                          gpointer data,
                                                          GDestroyNotify notify);</pre>
 <p>
@@ -987,9 +1014,9 @@ events to GTK+.)</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744314"></a><h3>
+<a name="id2801292"></a><h3>
 <a name="GdkEventFunc"></a>GdkEventFunc ()</h3>
-<a class="indexterm" name="id2744327"></a><pre class="programlisting">void                (*GdkEventFunc)                     (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
+<a class="indexterm" name="id2801304"></a><pre class="programlisting">void                (*GdkEventFunc)                     (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          gpointer data);</pre>
 <p>
 Specifies the type of function passed to <a href="gdk-Events.html#gdk-event-handler-set"><code class="function">gdk_event_handler_set()</code></a> to handle
@@ -1016,9 +1043,9 @@ all GDK events.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744427"></a><h3>
+<a name="id2801405"></a><h3>
 <a name="gdk-event-send-client-message"></a>gdk_event_send_client_message ()</h3>
-<a class="indexterm" name="id2744441"></a><pre class="programlisting">gboolean            gdk_event_send_client_message       (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
+<a class="indexterm" name="id2801418"></a><pre class="programlisting">gboolean            gdk_event_send_client_message       (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          <a href="gdk-Event-Structures.html#GdkNativeWindow">GdkNativeWindow</a> winid);</pre>
 <p>
 Sends an X ClientMessage event to a given window (which must be
@@ -1050,9 +1077,9 @@ though the amount of data is limited to 20 bytes.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744553"></a><h3>
+<a name="id2801531"></a><h3>
 <a name="gdk-event-send-client-message-for-display"></a>gdk_event_send_client_message_for_display ()</h3>
-<a class="indexterm" name="id2744571"></a><pre class="programlisting">gboolean            gdk_event_send_client_message_for_display
+<a class="indexterm" name="id2801548"></a><pre class="programlisting">gboolean            gdk_event_send_client_message_for_display
                                                         (<a href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
                                                          <a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          <a href="gdk-Event-Structures.html#GdkNativeWindow">GdkNativeWindow</a> winid);</pre>
@@ -1099,9 +1126,9 @@ X11, and to just four bytes on Windows.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744716"></a><h3>
+<a name="id2801693"></a><h3>
 <a name="gdk-event-send-clientmessage-toall"></a>gdk_event_send_clientmessage_toall ()</h3>
-<a class="indexterm" name="id2744731"></a><pre class="programlisting">void                gdk_event_send_clientmessage_toall  (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
+<a class="indexterm" name="id2801708"></a><pre class="programlisting">void                gdk_event_send_clientmessage_toall  (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
 <p>
 Sends an X ClientMessage event to all toplevel windows on the default
 <a href="GdkScreen.html" title="GdkScreen"><span class="type">GdkScreen</span></a>.
@@ -1124,9 +1151,9 @@ to all children of the root window.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744813"></a><h3>
+<a name="id2801790"></a><h3>
 <a name="gdk-add-client-message-filter"></a>gdk_add_client_message_filter ()</h3>
-<a class="indexterm" name="id2744827"></a><pre class="programlisting">void                gdk_add_client_message_filter       (<a href="gdk-Properties-and-Atoms.html#GdkAtom">GdkAtom</a> message_type,
+<a class="indexterm" name="id2801804"></a><pre class="programlisting">void                gdk_add_client_message_filter       (<a href="gdk-Properties-and-Atoms.html#GdkAtom">GdkAtom</a> message_type,
                                                          <a href="gdk-Windows.html#GdkFilterFunc">GdkFilterFunc</a> func,
                                                          gpointer data);</pre>
 <p>
@@ -1159,9 +1186,9 @@ are received. See <a href="GdkDisplay.html#gdk-display-add-client-message-filter
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2744946"></a><h3>
+<a name="id2801924"></a><h3>
 <a name="gdk-get-show-events"></a>gdk_get_show_events ()</h3>
-<a class="indexterm" name="id2744960"></a><pre class="programlisting">gboolean            gdk_get_show_events                 (void);</pre>
+<a class="indexterm" name="id2801937"></a><pre class="programlisting">gboolean            gdk_get_show_events                 (void);</pre>
 <p>
 Gets whether event debugging output is enabled.</p>
 <p>
@@ -1177,9 +1204,9 @@ Gets whether event debugging output is enabled.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745010"></a><h3>
+<a name="id2801987"></a><h3>
 <a name="gdk-set-show-events"></a>gdk_set_show_events ()</h3>
-<a class="indexterm" name="id2745024"></a><pre class="programlisting">void                gdk_set_show_events                 (gboolean show_events);</pre>
+<a class="indexterm" name="id2802001"></a><pre class="programlisting">void                gdk_set_show_events                 (gboolean show_events);</pre>
 <p>
 Sets whether a trace of received events is output.
 Note that GTK+ must be compiled with debugging (that is,
@@ -1198,9 +1225,9 @@ to use this option.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745090"></a><h3>
+<a name="id2802067"></a><h3>
 <a name="gdk-event-set-screen"></a>gdk_event_set_screen ()</h3>
-<a class="indexterm" name="id2745106"></a><pre class="programlisting">void                gdk_event_set_screen                (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
+<a class="indexterm" name="id2802083"></a><pre class="programlisting">void                gdk_event_set_screen                (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event,
                                                          <a href="GdkScreen.html" title="GdkScreen">GdkScreen</a> *screen);</pre>
 <p>
 Sets the screen for <em class="parameter"><code>event</code></em> to <em class="parameter"><code>screen</code></em>. The event must
@@ -1229,9 +1256,9 @@ have been allocated by GTK+, for instance, by
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745222"></a><h3>
+<a name="id2802200"></a><h3>
 <a name="gdk-event-get-screen"></a>gdk_event_get_screen ()</h3>
-<a class="indexterm" name="id2745238"></a><pre class="programlisting"><a href="GdkScreen.html" title="GdkScreen">GdkScreen</a>*          gdk_event_get_screen                (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
+<a class="indexterm" name="id2802215"></a><pre class="programlisting"><a href="GdkScreen.html" title="GdkScreen">GdkScreen</a>*          gdk_event_get_screen                (<a href="gdk-Event-Structures.html#GdkEvent">GdkEvent</a> *event);</pre>
 <p>
 Returns the screen for the event. The screen is
 typically the screen for <code class="literal">event-&gt;any.window</code>, but
@@ -1264,9 +1291,9 @@ to which <code class="literal">event-&gt;motion.x_root</code> and
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2745335"></a><h3>
+<a name="id2802312"></a><h3>
 <a name="gdk-setting-get"></a>gdk_setting_get ()</h3>
-<a class="indexterm" name="id2745348"></a><pre class="programlisting">gboolean            gdk_setting_get                     (const gchar *name,
+<a class="indexterm" name="id2802325"></a><pre class="programlisting">gboolean            gdk_setting_get                     (const gchar *name,
                                                          GValue *value);</pre>
 <p>
 Obtains a desktop-wide setting, such as the double-click time,
@@ -1297,7 +1324,7 @@ for the default screen. See <a href="GdkScreen.html#gdk-screen-get-setting"><cod
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2745471"></a><h2>See Also</h2>
+<a name="id2802449"></a><h2>See Also</h2>
 <p>
 </p>
 <div class="variablelist"><table border="0">

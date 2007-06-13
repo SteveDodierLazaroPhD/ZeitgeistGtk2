@@ -147,7 +147,7 @@ static GObjectClass *parent_class;
 
 GType gtk_type_im_context_xim = 0;
 
-GSList *open_ims = NULL;
+static GSList *open_ims = NULL;
 
 /* List of status windows for different toplevels */
 static GSList *status_windows = NULL;
@@ -1163,8 +1163,7 @@ preedit_draw_callback (XIC                           xic,
 
   context->preedit_length += diff;
 
-  if (new_text)
-    g_free (new_text);
+  g_free (new_text);
 
   if (!context->finalizing)
     g_signal_emit_by_name (context, "preedit_changed");

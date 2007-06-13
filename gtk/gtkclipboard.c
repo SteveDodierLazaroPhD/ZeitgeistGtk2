@@ -728,9 +728,8 @@ gtk_clipboard_set_text (GtkClipboard *clipboard,
 			gint          len)
 {
   GtkTargetList *list;
-  GList *l;
   GtkTargetEntry *targets;
-  gint n_targets, i;
+  gint n_targets;
 
   g_return_if_fail (clipboard != NULL);
   g_return_if_fail (text != NULL);
@@ -738,13 +737,7 @@ gtk_clipboard_set_text (GtkClipboard *clipboard,
   list = gtk_target_list_new (NULL, 0);
   gtk_target_list_add_text_targets (list, 0);
 
-  n_targets = g_list_length (list->list);
-  targets = g_new0 (GtkTargetEntry, n_targets);
-  for (l = list->list, i = 0; l; l = l->next, i++)
-    {
-      GtkTargetPair *pair = (GtkTargetPair *)l->data;
-      targets[i].target = gdk_atom_name (pair->target);
-    }
+  targets = gtk_target_table_new_from_list (list, &n_targets);
   
   if (len < 0)
     len = strlen (text);
@@ -755,9 +748,7 @@ gtk_clipboard_set_text (GtkClipboard *clipboard,
 			       g_strndup (text, len));
   gtk_clipboard_set_can_store (clipboard, NULL, 0);
 
-  for (i = 0; i < n_targets; i++)
-    g_free (targets[i].target);
-  g_free (targets);
+  gtk_target_table_free (targets, n_targets);
   gtk_target_list_unref (list);
 }
 
@@ -794,9 +785,8 @@ gtk_clipboard_set_image (GtkClipboard *clipboard,
 			  GdkPixbuf    *pixbuf)
 {
   GtkTargetList *list;
-  GList *l;
   GtkTargetEntry *targets;
-  gint n_targets, i;
+  gint n_targets;
 
   g_return_if_fail (clipboard != NULL);
   g_return_if_fail (GDK_IS_PIXBUF (pixbuf));
@@ -804,13 +794,7 @@ gtk_clipboard_set_image (GtkClipboard *clipboard,
   list = gtk_target_list_new (NULL, 0);
   gtk_target_list_add_image_targets (list, 0, TRUE);
 
-  n_targets = g_list_length (list->list);
-  targets = g_new0 (GtkTargetEntry, n_targets);
-  for (l = list->list, i = 0; l; l = l->next, i++)
-    {
-      GtkTargetPair *pair = (GtkTargetPair *)l->data;
-      targets[i].target = gdk_atom_name (pair->target);
-    }
+  targets = gtk_target_table_new_from_list (list, &n_targets);
 
   gtk_clipboard_set_with_data (clipboard, 
 			       targets, n_targets,
@@ -818,9 +802,7 @@ gtk_clipboard_set_image (GtkClipboard *clipboard,
 			       g_object_ref (pixbuf));
   gtk_clipboard_set_can_store (clipboard, NULL, 0);
 
-  for (i = 0; i < n_targets; i++)
-    g_free (targets[i].target);
-  g_free (targets);
+  gtk_target_table_free (targets, n_targets);
   gtk_target_list_unref (list);
 }
 
@@ -1862,6 +1844,8 @@ gtk_clipboard_store (GtkClipboard *clipboard)
   if (!gdk_display_supports_clipboard_persistence (clipboard->display))
     return;
 
+  g_object_ref (clipboard);
+
   clipboard_widget = get_clipboard_widget (clipboard->display);
   clipboard->notify_signal_id = g_signal_connect (clipboard_widget, "selection_notify_event",
 						  G_CALLBACK (gtk_clipboard_selection_notify), clipboard);
@@ -1893,6 +1877,8 @@ gtk_clipboard_store (GtkClipboard *clipboard)
   clipboard->notify_signal_id = 0;
   
   clipboard->storing_selection = FALSE;
+
+  g_object_unref (clipboard);
 }
 
 /* Stores all clipboard selections on all displays, called from

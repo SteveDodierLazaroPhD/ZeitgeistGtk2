@@ -42,6 +42,9 @@
 
 -(BOOL)isOpaque
 {
+  if (GDK_WINDOW_DESTROYED (gdk_window))
+    return YES;
+
   /* A view is opaque if its GdkWindow doesn't have the RGBA colormap */
   return gdk_drawable_get_colormap (gdk_window) != gdk_screen_get_rgba_colormap (_gdk_screen);
 }
@@ -54,6 +57,12 @@
   const NSRect *drawn_rects;
   int count, i;
   GdkRegion *region;
+
+  if (GDK_WINDOW_DESTROYED (gdk_window))
+    return;
+
+  if (!(private->event_mask & GDK_EXPOSURE_MASK))
+    return;
 
   GDK_QUARTZ_ALLOC_POOL;
 
@@ -71,7 +80,7 @@
       gdk_region_union_with_rect (region, &gdk_rect);
     }
 
-  if (!gdk_region_empty (region) && private->event_mask & GDK_EXPOSURE_MASK)
+  if (!gdk_region_empty (region))
     {
       GdkEvent event;
       
@@ -87,15 +96,16 @@
       event.expose.region = region;
       event.expose.area = gdk_rect;
       
-      impl->in_paint_rect_count ++;
+      impl->in_paint_rect_count++;
 
       (*_gdk_event_func) (&event, _gdk_event_data);
 
-      impl->in_paint_rect_count --;
+      impl->in_paint_rect_count--;
 
       g_object_unref (gdk_window);
-      gdk_region_destroy (event.expose.region);
     }
+
+  gdk_region_destroy (region);
 
   GDK_QUARTZ_RELEASE_POOL;
 }

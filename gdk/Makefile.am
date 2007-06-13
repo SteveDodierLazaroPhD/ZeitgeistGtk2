@@ -11,6 +11,7 @@ EXTRA_DIST =			\
 	gdkkeysyms-update.pl	\
 	gdk.def 		\
 	gdkmarshalers.list	\
+	gdkmedialib.h		\
 	makeenums.pl		\
 	makefile.msc		\
 	gdk.symbols		\
@@ -45,6 +46,12 @@ LDADD = \
 	$(no_undefined)							\
 	$(LIBTOOL_EXPORT_OPTIONS)
 
+if USE_MEDIALIB
+medialib_sources =  \
+    gdkmedialib.c
+else
+medialib_sources =
+endif
 
 #
 # setup source file variables
@@ -89,6 +96,7 @@ gdk_headers =                     \
 	gdkalias.h
 
 gdk_c_sources =                 \
+	$(medialib_sources)     \
 	gdk.c			\
 	gdkcairo.c		\
 	gdkcolor.c		\
@@ -159,12 +167,6 @@ libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la $(GDK_DEP_LIBS) \
   $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
 libgdk_win32_2_0_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o gdk.def
 libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols gdk.def $(LDADD)
-if HAVE_WINTAB
-libgdk_win32_2_0_la_LDFLAGS += -Wl,win32/libwntab32x.a
-endif
-if HAVE_IE55
-libgdk_win32_2_0_la_LDFLAGS += -Wl,win32/libie55uuid.a
-endif
 
 if OS_WIN32
 install-def-file: gdk.def
@@ -202,7 +204,7 @@ gdkaliasdef.c: gdk.symbols
 	 $(PERL) $(srcdir)/makegdkalias.pl -def < $(srcdir)/gdk.symbols > gdkaliasdef.c
 
 if OS_LINUX
-TESTS = pltcheck.sh abicheck.sh
+TESTS = abicheck.sh pltcheck.sh
 endif
 
 

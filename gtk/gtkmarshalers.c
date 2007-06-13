@@ -633,7 +633,48 @@ _gtk_marshal_BOOLEAN__OBJECT_STRING_STRING (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:INT (./gtkmarshalers.list:38) */
+/* BOOLEAN:OBJECT,ENUM (./gtkmarshalers.list:38) */
+void
+_gtk_marshal_BOOLEAN__OBJECT_ENUM (GClosure     *closure,
+                                   GValue       *return_value,
+                                   guint         n_param_values,
+                                   const GValue *param_values,
+                                   gpointer      invocation_hint,
+                                   gpointer      marshal_data)
+{
+  typedef gboolean (*GMarshalFunc_BOOLEAN__OBJECT_ENUM) (gpointer     data1,
+                                                         gpointer     arg_1,
+                                                         gint         arg_2,
+                                                         gpointer     data2);
+  register GMarshalFunc_BOOLEAN__OBJECT_ENUM callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+  gboolean v_return;
+
+  g_return_if_fail (return_value != NULL);
+  g_return_if_fail (n_param_values == 3);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_BOOLEAN__OBJECT_ENUM) (marshal_data ? marshal_data : cc->callback);
+
+  v_return = callback (data1,
+                       g_marshal_value_peek_object (param_values + 1),
+                       g_marshal_value_peek_enum (param_values + 2),
+                       data2);
+
+  g_value_set_boolean (return_value, v_return);
+}
+
+/* BOOLEAN:INT (./gtkmarshalers.list:39) */
 void
 _gtk_marshal_BOOLEAN__INT (GClosure     *closure,
                            GValue       *return_value,
@@ -672,7 +713,7 @@ _gtk_marshal_BOOLEAN__INT (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:INT,INT (./gtkmarshalers.list:39) */
+/* BOOLEAN:INT,INT (./gtkmarshalers.list:40) */
 void
 _gtk_marshal_BOOLEAN__INT_INT (GClosure     *closure,
                                GValue       *return_value,
@@ -713,7 +754,7 @@ _gtk_marshal_BOOLEAN__INT_INT (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:INT,INT,INT (./gtkmarshalers.list:40) */
+/* BOOLEAN:INT,INT,INT (./gtkmarshalers.list:41) */
 void
 _gtk_marshal_BOOLEAN__INT_INT_INT (GClosure     *closure,
                                    GValue       *return_value,
@@ -756,7 +797,52 @@ _gtk_marshal_BOOLEAN__INT_INT_INT (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:UINT (./gtkmarshalers.list:41) */
+/* BOOLEAN:INT,INT,BOOLEAN,OBJECT (./gtkmarshalers.list:42) */
+void
+_gtk_marshal_BOOLEAN__INT_INT_BOOLEAN_OBJECT (GClosure     *closure,
+                                              GValue       *return_value,
+                                              guint         n_param_values,
+                                              const GValue *param_values,
+                                              gpointer      invocation_hint,
+                                              gpointer      marshal_data)
+{
+  typedef gboolean (*GMarshalFunc_BOOLEAN__INT_INT_BOOLEAN_OBJECT) (gpointer     data1,
+                                                                    gint         arg_1,
+                                                                    gint         arg_2,
+                                                                    gboolean     arg_3,
+                                                                    gpointer     arg_4,
+                                                                    gpointer     data2);
+  register GMarshalFunc_BOOLEAN__INT_INT_BOOLEAN_OBJECT callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+  gboolean v_return;
+
+  g_return_if_fail (return_value != NULL);
+  g_return_if_fail (n_param_values == 5);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_BOOLEAN__INT_INT_BOOLEAN_OBJECT) (marshal_data ? marshal_data : cc->callback);
+
+  v_return = callback (data1,
+                       g_marshal_value_peek_int (param_values + 1),
+                       g_marshal_value_peek_int (param_values + 2),
+                       g_marshal_value_peek_boolean (param_values + 3),
+                       g_marshal_value_peek_object (param_values + 4),
+                       data2);
+
+  g_value_set_boolean (return_value, v_return);
+}
+
+/* BOOLEAN:UINT (./gtkmarshalers.list:43) */
 void
 _gtk_marshal_BOOLEAN__UINT (GClosure     *closure,
                             GValue       *return_value,
@@ -795,7 +881,7 @@ _gtk_marshal_BOOLEAN__UINT (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:VOID (./gtkmarshalers.list:42) */
+/* BOOLEAN:VOID (./gtkmarshalers.list:44) */
 void
 _gtk_marshal_BOOLEAN__VOID (GClosure     *closure,
                             GValue       *return_value,
@@ -832,7 +918,7 @@ _gtk_marshal_BOOLEAN__VOID (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:BOOLEAN (./gtkmarshalers.list:43) */
+/* BOOLEAN:BOOLEAN (./gtkmarshalers.list:45) */
 void
 _gtk_marshal_BOOLEAN__BOOLEAN (GClosure     *closure,
                                GValue       *return_value,
@@ -871,9 +957,9 @@ _gtk_marshal_BOOLEAN__BOOLEAN (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:NONE (./gtkmarshalers.list:44) */
+/* BOOLEAN:NONE (./gtkmarshalers.list:46) */
 
-/* BOOLEAN:BOOLEAN,BOOLEAN,BOOLEAN (./gtkmarshalers.list:45) */
+/* BOOLEAN:BOOLEAN,BOOLEAN,BOOLEAN (./gtkmarshalers.list:47) */
 void
 _gtk_marshal_BOOLEAN__BOOLEAN_BOOLEAN_BOOLEAN (GClosure     *closure,
                                                GValue       *return_value,
@@ -916,7 +1002,7 @@ _gtk_marshal_BOOLEAN__BOOLEAN_BOOLEAN_BOOLEAN (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:STRING (./gtkmarshalers.list:46) */
+/* BOOLEAN:STRING (./gtkmarshalers.list:48) */
 void
 _gtk_marshal_BOOLEAN__STRING (GClosure     *closure,
                               GValue       *return_value,
@@ -955,7 +1041,7 @@ _gtk_marshal_BOOLEAN__STRING (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* ENUM:ENUM (./gtkmarshalers.list:47) */
+/* ENUM:ENUM (./gtkmarshalers.list:49) */
 void
 _gtk_marshal_ENUM__ENUM (GClosure     *closure,
                          GValue       *return_value,
@@ -994,7 +1080,7 @@ _gtk_marshal_ENUM__ENUM (GClosure     *closure,
   g_value_set_enum (return_value, v_return);
 }
 
-/* ENUM:VOID (./gtkmarshalers.list:48) */
+/* ENUM:VOID (./gtkmarshalers.list:50) */
 void
 _gtk_marshal_ENUM__VOID (GClosure     *closure,
                          GValue       *return_value,
@@ -1031,7 +1117,7 @@ _gtk_marshal_ENUM__VOID (GClosure     *closure,
   g_value_set_enum (return_value, v_return);
 }
 
-/* INT:POINTER (./gtkmarshalers.list:49) */
+/* INT:POINTER (./gtkmarshalers.list:51) */
 void
 _gtk_marshal_INT__POINTER (GClosure     *closure,
                            GValue       *return_value,
@@ -1070,13 +1156,13 @@ _gtk_marshal_INT__POINTER (GClosure     *closure,
   g_value_set_int (return_value, v_return);
 }
 
-/* NONE:BOOLEAN (./gtkmarshalers.list:50) */
+/* NONE:BOOLEAN (./gtkmarshalers.list:52) */
 
-/* NONE:ENUM (./gtkmarshalers.list:51) */
+/* NONE:ENUM (./gtkmarshalers.list:53) */
 
-/* NONE:INT (./gtkmarshalers.list:52) */
+/* NONE:INT (./gtkmarshalers.list:54) */
 
-/* NONE:INT,BOOL (./gtkmarshalers.list:53) */
+/* NONE:INT,BOOL (./gtkmarshalers.list:55) */
 void
 _gtk_marshal_VOID__INT_BOOLEAN (GClosure     *closure,
                                 GValue       *return_value,
@@ -1113,7 +1199,7 @@ _gtk_marshal_VOID__INT_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* NONE:INT,INT (./gtkmarshalers.list:54) */
+/* NONE:INT,INT (./gtkmarshalers.list:56) */
 void
 _gtk_marshal_VOID__INT_INT (GClosure     *closure,
                             GValue       *return_value,
@@ -1150,9 +1236,9 @@ _gtk_marshal_VOID__INT_INT (GClosure     *closure,
             data2);
 }
 
-/* NONE:NONE (./gtkmarshalers.list:55) */
+/* NONE:NONE (./gtkmarshalers.list:57) */
 
-/* NONE:STRING,INT,POINTER (./gtkmarshalers.list:56) */
+/* NONE:STRING,INT,POINTER (./gtkmarshalers.list:58) */
 void
 _gtk_marshal_VOID__STRING_INT_POINTER (GClosure     *closure,
                                        GValue       *return_value,
@@ -1191,7 +1277,7 @@ _gtk_marshal_VOID__STRING_INT_POINTER (GClosure     *closure,
             data2);
 }
 
-/* OBJECT:VOID (./gtkmarshalers.list:57) */
+/* OBJECT:VOID (./gtkmarshalers.list:59) */
 void
 _gtk_marshal_OBJECT__VOID (GClosure     *closure,
                            GValue       *return_value,
@@ -1228,7 +1314,7 @@ _gtk_marshal_OBJECT__VOID (GClosure     *closure,
   g_value_take_object (return_value, v_return);
 }
 
-/* STRING:DOUBLE (./gtkmarshalers.list:58) */
+/* STRING:DOUBLE (./gtkmarshalers.list:60) */
 void
 _gtk_marshal_STRING__DOUBLE (GClosure     *closure,
                              GValue       *return_value,
@@ -1267,11 +1353,11 @@ _gtk_marshal_STRING__DOUBLE (GClosure     *closure,
   g_value_take_string (return_value, v_return);
 }
 
-/* VOID:DOUBLE (./gtkmarshalers.list:59) */
+/* VOID:DOUBLE (./gtkmarshalers.list:61) */
 
-/* VOID:BOOLEAN (./gtkmarshalers.list:60) */
+/* VOID:BOOLEAN (./gtkmarshalers.list:62) */
 
-/* VOID:BOOLEAN,BOOLEAN,BOOLEAN (./gtkmarshalers.list:61) */
+/* VOID:BOOLEAN,BOOLEAN,BOOLEAN (./gtkmarshalers.list:63) */
 void
 _gtk_marshal_VOID__BOOLEAN_BOOLEAN_BOOLEAN (GClosure     *closure,
                                             GValue       *return_value,
@@ -1310,9 +1396,9 @@ _gtk_marshal_VOID__BOOLEAN_BOOLEAN_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* VOID:BOXED (./gtkmarshalers.list:62) */
+/* VOID:BOXED (./gtkmarshalers.list:64) */
 
-/* VOID:BOXED,BOXED (./gtkmarshalers.list:63) */
+/* VOID:BOXED,BOXED (./gtkmarshalers.list:65) */
 void
 _gtk_marshal_VOID__BOXED_BOXED (GClosure     *closure,
                                 GValue       *return_value,
@@ -1349,7 +1435,7 @@ _gtk_marshal_VOID__BOXED_BOXED (GClosure     *closure,
             data2);
 }
 
-/* VOID:BOXED,BOXED,POINTER (./gtkmarshalers.list:64) */
+/* VOID:BOXED,BOXED,POINTER (./gtkmarshalers.list:66) */
 void
 _gtk_marshal_VOID__BOXED_BOXED_POINTER (GClosure     *closure,
                                         GValue       *return_value,
@@ -1388,7 +1474,7 @@ _gtk_marshal_VOID__BOXED_BOXED_POINTER (GClosure     *closure,
             data2);
 }
 
-/* VOID:BOXED,OBJECT (./gtkmarshalers.list:65) */
+/* VOID:BOXED,OBJECT (./gtkmarshalers.list:67) */
 void
 _gtk_marshal_VOID__BOXED_OBJECT (GClosure     *closure,
                                  GValue       *return_value,
@@ -1425,7 +1511,7 @@ _gtk_marshal_VOID__BOXED_OBJECT (GClosure     *closure,
             data2);
 }
 
-/* VOID:BOXED,STRING,INT (./gtkmarshalers.list:66) */
+/* VOID:BOXED,STRING,INT (./gtkmarshalers.list:68) */
 void
 _gtk_marshal_VOID__BOXED_STRING_INT (GClosure     *closure,
                                      GValue       *return_value,
@@ -1464,7 +1550,7 @@ _gtk_marshal_VOID__BOXED_STRING_INT (GClosure     *closure,
             data2);
 }
 
-/* VOID:BOXED,UINT (./gtkmarshalers.list:67) */
+/* VOID:BOXED,UINT (./gtkmarshalers.list:69) */
 void
 _gtk_marshal_VOID__BOXED_UINT (GClosure     *closure,
                                GValue       *return_value,
@@ -1501,7 +1587,7 @@ _gtk_marshal_VOID__BOXED_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:BOXED,UINT,FLAGS (./gtkmarshalers.list:68) */
+/* VOID:BOXED,UINT,FLAGS (./gtkmarshalers.list:70) */
 void
 _gtk_marshal_VOID__BOXED_UINT_FLAGS (GClosure     *closure,
                                      GValue       *return_value,
@@ -1540,7 +1626,7 @@ _gtk_marshal_VOID__BOXED_UINT_FLAGS (GClosure     *closure,
             data2);
 }
 
-/* VOID:BOXED,UINT,UINT (./gtkmarshalers.list:69) */
+/* VOID:BOXED,UINT,UINT (./gtkmarshalers.list:71) */
 void
 _gtk_marshal_VOID__BOXED_UINT_UINT (GClosure     *closure,
                                     GValue       *return_value,
@@ -1579,9 +1665,9 @@ _gtk_marshal_VOID__BOXED_UINT_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:ENUM (./gtkmarshalers.list:70) */
+/* VOID:ENUM (./gtkmarshalers.list:72) */
 
-/* VOID:ENUM,BOOLEAN (./gtkmarshalers.list:71) */
+/* VOID:ENUM,BOOLEAN (./gtkmarshalers.list:73) */
 void
 _gtk_marshal_VOID__ENUM_BOOLEAN (GClosure     *closure,
                                  GValue       *return_value,
@@ -1618,7 +1704,7 @@ _gtk_marshal_VOID__ENUM_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* VOID:ENUM,ENUM (./gtkmarshalers.list:72) */
+/* VOID:ENUM,ENUM (./gtkmarshalers.list:74) */
 void
 _gtk_marshal_VOID__ENUM_ENUM (GClosure     *closure,
                               GValue       *return_value,
@@ -1655,7 +1741,7 @@ _gtk_marshal_VOID__ENUM_ENUM (GClosure     *closure,
             data2);
 }
 
-/* VOID:ENUM,FLOAT (./gtkmarshalers.list:73) */
+/* VOID:ENUM,FLOAT (./gtkmarshalers.list:75) */
 void
 _gtk_marshal_VOID__ENUM_FLOAT (GClosure     *closure,
                                GValue       *return_value,
@@ -1692,7 +1778,7 @@ _gtk_marshal_VOID__ENUM_FLOAT (GClosure     *closure,
             data2);
 }
 
-/* VOID:ENUM,FLOAT,BOOLEAN (./gtkmarshalers.list:74) */
+/* VOID:ENUM,FLOAT,BOOLEAN (./gtkmarshalers.list:76) */
 void
 _gtk_marshal_VOID__ENUM_FLOAT_BOOLEAN (GClosure     *closure,
                                        GValue       *return_value,
@@ -1731,7 +1817,7 @@ _gtk_marshal_VOID__ENUM_FLOAT_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* VOID:ENUM,INT (./gtkmarshalers.list:75) */
+/* VOID:ENUM,INT (./gtkmarshalers.list:77) */
 void
 _gtk_marshal_VOID__ENUM_INT (GClosure     *closure,
                              GValue       *return_value,
@@ -1768,7 +1854,7 @@ _gtk_marshal_VOID__ENUM_INT (GClosure     *closure,
             data2);
 }
 
-/* VOID:ENUM,INT,BOOLEAN (./gtkmarshalers.list:76) */
+/* VOID:ENUM,INT,BOOLEAN (./gtkmarshalers.list:78) */
 void
 _gtk_marshal_VOID__ENUM_INT_BOOLEAN (GClosure     *closure,
                                      GValue       *return_value,
@@ -1807,11 +1893,11 @@ _gtk_marshal_VOID__ENUM_INT_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* VOID:INT (./gtkmarshalers.list:77) */
+/* VOID:INT (./gtkmarshalers.list:79) */
 
-/* VOID:INT,INT (./gtkmarshalers.list:78) */
+/* VOID:INT,INT (./gtkmarshalers.list:80) */
 
-/* VOID:INT,INT,BOXED (./gtkmarshalers.list:79) */
+/* VOID:INT,INT,BOXED (./gtkmarshalers.list:81) */
 void
 _gtk_marshal_VOID__INT_INT_BOXED (GClosure     *closure,
                                   GValue       *return_value,
@@ -1850,7 +1936,7 @@ _gtk_marshal_VOID__INT_INT_BOXED (GClosure     *closure,
             data2);
 }
 
-/* VOID:INT,INT,INT (./gtkmarshalers.list:80) */
+/* VOID:INT,INT,INT (./gtkmarshalers.list:82) */
 void
 _gtk_marshal_VOID__INT_INT_INT (GClosure     *closure,
                                 GValue       *return_value,
@@ -1889,9 +1975,9 @@ _gtk_marshal_VOID__INT_INT_INT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT (./gtkmarshalers.list:81) */
+/* VOID:OBJECT (./gtkmarshalers.list:83) */
 
-/* VOID:OBJECT,BOOLEAN (./gtkmarshalers.list:82) */
+/* VOID:OBJECT,BOOLEAN (./gtkmarshalers.list:84) */
 void
 _gtk_marshal_VOID__OBJECT_BOOLEAN (GClosure     *closure,
                                    GValue       *return_value,
@@ -1928,7 +2014,7 @@ _gtk_marshal_VOID__OBJECT_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,BOXED,BOXED (./gtkmarshalers.list:83) */
+/* VOID:OBJECT,BOXED,BOXED (./gtkmarshalers.list:85) */
 void
 _gtk_marshal_VOID__OBJECT_BOXED_BOXED (GClosure     *closure,
                                        GValue       *return_value,
@@ -1967,7 +2053,7 @@ _gtk_marshal_VOID__OBJECT_BOXED_BOXED (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,BOXED,UINT,UINT (./gtkmarshalers.list:84) */
+/* VOID:OBJECT,BOXED,UINT,UINT (./gtkmarshalers.list:86) */
 void
 _gtk_marshal_VOID__OBJECT_BOXED_UINT_UINT (GClosure     *closure,
                                            GValue       *return_value,
@@ -2008,7 +2094,7 @@ _gtk_marshal_VOID__OBJECT_BOXED_UINT_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,INT (./gtkmarshalers.list:85) */
+/* VOID:OBJECT,INT (./gtkmarshalers.list:87) */
 void
 _gtk_marshal_VOID__OBJECT_INT (GClosure     *closure,
                                GValue       *return_value,
@@ -2045,7 +2131,7 @@ _gtk_marshal_VOID__OBJECT_INT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,INT,OBJECT (./gtkmarshalers.list:86) */
+/* VOID:OBJECT,INT,OBJECT (./gtkmarshalers.list:88) */
 void
 _gtk_marshal_VOID__OBJECT_INT_OBJECT (GClosure     *closure,
                                       GValue       *return_value,
@@ -2084,7 +2170,7 @@ _gtk_marshal_VOID__OBJECT_INT_OBJECT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,INT,INT (./gtkmarshalers.list:87) */
+/* VOID:OBJECT,INT,INT (./gtkmarshalers.list:89) */
 void
 _gtk_marshal_VOID__OBJECT_INT_INT (GClosure     *closure,
                                    GValue       *return_value,
@@ -2123,7 +2209,7 @@ _gtk_marshal_VOID__OBJECT_INT_INT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,INT,INT,BOXED,UINT,UINT (./gtkmarshalers.list:88) */
+/* VOID:OBJECT,INT,INT,BOXED,UINT,UINT (./gtkmarshalers.list:90) */
 void
 _gtk_marshal_VOID__OBJECT_INT_INT_BOXED_UINT_UINT (GClosure     *closure,
                                                    GValue       *return_value,
@@ -2168,7 +2254,7 @@ _gtk_marshal_VOID__OBJECT_INT_INT_BOXED_UINT_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,OBJECT (./gtkmarshalers.list:89) */
+/* VOID:OBJECT,OBJECT (./gtkmarshalers.list:91) */
 void
 _gtk_marshal_VOID__OBJECT_OBJECT (GClosure     *closure,
                                   GValue       *return_value,
@@ -2205,7 +2291,7 @@ _gtk_marshal_VOID__OBJECT_OBJECT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,STRING (./gtkmarshalers.list:90) */
+/* VOID:OBJECT,STRING (./gtkmarshalers.list:92) */
 void
 _gtk_marshal_VOID__OBJECT_STRING (GClosure     *closure,
                                   GValue       *return_value,
@@ -2242,7 +2328,7 @@ _gtk_marshal_VOID__OBJECT_STRING (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,STRING,STRING (./gtkmarshalers.list:91) */
+/* VOID:OBJECT,STRING,STRING (./gtkmarshalers.list:93) */
 void
 _gtk_marshal_VOID__OBJECT_STRING_STRING (GClosure     *closure,
                                          GValue       *return_value,
@@ -2281,7 +2367,7 @@ _gtk_marshal_VOID__OBJECT_STRING_STRING (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,UINT (./gtkmarshalers.list:92) */
+/* VOID:OBJECT,UINT (./gtkmarshalers.list:94) */
 void
 _gtk_marshal_VOID__OBJECT_UINT (GClosure     *closure,
                                 GValue       *return_value,
@@ -2318,7 +2404,7 @@ _gtk_marshal_VOID__OBJECT_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,UINT,FLAGS (./gtkmarshalers.list:93) */
+/* VOID:OBJECT,UINT,FLAGS (./gtkmarshalers.list:95) */
 void
 _gtk_marshal_VOID__OBJECT_UINT_FLAGS (GClosure     *closure,
                                       GValue       *return_value,
@@ -2357,11 +2443,11 @@ _gtk_marshal_VOID__OBJECT_UINT_FLAGS (GClosure     *closure,
             data2);
 }
 
-/* VOID:OBJECT,STRING (./gtkmarshalers.list:94) */
+/* VOID:OBJECT,STRING (./gtkmarshalers.list:96) */
 
-/* VOID:POINTER (./gtkmarshalers.list:95) */
+/* VOID:POINTER (./gtkmarshalers.list:97) */
 
-/* VOID:POINTER,INT (./gtkmarshalers.list:96) */
+/* VOID:POINTER,INT (./gtkmarshalers.list:98) */
 void
 _gtk_marshal_VOID__POINTER_INT (GClosure     *closure,
                                 GValue       *return_value,
@@ -2398,7 +2484,7 @@ _gtk_marshal_VOID__POINTER_INT (GClosure     *closure,
             data2);
 }
 
-/* VOID:POINTER,BOOLEAN (./gtkmarshalers.list:97) */
+/* VOID:POINTER,BOOLEAN (./gtkmarshalers.list:99) */
 void
 _gtk_marshal_VOID__POINTER_BOOLEAN (GClosure     *closure,
                                     GValue       *return_value,
@@ -2435,7 +2521,7 @@ _gtk_marshal_VOID__POINTER_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* VOID:POINTER,POINTER,BOOLEAN (./gtkmarshalers.list:98) */
+/* VOID:POINTER,POINTER,BOOLEAN (./gtkmarshalers.list:100) */
 void
 _gtk_marshal_VOID__POINTER_POINTER_BOOLEAN (GClosure     *closure,
                                             GValue       *return_value,
@@ -2474,7 +2560,7 @@ _gtk_marshal_VOID__POINTER_POINTER_BOOLEAN (GClosure     *closure,
             data2);
 }
 
-/* VOID:POINTER,POINTER,POINTER (./gtkmarshalers.list:99) */
+/* VOID:POINTER,POINTER,POINTER (./gtkmarshalers.list:101) */
 void
 _gtk_marshal_VOID__POINTER_POINTER_POINTER (GClosure     *closure,
                                             GValue       *return_value,
@@ -2513,7 +2599,7 @@ _gtk_marshal_VOID__POINTER_POINTER_POINTER (GClosure     *closure,
             data2);
 }
 
-/* VOID:POINTER,UINT (./gtkmarshalers.list:100) */
+/* VOID:POINTER,UINT (./gtkmarshalers.list:102) */
 void
 _gtk_marshal_VOID__POINTER_UINT (GClosure     *closure,
                                  GValue       *return_value,
@@ -2550,9 +2636,9 @@ _gtk_marshal_VOID__POINTER_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:STRING (./gtkmarshalers.list:101) */
+/* VOID:STRING (./gtkmarshalers.list:103) */
 
-/* VOID:STRING,STRING (./gtkmarshalers.list:102) */
+/* VOID:STRING,STRING (./gtkmarshalers.list:104) */
 void
 _gtk_marshal_VOID__STRING_STRING (GClosure     *closure,
                                   GValue       *return_value,
@@ -2589,9 +2675,9 @@ _gtk_marshal_VOID__STRING_STRING (GClosure     *closure,
             data2);
 }
 
-/* VOID:STRING,INT,POINTER (./gtkmarshalers.list:103) */
+/* VOID:STRING,INT,POINTER (./gtkmarshalers.list:105) */
 
-/* VOID:STRING,UINT,FLAGS (./gtkmarshalers.list:104) */
+/* VOID:STRING,UINT,FLAGS (./gtkmarshalers.list:106) */
 void
 _gtk_marshal_VOID__STRING_UINT_FLAGS (GClosure     *closure,
                                       GValue       *return_value,
@@ -2630,7 +2716,7 @@ _gtk_marshal_VOID__STRING_UINT_FLAGS (GClosure     *closure,
             data2);
 }
 
-/* VOID:STRING,UINT,FLAGS,UINT (./gtkmarshalers.list:105) */
+/* VOID:STRING,UINT,FLAGS,UINT (./gtkmarshalers.list:107) */
 void
 _gtk_marshal_VOID__STRING_UINT_FLAGS_UINT (GClosure     *closure,
                                            GValue       *return_value,
@@ -2671,7 +2757,7 @@ _gtk_marshal_VOID__STRING_UINT_FLAGS_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,FLAGS,BOXED (./gtkmarshalers.list:106) */
+/* VOID:UINT,FLAGS,BOXED (./gtkmarshalers.list:108) */
 void
 _gtk_marshal_VOID__UINT_FLAGS_BOXED (GClosure     *closure,
                                      GValue       *return_value,
@@ -2710,7 +2796,7 @@ _gtk_marshal_VOID__UINT_FLAGS_BOXED (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,UINT (./gtkmarshalers.list:107) */
+/* VOID:UINT,UINT (./gtkmarshalers.list:109) */
 void
 _gtk_marshal_VOID__UINT_UINT (GClosure     *closure,
                               GValue       *return_value,
@@ -2747,7 +2833,7 @@ _gtk_marshal_VOID__UINT_UINT (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,STRING (./gtkmarshalers.list:108) */
+/* VOID:UINT,STRING (./gtkmarshalers.list:110) */
 void
 _gtk_marshal_VOID__UINT_STRING (GClosure     *closure,
                                 GValue       *return_value,
@@ -2784,7 +2870,7 @@ _gtk_marshal_VOID__UINT_STRING (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,BOXED,UINT,FLAGS,FLAGS (./gtkmarshalers.list:109) */
+/* VOID:UINT,BOXED,UINT,FLAGS,FLAGS (./gtkmarshalers.list:111) */
 void
 _gtk_marshal_VOID__UINT_BOXED_UINT_FLAGS_FLAGS (GClosure     *closure,
                                                 GValue       *return_value,
@@ -2827,7 +2913,7 @@ _gtk_marshal_VOID__UINT_BOXED_UINT_FLAGS_FLAGS (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,OBJECT,UINT,FLAGS,FLAGS (./gtkmarshalers.list:110) */
+/* VOID:UINT,OBJECT,UINT,FLAGS,FLAGS (./gtkmarshalers.list:112) */
 void
 _gtk_marshal_VOID__UINT_OBJECT_UINT_FLAGS_FLAGS (GClosure     *closure,
                                                  GValue       *return_value,
@@ -2870,5 +2956,48 @@ _gtk_marshal_VOID__UINT_OBJECT_UINT_FLAGS_FLAGS (GClosure     *closure,
             data2);
 }
 
-/* VOID:VOID (./gtkmarshalers.list:111) */
+/* VOID:VOID (./gtkmarshalers.list:113) */
+
+/* OBJECT:OBJECT,INT,INT (./gtkmarshalers.list:114) */
+void
+_gtk_marshal_OBJECT__OBJECT_INT_INT (GClosure     *closure,
+                                     GValue       *return_value,
+                                     guint         n_param_values,
+                                     const GValue *param_values,
+                                     gpointer      invocation_hint,
+                                     gpointer      marshal_data)
+{
+  typedef GObject* (*GMarshalFunc_OBJECT__OBJECT_INT_INT) (gpointer     data1,
+                                                           gpointer     arg_1,
+                                                           gint         arg_2,
+                                                           gint         arg_3,
+                                                           gpointer     data2);
+  register GMarshalFunc_OBJECT__OBJECT_INT_INT callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+  GObject* v_return;
+
+  g_return_if_fail (return_value != NULL);
+  g_return_if_fail (n_param_values == 4);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_OBJECT__OBJECT_INT_INT) (marshal_data ? marshal_data : cc->callback);
+
+  v_return = callback (data1,
+                       g_marshal_value_peek_object (param_values + 1),
+                       g_marshal_value_peek_int (param_values + 2),
+                       g_marshal_value_peek_int (param_values + 3),
+                       data2);
+
+  g_value_take_object (return_value, v_return);
+}
 

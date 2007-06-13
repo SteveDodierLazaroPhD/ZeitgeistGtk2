@@ -32,6 +32,7 @@
 #include "gtkkeyhash.h"
 #include "gtkmain.h"
 #include "gtkmarshalers.h"
+#include "gtkmenu.h"
 #include "gtkmenubar.h"
 #include "gtkmenuitem.h"
 #include "gtkmenushell.h"
@@ -63,13 +64,6 @@ enum {
   PROP_0,
   PROP_TAKE_FOCUS
 };
-
-typedef void (*GtkMenuShellSignal1) (GtkObject           *object,
-				     GtkMenuDirectionType arg1,
-				     gpointer             data);
-typedef void (*GtkMenuShellSignal2) (GtkObject *object,
-				     gboolean   arg1,
-				     gpointer   data);
 
 /* Terminology:
  * 
@@ -139,7 +133,8 @@ struct _GtkMenuShellPrivate
   GtkMnemonicHash *mnemonic_hash;
   GtkKeyHash *key_hash;
 
-  gboolean take_focus;
+  guint take_focus : 1;
+  guint activated_submenu : 1;
 };
 
 static void gtk_menu_shell_set_property      (GObject           *object,
@@ -372,6 +367,7 @@ gtk_menu_shell_init (GtkMenuShell *menu_shell)
   priv->mnemonic_hash = NULL;
   priv->key_hash = NULL;
   priv->take_focus = TRUE;
+  priv->activated_submenu = FALSE;
 }
 
 static void
@@ -527,39 +523,48 @@ gtk_menu_shell_button_press (GtkWidget      *widget,
   GtkMenuShell *menu_shell;
   GtkWidget *menu_item;
 
-  g_return_val_if_fail (GTK_IS_MENU_SHELL (widget), FALSE);
-  g_return_val_if_fail (event != NULL, FALSE);
-
   if (event->type != GDK_BUTTON_PRESS)
     return FALSE;
 
   menu_shell = GTK_MENU_SHELL (widget);
 
   if (menu_shell->parent_menu_shell)
+    return gtk_widget_event (menu_shell->parent_menu_shell, (GdkEvent*) event);
+
+  menu_item = gtk_menu_shell_get_item (menu_shell, (GdkEvent *)event);
+
+  if (menu_item && _gtk_menu_item_is_selectable (menu_item) &&
+      menu_item != GTK_MENU_SHELL (menu_item->parent)->active_menu_item)
     {
-      return gtk_widget_event (menu_shell->parent_menu_shell, (GdkEvent*) event);
+      /*  select the menu item *before* activating the shell, so submenus
+       *  which might be open are closed the friendly way. If we activate
+       *  (and thus grab) this menu shell first, we might get grab_broken
+       *  events which will close the entire menu hierarchy. Selecting the
+       *  menu item also fixes up the state as if enter_notify() would
+       *  have run before (which normally selects the item).
+       */
+      if (GTK_MENU_SHELL_GET_CLASS (menu_item->parent)->submenu_placement != GTK_TOP_BOTTOM)
+        {
+          gtk_menu_shell_select_item (GTK_MENU_SHELL (menu_item->parent), menu_item);
+        }
     }
-  else if (!menu_shell->active || !menu_shell->button)
+
+  if (!menu_shell->active || !menu_shell->button)
     {
       _gtk_menu_shell_activate (menu_shell);
-      
+
       menu_shell->button = event->button;
 
-      menu_item = gtk_menu_shell_get_item (menu_shell, (GdkEvent *)event);
-
-      if (menu_item && _gtk_menu_item_is_selectable (menu_item))
-	{
-	  if ((menu_item->parent == widget) &&
-	      (menu_item != menu_shell->active_menu_item))
-	    {
-	      if (GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement == GTK_TOP_BOTTOM)
-		{
-		  menu_shell->activate_time = event->time;
-		}
-      
-	      gtk_menu_shell_select_item (menu_shell, menu_item);
-	    }
-	}
+      if (menu_item && _gtk_menu_item_is_selectable (menu_item) &&
+	  menu_item->parent == widget &&
+          menu_item != menu_shell->active_menu_item)
+        {
+          if (GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement == GTK_TOP_BOTTOM)
+            {
+              menu_shell->activate_time = event->time;
+              gtk_menu_shell_select_item (menu_shell, menu_item);
+            }
+        }
     }
   else
     {
@@ -569,6 +574,18 @@ gtk_menu_shell_button_press (GtkWidget      *widget,
 	  gtk_menu_shell_deactivate (menu_shell);
 	  g_signal_emit (menu_shell, menu_shell_signals[SELECTION_DONE], 0);
 	}
+    }
+
+  if (menu_item && _gtk_menu_item_is_selectable (menu_item) &&
+      GTK_MENU_ITEM (menu_item)->submenu != NULL &&
+      !GTK_WIDGET_VISIBLE (GTK_MENU_ITEM (menu_item)->submenu))
+    {
+      GtkMenuShellPrivate *priv;
+
+      _gtk_menu_item_popup_submenu (menu_item, FALSE);
+
+      priv = GTK_MENU_SHELL_GET_PRIVATE (menu_item->parent);
+      priv->activated_submenu = TRUE;
     }
 
   return TRUE;
@@ -598,16 +615,14 @@ static gint
 gtk_menu_shell_button_release (GtkWidget      *widget,
 			       GdkEventButton *event)
 {
-  GtkMenuShell *menu_shell;
-  GtkWidget *menu_item;
-  gint deactivate;
+  GtkMenuShell *menu_shell = GTK_MENU_SHELL (widget);
+  GtkMenuShellPrivate *priv = GTK_MENU_SHELL_GET_PRIVATE (widget);
 
-  g_return_val_if_fail (GTK_IS_MENU_SHELL (widget), FALSE);
-  g_return_val_if_fail (event != NULL, FALSE);
-
-  menu_shell = GTK_MENU_SHELL (widget);
   if (menu_shell->active)
     {
+      GtkWidget *menu_item;
+      gboolean   deactivate = TRUE;
+
       if (menu_shell->button && (event->button != menu_shell->button))
 	{
 	  menu_shell->button = 0;
@@ -618,63 +633,108 @@ gtk_menu_shell_button_release (GtkWidget      *widget,
       menu_shell->button = 0;
       menu_item = gtk_menu_shell_get_item (menu_shell, (GdkEvent*) event);
 
-      deactivate = TRUE;
-
       if ((event->time - menu_shell->activate_time) > MENU_SHELL_TIMEOUT)
-	{
-	  if (menu_item && (menu_shell->active_menu_item == menu_item) &&
-	      _gtk_menu_item_is_selectable (menu_item))
-	    {
-	      if (GTK_MENU_ITEM (menu_item)->submenu == NULL)
-		{
-		  gtk_menu_shell_activate_item (menu_shell, menu_item, TRUE);
-		  return TRUE;
-		}
-	      else if (GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement != GTK_TOP_BOTTOM)
-		{
-		  gtk_menu_item_select (GTK_MENU_ITEM (menu_item));
-		  return TRUE;
-		}
-	    }
-	  else if (menu_item &&
-		   !_gtk_menu_item_is_selectable (menu_item) &&
-		   GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement != GTK_TOP_BOTTOM)
-	    {
-	      deactivate = FALSE;
-	    }
-	  else if (menu_shell->parent_menu_shell)
-	    {
-	      menu_shell->active = TRUE;
-	      gtk_widget_event (menu_shell->parent_menu_shell, (GdkEvent*) event);
-	      return TRUE;
-	    }
+        {
+          if (menu_item && (menu_shell->active_menu_item == menu_item) &&
+              _gtk_menu_item_is_selectable (menu_item))
+            {
+              GtkWidget *submenu = GTK_MENU_ITEM (menu_item)->submenu;
 
-	  /* If we ended up on an item with a submenu, leave the menu up.
-	   */
-	  if (menu_item && (menu_shell->active_menu_item == menu_item) &&
-	      GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement != GTK_TOP_BOTTOM)
-	    {
-	      deactivate = FALSE;
-	    }
-	}
+              if (submenu == NULL)
+                {
+                  gtk_menu_shell_activate_item (menu_shell, menu_item, TRUE);
+
+                  deactivate = FALSE;
+                }
+              else if (GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement != GTK_TOP_BOTTOM ||
+                       priv->activated_submenu)
+                {
+                  gint popdown_delay;
+                  GTimeVal *popup_time;
+                  gint64 usec_since_popup = 0;
+
+                  g_object_get (gtk_widget_get_settings (widget),
+                                "gtk-menu-popdown-delay", &popdown_delay,
+                                NULL);
+
+                  popup_time = g_object_get_data (G_OBJECT (submenu),
+                                                  "gtk-menu-exact-popup-time");
+
+                  if (popup_time)
+                    {
+                      GTimeVal current_time;
+
+                      g_get_current_time (&current_time);
+
+                      usec_since_popup = ((gint64) current_time.tv_sec * 1000 * 1000 +
+                                          (gint64) current_time.tv_usec -
+                                          (gint64) popup_time->tv_sec * 1000 * 1000 -
+                                          (gint64) popup_time->tv_usec);
+
+                      g_object_set_data (G_OBJECT (submenu),
+                                         "gtk-menu-exact-popup-time", NULL);
+                    }
+
+                  /*  only close the submenu on click if we opened the
+                   *  menu explicitely (usec_since_popup == 0) or
+                   *  enough time has passed since it was opened by
+                   *  GtkMenuItem's timeout (usec_since_popup > delay).
+                   */
+                  if (!priv->activated_submenu &&
+                      (usec_since_popup == 0 ||
+                       usec_since_popup > popdown_delay * 1000))
+                    {
+                      _gtk_menu_item_popdown_submenu (menu_item);
+                    }
+                  else
+                    {
+                      gtk_menu_item_select (GTK_MENU_ITEM (menu_item));
+                    }
+
+                  deactivate = FALSE;
+                }
+            }
+          else if (menu_item &&
+                   !_gtk_menu_item_is_selectable (menu_item) &&
+                   GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement != GTK_TOP_BOTTOM)
+            {
+              deactivate = FALSE;
+            }
+          else if (menu_shell->parent_menu_shell)
+            {
+              menu_shell->active = TRUE;
+              gtk_widget_event (menu_shell->parent_menu_shell, (GdkEvent*) event);
+              deactivate = FALSE;
+            }
+
+          /* If we ended up on an item with a submenu, leave the menu up.
+           */
+          if (menu_item && (menu_shell->active_menu_item == menu_item) &&
+              GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement != GTK_TOP_BOTTOM)
+            {
+              deactivate = FALSE;
+            }
+        }
       else /* a very fast press-release */
-	{
-	  /* We only ever want to prevent deactivation on the first
+        {
+          /* We only ever want to prevent deactivation on the first
            * press/release. Setting the time to zero is a bit of a
-	   * hack, since we could be being triggered in the first
-	   * few fractions of a second after a server time wraparound.
-	   * the chances of that happening are ~1/10^6, without
-	   * serious harm if we lose.
-	   */
-	  menu_shell->activate_time = 0;
-	  deactivate = FALSE;
-	}
-      
+           * hack, since we could be being triggered in the first
+           * few fractions of a second after a server time wraparound.
+           * the chances of that happening are ~1/10^6, without
+           * serious harm if we lose.
+           */
+          menu_shell->activate_time = 0;
+          deactivate = FALSE;
+        }
+
       if (deactivate)
-	{
-	  gtk_menu_shell_deactivate (menu_shell);
-	  g_signal_emit (menu_shell, menu_shell_signals[SELECTION_DONE], 0);
-	}
+        {
+          gtk_menu_shell_deactivate (menu_shell);
+          g_signal_emit (menu_shell, menu_shell_signals[SELECTION_DONE], 0);
+        }
+
+      priv->activated_submenu = FALSE;
     }
 
   return TRUE;
@@ -685,6 +745,7 @@ gtk_menu_shell_key_press (GtkWidget   *widget,
 			  GdkEventKey *event)
 {
   GtkMenuShell *menu_shell;
+  gboolean enable_mnemonics;
   
   g_return_val_if_fail (GTK_IS_MENU_SHELL (widget), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
@@ -697,7 +758,14 @@ gtk_menu_shell_key_press (GtkWidget   *widget,
   if (gtk_bindings_activate_event (GTK_OBJECT (widget), event))
     return TRUE;
 
-  return gtk_menu_shell_activate_mnemonic (menu_shell, event);
+  g_object_get (gtk_widget_get_settings (widget),
+		"gtk-enable-mnemonics", &enable_mnemonics,
+		NULL);
+
+  if (enable_mnemonics)
+    return gtk_menu_shell_activate_mnemonic (menu_shell, event);
+
+  return FALSE;
 }
 
 static gint
@@ -705,7 +773,6 @@ gtk_menu_shell_enter_notify (GtkWidget        *widget,
 			     GdkEventCrossing *event)
 {
   GtkMenuShell *menu_shell;
-  GtkWidget *menu_item;
 
   g_return_val_if_fail (GTK_IS_MENU_SHELL (widget), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
@@ -714,24 +781,54 @@ gtk_menu_shell_enter_notify (GtkWidget        *widget,
 
   if (menu_shell->active)
     {
+      GtkWidget *menu_item;
+
       menu_item = gtk_get_event_widget ((GdkEvent*) event);
 
       if (!menu_item ||
 	  (GTK_IS_MENU_ITEM (menu_item) && 
 	   !_gtk_menu_item_is_selectable (menu_item)))
 	return TRUE;
-      
-      if ((menu_item->parent == widget) &&
-	  (menu_shell->active_menu_item != menu_item) &&
+
+      if (menu_item->parent == widget &&
 	  GTK_IS_MENU_ITEM (menu_item))
 	{
 	  if (menu_shell->ignore_enter)
 	    return TRUE;
-	  
-	  if ((event->detail != GDK_NOTIFY_INFERIOR) &&
-	      (GTK_WIDGET_STATE (menu_item) != GTK_STATE_PRELIGHT))
-	    {
-	      gtk_menu_shell_select_item (menu_shell, menu_item);
+
+	  if (event->detail != GDK_NOTIFY_INFERIOR)
+            {
+	      if (GTK_WIDGET_STATE (menu_item) != GTK_STATE_PRELIGHT)
+                gtk_menu_shell_select_item (menu_shell, menu_item);
+
+              /* If any mouse button is down, and there is a submenu
+               * that is not yet visible, activate it. It's sufficient
+               * to check for any button's mask (not only the one
+               * matching menu_shell->button), because there is no
+               * situation a mouse button could be pressed while
+               * entering a menu item where we wouldn't want to show
+               * its submenu.
+               */
+              if ((event->state & (GDK_BUTTON1_MASK | GDK_BUTTON2_MASK | GDK_BUTTON3_MASK)) &&
+                  GTK_MENU_ITEM (menu_item)->submenu != NULL)
+                {
+                  GtkMenuShellPrivate *priv;
+
+                  priv = GTK_MENU_SHELL_GET_PRIVATE (menu_item->parent);
+                  priv->activated_submenu = TRUE;
+
+                  if (!GTK_WIDGET_VISIBLE (GTK_MENU_ITEM (menu_item)->submenu))
+                    {
+                      gboolean touchscreen_mode;
+
+                      g_object_get (gtk_widget_get_settings (widget),
+                                    "gtk-touchscreen-mode", &touchscreen_mode,
+                                    NULL);
+
+                      if (touchscreen_mode)
+                        _gtk_menu_item_popup_submenu (menu_item, TRUE);
+                    }
+                }
 	    }
 	}
       else if (menu_shell->parent_menu_shell)
@@ -1044,17 +1141,27 @@ gtk_menu_shell_move_selected (GtkMenuShell  *menu_shell,
       GList *node = g_list_find (menu_shell->children,
 				 menu_shell->active_menu_item);
       GList *start_node = node;
-      
+      gboolean wrap_around;
+
+      g_object_get (gtk_widget_get_settings (GTK_WIDGET (menu_shell)),
+                    "gtk-keynav-wrap-around", &wrap_around,
+                    NULL);
+
       if (distance > 0)
 	{
 	  node = node->next;
 	  while (node != start_node && 
 		 (!node || !_gtk_menu_item_is_selectable (node->data)))
 	    {
-	      if (!node)
-		node = menu_shell->children;
-	      else
+	      if (node)
 		node = node->next;
+              else if (wrap_around)
+		node = menu_shell->children;
+              else
+                {
+                  gtk_widget_error_bell (GTK_WIDGET (menu_shell));
+                  break;
+                }
 	    }
 	}
       else
@@ -1063,10 +1170,15 @@ gtk_menu_shell_move_selected (GtkMenuShell  *menu_shell,
 	  while (node != start_node &&
 		 (!node || !_gtk_menu_item_is_selectable (node->data)))
 	    {
-	      if (!node)
-		node = g_list_last (menu_shell->children);
-	      else
+	      if (node)
 		node = node->prev;
+              else if (wrap_around)
+		node = g_list_last (menu_shell->children);
+              else
+                {
+                  gtk_widget_error_bell (GTK_WIDGET (menu_shell));
+                  break;
+                }
 	    }
 	}
       
@@ -1153,7 +1265,7 @@ gtk_menu_shell_select_submenu_first (GtkMenuShell     *menu_shell)
   
   if (menu_item->submenu)
     {
-      _gtk_menu_item_popup_submenu (GTK_WIDGET (menu_item));
+      _gtk_menu_item_popup_submenu (GTK_WIDGET (menu_item), FALSE);
       gtk_menu_shell_select_first (GTK_MENU_SHELL (menu_item->submenu), TRUE);
       if (GTK_MENU_SHELL (menu_item->submenu)->active_menu_item)
 	return TRUE;
@@ -1163,8 +1275,8 @@ gtk_menu_shell_select_submenu_first (GtkMenuShell     *menu_shell)
 }
 
 static void
-gtk_real_menu_shell_move_current (GtkMenuShell      *menu_shell,
-				  GtkMenuDirectionType direction)
+gtk_real_menu_shell_move_current (GtkMenuShell         *menu_shell,
+				  GtkMenuDirectionType  direction)
 {
   GtkMenuShell *parent_menu_shell = NULL;
   gboolean had_selection;
@@ -1179,16 +1291,29 @@ gtk_real_menu_shell_move_current (GtkMenuShell      *menu_shell,
     case GTK_MENU_DIR_PARENT:
       if (parent_menu_shell)
 	{
-	  if (GTK_MENU_SHELL_GET_CLASS (parent_menu_shell)->submenu_placement == 
-		       GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement)
+          gboolean touchscreen_mode;
+
+          g_object_get (gtk_widget_get_settings (GTK_WIDGET (menu_shell)),
+                        "gtk-touchscreen-mode", &touchscreen_mode,
+                        NULL);
+
+          if (touchscreen_mode)
+            {
+              /* close menu when returning from submenu. */
+              _gtk_menu_item_popdown_submenu (GTK_MENU (menu_shell)->parent_menu_item);
+              break;
+            }
+
+	  if (GTK_MENU_SHELL_GET_CLASS (parent_menu_shell)->submenu_placement ==
+              GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement)
 	    gtk_menu_shell_deselect (menu_shell);
-	  else 
+	  else
 	    {
 	      if (PACK_DIRECTION (parent_menu_shell) == GTK_PACK_DIRECTION_LTR)
 		gtk_menu_shell_move_selected (parent_menu_shell, -1);
 	      else
 		gtk_menu_shell_move_selected (parent_menu_shell, 1);
-	      gtk_menu_shell_select_submenu_first (parent_menu_shell); 
+	      gtk_menu_shell_select_submenu_first (parent_menu_shell);
 	    }
 	}
       /* If there is no parent and the submenu is in the opposite direction
@@ -1206,7 +1331,7 @@ gtk_real_menu_shell_move_current (GtkMenuShell      *menu_shell,
 	    _gtk_menu_shell_select_last (submenu, TRUE);
 	}
       break;
-      
+
     case GTK_MENU_DIR_CHILD:
       if (menu_shell->active_menu_item &&
 	  _gtk_menu_item_is_selectable (menu_shell->active_menu_item) &&
@@ -1217,18 +1342,13 @@ gtk_real_menu_shell_move_current (GtkMenuShell      *menu_shell,
 	}
 
       /* Try to find a menu running the opposite direction */
-      while (parent_menu_shell && 
+      while (parent_menu_shell &&
 	     (GTK_MENU_SHELL_GET_CLASS (parent_menu_shell)->submenu_placement ==
 	      GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement))
 	{
-	  GtkWidget *tmp_widget = parent_menu_shell->parent_menu_shell;
-	  
-	  if (tmp_widget)
-	    parent_menu_shell = GTK_MENU_SHELL (tmp_widget);
-	  else
-	    parent_menu_shell = NULL;
+	  parent_menu_shell = GTK_MENU_SHELL (parent_menu_shell->parent_menu_shell);
 	}
-      
+
       if (parent_menu_shell)
 	{
 	  if (PACK_DIRECTION (parent_menu_shell) == GTK_PACK_DIRECTION_LTR)
@@ -1239,7 +1359,7 @@ gtk_real_menu_shell_move_current (GtkMenuShell      *menu_shell,
 	  gtk_menu_shell_select_submenu_first (parent_menu_shell);
 	}
       break;
-      
+
     case GTK_MENU_DIR_PREV:
       gtk_menu_shell_move_selected (menu_shell, -1);
       if (!had_selection &&
@@ -1247,6 +1367,7 @@ gtk_real_menu_shell_move_current (GtkMenuShell      *menu_shell,
 	  menu_shell->children)
 	_gtk_menu_shell_select_last (menu_shell, TRUE);
       break;
+
     case GTK_MENU_DIR_NEXT:
       gtk_menu_shell_move_selected (menu_shell, 1);
       if (!had_selection &&
@@ -1264,13 +1385,12 @@ gtk_real_menu_shell_activate_current (GtkMenuShell      *menu_shell,
   if (menu_shell->active_menu_item &&
       _gtk_menu_item_is_selectable (menu_shell->active_menu_item))
   {
-   
     if (GTK_MENU_ITEM (menu_shell->active_menu_item)->submenu == NULL)
       gtk_menu_shell_activate_item (menu_shell,
 				    menu_shell->active_menu_item,
 				    force_hide);
     else
-      _gtk_menu_item_popup_submenu (menu_shell->active_menu_item);
+      _gtk_menu_item_popup_submenu (menu_shell->active_menu_item, FALSE);
   }
 }
 

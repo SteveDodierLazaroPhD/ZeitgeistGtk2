@@ -27,7 +27,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-link-button-
 <link linkend="void">void</link>                <link linkend="gtk-link-button-set-uri">gtk_link_button_set_uri</link>             (<link linkend="GtkLinkButton">GtkLinkButton</link> *link_button,
                                                          const <link linkend="gchar">gchar</link> *uri);
 <link linkend="void">void</link>                (<link linkend="GtkLinkButtonUriFunc">*GtkLinkButtonUriFunc</link>)             (<link linkend="GtkLinkButton">GtkLinkButton</link> *button,
-                                                         const <link linkend="gchar">gchar</link> *link,
+                                                         const <link linkend="gchar">gchar</link> *link_,
                                                          <link linkend="gpointer">gpointer</link> user_data);
 <link linkend="GtkLinkButtonUriFunc">GtkLinkButtonUriFunc</link> <link linkend="gtk-link-button-set-uri-hook">gtk_link_button_set_uri_hook</link>       (<link linkend="GtkLinkButtonUriFunc">GtkLinkButtonUriFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data,
@@ -68,7 +68,7 @@ GtkLinkButton implements
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  &quot;<link linkend="GtkLinkButton--uri">uri</link>&quot;                      <link linkend="gchararray">gchararray</link>            : Read / Write
+  <link linkend="GtkLinkButton--uri">uri</link>                      <link linkend="gchararray">gchararray</link>            : Read / Write
 </synopsis>
 </refsect1>
 
@@ -185,7 +185,7 @@ Sets <parameter>uri</parameter> as the URI where the <link linkend="GtkLinkButto
 <refsect2>
 <title><anchor id="GtkLinkButtonUriFunc" role="function"/>GtkLinkButtonUriFunc ()</title>
 <indexterm><primary>GtkLinkButtonUriFunc</primary></indexterm><programlisting><link linkend="void">void</link>                (*GtkLinkButtonUriFunc)             (<link linkend="GtkLinkButton">GtkLinkButton</link> *button,
-                                                         const <link linkend="gchar">gchar</link> *link,
+                                                         const <link linkend="gchar">gchar</link> *link_,
                                                          <link linkend="gpointer">gpointer</link> user_data);</programlisting>
 <para>
 The type of a function which is called when the <link linkend="GtkLinkButton"><type>GtkLinkButton</type></link> is
@@ -194,11 +194,12 @@ clicked.
 <varlistentry><term><parameter>button</parameter>&nbsp;:</term>
 <listitem><simpara>the <link linkend="GtkLinkButton"><type>GtkLinkButton</type></link> which was clicked
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>link</parameter>&nbsp;:</term>
-<listitem><simpara>the URI to which the clicked <link linkend="GtkLinkButton"><type>GtkLinkButton</type></link> points
+<varlistentry><term><parameter>link_</parameter>&nbsp;:</term>
+<listitem><simpara>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>user data that was passed when the function was registered
+  with <link linkend="gtk-link-button-set-uri-hook"><function>gtk_link_button_set_uri_hook()</function></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
@@ -231,8 +232,8 @@ for the "clicked" signal.</para>
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkLinkButton--uri"/>The &quot;<literal>uri</literal>&quot; property</title>
-<indexterm role="2.10"><primary>GtkLinkButton:uri</primary></indexterm><programlisting>  &quot;uri&quot;                      <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkLinkButton--uri"/>The :<literal>uri</literal> property</title>
+<indexterm role="2.10"><primary>GtkLinkButton:uri</primary></indexterm><programlisting>  uri                      <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 The URI bound to this button.</para>
 <para>

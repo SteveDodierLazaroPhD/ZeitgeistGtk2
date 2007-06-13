@@ -43,12 +43,6 @@
 
 #include <glib/gprintf.h>
 
-#if defined (__GNUC__) && defined (HAVE_DIMM_H)
-/* The w32api imm.h clashes a bit with the IE5.5 dimm.h */
-# define IMEMENUITEMINFOA hidden_IMEMENUITEMINFOA
-# define IMEMENUITEMINFOW hidden_IMEMENUITEMINFOW
-#endif
-
 #include "gdk.h"
 #include "gdkprivate-win32.h"
 #include "gdkinput-win32.h"
@@ -64,15 +58,6 @@
 #include <objbase.h>
 
 #include <imm.h>
-
-#if defined (__GNUC__) && defined (HAVE_DIMM_H)
-# undef IMEMENUITEMINFOA
-# undef IMEMENUITEMINFOW
-#endif
-
-#ifdef HAVE_DIMM_H
-#include <dimm.h>
-#endif
 
 #ifndef XBUTTON1
 #define XBUTTON1 1
@@ -146,11 +131,6 @@ static UINT client_message;
 
 static UINT got_gdk_events_message;
 static HWND modal_win32_dialog = NULL;
-
-#ifdef HAVE_DIMM_H
-static IActiveIMMApp *active_imm_app = NULL;
-static IActiveIMMMessagePumpOwner *active_imm_msgpump_owner = NULL;
-#endif
 
 #if 0
 static HKL latin_locale = NULL;
@@ -265,9 +245,6 @@ inner_window_procedure (HWND   hwnd,
 {
   MSG msg;
   DWORD pos;
-#ifdef HAVE_DIMM_H
-  LRESULT lres;
-#endif
   gint ret_val = 0;
 
   msg.hwnd = hwnd;
@@ -285,23 +262,15 @@ inner_window_procedure (HWND   hwnd,
        * the window procedure.
        */
       if (modal_win32_dialog)
-	PostMessage (modal_win32_dialog, got_gdk_events_message,
-		     (WPARAM) 1, 0);
+	PostMessageW (modal_win32_dialog, got_gdk_events_message,
+		      (WPARAM) 1, 0);
       return ret_val;
     }
   else
     {
-      /* Otherwise call DefWindowProc(). */
-      GDK_NOTE (EVENTS, g_print (" DefWindowProc"));
-#ifndef HAVE_DIMM_H
-      return DefWindowProc (hwnd, message, wparam, lparam);
-#else
-      if (active_imm_app == NULL ||
-	  (*active_imm_app->lpVtbl->OnDefWindowProc) (active_imm_app, hwnd, message, wparam, lparam, &lres) == S_FALSE)
-	return DefWindowProc (hwnd, message, wparam, lparam);
-      else
-	return lres;
-#endif
+      /* Otherwise call DefWindowProcW(). */
+      GDK_NOTE (EVENTS, g_print (" DefWindowProcW"));
+      return DefWindowProcW (hwnd, message, wparam, lparam);
     }
 }
 
@@ -331,9 +300,6 @@ void
 _gdk_events_init (void)
 {
   GSource *source;
-#ifdef HAVE_DIMM_H
-  HRESULT hres;
-#endif
 
 #if 0
   int i, j, n;
@@ -443,26 +409,6 @@ _gdk_events_init (void)
   g_source_add_poll (source, &event_poll_fd);
   g_source_set_can_recurse (source, TRUE);
   g_source_attach (source, NULL);
-
-#ifdef HAVE_DIMM_H
-  hres = CoCreateInstance (&CLSID_CActiveIMM,
-			   NULL,
-			   CLSCTX_ALL,
-			   &IID_IActiveIMMApp,
-			   (LPVOID *) &active_imm_app);
-  
-  if (hres == S_OK)
-    {
-      GDK_NOTE (EVENTS, g_print ("IActiveIMMApp created %p\n",
-				 active_imm_app));
-      (*active_imm_app->lpVtbl->Activate) (active_imm_app, TRUE);
-      
-      hres = (*active_imm_app->lpVtbl->QueryInterface) (active_imm_app, &IID_IActiveIMMMessagePumpOwner, (void **) &active_imm_msgpump_owner);
-      GDK_NOTE (EVENTS, g_print ("IActiveIMMMessagePumpOwner created %p\n",
-				 active_imm_msgpump_owner));
-      (active_imm_msgpump_owner->lpVtbl->Start) (active_imm_msgpump_owner);
-    }
-#endif
 }
 
 gboolean
@@ -471,7 +417,7 @@ gdk_events_pending (void)
   MSG msg;
   return (_gdk_event_queue_find_first (_gdk_display) ||
 	  (modal_win32_dialog == NULL &&
-	   PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE)));
+	   PeekMessageW (&msg, NULL, 0, 0, PM_NOREMOVE)));
 }
 
 GdkEvent*
@@ -484,7 +430,7 @@ gdk_event_get_graphics_expose (GdkWindow *window)
   
   GDK_NOTE (EVENTS, g_print ("gdk_event_get_graphics_expose\n"));
 
-  if (PeekMessage (&msg, GDK_WINDOW_HWND (window), WM_PAINT, WM_PAINT, PM_REMOVE))
+  if (PeekMessageW (&msg, GDK_WINDOW_HWND (window), WM_PAINT, WM_PAINT, PM_REMOVE))
     {
       handle_wm_paint (&msg, window, TRUE, &event);
       if (event != NULL)
@@ -618,6 +564,9 @@ gdk_pointer_grab (GdkWindow    *window,
 
 	  gdk_window_get_origin (confine_to, &x, &y);
 	  gdk_drawable_get_size (confine_to, &width, &height);
+
+	  x -= _gdk_offset_x;
+	  y -= _gdk_offset_y;
 
 	  rect.left = x;
 	  rect.top = y;
@@ -901,21 +850,6 @@ build_key_event_state (GdkEvent *event,
     event->key.state |= GDK_BUTTON4_MASK;
   if (key_state[VK_XBUTTON2] & 0x80)
     event->key.state |= GDK_BUTTON5_MASK;
-
-  /* Win9x doesn't distinguish between left and right Control and Alt
-   * in the keyboard state as returned by GetKeyboardState(), so we
-   * have to punt, and accept either Control + either Alt to be AltGr.
-   *
-   * Alternatively, we could have some state saved when the Control
-   * and Alt keys messages come in, as the KF_EXTENDED bit in lParam
-   * does indicate correctly whether it is the right Control or Alt
-   * key. But that would be a bit messy.
-   */
-  if (!G_WIN32_IS_NT_BASED () &&
-      _gdk_keyboard_has_altgr &&
-      key_state[VK_CONTROL] & 0x80 &&
-      key_state[VK_MENU] & 0x80)
-    key_state[VK_LCONTROL] = key_state[VK_RMENU] = 0x80;
 
   if (_gdk_keyboard_has_altgr &&
       (key_state[VK_LCONTROL] & 0x80) &&
@@ -1847,8 +1781,6 @@ handle_configure_event (MSG       *msg,
 
       append_event (event);
     }
-
-  g_main_context_iteration (NULL, FALSE);
 }
 
 GdkRegion *
@@ -2104,7 +2036,7 @@ gdk_event_translate (MSG  *msg,
       
       /* If result is GDK_FILTER_CONTINUE, we continue as if nothing
        * happened. If it is GDK_FILTER_REMOVE or GDK_FILTER_TRANSLATE,
-       * we return TRUE, and DefWindowProc() will not be called.
+       * we return TRUE, and DefWindowProcW() will not be called.
        */
       if (result == GDK_FILTER_REMOVE || result == GDK_FILTER_TRANSLATE)
 	return TRUE;
@@ -2132,12 +2064,11 @@ gdk_event_translate (MSG  *msg,
 	   */
 	  GDK_NOTE (EVENTS, g_print (" (posted)"));
 	
-	  PostMessage (msg->hwnd, msg->message,
-		       msg->wParam, msg->lParam);
+	  PostMessageW (msg->hwnd, msg->message, msg->wParam, msg->lParam);
 	}
       else if (msg->message == WM_CREATE)
 	{
-	  window = (UNALIGNED GdkWindow*) (((LPCREATESTRUCT) msg->lParam)->lpCreateParams);
+	  window = (UNALIGNED GdkWindow*) (((LPCREATESTRUCTW) msg->lParam)->lpCreateParams);
 	  GDK_WINDOW_HWND (window) = msg->hwnd;
 	}
       else
@@ -2391,7 +2322,7 @@ gdk_event_translate (MSG  *msg,
     case WM_SYSCHAR:
       if (msg->wParam != VK_SPACE)
 	{
-	  /* To prevent beeps, don't let DefWindowProc() be called */
+	  /* To prevent beeps, don't let DefWindowProcW() be called */
 	  return_val = TRUE;
 	  goto done;
 	}
@@ -2977,7 +2908,8 @@ gdk_event_translate (MSG  *msg,
 		((GdkWindowObject *) window)->resize_count -= 1;
 	      
 	      handle_configure_event (msg, window);
-	      
+	      g_main_context_iteration (NULL, FALSE);
+
 	      /* Dispatch main loop - to realize resizes... */
 	      handle_stuff_while_moving_or_resizing ();
 	      
@@ -3247,7 +3179,7 @@ gdk_event_translate (MSG  *msg,
 
       if (impl->hint_flags & (GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE))
 	{
-	  /* Don't call DefWindowProc() */
+	  /* Don't call DefWindowProcW() */
 	  GDK_NOTE (EVENTS, g_print (" (handled, mintrack:%ldx%ld maxtrack:%ldx%ld "
 				     "maxpos:%+ld%+ld maxsize:%ldx%ld)",
 				     mmi->ptMinTrackSize.x, mmi->ptMinTrackSize.y,
@@ -3380,7 +3312,6 @@ gdk_event_translate (MSG  *msg,
 	}
       break;
 
-#ifdef HAVE_WINTAB
     case WM_ACTIVATE:
       /* Bring any tablet contexts to the top of the overlap order when
        * one of our windows is activated.
@@ -3421,7 +3352,6 @@ gdk_event_translate (MSG  *msg,
       else
 	gdk_event_free (event);
       break;
-#endif
     }
 
 done:
@@ -3442,10 +3372,10 @@ _gdk_events_queue (GdkDisplay *display)
     return;
   
   while (!_gdk_event_queue_find_first (display) &&
-	 PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
+	 PeekMessageW (&msg, NULL, 0, 0, PM_REMOVE))
     {
       TranslateMessage (&msg);
-      DispatchMessage (&msg);
+      DispatchMessageW (&msg);
     }
 }
 
@@ -3462,7 +3392,7 @@ gdk_event_prepare (GSource *source,
 
   retval = (_gdk_event_queue_find_first (_gdk_display) != NULL ||
 	    (modal_win32_dialog == NULL &&
-	     PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE)));
+	     PeekMessageW (&msg, NULL, 0, 0, PM_NOREMOVE)));
 
   GDK_THREADS_LEAVE ();
 
@@ -3480,7 +3410,7 @@ gdk_event_check (GSource *source)
   if (event_poll_fd.revents & G_IO_IN)
     retval = (_gdk_event_queue_find_first (_gdk_display) != NULL ||
 	      (modal_win32_dialog == NULL &&
-	       PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE)));
+	       PeekMessageW (&msg, NULL, 0, 0, PM_NOREMOVE)));
   else
     retval = FALSE;
 
@@ -3537,9 +3467,9 @@ gdk_event_send_client_message_for_display (GdkDisplay     *display,
 {
   check_for_too_much_data (event);
 
-  return PostMessage ((HWND) winid, client_message,
-		      (WPARAM) event->client.message_type,
-		      event->client.data.l[0]);
+  return PostMessageW ((HWND) winid, client_message,
+		       (WPARAM) event->client.message_type,
+		       event->client.data.l[0]);
 }
 
 void
@@ -3548,9 +3478,9 @@ gdk_screen_broadcast_client_message (GdkScreen *screen,
 {
   check_for_too_much_data (event);
 
-  PostMessage (HWND_BROADCAST, client_message,
+  PostMessageW (HWND_BROADCAST, client_message,
 	       (WPARAM) event->client.message_type,
-	       event->client.data.l[0]);
+		event->client.data.l[0]);
 }
 
 void
@@ -3560,10 +3490,10 @@ gdk_flush (void)
   MSG msg;
 
   /* Process all messages currently available */
-  while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
+  while (PeekMessageW (&msg, NULL, 0, 0, PM_REMOVE))
     {
       TranslateMessage (&msg);
-      DispatchMessage (&msg);
+      DispatchMessageW (&msg);
     }
 #endif
 
@@ -3578,8 +3508,8 @@ gdk_display_sync (GdkDisplay * display)
   g_return_if_fail (display == _gdk_display);
 
   /* Process all messages currently available */
-  while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
-    DispatchMessage (&msg);
+  while (PeekMessageW (&msg, NULL, 0, 0, PM_REMOVE))
+    DispatchMessageW (&msg);
 }
 
 void

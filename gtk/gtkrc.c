@@ -319,7 +319,8 @@ static const gchar symbol_names[] =
   "im_module_file\0"
   "LTR\0"
   "RTL\0"
-  "color\0";
+  "color\0"
+  "unbind\0";
 
 static const struct
 {
@@ -361,7 +362,8 @@ static const struct
   { 245, GTK_RC_TOKEN_IM_MODULE_FILE },
   { 260, GTK_RC_TOKEN_LTR },
   { 264, GTK_RC_TOKEN_RTL },
-  { 268, GTK_RC_TOKEN_COLOR }
+  { 268, GTK_RC_TOKEN_COLOR },
+  { 274, GTK_RC_TOKEN_UNBIND }
 };
 
 static GHashTable *realized_style_ht = NULL;
@@ -885,7 +887,7 @@ _gtk_rc_init (void)
                        "\n"    
 		       "class \"GtkProgressBar\" style : gtk \"gtk-default-progress-bar-style\"\n"
 		       "class \"GtkTrayIcon\" style : gtk \"gtk-default-tray-icon-style\"\n"
-		       "widget \"gtk-tooltips*\" style : gtk \"gtk-default-tooltips-style\"\n"
+		       "widget \"gtk-tooltip*\" style : gtk \"gtk-default-tooltips-style\"\n"
 		       "widget_class \"*<GtkMenuItem>*\" style : gtk \"gtk-default-menu-item-style\"\n"
 		       "widget_class \"*<GtkMenuBar>*<GtkMenuItem>\" style : gtk \"gtk-default-menu-bar-item-style\"\n"
                        "class \"GtkLabel\" style : gtk \"gtk-default-label-style\"\n"
@@ -1164,14 +1166,12 @@ gtk_rc_style_finalize (GObject *object)
   rc_style = GTK_RC_STYLE (object);
   rc_priv = GTK_RC_STYLE_GET_PRIVATE (rc_style);
 
-  if (rc_style->name)
-    g_free (rc_style->name);
+  g_free (rc_style->name);
   if (rc_style->font_desc)
     pango_font_description_free (rc_style->font_desc);
       
   for (i = 0; i < 5; i++)
-    if (rc_style->bg_pixmap_name[i])
-      g_free (rc_style->bg_pixmap_name[i]);
+    g_free (rc_style->bg_pixmap_name[i]);
   
   /* Now remove all references to this rc_style from
    * realized_style_ht
@@ -2862,7 +2862,7 @@ gtk_rc_parse_statement (GtkRcContext *context,
       return gtk_rc_parse_style (context, scanner);
       
     case GTK_RC_TOKEN_BINDING:
-      return gtk_binding_parse_binding (scanner);
+      return _gtk_binding_parse_binding (scanner);
       
     case GTK_RC_TOKEN_PIXMAP_PATH:
       return gtk_rc_parse_pixmap_path (context, scanner);
@@ -3040,8 +3040,7 @@ gtk_rc_parse_style (GtkRcContext *context,
 	  
 	  for (i = 0; i < 5; i++)
 	    {
-	      if (rc_style->bg_pixmap_name[i])
-		g_free (rc_style->bg_pixmap_name[i]);
+	      g_free (rc_style->bg_pixmap_name[i]);
 	      rc_style->bg_pixmap_name[i] = g_strdup (parent_style->bg_pixmap_name[i]);
 	    }
 	}
@@ -3396,8 +3395,7 @@ gtk_rc_parse_bg_pixmap (GtkRcContext *context,
   
   if (pixmap_file)
     {
-      if (rc_style->bg_pixmap_name[state])
-	g_free (rc_style->bg_pixmap_name[state]);
+      g_free (rc_style->bg_pixmap_name[state]);
       rc_style->bg_pixmap_name[state] = pixmap_file;
     }
   
@@ -4052,8 +4050,7 @@ gtk_rc_parse_im_module_file (GScanner *scanner)
   if (token != G_TOKEN_STRING)
     return G_TOKEN_STRING;
 
-  if (im_module_file)
-    g_free (im_module_file);
+  g_free (im_module_file);
     
   im_module_file = g_strdup (scanner->value.v_string);
 

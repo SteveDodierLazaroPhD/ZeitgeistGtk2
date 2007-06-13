@@ -87,6 +87,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gdk-display-get-
                                                          <link linkend="gint">gint</link> n_targets);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-display-supports-shapes">gdk_display_supports_shapes</link>         (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-display-supports-input-shapes">gdk_display_supports_input_shapes</link>   (<link linkend="GdkDisplay">GdkDisplay</link> *display);
+<link linkend="gboolean">gboolean</link>            <link linkend="gdk-display-supports-composite">gdk_display_supports_composite</link>      (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 
 
 </synopsis>
@@ -111,7 +112,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gdk-display-get-
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  &quot;<link linkend="GdkDisplay-closed">closed</link>&quot;                                         : Run Last
+  <link linkend="GdkDisplay-closed">closed</link>                                         : Run Last
 </synopsis>
 </refsect1>
 
@@ -454,7 +455,9 @@ queue for <parameter>display</parameter>.</para>
                                                          <link linkend="GdkFilterFunc">GdkFilterFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data);</programlisting>
 <para>
-Adds a filter to be called when X ClientMessage events are received.</para>
+Adds a filter to be called when X ClientMessage events are received.
+See <link linkend="gdk-window-add-filter"><function>gdk_window_add_filter()</function></link> if you are interested in filtering other
+types of events.</para>
 <para>
 
 </para><variablelist role="params">
@@ -910,12 +913,33 @@ be used to modify the input shape of windows on <parameter>display</parameter>.<
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
+<refsect2>
+<title><anchor id="gdk-display-supports-composite" role="function" condition="since:2.12"/>gdk_display_supports_composite ()</title>
+<indexterm role="2.12"><primary>gdk_display_supports_composite</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_display_supports_composite      (<link linkend="GdkDisplay">GdkDisplay</link> *display);</programlisting>
+<para>
+Returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <link linkend="gdk-window-set-composited"><function>gdk_window_set_composited()</function></link> can be used
+to redirect drawing on the window using compositing.
+</para>
+<para>
+Currently this only works on X11 with XComposite and
+XDamage extensions available.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkDisplay"><type>GdkDisplay</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if windows may be composited.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 
 </refsect1>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GdkDisplay-closed"/>The &quot;closed&quot; signal</title>
+<refsect2><title><anchor id="GdkDisplay-closed"/>The <literal>::closed</literal> signal</title>
 <indexterm role="2.2"><primary>GdkDisplay::closed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkDisplay">GdkDisplay</link> *display,
                                                         <link linkend="gboolean">gboolean</link>    is_error,
                                                         <link linkend="gpointer">gpointer</link>    user_data)      : Run Last</programlisting>

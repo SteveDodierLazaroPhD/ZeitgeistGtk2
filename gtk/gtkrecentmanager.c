@@ -296,7 +296,7 @@ gtk_recent_manager_init (GtkRecentManager *manager)
   priv->filename = g_build_filename (g_get_home_dir (),
 				     GTK_RECENTLY_USED_FILE,
 				     NULL);
-  priv->poll_timeout = g_timeout_add (POLL_DELTA,
+  priv->poll_timeout = gdk_threads_add_timeout (POLL_DELTA,
 		  		      gtk_recent_manager_poll_timeout,
 				      manager);
 
@@ -360,8 +360,7 @@ gtk_recent_manager_finalize (GObject *object)
   if (priv->poll_timeout)
     g_source_remove (priv->poll_timeout);
   
-  if (priv->filename)
-    g_free (priv->filename);
+  g_free (priv->filename);
   
   if (priv->recent_items)
     g_bookmark_file_free (priv->recent_items);
@@ -508,7 +507,7 @@ gtk_recent_manager_set_filename (GtkRecentManager *manager,
     }
 
   priv->filename = g_strdup (filename);
-  priv->poll_timeout = g_timeout_add (POLL_DELTA,
+  priv->poll_timeout = gdk_threads_add_timeout (POLL_DELTA,
 		  		      gtk_recent_manager_poll_timeout,
 				      manager);
 
@@ -845,7 +844,7 @@ gtk_recent_manager_add_item (GtkRecentManager  *manager,
   recent_data.display_name = NULL;
   recent_data.description = NULL;
   recent_data.mime_type = NULL;
-  
+
 #ifdef G_OS_UNIX
   if (has_case_prefix (uri, "file:/"))
     {
@@ -856,9 +855,9 @@ gtk_recent_manager_add_item (GtkRecentManager  *manager,
       if (filename)
         {
           mime_type = xdg_mime_get_mime_type_for_file (filename, NULL);
-          if (mime_type && *mime_type)
+          if (mime_type)
             recent_data.mime_type = g_strdup (mime_type);
-
+      
           g_free (filename);
         }
 
@@ -1439,7 +1438,7 @@ gtk_recent_info_get_type (void)
   static GType info_type = 0;
   
   if (!info_type)
-    info_type = g_boxed_type_register_static ("GtkRecentInfo",
+    info_type = g_boxed_type_register_static (I_("GtkRecentInfo"),
     					      (GBoxedCopyFunc) gtk_recent_info_ref,
     					      (GBoxedFreeFunc) gtk_recent_info_unref);
   return info_type;
@@ -1734,11 +1733,9 @@ recent_app_info_free (RecentAppInfo *app_info)
   if (!app_info)
     return;
   
-  if (app_info->name)
-    g_free (app_info->name);
+  g_free (app_info->name);
   
-  if (app_info->exec)
-    g_free (app_info->exec);
+  g_free (app_info->exec);
   
   g_free (app_info);
 }
@@ -2052,9 +2049,14 @@ gtk_recent_info_get_icon (GtkRecentInfo *info,
   if (info->mime_type)
     retval = get_icon_for_mime_type (info->mime_type, size);
 
-  /* this should never fail */  
+  /* this function should never fail */  
   if (!retval)
-    retval = get_icon_fallback (GTK_STOCK_FILE, size);
+    {
+      if (info->mime_type && strcmp (info->mime_type, "x-directory/normal") == 0)
+        retval = get_icon_fallback (GTK_STOCK_DIRECTORY, size);
+      else
+        retval = get_icon_fallback (GTK_STOCK_FILE, size);
+    }
   
   return retval;
 }
@@ -2293,7 +2295,9 @@ gtk_recent_info_get_short_name (GtkRecentInfo *info)
  * gtk_recent_info_get_uri_display:
  * @info: a #GtkRecentInfo
  *
- * Gets a displayable version of the resource's URI.
+ * Gets a displayable version of the resource's URI.  If the resource
+ * is local, it returns a local path; if the resource is not local,
+ * it returns the UTF-8 encoded content of gtk_recent_info_get_uri().
  *
  * Return value: a UTF-8 string containing the resource's URI or %NULL
  *
@@ -2302,18 +2306,28 @@ gtk_recent_info_get_short_name (GtkRecentInfo *info)
 gchar *
 gtk_recent_info_get_uri_display (GtkRecentInfo *info)
 {
-  gchar *filename, *filename_utf8;
+  gchar *retval;
   
   g_return_val_if_fail (info != NULL, NULL);
-  
-  filename = g_filename_from_uri (info->uri, NULL, NULL);
-  if (!filename)
-    return NULL;
-      
-  filename_utf8 = g_filename_to_utf8 (filename, -1, NULL, NULL, NULL);
-  g_free (filename);
 
-  return filename_utf8;
+  retval = NULL;
+  if (gtk_recent_info_is_local (info))
+    {
+      gchar *filename;
+
+      filename = g_filename_from_uri (info->uri, NULL, NULL);
+      if (!filename)
+        return NULL;
+      
+      retval = g_filename_to_utf8 (filename, -1, NULL, NULL, NULL);
+      g_free (filename);
+    }
+  else
+    {
+      retval = make_valid_utf8 (info->uri);
+    }
+
+  return retval;
 }
 
 /**

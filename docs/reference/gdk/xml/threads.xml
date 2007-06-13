@@ -27,6 +27,20 @@
 extern              GMutex *<link linkend="gdk-threads-mutex">gdk_threads_mutex</link>;
 <link linkend="void">void</link>                <link linkend="gdk-threads-set-lock-functions">gdk_threads_set_lock_functions</link>      (<link linkend="GCallback">GCallback</link> enter_fn,
                                                          <link linkend="GCallback">GCallback</link> leave_fn);
+<link linkend="guint">guint</link>               <link linkend="gdk-threads-add-idle">gdk_threads_add_idle</link>                (<link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data);
+<link linkend="guint">guint</link>               <link linkend="gdk-threads-add-idle-full">gdk_threads_add_idle_full</link>           (<link linkend="gint">gint</link> priority,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);
+<link linkend="guint">guint</link>               <link linkend="gdk-threads-add-timeout">gdk_threads_add_timeout</link>             (<link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data);
+<link linkend="guint">guint</link>               <link linkend="gdk-threads-add-timeout-full">gdk_threads_add_timeout_full</link>        (<link linkend="gint">gint</link> priority,
+                                                         <link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);
 
 </synopsis>
 </refsynopsisdiv>
@@ -375,6 +389,205 @@ be called multiple times.</para>
 <listitem><simpara> function called to release the guard
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+</para></refsect2>
+<refsect2>
+<title><anchor id="gdk-threads-add-idle" role="function" condition="since:2.12"/>gdk_threads_add_idle ()</title>
+<indexterm role="2.12"><primary>gdk_threads_add_idle</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_idle                (<link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data);</programlisting>
+<para>
+A wrapper for the common usage of <link linkend="gdk-threads-add-idle-full"><function>gdk_threads_add_idle_full()</function></link> 
+assigning the default priority, <link linkend="G-PRIORITY-DEFAULT-IDLE:CAPS"><type>G_PRIORITY_DEFAULT_IDLE</type></link>.
+</para>
+<para>
+See <link linkend="gdk-threads-add-idle-full"><function>gdk_threads_add_idle_full()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<listitem><simpara> function to call
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara>     data to pass to <parameter>function</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the ID (greater than 0) of the event source.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gdk-threads-add-idle-full" role="function" condition="since:2.12"/>gdk_threads_add_idle_full ()</title>
+<indexterm role="2.12"><primary>gdk_threads_add_idle_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_idle_full           (<link linkend="gint">gint</link> priority,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);</programlisting>
+<para>
+Adds a function to be called whenever there are no higher priority
+events pending.  If the function returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> it is automatically
+removed from the list of event sources and will not be called again.
+</para>
+<para>
+This variant of <link linkend="g-idle-add-full"><function>g_idle_add_full()</function></link> calls <parameter>function</parameter> with the GDK lock
+held. It can be thought of a MT-safe version for GTK+ widgets for the 
+following use case, where you have to worry about <link linkend="idle-callback"><function>idle_callback()</function></link>
+running in thread A and accessing <parameter>self</parameter> after it has been finalized
+in thread B:
+</para>
+<para>
+<informalexample><programlisting>
+static gboolean idle_callback (gpointer data)
+{
+   SomeWidget *self = data;
+    
+   /<!-- -->* do stuff with self *<!-- -->/
+    
+   self->idle_id = 0;
+   
+   return FALSE;
+}
+ 
+static void some_widget_do_stuff_later (SomeWidget *self)
+{
+   self->idle_id = g_idle_add (idle_callback, self)
+}
+  
+static void some_widget_finalize (GObject *object)
+{
+   SomeWidget *self = SOME_WIDGET(object);
+   
+   if (self->idle_id)
+     g_source_remove (self->idle_id);
+   
+   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+</programlisting></informalexample></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>priority</parameter>&nbsp;:</term>
+<listitem><simpara> the priority of the idle source. Typically this will be in the
+           range btweeen <link linkend="G-PRIORITY-DEFAULT-IDLE:CAPS"><type>G_PRIORITY_DEFAULT_IDLE</type></link> and <link linkend="G-PRIORITY-HIGH-IDLE:CAPS"><type>G_PRIORITY_HIGH_IDLE</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<listitem><simpara> function to call
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara>     data to pass to <parameter>function</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>notify</parameter>&nbsp;:</term>
+<listitem><simpara>   function to call when the idle is removed, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the ID (greater than 0) of the event source.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gdk-threads-add-timeout" role="function" condition="since:2.12"/>gdk_threads_add_timeout ()</title>
+<indexterm role="2.12"><primary>gdk_threads_add_timeout</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout             (<link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data);</programlisting>
+<para>
+A wrapper for the common usage of <link linkend="gdk-threads-add-timeout-full"><function>gdk_threads_add_timeout_full()</function></link> 
+assigning the default priority, <link linkend="G-PRIORITY-DEFAULT:CAPS"><type>G_PRIORITY_DEFAULT</type></link>.
+</para>
+<para>
+See <link linkend="gdk-threads-add-timeout-full"><function>gdk_threads_add_timeout_full()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>interval</parameter>&nbsp;:</term>
+<listitem><simpara> the time between calls to the function, in milliseconds
+            (1/1000ths of a second)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<listitem><simpara> function to call
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara>     data to pass to <parameter>function</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the ID (greater than 0) of the event source.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gdk-threads-add-timeout-full" role="function" condition="since:2.12"/>gdk_threads_add_timeout_full ()</title>
+<indexterm role="2.12"><primary>gdk_threads_add_timeout_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout_full        (<link linkend="gint">gint</link> priority,
+                                                         <link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);</programlisting>
+<para>
+Sets a function to be called at regular intervals holding the GDK lock,
+with the given priority.  The function is called repeatedly until it 
+returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>, at which point the timeout is automatically destroyed 
+and the function will not be called again.  The <parameter>notify</parameter> function is
+called when the timeout is destroyed.  The first call to the
+function will be at the end of the first <parameter>interval</parameter>.
+</para>
+<para>
+Note that timeout functions may be delayed, due to the processing of other
+event sources. Thus they should not be relied on for precise timing.
+After each call to the timeout function, the time of the next
+timeout is recalculated based on the current time and the given interval
+(it does not try to 'catch up' time lost in delays).
+</para>
+<para>
+This variant of <link linkend="g-timeout-add-full"><function>g_timeout_add_full()</function></link> can be thought of a MT-safe version 
+for GTK+ widgets for the following use case:
+</para>
+<para>
+<informalexample><programlisting>
+static gboolean timeout_callback (gpointer data)
+{
+   SomeWidget *self = data;
+   
+   /<!-- -->* do stuff with self *<!-- -->/
+   
+   self->timeout_id = 0;
+   
+   return FALSE;
+}
+ 
+static void some_widget_do_stuff_later (SomeWidget *self)
+{
+   self->timeout_id = g_timeout_add (timeout_callback, self)
+}
+ 
+static void some_widget_finalize (GObject *object)
+{
+   SomeWidget *self = SOME_WIDGET(object);
+   
+   if (self->timeout_id)
+     g_source_remove (self->timeout_id);
+   
+   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+</programlisting></informalexample></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>priority</parameter>&nbsp;:</term>
+<listitem><simpara> the priority of the timeout source. Typically this will be in the
+           range between <link linkend="G-PRIORITY-DEFAULT-IDLE:CAPS"><type>G_PRIORITY_DEFAULT_IDLE</type></link> and <link linkend="G-PRIORITY-HIGH-IDLE:CAPS"><type>G_PRIORITY_HIGH_IDLE</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>interval</parameter>&nbsp;:</term>
+<listitem><simpara> the time between calls to the function, in milliseconds
+            (1/1000ths of a second)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<listitem><simpara> function to call
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara>     data to pass to <parameter>function</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>notify</parameter>&nbsp;:</term>
+<listitem><simpara>   function to call when the timeout is removed, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the ID (greater than 0) of the event source.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 
 </refsect1>
