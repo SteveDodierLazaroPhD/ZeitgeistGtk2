@@ -1,64 +1,136 @@
-gtk+2.0 (2.11.2-0ubuntu2) gutsy; urgency=low
+gtk+2.0 (2.11.3-0ubuntu1) gutsy; urgency=low
 
+  * New upstream version:
+    * GtkBuilder: GTK+ supports constructing user interfaces 
+      from XML descriptions now, similar to libglade.
+    * The new tooltip code now has convenience api to set
+      text tooltips: gtk_widget_set_tooltip_text(),
+      gtk_widget_set_tooltip_markup()
+    * GtkTextView, GtkEntry:
+      - gtk_widget_modify_cursor() is a new function in the 
+        gtk_widget_modify family to override the style-provided 
+        cursor colors
+      - Use a block cursor in overwrite mode
+    * GtkFileChooser:
+      - Use xdg-user-dirs to find the Desktop directory
+      - gtk_file_system_create() is now public API
+    * GtkMenu:
+      - GtkMenuItem gained a submenu property
+      - GtkMenuShell obtained a move-selected signal 
+    * OS X port:
+      - Many improvements
+    * Bugs fixed:
+      - 445691 Crash when spawning a new process
+      - 447163 Implicit pointer conversion gdk_font_ref()
+      - 420249 deadlock on print operation
+      - 440918 out-of-bound access on loading pnm
+      - 142494 treeview coordinate systems need documentation/auditing
+      - 343012 RC parser rejects lower-case identifiers.
+      - 350460 Popup windows (esp. menus) misbehave wrt focus
+      - 410815 Icon view gets confused when scaling down the pixbuf column
+      - 435471 small GtkComboBox cleanup
+      - 435840 GTK_WIDGET_SAVED_STATE inconsistency
+      - 442617 gdk_spawn overrides envp, breaking child setup funcs whic...
+      - 443913 When .recently-used.xbel is empty, recently-used uses %10...
+      - 444097 Cannot compile gtksearchenginesimple.c
+      - 444310 update_buttons_state on a bare assistant causes gtk+ to c...
+      - 444734 Compact file-chooser folder selection not working with gt...
+      - 444786 Error loading 'gtk-select-color' in Stock icons and Items
+      - 445054 GtkScrolledWindow::scrollbars-within-bevel is drawing wrong
+      - 445284 Custom (pixbuf etc.) cursor reverts to default cursor on ...
+      - 445539 Unititialized var in gtkrc.c trunk
+      - 445855 gtk_scale_button_new() uses private API.
+      - 446138 Tiny doc update for gdk_window_get_pointer()
+      - 446513 gtknotebook.h: create_window is wrong declaration
+      - 446616 glib requirement insufficient
+      - 447065 GtkMenuItem: add "submenu" property and some cleanup
+      - 426192 Symbolic colors are not working under "engine" sections o...
+      - 446107 tiff load dialogue has unreadable text
+      - 447396 Typo in documentation of gtk_widget_modify_cursor
+      - 79585 	API to change cursor color
+      - 80378 	Visible (Cursor-shape) indicator for Overtype mode
+      - 158008 Stock button for Dont Save, Discard Changes, Do Not Save
+      - 334576 GtkCellRendererProgress ignores xalign attribute
+      - 344836 Add orientation property to CellRendererProgress
+      - 172535 Add support for UI builders in gtk+
+      - 446833 gtk_menu_shell_move_selected should be a vcall
+      - 447586 gtknotebook.c: decreasing unknown size pointer
   * debian/control.in:
-    - libgtk2.0-dev Build-Depends on libxcomposite-dev, libxdamage-dev
-      (LP: #120241)
-
- -- Sebastien Bacher <seb128@canonical.com>  Wed, 13 Jun 2007 21:06:02 +0200
-
-gtk+2.0 (2.11.2-0ubuntu1) gutsy; urgency=low
-
-  * New upstream version
-  * debian/control.in:
-    - Build-Depends on libxcomposite-dev and libxdamage-dev
-    - updated glib and pango requirement
-  * debian/patches/011_directfb-build-fixes-from-head.patch,
-    debian/patches/013_gdkproperty-directfb-strdup.patch,
-    debian/patches/025_dfb-window-destroy-leak.patch,
-    debian/patches/031_cursor-blinking-timeout.patch,
-    debian/patches/032_filechooser-sizing.patch,
-    debian/patches/090_capslock-numlock-im-thai.patch:
-    - dropped, fixed with the new version
-  * debian/patches/021_loader-files-d.patch:
-    - patch update from Loic Minier
-  * debian/patches/030_gtkentry_password-char-circle.patch:
-    - updated
-  * debian/patches/040_filechooser_single-click.patch:
-    - don't apply, Debian patch which needs to be reworked
+    - updated glib requirement
   * debian/patches/070_mandatory-relibtoolize.patch:
     - updated
+  * debian/patches/090_from_svn_no_keyword_use.patch:
+    - patch from SVN, don't use a C++ keyword
   * debian/rules:
     - updated shlibs version
-
- -- Sebastien Bacher <seb128@canonical.com>  Wed, 13 Jun 2007 10:00:13 +0200
-
-gtk+2.0 (2.10.12-2ubuntu3) gutsy; urgency=low
-
-  * debian/patches/009_gtk-export-filechooser.patch:
-    - patch from Nokia to allow implementing GtkFileChooser outside of GTK,
-      used for hildon
-  * debian/patches/070_mandatory-relibtoolize.patch:
-    - updated
-
- -- Sebastien Bacher <seb128@canonical.com>  Wed, 30 May 2007 14:08:04 +0200
-
-gtk+2.0 (2.10.12-2ubuntu2) gutsy; urgency=low
-
-  * debian/dh_gtkmodules.in:
-    - use printf rather than echo, fix incorrect png loader description
-      (Ubuntu: #117065)
+  * Sync with Debian:
+  * debian/control.in:
+    - libgtk2.0-dev Build-Depends on libxcomposite-dev, libxdamage-dev
   * debian/libgtk2.0-0.postinst.in:
     - updated transition version
 
- -- Sebastien Bacher <seb128@canonical.com>  Sun, 27 May 2007 19:07:47 +0200
+ -- Sebastien Bacher <seb128@canonical.com>  Sat, 16 Jun 2007 14:06:34 +0200
 
-gtk+2.0 (2.10.12-2ubuntu1) gutsy; urgency=low
+gtk+2.0 (2.11.2-1) experimental; urgency=low
 
-  * Sync with Debian
-  * debian/control.in:
-    - transitional Conflicts on previous gtk2-engines-ubuntulooks version
+  * New upstream release series; these are development releases, the new API
+    may still change incompatibly.
+    - Target at experimental; include check-dist.
+    - Bump shlibs to >= 2.11.2.
+    - Refresh patches 001_static-linking-dont-query-immodules, 005_xpmico,
+      009_gtk-export-filechooser, 015_default-fallback-icon-theme,
+      033_treeview_resizing, 041_ia32-libs to apply cleanly.
+    - Update patch 021_loader-files-d to apply with the upstream G_MODULE
+      changes and the support for included modules.
+    - Update patch 030_gtkentry_password-char-circle to apply.
+    - Drop patch 031_cursor-blinking-timeout, merged upstream.
+    - Disable 040_filechooser_single-click for now as it doesn't apply cleanly
+      and doesn't seem critical; add a description and cross-refs.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+    - Bump up build-deps to libglib2.0-dev >= 2.13.1, libpango1.0-dev >=
+      1.15.3, gtk-doc-tools >= 1.6.
+    - Build-dep on libxcomposite-dev for composite support.
+    - Build-dep on libxdamage-dev for damage support.
+    - Enable test print backend by passing --enable-test-print-backend to
+      configure.
+  * Update 007_implicit_pointer_conversion_gdkdrawable_directfb to include
+    cairo.h instead of defining the directfb feature manually.
+  * New patch, 006_proper-directfb-modules, fixes pkg-config modules included
+    to build directfb stuff, uncovered by the change in
+    007_implicit_pointer_conversion_gdkdrawable_directfb; refresh
+    relibtoolizing patch.
+  * Add cross-refs to patch headers.
+  * Clean up CFLAGS.
+  * Prepare passing -z defs via LDFLAGS in the future.
 
- -- Sebastien Bacher <seb128@canonical.com>  Thu, 24 May 2007 11:57:31 +0200
+ -- Loic Minier <lool@dooz.org>  Wed, 13 Jun 2007 16:57:47 +0200
+
+gtk+2.0 (2.10.13-1) unstable; urgency=low
+
+  * Bump Conflicts to iiimf-client-gtk << 12.3.91-4.
+  * Upload to unstable; drop check-dist include.
+  * New upstream release; no API change.
+    - Drop patches 011_directfb-build-fixes-from-head,
+      013_gdkproperty-directfb-strdup, 032_filechooser-sizing,
+      090_capslock-numlock-im-thai merged upstream.
+    - Update relibtoolizing patch, 070_mandatory-relibtoolize.
+
+ -- Loic Minier <lool@dooz.org>  Wed, 13 Jun 2007 10:06:49 +0200
+
+gtk+2.0 (2.10.12-3) experimental; urgency=low
+
+  * Use printf instead of echo in dh_gtkmodules to write to write data to
+    files in complex_doit() calls as dash's echo will always honor escape
+    sequences.
+  * Conflict with gtk2-engines-ubuntulooks (<= 0.9.11-1).
+  * New patch, 009_gtk-export-filechooser, exports some filechooser API for
+    use in maemo / Hildon; from Nokia, taken from the Ubuntu package; update
+    patch 032_filechooser-sizing to apply cleanly; bump shlibs to 2.10.12-3;
+    update patch 070_mandatory-relibtoolize.
+  * Kill patch 025_dfb-window-destroy-leak from source tree as well now.
+  * Include check-dist to prevent accidental uploads to unstable.
+
+ -- Loic Minier <lool@dooz.org>  Thu, 07 Jun 2007 00:13:00 +0200
 
 gtk+2.0 (2.10.12-2) unstable; urgency=low
 

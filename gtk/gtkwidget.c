@@ -52,6 +52,7 @@
 #include "gtktooltips.h"
 #include "gtktooltip.h"
 #include "gtkinvisible.h"
+#include "gtkbuildable.h"
 #include "gtkalias.h"
 
 #define WIDGET_CLASS(w)	 GTK_WIDGET_GET_CLASS (w)
@@ -150,7 +151,8 @@ enum {
   PROP_EXTENSION_EVENTS,
   PROP_NO_SHOW_ALL,
   PROP_HAS_TOOLTIP,
-  PROP_TOOLTIP_MARKUP
+  PROP_TOOLTIP_MARKUP,
+  PROP_TOOLTIP_TEXT
 };
 
 typedef	struct	_GtkStateData	 GtkStateData;
@@ -245,6 +247,28 @@ static gboolean         gtk_widget_real_can_activate_accel      (GtkWidget *widg
 static void             gtk_widget_set_has_tooltip              (GtkWidget *widget,
 								 gboolean   has_tooltip,
 								 gboolean   force);
+static void             gtk_widget_buildable_interface_init     (GtkBuildableIface *iface);
+static void             gtk_widget_buildable_set_name           (GtkBuildable     *buildable,
+                                                                 const gchar      *name);
+static const gchar *    gtk_widget_buildable_get_name           (GtkBuildable     *buildable);
+static void             gtk_widget_buildable_set_property       (GtkBuildable     *buildable,
+                                                                 GtkBuilder       *builder,
+                                                                 const gchar      *name,
+                                                                 const GValue     *value);
+static gboolean         gtk_widget_buildable_custom_tag_start   (GtkBuildable     *buildable,
+                                                                 GtkBuilder       *builder,
+                                                                 GObject          *child,
+                                                                 const gchar      *tagname,
+                                                                 GMarkupParser    *parser,
+                                                                 gpointer         *data);
+static void             gtk_widget_buildable_custom_finshed     (GtkBuildable     *buildable,
+                                                                 GtkBuilder       *builder,
+                                                                 GObject          *child,
+                                                                 const gchar      *tagname,
+                                                                 gpointer          data);
+static void             gtk_widget_buildable_parser_finshed     (GtkBuildable     *buildable,
+                                                                 GtkBuilder       *builder);
+
      
 static void gtk_widget_set_usize_internal (GtkWidget *widget,
 					   gint       width,
@@ -311,11 +335,20 @@ gtk_widget_get_type (void)
 	NULL /* interface data */
       };
 
+      const GInterfaceInfo buildable_info =
+      {
+	(GInterfaceInitFunc) gtk_widget_buildable_interface_init,
+	(GInterfaceFinalizeFunc) NULL,
+	NULL /* interface data */
+      };
+
       widget_type = g_type_register_static (GTK_TYPE_OBJECT, "GtkWidget",
                                            &widget_info, G_TYPE_FLAG_ABSTRACT);
 
       g_type_add_interface_static (widget_type, ATK_TYPE_IMPLEMENTOR,
                                    &accessibility_info) ;
+      g_type_add_interface_static (widget_type, GTK_TYPE_BUILDABLE,
+                                   &buildable_info) ;
 
     }
 
@@ -588,21 +621,41 @@ gtk_widget_class_init (GtkWidgetClass *klass)
  							 P_("Whether this widget has a tooltip"),
  							 FALSE,
  							 GTK_PARAM_READWRITE));
-
-/**
- * GtkWidget:tooltip-markup:
- *
- * Sets the text of tooltip to be the given string, which is marked up
- * with the <link linkend="PangoMarkupFormat">Pango text markup language</link>.
- * Also see gtk_tooltip_set_markup().
- *
- * This is a convenience property which will take care of getting the
- * tooltip shown if the given string is not %NULL: #GtkWidget:has-tooltip
- * will automatically be set to %TRUE and there will be taken care of
- * #GtkWidget::query-tooltip in the default signal handler.
- *
- * Since: 2.12
- */
+  /**
+   * GtkWidget:tooltip-text:
+   *
+   * Sets the text of tooltip to be the given string.
+   *
+   * Also see gtk_tooltip_set_text().
+   *
+   * This is a convenience property which will take care of getting the
+   * tooltip shown if the given string is not %NULL: #GtkWidget:has-tooltip
+   * will automatically be set to %TRUE and there will be taken care of
+   * #GtkWidget::query-tooltip in the default signal handler.
+   *
+   * Since: 2.12
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_TOOLTIP_TEXT,
+                                   g_param_spec_string ("tooltip-text",
+                                                        P_("Tooltip Text"),
+                                                        P_("The contents of the tooltip for this widget"),
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+  /**
+   * GtkWidget:tooltip-markup:
+   *
+   * Sets the text of tooltip to be the given string, which is marked up
+   * with the <link linkend="PangoMarkupFormat">Pango text markup language</link>.
+   * Also see gtk_tooltip_set_markup().
+   *
+   * This is a convenience property which will take care of getting the
+   * tooltip shown if the given string is not %NULL: #GtkWidget:has-tooltip
+   * will automatically be set to %TRUE and there will be taken care of
+   * #GtkWidget::query-tooltip in the default signal handler.
+   *
+   * Since: 2.12
+   */
   g_object_class_install_property (gobject_class,
 				   PROP_TOOLTIP_MARKUP,
 				   g_param_spec_string ("tooltip-markup",
@@ -714,8 +767,10 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    *   if the widget was previously unanchored
    *
    * The ::hierarchy-changed signal is emitted when the
-   * anchored state of a widget changes. A widget is anchored,
-   * if it has an ancestor that is a toplevel window.
+   * anchored state of a widget changes. A widget is
+   * <firstterm>anchored</firstterm> when its toplevel
+   * ancestor is a #GtkWindow. This signal is emitted when
+   * a widget changes from un-anchored to anchored or vice-versa.
    */
   widget_signals[HIERARCHY_CHANGED] =
     g_signal_new (I_("hierarchy_changed"),
@@ -1971,9 +2026,7 @@ gtk_widget_set_property (GObject         *object,
       gtk_widget_set_has_tooltip (widget, g_value_get_boolean (value), FALSE);
       break;
     case PROP_TOOLTIP_MARKUP:
-      tooltip_markup = g_object_get_qdata (object, quark_tooltip_markup);
       tooltip_window = g_object_get_qdata (object, quark_tooltip_window);
-
       tooltip_markup = g_value_dup_string (value);
 
       g_object_set_qdata_full (object, quark_tooltip_markup,
@@ -1981,6 +2034,15 @@ gtk_widget_set_property (GObject         *object,
 
       tmp = (tooltip_window != NULL || tooltip_markup != NULL);
       gtk_widget_set_has_tooltip (widget, tmp, FALSE);
+      break;
+    case PROP_TOOLTIP_TEXT:
+      tooltip_window = g_object_get_qdata (object, quark_tooltip_window);
+      tooltip_markup = g_markup_escape_text (g_value_get_string (value), -1);
+
+      g_object_set_qdata_full (object, quark_tooltip_markup,
+                               tooltip_markup, g_free);
+
+      gtk_widget_set_has_tooltip (widget, TRUE, FALSE);
       break;
     default:
       break;
@@ -2078,6 +2140,18 @@ gtk_widget_get_property (GObject         *object,
       break;
     case PROP_HAS_TOOLTIP:
       g_value_set_boolean (value, GPOINTER_TO_UINT (g_object_get_qdata (object, quark_has_tooltip)));
+      break;
+    case PROP_TOOLTIP_TEXT:
+      {
+        gchar *escaped = g_object_get_qdata (object, quark_tooltip_markup);
+        gchar *text = NULL;
+
+        if (escaped && !pango_parse_markup (escaped, -1, 0, NULL, &text, NULL, NULL))
+          g_assert (NULL == text); /* text should still be NULL in case of markup errors */
+
+        g_value_set_string (value, text);
+        g_free (text);
+      }
       break;
     case PROP_TOOLTIP_MARKUP:
       g_value_set_string (value, g_object_get_qdata (object, quark_tooltip_markup));
@@ -5400,6 +5474,70 @@ gtk_widget_modify_base (GtkWidget      *widget,
   gtk_widget_modify_color_component (widget, GTK_RC_BASE, state, color);
 }
 
+static void
+modify_color_property (GtkWidget      *widget,
+		       GtkRcStyle     *rc_style,
+		       const char     *name,
+		       const GdkColor *color)
+{
+  GQuark type_name = g_type_qname (G_OBJECT_TYPE (widget));
+  GQuark property_name = g_quark_from_string (name);
+
+  if (color)
+    {
+      GtkRcProperty rc_property = {0};
+      char *color_name;
+
+      rc_property.type_name = type_name;
+      rc_property.property_name = property_name;
+      rc_property.origin = NULL;
+
+      color_name = gdk_color_to_string (color);
+      g_value_init (&rc_property.value, G_TYPE_STRING);
+      g_value_take_string (&rc_property.value, color_name);
+
+      _gtk_rc_style_set_rc_property (rc_style, &rc_property);
+
+      g_value_unset (&rc_property.value);
+    }
+  else
+    _gtk_rc_style_unset_rc_property (rc_style, type_name, property_name);
+}
+
+/**
+ * gtk_widget_modify_cursor:
+ * @widget: a #GtkWidget
+ * @primary: the color to use for primary cursor (does not need to be
+ *           allocated), or %NULL to undo the effect of previous calls to
+ *           of gtk_widget_modify_cursor().
+ * @secondary: the color to use for secondary cursor (does not need to be
+ *             allocated), or %NULL to undo the effect of previous calls to
+ *             of gtk_widget_modify_cursor().
+ *
+ * Sets the cursor color to use in a widget, overriding the
+ * #GtkWidget:cursor-color and #GtkWidget:secondary-cursor-color
+ * style properties. All other style values are left untouched. 
+ * See also gtk_widget_modify_style().
+ *
+ * Since: 2.12
+ **/
+void
+gtk_widget_modify_cursor (GtkWidget      *widget,
+			  const GdkColor *primary,
+			  const GdkColor *secondary)
+{
+  GtkRcStyle *rc_style;
+
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+
+  rc_style = gtk_widget_get_modifier_style (widget);
+
+  modify_color_property (widget, rc_style, "cursor-color", primary);
+  modify_color_property (widget, rc_style, "secondary-cursor-color", secondary);
+
+  gtk_widget_modify_style (widget, rc_style);
+}
+
 /**
  * gtk_widget_modify_font:
  * @widget: a #GtkWidget
@@ -7497,36 +7635,28 @@ static void
 gtk_widget_propagate_state (GtkWidget           *widget,
 			    GtkStateData        *data)
 {
-  guint8 old_state;
+  guint8 old_state = GTK_WIDGET_STATE (widget);
+  guint8 old_saved_state = GTK_WIDGET_SAVED_STATE (widget);
 
   /* don't call this function with state==GTK_STATE_INSENSITIVE,
    * parent_sensitive==TRUE on a sensitive widget
    */
 
-  old_state = GTK_WIDGET_STATE (widget);
 
   if (data->parent_sensitive)
-    {
-      GTK_WIDGET_SET_FLAGS (widget, GTK_PARENT_SENSITIVE);
+    GTK_WIDGET_SET_FLAGS (widget, GTK_PARENT_SENSITIVE);
+  else
+    GTK_WIDGET_UNSET_FLAGS (widget, GTK_PARENT_SENSITIVE);
 
-      if (GTK_WIDGET_IS_SENSITIVE (widget))
-	{
-	  if (data->state_restoration)
-	    GTK_WIDGET_STATE (widget) = GTK_WIDGET_SAVED_STATE (widget);
-	  else
-	    GTK_WIDGET_STATE (widget) = data->state;
-	}
+  if (GTK_WIDGET_IS_SENSITIVE (widget))
+    {
+      if (data->state_restoration)
+        GTK_WIDGET_STATE (widget) = GTK_WIDGET_SAVED_STATE (widget);
       else
-	{
-	  GTK_WIDGET_STATE (widget) = GTK_STATE_INSENSITIVE;
-	  if (!data->state_restoration &&
-	      data->state != GTK_STATE_INSENSITIVE)
-	    GTK_WIDGET_SAVED_STATE (widget) = data->state;
-	}
+        GTK_WIDGET_STATE (widget) = data->state;
     }
   else
     {
-      GTK_WIDGET_UNSET_FLAGS (widget, GTK_PARENT_SENSITIVE);
       if (!data->state_restoration)
 	{
 	  if (data->state != GTK_STATE_INSENSITIVE)
@@ -7546,19 +7676,19 @@ gtk_widget_propagate_state (GtkWidget           *widget,
 	gtk_window_set_focus (GTK_WINDOW (window), NULL);
     }
 
-  if (old_state != GTK_WIDGET_STATE (widget))
+  if (old_state != GTK_WIDGET_STATE (widget) ||
+      old_saved_state != GTK_WIDGET_SAVED_STATE (widget))
     {
       g_object_ref (widget);
-      
+
       if (!GTK_WIDGET_IS_SENSITIVE (widget) && GTK_WIDGET_HAS_GRAB (widget))
 	gtk_grab_remove (widget);
-      
+
       g_signal_emit (widget, widget_signals[STATE_CHANGED], 0, old_state);
-      
+
       if (GTK_IS_CONTAINER (widget))
 	{
 	  data->parent_sensitive = (GTK_WIDGET_IS_SENSITIVE (widget) != FALSE);
-	  data->state = GTK_WIDGET_STATE (widget);
 	  if (data->use_forall)
 	    gtk_container_forall (GTK_CONTAINER (widget),
 				  (GtkCallback) gtk_widget_propagate_state,
@@ -7775,7 +7905,7 @@ gtk_widget_reset_shapes (GtkWidget *widget)
  * 
  * Return value: the widget that was referenced
  *
- * Deprecated: Use g_object_ref() instead.
+ * Deprecated:2.12: Use g_object_ref() instead.
  **/
 GtkWidget*
 gtk_widget_ref (GtkWidget *widget)
@@ -7791,7 +7921,7 @@ gtk_widget_ref (GtkWidget *widget)
  *
  * Inverse of gtk_widget_ref(). Equivalent to g_object_unref().
  * 
- * Deprecated: Use g_object_unref() instead.
+ * Deprecated:2.12: Use g_object_unref() instead.
  **/
 void
 gtk_widget_unref (GtkWidget *widget)
@@ -8302,6 +8432,176 @@ gtk_widget_ref_accessible (AtkImplementor *implementor)
   return accessible;
 }
 
+/*
+ * GtkBuildable implementation
+ */
+static GQuark		quark_builder_has_default = 0;
+static GQuark		quark_builder_has_focus = 0;
+
+static void
+gtk_widget_buildable_interface_init (GtkBuildableIface *iface)
+{
+  quark_builder_has_default = g_quark_from_static_string ("gtk-builder-has-default");
+  quark_builder_has_focus = g_quark_from_static_string ("gtk-builder-has-focus");
+
+  iface->set_name = gtk_widget_buildable_set_name;
+  iface->get_name = gtk_widget_buildable_get_name;
+  iface->set_property = gtk_widget_buildable_set_property;
+  iface->parser_finished = gtk_widget_buildable_parser_finshed;
+  iface->custom_tag_start = gtk_widget_buildable_custom_tag_start;
+  iface->custom_finished = gtk_widget_buildable_custom_finshed;
+}
+
+static void
+gtk_widget_buildable_set_name (GtkBuildable *buildable,
+			       const gchar  *name)
+{
+  gtk_widget_set_name (GTK_WIDGET (buildable), name);
+}
+
+static const gchar *
+gtk_widget_buildable_get_name (GtkBuildable *buildable)
+{
+  return gtk_widget_get_name (GTK_WIDGET (buildable));
+}
+
+static void
+gtk_widget_buildable_set_property (GtkBuildable *buildable,
+				   GtkBuilder   *builder,
+				   const gchar  *name,
+				   const GValue *value)
+{
+  if (strcmp (name, "has-default") == 0 && g_value_get_boolean (value))
+      g_object_set_qdata (G_OBJECT (buildable), quark_builder_has_default,
+			  GINT_TO_POINTER (TRUE));
+  else if (strcmp (name, "has-focus") == 0 && g_value_get_boolean (value))
+      g_object_set_qdata (G_OBJECT (buildable), quark_builder_has_focus,
+			  GINT_TO_POINTER (TRUE));
+  else
+    g_object_set_property (G_OBJECT (buildable), name, value);
+}
+
+static void
+gtk_widget_buildable_parser_finshed (GtkBuildable *buildable,
+				     GtkBuilder   *builder)
+{
+  if (g_object_get_qdata (G_OBJECT (buildable), quark_builder_has_default))
+    gtk_widget_grab_default (GTK_WIDGET (buildable));
+  if (g_object_get_qdata (G_OBJECT (buildable), quark_builder_has_focus))
+    gtk_widget_grab_focus (GTK_WIDGET (buildable));
+}
+
+typedef struct {
+  GObject *object;
+  guint    key;
+  guint    modifiers;
+  gchar   *signal;
+} AccelGroupParserData;
+
+static void
+accel_group_start_element (GMarkupParseContext *context,
+			   const gchar         *element_name,
+			   const gchar        **names,
+			   const gchar        **values,
+			   gpointer             user_data,
+			   GError             **error)
+{
+  gint i;
+  guint key = 0;
+  guint modifiers = 0;
+  gchar *signal = NULL;
+  AccelGroupParserData *parser_data = (AccelGroupParserData*)user_data;
+
+  for (i = 0; names[i]; i++)
+    {
+      if (strcmp (names[i], "key") == 0)
+	key = gdk_keyval_from_name (values[i]);
+      else if (strcmp (names[i], "modifiers") == 0)
+	modifiers = _gtk_builder_flags_from_string (GDK_TYPE_MODIFIER_TYPE, values[i]);
+      else if (strcmp (names[i], "signal") == 0)
+	signal = g_strdup (values[i]);
+    }
+
+  if (key == 0 || signal == NULL)
+    {
+      g_warning ("<accelerator> requires a key or signal attribute");
+      return;
+    }
+  parser_data->key = key;
+  parser_data->modifiers = modifiers;
+  parser_data->signal = signal;
+}
+
+static const GMarkupParser accel_group_parser =
+  {
+    accel_group_start_element,
+  };
+
+static gboolean
+gtk_widget_buildable_custom_tag_start (GtkBuildable     *buildable,
+				       GtkBuilder       *builder,
+				       GObject          *child,
+				       const gchar      *tagname,
+				       GMarkupParser    *parser,
+				       gpointer         *data)
+{
+  AccelGroupParserData *parser_data;
+
+  g_assert (buildable);
+
+  if (strcmp (tagname, "accelerator") == 0)
+    {
+      parser_data = g_new0 (AccelGroupParserData, 1);
+      parser_data->object = g_object_ref (buildable);
+      *parser = accel_group_parser;
+      *data = parser_data;
+      return TRUE;
+    }
+  return FALSE;
+}
+
+static void
+gtk_widget_buildable_custom_finshed (GtkBuildable *buildable,
+				     GtkBuilder   *builder,
+				     GObject      *child,
+				     const gchar  *tagname,
+				     gpointer      user_data)
+{
+  AccelGroupParserData *data;
+  GtkWidget *toplevel;
+  GSList *accel_groups;
+  GtkAccelGroup *accel_group;
+
+  if (strcmp (tagname, "accelerator") == 0)
+    {
+      data = (AccelGroupParserData*)user_data;
+      g_assert (data->object);
+
+      toplevel = gtk_widget_get_toplevel (GTK_WIDGET (data->object));
+      accel_groups = gtk_accel_groups_from_object (G_OBJECT (toplevel));
+      if (g_slist_length (accel_groups) == 0)
+	{
+	  accel_group = gtk_accel_group_new ();
+	  gtk_window_add_accel_group (GTK_WINDOW (toplevel), accel_group);
+	}
+      else
+	{
+	  g_assert (g_slist_length (accel_groups) == 1);
+	  accel_group = g_slist_nth_data (accel_groups, 0);
+	}
+      gtk_widget_add_accelerator (GTK_WIDGET(data->object),
+				  data->signal,
+				  accel_group,
+				  data->key,
+				  data->modifiers,
+				  GTK_ACCEL_VISIBLE);
+      g_object_unref (data->object);
+      g_free (data->signal);
+      g_slice_free (AccelGroupParserData, data);
+    }
+}
+
+
 /**
  * gtk_widget_get_clipboard:
  * @widget: a #GtkWidget
@@ -8593,6 +8893,100 @@ gtk_widget_trigger_tooltip_query (GtkWidget *widget)
 {
   gtk_tooltip_trigger_tooltip_query (gtk_widget_get_display (widget));
 }
+
+/**
+ * gtk_widget_set_tooltip_text:
+ * @widget: a #GtkWidget
+ * @text: the contents of the tooltip for @widget
+ *
+ * Sets @text as the contents of the tooltip. This function will take
+ * care of setting GtkWidget:has-tooltip to %TRUE and of the default
+ * handler for the GtkWidget::query-tooltip signal.
+ *
+ * See also the GtkWidget:tooltip-text property and gtk_tooltip_set_text().
+ *
+ * Since: 2.12
+ */
+void
+gtk_widget_set_tooltip_text (GtkWidget   *widget,
+                             const gchar *text)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+
+  g_object_set (G_OBJECT (widget), "tooltip-text", text, NULL);
+}
+
+/**
+ * gtk_widget_get_tooltip_text:
+ * @widget: a #GtkWidget
+ *
+ * Gets the contents of the tooltip for @widget.
+ *
+ * Return value: the tooltip text, or %NULL. You should free the
+ *   returned string with g_free() when done.
+ *
+ * Since: 2.12
+ */
+gchar *
+gtk_widget_get_tooltip_text (GtkWidget *widget)
+{
+  gchar *text = NULL;
+
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+
+  g_object_get (G_OBJECT (widget), "tooltip-text", &text, NULL);
+
+  return text;
+}
+
+/**
+ * gtk_widget_set_tooltip_markup:
+ * @widget: a #GtkWidget
+ * @markup: the contents of the tooltip for @widget, or %NULL
+ *
+ * Sets @markup as the contents of the tooltip, which is marked up with
+ *  the <link linkend="PangoMarkupFormat">Pango text markup language</link>.
+ *
+ * This function will take care of setting GtkWidget:has-tooltip to %TRUE
+ * and of the default handler for the GtkWidget::query-tooltip signal.
+ *
+ * See also the GtkWidget:tooltip-markup property and
+ * gtk_tooltip_set_markup().
+ *
+ * Since: 2.12
+ */
+void
+gtk_widget_set_tooltip_markup (GtkWidget   *widget,
+                               const gchar *markup)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+
+  g_object_set (G_OBJECT (widget), "tooltip-markup", markup, NULL);
+}
+
+/**
+ * gtk_widget_get_tooltip_markup:
+ * @widget: a #GtkWidget
+ *
+ * Gets the contents of the tooltip for @widget.
+ *
+ * Return value: the tooltip text, or %NULL. You should free the
+ *   returned string with g_free() when done.
+ *
+ * Since: 2.12
+ */
+gchar *
+gtk_widget_get_tooltip_markup (GtkWidget *widget)
+{
+  gchar *text = NULL;
+
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+
+  g_object_get (G_OBJECT (widget), "tooltip-markup", &text, NULL);
+
+  return text;
+}
+
 
 #define __GTK_WIDGET_C__
 #include "gtkaliasdef.c"

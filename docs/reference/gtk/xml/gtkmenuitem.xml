@@ -71,11 +71,18 @@
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkMenuItem implements
- <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
+ <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
 
 </refsect1>
 
 
+<refsect1 role="properties">
+<title role="properties.title">Properties</title>
+<synopsis>
+
+  <link linkend="GtkMenuItem--submenu">submenu</link>                  <link linkend="GtkMenu">GtkMenu</link>               : Read / Write
+</synopsis>
+</refsect1>
 <refsect1 role="style_properties">
 <title role="style_properties.title">Style Properties</title>
 <synopsis>
@@ -188,15 +195,16 @@ or Arabic, right-justified-menu-items appear at the left.)</para>
 <indexterm><primary>gtk_menu_item_set_submenu</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_item_set_submenu           (<link linkend="GtkMenuItem">GtkMenuItem</link> *menu_item,
                                                          <link linkend="GtkWidget">GtkWidget</link> *submenu);</programlisting>
 <para>
-Sets the widget submenu, or changes it.
+Sets or replaces the menu item's submenu, or removes it when a <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+submenu is passed.</para>
+<para>
+
 </para><variablelist role="params">
 <varlistentry><term><parameter>menu_item</parameter>&nbsp;:</term>
-<listitem><simpara>the menu item widget
+<listitem><simpara> a <link linkend="GtkMenuItem"><type>GtkMenuItem</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>submenu</parameter>&nbsp;:</term>
-<listitem><simpara>the submenu
-
-
+<listitem><simpara> the submenu, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
@@ -232,15 +240,18 @@ Note that you do need to set an accelerator on the parent menu with
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
-<title><anchor id="gtk-menu-item-remove-submenu" role="function"/>gtk_menu_item_remove_submenu ()</title>
-<indexterm><primary>gtk_menu_item_remove_submenu</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_item_remove_submenu        (<link linkend="GtkMenuItem">GtkMenuItem</link> *menu_item);</programlisting>
+<title><anchor id="gtk-menu-item-remove-submenu" role="function" condition="deprecated"/>gtk_menu_item_remove_submenu ()</title>
+<indexterm role="deprecated"><primary>gtk_menu_item_remove_submenu</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_item_remove_submenu        (<link linkend="GtkMenuItem">GtkMenuItem</link> *menu_item);</programlisting>
+<warning><para><literal>gtk_menu_item_remove_submenu</literal> has been deprecated since version 2.12 and should not be used in newly-written code. <link linkend="gtk-menu-item-remove-submenu"><function>gtk_menu_item_remove_submenu()</function></link> is deprecated and
+                  should not be used in newly written code. Use
+                  <link linkend="gtk-menu-item-set-submenu"><function>gtk_menu_item_set_submenu()</function></link> instead.</para></warning>
 <para>
-Removes the widget's submenu.
+Removes the widget's submenu.</para>
+<para>
+
 </para><variablelist role="params">
 <varlistentry><term><parameter>menu_item</parameter>&nbsp;:</term>
-<listitem><simpara>the menu item widget
-
-
+<listitem><simpara> a <link linkend="GtkMenuItem"><type>GtkMenuItem</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
@@ -358,6 +369,19 @@ Gets the submenu underneath this menu item, if any. See
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> submenu for this menu item, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if none.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+
+</refsect1>
+<refsect1 role="property_details">
+<title role="property_details.title">Property Details</title>
+<refsect2><title><anchor id="GtkMenuItem--submenu"/>The :<literal>submenu</literal> property</title>
+<indexterm role="2.12"><primary>GtkMenuItem:submenu</primary></indexterm><programlisting>  submenu                  <link linkend="GtkMenu">GtkMenu</link>               : Read / Write</programlisting>
+<para>
+The submenu attached to the menu item, or NULL if it has none.</para>
+<para>
+
+</para><para>Since  2.12
+</para>
+</refsect2>
 
 </refsect1>
 <refsect1 role="style_properties_details">

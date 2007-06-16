@@ -85,8 +85,6 @@ ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
-ENABLE_FB_MANAGER_FALSE = @ENABLE_FB_MANAGER_FALSE@
-ENABLE_FB_MANAGER_TRUE = @ENABLE_FB_MANAGER_TRUE@
 ENABLE_GTK_DOC_FALSE = @ENABLE_GTK_DOC_FALSE@
 ENABLE_GTK_DOC_TRUE = @ENABLE_GTK_DOC_TRUE@
 ENABLE_MAN_FALSE = @ENABLE_MAN_FALSE@
@@ -249,8 +247,6 @@ TEST_PRINT_BACKEND_FALSE = @TEST_PRINT_BACKEND_FALSE@
 TEST_PRINT_BACKEND_TRUE = @TEST_PRINT_BACKEND_TRUE@
 USE_DIRECTFB_FALSE = @USE_DIRECTFB_FALSE@
 USE_DIRECTFB_TRUE = @USE_DIRECTFB_TRUE@
-USE_LINUX_FB_FALSE = @USE_LINUX_FB_FALSE@
-USE_LINUX_FB_TRUE = @USE_LINUX_FB_TRUE@
 USE_MEDIALIB25_FALSE = @USE_MEDIALIB25_FALSE@
 USE_MEDIALIB25_TRUE = @USE_MEDIALIB25_TRUE@
 USE_MEDIALIB_FALSE = @USE_MEDIALIB_FALSE@
@@ -351,11 +347,12 @@ LDADDS = \
 
 @USE_X11_TRUE@testsocket_programs = testsocket testsocket_child
 
-TESTS = floatingtest
+TESTS = floatingtest buildertest
 
 noinst_PROGRAMS = \
 	autotestfilechooser		\
 	floatingtest			\
+	buildertest			\
 	simple				\
 	print-editor			\
 	testaccel			\
@@ -419,6 +416,7 @@ noinst_PROGRAMS = \
 autotestfilechooser_DEPENDENCIES = $(TEST_DEPS)
 simple_DEPENDENCIES = $(TEST_DEPS)
 floatingtest_DEPENDENCIES = $(TEST_DEPS)
+buildertest_DEPENDENCIES = $(TEST_DEPS)
 print_editor_DEPENDENCIES = $(TEST_DEPS)
 testicontheme_DEPENDENCIES = $(TEST_DEPS)
 testiconview_DEPENDENCIES = $(TEST_DEPS)
@@ -474,6 +472,7 @@ testvolumebutton_DEPENDENCIES = $(TEST_DEPS)
 autotestfilechooser_LDADD = $(LDADDS)
 simple_LDADD = $(LDADDS)
 floatingtest_LDADD = $(LDADDS)
+buildertest_LDADD = $(LDADDS)
 print_editor_LDADD = $(LDADDS)
 testaccel_LDADD = $(LDADDS)
 testassistant_LDADD = $(LDADDS)
@@ -532,6 +531,8 @@ testactions_LDADD = $(LDADDS)
 testgrouping_LDADD = $(LDADDS)
 testtooltips_LDADD = $(LDADDS)
 testvolumebutton_LDADD = $(LDADDS)
+
+buildertest_LDFLAGS = -export-dynamic
 
 autotestfilechooser_SOURCES = \
 	autotestfilechooser.c
@@ -671,11 +672,12 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 @USE_X11_TRUE@noinst_PROGRAMS = autotestfilechooser$(EXEEXT) \
-@USE_X11_TRUE@	floatingtest$(EXEEXT) simple$(EXEEXT) \
-@USE_X11_TRUE@	print-editor$(EXEEXT) testaccel$(EXEEXT) \
-@USE_X11_TRUE@	testassistant$(EXEEXT) testbbox$(EXEEXT) \
-@USE_X11_TRUE@	testcairo$(EXEEXT) testcalendar$(EXEEXT) \
-@USE_X11_TRUE@	testcombo$(EXEEXT) testcombochange$(EXEEXT) \
+@USE_X11_TRUE@	floatingtest$(EXEEXT) buildertest$(EXEEXT) \
+@USE_X11_TRUE@	simple$(EXEEXT) print-editor$(EXEEXT) \
+@USE_X11_TRUE@	testaccel$(EXEEXT) testassistant$(EXEEXT) \
+@USE_X11_TRUE@	testbbox$(EXEEXT) testcairo$(EXEEXT) \
+@USE_X11_TRUE@	testcalendar$(EXEEXT) testcombo$(EXEEXT) \
+@USE_X11_TRUE@	testcombochange$(EXEEXT) \
 @USE_X11_TRUE@	testcellrenderertext$(EXEEXT) testdnd$(EXEEXT) \
 @USE_X11_TRUE@	testellipsise$(EXEEXT) \
 @USE_X11_TRUE@	testentrycompletion$(EXEEXT) \
@@ -706,11 +708,12 @@ CONFIG_CLEAN_FILES =
 @USE_X11_TRUE@	testgrouping$(EXEEXT) testtooltips$(EXEEXT) \
 @USE_X11_TRUE@	testvolumebutton$(EXEEXT)
 @USE_X11_FALSE@noinst_PROGRAMS = autotestfilechooser$(EXEEXT) \
-@USE_X11_FALSE@	floatingtest$(EXEEXT) simple$(EXEEXT) \
-@USE_X11_FALSE@	print-editor$(EXEEXT) testaccel$(EXEEXT) \
-@USE_X11_FALSE@	testassistant$(EXEEXT) testbbox$(EXEEXT) \
-@USE_X11_FALSE@	testcairo$(EXEEXT) testcalendar$(EXEEXT) \
-@USE_X11_FALSE@	testcombo$(EXEEXT) testcombochange$(EXEEXT) \
+@USE_X11_FALSE@	floatingtest$(EXEEXT) buildertest$(EXEEXT) \
+@USE_X11_FALSE@	simple$(EXEEXT) print-editor$(EXEEXT) \
+@USE_X11_FALSE@	testaccel$(EXEEXT) testassistant$(EXEEXT) \
+@USE_X11_FALSE@	testbbox$(EXEEXT) testcairo$(EXEEXT) \
+@USE_X11_FALSE@	testcalendar$(EXEEXT) testcombo$(EXEEXT) \
+@USE_X11_FALSE@	testcombochange$(EXEEXT) \
 @USE_X11_FALSE@	testcellrenderertext$(EXEEXT) testdnd$(EXEEXT) \
 @USE_X11_FALSE@	testellipsise$(EXEEXT) \
 @USE_X11_FALSE@	testentrycompletion$(EXEEXT) \
@@ -745,6 +748,8 @@ PROGRAMS = $(noinst_PROGRAMS)
 am_autotestfilechooser_OBJECTS = autotestfilechooser.$(OBJEXT)
 autotestfilechooser_OBJECTS = $(am_autotestfilechooser_OBJECTS)
 autotestfilechooser_LDFLAGS =
+buildertest_SOURCES = buildertest.c
+buildertest_OBJECTS = buildertest.$(OBJEXT)
 floatingtest_SOURCES = floatingtest.c
 floatingtest_OBJECTS = floatingtest.$(OBJEXT)
 floatingtest_LDFLAGS =
@@ -965,6 +970,7 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/autotestfilechooser.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/buildertest.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/floatingtest.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pixbuf-lowmem.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pixbuf-random.Po \
@@ -1027,21 +1033,21 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(autotestfilechooser_SOURCES) floatingtest.c \
-	pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c \
-	pixbuf-read.c pixbuf-threads.c print-editor.c simple.c \
-	stresstest-toolbar.c testaccel.c $(testactions_SOURCES) \
-	testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c \
-	testcellrenderertext.c testcombo.c testcombochange.c testdnd.c \
-	testellipsise.c $(testentrycompletion_SOURCES) \
-	$(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) \
-	$(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c \
-	$(testiconview_SOURCES) testimage.c testinput.c testmenubars.c \
-	testmenus.c $(testmerge_SOURCES) testmultidisplay.c \
-	testmultiscreen.c testnotebookdnd.c testnouiprint.c \
-	$(testprint_SOURCES) $(testrecentchooser_SOURCES) \
-	$(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c \
-	testselection.c $(testsocket_SOURCES) \
+DIST_SOURCES = $(autotestfilechooser_SOURCES) buildertest.c \
+	floatingtest.c pixbuf-lowmem.c pixbuf-random.c \
+	pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c \
+	print-editor.c simple.c stresstest-toolbar.c testaccel.c \
+	$(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) \
+	testcairo.c testcalendar.c testcellrenderertext.c testcombo.c \
+	testcombochange.c testdnd.c testellipsise.c \
+	$(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) \
+	$(testfilechooserbutton_SOURCES) $(testgrouping_SOURCES) \
+	$(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) \
+	testimage.c testinput.c testmenubars.c testmenus.c \
+	$(testmerge_SOURCES) testmultidisplay.c testmultiscreen.c \
+	testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) \
+	$(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) \
+	testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) \
 	$(testsocket_child_SOURCES) $(testspinbutton_SOURCES) \
 	$(teststatusicon_SOURCES) $(testtext_SOURCES) testtextbuffer.c \
 	$(testtoolbar_SOURCES) $(testtooltips_SOURCES) \
@@ -1050,7 +1056,7 @@ DIST_SOURCES = $(autotestfilechooser_SOURCES) floatingtest.c \
 	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
 	testxinerama.c treestoretest.c
 DIST_COMMON = $(srcdir)/Makefile.in Makefile.am
-SOURCES = $(autotestfilechooser_SOURCES) floatingtest.c pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) testtextbuffer.c $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+SOURCES = $(autotestfilechooser_SOURCES) buildertest.c floatingtest.c pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) testtextbuffer.c $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 
 all: all-am
 
@@ -1071,6 +1077,9 @@ clean-noinstPROGRAMS:
 autotestfilechooser$(EXEEXT): $(autotestfilechooser_OBJECTS) $(autotestfilechooser_DEPENDENCIES) 
 	@rm -f autotestfilechooser$(EXEEXT)
 	$(LINK) $(autotestfilechooser_LDFLAGS) $(autotestfilechooser_OBJECTS) $(autotestfilechooser_LDADD) $(LIBS)
+buildertest$(EXEEXT): $(buildertest_OBJECTS) $(buildertest_DEPENDENCIES) 
+	@rm -f buildertest$(EXEEXT)
+	$(LINK) $(buildertest_LDFLAGS) $(buildertest_OBJECTS) $(buildertest_LDADD) $(LIBS)
 floatingtest$(EXEEXT): $(floatingtest_OBJECTS) $(floatingtest_DEPENDENCIES) 
 	@rm -f floatingtest$(EXEEXT)
 	$(LINK) $(floatingtest_LDFLAGS) $(floatingtest_OBJECTS) $(floatingtest_LDADD) $(LIBS)
@@ -1259,6 +1268,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/autotestfilechooser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buildertest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floatingtest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pixbuf-lowmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pixbuf-random.Po@am__quote@

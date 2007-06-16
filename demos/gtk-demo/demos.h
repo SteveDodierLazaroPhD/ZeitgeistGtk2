@@ -12,6 +12,7 @@ struct _Demo
 
 GtkWidget *do_appwindow (GtkWidget *do_widget);
 GtkWidget *do_assistant (GtkWidget *do_widget);
+GtkWidget *do_builder (GtkWidget *do_widget);
 GtkWidget *do_button_box (GtkWidget *do_widget);
 GtkWidget *do_changedisplay (GtkWidget *do_widget);
 GtkWidget *do_clipboard (GtkWidget *do_widget);
@@ -63,6 +64,7 @@ Demo child2[] = {
 Demo testgtk_demos[] = {
   { "Application main window", "appwindow.c", do_appwindow, NULL }, 
   { "Assistant", "assistant.c", do_assistant, NULL }, 
+  { "Builder", "builder.c", do_builder, NULL }, 
   { "Button Boxes", "button_box.c", do_button_box, NULL }, 
   { "Change Display", "changedisplay.c", do_changedisplay, NULL }, 
   { "Clipboard", "clipboard.c", do_clipboard, NULL }, 

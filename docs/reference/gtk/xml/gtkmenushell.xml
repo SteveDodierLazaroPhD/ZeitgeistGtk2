@@ -68,7 +68,7 @@ enum                <link linkend="GtkMenuDirectionType">GtkMenuDirectionType</l
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkMenuShell implements
- <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
+ <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
 
 </refsect1>
 
@@ -90,6 +90,7 @@ GtkMenuShell implements
   <link linkend="GtkMenuShell-cycle-focus">cycle-focus</link>                                    : Run Last / Action
   <link linkend="GtkMenuShell-deactivate">deactivate</link>                                     : Run First
   <link linkend="GtkMenuShell-move-current">move-current</link>                                   : Run Last / Action
+  <link linkend="GtkMenuShell-move-selected">move-selected</link>                                  : Run Last
   <link linkend="GtkMenuShell-selection-done">selection-done</link>                                 : Run First
 </synopsis>
 </refsect1>
@@ -481,7 +482,29 @@ specified by <parameter>direction</parameter>.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkMenuShell-selection-done"/>The <literal>::selection-done</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkMenuShell-move-selected"/>The <literal>::move-selected</literal> signal</title>
+<indexterm role="2.12"><primary>GtkMenuShell::move-selected</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkMenuShell">GtkMenuShell</link> *menu_shell,
+                                                        <link linkend="gint">gint</link>          distance,
+                                                        <link linkend="gpointer">gpointer</link>      user_data)       : Run Last</programlisting>
+<para>
+The ::move-selected signal is emitted to move the selection to
+another item.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>menu_shell</parameter>&nbsp;:</term>
+<listitem><simpara> the object on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>distance</parameter>&nbsp;:</term>
+<listitem><simpara> +1 to move to the next item, -1 to move to the previous
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop the signal emission, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to continue
+
+</simpara></listitem></varlistentry>
+</variablelist><para>Since  2.12
+</para></refsect2><refsect2><title><anchor id="GtkMenuShell-selection-done"/>The <literal>::selection-done</literal> signal</title>
 <indexterm><primary>GtkMenuShell::selection-done</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkMenuShell">GtkMenuShell</link> *menushell,
                                                         <link linkend="gpointer">gpointer</link>      user_data)      : Run First</programlisting>
 <para>

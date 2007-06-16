@@ -170,6 +170,42 @@ enum                <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosit
                                                          <link linkend="gint">gint</link> ty,
                                                          <link linkend="gint">gint</link> *wx,
                                                          <link linkend="gint">gint</link> *wy);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-convert-bin-window-to-tree-coords">gtk_tree_view_convert_bin_window_to_tree_coords</link>
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> bx,
+                                                         <link linkend="gint">gint</link> by,
+                                                         <link linkend="gint">gint</link> *tx,
+                                                         <link linkend="gint">gint</link> *ty);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-convert-bin-window-to-widget-coords">gtk_tree_view_convert_bin_window_to_widget_coords</link>
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> bx,
+                                                         <link linkend="gint">gint</link> by,
+                                                         <link linkend="gint">gint</link> *wx,
+                                                         <link linkend="gint">gint</link> *wy);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-convert-tree-to-bin-window-coords">gtk_tree_view_convert_tree_to_bin_window_coords</link>
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> tx,
+                                                         <link linkend="gint">gint</link> ty,
+                                                         <link linkend="gint">gint</link> *bx,
+                                                         <link linkend="gint">gint</link> *by);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-convert-tree-to-widget-coords">gtk_tree_view_convert_tree_to_widget_coords</link>
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> tx,
+                                                         <link linkend="gint">gint</link> ty,
+                                                         <link linkend="gint">gint</link> *wx,
+                                                         <link linkend="gint">gint</link> *wy);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-convert-widget-to-bin-window-coords">gtk_tree_view_convert_widget_to_bin_window_coords</link>
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> wx,
+                                                         <link linkend="gint">gint</link> wy,
+                                                         <link linkend="gint">gint</link> *bx,
+                                                         <link linkend="gint">gint</link> *by);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-convert-widget-to-tree-coords">gtk_tree_view_convert_widget_to_tree_coords</link>
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> wx,
+                                                         <link linkend="gint">gint</link> wy,
+                                                         <link linkend="gint">gint</link> *tx,
+                                                         <link linkend="gint">gint</link> *ty);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-enable-model-drag-dest">gtk_tree_view_enable_model_drag_dest</link>
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          const <link linkend="GtkTargetEntry">GtkTargetEntry</link> *targets,
@@ -285,7 +321,7 @@ enum                <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</l
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkTreeView implements
- <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
+ <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
 
 </refsect1>
 
@@ -365,9 +401,35 @@ linkend="GtkTreeModel">GtkTreeModel</link> interface.
 </para>
 
 <para>
-Please refer to the <link linkend="TreeWidget">tree widget conceptual overview</link> 
-for an overview of all the objects and data types related to the tree widget and how 
-they work together.
+Please refer to the <link linkend="TreeWidget">tree widget conceptual 
+overview</link> for an overview of all the objects and data types related 
+to the tree widget and how they work together.
+</para>
+
+<para>
+Several different coordinate systems are exposed in the GtkTreeView API.
+These are:
+
+<inlinegraphic fileref="tree-view-coordinates.png" format="PNG"></inlinegraphic>
+
+  <simplelist>
+    <member>Widget coordinates -- coordinates relative to the widget 
+    (usually <literal>widget-&gt;window</literal>.</member>
+    <member>Bin window coordinates -- coordinates relative to the window 
+    that GtkTreeView renders to.</member>
+    <member>Tree coordinates -- coordinates relative to the entire scrollable 
+    area of GtkTreeView.  These coordinates start at (0, 0) for row 0 of the 
+    tree.</member>
+  </simplelist>
+</para>
+
+<para>
+Several functions are available for converting between the different
+coordinate systems.  The most common translations are between widget and bin 
+window coordinates and between bin window and tree coordinates.  For the 
+former you can use <link linkend="gtk-tree-view-convert-widget-to-bin-window-coords"><function>gtk_tree_view_convert_widget_to_bin_window_coords()</function></link>
+(and vice versa), for the latter <link linkend="gtk-tree-view-convert-bin-window-to-tree-coords"><function>gtk_tree_view_convert_bin_window_to_tree_coords()</function></link> 
+(and vice versa).
 </para>
 </refsect1>
 
@@ -1120,7 +1182,7 @@ dropped everywhere.</para>
 <para>
 Scrolls the tree view such that the top-left corner of the visible
 area is <parameter>tree_x</parameter>, <parameter>tree_y</parameter>, where <parameter>tree_x</parameter> and <parameter>tree_y</parameter> are specified
-in tree window coordinates.  The <parameter>tree_view</parameter> must be realized before
+in tree coordinates.  The <parameter>tree_view</parameter> must be realized before
 this function is called.  If it isn't, you probably want to be
 using <link linkend="gtk-tree-view-scroll-to-cell"><function>gtk_tree_view_scroll_to_cell()</function></link>.
 </para>
@@ -1475,16 +1537,23 @@ Retrieves whether the user can reorder the tree via drag-and-drop. See
                                                          <link linkend="gint">gint</link> *cell_x,
                                                          <link linkend="gint">gint</link> *cell_y);</programlisting>
 <para>
-Finds the path at the point (<parameter>x</parameter>, <parameter>y</parameter>), relative to widget coordinates.  That
-is, <parameter>x</parameter> and <parameter>y</parameter> are relative to an events coordinates. <parameter>x</parameter> and <parameter>y</parameter> must come
-from an event on the <parameter>tree_view</parameter> only where <literal>event->window ==
-gtk_tree_view_get_bin (<!-- -->)</literal>. It is primarily for things 
-like popup menus. If <parameter>path</parameter> is non-<link linkend="NULL:CAPS"><literal>NULL</literal></link>, then it will be filled with the 
-<link linkend="GtkTreePath"><type>GtkTreePath</type></link> at that point.  This path should be freed with <link linkend="gtk-tree-path-free"><function>gtk_tree_path_free()</function></link>.  
-If <parameter>column</parameter> is non-<link linkend="NULL:CAPS"><literal>NULL</literal></link>, then it will be filled with the column at that point.
-<parameter>cell_x</parameter> and <parameter>cell_y</parameter> return the coordinates relative to the cell background
-(i.e. the <parameter>background_area</parameter> passed to <link linkend="gtk-cell-renderer-render"><function>gtk_cell_renderer_render()</function></link>).  This
-function is only meaningful if <parameter>tree_view</parameter> is realized.</para>
+Finds the path at the point (<parameter>x</parameter>, <parameter>y</parameter>), relative to bin_window coordinates
+(please see <link linkend="gtk-tree-view-get-bin-window"><function>gtk_tree_view_get_bin_window()</function></link>).
+That is, <parameter>x</parameter> and <parameter>y</parameter> are relative to an events coordinates. <parameter>x</parameter> and <parameter>y</parameter> must
+come from an event on the <parameter>tree_view</parameter> only where <literal>event->window ==
+gtk_tree_view_get_bin_window (<!-- -->)</literal>. It is primarily for
+things like popup menus. If <parameter>path</parameter> is non-<link linkend="NULL:CAPS"><literal>NULL</literal></link>, then it will be filled
+with the <link linkend="GtkTreePath"><type>GtkTreePath</type></link> at that point.  This path should be freed with
+<link linkend="gtk-tree-path-free"><function>gtk_tree_path_free()</function></link>.  If <parameter>column</parameter> is non-<link linkend="NULL:CAPS"><literal>NULL</literal></link>, then it will be filled
+with the column at that point.  <parameter>cell_x</parameter> and <parameter>cell_y</parameter> return the coordinates
+relative to the cell background (i.e. the <parameter>background_area</parameter> passed to
+<link linkend="gtk-cell-renderer-render"><function>gtk_cell_renderer_render()</function></link>).  This function is only meaningful if
+<parameter>tree_view</parameter> is realized.
+</para>
+<para>
+For converting widget coordinates (eg. the ones you get from
+GtkWidget::query-tooltip), please see
+<link linkend="gtk-tree-view-convert-widget-to-bin-window-coords"><function>gtk_tree_view_convert_widget_to_bin_window_coords()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1492,10 +1561,10 @@ function is only meaningful if <parameter>tree_view</parameter> is realized.</pa
 <listitem><simpara> A <link linkend="GtkTreeView"><type>GtkTreeView</type></link>.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>x</parameter>&nbsp;:</term>
-<listitem><simpara> The x position to be identified.
+<listitem><simpara> The x position to be identified (relative to bin_window).
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>y</parameter>&nbsp;:</term>
-<listitem><simpara> The y position to be identified.
+<listitem><simpara> The y position to be identified (relative to bin_window).
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>path</parameter>&nbsp;:</term>
 <listitem><simpara> A pointer to a <link linkend="GtkTreePath"><type>GtkTreePath</type></link> pointer to be filled in, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
@@ -1519,7 +1588,7 @@ function is only meaningful if <parameter>tree_view</parameter> is realized.</pa
                                                          <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *column,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *rect);</programlisting>
 <para>
-Fills the bounding rectangle in tree window coordinates for the cell at the
+Fills the bounding rectangle in bin_window coordinates for the cell at the
 row specified by <parameter>path</parameter> and the column specified by <parameter>column</parameter>.  If <parameter>path</parameter> is
 <link linkend="NULL:CAPS"><literal>NULL</literal></link>, or points to a path not currently displayed, the <parameter>y</parameter> and <parameter>height</parameter> fields
 of the rectangle will be filled with 0. If <parameter>column</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, the <parameter>x</parameter> and <parameter>width</parameter>
@@ -1551,16 +1620,15 @@ realized.</para>
                                                          <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *column,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *rect);</programlisting>
 <para>
-Fills the bounding rectangle in tree window coordinates for the cell at the
+Fills the bounding rectangle in bin_window coordinates for the cell at the
 row specified by <parameter>path</parameter> and the column specified by <parameter>column</parameter>.  If <parameter>path</parameter> is
 <link linkend="NULL:CAPS"><literal>NULL</literal></link>, or points to a node not found in the tree, the <parameter>y</parameter> and <parameter>height</parameter> fields of
 the rectangle will be filled with 0. If <parameter>column</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, the <parameter>x</parameter> and <parameter>width</parameter>
 fields will be filled with 0.  The returned rectangle is equivalent to the
 <parameter>background_area</parameter> passed to <link linkend="gtk-cell-renderer-render"><function>gtk_cell_renderer_render()</function></link>.  These background
-areas tile to cover the entire tree window (except for the area used for
-header buttons). Contrast with the <parameter>cell_area</parameter>, returned by
-<link linkend="gtk-tree-view-get-cell-area"><function>gtk_tree_view_get_cell_area()</function></link>, which returns only the cell itself, excluding
-surrounding borders and the tree expander area.</para>
+areas tile to cover the entire bin window.  Contrast with the <parameter>cell_area</parameter>,
+returned by <link linkend="gtk-tree-view-get-cell-area"><function>gtk_tree_view_get_cell_area()</function></link>, which returns only the cell
+itself, excluding surrounding borders and the tree expander area.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1583,10 +1651,10 @@ surrounding borders and the tree expander area.</para>
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *visible_rect);</programlisting>
 <para>
 Fills <parameter>visible_rect</parameter> with the currently-visible region of the
-buffer, in tree coordinates. Convert to widget coordinates with
-<link linkend="gtk-tree-view-tree-to-widget-coords"><function>gtk_tree_view_tree_to_widget_coords()</function></link>. Tree coordinates start at
-0,0 for row 0 of the tree, and cover the entire scrollable area of
-the tree.</para>
+buffer, in tree coordinates. Convert to bin_window coordinates with
+<link linkend="gtk-tree-view-convert-tree-to-bin-window-coords"><function>gtk_tree_view_convert_tree_to_bin_window_coords()</function></link>.
+Tree coordinates start at 0,0 for row 0 of the tree, and cover the entire
+scrollable area of the tree.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1642,15 +1710,19 @@ compare to <literal>event->window</literal> to confirm that the event on
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
-<title><anchor id="gtk-tree-view-widget-to-tree-coords" role="function"/>gtk_tree_view_widget_to_tree_coords ()</title>
-<indexterm><primary>gtk_tree_view_widget_to_tree_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_widget_to_tree_coords (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+<title><anchor id="gtk-tree-view-widget-to-tree-coords" role="function" condition="deprecated"/>gtk_tree_view_widget_to_tree_coords ()</title>
+<indexterm role="deprecated"><primary>gtk_tree_view_widget_to_tree_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_widget_to_tree_coords (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="gint">gint</link> wx,
                                                          <link linkend="gint">gint</link> wy,
                                                          <link linkend="gint">gint</link> *tx,
                                                          <link linkend="gint">gint</link> *ty);</programlisting>
+<warning><para><literal>gtk_tree_view_widget_to_tree_coords</literal> has been deprecated since version 2.12 and should not be used in newly-written code. Due to historial reasons the name of this function is
+incorrect.  For converting coordinates relative to the widget to
+bin_window coordinates, please see
+<link linkend="gtk-tree-view-convert-widget-to-bin-window-coords"><function>gtk_tree_view_convert_widget_to_bin_window_coords()</function></link>.</para></warning>
 <para>
-Converts widget coordinates to coordinates for the
-tree window (the full scrollable area of the tree).</para>
+Converts bin_window coordinates to coordinates for the
+tree (the full scrollable area of the tree).</para>
 <para>
 
 </para><variablelist role="params">
@@ -1658,10 +1730,10 @@ tree window (the full scrollable area of the tree).</para>
 <listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
-<listitem><simpara> widget X coordinate
+<listitem><simpara> X coordinate relative to bin_window
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
-<listitem><simpara> widget Y coordinate
+<listitem><simpara> Y coordinate relative to bin_window
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
 <listitem><simpara> return location for tree X coordinate
@@ -1671,8 +1743,137 @@ tree window (the full scrollable area of the tree).</para>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
-<title><anchor id="gtk-tree-view-tree-to-widget-coords" role="function"/>gtk_tree_view_tree_to_widget_coords ()</title>
-<indexterm><primary>gtk_tree_view_tree_to_widget_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_tree_to_widget_coords (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+<title><anchor id="gtk-tree-view-tree-to-widget-coords" role="function" condition="deprecated"/>gtk_tree_view_tree_to_widget_coords ()</title>
+<indexterm role="deprecated"><primary>gtk_tree_view_tree_to_widget_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_tree_to_widget_coords (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> tx,
+                                                         <link linkend="gint">gint</link> ty,
+                                                         <link linkend="gint">gint</link> *wx,
+                                                         <link linkend="gint">gint</link> *wy);</programlisting>
+<warning><para><literal>gtk_tree_view_tree_to_widget_coords</literal> has been deprecated since version 2.12 and should not be used in newly-written code. Due to historial reasons the name of this function is
+incorrect.  For converting bin_window coordinates to coordinates relative
+to bin_window, please see
+<link linkend="gtk-tree-view-convert-bin-window-to-widget-coords"><function>gtk_tree_view_convert_bin_window_to_widget_coords()</function></link>.</para></warning>
+<para>
+Converts tree coordinates (coordinates in full scrollable area of the tree)
+to bin_window coordinates.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
+<listitem><simpara> tree X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
+<listitem><simpara> tree Y coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
+<listitem><simpara> return location for X coordinate relative to bin_window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
+<listitem><simpara> return location for Y coordinate relative to bin_window
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-convert-bin-window-to-tree-coords" role="function" condition="since:2.12"/>gtk_tree_view_convert_bin_window_to_tree_coords ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_convert_bin_window_to_tree_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_convert_bin_window_to_tree_coords
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> bx,
+                                                         <link linkend="gint">gint</link> by,
+                                                         <link linkend="gint">gint</link> *tx,
+                                                         <link linkend="gint">gint</link> *ty);</programlisting>
+<para>
+Converts bin_window coordinates to coordinates for the
+tree (the full scrollable area of the tree).</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>bx</parameter>&nbsp;:</term>
+<listitem><simpara> return location for tree X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>by</parameter>&nbsp;:</term>
+<listitem><simpara> return location for tree Y coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
+<listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-convert-bin-window-to-widget-coords" role="function" condition="since:2.12"/>gtk_tree_view_convert_bin_window_to_widget_coords ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_convert_bin_window_to_widget_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_convert_bin_window_to_widget_coords
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> bx,
+                                                         <link linkend="gint">gint</link> by,
+                                                         <link linkend="gint">gint</link> *wx,
+                                                         <link linkend="gint">gint</link> *wy);</programlisting>
+<para>
+Converts bin_window coordinates (see <link linkend="gtk-tree-view-get-bin-window"><function>gtk_tree_view_get_bin_window()</function></link>).
+to widget relative coordinates.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>bx</parameter>&nbsp;:</term>
+<listitem><simpara> bin_window X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>by</parameter>&nbsp;:</term>
+<listitem><simpara> bin_window Y coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
+<listitem><simpara> return location for widget X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
+<listitem><simpara> return location for widget Y coordinate
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-convert-tree-to-bin-window-coords" role="function" condition="since:2.12"/>gtk_tree_view_convert_tree_to_bin_window_coords ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_convert_tree_to_bin_window_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_convert_tree_to_bin_window_coords
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> tx,
+                                                         <link linkend="gint">gint</link> ty,
+                                                         <link linkend="gint">gint</link> *bx,
+                                                         <link linkend="gint">gint</link> *by);</programlisting>
+<para>
+Converts tree coordinates (coordinates in full scrollable area of the tree)
+to bin_window coordinates.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
+<listitem><simpara> tree X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
+<listitem><simpara> tree Y coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>bx</parameter>&nbsp;:</term>
+<listitem><simpara> return location for X coordinate relative to bin_window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>by</parameter>&nbsp;:</term>
+<listitem><simpara> return location for Y coordinate relative to bin_window
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-convert-tree-to-widget-coords" role="function" condition="since:2.12"/>gtk_tree_view_convert_tree_to_widget_coords ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_convert_tree_to_widget_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_convert_tree_to_widget_coords
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="gint">gint</link> tx,
                                                          <link linkend="gint">gint</link> ty,
                                                          <link linkend="gint">gint</link> *wx,
@@ -1687,18 +1888,83 @@ to widget coordinates.</para>
 <listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
-<listitem><simpara> tree X coordinate
+<listitem><simpara>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
-<listitem><simpara> tree Y coordinate
+<listitem><simpara>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
-<listitem><simpara> return location for widget X coordinate
+<listitem><simpara> X coordinate relative to the tree
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
-<listitem><simpara> return location for widget Y coordinate
+<listitem><simpara> Y coordinate relative to the tree
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-convert-widget-to-bin-window-coords" role="function" condition="since:2.12"/>gtk_tree_view_convert_widget_to_bin_window_coords ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_convert_widget_to_bin_window_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_convert_widget_to_bin_window_coords
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> wx,
+                                                         <link linkend="gint">gint</link> wy,
+                                                         <link linkend="gint">gint</link> *bx,
+                                                         <link linkend="gint">gint</link> *by);</programlisting>
+<para>
+Converts widget coordinates to coordinates for the bin_window
+(see <link linkend="gtk-tree-view-get-bin-window"><function>gtk_tree_view_get_bin_window()</function></link>).</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate relative to the widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
+<listitem><simpara> Y coordinate relative to the widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>bx</parameter>&nbsp;:</term>
+<listitem><simpara> return location for bin_window X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>by</parameter>&nbsp;:</term>
+<listitem><simpara> return location for bin_window Y coordinate
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-convert-widget-to-tree-coords" role="function" condition="since:2.12"/>gtk_tree_view_convert_widget_to_tree_coords ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_convert_widget_to_tree_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_convert_widget_to_tree_coords
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> wx,
+                                                         <link linkend="gint">gint</link> wy,
+                                                         <link linkend="gint">gint</link> *tx,
+                                                         <link linkend="gint">gint</link> *ty);</programlisting>
+<para>
+Converts widget coordinates to coordinates for the
+tree (the full scrollable area of the tree).</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate relative to the widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
+<listitem><simpara> Y coordinate relative to the widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
+<listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gtk-tree-view-enable-model-drag-dest" role="function"/>gtk_tree_view_enable_model_drag_dest ()</title>
 <indexterm><primary>gtk_tree_view_enable_model_drag_dest</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_enable_model_drag_dest
@@ -1828,7 +2094,8 @@ Gets information about the row that is highlighted for feedback.</para>
                                                          <link linkend="GtkTreePath">GtkTreePath</link> **path,
                                                          <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosition</link> *pos);</programlisting>
 <para>
-Determines the destination row for a given position.</para>
+Determines the destination row for a given position.  <parameter>drag_x</parameter> and
+<parameter>drag_y</parameter> are expected to be in widget coordinates.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2514,9 +2781,15 @@ in <link linkend="GtkComboBox"><type>GtkComboBox</type></link> or <link linkend=
 </para>
 </refsect2>
 <refsect2><title><anchor id="GtkTreeView--level-indentation"/>The :<literal>level-indentation</literal> property</title>
-<indexterm><primary>GtkTreeView:level-indentation</primary></indexterm><programlisting>  level-indentation        <link linkend="gint">gint</link>                  : Read / Write</programlisting>
-<para>Extra indentation for each level.</para><para>Allowed values: &gt;= 0</para>
+<indexterm role="2.12"><primary>GtkTreeView:level-indentation</primary></indexterm><programlisting>  level-indentation        <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>
+Extra indentation for each level.</para>
+<para>
+
+</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
+<para>Since  2.12
+</para>
 </refsect2>
 <refsect2><title><anchor id="GtkTreeView--model"/>The :<literal>model</literal> property</title>
 <indexterm><primary>GtkTreeView:model</primary></indexterm><programlisting>  model                    <link linkend="GtkTreeModel">GtkTreeModel</link>          : Read / Write</programlisting>
@@ -2539,8 +2812,14 @@ in <link linkend="GtkComboBox"><type>GtkComboBox</type></link> or <link linkend=
 <para>Default value: -1</para>
 </refsect2>
 <refsect2><title><anchor id="GtkTreeView--show-expanders"/>The :<literal>show-expanders</literal> property</title>
-<indexterm><primary>GtkTreeView:show-expanders</primary></indexterm><programlisting>  show-expanders           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
-<para>View has expanders.</para><para>Default value: TRUE</para>
+<indexterm role="2.12"><primary>GtkTreeView:show-expanders</primary></indexterm><programlisting>  show-expanders           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+<link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the view has expanders.</para>
+<para>
+
+</para><para>Default value: TRUE</para>
+<para>Since  2.12
+</para>
 </refsect2>
 <refsect2><title><anchor id="GtkTreeView--vadjustment"/>The :<literal>vadjustment</literal> property</title>
 <indexterm><primary>GtkTreeView:vadjustment</primary></indexterm><programlisting>  vadjustment              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write</programlisting>
@@ -2640,7 +2919,7 @@ The position of the cursor (focused cell) has changed.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
@@ -2665,7 +2944,7 @@ The position of the cursor (focused cell) has changed.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
@@ -2756,7 +3035,7 @@ The given row has been expanded (child nodes are shown).</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
@@ -2770,7 +3049,7 @@ The given row has been expanded (child nodes are shown).</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
@@ -2785,7 +3064,7 @@ The given row has been expanded (child nodes are shown).</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
@@ -2804,7 +3083,7 @@ The given row has been expanded (child nodes are shown).</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
@@ -2822,7 +3101,7 @@ The given row has been expanded (child nodes are shown).</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
@@ -2884,7 +3163,7 @@ signal if you need to control the expandability of individual rows.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
@@ -2898,7 +3177,7 @@ signal if you need to control the expandability of individual rows.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>treeview</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>

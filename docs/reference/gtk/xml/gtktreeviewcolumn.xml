@@ -7,7 +7,7 @@
 
 <refnamediv>
 <refname>GtkTreeViewColumn</refname>
-<refpurpose>A visible column in a <link linkend="GtkTreeView"><type>GtkTreeView</type></link> widget</refpurpose>
+<refpurpose>A visible column in a GtkTreeView widget</refpurpose>
 <!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
@@ -136,6 +136,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-tree-view-co
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-column-focus-cell">gtk_tree_view_column_focus_cell</link>     (<link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *tree_column,
                                                          <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-column-queue-resize">gtk_tree_view_column_queue_resize</link>   (<link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *tree_column);
+<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-tree-view-column-get-tree-view">gtk_tree_view_column_get_tree_view</link>  (<link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *tree_column);
 
 
 </synopsis>
@@ -159,7 +160,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-tree-view-co
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkTreeViewColumn implements
- <link linkend="GtkCellLayout">GtkCellLayout</link>.</para>
+ <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="GtkCellLayout">GtkCellLayout</link>.</para>
 
 </refsect1>
 
@@ -1220,6 +1221,25 @@ their sizes renegotiated.</para>
 <listitem><simpara> A <link linkend="GtkTreeViewColumn"><type>GtkTreeViewColumn</type></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-column-get-tree-view" role="function" condition="since:2.12"/>gtk_tree_view_column_get_tree_view ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_column_get_tree_view</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_tree_view_column_get_tree_view  (<link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *tree_column);</programlisting>
+<para>
+Returns the <link linkend="GtkTreeView"><type>GtkTreeView</type></link> wherein <parameter>tree_column</parameter> has been inserted.  If
+<parameter>column</parameter> is currently not inserted in any tree view, <link linkend="NULL:CAPS"><literal>NULL</literal></link> is
+returned.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_column</parameter>&nbsp;:</term>
+<listitem><simpara> A <link linkend="GtkTreeViewColumn"><type>GtkTreeViewColumn</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The tree view wherein <parameter>column</parameter> has been inserted if any,
+              <link linkend="NULL:CAPS"><literal>NULL</literal></link> otherwise.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 
 </refsect1>

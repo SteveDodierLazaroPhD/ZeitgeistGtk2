@@ -1,0 +1,734 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>GtkBuilder</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<link rel="up" href="Builder.html" title="Interface builder">
+<link rel="prev" href="gtk-gtkbuildable.html" title="GtkBuildable">
+<link rel="next" href="DeprecatedObjects.html" title="Deprecated">
+<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
+<link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
+<link rel="part" href="gtkobjects.html" title="Part&#160;III.&#160;GTK+ Widgets and Objects">
+<link rel="chapter" href="ch01.html" title="Object Hierarchy">
+<link rel="chapter" href="ch02.html" title="Widget Gallery">
+<link rel="chapter" href="WindowWidgets.html" title="Windows">
+<link rel="chapter" href="DisplayWidgets.html" title="Display Widgets">
+<link rel="chapter" href="ButtonWidgets.html" title="Buttons and Toggles">
+<link rel="chapter" href="NumericEntry.html" title="Numeric/Text Data Entry">
+<link rel="chapter" href="TextWidgetObjects.html" title="Multiline Text Editor">
+<link rel="chapter" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
+<link rel="chapter" href="MenusAndCombos.html" title="Menus, Combo Box, Toolbar">
+<link rel="chapter" href="Actions.html" title="Action-based menus and toolbars">
+<link rel="chapter" href="SelectorWidgets.html" title="Selectors (File/Font/Color/Input Devices)">
+<link rel="chapter" href="LayoutContainers.html" title="Layout Containers">
+<link rel="chapter" href="Ornaments.html" title="Ornaments">
+<link rel="chapter" href="ScrollingWidgets.html" title="Scrolling">
+<link rel="chapter" href="Printing.html" title="Printing">
+<link rel="chapter" href="MiscObjects.html" title="Miscellaneous">
+<link rel="chapter" href="AbstractObjects.html" title="Abstract Base Classes">
+<link rel="chapter" href="PlugSocket.html" title="Cross-process Embedding">
+<link rel="chapter" href="SpecialObjects.html" title="Special-purpose features">
+<link rel="chapter" href="RecentDocuments.html" title="Recently Used Documents">
+<link rel="chapter" href="Builder.html" title="Interface builder">
+<link rel="chapter" href="DeprecatedObjects.html" title="Deprecated">
+<link rel="part" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
+<link rel="chapter" href="gtk-migrating-checklist.html" title="Migration Checklist">
+<link rel="chapter" href="gtk-migrating-GtkFileChooser.html" title="Migrating from GtkFileSelection to GtkFileChooser">
+<link rel="chapter" href="gtk-migrating-GtkAction.html" title="Migrating from old menu and toolbar systems to GtkAction">
+<link rel="chapter" href="gtk-migrating-GtkComboBox.html" title="Migrating from GtkOptionMenu and GtkCombo to GtkComboBox and GtkComboBoxEntry">
+<link rel="chapter" href="gtk-migrating-GtkIconView.html" title="Migrating from GnomeIconList to GtkIconView">
+<link rel="chapter" href="gtk-migrating-GtkAboutDialog.html" title="Migrating from GnomeAbout to GtkAboutDialog">
+<link rel="chapter" href="gtk-migrating-GtkColorButton.html" title="Migrating from GnomeColorPicker to GtkColorButton">
+<link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
+<link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
+<link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
+<link rel="glossary" href="glossary.html" title="Glossary">
+<link rel="index" href="ix01.html" title="Index">
+<link rel="index" href="ix02.html" title="Index of deprecated symbols">
+<link rel="index" href="ix03.html" title="Index of new symbols in 2.2">
+<link rel="index" href="ix04.html" title="Index of new symbols in 2.4">
+<link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
+<link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
+<link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
+<link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="gtk-gtkbuildable.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="Builder.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">GTK+ Reference Manual</th>
+<td><a accesskey="n" href="DeprecatedObjects.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id4105930" class="shortcut">Top</a>
+                  &#160;|&#160;
+                  <a href="#id4106492" class="shortcut">Description</a>
+                  &#160;|&#160;
+                  <a href="#id4106434" class="shortcut">Object Hierarchy</a>
+                  &#160;|&#160;
+                  <a href="#id4106458" class="shortcut">Properties</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="GtkBuilder"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2>
+<a name="id4105930"></a><span class="refentrytitle">GtkBuilder</span>
+</h2>
+<p>GtkBuilder &#8212; Build an interface from a UI definition description.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<pre class="synopsis">
+
+#include &lt;gtk/gtk.h&gt;
+
+
+                    <a href="GtkBuilder.html#GtkBuilder-struct">GtkBuilder</a>;
+<GTKDOCLINK HREF="void">void</GTKDOCLINK>                (<a href="GtkBuilder.html#GtkBuilderConnectFunc">*GtkBuilderConnectFunc</a>)            (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         <GTKDOCLINK HREF="GObject">GObject</GTKDOCLINK> *object,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *signal_name,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *handler_name,
+                                                         <GTKDOCLINK HREF="GObject">GObject</GTKDOCLINK> *connect_object,
+                                                         <GTKDOCLINK HREF="GConnectFlags">GConnectFlags</GTKDOCLINK> flags,
+                                                         <GTKDOCLINK HREF="gpointer">gpointer</GTKDOCLINK> user_data);
+<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a>*         <a href="GtkBuilder.html#gtk-builder-new">gtk_builder_new</a>                     (void);
+<GTKDOCLINK HREF="guint">guint</GTKDOCLINK>               <a href="GtkBuilder.html#gtk-builder-add-from-file">gtk_builder_add_from_file</a>           (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *filename,
+                                                         <GTKDOCLINK HREF="GError">GError</GTKDOCLINK> **error);
+<GTKDOCLINK HREF="guint">guint</GTKDOCLINK>               <a href="GtkBuilder.html#gtk-builder-add-from-string">gtk_builder_add_from_string</a>         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *buffer,
+                                                         <GTKDOCLINK HREF="gsize">gsize</GTKDOCLINK> length,
+                                                         <GTKDOCLINK HREF="GError">GError</GTKDOCLINK> **error);
+<GTKDOCLINK HREF="GObject">GObject</GTKDOCLINK>*            <a href="GtkBuilder.html#gtk-builder-get-object">gtk_builder_get_object</a>              (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *name);
+<GTKDOCLINK HREF="GSList">GSList</GTKDOCLINK>*             <a href="GtkBuilder.html#gtk-builder-get-objects">gtk_builder_get_objects</a>             (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);
+<GTKDOCLINK HREF="void">void</GTKDOCLINK>                <a href="GtkBuilder.html#gtk-builder-connect-signals">gtk_builder_connect_signals</a>         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         <GTKDOCLINK HREF="gpointer">gpointer</GTKDOCLINK> user_data);
+<GTKDOCLINK HREF="void">void</GTKDOCLINK>                <a href="GtkBuilder.html#gtk-builder-connect-signals-full">gtk_builder_connect_signals_full</a>    (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         <a href="GtkBuilder.html#GtkBuilderConnectFunc">GtkBuilderConnectFunc</a> func,
+                                                         <GTKDOCLINK HREF="gpointer">gpointer</GTKDOCLINK> user_data);
+<GTKDOCLINK HREF="void">void</GTKDOCLINK>                <a href="GtkBuilder.html#gtk-builder-set-translation-domain">gtk_builder_set_translation_domain</a>  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *domain);
+const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK>*        <a href="GtkBuilder.html#gtk-builder-get-translation-domain">gtk_builder_get_translation_domain</a>  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);
+<GTKDOCLINK HREF="GType">GType</GTKDOCLINK>               <a href="GtkBuilder.html#gtk-builder-get-type-from-name">gtk_builder_get_type_from_name</a>      (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="char">char</GTKDOCLINK> *typename);
+<GTKDOCLINK HREF="gboolean">gboolean</GTKDOCLINK>            <a href="GtkBuilder.html#gtk-builder-value-from-string">gtk_builder_value_from_string</a>       (<GTKDOCLINK HREF="GParamSpec">GParamSpec</GTKDOCLINK> *pspec,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *string,
+                                                         <GTKDOCLINK HREF="GValue">GValue</GTKDOCLINK> *value);
+<GTKDOCLINK HREF="gboolean">gboolean</GTKDOCLINK>            <a href="GtkBuilder.html#gtk-builder-value-from-string-type">gtk_builder_value_from_string_type</a>  (<GTKDOCLINK HREF="GType">GType</GTKDOCLINK> type,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *string,
+                                                         <GTKDOCLINK HREF="GValue">GValue</GTKDOCLINK> *value);
+#define             <a href="GtkBuilder.html#GTK-BUILDER-WARN-INVALID-CHILD-TYPE:CAPS">GTK_BUILDER_WARN_INVALID_CHILD_TYPE</a> (object, type)
+#define             <a href="GtkBuilder.html#GTK-BUILDER-ERROR:CAPS">GTK_BUILDER_ERROR</a>
+
+
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id4106434"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+
+  <GTKDOCLINK HREF="GObject">GObject</GTKDOCLINK>
+   +----GtkBuilder
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id4106458"></a><h2>Properties</h2>
+<pre class="synopsis">
+
+  <a href="GtkBuilder.html#GtkBuilder--translation-domain">translation-domain</a>       <GTKDOCLINK HREF="gchararray">gchararray</GTKDOCLINK>            : Read / Write
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="id4106492"></a><h2>Description</h2>
+<p>
+This object represents an `instantiation' of an UI definition description. 
+When one of these objects is created, the XML file is read, and the 
+interface is created. The GtkBuilder object then provides an interface 
+for accessing the widgets in the interface by the names assigned to 
+them inside the UI description.
+
+The GtkBuilder object can also be used to connect handlers to the named 
+signals in the description. GtkBuilder also provides an interface by 
+which it can look up the signal handler names in the program's symbol 
+table and automatically connect as many handlers up as it can that way.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="id4106517"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="id4106526"></a><h3>
+<a name="GtkBuilder-struct"></a>GtkBuilder</h3>
+<a class="indexterm" name="id4106540"></a><pre class="programlisting">typedef struct _GtkBuilder GtkBuilder;</pre>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4106554"></a><h3>
+<a name="GtkBuilderConnectFunc"></a>GtkBuilderConnectFunc ()</h3>
+<a class="indexterm" name="id4106570"></a><pre class="programlisting"><GTKDOCLINK HREF="void">void</GTKDOCLINK>                (*GtkBuilderConnectFunc)            (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         <GTKDOCLINK HREF="GObject">GObject</GTKDOCLINK> *object,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *signal_name,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *handler_name,
+                                                         <GTKDOCLINK HREF="GObject">GObject</GTKDOCLINK> *connect_object,
+                                                         <GTKDOCLINK HREF="GConnectFlags">GConnectFlags</GTKDOCLINK> flags,
+                                                         <GTKDOCLINK HREF="gpointer">gpointer</GTKDOCLINK> user_data);</pre>
+<p>
+This is the signature of a function used to connect signals.  It is used
+by the <a href="GtkBuilder.html#gtk-builder-connect-signals"><code class="function">gtk_builder_connect_signals()</code></a> and <a href="GtkBuilder.html#gtk-builder-connect-signals-full"><code class="function">gtk_builder_connect_signals_full()</code></a>
+methods.  It is mainly intended for interpreted language bindings, but
+could be useful where the programmer wants more control over the signal
+connection process.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></td>
+<td> a GObject subclass to connect a signal to
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>signal_name</code></em>&#160;:</span></td>
+<td> name of the signal
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>handler_name</code></em>&#160;:</span></td>
+<td> name of the handler
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>connect_object</code></em>&#160;:</span></td>
+<td> GObject, if non-<GTKDOCLINK HREF="NULL:CAPS"><code class="literal">NULL</code></GTKDOCLINK>, use g_signal_connect_object.
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>flags</code></em>&#160;:</span></td>
+<td> <GTKDOCLINK HREF="GConnectFlags"><span class="type">GConnectFlags</span></GTKDOCLINK> to use
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></td>
+<td> user data
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4106812"></a><h3>
+<a name="gtk-builder-new"></a>gtk_builder_new ()</h3>
+<a class="indexterm" name="id4106827"></a><pre class="programlisting"><a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a>*         gtk_builder_new                     (void);</pre>
+<p>
+Creates a new builder object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> a new builder object.
+
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4106875"></a><h3>
+<a name="gtk-builder-add-from-file"></a>gtk_builder_add_from_file ()</h3>
+<a class="indexterm" name="id4106891"></a><pre class="programlisting"><GTKDOCLINK HREF="guint">guint</GTKDOCLINK>               gtk_builder_add_from_file           (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *filename,
+                                                         <GTKDOCLINK HREF="GError">GError</GTKDOCLINK> **error);</pre>
+<p>
+Parses a string containing a <GTKDOCLINK HREF="BUILDER-UI">GtkBuilder UI definition</GTKDOCLINK> and 
+merges it with the current contents of <em class="parameter"><code>builder</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>filename</code></em>&#160;:</span></td>
+<td> the name of the file to parse
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></td>
+<td> return location for an error
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> A positive value on success, 0 if an error occurred
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107024"></a><h3>
+<a name="gtk-builder-add-from-string"></a>gtk_builder_add_from_string ()</h3>
+<a class="indexterm" name="id4107041"></a><pre class="programlisting"><GTKDOCLINK HREF="guint">guint</GTKDOCLINK>               gtk_builder_add_from_string         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *buffer,
+                                                         <GTKDOCLINK HREF="gsize">gsize</GTKDOCLINK> length,
+                                                         <GTKDOCLINK HREF="GError">GError</GTKDOCLINK> **error);</pre>
+<p>
+Parses a file containing a <GTKDOCLINK HREF="BUILDER-UI">GtkBuilder UI definition</GTKDOCLINK> and 
+merges it with the current contents of <em class="parameter"><code>builder</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>buffer</code></em>&#160;:</span></td>
+<td> the string to parse
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>length</code></em>&#160;:</span></td>
+<td> the length of <em class="parameter"><code>buffer</code></em> (may be -1 if <em class="parameter"><code>buffer</code></em> is nul-terminated)
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></td>
+<td> return location for an error
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> A positive value on success, 0 if an error occurred
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107208"></a><h3>
+<a name="gtk-builder-get-object"></a>gtk_builder_get_object ()</h3>
+<a class="indexterm" name="id4107224"></a><pre class="programlisting"><GTKDOCLINK HREF="GObject">GObject</GTKDOCLINK>*            gtk_builder_get_object              (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *name);</pre>
+<p>
+Gets the object named <em class="parameter"><code>name</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>name</code></em>&#160;:</span></td>
+<td> name of object to get
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> the object named <em class="parameter"><code>name</code></em> or <GTKDOCLINK HREF="NULL:CAPS"><code class="literal">NULL</code></GTKDOCLINK> if it could not be 
+   found in the object tree
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107344"></a><h3>
+<a name="gtk-builder-get-objects"></a>gtk_builder_get_objects ()</h3>
+<a class="indexterm" name="id4107359"></a><pre class="programlisting"><GTKDOCLINK HREF="GSList">GSList</GTKDOCLINK>*             gtk_builder_get_objects             (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);</pre>
+<p>
+Gets all objects that have been constructed by <em class="parameter"><code>builder</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> a newly-allocated <GTKDOCLINK HREF="GSList"><span class="type">GSList</span></GTKDOCLINK> containing all the objects
+  constructed by the <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> instance
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107457"></a><h3>
+<a name="gtk-builder-connect-signals"></a>gtk_builder_connect_signals ()</h3>
+<a class="indexterm" name="id4107473"></a><pre class="programlisting"><GTKDOCLINK HREF="void">void</GTKDOCLINK>                gtk_builder_connect_signals         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         <GTKDOCLINK HREF="gpointer">gpointer</GTKDOCLINK> user_data);</pre>
+<p>
+This method is a simpler variation of <a href="GtkBuilder.html#gtk-builder-connect-signals-full"><code class="function">gtk_builder_connect_signals_full()</code></a>.
+It uses <GTKDOCLINK HREF="GModule"><span class="type">GModule</span></GTKDOCLINK>'s introspective features (by opening the module <GTKDOCLINK HREF="NULL:CAPS"><code class="literal">NULL</code></GTKDOCLINK>) to
+look at the application's symbol table.  From here it tries to match
+the signal handler names given in the interface description with
+symbols in the application and connects the signals.
+</p>
+<p>
+Note that this function will not work correctly if <GTKDOCLINK HREF="GModule"><span class="type">GModule</span></GTKDOCLINK> is not
+supported on the platform.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></td>
+<td> a pointer to a structure sent in as user data to all signals
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107607"></a><h3>
+<a name="gtk-builder-connect-signals-full"></a>gtk_builder_connect_signals_full ()</h3>
+<a class="indexterm" name="id4107623"></a><pre class="programlisting"><GTKDOCLINK HREF="void">void</GTKDOCLINK>                gtk_builder_connect_signals_full    (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         <a href="GtkBuilder.html#GtkBuilderConnectFunc">GtkBuilderConnectFunc</a> func,
+                                                         <GTKDOCLINK HREF="gpointer">gpointer</GTKDOCLINK> user_data);</pre>
+<p>
+This function can be thought of the interpreted language binding
+version of <GTKDOCLINK HREF="gtk-builder-signal-autoconnect"><code class="function">gtk_builder_signal_autoconnect()</code></GTKDOCLINK>, except that it does not
+require gmodule to function correctly.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>func</code></em>&#160;:</span></td>
+<td> the function used to connect the signals.
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>user_data</code></em>&#160;:</span></td>
+<td> arbitrary data that will be passed to the connection function.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107749"></a><h3>
+<a name="gtk-builder-set-translation-domain"></a>gtk_builder_set_translation_domain ()</h3>
+<a class="indexterm" name="id4107765"></a><pre class="programlisting"><GTKDOCLINK HREF="void">void</GTKDOCLINK>                gtk_builder_set_translation_domain  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *domain);</pre>
+<p>
+Sets the translation domain and uses <GTKDOCLINK HREF="dgettext"><code class="function">dgettext()</code></GTKDOCLINK> for translating the
+property values marked as translatable from an interface description.
+You can also pass in <GTKDOCLINK HREF="NULL:CAPS"><code class="literal">NULL</code></GTKDOCLINK> to this method to use <GTKDOCLINK HREF="gettext"><code class="function">gettext()</code></GTKDOCLINK> instead of
+<GTKDOCLINK HREF="dgettext"><code class="function">dgettext()</code></GTKDOCLINK>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>domain</code></em>&#160;:</span></td>
+<td> the translation domain or <GTKDOCLINK HREF="NULL:CAPS"><code class="literal">NULL</code></GTKDOCLINK>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107904"></a><h3>
+<a name="gtk-builder-get-translation-domain"></a>gtk_builder_get_translation_domain ()</h3>
+<a class="indexterm" name="id4107921"></a><pre class="programlisting">const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK>*        gtk_builder_get_translation_domain  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);</pre>
+<p>
+Gets the translation domain.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> the translation domain. This string is owned
+by the builder object and must not be modified or freed.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4107999"></a><h3>
+<a name="gtk-builder-get-type-from-name"></a>gtk_builder_get_type_from_name ()</h3>
+<a class="indexterm" name="id4108012"></a><pre class="programlisting"><GTKDOCLINK HREF="GType">GType</GTKDOCLINK>               gtk_builder_get_type_from_name      (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+                                                         const <GTKDOCLINK HREF="char">char</GTKDOCLINK> *typename);</pre>
+<p>
+This method is used to lookup a type. It can be implemented in a 
+subclass to override the <GTKDOCLINK HREF="GType"><span class="type">GType</span></GTKDOCLINK> of an object created by the builder.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>builder</code></em>&#160;:</span></td>
+<td> a <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>typename</code></em>&#160;:</span></td>
+<td> Type name to lookup
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> the <GTKDOCLINK HREF="GType"><span class="type">GType</span></GTKDOCLINK> found for <em class="parameter"><code>typename</code></em> or <GTKDOCLINK HREF="G-TYPE-INVALID:CAPS"><span class="type">G_TYPE_INVALID</span></GTKDOCLINK> if no
+  type was found
+
+Since 2.12
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4108137"></a><h3>
+<a name="gtk-builder-value-from-string"></a>gtk_builder_value_from_string ()</h3>
+<a class="indexterm" name="id4108153"></a><pre class="programlisting"><GTKDOCLINK HREF="gboolean">gboolean</GTKDOCLINK>            gtk_builder_value_from_string       (<GTKDOCLINK HREF="GParamSpec">GParamSpec</GTKDOCLINK> *pspec,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *string,
+                                                         <GTKDOCLINK HREF="GValue">GValue</GTKDOCLINK> *value);</pre>
+<p>
+This function demarshals a value from a string.  This function
+calls <GTKDOCLINK HREF="g-value-init"><code class="function">g_value_init()</code></GTKDOCLINK> on the <em class="parameter"><code>value</code></em> argument, so it need not be
+initialised beforehand.
+</p>
+<p>
+This function can handle char, uchar, boolean, int, uint, long,
+ulong, enum, flags, float, double, string, GdkColor and
+GtkAdjustment type values.  Support for GtkWidget type values is
+still to come.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>pspec</code></em>&#160;:</span></td>
+<td> the GParamSpec for the property
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>string</code></em>&#160;:</span></td>
+<td> the string representation of the value.
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>value</code></em>&#160;:</span></td>
+<td> the GValue to store the result in.
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> <GTKDOCLINK HREF="TRUE:CAPS"><code class="literal">TRUE</code></GTKDOCLINK> on success.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4108302"></a><h3>
+<a name="gtk-builder-value-from-string-type"></a>gtk_builder_value_from_string_type ()</h3>
+<a class="indexterm" name="id4108318"></a><pre class="programlisting"><GTKDOCLINK HREF="gboolean">gboolean</GTKDOCLINK>            gtk_builder_value_from_string_type  (<GTKDOCLINK HREF="GType">GType</GTKDOCLINK> type,
+                                                         const <GTKDOCLINK HREF="gchar">gchar</GTKDOCLINK> *string,
+                                                         <GTKDOCLINK HREF="GValue">GValue</GTKDOCLINK> *value);</pre>
+<p>
+Like <a href="GtkBuilder.html#gtk-builder-value-from-string"><code class="function">gtk_builder_value_from_string()</code></a>, but takes a <GTKDOCLINK HREF="GType"><span class="type">GType</span></GTKDOCLINK> instead of <GTKDOCLINK HREF="GParamSpec"><span class="type">GParamSpec</span></GTKDOCLINK>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>type</code></em>&#160;:</span></td>
+<td> the GType of the value
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>string</code></em>&#160;:</span></td>
+<td> the string representation of the value.
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>value</code></em>&#160;:</span></td>
+<td> the GValue to store the result in.
+</td>
+</tr>
+<tr>
+<td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
+<td> <GTKDOCLINK HREF="TRUE:CAPS"><code class="literal">TRUE</code></GTKDOCLINK> on success.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4108468"></a><h3>
+<a name="GTK-BUILDER-WARN-INVALID-CHILD-TYPE:CAPS"></a>GTK_BUILDER_WARN_INVALID_CHILD_TYPE()</h3>
+<a class="indexterm" name="id4108482"></a><pre class="programlisting">#define             GTK_BUILDER_WARN_INVALID_CHILD_TYPE(object, type)</pre>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><span class="term"><em class="parameter"><code>object</code></em>&#160;:</span></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><span class="term"><em class="parameter"><code>type</code></em>&#160;:</span></td>
+<td>
+
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4108529"></a><h3>
+<a name="GTK-BUILDER-ERROR:CAPS"></a>GTK_BUILDER_ERROR</h3>
+<a class="indexterm" name="id4108543"></a><pre class="programlisting">#define GTK_BUILDER_ERROR                (gtk_builder_error_quark ())
+</pre>
+<p>
+
+</p>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="id4108560"></a><h2>Property Details</h2>
+<div class="refsect2" lang="en">
+<a name="id4108570"></a><h3>
+<a name="GtkBuilder--translation-domain"></a>The :<code class="literal">translation-domain</code> property</h3>
+<a class="indexterm" name="id4108587"></a><pre class="programlisting">  translation-domain       <GTKDOCLINK HREF="gchararray">gchararray</GTKDOCLINK>            : Read / Write</pre>
+<p>The translation domain used by gettext.</p>
+<p>Default value: NULL</p>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="id4108614"></a><h2>See Also</h2>
+<p>
+SEE ALSO
+</p>
+</div>
+</div>
+</body>
+</html>

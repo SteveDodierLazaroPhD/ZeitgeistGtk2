@@ -45,6 +45,9 @@ enum                <link linkend="GtkRcTokenType">GtkRcTokenType</link>;
 <link linkend="void">void</link>                <link linkend="gtk-rc-set-default-files">gtk_rc_set_default_files</link>            (<link linkend="gchar">gchar</link> **filenames);
 <link linkend="guint">guint</link>               <link linkend="gtk-rc-parse-color">gtk_rc_parse_color</link>                  (<link linkend="GScanner">GScanner</link> *scanner,
                                                          <link linkend="GdkColor">GdkColor</link> *color);
+<link linkend="guint">guint</link>               <link linkend="gtk-rc-parse-color-full">gtk_rc_parse_color_full</link>             (<link linkend="GScanner">GScanner</link> *scanner,
+                                                         <link linkend="GtkRcStyle">GtkRcStyle</link> *style,
+                                                         <link linkend="GdkColor">GdkColor</link> *color);
 <link linkend="guint">guint</link>               <link linkend="gtk-rc-parse-state">gtk_rc_parse_state</link>                  (<link linkend="GScanner">GScanner</link> *scanner,
                                                          <link linkend="GtkStateType">GtkStateType</link> *state);
 <link linkend="guint">guint</link>               <link linkend="gtk-rc-parse-priority">gtk_rc_parse_priority</link>               (<link linkend="GScanner">GScanner</link> *scanner,
@@ -1188,20 +1191,52 @@ end of <link linkend="gtk-init"><function>gtk_init()</function></link>.</para>
 <indexterm><primary>gtk_rc_parse_color</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_color                  (<link linkend="GScanner">GScanner</link> *scanner,
                                                          <link linkend="GdkColor">GdkColor</link> *color);</programlisting>
 <para>
-Parses a color in the <link linkend="color-format">format</link> expected in a RC file.
+Parses a color in the <link linkend="color=format">format</link> expected
+in a RC file. 
+</para>
+<para>
+Note that theme engines should use <link linkend="gtk-rc-parse-color-full"><function>gtk_rc_parse_color_full()</function></link> in 
+order to support symbolic colors.</para>
+<para>
+
 </para><variablelist role="params">
 <varlistentry><term><parameter>scanner</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkScanner"><type>GtkScanner</type></link>
+<listitem><simpara> a <link linkend="GScanner"><type>GScanner</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>color</parameter>&nbsp;:</term>
-<listitem><simpara>a pointer to a <link linkend="GtkColor"><type>GtkColor</type></link> structure in which to store the result
+<listitem><simpara> a pointer to a <link linkend="GtkColor"><type>GtkColor</type></link> structure in which to store the result
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="G-TOKEN-NONE:CAPS"><literal>G_TOKEN_NONE</literal></link> if parsing succeeded, otherwise the token
-that was expected but not found.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="G-TOKEN-NONE:CAPS"><literal>G_TOKEN_NONE</literal></link> if parsing succeeded, otherwise the token
+    that was expected but not found
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gtk-rc-parse-color-full" role="function" condition="since:2.12"/>gtk_rc_parse_color_full ()</title>
+<indexterm role="2.12"><primary>gtk_rc_parse_color_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_color_full             (<link linkend="GScanner">GScanner</link> *scanner,
+                                                         <link linkend="GtkRcStyle">GtkRcStyle</link> *style,
+                                                         <link linkend="GdkColor">GdkColor</link> *color);</programlisting>
+<para>
+Parses a color in the <link linkend="color=format">format</link> expected
+in a RC file. If <parameter>style</parameter> is not <link linkend="NULL:CAPS"><literal>NULL</literal></link>, it will be consulted to resolve
+references to symbolic colors.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>scanner</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GScanner"><type>GScanner</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>style</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>color</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a <link linkend="GtkColor"><type>GtkColor</type></link> structure in which to store the result
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="G-TOKEN-NONE:CAPS"><literal>G_TOKEN_NONE</literal></link> if parsing succeeded, otherwise the token
+    that was expected but not found
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gtk-rc-parse-state" role="function"/>gtk_rc_parse_state ()</title>
 <indexterm><primary>gtk_rc_parse_state</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_state                  (<link linkend="GScanner">GScanner</link> *scanner,

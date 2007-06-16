@@ -107,8 +107,6 @@ ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
-ENABLE_FB_MANAGER_FALSE = @ENABLE_FB_MANAGER_FALSE@
-ENABLE_FB_MANAGER_TRUE = @ENABLE_FB_MANAGER_TRUE@
 ENABLE_GTK_DOC_FALSE = @ENABLE_GTK_DOC_FALSE@
 ENABLE_GTK_DOC_TRUE = @ENABLE_GTK_DOC_TRUE@
 ENABLE_MAN_FALSE = @ENABLE_MAN_FALSE@
@@ -271,8 +269,6 @@ TEST_PRINT_BACKEND_FALSE = @TEST_PRINT_BACKEND_FALSE@
 TEST_PRINT_BACKEND_TRUE = @TEST_PRINT_BACKEND_TRUE@
 USE_DIRECTFB_FALSE = @USE_DIRECTFB_FALSE@
 USE_DIRECTFB_TRUE = @USE_DIRECTFB_TRUE@
-USE_LINUX_FB_FALSE = @USE_LINUX_FB_FALSE@
-USE_LINUX_FB_TRUE = @USE_LINUX_FB_TRUE@
 USE_MEDIALIB25_FALSE = @USE_MEDIALIB25_FALSE@
 USE_MEDIALIB25_TRUE = @USE_MEDIALIB25_TRUE@
 USE_MEDIALIB_FALSE = @USE_MEDIALIB_FALSE@
@@ -437,6 +433,8 @@ gtk_public_h_sources = \
 	gtkbin.h		\
 	gtkbindings.h		\
 	gtkbox.h		\
+	gtkbuilder.h		\
+	gtkbuildable.h		\
 	gtkbutton.h		\
 	gtkcalendar.h		\
 	gtkcelleditable.h	\
@@ -639,6 +637,7 @@ gtk_private_h_sources = \
 	gtksearchenginesimple.h	\
 	gtkdndcursors.h		\
 	gtkentryprivate.h	\
+	gtkbuilderprivate.h 	\
 	gtkfilechooserdefault.h	\
 	gtkfilechooserembed.h	\
 	gtkfilechooserentry.h	\
@@ -701,6 +700,9 @@ gtk_base_c_sources = \
 	gtkbin.c		\
 	gtkbindings.c		\
 	gtkbox.c		\
+	gtkbuildable.c		\
+	gtkbuilder.c		\
+	gtkbuilderparser.c	\
 	gtkbutton.c		\
 	gtkcalendar.c		\
 	gtkcelleditable.c	\
@@ -1167,6 +1169,7 @@ STOCK_ICONS = \
 	stock-icons/16/gtk-revert-to-saved-rtl.png    	\
 	stock-icons/16/gtk-save-as.png        		\
 	stock-icons/16/gtk-select-all.png     		\
+	stock-icons/16/gtk-select-color.png     	\
 	stock-icons/16/gtk-select-font.png    		\
 	stock-icons/16/gtk-sort-ascending.png	 	\
 	stock-icons/16/gtk-sort-descending.png        	\
@@ -1342,18 +1345,18 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
 	gtkarrow.c gtkaspectframe.c gtkassistant.c gtkbbox.c gtkbin.c \
-	gtkbindings.c gtkbox.c gtkbutton.c gtkcalendar.c \
-	gtkcelleditable.c gtkcelllayout.c gtkcellrenderer.c \
-	gtkcellrendereraccel.c gtkcellrenderercombo.c \
-	gtkcellrendererpixbuf.c gtkcellrendererprogress.c \
-	gtkcellrendererspin.c gtkcellrenderertext.c \
-	gtkcellrenderertoggle.c gtkcellview.c gtkcheckbutton.c \
-	gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c gtkcolorsel.c \
-	gtkcolorseldialog.c gtkcombo.c gtkcombobox.c gtkcomboboxentry.c \
-	gtkcontainer.c gtkctree.c gtkcurve.c gtkdialog.c \
-	gtkdrawingarea.c gtkeditable.c gtkentry.c gtkentrycompletion.c \
-	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
-	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkbindings.c gtkbox.c gtkbuildable.c gtkbuilder.c \
+	gtkbuilderparser.c gtkbutton.c gtkcalendar.c gtkcelleditable.c \
+	gtkcelllayout.c gtkcellrenderer.c gtkcellrendereraccel.c \
+	gtkcellrenderercombo.c gtkcellrendererpixbuf.c \
+	gtkcellrendererprogress.c gtkcellrendererspin.c \
+	gtkcellrenderertext.c gtkcellrenderertoggle.c gtkcellview.c \
+	gtkcheckbutton.c gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c \
+	gtkcolorsel.c gtkcolorseldialog.c gtkcombo.c gtkcombobox.c \
+	gtkcomboboxentry.c gtkcontainer.c gtkctree.c gtkcurve.c \
+	gtkdialog.c gtkdrawingarea.c gtkeditable.c gtkentry.c \
+	gtkentrycompletion.c gtkeventbox.c gtkexpander.c \
+	gtkfilechooser.c gtkfilechooserbutton.c gtkfilechooserdefault.c \
 	gtkfilechooserdialog.c gtkfilechooserembed.c \
 	gtkfilechooserentry.c gtkfilechoosersettings.c \
 	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
@@ -1419,7 +1422,8 @@ am__objects_2 = gtkquery.lo gtksearchengine.lo gtksearchenginebeagle.lo \
 	gtkaccelmap.lo gtkaccessible.lo gtkaction.lo gtkactiongroup.lo \
 	gtkadjustment.lo gtkalignment.lo gtkarrow.lo gtkaspectframe.lo \
 	gtkassistant.lo gtkbbox.lo gtkbin.lo gtkbindings.lo gtkbox.lo \
-	gtkbutton.lo gtkcalendar.lo gtkcelleditable.lo gtkcelllayout.lo \
+	gtkbuildable.lo gtkbuilder.lo gtkbuilderparser.lo gtkbutton.lo \
+	gtkcalendar.lo gtkcelleditable.lo gtkcelllayout.lo \
 	gtkcellrenderer.lo gtkcellrendereraccel.lo \
 	gtkcellrenderercombo.lo gtkcellrendererpixbuf.lo \
 	gtkcellrendererprogress.lo gtkcellrendererspin.lo \
@@ -1515,18 +1519,18 @@ am__libgtk_linux_fb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
 	gtkarrow.c gtkaspectframe.c gtkassistant.c gtkbbox.c gtkbin.c \
-	gtkbindings.c gtkbox.c gtkbutton.c gtkcalendar.c \
-	gtkcelleditable.c gtkcelllayout.c gtkcellrenderer.c \
-	gtkcellrendereraccel.c gtkcellrenderercombo.c \
-	gtkcellrendererpixbuf.c gtkcellrendererprogress.c \
-	gtkcellrendererspin.c gtkcellrenderertext.c \
-	gtkcellrenderertoggle.c gtkcellview.c gtkcheckbutton.c \
-	gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c gtkcolorsel.c \
-	gtkcolorseldialog.c gtkcombo.c gtkcombobox.c gtkcomboboxentry.c \
-	gtkcontainer.c gtkctree.c gtkcurve.c gtkdialog.c \
-	gtkdrawingarea.c gtkeditable.c gtkentry.c gtkentrycompletion.c \
-	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
-	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkbindings.c gtkbox.c gtkbuildable.c gtkbuilder.c \
+	gtkbuilderparser.c gtkbutton.c gtkcalendar.c gtkcelleditable.c \
+	gtkcelllayout.c gtkcellrenderer.c gtkcellrendereraccel.c \
+	gtkcellrenderercombo.c gtkcellrendererpixbuf.c \
+	gtkcellrendererprogress.c gtkcellrendererspin.c \
+	gtkcellrenderertext.c gtkcellrenderertoggle.c gtkcellview.c \
+	gtkcheckbutton.c gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c \
+	gtkcolorsel.c gtkcolorseldialog.c gtkcombo.c gtkcombobox.c \
+	gtkcomboboxentry.c gtkcontainer.c gtkctree.c gtkcurve.c \
+	gtkdialog.c gtkdrawingarea.c gtkeditable.c gtkentry.c \
+	gtkentrycompletion.c gtkeventbox.c gtkexpander.c \
+	gtkfilechooser.c gtkfilechooserbutton.c gtkfilechooserdefault.c \
 	gtkfilechooserdialog.c gtkfilechooserembed.c \
 	gtkfilechooserentry.c gtkfilechoosersettings.c \
 	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
@@ -1598,18 +1602,18 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
 	gtkarrow.c gtkaspectframe.c gtkassistant.c gtkbbox.c gtkbin.c \
-	gtkbindings.c gtkbox.c gtkbutton.c gtkcalendar.c \
-	gtkcelleditable.c gtkcelllayout.c gtkcellrenderer.c \
-	gtkcellrendereraccel.c gtkcellrenderercombo.c \
-	gtkcellrendererpixbuf.c gtkcellrendererprogress.c \
-	gtkcellrendererspin.c gtkcellrenderertext.c \
-	gtkcellrenderertoggle.c gtkcellview.c gtkcheckbutton.c \
-	gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c gtkcolorsel.c \
-	gtkcolorseldialog.c gtkcombo.c gtkcombobox.c gtkcomboboxentry.c \
-	gtkcontainer.c gtkctree.c gtkcurve.c gtkdialog.c \
-	gtkdrawingarea.c gtkeditable.c gtkentry.c gtkentrycompletion.c \
-	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
-	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkbindings.c gtkbox.c gtkbuildable.c gtkbuilder.c \
+	gtkbuilderparser.c gtkbutton.c gtkcalendar.c gtkcelleditable.c \
+	gtkcelllayout.c gtkcellrenderer.c gtkcellrendereraccel.c \
+	gtkcellrenderercombo.c gtkcellrendererpixbuf.c \
+	gtkcellrendererprogress.c gtkcellrendererspin.c \
+	gtkcellrenderertext.c gtkcellrenderertoggle.c gtkcellview.c \
+	gtkcheckbutton.c gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c \
+	gtkcolorsel.c gtkcolorseldialog.c gtkcombo.c gtkcombobox.c \
+	gtkcomboboxentry.c gtkcontainer.c gtkctree.c gtkcurve.c \
+	gtkdialog.c gtkdrawingarea.c gtkeditable.c gtkentry.c \
+	gtkentrycompletion.c gtkeventbox.c gtkexpander.c \
+	gtkfilechooser.c gtkfilechooserbutton.c gtkfilechooserdefault.c \
 	gtkfilechooserdialog.c gtkfilechooserembed.c \
 	gtkfilechooserentry.c gtkfilechoosersettings.c \
 	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
@@ -1674,18 +1678,18 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
 	gtkarrow.c gtkaspectframe.c gtkassistant.c gtkbbox.c gtkbin.c \
-	gtkbindings.c gtkbox.c gtkbutton.c gtkcalendar.c \
-	gtkcelleditable.c gtkcelllayout.c gtkcellrenderer.c \
-	gtkcellrendereraccel.c gtkcellrenderercombo.c \
-	gtkcellrendererpixbuf.c gtkcellrendererprogress.c \
-	gtkcellrendererspin.c gtkcellrenderertext.c \
-	gtkcellrenderertoggle.c gtkcellview.c gtkcheckbutton.c \
-	gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c gtkcolorsel.c \
-	gtkcolorseldialog.c gtkcombo.c gtkcombobox.c gtkcomboboxentry.c \
-	gtkcontainer.c gtkctree.c gtkcurve.c gtkdialog.c \
-	gtkdrawingarea.c gtkeditable.c gtkentry.c gtkentrycompletion.c \
-	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
-	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkbindings.c gtkbox.c gtkbuildable.c gtkbuilder.c \
+	gtkbuilderparser.c gtkbutton.c gtkcalendar.c gtkcelleditable.c \
+	gtkcelllayout.c gtkcellrenderer.c gtkcellrendereraccel.c \
+	gtkcellrenderercombo.c gtkcellrendererpixbuf.c \
+	gtkcellrendererprogress.c gtkcellrendererspin.c \
+	gtkcellrenderertext.c gtkcellrenderertoggle.c gtkcellview.c \
+	gtkcheckbutton.c gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c \
+	gtkcolorsel.c gtkcolorseldialog.c gtkcombo.c gtkcombobox.c \
+	gtkcomboboxentry.c gtkcontainer.c gtkctree.c gtkcurve.c \
+	gtkdialog.c gtkdrawingarea.c gtkeditable.c gtkentry.c \
+	gtkentrycompletion.c gtkeventbox.c gtkexpander.c \
+	gtkfilechooser.c gtkfilechooserbutton.c gtkfilechooserdefault.c \
 	gtkfilechooserdialog.c gtkfilechooserembed.c \
 	gtkfilechooserentry.c gtkfilechoosersettings.c \
 	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
@@ -1757,18 +1761,18 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
 	gtkarrow.c gtkaspectframe.c gtkassistant.c gtkbbox.c gtkbin.c \
-	gtkbindings.c gtkbox.c gtkbutton.c gtkcalendar.c \
-	gtkcelleditable.c gtkcelllayout.c gtkcellrenderer.c \
-	gtkcellrendereraccel.c gtkcellrenderercombo.c \
-	gtkcellrendererpixbuf.c gtkcellrendererprogress.c \
-	gtkcellrendererspin.c gtkcellrenderertext.c \
-	gtkcellrenderertoggle.c gtkcellview.c gtkcheckbutton.c \
-	gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c gtkcolorsel.c \
-	gtkcolorseldialog.c gtkcombo.c gtkcombobox.c gtkcomboboxentry.c \
-	gtkcontainer.c gtkctree.c gtkcurve.c gtkdialog.c \
-	gtkdrawingarea.c gtkeditable.c gtkentry.c gtkentrycompletion.c \
-	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
-	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkbindings.c gtkbox.c gtkbuildable.c gtkbuilder.c \
+	gtkbuilderparser.c gtkbutton.c gtkcalendar.c gtkcelleditable.c \
+	gtkcelllayout.c gtkcellrenderer.c gtkcellrendereraccel.c \
+	gtkcellrenderercombo.c gtkcellrendererpixbuf.c \
+	gtkcellrendererprogress.c gtkcellrendererspin.c \
+	gtkcellrenderertext.c gtkcellrenderertoggle.c gtkcellview.c \
+	gtkcheckbutton.c gtkcheckmenuitem.c gtkclist.c gtkcolorbutton.c \
+	gtkcolorsel.c gtkcolorseldialog.c gtkcombo.c gtkcombobox.c \
+	gtkcomboboxentry.c gtkcontainer.c gtkctree.c gtkcurve.c \
+	gtkdialog.c gtkdrawingarea.c gtkeditable.c gtkentry.c \
+	gtkentrycompletion.c gtkeventbox.c gtkexpander.c \
+	gtkfilechooser.c gtkfilechooserbutton.c gtkfilechooserdefault.c \
 	gtkfilechooserdialog.c gtkfilechooserembed.c \
 	gtkfilechooserentry.c gtkfilechoosersettings.c \
 	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
@@ -1858,6 +1862,9 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/gtkassistant.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkbbox.Plo ./$(DEPDIR)/gtkbin.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkbindings.Plo ./$(DEPDIR)/gtkbox.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkbuildable.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkbuilder.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkbuilderparser.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkbutton.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkcalendar.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkcelleditable.Plo \
@@ -2218,6 +2225,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkbin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkbindings.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkbox.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkbuildable.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkbuilder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkbuilderparser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkbutton.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkcalendar.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkcelleditable.Plo@am__quote@

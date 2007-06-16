@@ -7,7 +7,7 @@
 
 <refnamediv>
 <refname>GtkListStore</refname>
-<refpurpose>A list-like data structure that can be used with the <link linkend="GtkTreeView"><type>GtkTreeView</type></link></refpurpose>
+<refpurpose>A list-like data structure that can be used with the GtkTreeView</refpurpose>
 <!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
@@ -37,6 +37,11 @@
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                          <link linkend="gint">gint</link> column,
                                                          <link linkend="GValue">GValue</link> *value);
+<link linkend="void">void</link>                <link linkend="gtk-list-store-set-valuesv">gtk_list_store_set_valuesv</link>          (<link linkend="GtkListStore">GtkListStore</link> *list_store,
+                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
+                                                         <link linkend="gint">gint</link> *columns,
+                                                         <link linkend="GValue">GValue</link> *values,
+                                                         <link linkend="gint">gint</link> n_values);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-list-store-remove">gtk_list_store_remove</link>               (<link linkend="GtkListStore">GtkListStore</link> *list_store,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *iter);
 <link linkend="void">void</link>                <link linkend="gtk-list-store-insert">gtk_list_store_insert</link>               (<link linkend="GtkListStore">GtkListStore</link> *list_store,
@@ -97,7 +102,7 @@
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkListStore implements
- <link linkend="GtkTreeModel">GtkTreeModel</link>,  <link linkend="GtkTreeDragSource">GtkTreeDragSource</link>,  <link linkend="GtkTreeDragDest">GtkTreeDragDest</link> and  <link linkend="GtkTreeSortable">GtkTreeSortable</link>.</para>
+ <link linkend="GtkBuildable">GtkBuildable</link>,  <link linkend="GtkTreeModel">GtkTreeModel</link>,  <link linkend="GtkTreeDragSource">GtkTreeDragSource</link>,  <link linkend="GtkTreeDragDest">GtkTreeDragDest</link> and  <link linkend="GtkTreeSortable">GtkTreeSortable</link>.</para>
 
 </refsect1>
 
@@ -355,6 +360,39 @@ column.</para>
 <listitem><simpara> new value for the cell
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gtk-list-store-set-valuesv" role="function" condition="since:2.12"/>gtk_list_store_set_valuesv ()</title>
+<indexterm role="2.12"><primary>gtk_list_store_set_valuesv</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_list_store_set_valuesv          (<link linkend="GtkListStore">GtkListStore</link> *list_store,
+                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
+                                                         <link linkend="gint">gint</link> *columns,
+                                                         <link linkend="GValue">GValue</link> *values,
+                                                         <link linkend="gint">gint</link> n_values);</programlisting>
+<para>
+A variant of <link linkend="gtk-list-store-set-valist"><function>gtk_list_store_set_valist()</function></link> which
+takes the columns and values as two arrays, instead of
+varargs. This function is mainly intended for 
+language-bindings and in case the number of columns to
+change is not known until run-time.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>list_store</parameter>&nbsp;:</term>
+<listitem><simpara> A <link linkend="GtkListStore"><type>GtkListStore</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
+<listitem><simpara> A valid <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> for the row being modified
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>columns</parameter>&nbsp;:</term>
+<listitem><simpara> an array of column numbers
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>values</parameter>&nbsp;:</term>
+<listitem><simpara> an array of GValues 
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>n_values</parameter>&nbsp;:</term>
+<listitem><simpara> the length of the <parameter>columns</parameter> and <parameter>values</parameter> arrays
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gtk-list-store-remove" role="function"/>gtk_list_store_remove ()</title>
 <indexterm><primary>gtk_list_store_remove</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_list_store_remove               (<link linkend="GtkListStore">GtkListStore</link> *list_store,

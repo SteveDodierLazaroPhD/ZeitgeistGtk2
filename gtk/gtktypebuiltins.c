@@ -43,6 +43,25 @@ gtk_assistant_page_type_get_type (void)
   return etype;
 }
 
+/* enumerations from "gtkbuilder.h" */
+GType
+gtk_builder_error_get_type (void)
+{
+  static GType etype = 0;
+  if (etype == 0) {
+    static const GEnumValue values[] = {
+      { GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION, "GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION", "invalid-type-function" },
+      { GTK_BUILDER_ERROR_UNHANDLED_TAG, "GTK_BUILDER_ERROR_UNHANDLED_TAG", "unhandled-tag" },
+      { GTK_BUILDER_ERROR_MISSING_ATTRIBUTE, "GTK_BUILDER_ERROR_MISSING_ATTRIBUTE", "missing-attribute" },
+      { GTK_BUILDER_ERROR_INVALID_ATTRIBUTE, "GTK_BUILDER_ERROR_INVALID_ATTRIBUTE", "invalid-attribute" },
+      { GTK_BUILDER_ERROR_INVALID_TAG, "GTK_BUILDER_ERROR_INVALID_TAG", "invalid-tag" },
+      { 0, NULL, NULL }
+    };
+    etype = g_enum_register_static (g_intern_static_string ("GtkBuilderError"), values);
+  }
+  return etype;
+}
+
 /* enumerations from "gtkcalendar.h" */
 GType
 gtk_calendar_display_options_get_type (void)
@@ -248,6 +267,7 @@ gtk_debug_flag_get_type (void)
       { GTK_DEBUG_GEOMETRY, "GTK_DEBUG_GEOMETRY", "geometry" },
       { GTK_DEBUG_ICONTHEME, "GTK_DEBUG_ICONTHEME", "icontheme" },
       { GTK_DEBUG_PRINTING, "GTK_DEBUG_PRINTING", "printing" },
+      { GTK_DEBUG_BUILDER, "GTK_DEBUG_BUILDER", "builder" },
       { 0, NULL, NULL }
     };
     etype = g_flags_register_static (g_intern_static_string ("GtkDebugFlag"), values);

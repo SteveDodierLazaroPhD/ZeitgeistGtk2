@@ -33,6 +33,7 @@
 <link rel="chapter" href="PlugSocket.html" title="Cross-process Embedding">
 <link rel="chapter" href="SpecialObjects.html" title="Special-purpose features">
 <link rel="chapter" href="RecentDocuments.html" title="Recently Used Documents">
+<link rel="chapter" href="Builder.html" title="Interface builder">
 <link rel="chapter" href="DeprecatedObjects.html" title="Deprecated">
 <link rel="part" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
 <link rel="chapter" href="gtk-migrating-checklist.html" title="Migration Checklist">
@@ -69,13 +70,12 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle">Tree and List Widget Overview</span></h2>
-<p>Tree and List Widget Overview &#8212; Overview of <a href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a>, <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a>, and other 
-    associated widgets</p>
+<p>Tree and List Widget Overview &#8212; Overview of GtkTreeModel, GtkTreeView, and friends</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1" lang="en">
-<a name="id3215852"></a><h2>Overview</h2>
+<a name="id3334850"></a><h2>Overview</h2>
 <p>
       To create a tree or list in GTK+, use the <a href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> interface in
       conjunction with the <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget.  This widget is
@@ -106,7 +106,7 @@
     </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3215942"></a><h2>Creating a model</h2>
+<a name="id3335547"></a><h2>Creating a model</h2>
 <p>
       GTK+ provides two simple models that can be used: the <a href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>
       and the <a href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>.  GtkListStore is used to model list widgets, 
@@ -202,7 +202,7 @@ gtk_tree_store_set (store, &amp;iter2,
 </pre></div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3216105"></a><h2>Creating the view component</h2>
+<a name="id3335710"></a><h2>Creating the view component</h2>
 <p>
       While there are several different models to choose from, there is
       only one view widget to deal with.  It works with either the list
@@ -216,7 +216,7 @@ GtkWidget *tree;
 tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
 </pre></div>
 <div class="refsect2" lang="en">
-<a name="id3216162"></a><h3>Columns and cell renderers</h3>
+<a name="id3335767"></a><h3>Columns and cell renderers</h3>
 <p>
 	Once the <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget has a model, it will need to know how 
         to display the model.  It does this with columns and cell renderers.
@@ -253,11 +253,12 @@ gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3216254"></a><h3>Selection handling</h3>
+<a name="id3335859"></a><h3>Selection handling</h3>
 <p>
         Most applications will need to not only deal with displaying data, but 
         also receiving input events from users.  To do this, simply get a 
-        reference to a selection object and connect to the "changed" signal.
+        reference to a selection object and connect to the 
+        <a href="GtkTreeSelection.html#GtkTreeSelection-changed"><span class="type">::changed</span></a> signal.
       </p>
 <div class="informalexample"><pre class="programlisting">
 /* Prototype for selection handler callback */
@@ -296,7 +297,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection, gpointer data)
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3216295"></a><h2>Simple Example</h2>
+<a name="id3335910"></a><h2>Simple Example</h2>
 <p>
       Here is a simple example of using a <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget in context 
       of the other widgets.  It simply creates a simple model and view, 

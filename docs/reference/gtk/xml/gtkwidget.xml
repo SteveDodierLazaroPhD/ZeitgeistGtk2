@@ -212,6 +212,9 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
                                                          const <link linkend="GdkColor">GdkColor</link> *color);
 <link linkend="void">void</link>                <link linkend="gtk-widget-modify-font">gtk_widget_modify_font</link>              (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="PangoFontDescription">PangoFontDescription</link> *font_desc);
+<link linkend="void">void</link>                <link linkend="gtk-widget-modify-cursor">gtk_widget_modify_cursor</link>            (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         const <link linkend="GdkColor">GdkColor</link> *primary,
+                                                         const <link linkend="GdkColor">GdkColor</link> *secondary);
 <link linkend="PangoContext">PangoContext</link>*       <link linkend="gtk-widget-create-pango-context">gtk_widget_create_pango_context</link>     (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="PangoContext">PangoContext</link>*       <link linkend="gtk-widget-get-pango-context">gtk_widget_get_pango_context</link>        (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="PangoLayout">PangoLayout</link>*        <link linkend="gtk-widget-create-pango-layout">gtk_widget_create_pango_layout</link>      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -314,6 +317,12 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
 <link linkend="void">void</link>                <link linkend="gtk-widget-error-bell">gtk_widget_error_bell</link>               (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-keynav-failed">gtk_widget_keynav_failed</link>            (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GtkDirectionType">GtkDirectionType</link> direction);
+<link linkend="gchar">gchar</link>*              <link linkend="gtk-widget-get-tooltip-markup">gtk_widget_get_tooltip_markup</link>       (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="void">void</link>                <link linkend="gtk-widget-set-tooltip-markup">gtk_widget_set_tooltip_markup</link>       (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         const <link linkend="gchar">gchar</link> *markup);
+<link linkend="gchar">gchar</link>*              <link linkend="gtk-widget-get-tooltip-text">gtk_widget_get_tooltip_text</link>         (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="void">void</link>                <link linkend="gtk-widget-set-tooltip-text">gtk_widget_set_tooltip_text</link>         (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         const <link linkend="gchar">gchar</link> *text);
 <link linkend="GtkWindow">GtkWindow</link>*          <link linkend="gtk-widget-get-tooltip-window">gtk_widget_get_tooltip_window</link>       (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="void">void</link>                <link linkend="gtk-widget-set-tooltip-window">gtk_widget_set_tooltip_window</link>       (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GtkWindow">GtkWindow</link> *custom_window);
@@ -364,7 +373,7 @@ GtkWidget is required by
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkWidget implements
- <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
+ <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
 
 </refsect1>
 
@@ -391,6 +400,7 @@ GtkWidget implements
   <link linkend="GtkWidget--sensitive">sensitive</link>                <link linkend="gboolean">gboolean</link>              : Read / Write
   <link linkend="GtkWidget--style">style</link>                    <link linkend="GtkStyle">GtkStyle</link>              : Read / Write
   <link linkend="GtkWidget--tooltip-markup">tooltip-markup</link>           <link linkend="gchararray">gchararray</link>            : Read / Write
+  <link linkend="GtkWidget--tooltip-text">tooltip-text</link>             <link linkend="gchararray">gchararray</link>            : Read / Write
   <link linkend="GtkWidget--visible">visible</link>                  <link linkend="gboolean">gboolean</link>              : Read / Write
   <link linkend="GtkWidget--width-request">width-request</link>            <link linkend="gint">gint</link>                  : Read / Write
 </synopsis>
@@ -1287,9 +1297,9 @@ cast the object yourself.</para>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
-<title><anchor id="gtk-widget-ref" role="function" condition="deprecated:Use g_object_ref() instead."/>gtk_widget_ref ()</title>
+<title><anchor id="gtk-widget-ref" role="function" condition="deprecated:2.12: Use g_object_ref() instead."/>gtk_widget_ref ()</title>
 <indexterm role="deprecated"><primary>gtk_widget_ref</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_widget_ref                      (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
-<warning><para><literal>gtk_widget_ref</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-ref"><function>g_object_ref()</function></link> instead.</para></warning>
+<warning><para><literal>gtk_widget_ref</literal> has been deprecated since version 2.12 and should not be used in newly-written code. Use <link linkend="g-object-ref"><function>g_object_ref()</function></link> instead.</para></warning>
 <para>
 Adds a reference to a widget. This function is exactly the same
 as calling <link linkend="g-object-ref"><function>g_object_ref()</function></link>, and exists mostly for historical
@@ -1306,9 +1316,9 @@ to a <link linkend="GObject"><type>GObject</type></link>, it saves a small amoun
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
-<title><anchor id="gtk-widget-unref" role="function" condition="deprecated:Use g_object_unref() instead."/>gtk_widget_unref ()</title>
+<title><anchor id="gtk-widget-unref" role="function" condition="deprecated:2.12: Use g_object_unref() instead."/>gtk_widget_unref ()</title>
 <indexterm role="deprecated"><primary>gtk_widget_unref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_unref                    (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
-<warning><para><literal>gtk_widget_unref</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-unref"><function>g_object_unref()</function></link> instead.</para></warning>
+<warning><para><literal>gtk_widget_unref</literal> has been deprecated since version 2.12 and should not be used in newly-written code. Use <link linkend="g-object-unref"><function>g_object_unref()</function></link> instead.</para></warning>
 <para>
 Inverse of <link linkend="gtk-widget-ref"><function>gtk_widget_ref()</function></link>. Equivalent to <link linkend="g-object-unref"><function>g_object_unref()</function></link>.</para>
 <para>
@@ -3069,6 +3079,34 @@ untouched. See also <link linkend="gtk-widget-modify-style"><function>gtk_widget
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>
+<title><anchor id="gtk-widget-modify-cursor" role="function" condition="since:2.12"/>gtk_widget_modify_cursor ()</title>
+<indexterm role="2.12"><primary>gtk_widget_modify_cursor</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_modify_cursor            (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         const <link linkend="GdkColor">GdkColor</link> *primary,
+                                                         const <link linkend="GdkColor">GdkColor</link> *secondary);</programlisting>
+<para>
+Sets the cursor color to use in a widget, overriding the
+<link linkend="GtkWidget--cursor-color"><type>:cursor-color</type></link> and <link linkend="GtkWidget--secondary-cursor-color"><type>:secondary-cursor-color</type></link>
+style properties. All other style values are left untouched. 
+See also <link linkend="gtk-widget-modify-style"><function>gtk_widget_modify_style()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>primary</parameter>&nbsp;:</term>
+<listitem><simpara> the color to use for primary cursor (does not need to be
+          allocated), or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to undo the effect of previous calls to
+          of <link linkend="gtk-widget-modify-cursor"><function>gtk_widget_modify_cursor()</function></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>secondary</parameter>&nbsp;:</term>
+<listitem><simpara> the color to use for secondary cursor (does not need to be
+            allocated), or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to undo the effect of previous calls to
+            of <link linkend="gtk-widget-modify-cursor"><function>gtk_widget_modify_cursor()</function></link>.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-widget-create-pango-context" role="function"/>gtk_widget_create_pango_context ()</title>
 <indexterm><primary>gtk_widget_create_pango_context</primary></indexterm><programlisting><link linkend="PangoContext">PangoContext</link>*       gtk_widget_create_pango_context     (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
@@ -4379,6 +4417,88 @@ that require entering license keys.</para>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
+<title><anchor id="gtk-widget-get-tooltip-markup" role="function" condition="since:2.12"/>gtk_widget_get_tooltip_markup ()</title>
+<indexterm role="2.12"><primary>gtk_widget_get_tooltip_markup</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_widget_get_tooltip_markup       (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<para>
+Gets the contents of the tooltip for <parameter>widget</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the tooltip text, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>. You should free the
+  returned string with <link linkend="g-free"><function>g_free()</function></link> when done.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-widget-set-tooltip-markup" role="function" condition="since:2.12"/>gtk_widget_set_tooltip_markup ()</title>
+<indexterm role="2.12"><primary>gtk_widget_set_tooltip_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_set_tooltip_markup       (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         const <link linkend="gchar">gchar</link> *markup);</programlisting>
+<para>
+Sets <parameter>markup</parameter> as the contents of the tooltip, which is marked up with
+ the <link linkend="PangoMarkupFormat">Pango text markup language</link>.
+</para>
+<para>
+This function will take care of setting GtkWidget:has-tooltip to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>
+and of the default handler for the GtkWidget::query-tooltip signal.
+</para>
+<para>
+See also the GtkWidget:tooltip-markup property and
+<link linkend="gtk-tooltip-set-markup"><function>gtk_tooltip_set_markup()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>markup</parameter>&nbsp;:</term>
+<listitem><simpara> the contents of the tooltip for <parameter>widget</parameter>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-widget-get-tooltip-text" role="function" condition="since:2.12"/>gtk_widget_get_tooltip_text ()</title>
+<indexterm role="2.12"><primary>gtk_widget_get_tooltip_text</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_widget_get_tooltip_text         (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<para>
+Gets the contents of the tooltip for <parameter>widget</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the tooltip text, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>. You should free the
+  returned string with <link linkend="g-free"><function>g_free()</function></link> when done.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-widget-set-tooltip-text" role="function" condition="since:2.12"/>gtk_widget_set_tooltip_text ()</title>
+<indexterm role="2.12"><primary>gtk_widget_set_tooltip_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_set_tooltip_text         (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         const <link linkend="gchar">gchar</link> *text);</programlisting>
+<para>
+Sets <parameter>text</parameter> as the contents of the tooltip. This function will take
+care of setting GtkWidget:has-tooltip to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> and of the default
+handler for the GtkWidget::query-tooltip signal.
+</para>
+<para>
+See also the GtkWidget:tooltip-text property and <link linkend="gtk-tooltip-set-text"><function>gtk_tooltip_set_text()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>text</parameter>&nbsp;:</term>
+<listitem><simpara> the contents of the tooltip for <parameter>widget</parameter>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-widget-get-tooltip-window" role="function" condition="since:2.12"/>gtk_widget_get_tooltip_window ()</title>
 <indexterm role="2.12"><primary>gtk_widget_get_tooltip_window</primary></indexterm><programlisting><link linkend="GtkWindow">GtkWindow</link>*          gtk_widget_get_tooltip_window       (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
@@ -4544,6 +4664,25 @@ whether it will provide a tooltip or not.</para>
 Sets the text of tooltip to be the given string, which is marked up
 with the <link linkend="PangoMarkupFormat">Pango text markup language</link>.
 Also see <link linkend="gtk-tooltip-set-markup"><function>gtk_tooltip_set_markup()</function></link>.
+</para>
+<para>
+This is a convenience property which will take care of getting the
+tooltip shown if the given string is not <link linkend="NULL:CAPS"><literal>NULL</literal></link>: <link linkend="GtkWidget--has-tooltip"><type>:has-tooltip</type></link>
+will automatically be set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> and there will be taken care of
+<link linkend="GtkWidget-query-tooltip"><type>::query-tooltip</type></link> in the default signal handler.</para>
+<para>
+
+</para><para>Default value: NULL</para>
+<para>Since  2.12
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkWidget--tooltip-text"/>The :<literal>tooltip-text</literal> property</title>
+<indexterm role="2.12"><primary>GtkWidget:tooltip-text</primary></indexterm><programlisting>  tooltip-text             <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
+<para>
+Sets the text of tooltip to be the given string.
+</para>
+<para>
+Also see <link linkend="gtk-tooltip-set-text"><function>gtk_tooltip_set_text()</function></link>.
 </para>
 <para>
 This is a convenience property which will take care of getting the
@@ -5492,14 +5631,12 @@ its ancestor.</para>
                                                         <link linkend="gpointer">gpointer</link>   user_data)              : Run Last</programlisting>
 <para>
 The ::hierarchy-changed signal is emitted when the
-anchored state of a widget changes. A widget is anchored,
-if it has an ancestor that is a toplevel window.</para>
-<para>
-Emitted when there is a change in the hierarchy to
-which a widget belongs. More precisely, a widget is
+anchored state of a widget changes. A widget is
 <firstterm>anchored</firstterm> when its toplevel
-ancestor is a <link linkend="GtkWindow"><type>GtkWindow</type></link>. This signal is emitted when 
-a widget changes from un-anchored to anchored or vice-versa.
+ancestor is a <link linkend="GtkWindow"><type>GtkWindow</type></link>. This signal is emitted when
+a widget changes from un-anchored to anchored or vice-versa.</para>
+<para>
+
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
 <listitem><simpara> the object on which the signal is emitted

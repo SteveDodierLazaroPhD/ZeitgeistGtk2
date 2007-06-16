@@ -85,8 +85,6 @@ ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
-ENABLE_FB_MANAGER_FALSE = @ENABLE_FB_MANAGER_FALSE@
-ENABLE_FB_MANAGER_TRUE = @ENABLE_FB_MANAGER_TRUE@
 ENABLE_GTK_DOC_FALSE = @ENABLE_GTK_DOC_FALSE@
 ENABLE_GTK_DOC_TRUE = @ENABLE_GTK_DOC_TRUE@
 ENABLE_MAN_FALSE = @ENABLE_MAN_FALSE@
@@ -249,8 +247,6 @@ TEST_PRINT_BACKEND_FALSE = @TEST_PRINT_BACKEND_FALSE@
 TEST_PRINT_BACKEND_TRUE = @TEST_PRINT_BACKEND_TRUE@
 USE_DIRECTFB_FALSE = @USE_DIRECTFB_FALSE@
 USE_DIRECTFB_TRUE = @USE_DIRECTFB_TRUE@
-USE_LINUX_FB_FALSE = @USE_LINUX_FB_FALSE@
-USE_LINUX_FB_TRUE = @USE_LINUX_FB_TRUE@
 USE_MEDIALIB25_FALSE = @USE_MEDIALIB25_FALSE@
 USE_MEDIALIB25_TRUE = @USE_MEDIALIB25_TRUE@
 USE_MEDIALIB_FALSE = @USE_MEDIALIB_FALSE@
@@ -331,6 +327,7 @@ democodedir = $(datadir)/gtk-2.0/demo
 demos = \
 	appwindow.c				\
 	assistant.c				\
+	builder.c				\
 	button_box.c				\
 	changedisplay.c				\
 	clipboard.c				\
@@ -388,7 +385,8 @@ bin_PROGRAMS = gtk-demo
 BUILT_SOURCES = demos.h
 
 EXTRA_DIST = \
-	$(IMAGEFILES)
+	$(IMAGEFILES)	\
+	demo.ui
 
 
 gtk_demo_SOURCES = \
@@ -400,6 +398,7 @@ gtk_demo_SOURCES = \
 
 gtk_demo_DEPENDENCIES = $(DEPS)
 gtk_demo_LDADD = $(LDADDS)
+gtk_demo_LDFLAGS = -export-dynamic
 
 IMAGEFILES = alphatest.png		\
 	        apple-red.png		\
@@ -417,7 +416,7 @@ IMAGEFILES = alphatest.png		\
 		gtk-logo-rgb.gif		
 
 
-democode_DATA = $(demos) $(IMAGEFILES)
+democode_DATA = $(demos) $(IMAGEFILES) demo.ui
 
 DISTCLEANFILES = demos.h
 subdir = demos/gtk-demo
@@ -429,7 +428,7 @@ bin_PROGRAMS = gtk-demo$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am__objects_1 = appwindow.$(OBJEXT) assistant.$(OBJEXT) \
-	button_box.$(OBJEXT) changedisplay.$(OBJEXT) \
+	builder.$(OBJEXT) button_box.$(OBJEXT) changedisplay.$(OBJEXT) \
 	clipboard.$(OBJEXT) colorsel.$(OBJEXT) combobox.$(OBJEXT) \
 	dialog.$(OBJEXT) drawingarea.$(OBJEXT) editable_cells.$(OBJEXT) \
 	entry_completion.$(OBJEXT) expander.$(OBJEXT) \
@@ -441,13 +440,13 @@ am__objects_1 = appwindow.$(OBJEXT) assistant.$(OBJEXT) \
 	tree_store.$(OBJEXT) ui_manager.$(OBJEXT)
 am_gtk_demo_OBJECTS = $(am__objects_1) main.$(OBJEXT)
 gtk_demo_OBJECTS = $(am_gtk_demo_OBJECTS)
-gtk_demo_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/appwindow.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/assistant.Po ./$(DEPDIR)/button_box.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/assistant.Po ./$(DEPDIR)/builder.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/button_box.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/changedisplay.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/clipboard.Po ./$(DEPDIR)/colorsel.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/combobox.Po ./$(DEPDIR)/dialog.Po \
@@ -531,6 +530,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/appwindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/assistant.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/builder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/button_box.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changedisplay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clipboard.Po@am__quote@

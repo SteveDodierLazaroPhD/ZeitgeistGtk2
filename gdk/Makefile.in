@@ -85,8 +85,6 @@ ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
-ENABLE_FB_MANAGER_FALSE = @ENABLE_FB_MANAGER_FALSE@
-ENABLE_FB_MANAGER_TRUE = @ENABLE_FB_MANAGER_TRUE@
 ENABLE_GTK_DOC_FALSE = @ENABLE_GTK_DOC_FALSE@
 ENABLE_GTK_DOC_TRUE = @ENABLE_GTK_DOC_TRUE@
 ENABLE_MAN_FALSE = @ENABLE_MAN_FALSE@
@@ -249,8 +247,6 @@ TEST_PRINT_BACKEND_FALSE = @TEST_PRINT_BACKEND_FALSE@
 TEST_PRINT_BACKEND_TRUE = @TEST_PRINT_BACKEND_TRUE@
 USE_DIRECTFB_FALSE = @USE_DIRECTFB_FALSE@
 USE_DIRECTFB_TRUE = @USE_DIRECTFB_TRUE@
-USE_LINUX_FB_FALSE = @USE_LINUX_FB_FALSE@
-USE_LINUX_FB_TRUE = @USE_LINUX_FB_TRUE@
 USE_MEDIALIB25_FALSE = @USE_MEDIALIB25_FALSE@
 USE_MEDIALIB25_TRUE = @USE_MEDIALIB25_TRUE@
 USE_MEDIALIB_FALSE = @USE_MEDIALIB_FALSE@
@@ -327,7 +323,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
 SUBDIRS = $(gdktarget)
-DIST_SUBDIRS = linux-fb win32 x11 quartz directfb
+DIST_SUBDIRS = win32 x11 quartz directfb
 
 EXTRA_DIST = \
 	keynames.txt		\
@@ -483,12 +479,6 @@ libgdk_x11_2_0_la_LIBADD = x11/libgdk-x11.la $(GDK_DEP_LIBS) \
 
 libgdk_x11_2_0_la_LDFLAGS = $(LDADD)
 
-libgdk_linux_fb_2_0_la_SOURCES = $(common_sources) gdkkeynames.c
-libgdk_linux_fb_2_0_la_LIBADD = linux-fb/libgdk-linux-fb.la $(GDK_DEP_LIBS) \
-  $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
-
-libgdk_linux_fb_2_0_la_LDFLAGS = $(LDADD)
-
 libgdk_quartz_2_0_la_SOURCES = $(common_sources) gdkkeynames.c
 libgdk_quartz_2_0_la_LIBADD = quartz/libgdk-quartz.la $(GDK_DEP_LIBS) \
   $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
@@ -508,7 +498,7 @@ libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols gdk.d
 
 lib_LTLIBRARIES = $(gdktargetlib)
 
-EXTRA_LTLIBRARIES = libgdk-x11-2.0.la libgdk-linux-fb-2.0.la libgdk-win32-2.0.la libgdk-quartz-2.0.la libgdk-directfb-2.0.la
+EXTRA_LTLIBRARIES = libgdk-x11-2.0.la libgdk-win32-2.0.la libgdk-quartz-2.0.la libgdk-directfb-2.0.la
 
 MAINTAINERCLEANFILES = gdkenumtypes.h stamp-gdkenumtypes.h gdkenumtypes.c \
   gdkmarshalers.h gdkmarshalers.c
@@ -564,20 +554,6 @@ am__objects_2 = $(am__objects_1) gdk.lo gdkcairo.lo gdkcolor.lo \
 am__objects_3 = $(am__objects_2) gdkenumtypes.lo
 am_libgdk_directfb_2_0_la_OBJECTS = $(am__objects_3)
 libgdk_directfb_2_0_la_OBJECTS = $(am_libgdk_directfb_2_0_la_OBJECTS)
-libgdk_linux_fb_2_0_la_DEPENDENCIES = linux-fb/libgdk-linux-fb.la \
-	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
-am__libgdk_linux_fb_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c gdkcairo.c \
-	gdkcolor.c gdkcursor.c gdkdisplay.c gdkdnd.c gdkdraw.c \
-	gdkevents.c gdkfont.c gdkgc.c gdkglobals.c gdkkeys.c \
-	gdkkeyuni.c gdkimage.c gdkinternals.h gdkintl.h \
-	gdkdisplaymanager.c gdkpango.c gdkpixbuf-drawable.c \
-	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrgb.c gdkrectangle.c \
-	gdkregion-generic.c gdkregion-generic.h gdkscreen.c \
-	gdkselection.c gdkvisual.c gdkwindow.c gdkenumtypes.c \
-	gdkmarshalers.h gdkkeynames.c
-am_libgdk_linux_fb_2_0_la_OBJECTS = $(am__objects_3) gdkkeynames.lo
-libgdk_linux_fb_2_0_la_OBJECTS = $(am_libgdk_linux_fb_2_0_la_OBJECTS)
 libgdk_quartz_2_0_la_DEPENDENCIES = quartz/libgdk-quartz.la \
 	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
 am__libgdk_quartz_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c gdkcairo.c \
@@ -652,7 +628,6 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(am__libgdk_directfb_2_0_la_SOURCES_DIST) \
-	$(am__libgdk_linux_fb_2_0_la_SOURCES_DIST) \
 	$(am__libgdk_quartz_2_0_la_SOURCES_DIST) \
 	$(am__libgdk_win32_2_0_la_SOURCES_DIST) \
 	$(am__libgdk_x11_2_0_la_SOURCES_DIST)
@@ -668,7 +643,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \
 	check-recursive installcheck-recursive
 DIST_COMMON = $(gdkinclude_HEADERS) $(srcdir)/Makefile.in COPYING \
 	Makefile.am
-SOURCES = $(libgdk_directfb_2_0_la_SOURCES) $(libgdk_linux_fb_2_0_la_SOURCES) $(libgdk_quartz_2_0_la_SOURCES) $(libgdk_win32_2_0_la_SOURCES) $(libgdk_x11_2_0_la_SOURCES)
+SOURCES = $(libgdk_directfb_2_0_la_SOURCES) $(libgdk_quartz_2_0_la_SOURCES) $(libgdk_win32_2_0_la_SOURCES) $(libgdk_x11_2_0_la_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -710,8 +685,6 @@ clean-libLTLIBRARIES:
 	done
 libgdk-directfb-2.0.la: $(libgdk_directfb_2_0_la_OBJECTS) $(libgdk_directfb_2_0_la_DEPENDENCIES) 
 	$(LINK)  $(libgdk_directfb_2_0_la_LDFLAGS) $(libgdk_directfb_2_0_la_OBJECTS) $(libgdk_directfb_2_0_la_LIBADD) $(LIBS)
-libgdk-linux-fb-2.0.la: $(libgdk_linux_fb_2_0_la_OBJECTS) $(libgdk_linux_fb_2_0_la_DEPENDENCIES) 
-	$(LINK)  $(libgdk_linux_fb_2_0_la_LDFLAGS) $(libgdk_linux_fb_2_0_la_OBJECTS) $(libgdk_linux_fb_2_0_la_LIBADD) $(LIBS)
 libgdk-quartz-2.0.la: $(libgdk_quartz_2_0_la_OBJECTS) $(libgdk_quartz_2_0_la_DEPENDENCIES) 
 	$(LINK)  $(libgdk_quartz_2_0_la_LDFLAGS) $(libgdk_quartz_2_0_la_OBJECTS) $(libgdk_quartz_2_0_la_LIBADD) $(LIBS)
 libgdk-win32-2.0.la: $(libgdk_win32_2_0_la_OBJECTS) $(libgdk_win32_2_0_la_DEPENDENCIES) 
