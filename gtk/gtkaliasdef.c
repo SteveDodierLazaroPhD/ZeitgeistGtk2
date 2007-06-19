@@ -1013,8 +1013,8 @@ extern __typeof (gtk_box_set_spacing) gtk_box_set_spacing __attribute((alias("IA
 #endif
 #if IN_HEADER(__GTK_BUILDABLE_H__)
 #if IN_FILE(__GTK_BUILDABLE_C__)
-#undef gtk_buildable_add 
-extern __typeof (gtk_buildable_add) gtk_buildable_add __attribute((alias("IA__gtk_buildable_add"), visibility("default")));
+#undef gtk_buildable_add_child 
+extern __typeof (gtk_buildable_add_child) gtk_buildable_add_child __attribute((alias("IA__gtk_buildable_add_child"), visibility("default")));
 
 #undef gtk_buildable_construct_child 
 extern __typeof (gtk_buildable_construct_child) gtk_buildable_construct_child __attribute((alias("IA__gtk_buildable_construct_child"), visibility("default")));
@@ -1043,8 +1043,8 @@ extern __typeof (gtk_buildable_parser_finished) gtk_buildable_parser_finished __
 #undef gtk_buildable_set_name 
 extern __typeof (gtk_buildable_set_name) gtk_buildable_set_name __attribute((alias("IA__gtk_buildable_set_name"), visibility("default")));
 
-#undef gtk_buildable_set_property 
-extern __typeof (gtk_buildable_set_property) gtk_buildable_set_property __attribute((alias("IA__gtk_buildable_set_property"), visibility("default")));
+#undef gtk_buildable_set_buildable_property 
+extern __typeof (gtk_buildable_set_buildable_property) gtk_buildable_set_buildable_property __attribute((alias("IA__gtk_buildable_set_buildable_property"), visibility("default")));
 
 #endif
 #endif
@@ -7597,12 +7597,14 @@ extern __typeof (gtk_recent_manager_get_items) gtk_recent_manager_get_items __at
 #undef gtk_recent_manager_get_default 
 extern __typeof (gtk_recent_manager_get_default) gtk_recent_manager_get_default __attribute((alias("IA__gtk_recent_manager_get_default"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_recent_manager_get_for_screen 
 extern __typeof (gtk_recent_manager_get_for_screen) gtk_recent_manager_get_for_screen __attribute((alias("IA__gtk_recent_manager_get_for_screen"), visibility("default")));
 
 #undef gtk_recent_manager_set_screen 
 extern __typeof (gtk_recent_manager_set_screen) gtk_recent_manager_set_screen __attribute((alias("IA__gtk_recent_manager_set_screen"), visibility("default")));
 
+#endif
 #undef gtk_recent_manager_add_item 
 extern __typeof (gtk_recent_manager_add_item) gtk_recent_manager_add_item __attribute((alias("IA__gtk_recent_manager_add_item"), visibility("default")));
 

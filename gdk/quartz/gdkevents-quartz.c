@@ -26,6 +26,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#import <Cocoa/Cocoa.h>
 #include <Carbon/Carbon.h>
 
 #include "gdkscreen.h"
@@ -67,6 +68,18 @@ static void get_converted_window_coordinates    (GdkWindow *in_window,
                                                  gint      *out_x, 
                                                  gint      *out_y);
 static void append_event                        (GdkEvent  *event);
+
+/* A category that exposes the protected carbon event for an NSEvent. */
+@interface NSEvent (GdkQuartzNSEvent)
+- (void *)gdk_quartz_event_ref;
+@end 
+
+@implementation NSEvent (GdkQuartzNSEvent)
+- (void *)gdk_quartz_event_ref
+{
+  return _eventRef;
+}
+@end
 
 void 
 _gdk_events_init (void)
@@ -251,6 +264,31 @@ gdk_pointer_grab (GdkWindow    *window,
 
   return pointer_grab_internal (window, owner_events, event_mask, 
 				confine_to, cursor, FALSE);
+}
+
+/* This is used to break any grabs in the case where we have to due to
+ * the grab emulation. Instead of enforcing the desktop wide grab, we
+ * break it when the app loses focus for example.
+ */
+static void
+break_all_grabs (void)
+{
+  if (_gdk_quartz_keyboard_grab_window)
+    {
+      generate_grab_broken_event (_gdk_quartz_keyboard_grab_window,
+                                  TRUE, FALSE,
+                                  NULL);
+      g_object_unref (_gdk_quartz_keyboard_grab_window);
+      _gdk_quartz_keyboard_grab_window = NULL;
+    }
+
+  if (_gdk_quartz_pointer_grab_window)
+    {
+      generate_grab_broken_event (_gdk_quartz_pointer_grab_window,
+                                  FALSE, pointer_grab_implicit,
+                                  NULL);
+      pointer_ungrab_internal (FALSE);
+    }
 }
 
 static void
@@ -764,6 +802,13 @@ synthesize_crossing_events (GdkWindow      *window,
     }
   
   _gdk_quartz_events_update_mouse_window (window);
+
+  /* FIXME: This does't work when someone calls gdk_window_set_cursor
+   * during a grab. The right behavior is that the cursor doesn't
+   * change when a grab is in effect, but in that case it does.
+   */
+  if (window && !_gdk_quartz_pointer_grab_window)
+    _gdk_quartz_events_update_cursor (window);
 }
 
 void 
@@ -820,15 +865,16 @@ _gdk_quartz_events_update_cursor (GdkWindow *window)
   GdkWindowObject *private = GDK_WINDOW_OBJECT (window);
   NSCursor *nscursor = nil;
 
-  while (private) {
-    GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+  while (private)
+    {
+      GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
 
-    nscursor = impl->nscursor;
-    if (nscursor)
-      break;
+      nscursor = impl->nscursor;
+      if (nscursor)
+        break;
 
-    private = private->parent;
-  }
+      private = private->parent;
+    }
 
   if (!nscursor)
     nscursor = [NSCursor arrowCursor];
@@ -1000,6 +1046,134 @@ find_mouse_window_for_ns_event (NSEvent *nsevent,
   return mouse_window;
 }
 
+/* Synthesizes crossing events if necessary, based on the passed in
+ * NSEvent. Uses NSMouseEntered and NSMouseExisted for toplevels and
+ * the mouse moved/dragged events for child windows, to see if the
+ * mouse window has changed.
+ */
+static void
+synthesize_crossing_events_for_ns_event (NSEvent *nsevent)
+{
+  NSEventType event_type;
+  GdkWindow *mouse_window;
+  gint x; 
+  gint y;
+
+  event_type = [nsevent type];
+
+  switch (event_type)
+    {
+    case NSMouseMoved:
+    case NSLeftMouseDragged:
+    case NSRightMouseDragged:
+    case NSOtherMouseDragged:
+      mouse_window = find_mouse_window_for_ns_event (nsevent, &x, &y);
+
+      /* We don't need to handle the case where we don't find a mouse
+       * window (i.e. after leaving a GDK toplevel and not entering a
+       * new one) here, it's covered by NSMouseExited events.
+       */
+      if (mouse_window && mouse_window != current_mouse_window)
+        synthesize_crossing_events (mouse_window, GDK_CROSSING_NORMAL, nsevent, x, y);
+
+      break;
+
+    case NSMouseEntered:
+      {
+	GdkWindow *event_toplevel;
+        NSPoint point;
+
+        event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
+        point = [nsevent locationInWindow];
+
+        x = point.x;
+
+        /* Flip the y coordinate. */
+        if (event_toplevel == _gdk_root)
+          y = _gdk_quartz_window_get_inverted_screen_y (point.y);
+        else
+          {
+            GdkWindowImplQuartz *impl;
+
+            impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
+            y = impl->height - point.y;
+          }
+
+        /* This is the only case where we actually use the window from
+         * the event since we need to know which toplevel we entered
+         * so it can be tracked properly.
+         */
+	mouse_window = _gdk_quartz_window_find_child (event_toplevel, x, y);
+
+        /* Treat unknown windows (including title bar/buttons,
+         * desktop) as the root.
+         */
+        if (!mouse_window) 
+          mouse_window = _gdk_root;
+
+        if (mouse_window != event_toplevel)
+          get_converted_window_coordinates (event_toplevel,
+                                            x, y,
+                                            mouse_window,
+                                            &x, &y);
+
+	synthesize_crossing_events (mouse_window, GDK_CROSSING_NORMAL, nsevent, x, y);
+      }
+      break;
+
+    case NSMouseExited:
+      {
+	GdkWindow *event_toplevel;
+        NSPoint point;
+        gint x_orig, y_orig;
+
+        /* We get mouse exited when leaving toplevels. We only use
+         * this when leaving from a window to the root window. The
+         * other case is handled above by checking the motion/button
+         * events, or getting a MouseEntered for another GDK window.
+         *
+         * The reason we don't use MouseExited for other windows is
+         * that quartz first delivers the entered event and then the
+         * exited which is the opposite from what we need.
+         */
+
+        event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
+        point = [nsevent locationInWindow];
+
+        x = point.x;
+
+        /* Flip the y coordinate. */
+        if (event_toplevel == _gdk_root)
+          y = _gdk_quartz_window_get_inverted_screen_y (point.y);
+        else
+          {
+            GdkWindowImplQuartz *impl;
+
+            impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
+            y = impl->height - point.y;
+          }
+
+        if (gdk_window_get_origin (event_toplevel, &x_orig, &y_orig))
+          {
+            x += x_orig;
+            y += y_orig;
+          }
+
+        /* Check if the root window has a child at this position, if
+         * so ignore the event since it means we didn't exit to the
+         * root.
+         */
+        mouse_window = _gdk_quartz_window_find_child (_gdk_root, x, y);
+        if (mouse_window == _gdk_root)
+          synthesize_crossing_events (_gdk_root, GDK_CROSSING_NORMAL, nsevent, x, y);
+      }
+      break;
+
+    default:
+      break;
+    }
+}
+
 /* This function finds the correct window to send an event to, taking
  * into account grabs, event propagation, and event masks.
  */
@@ -1008,44 +1182,9 @@ find_window_for_ns_event (NSEvent *nsevent,
                           gint    *x, 
                           gint    *y)
 {
-  NSWindow *nswindow = [nsevent window];
-  NSEventType event_type = [nsevent type];
+  NSEventType event_type;
 
-  if (!nswindow)
-    return NULL;
-
-  /* Window was not created by GDK so the event should be handled by Quartz. */
-  if (![[nswindow contentView] isKindOfClass:[GdkQuartzView class]]) 
-    return NULL;
-
-  /* Synthesize crossing events when moving between child
-   * windows. Toplevels are handled with NSMouseEntered and
-   * NSMouseExited in the switch below.
-   */
-  if (event_type == NSMouseMoved ||
-      event_type == NSLeftMouseDragged ||
-      event_type == NSRightMouseDragged ||
-      event_type == NSOtherMouseDragged)
-    {
-      GdkWindow *mouse_window;
-
-      mouse_window = find_mouse_window_for_ns_event (nsevent, x, y);
-
-      /* We don't need to handle the case where we don't find a mouse
-       * window (i.e. after leaving a gdk toplevel and not entering a
-       * new one) here, it's covered by NSMouseExited events.
-       */
-      if (mouse_window && mouse_window != current_mouse_window)
-        synthesize_crossing_events (mouse_window, GDK_CROSSING_NORMAL, nsevent, *x, *y);
-
-      /* FIXME: Does this check really work as intended? It seems like
-       * we sometimes get a cursor update when we shouldn't, for
-       * example during an implicit grab on a GtkButton, and dragging
-       * the mouse over a link button.
-       */
-      if (mouse_window && !_gdk_quartz_pointer_grab_window)
-        _gdk_quartz_events_update_cursor (mouse_window);
-    }
+  event_type = [nsevent type];
 
   switch (event_type)
     {
@@ -1146,91 +1285,8 @@ find_window_for_ns_event (NSEvent *nsevent,
       break;
       
     case NSMouseEntered:
-      {
-	GdkWindow *event_toplevel;
-        GdkWindow *mouse_window;
-        NSPoint point;
-        gint x_tmp, y_tmp;
-
-        event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
-        point = [nsevent locationInWindow];
-
-        x_tmp = point.x;
-
-        /* Flip the y coordinate. */
-        if (event_toplevel == _gdk_root)
-          y_tmp = _gdk_quartz_window_get_inverted_screen_y (point.y);
-        else
-          {
-            GdkWindowImplQuartz *impl;
-            
-            impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
-            y_tmp = impl->height - point.y;
-          }
-
-        /* This is the only case where we actually use the window from
-         * the event since we need to know which toplevel we entered
-         * so it can be tracked properly.
-         */
-	mouse_window = _gdk_quartz_window_find_child (event_toplevel, x_tmp, y_tmp);
-
-        /* Treat unknown windows (including title bar/buttons,
-         * desktop) as the root.
-         */
-        if (!mouse_window) 
-          mouse_window = _gdk_root;
-
-	synthesize_crossing_events (mouse_window, GDK_CROSSING_NORMAL, nsevent, *x, *y);
-      }
-      break;
-
     case NSMouseExited:
-      {
-	GdkWindow *event_toplevel;
-        GdkWindow *mouse_window;
-        NSPoint point;
-        gint x_tmp, y_tmp;
-        gint x_orig, y_orig;
-
-        /* We get mouse exited when leaving toplevels. We only use
-         * this when leaving from a window to the root window. The
-         * other case is handled above by checking the motion/button
-         * events, or getting a MouseEntered for another GDK window.
-         *
-         * The reason we don't use MouseExited for other windows is
-         * that quartz first delivers the entered event and then the
-         * exited which is the opposite from what we need.
-         */
-
-        /* Check if the root window has a child at this position, if
-         * so ignore the event.
-         */
-        event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
-        point = [nsevent locationInWindow];
-
-        x_tmp = point.x;
-
-        /* Flip the y coordinate. */
-        if (event_toplevel == _gdk_root)
-          y_tmp = _gdk_quartz_window_get_inverted_screen_y (point.y);
-        else
-          {
-            GdkWindowImplQuartz *impl;
-            
-            impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
-            y_tmp = impl->height - point.y;
-          }
-
-        if (gdk_window_get_origin (event_toplevel, &x_orig, &y_orig))
-          {
-            x_tmp += x_orig;
-            y_tmp += y_orig;
-          }
-
-        mouse_window = _gdk_quartz_window_find_child (_gdk_root, x_tmp, y_tmp);
-        if (mouse_window == _gdk_root)
-          synthesize_crossing_events (_gdk_root, GDK_CROSSING_NORMAL, nsevent, *x, *y);
-      }
+      /* Already handled in synthesize_crossing_events_for_ns_event. */
       break;
 
     case NSKeyDown:
@@ -1247,13 +1303,9 @@ find_window_for_ns_event (NSEvent *nsevent,
       }
       break;
 
-    case NSAppKitDefined:
-    case NSSystemDefined:
-      /* We ignore these events */
-      break;
-
     default:
-      NSLog(@"Unhandled event %@", nsevent);
+      /* Ignore everything else. */
+      break;
     }
 
   return NULL;
@@ -1458,16 +1510,84 @@ _gdk_quartz_events_get_current_event_mask (void)
 static gboolean
 gdk_event_translate (NSEvent *nsevent)
 {
+  NSWindow *nswindow;
   GdkWindow *window;
   GdkFilterReturn result;
   GdkEvent *event;
   int x, y;
 
+  /* There is no support for real desktop wide grabs, so we break
+   * grabs when the application loses focus (gets deactivated).
+   */
+  if ([nsevent type] == NSAppKitDefined)
+    {
+      if ([nsevent subtype] == NSApplicationDeactivatedEventType)
+        break_all_grabs ();
+
+      /* This could potentially be used to break grabs when clicking
+       * on the title. The subtype 20 is undocumented so it's probably
+       * not a good idea: else if (subtype == 20) break_all_grabs ();
+       */
+    }
+
+  /* Special-case menu shortcut events. We create command events for
+   * those and forward to the corresponding menu.
+   */
+  if ([nsevent type] == NSKeyDown)
+    {
+      EventRef event_ref;
+      MenuRef menu_ref;
+      MenuItemIndex index;
+
+      event_ref = [nsevent gdk_quartz_event_ref];
+      if (IsMenuKeyEvent (NULL, event_ref,
+                          kMenuEventQueryOnly, 
+                          &menu_ref, &index))
+        {
+          MenuCommand menu_command;
+          HICommand hi_command;
+
+          if (GetMenuItemCommandID (menu_ref, index, &menu_command) != noErr)
+            return FALSE;
+   
+          hi_command.commandID = menu_command;
+          hi_command.menu.menuRef = menu_ref;
+          hi_command.menu.menuItemIndex = index;
+
+          CreateEvent (NULL, kEventClassCommand, kEventCommandProcess, 
+                       0, kEventAttributeUserEvent, &event_ref);
+          SetEventParameter (event_ref, kEventParamDirectObject, 
+                             typeHICommand, 
+                             sizeof (HICommand), &hi_command);
+
+          SendEventToEventTarget (event_ref, GetMenuEventTarget (menu_ref));
+
+          ReleaseEvent (event_ref);
+
+          return TRUE;
+        }
+    }
+
+  nswindow = [nsevent window];
+
+  /* Ignore events for no window or ones not created by GDK. */
+  if (!nswindow || ![[nswindow contentView] isKindOfClass:[GdkQuartzView class]])
+    return FALSE;
+
+  /* Ignore events and break grabs while the window is being
+   * dragged. This is a workaround for the window getting events for
+   * the window title.
+   */
+  if ([(GdkQuartzWindow *)nswindow isInMove])
+    {
+      break_all_grabs ();
+      return FALSE;
+    }
+
+  /* Apply any global filters. */
   if (_gdk_default_filters)
     {
-      /* Apply global filters */
-
-      GdkFilterReturn result = apply_filters (NULL, nsevent, _gdk_default_filters);
+      result = apply_filters (NULL, nsevent, _gdk_default_filters);
 
       /* If result is GDK_FILTER_CONTINUE, we continue as if nothing
        * happened. If it is GDK_FILTER_REMOVE,
@@ -1477,39 +1597,33 @@ gdk_event_translate (NSEvent *nsevent)
 	return TRUE;
     }
 
-  /* Catch the case where the entire app loses focus, and break any grabs. */
-  if ([nsevent type] == NSAppKitDefined)
-    {
-      if ([nsevent subtype] == NSApplicationDeactivatedEventType)
-	{
-	  if (_gdk_quartz_keyboard_grab_window)
-	    {
-	      generate_grab_broken_event (_gdk_quartz_keyboard_grab_window,
-					  TRUE, FALSE,
-					  NULL);
-	      g_object_unref (_gdk_quartz_keyboard_grab_window);
-	      _gdk_quartz_keyboard_grab_window = NULL;
-	    }
+  /* Take care of NSMouseEntered/Exited events and mouse movements
+   * events and emit the right GDK crossing events.
+   */
+  synthesize_crossing_events_for_ns_event (nsevent);
 
-	  if (_gdk_quartz_pointer_grab_window)
-	    {
-	      generate_grab_broken_event (_gdk_quartz_pointer_grab_window,
-					  FALSE, pointer_grab_implicit,
-					  NULL);
-	      pointer_ungrab_internal (FALSE);
-	    }
-	}
-    }
-
+  /* Find the right GDK window to send the event to, taking grabs and
+   * event masks into consideration.
+   */
   window = find_window_for_ns_event (nsevent, &x, &y);
-
   if (!window)
     return FALSE;
 
+  /* Apply any window filters. */
   result = apply_filters (window, nsevent, ((GdkWindowObject *) window)->filters);
-
   if (result == GDK_FILTER_REMOVE)
     return TRUE;
+
+  /* We need the appliction to be activated on clicks so that popups
+   * like context menus get events routed properly. This is handled
+   * automatically for left mouse button presses but not other
+   * buttons, so we do it here.
+   */
+  if ([nsevent type] == NSRightMouseDown || [nsevent type] == NSOtherMouseDown)
+    {
+      if (![NSApp isActive])
+        [NSApp activateIgnoringOtherApps:YES];
+    }
 
   current_mask = get_event_mask_from_ns_event (nsevent);
 
@@ -1601,8 +1715,9 @@ gdk_event_translate (NSEvent *nsevent)
 	    dx--;
 	  }
 
-	break;
       }
+      break;
+
     case NSKeyDown:
     case NSKeyUp:
     case NSFlagsChanged:
@@ -1618,8 +1733,10 @@ gdk_event_translate (NSEvent *nsevent)
         return TRUE;
       }
       break;
+
     default:
-      NSLog(@"Untranslated: %@", nsevent);
+      /* Ignore everything elsee. */
+      break;
     }
 
   return FALSE;

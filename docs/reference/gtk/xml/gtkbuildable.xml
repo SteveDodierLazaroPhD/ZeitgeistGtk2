@@ -24,11 +24,12 @@
 <link linkend="void">void</link>                <link linkend="gtk-buildable-set-name">gtk_buildable_set_name</link>              (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
                                                          const <link linkend="gchar">gchar</link> *name);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-buildable-get-name">gtk_buildable_get_name</link>              (<link linkend="GtkBuildable">GtkBuildable</link> *buildable);
-<link linkend="void">void</link>                <link linkend="gtk-buildable-add">gtk_buildable_add</link>                   (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
+<link linkend="void">void</link>                <link linkend="gtk-buildable-add-child">gtk_buildable_add_child</link>             (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
                                                          <link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          <link linkend="GObject">GObject</link> *child,
                                                          const <link linkend="gchar">gchar</link> *type);
-<link linkend="void">void</link>                <link linkend="gtk-buildable-set-property">gtk_buildable_set_property</link>          (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
+<link linkend="void">void</link>                <link linkend="gtk-buildable-set-buildable-property">gtk_buildable_set_buildable_property</link>
+                                                        (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
                                                          <link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          const <link linkend="gchar">gchar</link> *name,
                                                          const <link linkend="GValue">GValue</link> *value);
@@ -105,42 +106,42 @@ LONG
   GTypeInterface g_iface;
 
   /* virtual table */
-  void          (* set_name)            (GtkBuildable  *buildable,
-                                         const gchar   *name);
-  const gchar * (* get_name)            (GtkBuildable  *buildable);
-  void          (* add)                 (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder,
-                                         GObject       *child,
-                                         const gchar   *type);
-  void          (* set_property)        (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder,
-                                         const gchar   *name,
-                                         const GValue  *value);
-  GObject *     (* construct_child)     (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder,
-                                         const gchar   *name);
-  gboolean      (* custom_tag_start)    (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder,
-                                         GObject       *child,
-                                         const gchar   *tagname,
-                                         GMarkupParser *parser,
-                                         gpointer      *data);
-  void          (* custom_tag_end)      (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder,
-                                         GObject       *child,
-                                         const gchar   *tagname,
-                                         gpointer      *data);
-  void          (* custom_finished)     (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder,
-                                         GObject       *child,
-                                         const gchar   *tagname,
-                                         gpointer       data);
-  void          (* parser_finished)     (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder);
+  void          (* set_name)               (GtkBuildable  *buildable,
+                                            const gchar   *name);
+  const gchar * (* get_name)               (GtkBuildable  *buildable);
+  void          (* add_child)              (GtkBuildable  *buildable,
+					    GtkBuilder    *builder,
+					    GObject       *child,
+					    const gchar   *type);
+  void          (* set_buildable_property) (GtkBuildable  *buildable,
+					    GtkBuilder    *builder,
+					    const gchar   *name,
+					    const GValue  *value);
+  GObject *     (* construct_child)        (GtkBuildable  *buildable,
+					    GtkBuilder    *builder,
+					    const gchar   *name);
+  gboolean      (* custom_tag_start)       (GtkBuildable  *buildable,
+					    GtkBuilder    *builder,
+					    GObject       *child,
+					    const gchar   *tagname,
+					    GMarkupParser *parser,
+					    gpointer      *data);
+  void          (* custom_tag_end)         (GtkBuildable  *buildable,
+					    GtkBuilder    *builder,
+					    GObject       *child,
+					    const gchar   *tagname,
+					    gpointer      *data);
+  void          (* custom_finished)        (GtkBuildable  *buildable,
+					    GtkBuilder    *builder,
+					    GObject       *child,
+					    const gchar   *tagname,
+					    gpointer       data);
+  void          (* parser_finished)        (GtkBuildable  *buildable,
+					    GtkBuilder    *builder);
 
-  GObject *    (* get_internal_child)   (GtkBuildable  *buildable,
-                                         GtkBuilder    *builder,
-                                         const gchar   *childname);
+  GObject *     (* get_internal_child)     (GtkBuildable  *buildable,
+					    GtkBuilder    *builder,
+					    const gchar   *childname);
 } GtkBuildableIface;
 </programlisting>
 <para>
@@ -189,8 +190,8 @@ to construct the <parameter>buildable</parameter>.
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-buildable-add" role="function" condition="since:2.12"/>gtk_buildable_add ()</title>
-<indexterm role="2.12"><primary>gtk_buildable_add</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_buildable_add                   (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
+<title><anchor id="gtk-buildable-add-child" role="function" condition="since:2.12"/>gtk_buildable_add_child ()</title>
+<indexterm role="2.12"><primary>gtk_buildable_add_child</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_buildable_add_child             (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
                                                          <link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          <link linkend="GObject">GObject</link> *child,
                                                          const <link linkend="gchar">gchar</link> *type);</programlisting>
@@ -220,8 +221,9 @@ page labels (<parameter>type</parameter> = "page-label") and normal children.</p
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-buildable-set-property" role="function" condition="since:2.12"/>gtk_buildable_set_property ()</title>
-<indexterm role="2.12"><primary>gtk_buildable_set_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_buildable_set_property          (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
+<title><anchor id="gtk-buildable-set-buildable-property" role="function" condition="since:2.12"/>gtk_buildable_set_buildable_property ()</title>
+<indexterm role="2.12"><primary>gtk_buildable_set_buildable_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_buildable_set_buildable_property
+                                                        (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
                                                          <link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          const <link linkend="gchar">gchar</link> *name,
                                                          const <link linkend="GValue">GValue</link> *value);</programlisting>

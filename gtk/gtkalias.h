@@ -1010,8 +1010,8 @@ extern __typeof (gtk_box_set_spacing) IA__gtk_box_set_spacing __attribute((visib
 #endif
 #if IN_HEADER(__GTK_BUILDABLE_H__)
 #if IN_FILE(__GTK_BUILDABLE_C__)
-extern __typeof (gtk_buildable_add) IA__gtk_buildable_add __attribute((visibility("hidden")));
-#define gtk_buildable_add IA__gtk_buildable_add
+extern __typeof (gtk_buildable_add_child) IA__gtk_buildable_add_child __attribute((visibility("hidden")));
+#define gtk_buildable_add_child IA__gtk_buildable_add_child
 
 extern __typeof (gtk_buildable_construct_child) IA__gtk_buildable_construct_child __attribute((visibility("hidden")));
 #define gtk_buildable_construct_child IA__gtk_buildable_construct_child
@@ -1040,8 +1040,8 @@ extern __typeof (gtk_buildable_parser_finished) IA__gtk_buildable_parser_finishe
 extern __typeof (gtk_buildable_set_name) IA__gtk_buildable_set_name __attribute((visibility("hidden")));
 #define gtk_buildable_set_name IA__gtk_buildable_set_name
 
-extern __typeof (gtk_buildable_set_property) IA__gtk_buildable_set_property __attribute((visibility("hidden")));
-#define gtk_buildable_set_property IA__gtk_buildable_set_property
+extern __typeof (gtk_buildable_set_buildable_property) IA__gtk_buildable_set_buildable_property __attribute((visibility("hidden")));
+#define gtk_buildable_set_buildable_property IA__gtk_buildable_set_buildable_property
 
 #endif
 #endif
@@ -7594,12 +7594,14 @@ extern __typeof (gtk_recent_manager_get_items) IA__gtk_recent_manager_get_items 
 extern __typeof (gtk_recent_manager_get_default) IA__gtk_recent_manager_get_default __attribute((visibility("hidden")));
 #define gtk_recent_manager_get_default IA__gtk_recent_manager_get_default
 
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_recent_manager_get_for_screen) IA__gtk_recent_manager_get_for_screen __attribute((visibility("hidden")));
 #define gtk_recent_manager_get_for_screen IA__gtk_recent_manager_get_for_screen
 
 extern __typeof (gtk_recent_manager_set_screen) IA__gtk_recent_manager_set_screen __attribute((visibility("hidden")));
 #define gtk_recent_manager_set_screen IA__gtk_recent_manager_set_screen
 
+#endif
 extern __typeof (gtk_recent_manager_add_item) IA__gtk_recent_manager_add_item __attribute((visibility("hidden")));
 #define gtk_recent_manager_add_item IA__gtk_recent_manager_add_item
 

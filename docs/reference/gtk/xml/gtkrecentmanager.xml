@@ -345,8 +345,7 @@ each time something inside the list changes.
 </para>
 <para>
 <link linkend="GtkRecentManager"><type>GtkRecentManager</type></link> objects are expensive: be sure to create them only when
-needed. You should use the <link linkend="gtk-recent-manager-new-for-screen"><function>gtk_recent_manager_new_for_screen()</function></link> or the
-<link linkend="gtk-recent-manager-get-default"><function>gtk_recent_manager_get_default()</function></link> functions instead.</para>
+needed. You should use <link linkend="gtk-recent-manager-get-default"><function>gtk_recent_manager_get_default()</function></link> instead.</para>
 <para>
 
 </para><variablelist role="params">
@@ -359,22 +358,21 @@ needed. You should use the <link linkend="gtk-recent-manager-new-for-screen"><fu
 <title><anchor id="gtk-recent-manager-get-default" role="function" condition="since:2.10"/>gtk_recent_manager_get_default ()</title>
 <indexterm role="2.10"><primary>gtk_recent_manager_get_default</primary></indexterm><programlisting><link linkend="GtkRecentManager">GtkRecentManager</link>*   gtk_recent_manager_get_default      (void);</programlisting>
 <para>
-Gets the recent manager for the default screen. See
-<link linkend="gtk-recent-manager-get-for-screen"><function>gtk_recent_manager_get_for_screen()</function></link>.</para>
+Gets a unique instance of <link linkend="GtkRecentManager"><type>GtkRecentManager</type></link>, that you can share
+in your application without caring about memory management. The
+returned instance will be freed when you application terminates.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A unique <link linkend="GtkRecentManager"><type>GtkRecentManager</type></link> associated with the
-  default screen. This recent manager is associated with the
-  screen and can be used as long as the screen is open.
-  Do not ref or unref it.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A unique <link linkend="GtkRecentManager"><type>GtkRecentManager</type></link>. Do not ref or unref it.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-recent-manager-get-for-screen" role="function" condition="since:2.10"/>gtk_recent_manager_get_for_screen ()</title>
-<indexterm role="2.10"><primary>gtk_recent_manager_get_for_screen</primary></indexterm><programlisting><link linkend="GtkRecentManager">GtkRecentManager</link>*   gtk_recent_manager_get_for_screen   (<link linkend="GdkScreen">GdkScreen</link> *screen);</programlisting>
+<title><anchor id="gtk-recent-manager-get-for-screen" role="function" condition="deprecated:|since:2.10"/>gtk_recent_manager_get_for_screen ()</title>
+<indexterm role="deprecated"><primary>gtk_recent_manager_get_for_screen</primary></indexterm><indexterm role="2.10"><primary>gtk_recent_manager_get_for_screen</primary></indexterm><programlisting><link linkend="GtkRecentManager">GtkRecentManager</link>*   gtk_recent_manager_get_for_screen   (<link linkend="GdkScreen">GdkScreen</link> *screen);</programlisting>
+<warning><para><literal>gtk_recent_manager_get_for_screen</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Gets the recent manager object associated with <parameter>screen</parameter>; if this
 function has not previously been called for the given screen,
@@ -395,13 +393,22 @@ users.</para>
   and can be used as long as the screen is open. Do not ref or
   unref it.
 
+<parameter>Deprecated</parameter>: 2.12: This function has been deprecated and should
+  not be used in newly written code. Calling this function is
+  equivalent to calling <link linkend="gtk-recent-manager-get-default"><function>gtk_recent_manager_get_default()</function></link>.
+
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-recent-manager-set-screen" role="function" condition="since:2.10"/>gtk_recent_manager_set_screen ()</title>
-<indexterm role="2.10"><primary>gtk_recent_manager_set_screen</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_recent_manager_set_screen       (<link linkend="GtkRecentManager">GtkRecentManager</link> *manager,
+<title><anchor id="gtk-recent-manager-set-screen" role="function" condition="deprecated:|since"/>gtk_recent_manager_set_screen ()</title>
+<indexterm role="deprecated"><primary>gtk_recent_manager_set_screen</primary></indexterm><indexterm role="2.10
+
+@Deprecated: 2.12: This function has been deprecated and should
+  not be used in newly written code. Calling this function has
+  no effect."><primary>gtk_recent_manager_set_screen</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_recent_manager_set_screen       (<link linkend="GtkRecentManager">GtkRecentManager</link> *manager,
                                                          <link linkend="GdkScreen">GdkScreen</link> *screen);</programlisting>
+<warning><para><literal>gtk_recent_manager_set_screen</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Sets the screen for a recent manager; the screen is used to
 track the user's currently configured recently used documents
@@ -416,6 +423,10 @@ storage.</para>
 <listitem><simpara> a <link linkend="GdkScreen"><type>GdkScreen</type></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+
+@Deprecated: 2.12: This function has been deprecated and should
+  not be used in newly written code. Calling this function has
+  no effect.
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-recent-manager-add-item" role="function" condition="since:2.10"/>gtk_recent_manager_add_item ()</title>
