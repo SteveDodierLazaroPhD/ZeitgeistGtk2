@@ -481,9 +481,8 @@ find_child_window_helper (GdkWindow *window,
 }
 
 /* Given a GdkWindow and coordinates relative to it, returns the
- * window in which the point is. The returned window will be in the
- * same subtree as the passed in window (including the passed in
- * window), if no window is found, NULL is returned.
+ * innermost subwindow that contains the point. If the coordinates are
+ * outside the passed in window, NULL is returned.
  */
 GdkWindow *
 _gdk_quartz_window_find_child (GdkWindow *window,
@@ -643,16 +642,17 @@ gdk_window_new (GdkWindow     *parent,
 	const char *title;
 	int style_mask;
 
-	switch (attributes->window_type) {
-	case GDK_WINDOW_TEMP:
-	  style_mask = NSBorderlessWindowMask;
-	  break;
-	default:
-	  style_mask = (NSTitledWindowMask |
-			NSClosableWindowMask |
-			NSMiniaturizableWindowMask |
-			NSResizableWindowMask);
-	} 
+	switch (attributes->window_type) 
+          {
+          case GDK_WINDOW_TEMP:
+            style_mask = NSBorderlessWindowMask;
+            break;
+          default:
+            style_mask = (NSTitledWindowMask |
+                          NSClosableWindowMask |
+                          NSMiniaturizableWindowMask |
+                          NSResizableWindowMask);
+          }
 
 	impl->toplevel = [[GdkQuartzWindow alloc] initWithContentRect:content_rect 
 			                                    styleMask:style_mask
@@ -665,7 +665,7 @@ gdk_window_new (GdkWindow     *parent,
 	  title = get_default_title ();
 
 	gdk_window_set_title (window, title);
-	  
+  
 	if (draw_impl->colormap == gdk_screen_get_rgba_colormap (_gdk_screen))
 	  {
 	    [impl->toplevel setOpaque:NO];
@@ -675,14 +675,9 @@ gdk_window_new (GdkWindow     *parent,
 	impl->view = [[GdkQuartzView alloc] initWithFrame:content_rect];
 	[impl->view setGdkWindow:window];
 	[impl->toplevel setContentView:impl->view];
-
-	/* Add a tracking rect */
-	impl->tracking_rect = [impl->view addTrackingRect:NSMakeRect(0, 0, impl->width, impl->height) 
-			                            owner:impl->view
-			                         userData:nil
-			                     assumeInside:NO];
       }
       break;
+
     case GDK_WINDOW_CHILD:
       {
 	GdkWindowImplQuartz *parent_impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (parent)->impl);
@@ -701,6 +696,7 @@ gdk_window_new (GdkWindow     *parent,
 	  }
       }
       break;
+
     default:
       g_assert_not_reached ();
     }
@@ -1210,6 +1206,13 @@ gdk_window_get_origin (GdkWindow *window,
 	*y = 0;
       
       return FALSE;
+    }
+
+  if (window == _gdk_root)
+    {
+      *x = 0;
+      *y = 0;
+      return TRUE;
     }
   
   private = GDK_WINDOW_OBJECT (window);

@@ -1,4 +1,452 @@
+2007-07-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.11.5 ===
+
+	* tests/autotestkeywords.cc: Make platform includes
+	conditional.
+
+	* gtk/Makefile.am: File list fixes
+
+	* NEWS: Updates
+
+2007-07-02  Kristian Rietveld  <kris@gtk.org>
+
+	* gtk/gtk.symbols:
+	* gtk/gtktreeview.[ch] (gtk_tree_view_is_rubber_banding_active): new
+	function to check whether a rubber banding operation is currently
+	active.  (#393579, Christian Neumair).
+
+2007-07-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2007-07-02  Jan Arne Petersen  <jpetersen@jpetersen.org>
+
+	* gtk/gtkscalebutton.c: (gtk_scale_button_update_icon): Add
+	parentheses to fix the operator order in the icon selection.
+
+2007-07-01  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtk-builder-convert (GtkBuilderConverter): 
+	Convert to getopt, improved documentation, change
+	the script to require two arguments
+
+2007-06-30  Richard Hult  <richard@imendio.com>
+
+	Continue the event handling cleanup:
+
+	* gdk/quartz/gdkevents-quartz.c: (synthesize_crossing_events):
+	Don't do anything if the old and new windows are the same,
+	simplifies the callers.
+	(find_mouse_window_for_ns_event): Always return a window (root
+	instead of NULL). Remove unneccessary check for the current mouse
+	window being NULL, that was a workaround for a now fixed
+	bug. Convert to root coordinates if we don't find a window.
+	(synthesize_crossing_events_for_ns_event): Simplify and add
+	comment.
+
+2007-06-30  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkevents-quartz.c:
+	(synthesize_crossing_events_for_ns_event): Simplify (get the
+	origin directly from the window).
+
+2007-06-30  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkevents-quartz.c: (create_crossing_event),
+	(synthesize_crossing_events), (find_mouse_window_for_ns_event),
+	(synthesize_crossing_events_for_ns_event): No need to special case
+	the root window now that it has the right size.
+
+2007-06-30  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c:
+	* gdk/quartz/gdkevents-quartz.c: Improve comments in those
+	files. Add a debugging helper to print out information about a
+	window.
+
+2007-06-30  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilder.c:
+	* gtk/gtkbuilder.h:
+	* gtk/gtkbuilderparser.c:
+	* gtk/gtkbuilderprivate.h:
+	* gtk/gtkwidget.c: 
+	* tests/buildertest.c:
+
+	Improve error handling for enum/flags, rename the converter functions
+	to be consistent. Add tests. Fixes #452465
+
+2007-06-30  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c: (gdk_window_get_origin): Make
+	this work properly for the root window.
+
+2007-06-30  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/GdkQuartzView.c: Improve the tracking rect updating:
+	- No need to override setFrame.
+	- Use our own size instead of the bounds from the view as it's not
+	always updated before the tracking rect.
+	- Only reset the tracking rect if the new window is nil).
+	
+	* gdk/quartz/GdkQuartzWindow.c: Update the bounds of the content
+	view when the window size changes.
+
+2007-06-30  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkbuilderparser.c (_gtk_builder_parse_boolean): 
+	Use g_ascii_strdown() instead of a rolling our own.
+
+2007-06-30  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilderparser.c: (_get_type_by_symbol), (parse_object),
+	(parse_child):
+	* tests/buildertest.c: (test_types):
+	Move type-func to <object> instead of <child>, add a test to
+	make sure that it works as desired, #452463
+
+	* gtk/gtkbuilder.c: (gtk_builder_value_from_string_type):
+	* gtk/gtkbuilderparser.c: (_gtk_builder_parse_boolean),
+	(parse_property), (parse_signal):
+	* gtk/gtkbuilderprivate.h:
+	* tests/buildertest.c: (test_value_from_string):
+	Make boolean string parsing consistent, #452464
+
+2007-06-30  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkbuilder.c:
+	* gtk/gtkbuildable.c: Documentation updates.
+
+2007-06-29  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/gdk.symbols:
+	* gdk/gdkkeys.h:
+	* gdk/x11/gdkkeys-x11.c (gdk_keymap_have_bidi_layouts): New
+	function to determine if keyboard layouts for both LTR and LTR 
+	languages are in use. Refactor the direction caching code to
+	make this information available.  (#353805, Behnam Esfahbod)
+
+2007-06-29  Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/printbackend/cups/gtkcupsutils.c (_post_check):
+	(_get_check): Enable SSL support.  (#451070, Vince Busam)
+
+2007-06-29  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilder.c: (gtk_builder_finalize),
+	(gtk_builder_get_parameters), (_gtk_builder_construct):
+	* tests/buildertest.c:
+
+	Improve reference counting, #447967
+
+2007-06-29  Ryan Lortie  <desrt@desrt.ca>
+
+	* tests/testgtk.c (create_composited_window): Connect the "destroy"
+	signal so that the 'window' pointer is set back to NULL (like for the
+	other examples).
+
+	* gdk/x11/gdkwindow-x11.c (gdk_window_impl_x11_finalize): Don't
+	destroy the Damage here.  By finalize() XDestroyWindow has already
+	been called (and took the Damage with it).
+
+	Bug #452046.
+
+2007-06-29  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentchooserdefault.c (recent_meta_data_func): Escape
+	markup entities in the name and URI before displaying them.
+
+2007-06-29  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentmanager.c (get_icon_for_mime_type): Do not
+	cache the icon pixbufs but rely on the GtkIconTheme not to
+	hit the disk cache too much (should tentatively fix #426987).
+
+2007-06-28  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* modules/engines/ms-windows/msw_style.c: Draw no bevel
+	when "GtkToolbar::shadow-type" is "none" (#450469).
+
+2007-06-28  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtk-builder-convert (_indent): Prettify the output by
+	running it through xmllint --format if xmllint is available 
+	which also requires the subprocess module only available 
+	in python 2.4 or later
+
+2007-06-28  Christian Persch  <chpe@gnome.org>
+
+	* gtk/gtkvolumebutton.c: (gtk_volume_button_class_init),
+	(gtk_volume_button_init), (gtk_volume_button_dispose),
+	(gtk_volume_button_update_tooltip): Make the volume button use range
+	0.0 to 1.0 by default, and fix tooltips code to cope with different ranges.
+	Bug #451866.
+
+2007-06-28  Yevgen Muntyan  <muntyan@tamu.edu>
+
+	* gtk/gtktextutil.c (_gtk_text_util_get_block_cursor_location):
+	do right thing in one-character lines and at paragraph end (#448313).
+
+	* configure.in: require pango-1.17.3 to get fixed pango_layout_index_to_line_x()
+	(pango #448342).
+
+2007-06-27  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilderparser.c (parse_property): Use
+	the attribute name in the error message instead of
+	the value.
+	
+	* demos/gtk-demo/demo.ui: Set name of Help menu
+	to HelpMenu
+
+	* gtk/gtkbuilder.c (apply_delayed_properties): 
+	Print out the name of the right object in the warning
+	(#451314, Philip Withnall)
+
+	* gtk/gtk-builder-convert (GtkBuilderConverter._parse): Remove
+	glade-interface doctype if found.
+	(GtkBuilderConverter._convert): 
+	Make sure that we can convert Gazpacho files too.
+
+2007-06-27  Cody Russell  <bratsche@gnome.org>
+
+	* modules/engines/ms-windows/msw_style.c (draw_themed_tab_button):
+	Fixed, very hackishly, a one pixel error that occurs using the
+	XP theme engine only on the left-most tab, if it is active, when
+	the notebook is bottom-oriented. (#392283)
+
+2007-06-27  Johan Dahlin  <jdahlin@async.com.br>
+
+	* tests/buildertest.c: (test_value_from_string): 
+	Check the code and domain of GErrors instead of the string values
+	
+	* gtk/gtkbuilder.c: (gtk_builder_get_parameters),
+	(gtk_builder_value_from_string),
+	(gtk_builder_value_from_string_type):
+	* gtk/gtkbuilder.h:
+	* gtk/gtkcontainer.c: (gtk_container_buildable_set_child_property),
+	(attributes_text_element):
+	* gtk/gtkliststore.c: (list_store_text):
+	* tests/buildertest.c: (test_value_from_string):
+
+	Add GtkBuilder and GError arguments to gtk_builder_value_from_string
+	and gtk_builder_value_from_string_type. (#451428)
+
+2007-06-27  Xan Lopez  <xan@gnome.org>
+
+	* gtk/gtkvbbox.c (gtk_vbutton_box_size_allocate):
+	* gtk/gtkhbbox.c (gtk_hbutton_box_size_allocate):
+
+	Do not add border_width to the first button initial
+	coordinate, since it's already taken into account in
+	the allocation value. (#451484)
+
+2007-06-27  Michael Natterer  <mitch@imendio.com>
+
+	Merged from maemo-gtk:
+
+	* gtk/gtkmenu.c (gtk_menu_handle_scrolling): when updating the
+	scroll arrows' state, make sure we don't overwrite the insensitive
+	state that might have been set by the first scroll step hitting
+	the top/bottom border of the menu.
+
+Wed Jun 27 13:27:21 2007  Tim Janik  <timj@gtk.org>
+
+	* gtk/gtkradiobutton.[hc]: applied patch to improve variable names, 
+	by Olivier Delhomme, #451527.
+
+Wed Jun 27 11:57:41 2007  Tim Janik  <timj@imendio.com>
+
+	* gtk/gtkstatusicon.c (gtk_status_icon_position_menu): fixed
+	push_in description.
+
+2007-06-27  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilderparser.c: Plug leaks in error code paths
+
+2007-06-26  Johan Dahlin  <jdahlin@async.com.br>
+
+	* tests/buildertest.c (test_object_properties): 
+	Add a test to check object properties
+
+	* gtk/gtkbuilder.h (enum): 
+	* gtk/gtkbuilderparser.c (end_element): 
+	* tests/buildertest.c (test_parser): 
+	Set an error if we encounter properties without values set
+	(#451303, Philip Withnall)
+	(test_object_properties): Add a test
+
+	* demos/gtk-demo/builder.c (do_builder): Connect the
+	destroy signal in the example instead of the ui file.
+	Also set the screen and title of the window.
+	(#451345, Thomas Rydzynski)
+
+2007-06-26  Richard Hult  <richard@imendio.com>
+
+	* gtk/gtkbuilder.c: (gtk_builder_value_from_string_type): Fix a
+	bunch of small bugs when parsing property values
+	(boolean/int/uint/long/ulong/float/double). Bug #451353.
+
+	* tests/buildertest.c: Add tests for the above.
+
+2007-06-26  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkfilechooserdefault.c (list_mtime_data_func): Fix
+	a typo in the previous commit.
+
+	(shortcuts_append_desktop): Remove unused variable and
+	hush the compiler warning.
+
+2007-06-26  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkfilechooserdefault.c (list_mtime_data_func): Show
+	the time of last change in the file chooser, for files
+	modified today or yesterday. (#324543)
+
+	* configure.in: Check for localtime_r().
+
+2007-06-26  Cody Russell  <bratsche@gnome.org>
+
+	* modules/engines/ms-windows/xp_theme.[ch]
+	* modules/engines/ms-windows/msw_style.c: Add support for 
+	drawing checkboxes with inconsistent states. (Tor, #164809)
+
+2007-06-26  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtk-builder-convert (GtkBuilderConverter.to_xml): Encode 
+	the output in utf-8 as suggested by Bogdan Nicula
+
+2007-06-22  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+ 
+	* configure.in, tests/Makefile.am, tests/autotestkeywords.cc,
+	tests/dummy-headers/*: Extend the C++ keyword test
+	to include internal GDK headers (#449016).
+
+2007-06-26  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* ChangeLog, configure.in, tests/Makefile.am, 
+	tests/autotestkeywords.cc: Create test for finding
+	C++ keywords in public header files (#449016).
+
+2007-06-26  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtktooltips.h: remove the deprecation macros for now to fix
+	the build and give us a chance to fix widgets which use GtkTooltips
+	in their API.
+
+2007-06-26  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtktooltips.[ch]:
+	* docs/reference/gtk/tmpl/gtktooltips.sgml: deprecate GtkTooltips.
+
+2007-06-25  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtk-builder-convert: Add a script to convert libglade files
+	to something gtkbuilder can parse.
+	Fixes #447995
+
+2007-06-25  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkevents-quartz.c (gdk_event_translate): Don't steal
+	menu events while the keyboard is grabbed.
+
+2007-06-25  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/Makefile.am:
+	* gdk/quartz/xcursors.h:
+	* gdk/quartz/gdkcursor-quartz.c: Fallback to X cursors for the
+	ones that OS X doesn't provide. Fixes bug #327912.
+
+2007-06-25  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentmanager.c:
+	(build_recent_info): building a GtkRecentInfo can never fail.
+
+	(gtk_recent_manager_get_items): Clamp the list while building
+	it so we don't need to traverse it more than once. (#446532,
+	Philip Withnall)
+
+2007-06-25  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/win32/gdkevents-win32.c (gdk_pointer_grab): Revert my
+	attempted overly simple fix for #445284, as it causes a
+	regression. (For instance, in GIMP the tool cursor gets used also
+	for the right-click menu in image windows.) A more complex fix is
+	needed to more completely emulate X11 behaviour.
+
+2007-06-24  Kristian Rietveld  <kris@gtk.org>
+
+	* Makefile.am: fix little mistake in my last commit ...
+
+2007-06-24  Kristian Rietveld  <kris@gtk.org>
+
+	* gtk/gtksearchenginequartz.[ch]: Add a search engine which queries
+	the Spotlight database on MacOS X (only available in 10.4 and
+	higher).
+
+	* gtk/gtksearchengine.c (_gtk_search_engine_new): try creating
+	quartz search engine if we are on OS X.
+
+	* Makefile.am: added use_quartz_sources section with new file.
+
+2007-06-22  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtksearchenginebeagle.c:
+	* gtk/gtksearchenginesimple.c:
+	* gtk/gtksearchenginetracker.c: Remove the MIME type calls and
+	queries from the search engine implementations, since we use our
+	own GtkFileSystem to filter out basing on MIME types and we cannot
+	query MIME types anyway. The GtkQuery private object still has
+	MIME type, as well as location, support for future expansion.
+
+Fri Jun 22 12:13:39 2007  Tim Janik  <timj@imendio.com>
+
+	* gtk/gtkframe.c (gtk_frame_paint): applied patch from Xan Lopez
+	to eliminate gap in painted frame for yaling=0.0 or yalign=1.0.
+
+	* tests/testframe.c: added test application from Xan Lopez to
+	test xalign/yalign interactions with xthickness/ythickness.
+
+Fri Jun 22 00:34:34 2007  Tim Janik  <timj@gtk.org>
+
+	* gdk/x11/gdkdisplay-x11.c (gdk_x11_display_get_xdisplay): applied
+	patch from Mark Tiefenbruck to add missing return_if_fail, #449862.
+
+2007-06-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktoolbar.c: Remove debug spew.  (#449492, Christian Persch)
+
+2007-06-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkmain.c (gtk_main_do_event): Remove faulty and irrelevant
+	enter-leave compression code.  (#449167, patch by Tim Janik)
+
+2007-06-19  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gdk/quartz/GdkQuartzView.c ([GdkQuartzView -updateTrackingRect]): Fix a typo
+	in a comment
+
+2007-06-20  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c (gdk_window_new): 
+	* gdk/quartz/GdkQuartzWindow.c (windowDidResize): Don't create or
+	update the tracking rect in the window, move it to the view where
+	it belongs.
+
+	* gdk/quartz/GdkQuartzView.c (updateTrackingRect)
+	(viewDidMoveToWindow, viewWillMoveToWindow)
+	(setFrame, setBounds): Create and update the tracking rect here.
+
+2007-06-19  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* gdk/gdkinternals.h: Restore G_BEGIN_DECLS at the
+	top of this file to make C++ compilers happy.
+
 2007-06-19  Matthias Clasen <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.11.4 ===
 

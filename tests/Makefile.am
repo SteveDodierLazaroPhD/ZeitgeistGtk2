@@ -28,6 +28,7 @@ TESTS = floatingtest buildertest
 
 noinst_PROGRAMS =			\
 	autotestfilechooser		\
+	autotestkeywords		\
 	floatingtest			\
 	buildertest			\
 	simple				\
@@ -45,6 +46,7 @@ noinst_PROGRAMS =			\
 	testentrycompletion 		\
 	testfilechooser			\
 	testfilechooserbutton		\
+	testframe			\
 	testgtk				\
 	testiconview			\
 	testicontheme			\
@@ -89,6 +91,20 @@ noinst_PROGRAMS =			\
 	testtooltips			\
 	testvolumebutton
 
+if HAVE_CXX
+noinst_PROGRAMS += autotestkeywords
+TESTS += autotestkeywords
+
+autotestkeywords_SOURCES = autotestkeywords.cc
+autotestkeywords_CPPFLAGS = -I$(srcdir)/dummy-headers
+
+if HAVE_OBJC
+autotestkeywords_CPPFLAGS += -DHAVE_OBJC=1
+autotestkeywords_CXXFLAGS = -x objective-c++
+endif
+
+endif
+
 autotestfilechooser_DEPENDENCIES = $(TEST_DEPS)
 simple_DEPENDENCIES = $(TEST_DEPS)
 floatingtest_DEPENDENCIES = $(TEST_DEPS)
@@ -99,6 +115,7 @@ testiconview_DEPENDENCIES = $(TEST_DEPS)
 testaccel_DEPENDENCIES = $(TEST_DEPS)
 testassistant_DEPENDENCIES = $(TEST_DEPS)
 testbbox_DEPENDENCIES = $(TEST_DEPS)
+testframe_DEPENDENCIES = $(TEST_DEPS)
 testcairo_DEPENDENCIES = $(TEST_DEPS)
 testcalendar_DEPENDENCIES = $(TEST_DEPS)
 testcombo_DEPENDENCIES = $(TEST_DEPS)
@@ -153,6 +170,7 @@ print_editor_LDADD = $(LDADDS)
 testaccel_LDADD = $(LDADDS)
 testassistant_LDADD = $(LDADDS)
 testbbox_LDADD = $(LDADDS)
+testframe_LDADD = $(LDADDS)
 testcairo_LDADD = $(LDADDS)
 testcalendar_LDADD = $(LDADDS)
 testcombo_LDADD = $(LDADDS)
@@ -275,6 +293,9 @@ testactions_SOURCES = 		\
 
 testbbox_SOURCES = 		\
 	testbbox.c
+
+testframe_SOURCES = 		\
+	testframe.c
 
 testiconview_SOURCES = 		\
 	testiconview.c		\

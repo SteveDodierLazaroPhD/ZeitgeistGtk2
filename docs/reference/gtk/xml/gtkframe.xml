@@ -92,6 +92,30 @@ If present, the label is drawn in a gap in the
 top side of the frame. The position of the
 label can be controlled with <link linkend="gtk-frame-set-label-align"><function>gtk_frame_set_label_align()</function></link>.
 </para>
+
+<refsect2 id="GtkFrame-BUILDER-UI">
+<title>GtkFrame as GtkBuildable</title>
+<para>
+The GtkFrame implementation of the GtkBuildable interface
+supports placing a child in the label position by specifying
+"label" as the "type" attribute of a &lt;child&gt; element.
+A normal content child can be specified without specifying 
+a &lt;child&gt; type attribute.
+</para> 
+<example>
+<title>A UI definition fragment with GtkFrame</title>
+<programlisting><![CDATA[
+<object class="GtkFrame">
+  <child type="label">
+    <object class="GtkLabel" id="frame-label"/>
+  </child>
+  <child>
+    <object class="GtkEntry" id="frame-content"/>
+  </child>
+</object>
+]]></programlisting>
+</example>
+</refsect2>
 </refsect1>
 
 <refsect1 role="details">
@@ -170,7 +194,9 @@ default values for a newly created frame are 0.0 and 0.5.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>yalign</parameter>&nbsp;:</term>
 <listitem><simpara> The y alignment of the label. A value of 0.0 aligns under 
-  the frame; 1.0 aligns above the frame.
+  the frame; 1.0 aligns above the frame. If the values are exactly
+  0.0 or 1.0 the gap in the frame won't be painted because the label
+  will be completely above or below the frame.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>

@@ -43,7 +43,9 @@ typedef enum
   GTK_BUILDER_ERROR_UNHANDLED_TAG,
   GTK_BUILDER_ERROR_MISSING_ATTRIBUTE,
   GTK_BUILDER_ERROR_INVALID_ATTRIBUTE,
-  GTK_BUILDER_ERROR_INVALID_TAG
+  GTK_BUILDER_ERROR_INVALID_TAG,
+  GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
+  GTK_BUILDER_ERROR_INVALID_VALUE
 } GtkBuilderError;
 
 GQuark gtk_builder_error_quark (void);
@@ -105,14 +107,16 @@ const gchar* gtk_builder_get_translation_domain  (GtkBuilder   	*builder);
 GType        gtk_builder_get_type_from_name      (GtkBuilder   	*builder,
                                                   const char   	*type_name);
 
-gboolean     gtk_builder_value_from_string       (GParamSpec   	*pspec,
+gboolean     gtk_builder_value_from_string       (GtkBuilder    *builder,
+						  GParamSpec   	*pspec,
                                                   const gchar  	*string,
-                                                  GValue       	*value);
-gboolean     gtk_builder_value_from_string_type  (GType        	 type,
+                                                  GValue       	*value,
+						  GError       **error);
+gboolean     gtk_builder_value_from_string_type  (GtkBuilder    *builder,
+						  GType        	 type,
                                                   const gchar  	*string,
-                                                  GValue       	*value);
-guint        _gtk_builder_flags_from_string      (GType      	 type,
-						  const char  	*string);
+                                                  GValue       	*value,
+						  GError       **error);
 
 #define GTK_BUILDER_WARN_INVALID_CHILD_TYPE(object, type) \
   g_warning ("'%s' is not a valid child type of '%s'", type, g_type_name (G_OBJECT_TYPE (type)))

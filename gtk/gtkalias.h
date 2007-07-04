@@ -9721,6 +9721,7 @@ extern __typeof (gtk_tooltip_trigger_tooltip_query) IA__gtk_tooltip_trigger_tool
 #endif
 #if IN_HEADER(__GTK_TOOLTIPS_H__)
 #if IN_FILE(__GTK_TOOLTIPS_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_tooltips_data_get) IA__gtk_tooltips_data_get __attribute((visibility("hidden")));
 #define gtk_tooltips_data_get IA__gtk_tooltips_data_get
 
@@ -9742,14 +9743,13 @@ extern __typeof (gtk_tooltips_get_type) IA__gtk_tooltips_get_type __attribute((v
 extern __typeof (gtk_tooltips_new) IA__gtk_tooltips_new __attribute((visibility("hidden")));
 #define gtk_tooltips_new IA__gtk_tooltips_new
 
-#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_tooltips_set_delay) IA__gtk_tooltips_set_delay __attribute((visibility("hidden")));
 #define gtk_tooltips_set_delay IA__gtk_tooltips_set_delay
 
-#endif
 extern __typeof (gtk_tooltips_set_tip) IA__gtk_tooltips_set_tip __attribute((visibility("hidden")));
 #define gtk_tooltips_set_tip IA__gtk_tooltips_set_tip
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_TRAY_ICON_H__)
@@ -10615,6 +10615,9 @@ extern __typeof (gtk_tree_view_insert_column_with_attributes) IA__gtk_tree_view_
 
 extern __typeof (gtk_tree_view_insert_column_with_data_func) IA__gtk_tree_view_insert_column_with_data_func __attribute((visibility("hidden")));
 #define gtk_tree_view_insert_column_with_data_func IA__gtk_tree_view_insert_column_with_data_func
+
+extern __typeof (gtk_tree_view_is_rubber_banding_active) IA__gtk_tree_view_is_rubber_banding_active __attribute((visibility("hidden")));
+#define gtk_tree_view_is_rubber_banding_active IA__gtk_tree_view_is_rubber_banding_active
 
 extern __typeof (gtk_tree_view_map_expanded_rows) IA__gtk_tree_view_map_expanded_rows __attribute((visibility("hidden")));
 #define gtk_tree_view_map_expanded_rows IA__gtk_tree_view_map_expanded_rows

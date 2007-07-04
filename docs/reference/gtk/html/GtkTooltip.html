@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,20 +67,20 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkTooltips.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3791844" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3817754" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3792074" class="shortcut">Description</a>
+                  <a href="#id3817985" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3792050" class="shortcut">Object Hierarchy</a></nobr></td></tr>
+                  <a href="#id3817961" class="shortcut">Object Hierarchy</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkTooltip"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3791844"></a><span class="refentrytitle">GtkTooltip</span>
+<a name="id3817754"></a><span class="refentrytitle">GtkTooltip</span>
 </h2>
-<p>GtkTooltip</p>
+<p>GtkTooltip &#8212; Add tips to your widgets</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
@@ -118,7 +119,7 @@ href="../gdk/GdkDisplay.html"
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3792050"></a><h2>Object Hierarchy</h2>
+<a name="id3817961"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -128,26 +129,36 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3792074"></a><h2>Description</h2>
+<a name="id3817985"></a><h2>Description</h2>
 <p>
-
+<a href="GtkTooltip.html" title="GtkTooltip"><span class="type">GtkTooltip</span></a> belongs to the new tooltips API that was
+introduced in GTK+ 2.12 and which deprecates the old
+<a href="GtkTooltips.html" title="GtkTooltips"><span class="type">GtkTooltips</span></a> API. 
+</p>
+<p>
+Basic tooltips can be realized simply by using
+<a href="GtkWidget.html#gtk-widget-set-tooltip-text"><code class="function">gtk_widget_set_tooltip_text()</code></a> or <a href="GtkWidget.html#gtk-widget-set-tooltip-markup"><code class="function">gtk_widget_set_tooltip_markup()</code></a> without
+any explicit tooltip object. For fancy tooltips, you will likely
+connect to the <a href="GtkWidget.html#GtkWidget-query-tooltip"><span class="type">::query-tooltip</span></a> signal, which is passed
+a <a href="GtkTooltip.html" title="GtkTooltip"><span class="type">GtkTooltip</span></a> object as the last parameter. You can use functions
+like <a href="GtkTooltip.html#gtk-tooltip-set-icon"><code class="function">gtk_tooltip_set_icon()</code></a> to modify the tooltip.  
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3792089"></a><h2>Details</h2>
+<a name="id3818078"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3792099"></a><h3>
+<a name="id3818089"></a><h3>
 <a name="GtkTooltip-struct"></a>GtkTooltip</h3>
-<a class="indexterm" name="id3792112"></a><pre class="programlisting">typedef struct _GtkTooltip GtkTooltip;</pre>
+<a class="indexterm" name="id3818102"></a><pre class="programlisting">typedef struct _GtkTooltip GtkTooltip;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3792127"></a><h3>
+<a name="id3818117"></a><h3>
 <a name="gtk-tooltip-set-markup"></a>gtk_tooltip_set_markup ()</h3>
-<a class="indexterm" name="id3792143"></a><pre class="programlisting">void                gtk_tooltip_set_markup              (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
+<a class="indexterm" name="id3818132"></a><pre class="programlisting">void                gtk_tooltip_set_markup              (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *markup);</pre>
@@ -182,9 +193,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3792277"></a><h3>
+<a name="id3818267"></a><h3>
 <a name="gtk-tooltip-set-text"></a>gtk_tooltip_set_text ()</h3>
-<a class="indexterm" name="id3792293"></a><pre class="programlisting">void                gtk_tooltip_set_text                (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
+<a class="indexterm" name="id3818283"></a><pre class="programlisting">void                gtk_tooltip_set_text                (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *text);</pre>
@@ -218,9 +229,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3792424"></a><h3>
+<a name="id3818413"></a><h3>
 <a name="gtk-tooltip-set-icon"></a>gtk_tooltip_set_icon ()</h3>
-<a class="indexterm" name="id3792439"></a><pre class="programlisting">void                gtk_tooltip_set_icon                (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
+<a class="indexterm" name="id3818429"></a><pre class="programlisting">void                gtk_tooltip_set_icon                (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
                                                          <a
 href="../gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 >GdkPixbuf</a> *pixbuf);</pre>
@@ -256,9 +267,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3792567"></a><h3>
+<a name="id3818556"></a><h3>
 <a name="gtk-tooltip-set-icon-from-stock"></a>gtk_tooltip_set_icon_from_stock ()</h3>
-<a class="indexterm" name="id3792583"></a><pre class="programlisting">void                gtk_tooltip_set_icon_from_stock     (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
+<a class="indexterm" name="id3818572"></a><pre class="programlisting">void                gtk_tooltip_set_icon_from_stock     (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *stock_id,
@@ -299,9 +310,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3792732"></a><h3>
+<a name="id3818721"></a><h3>
 <a name="gtk-tooltip-set-custom"></a>gtk_tooltip_set_custom ()</h3>
-<a class="indexterm" name="id3792747"></a><pre class="programlisting">void                gtk_tooltip_set_custom              (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
+<a class="indexterm" name="id3818737"></a><pre class="programlisting">void                gtk_tooltip_set_custom              (<a href="GtkTooltip.html" title="GtkTooltip">GtkTooltip</a> *tooltip,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *custom_widget);</pre>
 <p>
 Replaces the widget packed into the tooltip with <em class="parameter"><code>custom_widget</code></em>.  
@@ -331,9 +342,9 @@ and <a href="GtkTooltip.html#gtk-tooltip-set-icon"><code class="function">gtk_to
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3792887"></a><h3>
+<a name="id3818877"></a><h3>
 <a name="gtk-tooltip-trigger-tooltip-query"></a>gtk_tooltip_trigger_tooltip_query ()</h3>
-<a class="indexterm" name="id3792904"></a><pre class="programlisting">void                gtk_tooltip_trigger_tooltip_query   (<a
+<a class="indexterm" name="id3818894"></a><pre class="programlisting">void                gtk_tooltip_trigger_tooltip_query   (<a
 href="../gdk/GdkDisplay.html"
 >GdkDisplay</a> *display);</pre>
 <p>

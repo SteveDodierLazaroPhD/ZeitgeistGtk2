@@ -36,6 +36,8 @@
                                                          <link linkend="GdkPixbuf">GdkPixbuf</link> *dest,
                                                          <link linkend="gfloat">gfloat</link> saturation,
                                                          <link linkend="gboolean">gboolean</link> pixelate);
+<link linkend="GdkPixbuf">GdkPixbuf</link>*          <link linkend="gdk-pixbuf-apply-embedded-orientation">gdk_pixbuf_apply_embedded_orientation</link>
+                                                        (<link linkend="GdkPixbuf">GdkPixbuf</link> *src);
 <link linkend="void">void</link>                <link linkend="gdk-pixbuf-fill">gdk_pixbuf_fill</link>                     (<link linkend="GdkPixbuf">GdkPixbuf</link> *pixbuf,
                                                          <link linkend="guint32">guint32</link> pixel);
 </synopsis>
@@ -170,6 +172,31 @@ rowstride.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>pixelate</parameter>&nbsp;:</term>
 <listitem><simpara> whether to pixelate
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="gdk-pixbuf-apply-embedded-orientation" role="function"/>gdk_pixbuf_apply_embedded_orientation ()</title>
+<indexterm><primary>gdk_pixbuf_apply_embedded_orientation</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link>*          gdk_pixbuf_apply_embedded_orientation
+                                                        (<link linkend="GdkPixbuf">GdkPixbuf</link> *src);</programlisting>
+<para>
+Takes an existing pixbuf and checks for the presence of an
+associated "orientation" option, which may be provided by the 
+jpeg loader (which reads the exif orientation tag) or the 
+tiff loader (which reads the tiff orientation tag, and
+compensates it for the partial transforms performed by 
+libtiff). If an orientation option/tag is present, the
+appropriate transform will be performed so that the pixbuf
+is oriented correctly.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>src</parameter>&nbsp;:</term>
+<listitem><simpara> A <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly-created pixbuf, or a reference to the
+input pixbuf (with an increased reference count).
+
+Since 2.12
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2>

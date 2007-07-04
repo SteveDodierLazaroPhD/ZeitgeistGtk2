@@ -38,8 +38,8 @@
 #include "gtktypeutils.h"
 #include "gtkalias.h"
 
-static void free_property_info (PropertyInfo *info,
-                                gpointer      user_data);
+static void free_property_info (PropertyInfo *info);
+static void free_object_info (ObjectInfo *info);
 
 static inline void
 state_push (ParserData *data, gpointer info)
@@ -139,6 +139,70 @@ error_invalid_tag (ParserData *data,
 		 line_number, char_number, tag);
 }
 
+static void
+error_missing_property_value (ParserData *data,
+			      GError **error)
+{
+  gint line_number, char_number;
+
+  g_markup_parse_context_get_position (data->ctx,
+                                       &line_number,
+                                       &char_number);
+
+  g_set_error (error,
+	       GTK_BUILDER_ERROR,
+	       GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
+	       "%s:%d:%d <property> must have a value set",
+	       data->filename,
+	       line_number, char_number);
+}
+
+gboolean
+_gtk_builder_boolean_from_string (const gchar  *string,
+				  gboolean     *value,
+				  GError      **error)
+{
+  gboolean retval = TRUE;
+  int length;
+  
+  g_assert (string != NULL);
+  length = strlen (string);
+  
+  if (length == 0)
+    retval = FALSE;
+  else if (length == 1)
+    {
+      gchar c = g_ascii_tolower (string[0]);
+      if (c == 'y' || c == 't' || c == '1')
+	*value = TRUE;
+      else if (c == 'n' || c == 'f' || c == '0')
+	*value = FALSE;
+      else
+	retval = FALSE;
+    }
+  else
+    {
+      gchar *lower = g_ascii_strdown (string, length);
+      
+      if (strcmp (lower, "yes") == 0 || strcmp (lower, "true") == 0)
+	*value = TRUE;
+      else if (strcmp (lower, "no") == 0 || strcmp (lower, "false") == 0)
+	*value = FALSE;
+      else
+	retval = FALSE;
+      g_free (lower);
+    }
+  
+  if (!retval)
+    g_set_error (error,
+		 GTK_BUILDER_ERROR,
+		 GTK_BUILDER_ERROR_INVALID_VALUE,
+		 "could not parse boolean `%s'",
+		 string);
+
+  return retval;
+}
+
 static GObject *
 builder_construct (ParserData *data,
                    ObjectInfo *object_info)
@@ -160,6 +224,26 @@ builder_construct (ParserData *data,
   return object;
 }
 
+static gchar *
+_get_type_by_symbol (const gchar* symbol)
+{
+  static GModule *module = NULL;
+  GTypeGetFunc func;
+  GType type;
+  
+  if (!module)
+    module = g_module_open (NULL, 0);
+
+  if (!g_module_symbol (module, symbol, (gpointer)&func))
+    return NULL;
+  
+  type = func ();
+  if (type == G_TYPE_INVALID)
+    return NULL;
+
+  return g_strdup (g_type_name (type));
+}
+
 static void
 parse_object (ParserData   *data,
               const gchar  *element_name,
@@ -178,6 +262,8 @@ parse_object (ParserData   *data,
   if (child_info && strcmp (child_info->tag.name, "object") == 0)
     {
       error_invalid_tag (data, element_name, NULL, error);
+      if (child_info)
+	free_object_info ((ObjectInfo*)child_info);
       return;
     }
 
@@ -189,9 +275,25 @@ parse_object (ParserData   *data,
         object_id = g_strdup (values[i]);
       else if (strcmp (names[i], "constructor") == 0)
         constructor = g_strdup (values[i]);
+      else if (strcmp (names[i], "type-func") == 0)
+        {
+	  /* Call the GType function, and return the name of the GType,
+	   * it's guaranteed afterwards that g_type_from_name on the name
+	   * will return our GType
+	   */
+          object_class = _get_type_by_symbol (values[i]);
+          if (!object_class)
+            {
+              g_set_error (error, GTK_BUILDER_ERROR, 
+                           GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION,
+                           _("Invalid type function: `%s'"),
+                           values[i]);
+              return;
+            }
+        }
       else
 	{
-	  error_invalid_attribute (data, element_name, values[i], error);
+	  error_invalid_attribute (data, element_name, names[i], error);
 	  return;
 	}
     }
@@ -234,26 +336,6 @@ free_object_info (ObjectInfo *info)
   g_slice_free (ObjectInfo, info);
 }
 
-static gchar *
-_get_type_by_symbol (const gchar* symbol)
-{
-  static GModule *module = NULL;
-  GTypeGetFunc func;
-  GType type;
-  
-  if (!module)
-    module = g_module_open (NULL, 0);
-
-  if (!g_module_symbol (module, symbol, (gpointer)&func))
-    return NULL;
-  
-  type = func ();
-  if (type == G_TYPE_INVALID)
-    return NULL;
-
-  return g_strdup (g_type_name (type));
-}
-
 static void
 parse_child (ParserData   *data,
              const gchar  *element_name,
@@ -270,6 +352,8 @@ parse_child (ParserData   *data,
   if (!object_info || strcmp (object_info->tag.name, "object") != 0)
     {
       error_invalid_tag (data, element_name, "object", error);
+      if (object_info)
+	free_object_info (object_info);
       return;
     }
   
@@ -283,20 +367,8 @@ parse_child (ParserData   *data,
         child_info->type = g_strdup (values[i]);
       else if (strcmp (names[i], "internal-child") == 0)
         child_info->internal_child = g_strdup (values[i]);
-      else if (strcmp (names[i], "type-func") == 0)
-        {
-          child_info->type = _get_type_by_symbol (values[i]);
-          if (!child_info->type)
-            {
-              g_set_error (error, GTK_BUILDER_ERROR, 
-                           GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION,
-                           _("Invalid type function: `%s'"),
-                           values[i]);
-              return;
-            }
-        }
       else
-	error_invalid_attribute (data, element_name, values[i], error);
+	error_invalid_attribute (data, element_name, names[i], error);
     }
 
   child_info->parent = (CommonInfo*)object_info;
@@ -331,10 +403,14 @@ parse_property (ParserData   *data,
       if (strcmp (names[i], "name") == 0)
         name = g_strdelimit (g_strdup (values[i]), "_", '-');
       else if (strcmp (names[i], "translatable") == 0)
-        translatable = strcmp (values[i], "yes") == 0;
+	{
+	  if (!_gtk_builder_boolean_from_string (values[i], &translatable,
+						 error))
+	    return;
+	}
       else
 	{
-	  error_invalid_attribute (data, element_name, values[i], error);
+	  error_invalid_attribute (data, element_name, names[i], error);
 	  return;
 	}
     }
@@ -354,8 +430,7 @@ parse_property (ParserData   *data,
 }
 
 static void
-free_property_info (PropertyInfo *info,
-                    gpointer user_data)
+free_property_info (PropertyInfo *info)
 {
   g_free (info->data);
   g_free (info->name);
@@ -387,17 +462,21 @@ parse_signal (ParserData   *data,
       else if (strcmp (names[i], "handler") == 0)
         handler = g_strdup (values[i]);
       else if (strcmp (names[i], "after") == 0)
-        after = strcmp (values[i], "yes") == 0;
+	{
+	  if (!_gtk_builder_boolean_from_string (values[i], &after, error))
+	    return;
+	}
       else if (strcmp (names[i], "swapped") == 0)
 	{
-	  swapped = strcmp (values[i], "yes") == 0;
+	  if (!_gtk_builder_boolean_from_string (values[i], &swapped, error))
+	    return;
 	  swapped_set = TRUE;
 	}
       else if (strcmp (names[i], "object") == 0)
         object = g_strdup (values[i]);
       else
 	{
-	  error_invalid_attribute (data, element_name, values[i], error);
+	  error_invalid_attribute (data, element_name, names[i], error);
 	  return;
 	}
     }
@@ -459,7 +538,7 @@ parse_interface (ParserData   *data,
 	  break;
 	}
       else
-	error_invalid_attribute (data, "interface", values[i], error);
+	error_invalid_attribute (data, "interface", names[i], error);
     }
 }
 
@@ -707,6 +786,15 @@ end_element (GMarkupParseContext *context,
       PropertyInfo *prop_info = state_pop_info (data, PropertyInfo);
       CommonInfo *info = state_peek_info (data, CommonInfo);
 
+      if (!prop_info->data)
+	{
+	  error_missing_property_value (data, error);
+	  free_property_info (prop_info);
+	  if (strcmp (info->tag.name, "object") == 0)
+	    free_object_info((ObjectInfo*)info);
+	  return;
+	}
+      
       /* Normal properties */
       if (strcmp (info->tag.name, "object") == 0)
         {

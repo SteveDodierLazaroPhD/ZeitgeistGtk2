@@ -150,6 +150,9 @@ extern __typeof (gdk_pixbuf_copy_area) IA__gdk_pixbuf_copy_area __attribute((vis
 extern __typeof (gdk_pixbuf_saturate_and_pixelate) IA__gdk_pixbuf_saturate_and_pixelate __attribute((visibility("hidden")));
 #define gdk_pixbuf_saturate_and_pixelate IA__gdk_pixbuf_saturate_and_pixelate
 
+extern __typeof (gdk_pixbuf_apply_embedded_orientation) IA__gdk_pixbuf_apply_embedded_orientation __attribute((visibility("hidden")));
+#define gdk_pixbuf_apply_embedded_orientation IA__gdk_pixbuf_apply_embedded_orientation
+
 #endif
 #endif
 #if IN_HEADER(GDK_PIXBUF_TRANSFORM_H)

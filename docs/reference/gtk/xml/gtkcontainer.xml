@@ -176,66 +176,79 @@ GtkContainer implements
 <refsect1 role="desc">
 <title role="desc.title">Description</title>
 <para>
-A GTK+ user interface is constructed by nesting widgets inside widgets. Container widgets are the inner
-nodes in the resulting tree of widgets: they contain other widgets. So, for example, you might have a 
-<link linkend="GtkWindow"><type>GtkWindow</type></link> containing a <link linkend="GtkFrame"><type>GtkFrame</type></link> containing a GtkLabel. If you wanted an image instead of a textual label 
-inside the frame, you might replace the <link linkend="GtkLabel"><type>GtkLabel</type></link> widget with a <link linkend="GtkImage"><type>GtkImage</type></link> widget.
+A GTK+ user interface is constructed by nesting widgets inside widgets. 
+Container widgets are the inner nodes in the resulting tree of widgets: 
+they contain other widgets. So, for example, you might have a <link linkend="GtkWindow"><type>GtkWindow</type></link> 
+containing a <link linkend="GtkFrame"><type>GtkFrame</type></link> containing a GtkLabel. If you wanted an image instead 
+of a textual label inside the frame, you might replace the <link linkend="GtkLabel"><type>GtkLabel</type></link> widget 
+with a <link linkend="GtkImage"><type>GtkImage</type></link> widget.
 </para>
 <para>
-There are two major kinds of container widgets in GTK+. Both are subclasses of the abstract <link linkend="GtkContainer"><type>GtkContainer</type></link> 
-base class.
+There are two major kinds of container widgets in GTK+. Both are subclasses 
+of the abstract <link linkend="GtkContainer"><type>GtkContainer</type></link> base class.
 </para>
 <para>
-The first type of container widget has a single child widget and derives from <link linkend="GtkBin"><type>GtkBin</type></link>. These containers
-are <firstterm>decorators</firstterm>, which add some kind of functionality to the child. For example, 
-a <link linkend="GtkButton"><type>GtkButton</type></link> makes its child into a clickable button; a <link linkend="GtkFrame"><type>GtkFrame</type></link> draws a frame around its child and 
-a <link linkend="GtkWindow"><type>GtkWindow</type></link> places its child widget inside a top-level window.
+The first type of container widget has a single child widget and derives 
+from <link linkend="GtkBin"><type>GtkBin</type></link>. These containers are <firstterm>decorators</firstterm>, which 
+add some kind of functionality to the child. For example, a <link linkend="GtkButton"><type>GtkButton</type></link> makes 
+its child into a clickable button; a <link linkend="GtkFrame"><type>GtkFrame</type></link> draws a frame around its child 
+and a <link linkend="GtkWindow"><type>GtkWindow</type></link> places its child widget inside a top-level window.
 </para>
 <para>
-The second type of container can have more than one child; its purpose is to manage 
-<firstterm>layout</firstterm>. This means that these containers assign sizes and positions to their children. 
-For example, a <link linkend="GtkHBox"><type>GtkHBox</type></link> arranges its children in a horizontal row, and a <link linkend="GtkTable"><type>GtkTable</type></link> arranges the widgets it
-contains in a two-dimensional grid. 
+The second type of container can have more than one child; its purpose is to 
+manage <firstterm>layout</firstterm>. This means that these containers assign 
+sizes and positions to their children. For example, a <link linkend="GtkHBox"><type>GtkHBox</type></link> arranges its 
+children in a horizontal row, and a <link linkend="GtkTable"><type>GtkTable</type></link> arranges the widgets it contains 
+in a two-dimensional grid. 
 </para>
 <para>
-To fulfill its task, a layout container must negotiate the size requirements with its parent and its children.
-This negotiation is carried out in two phases, <firstterm>size requisition</firstterm> and 
-<firstterm>size allocation</firstterm>. 
+To fulfill its task, a layout container must negotiate the size requirements 
+with its parent and its children. This negotiation is carried out in two 
+phases, <firstterm>size requisition</firstterm> and <firstterm>size 
+allocation</firstterm>. 
 </para>
 <refsect2 id="size-requisition"><title>Size Requisition</title>
 <para>
-The size requisition of a widget is it's desired width and height. This is represented by a <link linkend="GtkRequisition"><type>GtkRequisition</type></link>.
+The size requisition of a widget is it's desired width and height. 
+This is represented by a <link linkend="GtkRequisition"><type>GtkRequisition</type></link>.
 </para>
 <para>
-How a widget determines its desired size depends on the widget. A <link linkend="GtkLabel"><type>GtkLabel</type></link>, for example, requests enough space 
-to display all its text. Container widgets generally base their size request on the requisitions of their 
-children.  
+How a widget determines its desired size depends on the widget. 
+A <link linkend="GtkLabel"><type>GtkLabel</type></link>, for example, requests enough space to display all its text. 
+Container widgets generally base their size request on the requisitions 
+of their children.  
 </para>
 <para>
-The size requisition phase of the widget layout process operates top-down. It starts at a top-level widget,
-typically a <link linkend="GtkWindow"><type>GtkWindow</type></link>. The top-level widget asks its child for its size requisition by calling
-<link linkend="gtk-widget-size-request"><function>gtk_widget_size_request()</function></link>. To determine its requisition, the child asks its own children for their requisitions 
-and so on. Finally, the top-level widget will get a requisition back from its child. 
+The size requisition phase of the widget layout process operates top-down. 
+It starts at a top-level widget, typically a <link linkend="GtkWindow"><type>GtkWindow</type></link>. The top-level widget 
+asks its child for its size requisition by calling <link linkend="gtk-widget-size-request"><function>gtk_widget_size_request()</function></link>. 
+To determine its requisition, the child asks its own children for their 
+requisitions and so on. Finally, the top-level widget will get a requisition 
+back from its child. 
 </para>
 </refsect2>
 <refsect2 id="size-allocation"><title>Size Allocation</title>
 <para>
-When the top-level widget has determined how much space its child would like to have, the second phase of the
-size negotiation, size allocation, begins. Depending on its configuration (see <link linkend="gtk-window-set-resizable"><function>gtk_window_set_resizable()</function></link>), the 
-top-level widget may be able to expand in order to satisfy the size request or it may have to ignore the size 
-request and keep its fixed size. It then tells its child widget how much space it gets by calling 
-<link linkend="gtk-widget-size-allocate"><function>gtk_widget_size_allocate()</function></link>. The child widget divides the space among its children and tells each child how much 
-space it got, and so on. Under normal circumstances, a <link linkend="GtkWindow"><type>GtkWindow</type></link> will always give its child the amount of space
-the child requested.
+When the top-level widget has determined how much space its child would like 
+to have, the second phase of the size negotiation, size allocation, begins. 
+Depending on its configuration (see <link linkend="gtk-window-set-resizable"><function>gtk_window_set_resizable()</function></link>), the top-level 
+widget may be able to expand in order to satisfy the size request or it may 
+have to ignore the size request and keep its fixed size. It then tells its 
+child widget how much space it gets by calling <link linkend="gtk-widget-size-allocate"><function>gtk_widget_size_allocate()</function></link>. 
+The child widget divides the space among its children and tells each child 
+how much space it got, and so on. Under normal circumstances, a <link linkend="GtkWindow"><type>GtkWindow</type></link> 
+will always give its child the amount of space the child requested.
 </para>
 <para>
-A child's size allocation is represented by a <link linkend="GtkAllocation"><type>GtkAllocation</type></link>. This struct contains not only a width and height, 
-but also a position (i.e. X and Y coordinates), so that containers can tell their children not only how much
-space they have gotten, but also where they are positioned inside the space available to the container. 
+A child's size allocation is represented by a <link linkend="GtkAllocation"><type>GtkAllocation</type></link>. This struct 
+contains not only a width and height, but also a position (i.e. X and Y 
+coordinates), so that containers can tell their children not only how much
+space they have gotten, but also where they are positioned inside the space 
+available to the container. 
 </para>
 <para>
-Widgets are required to honor the size allocation they receive; a size request is only a request, and widgets
-must be able to cope with any size.
+Widgets are required to honor the size allocation they receive; a size 
+request is only a request, and widgets must be able to cope with any size.
 </para>
 </refsect2>
 <refsect2 id="child-properties"><title>Child properties</title>
@@ -259,6 +272,29 @@ To obtain the value of a child property, use
 <link linkend="gtk-container-child-get-valist"><function>gtk_container_child_get_valist()</function></link>. To emit notification about child property 
 changes, use <link linkend="gtk-widget-child-notify"><function>gtk_widget_child_notify()</function></link>.
 </para>
+</refsect2>
+
+<refsect2 id="GtkContainer-BUILDER-UI">
+<title>GtkContainer as GtkBuildable</title>
+<para>
+The GtkContainer implementation of the GtkBuildable interface 
+supports a &lt;packing&gt; element for children, which can
+contain multiple &lt;property&gt; elements that specify
+child properties for the child.
+</para>
+<example>
+<title>Child properties in UI definitions</title>
+<programlisting><![CDATA[
+<object class="GtkVBox">
+  <child>
+    <object class="GtkLabel"/>
+    <packing>
+      <property name="pack-type">start</property>
+    </packing>
+  </child>
+</object>
+]]></programlisting>
+</example>
 </refsect2>
 </refsect1>
 

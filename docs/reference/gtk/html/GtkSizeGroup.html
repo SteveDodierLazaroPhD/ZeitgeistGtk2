@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,22 +67,22 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkTooltip.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3787518" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3813336" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3788790" class="shortcut">Description</a>
+                  <a href="#id3814608" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3788694" class="shortcut">Object Hierarchy</a>
+                  <a href="#id3814512" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3788718" class="shortcut">Implemented Interfaces</a>
+                  <a href="#id3814537" class="shortcut">Implemented Interfaces</a>
                   &#160;|&#160;
-                  <a href="#id3788741" class="shortcut">Properties</a></nobr></td></tr>
+                  <a href="#id3814559" class="shortcut">Properties</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkSizeGroup"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3787518"></a><span class="refentrytitle">GtkSizeGroup</span>
+<a name="id3813336"></a><span class="refentrytitle">GtkSizeGroup</span>
 </h2>
 <p>GtkSizeGroup &#8212; Grouping widgets so they request the same size</p>
 </td>
@@ -119,7 +120,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Link
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3788694"></a><h2>Object Hierarchy</h2>
+<a name="id3814512"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -129,13 +130,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3788718"></a><h2>Implemented Interfaces</h2>
+<a name="id3814537"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkSizeGroup implements
  <a href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3788741"></a><h2>Properties</h2>
+<a name="id3814559"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkSizeGroup.html#GtkSizeGroup--ignore-hidden">ignore-hidden</a>            <a
@@ -145,7 +146,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3788790"></a><h2>Description</h2>
+<a name="id3814608"></a><h2>Description</h2>
 <p>
 <a href="GtkSizeGroup.html" title="GtkSizeGroup"><span class="type">GtkSizeGroup</span></a> provides a mechanism for grouping a number of widgets
 together so they all request the same amount of space.  This is
@@ -187,22 +188,46 @@ vertical size from the vertical requisition of all widgets that can be
 reached from the widget by a chain of size groups of type
 <a href="GtkSizeGroup.html#GTK-SIZE-GROUP-VERTICAL:CAPS"><code class="literal">GTK_SIZE_GROUP_VERTICAL</code></a> or <a href="GtkSizeGroup.html#GTK-SIZE-GROUP-BOTH:CAPS"><code class="literal">GTK_SIZE_GROUP_BOTH</code></a>.
 </p>
+<div class="refsect2" lang="en">
+<a name="GtkSizeGroup-BUILDER-UI"></a><h3>GtkSizeGroup as GtkBuildable</h3>
+<p>
+Size groups can be specified in a UI definition by placing an
+&lt;object&gt; element with <code class="literal">class="GtkSizeGroup"</code>
+somewhere in the UI definition. The widgets that belong to the
+size group are specified by a &lt;widgets&gt; element that may
+contain multiple &lt;widget&gt; elements, one for each member
+of the size group. The name attribute gives the id of the widget.
+</p>
+<div class="example">
+<a name="id3814824"></a><p class="title"><b>Example&#160;43.&#160;A UI definition fragment with GtkSizeGroup</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkSizeGroup"&gt;
+  &lt;property name="mode"&gt;GTK_SIZE_GROUP_HORIZONTAL&lt;/property&gt;
+  &lt;widgets&gt;
+    &lt;widget name="radio1"/&gt;
+    &lt;widget name="radio2"/&gt;
+  &lt;/widgets&gt;
+&lt;/object&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3788976"></a><h2>Details</h2>
+<a name="id3814842"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3788986"></a><h3>
+<a name="id3814852"></a><h3>
 <a name="GtkSizeGroup-struct"></a>GtkSizeGroup</h3>
-<a class="indexterm" name="id3788999"></a><pre class="programlisting">typedef struct _GtkSizeGroup GtkSizeGroup;</pre>
+<a class="indexterm" name="id3814865"></a><pre class="programlisting">typedef struct _GtkSizeGroup GtkSizeGroup;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789014"></a><h3>
+<a name="id3814881"></a><h3>
 <a name="GtkSizeGroupMode"></a>enum GtkSizeGroupMode</h3>
-<a class="indexterm" name="id3789027"></a><pre class="programlisting">typedef enum {
+<a class="indexterm" name="id3814894"></a><pre class="programlisting">typedef enum {
   GTK_SIZE_GROUP_NONE,
   GTK_SIZE_GROUP_HORIZONTAL,
   GTK_SIZE_GROUP_VERTICAL,
@@ -243,9 +268,9 @@ group affects the requested sizes of its component widgets.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789146"></a><h3>
+<a name="id3815013"></a><h3>
 <a name="gtk-size-group-new"></a>gtk_size_group_new ()</h3>
-<a class="indexterm" name="id3789159"></a><pre class="programlisting"><a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a>*       gtk_size_group_new                  (<a href="GtkSizeGroup.html#GtkSizeGroupMode">GtkSizeGroupMode</a> mode);</pre>
+<a class="indexterm" name="id3815026"></a><pre class="programlisting"><a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a>*       gtk_size_group_new                  (<a href="GtkSizeGroup.html#GtkSizeGroupMode">GtkSizeGroupMode</a> mode);</pre>
 <p>
 Create a new <a href="GtkSizeGroup.html" title="GtkSizeGroup"><span class="type">GtkSizeGroup</span></a>.</p>
 <p>
@@ -269,9 +294,9 @@ Create a new <a href="GtkSizeGroup.html" title="GtkSizeGroup"><span class="type"
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789235"></a><h3>
+<a name="id3815102"></a><h3>
 <a name="gtk-size-group-set-mode"></a>gtk_size_group_set_mode ()</h3>
-<a class="indexterm" name="id3789249"></a><pre class="programlisting">void                gtk_size_group_set_mode             (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
+<a class="indexterm" name="id3815116"></a><pre class="programlisting">void                gtk_size_group_set_mode             (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
                                                          <a href="GtkSizeGroup.html#GtkSizeGroupMode">GtkSizeGroupMode</a> mode);</pre>
 <p>
 Sets the <a href="GtkSizeGroup.html#GtkSizeGroupMode"><span class="type">GtkSizeGroupMode</span></a> of the size group. The mode of the size
@@ -301,9 +326,9 @@ or should all have the same requisition in both directions
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789380"></a><h3>
+<a name="id3815247"></a><h3>
 <a name="gtk-size-group-get-mode"></a>gtk_size_group_get_mode ()</h3>
-<a class="indexterm" name="id3789393"></a><pre class="programlisting"><a href="GtkSizeGroup.html#GtkSizeGroupMode">GtkSizeGroupMode</a>    gtk_size_group_get_mode             (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group);</pre>
+<a class="indexterm" name="id3815260"></a><pre class="programlisting"><a href="GtkSizeGroup.html#GtkSizeGroupMode">GtkSizeGroupMode</a>    gtk_size_group_get_mode             (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group);</pre>
 <p>
 Gets the current mode of the size group. See <a href="GtkSizeGroup.html#gtk-size-group-set-mode"><code class="function">gtk_size_group_set_mode()</code></a>.</p>
 <p>
@@ -327,9 +352,9 @@ Gets the current mode of the size group. See <a href="GtkSizeGroup.html#gtk-size
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789474"></a><h3>
+<a name="id3815341"></a><h3>
 <a name="gtk-size-group-set-ignore-hidden"></a>gtk_size_group_set_ignore_hidden ()</h3>
-<a class="indexterm" name="id3789489"></a><pre class="programlisting">void                gtk_size_group_set_ignore_hidden    (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
+<a class="indexterm" name="id3815356"></a><pre class="programlisting">void                gtk_size_group_set_ignore_hidden    (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> ignore_hidden);</pre>
@@ -360,9 +385,9 @@ calculating the size.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789579"></a><h3>
+<a name="id3815446"></a><h3>
 <a name="gtk-size-group-get-ignore-hidden"></a>gtk_size_group_get_ignore_hidden ()</h3>
-<a class="indexterm" name="id3789595"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3815462"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_size_group_get_ignore_hidden    (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group);</pre>
 <p>
@@ -393,9 +418,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789682"></a><h3>
+<a name="id3815549"></a><h3>
 <a name="gtk-size-group-add-widget"></a>gtk_size_group_add_widget ()</h3>
-<a class="indexterm" name="id3789696"></a><pre class="programlisting">void                gtk_size_group_add_widget           (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
+<a class="indexterm" name="id3815563"></a><pre class="programlisting">void                gtk_size_group_add_widget           (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Adds a widget to a <a href="GtkSizeGroup.html" title="GtkSizeGroup"><span class="type">GtkSizeGroup</span></a>. In the future, the requisition
@@ -428,9 +453,9 @@ be removed from the size group.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789812"></a><h3>
+<a name="id3815679"></a><h3>
 <a name="gtk-size-group-remove-widget"></a>gtk_size_group_remove_widget ()</h3>
-<a class="indexterm" name="id3789826"></a><pre class="programlisting">void                gtk_size_group_remove_widget        (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
+<a class="indexterm" name="id3815693"></a><pre class="programlisting">void                gtk_size_group_remove_widget        (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Removes a widget from a <a href="GtkSizeGroup.html" title="GtkSizeGroup"><span class="type">GtkSizeGroup</span></a>.</p>
@@ -455,9 +480,9 @@ Removes a widget from a <a href="GtkSizeGroup.html" title="GtkSizeGroup"><span c
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3789924"></a><h3>
+<a name="id3815790"></a><h3>
 <a name="gtk-size-group-get-widgets"></a>gtk_size_group_get_widgets ()</h3>
-<a class="indexterm" name="id3789940"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3815807"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
 >GSList</a>*             gtk_size_group_get_widgets          (<a href="GtkSizeGroup.html" title="GtkSizeGroup">GtkSizeGroup</a> *size_group);</pre>
 <p>
@@ -489,11 +514,11 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Link
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3790031"></a><h2>Property Details</h2>
+<a name="id3815898"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3790042"></a><h3>
+<a name="id3815908"></a><h3>
 <a name="GtkSizeGroup--ignore-hidden"></a>The :<code class="literal">ignore-hidden</code> property</h3>
-<a class="indexterm" name="id3790058"></a><pre class="programlisting">  ignore-hidden            <a
+<a class="indexterm" name="id3815925"></a><pre class="programlisting">  ignore-hidden            <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -510,9 +535,9 @@ the size of the group.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3790104"></a><h3>
+<a name="id3815971"></a><h3>
 <a name="GtkSizeGroup--mode"></a>The :<code class="literal">mode</code> property</h3>
-<a class="indexterm" name="id3790120"></a><pre class="programlisting">  mode                     <a href="GtkSizeGroup.html#GtkSizeGroupMode">GtkSizeGroupMode</a>      : Read / Write</pre>
+<a class="indexterm" name="id3815986"></a><pre class="programlisting">  mode                     <a href="GtkSizeGroup.html#GtkSizeGroupMode">GtkSizeGroupMode</a>      : Read / Write</pre>
 <p>The directions in which the size group affects the requested sizes of its component widgets.</p>
 <p>Default value: GTK_SIZE_GROUP_HORIZONTAL</p>
 </div>

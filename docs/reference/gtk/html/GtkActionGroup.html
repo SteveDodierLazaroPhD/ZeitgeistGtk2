@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,24 +67,24 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkAction.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3528123" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3553509" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3529119" class="shortcut">Description</a>
+                  <a href="#id3554505" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3528951" class="shortcut">Object Hierarchy</a>
+                  <a href="#id3554337" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3528975" class="shortcut">Implemented Interfaces</a>
+                  <a href="#id3554362" class="shortcut">Implemented Interfaces</a>
                   &#160;|&#160;
-                  <a href="#id3528998" class="shortcut">Properties</a>
+                  <a href="#id3554384" class="shortcut">Properties</a>
                   &#160;|&#160;
-                  <a href="#id3529064" class="shortcut">Signals</a></nobr></td></tr>
+                  <a href="#id3554450" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkActionGroup"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3528123"></a><span class="refentrytitle">GtkActionGroup</span>
+<a name="id3553509"></a><span class="refentrytitle">GtkActionGroup</span>
 </h2>
 <p>GtkActionGroup &#8212; A group of actions</p>
 </td>
@@ -230,7 +231,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3528951"></a><h2>Object Hierarchy</h2>
+<a name="id3554337"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -240,13 +241,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3528975"></a><h2>Implemented Interfaces</h2>
+<a name="id3554362"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkActionGroup implements
  <a href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3528998"></a><h2>Properties</h2>
+<a name="id3554384"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkActionGroup.html#GtkActionGroup--name">name</a>                     <a
@@ -261,7 +262,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3529064"></a><h2>Signals</h2>
+<a name="id3554450"></a><h2>Signals</h2>
 <pre class="synopsis">
 
   <a href="GtkActionGroup.html#GtkActionGroup-connect-proxy">connect-proxy</a>                                  
@@ -271,7 +272,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3529119"></a><h2>Description</h2>
+<a name="id3554505"></a><h2>Description</h2>
 <p>
 Actions are organised into groups.  An action group is essentially a
 map from names to <a href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> objects.
@@ -294,13 +295,24 @@ and a shortcut is associated with this accelerator path. All menuitems and
 toolitems take on this accelerator path. The GTK+ accelerator map code makes 
 sure that the correct shortcut is displayed next to the menu item.
 </p>
+<div class="refsect2" lang="en">
+<a name="GtkActionGroup-BUILDER-UI"></a><h3>GtkActionGroup as GtkBuildable</h3>
+<p>
+The GtkActionGroup implementation of the GtkBuildable interface accepts
+GtkAction objects as &lt;child&gt; elements in UI definitions.
+</p>
+<p>
+Note that it is probably more common to define actions and action groups
+in the code, since they are directly related to what the code can do.
+</p>
+</div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3529180"></a><h2>Details</h2>
+<a name="id3554590"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3529190"></a><h3>
+<a name="id3554600"></a><h3>
 <a name="GtkActionGroup-struct"></a>GtkActionGroup</h3>
-<a class="indexterm" name="id3529204"></a><pre class="programlisting">typedef struct _GtkActionGroup GtkActionGroup;</pre>
+<a class="indexterm" name="id3554613"></a><pre class="programlisting">typedef struct _GtkActionGroup GtkActionGroup;</pre>
 <p>
 The <span class="structname">GtkActionGroup</span> struct contains only private 
 members and should not be accessed directly.
@@ -308,9 +320,9 @@ members and should not be accessed directly.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3529224"></a><h3>
+<a name="id3554634"></a><h3>
 <a name="gtk-action-group-new"></a>gtk_action_group_new ()</h3>
-<a class="indexterm" name="id3529240"></a><pre class="programlisting"><a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a>*     gtk_action_group_new                (const <a
+<a class="indexterm" name="id3554649"></a><pre class="programlisting"><a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a>*     gtk_action_group_new                (const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *name);</pre>
 <p>
@@ -341,9 +353,9 @@ with the actions.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3529333"></a><h3>
+<a name="id3554743"></a><h3>
 <a name="gtk-action-group-get-name"></a>gtk_action_group_get_name ()</h3>
-<a class="indexterm" name="id3529350"></a><pre class="programlisting">const <a
+<a class="indexterm" name="id3554759"></a><pre class="programlisting">const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*        gtk_action_group_get_name           (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group);</pre>
 <p>
@@ -372,9 +384,9 @@ Gets the name of the action group.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3529419"></a><h3>
+<a name="id3554828"></a><h3>
 <a name="gtk-action-group-get-sensitive"></a>gtk_action_group_get_sensitive ()</h3>
-<a class="indexterm" name="id3529434"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3554844"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_action_group_get_sensitive      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group);</pre>
 <p>
@@ -410,9 +422,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3529550"></a><h3>
+<a name="id3554960"></a><h3>
 <a name="gtk-action-group-set-sensitive"></a>gtk_action_group_set_sensitive ()</h3>
-<a class="indexterm" name="id3529566"></a><pre class="programlisting">void                gtk_action_group_set_sensitive      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3554975"></a><pre class="programlisting">void                gtk_action_group_set_sensitive      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> sensitive);</pre>
@@ -441,9 +453,9 @@ Changes the sensitivity of <em class="parameter"><code>action_group</code></em><
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3529650"></a><h3>
+<a name="id3555060"></a><h3>
 <a name="gtk-action-group-get-visible"></a>gtk_action_group_get_visible ()</h3>
-<a class="indexterm" name="id3529666"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3555076"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_action_group_get_visible        (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group);</pre>
 <p>
@@ -479,9 +491,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3529782"></a><h3>
+<a name="id3555191"></a><h3>
 <a name="gtk-action-group-set-visible"></a>gtk_action_group_set_visible ()</h3>
-<a class="indexterm" name="id3529798"></a><pre class="programlisting">void                gtk_action_group_set_visible        (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3555207"></a><pre class="programlisting">void                gtk_action_group_set_visible        (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> visible);</pre>
@@ -510,9 +522,9 @@ Changes the visible of <em class="parameter"><code>action_group</code></em>.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3529883"></a><h3>
+<a name="id3555293"></a><h3>
 <a name="gtk-action-group-get-action"></a>gtk_action_group_get_action ()</h3>
-<a class="indexterm" name="id3529899"></a><pre class="programlisting"><a href="GtkAction.html" title="GtkAction">GtkAction</a>*          gtk_action_group_get_action         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3555309"></a><pre class="programlisting"><a href="GtkAction.html" title="GtkAction">GtkAction</a>*          gtk_action_group_get_action         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *action_name);</pre>
@@ -549,9 +561,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3530000"></a><h3>
+<a name="id3555410"></a><h3>
 <a name="gtk-action-group-list-actions"></a>gtk_action_group_list_actions ()</h3>
-<a class="indexterm" name="id3530016"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3555426"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a>*              gtk_action_group_list_actions       (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group);</pre>
 <p>
@@ -580,9 +592,9 @@ Lists the actions in the action group.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3530086"></a><h3>
+<a name="id3555495"></a><h3>
 <a name="gtk-action-group-add-action"></a>gtk_action_group_add_action ()</h3>
-<a class="indexterm" name="id3530102"></a><pre class="programlisting">void                gtk_action_group_add_action         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3555511"></a><pre class="programlisting">void                gtk_action_group_add_action         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          <a href="GtkAction.html" title="GtkAction">GtkAction</a> *action);</pre>
 <p>
 Adds an action object to the action group. Note that this function
@@ -614,9 +626,9 @@ the action. Therefore you must either set the accel path yourself with
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3530204"></a><h3>
+<a name="id3555614"></a><h3>
 <a name="gtk-action-group-add-action-with-accel"></a>gtk_action_group_add_action_with_accel ()</h3>
-<a class="indexterm" name="id3530220"></a><pre class="programlisting">void                gtk_action_group_add_action_with_accel
+<a class="indexterm" name="id3555630"></a><pre class="programlisting">void                gtk_action_group_add_action_with_accel
                                                         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          <a href="GtkAction.html" title="GtkAction">GtkAction</a> *action,
                                                          const <a
@@ -666,9 +678,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3530383"></a><h3>
+<a name="id3555793"></a><h3>
 <a name="gtk-action-group-remove-action"></a>gtk_action_group_remove_action ()</h3>
-<a class="indexterm" name="id3530399"></a><pre class="programlisting">void                gtk_action_group_remove_action      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3555809"></a><pre class="programlisting">void                gtk_action_group_remove_action      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          <a href="GtkAction.html" title="GtkAction">GtkAction</a> *action);</pre>
 <p>
 Removes an action object from the action group.</p>
@@ -695,9 +707,9 @@ Removes an action object from the action group.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3530479"></a><h3>
+<a name="id3555889"></a><h3>
 <a name="GtkActionEntry"></a>GtkActionEntry</h3>
-<a class="indexterm" name="id3530492"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id3555902"></a><pre class="programlisting">typedef struct {
   const gchar     *name;
   const gchar     *stock_id;
   const gchar     *label;
@@ -768,9 +780,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Closu
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3530722"></a><h3>
+<a name="id3556131"></a><h3>
 <a name="gtk-action-group-add-actions"></a>gtk_action_group_add_actions ()</h3>
-<a class="indexterm" name="id3530738"></a><pre class="programlisting">void                gtk_action_group_add_actions        (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3556147"></a><pre class="programlisting">void                gtk_action_group_add_actions        (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a href="GtkActionGroup.html#GtkActionEntry">GtkActionEntry</a> *entries,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
@@ -819,9 +831,9 @@ their accel paths are set to
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3530881"></a><h3>
+<a name="id3556290"></a><h3>
 <a name="gtk-action-group-add-actions-full"></a>gtk_action_group_add_actions_full ()</h3>
-<a class="indexterm" name="id3530898"></a><pre class="programlisting">void                gtk_action_group_add_actions_full   (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3556307"></a><pre class="programlisting">void                gtk_action_group_add_actions_full   (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a href="GtkActionGroup.html#GtkActionEntry">GtkActionEntry</a> *entries,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
@@ -875,9 +887,9 @@ callback for <em class="parameter"><code>user_data</code></em>.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3531075"></a><h3>
+<a name="id3556485"></a><h3>
 <a name="GtkToggleActionEntry"></a>GtkToggleActionEntry</h3>
-<a class="indexterm" name="id3531089"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id3556498"></a><pre class="programlisting">typedef struct {
   const gchar     *name;
   const gchar     *stock_id;
   const gchar     *label;
@@ -953,9 +965,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3531317"></a><h3>
+<a name="id3556727"></a><h3>
 <a name="gtk-action-group-add-toggle-actions"></a>gtk_action_group_add_toggle_actions ()</h3>
-<a class="indexterm" name="id3531333"></a><pre class="programlisting">void                gtk_action_group_add_toggle_actions (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3556743"></a><pre class="programlisting">void                gtk_action_group_add_toggle_actions (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a href="GtkActionGroup.html#GtkToggleActionEntry">GtkToggleActionEntry</a> *entries,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
@@ -1004,9 +1016,9 @@ their accel paths are set to
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3531476"></a><h3>
+<a name="id3556886"></a><h3>
 <a name="gtk-action-group-add-toggle-actions-full"></a>gtk_action_group_add_toggle_actions_full ()</h3>
-<a class="indexterm" name="id3531493"></a><pre class="programlisting">void                gtk_action_group_add_toggle_actions_full
+<a class="indexterm" name="id3556902"></a><pre class="programlisting">void                gtk_action_group_add_toggle_actions_full
                                                         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a href="GtkActionGroup.html#GtkToggleActionEntry">GtkToggleActionEntry</a> *entries,
                                                          <a
@@ -1061,9 +1073,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Datasets.ht
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3531673"></a><h3>
+<a name="id3557082"></a><h3>
 <a name="GtkRadioActionEntry"></a>GtkRadioActionEntry</h3>
-<a class="indexterm" name="id3531686"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id3557095"></a><pre class="programlisting">typedef struct {
   const gchar *name;
   const gchar *stock_id;
   const gchar *label;
@@ -1131,9 +1143,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3531906"></a><h3>
+<a name="id3557315"></a><h3>
 <a name="gtk-action-group-add-radio-actions"></a>gtk_action_group_add_radio_actions ()</h3>
-<a class="indexterm" name="id3531921"></a><pre class="programlisting">void                gtk_action_group_add_radio_actions  (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3557331"></a><pre class="programlisting">void                gtk_action_group_add_radio_actions  (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a href="GtkActionGroup.html#GtkRadioActionEntry">GtkRadioActionEntry</a> *entries,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
@@ -1199,9 +1211,9 @@ The "changed" signal of the first radio action is connected to the
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3532115"></a><h3>
+<a name="id3557525"></a><h3>
 <a name="gtk-action-group-add-radio-actions-full"></a>gtk_action_group_add_radio_actions_full ()</h3>
-<a class="indexterm" name="id3532132"></a><pre class="programlisting">void                gtk_action_group_add_radio_actions_full
+<a class="indexterm" name="id3557541"></a><pre class="programlisting">void                gtk_action_group_add_radio_actions_full
                                                         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a href="GtkActionGroup.html#GtkRadioActionEntry">GtkRadioActionEntry</a> *entries,
                                                          <a
@@ -1273,9 +1285,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Datasets.ht
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3532357"></a><h3>
+<a name="id3557766"></a><h3>
 <a name="gtk-action-group-set-translate-func"></a>gtk_action_group_set_translate_func ()</h3>
-<a class="indexterm" name="id3532374"></a><pre class="programlisting">void                gtk_action_group_set_translate_func (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3557783"></a><pre class="programlisting">void                gtk_action_group_set_translate_func (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          <a href="GtkItemFactory.html#GtkTranslateFunc">GtkTranslateFunc</a> func,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1322,9 +1334,9 @@ with <a href="GtkActionGroup.html#gtk-action-group-set-translation-domain"><code
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3532601"></a><h3>
+<a name="id3558010"></a><h3>
 <a name="gtk-action-group-set-translation-domain"></a>gtk_action_group_set_translation_domain ()</h3>
-<a class="indexterm" name="id3532617"></a><pre class="programlisting">void                gtk_action_group_set_translation_domain
+<a class="indexterm" name="id3558027"></a><pre class="programlisting">void                gtk_action_group_set_translation_domain
                                                         (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1360,9 +1372,9 @@ If you're not using <code class="function">gettext()</code> for localization, se
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3532786"></a><h3>
+<a name="id3558195"></a><h3>
 <a name="gtk-action-group-translate-string"></a>gtk_action_group_translate_string ()</h3>
-<a class="indexterm" name="id3532803"></a><pre class="programlisting">const <a
+<a class="indexterm" name="id3558212"></a><pre class="programlisting">const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*        gtk_action_group_translate_string   (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          const <a
@@ -1400,11 +1412,11 @@ is mainly intended for language bindings.</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3532920"></a><h2>Property Details</h2>
+<a name="id3558330"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3532931"></a><h3>
+<a name="id3558341"></a><h3>
 <a name="GtkActionGroup--name"></a>The :<code class="literal">name</code> property</h3>
-<a class="indexterm" name="id3532947"></a><pre class="programlisting">  name                     <a
+<a class="indexterm" name="id3558357"></a><pre class="programlisting">  name                     <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
 >gchararray</a>            : Read / Write / Construct Only</pre>
 <p>A name for the action group.</p>
@@ -1412,9 +1424,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Stand
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3532974"></a><h3>
+<a name="id3558383"></a><h3>
 <a name="GtkActionGroup--sensitive"></a>The :<code class="literal">sensitive</code> property</h3>
-<a class="indexterm" name="id3532990"></a><pre class="programlisting">  sensitive                <a
+<a class="indexterm" name="id3558400"></a><pre class="programlisting">  sensitive                <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Whether the action group is enabled.</p>
@@ -1422,9 +1434,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3533017"></a><h3>
+<a name="id3558426"></a><h3>
 <a name="GtkActionGroup--visible"></a>The :<code class="literal">visible</code> property</h3>
-<a class="indexterm" name="id3533033"></a><pre class="programlisting">  visible                  <a
+<a class="indexterm" name="id3558442"></a><pre class="programlisting">  visible                  <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Whether the action group is visible.</p>
@@ -1432,11 +1444,11 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3533060"></a><h2>Signal Details</h2>
+<a name="id3558470"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3533071"></a><h3>
+<a name="id3558480"></a><h3>
 <a name="GtkActionGroup-connect-proxy"></a>The <code class="literal">::connect-proxy</code> signal</h3>
-<a class="indexterm" name="id3533088"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3558497"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>      *action,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>      *proxy,
                                                         <a
@@ -1488,9 +1500,9 @@ convenient to use.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3533230"></a><h3>
+<a name="id3558639"></a><h3>
 <a name="GtkActionGroup-disconnect-proxy"></a>The <code class="literal">::disconnect-proxy</code> signal</h3>
-<a class="indexterm" name="id3533246"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3558656"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>      *action,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>      *proxy,
                                                         <a
@@ -1536,9 +1548,9 @@ convenient to use.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3533381"></a><h3>
+<a name="id3558791"></a><h3>
 <a name="GtkActionGroup-post-activate"></a>The <code class="literal">::post-activate</code> signal</h3>
-<a class="indexterm" name="id3533398"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3558808"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>      *action,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1577,9 +1589,9 @@ notification just after any action is activated.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3533523"></a><h3>
+<a name="id3558932"></a><h3>
 <a name="GtkActionGroup-pre-activate"></a>The <code class="literal">::pre-activate</code> signal</h3>
-<a class="indexterm" name="id3533539"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
+<a class="indexterm" name="id3558949"></a><pre class="programlisting">void                user_function                      (<a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>      *action,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"

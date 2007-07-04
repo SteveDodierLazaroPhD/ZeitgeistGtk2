@@ -249,6 +249,35 @@ arrows added (see gtk_notebook_set_scrollable), and whether there
 will be a popup menu allowing the users to switch pages.
 (see <link linkend="gtk-notebook-enable-popup"><function>gtk_notebook_enable_popup()</function></link>, <link linkend="gtk-noteobook-disable-popup"><function>gtk_noteobook_disable_popup()</function></link>)
 </para>
+
+<refsect2 id="GtkNotebook-BUILDER-UI">
+<title>GtkNotebook as GtkBuildable</title>
+<para>
+The GtkNoteboopk implementation of the GtkBuildable interface
+supports placing children into tabs by specifying "tab" as the
+"type" attribute of a &lt;child&gt; element. Note that the content
+of the tab must be created before the tab can be filled.
+A tab child can be specified without specifying a &lt;child&gt; 
+type attribute.
+</para>
+<example>
+<title>A UI definition fragment with GtkNotebook</title>
+<programlisting><![CDATA[
+<object class="GtkNotebook">
+  <child>
+    <object class="GtkLabel" id="notebook-content">
+      <property name="label">Content</property>
+    </object>
+  </child>
+  <child type="tab">
+    <object class="GtkLabel" id="notebook-tab">
+      <property name="label">Tab</property>
+    </object>
+  </child>
+</object>
+]]></programlisting>
+</example>
+</refsect2>
 </refsect1>
 
 <refsect1 role="details">
@@ -1736,8 +1765,7 @@ Emitted when the user or a function changes the current page.
 <variablelist>
 <varlistentry>
 <term><link linkend="GtkContainer"><type>GtkContainer</type></link></term>
-<listitem><para>For functions that apply to every <link linkend="GtkContainer"><type>GtkContainer</type></link>
-(like <link linkend="GtkList"><type>GtkList</type></link>).</para></listitem>
+<listitem><para>For functions that apply to every <link linkend="GtkContainer"><type>GtkContainer</type></link></para></listitem>
 </varlistentry>
 </variablelist>
 </para>

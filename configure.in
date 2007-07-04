@@ -12,7 +12,7 @@ AC_PREREQ(2.54)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [11])
-m4_define([gtk_micro_version], [4])
+m4_define([gtk_micro_version], [5])
 m4_define([gtk_version],
           [gtk_major_version.gtk_minor_version.gtk_micro_version])
 m4_define([gtk_interface_age], [0])
@@ -32,7 +32,7 @@ m4_define([gtk_binary_version], [2.10.0])
 
 # required versions of other packages
 m4_define([glib_required_version], [2.13.5])
-m4_define([pango_required_version], [1.15.3])
+m4_define([pango_required_version], [1.17.3])
 m4_define([atk_required_version], [1.9.0])
 m4_define([cairo_required_version], [1.2.0])
 
@@ -134,6 +134,24 @@ esac
 dnl Initialize libtool
 AC_PROG_CC
 AM_DISABLE_STATIC
+
+dnl 
+dnl Check for a working C++ compiler, but do not bail out, if none is found.
+dnl We use this for an automated test for C++ header correctness.
+dnl 
+AC_CHECK_PROGS(CXX, [$CCC c++ g++ gcc CC cxx cc++ cl], gcc)
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+
+AC_TRY_COMPILE(,[class a { int b; } c;], ,CXX=)
+AM_CONDITIONAL(HAVE_CXX, test "$CXX" != "")
+
+gtk_save_cxxflags="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS -x objective-c++"
+AC_TRY_COMPILE([@interface Foo @end],,OBJC=yes,OBJC=no)
+AM_CONDITIONAL(HAVE_OBJC, test "$OBJC" == "yes")
+CXXFLAGS="$gtk_save_cxxflags"
+AC_LANG_RESTORE
 
 if test "$os_win32" = "yes"; then
   if test x$enable_static = xyes -o x$enable_static = x; then
@@ -392,6 +410,7 @@ fi
 AC_SUBST(REBUILD)
 
 AC_CHECK_FUNCS(lstat mkstemp flockfile getc_unlocked)
+AC_CHECK_FUNCS(localtime_r)
 
 # _NL_TIME_FIRST_WEEKDAY is an enum and not a define
 AC_MSG_CHECKING([for _NL_TIME_FIRST_WEEKDAY])

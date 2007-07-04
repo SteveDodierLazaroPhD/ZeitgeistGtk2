@@ -7,7 +7,7 @@
 
 <refnamediv>
 <refname>GtkBuildable</refname>
-<refpurpose>SHORT</refpurpose>
+<refpurpose>Interface for objects that can be built by GtkBuilder</refpurpose>
 <!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
@@ -88,7 +88,18 @@ GtkBuildable is implemented by
 <refsect1 role="desc">
 <title role="desc.title">Description</title>
 <para>
-LONG
+In order to allow construction from a <link linkend="BUILDER-UI">GtkBuilder 
+UI description</link>, an object class must implement the 
+GtkBuildable interface. The interface includes methods for setting 
+names and properties of objects, parsing custom tags, constructing 
+child objects.
+</para>
+<para>
+The GtkBuildable interface is implemented by all widgets and 
+many of the non-widget objects that are provided by GTK+. The
+main user of this interface is <link linkend="GtkBuilder"><type>GtkBuilder</type></link>, there should be
+very little need for applications to call any 
+<function>gtk_buildable_...</function> functions.
 </para>
 </refsect1>
 
@@ -145,18 +156,105 @@ LONG
 } GtkBuildableIface;
 </programlisting>
 <para>
+The GtkBuildableIface interface contains method that are
+necessary to allow <link linkend="GtkBuilder"><type>GtkBuilder</type></link> to construct an object from
+a GtkBuilder UI definition.
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="GTypeInterface">GTypeInterface</link>&nbsp;<structfield>g_iface</structfield>;</term>
+<listitem><simpara>the parent class
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>set_name</structfield>&nbsp;()</term>
+<listitem><simpara>Stores the name attribute given in the GtkBuilder UI definition.
+  <link linkend="GtkWidget"><type>GtkWidget</type></link> maps this to the <link linkend="GtkWidget--name"><type>:name</type></link> property, and 
+  <link linkend="gtk-buildable-set-name"><function>gtk_buildable_set_name()</function></link> has a fallback implementation that stores
+  the name as object data. Implement this method if your object
+  has some notion of "name" and it makes sense to map the XML name
+  attribute to it.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>get_name</structfield>&nbsp;()</term>
+<listitem><simpara>The getter corresponding to <parameter>set_name</parameter>. Implement this
+  if you implement <parameter>set_name</parameter>.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>add_child</structfield>&nbsp;()</term>
+<listitem><simpara>Adds a child. The <parameter>type</parameter> parameter can be used to 
+  differentiate the kind of child. <link linkend="GtkContainer"><type>GtkContainer</type></link> implements this 
+  to add add a child widget to the container, <link linkend="GtkNotebook"><type>GtkNotebook</type></link> uses 
+  the <parameter>type</parameter> to distinguish between page labels (of type "page-label") 
+  and normal children.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>set_buildable_property</structfield>&nbsp;()</term>
+<listitem><simpara>Sets a property of a buildable object.
+  It is normally not necessary to implement this, <link linkend="g-object-set-property"><function>g_object_set_property()</function></link>
+  is used by default. <link linkend="GtkWindow"><type>GtkWindow</type></link> implements this to delay showing itself
+  (i.e. setting the <link linkend="GtkWidget--visible"><type>:visible</type></link> property) until the whole interface 
+  is created.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>construct_child</structfield>&nbsp;()</term>
+<listitem><simpara>Constructs a child of a buildable that has been
+  specified as "constructor" in the UI definition. <link linkend="GtkUIManager"><type>GtkUIManager</type></link> implements 
+  this to reference to a widget created in a &lt;ui&gt; tag which is outside 
+  of the normal GtkBuilder UI definition hierarchy.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>custom_tag_start</structfield>&nbsp;()</term>
+<listitem><simpara>Implement this if the buildable needs to parse 
+  content below &lt;child&gt;. To handle an element, the implementation
+  must fill in the <parameter>parser</parameter> structure and <parameter>user_data</parameter> and return <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.
+  <link linkend="GtkWidget"><type>GtkWidget</type></link> implements this to parse keyboard accelerators specified
+  in &lt;accelerator&gt; elements. <link linkend="GtkContainer"><type>GtkContainer</type></link> implements it to map 
+  properties defined via &lt;packing&gt; elements to child properties.
+  Note that <parameter>user_data</parameter> must be freed in <parameter>custom_tag_end</parameter> or <parameter>custom_finished</parameter>.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>custom_tag_end</structfield>&nbsp;()</term>
+<listitem><simpara>Called for the end tag of each custom element that is
+  handled by the buildable (see <parameter>custom_tag_start</parameter>).
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>custom_finished</structfield>&nbsp;()</term>
+<listitem><simpara>Called for each custom tag handled by the buildable
+  when the builder finishes parsing (see <parameter>custom_tag_start</parameter>)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>parser_finished</structfield>&nbsp;()</term>
+<listitem><simpara>Called when a builder finishes the parsing
+  of a UI definition. It is normally not necessary to implement this,
+  unless you need to perform special cleanup actions. <link linkend="GtkWindow"><type>GtkWindow</type></link> sets
+  the <link linkend="GtkWidget--visible"><type>:visible</type></link> property here.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>get_internal_child</structfield>&nbsp;()</term>
+<listitem><simpara>Returns an internal child of a buildable. 
+  <link linkend="GtkDialog"><type>GtkDialog</type></link> implements this to give access to its <parameter>vbox</parameter>, making
+  it possible to add children to the vbox in a UI definition.
+  Implement this if the buildable has internal children that may
+  need to be accessed from a UI definition.
 
-</para></refsect2>
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2>
 <title><anchor id="gtk-buildable-set-name" role="function" condition="since:2.12"/>gtk_buildable_set_name ()</title>
 <indexterm role="2.12"><primary>gtk_buildable_set_name</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_buildable_set_name              (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
                                                          const <link linkend="gchar">gchar</link> *name);</programlisting>
 <para>
-Sets the name of the buildable object, it's used to synchronize the name
-if the object already has it's own concept of name.
-</para>
-<para>
-<link linkend="GtkWidget"><type>GtkWidget</type></link> implements this to map the buildable name to the widget name</para>
+Sets the name of the <parameter>buildable</parameter> object.</para>
 <para>
 
 </para><variablelist role="params">
@@ -172,12 +270,12 @@ if the object already has it's own concept of name.
 <title><anchor id="gtk-buildable-get-name" role="function" condition="since:2.12"/>gtk_buildable_get_name ()</title>
 <indexterm role="2.12"><primary>gtk_buildable_get_name</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_buildable_get_name              (<link linkend="GtkBuildable">GtkBuildable</link> *buildable);</programlisting>
 <para>
-Returns the buildable name. <link linkend="GtkBuilder"><type>GtkBuilder</type></link> sets the name based on the 
-the <link linkend="BUILDER-UI">GtkBuilder UI definition</link> used 
-to construct the <parameter>buildable</parameter>.
+Gets the name of the <parameter>buildable</parameter> object. 
 </para>
 <para>
-<link linkend="GtkWidget"><type>GtkWidget</type></link> implements this to map the buildable name to the widget name</para>
+<link linkend="GtkBuilder"><type>GtkBuilder</type></link> sets the name based on the the 
+<link linkend="BUILDER-UI">GtkBuilder UI definition</link> 
+used to construct the <parameter>buildable</parameter>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -196,13 +294,8 @@ to construct the <parameter>buildable</parameter>.
                                                          <link linkend="GObject">GObject</link> *child,
                                                          const <link linkend="gchar">gchar</link> *type);</programlisting>
 <para>
-Add a child to a buildable. type is an optional string
-describing how the child should be added.
-</para>
-<para>
-<link linkend="GtkContainer"><type>GtkContainer</type></link> implements this to be able to add a child widget
-to the container. <link linkend="GtkNotebook"><type>GtkNotebook</type></link> uses the <parameter>type</parameter> to distinguish between
-page labels (<parameter>type</parameter> = "page-label") and normal children.</para>
+Adds a child to <parameter>buildable</parameter>. <parameter>type</parameter> is an optional string
+describing how the child should be added.</para>
 <para>
 
 </para><variablelist role="params">
@@ -228,16 +321,7 @@ page labels (<parameter>type</parameter> = "page-label") and normal children.</p
                                                          const <link linkend="gchar">gchar</link> *name,
                                                          const <link linkend="GValue">GValue</link> *value);</programlisting>
 <para>
-Sets the property name <parameter>name</parameter> to <parameter>value</parameter> on the buildable object <parameter>buildable</parameter>
-which is created by the <parameter>builder</parameter>.
-</para>
-<para>
-This is optional to implement and is normally not needed.
-<link linkend="g-object-set-property"><function>g_object_set_property()</function></link> is used as a fallback.
-</para>
-<para>
-<link linkend="GtkWindow"><type>GtkWindow</type></link> implements this to delay showing (::visible) itself until
-the whole interface is fully created.</para>
+Sets the property name <parameter>name</parameter> to <parameter>value</parameter> on the <parameter>buildable</parameter> object.</para>
 <para>
 
 </para><variablelist role="params">
@@ -261,13 +345,11 @@ the whole interface is fully created.</para>
                                                          <link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          const <link linkend="gchar">gchar</link> *name);</programlisting>
 <para>
-Construct a child of <parameter>buildable</parameter> with the name <parameter>name</parameter>.
+Constructs a child of <parameter>buildable</parameter> with the name <parameter>name</parameter>. 
 </para>
 <para>
-<link linkend="GtkUIManager"><type>GtkUIManager</type></link> implements this to reference to a widget created in a 
-&lt;ui&gt; tag which is outside of the normal 
-<link linkend="BUILDER-UI">GtkBuilder UI definition</link>
-hierarchy.</para>
+<link linkend="GtkBuilder"><type>GtkBuilder</type></link> calls this function if a "constructor" has been
+specified in the UI definition.</para>
 <para>
 
 </para><variablelist role="params">
@@ -280,7 +362,7 @@ hierarchy.</para>
 <varlistentry><term><parameter>name</parameter>&nbsp;:</term>
 <listitem><simpara> name of child to construct
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the child with name <parameter>name</parameter>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the constructed child
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
@@ -294,20 +376,7 @@ hierarchy.</para>
                                                          <link linkend="GMarkupParser">GMarkupParser</link> *parser,
                                                          <link linkend="gpointer">gpointer</link> *data);</programlisting>
 <para>
-This is called when an unknown tag under &lt;child&gt; tag is found.
-</para>
-<para>
-Called when an unknown tag is present under a &lt;child&gt; tag.
-If the buildable implementation wishes to handle the tag it should
-return <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> and fill in the <parameter>parser</parameter> structure. Remember to either
-implement custom_tag_end or custom_tag_finish to free
-the user data allocated here.
-</para>
-<para>
-<link linkend="GtkWidget"><type>GtkWidget</type></link> implements this and parsers all &lt;accelerator&gt; tags to
-keyboard accelerators.
-<link linkend="GtkContainer"><type>GtkContainer</type></link> implements this to map properties defined under
-&lt;packing&gt; tag to child properties.</para>
+This is called for each unknown element under &lt;child&gt;.</para>
 <para>
 
 </para><variablelist role="params">
@@ -324,10 +393,11 @@ keyboard accelerators.
 <listitem><simpara> name of tag
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GMarkupParser"><type>GMarkupParser</type></link> structure
+<listitem><simpara> a <link linkend="GMarkupParser"><type>GMarkupParser</type></link> structure to fill in
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>data</parameter>&nbsp;:</term>
-<listitem><simpara> user data that will be passed in to parser functions
+<listitem><simpara> return location for user data that will be passed in 
+  to parser functions
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if a object has a custom implementation, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>
          if it doesn't.
@@ -343,8 +413,8 @@ keyboard accelerators.
                                                          const <link linkend="gchar">gchar</link> *tagname,
                                                          <link linkend="gpointer">gpointer</link> *data);</programlisting>
 <para>
-This is called for each custom tag handled by the buildable.
-It will be called when the end of the tag is reached.</para>
+This is called at the end of each custom element handled by 
+the buildable.</para>
 <para>
 
 </para><variablelist role="params">
@@ -400,13 +470,11 @@ called once for each custom tag handled by the <parameter>buildable</parameter>.
 <indexterm role="2.12"><primary>gtk_buildable_parser_finished</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_buildable_parser_finished       (<link linkend="GtkBuildable">GtkBuildable</link> *buildable,
                                                          <link linkend="GtkBuilder">GtkBuilder</link> *builder);</programlisting>
 <para>
-Finish the parsing of a <link linkend="BUILDER-UI">GtkBuilder UI definition</link>
-snippet. Note that this will be called once for each time gtk_builder_add_from_file or
-gtk_builder_add_from_string is called on a builder.
-</para>
-<para>
-<link linkend="GtkWindow"><type>GtkWindow</type></link> implements this to delay showing (::visible) itself until
-the whole interface is fully created.</para>
+Called when the builder finishes the parsing of a 
+<link linkend="BUILDER-UI">GtkBuilder UI definition</link>. 
+Note that this will be called once for each time 
+<link linkend="gtk-builder-add-from-file"><function>gtk_builder_add_from_file()</function></link> or <link linkend="gtk-builder-add-from-string"><function>gtk_builder_add_from_string()</function></link> 
+is called on a builder.</para>
 <para>
 
 </para><variablelist role="params">
@@ -447,11 +515,5 @@ Get the internal child called <parameter>childname</parameter> of the <parameter
 
 
 
-<refsect1>
-<title>See Also</title>
-<para>
-SEE ALSO
-</para>
-</refsect1>
 
 </refentry>

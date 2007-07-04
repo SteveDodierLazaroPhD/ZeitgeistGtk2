@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,20 +67,20 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="MenusAndCombos.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3417909" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3443023" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3418924" class="shortcut">Description</a>
+                  <a href="#id3444038" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3418849" class="shortcut">Object Hierarchy</a>
+                  <a href="#id3443962" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3418873" class="shortcut">Implemented Interfaces</a></nobr></td></tr>
+                  <a href="#id3443987" class="shortcut">Implemented Interfaces</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkTreeStore"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3417909"></a><span class="refentrytitle">GtkTreeStore</span>
+<a name="id3443023"></a><span class="refentrytitle">GtkTreeStore</span>
 </h2>
 <p>GtkTreeStore &#8212; A tree-like data structure that can be used with the GtkTreeView</p>
 </td>
@@ -214,7 +215,7 @@ void                <a href="GtkTreeStore.html#gtk-tree-store-move-after">gtk_tr
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3418849"></a><h2>Object Hierarchy</h2>
+<a name="id3443962"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -224,13 +225,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3418873"></a><h2>Implemented Interfaces</h2>
+<a name="id3443987"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkTreeStore implements
  <a href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>,  <a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a>,  <a href="gtk-GtkTreeView-drag-and-drop.html#GtkTreeDragSource">GtkTreeDragSource</a>,  <a href="gtk-GtkTreeView-drag-and-drop.html#GtkTreeDragDest">GtkTreeDragDest</a> and  <a href="GtkTreeSortable.html" title="GtkTreeSortable">GtkTreeSortable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3418924"></a><h2>Description</h2>
+<a name="id3444038"></a><h2>Description</h2>
 <p>
 The <a href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> object is a list model for use with a <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a>
 widget.  It implements the <a href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> interface, and consequentialy,
@@ -238,24 +239,45 @@ can use all of the methods available there.  It also implements the
 <a href="GtkTreeSortable.html" title="GtkTreeSortable"><span class="type">GtkTreeSortable</span></a> interface so it can be sorted by the view.  Finally,
 it also implements the tree drag and
 drop interfaces.
-
 </p>
+<div class="refsect2" lang="en">
+<a name="GtkTreeStore-BUILDER-UI"></a><h3>GtkTreeStore as GtkBuildable</h3>
+<p>
+The GtkTreeStore implementation of the GtkBuildable interface allows
+to specify the model columns with a &lt;columns&gt; element that may
+contain multiple &lt;column&gt; elements, each specifying one model
+column. The "type" attribute specifies the data type for the column.
+</p>
+<div class="example">
+<a name="id3444121"></a><p class="title"><b>Example&#160;23.&#160;A UI Definition fragment for a tree store</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkTreeStore"&gt;
+  &lt;columns&gt;
+    &lt;column type="gchararray"/&gt;
+    &lt;column type="gchararray"/&gt;
+    &lt;column type="gint"/&gt;
+  &lt;/columns&gt;
+&lt;/object&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3418983"></a><h2>Details</h2>
+<a name="id3444139"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3418993"></a><h3>
+<a name="id3444149"></a><h3>
 <a name="GtkTreeStore-struct"></a>GtkTreeStore</h3>
-<a class="indexterm" name="id3419006"></a><pre class="programlisting">typedef struct _GtkTreeStore GtkTreeStore;</pre>
+<a class="indexterm" name="id3444161"></a><pre class="programlisting">typedef struct _GtkTreeStore GtkTreeStore;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3419021"></a><h3>
+<a name="id3444176"></a><h3>
 <a name="gtk-tree-store-new"></a>gtk_tree_store_new ()</h3>
-<a class="indexterm" name="id3419035"></a><pre class="programlisting"><a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a>*       gtk_tree_store_new                  (<a
+<a class="indexterm" name="id3444190"></a><pre class="programlisting"><a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a>*       gtk_tree_store_new                  (<a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_columns,
                                                          ...);</pre>
@@ -298,9 +320,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3419170"></a><h3>
+<a name="id3444324"></a><h3>
 <a name="gtk-tree-store-newv"></a>gtk_tree_store_newv ()</h3>
-<a class="indexterm" name="id3419183"></a><pre class="programlisting"><a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a>*       gtk_tree_store_newv                 (<a
+<a class="indexterm" name="id3444338"></a><pre class="programlisting"><a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a>*       gtk_tree_store_newv                 (<a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_columns,
                                                          <a
@@ -336,9 +358,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3419283"></a><h3>
+<a name="id3444438"></a><h3>
 <a name="gtk-tree-store-set-column-types"></a>gtk_tree_store_set_column_types ()</h3>
-<a class="indexterm" name="id3419297"></a><pre class="programlisting">void                gtk_tree_store_set_column_types     (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3444452"></a><pre class="programlisting">void                gtk_tree_store_set_column_types     (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_columns,
@@ -378,9 +400,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3419444"></a><h3>
+<a name="id3444599"></a><h3>
 <a name="gtk-tree-store-set-value"></a>gtk_tree_store_set_value ()</h3>
-<a class="indexterm" name="id3419457"></a><pre class="programlisting">void                gtk_tree_store_set_value            (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3444612"></a><pre class="programlisting">void                gtk_tree_store_set_value            (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -423,9 +445,9 @@ column.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3419609"></a><h3>
+<a name="id3444764"></a><h3>
 <a name="gtk-tree-store-set"></a>gtk_tree_store_set ()</h3>
-<a class="indexterm" name="id3419622"></a><pre class="programlisting">void                gtk_tree_store_set                  (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3444777"></a><pre class="programlisting">void                gtk_tree_store_set                  (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          ...);</pre>
 <p>
@@ -463,9 +485,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3419753"></a><h3>
+<a name="id3444908"></a><h3>
 <a name="gtk-tree-store-set-valist"></a>gtk_tree_store_set_valist ()</h3>
-<a class="indexterm" name="id3419767"></a><pre class="programlisting">void                gtk_tree_store_set_valist           (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3444922"></a><pre class="programlisting">void                gtk_tree_store_set_valist           (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          va_list var_args);</pre>
 <p>
@@ -497,9 +519,9 @@ use by language bindings.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3419895"></a><h3>
+<a name="id3445050"></a><h3>
 <a name="gtk-tree-store-set-valuesv"></a>gtk_tree_store_set_valuesv ()</h3>
-<a class="indexterm" name="id3419912"></a><pre class="programlisting">void                gtk_tree_store_set_valuesv          (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3445066"></a><pre class="programlisting">void                gtk_tree_store_set_valuesv          (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -553,9 +575,9 @@ the number of columns to change is not known until run-time.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3420099"></a><h3>
+<a name="id3445254"></a><h3>
 <a name="gtk-tree-store-remove"></a>gtk_tree_store_remove ()</h3>
-<a class="indexterm" name="id3420112"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3445267"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_store_remove               (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter);</pre>
@@ -593,9 +615,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3420256"></a><h3>
+<a name="id3445411"></a><h3>
 <a name="gtk-tree-store-insert"></a>gtk_tree_store_insert ()</h3>
-<a class="indexterm" name="id3420270"></a><pre class="programlisting">void                gtk_tree_store_insert               (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3445424"></a><pre class="programlisting">void                gtk_tree_store_insert               (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent,
                                                          <a
@@ -644,9 +666,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3420481"></a><h3>
+<a name="id3445636"></a><h3>
 <a name="gtk-tree-store-insert-before"></a>gtk_tree_store_insert_before ()</h3>
-<a class="indexterm" name="id3420494"></a><pre class="programlisting">void                gtk_tree_store_insert_before        (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3445649"></a><pre class="programlisting">void                gtk_tree_store_insert_before        (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *sibling);</pre>
@@ -700,9 +722,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3420783"></a><h3>
+<a name="id3445938"></a><h3>
 <a name="gtk-tree-store-insert-after"></a>gtk_tree_store_insert_after ()</h3>
-<a class="indexterm" name="id3420797"></a><pre class="programlisting">void                gtk_tree_store_insert_after         (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3445952"></a><pre class="programlisting">void                gtk_tree_store_insert_after         (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *sibling);</pre>
@@ -756,9 +778,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3421086"></a><h3>
+<a name="id3446241"></a><h3>
 <a name="gtk-tree-store-insert-with-values"></a>gtk_tree_store_insert_with_values ()</h3>
-<a class="indexterm" name="id3421103"></a><pre class="programlisting">void                gtk_tree_store_insert_with_values   (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3446258"></a><pre class="programlisting">void                gtk_tree_store_insert_with_values   (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent,
                                                          <a
@@ -829,9 +851,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3421342"></a><h3>
+<a name="id3446497"></a><h3>
 <a name="gtk-tree-store-insert-with-valuesv"></a>gtk_tree_store_insert_with_valuesv ()</h3>
-<a class="indexterm" name="id3421359"></a><pre class="programlisting">void                gtk_tree_store_insert_with_valuesv  (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3446514"></a><pre class="programlisting">void                gtk_tree_store_insert_with_valuesv  (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent,
                                                          <a
@@ -902,9 +924,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3421617"></a><h3>
+<a name="id3446772"></a><h3>
 <a name="gtk-tree-store-prepend"></a>gtk_tree_store_prepend ()</h3>
-<a class="indexterm" name="id3421630"></a><pre class="programlisting">void                gtk_tree_store_prepend              (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3446785"></a><pre class="programlisting">void                gtk_tree_store_prepend              (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent);</pre>
 <p>
@@ -943,9 +965,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3421818"></a><h3>
+<a name="id3446973"></a><h3>
 <a name="gtk-tree-store-append"></a>gtk_tree_store_append ()</h3>
-<a class="indexterm" name="id3421831"></a><pre class="programlisting">void                gtk_tree_store_append               (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3446986"></a><pre class="programlisting">void                gtk_tree_store_append               (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent);</pre>
 <p>
@@ -984,9 +1006,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3422019"></a><h3>
+<a name="id3447174"></a><h3>
 <a name="gtk-tree-store-is-ancestor"></a>gtk_tree_store_is_ancestor ()</h3>
-<a class="indexterm" name="id3422033"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3447188"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_store_is_ancestor          (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
@@ -1029,9 +1051,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3422217"></a><h3>
+<a name="id3447372"></a><h3>
 <a name="gtk-tree-store-iter-depth"></a>gtk_tree_store_iter_depth ()</h3>
-<a class="indexterm" name="id3422230"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3447385"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_store_iter_depth           (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter);</pre>
@@ -1064,9 +1086,9 @@ for anything down a level, etc.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3422341"></a><h3>
+<a name="id3447496"></a><h3>
 <a name="gtk-tree-store-clear"></a>gtk_tree_store_clear ()</h3>
-<a class="indexterm" name="id3422354"></a><pre class="programlisting">void                gtk_tree_store_clear                (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store);</pre>
+<a class="indexterm" name="id3447509"></a><pre class="programlisting">void                gtk_tree_store_clear                (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store);</pre>
 <p>
 Removes all rows from <em class="parameter"><code>tree_store</code></em></p>
 <p>
@@ -1083,9 +1105,9 @@ Removes all rows from <em class="parameter"><code>tree_store</code></em></p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3422418"></a><h3>
+<a name="id3447573"></a><h3>
 <a name="gtk-tree-store-iter-is-valid"></a>gtk_tree_store_iter_is_valid ()</h3>
-<a class="indexterm" name="id3422434"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3447589"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_store_iter_is_valid        (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter);</pre>
@@ -1128,9 +1150,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3422573"></a><h3>
+<a name="id3447728"></a><h3>
 <a name="gtk-tree-store-reorder"></a>gtk_tree_store_reorder ()</h3>
-<a class="indexterm" name="id3422588"></a><pre class="programlisting">void                gtk_tree_store_reorder              (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3447743"></a><pre class="programlisting">void                gtk_tree_store_reorder              (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *parent,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -1169,9 +1191,9 @@ unsorted stores.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3422736"></a><h3>
+<a name="id3447891"></a><h3>
 <a name="gtk-tree-store-swap"></a>gtk_tree_store_swap ()</h3>
-<a class="indexterm" name="id3422752"></a><pre class="programlisting">void                gtk_tree_store_swap                 (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3447907"></a><pre class="programlisting">void                gtk_tree_store_swap                 (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *a,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *b);</pre>
 <p>
@@ -1205,9 +1227,9 @@ only works with unsorted stores.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3422893"></a><h3>
+<a name="id3448048"></a><h3>
 <a name="gtk-tree-store-move-before"></a>gtk_tree_store_move_before ()</h3>
-<a class="indexterm" name="id3422909"></a><pre class="programlisting">void                gtk_tree_store_move_before          (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3448064"></a><pre class="programlisting">void                gtk_tree_store_move_before          (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *position);</pre>
 <p>
@@ -1247,9 +1269,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3423096"></a><h3>
+<a name="id3448251"></a><h3>
 <a name="gtk-tree-store-move-after"></a>gtk_tree_store_move_after ()</h3>
-<a class="indexterm" name="id3423112"></a><pre class="programlisting">void                gtk_tree_store_move_after           (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
+<a class="indexterm" name="id3448267"></a><pre class="programlisting">void                gtk_tree_store_move_after           (<a href="GtkTreeStore.html" title="GtkTreeStore">GtkTreeStore</a> *tree_store,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *position);</pre>
 <p>
@@ -1287,7 +1309,7 @@ to the start of the level.</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3423290"></a><h2>See Also</h2>
+<a name="id3448445"></a><h2>See Also</h2>
 <p>
 <a href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a>, <a href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>
 </p>

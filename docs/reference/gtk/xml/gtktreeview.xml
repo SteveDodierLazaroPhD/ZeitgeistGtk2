@@ -431,6 +431,33 @@ former you can use <link linkend="gtk-tree-view-convert-widget-to-bin-window-coo
 (and vice versa), for the latter <link linkend="gtk-tree-view-convert-bin-window-to-tree-coords"><function>gtk_tree_view_convert_bin_window_to_tree_coords()</function></link> 
 (and vice versa).
 </para>
+
+<refsect2 id="GtkTreeView-BUILDER-UI">
+<title>GtkTreeView as GtkBuildable</title>
+<para>
+The GtkTreeView implementation of the GtkBuildable interface accepts
+GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
+</para>
+<example>
+<title>A UI definition fragment with GtkTreeView</title>
+<programlisting><![CDATA[
+<object class="GtkTreeView">
+  <property name="model">liststore1</property>
+  <child>
+    <object class="GtkTreeViewColumn">
+      <property name="title">Test</property>
+      <child>
+        <object class="GtkCellRendererText"/>
+        <attributes>"
+          <attribute name="text">1</attribute>
+        </attributes>
+      </child>
+    </object>
+  </child>
+</object>
+]]></programlisting>
+</example>
+</refsect2>
 </refsect1>
 
 <refsect1 role="details">

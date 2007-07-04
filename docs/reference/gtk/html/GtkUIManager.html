@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,24 +67,24 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkActionGroup.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3518771" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3544012" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3519523" class="shortcut">Description</a>
+                  <a href="#id3544764" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3519349" class="shortcut">Object Hierarchy</a>
+                  <a href="#id3544590" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3519374" class="shortcut">Implemented Interfaces</a>
+                  <a href="#id3544614" class="shortcut">Implemented Interfaces</a>
                   &#160;|&#160;
-                  <a href="#id3519396" class="shortcut">Properties</a>
+                  <a href="#id3544637" class="shortcut">Properties</a>
                   &#160;|&#160;
-                  <a href="#id3519445" class="shortcut">Signals</a></nobr></td></tr>
+                  <a href="#id3544686" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkUIManager"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3518771"></a><span class="refentrytitle">GtkUIManager</span>
+<a name="id3544012"></a><span class="refentrytitle">GtkUIManager</span>
 </h2>
 <p>GtkUIManager &#8212; Constructing menus and toolbars from an XML description</p>
 </td>
@@ -183,7 +184,7 @@ void                <a href="GtkUIManager.html#gtk-ui-manager-ensure-update">gtk
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3519349"></a><h2>Object Hierarchy</h2>
+<a name="id3544590"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -193,13 +194,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3519374"></a><h2>Implemented Interfaces</h2>
+<a name="id3544614"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkUIManager implements
  <a href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3519396"></a><h2>Properties</h2>
+<a name="id3544637"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkUIManager.html#GtkUIManager--add-tearoffs">add-tearoffs</a>             <a
@@ -211,7 +212,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Stand
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3519445"></a><h2>Signals</h2>
+<a name="id3544686"></a><h2>Signals</h2>
 <pre class="synopsis">
 
   <a href="GtkUIManager.html#GtkUIManager-actions-changed">actions-changed</a>                                : Run First / No Recursion
@@ -223,7 +224,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Stand
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3519523"></a><h2>Description</h2>
+<a name="id3544764"></a><h2>Description</h2>
 <p>
 A <a href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> constructs a user interface (menus and toolbars) from
 one or more UI definitions, which reference actions from one or more 
@@ -234,6 +235,13 @@ action groups.
 <p>
 The UI definitions are specified in an XML format which can be
 roughly described by the following DTD. 
+</p>
+<p>
+Do not confuse the GtkUIManager UI Definitions described here with
+the similarly named <a href="GtkBuilder.html#BUILDER-UI" title="GtkBuilder UI Definitions">GtkBuilder UI 
+Definitions</a>. 
+</p>
+<p>
 </p>
 <pre class="programlisting">
 &lt;!ELEMENT ui          (menubar|toolbar|popup|accelerator)* &gt;
@@ -246,28 +254,28 @@ roughly described by the following DTD.
 &lt;!ELEMENT toolitem     (menu?) &gt;
 &lt;!ELEMENT separator    EMPTY &gt;
 &lt;!ELEMENT accelerator  EMPTY &gt;
-&lt;!ATTLIST menubar      name                  #IMPLIED 
-                       action                #IMPLIED &gt;
-&lt;!ATTLIST toolbar      name                  #IMPLIED 
-                       action                #IMPLIED &gt;
-&lt;!ATTLIST popup        name                  #IMPLIED 
-                       action                #IMPLIED &gt;
-&lt;!ATTLIST placeholder  name                  #IMPLIED
-                       action                #IMPLIED &gt;
-&lt;!ATTLIST separator    name                  #IMPLIED
-                       action                #IMPLIED
-                       expand   (true|false) #IMPLIED &gt;
-&lt;!ATTLIST menu         name                  #IMPLIED
-                       action                #REQUIRED
-                       position (top|bot)    #IMPLIED &gt;
-&lt;!ATTLIST menuitem     name                  #IMPLIED
-                       action                #REQUIRED
-                       position (top|bot)    #IMPLIED &gt;
-&lt;!ATTLIST toolitem     name                  #IMPLIED
-                       action                #REQUIRED
-                       position (top|bot)    #IMPLIED &gt;
-&lt;!ATTLIST accelerator  name                  #IMPLIED
-                       action                #REQUIRED &gt;
+&lt;!ATTLIST menubar      name                  &amp;num;IMPLIED 
+                       action                &amp;num;IMPLIED &gt;
+&lt;!ATTLIST toolbar      name                  &amp;num;IMPLIED 
+                       action                &amp;num;IMPLIED &gt;
+&lt;!ATTLIST popup        name                  &amp;num;IMPLIED 
+                       action                &amp;num;IMPLIED &gt;
+&lt;!ATTLIST placeholder  name                  &amp;num;IMPLIED
+                       action                &amp;num;IMPLIED &gt;
+&lt;!ATTLIST separator    name                  &amp;num;IMPLIED
+                       action                &amp;num;IMPLIED
+                       expand   (true|false) &amp;num;IMPLIED &gt;
+&lt;!ATTLIST menu         name                  &amp;num;IMPLIED
+                       action                &amp;num;REQUIRED
+                       position (top|bot)    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST menuitem     name                  &amp;num;IMPLIED
+                       action                &amp;num;REQUIRED
+                       position (top|bot)    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST toolitem     name                  &amp;num;IMPLIED
+                       action                &amp;num;REQUIRED
+                       position (top|bot)    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST accelerator  name                  &amp;num;IMPLIED
+                       action                &amp;num;REQUIRED &gt;
 </pre>
 <p>
 There are some additional restrictions beyond those specified in the
@@ -285,7 +293,7 @@ enclosed in doublequotes, thus they must not '"' characters or references
 to the &amp;quot; entity.
 </p>
 <div class="example">
-<a name="id3519590"></a><p class="title"><b>Example&#160;22.&#160;A UI definition</b></p>
+<a name="id3544859"></a><p class="title"><b>Example&#160;27.&#160;A UI definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;ui&gt;
   &lt;menubar&gt;
@@ -386,7 +394,7 @@ toolitem with the same name has path
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3519917"></a><h3>Accelerators</h3>
+<a name="id3545147"></a><h3>Accelerators</h3>
 <p>
 Every action has an accelerator path. Accelerators are installed together with
 menuitem proxies, but they can also be explicitly added with &lt;accelerator&gt;
@@ -414,7 +422,7 @@ Toolitems following an expanding separator are effectively right-aligned.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3519975"></a><h3>Empty Menus</h3>
+<a name="id3545205"></a><h3>Empty Menus</h3>
 <p>
 Submenus pose similar problems to separators inconnection with merging. It is 
 impossible to know in advance whether they will end up empty after merging. 
@@ -431,13 +439,58 @@ The behaviour is chosen based on the "hide_if_empty" property of the action
 to which the submenu is associated.
 </p>
 </div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkUIManager-BUILDER-UI"></a><h3>GtkUIManager as GtkBuildable</h3>
+<p>
+The GtkUIManager implementation of the GtkBuildable interface accepts
+GtkActionGroup objects as &lt;child&gt; elements in UI definitions.
+</p>
+<p>
+A GtkUIManager UI definition as described above can be embedded in
+an GtkUIManager &lt;object&gt; element in a GtkBuilder UI definition.
+</p>
+<p>
+The widgets that are constructed by a GtkUIManager can be embedded in
+other parts of the constructed user interface with the help of the
+"constructor" attribute. See the example below.
+</p>
+<div class="example">
+<a name="id3545271"></a><p class="title"><b>Example&#160;28.&#160;An embedded GtkUIManager UI definition</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkUIManager" id="uiman"&gt;
+  &lt;child&gt;
+    &lt;object class="GtkActionGroup"&gt;
+      &lt;child&gt;
+        &lt;object class="GtkAction" id="file"&gt;
+          &lt;property name="label"&gt;_File&lt;/property&gt;
+        &lt;/object&gt;
+      &lt;/child&gt;
+    &lt;/object&gt;
+  &lt;/child&gt;
+  &lt;ui&gt;
+    &lt;menubar name="menubar1"&gt;
+      &lt;menu action="file"&gt;
+      &lt;/menu&gt;
+    &lt;/menubar&gt;
+  &lt;/ui&gt;
+&lt;/object&gt;
+&lt;object class="GtkWindow" id="main-window"&gt;
+  &lt;child&gt;
+    &lt;object class="GtkMenuBar" id="menubar1" constructor="uiman"/&gt;
+  &lt;/child&gt;
+&lt;/object&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3520012"></a><h2>Details</h2>
+<a name="id3545285"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3520022"></a><h3>
+<a name="id3545305"></a><h3>
 <a name="GtkUIManager-struct"></a>GtkUIManager</h3>
-<a class="indexterm" name="id3520035"></a><pre class="programlisting">typedef struct _GtkUIManager GtkUIManager;</pre>
+<a class="indexterm" name="id3545318"></a><pre class="programlisting">typedef struct _GtkUIManager GtkUIManager;</pre>
 <p>
 The <span class="structname">GtkUIManager</span> struct contains only private
 members and should not be accessed directly.
@@ -445,9 +498,9 @@ members and should not be accessed directly.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520056"></a><h3>
+<a name="id3545338"></a><h3>
 <a name="gtk-ui-manager-new"></a>gtk_ui_manager_new ()</h3>
-<a class="indexterm" name="id3520072"></a><pre class="programlisting"><a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a>*       gtk_ui_manager_new                  (void);</pre>
+<a class="indexterm" name="id3545354"></a><pre class="programlisting"><a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a>*       gtk_ui_manager_new                  (void);</pre>
 <p>
 Creates a new ui manager object.</p>
 <p>
@@ -467,9 +520,9 @@ Creates a new ui manager object.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520119"></a><h3>
+<a name="id3545401"></a><h3>
 <a name="gtk-ui-manager-set-add-tearoffs"></a>gtk_ui_manager_set_add_tearoffs ()</h3>
-<a class="indexterm" name="id3520135"></a><pre class="programlisting">void                gtk_ui_manager_set_add_tearoffs     (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
+<a class="indexterm" name="id3545417"></a><pre class="programlisting">void                gtk_ui_manager_set_add_tearoffs     (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> add_tearoffs);</pre>
@@ -503,9 +556,9 @@ menus never have tearoff menu items.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520237"></a><h3>
+<a name="id3545519"></a><h3>
 <a name="gtk-ui-manager-get-add-tearoffs"></a>gtk_ui_manager_get_add_tearoffs ()</h3>
-<a class="indexterm" name="id3520253"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3545535"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_ui_manager_get_add_tearoffs     (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
 <p>
@@ -535,9 +588,9 @@ will have tearoff menu items.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520338"></a><h3>
+<a name="id3545620"></a><h3>
 <a name="gtk-ui-manager-insert-action-group"></a>gtk_ui_manager_insert_action_group ()</h3>
-<a class="indexterm" name="id3520354"></a><pre class="programlisting">void                gtk_ui_manager_insert_action_group  (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
+<a class="indexterm" name="id3545637"></a><pre class="programlisting">void                gtk_ui_manager_insert_action_group  (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          <a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -574,9 +627,9 @@ name in later groups.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520472"></a><h3>
+<a name="id3545754"></a><h3>
 <a name="gtk-ui-manager-remove-action-group"></a>gtk_ui_manager_remove_action_group ()</h3>
-<a class="indexterm" name="id3520488"></a><pre class="programlisting">void                gtk_ui_manager_remove_action_group  (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
+<a class="indexterm" name="id3545771"></a><pre class="programlisting">void                gtk_ui_manager_remove_action_group  (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          <a href="GtkActionGroup.html" title="GtkActionGroup">GtkActionGroup</a> *action_group);</pre>
 <p>
 Removes an action group from the list of action groups associated 
@@ -604,9 +657,9 @@ with <em class="parameter"><code>self</code></em>.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520582"></a><h3>
+<a name="id3545865"></a><h3>
 <a name="gtk-ui-manager-get-action-groups"></a>gtk_ui_manager_get_action_groups ()</h3>
-<a class="indexterm" name="id3520598"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3545880"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a>*              gtk_ui_manager_get_action_groups    (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
 <p>
@@ -638,9 +691,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Doubly-Link
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520689"></a><h3>
+<a name="id3545971"></a><h3>
 <a name="gtk-ui-manager-get-accel-group"></a>gtk_ui_manager_get_accel_group ()</h3>
-<a class="indexterm" name="id3520705"></a><pre class="programlisting"><a href="gtk-Keyboard-Accelerators.html#GtkAccelGroup">GtkAccelGroup</a>*      gtk_ui_manager_get_accel_group      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
+<a class="indexterm" name="id3545987"></a><pre class="programlisting"><a href="gtk-Keyboard-Accelerators.html#GtkAccelGroup">GtkAccelGroup</a>*      gtk_ui_manager_get_accel_group      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
 <p>
 Returns the <a href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="type">GtkAccelGroup</span></a> associated with <em class="parameter"><code>self</code></em>.</p>
 <p>
@@ -667,9 +720,9 @@ Returns the <a href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520804"></a><h3>
+<a name="id3546086"></a><h3>
 <a name="gtk-ui-manager-get-widget"></a>gtk_ui_manager_get_widget ()</h3>
-<a class="indexterm" name="id3520820"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_ui_manager_get_widget           (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
+<a class="indexterm" name="id3546102"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_ui_manager_get_widget           (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *path);</pre>
@@ -721,9 +774,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3520952"></a><h3>
+<a name="id3546234"></a><h3>
 <a name="gtk-ui-manager-get-toplevels"></a>gtk_ui_manager_get_toplevels ()</h3>
-<a class="indexterm" name="id3520968"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3546251"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
 >GSList</a>*             gtk_ui_manager_get_toplevels        (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          <a href="GtkUIManager.html#GtkUIManagerItemType">GtkUIManagerItemType</a> types);</pre>
@@ -761,9 +814,9 @@ types.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3521099"></a><h3>
+<a name="id3546381"></a><h3>
 <a name="gtk-ui-manager-get-action"></a>gtk_ui_manager_get_action ()</h3>
-<a class="indexterm" name="id3521115"></a><pre class="programlisting"><a href="GtkAction.html" title="GtkAction">GtkAction</a>*          gtk_ui_manager_get_action           (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
+<a class="indexterm" name="id3546397"></a><pre class="programlisting"><a href="GtkAction.html" title="GtkAction">GtkAction</a>*          gtk_ui_manager_get_action           (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *path);</pre>
@@ -802,9 +855,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3521235"></a><h3>
+<a name="id3546517"></a><h3>
 <a name="gtk-ui-manager-add-ui-from-string"></a>gtk_ui_manager_add_ui_from_string ()</h3>
-<a class="indexterm" name="id3521251"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3546534"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               gtk_ui_manager_add_ui_from_string   (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          const <a
@@ -861,9 +914,9 @@ element is added if it is missing.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3521435"></a><h3>
+<a name="id3546717"></a><h3>
 <a name="gtk-ui-manager-add-ui-from-file"></a>gtk_ui_manager_add_ui_from_file ()</h3>
-<a class="indexterm" name="id3521451"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3546733"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               gtk_ui_manager_add_ui_from_file     (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          const <a
@@ -911,9 +964,9 @@ merges it with the current contents of <em class="parameter"><code>self</code></
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3521598"></a><h3>
+<a name="id3546880"></a><h3>
 <a name="gtk-ui-manager-new-merge-id"></a>gtk_ui_manager_new_merge_id ()</h3>
-<a class="indexterm" name="id3521614"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3546896"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               gtk_ui_manager_new_merge_id         (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
 <p>
@@ -943,9 +996,9 @@ Returns an unused merge id, suitable for use with
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3521700"></a><h3>
+<a name="id3546983"></a><h3>
 <a name="GtkUIManagerItemType"></a>enum GtkUIManagerItemType</h3>
-<a class="indexterm" name="id3521714"></a><pre class="programlisting">typedef enum {
+<a class="indexterm" name="id3546996"></a><pre class="programlisting">typedef enum {
   GTK_UI_MANAGER_AUTO         = 0,
   GTK_UI_MANAGER_MENUBAR      = 1 &lt;&lt; 0,
   GTK_UI_MANAGER_MENU         = 1 &lt;&lt; 1,
@@ -1021,9 +1074,9 @@ what UI element to create.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3521989"></a><h3>
+<a name="id3547271"></a><h3>
 <a name="gtk-ui-manager-add-ui"></a>gtk_ui_manager_add_ui ()</h3>
-<a class="indexterm" name="id3522004"></a><pre class="programlisting">void                gtk_ui_manager_add_ui               (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
+<a class="indexterm" name="id3547287"></a><pre class="programlisting">void                gtk_ui_manager_add_ui               (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> merge_id,
@@ -1105,9 +1158,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3522299"></a><h3>
+<a name="id3547582"></a><h3>
 <a name="gtk-ui-manager-remove-ui"></a>gtk_ui_manager_remove_ui ()</h3>
-<a class="indexterm" name="id3522315"></a><pre class="programlisting">void                gtk_ui_manager_remove_ui            (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
+<a class="indexterm" name="id3547597"></a><pre class="programlisting">void                gtk_ui_manager_remove_ui            (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> merge_id);</pre>
@@ -1136,9 +1189,9 @@ Unmerges the part of <em class="parameter"><code>self</code></em>s content ident
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3522427"></a><h3>
+<a name="id3547709"></a><h3>
 <a name="gtk-ui-manager-get-ui"></a>gtk_ui_manager_get_ui ()</h3>
-<a class="indexterm" name="id3522442"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3547725"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*              gtk_ui_manager_get_ui               (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
 <p>
@@ -1168,9 +1221,9 @@ the merged UI.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3522526"></a><h3>
+<a name="id3547808"></a><h3>
 <a name="gtk-ui-manager-ensure-update"></a>gtk_ui_manager_ensure_update ()</h3>
-<a class="indexterm" name="id3522542"></a><pre class="programlisting">void                gtk_ui_manager_ensure_update        (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
+<a class="indexterm" name="id3547824"></a><pre class="programlisting">void                gtk_ui_manager_ensure_update        (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *self);</pre>
 <p>
 Makes sure that all pending updates to the UI have been completed.
 </p>
@@ -1205,11 +1258,11 @@ gtk_widget_show (window);
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3522638"></a><h2>Property Details</h2>
+<a name="id3547920"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3522648"></a><h3>
+<a name="id3547931"></a><h3>
 <a name="GtkUIManager--add-tearoffs"></a>The :<code class="literal">add-tearoffs</code> property</h3>
-<a class="indexterm" name="id3522665"></a><pre class="programlisting">  add-tearoffs             <a
+<a class="indexterm" name="id3547947"></a><pre class="programlisting">  add-tearoffs             <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -1228,9 +1281,9 @@ menus never have tearoff menu items.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3522706"></a><h3>
+<a name="id3547988"></a><h3>
 <a name="GtkUIManager--ui"></a>The :<code class="literal">ui</code> property</h3>
-<a class="indexterm" name="id3522722"></a><pre class="programlisting">  ui                       <a
+<a class="indexterm" name="id3548004"></a><pre class="programlisting">  ui                       <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
 >gchararray</a>            : Read</pre>
 <p>An XML string describing the merged UI.</p>
@@ -1238,11 +1291,11 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Stand
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3522749"></a><h2>Signal Details</h2>
+<a name="id3548032"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3522760"></a><h3>
+<a name="id3548042"></a><h3>
 <a name="GtkUIManager-actions-changed"></a>The <code class="literal">::actions-changed</code> signal</h3>
-<a class="indexterm" name="id3522776"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *merge,
+<a class="indexterm" name="id3548059"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *merge,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>      user_data)      : Run First / No Recursion</pre>
@@ -1271,9 +1324,9 @@ changes.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3522862"></a><h3>
+<a name="id3548144"></a><h3>
 <a name="GtkUIManager-add-widget"></a>The <code class="literal">::add-widget</code> signal</h3>
-<a class="indexterm" name="id3522878"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *merge,
+<a class="indexterm" name="id3548160"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *merge,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>    *widget,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1309,9 +1362,9 @@ It is not emitted for generated popup menus, which can be obtained by
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3522997"></a><h3>
+<a name="id3548280"></a><h3>
 <a name="GtkUIManager-connect-proxy"></a>The <code class="literal">::connect-proxy</code> signal</h3>
-<a class="indexterm" name="id3523014"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
+<a class="indexterm" name="id3548296"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>    *action,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>    *proxy,
                                                         <a
@@ -1357,9 +1410,9 @@ statusbar.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3523141"></a><h3>
+<a name="id3548423"></a><h3>
 <a name="GtkUIManager-disconnect-proxy"></a>The <code class="literal">::disconnect-proxy</code> signal</h3>
-<a class="indexterm" name="id3523157"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
+<a class="indexterm" name="id3548440"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>    *action,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>    *proxy,
                                                         <a
@@ -1400,9 +1453,9 @@ from an action in the group.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3523279"></a><h3>
+<a name="id3548561"></a><h3>
 <a name="GtkUIManager-post-activate"></a>The <code class="literal">::post-activate</code> signal</h3>
-<a class="indexterm" name="id3523295"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
+<a class="indexterm" name="id3548578"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>    *action,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1441,9 +1494,9 @@ just after any action is activated.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3523405"></a><h3>
+<a name="id3548688"></a><h3>
 <a name="GtkUIManager-pre-activate"></a>The <code class="literal">::pre-activate</code> signal</h3>
-<a class="indexterm" name="id3523422"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
+<a class="indexterm" name="id3548704"></a><pre class="programlisting">void                user_function                      (<a href="GtkUIManager.html" title="GtkUIManager">GtkUIManager</a> *uimanager,
                                                         <a href="GtkAction.html" title="GtkAction">GtkAction</a>    *action,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1480,6 +1533,12 @@ just before any action is activated.</p>
 <p>Since  2.4
 </p>
 </div>
+</div>
+<div class="refsect1" lang="en">
+<a name="id3548816"></a><h2>See Also</h2>
+<p>
+<a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+</p>
 </div>
 </div>
 </body>

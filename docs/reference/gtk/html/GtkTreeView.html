@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,26 +67,26 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-GtkTreeView-drag-and-drop.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3289693" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3314408" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3294076" class="shortcut">Description</a>
+                  <a href="#id3318791" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3293300" class="shortcut">Object Hierarchy</a>
+                  <a href="#id3318015" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3293354" class="shortcut">Implemented Interfaces</a>
+                  <a href="#id3318069" class="shortcut">Implemented Interfaces</a>
                   &#160;|&#160;
-                  <a href="#id3293384" class="shortcut">Properties</a>
+                  <a href="#id3318099" class="shortcut">Properties</a>
                   &#160;|&#160;
-                  <a href="#id3293692" class="shortcut">Style Properties</a>
+                  <a href="#id3318407" class="shortcut">Style Properties</a>
                   &#160;|&#160;
-                  <a href="#id3293903" class="shortcut">Signals</a></nobr></td></tr>
+                  <a href="#id3318618" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkTreeView"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3289693"></a><span class="refentrytitle">GtkTreeView</span>
+<a name="id3314408"></a><span class="refentrytitle">GtkTreeView</span>
 </h2>
 <p>GtkTreeView &#8212; A widget for displaying both trees and lists</p>
 </td>
@@ -622,7 +623,7 @@ void                <a href="GtkTreeView.html#gtk-tree-view-set-grid-lines">gtk_
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3293300"></a><h2>Object Hierarchy</h2>
+<a name="id3318015"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -638,13 +639,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3293354"></a><h2>Implemented Interfaces</h2>
+<a name="id3318069"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkTreeView implements
  <a href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a> and  AtkImplementorIface.</p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3293384"></a><h2>Properties</h2>
+<a name="id3318099"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkTreeView.html#GtkTreeView--enable-grid-lines">enable-grid-lines</a>        <a href="GtkTreeView.html#GtkTreeViewGridLines">GtkTreeViewGridLines</a>  : Read / Write
@@ -694,7 +695,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3293692"></a><h2>Style Properties</h2>
+<a name="id3318407"></a><h2>Style Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkTreeView.html#GtkTreeView--allow-rules">allow-rules</a>              <a
@@ -736,7 +737,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3293903"></a><h2>Signals</h2>
+<a name="id3318618"></a><h2>Signals</h2>
 <pre class="synopsis">
 
   <a href="GtkTreeView.html#GtkTreeView-columns-changed">columns-changed</a>                                : Run Last
@@ -758,7 +759,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3294076"></a><h2>Description</h2>
+<a name="id3318791"></a><h2>Description</h2>
 <p>
 Widget that displays any object that implements the <a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> interface.
 </p>
@@ -793,22 +794,49 @@ former you can use <a href="GtkTreeView.html#gtk-tree-view-convert-widget-to-bin
 (and vice versa), for the latter <a href="GtkTreeView.html#gtk-tree-view-convert-bin-window-to-tree-coords"><code class="function">gtk_tree_view_convert_bin_window_to_tree_coords()</code></a> 
 (and vice versa).
 </p>
+<div class="refsect2" lang="en">
+<a name="GtkTreeView-BUILDER-UI"></a><h3>GtkTreeView as GtkBuildable</h3>
+<p>
+The GtkTreeView implementation of the GtkBuildable interface accepts
+GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
+</p>
+<div class="example">
+<a name="id3318912"></a><p class="title"><b>Example&#160;17.&#160;A UI definition fragment with GtkTreeView</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkTreeView"&gt;
+  &lt;property name="model"&gt;liststore1&lt;/property&gt;
+  &lt;child&gt;
+    &lt;object class="GtkTreeViewColumn"&gt;
+      &lt;property name="title"&gt;Test&lt;/property&gt;
+      &lt;child&gt;
+        &lt;object class="GtkCellRendererText"/&gt;
+        &lt;attributes&gt;"
+          &lt;attribute name="text"&gt;1&lt;/attribute&gt;
+        &lt;/attributes&gt;
+      &lt;/child&gt;
+    &lt;/object&gt;
+  &lt;/child&gt;
+&lt;/object&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3294181"></a><h2>Details</h2>
+<a name="id3318926"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3294192"></a><h3>
+<a name="id3318943"></a><h3>
 <a name="GtkTreeView-struct"></a>GtkTreeView</h3>
-<a class="indexterm" name="id3294205"></a><pre class="programlisting">typedef struct _GtkTreeView GtkTreeView;</pre>
+<a class="indexterm" name="id3318957"></a><pre class="programlisting">typedef struct _GtkTreeView GtkTreeView;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3294220"></a><h3>
+<a name="id3318972"></a><h3>
 <a name="GtkTreeViewDropPosition"></a>enum GtkTreeViewDropPosition</h3>
-<a class="indexterm" name="id3294234"></a><pre class="programlisting">typedef enum
+<a class="indexterm" name="id3318986"></a><pre class="programlisting">typedef enum
 {
   /* drop before/after this row */
   GTK_TREE_VIEW_DROP_BEFORE,
@@ -852,9 +880,9 @@ An enum for determining where a dropped row goes.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3294353"></a><h3>
+<a name="id3319105"></a><h3>
 <a name="GtkTreeViewPrivate"></a>GtkTreeViewPrivate</h3>
-<a class="indexterm" name="id3294366"></a><pre class="programlisting">typedef struct _GtkTreeViewPrivate GtkTreeViewPrivate;</pre>
+<a class="indexterm" name="id3319118"></a><pre class="programlisting">typedef struct _GtkTreeViewPrivate GtkTreeViewPrivate;</pre>
 <p>
 A private struct for internal use only.  The definition of this
 structure is not publically available.
@@ -862,9 +890,9 @@ structure is not publically available.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3294384"></a><h3>
+<a name="id3319135"></a><h3>
 <a name="GtkTreeViewColumnDropFunc"></a>GtkTreeViewColumnDropFunc ()</h3>
-<a class="indexterm" name="id3294398"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3319149"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            (*GtkTreeViewColumnDropFunc)        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column,
@@ -930,9 +958,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3294661"></a><h3>
+<a name="id3319413"></a><h3>
 <a name="GtkTreeViewMappingFunc"></a>GtkTreeViewMappingFunc ()</h3>
-<a class="indexterm" name="id3294674"></a><pre class="programlisting">void                (*GtkTreeViewMappingFunc)           (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3319426"></a><pre class="programlisting">void                (*GtkTreeViewMappingFunc)           (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -965,9 +993,9 @@ Function used for <a href="GtkTreeView.html#gtk-tree-view-map-expanded-rows"><sp
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3294781"></a><h3>
+<a name="id3319533"></a><h3>
 <a name="GtkTreeViewSearchEqualFunc"></a>GtkTreeViewSearchEqualFunc ()</h3>
-<a class="indexterm" name="id3294795"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3319547"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            (*GtkTreeViewSearchEqualFunc)       (<a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *model,
                                                          <a
@@ -1032,9 +1060,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295032"></a><h3>
+<a name="id3319784"></a><h3>
 <a name="gtk-tree-view-new"></a>gtk_tree_view_new ()</h3>
-<a class="indexterm" name="id3295045"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_tree_view_new                   (void);</pre>
+<a class="indexterm" name="id3319797"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_tree_view_new                   (void);</pre>
 <p>
 Creates a new <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget.</p>
 <p>
@@ -1051,9 +1079,9 @@ Creates a new <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295101"></a><h3>
+<a name="id3319853"></a><h3>
 <a name="gtk-tree-view-get-level-indentation"></a>gtk_tree_view_get_level_indentation ()</h3>
-<a class="indexterm" name="id3295116"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3319868"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_view_get_level_indentation (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -1084,9 +1112,9 @@ in <em class="parameter"><code>tree_view</code></em>.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295205"></a><h3>
+<a name="id3319957"></a><h3>
 <a name="gtk-tree-view-get-show-expanders"></a>gtk_tree_view_get_show_expanders ()</h3>
-<a class="indexterm" name="id3295221"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3319973"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_show_expanders    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -1120,9 +1148,9 @@ otherwise.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295329"></a><h3>
+<a name="id3320081"></a><h3>
 <a name="gtk-tree-view-set-level-indentation"></a>gtk_tree_view_set_level_indentation ()</h3>
-<a class="indexterm" name="id3295346"></a><pre class="programlisting">void                gtk_tree_view_set_level_indentation (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3320097"></a><pre class="programlisting">void                gtk_tree_view_set_level_indentation (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> indentation);</pre>
@@ -1155,9 +1183,9 @@ This does not have any visible effects for lists.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295448"></a><h3>
+<a name="id3320200"></a><h3>
 <a name="gtk-tree-view-set-show-expanders"></a>gtk_tree_view_set_show_expanders ()</h3>
-<a class="indexterm" name="id3295464"></a><pre class="programlisting">void                gtk_tree_view_set_show_expanders    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3320216"></a><pre class="programlisting">void                gtk_tree_view_set_show_expanders    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> enabled);</pre>
@@ -1196,9 +1224,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295594"></a><h3>
+<a name="id3320346"></a><h3>
 <a name="gtk-tree-view-new-with-model"></a>gtk_tree_view_new_with_model ()</h3>
-<a class="indexterm" name="id3295608"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_tree_view_new_with_model        (<a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *model);</pre>
+<a class="indexterm" name="id3320360"></a><pre class="programlisting"><a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_tree_view_new_with_model        (<a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *model);</pre>
 <p>
 Creates a new <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget with the model initialized to <em class="parameter"><code>model</code></em>.</p>
 <p>
@@ -1222,9 +1250,9 @@ Creates a new <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295691"></a><h3>
+<a name="id3320443"></a><h3>
 <a name="gtk-tree-view-get-model"></a>gtk_tree_view_get_model ()</h3>
-<a class="indexterm" name="id3295704"></a><pre class="programlisting"><a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a>*       gtk_tree_view_get_model             (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3320456"></a><pre class="programlisting"><a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a>*       gtk_tree_view_get_model             (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Returns the model the <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> is based on.  Returns <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
@@ -1253,9 +1281,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295811"></a><h3>
+<a name="id3320562"></a><h3>
 <a name="gtk-tree-view-set-model"></a>gtk_tree_view_set_model ()</h3>
-<a class="indexterm" name="id3295823"></a><pre class="programlisting">void                gtk_tree_view_set_model             (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3320575"></a><pre class="programlisting">void                gtk_tree_view_set_model             (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *model);</pre>
 <p>
 Sets the model for a <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a>.  If the <em class="parameter"><code>tree_view</code></em> already has a model
@@ -1284,9 +1312,9 @@ then it will unset the old model.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3295936"></a><h3>
+<a name="id3320688"></a><h3>
 <a name="gtk-tree-view-get-selection"></a>gtk_tree_view_get_selection ()</h3>
-<a class="indexterm" name="id3295950"></a><pre class="programlisting"><a href="GtkTreeSelection.html" title="GtkTreeSelection">GtkTreeSelection</a>*   gtk_tree_view_get_selection         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3320702"></a><pre class="programlisting"><a href="GtkTreeSelection.html" title="GtkTreeSelection">GtkTreeSelection</a>*   gtk_tree_view_get_selection         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Gets the <a href="GtkTreeSelection.html" title="GtkTreeSelection"><span class="type">GtkTreeSelection</span></a> associated with <em class="parameter"><code>tree_view</code></em>.</p>
 <p>
@@ -1310,9 +1338,9 @@ Gets the <a href="GtkTreeSelection.html" title="GtkTreeSelection"><span class="t
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296040"></a><h3>
+<a name="id3320792"></a><h3>
 <a name="gtk-tree-view-get-hadjustment"></a>gtk_tree_view_get_hadjustment ()</h3>
-<a class="indexterm" name="id3296054"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_tree_view_get_hadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3320806"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_tree_view_get_hadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Gets the <a href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> currently being used for the horizontal aspect.</p>
 <p>
@@ -1339,9 +1367,9 @@ used.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296150"></a><h3>
+<a name="id3320902"></a><h3>
 <a name="gtk-tree-view-set-hadjustment"></a>gtk_tree_view_set_hadjustment ()</h3>
-<a class="indexterm" name="id3296164"></a><pre class="programlisting">void                gtk_tree_view_set_hadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3320916"></a><pre class="programlisting">void                gtk_tree_view_set_hadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *adjustment);</pre>
 <p>
 Sets the <a href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> for the current horizontal aspect.</p>
@@ -1368,9 +1396,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296271"></a><h3>
+<a name="id3321023"></a><h3>
 <a name="gtk-tree-view-get-vadjustment"></a>gtk_tree_view_get_vadjustment ()</h3>
-<a class="indexterm" name="id3296285"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_tree_view_get_vadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3321036"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_tree_view_get_vadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Gets the <a href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> currently being used for the vertical aspect.</p>
 <p>
@@ -1397,9 +1425,9 @@ used.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296381"></a><h3>
+<a name="id3321133"></a><h3>
 <a name="gtk-tree-view-set-vadjustment"></a>gtk_tree_view_set_vadjustment ()</h3>
-<a class="indexterm" name="id3296395"></a><pre class="programlisting">void                gtk_tree_view_set_vadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3321147"></a><pre class="programlisting">void                gtk_tree_view_set_vadjustment       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *adjustment);</pre>
 <p>
 Sets the <a href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> for the current vertical aspect.</p>
@@ -1426,9 +1454,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296502"></a><h3>
+<a name="id3321254"></a><h3>
 <a name="gtk-tree-view-get-headers-visible"></a>gtk_tree_view_get_headers_visible ()</h3>
-<a class="indexterm" name="id3296516"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3321268"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_headers_visible   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -1456,9 +1484,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296601"></a><h3>
+<a name="id3321353"></a><h3>
 <a name="gtk-tree-view-set-headers-visible"></a>gtk_tree_view_set_headers_visible ()</h3>
-<a class="indexterm" name="id3296615"></a><pre class="programlisting">void                gtk_tree_view_set_headers_visible   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3321367"></a><pre class="programlisting">void                gtk_tree_view_set_headers_visible   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> headers_visible);</pre>
@@ -1487,9 +1515,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296705"></a><h3>
+<a name="id3321457"></a><h3>
 <a name="gtk-tree-view-columns-autosize"></a>gtk_tree_view_columns_autosize ()</h3>
-<a class="indexterm" name="id3296718"></a><pre class="programlisting">void                gtk_tree_view_columns_autosize      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3321470"></a><pre class="programlisting">void                gtk_tree_view_columns_autosize      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Resizes all columns to their optimal width. Only works after the
 treeview has been realized.</p>
@@ -1507,9 +1535,9 @@ treeview has been realized.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296777"></a><h3>
+<a name="id3321529"></a><h3>
 <a name="gtk-tree-view-get-headers-clickable"></a>gtk_tree_view_get_headers_clickable ()</h3>
-<a class="indexterm" name="id3296794"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3321546"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_headers_clickable (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -1542,9 +1570,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296890"></a><h3>
+<a name="id3321642"></a><h3>
 <a name="gtk-tree-view-set-headers-clickable"></a>gtk_tree_view_set_headers_clickable ()</h3>
-<a class="indexterm" name="id3296904"></a><pre class="programlisting">void                gtk_tree_view_set_headers_clickable (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3321656"></a><pre class="programlisting">void                gtk_tree_view_set_headers_clickable (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> setting);</pre>
@@ -1573,9 +1601,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3296994"></a><h3>
+<a name="id3321746"></a><h3>
 <a name="gtk-tree-view-set-rules-hint"></a>gtk_tree_view_set_rules_hint ()</h3>
-<a class="indexterm" name="id3297008"></a><pre class="programlisting">void                gtk_tree_view_set_rules_hint        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3321760"></a><pre class="programlisting">void                gtk_tree_view_set_rules_hint        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> setting);</pre>
@@ -1615,9 +1643,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3297116"></a><h3>
+<a name="id3321868"></a><h3>
 <a name="gtk-tree-view-get-rules-hint"></a>gtk_tree_view_get_rules_hint ()</h3>
-<a class="indexterm" name="id3297129"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3321881"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_rules_hint        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -1645,9 +1673,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3297220"></a><h3>
+<a name="id3321971"></a><h3>
 <a name="gtk-tree-view-append-column"></a>gtk_tree_view_append_column ()</h3>
-<a class="indexterm" name="id3297233"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3321985"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_view_append_column         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column);</pre>
@@ -1681,9 +1709,9 @@ GTK_TREE_VIEW_COLUMN_FIXED.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3297357"></a><h3>
+<a name="id3322109"></a><h3>
 <a name="gtk-tree-view-remove-column"></a>gtk_tree_view_remove_column ()</h3>
-<a class="indexterm" name="id3297371"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3322123"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_view_remove_column         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column);</pre>
@@ -1715,9 +1743,9 @@ Removes <em class="parameter"><code>column</code></em> from <em class="parameter
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3297487"></a><h3>
+<a name="id3322239"></a><h3>
 <a name="gtk-tree-view-insert-column"></a>gtk_tree_view_insert_column ()</h3>
-<a class="indexterm" name="id3297500"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3322252"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_view_insert_column         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column,
@@ -1760,9 +1788,9 @@ set to be GTK_TREE_VIEW_COLUMN_FIXED.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3297671"></a><h3>
+<a name="id3322423"></a><h3>
 <a name="gtk-tree-view-insert-column-with-attributes"></a>gtk_tree_view_insert_column_with_attributes ()</h3>
-<a class="indexterm" name="id3297686"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3322438"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_view_insert_column_with_attributes
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
@@ -1823,9 +1851,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3297897"></a><h3>
+<a name="id3322649"></a><h3>
 <a name="gtk-tree-view-insert-column-with-data-func"></a>gtk_tree_view_insert_column_with_data_func ()</h3>
-<a class="indexterm" name="id3297911"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3322663"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_view_insert_column_with_data_func
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
@@ -1901,9 +1929,9 @@ If <em class="parameter"><code>tree_view</code></em> has "fixed_height" mode ena
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3298176"></a><h3>
+<a name="id3322928"></a><h3>
 <a name="gtk-tree-view-get-column"></a>gtk_tree_view_get_column ()</h3>
-<a class="indexterm" name="id3298189"></a><pre class="programlisting"><a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a>*  gtk_tree_view_get_column            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3322941"></a><pre class="programlisting"><a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a>*  gtk_tree_view_get_column            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n);</pre>
@@ -1938,9 +1966,9 @@ range of columns.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3298317"></a><h3>
+<a name="id3323069"></a><h3>
 <a name="gtk-tree-view-get-columns"></a>gtk_tree_view_get_columns ()</h3>
-<a class="indexterm" name="id3298331"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3323083"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a>*              gtk_tree_view_get_columns           (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -1971,9 +1999,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Doubly-Link
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3298440"></a><h3>
+<a name="id3323192"></a><h3>
 <a name="gtk-tree-view-move-column-after"></a>gtk_tree_view_move_column_after ()</h3>
-<a class="indexterm" name="id3298454"></a><pre class="programlisting">void                gtk_tree_view_move_column_after     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3323206"></a><pre class="programlisting">void                gtk_tree_view_move_column_after     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *base_column);</pre>
 <p>
@@ -2009,9 +2037,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3298618"></a><h3>
+<a name="id3323370"></a><h3>
 <a name="gtk-tree-view-set-expander-column"></a>gtk_tree_view_set_expander_column ()</h3>
-<a class="indexterm" name="id3298632"></a><pre class="programlisting">void                gtk_tree_view_set_expander_column   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3323384"></a><pre class="programlisting">void                gtk_tree_view_set_expander_column   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column);</pre>
 <p>
 Sets the column to draw the expander arrow at. It must be in <em class="parameter"><code>tree_view</code></em>.  
@@ -2046,9 +2074,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3298751"></a><h3>
+<a name="id3323503"></a><h3>
 <a name="gtk-tree-view-get-expander-column"></a>gtk_tree_view_get_expander_column ()</h3>
-<a class="indexterm" name="id3298766"></a><pre class="programlisting"><a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a>*  gtk_tree_view_get_expander_column   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3323518"></a><pre class="programlisting"><a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a>*  gtk_tree_view_get_expander_column   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Returns the column that is the current expander column.  This
 column has the expander arrow drawn next to it.</p>
@@ -2073,9 +2101,9 @@ column has the expander arrow drawn next to it.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3298836"></a><h3>
+<a name="id3323587"></a><h3>
 <a name="gtk-tree-view-set-column-drag-function"></a>gtk_tree_view_set_column_drag_function ()</h3>
-<a class="indexterm" name="id3298849"></a><pre class="programlisting">void                gtk_tree_view_set_column_drag_function
+<a class="indexterm" name="id3323601"></a><pre class="programlisting">void                gtk_tree_view_set_column_drag_function
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeView.html#GtkTreeViewColumnDropFunc">GtkTreeViewColumnDropFunc</a> func,
                                                          <a
@@ -2133,9 +2161,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3299100"></a><h3>
+<a name="id3323852"></a><h3>
 <a name="gtk-tree-view-scroll-to-point"></a>gtk_tree_view_scroll_to_point ()</h3>
-<a class="indexterm" name="id3299114"></a><pre class="programlisting">void                gtk_tree_view_scroll_to_point       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3323866"></a><pre class="programlisting">void                gtk_tree_view_scroll_to_point       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> tree_x,
@@ -2177,9 +2205,9 @@ If either <em class="parameter"><code>tree_x</code></em> or <em class="parameter
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3299277"></a><h3>
+<a name="id3324028"></a><h3>
 <a name="gtk-tree-view-scroll-to-cell"></a>gtk_tree_view_scroll_to_cell ()</h3>
-<a class="indexterm" name="id3299290"></a><pre class="programlisting">void                gtk_tree_view_scroll_to_cell        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3324042"></a><pre class="programlisting">void                gtk_tree_view_scroll_to_cell        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column,
                                                          <a
@@ -2265,9 +2293,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3299647"></a><h3>
+<a name="id3324399"></a><h3>
 <a name="gtk-tree-view-set-cursor"></a>gtk_tree_view_set_cursor ()</h3>
-<a class="indexterm" name="id3299660"></a><pre class="programlisting">void                gtk_tree_view_set_cursor            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3324412"></a><pre class="programlisting">void                gtk_tree_view_set_cursor            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *focus_column,
                                                          <a
@@ -2321,9 +2349,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3299883"></a><h3>
+<a name="id3324635"></a><h3>
 <a name="gtk-tree-view-set-cursor-on-cell"></a>gtk_tree_view_set_cursor_on_cell ()</h3>
-<a class="indexterm" name="id3299899"></a><pre class="programlisting">void                gtk_tree_view_set_cursor_on_cell    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3324651"></a><pre class="programlisting">void                gtk_tree_view_set_cursor_on_cell    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *focus_column,
                                                          <a href="GtkCellRenderer.html" title="GtkCellRenderer">GtkCellRenderer</a> *focus_cell,
@@ -2392,9 +2420,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3300206"></a><h3>
+<a name="id3324957"></a><h3>
 <a name="gtk-tree-view-get-cursor"></a>gtk_tree_view_get_cursor ()</h3>
-<a class="indexterm" name="id3300218"></a><pre class="programlisting">void                gtk_tree_view_get_cursor            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3324970"></a><pre class="programlisting">void                gtk_tree_view_get_cursor            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> **path,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> **focus_column);</pre>
 <p>
@@ -2439,9 +2467,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3300411"></a><h3>
+<a name="id3325162"></a><h3>
 <a name="gtk-tree-view-row-activated"></a>gtk_tree_view_row_activated ()</h3>
-<a class="indexterm" name="id3300425"></a><pre class="programlisting">void                gtk_tree_view_row_activated         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3325176"></a><pre class="programlisting">void                gtk_tree_view_row_activated         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column);</pre>
 <p>
@@ -2472,9 +2500,9 @@ Activates the cell determined by <em class="parameter"><code>path</code></em> an
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3300554"></a><h3>
+<a name="id3325306"></a><h3>
 <a name="gtk-tree-view-expand-all"></a>gtk_tree_view_expand_all ()</h3>
-<a class="indexterm" name="id3300567"></a><pre class="programlisting">void                gtk_tree_view_expand_all            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3325319"></a><pre class="programlisting">void                gtk_tree_view_expand_all            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Recursively expands all nodes in the <em class="parameter"><code>tree_view</code></em>.</p>
 <p>
@@ -2491,9 +2519,9 @@ Recursively expands all nodes in the <em class="parameter"><code>tree_view</code
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3300631"></a><h3>
+<a name="id3325383"></a><h3>
 <a name="gtk-tree-view-collapse-all"></a>gtk_tree_view_collapse_all ()</h3>
-<a class="indexterm" name="id3300645"></a><pre class="programlisting">void                gtk_tree_view_collapse_all          (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3325397"></a><pre class="programlisting">void                gtk_tree_view_collapse_all          (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Recursively collapses all visible, expanded nodes in <em class="parameter"><code>tree_view</code></em>.</p>
 <p>
@@ -2510,9 +2538,9 @@ Recursively collapses all visible, expanded nodes in <em class="parameter"><code
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3300708"></a><h3>
+<a name="id3325460"></a><h3>
 <a name="gtk-tree-view-expand-to-path"></a>gtk_tree_view_expand_to_path ()</h3>
-<a class="indexterm" name="id3300724"></a><pre class="programlisting">void                gtk_tree_view_expand_to_path        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3325476"></a><pre class="programlisting">void                gtk_tree_view_expand_to_path        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path);</pre>
 <p>
 Expands the row at <em class="parameter"><code>path</code></em>. This will also expand all parent rows of
@@ -2540,9 +2568,9 @@ Expands the row at <em class="parameter"><code>path</code></em>. This will also 
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3300823"></a><h3>
+<a name="id3325575"></a><h3>
 <a name="gtk-tree-view-expand-row"></a>gtk_tree_view_expand_row ()</h3>
-<a class="indexterm" name="id3300837"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3325589"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_expand_row            (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
@@ -2584,9 +2612,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3300960"></a><h3>
+<a name="id3325712"></a><h3>
 <a name="gtk-tree-view-collapse-row"></a>gtk_tree_view_collapse_row ()</h3>
-<a class="indexterm" name="id3300974"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3325726"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_collapse_row          (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path);</pre>
@@ -2620,9 +2648,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3301080"></a><h3>
+<a name="id3325832"></a><h3>
 <a name="gtk-tree-view-map-expanded-rows"></a>gtk_tree_view_map_expanded_rows ()</h3>
-<a class="indexterm" name="id3301093"></a><pre class="programlisting">void                gtk_tree_view_map_expanded_rows     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3325845"></a><pre class="programlisting">void                gtk_tree_view_map_expanded_rows     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeView.html#GtkTreeViewMappingFunc">GtkTreeViewMappingFunc</a> func,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -2655,9 +2683,9 @@ Calls <em class="parameter"><code>func</code></em> on all expanded rows.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3301202"></a><h3>
+<a name="id3325954"></a><h3>
 <a name="gtk-tree-view-row-expanded"></a>gtk_tree_view_row_expanded ()</h3>
-<a class="indexterm" name="id3301216"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3325968"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_row_expanded          (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path);</pre>
@@ -2693,9 +2721,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3301354"></a><h3>
+<a name="id3326106"></a><h3>
 <a name="gtk-tree-view-set-reorderable"></a>gtk_tree_view_set_reorderable ()</h3>
-<a class="indexterm" name="id3301368"></a><pre class="programlisting">void                gtk_tree_view_set_reorderable       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3326120"></a><pre class="programlisting">void                gtk_tree_view_set_reorderable       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> reorderable);</pre>
@@ -2736,9 +2764,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3301521"></a><h3>
+<a name="id3326273"></a><h3>
 <a name="gtk-tree-view-get-reorderable"></a>gtk_tree_view_get_reorderable ()</h3>
-<a class="indexterm" name="id3301534"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3326286"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_reorderable       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -2767,9 +2795,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3301625"></a><h3>
+<a name="id3326377"></a><h3>
 <a name="gtk-tree-view-get-path-at-pos"></a>gtk_tree_view_get_path_at_pos ()</h3>
-<a class="indexterm" name="id3301639"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3326391"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_path_at_pos       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
@@ -2869,9 +2897,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3302080"></a><h3>
+<a name="id3326832"></a><h3>
 <a name="gtk-tree-view-get-cell-area"></a>gtk_tree_view_get_cell_area ()</h3>
-<a class="indexterm" name="id3302094"></a><pre class="programlisting">void                gtk_tree_view_get_cell_area         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3326846"></a><pre class="programlisting">void                gtk_tree_view_get_cell_area         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column,
                                                          <a
@@ -2926,9 +2954,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3302352"></a><h3>
+<a name="id3327104"></a><h3>
 <a name="gtk-tree-view-get-background-area"></a>gtk_tree_view_get_background_area ()</h3>
-<a class="indexterm" name="id3302367"></a><pre class="programlisting">void                gtk_tree_view_get_background_area   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3327119"></a><pre class="programlisting">void                gtk_tree_view_get_background_area   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column,
                                                          <a
@@ -2983,9 +3011,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3302637"></a><h3>
+<a name="id3327389"></a><h3>
 <a name="gtk-tree-view-get-visible-rect"></a>gtk_tree_view_get_visible_rect ()</h3>
-<a class="indexterm" name="id3302651"></a><pre class="programlisting">void                gtk_tree_view_get_visible_rect      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3327403"></a><pre class="programlisting">void                gtk_tree_view_get_visible_rect      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="../gdk/gdk-Points-Rectangles-and-Regions.html#GdkRectangle"
 >GdkRectangle</a> *visible_rect);</pre>
@@ -3016,9 +3044,9 @@ scrollable area of the tree.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3302753"></a><h3>
+<a name="id3327505"></a><h3>
 <a name="gtk-tree-view-get-visible-range"></a>gtk_tree_view_get_visible_range ()</h3>
-<a class="indexterm" name="id3302768"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3327520"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_visible_range     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> **start_path,
@@ -3069,9 +3097,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3302958"></a><h3>
+<a name="id3327710"></a><h3>
 <a name="gtk-tree-view-get-bin-window"></a>gtk_tree_view_get_bin_window ()</h3>
-<a class="indexterm" name="id3302972"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3327723"></a><pre class="programlisting"><a
 href="../gdk/gdk-Windows.html#GdkWindow"
 >GdkWindow</a>*          gtk_tree_view_get_bin_window        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -3103,9 +3131,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3303084"></a><h3>
+<a name="id3327835"></a><h3>
 <a name="gtk-tree-view-widget-to-tree-coords"></a>gtk_tree_view_widget_to_tree_coords ()</h3>
-<a class="indexterm" name="id3303100"></a><pre class="programlisting">void                gtk_tree_view_widget_to_tree_coords (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3327852"></a><pre class="programlisting">void                gtk_tree_view_widget_to_tree_coords (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> wx,
@@ -3164,9 +3192,9 @@ tree (the full scrollable area of the tree).</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3303275"></a><h3>
+<a name="id3328027"></a><h3>
 <a name="gtk-tree-view-tree-to-widget-coords"></a>gtk_tree_view_tree_to_widget_coords ()</h3>
-<a class="indexterm" name="id3303291"></a><pre class="programlisting">void                gtk_tree_view_tree_to_widget_coords (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3328043"></a><pre class="programlisting">void                gtk_tree_view_tree_to_widget_coords (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> tx,
@@ -3225,9 +3253,9 @@ to bin_window coordinates.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3303465"></a><h3>
+<a name="id3328217"></a><h3>
 <a name="gtk-tree-view-convert-bin-window-to-tree-coords"></a>gtk_tree_view_convert_bin_window_to_tree_coords ()</h3>
-<a class="indexterm" name="id3303481"></a><pre class="programlisting">void                gtk_tree_view_convert_bin_window_to_tree_coords
+<a class="indexterm" name="id3328233"></a><pre class="programlisting">void                gtk_tree_view_convert_bin_window_to_tree_coords
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -3284,9 +3312,9 @@ tree (the full scrollable area of the tree).</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3303636"></a><h3>
+<a name="id3328387"></a><h3>
 <a name="gtk-tree-view-convert-bin-window-to-widget-coords"></a>gtk_tree_view_convert_bin_window_to_widget_coords ()</h3>
-<a class="indexterm" name="id3303652"></a><pre class="programlisting">void                gtk_tree_view_convert_bin_window_to_widget_coords
+<a class="indexterm" name="id3328404"></a><pre class="programlisting">void                gtk_tree_view_convert_bin_window_to_widget_coords
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -3341,9 +3369,9 @@ to widget relative coordinates.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3303818"></a><h3>
+<a name="id3328570"></a><h3>
 <a name="gtk-tree-view-convert-tree-to-bin-window-coords"></a>gtk_tree_view_convert_tree_to_bin_window_coords ()</h3>
-<a class="indexterm" name="id3303835"></a><pre class="programlisting">void                gtk_tree_view_convert_tree_to_bin_window_coords
+<a class="indexterm" name="id3328587"></a><pre class="programlisting">void                gtk_tree_view_convert_tree_to_bin_window_coords
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -3398,9 +3426,9 @@ to bin_window coordinates.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3303990"></a><h3>
+<a name="id3328742"></a><h3>
 <a name="gtk-tree-view-convert-tree-to-widget-coords"></a>gtk_tree_view_convert_tree_to_widget_coords ()</h3>
-<a class="indexterm" name="id3304007"></a><pre class="programlisting">void                gtk_tree_view_convert_tree_to_widget_coords
+<a class="indexterm" name="id3328759"></a><pre class="programlisting">void                gtk_tree_view_convert_tree_to_widget_coords
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -3455,9 +3483,9 @@ to widget coordinates.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3304159"></a><h3>
+<a name="id3328911"></a><h3>
 <a name="gtk-tree-view-convert-widget-to-bin-window-coords"></a>gtk_tree_view_convert_widget_to_bin_window_coords ()</h3>
-<a class="indexterm" name="id3304176"></a><pre class="programlisting">void                gtk_tree_view_convert_widget_to_bin_window_coords
+<a class="indexterm" name="id3328928"></a><pre class="programlisting">void                gtk_tree_view_convert_widget_to_bin_window_coords
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -3512,9 +3540,9 @@ Converts widget coordinates to coordinates for the bin_window
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3304342"></a><h3>
+<a name="id3329094"></a><h3>
 <a name="gtk-tree-view-convert-widget-to-tree-coords"></a>gtk_tree_view_convert_widget_to_tree_coords ()</h3>
-<a class="indexterm" name="id3304360"></a><pre class="programlisting">void                gtk_tree_view_convert_widget_to_tree_coords
+<a class="indexterm" name="id3329112"></a><pre class="programlisting">void                gtk_tree_view_convert_widget_to_tree_coords
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -3571,9 +3599,9 @@ tree (the full scrollable area of the tree).</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3304512"></a><h3>
+<a name="id3329264"></a><h3>
 <a name="gtk-tree-view-enable-model-drag-dest"></a>gtk_tree_view_enable_model_drag_dest ()</h3>
-<a class="indexterm" name="id3304526"></a><pre class="programlisting">void                gtk_tree_view_enable_model_drag_dest
+<a class="indexterm" name="id3329278"></a><pre class="programlisting">void                gtk_tree_view_enable_model_drag_dest
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          const <a href="gtk-Selections.html#GtkTargetEntry">GtkTargetEntry</a> *targets,
                                                          <a
@@ -3616,9 +3644,9 @@ Turns <em class="parameter"><code>tree_view</code></em> into a drop destination 
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3304665"></a><h3>
+<a name="id3329417"></a><h3>
 <a name="gtk-tree-view-enable-model-drag-source"></a>gtk_tree_view_enable_model_drag_source ()</h3>
-<a class="indexterm" name="id3304679"></a><pre class="programlisting">void                gtk_tree_view_enable_model_drag_source
+<a class="indexterm" name="id3329431"></a><pre class="programlisting">void                gtk_tree_view_enable_model_drag_source
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="../gdk/gdk-Windows.html#GdkModifierType"
@@ -3669,9 +3697,9 @@ Turns <em class="parameter"><code>tree_view</code></em> into a drag source for a
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3304841"></a><h3>
+<a name="id3329592"></a><h3>
 <a name="gtk-tree-view-unset-rows-drag-source"></a>gtk_tree_view_unset_rows_drag_source ()</h3>
-<a class="indexterm" name="id3304854"></a><pre class="programlisting">void                gtk_tree_view_unset_rows_drag_source
+<a class="indexterm" name="id3329606"></a><pre class="programlisting">void                gtk_tree_view_unset_rows_drag_source
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Undoes the effect of <a href="GtkTreeView.html#gtk-tree-view-enable-model-drag-source"><code class="function">gtk_tree_view_enable_model_drag_source()</code></a>.</p>
@@ -3689,9 +3717,9 @@ Undoes the effect of <a href="GtkTreeView.html#gtk-tree-view-enable-model-drag-s
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3304925"></a><h3>
+<a name="id3329677"></a><h3>
 <a name="gtk-tree-view-unset-rows-drag-dest"></a>gtk_tree_view_unset_rows_drag_dest ()</h3>
-<a class="indexterm" name="id3304939"></a><pre class="programlisting">void                gtk_tree_view_unset_rows_drag_dest  (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3329691"></a><pre class="programlisting">void                gtk_tree_view_unset_rows_drag_dest  (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Undoes the effect of <a href="GtkTreeView.html#gtk-tree-view-enable-model-drag-dest"><code class="function">gtk_tree_view_enable_model_drag_dest()</code></a>.</p>
 <p>
@@ -3708,9 +3736,9 @@ Undoes the effect of <a href="GtkTreeView.html#gtk-tree-view-enable-model-drag-d
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305008"></a><h3>
+<a name="id3329760"></a><h3>
 <a name="gtk-tree-view-set-drag-dest-row"></a>gtk_tree_view_set_drag_dest_row ()</h3>
-<a class="indexterm" name="id3305022"></a><pre class="programlisting">void                gtk_tree_view_set_drag_dest_row     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3329773"></a><pre class="programlisting">void                gtk_tree_view_set_drag_dest_row     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a href="GtkTreeView.html#GtkTreeViewDropPosition">GtkTreeViewDropPosition</a> pos);</pre>
 <p>
@@ -3743,9 +3771,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305135"></a><h3>
+<a name="id3329887"></a><h3>
 <a name="gtk-tree-view-get-drag-dest-row"></a>gtk_tree_view_get_drag_dest_row ()</h3>
-<a class="indexterm" name="id3305149"></a><pre class="programlisting">void                gtk_tree_view_get_drag_dest_row     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3329900"></a><pre class="programlisting">void                gtk_tree_view_get_drag_dest_row     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> **path,
                                                          <a href="GtkTreeView.html#GtkTreeViewDropPosition">GtkTreeViewDropPosition</a> *pos);</pre>
 <p>
@@ -3780,9 +3808,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305272"></a><h3>
+<a name="id3330024"></a><h3>
 <a name="gtk-tree-view-get-dest-row-at-pos"></a>gtk_tree_view_get_dest_row_at_pos ()</h3>
-<a class="indexterm" name="id3305287"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3330039"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_dest_row_at_pos   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
@@ -3841,9 +3869,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305478"></a><h3>
+<a name="id3330230"></a><h3>
 <a name="gtk-tree-view-create-row-drag-icon"></a>gtk_tree_view_create_row_drag_icon ()</h3>
-<a class="indexterm" name="id3305492"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3330244"></a><pre class="programlisting"><a
 href="../gdk/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"
 >GdkPixmap</a>*          gtk_tree_view_create_row_drag_icon  (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path);</pre>
@@ -3878,9 +3906,9 @@ This image is used for a drag icon.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305610"></a><h3>
+<a name="id3330362"></a><h3>
 <a name="gtk-tree-view-set-enable-search"></a>gtk_tree_view_set_enable_search ()</h3>
-<a class="indexterm" name="id3305624"></a><pre class="programlisting">void                gtk_tree_view_set_enable_search     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3330375"></a><pre class="programlisting">void                gtk_tree_view_set_enable_search     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> enable_search);</pre>
@@ -3916,9 +3944,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305737"></a><h3>
+<a name="id3330489"></a><h3>
 <a name="gtk-tree-view-get-enable-search"></a>gtk_tree_view_get_enable_search ()</h3>
-<a class="indexterm" name="id3305750"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3330502"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_enable_search     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -3945,9 +3973,9 @@ by typing in text.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305820"></a><h3>
+<a name="id3330572"></a><h3>
 <a name="gtk-tree-view-get-search-column"></a>gtk_tree_view_get_search_column ()</h3>
-<a class="indexterm" name="id3305834"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3330586"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_tree_view_get_search_column     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -3973,9 +4001,9 @@ Gets the column searched on by the interactive search code.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3305904"></a><h3>
+<a name="id3330656"></a><h3>
 <a name="gtk-tree-view-set-search-column"></a>gtk_tree_view_set_search_column ()</h3>
-<a class="indexterm" name="id3305918"></a><pre class="programlisting">void                gtk_tree_view_set_search_column     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3330670"></a><pre class="programlisting">void                gtk_tree_view_set_search_column     (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> column);</pre>
@@ -4011,9 +4039,9 @@ Note that <em class="parameter"><code>column</code></em> refers to a column of t
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306022"></a><h3>
+<a name="id3330774"></a><h3>
 <a name="gtk-tree-view-get-search-equal-func"></a>gtk_tree_view_get_search_equal_func ()</h3>
-<a class="indexterm" name="id3306036"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewSearchEqualFunc">GtkTreeViewSearchEqualFunc</a> gtk_tree_view_get_search_equal_func
+<a class="indexterm" name="id3330788"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewSearchEqualFunc">GtkTreeViewSearchEqualFunc</a> gtk_tree_view_get_search_equal_func
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Returns the compare function currently in use.</p>
@@ -4038,9 +4066,9 @@ Returns the compare function currently in use.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306107"></a><h3>
+<a name="id3330859"></a><h3>
 <a name="gtk-tree-view-set-search-equal-func"></a>gtk_tree_view_set_search_equal_func ()</h3>
-<a class="indexterm" name="id3306121"></a><pre class="programlisting">void                gtk_tree_view_set_search_equal_func (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3330873"></a><pre class="programlisting">void                gtk_tree_view_set_search_equal_func (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeView.html#GtkTreeViewSearchEqualFunc">GtkTreeViewSearchEqualFunc</a> search_equal_func,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -4087,9 +4115,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306310"></a><h3>
+<a name="id3331062"></a><h3>
 <a name="gtk-tree-view-get-search-entry"></a>gtk_tree_view_get_search_entry ()</h3>
-<a class="indexterm" name="id3306326"></a><pre class="programlisting"><a href="GtkEntry.html" title="GtkEntry">GtkEntry</a>*           gtk_tree_view_get_search_entry      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3331078"></a><pre class="programlisting"><a href="GtkEntry.html" title="GtkEntry">GtkEntry</a>*           gtk_tree_view_get_search_entry      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Returns the GtkEntry which is currently in use as interactive search
 entry for <em class="parameter"><code>tree_view</code></em>.  In case the built-in entry is being used, <a
@@ -4120,9 +4148,9 @@ will be returned.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306420"></a><h3>
+<a name="id3331172"></a><h3>
 <a name="gtk-tree-view-set-search-entry"></a>gtk_tree_view_set_search_entry ()</h3>
-<a class="indexterm" name="id3306436"></a><pre class="programlisting">void                gtk_tree_view_set_search_entry      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3331188"></a><pre class="programlisting">void                gtk_tree_view_set_search_entry      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry);</pre>
 <p>
 Sets the entry which the interactive search code will use for this
@@ -4157,9 +4185,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306565"></a><h3>
+<a name="id3331317"></a><h3>
 <a name="GtkTreeViewSearchPositionFunc"></a>GtkTreeViewSearchPositionFunc ()</h3>
-<a class="indexterm" name="id3306579"></a><pre class="programlisting">void                (*GtkTreeViewSearchPositionFunc)    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3331331"></a><pre class="programlisting">void                (*GtkTreeViewSearchPositionFunc)    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *search_dialog,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -4192,9 +4220,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306668"></a><h3>
+<a name="id3331420"></a><h3>
 <a name="gtk-tree-view-get-search-position-func"></a>gtk_tree_view_get_search_position_func ()</h3>
-<a class="indexterm" name="id3306684"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewSearchPositionFunc">GtkTreeViewSearchPositionFunc</a> gtk_tree_view_get_search_position_func
+<a class="indexterm" name="id3331436"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewSearchPositionFunc">GtkTreeViewSearchPositionFunc</a> gtk_tree_view_get_search_position_func
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Returns the positioning function currently in use.</p>
@@ -4222,9 +4250,9 @@ Returns the positioning function currently in use.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306763"></a><h3>
+<a name="id3331515"></a><h3>
 <a name="gtk-tree-view-set-search-position-func"></a>gtk_tree_view_set_search_position_func ()</h3>
-<a class="indexterm" name="id3306779"></a><pre class="programlisting">void                gtk_tree_view_set_search_position_func
+<a class="indexterm" name="id3331531"></a><pre class="programlisting">void                gtk_tree_view_set_search_position_func
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeView.html#GtkTreeViewSearchPositionFunc">GtkTreeViewSearchPositionFunc</a> func,
                                                          <a
@@ -4275,9 +4303,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3306957"></a><h3>
+<a name="id3331709"></a><h3>
 <a name="gtk-tree-view-get-fixed-height-mode"></a>gtk_tree_view_get_fixed_height_mode ()</h3>
-<a class="indexterm" name="id3306973"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3331725"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_fixed_height_mode (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -4308,9 +4336,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3307070"></a><h3>
+<a name="id3331822"></a><h3>
 <a name="gtk-tree-view-set-fixed-height-mode"></a>gtk_tree_view_set_fixed_height_mode ()</h3>
-<a class="indexterm" name="id3307086"></a><pre class="programlisting">void                gtk_tree_view_set_fixed_height_mode (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3331838"></a><pre class="programlisting">void                gtk_tree_view_set_fixed_height_mode (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> enable);</pre>
@@ -4345,9 +4373,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3307210"></a><h3>
+<a name="id3331962"></a><h3>
 <a name="gtk-tree-view-get-hover-selection"></a>gtk_tree_view_get_hover_selection ()</h3>
-<a class="indexterm" name="id3307227"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3331979"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_hover_selection   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -4378,9 +4406,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3307324"></a><h3>
+<a name="id3332076"></a><h3>
 <a name="gtk-tree-view-set-hover-selection"></a>gtk_tree_view_set_hover_selection ()</h3>
-<a class="indexterm" name="id3307341"></a><pre class="programlisting">void                gtk_tree_view_set_hover_selection   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3332093"></a><pre class="programlisting">void                gtk_tree_view_set_hover_selection   (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> hover);</pre>
@@ -4414,9 +4442,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3307467"></a><h3>
+<a name="id3332219"></a><h3>
 <a name="gtk-tree-view-get-hover-expand"></a>gtk_tree_view_get_hover_expand ()</h3>
-<a class="indexterm" name="id3307483"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3332235"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_hover_expand      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -4447,9 +4475,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3307581"></a><h3>
+<a name="id3332333"></a><h3>
 <a name="gtk-tree-view-set-hover-expand"></a>gtk_tree_view_set_hover_expand ()</h3>
-<a class="indexterm" name="id3307597"></a><pre class="programlisting">void                gtk_tree_view_set_hover_expand      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3332349"></a><pre class="programlisting">void                gtk_tree_view_set_hover_expand      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> expand);</pre>
@@ -4482,9 +4510,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3307701"></a><h3>
+<a name="id3332453"></a><h3>
 <a name="GtkTreeDestroyCountFunc"></a>GtkTreeDestroyCountFunc ()</h3>
-<a class="indexterm" name="id3307714"></a><pre class="programlisting">void                (*GtkTreeDestroyCountFunc)          (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3332466"></a><pre class="programlisting">void                (*GtkTreeDestroyCountFunc)          (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -4525,9 +4553,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3307824"></a><h3>
+<a name="id3332576"></a><h3>
 <a name="gtk-tree-view-set-destroy-count-func"></a>gtk_tree_view_set_destroy_count_func ()</h3>
-<a class="indexterm" name="id3307839"></a><pre class="programlisting">void                gtk_tree_view_set_destroy_count_func
+<a class="indexterm" name="id3332590"></a><pre class="programlisting">void                gtk_tree_view_set_destroy_count_func
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeView.html#GtkTreeDestroyCountFunc">GtkTreeDestroyCountFunc</a> func,
                                                          <a
@@ -4575,9 +4603,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308010"></a><h3>
+<a name="id3332762"></a><h3>
 <a name="GtkTreeViewRowSeparatorFunc"></a>GtkTreeViewRowSeparatorFunc ()</h3>
-<a class="indexterm" name="id3308024"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3332776"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            (*GtkTreeViewRowSeparatorFunc)      (<a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *model,
                                                          <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
@@ -4623,9 +4651,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308173"></a><h3>
+<a name="id3332925"></a><h3>
 <a name="gtk-tree-view-get-row-separator-func"></a>gtk_tree_view_get_row_separator_func ()</h3>
-<a class="indexterm" name="id3308189"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewRowSeparatorFunc">GtkTreeViewRowSeparatorFunc</a> gtk_tree_view_get_row_separator_func
+<a class="indexterm" name="id3332941"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewRowSeparatorFunc">GtkTreeViewRowSeparatorFunc</a> gtk_tree_view_get_row_separator_func
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Returns the current row separator function.</p>
@@ -4653,9 +4681,9 @@ Returns the current row separator function.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308267"></a><h3>
+<a name="id3333019"></a><h3>
 <a name="gtk-tree-view-set-row-separator-func"></a>gtk_tree_view_set_row_separator_func ()</h3>
-<a class="indexterm" name="id3308283"></a><pre class="programlisting">void                gtk_tree_view_set_row_separator_func
+<a class="indexterm" name="id3333035"></a><pre class="programlisting">void                gtk_tree_view_set_row_separator_func
                                                         (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeView.html#GtkTreeViewRowSeparatorFunc">GtkTreeViewRowSeparatorFunc</a> func,
                                                          <a
@@ -4705,9 +4733,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308469"></a><h3>
+<a name="id3333221"></a><h3>
 <a name="gtk-tree-view-get-rubber-banding"></a>gtk_tree_view_get_rubber_banding ()</h3>
-<a class="indexterm" name="id3308485"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3333237"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_rubber_banding    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -4740,9 +4768,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308593"></a><h3>
+<a name="id3333345"></a><h3>
 <a name="gtk-tree-view-set-rubber-banding"></a>gtk_tree_view_set_rubber_banding ()</h3>
-<a class="indexterm" name="id3308609"></a><pre class="programlisting">void                gtk_tree_view_set_rubber_banding    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3333361"></a><pre class="programlisting">void                gtk_tree_view_set_rubber_banding    (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> enable);</pre>
@@ -4775,9 +4803,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308722"></a><h3>
+<a name="id3333474"></a><h3>
 <a name="gtk-tree-view-get-enable-tree-lines"></a>gtk_tree_view_get_enable_tree_lines ()</h3>
-<a class="indexterm" name="id3308739"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3333491"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_view_get_enable_tree_lines (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
@@ -4811,9 +4839,9 @@ otherwise.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308847"></a><h3>
+<a name="id3333598"></a><h3>
 <a name="gtk-tree-view-set-enable-tree-lines"></a>gtk_tree_view_set_enable_tree_lines ()</h3>
-<a class="indexterm" name="id3308863"></a><pre class="programlisting">void                gtk_tree_view_set_enable_tree_lines (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3333615"></a><pre class="programlisting">void                gtk_tree_view_set_enable_tree_lines (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> enabled);</pre>
@@ -4847,9 +4875,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3308978"></a><h3>
+<a name="id3333729"></a><h3>
 <a name="GtkTreeViewGridLines"></a>enum GtkTreeViewGridLines</h3>
-<a class="indexterm" name="id3308991"></a><pre class="programlisting">typedef enum {
+<a class="indexterm" name="id3333743"></a><pre class="programlisting">typedef enum {
   GTK_TREE_VIEW_GRID_LINES_NONE,
   GTK_TREE_VIEW_GRID_LINES_HORIZONTAL,
   GTK_TREE_VIEW_GRID_LINES_VERTICAL,
@@ -4862,9 +4890,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309009"></a><h3>
+<a name="id3333761"></a><h3>
 <a name="gtk-tree-view-get-grid-lines"></a>gtk_tree_view_get_grid_lines ()</h3>
-<a class="indexterm" name="id3309025"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewGridLines">GtkTreeViewGridLines</a> gtk_tree_view_get_grid_lines       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
+<a class="indexterm" name="id3333777"></a><pre class="programlisting"><a href="GtkTreeView.html#GtkTreeViewGridLines">GtkTreeViewGridLines</a> gtk_tree_view_get_grid_lines       (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
 Returns which grid lines are enabled in <em class="parameter"><code>tree_view</code></em>.</p>
 <p>
@@ -4892,9 +4920,9 @@ are enabled.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309116"></a><h3>
+<a name="id3333868"></a><h3>
 <a name="gtk-tree-view-set-grid-lines"></a>gtk_tree_view_set_grid_lines ()</h3>
-<a class="indexterm" name="id3309132"></a><pre class="programlisting">void                gtk_tree_view_set_grid_lines        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3333884"></a><pre class="programlisting">void                gtk_tree_view_set_grid_lines        (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                          <a href="GtkTreeView.html#GtkTreeViewGridLines">GtkTreeViewGridLines</a> grid_lines);</pre>
 <p>
 Sets which grid lines to draw in <em class="parameter"><code>tree_view</code></em>.</p>
@@ -4922,19 +4950,19 @@ enable.
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3309236"></a><h2>Property Details</h2>
+<a name="id3333988"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3309246"></a><h3>
+<a name="id3333998"></a><h3>
 <a name="GtkTreeView--enable-grid-lines"></a>The :<code class="literal">enable-grid-lines</code> property</h3>
-<a class="indexterm" name="id3309263"></a><pre class="programlisting">  enable-grid-lines        <a href="GtkTreeView.html#GtkTreeViewGridLines">GtkTreeViewGridLines</a>  : Read / Write</pre>
+<a class="indexterm" name="id3334015"></a><pre class="programlisting">  enable-grid-lines        <a href="GtkTreeView.html#GtkTreeViewGridLines">GtkTreeViewGridLines</a>  : Read / Write</pre>
 <p>Whether grid lines should be drawn in the tree view.</p>
 <p>Default value: GTK_TREE_VIEW_GRID_LINES_NONE</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309291"></a><h3>
+<a name="id3334043"></a><h3>
 <a name="GtkTreeView--enable-search"></a>The :<code class="literal">enable-search</code> property</h3>
-<a class="indexterm" name="id3309307"></a><pre class="programlisting">  enable-search            <a
+<a class="indexterm" name="id3334059"></a><pre class="programlisting">  enable-search            <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>View allows user to search through columns interactively.</p>
@@ -4942,9 +4970,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309334"></a><h3>
+<a name="id3334086"></a><h3>
 <a name="GtkTreeView--enable-tree-lines"></a>The :<code class="literal">enable-tree-lines</code> property</h3>
-<a class="indexterm" name="id3309351"></a><pre class="programlisting">  enable-tree-lines        <a
+<a class="indexterm" name="id3334102"></a><pre class="programlisting">  enable-tree-lines        <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Whether tree lines should be drawn in the tree view.</p>
@@ -4952,16 +4980,16 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309378"></a><h3>
+<a name="id3334129"></a><h3>
 <a name="GtkTreeView--expander-column"></a>The :<code class="literal">expander-column</code> property</h3>
-<a class="indexterm" name="id3309394"></a><pre class="programlisting">  expander-column          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a>     : Read / Write</pre>
+<a class="indexterm" name="id3334146"></a><pre class="programlisting">  expander-column          <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a>     : Read / Write</pre>
 <p>Set the column for the expander column.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309418"></a><h3>
+<a name="id3334170"></a><h3>
 <a name="GtkTreeView--fixed-height-mode"></a>The :<code class="literal">fixed-height-mode</code> property</h3>
-<a class="indexterm" name="id3309434"></a><pre class="programlisting">  fixed-height-mode        <a
+<a class="indexterm" name="id3334186"></a><pre class="programlisting">  fixed-height-mode        <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -4981,16 +5009,16 @@ information on this option.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309503"></a><h3>
+<a name="id3334254"></a><h3>
 <a name="GtkTreeView--hadjustment"></a>The :<code class="literal">hadjustment</code> property</h3>
-<a class="indexterm" name="id3309519"></a><pre class="programlisting">  hadjustment              <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>         : Read / Write</pre>
+<a class="indexterm" name="id3334271"></a><pre class="programlisting">  hadjustment              <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>         : Read / Write</pre>
 <p>Horizontal Adjustment for the widget.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309542"></a><h3>
+<a name="id3334294"></a><h3>
 <a name="GtkTreeView--headers-clickable"></a>The :<code class="literal">headers-clickable</code> property</h3>
-<a class="indexterm" name="id3309558"></a><pre class="programlisting">  headers-clickable        <a
+<a class="indexterm" name="id3334310"></a><pre class="programlisting">  headers-clickable        <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Column headers respond to click events.</p>
@@ -4998,9 +5026,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309585"></a><h3>
+<a name="id3334337"></a><h3>
 <a name="GtkTreeView--headers-visible"></a>The :<code class="literal">headers-visible</code> property</h3>
-<a class="indexterm" name="id3309601"></a><pre class="programlisting">  headers-visible          <a
+<a class="indexterm" name="id3334353"></a><pre class="programlisting">  headers-visible          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Show the column header buttons.</p>
@@ -5008,9 +5036,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309627"></a><h3>
+<a name="id3334379"></a><h3>
 <a name="GtkTreeView--hover-expand"></a>The :<code class="literal">hover-expand</code> property</h3>
-<a class="indexterm" name="id3309644"></a><pre class="programlisting">  hover-expand             <a
+<a class="indexterm" name="id3334396"></a><pre class="programlisting">  hover-expand             <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -5030,9 +5058,9 @@ in <a href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309707"></a><h3>
+<a name="id3334459"></a><h3>
 <a name="GtkTreeView--hover-selection"></a>The :<code class="literal">hover-selection</code> property</h3>
-<a class="indexterm" name="id3309724"></a><pre class="programlisting">  hover-selection          <a
+<a class="indexterm" name="id3334476"></a><pre class="programlisting">  hover-selection          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -5053,9 +5081,9 @@ in <a href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309809"></a><h3>
+<a name="id3334561"></a><h3>
 <a name="GtkTreeView--level-indentation"></a>The :<code class="literal">level-indentation</code> property</h3>
-<a class="indexterm" name="id3309826"></a><pre class="programlisting">  level-indentation        <a
+<a class="indexterm" name="id3334578"></a><pre class="programlisting">  level-indentation        <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write</pre>
 <p>
@@ -5070,16 +5098,16 @@ Extra indentation for each level.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309865"></a><h3>
+<a name="id3334617"></a><h3>
 <a name="GtkTreeView--model"></a>The :<code class="literal">model</code> property</h3>
-<a class="indexterm" name="id3309881"></a><pre class="programlisting">  model                    <a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a>          : Read / Write</pre>
+<a class="indexterm" name="id3334633"></a><pre class="programlisting">  model                    <a href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a>          : Read / Write</pre>
 <p>The model for the tree view.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309904"></a><h3>
+<a name="id3334656"></a><h3>
 <a name="GtkTreeView--reorderable"></a>The :<code class="literal">reorderable</code> property</h3>
-<a class="indexterm" name="id3309921"></a><pre class="programlisting">  reorderable              <a
+<a class="indexterm" name="id3334672"></a><pre class="programlisting">  reorderable              <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>View is reorderable.</p>
@@ -5087,9 +5115,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309947"></a><h3>
+<a name="id3334699"></a><h3>
 <a name="GtkTreeView--rubber-banding"></a>The :<code class="literal">rubber-banding</code> property</h3>
-<a class="indexterm" name="id3309963"></a><pre class="programlisting">  rubber-banding           <a
+<a class="indexterm" name="id3334715"></a><pre class="programlisting">  rubber-banding           <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Whether to enable selection of multiple items by dragging the mouse pointer.</p>
@@ -5097,9 +5125,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3309991"></a><h3>
+<a name="id3334743"></a><h3>
 <a name="GtkTreeView--rules-hint"></a>The :<code class="literal">rules-hint</code> property</h3>
-<a class="indexterm" name="id3310006"></a><pre class="programlisting">  rules-hint               <a
+<a class="indexterm" name="id3334758"></a><pre class="programlisting">  rules-hint               <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Set a hint to the theme engine to draw rows in alternating colors.</p>
@@ -5107,9 +5135,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310034"></a><h3>
+<a name="id3334785"></a><h3>
 <a name="GtkTreeView--search-column"></a>The :<code class="literal">search-column</code> property</h3>
-<a class="indexterm" name="id3310050"></a><pre class="programlisting">  search-column            <a
+<a class="indexterm" name="id3334802"></a><pre class="programlisting">  search-column            <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write</pre>
 <p>Model column to search through when searching through code.</p>
@@ -5118,9 +5146,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310081"></a><h3>
+<a name="id3334832"></a><h3>
 <a name="GtkTreeView--show-expanders"></a>The :<code class="literal">show-expanders</code> property</h3>
-<a class="indexterm" name="id3310097"></a><pre class="programlisting">  show-expanders           <a
+<a class="indexterm" name="id3334849"></a><pre class="programlisting">  show-expanders           <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -5136,18 +5164,18 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310142"></a><h3>
+<a name="id3334894"></a><h3>
 <a name="GtkTreeView--vadjustment"></a>The :<code class="literal">vadjustment</code> property</h3>
-<a class="indexterm" name="id3310159"></a><pre class="programlisting">  vadjustment              <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>         : Read / Write</pre>
+<a class="indexterm" name="id3334910"></a><pre class="programlisting">  vadjustment              <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>         : Read / Write</pre>
 <p>Vertical Adjustment for the widget.</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3310183"></a><h2>Style Property Details</h2>
+<a name="id3334935"></a><h2>Style Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3310194"></a><h3>
+<a name="id3334946"></a><h3>
 <a name="GtkTreeView--allow-rules"></a>The :<code class="literal">allow-rules</code> style property</h3>
-<a class="indexterm" name="id3310210"></a><pre class="programlisting">  allow-rules              <a
+<a class="indexterm" name="id3334962"></a><pre class="programlisting">  allow-rules              <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read</pre>
 <p>Allow drawing of alternating color rows.</p>
@@ -5155,18 +5183,18 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310236"></a><h3>
+<a name="id3334988"></a><h3>
 <a name="GtkTreeView--even-row-color"></a>The :<code class="literal">even-row-color</code> style property</h3>
-<a class="indexterm" name="id3310252"></a><pre class="programlisting">  even-row-color           <a
+<a class="indexterm" name="id3335004"></a><pre class="programlisting">  even-row-color           <a
 href="../gdk/gdk-Colormaps-and-Colors.html#GdkColor"
 >GdkColor</a>              : Read</pre>
 <p>Color to use for even rows.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310275"></a><h3>
+<a name="id3335026"></a><h3>
 <a name="GtkTreeView--expander-size"></a>The :<code class="literal">expander-size</code> style property</h3>
-<a class="indexterm" name="id3310291"></a><pre class="programlisting">  expander-size            <a
+<a class="indexterm" name="id3335043"></a><pre class="programlisting">  expander-size            <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Size of the expander arrow.</p>
@@ -5175,9 +5203,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310321"></a><h3>
+<a name="id3335073"></a><h3>
 <a name="GtkTreeView--grid-line-pattern"></a>The :<code class="literal">grid-line-pattern</code> style property</h3>
-<a class="indexterm" name="id3310338"></a><pre class="programlisting">  grid-line-pattern        <a
+<a class="indexterm" name="id3335089"></a><pre class="programlisting">  grid-line-pattern        <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
 >gchararray</a>            : Read</pre>
 <p>Dash pattern used to draw the tree view grid lines.</p>
@@ -5185,9 +5213,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Stand
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310364"></a><h3>
+<a name="id3335116"></a><h3>
 <a name="GtkTreeView--grid-line-width"></a>The :<code class="literal">grid-line-width</code> style property</h3>
-<a class="indexterm" name="id3310381"></a><pre class="programlisting">  grid-line-width          <a
+<a class="indexterm" name="id3335133"></a><pre class="programlisting">  grid-line-width          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Width, in pixels, of the tree view grid lines.</p>
@@ -5196,9 +5224,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310412"></a><h3>
+<a name="id3335164"></a><h3>
 <a name="GtkTreeView--horizontal-separator"></a>The :<code class="literal">horizontal-separator</code> style property</h3>
-<a class="indexterm" name="id3310428"></a><pre class="programlisting">  horizontal-separator     <a
+<a class="indexterm" name="id3335180"></a><pre class="programlisting">  horizontal-separator     <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Horizontal space between cells.  Must be an even number.</p>
@@ -5207,9 +5235,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310459"></a><h3>
+<a name="id3335211"></a><h3>
 <a name="GtkTreeView--indent-expanders"></a>The :<code class="literal">indent-expanders</code> style property</h3>
-<a class="indexterm" name="id3310475"></a><pre class="programlisting">  indent-expanders         <a
+<a class="indexterm" name="id3335227"></a><pre class="programlisting">  indent-expanders         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read</pre>
 <p>Make the expanders indented.</p>
@@ -5217,18 +5245,18 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310502"></a><h3>
+<a name="id3335253"></a><h3>
 <a name="GtkTreeView--odd-row-color"></a>The :<code class="literal">odd-row-color</code> style property</h3>
-<a class="indexterm" name="id3310518"></a><pre class="programlisting">  odd-row-color            <a
+<a class="indexterm" name="id3335270"></a><pre class="programlisting">  odd-row-color            <a
 href="../gdk/gdk-Colormaps-and-Colors.html#GdkColor"
 >GdkColor</a>              : Read</pre>
 <p>Color to use for odd rows.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310541"></a><h3>
+<a name="id3335292"></a><h3>
 <a name="GtkTreeView--row-ending-details"></a>The :<code class="literal">row-ending-details</code> style property</h3>
-<a class="indexterm" name="id3310558"></a><pre class="programlisting">  row-ending-details       <a
+<a class="indexterm" name="id3335309"></a><pre class="programlisting">  row-ending-details       <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read</pre>
 <p>Enable extended row background theming.</p>
@@ -5236,9 +5264,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310584"></a><h3>
+<a name="id3335336"></a><h3>
 <a name="GtkTreeView--tree-line-pattern"></a>The :<code class="literal">tree-line-pattern</code> style property</h3>
-<a class="indexterm" name="id3310601"></a><pre class="programlisting">  tree-line-pattern        <a
+<a class="indexterm" name="id3335353"></a><pre class="programlisting">  tree-line-pattern        <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
 >gchararray</a>            : Read</pre>
 <p>Dash pattern used to draw the tree view lines.</p>
@@ -5246,9 +5274,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Stand
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310628"></a><h3>
+<a name="id3335379"></a><h3>
 <a name="GtkTreeView--tree-line-width"></a>The :<code class="literal">tree-line-width</code> style property</h3>
-<a class="indexterm" name="id3310644"></a><pre class="programlisting">  tree-line-width          <a
+<a class="indexterm" name="id3335396"></a><pre class="programlisting">  tree-line-width          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Width, in pixels, of the tree view lines.</p>
@@ -5257,9 +5285,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310675"></a><h3>
+<a name="id3335427"></a><h3>
 <a name="GtkTreeView--vertical-separator"></a>The :<code class="literal">vertical-separator</code> style property</h3>
-<a class="indexterm" name="id3310691"></a><pre class="programlisting">  vertical-separator       <a
+<a class="indexterm" name="id3335443"></a><pre class="programlisting">  vertical-separator       <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Vertical space between cells.  Must be an even number.</p>
@@ -5268,11 +5296,11 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3310723"></a><h2>Signal Details</h2>
+<a name="id3335474"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3310733"></a><h3>
+<a name="id3335485"></a><h3>
 <a name="GtkTreeView-columns-changed"></a>The <code class="literal">::columns-changed</code> signal</h3>
-<a class="indexterm" name="id3310749"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3335501"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>     user_data)      : Run Last</pre>
@@ -5298,9 +5326,9 @@ The number of columns of the treeview has changed.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310823"></a><h3>
+<a name="id3335575"></a><h3>
 <a name="GtkTreeView-cursor-changed"></a>The <code class="literal">::cursor-changed</code> signal</h3>
-<a class="indexterm" name="id3310839"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3335590"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>     user_data)      : Run Last</pre>
@@ -5326,9 +5354,9 @@ The position of the cursor (focused cell) has changed.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3310911"></a><h3>
+<a name="id3335663"></a><h3>
 <a name="GtkTreeView-expand-collapse-cursor-row"></a>The <code class="literal">::expand-collapse-cursor-row</code> signal</h3>
-<a class="indexterm" name="id3310929"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3335681"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *treeview,
                                                         <a
@@ -5384,9 +5412,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311071"></a><h3>
+<a name="id3335823"></a><h3>
 <a name="GtkTreeView-move-cursor"></a>The <code class="literal">::move-cursor</code> signal</h3>
-<a class="indexterm" name="id3311087"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3335839"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a>    *treeview,
                                                         <a href="gtk-Standard-Enumerations.html#GtkMovementStep">GtkMovementStep</a> arg1,
@@ -5432,9 +5460,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311209"></a><h3>
+<a name="id3335961"></a><h3>
 <a name="GtkTreeView-row-activated"></a>The <code class="literal">::row-activated</code> signal</h3>
-<a class="indexterm" name="id3311225"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a>       *tree_view,
+<a class="indexterm" name="id3335977"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a>       *tree_view,
                                                         <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a>       *path,
                                                         <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">GtkTreeViewColumn</a> *column,
                                                         <a
@@ -5480,9 +5508,9 @@ widget conceptual overview</a> as well as <a href="GtkTreeSelection.html" title=
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311392"></a><h3>
+<a name="id3336144"></a><h3>
 <a name="GtkTreeView-row-collapsed"></a>The <code class="literal">::row-collapsed</code> signal</h3>
-<a class="indexterm" name="id3311409"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3336160"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                         <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                         <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                         <a
@@ -5520,9 +5548,9 @@ The given row has been collapsed (child nodes are hidden).</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311526"></a><h3>
+<a name="id3336277"></a><h3>
 <a name="GtkTreeView-row-expanded"></a>The <code class="literal">::row-expanded</code> signal</h3>
-<a class="indexterm" name="id3311541"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
+<a class="indexterm" name="id3336293"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                         <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
                                                         <a href="GtkTreeModel.html#GtkTreePath">GtkTreePath</a> *path,
                                                         <a
@@ -5560,9 +5588,9 @@ The given row has been expanded (child nodes are shown).</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311658"></a><h3>
+<a name="id3336410"></a><h3>
 <a name="GtkTreeView-select-all"></a>The <code class="literal">::select-all</code> signal</h3>
-<a class="indexterm" name="id3311674"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3336426"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *treeview,
                                                         <a
@@ -5594,9 +5622,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311753"></a><h3>
+<a name="id3336504"></a><h3>
 <a name="GtkTreeView-select-cursor-parent"></a>The <code class="literal">::select-cursor-parent</code> signal</h3>
-<a class="indexterm" name="id3311770"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3336521"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *treeview,
                                                         <a
@@ -5628,9 +5656,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311848"></a><h3>
+<a name="id3336600"></a><h3>
 <a name="GtkTreeView-select-cursor-row"></a>The <code class="literal">::select-cursor-row</code> signal</h3>
-<a class="indexterm" name="id3311865"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3336617"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *treeview,
                                                         <a
@@ -5670,9 +5698,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3311965"></a><h3>
+<a name="id3336717"></a><h3>
 <a name="GtkTreeView-set-scroll-adjustments"></a>The <code class="literal">::set-scroll-adjustments</code> signal</h3>
-<a class="indexterm" name="id3311982"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a>   *treeview,
+<a class="indexterm" name="id3336734"></a><pre class="programlisting">void                user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a>   *treeview,
                                                         <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *arg1,
                                                         <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *arg2,
                                                         <a
@@ -5709,9 +5737,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3312094"></a><h3>
+<a name="id3336846"></a><h3>
 <a name="GtkTreeView-start-interactive-search"></a>The <code class="literal">::start-interactive-search</code> signal</h3>
-<a class="indexterm" name="id3312111"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3336863"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *treeview,
                                                         <a
@@ -5743,9 +5771,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3312190"></a><h3>
+<a name="id3336941"></a><h3>
 <a name="GtkTreeView-test-collapse-row"></a>The <code class="literal">::test-collapse-row</code> signal</h3>
-<a class="indexterm" name="id3312206"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3336958"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                         <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
@@ -5795,9 +5823,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3312355"></a><h3>
+<a name="id3337107"></a><h3>
 <a name="GtkTreeView-test-expand-row"></a>The <code class="literal">::test-expand-row</code> signal</h3>
-<a class="indexterm" name="id3312371"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3337123"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view,
                                                         <a href="GtkTreeModel.html#GtkTreeIter">GtkTreeIter</a> *iter,
@@ -5847,9 +5875,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3312520"></a><h3>
+<a name="id3337272"></a><h3>
 <a name="GtkTreeView-toggle-cursor-row"></a>The <code class="literal">::toggle-cursor-row</code> signal</h3>
-<a class="indexterm" name="id3312536"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3337288"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *treeview,
                                                         <a
@@ -5881,9 +5909,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3312615"></a><h3>
+<a name="id3337367"></a><h3>
 <a name="GtkTreeView-unselect-all"></a>The <code class="literal">::unselect-all</code> signal</h3>
-<a class="indexterm" name="id3312631"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3337383"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *treeview,
                                                         <a
@@ -5915,7 +5943,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3312712"></a><h2>See Also</h2>
+<a name="id3337464"></a><h2>See Also</h2>
 <p>
 <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn"><span class="type">GtkTreeViewColumn</span></a>, <a href="GtkTreeSelection.html" title="GtkTreeSelection"><span class="type">GtkTreeSelection</span></a>, <span class="type">GtkTreeDnd</span>, <span class="type">GtkTreeMode</span>, <a href="GtkTreeSortable.html" title="GtkTreeSortable"><span class="type">GtkTreeSortable</span></a>, <a href="GtkTreeModelSort.html" title="GtkTreeModelSort"><span class="type">GtkTreeModelSort</span></a>, <a href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>, <a href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>, <a href="GtkCellRenderer.html" title="GtkCellRenderer"><span class="type">GtkCellRenderer</span></a>, <a href="GtkCellEditable.html" title="GtkCellEditable"><span class="type">GtkCellEditable</span></a>, <a href="GtkCellRendererPixbuf.html" title="GtkCellRendererPixbuf"><span class="type">GtkCellRendererPixbuf</span></a>, <a href="GtkCellRendererText.html" title="GtkCellRendererText"><span class="type">GtkCellRendererText</span></a>, <a href="GtkCellRendererToggle.html" title="GtkCellRendererToggle"><span class="type">GtkCellRendererToggle</span></a>
 </p>

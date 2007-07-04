@@ -69,6 +69,38 @@ static void get_converted_window_coordinates    (GdkWindow *in_window,
                                                  gint      *out_y);
 static void append_event                        (GdkEvent  *event);
 
+static const gchar *
+which_window_is_this (GdkWindow *window)
+{
+  static gchar buf[256];
+  const gchar *name = NULL;
+  gpointer widget;
+
+  /* Get rid of compiler warning. */
+  if (0) which_window_is_this (window);
+
+  if (window == _gdk_root)
+    name = "root";
+  else if (window == NULL)
+    name = "null";
+
+  if (window)
+    {
+      gdk_window_get_user_data (window, &widget);
+      if (widget)
+        name = G_OBJECT_TYPE_NAME (widget);
+    }
+
+  if (!name)
+    name = "unknown";
+
+  snprintf (buf, 256, "<%s (%p)%s>", 
+            name, window, 
+            window == current_mouse_window ? ", is mouse" : "");
+
+  return buf;
+}
+
 /* A category that exposes the protected carbon event for an NSEvent. */
 @interface NSEvent (GdkQuartzNSEvent)
 - (void *)gdk_quartz_event_ref;
@@ -606,25 +638,17 @@ create_crossing_event (GdkWindow      *window,
   {
     NSWindow *nswindow;
     GdkWindow *toplevel;
+    GdkWindowImplQuartz *impl;
     NSPoint point;
 
     nswindow = [nsevent window];
     point = [nsevent locationInWindow];
 
     toplevel = [(GdkQuartzView *)[nswindow contentView] gdkWindow];
+    impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (toplevel)->impl);
 
     x_tmp = point.x;
-
-    /* Flip the y coordinate. */
-    if (toplevel == _gdk_root)
-      y_tmp = _gdk_quartz_window_get_inverted_screen_y (point.y);
-    else
-      {
-        GdkWindowImplQuartz *impl;
-
-        impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (toplevel)->impl);
-        y_tmp = impl->height - point.y;
-      }
+    y_tmp = impl->height - point.y;
 
     get_converted_window_coordinates (toplevel,
                                       x_tmp, y_tmp,
@@ -731,6 +755,9 @@ synthesize_crossing_events (GdkWindow      *window,
 {
   GdkWindow *intermediate, *tem, *common_ancestor;
 
+  if (window == current_mouse_window)
+    return;
+
   if (gdk_window_is_ancestor (current_mouse_window, window))
     {
       /* Pointer has moved to an inferior window. */
@@ -800,7 +827,7 @@ synthesize_crossing_events (GdkWindow      *window,
        */
       g_warning ("Trying to create crossing event when current_mouse_window is NULL");
     }
-  
+
   _gdk_quartz_events_update_mouse_window (window);
 
   /* FIXME: This does't work when someone calls gdk_window_set_cursor
@@ -986,37 +1013,26 @@ get_converted_window_coordinates (GdkWindow *in_window,
 /* Given a mouse NSEvent (must be a mouse event for a GDK window),
  * finds the subwindow over which the pointer is located. Returns
  * coordinates relative to the found window. If no window is found,
- * returns NULL.
-*/
+ * returns the root window, and root window coordinates.
+ */
 static GdkWindow *
 find_mouse_window_for_ns_event (NSEvent *nsevent,
                                 gint    *x_ret,
                                 gint    *y_ret)
 {
   GdkWindow *event_toplevel;
+  GdkWindowImplQuartz *impl;
   GdkWindow *mouse_toplevel;
   GdkWindow *mouse_window;
   NSPoint point;
   gint x_tmp, y_tmp;
 
   event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
+  impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
   point = [nsevent locationInWindow];
 
   x_tmp = point.x;
-
-  /* Flip the y coordinate. */
-  if (event_toplevel == _gdk_root)
-    y_tmp = _gdk_quartz_window_get_inverted_screen_y (point.y);
-  else
-    {
-      GdkWindowImplQuartz *impl;
-
-      impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
-      y_tmp = impl->height - point.y;
-    }
-
-  if (!current_mouse_window)
-    return NULL;
+  y_tmp = impl->height - point.y;
 
   mouse_toplevel = gdk_window_get_toplevel (current_mouse_window);
 
@@ -1026,19 +1042,24 @@ find_mouse_window_for_ns_event (NSEvent *nsevent,
                                     &x_tmp, &y_tmp);
 
   mouse_window = _gdk_quartz_window_find_child (mouse_toplevel, x_tmp, y_tmp);
-  if (!mouse_window)
+  if (mouse_window && mouse_window != mouse_toplevel)
     {
-      /* This happens for events on the window title and window
-       * buttons (and the desktop).
-       */
-      return NULL;
+      get_child_coordinates_from_ancestor (mouse_toplevel,
+                                           x_tmp, y_tmp,
+                                           mouse_window,
+                                           &x_tmp, &y_tmp);
     }
-
-  if (mouse_window != mouse_toplevel)
-    get_child_coordinates_from_ancestor (mouse_toplevel,
-					 x_tmp, y_tmp,
-					 mouse_window,
-					 &x_tmp, &y_tmp);
+  else if (!mouse_window)
+    {
+      /* This happens for events on the window title buttons and the
+       * desktop, treat those as being on the root window.
+       */
+      get_converted_window_coordinates (mouse_toplevel,
+                                        x_tmp, y_tmp,
+                                        _gdk_root,
+                                        &x_tmp, &y_tmp);
+      mouse_window = _gdk_root;
+    }
 
   *x_ret = x_tmp;
   *y_ret = y_tmp;
@@ -1067,13 +1088,12 @@ synthesize_crossing_events_for_ns_event (NSEvent *nsevent)
     case NSLeftMouseDragged:
     case NSRightMouseDragged:
     case NSOtherMouseDragged:
-      mouse_window = find_mouse_window_for_ns_event (nsevent, &x, &y);
-
-      /* We don't need to handle the case where we don't find a mouse
-       * window (i.e. after leaving a GDK toplevel and not entering a
-       * new one) here, it's covered by NSMouseExited events.
+      /* We only handle moving the pointer to another GDK window.
+       * Leaving to a non-GDK toplevel window (or window title bar or
+       * the desktop) is covered by NSMouseExited events.
        */
-      if (mouse_window && mouse_window != current_mouse_window)
+      mouse_window = find_mouse_window_for_ns_event (nsevent, &x, &y);
+      if (mouse_window != _gdk_root)
         synthesize_crossing_events (mouse_window, GDK_CROSSING_NORMAL, nsevent, x, y);
 
       break;
@@ -1081,34 +1101,27 @@ synthesize_crossing_events_for_ns_event (NSEvent *nsevent)
     case NSMouseEntered:
       {
 	GdkWindow *event_toplevel;
+        GdkWindowImplQuartz *impl;
         NSPoint point;
-
-        event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
-        point = [nsevent locationInWindow];
-
-        x = point.x;
-
-        /* Flip the y coordinate. */
-        if (event_toplevel == _gdk_root)
-          y = _gdk_quartz_window_get_inverted_screen_y (point.y);
-        else
-          {
-            GdkWindowImplQuartz *impl;
-
-            impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
-            y = impl->height - point.y;
-          }
 
         /* This is the only case where we actually use the window from
          * the event since we need to know which toplevel we entered
          * so it can be tracked properly.
          */
+        event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
+        impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
+
+        point = [nsevent locationInWindow];
+
+        x = point.x;
+        y = impl->height - point.y;
+
 	mouse_window = _gdk_quartz_window_find_child (event_toplevel, x, y);
 
-        /* Treat unknown windows (including title bar/buttons,
-         * desktop) as the root.
+        /* Treat unknown windows (like the title bar buttons or
+         * desktop) as the root window.
          */
-        if (!mouse_window) 
+        if (!mouse_window)
           mouse_window = _gdk_root;
 
         if (mouse_window != event_toplevel)
@@ -1117,53 +1130,48 @@ synthesize_crossing_events_for_ns_event (NSEvent *nsevent)
                                             mouse_window,
                                             &x, &y);
 
-	synthesize_crossing_events (mouse_window, GDK_CROSSING_NORMAL, nsevent, x, y);
+        synthesize_crossing_events (mouse_window, GDK_CROSSING_NORMAL, nsevent, x, y);
       }
       break;
 
     case NSMouseExited:
       {
 	GdkWindow *event_toplevel;
+        GdkWindowImplQuartz *impl;
         NSPoint point;
-        gint x_orig, y_orig;
 
-        /* We get mouse exited when leaving toplevels. We only use
-         * this when leaving from a window to the root window. The
-         * other case is handled above by checking the motion/button
-         * events, or getting a MouseEntered for another GDK window.
-         *
-         * The reason we don't use MouseExited for other windows is
-         * that quartz first delivers the entered event and then the
-         * exited which is the opposite from what we need.
+        /* We only use NSMouseExited when leaving to the root
+         * window. The other cases are handled above by checking the
+         * motion/button events, or getting a NSMouseEntered for
+         * another GDK window. The reason we don't use NSMouseExited
+         * for other windows is that quartz first delivers the entered
+         * event and then the exited which is the opposite from what
+         * we need.
          */
-
         event_toplevel = [(GdkQuartzView *)[[nsevent window] contentView] gdkWindow];
+        impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
         point = [nsevent locationInWindow];
 
         x = point.x;
+        y = impl->height - point.y;
 
-        /* Flip the y coordinate. */
-        if (event_toplevel == _gdk_root)
-          y = _gdk_quartz_window_get_inverted_screen_y (point.y);
-        else
-          {
-            GdkWindowImplQuartz *impl;
+        x += GDK_WINDOW_OBJECT (event_toplevel)->x;
+        y += GDK_WINDOW_OBJECT (event_toplevel)->y;
 
-            impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (event_toplevel)->impl);
-            y = impl->height - point.y;
-          }
-
-        if (gdk_window_get_origin (event_toplevel, &x_orig, &y_orig))
-          {
-            x += x_orig;
-            y += y_orig;
-          }
-
-        /* Check if the root window has a child at this position, if
-         * so ignore the event since it means we didn't exit to the
-         * root.
+        /* If there is a window other than the root window at this
+         * position, it means we didn't exit to the root window and we
+         * ignore the event.
+         *
+         * FIXME: This is not enough, it doesn't catch the case where
+         * we leave a GDK window to a non-GDK window that has GDK
+         * windows below it.
          */
         mouse_window = _gdk_quartz_window_find_child (_gdk_root, x, y);
+
+        if (gdk_window_get_toplevel (mouse_window) == 
+            gdk_window_get_toplevel (current_mouse_window))
+          mouse_window = _gdk_root;
+
         if (mouse_window == _gdk_root)
           synthesize_crossing_events (_gdk_root, GDK_CROSSING_NORMAL, nsevent, x, y);
       }
@@ -1533,7 +1541,9 @@ gdk_event_translate (NSEvent *nsevent)
   /* Special-case menu shortcut events. We create command events for
    * those and forward to the corresponding menu.
    */
-  if ([nsevent type] == NSKeyDown)
+  if ((!_gdk_quartz_keyboard_grab_window ||
+       (_gdk_quartz_keyboard_grab_window && keyboard_grab_owner_events)) &&
+      [nsevent type] == NSKeyDown)
     {
       EventRef event_ref;
       MenuRef menu_ref;

@@ -43,6 +43,7 @@
                                                          <link linkend="guint">guint</link> **keyvals,
                                                          <link linkend="gint">gint</link> *n_entries);
 <link linkend="PangoDirection">PangoDirection</link>      <link linkend="gdk-keymap-get-direction">gdk_keymap_get_direction</link>            (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);
+<link linkend="gboolean">gboolean</link>            <link linkend="gdk-keymap-have-bidi-layouts">gdk_keymap_have_bidi_layouts</link>        (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);
 
 <link linkend="gchar">gchar</link>*              <link linkend="gdk-keyval-name">gdk_keyval_name</link>                     (<link linkend="guint">guint</link> keyval);
 <link linkend="guint">guint</link>               <link linkend="gdk-keyval-from-name">gdk_keyval_from_name</link>                (const <link linkend="gchar">gchar</link> *keyval_name);
@@ -428,17 +429,40 @@ keyboard group and level. See <link linkend="gdk-keymap-translate-keyboard-state
 <title><anchor id="gdk-keymap-get-direction" role="function"/>gdk_keymap_get_direction ()</title>
 <indexterm><primary>gdk_keymap_get_direction</primary></indexterm><programlisting><link linkend="PangoDirection">PangoDirection</link>      gdk_keymap_get_direction            (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
 <para>
+</para>
+<para>
 Returns the direction of the keymap. 
 </para><variablelist role="params">
 <varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap.
-Returns: <link linkend="PANGO-DIRECTION-LTR:CAPS"><literal>PANGO_DIRECTION_LTR</literal></link> or <link linkend="PANGO-DIRECTION-RTL:CAPS"><literal>PANGO_DIRECTION_RTL</literal></link>.
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the direction of the keymap.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the direction of effective layout of the keymap.
 
-
+<parameter>Returns</parameter>: <link linkend="PANGO-DIRECTION-LTR:CAPS"><literal>PANGO_DIRECTION_LTR</literal></link> or <link linkend="PANGO-DIRECTION-RTL:CAPS"><literal>PANGO_DIRECTION_RTL</literal></link> if determines the
+direction.  <link linkend="PANGO-DIRECTION-NEUTRAL:CAPS"><literal>PANGO_DIRECTION_NEUTRAL</literal></link> otherwise.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2>
+<title><anchor id="gdk-keymap-have-bidi-layouts" role="function" condition="since:2.12"/>gdk_keymap_have_bidi_layouts ()</title>
+<indexterm role="2.12"><primary>gdk_keymap_have_bidi_layouts</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_have_bidi_layouts        (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
+<para>
+Determines if keyboard layouts for both right-to-left and left-to-right
+languages are in use.
+</para>
+<para>
+<parameter>Returns</parameter>: <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if there are layouts in both directions, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gdk-keyval-name" role="function"/>gdk_keyval_name ()</title>
 <indexterm><primary>gdk_keyval_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gdk_keyval_name                     (<link linkend="guint">guint</link> keyval);</programlisting>

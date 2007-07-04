@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,16 +67,16 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-Standard-Enumerations.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2829860" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id2854369" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id2830411" class="shortcut">Description</a></nobr></td></tr>
+                  <a href="#id2854920" class="shortcut">Description</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gtk-Bindings"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id2829860"></a><span class="refentrytitle">Bindings</span>
+<a name="id2854369"></a><span class="refentrytitle">Bindings</span>
 </h2>
 <p>Bindings &#8212; Key bindings for individual widgets</p>
 </td>
@@ -189,7 +190,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2830411"></a><h2>Description</h2>
+<a name="id2854920"></a><h2>Description</h2>
 <p>
 GtkBinding provides a mechanism for configuring Gtk+ key bindings through RC files.
 This eases key binding adjustments for application developers as well as users and
@@ -197,7 +198,7 @@ provides Gtk+ users or administrators with high key binding configurability whic
 requires no application or toolkit side changes.
 </p>
 <div class="refsect2" lang="en">
-<a name="id2830429"></a><a name="gtk-bindings-install"></a><h3>Installing a key binding</h3>
+<a name="id2854938"></a><a name="gtk-bindings-install"></a><h3>Installing a key binding</h3>
 <p>
 A resource file binding consists of a 'binding' definition and a match statement to
 apply the binding to specific widget types. Details on the matching mechanism are
@@ -282,11 +283,11 @@ is now possible.
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2830634"></a><h2>Details</h2>
+<a name="id2855143"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id2830645"></a><h3>
+<a name="id2855154"></a><h3>
 <a name="GtkBindingSet"></a>GtkBindingSet</h3>
-<a class="indexterm" name="id2830658"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2855166"></a><pre class="programlisting">typedef struct {
   gchar			*set_name;
   gint			 priority;
   GSList		*widget_path_pspecs;
@@ -365,9 +366,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2830857"></a><h3>
+<a name="id2855366"></a><h3>
 <a name="GtkBindingEntry"></a>GtkBindingEntry</h3>
-<a class="indexterm" name="id2830869"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2855378"></a><pre class="programlisting">typedef struct {
   /* key portion
    */
   guint			 keyval;
@@ -449,9 +450,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831091"></a><h3>
+<a name="id2855600"></a><h3>
 <a name="GtkBindingSignal"></a>GtkBindingSignal</h3>
-<a class="indexterm" name="id2831104"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2855613"></a><pre class="programlisting">typedef struct {
   GtkBindingSignal	*next;
   gchar 		*signal_name;
   guint			 n_args;
@@ -495,9 +496,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831219"></a><h3>
+<a name="id2855728"></a><h3>
 <a name="GtkBindingArg"></a>GtkBindingArg</h3>
-<a class="indexterm" name="id2831232"></a><pre class="programlisting">typedef struct {
+<a class="indexterm" name="id2855741"></a><pre class="programlisting">typedef struct {
   GType		 arg_type;
   union {
     glong	 long_data;
@@ -524,9 +525,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831292"></a><h3>
+<a name="id2855801"></a><h3>
 <a name="gtk-binding-entry-add"></a>gtk_binding_entry_add</h3>
-<a class="indexterm" name="id2831308"></a><pre class="programlisting">#define	 gtk_binding_entry_add		gtk_binding_entry_clear
+<a class="indexterm" name="id2855817"></a><pre class="programlisting">#define	 gtk_binding_entry_add		gtk_binding_entry_clear
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -538,9 +539,9 @@ Deprecated.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831337"></a><h3>
+<a name="id2855846"></a><h3>
 <a name="gtk-binding-entry-add-signall"></a>gtk_binding_entry_add_signall ()</h3>
-<a class="indexterm" name="id2831353"></a><pre class="programlisting">void                gtk_binding_entry_add_signall       (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2855862"></a><pre class="programlisting">void                gtk_binding_entry_add_signall       (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> keyval,
@@ -595,9 +596,9 @@ Deprecated.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831513"></a><h3>
+<a name="id2856022"></a><h3>
 <a name="gtk-binding-entry-clear"></a>gtk_binding_entry_clear ()</h3>
-<a class="indexterm" name="id2831529"></a><pre class="programlisting">void                gtk_binding_entry_clear             (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2856038"></a><pre class="programlisting">void                gtk_binding_entry_clear             (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> keyval,
@@ -636,9 +637,9 @@ Use of this function is deprecated.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831636"></a><h3>
+<a name="id2856144"></a><h3>
 <a name="gtk-binding-parse-binding"></a>gtk_binding_parse_binding ()</h3>
-<a class="indexterm" name="id2831652"></a><pre class="programlisting"><a
+<a class="indexterm" name="id2856161"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               gtk_binding_parse_binding           (<a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Lexical-Scanner.html#GScanner"
@@ -670,9 +671,9 @@ Deprecated as public API, used only internally.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831736"></a><h3>
+<a name="id2856245"></a><h3>
 <a name="gtk-binding-set-new"></a>gtk_binding_set_new ()</h3>
-<a class="indexterm" name="id2831750"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_new                 (const <a
+<a class="indexterm" name="id2856259"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_new                 (const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *set_name);</pre>
 <p>
@@ -699,9 +700,9 @@ a unique name which needs to be specified upon creation.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831813"></a><h3>
+<a name="id2856322"></a><h3>
 <a name="gtk-binding-set-by-class"></a>gtk_binding_set_by_class ()</h3>
-<a class="indexterm" name="id2831826"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_by_class            (<a
+<a class="indexterm" name="id2856335"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_by_class            (<a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> object_class);</pre>
 <p>
@@ -729,9 +730,9 @@ demand by this function.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2831904"></a><h3>
+<a name="id2856412"></a><h3>
 <a name="gtk-binding-set-find"></a>gtk_binding_set_find ()</h3>
-<a class="indexterm" name="id2831917"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_find                (const <a
+<a class="indexterm" name="id2856426"></a><pre class="programlisting"><a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a>*      gtk_binding_set_find                (const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *set_name);</pre>
 <p>
@@ -761,9 +762,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2832018"></a><h3>
+<a name="id2856527"></a><h3>
 <a name="gtk-bindings-activate"></a>gtk_bindings_activate ()</h3>
-<a class="indexterm" name="id2832031"></a><pre class="programlisting"><a
+<a class="indexterm" name="id2856540"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_bindings_activate               (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
@@ -808,9 +809,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2832165"></a><h3>
+<a name="id2856674"></a><h3>
 <a name="gtk-bindings-activate-event"></a>gtk_bindings_activate_event ()</h3>
-<a class="indexterm" name="id2832179"></a><pre class="programlisting"><a
+<a class="indexterm" name="id2856688"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_bindings_activate_event         (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
@@ -849,9 +850,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2832299"></a><h3>
+<a name="id2856808"></a><h3>
 <a name="gtk-binding-set-activate"></a>gtk_binding_set_activate ()</h3>
-<a class="indexterm" name="id2832313"></a><pre class="programlisting"><a
+<a class="indexterm" name="id2856822"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_binding_set_activate            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          <a
@@ -902,9 +903,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2832481"></a><h3>
+<a name="id2856990"></a><h3>
 <a name="gtk-binding-entry-add-signal"></a>gtk_binding_entry_add_signal ()</h3>
-<a class="indexterm" name="id2832494"></a><pre class="programlisting">void                gtk_binding_entry_add_signal        (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2857003"></a><pre class="programlisting">void                gtk_binding_entry_add_signal        (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> keyval,
@@ -967,9 +968,9 @@ arguments.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2832704"></a><h3>
+<a name="id2857213"></a><h3>
 <a name="gtk-binding-entry-skip"></a>gtk_binding_entry_skip ()</h3>
-<a class="indexterm" name="id2832723"></a><pre class="programlisting">void                gtk_binding_entry_skip              (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2857232"></a><pre class="programlisting">void                gtk_binding_entry_skip              (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> keyval,
@@ -1010,9 +1011,9 @@ to be activated.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2832832"></a><h3>
+<a name="id2857341"></a><h3>
 <a name="gtk-binding-entry-remove"></a>gtk_binding_entry_remove ()</h3>
-<a class="indexterm" name="id2832845"></a><pre class="programlisting">void                gtk_binding_entry_remove            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2857354"></a><pre class="programlisting">void                gtk_binding_entry_remove            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> keyval,
@@ -1048,9 +1049,9 @@ Remove a binding previously installed via
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2832964"></a><h3>
+<a name="id2857473"></a><h3>
 <a name="gtk-binding-set-add-path"></a>gtk_binding_set_add_path ()</h3>
-<a class="indexterm" name="id2832978"></a><pre class="programlisting">void                gtk_binding_set_add_path            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
+<a class="indexterm" name="id2857487"></a><pre class="programlisting">void                gtk_binding_set_add_path            (<a href="gtk-Bindings.html#GtkBindingSet">GtkBindingSet</a> *binding_set,
                                                          <a href="gtk-Standard-Enumerations.html#GtkPathType">GtkPathType</a> path_type,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1090,7 +1091,7 @@ assign match patterns to <a href="gtk-Bindings.html#GtkBindingSet"><span class="
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id2833106"></a><h2>See Also</h2>
+<a name="id2857615"></a><h2>See Also</h2>
 <p>
 </p>
 <div class="variablelist"><table border="0">

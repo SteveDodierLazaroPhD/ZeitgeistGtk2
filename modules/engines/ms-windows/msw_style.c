@@ -68,6 +68,7 @@ typedef enum
     CHECK_LIGHT,
     CHECK_MID,
     CHECK_TEXT,
+    CHECK_INCONSISTENT,
     RADIO_BASE,
     RADIO_BLACK,
     RADIO_DARK,
@@ -113,6 +114,10 @@ static const guint8 check_text_bits[] = {
     0xd8, 0x01, 0xf8,
     0x00, 0x70, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+static const char check_inconsistent_bits[] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x03, 0xf0,
+    0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
 static const guint8 radio_base_bits[] = {
     0x00, 0x00, 0x00, 0x00, 0xf0, 0x01, 0xf8, 0x03, 0xfc, 0x07, 0xfc, 0x07,
     0xfc, 0x07, 0xfc,
@@ -157,6 +162,7 @@ static struct
     {check_light_bits, NULL},
     {check_mid_bits, NULL},
     {check_text_bits, NULL},
+    {check_inconsistent_bits, NULL},
     {radio_base_bits, NULL},
     {radio_black_bits, NULL},
     {radio_dark_bits, NULL},
@@ -1118,10 +1124,23 @@ draw_check (GtkStyle * style,
 	}
     else
 	{
-	    if (!xp_theme_draw (window, shadow == GTK_SHADOW_IN
-				? XP_THEME_ELEMENT_PRESSED_CHECKBOX
-				: XP_THEME_ELEMENT_CHECKBOX,
-				style, x, y, width, height, state, area))
+	  XpThemeElement theme_elt = XP_THEME_ELEMENT_CHECKBOX;
+	  switch (shadow)
+	    {
+	    case GTK_SHADOW_ETCHED_IN:
+	      theme_elt = XP_THEME_ELEMENT_INCONSISTENT_CHECKBOX;
+	      break;
+
+	    case GTK_SHADOW_IN:
+	      theme_elt = XP_THEME_ELEMENT_PRESSED_CHECKBOX;
+	      break;
+
+	    default:
+	      break;
+	    }
+
+	  if (!xp_theme_draw (window, theme_elt,
+			      style, x, y, width, height, state, area))
 		{
                     if( detail && !strcmp(detail, "cellcheck") )
                         state = GTK_STATE_NORMAL;
@@ -1144,6 +1163,11 @@ draw_check (GtkStyle * style,
 			    draw_part (window, style->text_aa_gc[state], area,
 				       x, y, CHECK_AA);
 			}
+		    else if (shadow == GTK_SHADOW_ETCHED_IN)
+		      {
+			draw_part (window, style->text_gc[state], area, x, y, CHECK_INCONSISTENT);
+			draw_part (window, style->text_aa_gc[state], area, x, y, CHECK_AA);
+		      }
 		}
 	}
 }
@@ -2528,6 +2552,25 @@ draw_themed_tab_button (GtkStyle *style,
       g_object_unref (pixbuf);
       pixbuf = rotated;
 
+      // XXX - This is really hacky and evil.  When we're drawing the left-most tab
+      //       while it is active on a bottom-oriented notebook, there is one white
+      //       pixel at the top.  There may be a better solution than this if someone
+      //       has time to discover it.
+      if (gap_side == GTK_POS_BOTTOM && state_type == GTK_STATE_NORMAL && x == widget->allocation.x)
+	{
+	  int rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+	  int n_channels = gdk_pixbuf_get_n_channels (pixbuf);
+	  int psub = 0;
+
+	  guchar *pixels = gdk_pixbuf_get_pixels (pixbuf);
+	  guchar *p = pixels + rowstride;
+
+	  for (psub = 0; psub < n_channels; psub++)
+	    {
+	      pixels[psub] = p[psub];
+	    }
+	}
+
       gdk_draw_pixbuf (window, NULL, pixbuf, 0, 0, clip_rect.x, clip_rect.y,
                        clip_rect.width, clip_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
       g_object_unref (pixbuf);
@@ -2818,6 +2861,9 @@ draw_shadow (GtkStyle * style,
 
     if ( is_toolbar || is_handlebox )
 				{
+        if( shadow_type == GTK_SHADOW_NONE )
+	    return;
+
         if( widget ) {
             HDC dc;
             RECT rect;

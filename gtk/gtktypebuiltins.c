@@ -55,6 +55,8 @@ gtk_builder_error_get_type (void)
       { GTK_BUILDER_ERROR_MISSING_ATTRIBUTE, "GTK_BUILDER_ERROR_MISSING_ATTRIBUTE", "missing-attribute" },
       { GTK_BUILDER_ERROR_INVALID_ATTRIBUTE, "GTK_BUILDER_ERROR_INVALID_ATTRIBUTE", "invalid-attribute" },
       { GTK_BUILDER_ERROR_INVALID_TAG, "GTK_BUILDER_ERROR_INVALID_TAG", "invalid-tag" },
+      { GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE, "GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE", "missing-property-value" },
+      { GTK_BUILDER_ERROR_INVALID_VALUE, "GTK_BUILDER_ERROR_INVALID_VALUE", "invalid-value" },
       { 0, NULL, NULL }
     };
     etype = g_enum_register_static (g_intern_static_string ("GtkBuilderError"), values);

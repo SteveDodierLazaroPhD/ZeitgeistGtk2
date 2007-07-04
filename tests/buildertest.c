@@ -22,6 +22,7 @@
 #include <string.h>
 #include <libintl.h>
 #include <locale.h>
+#include <math.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -50,31 +51,44 @@ gboolean test_parser (void)
   error = NULL;
   gtk_builder_add_from_string (builder, "<xxx/>", -1, &error);
   g_assert (error != NULL);
-  g_return_val_if_fail (strcmp (error->message, "Invalid root element: 'xxx'") == 0, FALSE);
-  g_error_free (error);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_UNHANDLED_TAG, FALSE);
+    g_error_free (error);
   
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface invalid=\"X\"/>", -1, &error);
   g_assert (error != NULL);
-  g_return_val_if_fail (strcmp (error->message, "<input>:1:24 'X' is not a valid attribute of <interface>") == 0, FALSE);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_ATTRIBUTE, FALSE);
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface><child/></interface>", -1, &error);
   g_assert (error != NULL);
-  g_return_val_if_fail (strcmp (error->message, "<input>:1:19 'child' is not a valid tag here, expected a 'object' tag") == 0, FALSE);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_TAG, FALSE);
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface><object class=\"GtkVBox\" id=\"a\"><object class=\"GtkHBox\" id=\"b\"/></object></interface>", -1, &error);
   g_assert (error != NULL);
-  g_return_val_if_fail (strcmp (error->message, "<input>:1:74 'object' is not a valid tag here") == 0, FALSE);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_TAG, FALSE);
   g_error_free (error);
 
+  error = NULL;
+  gtk_builder_add_from_string (builder, "<interface><object class=\"GtkWindow\" id=\"a\"><property name=\"type\"/></object></interface>", -1, &error);
+  g_assert (error != NULL);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE, FALSE);
+  g_error_free (error);
+
+  g_object_unref (builder);
+  
   return TRUE;
 }
 
-  int normal;
+int normal;
 int after;
 int object;
 int object_after;
@@ -193,7 +207,7 @@ gboolean test_connect_signals (void)
   g_return_val_if_fail (after == 1, FALSE);
   g_return_val_if_fail (object == 1, FALSE);
   g_return_val_if_fail (object_after == 1, FALSE);
-  
+  gtk_widget_destroy (GTK_WIDGET (window));
   g_object_unref (builder);
   
   builder = builder_new_from_string (buffer_order, -1, NULL);
@@ -203,6 +217,8 @@ gboolean test_connect_signals (void)
   gtk_window_set_title (GTK_WINDOW (window), "test");
   g_assert (normal == 20);
 
+  gtk_widget_destroy (GTK_WIDGET (window));
+
   gtk_builder_add_from_string (builder, buffer_extra,
 			       strlen (buffer_extra), NULL);
   gtk_builder_add_from_string (builder, buffer_extra2,
@@ -211,10 +227,13 @@ gboolean test_connect_signals (void)
   window = gtk_builder_get_object (builder, "window2");
   gtk_window_set_title (GTK_WINDOW (window), "test");
   g_assert (normal == 30);
+
+  gtk_widget_destroy (GTK_WIDGET (window));
   window = gtk_builder_get_object (builder, "window3");
   gtk_window_set_title (GTK_WINDOW (window), "test");
   g_assert (normal == 40);
-
+  gtk_widget_destroy (GTK_WIDGET (window));
+  
   g_object_unref (builder);
 
   return TRUE;
@@ -223,7 +242,7 @@ gboolean test_connect_signals (void)
 gboolean test_uimanager_simple (void)
 {
   GtkBuilder *builder;
-  GObject *uimgr, *menubar;
+  GObject *window, *uimgr, *menubar;
   GObject *menu, *label;
   GList *children;
   const gchar buffer[] =
@@ -262,7 +281,6 @@ gboolean test_uimanager_simple (void)
   uimgr = gtk_builder_get_object (builder, "uimgr1");
   g_return_val_if_fail (uimgr != NULL, FALSE);
   g_return_val_if_fail (GTK_IS_UI_MANAGER (uimgr), FALSE);
-
   g_object_unref (builder);
   
   builder = builder_new_from_string (buffer2, -1, NULL);
@@ -283,7 +301,9 @@ gboolean test_uimanager_simple (void)
   g_return_val_if_fail (GTK_IS_LABEL (label), FALSE);
   g_return_val_if_fail
     (strcmp (gtk_label_get_text (GTK_LABEL (label)), "File") == 0, FALSE);
-  
+
+  window = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window));
   g_object_unref (builder);
   
   return TRUE;
@@ -336,7 +356,7 @@ gboolean test_translation (void)
     "    </child>"
     "  </object>"
     "</interface>";
-  GtkLabel *label;
+  GtkLabel *window, *label;
 
   setlocale (LC_ALL, "sv_SE");
   textdomain ("builder");
@@ -345,6 +365,9 @@ gboolean test_translation (void)
   builder = builder_new_from_string (buffer, -1, NULL);
   label = GTK_LABEL (gtk_builder_get_object (builder, "label"));
   g_assert (strcmp (gtk_label_get_text (label), "Arkiv") == 0);
+
+  window = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window));
   g_object_unref (builder);
   
   return TRUE;
@@ -439,8 +462,16 @@ gboolean test_sizegroup (void)
   widgets = gtk_size_group_get_widgets (GTK_SIZE_GROUP (sizegroup));
   g_return_val_if_fail (g_slist_length (widgets) == 2, FALSE);
   g_slist_free (widgets);
+
+#if 0
+  {
+    GObject *window;
+    window = gtk_builder_get_object (builder, "window1");
+    gtk_widget_destroy (GTK_WIDGET (window));
+  }
+#endif  
   g_object_unref (builder);
-  
+
   return TRUE;
 }
 
@@ -607,11 +638,39 @@ gboolean test_types (void)
     "  <object class=\"GtkWindow\" id=\"window\"/>"
     "  <object class=\"GtkUIManager\" id=\"uimanager\"/>"
     "</interface>";
+  const gchar buffer2[] = 
+    "<interface>"
+    "  <object type-func=\"gtk_window_get_type\" id=\"window\"/>"
+    "</interface>";
+  const gchar buffer3[] = 
+    "<interface>"
+    "  <object type-func=\"xxx_invalid_get_type_function\" id=\"window\"/>"
+    "</interface>";
   GtkBuilder *builder;
+  GObject *window;
+  GError *error;
 
   builder = builder_new_from_string (buffer, -1, NULL);
+  gtk_widget_destroy (GTK_WIDGET (gtk_builder_get_object (builder, "dialog")));
+  gtk_widget_destroy (GTK_WIDGET (gtk_builder_get_object (builder, "window")));
+  g_object_unref (builder);
+
+  builder = builder_new_from_string (buffer2, -1, NULL);
+  window = gtk_builder_get_object (builder, "window");
+  g_assert (window != NULL);
+  g_assert (GTK_IS_WINDOW (window));
+  gtk_widget_destroy (GTK_WIDGET (window));
   g_object_unref (builder);
   
+  error = NULL;
+  builder = gtk_builder_new ();
+  gtk_builder_add_from_string (builder, buffer3, -1, &error);
+  g_assert (error != NULL);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION, FALSE);
+  g_error_free (error);
+  g_object_unref (builder);
+
   return TRUE;
 }
 
@@ -741,6 +800,8 @@ gboolean test_construct_only_property (void)
   widget = gtk_builder_get_object (builder, "window1");
   g_object_get (widget, "type", &type, NULL);
   g_return_val_if_fail (type == GTK_WINDOW_POPUP, FALSE);
+
+  gtk_widget_destroy (GTK_WIDGET (widget));
   g_object_unref (builder);
 
   builder = builder_new_from_string (buffer2, -1, NULL);
@@ -748,6 +809,42 @@ gboolean test_construct_only_property (void)
   g_return_val_if_fail (textbuffer != NULL, FALSE);
   g_object_get (textbuffer, "tag-table", &tagtable, NULL);
   g_return_val_if_fail (tagtable == gtk_builder_get_object (builder, "tagtable1"), FALSE);
+  g_object_unref (tagtable);
+  g_object_unref (builder);
+
+  return TRUE;
+}
+
+gboolean test_object_properties (void)
+{
+  GtkBuilder *builder;
+  const gchar buffer[] =
+    "<interface>"
+    "  <object class=\"GtkWindow\" id=\"window1\">"
+    "    <child>"
+    "      <object class=\"GtkVBox\" id=\"vbox\">"
+    "        <property name=\"border-width\">10</property>"
+    "        <child>"
+    "          <object class=\"GtkLabel\" id=\"label1\">"
+    "            <property name=\"mnemonic-widget\">spinbutton1</property>"
+    "          </object>"
+    "        </child>"
+    "        <child>"
+    "          <object class=\"GtkSpinButton\" id=\"spinbutton1\"/>"
+    "        </child>"
+    "      </object>"
+    "    </child>"
+    "  </object>"
+    "</interface>";
+  GObject *label, *spinbutton;
+  
+  builder = builder_new_from_string (buffer, -1, NULL);
+  label = gtk_builder_get_object (builder, "label1");
+  g_return_val_if_fail (label != NULL, FALSE);
+  spinbutton = gtk_builder_get_object (builder, "spinbutton1");
+  g_return_val_if_fail (spinbutton != NULL, FALSE);
+  g_return_val_if_fail (spinbutton == (GObject*)gtk_label_get_mnemonic_widget (GTK_LABEL (label)), FALSE);
+  
   g_object_unref (builder);
 
   return TRUE;
@@ -795,6 +892,8 @@ gboolean test_children (void)
   g_return_val_if_fail (button != NULL, FALSE);
   g_return_val_if_fail (GTK_IS_BUTTON (button), FALSE);
   g_return_val_if_fail (strcmp (GTK_WIDGET (GTK_WIDGET (button)->parent)->name, "window1") == 0, FALSE);
+
+  gtk_widget_destroy (GTK_WIDGET (window));
   g_object_unref (builder);
   
   builder = builder_new_from_string (buffer2, -1, NULL);
@@ -823,6 +922,7 @@ gboolean test_children (void)
   g_return_val_if_fail (GTK_WIDGET (GTK_DIALOG (dialog)->action_area)->name != NULL, FALSE);
   g_return_val_if_fail (strcmp (GTK_WIDGET (GTK_DIALOG (dialog)->action_area)->name,
 				"dialog1-action_area") == 0, FALSE);
+  gtk_widget_destroy (GTK_WIDGET (dialog));
   g_object_unref (builder);
   
   return TRUE;
@@ -927,7 +1027,7 @@ gboolean test_treeview_column (void)
     "  </child>"
     "</object>"
     "</interface>";
-  GObject *treeview;
+  GObject *window, *treeview;
   GtkTreeViewColumn *column;
   GList *renderers;
   GObject *renderer;
@@ -963,6 +1063,9 @@ gboolean test_treeview_column (void)
   g_free (text);
 
   gtk_widget_unrealize (GTK_WIDGET (treeview));
+
+  window = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window));
   
   g_object_unref (builder);
   return TRUE;
@@ -1001,8 +1104,7 @@ gboolean test_icon_view (void)
     "    </child>"
     "  </object>"
     "</interface>";
-  GObject *iconview;
-  GObject *renderer;
+  GObject *window, *iconview, *renderer;
   gchar *text;
   
   builder = builder_new_from_string (buffer, -1, NULL);
@@ -1018,6 +1120,8 @@ gboolean test_icon_view (void)
   g_return_val_if_fail (strcmp (text, "test") == 0, FALSE);
   g_free (text);
     
+  window = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window));
   g_object_unref (builder);
   return TRUE;
 }
@@ -1064,8 +1168,7 @@ gboolean test_combo_box (void)
     "    </child>"
     "  </object>"
     "</interface>";
-  GObject *combobox;
-  GObject *renderer;
+  GObject *window, *combobox, *renderer;
   gchar *text;
 
   builder = builder_new_from_string (buffer, -1, NULL);
@@ -1086,6 +1189,9 @@ gboolean test_combo_box (void)
   g_assert (text);
   g_return_val_if_fail (strcmp (text, "2") == 0, FALSE);
   g_free (text);
+
+  window = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window));
 
   g_object_unref (builder);
   return TRUE;
@@ -1133,8 +1239,7 @@ gboolean test_combo_box_entry (void)
     "    </child>"
     "  </object>"
     "</interface>";
-  GObject *combobox;
-  GObject *renderer;
+  GObject *window, *combobox, *renderer;
   gchar *text;
 
   builder = builder_new_from_string (buffer, -1, NULL);
@@ -1154,6 +1259,9 @@ gboolean test_combo_box_entry (void)
   g_assert (text);
   g_return_val_if_fail (strcmp (text, "2") == 0, FALSE);
   g_free (text);
+
+  window = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window));
 
   g_object_unref (builder);
   return TRUE;
@@ -1177,33 +1285,34 @@ gboolean test_cell_view (void)
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "    <child>"
     "      <object class=\"GtkCellView\" id=\"cellview1\">"
-    "   <property name=\"visible\">True</property>"
-    "   <property name=\"model\">liststore1</property>"
-    "   <child>"
-    "     <object class=\"GtkCellRendererText\" id=\"renderer1\"/>"
-    "     <attributes>"
-    "       <attribute name=\"text\">0</attribute>"
-    "     </attributes>"
-    "   </child>"
+    "        <property name=\"visible\">True</property>"
+    "        <property name=\"model\">liststore1</property>"
+    "        <child>"
+    "          <object class=\"GtkCellRendererText\" id=\"renderer1\"/>"
+    "          <attributes>"
+    "            <attribute name=\"text\">0</attribute>"
+    "          </attributes>"
+    "        </child>"
     "      </object>"
     "    </child>"
     "  </object>"
     "</interface>";
   GObject *cellview;
-  GObject *model;
+  GObject *model, *window;
   GtkTreePath *path;
   GList *renderers;
   GObject *renderer;
   gchar *text;
   
   builder = builder_new_from_string (buffer, -1, NULL);
-  g_assert (builder);
   cellview = gtk_builder_get_object (builder, "cellview1");
+  g_assert (builder);
   g_assert (cellview);
   g_return_val_if_fail (GTK_IS_CELL_VIEW (cellview), FALSE);
   g_object_get (cellview, "model", &model, NULL);
   g_assert (model);
   g_return_val_if_fail (GTK_IS_TREE_MODEL (model), FALSE);
+  g_object_unref (model);
   path = gtk_tree_path_new_first ();
   gtk_cell_view_set_displayed_row (GTK_CELL_VIEW (cellview), path);
   
@@ -1220,6 +1329,10 @@ gboolean test_cell_view (void)
   g_return_val_if_fail (strcmp (text, "test") == 0, FALSE);
   g_free (text);
   gtk_tree_path_free (path);
+
+  window = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window));
+  
   g_object_unref (builder);
   return TRUE;
 }
@@ -1266,6 +1379,7 @@ gboolean test_dialog (void)
                         (GTK_DIALOG (dialog1),
                          GTK_WIDGET (button_cancel)) == -5, FALSE);
   
+  gtk_widget_destroy (GTK_WIDGET (dialog1));
   g_object_unref (builder);
   
   return TRUE;
@@ -1309,6 +1423,7 @@ gboolean test_accelerators (void)
   accel_group = g_slist_nth_data (accel_groups, 0);
   g_assert (accel_group);
 
+  gtk_widget_destroy (GTK_WIDGET (window1));
   g_object_unref (builder);
 
   builder = builder_new_from_string (buffer2, -1, NULL);
@@ -1321,6 +1436,7 @@ gboolean test_accelerators (void)
   accel_group = g_slist_nth_data (accel_groups, 0);
   g_assert (accel_group);
 
+  gtk_widget_destroy (GTK_WIDGET (window1));
   g_object_unref (builder);
   return TRUE;
 }
@@ -1350,7 +1466,7 @@ gboolean test_widget (void)
     "  </object>"
    "</interface>";
   GtkBuilder *builder;
-  GObject *button1;
+  GObject *window1, *button1;
   
   builder = builder_new_from_string (buffer, -1, NULL);
   button1 = gtk_builder_get_object (builder, "button1");
@@ -1358,6 +1474,9 @@ gboolean test_widget (void)
 #if 0
   g_return_val_if_fail (GTK_WIDGET_HAS_FOCUS (GTK_WIDGET (button1)), FALSE);
 #endif
+  window1 = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window1));
+  
   g_object_unref (builder);
   
   builder = builder_new_from_string (buffer2, -1, NULL);
@@ -1365,7 +1484,211 @@ gboolean test_widget (void)
 
   g_return_val_if_fail (GTK_WIDGET_RECEIVES_DEFAULT (GTK_WIDGET (button1)), FALSE);
   
+  window1 = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window1));
   g_object_unref (builder);
+  return TRUE;
+}
+
+static gboolean
+test_value_from_string (void)
+{
+  GValue value = { 0 };
+  GError *error = NULL;
+  GtkBuilder *builder;
+
+  builder = gtk_builder_new ();
+  
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_STRING, "test", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_STRING (&value), FALSE);
+  g_return_val_if_fail (strcmp (g_value_get_string (&value), "test") == 0, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "true", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_BOOLEAN (&value), FALSE);
+  g_return_val_if_fail (g_value_get_boolean (&value) == TRUE, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "false", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_BOOLEAN (&value), FALSE);
+  g_return_val_if_fail (g_value_get_boolean (&value) == FALSE, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "yes", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_BOOLEAN (&value), FALSE);
+  g_return_val_if_fail (g_value_get_boolean (&value) == TRUE, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "no", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_BOOLEAN (&value), FALSE);
+  g_return_val_if_fail (g_value_get_boolean (&value) == FALSE, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "0", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_BOOLEAN (&value), FALSE);
+  g_return_val_if_fail (g_value_get_boolean (&value) == FALSE, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "1", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_BOOLEAN (&value), FALSE);
+  g_return_val_if_fail (g_value_get_boolean (&value) == TRUE, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "tRuE", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_BOOLEAN (&value), FALSE);
+  g_return_val_if_fail (g_value_get_boolean (&value) == TRUE, FALSE);
+  g_value_unset (&value);
+  
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "blaurgh", &value, &error) == FALSE, FALSE);
+  g_return_val_if_fail (error != NULL, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "yess", &value, &error) == FALSE, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+  
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "trueee", &value, &error) == FALSE, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+  
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "", &value, &error) == FALSE, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+  
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_INT, "12345", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_INT (&value), FALSE);
+  g_return_val_if_fail (g_value_get_int (&value) == 12345, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_LONG, "9912345", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_LONG (&value), FALSE);
+  g_return_val_if_fail (g_value_get_long (&value) == 9912345, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_UINT, "2345", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_UINT (&value), FALSE);
+  g_return_val_if_fail (g_value_get_uint (&value) == 2345, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_FLOAT, "1.454", &value, &error), FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_FLOAT (&value), FALSE);
+  g_return_val_if_fail (fabs (g_value_get_float (&value) - 1.454) < 0.00001, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_FLOAT, "abc", &value, &error) == FALSE, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, G_TYPE_INT, "/-+,abc", &value, &error) == FALSE, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, GTK_TYPE_WINDOW_TYPE, "toplevel", &value, &error) == TRUE, FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_ENUM (&value), FALSE);
+  g_return_val_if_fail (g_value_get_enum (&value) == GTK_WINDOW_TOPLEVEL, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, GTK_TYPE_WINDOW_TYPE, "sliff", &value, &error) == FALSE, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+  
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, GTK_TYPE_WIDGET_FLAGS, "mapped", &value, &error) == TRUE, FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_FLAGS (&value), FALSE);
+  g_return_val_if_fail (g_value_get_flags (&value) == GTK_MAPPED, FALSE);
+  g_value_unset (&value);
+
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, GTK_TYPE_WIDGET_FLAGS, "GTK_VISIBLE | GTK_REALIZED", &value, &error) == TRUE, FALSE);
+  g_return_val_if_fail (G_VALUE_HOLDS_FLAGS (&value), FALSE);
+  g_return_val_if_fail (g_value_get_flags (&value) == (GTK_VISIBLE | GTK_REALIZED), FALSE);
+  g_value_unset (&value);
+  
+  g_return_val_if_fail (gtk_builder_value_from_string_type (builder, GTK_TYPE_WINDOW_TYPE, "foobar", &value, &error) == FALSE, FALSE);
+  g_value_unset (&value);
+  g_return_val_if_fail (error->domain == GTK_BUILDER_ERROR, FALSE);
+  g_return_val_if_fail (error->code == GTK_BUILDER_ERROR_INVALID_VALUE, FALSE);
+  g_error_free (error);
+  error = NULL;
+  
+  g_object_unref (builder);
+  
+  return TRUE;
+}
+
+gboolean model_freed = FALSE;
+
+static void model_weakref (gpointer data, GObject *model)
+{
+  model_freed = TRUE;
+}
+
+static gboolean
+test_reference_counting (void)
+{
+  GtkBuilder *builder;
+  const gchar buffer1[] =
+    "<interface>"
+    "  <object class=\"GtkListStore\" id=\"liststore1\"/>"
+    "  <object class=\"GtkListStore\" id=\"liststore2\"/>"
+    "  <object class=\"GtkWindow\" id=\"window1\">"
+    "    <child>"
+    "      <object class=\"GtkTreeView\" id=\"treeview1\">"
+    "        <property name=\"model\">liststore1</property>"
+    "      </object>"
+    "    </child>"
+    "  </object>"
+    "</interface>";
+  const gchar buffer2[] =
+    "<interface>"
+    "  <object class=\"GtkVBox\" id=\"vbox1\">"
+    "    <child>"
+    "      <object class=\"GtkLabel\" id=\"label1\"/>"
+    "      <packing>"
+    "        <property name=\"pack-type\">start</property>"
+    "      </packing>"
+    "    </child>"
+    "  </object>"
+    "</interface>";
+  GObject *window, *treeview, *model;
+  
+  builder = builder_new_from_string (buffer1, -1, NULL);
+  window = gtk_builder_get_object (builder, "window1");
+  treeview = gtk_builder_get_object (builder, "treeview1");
+  model = gtk_builder_get_object (builder, "liststore1");
+  g_object_unref (builder);
+
+  g_object_weak_ref (model, (GWeakNotify)model_weakref, NULL);
+
+  g_assert (model_freed == FALSE);
+  gtk_tree_view_set_model (GTK_TREE_VIEW (treeview), NULL);
+  g_assert (model_freed == TRUE);
+  
+  gtk_widget_destroy (GTK_WIDGET (window));
+
+  builder = builder_new_from_string (buffer2, -1, NULL);
+  g_object_unref (builder);
+  
   return TRUE;
 }
 
@@ -1393,6 +1716,10 @@ main (int argc, char **argv)
   g_print ("Testing child properties\n");
   if (!test_child_properties ())
     g_error ("test_child_properties failed");
+
+  g_print ("Testing object properties\n");
+  if (!test_object_properties ())
+    g_error ("test_object_properties failed");
 
   g_print ("Testing notebook\n");
   if (!test_notebook ())
@@ -1457,6 +1784,14 @@ main (int argc, char **argv)
   g_print ("Testing widget\n");
   if (!test_widget ())
     g_error ("test_widget failed");
+
+  g_print ("Testing value from string\n");
+  if (!test_value_from_string ())
+    g_error ("test_value_from_string failed");
+
+  g_print ("Testing reference counting\n");
+  if (!test_reference_counting ())
+    g_error ("test_reference_counting failed");
 
   return 0;
 }

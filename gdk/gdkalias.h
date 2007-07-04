@@ -1725,6 +1725,9 @@ extern __typeof (gdk_keymap_get_entries_for_keyval) IA__gdk_keymap_get_entries_f
 extern __typeof (gdk_keymap_get_for_display) IA__gdk_keymap_get_for_display __attribute((visibility("hidden")));
 #define gdk_keymap_get_for_display IA__gdk_keymap_get_for_display
 
+extern __typeof (gdk_keymap_have_bidi_layouts) IA__gdk_keymap_have_bidi_layouts __attribute((visibility("hidden")));
+#define gdk_keymap_have_bidi_layouts IA__gdk_keymap_have_bidi_layouts
+
 extern __typeof (gdk_keymap_lookup_key) IA__gdk_keymap_lookup_key __attribute((visibility("hidden")));
 #define gdk_keymap_lookup_key IA__gdk_keymap_lookup_key
 

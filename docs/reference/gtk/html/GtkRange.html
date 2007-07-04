@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,26 +67,26 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkScale.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3855436" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3881826" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3856493" class="shortcut">Description</a>
+                  <a href="#id3882882" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3856036" class="shortcut">Object Hierarchy</a>
+                  <a href="#id3882425" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3856098" class="shortcut">Implemented Interfaces</a>
+                  <a href="#id3882487" class="shortcut">Implemented Interfaces</a>
                   &#160;|&#160;
-                  <a href="#id3856128" class="shortcut">Properties</a>
+                  <a href="#id3882517" class="shortcut">Properties</a>
                   &#160;|&#160;
-                  <a href="#id3856276" class="shortcut">Style Properties</a>
+                  <a href="#id3882665" class="shortcut">Style Properties</a>
                   &#160;|&#160;
-                  <a href="#id3856437" class="shortcut">Signals</a></nobr></td></tr>
+                  <a href="#id3882826" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkRange"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3855436"></a><span class="refentrytitle">GtkRange</span>
+<a name="id3881826"></a><span class="refentrytitle">GtkRange</span>
 </h2>
 <p>GtkRange &#8212; Base class for widgets which visualize an adjustment</p>
 </td>
@@ -172,7 +173,7 @@ void                <a href="GtkRange.html#gtk-range-set-upper-stepper-sensitivi
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3856036"></a><h2>Object Hierarchy</h2>
+<a name="id3882425"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -189,13 +190,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3856098"></a><h2>Implemented Interfaces</h2>
+<a name="id3882487"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkRange implements
  <a href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a> and  AtkImplementorIface.</p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3856128"></a><h2>Properties</h2>
+<a name="id3882517"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkRange.html#GtkRange--adjustment">adjustment</a>               <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>         : Read / Write / Construct
@@ -217,7 +218,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3856276"></a><h2>Style Properties</h2>
+<a name="id3882665"></a><h2>Style Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkRange.html#GtkRange--activate-slider">activate-slider</a>          <a
@@ -250,7 +251,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3856437"></a><h2>Signals</h2>
+<a name="id3882826"></a><h2>Signals</h2>
 <pre class="synopsis">
 
   <a href="GtkRange.html#GtkRange-adjust-bounds">adjust-bounds</a>                                  : Run Last
@@ -260,26 +261,33 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3856493"></a><h2>Description</h2>
+<a name="id3882882"></a><h2>Description</h2>
 <p>
-
+<a href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a> is the common base class for widgets which visualize an
+adjustment, e.g scales or scrollbars. 
+</p>
+<p>
+Apart from signals for monitoring the parameters of the adjustment, 
+GtkRange provides properties and methods for influencing the sensitivity
+of the "steppers". It also provides properties and methods for setting a 
+"fill level" on range widgets. See <a href="GtkRange.html#gtk-range-set-fill-level"><code class="function">gtk_range_set_fill_level()</code></a>.
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3856508"></a><h2>Details</h2>
+<a name="id3882924"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3856518"></a><h3>
+<a name="id3882934"></a><h3>
 <a name="GtkRange-struct"></a>GtkRange</h3>
-<a class="indexterm" name="id3856530"></a><pre class="programlisting">typedef struct _GtkRange GtkRange;</pre>
+<a class="indexterm" name="id3882948"></a><pre class="programlisting">typedef struct _GtkRange GtkRange;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3856545"></a><h3>
+<a name="id3882962"></a><h3>
 <a name="gtk-range-get-fill-level"></a>gtk_range_get_fill_level ()</h3>
-<a class="indexterm" name="id3856560"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3882977"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a>             gtk_range_get_fill_level            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
@@ -308,9 +316,9 @@ Gets the current position of the fill level indicator.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3856636"></a><h3>
+<a name="id3883053"></a><h3>
 <a name="gtk-range-get-restrict-to-fill-level"></a>gtk_range_get_restrict_to_fill_level ()</h3>
-<a class="indexterm" name="id3856652"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3883069"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_range_get_restrict_to_fill_level
                                                         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
@@ -342,9 +350,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3856745"></a><h3>
+<a name="id3883162"></a><h3>
 <a name="gtk-range-get-show-fill-level"></a>gtk_range_get_show_fill_level ()</h3>
-<a class="indexterm" name="id3856761"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3883178"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_range_get_show_fill_level       (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
@@ -375,9 +383,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3856853"></a><h3>
+<a name="id3883270"></a><h3>
 <a name="gtk-range-set-fill-level"></a>gtk_range_set_fill_level ()</h3>
-<a class="indexterm" name="id3856869"></a><pre class="programlisting">void                gtk_range_set_fill_level            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3883286"></a><pre class="programlisting">void                gtk_range_set_fill_level            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a> fill_level);</pre>
@@ -425,9 +433,9 @@ enabled.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857001"></a><h3>
+<a name="id3883418"></a><h3>
 <a name="gtk-range-set-restrict-to-fill-level"></a>gtk_range_set_restrict_to_fill_level ()</h3>
-<a class="indexterm" name="id3857018"></a><pre class="programlisting">void                gtk_range_set_restrict_to_fill_level
+<a class="indexterm" name="id3883435"></a><pre class="programlisting">void                gtk_range_set_restrict_to_fill_level
                                                         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
@@ -459,9 +467,9 @@ level concept.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857120"></a><h3>
+<a name="id3883537"></a><h3>
 <a name="gtk-range-set-show-fill-level"></a>gtk_range_set_show_fill_level ()</h3>
-<a class="indexterm" name="id3857136"></a><pre class="programlisting">void                gtk_range_set_show_fill_level       (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3883553"></a><pre class="programlisting">void                gtk_range_set_show_fill_level       (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> show_fill_level);</pre>
@@ -492,9 +500,9 @@ level concept.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857236"></a><h3>
+<a name="id3883653"></a><h3>
 <a name="gtk-range-get-adjustment"></a>gtk_range_get_adjustment ()</h3>
-<a class="indexterm" name="id3857249"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_range_get_adjustment            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
+<a class="indexterm" name="id3883666"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_range_get_adjustment            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
 Get the <a href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> which is the "model" object for <a href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a>.
 See <a href="GtkRange.html#gtk-range-set-adjustment"><code class="function">gtk_range_set_adjustment()</code></a> for details.
@@ -521,9 +529,9 @@ be unreferenced.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857355"></a><h3>
+<a name="id3883772"></a><h3>
 <a name="gtk-range-set-update-policy"></a>gtk_range_set_update_policy ()</h3>
-<a class="indexterm" name="id3857369"></a><pre class="programlisting">void                gtk_range_set_update_policy         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3883786"></a><pre class="programlisting">void                gtk_range_set_update_policy         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a href="gtk-Standard-Enumerations.html#GtkUpdateType">GtkUpdateType</a> policy);</pre>
 <p>
 Sets the update policy for the range. <span class="type">GTK_UPDATE_CONTINUOUS</span> means that
@@ -555,9 +563,9 @@ drag operation.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857481"></a><h3>
+<a name="id3883898"></a><h3>
 <a name="gtk-range-set-adjustment"></a>gtk_range_set_adjustment ()</h3>
-<a class="indexterm" name="id3857494"></a><pre class="programlisting">void                gtk_range_set_adjustment            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3883911"></a><pre class="programlisting">void                gtk_range_set_adjustment            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *adjustment);</pre>
 <p>
 Sets the adjustment to be used as the "model" object for this range
@@ -588,9 +596,9 @@ The page size affects the size of the scrollbar slider.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857605"></a><h3>
+<a name="id3884022"></a><h3>
 <a name="gtk-range-get-inverted"></a>gtk_range_get_inverted ()</h3>
-<a class="indexterm" name="id3857618"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3884035"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_range_get_inverted              (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
@@ -618,9 +626,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857706"></a><h3>
+<a name="id3884124"></a><h3>
 <a name="gtk-range-set-inverted"></a>gtk_range_set_inverted ()</h3>
-<a class="indexterm" name="id3857719"></a><pre class="programlisting">void                gtk_range_set_inverted              (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3884137"></a><pre class="programlisting">void                gtk_range_set_inverted              (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> setting);</pre>
@@ -652,9 +660,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857812"></a><h3>
+<a name="id3884230"></a><h3>
 <a name="gtk-range-get-update-policy"></a>gtk_range_get_update_policy ()</h3>
-<a class="indexterm" name="id3857826"></a><pre class="programlisting"><a href="gtk-Standard-Enumerations.html#GtkUpdateType">GtkUpdateType</a>       gtk_range_get_update_policy         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
+<a class="indexterm" name="id3884243"></a><pre class="programlisting"><a href="gtk-Standard-Enumerations.html#GtkUpdateType">GtkUpdateType</a>       gtk_range_get_update_policy         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
 Gets the update policy of <em class="parameter"><code>range</code></em>. See <a href="GtkRange.html#gtk-range-set-update-policy"><code class="function">gtk_range_set_update_policy()</code></a>.</p>
 <p>
@@ -678,9 +686,9 @@ Gets the update policy of <em class="parameter"><code>range</code></em>. See <a 
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857911"></a><h3>
+<a name="id3884328"></a><h3>
 <a name="gtk-range-get-value"></a>gtk_range_get_value ()</h3>
-<a class="indexterm" name="id3857924"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3884341"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a>             gtk_range_get_value                 (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
@@ -706,9 +714,9 @@ Gets the current value of the range.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3857993"></a><h3>
+<a name="id3884410"></a><h3>
 <a name="gtk-range-set-increments"></a>gtk_range_set_increments ()</h3>
-<a class="indexterm" name="id3858006"></a><pre class="programlisting">void                gtk_range_set_increments            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3884423"></a><pre class="programlisting">void                gtk_range_set_increments            (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a> step,
@@ -746,9 +754,9 @@ is used for example when moving via Page Up or Page Down keys.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858126"></a><h3>
+<a name="id3884543"></a><h3>
 <a name="gtk-range-set-range"></a>gtk_range_set_range ()</h3>
-<a class="indexterm" name="id3858140"></a><pre class="programlisting">void                gtk_range_set_range                 (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3884556"></a><pre class="programlisting">void                gtk_range_set_range                 (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a> min,
@@ -785,9 +793,9 @@ page size, it is clamped between <em class="parameter"><code>min</code></em> and
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858273"></a><h3>
+<a name="id3884690"></a><h3>
 <a name="gtk-range-set-value"></a>gtk_range_set_value ()</h3>
-<a class="indexterm" name="id3858286"></a><pre class="programlisting">void                gtk_range_set_value                 (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3884703"></a><pre class="programlisting">void                gtk_range_set_value                 (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a> value);</pre>
@@ -817,9 +825,9 @@ value changes.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858376"></a><h3>
+<a name="id3884793"></a><h3>
 <a name="GtkSensitivityType"></a>enum GtkSensitivityType</h3>
-<a class="indexterm" name="id3858390"></a><pre class="programlisting">typedef enum
+<a class="indexterm" name="id3884807"></a><pre class="programlisting">typedef enum
 {
   GTK_SENSITIVITY_AUTO,
   GTK_SENSITIVITY_ON,
@@ -855,9 +863,9 @@ at the end of range widgets.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858481"></a><h3>
+<a name="id3884898"></a><h3>
 <a name="gtk-range-set-lower-stepper-sensitivity"></a>gtk_range_set_lower_stepper_sensitivity ()</h3>
-<a class="indexterm" name="id3858497"></a><pre class="programlisting">void                gtk_range_set_lower_stepper_sensitivity
+<a class="indexterm" name="id3884914"></a><pre class="programlisting">void                gtk_range_set_lower_stepper_sensitivity
                                                         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a> sensitivity);</pre>
 <p>
@@ -886,9 +894,9 @@ Sets the sensitivity policy for the stepper that points to the
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858587"></a><h3>
+<a name="id3885004"></a><h3>
 <a name="gtk-range-get-lower-stepper-sensitivity"></a>gtk_range_get_lower_stepper_sensitivity ()</h3>
-<a class="indexterm" name="id3858604"></a><pre class="programlisting"><a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>  gtk_range_get_lower_stepper_sensitivity
+<a class="indexterm" name="id3885021"></a><pre class="programlisting"><a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>  gtk_range_get_lower_stepper_sensitivity
                                                         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
 Gets the sensitivity policy for the stepper that points to the
@@ -917,9 +925,9 @@ Gets the sensitivity policy for the stepper that points to the
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858682"></a><h3>
+<a name="id3885099"></a><h3>
 <a name="gtk-range-set-upper-stepper-sensitivity"></a>gtk_range_set_upper_stepper_sensitivity ()</h3>
-<a class="indexterm" name="id3858699"></a><pre class="programlisting">void                gtk_range_set_upper_stepper_sensitivity
+<a class="indexterm" name="id3885116"></a><pre class="programlisting">void                gtk_range_set_upper_stepper_sensitivity
                                                         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                          <a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a> sensitivity);</pre>
 <p>
@@ -948,9 +956,9 @@ Sets the sensitivity policy for the stepper that points to the
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858789"></a><h3>
+<a name="id3885206"></a><h3>
 <a name="gtk-range-get-upper-stepper-sensitivity"></a>gtk_range_get_upper_stepper_sensitivity ()</h3>
-<a class="indexterm" name="id3858805"></a><pre class="programlisting"><a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>  gtk_range_get_upper_stepper_sensitivity
+<a class="indexterm" name="id3885222"></a><pre class="programlisting"><a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>  gtk_range_get_upper_stepper_sensitivity
                                                         (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range);</pre>
 <p>
 Gets the sensitivity policy for the stepper that points to the
@@ -979,18 +987,18 @@ Gets the sensitivity policy for the stepper that points to the
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3858885"></a><h2>Property Details</h2>
+<a name="id3885302"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3858895"></a><h3>
+<a name="id3885312"></a><h3>
 <a name="GtkRange--adjustment"></a>The :<code class="literal">adjustment</code> property</h3>
-<a class="indexterm" name="id3858912"></a><pre class="programlisting">  adjustment               <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>         : Read / Write / Construct</pre>
+<a class="indexterm" name="id3885329"></a><pre class="programlisting">  adjustment               <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>         : Read / Write / Construct</pre>
 <p>The GtkAdjustment that contains the current value of this range object.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858935"></a><h3>
+<a name="id3885352"></a><h3>
 <a name="GtkRange--fill-level"></a>The :<code class="literal">fill-level</code> property</h3>
-<a class="indexterm" name="id3858952"></a><pre class="programlisting">  fill-level               <a
+<a class="indexterm" name="id3885369"></a><pre class="programlisting">  fill-level               <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a>               : Read / Write</pre>
 <p>
@@ -1005,9 +1013,9 @@ See <a href="GtkRange.html#gtk-range-set-fill-level"><code class="function">gtk_
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3858998"></a><h3>
+<a name="id3885415"></a><h3>
 <a name="GtkRange--inverted"></a>The :<code class="literal">inverted</code> property</h3>
-<a class="indexterm" name="id3859014"></a><pre class="programlisting">  inverted                 <a
+<a class="indexterm" name="id3885431"></a><pre class="programlisting">  inverted                 <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Invert direction slider moves to increase range value.</p>
@@ -1015,17 +1023,17 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859041"></a><h3>
+<a name="id3885458"></a><h3>
 <a name="GtkRange--lower-stepper-sensitivity"></a>The :<code class="literal">lower-stepper-sensitivity</code> property</h3>
-<a class="indexterm" name="id3859058"></a><pre class="programlisting">  lower-stepper-sensitivity <a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>    : Read / Write</pre>
+<a class="indexterm" name="id3885475"></a><pre class="programlisting">  lower-stepper-sensitivity <a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>    : Read / Write</pre>
 <p>The sensitivity policy for the stepper that points to the adjustment's lower side.</p>
 <p>Default value: GTK_SENSITIVITY_AUTO</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859086"></a><h3>
+<a name="id3885503"></a><h3>
 <a name="GtkRange--restrict-to-fill-level"></a>The :<code class="literal">restrict-to-fill-level</code> property</h3>
-<a class="indexterm" name="id3859103"></a><pre class="programlisting">  restrict-to-fill-level   <a
+<a class="indexterm" name="id3885520"></a><pre class="programlisting">  restrict-to-fill-level   <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -1041,9 +1049,9 @@ fill level. See <a href="GtkRange.html#gtk-range-set-restrict-to-fill-level"><co
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859152"></a><h3>
+<a name="id3885569"></a><h3>
 <a name="GtkRange--show-fill-level"></a>The :<code class="literal">show-fill-level</code> property</h3>
-<a class="indexterm" name="id3859168"></a><pre class="programlisting">  show-fill-level          <a
+<a class="indexterm" name="id3885585"></a><pre class="programlisting">  show-fill-level          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
@@ -1059,27 +1067,27 @@ graphics are displayed on the trough. See
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859216"></a><h3>
+<a name="id3885633"></a><h3>
 <a name="GtkRange--update-policy"></a>The :<code class="literal">update-policy</code> property</h3>
-<a class="indexterm" name="id3859233"></a><pre class="programlisting">  update-policy            <a href="gtk-Standard-Enumerations.html#GtkUpdateType">GtkUpdateType</a>         : Read / Write</pre>
+<a class="indexterm" name="id3885650"></a><pre class="programlisting">  update-policy            <a href="gtk-Standard-Enumerations.html#GtkUpdateType">GtkUpdateType</a>         : Read / Write</pre>
 <p>How the range should be updated on the screen.</p>
 <p>Default value: GTK_UPDATE_CONTINUOUS</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859260"></a><h3>
+<a name="id3885677"></a><h3>
 <a name="GtkRange--upper-stepper-sensitivity"></a>The :<code class="literal">upper-stepper-sensitivity</code> property</h3>
-<a class="indexterm" name="id3859277"></a><pre class="programlisting">  upper-stepper-sensitivity <a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>    : Read / Write</pre>
+<a class="indexterm" name="id3885694"></a><pre class="programlisting">  upper-stepper-sensitivity <a href="GtkRange.html#GtkSensitivityType">GtkSensitivityType</a>    : Read / Write</pre>
 <p>The sensitivity policy for the stepper that points to the adjustment's upper side.</p>
 <p>Default value: GTK_SENSITIVITY_AUTO</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3859306"></a><h2>Style Property Details</h2>
+<a name="id3885723"></a><h2>Style Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3859317"></a><h3>
+<a name="id3885734"></a><h3>
 <a name="GtkRange--activate-slider"></a>The :<code class="literal">activate-slider</code> style property</h3>
-<a class="indexterm" name="id3859333"></a><pre class="programlisting">  activate-slider          <a
+<a class="indexterm" name="id3885750"></a><pre class="programlisting">  activate-slider          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read</pre>
 <p>With this option set to TRUE, sliders will be drawn ACTIVE and with shadow IN while they are dragged.</p>
@@ -1087,9 +1095,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859360"></a><h3>
+<a name="id3885777"></a><h3>
 <a name="GtkRange--arrow-displacement-x"></a>The :<code class="literal">arrow-displacement-x</code> style property</h3>
-<a class="indexterm" name="id3859377"></a><pre class="programlisting">  arrow-displacement-x     <a
+<a class="indexterm" name="id3885794"></a><pre class="programlisting">  arrow-displacement-x     <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>How far in the x direction to move the arrow when the button is depressed.</p>
@@ -1097,9 +1105,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859404"></a><h3>
+<a name="id3885821"></a><h3>
 <a name="GtkRange--arrow-displacement-y"></a>The :<code class="literal">arrow-displacement-y</code> style property</h3>
-<a class="indexterm" name="id3859421"></a><pre class="programlisting">  arrow-displacement-y     <a
+<a class="indexterm" name="id3885838"></a><pre class="programlisting">  arrow-displacement-y     <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>How far in the y direction to move the arrow when the button is depressed.</p>
@@ -1107,9 +1115,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859448"></a><h3>
+<a name="id3885865"></a><h3>
 <a name="GtkRange--slider-width"></a>The :<code class="literal">slider-width</code> style property</h3>
-<a class="indexterm" name="id3859465"></a><pre class="programlisting">  slider-width             <a
+<a class="indexterm" name="id3885882"></a><pre class="programlisting">  slider-width             <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Width of scrollbar or scale thumb.</p>
@@ -1118,9 +1126,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859495"></a><h3>
+<a name="id3885912"></a><h3>
 <a name="GtkRange--stepper-size"></a>The :<code class="literal">stepper-size</code> style property</h3>
-<a class="indexterm" name="id3859512"></a><pre class="programlisting">  stepper-size             <a
+<a class="indexterm" name="id3885928"></a><pre class="programlisting">  stepper-size             <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Length of step buttons at ends.</p>
@@ -1129,9 +1137,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859542"></a><h3>
+<a name="id3885959"></a><h3>
 <a name="GtkRange--stepper-spacing"></a>The :<code class="literal">stepper-spacing</code> style property</h3>
-<a class="indexterm" name="id3859558"></a><pre class="programlisting">  stepper-spacing          <a
+<a class="indexterm" name="id3885975"></a><pre class="programlisting">  stepper-spacing          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>
@@ -1149,9 +1157,9 @@ stepper-spacing won't have any effect if there are no steppers.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859606"></a><h3>
+<a name="id3886023"></a><h3>
 <a name="GtkRange--trough-border"></a>The :<code class="literal">trough-border</code> style property</h3>
-<a class="indexterm" name="id3859622"></a><pre class="programlisting">  trough-border            <a
+<a class="indexterm" name="id3886039"></a><pre class="programlisting">  trough-border            <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read</pre>
 <p>Spacing between thumb/steppers and outer trough bevel.</p>
@@ -1160,9 +1168,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859653"></a><h3>
+<a name="id3886070"></a><h3>
 <a name="GtkRange--trough-side-details"></a>The :<code class="literal">trough-side-details</code> style property</h3>
-<a class="indexterm" name="id3859670"></a><pre class="programlisting">  trough-side-details      <a
+<a class="indexterm" name="id3886087"></a><pre class="programlisting">  trough-side-details      <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read</pre>
 <p>
@@ -1179,9 +1187,9 @@ slider are drawn with different details.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859716"></a><h3>
+<a name="id3886133"></a><h3>
 <a name="GtkRange--trough-under-steppers"></a>The :<code class="literal">trough-under-steppers</code> style property</h3>
-<a class="indexterm" name="id3859733"></a><pre class="programlisting">  trough-under-steppers    <a
+<a class="indexterm" name="id3886150"></a><pre class="programlisting">  trough-under-steppers    <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read</pre>
 <p>
@@ -1198,11 +1206,11 @@ automatically enable trough-under-steppers too.</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3859784"></a><h2>Signal Details</h2>
+<a name="id3886201"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3859795"></a><h3>
+<a name="id3886212"></a><h3>
 <a name="GtkRange-adjust-bounds"></a>The <code class="literal">::adjust-bounds</code> signal</h3>
-<a class="indexterm" name="id3859811"></a><pre class="programlisting">void                user_function                      (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3886228"></a><pre class="programlisting">void                user_function                      (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 >gdouble</a>   arg1,
@@ -1235,9 +1243,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3859900"></a><h3>
+<a name="id3886317"></a><h3>
 <a name="GtkRange-change-value"></a>The <code class="literal">::change-value</code> signal</h3>
-<a class="indexterm" name="id3859917"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3886334"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            user_function                      (<a href="GtkRange.html" title="GtkRange">GtkRange</a>     *range,
                                                         <a href="gtk-Standard-Enumerations.html#GtkScrollType">GtkScrollType</a> scroll,
@@ -1311,9 +1319,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3860118"></a><h3>
+<a name="id3886534"></a><h3>
 <a name="GtkRange-move-slider"></a>The <code class="literal">::move-slider</code> signal</h3>
-<a class="indexterm" name="id3860134"></a><pre class="programlisting">void                user_function                      (<a href="GtkRange.html" title="GtkRange">GtkRange</a>     *range,
+<a class="indexterm" name="id3886551"></a><pre class="programlisting">void                user_function                      (<a href="GtkRange.html" title="GtkRange">GtkRange</a>     *range,
                                                         <a href="gtk-Standard-Enumerations.html#GtkScrollType">GtkScrollType</a> arg1,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1343,9 +1351,9 @@ Virtual function that moves the slider. Used for keybindings.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3860233"></a><h3>
+<a name="id3886650"></a><h3>
 <a name="GtkRange-value-changed"></a>The <code class="literal">::value-changed</code> signal</h3>
-<a class="indexterm" name="id3860248"></a><pre class="programlisting">void                user_function                      (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
+<a class="indexterm" name="id3886665"></a><pre class="programlisting">void                user_function                      (<a href="GtkRange.html" title="GtkRange">GtkRange</a> *range,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>  user_data)      : Run Last</pre>

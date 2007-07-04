@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkAssistant.html" title="Migrating from GnomeDruid to GtkAssistant">
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
+<link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -66,24 +67,24 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkItem.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3814696" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3841012" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3816201" class="shortcut">Description</a>
+                  <a href="#id3842517" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3815886" class="shortcut">Object Hierarchy</a>
+                  <a href="#id3842202" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3816050" class="shortcut">Implemented Interfaces</a>
+                  <a href="#id3842366" class="shortcut">Implemented Interfaces</a>
                   &#160;|&#160;
-                  <a href="#id3816080" class="shortcut">Properties</a>
+                  <a href="#id3842396" class="shortcut">Properties</a>
                   &#160;|&#160;
-                  <a href="#id3816144" class="shortcut">Signals</a></nobr></td></tr>
+                  <a href="#id3842461" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkContainer"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3814696"></a><span class="refentrytitle">GtkContainer</span>
+<a name="id3841012"></a><span class="refentrytitle">GtkContainer</span>
 </h2>
 <p>GtkContainer &#8212; Base class for widgets which contain other widgets</p>
 </td>
@@ -246,7 +247,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3815886"></a><h2>Object Hierarchy</h2>
+<a name="id3842202"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
@@ -277,13 +278,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3816050"></a><h2>Implemented Interfaces</h2>
+<a name="id3842366"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkContainer implements
  <a href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a> and  AtkImplementorIface.</p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3816080"></a><h2>Properties</h2>
+<a name="id3842396"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkContainer.html#GtkContainer--border-width">border-width</a>             <a
@@ -294,7 +295,7 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3816144"></a><h2>Signals</h2>
+<a name="id3842461"></a><h2>Signals</h2>
 <pre class="synopsis">
 
   <a href="GtkContainer.html#GtkContainer-add">add</a>                                            : Run First
@@ -304,71 +305,84 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3816201"></a><h2>Description</h2>
+<a name="id3842517"></a><h2>Description</h2>
 <p>
-A GTK+ user interface is constructed by nesting widgets inside widgets. Container widgets are the inner
-nodes in the resulting tree of widgets: they contain other widgets. So, for example, you might have a 
-<a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> containing a <a href="GtkFrame.html" title="GtkFrame"><span class="type">GtkFrame</span></a> containing a GtkLabel. If you wanted an image instead of a textual label 
-inside the frame, you might replace the <a href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a> widget with a <a href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> widget.
+A GTK+ user interface is constructed by nesting widgets inside widgets. 
+Container widgets are the inner nodes in the resulting tree of widgets: 
+they contain other widgets. So, for example, you might have a <a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> 
+containing a <a href="GtkFrame.html" title="GtkFrame"><span class="type">GtkFrame</span></a> containing a GtkLabel. If you wanted an image instead 
+of a textual label inside the frame, you might replace the <a href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a> widget 
+with a <a href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> widget.
 </p>
 <p>
-There are two major kinds of container widgets in GTK+. Both are subclasses of the abstract <a href="GtkContainer.html" title="GtkContainer"><span class="type">GtkContainer</span></a> 
-base class.
+There are two major kinds of container widgets in GTK+. Both are subclasses 
+of the abstract <a href="GtkContainer.html" title="GtkContainer"><span class="type">GtkContainer</span></a> base class.
 </p>
 <p>
-The first type of container widget has a single child widget and derives from <a href="GtkBin.html" title="GtkBin"><span class="type">GtkBin</span></a>. These containers
-are <em class="firstterm">decorators</em>, which add some kind of functionality to the child. For example, 
-a <a href="GtkButton.html" title="GtkButton"><span class="type">GtkButton</span></a> makes its child into a clickable button; a <a href="GtkFrame.html" title="GtkFrame"><span class="type">GtkFrame</span></a> draws a frame around its child and 
-a <a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> places its child widget inside a top-level window.
+The first type of container widget has a single child widget and derives 
+from <a href="GtkBin.html" title="GtkBin"><span class="type">GtkBin</span></a>. These containers are <em class="firstterm">decorators</em>, which 
+add some kind of functionality to the child. For example, a <a href="GtkButton.html" title="GtkButton"><span class="type">GtkButton</span></a> makes 
+its child into a clickable button; a <a href="GtkFrame.html" title="GtkFrame"><span class="type">GtkFrame</span></a> draws a frame around its child 
+and a <a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> places its child widget inside a top-level window.
 </p>
 <p>
-The second type of container can have more than one child; its purpose is to manage 
-<em class="firstterm">layout</em>. This means that these containers assign sizes and positions to their children. 
-For example, a <a href="GtkHBox.html" title="GtkHBox"><span class="type">GtkHBox</span></a> arranges its children in a horizontal row, and a <a href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a> arranges the widgets it
-contains in a two-dimensional grid. 
+The second type of container can have more than one child; its purpose is to 
+manage <em class="firstterm">layout</em>. This means that these containers assign 
+sizes and positions to their children. For example, a <a href="GtkHBox.html" title="GtkHBox"><span class="type">GtkHBox</span></a> arranges its 
+children in a horizontal row, and a <a href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a> arranges the widgets it contains 
+in a two-dimensional grid. 
 </p>
 <p>
-To fulfill its task, a layout container must negotiate the size requirements with its parent and its children.
-This negotiation is carried out in two phases, <em class="firstterm">size requisition</em> and 
-<em class="firstterm">size allocation</em>. 
+To fulfill its task, a layout container must negotiate the size requirements 
+with its parent and its children. This negotiation is carried out in two 
+phases, <em class="firstterm">size requisition</em> and <em class="firstterm">size 
+allocation</em>. 
 </p>
 <div class="refsect2" lang="en">
 <a name="size-requisition"></a><h3>Size Requisition</h3>
 <p>
-The size requisition of a widget is it's desired width and height. This is represented by a <a href="GtkWidget.html#GtkRequisition"><span class="type">GtkRequisition</span></a>.
+The size requisition of a widget is it's desired width and height. 
+This is represented by a <a href="GtkWidget.html#GtkRequisition"><span class="type">GtkRequisition</span></a>.
 </p>
 <p>
-How a widget determines its desired size depends on the widget. A <a href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a>, for example, requests enough space 
-to display all its text. Container widgets generally base their size request on the requisitions of their 
-children.  
+How a widget determines its desired size depends on the widget. 
+A <a href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a>, for example, requests enough space to display all its text. 
+Container widgets generally base their size request on the requisitions 
+of their children.  
 </p>
 <p>
-The size requisition phase of the widget layout process operates top-down. It starts at a top-level widget,
-typically a <a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>. The top-level widget asks its child for its size requisition by calling
-<a href="GtkWidget.html#gtk-widget-size-request"><code class="function">gtk_widget_size_request()</code></a>. To determine its requisition, the child asks its own children for their requisitions 
-and so on. Finally, the top-level widget will get a requisition back from its child. 
+The size requisition phase of the widget layout process operates top-down. 
+It starts at a top-level widget, typically a <a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>. The top-level widget 
+asks its child for its size requisition by calling <a href="GtkWidget.html#gtk-widget-size-request"><code class="function">gtk_widget_size_request()</code></a>. 
+To determine its requisition, the child asks its own children for their 
+requisitions and so on. Finally, the top-level widget will get a requisition 
+back from its child. 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
 <a name="size-allocation"></a><h3>Size Allocation</h3>
 <p>
-When the top-level widget has determined how much space its child would like to have, the second phase of the
-size negotiation, size allocation, begins. Depending on its configuration (see <a href="GtkWindow.html#gtk-window-set-resizable"><code class="function">gtk_window_set_resizable()</code></a>), the 
-top-level widget may be able to expand in order to satisfy the size request or it may have to ignore the size 
-request and keep its fixed size. It then tells its child widget how much space it gets by calling 
-<a href="GtkWidget.html#gtk-widget-size-allocate"><code class="function">gtk_widget_size_allocate()</code></a>. The child widget divides the space among its children and tells each child how much 
-space it got, and so on. Under normal circumstances, a <a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> will always give its child the amount of space
-the child requested.
+When the top-level widget has determined how much space its child would like 
+to have, the second phase of the size negotiation, size allocation, begins. 
+Depending on its configuration (see <a href="GtkWindow.html#gtk-window-set-resizable"><code class="function">gtk_window_set_resizable()</code></a>), the top-level 
+widget may be able to expand in order to satisfy the size request or it may 
+have to ignore the size request and keep its fixed size. It then tells its 
+child widget how much space it gets by calling <a href="GtkWidget.html#gtk-widget-size-allocate"><code class="function">gtk_widget_size_allocate()</code></a>. 
+The child widget divides the space among its children and tells each child 
+how much space it got, and so on. Under normal circumstances, a <a href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> 
+will always give its child the amount of space the child requested.
 </p>
 <p>
-A child's size allocation is represented by a <a href="GtkWidget.html#GtkAllocation"><span class="type">GtkAllocation</span></a>. This struct contains not only a width and height, 
-but also a position (i.e. X and Y coordinates), so that containers can tell their children not only how much
-space they have gotten, but also where they are positioned inside the space available to the container. 
+A child's size allocation is represented by a <a href="GtkWidget.html#GtkAllocation"><span class="type">GtkAllocation</span></a>. This struct 
+contains not only a width and height, but also a position (i.e. X and Y 
+coordinates), so that containers can tell their children not only how much
+space they have gotten, but also where they are positioned inside the space 
+available to the container. 
 </p>
 <p>
-Widgets are required to honor the size allocation they receive; a size request is only a request, and widgets
-must be able to cope with any size.
+Widgets are required to honor the size allocation they receive; a size 
+request is only a request, and widgets must be able to cope with any size.
 </p>
 </div>
 <hr>
@@ -395,22 +409,46 @@ To obtain the value of a child property, use
 changes, use <a href="GtkWidget.html#gtk-widget-child-notify"><code class="function">gtk_widget_child_notify()</code></a>.
 </p>
 </div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkContainer-BUILDER-UI"></a><h3>GtkContainer as GtkBuildable</h3>
+<p>
+The GtkContainer implementation of the GtkBuildable interface 
+supports a &lt;packing&gt; element for children, which can
+contain multiple &lt;property&gt; elements that specify
+child properties for the child.
+</p>
+<div class="example">
+<a name="id3842991"></a><p class="title"><b>Example&#160;45.&#160;Child properties in UI definitions</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkVBox"&gt;
+  &lt;child&gt;
+    &lt;object class="GtkLabel"/&gt;
+    &lt;packing&gt;
+      &lt;property name="pack-type"&gt;start&lt;/property&gt;
+    &lt;/packing&gt;
+  &lt;/child&gt;
+&lt;/object&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3816653"></a><h2>Details</h2>
+<a name="id3843009"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3816664"></a><h3>
+<a name="id3843019"></a><h3>
 <a name="GtkContainer-struct"></a>GtkContainer</h3>
-<a class="indexterm" name="id3816677"></a><pre class="programlisting">typedef struct _GtkContainer GtkContainer;</pre>
+<a class="indexterm" name="id3843031"></a><pre class="programlisting">typedef struct _GtkContainer GtkContainer;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3816692"></a><h3>
+<a name="id3843046"></a><h3>
 <a name="GTK-IS-RESIZE-CONTAINER:CAPS"></a>GTK_IS_RESIZE_CONTAINER()</h3>
-<a class="indexterm" name="id3816706"></a><pre class="programlisting">#define GTK_IS_RESIZE_CONTAINER(widget) (GTK_IS_CONTAINER (widget) &amp;&amp; ((GtkContainer*) (widget))-&gt;resize_mode != GTK_RESIZE_PARENT)
+<a class="indexterm" name="id3843061"></a><pre class="programlisting">#define GTK_IS_RESIZE_CONTAINER(widget) (GTK_IS_CONTAINER (widget) &amp;&amp; ((GtkContainer*) (widget))-&gt;resize_mode != GTK_RESIZE_PARENT)
 </pre>
 <p>
 
@@ -428,9 +466,9 @@ changes, use <a href="GtkWidget.html#gtk-widget-child-notify"><code class="funct
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3816741"></a><h3>
+<a name="id3843096"></a><h3>
 <a name="GTK-CONTAINER-WARN-INVALID-CHILD-PROPERTY-ID:CAPS"></a>GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID()</h3>
-<a class="indexterm" name="id3816756"></a><pre class="programlisting">#define             GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID(object, property_id, pspec)</pre>
+<a class="indexterm" name="id3843110"></a><pre class="programlisting">#define             GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID(object, property_id, pspec)</pre>
 <p>
 This macro should be used to emit a standard warning about unexpected
 properties in <code class="function">set_child_property()</code> and <code class="function">get_child_property()</code> implementations.
@@ -465,9 +503,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GPara
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3816882"></a><h3>
+<a name="id3843236"></a><h3>
 <a name="gtk-container-border-width"></a>gtk_container_border_width</h3>
-<a class="indexterm" name="id3816898"></a><pre class="programlisting">#define	gtk_container_border_width		gtk_container_set_border_width
+<a class="indexterm" name="id3843253"></a><pre class="programlisting">#define	gtk_container_border_width		gtk_container_set_border_width
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -479,9 +517,9 @@ Does the same as <a href="GtkContainer.html#gtk-container-set-border-width"><cod
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3816950"></a><h3>
+<a name="id3843304"></a><h3>
 <a name="gtk-container-add"></a>gtk_container_add ()</h3>
-<a class="indexterm" name="id3816963"></a><pre class="programlisting">void                gtk_container_add                   (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3843318"></a><pre class="programlisting">void                gtk_container_add                   (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Adds <em class="parameter"><code>widget</code></em> to <em class="parameter"><code>container</code></em>. Typically used for simple containers
@@ -513,9 +551,9 @@ you can't place the same widget inside two different containers.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3817138"></a><h3>
+<a name="id3843493"></a><h3>
 <a name="gtk-container-remove"></a>gtk_container_remove ()</h3>
-<a class="indexterm" name="id3817152"></a><pre class="programlisting">void                gtk_container_remove                (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3843506"></a><pre class="programlisting">void                gtk_container_remove                (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <p>
 Removes <em class="parameter"><code>widget</code></em> from <em class="parameter"><code>container</code></em>. <em class="parameter"><code>widget</code></em> must be inside <em class="parameter"><code>container</code></em>.
@@ -550,9 +588,9 @@ container and help break any circular reference count cycles.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3817314"></a><h3>
+<a name="id3843668"></a><h3>
 <a name="gtk-container-add-with-properties"></a>gtk_container_add_with_properties ()</h3>
-<a class="indexterm" name="id3817328"></a><pre class="programlisting">void                gtk_container_add_with_properties   (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3843682"></a><pre class="programlisting">void                gtk_container_add_with_properties   (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -595,9 +633,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3817502"></a><h3>
+<a name="id3843856"></a><h3>
 <a name="gtk-container-get-resize-mode"></a>gtk_container_get_resize_mode ()</h3>
-<a class="indexterm" name="id3817516"></a><pre class="programlisting"><a href="gtk-Standard-Enumerations.html#GtkResizeMode">GtkResizeMode</a>       gtk_container_get_resize_mode       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
+<a class="indexterm" name="id3843870"></a><pre class="programlisting"><a href="gtk-Standard-Enumerations.html#GtkResizeMode">GtkResizeMode</a>       gtk_container_get_resize_mode       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
 Returns the resize mode for the container. See
 <a href="GtkContainer.html#gtk-container-set-resize-mode"><code class="function">gtk_container_set_resize_mode()</code></a>.</p>
@@ -622,9 +660,9 @@ Returns the resize mode for the container. See
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3817597"></a><h3>
+<a name="id3843951"></a><h3>
 <a name="gtk-container-set-resize-mode"></a>gtk_container_set_resize_mode ()</h3>
-<a class="indexterm" name="id3817611"></a><pre class="programlisting">void                gtk_container_set_resize_mode       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3843965"></a><pre class="programlisting">void                gtk_container_set_resize_mode       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="gtk-Standard-Enumerations.html#GtkResizeMode">GtkResizeMode</a> resize_mode);</pre>
 <p>
 Sets the resize mode for the container.
@@ -654,9 +692,9 @@ or executed immediately.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3817698"></a><h3>
+<a name="id3844052"></a><h3>
 <a name="gtk-container-check-resize"></a>gtk_container_check_resize ()</h3>
-<a class="indexterm" name="id3817712"></a><pre class="programlisting">void                gtk_container_check_resize          (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
+<a class="indexterm" name="id3844066"></a><pre class="programlisting">void                gtk_container_check_resize          (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
 
 </p>
@@ -673,9 +711,9 @@ or executed immediately.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3817758"></a><h3>
+<a name="id3844113"></a><h3>
 <a name="gtk-container-foreach"></a>gtk_container_foreach ()</h3>
-<a class="indexterm" name="id3817772"></a><pre class="programlisting">void                gtk_container_foreach               (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3844126"></a><pre class="programlisting">void                gtk_container_foreach               (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html#GtkCallback">GtkCallback</a> callback,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -711,9 +749,9 @@ Invokes <em class="parameter"><code>callback</code></em> on each non-internal ch
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3817921"></a><h3>
+<a name="id3844275"></a><h3>
 <a name="gtk-container-foreach-full"></a>gtk_container_foreach_full ()</h3>
-<a class="indexterm" name="id3817938"></a><pre class="programlisting">void                gtk_container_foreach_full          (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3844292"></a><pre class="programlisting">void                gtk_container_foreach_full          (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html#GtkCallback">GtkCallback</a> callback,
                                                          <a href="gtk-Types.html#GtkCallbackMarshal">GtkCallbackMarshal</a> marshal,
                                                          <a
@@ -760,9 +798,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818094"></a><h3>
+<a name="id3844449"></a><h3>
 <a name="gtk-container-children"></a>gtk_container_children</h3>
-<a class="indexterm" name="id3818110"></a><pre class="programlisting">#define gtk_container_children gtk_container_get_children
+<a class="indexterm" name="id3844465"></a><pre class="programlisting">#define gtk_container_children gtk_container_get_children
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -774,9 +812,9 @@ Does the same as <a href="GtkContainer.html#gtk-container-get-children"><code cl
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818162"></a><h3>
+<a name="id3844516"></a><h3>
 <a name="gtk-container-get-children"></a>gtk_container_get_children ()</h3>
-<a class="indexterm" name="id3818175"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3844529"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a>*              gtk_container_get_children          (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
@@ -803,9 +841,9 @@ Returns the container's non-internal children. See
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818257"></a><h3>
+<a name="id3844611"></a><h3>
 <a name="gtk-container-set-reallocate-redraws"></a>gtk_container_set_reallocate_redraws ()</h3>
-<a class="indexterm" name="id3818271"></a><pre class="programlisting">void                gtk_container_set_reallocate_redraws
+<a class="indexterm" name="id3844625"></a><pre class="programlisting">void                gtk_container_set_reallocate_redraws
                                                         (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
@@ -837,9 +875,9 @@ redrawn if any of their children changed allocation.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818371"></a><h3>
+<a name="id3844725"></a><h3>
 <a name="gtk-container-set-focus-child"></a>gtk_container_set_focus_child ()</h3>
-<a class="indexterm" name="id3818384"></a><pre class="programlisting">void                gtk_container_set_focus_child       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3844739"></a><pre class="programlisting">void                gtk_container_set_focus_child       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child);</pre>
 <p>
 
@@ -864,9 +902,9 @@ redrawn if any of their children changed allocation.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818453"></a><h3>
+<a name="id3844807"></a><h3>
 <a name="gtk-container-get-focus-vadjustment"></a>gtk_container_get_focus_vadjustment ()</h3>
-<a class="indexterm" name="id3818467"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_container_get_focus_vadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
+<a class="indexterm" name="id3844822"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_container_get_focus_vadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
 Retrieves the vertical focus adjustment for the container. See
 <a href="GtkContainer.html#gtk-container-set-focus-vadjustment"><code class="function">gtk_container_set_focus_vadjustment()</code></a>.</p>
@@ -894,9 +932,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818559"></a><h3>
+<a name="id3844913"></a><h3>
 <a name="gtk-container-set-focus-vadjustment"></a>gtk_container_set_focus_vadjustment ()</h3>
-<a class="indexterm" name="id3818574"></a><pre class="programlisting">void                gtk_container_set_focus_vadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3844928"></a><pre class="programlisting">void                gtk_container_set_focus_vadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *adjustment);</pre>
 <p>
 Hooks up an adjustment to focus handling in a container, so when a 
@@ -931,9 +969,9 @@ system as the allocation for immediate children of the container.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818695"></a><h3>
+<a name="id3845049"></a><h3>
 <a name="gtk-container-get-focus-hadjustment"></a>gtk_container_get_focus_hadjustment ()</h3>
-<a class="indexterm" name="id3818709"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_container_get_focus_hadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
+<a class="indexterm" name="id3845063"></a><pre class="programlisting"><a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>*      gtk_container_get_focus_hadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
 Retrieves the horizontal focus adjustment for the container. See
 <a href="GtkContainer.html#gtk-container-set-focus-hadjustment"><code class="function">gtk_container_set_focus_hadjustment()</code></a>.</p>
@@ -961,9 +999,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818801"></a><h3>
+<a name="id3845155"></a><h3>
 <a name="gtk-container-set-focus-hadjustment"></a>gtk_container_set_focus_hadjustment ()</h3>
-<a class="indexterm" name="id3818815"></a><pre class="programlisting">void                gtk_container_set_focus_hadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3845169"></a><pre class="programlisting">void                gtk_container_set_focus_hadjustment (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *adjustment);</pre>
 <p>
 Hooks up an adjustment to focus handling in a container, so when a child 
@@ -998,9 +1036,9 @@ system as the allocation for immediate children of the container.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818936"></a><h3>
+<a name="id3845290"></a><h3>
 <a name="gtk-container-resize-children"></a>gtk_container_resize_children ()</h3>
-<a class="indexterm" name="id3818949"></a><pre class="programlisting">void                gtk_container_resize_children       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
+<a class="indexterm" name="id3845304"></a><pre class="programlisting">void                gtk_container_resize_children       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
 
 </p>
@@ -1017,9 +1055,9 @@ system as the allocation for immediate children of the container.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3818996"></a><h3>
+<a name="id3845350"></a><h3>
 <a name="gtk-container-child-type"></a>gtk_container_child_type ()</h3>
-<a class="indexterm" name="id3819010"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3845364"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a>               gtk_container_child_type            (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
@@ -1054,9 +1092,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3819110"></a><h3>
+<a name="id3845465"></a><h3>
 <a name="gtk-container-child-get"></a>gtk_container_child_get ()</h3>
-<a class="indexterm" name="id3819124"></a><pre class="programlisting">void                gtk_container_child_get             (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3845478"></a><pre class="programlisting">void                gtk_container_child_get             (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1100,9 +1138,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Gener
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3819284"></a><h3>
+<a name="id3845638"></a><h3>
 <a name="gtk-container-child-set"></a>gtk_container_child_set ()</h3>
-<a class="indexterm" name="id3819298"></a><pre class="programlisting">void                gtk_container_child_set             (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3845652"></a><pre class="programlisting">void                gtk_container_child_set             (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1144,9 +1182,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3819450"></a><h3>
+<a name="id3845804"></a><h3>
 <a name="gtk-container-child-get-property"></a>gtk_container_child_get_property ()</h3>
-<a class="indexterm" name="id3819464"></a><pre class="programlisting">void                gtk_container_child_get_property    (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3845818"></a><pre class="programlisting">void                gtk_container_child_get_property    (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1187,9 +1225,9 @@ Gets the value of a child property for <em class="parameter"><code>child</code><
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3819607"></a><h3>
+<a name="id3845961"></a><h3>
 <a name="gtk-container-child-set-property"></a>gtk_container_child_set_property ()</h3>
-<a class="indexterm" name="id3819620"></a><pre class="programlisting">void                gtk_container_child_set_property    (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3845974"></a><pre class="programlisting">void                gtk_container_child_set_property    (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1230,9 +1268,9 @@ Sets a child property for <em class="parameter"><code>child</code></em> and <em 
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3819763"></a><h3>
+<a name="id3846117"></a><h3>
 <a name="gtk-container-child-get-valist"></a>gtk_container_child_get_valist ()</h3>
-<a class="indexterm" name="id3819776"></a><pre class="programlisting">void                gtk_container_child_get_valist      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3846131"></a><pre class="programlisting">void                gtk_container_child_get_valist      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1276,9 +1314,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Gener
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3819944"></a><h3>
+<a name="id3846298"></a><h3>
 <a name="gtk-container-child-set-valist"></a>gtk_container_child_set_valist ()</h3>
-<a class="indexterm" name="id3819958"></a><pre class="programlisting">void                gtk_container_child_set_valist      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3846312"></a><pre class="programlisting">void                gtk_container_child_set_valist      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child,
                                                          const <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1320,9 +1358,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3820118"></a><h3>
+<a name="id3846472"></a><h3>
 <a name="gtk-container-forall"></a>gtk_container_forall ()</h3>
-<a class="indexterm" name="id3820131"></a><pre class="programlisting">void                gtk_container_forall                (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3846485"></a><pre class="programlisting">void                gtk_container_forall                (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html#GtkCallback">GtkCallback</a> callback,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1360,9 +1398,9 @@ rather than <a href="GtkContainer.html#gtk-container-forall"><code class="functi
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3820272"></a><h3>
+<a name="id3846626"></a><h3>
 <a name="gtk-container-get-border-width"></a>gtk_container_get_border_width ()</h3>
-<a class="indexterm" name="id3820285"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3846640"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               gtk_container_get_border_width      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
@@ -1389,9 +1427,9 @@ Retrieves the border width of the container. See
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3820366"></a><h3>
+<a name="id3846721"></a><h3>
 <a name="gtk-container-set-border-width"></a>gtk_container_set_border_width ()</h3>
-<a class="indexterm" name="id3820380"></a><pre class="programlisting">void                gtk_container_set_border_width      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3846734"></a><pre class="programlisting">void                gtk_container_set_border_width      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> border_width);</pre>
@@ -1428,9 +1466,9 @@ it a size, and place it on the side of the container as a spacer.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3820505"></a><h3>
+<a name="id3846859"></a><h3>
 <a name="gtk-container-propagate-expose"></a>gtk_container_propagate_expose ()</h3>
-<a class="indexterm" name="id3820519"></a><pre class="programlisting">void                gtk_container_propagate_expose      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3846873"></a><pre class="programlisting">void                gtk_container_propagate_expose      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child,
                                                          <a
 href="../gdk/gdk-Event-Structures.html#GdkEventExpose"
@@ -1477,9 +1515,9 @@ and then chain to the ::expose implementation from <a href="GtkContainer.html" t
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3820701"></a><h3>
+<a name="id3847055"></a><h3>
 <a name="gtk-container-get-focus-chain"></a>gtk_container_get_focus_chain ()</h3>
-<a class="indexterm" name="id3820715"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3847069"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_container_get_focus_chain       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a
@@ -1532,9 +1570,9 @@ has been set explicitly.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3820872"></a><h3>
+<a name="id3847226"></a><h3>
 <a name="gtk-container-set-focus-chain"></a>gtk_container_set_focus_chain ()</h3>
-<a class="indexterm" name="id3820886"></a><pre class="programlisting">void                gtk_container_set_focus_chain       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3847240"></a><pre class="programlisting">void                gtk_container_set_focus_chain       (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 >GList</a> *focusable_widgets);</pre>
@@ -1568,9 +1606,9 @@ when the focus chain is actually traversed.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3820976"></a><h3>
+<a name="id3847330"></a><h3>
 <a name="gtk-container-unset-focus-chain"></a>gtk_container_unset_focus_chain ()</h3>
-<a class="indexterm" name="id3820990"></a><pre class="programlisting">void                gtk_container_unset_focus_chain     (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
+<a class="indexterm" name="id3847344"></a><pre class="programlisting">void                gtk_container_unset_focus_chain     (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container);</pre>
 <p>
 Removes a focus chain explicitly set with <a href="GtkContainer.html#gtk-container-set-focus-chain"><code class="function">gtk_container_set_focus_chain()</code></a>.</p>
 <p>
@@ -1587,9 +1625,9 @@ Removes a focus chain explicitly set with <a href="GtkContainer.html#gtk-contain
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821060"></a><h3>
+<a name="id3847414"></a><h3>
 <a name="gtk-container-class-find-child-property"></a>gtk_container_class_find_child_property ()</h3>
-<a class="indexterm" name="id3821074"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3847429"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 >GParamSpec</a>*         gtk_container_class_find_child_property
                                                         (<a
@@ -1631,9 +1669,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821192"></a><h3>
+<a name="id3847547"></a><h3>
 <a name="gtk-container-class-install-child-property"></a>gtk_container_class_install_child_property ()</h3>
-<a class="indexterm" name="id3821208"></a><pre class="programlisting">void                gtk_container_class_install_child_property
+<a class="indexterm" name="id3847562"></a><pre class="programlisting">void                gtk_container_class_install_child_property
                                                         (GtkContainerClass *cclass,
                                                          <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
@@ -1671,9 +1709,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GPara
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821319"></a><h3>
+<a name="id3847673"></a><h3>
 <a name="gtk-container-class-list-child-properties"></a>gtk_container_class_list_child_properties ()</h3>
-<a class="indexterm" name="id3821334"></a><pre class="programlisting"><a
+<a class="indexterm" name="id3847688"></a><pre class="programlisting"><a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 >GParamSpec</a>**        gtk_container_class_list_child_properties
                                                         (<a
@@ -1717,11 +1755,11 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Memory-Allo
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3821456"></a><h2>Property Details</h2>
+<a name="id3847811"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3821467"></a><h3>
+<a name="id3847821"></a><h3>
 <a name="GtkContainer--border-width"></a>The :<code class="literal">border-width</code> property</h3>
-<a class="indexterm" name="id3821484"></a><pre class="programlisting">  border-width             <a
+<a class="indexterm" name="id3847838"></a><pre class="programlisting">  border-width             <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write</pre>
 <p>The width of the empty border outside the containers children.</p>
@@ -1730,26 +1768,26 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821514"></a><h3>
+<a name="id3847869"></a><h3>
 <a name="GtkContainer--child"></a>The :<code class="literal">child</code> property</h3>
-<a class="indexterm" name="id3821530"></a><pre class="programlisting">  child                    <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>             : Write</pre>
+<a class="indexterm" name="id3847884"></a><pre class="programlisting">  child                    <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>             : Write</pre>
 <p>Can be used to add a new child to the container.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821553"></a><h3>
+<a name="id3847907"></a><h3>
 <a name="GtkContainer--resize-mode"></a>The :<code class="literal">resize-mode</code> property</h3>
-<a class="indexterm" name="id3821569"></a><pre class="programlisting">  resize-mode              <a href="gtk-Standard-Enumerations.html#GtkResizeMode">GtkResizeMode</a>         : Read / Write</pre>
+<a class="indexterm" name="id3847923"></a><pre class="programlisting">  resize-mode              <a href="gtk-Standard-Enumerations.html#GtkResizeMode">GtkResizeMode</a>         : Read / Write</pre>
 <p>Specify how resize events are handled.</p>
 <p>Default value: GTK_RESIZE_PARENT</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3821597"></a><h2>Signal Details</h2>
+<a name="id3847951"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3821607"></a><h3>
+<a name="id3847962"></a><h3>
 <a name="GtkContainer-add"></a>The <code class="literal">::add</code> signal</h3>
-<a class="indexterm" name="id3821623"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3847978"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>    *widget,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1780,9 +1818,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821714"></a><h3>
+<a name="id3848068"></a><h3>
 <a name="GtkContainer-check-resize"></a>The <code class="literal">::check-resize</code> signal</h3>
-<a class="indexterm" name="id3821730"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3848084"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>      user_data)      : Run Last</pre>
@@ -1807,9 +1845,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821799"></a><h3>
+<a name="id3848153"></a><h3>
 <a name="GtkContainer-remove"></a>The <code class="literal">::remove</code> signal</h3>
-<a class="indexterm" name="id3821815"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3848169"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>    *widget,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
@@ -1840,9 +1878,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3821905"></a><h3>
+<a name="id3848259"></a><h3>
 <a name="GtkContainer-set-focus-child"></a>The <code class="literal">::set-focus-child</code> signal</h3>
-<a class="indexterm" name="id3821922"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
+<a class="indexterm" name="id3848276"></a><pre class="programlisting">void                user_function                      (<a href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                         <a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>    *widget,
                                                         <a
 href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"

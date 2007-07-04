@@ -1,6 +1,6 @@
 /* GdkQuartzView.m
  *
- * Copyright (C) 2005 Imendio AB
+ * Copyright (C) 2005-2007 Imendio AB
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -108,6 +108,58 @@
   gdk_region_destroy (region);
 
   GDK_QUARTZ_RELEASE_POOL;
+}
+
+/* For information on setting up tracking rects properly, see here:
+ * http://developer.apple.com/documentation/Cocoa/Conceptual/EventOverview/EventOverview.pdf
+ */
+-(void)updateTrackingRect
+{
+  GdkWindowObject *private = GDK_WINDOW_OBJECT (gdk_window);
+  GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+  NSRect rect;
+
+  if (trackingRect)
+    {
+      [self removeTrackingRect:trackingRect];
+      trackingRect = nil;
+    }
+
+  if (!impl->toplevel)
+    return;
+
+  /* Note, if we want to set assumeInside we can use:
+   * NSPointInRect ([[self window] convertScreenToBase:[NSEvent mouseLocation]], rect)
+   */
+
+  rect = NSMakeRect (0, 0, impl->width, impl->height);
+  trackingRect = [self addTrackingRect:rect
+                                 owner:self
+                              userData:nil
+                          assumeInside:NO];
+}
+
+-(void)viewDidMoveToWindow
+{
+  if (![self window]) /* We are destroyed already */
+      return;
+
+  [self updateTrackingRect];
+}
+
+-(void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+  if (newWindow == nil && trackingRect)
+    {
+      [self removeTrackingRect:trackingRect];
+      trackingRect = nil;
+    }
+}
+
+-(void)setBounds:(NSRect)bounds
+{
+  [super setBounds:bounds];
+  [self updateTrackingRect];
 }
 
 @end

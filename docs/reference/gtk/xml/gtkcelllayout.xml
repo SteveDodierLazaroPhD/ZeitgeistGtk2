@@ -106,6 +106,33 @@ cell renderer. Finally, it is possible to specify a function with
 <link linkend="gtk-cell-layout-set-cell-data-func"><function>gtk_cell_layout_set_cell_data_func()</function></link> that is called to determine the value 
 of the attribute for each cell that is rendered.
 </para>
+
+<refsect2 id="GtkCellLayout-BUILDER-UI">
+<title>GtkCellLayouts as GtkBuildable</title>
+<para>
+Implementations of GtkCellLayout which also implement the GtkBuildable 
+interface (<link linkend="GtkCellView"><type>GtkCellView</type></link>, <link linkend="GtkIconView"><type>GtkIconView</type></link>, <link linkend="GtkComboBox"><type>GtkComboBox</type></link>, <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>, 
+<link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>, <link linkend="GtkTreeViewColumn"><type>GtkTreeViewColumn</type></link>) accept GtkCellRenderer objects
+as &lt;child&gt; elements in UI definitions. They support a custom 
+&lt;attributes&gt; element for their children, which can contain 
+multiple &lt;attribute&gt; elements. Each &lt;attribute&gt; element has 
+a name attribute which specifies a property of the cell renderer; the 
+content of the element is the attribute value.
+</para>
+<example>
+<title>A UI definition fragment specifying attributes</title>
+<programlisting><![CDATA[
+<object class="GtkCellView">
+  <child>
+    <object class="GtkCellRendererText"/>
+    <attributes>
+      <attribute name="text">0</attribute>
+    </attributes>
+  </child>"
+</object>
+]]></programlisting>
+</example>
+</refsect2>
 </refsect1>
 
 <refsect1 role="details">

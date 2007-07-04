@@ -69,6 +69,7 @@ IGNORE_HFILES=				\
 	gtksearchenginebeagle.h		\
 	gtksearchenginetracker.h	\
 	gtksearchenginesimple.h		\
+	gtksearchenginequartz.h		\
 	gtksequence.h			\
 	gtksocketprivate.h		\
 	gtktextbtree.h			\
@@ -134,6 +135,7 @@ content_files =					\
 	migrating-GtkAssistant.sgml		\
 	migrating-GtkRecentChooser.sgml 	\
 	migrating-GtkLinkButton.sgml		\
+	migrating-GtkBuilder.sgml		\
 	objects_grouped.sgml			\
 	osx.sgml				\
 	question_index.sgml			\
@@ -144,6 +146,7 @@ content_files =					\
 	x11.sgml				\
 	gtk-query-immodules-2.0.xml		\
 	gtk-update-icon-cache.xml		\
+	gtk-builder-convert.xml			\
 	visual_index.xml
 
 expand_content_files = 				\
@@ -158,6 +161,7 @@ expand_content_files = 				\
 	migrating-GtkAssistant.sgml		\
 	migrating-GtkRecentChooser.sgml 	\
 	migrating-GtkLinkButton.sgml		\
+	migrating-GtkBuilder.sgml		\
 	tree_widget.sgml			\
 	text_widget.sgml			\
 	question_index.sgml
@@ -333,7 +337,7 @@ EXTRA_DIST += version.xml.in
 
 ########################################################################
 
-man_MANS = gtk-query-immodules-2.0.1 gtk-update-icon-cache.1 
+man_MANS = gtk-query-immodules-2.0.1 gtk-update-icon-cache.1 gtk-builder-convert.1
 
 if ENABLE_MAN
 

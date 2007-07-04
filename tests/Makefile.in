@@ -36,6 +36,9 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = @host@
+@HAVE_CXX_TRUE@am__append_1 = autotestkeywords
+@HAVE_CXX_TRUE@am__append_2 = autotestkeywords
+@HAVE_CXX_TRUE@@HAVE_OBJC_TRUE@am__append_3 = -DHAVE_OBJC=1
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
@@ -143,10 +146,14 @@ GTK_VERSION = @GTK_VERSION@
 GTK_XIM_FLAGS = @GTK_XIM_FLAGS@
 HAVE_CUPS_FALSE = @HAVE_CUPS_FALSE@
 HAVE_CUPS_TRUE = @HAVE_CUPS_TRUE@
+HAVE_CXX_FALSE = @HAVE_CXX_FALSE@
+HAVE_CXX_TRUE = @HAVE_CXX_TRUE@
 HAVE_DOCBOOK_FALSE = @HAVE_DOCBOOK_FALSE@
 HAVE_DOCBOOK_TRUE = @HAVE_DOCBOOK_TRUE@
 HAVE_JPEG_FALSE = @HAVE_JPEG_FALSE@
 HAVE_JPEG_TRUE = @HAVE_JPEG_TRUE@
+HAVE_OBJC_FALSE = @HAVE_OBJC_FALSE@
+HAVE_OBJC_TRUE = @HAVE_OBJC_TRUE@
 HAVE_PNG_FALSE = @HAVE_PNG_FALSE@
 HAVE_PNG_TRUE = @HAVE_PNG_TRUE@
 HAVE_TIFF_FALSE = @HAVE_TIFF_FALSE@
@@ -347,10 +354,11 @@ LDADDS = \
 
 @USE_X11_TRUE@testsocket_programs = testsocket testsocket_child
 
-TESTS = floatingtest buildertest
+TESTS = floatingtest buildertest $(am__append_2)
 
 noinst_PROGRAMS = \
 	autotestfilechooser		\
+	autotestkeywords		\
 	floatingtest			\
 	buildertest			\
 	simple				\
@@ -368,6 +376,7 @@ noinst_PROGRAMS = \
 	testentrycompletion 		\
 	testfilechooser			\
 	testfilechooserbutton		\
+	testframe			\
 	testgtk				\
 	testiconview			\
 	testicontheme			\
@@ -410,8 +419,12 @@ noinst_PROGRAMS = \
 	testactions			\
 	testgrouping			\
 	testtooltips			\
-	testvolumebutton
+	testvolumebutton\
+$(am__append_1)
 
+@HAVE_CXX_TRUE@autotestkeywords_SOURCES = autotestkeywords.cc
+@HAVE_CXX_TRUE@autotestkeywords_CPPFLAGS = -I$(srcdir)/dummy-headers $(am__append_3)
+@HAVE_CXX_TRUE@@HAVE_OBJC_TRUE@autotestkeywords_CXXFLAGS = -x objective-c++
 
 autotestfilechooser_DEPENDENCIES = $(TEST_DEPS)
 simple_DEPENDENCIES = $(TEST_DEPS)
@@ -423,6 +436,7 @@ testiconview_DEPENDENCIES = $(TEST_DEPS)
 testaccel_DEPENDENCIES = $(TEST_DEPS)
 testassistant_DEPENDENCIES = $(TEST_DEPS)
 testbbox_DEPENDENCIES = $(TEST_DEPS)
+testframe_DEPENDENCIES = $(TEST_DEPS)
 testcairo_DEPENDENCIES = $(TEST_DEPS)
 testcalendar_DEPENDENCIES = $(TEST_DEPS)
 testcombo_DEPENDENCIES = $(TEST_DEPS)
@@ -477,6 +491,7 @@ print_editor_LDADD = $(LDADDS)
 testaccel_LDADD = $(LDADDS)
 testassistant_LDADD = $(LDADDS)
 testbbox_LDADD = $(LDADDS)
+testframe_LDADD = $(LDADDS)
 testcairo_LDADD = $(LDADDS)
 testcalendar_LDADD = $(LDADDS)
 testcombo_LDADD = $(LDADDS)
@@ -618,6 +633,10 @@ testbbox_SOURCES = \
 	testbbox.c
 
 
+testframe_SOURCES = \
+	testframe.c
+
+
 testiconview_SOURCES = \
 	testiconview.c		\
 	prop-editor.c
@@ -671,83 +690,276 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-@USE_X11_TRUE@noinst_PROGRAMS = autotestfilechooser$(EXEEXT) \
-@USE_X11_TRUE@	floatingtest$(EXEEXT) buildertest$(EXEEXT) \
-@USE_X11_TRUE@	simple$(EXEEXT) print-editor$(EXEEXT) \
-@USE_X11_TRUE@	testaccel$(EXEEXT) testassistant$(EXEEXT) \
-@USE_X11_TRUE@	testbbox$(EXEEXT) testcairo$(EXEEXT) \
-@USE_X11_TRUE@	testcalendar$(EXEEXT) testcombo$(EXEEXT) \
-@USE_X11_TRUE@	testcombochange$(EXEEXT) \
-@USE_X11_TRUE@	testcellrenderertext$(EXEEXT) testdnd$(EXEEXT) \
-@USE_X11_TRUE@	testellipsise$(EXEEXT) \
-@USE_X11_TRUE@	testentrycompletion$(EXEEXT) \
-@USE_X11_TRUE@	testfilechooser$(EXEEXT) \
-@USE_X11_TRUE@	testfilechooserbutton$(EXEEXT) testgtk$(EXEEXT) \
-@USE_X11_TRUE@	testiconview$(EXEEXT) testicontheme$(EXEEXT) \
-@USE_X11_TRUE@	testimage$(EXEEXT) testinput$(EXEEXT) \
-@USE_X11_TRUE@	testmenus$(EXEEXT) testmenubars$(EXEEXT) \
-@USE_X11_TRUE@	testmultidisplay$(EXEEXT) \
-@USE_X11_TRUE@	testmultiscreen$(EXEEXT) testnotebookdnd$(EXEEXT) \
-@USE_X11_TRUE@	testnouiprint$(EXEEXT) testprint$(EXEEXT) \
-@USE_X11_TRUE@	testrgb$(EXEEXT) testrecentchooser$(EXEEXT) \
-@USE_X11_TRUE@	testrecentchoosermenu$(EXEEXT) \
-@USE_X11_TRUE@	testrichtext$(EXEEXT) testselection$(EXEEXT) \
-@USE_X11_TRUE@	testsocket$(EXEEXT) testsocket_child$(EXEEXT) \
-@USE_X11_TRUE@	testspinbutton$(EXEEXT) teststatusicon$(EXEEXT) \
-@USE_X11_TRUE@	testtext$(EXEEXT) testtextbuffer$(EXEEXT) \
-@USE_X11_TRUE@	testtoolbar$(EXEEXT) stresstest-toolbar$(EXEEXT) \
-@USE_X11_TRUE@	testtreeedit$(EXEEXT) testtreemodel$(EXEEXT) \
-@USE_X11_TRUE@	testtreeview$(EXEEXT) testtreefocus$(EXEEXT) \
-@USE_X11_TRUE@	testtreeflow$(EXEEXT) testtreecolumns$(EXEEXT) \
-@USE_X11_TRUE@	testtreesort$(EXEEXT) treestoretest$(EXEEXT) \
-@USE_X11_TRUE@	testxinerama$(EXEEXT) pixbuf-read$(EXEEXT) \
-@USE_X11_TRUE@	pixbuf-lowmem$(EXEEXT) \
-@USE_X11_TRUE@	pixbuf-randomly-modified$(EXEEXT) \
-@USE_X11_TRUE@	pixbuf-random$(EXEEXT) pixbuf-threads$(EXEEXT) \
-@USE_X11_TRUE@	testmerge$(EXEEXT) testactions$(EXEEXT) \
-@USE_X11_TRUE@	testgrouping$(EXEEXT) testtooltips$(EXEEXT) \
-@USE_X11_TRUE@	testvolumebutton$(EXEEXT)
-@USE_X11_FALSE@noinst_PROGRAMS = autotestfilechooser$(EXEEXT) \
-@USE_X11_FALSE@	floatingtest$(EXEEXT) buildertest$(EXEEXT) \
-@USE_X11_FALSE@	simple$(EXEEXT) print-editor$(EXEEXT) \
-@USE_X11_FALSE@	testaccel$(EXEEXT) testassistant$(EXEEXT) \
-@USE_X11_FALSE@	testbbox$(EXEEXT) testcairo$(EXEEXT) \
-@USE_X11_FALSE@	testcalendar$(EXEEXT) testcombo$(EXEEXT) \
-@USE_X11_FALSE@	testcombochange$(EXEEXT) \
-@USE_X11_FALSE@	testcellrenderertext$(EXEEXT) testdnd$(EXEEXT) \
-@USE_X11_FALSE@	testellipsise$(EXEEXT) \
-@USE_X11_FALSE@	testentrycompletion$(EXEEXT) \
-@USE_X11_FALSE@	testfilechooser$(EXEEXT) \
-@USE_X11_FALSE@	testfilechooserbutton$(EXEEXT) testgtk$(EXEEXT) \
-@USE_X11_FALSE@	testiconview$(EXEEXT) testicontheme$(EXEEXT) \
-@USE_X11_FALSE@	testimage$(EXEEXT) testinput$(EXEEXT) \
-@USE_X11_FALSE@	testmenus$(EXEEXT) testmenubars$(EXEEXT) \
-@USE_X11_FALSE@	testmultidisplay$(EXEEXT) \
-@USE_X11_FALSE@	testmultiscreen$(EXEEXT) \
-@USE_X11_FALSE@	testnotebookdnd$(EXEEXT) testnouiprint$(EXEEXT) \
-@USE_X11_FALSE@	testprint$(EXEEXT) testrgb$(EXEEXT) \
-@USE_X11_FALSE@	testrecentchooser$(EXEEXT) \
-@USE_X11_FALSE@	testrecentchoosermenu$(EXEEXT) \
-@USE_X11_FALSE@	testrichtext$(EXEEXT) testselection$(EXEEXT) \
-@USE_X11_FALSE@	testspinbutton$(EXEEXT) teststatusicon$(EXEEXT) \
-@USE_X11_FALSE@	testtext$(EXEEXT) testtextbuffer$(EXEEXT) \
-@USE_X11_FALSE@	testtoolbar$(EXEEXT) stresstest-toolbar$(EXEEXT) \
-@USE_X11_FALSE@	testtreeedit$(EXEEXT) testtreemodel$(EXEEXT) \
-@USE_X11_FALSE@	testtreeview$(EXEEXT) testtreefocus$(EXEEXT) \
-@USE_X11_FALSE@	testtreeflow$(EXEEXT) testtreecolumns$(EXEEXT) \
-@USE_X11_FALSE@	testtreesort$(EXEEXT) treestoretest$(EXEEXT) \
-@USE_X11_FALSE@	testxinerama$(EXEEXT) pixbuf-read$(EXEEXT) \
-@USE_X11_FALSE@	pixbuf-lowmem$(EXEEXT) \
-@USE_X11_FALSE@	pixbuf-randomly-modified$(EXEEXT) \
-@USE_X11_FALSE@	pixbuf-random$(EXEEXT) pixbuf-threads$(EXEEXT) \
-@USE_X11_FALSE@	testmerge$(EXEEXT) testactions$(EXEEXT) \
-@USE_X11_FALSE@	testgrouping$(EXEEXT) testtooltips$(EXEEXT) \
-@USE_X11_FALSE@	testvolumebutton$(EXEEXT)
+@HAVE_CXX_FALSE@@USE_X11_TRUE@noinst_PROGRAMS = \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	autotestfilechooser$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	autotestkeywords$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	floatingtest$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	buildertest$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	simple$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	print-editor$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testaccel$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testassistant$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testbbox$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testcairo$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testcalendar$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testcombo$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testcombochange$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testdnd$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testellipsise$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testfilechooser$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testfilechooserbutton$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testframe$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testgtk$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testiconview$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testicontheme$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testimage$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testinput$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testmenus$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testmenubars$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testmultidisplay$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testmultiscreen$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testnotebookdnd$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testrgb$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testrecentchooser$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testrecentchoosermenu$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testselection$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testsocket$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testsocket_child$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testspinbutton$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	teststatusicon$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtextbuffer$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtoolbar$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	stresstest-toolbar$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreeedit$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreemodel$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreeview$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreefocus$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreeflow$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreesort$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	treestoretest$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-read$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-lowmem$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-randomly-modified$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-random$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-threads$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testmerge$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testactions$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testgrouping$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtooltips$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testvolumebutton$(EXEEXT)
+@HAVE_CXX_FALSE@@USE_X11_FALSE@noinst_PROGRAMS = \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	autotestfilechooser$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	autotestkeywords$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	floatingtest$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	buildertest$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	simple$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	print-editor$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testaccel$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testassistant$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testbbox$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testcairo$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testcalendar$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testcombo$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testcombochange$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testdnd$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testellipsise$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testfilechooser$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testfilechooserbutton$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testframe$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testgtk$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testiconview$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testicontheme$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testimage$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testinput$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testmenus$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testmenubars$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testmultidisplay$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testmultiscreen$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testnotebookdnd$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testrgb$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testrecentchooser$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testrecentchoosermenu$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testselection$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testspinbutton$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	teststatusicon$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtextbuffer$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtoolbar$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	stresstest-toolbar$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreeedit$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreemodel$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreeview$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreefocus$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreeflow$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreesort$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	treestoretest$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-read$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-lowmem$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-randomly-modified$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-random$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-threads$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testmerge$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testactions$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testgrouping$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtooltips$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testvolumebutton$(EXEEXT)
+@HAVE_CXX_TRUE@@USE_X11_TRUE@noinst_PROGRAMS = \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	autotestfilechooser$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	autotestkeywords$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	floatingtest$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	buildertest$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	simple$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	print-editor$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testaccel$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testassistant$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testbbox$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testcairo$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testcalendar$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testcombo$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testcombochange$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testdnd$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testellipsise$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testfilechooser$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testfilechooserbutton$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testframe$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testgtk$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testiconview$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testicontheme$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testimage$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testinput$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testmenus$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testmenubars$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testmultidisplay$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testmultiscreen$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testnotebookdnd$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testrgb$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testrecentchooser$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testrecentchoosermenu$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testselection$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testsocket$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testsocket_child$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testspinbutton$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	teststatusicon$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtextbuffer$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtoolbar$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	stresstest-toolbar$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreeedit$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreemodel$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreeview$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreefocus$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreeflow$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreesort$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	treestoretest$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-read$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-lowmem$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-randomly-modified$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-random$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-threads$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testmerge$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testactions$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testgrouping$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtooltips$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testvolumebutton$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	autotestkeywords$(EXEEXT)
+@HAVE_CXX_TRUE@@USE_X11_FALSE@noinst_PROGRAMS = \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	autotestfilechooser$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	autotestkeywords$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	floatingtest$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	buildertest$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	simple$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	print-editor$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testaccel$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testassistant$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testbbox$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testcairo$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testcalendar$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testcombo$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testcombochange$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testdnd$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testellipsise$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testfilechooser$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testfilechooserbutton$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testframe$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testgtk$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testiconview$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testicontheme$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testimage$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testinput$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testmenus$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testmenubars$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testmultidisplay$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testmultiscreen$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testnotebookdnd$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testrgb$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testrecentchooser$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testrecentchoosermenu$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testselection$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testspinbutton$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	teststatusicon$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtextbuffer$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtoolbar$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	stresstest-toolbar$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreeedit$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreemodel$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreeview$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreefocus$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreeflow$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreesort$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	treestoretest$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-read$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-lowmem$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-randomly-modified$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-random$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-threads$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testmerge$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testactions$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testgrouping$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtooltips$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testvolumebutton$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	autotestkeywords$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
 am_autotestfilechooser_OBJECTS = autotestfilechooser.$(OBJEXT)
 autotestfilechooser_OBJECTS = $(am_autotestfilechooser_OBJECTS)
 autotestfilechooser_LDFLAGS =
+am__autotestkeywords_SOURCES_DIST = autotestkeywords.cc
+@HAVE_CXX_TRUE@am_autotestkeywords_OBJECTS = \
+@HAVE_CXX_TRUE@	autotestkeywords-autotestkeywords.$(OBJEXT)
+autotestkeywords_OBJECTS = $(am_autotestkeywords_OBJECTS)
+autotestkeywords_LDADD = $(LDADD)
+autotestkeywords_DEPENDENCIES =
+autotestkeywords_LDFLAGS =
 buildertest_SOURCES = buildertest.c
 buildertest_OBJECTS = buildertest.$(OBJEXT)
 floatingtest_SOURCES = floatingtest.c
@@ -846,6 +1058,9 @@ am_testfilechooserbutton_OBJECTS = prop-editor.$(OBJEXT) \
 	testfilechooserbutton.$(OBJEXT)
 testfilechooserbutton_OBJECTS = $(am_testfilechooserbutton_OBJECTS)
 testfilechooserbutton_LDFLAGS =
+am_testframe_OBJECTS = testframe.$(OBJEXT)
+testframe_OBJECTS = $(am_testframe_OBJECTS)
+testframe_LDFLAGS =
 am_testgrouping_OBJECTS = testgrouping.$(OBJEXT)
 testgrouping_OBJECTS = $(am_testgrouping_OBJECTS)
 testgrouping_LDFLAGS =
@@ -970,6 +1185,7 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/autotestfilechooser.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/autotestkeywords-autotestkeywords.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/buildertest.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/floatingtest.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pixbuf-lowmem.Po \
@@ -991,6 +1207,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/testentrycompletion.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testfilechooser.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testfilechooserbutton.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testframe.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testgrouping.Po ./$(DEPDIR)/testgtk.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testicontheme.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testiconview.Po \
@@ -1033,7 +1250,16 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(autotestfilechooser_SOURCES) buildertest.c \
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES = $(autotestfilechooser_SOURCES) \
+	$(am__autotestkeywords_SOURCES_DIST) buildertest.c \
 	floatingtest.c pixbuf-lowmem.c pixbuf-random.c \
 	pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c \
 	print-editor.c simple.c stresstest-toolbar.c testaccel.c \
@@ -1041,13 +1267,14 @@ DIST_SOURCES = $(autotestfilechooser_SOURCES) buildertest.c \
 	testcairo.c testcalendar.c testcellrenderertext.c testcombo.c \
 	testcombochange.c testdnd.c testellipsise.c \
 	$(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) \
-	$(testfilechooserbutton_SOURCES) $(testgrouping_SOURCES) \
-	$(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) \
-	testimage.c testinput.c testmenubars.c testmenus.c \
-	$(testmerge_SOURCES) testmultidisplay.c testmultiscreen.c \
-	testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) \
-	$(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) \
-	testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) \
+	$(testfilechooserbutton_SOURCES) $(testframe_SOURCES) \
+	$(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c \
+	$(testiconview_SOURCES) testimage.c testinput.c testmenubars.c \
+	testmenus.c $(testmerge_SOURCES) testmultidisplay.c \
+	testmultiscreen.c testnotebookdnd.c testnouiprint.c \
+	$(testprint_SOURCES) $(testrecentchooser_SOURCES) \
+	$(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c \
+	testselection.c $(testsocket_SOURCES) \
 	$(testsocket_child_SOURCES) $(testspinbutton_SOURCES) \
 	$(teststatusicon_SOURCES) $(testtext_SOURCES) testtextbuffer.c \
 	$(testtoolbar_SOURCES) $(testtooltips_SOURCES) \
@@ -1056,12 +1283,12 @@ DIST_SOURCES = $(autotestfilechooser_SOURCES) buildertest.c \
 	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
 	testxinerama.c treestoretest.c
 DIST_COMMON = $(srcdir)/Makefile.in Makefile.am
-SOURCES = $(autotestfilechooser_SOURCES) buildertest.c floatingtest.c pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) testtextbuffer.c $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+SOURCES = $(autotestfilechooser_SOURCES) $(autotestkeywords_SOURCES) buildertest.c floatingtest.c pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) testtextbuffer.c $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .cc .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  tests/Makefile
@@ -1077,6 +1304,9 @@ clean-noinstPROGRAMS:
 autotestfilechooser$(EXEEXT): $(autotestfilechooser_OBJECTS) $(autotestfilechooser_DEPENDENCIES) 
 	@rm -f autotestfilechooser$(EXEEXT)
 	$(LINK) $(autotestfilechooser_LDFLAGS) $(autotestfilechooser_OBJECTS) $(autotestfilechooser_LDADD) $(LIBS)
+autotestkeywords$(EXEEXT): $(autotestkeywords_OBJECTS) $(autotestkeywords_DEPENDENCIES) 
+	@rm -f autotestkeywords$(EXEEXT)
+	$(CXXLINK) $(autotestkeywords_LDFLAGS) $(autotestkeywords_OBJECTS) $(autotestkeywords_LDADD) $(LIBS)
 buildertest$(EXEEXT): $(buildertest_OBJECTS) $(buildertest_DEPENDENCIES) 
 	@rm -f buildertest$(EXEEXT)
 	$(LINK) $(buildertest_LDFLAGS) $(buildertest_OBJECTS) $(buildertest_LDADD) $(LIBS)
@@ -1149,6 +1379,9 @@ testfilechooser$(EXEEXT): $(testfilechooser_OBJECTS) $(testfilechooser_DEPENDENC
 testfilechooserbutton$(EXEEXT): $(testfilechooserbutton_OBJECTS) $(testfilechooserbutton_DEPENDENCIES) 
 	@rm -f testfilechooserbutton$(EXEEXT)
 	$(LINK) $(testfilechooserbutton_LDFLAGS) $(testfilechooserbutton_OBJECTS) $(testfilechooserbutton_LDADD) $(LIBS)
+testframe$(EXEEXT): $(testframe_OBJECTS) $(testframe_DEPENDENCIES) 
+	@rm -f testframe$(EXEEXT)
+	$(LINK) $(testframe_LDFLAGS) $(testframe_OBJECTS) $(testframe_LDADD) $(LIBS)
 testgrouping$(EXEEXT): $(testgrouping_OBJECTS) $(testgrouping_DEPENDENCIES) 
 	@rm -f testgrouping$(EXEEXT)
 	$(LINK) $(testgrouping_LDFLAGS) $(testgrouping_OBJECTS) $(testgrouping_LDADD) $(LIBS)
@@ -1268,6 +1501,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/autotestfilechooser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/autotestkeywords-autotestkeywords.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buildertest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floatingtest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pixbuf-lowmem.Po@am__quote@
@@ -1293,6 +1527,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testentrycompletion.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testfilechooser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testfilechooserbutton.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testframe.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgrouping.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgtk.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testicontheme.Po@am__quote@
@@ -1365,6 +1600,72 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
+
+.cc.o:
+@am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
+
+.cc.obj:
+@am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`
+
+.cc.lo:
+@am__fastdepCXX_TRUE@	if $(LTCXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Plo"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
+
+autotestkeywords-autotestkeywords.o: autotestkeywords.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -MT autotestkeywords-autotestkeywords.o -MD -MP -MF "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o autotestkeywords-autotestkeywords.o `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo" "$(DEPDIR)/autotestkeywords-autotestkeywords.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='autotestkeywords.cc' object='autotestkeywords-autotestkeywords.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/autotestkeywords-autotestkeywords.Po' tmpdepfile='$(DEPDIR)/autotestkeywords-autotestkeywords.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -c -o autotestkeywords-autotestkeywords.o `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc
+
+autotestkeywords-autotestkeywords.obj: autotestkeywords.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -MT autotestkeywords-autotestkeywords.obj -MD -MP -MF "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o autotestkeywords-autotestkeywords.obj `if test -f 'autotestkeywords.cc'; then $(CYGPATH_W) 'autotestkeywords.cc'; else $(CYGPATH_W) '$(srcdir)/autotestkeywords.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo" "$(DEPDIR)/autotestkeywords-autotestkeywords.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='autotestkeywords.cc' object='autotestkeywords-autotestkeywords.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/autotestkeywords-autotestkeywords.Po' tmpdepfile='$(DEPDIR)/autotestkeywords-autotestkeywords.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -c -o autotestkeywords-autotestkeywords.obj `if test -f 'autotestkeywords.cc'; then $(CYGPATH_W) 'autotestkeywords.cc'; else $(CYGPATH_W) '$(srcdir)/autotestkeywords.cc'; fi`
+
+autotestkeywords-autotestkeywords.lo: autotestkeywords.cc
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -MT autotestkeywords-autotestkeywords.lo -MD -MP -MF "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o autotestkeywords-autotestkeywords.lo `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo" "$(DEPDIR)/autotestkeywords-autotestkeywords.Plo"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/autotestkeywords-autotestkeywords.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='autotestkeywords.cc' object='autotestkeywords-autotestkeywords.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/autotestkeywords-autotestkeywords.Plo' tmpdepfile='$(DEPDIR)/autotestkeywords-autotestkeywords.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -c -o autotestkeywords-autotestkeywords.lo `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc
 
 mostlyclean-libtool:
 	-rm -f *.lo
