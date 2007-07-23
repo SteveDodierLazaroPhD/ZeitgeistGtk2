@@ -39,6 +39,13 @@
   return NO;
 }
 
+-(void)windowWillMiniaturize:(NSNotification *)aNotification
+{
+  GdkWindow *window = [[self contentView] gdkWindow];
+
+  _gdk_quartz_window_detach_from_parent (window);
+}
+
 -(void)windowDidMiniaturize:(NSNotification *)aNotification
 {
   GdkWindow *window = [[self contentView] gdkWindow];
@@ -50,6 +57,8 @@
 -(void)windowDidDeminiaturize:(NSNotification *)aNotification
 {
   GdkWindow *window = [[self contentView] gdkWindow];
+
+  _gdk_quartz_window_attach_to_parent (window);
 
   gdk_synthesize_window_state (window, GDK_WINDOW_STATE_ICONIFIED, 0);
 }
@@ -66,6 +75,22 @@
   GdkWindow *window = [[self contentView] gdkWindow];
 
   _gdk_quartz_events_update_focus_window (window, FALSE);
+}
+
+-(void)windowDidBecomeMain:(NSNotification *)aNotification
+{
+  GdkWindow *window;
+
+  window = [[self contentView] gdkWindow];
+  _gdk_quartz_window_did_become_main (window);
+}
+
+-(void)windowDidResignMain:(NSNotification *)aNotification
+{
+  GdkWindow *window;
+
+  window = [[self contentView] gdkWindow];
+  _gdk_quartz_window_did_resign_main (window);
 }
 
 /* Used in combination with NSLeftMouseUp in sendEvent to keep track

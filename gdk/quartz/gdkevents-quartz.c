@@ -49,6 +49,10 @@ static gboolean     pointer_grab_implicit;
 GdkWindow *         _gdk_quartz_keyboard_grab_window;
 static gboolean     keyboard_grab_owner_events;
 
+/* This is the event mask and button state from the last event */
+static GdkEventMask current_event_mask;
+static int          current_button_state;
+
 static void get_child_coordinates_from_ancestor (GdkWindow *ancestor_window,
                                                  gint       ancestor_x,
                                                  gint       ancestor_y,
@@ -448,6 +452,20 @@ get_mouse_button_from_ns_event (NSEvent *event)
 }
 
 static GdkModifierType
+get_mouse_button_modifiers_from_ns_event (NSEvent *event)
+{
+  int button;
+  GdkModifierType state = 0;
+
+  /* This maps buttons 1 to 5 to GDK_BUTTON[1-5]_MASK */
+  button = get_mouse_button_from_ns_event (event);
+  if (button >= 1 && button <= 5)
+    state = (1 << (button + 7));
+
+  return state;
+}
+
+static GdkModifierType
 get_keyboard_modifiers_from_ns_event (NSEvent *nsevent)
 {
   GdkModifierType modifiers = 0;
@@ -463,8 +481,6 @@ get_keyboard_modifiers_from_ns_event (NSEvent *nsevent)
     modifiers |= GDK_CONTROL_MASK;
   if (nsflags & NSCommandKeyMask)
     modifiers |= GDK_MOD1_MASK;
-
-  /* FIXME: Support GDK_BUTTON_MASK */
 
   return modifiers;
 }
@@ -585,17 +601,6 @@ _gdk_quartz_events_update_focus_window (GdkWindow *window,
       append_event (event);
       current_keyboard_window = g_object_ref (window);
     }
-}
-
-static gboolean
-gdk_window_is_ancestor (GdkWindow *ancestor,
-			GdkWindow *window)
-{
-  if (ancestor == NULL || window == NULL)
-    return FALSE;
-
-  return (gdk_window_get_parent (window) == ancestor ||
-	  gdk_window_is_ancestor (ancestor, gdk_window_get_parent (window)));
 }
 
 static void
@@ -758,7 +763,7 @@ synthesize_crossing_events (GdkWindow      *window,
   if (window == current_mouse_window)
     return;
 
-  if (gdk_window_is_ancestor (current_mouse_window, window))
+  if (_gdk_quartz_window_is_ancestor (current_mouse_window, window))
     {
       /* Pointer has moved to an inferior window. */
       synthesize_leave_event (current_mouse_window, nsevent, mode, GDK_NOTIFY_INFERIOR);
@@ -775,7 +780,7 @@ synthesize_crossing_events (GdkWindow      *window,
 
       synthesize_enter_event (window, nsevent, mode, GDK_NOTIFY_ANCESTOR);
     }
-  else if (gdk_window_is_ancestor (window, current_mouse_window))
+  else if (_gdk_quartz_window_is_ancestor (window, current_mouse_window))
     {
       /* Pointer has moved to an ancestor window. */
       synthesize_leave_event (current_mouse_window, nsevent, mode, GDK_NOTIFY_ANCESTOR);
@@ -799,7 +804,7 @@ synthesize_crossing_events (GdkWindow      *window,
 	common_ancestor = gdk_window_get_parent (tem);
 	tem = common_ancestor;
       } while (common_ancestor &&
-	       !gdk_window_is_ancestor (common_ancestor, window));
+	       !_gdk_quartz_window_is_ancestor (common_ancestor, window));
       if (common_ancestor)
 	{
 	  synthesize_leave_event (current_mouse_window, nsevent, mode, GDK_NOTIFY_NONLINEAR);
@@ -862,8 +867,11 @@ _gdk_quartz_events_send_map_events (GdkWindow *window)
 
 /* Get current mouse window */
 GdkWindow *
-_gdk_quartz_events_get_mouse_window (void)
+_gdk_quartz_events_get_mouse_window (gboolean consider_grabs)
 {
+  if (!consider_grabs)
+    return current_mouse_window;
+
   if (_gdk_quartz_pointer_grab_window && !pointer_grab_owner_events)
     return _gdk_quartz_pointer_grab_window;
   
@@ -903,11 +911,15 @@ _gdk_quartz_events_update_cursor (GdkWindow *window)
       private = private->parent;
     }
 
+  GDK_QUARTZ_ALLOC_POOL;
+
   if (!nscursor)
     nscursor = [NSCursor arrowCursor];
 
   if ([NSCursor currentCursor] != nscursor)
     [nscursor set];
+
+  GDK_QUARTZ_RELEASE_POOL;
 }
 
 /* Translates coordinates from an ancestor window + coords, to
@@ -1327,7 +1339,10 @@ create_button_event (GdkWindow *window,
 {
   GdkEvent *event;
   GdkEventType type;
-  guint button;
+  gint state;
+  gint button;
+
+  state = get_keyboard_modifiers_from_ns_event (nsevent);
 
   switch ([nsevent type])
     {
@@ -1340,6 +1355,7 @@ create_button_event (GdkWindow *window,
     case NSRightMouseUp:
     case NSOtherMouseUp:
       type = GDK_BUTTON_RELEASE;
+      state |= get_mouse_button_modifiers_from_ns_event (nsevent);
       break;
     default:
       g_assert_not_reached ();
@@ -1353,7 +1369,7 @@ create_button_event (GdkWindow *window,
   event->button.x = x;
   event->button.y = y;
   /* FIXME event->axes */
-  event->button.state = get_keyboard_modifiers_from_ns_event (nsevent);
+  event->button.state = state;
   event->button.button = button;
   event->button.device = _gdk_display->core_pointer;
   convert_window_coordinates_to_root (window, x, y, 
@@ -1372,14 +1388,13 @@ create_motion_event (GdkWindow *window,
   GdkEvent *event;
   GdkEventType type;
   GdkModifierType state = 0;
-  int button = 0;
 
   switch ([nsevent type])
     {
     case NSLeftMouseDragged:
     case NSRightMouseDragged:
     case NSOtherMouseDragged:
-      button = get_mouse_button_from_ns_event (nsevent);
+      state = get_mouse_button_modifiers_from_ns_event (nsevent);
       /* Fall through */
     case NSMouseMoved:
       type = GDK_MOTION_NOTIFY;
@@ -1388,10 +1403,6 @@ create_motion_event (GdkWindow *window,
       g_assert_not_reached ();
     }
 
-  /* This maps buttons 1 to 5 to GDK_BUTTON[1-5]_MASK */
-  if (button >= 1 && button <= 5)
-    state = (1 << (button + 7));
-  
   state |= get_keyboard_modifiers_from_ns_event (nsevent);
 
   event = gdk_event_new (type);
@@ -1461,6 +1472,47 @@ create_key_event (GdkWindow    *window,
 
   event->key.is_modifier = _gdk_quartz_keys_is_modifier (event->key.hardware_keycode);
 
+  /* If the key press is a modifier, the state should include the mask
+   * for that modifier but only for releases, not presses. This
+   * matches the X11 backend behavior.
+   */
+  if (event->key.is_modifier)
+    {
+      int mask = 0;
+
+      switch (event->key.keyval)
+        {
+        case GDK_Meta_R:
+        case GDK_Meta_L:
+          mask = GDK_MOD1_MASK;
+          break;
+        case GDK_Shift_R:
+        case GDK_Shift_L:
+          mask = GDK_SHIFT_MASK;
+          break;
+        case GDK_Caps_Lock:
+          mask = GDK_LOCK_MASK;
+          break;
+        case GDK_Alt_R:
+        case GDK_Alt_L:
+          mask = GDK_MOD5_MASK;
+          break;
+        case GDK_Control_R:
+        case GDK_Control_L:
+          mask = GDK_CONTROL_MASK;
+          break;
+        default:
+          mask = 0;
+        }
+
+      if (type == GDK_KEY_PRESS)
+        event->key.state &= ~mask;
+      else if (type == GDK_KEY_RELEASE)
+        event->key.state |= mask;
+    }
+
+  event->key.state |= current_button_state;
+
   event->key.string = NULL;
 
   /* Fill in ->string since apps depend on it, taken from the x11 backend. */
@@ -1508,11 +1560,10 @@ create_key_event (GdkWindow    *window,
   return event;
 }
 
-static GdkEventMask current_mask = 0;
 GdkEventMask 
 _gdk_quartz_events_get_current_event_mask (void)
 {
-  return current_mask;
+  return current_event_mask;
 }
 
 static gboolean
@@ -1578,6 +1629,25 @@ gdk_event_translate (NSEvent *nsevent)
         }
     }
 
+  /* Keep track of button state, since we don't get that information
+   * for key events. 
+   */
+  switch ([nsevent type])
+    {
+    case NSLeftMouseDown:
+    case NSRightMouseDown:
+    case NSOtherMouseDown:
+      current_button_state |= get_mouse_button_modifiers_from_ns_event (nsevent);
+      break;
+    case NSLeftMouseUp:
+    case NSRightMouseUp:
+    case NSOtherMouseUp:
+      current_button_state &= ~get_mouse_button_modifiers_from_ns_event (nsevent);
+      break;
+    default:
+      break;
+    }
+
   nswindow = [nsevent window];
 
   /* Ignore events for no window or ones not created by GDK. */
@@ -1635,7 +1705,7 @@ gdk_event_translate (NSEvent *nsevent)
         [NSApp activateIgnoringOtherApps:YES];
     }
 
-  current_mask = get_event_mask_from_ns_event (nsevent);
+  current_event_mask = get_event_mask_from_ns_event (nsevent);
 
   switch ([nsevent type])
     {

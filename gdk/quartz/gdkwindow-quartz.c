@@ -26,8 +26,10 @@
 
 static gpointer parent_class;
 
-static GSList *update_windows = NULL;
-static guint update_idle = 0;
+static GSList *update_windows;
+static guint   update_idle;
+
+static GSList *main_window_stack;
 
 #define WINDOW_IS_TOPLEVEL(window)		   \
   (GDK_WINDOW_TYPE (window) != GDK_WINDOW_CHILD && \
@@ -434,6 +436,18 @@ get_default_title (void)
   return title;
 }
 
+gboolean
+_gdk_quartz_window_is_ancestor (GdkWindow *ancestor,
+                                GdkWindow *window)
+{
+  if (ancestor == NULL || window == NULL)
+    return FALSE;
+
+  return (gdk_window_get_parent (window) == ancestor ||
+          _gdk_quartz_window_is_ancestor (ancestor, 
+                                          gdk_window_get_parent (window)));
+}
+
 /* FIXME: It would be nice to have one function that takes an NSPoint
  * and flips the coords for any window.
  */
@@ -496,6 +510,44 @@ _gdk_quartz_window_find_child (GdkWindow *window,
     return find_child_window_helper (window, x, y, 0, 0);
 
   return NULL;
+}
+
+void
+_gdk_quartz_window_did_become_main (GdkWindow *window)
+{
+  main_window_stack = g_slist_remove (main_window_stack, window);
+
+  if (GDK_WINDOW_OBJECT (window)->window_type != GDK_WINDOW_TEMP)
+    main_window_stack = g_slist_prepend (main_window_stack, window);
+}
+
+void
+_gdk_quartz_window_did_resign_main (GdkWindow *window)
+{
+  GdkWindow *new_window = NULL;
+
+  if (main_window_stack)
+    new_window = main_window_stack->data;
+  else
+    {
+      GList *toplevels;
+
+      toplevels = gdk_window_get_toplevels ();
+      if (toplevels)
+        new_window = toplevels->data;
+      g_list_free (toplevels);
+    }
+
+  if (new_window &&
+      new_window != window &&
+      GDK_WINDOW_IS_MAPPED (new_window) &&
+      GDK_WINDOW_OBJECT (new_window)->window_type != GDK_WINDOW_TEMP)
+    {
+      GdkWindowObject *private = (GdkWindowObject *) new_window;
+      GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+
+      [impl->toplevel makeKeyAndOrderFront:impl->toplevel];
+    }
 }
 
 GdkWindow *
@@ -635,12 +687,17 @@ gdk_window_new (GdkWindow     *parent,
     case GDK_WINDOW_DIALOG:
     case GDK_WINDOW_TEMP:
       {
-	NSRect content_rect = 
-	  NSMakeRect (private->x, 
-		      _gdk_quartz_window_get_inverted_screen_y (private->y) - impl->height,
-		      impl->width, impl->height);
-	const char *title;
-	int style_mask;
+        NSRect content_rect;
+        int style_mask;
+        const char *title;
+
+        /* Big hack: We start out outside the screen and move the
+         * window in before showing it. This makes the initial
+         * MouseEntered event work if the window ends up right under
+         * the mouse pointer, bad quartz.
+         */
+        content_rect = NSMakeRect (-500 - impl->width, -500 - impl->height,
+                                   impl->width, impl->height);
 
 	switch (attributes->window_type) 
           {
@@ -739,13 +796,17 @@ _gdk_windowing_window_destroy (GdkWindow *window,
 			       gboolean   foreign_destroy)
 {
   update_windows = g_slist_remove (update_windows, window);
+  main_window_stack = g_slist_remove (main_window_stack, window);
 
   if (!recursing && !foreign_destroy)
     {
       GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (window)->impl);
+      GdkWindow *mouse_window;
 
-      if (window == _gdk_quartz_events_get_mouse_window ()) 
-	_gdk_quartz_events_update_mouse_window (_gdk_root);
+      mouse_window = _gdk_quartz_events_get_mouse_window (FALSE);
+      if (window == mouse_window ||
+          _gdk_quartz_window_is_ancestor (window, mouse_window))
+        _gdk_quartz_events_update_mouse_window (_gdk_root);
 
       GDK_QUARTZ_ALLOC_POOL;
 
@@ -806,6 +867,22 @@ show_window_internal (GdkWindow *window,
 
   if (impl->toplevel)
     {
+      /* Move the window into place, to guarantee that we get the
+       * initial MouseEntered event.
+       */
+      if (!GDK_WINDOW_IS_MAPPED (window))
+        {
+          NSRect content_rect;
+          NSRect frame_rect;
+
+          content_rect =
+            NSMakeRect (private->x,
+                        _gdk_quartz_window_get_inverted_screen_y (private->y) - impl->height,
+                        impl->width, impl->height);
+          frame_rect = [impl->toplevel frameRectForContentRect:content_rect];
+          [impl->toplevel setFrame:frame_rect display:NO];
+        }
+
       /* We should make the window not raise for !raise, but at least
        * this will keep it from getting focused in that case.
        */
@@ -814,14 +891,13 @@ show_window_internal (GdkWindow *window,
         [impl->toplevel makeKeyAndOrderFront:impl->toplevel];
       else
         [impl->toplevel orderFront:nil];
-
-      [impl->view setNeedsDisplay:YES];
     }
   else
     {
       [impl->view setHidden:NO];
-      [impl->view setNeedsDisplay:YES];
     }
+
+  [impl->view setNeedsDisplay:YES];
 
   if (all_parents_shown (private->parent))
     _gdk_quartz_events_send_map_events (window);
@@ -835,14 +911,53 @@ show_window_internal (GdkWindow *window,
     gdk_window_iconify (window);
 
   if (impl->transient_for && !GDK_WINDOW_DESTROYED (impl->transient_for))
+    _gdk_quartz_window_attach_to_parent (window);
+
+  GDK_QUARTZ_RELEASE_POOL;
+}
+
+/* Temporarily unsets the parent window, if the window is a
+ * transient. 
+ */
+void
+_gdk_quartz_window_detach_from_parent (GdkWindow *window)
+{
+  GdkWindowImplQuartz *impl;
+
+  g_return_if_fail (GDK_IS_WINDOW (window));
+
+  impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (window)->impl);
+  
+  g_return_if_fail (impl->toplevel != NULL);
+
+  if (impl->transient_for && !GDK_WINDOW_DESTROYED (impl->transient_for))
+    {
+      GdkWindowImplQuartz *parent_impl;
+
+      parent_impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (impl->transient_for)->impl);
+      [parent_impl->toplevel removeChildWindow:impl->toplevel];
+    }
+}
+
+/* Re-sets the parent window, if the window is a transient. */
+void
+_gdk_quartz_window_attach_to_parent (GdkWindow *window)
+{
+  GdkWindowImplQuartz *impl;
+
+  g_return_if_fail (GDK_IS_WINDOW (window));
+
+  impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (window)->impl);
+  
+  g_return_if_fail (impl->toplevel != NULL);
+
+  if (impl->transient_for && !GDK_WINDOW_DESTROYED (impl->transient_for))
     {
       GdkWindowImplQuartz *parent_impl;
 
       parent_impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (impl->transient_for)->impl);
       [parent_impl->toplevel addChildWindow:impl->toplevel ordered:NSWindowAbove];
     }
-
-  GDK_QUARTZ_RELEASE_POOL;
 }
 
 void
@@ -866,36 +981,48 @@ gdk_window_hide (GdkWindow *window)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
   GdkWindowImplQuartz *impl;
+  GdkWindow *mouse_window;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
   if (GDK_WINDOW_DESTROYED (window))
     return;
 
+  mouse_window = _gdk_quartz_events_get_mouse_window (FALSE);
+  if (window == mouse_window || 
+      _gdk_quartz_window_is_ancestor (window, mouse_window))
+    _gdk_quartz_events_update_mouse_window (_gdk_root);
+
   if (GDK_WINDOW_IS_MAPPED (window))
     gdk_synthesize_window_state (window,
 				 0,
 				 GDK_WINDOW_STATE_WITHDRAWN);
-  
+
   _gdk_window_clear_update_area (window);
 
   impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
 
   if (impl->toplevel) 
     {
-      /* We must unset the transient while it is hidden, otherwise
-       * quartz won't hide the window.
-       */
-      if (impl->transient_for)
-        {
-          if (!GDK_WINDOW_DESTROYED (impl->transient_for))
-            {
-              GdkWindowImplQuartz *parent_impl;
+      NSRect content_rect;
+      NSRect frame_rect;
 
-              parent_impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (impl->transient_for)->impl);
-              [parent_impl->toplevel removeChildWindow:impl->toplevel];
-            }
-        }
+     /* Update main window. */
+      main_window_stack = g_slist_remove (main_window_stack, window);
+      if ([NSApp mainWindow] == impl->toplevel)
+        _gdk_quartz_window_did_resign_main (window);
+
+      if (impl->transient_for)
+        _gdk_quartz_window_detach_from_parent (window);
+
+      /* Big hack in gdk_window_new() and show_window_internal()
+       * continued. Move the window away when hidden so that we can
+       * move it back before showing it.
+       */
+      content_rect = NSMakeRect (-500 - impl->width, -500 - impl->height,
+                                 impl->width, impl->height);
+      frame_rect = [impl->toplevel frameRectForContentRect:content_rect];
+      [impl->toplevel setFrame:frame_rect display:NO];
 
       [impl->toplevel orderOut:nil];
     }
@@ -955,7 +1082,6 @@ move_resize_window_internal (GdkWindow *window,
       NSRect frame_rect = [impl->toplevel frameRectForContentRect:content_rect];
       
       frame_rect.origin.y -= frame_rect.size.height;
-
       [impl->toplevel setFrame:frame_rect display:YES];
     }
   else 
@@ -1159,6 +1285,8 @@ gdk_window_set_cursor (GdkWindow *window,
   if (GDK_WINDOW_DESTROYED (window))
     return;
 
+  GDK_QUARTZ_ALLOC_POOL;
+
   if (!cursor)
     nscursor = NULL;
   else 
@@ -1169,7 +1297,9 @@ gdk_window_set_cursor (GdkWindow *window,
 
   impl->nscursor = nscursor;
 
-  _gdk_quartz_events_update_cursor (_gdk_quartz_events_get_mouse_window ());
+  GDK_QUARTZ_RELEASE_POOL;
+
+  _gdk_quartz_events_update_cursor (_gdk_quartz_events_get_mouse_window (TRUE));
 }
 
 void
@@ -1563,11 +1693,7 @@ gdk_window_set_transient_for (GdkWindow *window,
 
   if (window_impl->transient_for)
     {
-      if (!GDK_WINDOW_DESTROYED (window_impl->transient_for))
-        {
-          parent_impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (window_impl->transient_for)->impl);
-          [parent_impl->toplevel removeChildWindow:window_impl->toplevel];
-        }
+      _gdk_quartz_window_detach_from_parent (window);
 
       g_object_unref (window_impl->transient_for);
       window_impl->transient_for = NULL;
@@ -1594,7 +1720,7 @@ gdk_window_set_transient_for (GdkWindow *window,
            * window will be added in show() instead.
            */
           if (!(GDK_WINDOW_OBJECT (window)->state & GDK_WINDOW_STATE_WITHDRAWN))
-            [parent_impl->toplevel addChildWindow:window_impl->toplevel ordered:NSWindowAbove];
+            _gdk_quartz_window_attach_to_parent (window);
         }
     }
   

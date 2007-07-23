@@ -148,10 +148,10 @@ expose_cb (GtkWidget *widget, GdkEventExpose *event, gpointer data)
                               GDK_INTERP_BILINEAR, 255,
                               event->area.x, event->area.y, 16, 0xaaaaaa, 0x555555);
 
-  gdk_pixbuf_render_to_drawable (dest, widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-                                 0, 0, event->area.x, event->area.y,
-                                 event->area.width, event->area.height,
-                                 GDK_RGB_DITHER_NORMAL, event->area.x, event->area.y);
+  gdk_draw_pixbuf (widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], dest,
+                   0, 0, event->area.x, event->area.y,
+                   event->area.width, event->area.height,
+                   GDK_RGB_DITHER_NORMAL, event->area.x, event->area.y);
   
   gdk_pixbuf_unref (dest);
   
@@ -576,7 +576,8 @@ result in a new pixbuf.</para>
 <varlistentry><term><parameter>angle</parameter>&nbsp;:</term>
 <listitem><simpara> the angle to rotate by
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new pixbuf
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the new <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if not enough memory could be
+allocated for it.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.6
@@ -597,7 +598,8 @@ result in a new pixbuf.</para>
 <varlistentry><term><parameter>horizontal</parameter>&nbsp;:</term>
 <listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to flip horizontally, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to flip vertically
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new pixbuf.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the new <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if not enough memory could be
+allocated for it.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.6

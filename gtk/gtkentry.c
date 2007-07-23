@@ -5870,11 +5870,6 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
               if (!gtk_tree_selection_get_selected (sel, &model, &iter))
                 return FALSE;
               
-              if (completion->priv->completion_prefix == NULL)
-                {
-                  completion->priv->completion_prefix = g_strdup (gtk_entry_get_text (GTK_ENTRY (completion->priv->entry)));
-                }
-              
               g_signal_emit_by_name (completion, "cursor_on_match", model,
                                      &iter, &entry_set);
             }
@@ -5898,15 +5893,27 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
            event->keyval == GDK_Right ||
            event->keyval == GDK_KP_Right) 
     {
+      GtkTreeSelection *sel;
+      GtkTreeIter iter;
+      GtkTreeModel *model = NULL;
+
       _gtk_entry_reset_im_context (GTK_ENTRY (widget));
       _gtk_entry_completion_popdown (completion);
+
+      sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (completion->priv->tree_view));
+      if (!gtk_tree_selection_get_selected (sel, &model, &iter))
+        return FALSE;
 
       if (completion->priv->inline_selection)
         {
           /* Escape rejects the tentative completion */
           if (event->keyval == GDK_Escape)
             {
-              gtk_entry_set_text (GTK_ENTRY (completion->priv->entry), completion->priv->completion_prefix);
+              if (completion->priv->completion_prefix)
+                gtk_entry_set_text (GTK_ENTRY (completion->priv->entry), 
+                                    completion->priv->completion_prefix);
+              else 
+                gtk_entry_set_text (GTK_ENTRY (completion->priv->entry), "");
             }
 
           /* Move the cursor to the end for Right/Esc, to the

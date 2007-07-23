@@ -474,6 +474,7 @@ GTK_BUILDABLE_GET_IFACE
 <TITLE>GtkBuilder</TITLE>
 GtkBuilder
 GtkBuilderConnectFunc
+GtkBuilderError
 gtk_builder_new
 gtk_builder_add_from_file
 gtk_builder_add_from_string
@@ -498,6 +499,7 @@ GTK_BUILDER_GET_CLASS
 <SUBSECTION Private>
 gtk_builder_get_type
 gtk_builder_error_quark
+GtkBuilderPrivate
 </SECTION>
 
 <SECTION>
@@ -1780,6 +1782,7 @@ gtk_icon_view_set_pixbuf_column
 gtk_icon_view_get_pixbuf_column
 gtk_icon_view_get_path_at_pos
 gtk_icon_view_get_item_at_pos
+gtk_icon_view_convert_widget_to_bin_window_coords
 gtk_icon_view_set_cursor
 gtk_icon_view_get_cursor
 gtk_icon_view_selected_foreach
@@ -1808,6 +1811,11 @@ gtk_icon_view_unselect_all
 gtk_icon_view_item_activated
 gtk_icon_view_scroll_to_path
 gtk_icon_view_get_visible_range
+gtk_icon_view_set_tooltip_item
+gtk_icon_view_set_tooltip_cell
+gtk_icon_view_get_tooltip_context
+gtk_icon_view_set_tooltip_column
+gtk_icon_view_get_tooltip_column
 <SUBSECTION Dnd>
 GtkIconViewDropPosition
 gtk_icon_view_enable_model_drag_source
@@ -3983,6 +3991,8 @@ gtk_tool_item_get_homogeneous
 gtk_tool_item_set_expand
 gtk_tool_item_get_expand
 gtk_tool_item_set_tooltip
+gtk_tool_item_set_tooltip_text
+gtk_tool_item_set_tooltip_markup
 gtk_tool_item_set_use_drag_window
 gtk_tool_item_get_use_drag_window
 gtk_tool_item_set_visible_horizontal
@@ -4075,6 +4085,8 @@ gtk_menu_tool_button_new_from_stock
 gtk_menu_tool_button_set_menu
 gtk_menu_tool_button_get_menu
 gtk_menu_tool_button_set_arrow_tooltip
+gtk_menu_tool_button_set_arrow_tooltip_text
+gtk_menu_tool_button_set_arrow_tooltip_markup
 
 <SUBSECTION Standard>
 GtkMenuToolButtonClass
@@ -4171,8 +4183,11 @@ gtk_tooltip_set_icon
 gtk_tooltip_set_icon_from_stock
 gtk_tooltip_set_custom
 gtk_tooltip_trigger_tooltip_query
+gtk_tooltip_set_tip_area
 <SUBSECTION Standard>
 GTK_TYPE_TOOLTIP
+GTK_IS_TOOLTIP
+GTK_TOOLTIP
 <SUBSECTION Private>
 gtk_tooltip_get_type
 </SECTION>
@@ -4663,11 +4678,17 @@ gtk_tree_view_get_row_separator_func
 gtk_tree_view_set_row_separator_func
 gtk_tree_view_get_rubber_banding
 gtk_tree_view_set_rubber_banding
+gtk_tree_view_is_rubber_banding_active
 gtk_tree_view_get_enable_tree_lines
 gtk_tree_view_set_enable_tree_lines
 GtkTreeViewGridLines
 gtk_tree_view_get_grid_lines
 gtk_tree_view_set_grid_lines
+gtk_tree_view_set_tooltip_row
+gtk_tree_view_set_tooltip_cell
+gtk_tree_view_get_tooltip_context
+gtk_tree_view_get_tooltip_column
+gtk_tree_view_set_tooltip_column
 
 <SUBSECTION Standard>
 GtkTreeSelectionClass
@@ -4738,6 +4759,7 @@ gtk_cell_layout_get_type
 GtkCellRendererState
 GtkCellRendererMode
 GtkCellRenderer
+GtkCellRendererClass
 gtk_cell_renderer_get_size
 gtk_cell_renderer_render
 gtk_cell_renderer_activate
@@ -5275,6 +5297,8 @@ gtk_widget_get_tooltip_text
 gtk_widget_set_tooltip_text
 gtk_widget_get_tooltip_window
 gtk_widget_set_tooltip_window
+gtk_widget_get_has_tooltip
+gtk_widget_set_has_tooltip
 gtk_widget_trigger_tooltip_query
 <SUBSECTION>
 gtk_requisition_copy

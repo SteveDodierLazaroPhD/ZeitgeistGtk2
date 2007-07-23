@@ -42,6 +42,7 @@
 #include "gtkentry.h"
 #include "gtkframe.h"
 #include "gtktreemodelsort.h"
+#include "gtktooltip.h"
 #include "gtkprivate.h"
 #include "gtkalias.h"
 
@@ -142,7 +143,8 @@ enum {
   PROP_LEVEL_INDENTATION,
   PROP_RUBBER_BANDING,
   PROP_ENABLE_GRID_LINES,
-  PROP_ENABLE_TREE_LINES
+  PROP_ENABLE_TREE_LINES,
+  PROP_TOOLTIP_COLUMN
 };
 
 /* object signals */
@@ -755,6 +757,16 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
                                                            FALSE,
                                                            GTK_PARAM_READWRITE));
 
+    g_object_class_install_property (o_class,
+				     PROP_TOOLTIP_COLUMN,
+				     g_param_spec_int ("tooltip-column",
+						       P_("Tooltip Column"),
+						       P_("The column in the model containing the tooltip texts for the rows"),
+						       -1,
+						       G_MAXINT,
+						       -1,
+						       GTK_PARAM_READWRITE));
+
   /* Style properties */
 #define _TREE_VIEW_EXPANDER_SIZE 12
 #define _TREE_VIEW_VERTICAL_SEPARATOR 2
@@ -897,7 +909,7 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
    * The given row is about to be expanded (show its children nodes). Use this
    * signal if you need to control the expandability of individual rows.
    *
-   * Returns: %TRUE to allow expansion, %FALSE to reject
+   * Returns: %FALSE to allow expansion, %TRUE to reject
    */
   tree_view_signals[TEST_EXPAND_ROW] =
     g_signal_new (I_("test-expand-row"),
@@ -919,7 +931,7 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
    * The given row is about to be collapsed (hide its children nodes). Use this
    * signal if you need to control the collapsibility of individual rows.
    *
-   * Returns: %TRUE to allow expansion, %FALSE to reject
+   * Returns: %FALSE to allow collapsing, %TRUE to reject
    */
   tree_view_signals[TEST_COLLAPSE_ROW] =
     g_signal_new (I_("test-collapse-row"),
@@ -1348,6 +1360,8 @@ gtk_tree_view_init (GtkTreeView *tree_view)
 
   tree_view->priv->grid_lines = GTK_TREE_VIEW_GRID_LINES_NONE;
   tree_view->priv->tree_lines_enabled = FALSE;
+
+  tree_view->priv->tooltip_column = -1;
 }
 
 
@@ -1421,6 +1435,9 @@ gtk_tree_view_set_property (GObject         *object,
     case PROP_ENABLE_TREE_LINES:
       gtk_tree_view_set_enable_tree_lines (tree_view, g_value_get_boolean (value));
       break;
+    case PROP_TOOLTIP_COLUMN:
+      gtk_tree_view_set_tooltip_column (tree_view, g_value_get_int (value));
+      break;
     default:
       break;
     }
@@ -1491,6 +1508,9 @@ gtk_tree_view_get_property (GObject    *object,
       break;
     case PROP_ENABLE_TREE_LINES:
       g_value_set_boolean (value, tree_view->priv->tree_lines_enabled);
+      break;
+    case PROP_TOOLTIP_COLUMN:
+      g_value_set_boolean (value, tree_view->priv->tooltip_column);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -12892,8 +12912,8 @@ gtk_tree_view_tree_to_widget_coords (GtkTreeView *tree_view,
  * @tree_view: a #GtkTreeView
  * @wx: X coordinate relative to the widget
  * @wy: Y coordinate relative to the widget
- * @bx: return location for tree X coordinate
- * @by: return location for tree Y coordinate
+ * @tx: return location for tree X coordinate
+ * @ty: return location for tree Y coordinate
  *
  * Converts widget coordinates to coordinates for the
  * tree (the full scrollable area of the tree).
@@ -12922,10 +12942,10 @@ gtk_tree_view_convert_widget_to_tree_coords (GtkTreeView *tree_view,
 /**
  * gtk_tree_view_convert_tree_to_widget_coords:
  * @tree_view: a #GtkTreeView
- * @wx: X coordinate relative to the tree
- * @wy: Y coordinate relative to the tree
- * @bx: return location for widget X coordinate
- * @by: return location for widget Y coordinate
+ * @tx: X coordinate relative to the tree
+ * @ty: Y coordinate relative to the tree
+ * @wx: return location for widget X coordinate
+ * @wy: return location for widget Y coordinate
  *
  * Converts tree coordinates (coordinates in full scrollable area of the tree)
  * to widget coordinates.
@@ -12974,7 +12994,7 @@ gtk_tree_view_convert_widget_to_bin_window_coords (GtkTreeView *tree_view,
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
   if (bx)
-    *bx = wx;
+    *bx = wx + tree_view->priv->hadjustment->value;
   if (by)
     *by = wy - TREE_VIEW_HEADER_HEIGHT (tree_view);
 }
@@ -12987,7 +13007,7 @@ gtk_tree_view_convert_widget_to_bin_window_coords (GtkTreeView *tree_view,
  * @wx: return location for widget X coordinate
  * @wy: return location for widget Y coordinate
  *
- * Converts bin_window coordinates (see gtk_tree_view_get_bin_window()).
+ * Converts bin_window coordinates (see gtk_tree_view_get_bin_window())
  * to widget relative coordinates.
  *
  * Since: 2.12
@@ -13002,7 +13022,7 @@ gtk_tree_view_convert_bin_window_to_widget_coords (GtkTreeView *tree_view,
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
   if (wx)
-    *wx = bx;
+    *wx = bx - tree_view->priv->hadjustment->value;
   if (wy)
     *wy = by + TREE_VIEW_HEADER_HEIGHT (tree_view);
 }
@@ -13030,7 +13050,7 @@ gtk_tree_view_convert_tree_to_bin_window_coords (GtkTreeView *tree_view,
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
   if (bx)
-    *bx = tx - tree_view->priv->hadjustment->value;
+    *bx = tx;
   if (by)
     *by = ty - tree_view->priv->dy;
 }
@@ -13038,10 +13058,10 @@ gtk_tree_view_convert_tree_to_bin_window_coords (GtkTreeView *tree_view,
 /**
  * gtk_tree_view_convert_bin_window_to_tree_coords:
  * @tree_view: a #GtkTreeView
- * @wx: X coordinate relative to bin_window
- * @wy: Y coordinate relative to bin_window
- * @bx: return location for tree X coordinate
- * @by: return location for tree Y coordinate
+ * @bx: X coordinate relative to bin_window
+ * @by: Y coordinate relative to bin_window
+ * @tx: return location for tree X coordinate
+ * @ty: return location for tree Y coordinate
  *
  * Converts bin_window coordinates to coordinates for the
  * tree (the full scrollable area of the tree).
@@ -13058,7 +13078,7 @@ gtk_tree_view_convert_bin_window_to_tree_coords (GtkTreeView *tree_view,
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
   if (tx)
-    *tx = bx + tree_view->priv->hadjustment->value;
+    *tx = bx;
   if (ty)
     *ty = by + tree_view->priv->dy;
 }
@@ -15169,6 +15189,288 @@ gtk_tree_view_get_level_indentation (GtkTreeView *tree_view)
   g_return_val_if_fail (GTK_IS_TREE_VIEW (tree_view), 0);
 
   return tree_view->priv->level_indentation;
+}
+
+/**
+ * gtk_tree_view_set_tooltip_row:
+ * @tree_view: a #GtkTreeView
+ * @tooltip: a #GtkTooltip
+ * @path: a #GtkTreePath
+ *
+ * Sets the tip area of @tooltip to be the area covered by the row at @path.
+ * See also gtk_tooltip_set_tip_area().
+ *
+ * Since: 2.12
+ */
+void
+gtk_tree_view_set_tooltip_row (GtkTreeView *tree_view,
+			       GtkTooltip  *tooltip,
+			       GtkTreePath *path)
+{
+  g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
+  g_return_if_fail (GTK_IS_TOOLTIP (tooltip));
+
+  gtk_tree_view_set_tooltip_cell (tree_view, tooltip, path, NULL, NULL);
+}
+
+/**
+ * gtk_tree_view_set_tooltip_cell:
+ * @tree_view: a #GtkTreeView
+ * @tooltip: a #GtkTooltip
+ * @path: a #GtkTreePath or %NULL
+ * @column: a #GtkTreeViewColumn or %NULL
+ * @cell: a #GtkCellRendererText or %NULL
+ *
+ * Sets the tip area of @tooltip to the area @path, @column and @cell have
+ * in common.  For example if @path is %NULL and @column is set, the tip
+ * area will be set to the full area covered by @column.  See also
+ * gtk_tooltip_set_tip_area().
+ *
+ * Since: 2.12
+ */
+void
+gtk_tree_view_set_tooltip_cell (GtkTreeView       *tree_view,
+				GtkTooltip        *tooltip,
+				GtkTreePath       *path,
+				GtkTreeViewColumn *column,
+				GtkCellRenderer   *cell)
+{
+  GdkRectangle rect;
+
+  g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
+  g_return_if_fail (GTK_IS_TOOLTIP (tooltip));
+
+  if (column)
+    g_return_if_fail (GTK_IS_TREE_VIEW_COLUMN (column));
+
+  if (cell)
+    g_return_if_fail (GTK_IS_CELL_RENDERER (cell));
+
+  /* Determine x values. */
+  if (column && cell)
+    {
+      GdkRectangle tmp;
+      gint start, width;
+
+      gtk_tree_view_get_cell_area (tree_view, NULL, column, &tmp);
+      gtk_tree_view_column_cell_get_position (column, cell, &start, &width);
+
+      /* FIXME: a need a path here to correctly correct for indent */
+
+      gtk_tree_view_convert_bin_window_to_widget_coords (tree_view,
+							 tmp.x + start, 0,
+							 &rect.x, NULL);
+      rect.width = width;
+    }
+  else if (column)
+    {
+      GdkRectangle tmp;
+
+      gtk_tree_view_get_background_area (tree_view, NULL, column, &tmp);
+      gtk_tree_view_convert_bin_window_to_widget_coords (tree_view,
+							 tmp.x, 0,
+							 &rect.x, NULL);
+      rect.width = tmp.width;
+    }
+  else
+    {
+      rect.x = 0;
+      rect.width = GTK_WIDGET (tree_view)->allocation.width;
+    }
+
+  /* Determine y values. */
+  if (path)
+    {
+      GdkRectangle tmp;
+
+      gtk_tree_view_get_background_area (tree_view, path, NULL, &tmp);
+      gtk_tree_view_convert_bin_window_to_widget_coords (tree_view,
+							 0, tmp.y,
+							 NULL, &rect.y);
+      rect.height = tmp.height;
+    }
+  else
+    {
+      rect.y = 0;
+      rect.height = tree_view->priv->vadjustment->page_size;
+    }
+
+  gtk_tooltip_set_tip_area (tooltip, &rect);
+}
+
+/**
+ * gtk_tree_view_get_tooltip_context:
+ * @tree_view: a #GtkTreeView
+ * @x: the x coordinate (relative to widget coordinates)
+ * @y: the y coordinate (relative to widget coordinates)
+ * @keyboard_tip: whether this is a keyboard tooltip or not
+ * @model: a pointer to receive a #GtkTreeModel or %NULL
+ * @path: a pointer to receive a #GtkTreePath or %NULL
+ * @iter: a pointer to receive a #GtkTreeIter or %NULL
+ *
+ * This function is supposed to be used in a #GtkWidget::query-tooltip
+ * signal handler for #GtkTreeView.  The @x, @y and @keyboard_tip values
+ * which are received in the signal handler, should be passed to this
+ * function without modification.
+ *
+ * The return value indicates whether there is a tree view row at the given
+ * coordinates (%TRUE) or not (%FALSE) for mouse tooltips.  For keyboard
+ * tooltips the row returned will be the cursor row.  When %TRUE, then any of
+ * @model, @path and @iter which have been provided will be set to point to
+ * that row and the corresponding model.  @x and @y will always be converted
+ * to be relative to @tree_view's bin_window if @keyboard_tooltip is %FALSE.
+ *
+ * Return value: whether or not the given tooltip context points to a row.
+ *
+ * Since: 2.12
+ */
+gboolean
+gtk_tree_view_get_tooltip_context (GtkTreeView   *tree_view,
+				   gint          *x,
+				   gint          *y,
+				   gboolean       keyboard_tip,
+				   GtkTreeModel **model,
+				   GtkTreePath  **path,
+				   GtkTreeIter   *iter)
+{
+  GtkTreePath *tmppath = NULL;
+
+  g_return_val_if_fail (GTK_IS_TREE_VIEW (tree_view), FALSE);
+  g_return_val_if_fail (x != NULL, FALSE);
+  g_return_val_if_fail (y != NULL, FALSE);
+
+  if (keyboard_tip)
+    {
+      gtk_tree_view_get_cursor (tree_view, &tmppath, NULL);
+
+      if (!tmppath)
+	return FALSE;
+    }
+  else
+    {
+      gtk_tree_view_convert_widget_to_bin_window_coords (tree_view, *x, *y,
+							 x, y);
+
+      if (!gtk_tree_view_get_path_at_pos (tree_view, *x, *y,
+					  &tmppath, NULL, NULL, NULL))
+	return FALSE;
+    }
+
+  if (model)
+    *model = gtk_tree_view_get_model (tree_view);
+
+  if (iter)
+    gtk_tree_model_get_iter (gtk_tree_view_get_model (tree_view),
+			     iter, tmppath);
+
+  if (path)
+    *path = tmppath;
+  else
+    gtk_tree_path_free (tmppath);
+
+  return TRUE;
+}
+
+static gboolean
+gtk_tree_view_set_tooltip_query_cb (GtkWidget  *widget,
+				    gint        x,
+				    gint        y,
+				    gboolean    keyboard_tip,
+				    GtkTooltip *tooltip,
+				    gpointer    data)
+{
+  gchar *str;
+  GtkTreeIter iter;
+  GtkTreePath *path;
+  GtkTreeModel *model;
+  GtkTreeView *tree_view = GTK_TREE_VIEW (widget);
+
+  if (!gtk_tree_view_get_tooltip_context (GTK_TREE_VIEW (widget),
+					  &x, &y,
+					  keyboard_tip,
+					  &model, &path, &iter))
+    return FALSE;
+
+  gtk_tree_model_get (model, &iter, tree_view->priv->tooltip_column, &str, -1);
+
+  if (!str)
+    {
+      gtk_tree_path_free (path);
+      return FALSE;
+    }
+
+  gtk_tooltip_set_markup (tooltip, str);
+  gtk_tree_view_set_tooltip_row (tree_view, tooltip, path);
+
+  gtk_tree_path_free (path);
+  g_free (str);
+
+  return TRUE;
+}
+
+/**
+ * gtk_tree_view_set_tooltip_column:
+ * @tree_view: a #GtkTreeView
+ * @column: an integer, which is a valid column number for @tree_view's model
+ *
+ * If you only plan to have simple (text-only) tooltips on full rows, you
+ * can use this function to have #GtkTreeView handle these automatically
+ * for you. @column should be set to the column in @tree_view's model
+ * containing the tooltip texts, or -1 to disable this feature.
+ *
+ * When enabled, #GtkWidget::has-tooltip will be set to %TRUE and
+ * @tree_view will connect a #GtkWidget::query-tooltip signal handler.
+ *
+ * Since: 2.12
+ */
+void
+gtk_tree_view_set_tooltip_column (GtkTreeView *tree_view,
+			          gint         column)
+{
+  g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
+
+  if (column == tree_view->priv->tooltip_column)
+    return;
+
+  if (column == -1)
+    {
+      g_signal_handlers_disconnect_by_func (tree_view,
+	  				    gtk_tree_view_set_tooltip_query_cb,
+					    NULL);
+      gtk_widget_set_has_tooltip (GTK_WIDGET (tree_view), FALSE);
+    }
+  else
+    {
+      if (tree_view->priv->tooltip_column == -1)
+        {
+          g_signal_connect (tree_view, "query-tooltip",
+		            G_CALLBACK (gtk_tree_view_set_tooltip_query_cb), NULL);
+          gtk_widget_set_has_tooltip (GTK_WIDGET (tree_view), TRUE);
+        }
+    }
+
+  tree_view->priv->tooltip_column = column;
+  g_object_notify (G_OBJECT (tree_view), "tooltip-column");
+}
+
+/**
+ * gtk_tree_view_get_tooltip_column:
+ * @tree_view: a #GtkTreeView
+ *
+ * Returns the column of @tree_view's model which is being used for
+ * displaying tooltips on @tree_view's rows.
+ *
+ * Return value: the index of the tooltip column that is currently being
+ * used, or -1 if this is disabled.
+ *
+ * Since 2.12
+ */
+gint
+gtk_tree_view_get_tooltip_column (GtkTreeView *tree_view)
+{
+  g_return_val_if_fail (GTK_IS_TREE_VIEW (tree_view), 0);
+
+  return tree_view->priv->tooltip_column;
 }
 
 #define __GTK_TREE_VIEW_C__

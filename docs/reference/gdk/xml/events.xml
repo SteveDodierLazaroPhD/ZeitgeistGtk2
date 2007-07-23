@@ -390,10 +390,11 @@ above.
 number of <link linkend="GDK-MOTION-NOTIFY:CAPS"><literal>GDK_MOTION_NOTIFY</literal></link> events received. Normally a <link linkend="GDK-MOTION-NOTIFY:CAPS"><literal>GDK_MOTION_NOTIFY</literal></link>
 event is received each time the mouse moves. However, if the application
 spends a lot of time processing the event (updating the display, for example),
-it can easily lag behind the position of the mouse. When using the
-<link linkend="GDK-POINTER-MOTION-HINT-MASK:CAPS"><literal>GDK_POINTER_MOTION_HINT_MASK</literal></link> the server will only send a single 
-<link linkend="GDK-MOTION-NOTIFY:CAPS"><literal>GDK_MOTION_NOTIFY</literal></link> event (which is marked as a hint) until the application 
-asks for more, by calling <link linkend="gdk-window-get-pointer"><function>gdk_window_get_pointer()</function></link>.
+it can lag behind the position of the mouse. When using
+<link linkend="GDK-POINTER-MOTION-HINT-MASK:CAPS"><literal>GDK_POINTER_MOTION_HINT_MASK</literal></link>, fewer <link linkend="GDK-MOTION-NOTIFY:CAPS"><literal>GDK_MOTION_NOTIFY</literal></link> events will be sent,
+some of which are marked as a hint (the is_hint member is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>).
+To receive more motion events after a motion hint event, the application
+needs to asks for more, by calling <link linkend="gdk-event-request-motions"><function>gdk_event_request_motions()</function></link>.
 </para><variablelist role="enum">
 <varlistentry>
 <term><anchor id="GDK-EXPOSURE-MASK:CAPS" role="constant"/><literal>GDK_EXPOSURE_MASK</literal></term>
@@ -751,7 +752,18 @@ Request more motion notifies if <parameter>event</parameter> is a motion notify 
 This function should be used instead of <link linkend="gdk-window-get-pointer"><function>gdk_window_get_pointer()</function></link> to
 request further motion notifies, because it also works for extension
 events where motion notifies are provided for devices other than the
-core pointer.</para>
+core pointer. Coordinate extraction, processing and requesting more
+motion events from a <link linkend="GDK-MOTION-NOTIFY:CAPS"><literal>GDK_MOTION_NOTIFY</literal></link> event usually works like this:
+</para>
+<para>
+<informalexample><programlisting>
+{  // motion_event handler
+  x = motion_event->x;
+  y = motion_event->y;
+  ; // handle (x,y) motion
+  gdk_event_request_motions (motion_event); // handles is_hint events
+}
+</programlisting></informalexample></para>
 <para>
 
 </para><variablelist role="params">

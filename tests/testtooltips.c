@@ -128,12 +128,18 @@ query_tooltip_tree_view_cb (GtkWidget  *widget,
         return FALSE;
     }
 
-  gtk_tree_model_get_iter (model, &iter, path);
+  if (!gtk_tree_view_get_tooltip_context (tree_view, &x, &y,
+					  keyboard_tip,
+					  &model, &path, &iter))
+    return FALSE;
+
   gtk_tree_model_get (model, &iter, 0, &tmp, -1);
   pathstring = gtk_tree_path_to_string (path);
 
   g_snprintf (buffer, 511, "<b>Path %s:</b> %s", pathstring, tmp);
   gtk_tooltip_set_markup (tooltip, buffer);
+
+  gtk_tree_view_set_tooltip_row (tree_view, tooltip, path);
 
   gtk_tree_path_free (path);
   g_free (pathstring);

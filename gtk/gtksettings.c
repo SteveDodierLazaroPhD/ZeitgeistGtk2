@@ -105,7 +105,8 @@ enum {
   PROP_PRINT_BACKENDS,
   PROP_PRINT_PREVIEW_COMMAND,
   PROP_ENABLE_MNEMONICS,
-  PROP_ENABLE_ACCELS
+  PROP_ENABLE_ACCELS,
+  PROP_RECENT_FILES_LIMIT
 };
 
 
@@ -785,6 +786,25 @@ gtk_settings_class_init (GtkSettingsClass *class)
                                                                    GTK_PARAM_READWRITE),
                                              NULL);
   g_assert (result == PROP_ENABLE_ACCELS);
+
+  /**
+   * GtkSettings:gtk-recent-files-limit:
+   *
+   * The number of recently used files that should be displayed by default by
+   * #GtkRecentChooser implementations and by the #GtkFileChooser. A value of
+   * -1 means every recently used file stored.
+   *
+   * Since: 2.12
+   */
+  result = settings_install_property_parser (class,
+					     g_param_spec_int ("gtk-recent-files-limit",
+ 							       P_("Recent Files Limit"),
+ 							       P_("Number of recently used files"),
+ 							       -1, G_MAXINT,
+							       50,
+ 							       GTK_PARAM_READWRITE),
+					     NULL);
+  g_assert (result == PROP_RECENT_FILES_LIMIT);
 }
 
 static void
@@ -1085,6 +1105,9 @@ apply_queued_setting (GtkSettings             *data,
   if (_gtk_settings_parse_convert (parser, &qvalue->public.value,
 				   pspec, &tmp_value))
     {
+      if (pspec->param_id == PROP_COLOR_SCHEME) 
+        merge_color_scheme (data, &tmp_value, qvalue->source);
+
       if (data->property_values[pspec->param_id - 1].source <= qvalue->source)
 	{
           g_value_copy (&tmp_value, &data->property_values[pspec->param_id - 1].value);
@@ -1092,8 +1115,6 @@ apply_queued_setting (GtkSettings             *data,
           g_object_notify (G_OBJECT (data), g_param_spec_get_name (pspec));
 	}
 
-      if (pspec->param_id == PROP_COLOR_SCHEME) 
-        merge_color_scheme (data, &tmp_value, qvalue->source);
     }
   else
     {

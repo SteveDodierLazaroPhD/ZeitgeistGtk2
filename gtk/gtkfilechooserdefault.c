@@ -63,6 +63,7 @@
 #include "gtksizegroup.h"
 #include "gtkstock.h"
 #include "gtktable.h"
+#include "gtktooltip.h"
 #include "gtktreednd.h"
 #include "gtktreeprivate.h"
 #include "gtktreeselection.h"
@@ -4469,6 +4470,82 @@ file_list_set_sort_column_ids (GtkFileChooserDefault *impl)
   gtk_tree_view_column_set_sort_column_id (impl->list_mtime_column, mtime_id);
 }
 
+static gboolean
+file_list_query_tooltip_cb (GtkWidget  *widget,
+                            gint        x,
+                            gint        y,
+                            gboolean    keyboard_tip,
+                            GtkTooltip *tooltip,
+                            gpointer    user_data)
+{
+  GtkFileChooserDefault *impl = user_data;
+  GtkTreeIter iter, child_iter;
+  GtkTreePath *path = NULL;
+  GtkFilePath *file_path = NULL;
+  gchar *filename;
+
+  if (impl->operation_mode == OPERATION_MODE_BROWSE)
+    return FALSE;
+
+
+  gtk_tree_view_get_tooltip_context (GTK_TREE_VIEW (impl->browse_files_tree_view),
+                                     &x, &y,
+                                     keyboard_tip,
+                                     NULL, &path, NULL);
+                                       
+  if (!path)
+    return FALSE;
+
+  switch (impl->operation_mode)
+    {
+    case OPERATION_MODE_SEARCH:
+      if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (impl->search_model_sort), &iter, path))
+        {
+          gtk_tree_path_free (path);
+          return FALSE;
+        }
+
+      search_get_valid_child_iter (impl, &child_iter, &iter);
+      gtk_tree_model_get (GTK_TREE_MODEL (impl->search_model), &child_iter,
+                          SEARCH_MODEL_COL_PATH, &file_path,
+                          -1);
+      break;
+    
+    case OPERATION_MODE_RECENT:
+      if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (impl->recent_model_sort), &iter, path))
+        {
+          gtk_tree_path_free (path);
+          return FALSE;
+        }
+
+      recent_get_valid_child_iter (impl, &child_iter, &iter);
+      gtk_tree_model_get (GTK_TREE_MODEL (impl->recent_model), &child_iter,
+                          RECENT_MODEL_COL_PATH, &file_path,
+                          -1);
+      break;
+
+    case OPERATION_MODE_BROWSE:
+      g_assert_not_reached ();
+      return FALSE;
+    }
+
+  if (!file_path)
+    {
+      gtk_tree_path_free (path);
+      return FALSE;
+    }
+
+  filename = gtk_file_system_path_to_filename (impl->file_system, file_path);
+  gtk_tooltip_set_text (tooltip, filename);
+  gtk_tree_view_set_tooltip_row (GTK_TREE_VIEW (impl->browse_files_tree_view),
+                                 tooltip,
+                                 path);
+
+  g_free (filename);
+  gtk_tree_path_free (path);
+
+  return TRUE;
+}
 
 /* Creates the widgets for the file list */
 static GtkWidget *
@@ -4520,6 +4597,10 @@ create_file_list (GtkFileChooserDefault *impl)
                     G_CALLBACK (file_list_drag_drop_cb), impl);
   g_signal_connect (impl->browse_files_tree_view, "drag_motion",
                     G_CALLBACK (file_list_drag_motion_cb), impl);
+
+  g_object_set (impl->browse_files_tree_view, "has-tooltip", TRUE, NULL);
+  g_signal_connect (impl->browse_files_tree_view, "query-tooltip",
+                    G_CALLBACK (file_list_query_tooltip_cb), impl);
 
   selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (impl->browse_files_tree_view));
   gtk_tree_selection_set_select_function (selection,
@@ -9684,6 +9765,7 @@ typedef struct
   GList *items;
   gint n_items;
   gint n_loaded_items;
+  guint needs_sorting : 1;
 } RecentLoadData;
 
 static void
@@ -9767,6 +9849,32 @@ out:
   g_object_unref (handle);
 }
 
+static gint
+recent_sort_mru (gconstpointer a,
+                 gconstpointer b)
+{
+  GtkRecentInfo *info_a = (GtkRecentInfo *) a;
+  GtkRecentInfo *info_b = (GtkRecentInfo *) b;
+
+  return (gtk_recent_info_get_modified (info_a) < gtk_recent_info_get_modified (info_b));
+}
+
+static gint
+get_recent_files_limit (GtkWidget *widget)
+{
+  GtkSettings *settings;
+  gint limit;
+
+  if (gtk_widget_has_screen (widget))
+    settings = gtk_settings_get_for_screen (gtk_widget_get_screen (widget));
+  else
+    settings = gtk_settings_get_default ();
+
+  g_object_get (G_OBJECT (settings), "gtk-recent-files-limit", &limit, NULL);
+
+  return limit;
+}
+
 static gboolean
 recent_idle_load (gpointer data)
 {
@@ -9783,14 +9891,47 @@ recent_idle_load (gpointer data)
   if (!impl->recent_manager)
     return FALSE;
 
+  /* first iteration: load all the items */
   if (!load_data->items)
     {
       load_data->items = gtk_recent_manager_get_items (impl->recent_manager);
       if (!load_data->items)
         return FALSE;
 
+      load_data->needs_sorting = TRUE;
+
+      return TRUE;
+    }
+  
+  /* second iteration: preliminary MRU sorting and clamping */
+  if (load_data->needs_sorting)
+    {
+      gint limit;
+
+      load_data->items = g_list_sort (load_data->items, recent_sort_mru);
       load_data->n_items = g_list_length (load_data->items);
+
+      limit = get_recent_files_limit (GTK_WIDGET (impl));
+      
+      if (limit != -1 && (load_data->n_items > limit))
+        {
+          GList *clamp, *l;
+
+          clamp = g_list_nth (load_data->items, limit - 1);
+          if (G_LIKELY (clamp))
+            {
+              l = clamp->next;
+              clamp->next = NULL;
+
+              g_list_foreach (l, (GFunc) gtk_recent_info_unref, NULL);
+              g_list_free (l);
+
+              load_data->n_items = limit;
+            }
+         }
+
       load_data->n_loaded_items = 0;
+      load_data->needs_sorting = FALSE;
 
       return TRUE;
     }
@@ -9862,6 +10003,7 @@ recent_start_loading (GtkFileChooserDefault *impl)
   load_data->items = NULL;
   load_data->n_items = 0;
   load_data->n_loaded_items = 0;
+  load_data->needs_sorting = TRUE;
 
   /* begin lazy loading the recent files into the model */
   impl->load_recent_id = gdk_threads_add_idle_full (G_PRIORITY_HIGH_IDLE + 30,
@@ -10728,21 +10870,14 @@ list_name_data_func (GtkTreeViewColumn *tree_column,
   if (impl->operation_mode == OPERATION_MODE_SEARCH)
     {
       GtkTreeIter child_iter;
-      GtkFilePath *file_path;
-      gchar *display_name, *tmp;
-      gchar *text;
+      gchar *display_name;
       gboolean is_folder;
 
       search_get_valid_child_iter (impl, &child_iter, iter);
       gtk_tree_model_get (GTK_TREE_MODEL (impl->search_model), &child_iter,
-                          SEARCH_MODEL_COL_PATH, &file_path,
                           SEARCH_MODEL_COL_DISPLAY_NAME, &display_name,
                           SEARCH_MODEL_COL_IS_FOLDER, &is_folder,
 			  -1);
-
-      tmp = gtk_file_system_path_to_filename (impl->file_system, file_path);
-      text = g_strdup_printf ("<b>%s</b>\n%s", display_name, tmp);
-      g_free (tmp);
 
       if (impl->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER ||
           impl->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
@@ -10751,13 +10886,11 @@ list_name_data_func (GtkTreeViewColumn *tree_column,
         }
 
       g_object_set (cell,
-		    "markup", text,
+		    "text", display_name,
 		    "sensitive", sensitive,
 		    "ellipsize", PANGO_ELLIPSIZE_END,
 		    NULL);
       
-      g_free (text);
-
       return;
     }
 
@@ -10765,7 +10898,7 @@ list_name_data_func (GtkTreeViewColumn *tree_column,
     {
       GtkTreeIter child_iter;
       GtkRecentInfo *recent_info;
-      gchar *tmp, *text;
+      gchar *display_name;
       gboolean is_folder;
 
       recent_get_valid_child_iter (impl, &child_iter, iter);
@@ -10774,11 +10907,7 @@ list_name_data_func (GtkTreeViewColumn *tree_column,
                           RECENT_MODEL_COL_IS_FOLDER, &is_folder,
                           -1);
       
-      tmp = gtk_recent_info_get_short_name (recent_info);
-      text = g_strdup_printf ("<b>%s</b>\n%s",
-                              tmp,
-                              gtk_recent_info_get_uri_display (recent_info));
-      g_free (tmp);
+      display_name = gtk_recent_info_get_short_name (recent_info);
 
       if (impl->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER ||
           impl->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
@@ -10787,11 +10916,12 @@ list_name_data_func (GtkTreeViewColumn *tree_column,
         }
 
       g_object_set (cell,
-                    "markup", text,
+                    "text", display_name,
                     "sensitive", sensitive,
                     "ellipsize", PANGO_ELLIPSIZE_END,
                     NULL);
-      g_free (text);
+
+      g_free (display_name);
 
       return;
     }

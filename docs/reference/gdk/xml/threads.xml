@@ -81,12 +81,14 @@ You must call <link linkend="g-thread-init"><function>g_thread_init()</function>
 any other GTK+ or GDK functions in a threaded GTK+ program.
 </para>
 <para>
-Idles, timeouts, and input functions are executed outside
-of the main GTK+ lock. So, if you need to call GTK+
-inside of such a callback, you must surround the callback
-with a <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link>/<link linkend="gdk-threads-leave"><function>gdk_threads_leave()</function></link> pair.
-(However, signals are still executed within the main
-GTK+ lock.)
+Idles, timeouts, and input functions from GLib, such as <link linkend="g-idle-add"><function>g_idle_add()</function></link>, are
+executed outside of the main GTK+ lock.
+So, if you need to call GTK+ inside of such a callback, you must surround
+the callback with a <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link>/<link linkend="gdk-threads-leave"><function>gdk_threads_leave()</function></link> pair or use
+<link linkend="gdk-threads-add-idle-full"><function>gdk_threads_add_idle_full()</function></link> which does this for you.
+However, event dispatching from the mainloop is still executed within
+the main GTK+ lock, so callback functions connected to event signals
+like GtkWidget::button-press-event, do not need thread protection.
 </para>
 <para>
 In particular, this means, if you are writing widgets that might 
@@ -298,11 +300,12 @@ int main (int argc, char *argv[])
 <title><anchor id="GDK-THREADS-ENTER:CAPS" role="macro"/>GDK_THREADS_ENTER()</title>
 <indexterm><primary>GDK_THREADS_ENTER</primary></indexterm><programlisting>#define             GDK_THREADS_ENTER()</programlisting>
 <para>
-This macro marks the beginning of a critical section in which GDK and GTK+
-functions can be called.  Only one thread at a time can be in such a
-critial section. The macro expands to a no-op if <link linkend="G-THREADS-ENABLED:CAPS"><type>G_THREADS_ENABLED</type></link>
-has not been defined. Typically <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link> should be used 
-instead of this macro.
+This macro marks the beginning of a critical section in which GDK and
+GTK+ functions can be called safely and without causing race
+conditions.  Only one thread at a time can be in such a critial
+section. The macro expands to a no-op if <link linkend="G-THREADS-ENABLED:CAPS"><type>G_THREADS_ENABLED</type></link> has not
+been defined. Typically <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link> should be used instead of
+this macro.
 </para></refsect2>
 <refsect2>
 <title><anchor id="GDK-THREADS-LEAVE:CAPS" role="macro"/>GDK_THREADS_LEAVE()</title>
@@ -329,9 +332,9 @@ GTK+; to be safe, call it before <link linkend="gtk-init"><function>gtk_init()</
 <title><anchor id="gdk-threads-enter" role="function"/>gdk_threads_enter ()</title>
 <indexterm><primary>gdk_threads_enter</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_enter                   (void);</programlisting>
 <para>
-This macro marks the beginning of a critical section
-in which GDK and GTK+ functions can be called.
-Only one thread at a time can be in such a critial 
+This macro marks the beginning of a critical section in which GDK and
+GTK+ functions can be called safely and without causing race
+conditions.  Only one thread at a time can be in such a critial
 section.
 </para></refsect2>
 <refsect2>
@@ -434,29 +437,33 @@ in thread B:
 </para>
 <para>
 <informalexample><programlisting>
-static gboolean idle_callback (gpointer data)
+static gboolean
+idle_callback (gpointer data)
 {
+   // gdk_threads_enter(); would be needed for g_idle_add()
+
    SomeWidget *self = data;
-    
    /<!-- -->* do stuff with self *<!-- -->/
-    
+
    self->idle_id = 0;
-   
+
+   // gdk_threads_leave(); would be needed for g_idle_add()
    return FALSE;
 }
- 
-static void some_widget_do_stuff_later (SomeWidget *self)
+
+static void
+some_widget_do_stuff_later (SomeWidget *self)
 {
-   self->idle_id = g_idle_add (idle_callback, self)
+   self->idle_id = gdk_threads_add_idle (idle_callback, self)
+   // using g_idle_add() here would require thread protection in the callback
 }
-  
-static void some_widget_finalize (GObject *object)
+
+static void
+some_widget_finalize (GObject *object)
 {
-   SomeWidget *self = SOME_WIDGET(object);
-   
+   SomeWidget *self = SOME_WIDGET (object);
    if (self->idle_id)
      g_source_remove (self->idle_id);
-   
    G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 </programlisting></informalexample></para>

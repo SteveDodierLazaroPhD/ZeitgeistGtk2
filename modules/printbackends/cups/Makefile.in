@@ -325,7 +325,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-@OS_WIN32_TRUE@no_undefined = -no-undefined
+@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
 
 INCLUDES = \
 	-I$(top_srcdir) 				\
@@ -340,8 +340,9 @@ INCLUDES = \
 
 
 LDADDS = \
-	$(GTK_DEP_LIBS)					\
-	$(top_builddir)/gtk/$(gtktargetlib)		
+	$(top_builddir)/gtk/$(gtktargetlib)		\
+	$(top_builddir)/gdk/$(gdktargetlib)		\
+	$(GTK_DEP_LIBS)
 
 
 backenddir = $(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/printbackends
@@ -370,7 +371,8 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(backend_LTLIBRARIES)
 
 libprintbackend_cups_la_DEPENDENCIES = \
-	$(top_builddir)/gtk/$(gtktargetlib)
+	$(top_builddir)/gtk/$(gtktargetlib) \
+	$(top_builddir)/gdk/$(gdktargetlib)
 am_libprintbackend_cups_la_OBJECTS = gtkprintbackendcups.lo \
 	gtkprintercups.lo gtkcupsutils.lo
 libprintbackend_cups_la_OBJECTS = $(am_libprintbackend_cups_la_OBJECTS)

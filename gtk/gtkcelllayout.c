@@ -17,9 +17,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <string.h>
 #include <stdlib.h>
-#include <config.h>
+#include <errno.h>
 #include "gtkcelllayout.h"
 #include "gtkintl.h"
 #include "gtkalias.h"
@@ -346,12 +347,27 @@ attributes_text_element (GMarkupParseContext *context,
 			 GError             **error)
 {
   AttributesSubParserData *parser_data = (AttributesSubParserData*)user_data;
+  glong l;
+  gchar *endptr;
 
   if (!parser_data->attr_name)
     return;
+
+  errno = 0;
+  l = strtol (text, &endptr, 0);
+  if (errno || endptr == text)
+    {
+      g_set_error (error, 
+                   GTK_BUILDER_ERROR,
+                   GTK_BUILDER_ERROR_INVALID_VALUE,
+                   "Could not parse integer `%s'",
+                   text);
+      return;
+    }
+
   gtk_cell_layout_add_attribute (parser_data->cell_layout,
 				 parser_data->renderer,
-				 parser_data->attr_name, atoi (text));
+				 parser_data->attr_name, l);
   g_free (parser_data->attr_name);
   parser_data->attr_name = NULL;
 }
@@ -417,8 +433,8 @@ _gtk_cell_layout_buildable_add_child (GtkBuildable      *buildable,
   g_return_if_fail (GTK_IS_CELL_RENDERER (child));
 
   iface = GTK_CELL_LAYOUT_GET_IFACE (buildable);
-  g_return_if_fail (iface->pack_end != NULL);
-  iface->pack_end (GTK_CELL_LAYOUT (buildable), GTK_CELL_RENDERER (child), FALSE);
+  g_return_if_fail (iface->pack_start != NULL);
+  iface->pack_start (GTK_CELL_LAYOUT (buildable), GTK_CELL_RENDERER (child), FALSE);
 }
 
 #define __GTK_CELL_LAYOUT_C__

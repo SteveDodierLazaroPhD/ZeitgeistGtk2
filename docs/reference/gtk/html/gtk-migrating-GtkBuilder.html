@@ -7,7 +7,7 @@
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
 <link rel="prev" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
-<link rel="next" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
+<link rel="next" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
 <meta name="generator" content="GTK-Doc V1.7 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
@@ -47,6 +47,7 @@
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
+<link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -64,7 +65,7 @@
 <td><a accesskey="u" href="migrating.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">GTK+ Reference Manual</th>
-<td><a accesskey="n" href="pt05.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gtk-migrating-tooltips.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="chapter" lang="en">
 <div class="titlepage"><div><div><h2 class="title">
@@ -75,7 +76,45 @@
     provided by <span class="type">GladeXML</span> in the libglade library.
   </p>
 <p>
-    More details about migrating from libglade to GtkBiulder will 
+    While GtkBuilder strives to be a complete replacement for
+    libglade, there are a number of areas where it is currently
+    still behind libglade:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>
+        GtkBuilder can not construct partial trees, it lacks
+        the equivalent of the <em class="parameter"><code>root</code></em> parameter of <code class="function">glade_xml_new()</code>.
+        Due to the way GtkBuilder parses its input, this is difficult 
+        to implement, see 
+        <a href="http://bugzilla.gnome.org/show_bug.cgi?id=447998" target="_top">bug 
+        447998</a>. As a workaround, you can split your glade file 
+        into multiple GtkBuilder input files. The 
+        <span class="application">gtk-builder-convert</span> conversion script 
+        has a <code class="option">--root</code> option that can help with this.
+      </p></li>
+<li><p>
+        GtkBuilder does not yet implement support for accessibility 
+        properties. It parses the same &lt;accessibility&gt; elements 
+        as libglade, but ignores them. See 
+        <a href="http://bugzilla.gnome.org/show_bug.cgi?id=454653" target="_top">bug 
+        454983</a> for the current status of accessibility support 
+        in GtkBuilder.
+      </p></li>
+<li><p>
+        GtkBuilder supports context information in translatable
+        properties in a slightly different way than libglade. 
+        Intltool does not yet support this; see 
+        <a href="http://bugzilla.gnome.org/show_bug.cgi?id=454894" target="_top">bug 
+        454894</a> for the current status of intltool support for 
+        GtkBuilder files. Thankfully, context in translations is a 
+        rarely used feature, and if you are not using it, intltools 
+        glade format support works just fine for GtkBuilder files.
+      </p></li>
+</ul></div>
+<p>
+  </p>
+<p>
+    More details about migrating from libglade to GtkBuilder will 
     appear here over time...
   </p>
 </div>

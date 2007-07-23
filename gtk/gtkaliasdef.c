@@ -4394,6 +4394,9 @@ extern __typeof (gtk_icon_view_get_path_at_pos) gtk_icon_view_get_path_at_pos __
 #undef gtk_icon_view_get_item_at_pos 
 extern __typeof (gtk_icon_view_get_item_at_pos) gtk_icon_view_get_item_at_pos __attribute((alias("IA__gtk_icon_view_get_item_at_pos"), visibility("default")));
 
+#undef gtk_icon_view_convert_widget_to_bin_window_coords 
+extern __typeof (gtk_icon_view_convert_widget_to_bin_window_coords) gtk_icon_view_convert_widget_to_bin_window_coords __attribute((alias("IA__gtk_icon_view_convert_widget_to_bin_window_coords"), visibility("default")));
+
 #undef gtk_icon_view_get_pixbuf_column 
 extern __typeof (gtk_icon_view_get_pixbuf_column) gtk_icon_view_get_pixbuf_column __attribute((alias("IA__gtk_icon_view_get_pixbuf_column"), visibility("default")));
 
@@ -4516,6 +4519,21 @@ extern __typeof (gtk_icon_view_get_dest_item_at_pos) gtk_icon_view_get_dest_item
 
 #undef gtk_icon_view_create_drag_icon 
 extern __typeof (gtk_icon_view_create_drag_icon) gtk_icon_view_create_drag_icon __attribute((alias("IA__gtk_icon_view_create_drag_icon"), visibility("default")));
+
+#undef gtk_icon_view_set_tooltip_item 
+extern __typeof (gtk_icon_view_set_tooltip_item) gtk_icon_view_set_tooltip_item __attribute((alias("IA__gtk_icon_view_set_tooltip_item"), visibility("default")));
+
+#undef gtk_icon_view_set_tooltip_cell 
+extern __typeof (gtk_icon_view_set_tooltip_cell) gtk_icon_view_set_tooltip_cell __attribute((alias("IA__gtk_icon_view_set_tooltip_cell"), visibility("default")));
+
+#undef gtk_icon_view_get_tooltip_context 
+extern __typeof (gtk_icon_view_get_tooltip_context) gtk_icon_view_get_tooltip_context __attribute((alias("IA__gtk_icon_view_get_tooltip_context"), visibility("default")));
+
+#undef gtk_icon_view_set_tooltip_column 
+extern __typeof (gtk_icon_view_set_tooltip_column) gtk_icon_view_set_tooltip_column __attribute((alias("IA__gtk_icon_view_set_tooltip_column"), visibility("default")));
+
+#undef gtk_icon_view_get_tooltip_column 
+extern __typeof (gtk_icon_view_get_tooltip_column) gtk_icon_view_get_tooltip_column __attribute((alias("IA__gtk_icon_view_get_tooltip_column"), visibility("default")));
 
 #endif
 #endif
@@ -5651,8 +5669,16 @@ extern __typeof (gtk_menu_tool_button_new) gtk_menu_tool_button_new __attribute(
 #undef gtk_menu_tool_button_new_from_stock 
 extern __typeof (gtk_menu_tool_button_new_from_stock) gtk_menu_tool_button_new_from_stock __attribute((alias("IA__gtk_menu_tool_button_new_from_stock"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_menu_tool_button_set_arrow_tooltip 
 extern __typeof (gtk_menu_tool_button_set_arrow_tooltip) gtk_menu_tool_button_set_arrow_tooltip __attribute((alias("IA__gtk_menu_tool_button_set_arrow_tooltip"), visibility("default")));
+
+#endif
+#undef gtk_menu_tool_button_set_arrow_tooltip_markup 
+extern __typeof (gtk_menu_tool_button_set_arrow_tooltip_markup) gtk_menu_tool_button_set_arrow_tooltip_markup __attribute((alias("IA__gtk_menu_tool_button_set_arrow_tooltip_markup"), visibility("default")));
+
+#undef gtk_menu_tool_button_set_arrow_tooltip_text 
+extern __typeof (gtk_menu_tool_button_set_arrow_tooltip_text) gtk_menu_tool_button_set_arrow_tooltip_text __attribute((alias("IA__gtk_menu_tool_button_set_arrow_tooltip_text"), visibility("default")));
 
 #undef gtk_menu_tool_button_set_menu 
 extern __typeof (gtk_menu_tool_button_set_menu) gtk_menu_tool_button_set_menu __attribute((alias("IA__gtk_menu_tool_button_set_menu"), visibility("default")));
@@ -9683,8 +9709,16 @@ extern __typeof (gtk_tool_item_set_is_important) gtk_tool_item_set_is_important 
 #undef gtk_tool_item_set_proxy_menu_item 
 extern __typeof (gtk_tool_item_set_proxy_menu_item) gtk_tool_item_set_proxy_menu_item __attribute((alias("IA__gtk_tool_item_set_proxy_menu_item"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_tool_item_set_tooltip 
 extern __typeof (gtk_tool_item_set_tooltip) gtk_tool_item_set_tooltip __attribute((alias("IA__gtk_tool_item_set_tooltip"), visibility("default")));
+
+#endif
+#undef gtk_tool_item_set_tooltip_markup 
+extern __typeof (gtk_tool_item_set_tooltip_markup) gtk_tool_item_set_tooltip_markup __attribute((alias("IA__gtk_tool_item_set_tooltip_markup"), visibility("default")));
+
+#undef gtk_tool_item_set_tooltip_text 
+extern __typeof (gtk_tool_item_set_tooltip_text) gtk_tool_item_set_tooltip_text __attribute((alias("IA__gtk_tool_item_set_tooltip_text"), visibility("default")));
 
 #undef gtk_tool_item_set_use_drag_window 
 extern __typeof (gtk_tool_item_set_use_drag_window) gtk_tool_item_set_use_drag_window __attribute((alias("IA__gtk_tool_item_set_use_drag_window"), visibility("default")));
@@ -9716,6 +9750,9 @@ extern __typeof (gtk_tooltip_set_markup) gtk_tooltip_set_markup __attribute((ali
 
 #undef gtk_tooltip_set_text 
 extern __typeof (gtk_tooltip_set_text) gtk_tooltip_set_text __attribute((alias("IA__gtk_tooltip_set_text"), visibility("default")));
+
+#undef gtk_tooltip_set_tip_area 
+extern __typeof (gtk_tooltip_set_tip_area) gtk_tooltip_set_tip_area __attribute((alias("IA__gtk_tooltip_set_tip_area"), visibility("default")));
 
 #undef gtk_tooltip_trigger_tooltip_query 
 extern __typeof (gtk_tooltip_trigger_tooltip_query) gtk_tooltip_trigger_tooltip_query __attribute((alias("IA__gtk_tooltip_trigger_tooltip_query"), visibility("default")));
@@ -10598,6 +10635,12 @@ extern __typeof (gtk_tree_view_get_selection) gtk_tree_view_get_selection __attr
 #undef gtk_tree_view_get_show_expanders 
 extern __typeof (gtk_tree_view_get_show_expanders) gtk_tree_view_get_show_expanders __attribute((alias("IA__gtk_tree_view_get_show_expanders"), visibility("default")));
 
+#undef gtk_tree_view_get_tooltip_column 
+extern __typeof (gtk_tree_view_get_tooltip_column) gtk_tree_view_get_tooltip_column __attribute((alias("IA__gtk_tree_view_get_tooltip_column"), visibility("default")));
+
+#undef gtk_tree_view_get_tooltip_context 
+extern __typeof (gtk_tree_view_get_tooltip_context) gtk_tree_view_get_tooltip_context __attribute((alias("IA__gtk_tree_view_get_tooltip_context"), visibility("default")));
+
 #undef gtk_tree_view_get_type 
 extern __typeof (gtk_tree_view_get_type) gtk_tree_view_get_type __attribute((alias("IA__gtk_tree_view_get_type"), visibility("default")));
 
@@ -10726,6 +10769,15 @@ extern __typeof (gtk_tree_view_set_search_position_func) gtk_tree_view_set_searc
 
 #undef gtk_tree_view_set_show_expanders 
 extern __typeof (gtk_tree_view_set_show_expanders) gtk_tree_view_set_show_expanders __attribute((alias("IA__gtk_tree_view_set_show_expanders"), visibility("default")));
+
+#undef gtk_tree_view_set_tooltip_row 
+extern __typeof (gtk_tree_view_set_tooltip_row) gtk_tree_view_set_tooltip_row __attribute((alias("IA__gtk_tree_view_set_tooltip_row"), visibility("default")));
+
+#undef gtk_tree_view_set_tooltip_cell 
+extern __typeof (gtk_tree_view_set_tooltip_cell) gtk_tree_view_set_tooltip_cell __attribute((alias("IA__gtk_tree_view_set_tooltip_cell"), visibility("default")));
+
+#undef gtk_tree_view_set_tooltip_column 
+extern __typeof (gtk_tree_view_set_tooltip_column) gtk_tree_view_set_tooltip_column __attribute((alias("IA__gtk_tree_view_set_tooltip_column"), visibility("default")));
 
 #undef gtk_tree_view_set_vadjustment 
 extern __typeof (gtk_tree_view_set_vadjustment) gtk_tree_view_set_vadjustment __attribute((alias("IA__gtk_tree_view_set_vadjustment"), visibility("default")));
@@ -11091,6 +11143,9 @@ extern __typeof (gtk_widget_get_events) gtk_widget_get_events __attribute((alias
 #undef gtk_widget_get_extension_events 
 extern __typeof (gtk_widget_get_extension_events) gtk_widget_get_extension_events __attribute((alias("IA__gtk_widget_get_extension_events"), visibility("default")));
 
+#undef gtk_widget_get_has_tooltip 
+extern __typeof (gtk_widget_get_has_tooltip) gtk_widget_get_has_tooltip __attribute((alias("IA__gtk_widget_get_has_tooltip"), visibility("default")));
+
 #undef gtk_widget_get_modifier_style 
 extern __typeof (gtk_widget_get_modifier_style) gtk_widget_get_modifier_style __attribute((alias("IA__gtk_widget_get_modifier_style"), visibility("default")));
 
@@ -11320,6 +11375,9 @@ extern __typeof (gtk_widget_set_events) gtk_widget_set_events __attribute((alias
 
 #undef gtk_widget_set_extension_events 
 extern __typeof (gtk_widget_set_extension_events) gtk_widget_set_extension_events __attribute((alias("IA__gtk_widget_set_extension_events"), visibility("default")));
+
+#undef gtk_widget_set_has_tooltip 
+extern __typeof (gtk_widget_set_has_tooltip) gtk_widget_set_has_tooltip __attribute((alias("IA__gtk_widget_set_has_tooltip"), visibility("default")));
 
 #undef gtk_widget_set_name 
 extern __typeof (gtk_widget_set_name) gtk_widget_set_name __attribute((alias("IA__gtk_widget_set_name"), visibility("default")));

@@ -47,6 +47,7 @@
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
+<link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -67,22 +68,22 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkPaned.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id3865527" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id4115226" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id3866496" class="shortcut">Description</a>
+                  <a href="#id4116194" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id3866344" class="shortcut">Object Hierarchy</a>
+                  <a href="#id4116042" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id3866435" class="shortcut">Properties</a>
+                  <a href="#id4116134" class="shortcut">Properties</a>
                   &#160;|&#160;
-                  <a href="#id3866469" class="shortcut">Signals</a></nobr></td></tr>
+                  <a href="#id4116167" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkObject"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id3865527"></a><span class="refentrytitle">GtkObject</span>
+<a name="id4115226"></a><span class="refentrytitle">GtkObject</span>
 </h2>
 <p>GtkObject &#8212; The base class of the GTK+ type hierarchy</p>
 </td>
@@ -104,7 +105,7 @@ enum                <a href="GtkObject.html#GtkObjectFlags">GtkObjectFlags</a>;
 enum                <a href="GtkObject.html#GtkArgFlags">GtkArgFlags</a>;
 <a href="GtkObject.html" title="GtkObject">GtkObject</a>*          <a href="GtkObject.html#gtk-object-new">gtk_object_new</a>                      (<a href="gtk-Types.html#GtkType">GtkType</a> type,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_property_name,
                                                          ...);
 void                <a href="GtkObject.html#gtk-object-sink">gtk_object_sink</a>                     (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);
@@ -113,98 +114,98 @@ void                <a href="GtkObject.html#gtk-object-unref">gtk_object_unref</
 void                <a href="GtkObject.html#gtk-object-weakref">gtk_object_weakref</a>                  (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> notify,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);
 void                <a href="GtkObject.html#gtk-object-weakunref">gtk_object_weakunref</a>                (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> notify,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);
 void                <a href="GtkObject.html#gtk-object-destroy">gtk_object_destroy</a>                  (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);
 void                <a href="GtkObject.html#gtk-object-get">gtk_object_get</a>                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_property_name,
                                                          ...);
 void                <a href="GtkObject.html#gtk-object-set">gtk_object_set</a>                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_property_name,
                                                          ...);
 void                <a href="GtkObject.html#gtk-object-set-data">gtk_object_set_data</a>                 (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);
 void                <a href="GtkObject.html#gtk-object-set-data-full">gtk_object_set_data_full</a>            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> destroy);
 void                <a href="GtkObject.html#gtk-object-remove-data">gtk_object_remove_data</a>              (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>            <a href="GtkObject.html#gtk-object-get-data">gtk_object_get_data</a>                 (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);
 void                <a href="GtkObject.html#gtk-object-remove-no-notify">gtk_object_remove_no_notify</a>         (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);
 void                <a href="GtkObject.html#gtk-object-set-user-data">gtk_object_set_user_data</a>            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>            <a href="GtkObject.html#gtk-object-get-user-data">gtk_object_get_user_data</a>            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);
 void                <a href="GtkObject.html#gtk-object-add-arg-type">gtk_object_add_arg_type</a>             (const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *arg_name,
                                                          <a href="gtk-Types.html#GtkType">GtkType</a> arg_type,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> arg_flags,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> arg_id);
 void                <a href="GtkObject.html#gtk-object-set-data-by-id">gtk_object_set_data_by_id</a>           (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);
 void                <a href="GtkObject.html#gtk-object-set-data-by-id-full">gtk_object_set_data_by_id_full</a>      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> destroy);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>            <a href="GtkObject.html#gtk-object-get-data-by-id">gtk_object_get_data_by_id</a>           (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id);
 void                <a href="GtkObject.html#gtk-object-remove-data-by-id">gtk_object_remove_data_by_id</a>        (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id);
 void                <a href="GtkObject.html#gtk-object-remove-no-notify-by-id">gtk_object_remove_no_notify_by_id</a>   (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> key_id);
 #define             <a href="GtkObject.html#gtk-object-data-try-key">gtk_object_data_try_key</a>
 #define             <a href="GtkObject.html#gtk-object-data-force-id">gtk_object_data_force_id</a>
@@ -213,14 +214,14 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3866344"></a><h2>Object Hierarchy</h2>
+<a name="id4116042"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>
    +----<a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned"
 >GInitiallyUnowned</a>
          +----GtkObject
                +----<a href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
@@ -234,47 +235,47 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3866435"></a><h2>Properties</h2>
+<a name="id4116134"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkObject.html#GtkObject--user-data">user-data</a>                <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>              : Read / Write
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3866469"></a><h2>Signals</h2>
+<a name="id4116167"></a><h2>Signals</h2>
 <pre class="synopsis">
 
   <a href="GtkObject.html#GtkObject-destroy">destroy</a>                                        : Cleanup / No Recursion / No Hooks
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3866496"></a><h2>Description</h2>
+<a name="id4116194"></a><h2>Description</h2>
 <div class="refsect2" lang="en">
-<a name="id3866506"></a><h3>Description</h3>
+<a name="id4116204"></a><h3>Description</h3>
 <p>
 <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> is the base class for all widgets, and for a few 
 non-widget objects such as <a href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>. <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> predates 
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 ><span class="type">GObject</span></a>; non-widgets that derive from <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> rather than 
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 ><span class="type">GObject</span></a> do so for backward compatibility reasons.
 </p>
 <p>
 <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>s are created with a "floating" reference count.
 This means that the initial reference is not owned by anyone. Calling
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"
 ><code class="function">g_object_unref()</code></a> on a newly-created <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> is incorrect, the floating
 reference has to be removed first. This can be done by anyone at any time, 
 by calling <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref-sink"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref-sink"
 ><code class="function">g_object_ref_sink()</code></a> to convert the floating reference into a
 regular reference. <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref-sink"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref-sink"
 ><code class="function">g_object_ref_sink()</code></a> returns a new reference if an object 
 is already sunk (has no floating reference). 
 </p>
@@ -326,15 +327,15 @@ Some simple rules for handling <span class="type">:</span>
 <div class="itemizedlist"><ul type="disc">
 <li><p>
 Never call <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"
 ><code class="function">g_object_unref()</code></a> unless you have previously called <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
 ><code class="function">g_object_ref()</code></a>, 
 even if you created the <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>. (Note: this is <span class="emphasis"><em>not</em></span>
 true for <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 ><span class="type">GObject</span></a>; for <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 ><span class="type">GObject</span></a>, the creator of the object owns a reference.)
 </p></li>
 <li><p>
@@ -344,7 +345,7 @@ In particular, widgets are almost always destroyed in this way.
 <li><p> Because of the floating reference count, you don't need to
 worry about reference counting for widgets and toplevel windows, unless you
 explicitly call <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
 ><code class="function">g_object_ref()</code></a> yourself.</p></li>
 </ul></div>
 <p>
@@ -352,11 +353,11 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-B
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3866875"></a><h2>Details</h2>
+<a name="id4116573"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3866885"></a><h3>
+<a name="id4116583"></a><h3>
 <a name="GtkObject-struct"></a>GtkObject</h3>
-<a class="indexterm" name="id3866898"></a><pre class="programlisting">typedef struct _GtkObject GtkObject;</pre>
+<a class="indexterm" name="id4116597"></a><pre class="programlisting">typedef struct _GtkObject GtkObject;</pre>
 <p>
 The object itself.  You should never use these members directly -
  use the accessing macros instead.
@@ -364,9 +365,9 @@ The object itself.  You should never use these members directly -
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3866915"></a><h3>
+<a name="id4116613"></a><h3>
 <a name="GTK-OBJECT-TYPE:CAPS"></a>GTK_OBJECT_TYPE()</h3>
-<a class="indexterm" name="id3866929"></a><pre class="programlisting">#define GTK_OBJECT_TYPE(object)		  (G_TYPE_FROM_INSTANCE (object))
+<a class="indexterm" name="id4116627"></a><pre class="programlisting">#define GTK_OBJECT_TYPE(object)		  (G_TYPE_FROM_INSTANCE (object))
 </pre>
 <p>
 Gets the type of an object.
@@ -384,9 +385,9 @@ Gets the type of an object.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3866971"></a><h3>
+<a name="id4116670"></a><h3>
 <a name="GTK-OBJECT-TYPE-NAME:CAPS"></a>GTK_OBJECT_TYPE_NAME()</h3>
-<a class="indexterm" name="id3866984"></a><pre class="programlisting">#define GTK_OBJECT_TYPE_NAME(object)	  (g_type_name (GTK_OBJECT_TYPE (object)))
+<a class="indexterm" name="id4116682"></a><pre class="programlisting">#define GTK_OBJECT_TYPE_NAME(object)	  (g_type_name (GTK_OBJECT_TYPE (object)))
 </pre>
 <p>
 Gets the name of an objects type.
@@ -404,9 +405,9 @@ Gets the name of an objects type.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867027"></a><h3>
+<a name="id4116725"></a><h3>
 <a name="GtkObjectFlags"></a>enum GtkObjectFlags</h3>
-<a class="indexterm" name="id3867040"></a><pre class="programlisting">typedef enum
+<a class="indexterm" name="id4116738"></a><pre class="programlisting">typedef enum
 {
   GTK_IN_DESTRUCTION	= 1 &lt;&lt; 0, /* Used internally during dispose */
 #if !defined (GTK_DISABLE_DEPRECATED) || defined (GTK_COMPILATION)
@@ -439,9 +440,9 @@ Tells about the state of the object.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867113"></a><h3>
+<a name="id4116812"></a><h3>
 <a name="GTK-OBJECT-FLAGS:CAPS"></a>GTK_OBJECT_FLAGS()</h3>
-<a class="indexterm" name="id3867126"></a><pre class="programlisting">#define GTK_OBJECT_FLAGS(obj)		  (GTK_OBJECT (obj)-&gt;flags)
+<a class="indexterm" name="id4116825"></a><pre class="programlisting">#define GTK_OBJECT_FLAGS(obj)		  (GTK_OBJECT (obj)-&gt;flags)
 </pre>
 <p>
 Gets the <a href="GtkObject.html#GtkObjectFlags"><span class="type">GtkObjectFlags</span></a> for an object without directly
@@ -460,9 +461,9 @@ accessing its members.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867171"></a><h3>
+<a name="id4116870"></a><h3>
 <a name="GTK-OBJECT-FLOATING:CAPS"></a>GTK_OBJECT_FLOATING()</h3>
-<a class="indexterm" name="id3867186"></a><pre class="programlisting">#define GTK_OBJECT_FLOATING(obj)	  (g_object_is_floating (obj))
+<a class="indexterm" name="id4116885"></a><pre class="programlisting">#define GTK_OBJECT_FLOATING(obj)	  (g_object_is_floating (obj))
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -470,7 +471,7 @@ accessing its members.
 </div>
 <p>
 Evaluates to <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 ><code class="literal">TRUE</code></a> if the object still has its floating reference count.
 See the overview documentation for <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>.
 </p>
@@ -487,9 +488,9 @@ See the overview documentation for <a href="GtkObject.html" title="GtkObject"><s
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867252"></a><h3>
+<a name="id4116951"></a><h3>
 <a name="GtkArgFlags"></a>enum GtkArgFlags</h3>
-<a class="indexterm" name="id3867268"></a><pre class="programlisting">typedef enum
+<a class="indexterm" name="id4116967"></a><pre class="programlisting">typedef enum
 {
   GTK_ARG_READABLE	 = G_PARAM_READABLE,
   GTK_ARG_WRITABLE	 = G_PARAM_WRITABLE,
@@ -501,7 +502,7 @@ See the overview documentation for <a href="GtkObject.html" title="GtkObject"><s
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">GtkArgFlags</code> is deprecated and should not be used in newly-written code. Use corresponding <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 ><span class="type">GParamSpec</span></a> features instead</p>
 </div>
 <p>
@@ -544,17 +545,17 @@ each child.  Used by <a href="GtkContainer.html" title="GtkContainer"><span clas
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867462"></a><h3>
+<a name="id4117160"></a><h3>
 <a name="gtk-object-new"></a>gtk_object_new ()</h3>
-<a class="indexterm" name="id3867477"></a><pre class="programlisting"><a href="GtkObject.html" title="GtkObject">GtkObject</a>*          gtk_object_new                      (<a href="gtk-Types.html#GtkType">GtkType</a> type,
+<a class="indexterm" name="id4117175"></a><pre class="programlisting"><a href="GtkObject.html" title="GtkObject">GtkObject</a>*          gtk_object_new                      (<a href="gtk-Types.html#GtkType">GtkType</a> type,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_property_name,
                                                          ...);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_new</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-new"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-new"
 ><code class="function">g_object_new()</code></a> instead.</p>
 </div>
 <p>
@@ -581,7 +582,7 @@ a <span class="type">GTK_TYPE_FOO</span> macro.)
 <td><span class="term"><em class="parameter"><code>...</code></em>&#160;:</span></td>
 <td>the first argument's value, followed by any number of
 name/argument-value pairs, terminated with <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>.
 </td>
 </tr>
@@ -595,13 +596,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867639"></a><h3>
+<a name="id4117337"></a><h3>
 <a name="gtk-object-sink"></a>gtk_object_sink ()</h3>
-<a class="indexterm" name="id3867654"></a><pre class="programlisting">void                gtk_object_sink                     (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
+<a class="indexterm" name="id4117352"></a><pre class="programlisting">void                gtk_object_sink                     (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_sink</code> has been deprecated since version 2.10 and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref-sink"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref-sink"
 ><code class="function">g_object_ref_sink()</code></a> instead</p>
 </div>
 <p>
@@ -620,13 +621,13 @@ the top of the page.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867742"></a><h3>
+<a name="id4117441"></a><h3>
 <a name="gtk-object-ref"></a>gtk_object_ref ()</h3>
-<a class="indexterm" name="id3867758"></a><pre class="programlisting"><a href="GtkObject.html" title="GtkObject">GtkObject</a>*          gtk_object_ref                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
+<a class="indexterm" name="id4117456"></a><pre class="programlisting"><a href="GtkObject.html" title="GtkObject">GtkObject</a>*          gtk_object_ref                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_ref</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
 ><code class="function">g_object_ref()</code></a> instead.</p>
 </div>
 <p>
@@ -651,13 +652,13 @@ Increases the reference count of the object.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867843"></a><h3>
+<a name="id4117542"></a><h3>
 <a name="gtk-object-unref"></a>gtk_object_unref ()</h3>
-<a class="indexterm" name="id3867858"></a><pre class="programlisting">void                gtk_object_unref                    (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
+<a class="indexterm" name="id4117557"></a><pre class="programlisting">void                gtk_object_unref                    (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_unref</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"
 ><code class="function">g_object_unref()</code></a> instead.</p>
 </div>
 <p>
@@ -675,26 +676,26 @@ to 0, the object is finalized (i.e. its memory is freed).
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3867930"></a><h3>
+<a name="id4117629"></a><h3>
 <a name="gtk-object-weakref"></a>gtk_object_weakref ()</h3>
-<a class="indexterm" name="id3867947"></a><pre class="programlisting">void                gtk_object_weakref                  (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4117645"></a><pre class="programlisting">void                gtk_object_weakref                  (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> notify,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_weakref</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-weak-ref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-weak-ref"
 ><code class="function">g_object_weak_ref()</code></a> instead.</p>
 </div>
 <p>
 Adds a weak reference callback to an object. Weak references are used for notification when an object is
 finalized. They are called "weak references" because they allow you to safely
 hold a pointer to an object without calling <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
 ><code class="function">g_object_ref()</code></a> (<a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
 ><code class="function">g_object_ref()</code></a> adds
 a strong reference, that is, forces the object to stay alive).
 </p>
@@ -721,17 +722,17 @@ a strong reference, that is, forces the object to stay alive).
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3868097"></a><h3>
+<a name="id4117796"></a><h3>
 <a name="gtk-object-weakunref"></a>gtk_object_weakunref ()</h3>
-<a class="indexterm" name="id3868114"></a><pre class="programlisting">void                gtk_object_weakunref                (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4117812"></a><pre class="programlisting">void                gtk_object_weakunref                (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> notify,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_weakunref</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-weak-unref"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-weak-unref"
 ><code class="function">g_object_weak_unref()</code></a> instead.</p>
 </div>
 <p>
@@ -760,9 +761,9 @@ Removes a weak reference callback to an object.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3868231"></a><h3>
+<a name="id4117929"></a><h3>
 <a name="gtk-object-destroy"></a>gtk_object_destroy ()</h3>
-<a class="indexterm" name="id3868244"></a><pre class="programlisting">void                gtk_object_destroy                  (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
+<a class="indexterm" name="id4117942"></a><pre class="programlisting">void                gtk_object_destroy                  (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
 <p>
 Emits the "destroy" signal notifying all reference holders that they should
 release the <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>. See the overview documentation at the top of the 
@@ -786,17 +787,17 @@ reference holders to release their references, it does not free the object.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3868318"></a><h3>
+<a name="id4118017"></a><h3>
 <a name="gtk-object-get"></a>gtk_object_get ()</h3>
-<a class="indexterm" name="id3868334"></a><pre class="programlisting">void                gtk_object_get                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4118032"></a><pre class="programlisting">void                gtk_object_get                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_property_name,
                                                          ...);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_get</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get"
 ><code class="function">g_object_get()</code></a> instead.</p>
 </div>
 <p>
@@ -819,7 +820,7 @@ Gets properties of an object.
 <td><span class="term"><em class="parameter"><code>...</code></em>&#160;:</span></td>
 <td>
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>-terminated list of name-return location pairs.
 </td>
 </tr>
@@ -828,17 +829,17 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3868459"></a><h3>
+<a name="id4118158"></a><h3>
 <a name="gtk-object-set"></a>gtk_object_set ()</h3>
-<a class="indexterm" name="id3868475"></a><pre class="programlisting">void                gtk_object_set                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4118174"></a><pre class="programlisting">void                gtk_object_set                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_property_name,
                                                          ...);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_set</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set"
 ><code class="function">g_object_set()</code></a> instead.</p>
 </div>
 <p>
@@ -873,7 +874,7 @@ void set_box_properties (GtkBox* box)
 <td><span class="term"><em class="parameter"><code>...</code></em>&#160;:</span></td>
 <td>the value of the first argument, followed optionally
 by more name/value pairs, followed by <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>.
 </td>
 </tr>
@@ -882,19 +883,19 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3868616"></a><h3>
+<a name="id4118315"></a><h3>
 <a name="gtk-object-set-data"></a>gtk_object_set_data ()</h3>
-<a class="indexterm" name="id3868632"></a><pre class="programlisting">void                gtk_object_set_data                 (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4118330"></a><pre class="programlisting">void                gtk_object_set_data                 (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_set_data</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
 ><code class="function">g_object_set_data()</code></a> instead.</p>
 </div>
 <p>
@@ -928,20 +929,20 @@ the old association will be destroyed.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3868754"></a><h3>
+<a name="id4118452"></a><h3>
 <a name="gtk-object-set-data-full"></a>gtk_object_set_data_full ()</h3>
-<a class="indexterm" name="id3868770"></a><pre class="programlisting">void                gtk_object_set_data_full            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4118468"></a><pre class="programlisting">void                gtk_object_set_data_full            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> destroy);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_set_data_full</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data-full"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data-full"
 ><code class="function">g_object_set_data_full()</code></a> instead.</p>
 </div>
 <p>
@@ -977,24 +978,24 @@ for when the association is destroyed, either by
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3868932"></a><h3>
+<a name="id4118631"></a><h3>
 <a name="gtk-object-remove-data"></a>gtk_object_remove_data ()</h3>
-<a class="indexterm" name="id3868949"></a><pre class="programlisting">void                gtk_object_remove_data              (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4118648"></a><pre class="programlisting">void                gtk_object_remove_data              (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_remove_data</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
 ><code class="function">g_object_set_data()</code></a> to set the object data to <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a> instead.</p>
 </div>
 <p>
 Removes a specified datum from the object's data associations (the object_data).
 Subsequent calls to <a href="GtkObject.html#gtk-object-get-data"><code class="function">gtk_object_get_data()</code></a> will return <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>.
 </p>
 <p>
@@ -1019,18 +1020,18 @@ it will be invoked.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3869090"></a><h3>
+<a name="id4118789"></a><h3>
 <a name="gtk-object-get-data"></a>gtk_object_get_data ()</h3>
-<a class="indexterm" name="id3869106"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+<a class="indexterm" name="id4118805"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>            gtk_object_get_data                 (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_get_data</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get-data"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get-data"
 ><code class="function">g_object_get_data()</code></a> instead.</p>
 </div>
 <p>
@@ -1052,7 +1053,7 @@ Get a named field from the object's table of associations (the object_data).
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
 <td>the data if found, or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a> if no such data exists.
 </td>
 </tr>
@@ -1061,16 +1062,16 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3869222"></a><h3>
+<a name="id4118921"></a><h3>
 <a name="gtk-object-remove-no-notify"></a>gtk_object_remove_no_notify ()</h3>
-<a class="indexterm" name="id3869239"></a><pre class="programlisting">void                gtk_object_remove_no_notify         (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4118938"></a><pre class="programlisting">void                gtk_object_remove_no_notify         (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_remove_no_notify</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-steal-data"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-steal-data"
 ><code class="function">g_object_steal_data()</code></a> instead.</p>
 </div>
 <p>
@@ -1100,16 +1101,16 @@ Therefore this only affects data set using <a href="GtkObject.html#gtk-object-se
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3869362"></a><h3>
+<a name="id4119060"></a><h3>
 <a name="gtk-object-set-user-data"></a>gtk_object_set_user_data ()</h3>
-<a class="indexterm" name="id3869378"></a><pre class="programlisting">void                gtk_object_set_user_data            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4119076"></a><pre class="programlisting">void                gtk_object_set_user_data            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_set_user_data</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-data"
 ><code class="function">g_object_set_data()</code></a> instead.</p>
 </div>
 <p>
@@ -1134,15 +1135,15 @@ pointer.  This function sets it.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3869472"></a><h3>
+<a name="id4119170"></a><h3>
 <a name="gtk-object-get-user-data"></a>gtk_object_get_user_data ()</h3>
-<a class="indexterm" name="id3869488"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+<a class="indexterm" name="id4119186"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>            gtk_object_get_user_data            (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_get_user_data</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get-data"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get-data"
 ><code class="function">g_object_get_data()</code></a> instead.</p>
 </div>
 <p>
@@ -1170,17 +1171,17 @@ writing applications.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3869574"></a><h3>
+<a name="id4119273"></a><h3>
 <a name="gtk-object-add-arg-type"></a>gtk_object_add_arg_type ()</h3>
-<a class="indexterm" name="id3869590"></a><pre class="programlisting">void                gtk_object_add_arg_type             (const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+<a class="indexterm" name="id4119288"></a><pre class="programlisting">void                gtk_object_add_arg_type             (const <a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *arg_name,
                                                          <a href="gtk-Types.html#GtkType">GtkType</a> arg_type,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> arg_flags,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> arg_id);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1188,9 +1189,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types
 </div>
 <p>
 Deprecated in favor of the <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 ><span class="type">GObject</span></a> property system including <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 ><span class="type">GParamSpec</span></a>.
 Add a new type of argument to an object class.
 Usually this is called when registering a new type of object.
@@ -1227,25 +1228,25 @@ settable or gettable, whether it is set when the object is constructed.)
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3869745"></a><h3>
+<a name="id4119444"></a><h3>
 <a name="gtk-object-set-data-by-id"></a>gtk_object_set_data_by_id ()</h3>
-<a class="indexterm" name="id3869762"></a><pre class="programlisting">void                gtk_object_set_data_by_id           (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4119461"></a><pre class="programlisting">void                gtk_object_set_data_by_id           (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_set_data_by_id</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
 ><code class="function">g_object_set_qdata()</code></a> instead.</p>
 </div>
 <p>
 Just like <a href="GtkObject.html#gtk-object-set-data"><code class="function">gtk_object_set_data()</code></a> except that it takes
 a <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 ><span class="type">GQuark</span></a> instead of a string, so it is slightly faster.
 </p>
 <p>
@@ -1275,26 +1276,26 @@ to get an id from a string.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3869923"></a><h3>
+<a name="id4119621"></a><h3>
 <a name="gtk-object-set-data-by-id-full"></a>gtk_object_set_data_by_id_full ()</h3>
-<a class="indexterm" name="id3869939"></a><pre class="programlisting">void                gtk_object_set_data_by_id_full      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4119638"></a><pre class="programlisting">void                gtk_object_set_data_by_id_full      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> data,
                                                          <a href="gtk-Types.html#GtkDestroyNotify">GtkDestroyNotify</a> destroy);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_set_data_by_id_full</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata-full"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata-full"
 ><code class="function">g_object_set_qdata_full()</code></a> instead.</p>
 </div>
 <p>
 Just like <a href="GtkObject.html#gtk-object-set-data-full"><code class="function">gtk_object_set_data_full()</code></a> except that it takes
 a <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 ><span class="type">GQuark</span></a> instead of a string, so it is slightly faster.
 </p>
 <p>
@@ -1329,24 +1330,24 @@ to get an id from a string.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3870125"></a><h3>
+<a name="id4119823"></a><h3>
 <a name="gtk-object-get-data-by-id"></a>gtk_object_get_data_by_id ()</h3>
-<a class="indexterm" name="id3870142"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+<a class="indexterm" name="id4119840"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>            gtk_object_get_data_by_id           (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_get_data_by_id</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get-qdata"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-get-qdata"
 ><code class="function">g_object_get_qdata()</code></a> instead.</p>
 </div>
 <p>
 Just like <a href="GtkObject.html#gtk-object-get-data"><code class="function">gtk_object_get_data()</code></a> except that it takes
 a <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 ><span class="type">GQuark</span></a> instead of a string, so it is slightly faster.
 </p>
 <p>
@@ -1369,7 +1370,7 @@ to get an id from a string.
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
 <td>the data if found, or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a> if no such data exists.
 </td>
 </tr>
@@ -1378,30 +1379,30 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3870302"></a><h3>
+<a name="id4120000"></a><h3>
 <a name="gtk-object-remove-data-by-id"></a>gtk_object_remove_data_by_id ()</h3>
-<a class="indexterm" name="id3870319"></a><pre class="programlisting">void                gtk_object_remove_data_by_id        (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4120017"></a><pre class="programlisting">void                gtk_object_remove_data_by_id        (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> data_id);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_remove_data_by_id</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-qdata"
 ><code class="function">g_object_set_qdata()</code></a> with data of <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a> instead.</p>
 </div>
 <p>
 Just like <a href="GtkObject.html#gtk-object-remove-data"><code class="function">gtk_object_remove_data()</code></a> except that it takes
 a <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 ><span class="type">GQuark</span></a> instead of a string, so it is slightly faster.
 </p>
 <p>
 Remove a specified datum from the object's data associations.
 Subsequent calls to <a href="GtkObject.html#gtk-object-get-data"><code class="function">gtk_object_get_data()</code></a> will return <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>.
 </p>
 <p>
@@ -1426,22 +1427,22 @@ to get an id from a string.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3870494"></a><h3>
+<a name="id4120192"></a><h3>
 <a name="gtk-object-remove-no-notify-by-id"></a>gtk_object_remove_no_notify_by_id ()</h3>
-<a class="indexterm" name="id3870511"></a><pre class="programlisting">void                gtk_object_remove_no_notify_by_id   (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4120210"></a><pre class="programlisting">void                gtk_object_remove_no_notify_by_id   (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 >GQuark</a> key_id);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_object_remove_no_notify_by_id</code> is deprecated and should not be used in newly-written code. Use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-steal-qdata"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-steal-qdata"
 ><code class="function">g_object_steal_qdata()</code></a> instead.</p>
 </div>
 <p>
 Just like <a href="GtkObject.html#gtk-object-remove-no-notify"><code class="function">gtk_object_remove_no_notify()</code></a> except that it takes
 a <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
 ><span class="type">GQuark</span></a> instead of a string, so it is slightly faster.
 </p>
 <p>
@@ -1466,9 +1467,9 @@ to get an id from a string.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3870651"></a><h3>
+<a name="id4120350"></a><h3>
 <a name="gtk-object-data-try-key"></a>gtk_object_data_try_key</h3>
-<a class="indexterm" name="id3870667"></a><pre class="programlisting">#define	gtk_object_data_try_key	    g_quark_try_string
+<a class="indexterm" name="id4120365"></a><pre class="programlisting">#define	gtk_object_data_try_key	    g_quark_try_string
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1480,9 +1481,9 @@ Useless deprecated macro. Ignore it.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3870696"></a><h3>
+<a name="id4120395"></a><h3>
 <a name="gtk-object-data-force-id"></a>gtk_object_data_force_id</h3>
-<a class="indexterm" name="id3870712"></a><pre class="programlisting">#define	gtk_object_data_force_id    g_quark_from_string
+<a class="indexterm" name="id4120410"></a><pre class="programlisting">#define	gtk_object_data_force_id    g_quark_from_string
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
@@ -1494,24 +1495,24 @@ Useless deprecated macro. Ignore it.
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3870742"></a><h2>Property Details</h2>
+<a name="id4120441"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3870753"></a><h3>
+<a name="id4120451"></a><h3>
 <a name="GtkObject--user-data"></a>The :<code class="literal">user-data</code> property</h3>
-<a class="indexterm" name="id3870769"></a><pre class="programlisting">  user-data                <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+<a class="indexterm" name="id4120468"></a><pre class="programlisting">  user-data                <a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>              : Read / Write</pre>
 <p>Anonymous User Data Pointer.</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3870793"></a><h2>Signal Details</h2>
+<a name="id4120491"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
-<a name="id3870803"></a><h3>
+<a name="id4120502"></a><h3>
 <a name="GtkObject-destroy"></a>The <code class="literal">::destroy</code> signal</h3>
-<a class="indexterm" name="id3870818"></a><pre class="programlisting">void                user_function                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
+<a class="indexterm" name="id4120517"></a><pre class="programlisting">void                user_function                      (<a href="GtkObject.html" title="GtkObject">GtkObject</a> *object,
                                                         <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>   user_data)      : Cleanup / No Recursion / No Hooks</pre>
 <p>
 Signals that all holders of a reference to the <a href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> should release
@@ -1536,10 +1537,10 @@ if all references are released.
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3870900"></a><h2>See Also</h2>
+<a name="id4120599"></a><h2>See Also</h2>
 <p>
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 ><span class="type">GObject</span></a>
 </p>
 </div>

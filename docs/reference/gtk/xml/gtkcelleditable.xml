@@ -107,9 +107,9 @@ to be usable when editing the contents of a <link linkend="GtkTreeView"><type>Gt
 <indexterm><primary>gtk_cell_editable_start_editing</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_cell_editable_start_editing     (<link linkend="GtkCellEditable">GtkCellEditable</link> *cell_editable,
                                                          <link linkend="GdkEvent">GdkEvent</link> *event);</programlisting>
 <para>
-Begins editing on a <parameter>cell_editable</parameter>.  <parameter>event</parameter> is the <link linkend="GdkEvent"><type>GdkEvent</type></link> that began the
-editing process.  It may be <link linkend="NULL:CAPS"><literal>NULL</literal></link>, in the instance that editing was initiated
-through programatic means.</para>
+Begins editing on a <parameter>cell_editable</parameter>. <parameter>event</parameter> is the <link linkend="GdkEvent"><type>GdkEvent</type></link> that began 
+the editing process. It may be <link linkend="NULL:CAPS"><literal>NULL</literal></link>, in the instance that editing was 
+initiated through programatic means.</para>
 <para>
 
 </para><variablelist role="params">
@@ -124,8 +124,7 @@ through programatic means.</para>
 <title><anchor id="gtk-cell-editable-editing-done" role="function"/>gtk_cell_editable_editing_done ()</title>
 <indexterm><primary>gtk_cell_editable_editing_done</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_cell_editable_editing_done      (<link linkend="GtkCellEditable">GtkCellEditable</link> *cell_editable);</programlisting>
 <para>
-Emits the "editing_done" signal.  This signal is a sign for the cell renderer
-to update its value from the cell.</para>
+Emits the <link linkend="GtkCellEditable-editing-done"><type>::editing-done</type></link> signal.</para>
 <para>
 
 </para><variablelist role="params">
@@ -137,8 +136,7 @@ to update its value from the cell.</para>
 <title><anchor id="gtk-cell-editable-remove-widget" role="function"/>gtk_cell_editable_remove_widget ()</title>
 <indexterm><primary>gtk_cell_editable_remove_widget</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_cell_editable_remove_widget     (<link linkend="GtkCellEditable">GtkCellEditable</link> *cell_editable);</programlisting>
 <para>
-Emits the "remove_widget" signal.  This signal is meant to indicate that the
-cell is finished editing, and the widget may now be destroyed.</para>
+Emits the <link linkend="GtkCellEditable-remove-widget"><type>::remove-widget</type></link> signal.</para>
 <para>
 
 </para><variablelist role="params">
@@ -152,26 +150,50 @@ cell is finished editing, and the widget may now be destroyed.</para>
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2><title><anchor id="GtkCellEditable-editing-done"/>The <literal>::editing-done</literal> signal</title>
-<indexterm><primary>GtkCellEditable::editing-done</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkCellEditable">GtkCellEditable</link> *celleditable,
-                                                        <link linkend="gpointer">gpointer</link>         user_data)         : Run Last</programlisting>
+<indexterm><primary>GtkCellEditable::editing-done</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkCellEditable">GtkCellEditable</link> *cell_editable,
+                                                        <link linkend="gpointer">gpointer</link>         user_data)          : Run Last</programlisting>
+<para>
+This signal is a sign for the cell renderer to update its 
+value from the <parameter>cell_editable</parameter>. 
+</para>
+<para>
+Implementations of <link linkend="GtkCellEditable"><type>GtkCellEditable</type></link> are responsible for 
+emitting this signal when they are done editing, e.g. 
+<link linkend="GtkEntry"><type>GtkEntry</type></link> is emitting it when the user presses Enter.
+</para>
+<para>
+<link linkend="gtk-cell-editable-editing-done"><function>gtk_cell_editable_editing_done()</function></link> is a convenience method
+for emitting ::editing-done.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>celleditable</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>cell_editable</parameter>&nbsp;:</term>
+<listitem><simpara> the object on which the signal was emitted
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkCellEditable-remove-widget"/>The <literal>::remove-widget</literal> signal</title>
-<indexterm><primary>GtkCellEditable::remove-widget</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkCellEditable">GtkCellEditable</link> *celleditable,
-                                                        <link linkend="gpointer">gpointer</link>         user_data)         : Run Last</programlisting>
+<indexterm><primary>GtkCellEditable::remove-widget</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkCellEditable">GtkCellEditable</link> *cell_editable,
+                                                        <link linkend="gpointer">gpointer</link>         user_data)          : Run Last</programlisting>
+<para>
+This signal is meant to indicate that the cell is finished 
+editing, and the widget may now be destroyed. 
+</para>
+<para>
+Implementations of <link linkend="GtkCellEditable"><type>GtkCellEditable</type></link> are responsible for 
+emitting this signal when they are done editing. It must
+be emitted after the <link linkend="GtkCellEditable-editing-done"><type>::editing-done</type></link> signal, 
+to give the cell renderer a chance to update the cell's value 
+before the widget is removed. 
+</para>
+<para>
+<link linkend="gtk-cell-editable-remove-widget"><function>gtk_cell_editable_remove_widget()</function></link> is a convenience method
+for emitting ::remove-widget.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>celleditable</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>cell_editable</parameter>&nbsp;:</term>
+<listitem><simpara> the object on which the signal was emitted
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>

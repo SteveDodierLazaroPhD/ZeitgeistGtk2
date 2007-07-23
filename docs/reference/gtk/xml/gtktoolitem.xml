@@ -31,17 +31,21 @@
                                                          <link linkend="GtkTooltips">GtkTooltips</link> *tooltips,
                                                          const <link linkend="gchar">gchar</link> *tip_text,
                                                          const <link linkend="gchar">gchar</link> *tip_private);
-<link linkend="void">void</link>                <link linkend="gtk-tool-item-set-use-drag-window">gtk_tool_item_set_use_drag_window</link>   (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+<link linkend="void">void</link>                <link linkend="gtk-tool-item-set-tooltip-text">gtk_tool_item_set_tooltip_text</link>      (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
+                                                         const <link linkend="gchar">gchar</link> *text);
+<link linkend="void">void</link>                <link linkend="gtk-tool-item-set-tooltip-markup">gtk_tool_item_set_tooltip_markup</link>    (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
+                                                         const <link linkend="gchar">gchar</link> *markup);
+<link linkend="void">void</link>                <link linkend="gtk-tool-item-set-use-drag-window">gtk_tool_item_set_use_drag_window</link>   (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                          <link linkend="gboolean">gboolean</link> use_drag_window);
-<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tool-item-get-use-drag-window">gtk_tool_item_get_use_drag_window</link>   (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tool-item-get-use-drag-window">gtk_tool_item_get_use_drag_window</link>   (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);
 <link linkend="void">void</link>                <link linkend="gtk-tool-item-set-visible-horizontal">gtk_tool_item_set_visible_horizontal</link>
-                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                          <link linkend="gboolean">gboolean</link> visible_horizontal);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-tool-item-get-visible-horizontal">gtk_tool_item_get_visible_horizontal</link>
-                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem);
-<link linkend="void">void</link>                <link linkend="gtk-tool-item-set-visible-vertical">gtk_tool_item_set_visible_vertical</link>  (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);
+<link linkend="void">void</link>                <link linkend="gtk-tool-item-set-visible-vertical">gtk_tool_item_set_visible_vertical</link>  (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                          <link linkend="gboolean">gboolean</link> visible_vertical);
-<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tool-item-get-visible-vertical">gtk_tool_item_get_visible_vertical</link>  (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tool-item-get-visible-vertical">gtk_tool_item_get_visible_vertical</link>  (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);
 <link linkend="void">void</link>                <link linkend="gtk-tool-item-set-is-important">gtk_tool_item_set_is_important</link>      (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                          <link linkend="gboolean">gboolean</link> is_important);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-tool-item-get-is-important">gtk_tool_item_get_is_important</link>      (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);
@@ -225,11 +229,12 @@ See <link linkend="gtk-tool-item-set-expand"><function>gtk_tool_item_set_expand(
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-tool-item-set-tooltip" role="function" condition="since:2.4"/>gtk_tool_item_set_tooltip ()</title>
-<indexterm role="2.4"><primary>gtk_tool_item_set_tooltip</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_tooltip           (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
+<title><anchor id="gtk-tool-item-set-tooltip" role="function" condition="deprecated:2.12: Use gtk_tool_item_set_tooltip_text() instead.|since:2.4"/>gtk_tool_item_set_tooltip ()</title>
+<indexterm role="deprecated"><primary>gtk_tool_item_set_tooltip</primary></indexterm><indexterm role="2.4"><primary>gtk_tool_item_set_tooltip</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_tooltip           (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                          <link linkend="GtkTooltips">GtkTooltips</link> *tooltips,
                                                          const <link linkend="gchar">gchar</link> *tip_text,
                                                          const <link linkend="gchar">gchar</link> *tip_private);</programlisting>
+<warning><para><literal>gtk_tool_item_set_tooltip</literal> has been deprecated since version 2.12 and should not be used in newly-written code. Use <link linkend="gtk-tool-item-set-tooltip-text"><function>gtk_tool_item_set_tooltip_text()</function></link> instead.</para></warning>
 <para>
 Sets the <link linkend="GtkTooltips"><type>GtkTooltips</type></link> object to be used for <parameter>tool_item</parameter>, the
 text to be displayed as tooltip on the item and the private text
@@ -250,40 +255,77 @@ to be used. See <link linkend="gtk-tooltips-set-tip"><function>gtk_tooltips_set_
 <listitem><simpara> text to be used as private tooltip text
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-tool-item-set-use-drag-window" role="function" condition="since:2.4"/>gtk_tool_item_set_use_drag_window ()</title>
-<indexterm role="2.4"><primary>gtk_tool_item_set_use_drag_window</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_use_drag_window   (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
-                                                         <link linkend="gboolean">gboolean</link> use_drag_window);</programlisting>
+<title><anchor id="gtk-tool-item-set-tooltip-text" role="function" condition="since:2.12"/>gtk_tool_item_set_tooltip_text ()</title>
+<indexterm role="2.12"><primary>gtk_tool_item_set_tooltip_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_tooltip_text      (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
+                                                         const <link linkend="gchar">gchar</link> *text);</programlisting>
 <para>
-Sets whether <parameter>toolitem</parameter> has a drag window. When <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> the
-toolitem can be used as a drag source through <link linkend="gtk-drag-source-set"><function>gtk_drag_source_set()</function></link>.
-When <parameter>toolitem</parameter> has a drag window it will intercept all events,
-even those that would otherwise be sent to a child of <parameter>toolitem</parameter>.</para>
+Sets the text to be displayed as tooltip on the item.
+See <link linkend="gtk-widget-set-tooltip-text"><function>gtk_widget_set_tooltip_text()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkToolItem--"><type>:</type></link> 
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>text</parameter>&nbsp;:</term>
+<listitem><simpara> text to be used as tooltip for <parameter>tool_item</parameter>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tool-item-set-tooltip-markup" role="function" condition="since:2.12"/>gtk_tool_item_set_tooltip_markup ()</title>
+<indexterm role="2.12"><primary>gtk_tool_item_set_tooltip_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_tooltip_markup    (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
+                                                         const <link linkend="gchar">gchar</link> *markup);</programlisting>
+<para>
+Sets the markup text to be displayed as tooltip on the item.
+See <link linkend="gtk-widget-set-tooltip-markup"><function>gtk_widget_set_tooltip_markup()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkToolItem--"><type>:</type></link> 
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>markup</parameter>&nbsp;:</term>
+<listitem><simpara> markup text to be used as tooltip for <parameter>tool_item</parameter>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tool-item-set-use-drag-window" role="function" condition="since:2.4"/>gtk_tool_item_set_use_drag_window ()</title>
+<indexterm role="2.4"><primary>gtk_tool_item_set_use_drag_window</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_use_drag_window   (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
+                                                         <link linkend="gboolean">gboolean</link> use_drag_window);</programlisting>
+<para>
+Sets whether <parameter>tool_item</parameter> has a drag window. When <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> the
+toolitem can be used as a drag source through <link linkend="gtk-drag-source-set"><function>gtk_drag_source_set()</function></link>.
+When <parameter>tool_item</parameter> has a drag window it will intercept all events,
+even those that would otherwise be sent to a child of <parameter>tool_item</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GtkToolItem"><type>GtkToolItem</type></link> 
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>use_drag_window</parameter>&nbsp;:</term>
-<listitem><simpara> Whether <parameter>toolitem</parameter> has a drag window.
+<listitem><simpara> Whether <parameter>tool_item</parameter> has a drag window.
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-tool-item-get-use-drag-window" role="function" condition="since:2.4"/>gtk_tool_item_get_use_drag_window ()</title>
-<indexterm role="2.4"><primary>gtk_tool_item_get_use_drag_window</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tool_item_get_use_drag_window   (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem);</programlisting>
+<indexterm role="2.4"><primary>gtk_tool_item_get_use_drag_window</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tool_item_get_use_drag_window   (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);</programlisting>
 <para>
-Returns whether <parameter>toolitem</parameter> has a drag window. See
+Returns whether <parameter>tool_item</parameter> has a drag window. See
 <link linkend="gtk-tool-item-set-use-drag-window"><function>gtk_tool_item_set_use_drag_window()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GtkToolItem"><type>GtkToolItem</type></link> 
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>toolitem</parameter> uses a drag window.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>tool_item</parameter> uses a drag window.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
@@ -291,35 +333,35 @@ Returns whether <parameter>toolitem</parameter> has a drag window. See
 <refsect2>
 <title><anchor id="gtk-tool-item-set-visible-horizontal" role="function" condition="since:2.4"/>gtk_tool_item_set_visible_horizontal ()</title>
 <indexterm role="2.4"><primary>gtk_tool_item_set_visible_horizontal</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_visible_horizontal
-                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                          <link linkend="gboolean">gboolean</link> visible_horizontal);</programlisting>
 <para>
-Sets whether <parameter>toolitem</parameter> is visible when the toolbar is docked horizontally.</para>
+Sets whether <parameter>tool_item</parameter> is visible when the toolbar is docked horizontally.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GtkToolItem"><type>GtkToolItem</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>visible_horizontal</parameter>&nbsp;:</term>
-<listitem><simpara> Whether <parameter>toolitem</parameter> is visible when in horizontal mode
+<listitem><simpara> Whether <parameter>tool_item</parameter> is visible when in horizontal mode
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-tool-item-get-visible-horizontal" role="function" condition="since:2.4"/>gtk_tool_item_get_visible_horizontal ()</title>
 <indexterm role="2.4"><primary>gtk_tool_item_get_visible_horizontal</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tool_item_get_visible_horizontal
-                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem);</programlisting>
+                                                        (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);</programlisting>
 <para>
-Returns whether the <parameter>toolitem</parameter> is visible on toolbars that are
+Returns whether the <parameter>tool_item</parameter> is visible on toolbars that are
 docked horizontally.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GtkToolItem"><type>GtkToolItem</type></link> 
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>toolitem</parameter> is visible on toolbars that are
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>tool_item</parameter> is visible on toolbars that are
 docked horizontally.
 
 </simpara></listitem></varlistentry>
@@ -327,38 +369,38 @@ docked horizontally.
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-tool-item-set-visible-vertical" role="function" condition="since:2.4"/>gtk_tool_item_set_visible_vertical ()</title>
-<indexterm role="2.4"><primary>gtk_tool_item_set_visible_vertical</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_visible_vertical  (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+<indexterm role="2.4"><primary>gtk_tool_item_set_visible_vertical</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_set_visible_vertical  (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                          <link linkend="gboolean">gboolean</link> visible_vertical);</programlisting>
 <para>
-Sets whether <parameter>toolitem</parameter> is visible when the toolbar is docked
+Sets whether <parameter>tool_item</parameter> is visible when the toolbar is docked
 vertically. Some tool items, such as text entries, are too wide to be
 useful on a vertically docked toolbar. If <parameter>visible_vertical</parameter> is <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>
-<parameter>toolitem</parameter> will not appear on toolbars that are docked vertically.</para>
+<parameter>tool_item</parameter> will not appear on toolbars that are docked vertically.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GtkToolItem"><type>GtkToolItem</type></link> 
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>visible_vertical</parameter>&nbsp;:</term>
-<listitem><simpara> whether <parameter>toolitem</parameter> is visible when the toolbar
+<listitem><simpara> whether <parameter>tool_item</parameter> is visible when the toolbar
 is in vertical mode
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-tool-item-get-visible-vertical" role="function" condition="since:2.4"/>gtk_tool_item_get_visible_vertical ()</title>
-<indexterm role="2.4"><primary>gtk_tool_item_get_visible_vertical</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tool_item_get_visible_vertical  (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem);</programlisting>
+<indexterm role="2.4"><primary>gtk_tool_item_get_visible_vertical</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tool_item_get_visible_vertical  (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);</programlisting>
 <para>
-Returns whether <parameter>toolitem</parameter> is visible when the toolbar is docked vertically.
+Returns whether <parameter>tool_item</parameter> is visible when the toolbar is docked vertically.
 See <link linkend="gtk-tool-item-set-visible-vertical"><function>gtk_tool_item_set_visible_vertical()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GtkToolItem"><type>GtkToolItem</type></link> 
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> Whether <parameter>toolitem</parameter> is visible when the toolbar is docked vertically
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> Whether <parameter>tool_item</parameter> is visible when the toolbar is docked vertically
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
@@ -608,14 +650,14 @@ signal.</para>
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2><title><anchor id="GtkToolItem-create-menu-proxy"/>The <literal>::create-menu-proxy</literal> signal</title>
-<indexterm><primary>GtkToolItem::create-menu-proxy</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+<indexterm><primary>GtkToolItem::create-menu-proxy</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
 <para>
 This signal is emitted when the toolbar needs information from <parameter>tool_item</parameter>
 about whether the item should appear in the toolbar overflow menu. In
 response the tool item should either
 <itemizedlist>
-<listitem> call <link linkend="gtk-tool-item-set-proxy-menu-item"><function>gtk_tool_item_set_proxy_menu_item()</function></link> with a <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<listitem>call <link linkend="gtk-tool-item-set-proxy-menu-item"><function>gtk_tool_item_set_proxy_menu_item()</function></link> with a <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 pointer and return <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to indicate that the item should not appear
 in the overflow menu
 </listitem>
@@ -637,7 +679,7 @@ menu.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> the object the signal was emitted on
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
@@ -645,7 +687,7 @@ menu.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the signal was handled, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if not
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkToolItem-set-tooltip"/>The <literal>::set-tooltip</literal> signal</title>
-<indexterm><primary>GtkToolItem::set-tooltip</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+<indexterm role="deprecated"><primary>GtkToolItem::set-tooltip</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                         <link linkend="GtkTooltips">GtkTooltips</link> *tooltips,
                                                         <link linkend="gchar">gchar</link>       *tip_text,
                                                         <link linkend="gchar">gchar</link>       *tip_private,
@@ -657,7 +699,7 @@ set the item's tooltip.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> the object the signal was emitted on
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>tooltips</parameter>&nbsp;:</term>
@@ -672,9 +714,10 @@ set the item's tooltip.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the signal was handled, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if not
+
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkToolItem-toolbar-reconfigured"/>The <literal>::toolbar-reconfigured</literal> signal</title>
-<indexterm><primary>GtkToolItem::toolbar-reconfigured</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkToolItem">GtkToolItem</link> *toolitem,
+<indexterm><primary>GtkToolItem::toolbar-reconfigured</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
 <para>
 This signal is emitted when some property of the toolbar that the
@@ -691,7 +734,7 @@ themselves accordingly.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>toolitem</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
 <listitem><simpara> the object the signal was emitted on
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>

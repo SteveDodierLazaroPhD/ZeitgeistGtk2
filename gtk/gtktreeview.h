@@ -402,6 +402,26 @@ void                        gtk_tree_view_set_level_indentation  (GtkTreeView   
 								  gint                        indentation);
 gint                        gtk_tree_view_get_level_indentation  (GtkTreeView                *tree_view);
 
+/* Convenience functions for setting tooltips */
+void          gtk_tree_view_set_tooltip_row    (GtkTreeView       *tree_view,
+						GtkTooltip        *tooltip,
+						GtkTreePath       *path);
+void          gtk_tree_view_set_tooltip_cell   (GtkTreeView       *tree_view,
+						GtkTooltip        *tooltip,
+						GtkTreePath       *path,
+						GtkTreeViewColumn *column,
+						GtkCellRenderer   *cell);
+gboolean      gtk_tree_view_get_tooltip_context(GtkTreeView       *tree_view,
+						gint              *x,
+						gint              *y,
+						gboolean           keyboard_tip,
+						GtkTreeModel     **model,
+						GtkTreePath      **path,
+						GtkTreeIter       *iter);
+void          gtk_tree_view_set_tooltip_column (GtkTreeView       *tree_view,
+					        gint               column);
+gint          gtk_tree_view_get_tooltip_column (GtkTreeView       *tree_view);
+
 G_END_DECLS
 
 

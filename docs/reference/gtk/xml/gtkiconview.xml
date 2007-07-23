@@ -45,6 +45,12 @@
                                                          <link linkend="gint">gint</link> y,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> **path,
                                                          <link linkend="GtkCellRenderer">GtkCellRenderer</link> **cell);
+<link linkend="void">void</link>                <link linkend="gtk-icon-view-convert-widget-to-bin-window-coords">gtk_icon_view_convert_widget_to_bin_window_coords</link>
+                                                        (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="gint">gint</link> wx,
+                                                         <link linkend="gint">gint</link> wy,
+                                                         <link linkend="gint">gint</link> *bx,
+                                                         <link linkend="gint">gint</link> *by);
 <link linkend="void">void</link>                <link linkend="gtk-icon-view-set-cursor">gtk_icon_view_set_cursor</link>            (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *path,
                                                          <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell,
@@ -98,6 +104,23 @@
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-icon-view-get-visible-range">gtk_icon_view_get_visible_range</link>     (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> **start_path,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> **end_path);
+<link linkend="void">void</link>                <link linkend="gtk-icon-view-set-tooltip-item">gtk_icon_view_set_tooltip_item</link>      (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path);
+<link linkend="void">void</link>                <link linkend="gtk-icon-view-set-tooltip-cell">gtk_icon_view_set_tooltip_cell</link>      (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
+                                                         <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-icon-view-get-tooltip-context">gtk_icon_view_get_tooltip_context</link>   (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="gint">gint</link> *x,
+                                                         <link linkend="gint">gint</link> *y,
+                                                         <link linkend="gboolean">gboolean</link> keyboard_tip,
+                                                         <link linkend="GtkTreeModel">GtkTreeModel</link> **model,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> **path,
+                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter);
+<link linkend="void">void</link>                <link linkend="gtk-icon-view-set-tooltip-column">gtk_icon_view_set_tooltip_column</link>    (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="gint">gint</link> column);
+<link linkend="gint">gint</link>                <link linkend="gtk-icon-view-get-tooltip-column">gtk_icon_view_get_tooltip_column</link>    (<link linkend="GtkIconView">GtkIconView</link> *icon_view);
 
 enum                <link linkend="GtkIconViewDropPosition">GtkIconViewDropPosition</link>;
 <link linkend="void">void</link>                <link linkend="gtk-icon-view-enable-model-drag-source">gtk_icon_view_enable_model_drag_source</link>
@@ -177,6 +200,7 @@ GtkIconView implements
   <link linkend="GtkIconView--selection-mode">selection-mode</link>           <link linkend="GtkSelectionMode">GtkSelectionMode</link>      : Read / Write
   <link linkend="GtkIconView--spacing">spacing</link>                  <link linkend="gint">gint</link>                  : Read / Write
   <link linkend="GtkIconView--text-column">text-column</link>              <link linkend="gint">gint</link>                  : Read / Write
+  <link linkend="GtkIconView--tooltip-column">tooltip-column</link>           <link linkend="gint">gint</link>                  : Read / Write
 </synopsis>
 </refsect1>
 <refsect1 role="style_properties">
@@ -423,9 +447,11 @@ Returns the column with pixbufs for <parameter>icon_view</parameter>.</para>
                                                          <link linkend="gint">gint</link> x,
                                                          <link linkend="gint">gint</link> y);</programlisting>
 <para>
-Finds the path at the point (<parameter>x</parameter>, <parameter>y</parameter>), relative to widget coordinates.
+Finds the path at the point (<parameter>x</parameter>, <parameter>y</parameter>), relative to bin_window coordinates.
 See <link linkend="gtk-icon-view-get-item-at-pos"><function>gtk_icon_view_get_item_at_pos()</function></link>, if you are also interested in
-the cell at the specified position.</para>
+the cell at the specified position. 
+See <link linkend="gtk-icon-view-convert-widget-to-bin-window-coords"><function>gtk_icon_view_convert_widget_to_bin_window_coords()</function></link> for converting
+widget coordinates to bin_window coordinates.</para>
 <para>
 
 </para><variablelist role="params">
@@ -452,10 +478,12 @@ if no icon exists at that position.
                                                          <link linkend="GtkTreePath">GtkTreePath</link> **path,
                                                          <link linkend="GtkCellRenderer">GtkCellRenderer</link> **cell);</programlisting>
 <para>
-Finds the path at the point (<parameter>x</parameter>, <parameter>y</parameter>), relative to widget coordinates.
+Finds the path at the point (<parameter>x</parameter>, <parameter>y</parameter>), relative to bin_window coordinates.
 In contrast to <link linkend="gtk-icon-view-get-path-at-pos"><function>gtk_icon_view_get_path_at_pos()</function></link>, this function also 
 obtains the cell at the specified position. The returned path should
-be freed with <link linkend="gtk-tree-path-free"><function>gtk_tree_path_free()</function></link>.</para>
+be freed with <link linkend="gtk-tree-path-free"><function>gtk_tree_path_free()</function></link>.
+See <link linkend="gtk-icon-view-convert-widget-to-bin-window-coords"><function>gtk_icon_view_convert_widget_to_bin_window_coords()</function></link> for converting
+widget coordinates to bin_window coordinates.</para>
 <para>
 
 </para><variablelist role="params">
@@ -479,6 +507,37 @@ be freed with <link linkend="gtk-tree-path-free"><function>gtk_tree_path_free()<
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.8
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-icon-view-convert-widget-to-bin-window-coords" role="function" condition="since:2.12"/>gtk_icon_view_convert_widget_to_bin_window_coords ()</title>
+<indexterm role="2.12"><primary>gtk_icon_view_convert_widget_to_bin_window_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_icon_view_convert_widget_to_bin_window_coords
+                                                        (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="gint">gint</link> wx,
+                                                         <link linkend="gint">gint</link> wy,
+                                                         <link linkend="gint">gint</link> *bx,
+                                                         <link linkend="gint">gint</link> *by);</programlisting>
+<para>
+Converts widget coordinates to coordinates for the bin_window,
+as expected by e.g. <link linkend="gtk-icon-view-get-path-at-pos"><function>gtk_icon_view_get_path_at_pos()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_view</parameter>&nbsp;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
+<listitem><simpara> X coordinate relative to the widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
+<listitem><simpara> Y coordinate relative to the widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>bx</parameter>&nbsp;:</term>
+<listitem><simpara> return location for bin_window X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>by</parameter>&nbsp;:</term>
+<listitem><simpara> return location for bin_window Y coordinate
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
 <title><anchor id="gtk-icon-view-set-cursor" role="function" condition="since:2.8"/>gtk_icon_view_set_cursor ()</title>
@@ -1040,6 +1099,152 @@ Both paths should be freed with <link linkend="gtk-tree-path-free"><function>gtk
 </variablelist><para role="since">Since  2.8
 </para></refsect2>
 <refsect2>
+<title><anchor id="gtk-icon-view-set-tooltip-item" role="function" condition="since:2.12"/>gtk_icon_view_set_tooltip_item ()</title>
+<indexterm role="2.12"><primary>gtk_icon_view_set_tooltip_item</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_icon_view_set_tooltip_item      (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path);</programlisting>
+<para>
+Sets the tip area of <parameter>tooltip</parameter> to be the area covered by the item at <parameter>path</parameter>.
+See also <link linkend="gtk-tooltip-set-tip-area"><function>gtk_tooltip_set_tip_area()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkIconView"><type>GtkIconView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tooltip</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTooltip"><type>GtkTooltip</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreePath"><type>GtkTreePath</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-icon-view-set-tooltip-cell" role="function" condition="since:2.12"/>gtk_icon_view_set_tooltip_cell ()</title>
+<indexterm role="2.12"><primary>gtk_icon_view_set_tooltip_cell</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_icon_view_set_tooltip_cell      (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
+                                                         <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell);</programlisting>
+<para>
+Sets the tip area of <parameter>tooltip</parameter> to the area which <parameter>cell</parameter> occupies in
+the item pointed to by <parameter>path</parameter>. See also <link linkend="gtk-tooltip-set-tip-area"><function>gtk_tooltip_set_tip_area()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkIconView"><type>GtkIconView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tooltip</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTooltip"><type>GtkTooltip</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreePath"><type>GtkTreePath</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>cell</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCellRenderer"><type>GtkCellRenderer</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-icon-view-get-tooltip-context" role="function" condition="since:2.12"/>gtk_icon_view_get_tooltip_context ()</title>
+<indexterm role="2.12"><primary>gtk_icon_view_get_tooltip_context</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_icon_view_get_tooltip_context   (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="gint">gint</link> *x,
+                                                         <link linkend="gint">gint</link> *y,
+                                                         <link linkend="gboolean">gboolean</link> keyboard_tip,
+                                                         <link linkend="GtkTreeModel">GtkTreeModel</link> **model,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> **path,
+                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter);</programlisting>
+<para>
+This function is supposed to be used in a <link linkend="GtkWidget-query-tooltip"><type>::query-tooltip</type></link>
+signal handler for <link linkend="GtkIconView"><type>GtkIconView</type></link>.  The <parameter>x</parameter>, <parameter>y</parameter> and <parameter>keyboard_tip</parameter> values
+which are received in the signal handler, should be passed to this
+function without modification.
+</para>
+<para>
+The return value indicates whether there is an icon view item at the given
+coordinates (<link linkend="TRUE:CAPS"><literal>TRUE</literal></link>) or not (<link linkend="FALSE:CAPS"><literal>FALSE</literal></link>) for mouse tooltips. For keyboard
+tooltips the item returned will be the cursor item. When <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, then any of
+<parameter>model</parameter>, <parameter>path</parameter> and <parameter>iter</parameter> which have been provided will be set to point to
+that row and the corresponding model. <parameter>x</parameter> and <parameter>y</parameter> will always be converted
+to be relative to <parameter>icon_view</parameter>'s bin_window if <parameter>keyboard_tooltip</parameter> is <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_view</parameter>&nbsp;:</term>
+<listitem><simpara> an <link linkend="GtkIconView"><type>GtkIconView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> the x coordinate (relative to widget coordinates)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> the y coordinate (relative to widget coordinates)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>keyboard_tip</parameter>&nbsp;:</term>
+<listitem><simpara> whether this is a keyboard tooltip or not
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to receive a <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to receive a <link linkend="GtkTreePath"><type>GtkTreePath</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to receive a <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> whether or not the given tooltip context points to a item
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-icon-view-set-tooltip-column" role="function" condition="since:2.12"/>gtk_icon_view_set_tooltip_column ()</title>
+<indexterm role="2.12"><primary>gtk_icon_view_set_tooltip_column</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_icon_view_set_tooltip_column    (<link linkend="GtkIconView">GtkIconView</link> *icon_view,
+                                                         <link linkend="gint">gint</link> column);</programlisting>
+<para>
+<parameter>column</parameter>: an integer, which is a valid column number for <parameter>icon_view</parameter>'s model
+</para>
+<para>
+If you only plan to have simple (text-only) tooltips on full items, you
+can use this function to have <link linkend="GtkIconView"><type>GtkIconView</type></link> handle these automatically
+for you. <parameter>column</parameter> should be set to the column in <parameter>icon_view</parameter>'s model
+containing the tooltip texts, or -1 to disable this feature.
+</para>
+<para>
+When enabled, <link linkend="GtkWidget-has-tooltip"><type>::has-tooltip</type></link> will be set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> and
+<parameter>icon_view</parameter> will connect a <link linkend="GtkWidget-query-tooltip"><type>::query-tooltip</type></link> signal handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkIconView"><type>GtkIconView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>column</parameter>&nbsp;:</term>
+<listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-icon-view-get-tooltip-column" role="function"/>gtk_icon_view_get_tooltip_column ()</title>
+<indexterm><primary>gtk_icon_view_get_tooltip_column</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_icon_view_get_tooltip_column    (<link linkend="GtkIconView">GtkIconView</link> *icon_view);</programlisting>
+<para>
+Returns the column of <parameter>icon_view</parameter>'s model which is being used for
+displaying tooltips on <parameter>icon_view</parameter>'s rows.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkIconView"><type>GtkIconView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the index of the tooltip column that is currently being
+used, or -1 if this is disabled.
+
+Since 2.12
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
 <title><anchor id="GtkIconViewDropPosition" role="enum"/>enum GtkIconViewDropPosition</title>
 <indexterm><primary>GtkIconViewDropPosition</primary></indexterm><programlisting>typedef enum
 {
@@ -1467,6 +1672,11 @@ property are both set to -1, no texts are displayed.</para>
 <para>Default value: -1</para>
 <para>Since  2.6
 </para>
+</refsect2>
+<refsect2><title><anchor id="GtkIconView--tooltip-column"/>The :<literal>tooltip-column</literal> property</title>
+<indexterm><primary>GtkIconView:tooltip-column</primary></indexterm><programlisting>  tooltip-column           <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>The column in the model containing the tooltip texts for the items.</para><para>Allowed values: &gt;= -1</para>
+<para>Default value: -1</para>
 </refsect2>
 
 </refsect1>

@@ -326,6 +326,9 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
 <link linkend="GtkWindow">GtkWindow</link>*          <link linkend="gtk-widget-get-tooltip-window">gtk_widget_get_tooltip_window</link>       (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="void">void</link>                <link linkend="gtk-widget-set-tooltip-window">gtk_widget_set_tooltip_window</link>       (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GtkWindow">GtkWindow</link> *custom_window);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-get-has-tooltip">gtk_widget_get_has_tooltip</link>          (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="void">void</link>                <link linkend="gtk-widget-set-has-tooltip">gtk_widget_set_has_tooltip</link>          (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         <link linkend="gboolean">gboolean</link> has_tooltip);
 <link linkend="void">void</link>                <link linkend="gtk-widget-trigger-tooltip-query">gtk_widget_trigger_tooltip_query</link>    (<link linkend="GtkWidget">GtkWidget</link> *widget);
 
 <link linkend="GtkRequisition">GtkRequisition</link>*     <link linkend="gtk-requisition-copy">gtk_requisition_copy</link>                (const <link linkend="GtkRequisition">GtkRequisition</link> *requisition);
@@ -4343,7 +4346,13 @@ See also <link linkend="gtk-action-get-proxies"><function>gtk_action_get_proxies
 <para>
 Whether <parameter>widget</parameter> can rely on having its alpha channel
 drawn correctly. On X11 this function returns whether a
-compositing manager is running for <parameter>widget</parameter>'s screen.</para>
+compositing manager is running for <parameter>widget</parameter>'s screen.
+</para>
+<para>
+Please note that the semantics of this call will change
+in the future if used on a widget that has a composited
+window in its heirarchy (as set by
+<link linkend="gdk-window-set-composited"><function>gdk_window_set_composited()</function></link>).</para>
 <para>
 
 </para><variablelist role="params">
@@ -4555,6 +4564,41 @@ tooltip window will be used.</para>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
+<title><anchor id="gtk-widget-get-has-tooltip" role="function" condition="since:2.12"/>gtk_widget_get_has_tooltip ()</title>
+<indexterm role="2.12"><primary>gtk_widget_get_has_tooltip</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_widget_get_has_tooltip          (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<para>
+Returns the current value of the has-tooltip property.  See
+GtkWidget:has-tooltip for more information.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> current value of has-tooltip on <parameter>widget</parameter>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-widget-set-has-tooltip" role="function" condition="since:2.12"/>gtk_widget_set_has_tooltip ()</title>
+<indexterm role="2.12"><primary>gtk_widget_set_has_tooltip</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_set_has_tooltip          (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         <link linkend="gboolean">gboolean</link> has_tooltip);</programlisting>
+<para>
+Sets the has-tooltip property on <parameter>widget</parameter> to <parameter>has_tooltip</parameter>.  See
+GtkWidget:has-tooltip for more information.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>has_tooltip</parameter>&nbsp;:</term>
+<listitem><simpara> whether or not <parameter>widget</parameter> has a tooltip.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-widget-trigger-tooltip-query" role="function" condition="since:2.12"/>gtk_widget_trigger_tooltip_query ()</title>
 <indexterm role="2.12"><primary>gtk_widget_trigger_tooltip_query</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_trigger_tooltip_query    (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
@@ -4637,7 +4681,13 @@ Frees a <link linkend="GtkRequisition"><type>GtkRequisition</type></link>.</para
 Enables or disables the emission of <link linkend="GtkWidget-query-tooltip"><type>::query-tooltip</type></link> on <parameter>widget</parameter>.  
 A value of <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> indicates that <parameter>widget</parameter> can have a tooltip, in this case
 the widget will be queried using <link linkend="GtkWidget-query-tooltip"><type>::query-tooltip</type></link> to determine
-whether it will provide a tooltip or not.</para>
+whether it will provide a tooltip or not.
+</para>
+<para>
+Note that setting this property to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> for the first time will change
+the event masks of the GdkWindows of this widget to include leave-notify
+and motion-notify events.  This cannot and will not be undone when the
+property is set to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> again.</para>
 <para>
 
 </para><para>Default value: FALSE</para>
@@ -4863,36 +4913,56 @@ configurable width and should be drawn using a box instead of a line.</para>
                                                         <link linkend="GdkEventButton">GdkEventButton</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
 <para>
+The ::button-press-event signal will be emitted when a button
+(typically from a mouse) is pressed.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the 
+widget needs to enable the <link linkend="GDK-BUTTON-PRESS-MASK:CAPS"><type>GDK_BUTTON_PRESS_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventButton"><type>GdkEventButton</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-button-release-event"/>The <literal>::button-release-event</literal> signal</title>
 <indexterm><primary>GtkWidget::button-release-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkEventButton">GdkEventButton</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
 <para>
+The ::button-release-event signal will be emitted when a button
+(typically from a mouse) is released.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the 
+widget needs to enable the <link linkend="GDK-BUTTON-RELEASE-MASK:CAPS"><type>GDK_BUTTON_RELEASE_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventButton"><type>GdkEventButton</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-can-activate-accel"/>The <literal>::can-activate-accel</literal> signal</title>
 <indexterm><primary>GtkWidget::can-activate-accel</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -4941,18 +5011,22 @@ changed on an object. The signal's detail holds the property name.</para>
                                                         <link linkend="GdkEventClient">GdkEventClient</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
 <para>
+The ::client-event will be emitted when the <parameter>widget</parameter>'s window
+receives a message (via a ClientMessage event) from another
+application.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventClient"><type>GdkEventClient</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for 
+  the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-composited-changed"/>The <literal>::composited-changed</literal> signal</title>
 <indexterm><primary>GtkWidget::composited-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -4974,18 +5048,26 @@ See <link linkend="gdk-screen-is-composited"><function>gdk_screen_is_composited(
                                                         <link linkend="GdkEventConfigure">GdkEventConfigure</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
+The ::configure-event signal will be emitted when the size, position or
+stacking of the <parameter>widget</parameter>'s window has changed.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-STRUCTURE-MASK:CAPS"><type>GDK_STRUCTURE_MASK</type></link> mask. GDK will enable this mask
+automatically for all new windows.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventConfigure"><type>GdkEventConfigure</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-delete-event"/>The <literal>::delete-event</literal> signal</title>
 <indexterm><primary>GtkWidget::delete-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -5019,7 +5101,12 @@ it can later be shown again without reconstructing it.</para>
 The ::destroy-event signal is emitted when a <link linkend="GdkWindow"><type>GdkWindow</type></link> is destroyed.
 You rarely get this signal, because most widgets disconnect themselves 
 from their window before they destroy it, so no widget owns the 
-window at destroy time.</para>
+window at destroy time.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-STRUCTURE-MASK:CAPS"><type>GDK_STRUCTURE_MASK</type></link> mask. GDK will enable this mask
+automatically for all new windows.</para>
 <para>
 
 </para><variablelist role="params">
@@ -5135,14 +5222,15 @@ is indicated by <parameter>info</parameter>. See <link linkend="gtk-selection-da
                                                         <link linkend="guint">guint</link>             time,
                                                         <link linkend="gpointer">gpointer</link>          user_data)         : Run Last</programlisting>
 <para>
-The ::drag-data-received signal is emitted on the drop site when the dragged 
-data has been received. If the data was received in order to determine 
-whether the drop will be accepted, the handler is expected to call 
-<link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> and <emphasis>not</emphasis> finish the drag. If the 
-data was received in response to a <link linkend="GtkWidget-drag-drop"><type>::drag-drop</type></link> signal (and this 
-is the last target to be received), the handler for this signal is expected 
-to process the received data and then call <link linkend="gtk-drag-finish"><function>gtk_drag_finish()</function></link>, setting the 
-<parameter>success</parameter> parameter depending on whether the data was processed successfully. 
+The ::drag-data-received signal is emitted on the drop site when the 
+dragged data has been received. If the data was received in order to 
+determine whether the drop will be accepted, the handler is expected 
+to call <link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> and <emphasis>not</emphasis> finish the drag. 
+If the data was received in response to a <link linkend="GtkWidget-drag-drop"><type>::drag-drop</type></link> signal 
+(and this is the last target to be received), the handler for this 
+signal is expected to process the received data and then call 
+<link linkend="gtk-drag-finish"><function>gtk_drag_finish()</function></link>, setting the <parameter>success</parameter> parameter depending on whether 
+the data was processed successfully. 
 </para>
 <para>
 The handler may inspect and modify <parameter>drag_context->action</parameter> before calling 
@@ -5445,50 +5533,72 @@ drag_data_received (GtkWidget        *widget,
                                                         <link linkend="GdkEventCrossing">GdkEventCrossing</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
 <para>
+The ::enter-notify-event will be emitted when the pointer enters
+the <parameter>widget</parameter>'s window.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-ENTER-NOTIFY-MASK:CAPS"><type>GDK_ENTER_NOTIFY_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventCrossing"><type>GdkEventCrossing</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-event"/>The <literal>::event</literal> signal</title>
 <indexterm><primary>GtkWidget::event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
+The GTK+ main loop will emit three signals for each GDK event delivered
+to a widget: one generic ::event signal, another, more specific,
+signal that matches the type of event delivered (e.g. 
+<link linkend="GtkWidget-key-press-event"><type>::key-press-event</type></link>) and finally a generic 
+<link linkend="GtkWidget-event-after"><type>::event-after</type></link> signal.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEvent"><type>GdkEvent</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event 
+and to cancel the emission of the second specific ::event signal.
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further and to allow the emission of 
+  the second signal. The ::event-after signal is emitted regardless of
+  the return value.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-event-after"/>The <literal>::event-after</literal> signal</title>
 <indexterm><primary>GtkWidget::event-after</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)</programlisting>
 <para>
+After the emission of the <link linkend="GtkWidget-event"><type>::event</type></link> signal and (optionally) 
+the second more specific signal, ::event-after will be emitted 
+regardless of the previous two signals handlers return values.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
-
+<listitem><simpara> the <link linkend="GdkEvent"><type>GdkEvent</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
@@ -5497,18 +5607,27 @@ drag_data_received (GtkWidget        *widget,
                                                         <link linkend="GdkEventExpose">GdkEventExpose</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
 <para>
+The ::expose-event signal is emitted when an area of a previously
+obscured <link linkend="GdkWindow"><type>GdkWindow</type></link> is made visible and needs to be redrawn.
+<link linkend="GTK-NO-WINDOW:CAPS"><type>GTK_NO_WINDOW</type></link> widgets will get a synthesized event from their parent 
+widget.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-EXPOSURE-MASK:CAPS"><type>GDK_EXPOSURE_MASK</type></link> mask.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventExpose"><type>GdkEventExpose</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus"/>The <literal>::focus</literal> signal</title>
 <indexterm><primary>GtkWidget::focus</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>       *widget,
@@ -5533,36 +5652,50 @@ drag_data_received (GtkWidget        *widget,
                                                         <link linkend="GdkEventFocus">GdkEventFocus</link> *event,
                                                         <link linkend="gpointer">gpointer</link>       user_data)      : Run Last</programlisting>
 <para>
+The ::focus-in-event signal will be emitted when the keyboard focus
+enters the <parameter>widget</parameter>'s window.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-FOCUS-CHANGE-MASK:CAPS"><type>GDK_FOCUS_CHANGE_MASK</type></link> mask.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventFocus"><type>GdkEventFocus</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus-out-event"/>The <literal>::focus-out-event</literal> signal</title>
 <indexterm><primary>GtkWidget::focus-out-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>     *widget,
                                                         <link linkend="GdkEventFocus">GdkEventFocus</link> *event,
                                                         <link linkend="gpointer">gpointer</link>       user_data)      : Run Last</programlisting>
 <para>
+The ::focus-out-event signal will be emitted when the keyboard focus
+leaves the <parameter>widget</parameter>'s window.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-FOCUS-CHANGE-MASK:CAPS"><type>GDK_FOCUS_CHANGE_MASK</type></link> mask.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventFocus"><type>GdkEventFocus</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-grab-broken-event"/>The <literal>::grab-broken-event</literal> signal</title>
 <indexterm role="2.8"><primary>GtkWidget::grab-broken-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -5587,8 +5720,8 @@ application grabs the pointer or keyboard again.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
-  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for 
+  the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.8
@@ -5669,36 +5802,54 @@ a widget changes from un-anchored to anchored or vice-versa.</para>
                                                         <link linkend="GdkEventKey">GdkEventKey</link> *event,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
 <para>
+The ::key-press-event signal is emitted when a key is pressed.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-KEY-PRESS-MASK:CAPS"><type>GDK_KEY_PRESS_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventKey"><type>GdkEventKey</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-key-release-event"/>The <literal>::key-release-event</literal> signal</title>
 <indexterm><primary>GtkWidget::key-release-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>   *widget,
                                                         <link linkend="GdkEventKey">GdkEventKey</link> *event,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
 <para>
+The ::key-release-event signal is emitted when a key is pressed.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-KEY-RELEASE-MASK:CAPS"><type>GDK_KEY_RELEASE_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventKey"><type>GdkEventKey</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-keynav-failed"/>The <literal>::keynav-failed</literal> signal</title>
 <indexterm role="2.12"><primary>GtkWidget::keynav-failed</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>       *widget,
@@ -5729,18 +5880,28 @@ See <link linkend="gtk-widget-keynav-failed"><function>gtk_widget_keynav_failed(
                                                         <link linkend="GdkEventCrossing">GdkEventCrossing</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
 <para>
+The ::leave-notify-event will be emitted when the pointer leaves
+the <parameter>widget</parameter>'s window.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-LEAVE-NOTIFY-MASK:CAPS"><type>GDK_LEAVE_NOTIFY_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventCrossing"><type>GdkEventCrossing</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-map"/>The <literal>::map</literal> signal</title>
 <indexterm><primary>GtkWidget::map</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -5759,18 +5920,26 @@ See <link linkend="gtk-widget-keynav-failed"><function>gtk_widget_keynav_failed(
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
+The ::map-event signal will be emitted when the <parameter>widget</parameter>'s window is
+mapped. A window is mapped when it becomes visible on the screen.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-STRUCTURE-MASK:CAPS"><type>GDK_STRUCTURE_MASK</type></link> mask. GDK will enable this mask
+automatically for all new windows.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventAny"><type>GdkEventAny</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-mnemonic-activate"/>The <literal>::mnemonic-activate</literal> signal</title>
 <indexterm><primary>GtkWidget::mnemonic-activate</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -5795,18 +5964,28 @@ See <link linkend="gtk-widget-keynav-failed"><function>gtk_widget_keynav_failed(
                                                         <link linkend="GdkEventMotion">GdkEventMotion</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
 <para>
+The ::motion-notify-event signal is emitted when the pointer moves 
+over the widget's <link linkend="GdkWindow"><type>GdkWindow</type></link>.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget 
+needs to enable the <link linkend="GDK-POINTER-MOTION-MASK:CAPS"><type>GDK_POINTER_MOTION_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventMotion"><type>GdkEventMotion</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-move-focus"/>The <literal>::move-focus</literal> signal</title>
 <indexterm><primary>GtkWidget::move-focus</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>       *widget,
@@ -5829,18 +6008,24 @@ See <link linkend="gtk-widget-keynav-failed"><function>gtk_widget_keynav_failed(
                                                         <link linkend="GdkEventNoExpose">GdkEventNoExpose</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
 <para>
+The ::no-expose-event will be emitted when the <parameter>widget</parameter>'s window is 
+drawn as a copy of another <link linkend="GdkDrawable"><type>GdkDrawable</type></link> (with <link linkend="gdk-draw-drawable"><function>gdk_draw_drawable()</function></link> or
+<link linkend="gdk-window-copy-area"><function>gdk_window_copy_area()</function></link>) which was completely unobscured. If the source
+window was partially obscured <link linkend="GdkEventExpose"><type>GdkEventExpose</type></link> events will be generated
+for those areas.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventNoExpose"><type>GdkEventNoExpose</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-parent-set"/>The <literal>::parent-set</literal> signal</title>
 <indexterm><primary>GtkWidget::parent-set</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -5865,11 +6050,11 @@ has been set on a widget.</para>
 <indexterm><primary>GtkWidget::popup-menu</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
 <para>
-This signal gets emitted whenever a widget should pop up a context menu.  
-This usually happens through the standard key binding mechanism; by
-pressing a certain key while a widget is focused, the user can cause the
-widget to pop up a menu.  For example, the <link linkend="GtkEntry"><type>GtkEntry</type></link> widget creates a 
-menu with clipboard commands.  See <xref linkend="checklist-popup-menu"/> 
+This signal gets emitted whenever a widget should pop up a context 
+menu. This usually happens through the standard key binding mechanism; 
+by pressing a certain key while a widget is focused, the user can cause 
+the widget to pop up a menu.  For example, the <link linkend="GtkEntry"><type>GtkEntry</type></link> widget creates 
+a menu with clipboard commands. See <xref linkend="checklist-popup-menu"/> 
 for an example of how to use this signal.</para>
 <para>
 
@@ -5877,64 +6062,82 @@ for an example of how to use this signal.</para>
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>returns</parameter>&nbsp;:</term>
-<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if a menu was activated
-</simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if a menu was activated
+</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-property-notify-event"/>The <literal>::property-notify-event</literal> signal</title>
 <indexterm><primary>GtkWidget::property-notify-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GdkEventProperty">GdkEventProperty</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
 <para>
+The ::property-notify-event signal will be emitted when a property on
+the <parameter>widget</parameter>'s window has been changed or deleted.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-PROPERTY-CHANGE-MASK:CAPS"><type>GDK_PROPERTY_CHANGE_MASK</type></link> mask.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventProperty"><type>GdkEventProperty</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-proximity-in-event"/>The <literal>::proximity-in-event</literal> signal</title>
 <indexterm><primary>GtkWidget::proximity-in-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventProximity">GdkEventProximity</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
+To receive this signal the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-PROXIMITY-IN-MASK:CAPS"><type>GDK_PROXIMITY_IN_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventProximity"><type>GdkEventProximity</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-proximity-out-event"/>The <literal>::proximity-out-event</literal> signal</title>
 <indexterm><primary>GtkWidget::proximity-out-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventProximity">GdkEventProximity</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
+To receive this signal the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-PROXIMITY-OUT-MASK:CAPS"><type>GDK_PROXIMITY_OUT_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventProximity"><type>GdkEventProximity</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-query-tooltip"/>The <literal>::query-tooltip</literal> signal</title>
 <indexterm role="2.12"><primary>GtkWidget::query-tooltip</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>  *widget,
@@ -5965,12 +6168,12 @@ destined function calls.</para>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>x</parameter>&nbsp;:</term>
-<listitem><simpara> the x coordinate of the cursor position where the request has been
-    emitted, relative to <parameter>widget->window</parameter>
+<listitem><simpara> the x coordinate of the cursor position where the request has 
+    been emitted, relative to <parameter>widget->window</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>y</parameter>&nbsp;:</term>
-<listitem><simpara> the y coordinate of the cursor position where the request has been
-    emitted, relative to <parameter>widget->window</parameter>
+<listitem><simpara> the y coordinate of the cursor position where the request has 
+    been emitted, relative to <parameter>widget->window</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>keyboard_mode</parameter>&nbsp;:</term>
 <listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the tooltip was trigged using the keyboard
@@ -6020,36 +6223,50 @@ screen of a widget has changed.</para>
                                                         <link linkend="GdkEventScroll">GdkEventScroll</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
 <para>
+The ::scroll-event signal is emitted when a button in the 4 to 7
+range is pressed. Wheel mice are usually configured to generate 
+button press events for buttons 4 and 5 when the wheel is turned.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-BUTTON-PRESS-MASK:CAPS"><type>GDK_BUTTON_PRESS_MASK</type></link> mask.
+</para>
+<para>
+This signal will be sent to the grab widget if there is one.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventScroll"><type>GdkEventScroll</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-clear-event"/>The <literal>::selection-clear-event</literal> signal</title>
 <indexterm><primary>GtkWidget::selection-clear-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventSelection">GdkEventSelection</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
+The ::selection-clear-event signal will be emitted when the
+the <parameter>widget</parameter>'s window has lost ownership of a selection.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventSelection"><type>GdkEventSelection</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-get"/>The <literal>::selection-get</literal> signal</title>
 <indexterm><primary>GtkWidget::selection-get</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
@@ -6118,18 +6335,22 @@ screen of a widget has changed.</para>
                                                         <link linkend="GdkEventSelection">GdkEventSelection</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
+The ::selection-request-event signal will be emitted when
+another client requests ownership of the selection owned by
+the <parameter>widget</parameter>'s window.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventSelection"><type>GdkEventSelection</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-show"/>The <literal>::show</literal> signal</title>
 <indexterm><primary>GtkWidget::show</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -6246,18 +6467,26 @@ on a widget. Note that style-modifying functions like
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
+The ::unmap-event signal will be emitted when the <parameter>widget</parameter>'s window is
+unmapped. A window is unmapped when it becomes invisible on the screen.
+</para>
+<para>
+To receive this signal, the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-STRUCTURE-MASK:CAPS"><type>GDK_STRUCTURE_MASK</type></link> mask. GDK will enable this mask
+automatically for all new windows.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventAny"><type>GdkEventAny</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-unrealize"/>The <literal>::unrealize</literal> signal</title>
 <indexterm><primary>GtkWidget::unrealize</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -6276,36 +6505,51 @@ on a widget. Note that style-modifying functions like
                                                         <link linkend="GdkEventVisibility">GdkEventVisibility</link> *event,
                                                         <link linkend="gpointer">gpointer</link>            user_data)      : Run Last</programlisting>
 <para>
+The ::visibility-notify-event will be emitted when the <parameter>widget</parameter>'s window
+is obscured or unobscured.
+</para>
+<para>
+To receive this signal the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget needs
+to enable the <link linkend="GDK-VISIBILITY-NOTIFY-MASK:CAPS"><type>GDK_VISIBILITY_NOTIFY_MASK</type></link> mask.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventVisibility"><type>GdkEventVisibility</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkWidget-window-state-event"/>The <literal>::window-state-event</literal> signal</title>
 <indexterm><primary>GtkWidget::window-state-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>           *widget,
                                                         <link linkend="GdkEventWindowState">GdkEventWindowState</link> *event,
                                                         <link linkend="gpointer">gpointer</link>             user_data)      : Run Last</programlisting>
 <para>
+The ::window-state-event will be emitted when the state of the 
+toplevel window associated to the <parameter>widget</parameter> changes.
+</para>
+<para>
+To receive this signal the <link linkend="GdkWindow"><type>GdkWindow</type></link> associated to the widget 
+needs to enable the <link linkend="GDK-STRUCTURE-MASK:CAPS"><type>GDK_STRUCTURE_MASK</type></link> mask. GDK will enable 
+this mask automatically for all new windows.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>event</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GdkEventWindowState"><type>GdkEventWindowState</type></link> which triggered this signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the 
+  event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 </refsect1>

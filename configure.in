@@ -12,7 +12,7 @@ AC_PREREQ(2.54)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [11])
-m4_define([gtk_micro_version], [5])
+m4_define([gtk_micro_version], [6])
 m4_define([gtk_version],
           [gtk_major_version.gtk_minor_version.gtk_micro_version])
 m4_define([gtk_interface_age], [0])
@@ -477,7 +477,7 @@ fi
 # sure that both po/ and po-properties/ have .po files that correspond
 # to your language.  If you only add one to po/, the build will break
 # in po-properties/.
-ALL_LINGUAS="af am ang ar az az_IR be be@latin bg bn bn_IN br bs ca cs cy da de dz el en_CA en_GB eo es et eu fa fi fr ga gl gu he hi hr hu hy ia id is it ja ka ko ku li lt lv mi mk ml mn mr ms nb ne nl nn nso or pa pl pt pt_BR ro ru rw sk sl sq sr sr@Latn sr@ije sv ta te th tk tr tt uk ur uz uz@Latn vi wa xh yi zh_CN zh_HK zh_TW"
+ALL_LINGUAS="af am ang ar az az_IR be be@latin bg bn bn_IN br bs ca cs cy da de dz el en_CA en_GB eo es et eu fa fi fr ga gl gu he hi hr hu hy ia id is it ja ka ko ku li lt lv mi mk ml mn mr ms nb ne nl nn nso or pa pl pt pt_BR ro ru rw sk sl sq sr sr@Latn sr@ije sv ta te th tk tr tt uk ur uz uz@cyrillic vi wa xh yi zh_CN zh_HK zh_TW"
 AM_GLIB_GNU_GETTEXT
 LIBS="$LIBS $INTLLIBS"
 AC_OUTPUT_COMMANDS([case "$CONFIG_FILES" in *po-properties/Makefile.in*)
@@ -1053,13 +1053,6 @@ GDK_PIXBUF_EXTRA_CFLAGS=
 GDK_PIXBUF_DEP_LIBS="`$PKG_CONFIG --libs $GDK_PIXBUF_PACKAGES` $GDK_PIXBUF_EXTRA_LIBS"
 GDK_PIXBUF_DEP_CFLAGS="`$PKG_CONFIG --cflags  gthread-2.0 $GDK_PIXBUF_PACKAGES $PNG_DEP_CFLAGS_PACKAGES` $GDK_PIXBUF_EXTRA_CFLAGS"
 
-AC_SUBST(GDK_PIXBUF_PACKAGES)
-AC_SUBST(GDK_PIXBUF_EXTRA_LIBS)
-AC_SUBST(GDK_PIXBUF_EXTRA_CFLAGS)
-AC_SUBST(GDK_PIXBUF_DEP_LIBS)
-AC_SUBST(GDK_PIXBUF_DEP_CFLAGS)
-
-
 ########################################
 # Windowing system checks
 ########################################
@@ -1529,6 +1522,16 @@ GLIB_PREFIX="`$PKG_CONFIG --variable=prefix glib-2.0`"
 ATK_PREFIX="`$PKG_CONFIG --variable=prefix atk`"
 PANGO_PREFIX="`$PKG_CONFIG --variable=prefix pango`"
 CAIRO_PREFIX="`pkg-config --variable=prefix cairo`"
+
+if test $enable_explicit_deps != yes ; then
+  GDK_PIXBUF_EXTRA_LIBS=
+fi
+
+AC_SUBST(GDK_PIXBUF_PACKAGES)
+AC_SUBST(GDK_PIXBUF_EXTRA_LIBS)
+AC_SUBST(GDK_PIXBUF_EXTRA_CFLAGS)
+AC_SUBST(GDK_PIXBUF_DEP_LIBS)
+AC_SUBST(GDK_PIXBUF_DEP_CFLAGS)
 
 AC_SUBST(GTK_PACKAGES)
 AC_SUBST(GTK_EXTRA_LIBS)

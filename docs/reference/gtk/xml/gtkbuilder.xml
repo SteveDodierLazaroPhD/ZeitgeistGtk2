@@ -27,6 +27,7 @@
                                                          <link linkend="GObject">GObject</link> *connect_object,
                                                          <link linkend="GConnectFlags">GConnectFlags</link> flags,
                                                          <link linkend="gpointer">gpointer</link> user_data);
+enum                <link linkend="GtkBuilderError">GtkBuilderError</link>;
 <link linkend="GtkBuilder">GtkBuilder</link>*         <link linkend="gtk-builder-new">gtk_builder_new</link>                     (void);
 <link linkend="guint">guint</link>               <link linkend="gtk-builder-add-from-file">gtk_builder_add_from_file</link>           (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          const <link linkend="gchar">gchar</link> *filename,
@@ -97,20 +98,30 @@ of a user interface and instantiates the described objects. To pass a
 description to a GtkBuilder, call <link linkend="gtk-builder-add-from-file"><function>gtk_builder_add_from_file()</function></link> or 
 <link linkend="gtk-builder-add-from-string"><function>gtk_builder_add_from_string()</function></link>. These functions can be called multiple
 times; the builder merges the content of all descriptions. 
-The functions <link linkend="gtk-builder-get-object"><function>gtk_builder_get_object()</function></link> and <link linkend="gtk-builder-get-objects"><function>gtk_builder_get_objects()</function></link>
-can be used to access the widgets in the interface by the names assigned 
-to them inside the UI description. The function <link linkend="gtk-builder-connect-signals"><function>gtk_builder_connect_signals()</function></link> 
-and variants thereof can be used to connect handlers to the named signals 
-in the description. 
 </para>
 <para>
 A GtkBuilder holds a reference to all objects that it has constructed
-and drops these references when it is finalized. To keep objects beyond
-the lifespan of the builder, they must be fetched with <link linkend="gtk-builder-get-object"><function>gtk_builder_get_object()</function></link>
-and reffed with <link linkend="g-object-ref"><function>g_object_ref()</function></link>. It is the responsibility of the user
-to destroy all toplevel windows that have been constructed by a builder
-(these are not automatically cleaned up when the builder is finalized, 
-since GTK+ itself holds a reference to each toplevel window).
+and drops these references when it is finalized. This finalization can 
+cause the destruction of non-widget objects or widgets which are not 
+contained in a toplevel window. For toplevel windows constructed by a 
+builder, it is the responsibility of the user to call <link linkend="gtk-widget-destroy"><function>gtk_widget_destroy()</function></link> 
+to get rid of them and all the widgets they contain.
+</para>
+<para>
+The functions <link linkend="gtk-builder-get-object"><function>gtk_builder_get_object()</function></link> and <link linkend="gtk-builder-get-objects"><function>gtk_builder_get_objects()</function></link>
+can be used to access the widgets in the interface by the names assigned 
+to them inside the UI description. Toplevel windows returned by these
+functions will stay around until the user explicitly destroys them
+with <link linkend="gtk-widget-destroy"><function>gtk_widget_destroy()</function></link>. Other widgets will either be part of a 
+larger hierarchy constructed by the builder (in which case you should
+not have to worry about their lifecycle), or without a parent, in which 
+case they have to be added to some container to make use of them.  
+Non-widget objects need to be reffed with <link linkend="g-object-ref"><function>g_object_ref()</function></link> to keep them
+beyond the lifespan of the builder.
+</para>
+<para>
+The function <link linkend="gtk-builder-connect-signals"><function>gtk_builder_connect_signals()</function></link> and variants thereof can be 
+used to connect handlers to the named signals in the description. 
 </para>
 
 <refsect2 id="BUILDER-UI"><title>GtkBuilder UI Definitions</title>
@@ -132,20 +143,23 @@ which are more limited in scope.
 <!ELEMENT signal    EMPTY >
 <!ELEMENT child     (object|ANY*) >
 
-<!ATTLIST interface  domain         #IMPLIED >
-<!ATTLIST object     id             #REQUIRED
-                     class          #IMPLIED
-                     type-func      #IMPLIED
-                     constructor    #IMPLIED >
-<!ATTLIST property   name           #REQUIRED
-                     translatable   #IMPLIED >
-<!ATTLIST signal     name           #REQUIRED
-                     handler        #REQUIRED
-                     after          #IMPLIED
-                     swapped        #IMPLIED
-                     object         #IMPLIED >
-<!ATTLIST child      type           #IMPLIED
-                     internal-child #IMPLIED >
+<!ATTLIST interface  domain         	    #IMPLIED >
+<!ATTLIST object     id             	    #REQUIRED
+                     class          	    #IMPLIED
+                     type-func      	    #IMPLIED
+                     constructor    	    #IMPLIED >
+<!ATTLIST property   name           	    #REQUIRED
+                     translatable   	    #IMPLIED 
+                     comments               #IMPLIED
+                     context                #IMPLIED >
+<!ATTLIST signal     name           	    #REQUIRED
+                     handler        	    #REQUIRED
+                     after          	    #IMPLIED
+                     swapped        	    #IMPLIED
+                     object         	    #IMPLIED
+                     last_modification_time #IMPLIED >
+<!ATTLIST child      type           	    #IMPLIED
+                     internal-child 	    #IMPLIED >
 ]]></programlisting>
 </para>
 <para>
@@ -190,7 +204,9 @@ set to a true value, GTK+ uses <link linkend="gettext"><function>gettext()</func
 the builder has a translation domain set) to find a translation 
 for the value. This happens before the value is parsed, so
 it can be used for properties of any type, but it is probably
-most useful for string properties.
+most useful for string properties. It is also possible to
+specify a context to disambiguate short strings, and comments
+which may help the translators.
 </para>
 <para>
 GtkBuilder can parse textual representations for the most
@@ -202,6 +218,7 @@ name, nick or integer value), flags (can be specified by their name,
 nick, integer value, optionally combined with "|", e.g. 
 "GTK_VISIBLE|GTK_REALIZED")  and colors (in a format understood by 
 <link linkend="gdk-color-parse"><function>gdk_color_parse()</function></link>). Objects can be referred to by their name. 
+Pixbufs can be specified as a filename of an image file to load.
 In general, GtkBuilder allows forward references to objects &mdash; 
 an object doesn't have to constructed before it can be referred to.
 The exception to this rule is that an object has to be constructed
@@ -216,7 +233,8 @@ but this can be changed by passing a custom <link linkend="GtkBuilderConnectFunc
 to <link linkend="gtk-builder-connect-signals-full"><function>gtk_builder_connect_signals_full()</function></link>. The remaining attributes,
 "after", "swapped" and "object", have the same meaning as the 
 corresponding parameters of the <link linkend="g-signal-connect-object"><function>g_signal_connect_object()</function></link> or
-<link linkend="g-signal-connect-data"><function>g_signal_connect_data()</function></link> functions.
+<link linkend="g-signal-connect-data"><function>g_signal_connect_data()</function></link> functions. A "last_modification_time" attribute
+is also allowed, but it does not have a meaning to the builder.
 </para>
 <para>
 Sometimes it is necessary to refer to widgets which have implicitly
@@ -341,6 +359,22 @@ connection process.</para>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
+<title><anchor id="GtkBuilderError" role="enum"/>enum GtkBuilderError</title>
+<indexterm><primary>GtkBuilderError</primary></indexterm><programlisting>typedef enum
+{
+  GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION,
+  GTK_BUILDER_ERROR_UNHANDLED_TAG,
+  GTK_BUILDER_ERROR_MISSING_ATTRIBUTE,
+  GTK_BUILDER_ERROR_INVALID_ATTRIBUTE,
+  GTK_BUILDER_ERROR_INVALID_TAG,
+  GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
+  GTK_BUILDER_ERROR_INVALID_VALUE
+} GtkBuilderError;
+</programlisting>
+<para>
+
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-builder-new" role="function" condition="since:2.12"/>gtk_builder_new ()</title>
 <indexterm role="2.12"><primary>gtk_builder_new</primary></indexterm><programlisting><link linkend="GtkBuilder">GtkBuilder</link>*         gtk_builder_new                     (void);</programlisting>
 <para>
@@ -359,7 +393,7 @@ Creates a new builder object.</para>
                                                          const <link linkend="gchar">gchar</link> *filename,
                                                          <link linkend="GError">GError</link> **error);</programlisting>
 <para>
-Parses a string containing a <link linkend="BUILDER-UI">GtkBuilder 
+Parses a file containing a <link linkend="BUILDER-UI">GtkBuilder 
 UI definition</link> and merges it with the current contents of <parameter>builder</parameter>.</para>
 <para>
 
@@ -533,8 +567,8 @@ by the builder object and must not be modified or freed.
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-builder-get-type-from-name" role="function"/>gtk_builder_get_type_from_name ()</title>
-<indexterm><primary>gtk_builder_get_type_from_name</primary></indexterm><programlisting><link linkend="GType">GType</link>               gtk_builder_get_type_from_name      (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
+<title><anchor id="gtk-builder-get-type-from-name" role="function" condition="since:2.12"/>gtk_builder_get_type_from_name ()</title>
+<indexterm role="2.12"><primary>gtk_builder_get_type_from_name</primary></indexterm><programlisting><link linkend="GType">GType</link>               gtk_builder_get_type_from_name      (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          const <link linkend="char">char</link> *type_name);</programlisting>
 <para>
 Looks up a type by name, using the virtual function that 
@@ -551,9 +585,9 @@ Looks up a type by name, using the virtual function that
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GType"><type>GType</type></link> found for <parameter>type_name</parameter> or <link linkend="G-TYPE-INVALID:CAPS"><type>G_TYPE_INVALID</type></link> 
   if no type was found
 
-Since 2.12
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
 <refsect2>
 <title><anchor id="gtk-builder-value-from-string" role="function" condition="since:2.12"/>gtk_builder_value_from_string ()</title>
 <indexterm role="2.12"><primary>gtk_builder_value_from_string</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_builder_value_from_string       (<link linkend="GtkBuilder">GtkBuilder</link> *builder,

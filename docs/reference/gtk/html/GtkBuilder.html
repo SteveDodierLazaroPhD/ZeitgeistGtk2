@@ -47,6 +47,7 @@
 <link rel="chapter" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
+<link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
 <link rel="part" href="pt05.html" title="Part&#160;V.&#160;GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="ix01.html" title="Index">
@@ -67,20 +68,20 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="DeprecatedObjects.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#id4039515" class="shortcut">Top</a>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#id4291894" class="shortcut">Top</a>
                   &#160;|&#160;
-                  <a href="#id4040106" class="shortcut">Description</a>
+                  <a href="#id4292493" class="shortcut">Description</a>
                   &#160;|&#160;
-                  <a href="#id4040048" class="shortcut">Object Hierarchy</a>
+                  <a href="#id4292435" class="shortcut">Object Hierarchy</a>
                   &#160;|&#160;
-                  <a href="#id4040072" class="shortcut">Properties</a></nobr></td></tr>
+                  <a href="#id4292459" class="shortcut">Properties</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkBuilder"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2>
-<a name="id4039515"></a><span class="refentrytitle">GtkBuilder</span>
+<a name="id4291894"></a><span class="refentrytitle">GtkBuilder</span>
 </h2>
 <p>GtkBuilder &#8212; Build an interface from an XML UI definition</p>
 </td>
@@ -96,103 +97,104 @@
                     <a href="GtkBuilder.html#GtkBuilder-struct">GtkBuilder</a>;
 void                (<a href="GtkBuilder.html#GtkBuilderConnectFunc">*GtkBuilderConnectFunc</a>)            (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *signal_name,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *handler_name,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a> *connect_object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
 >GConnectFlags</a> flags,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);
+enum                <a href="GtkBuilder.html#GtkBuilderError">GtkBuilderError</a>;
 <a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a>*         <a href="GtkBuilder.html#gtk-builder-new">gtk_builder_new</a>                     (void);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               <a href="GtkBuilder.html#gtk-builder-add-from-file">gtk_builder_add_from_file</a>           (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *filename,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               <a href="GtkBuilder.html#gtk-builder-add-from-string">gtk_builder_add_from_string</a>         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *buffer,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"
 >gsize</a> length,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>*            <a href="GtkBuilder.html#gtk-builder-get-object">gtk_builder_get_object</a>              (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *name);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
 >GSList</a>*             <a href="GtkBuilder.html#gtk-builder-get-objects">gtk_builder_get_objects</a>             (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);
 void                <a href="GtkBuilder.html#gtk-builder-connect-signals">gtk_builder_connect_signals</a>         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);
 void                <a href="GtkBuilder.html#gtk-builder-connect-signals-full">gtk_builder_connect_signals_full</a>    (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a href="GtkBuilder.html#GtkBuilderConnectFunc">GtkBuilderConnectFunc</a> func,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);
 void                <a href="GtkBuilder.html#gtk-builder-set-translation-domain">gtk_builder_set_translation_domain</a>  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *domain);
 const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*        <a href="GtkBuilder.html#gtk-builder-get-translation-domain">gtk_builder_get_translation_domain</a>  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a>               <a href="GtkBuilder.html#gtk-builder-get-type-from-name">gtk_builder_get_type_from_name</a>      (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const char *type_name);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a href="GtkBuilder.html#gtk-builder-value-from-string">gtk_builder_value_from_string</a>       (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 >GParamSpec</a> *pspec,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *string,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 >GValue</a> *value,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a href="GtkBuilder.html#gtk-builder-value-from-string-type">gtk_builder_value_from_string_type</a>  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a> type,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *string,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 >GValue</a> *value,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
 #define             <a href="GtkBuilder.html#GTK-BUILDER-WARN-INVALID-CHILD-TYPE:CAPS">GTK_BUILDER_WARN_INVALID_CHILD_TYPE</a> (object, type)
 #define             <a href="GtkBuilder.html#GTK-BUILDER-ERROR:CAPS">GTK_BUILDER_ERROR</a>
@@ -201,48 +203,58 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Repor
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id4040048"></a><h2>Object Hierarchy</h2>
+<a name="id4292435"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
 
   <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>
    +----GtkBuilder
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id4040072"></a><h2>Properties</h2>
+<a name="id4292459"></a><h2>Properties</h2>
 <pre class="synopsis">
 
   <a href="GtkBuilder.html#GtkBuilder--translation-domain">translation-domain</a>       <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
 >gchararray</a>            : Read / Write
 </pre>
 </div>
 <div class="refsect1" lang="en">
-<a name="id4040106"></a><h2>Description</h2>
+<a name="id4292493"></a><h2>Description</h2>
 <p>
 A GtkBuilder is an auxiliary object that reads textual descriptions
 of a user interface and instantiates the described objects. To pass a 
 description to a GtkBuilder, call <a href="GtkBuilder.html#gtk-builder-add-from-file"><code class="function">gtk_builder_add_from_file()</code></a> or 
 <a href="GtkBuilder.html#gtk-builder-add-from-string"><code class="function">gtk_builder_add_from_string()</code></a>. These functions can be called multiple
 times; the builder merges the content of all descriptions. 
-The functions <a href="GtkBuilder.html#gtk-builder-get-object"><code class="function">gtk_builder_get_object()</code></a> and <a href="GtkBuilder.html#gtk-builder-get-objects"><code class="function">gtk_builder_get_objects()</code></a>
-can be used to access the widgets in the interface by the names assigned 
-to them inside the UI description. The function <a href="GtkBuilder.html#gtk-builder-connect-signals"><code class="function">gtk_builder_connect_signals()</code></a> 
-and variants thereof can be used to connect handlers to the named signals 
-in the description. 
 </p>
 <p>
 A GtkBuilder holds a reference to all objects that it has constructed
-and drops these references when it is finalized. To keep objects beyond
-the lifespan of the builder, they must be fetched with <a href="GtkBuilder.html#gtk-builder-get-object"><code class="function">gtk_builder_get_object()</code></a>
-and reffed with <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
-><code class="function">g_object_ref()</code></a>. It is the responsibility of the user
-to destroy all toplevel windows that have been constructed by a builder
-(these are not automatically cleaned up when the builder is finalized, 
-since GTK+ itself holds a reference to each toplevel window).
+and drops these references when it is finalized. This finalization can 
+cause the destruction of non-widget objects or widgets which are not 
+contained in a toplevel window. For toplevel windows constructed by a 
+builder, it is the responsibility of the user to call <a href="GtkWidget.html#gtk-widget-destroy"><code class="function">gtk_widget_destroy()</code></a> 
+to get rid of them and all the widgets they contain.
+</p>
+<p>
+The functions <a href="GtkBuilder.html#gtk-builder-get-object"><code class="function">gtk_builder_get_object()</code></a> and <a href="GtkBuilder.html#gtk-builder-get-objects"><code class="function">gtk_builder_get_objects()</code></a>
+can be used to access the widgets in the interface by the names assigned 
+to them inside the UI description. Toplevel windows returned by these
+functions will stay around until the user explicitly destroys them
+with <a href="GtkWidget.html#gtk-widget-destroy"><code class="function">gtk_widget_destroy()</code></a>. Other widgets will either be part of a 
+larger hierarchy constructed by the builder (in which case you should
+not have to worry about their lifecycle), or without a parent, in which 
+case they have to be added to some container to make use of them.  
+Non-widget objects need to be reffed with <a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
+><code class="function">g_object_ref()</code></a> to keep them
+beyond the lifespan of the builder.
+</p>
+<p>
+The function <a href="GtkBuilder.html#gtk-builder-connect-signals"><code class="function">gtk_builder_connect_signals()</code></a> and variants thereof can be 
+used to connect handlers to the named signals in the description. 
 </p>
 <div class="refsect2" lang="en">
 <a name="BUILDER-UI"></a><h3>GtkBuilder UI Definitions</h3>
@@ -265,20 +277,23 @@ which are more limited in scope.
 &lt;!ELEMENT signal    EMPTY &gt;
 &lt;!ELEMENT child     (object|ANY*) &gt;
 
-&lt;!ATTLIST interface  domain         #IMPLIED &gt;
-&lt;!ATTLIST object     id             #REQUIRED
-                     class          #IMPLIED
-                     type-func      #IMPLIED
-                     constructor    #IMPLIED &gt;
-&lt;!ATTLIST property   name           #REQUIRED
-                     translatable   #IMPLIED &gt;
-&lt;!ATTLIST signal     name           #REQUIRED
-                     handler        #REQUIRED
-                     after          #IMPLIED
-                     swapped        #IMPLIED
-                     object         #IMPLIED &gt;
-&lt;!ATTLIST child      type           #IMPLIED
-                     internal-child #IMPLIED &gt;
+&lt;!ATTLIST interface  domain         	    #IMPLIED &gt;
+&lt;!ATTLIST object     id             	    #REQUIRED
+                     class          	    #IMPLIED
+                     type-func      	    #IMPLIED
+                     constructor    	    #IMPLIED &gt;
+&lt;!ATTLIST property   name           	    #REQUIRED
+                     translatable   	    #IMPLIED 
+                     comments               #IMPLIED
+                     context                #IMPLIED &gt;
+&lt;!ATTLIST signal     name           	    #REQUIRED
+                     handler        	    #REQUIRED
+                     after          	    #IMPLIED
+                     swapped        	    #IMPLIED
+                     object         	    #IMPLIED
+                     last_modification_time #IMPLIED &gt;
+&lt;!ATTLIST child      type           	    #IMPLIED
+                     internal-child 	    #IMPLIED &gt;
 </pre>
 <p>
 </p>
@@ -324,17 +339,19 @@ set to a true value, GTK+ uses <code class="function">gettext()</code> (or <code
 the builder has a translation domain set) to find a translation 
 for the value. This happens before the value is parsed, so
 it can be used for properties of any type, but it is probably
-most useful for string properties.
+most useful for string properties. It is also possible to
+specify a context to disambiguate short strings, and comments
+which may help the translators.
 </p>
 <p>
 GtkBuilder can parse textual representations for the most
 common property types: characters, strings, integers, floating-point
 numbers, booleans (strings like "TRUE", "t", "yes", "y", "1" are
 interpreted as <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 ><code class="literal">TRUE</code></a>, strings like "FALSE, "f", "no", "n", "0" are
 interpreted as <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 ><code class="literal">FALSE</code></a>), enumerations (can be specified by their 
 name, nick or integer value), flags (can be specified by their name, 
 nick, integer value, optionally combined with "|", e.g. 
@@ -342,6 +359,7 @@ nick, integer value, optionally combined with "|", e.g.
 <a
 href="../gdk/gdk-Colormaps-and-Colors.html#gdk-color-parse"
 ><code class="function">gdk_color_parse()</code></a>). Objects can be referred to by their name. 
+Pixbufs can be specified as a filename of an image file to load.
 In general, GtkBuilder allows forward references to objects &#8212; 
 an object doesn't have to constructed before it can be referred to.
 The exception to this rule is that an object has to be constructed
@@ -352,17 +370,18 @@ Signal handlers are set up with the &lt;signal&gt; element.
 The "name" attribute specifies the name of the signal, and the
 "handler" attribute specifies the function to connect to the signal.
 By default, GTK+ tries to find the handler using <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#g-module-symbol"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#g-module-symbol"
 ><code class="function">g_module_symbol()</code></a>,
 but this can be changed by passing a custom <a href="GtkBuilder.html#GtkBuilderConnectFunc"><span class="type">GtkBuilderConnectFunc</span></a>
 to <a href="GtkBuilder.html#gtk-builder-connect-signals-full"><code class="function">gtk_builder_connect_signals_full()</code></a>. The remaining attributes,
 "after", "swapped" and "object", have the same meaning as the 
 corresponding parameters of the <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-object"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-object"
 ><code class="function">g_signal_connect_object()</code></a> or
 <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-data"
-><code class="function">g_signal_connect_data()</code></a> functions.
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-data"
+><code class="function">g_signal_connect_data()</code></a> functions. A "last_modification_time" attribute
+is also allowed, but it does not have a meaning to the builder.
 </p>
 <p>
 Sometimes it is necessary to refer to widgets which have implicitly
@@ -381,7 +400,7 @@ The possible values for the "type" attribute are described in
 the sections describing the widget-specific portions of UI definitions.
 </p>
 <div class="example">
-<a name="id4040583"></a><p class="title"><b>Example&#160;50.&#160;A GtkBuilder UI Definition</b></p>
+<a name="id4293002"></a><p class="title"><b>Example&#160;50.&#160;A GtkBuilder UI Definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;interface&gt;
   &lt;object class="GtkDialog" id="dialog1"&gt;
@@ -437,37 +456,37 @@ respective objects, see
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id4040893"></a><h2>Details</h2>
+<a name="id4293175"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="id4040903"></a><h3>
+<a name="id4293185"></a><h3>
 <a name="GtkBuilder-struct"></a>GtkBuilder</h3>
-<a class="indexterm" name="id4040916"></a><pre class="programlisting">typedef struct _GtkBuilder GtkBuilder;</pre>
+<a class="indexterm" name="id4293198"></a><pre class="programlisting">typedef struct _GtkBuilder GtkBuilder;</pre>
 <p>
 
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4040930"></a><h3>
+<a name="id4293213"></a><h3>
 <a name="GtkBuilderConnectFunc"></a>GtkBuilderConnectFunc ()</h3>
-<a class="indexterm" name="id4040946"></a><pre class="programlisting">void                (*GtkBuilderConnectFunc)            (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+<a class="indexterm" name="id4293228"></a><pre class="programlisting">void                (*GtkBuilderConnectFunc)            (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a> *object,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *signal_name,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *handler_name,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a> *connect_object,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
 >GConnectFlags</a> flags,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);</pre>
 <p>
 This is the signature of a function used to connect signals.  It is used
@@ -504,18 +523,18 @@ connection process.</p>
 <tr>
 <td><span class="term"><em class="parameter"><code>connect_object</code></em>&#160;:</span></td>
 <td> a <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 ><span class="type">GObject</span></a>, if non-<a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>, use <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-object"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-object"
 ><code class="function">g_signal_connect_object()</code></a>
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>flags</code></em>&#160;:</span></td>
 <td> <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
 ><span class="type">GConnectFlags</span></a> to use
 </td>
 </tr>
@@ -531,9 +550,28 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Signa
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4041205"></a><h3>
+<a name="id4293488"></a><h3>
+<a name="GtkBuilderError"></a>enum GtkBuilderError</h3>
+<a class="indexterm" name="id4293501"></a><pre class="programlisting">typedef enum
+{
+  GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION,
+  GTK_BUILDER_ERROR_UNHANDLED_TAG,
+  GTK_BUILDER_ERROR_MISSING_ATTRIBUTE,
+  GTK_BUILDER_ERROR_INVALID_ATTRIBUTE,
+  GTK_BUILDER_ERROR_INVALID_TAG,
+  GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
+  GTK_BUILDER_ERROR_INVALID_VALUE
+} GtkBuilderError;
+</pre>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id4293520"></a><h3>
 <a name="gtk-builder-new"></a>gtk_builder_new ()</h3>
-<a class="indexterm" name="id4041221"></a><pre class="programlisting"><a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a>*         gtk_builder_new                     (void);</pre>
+<a class="indexterm" name="id4293535"></a><pre class="programlisting"><a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a>*         gtk_builder_new                     (void);</pre>
 <p>
 Creates a new builder object.</p>
 <p>
@@ -553,19 +591,19 @@ Creates a new builder object.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4041276"></a><h3>
+<a name="id4293590"></a><h3>
 <a name="gtk-builder-add-from-file"></a>gtk_builder_add_from_file ()</h3>
-<a class="indexterm" name="id4041292"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+<a class="indexterm" name="id4293607"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               gtk_builder_add_from_file           (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *filename,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
-Parses a string containing a <a href="GtkBuilder.html#BUILDER-UI" title="GtkBuilder UI Definitions">GtkBuilder 
+Parses a file containing a <a href="GtkBuilder.html#BUILDER-UI" title="GtkBuilder UI Definitions">GtkBuilder 
 UI definition</a> and merges it with the current contents of <em class="parameter"><code>builder</code></em>.</p>
 <p>
 
@@ -586,7 +624,7 @@ UI definition</a> and merges it with the current contents of <em class="paramete
 <tr>
 <td><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></td>
 <td> return location for an error, or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>
 </td>
 </tr>
@@ -603,19 +641,19 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4041435"></a><h3>
+<a name="id4293750"></a><h3>
 <a name="gtk-builder-add-from-string"></a>gtk_builder_add_from_string ()</h3>
-<a class="indexterm" name="id4041452"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+<a class="indexterm" name="id4293766"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>               gtk_builder_add_from_string         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *buffer,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"
 >gsize</a> length,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 Parses a string containing a <a href="GtkBuilder.html#BUILDER-UI" title="GtkBuilder UI Definitions">GtkBuilder 
@@ -644,7 +682,7 @@ UI definition</a> and merges it with the current contents of <em class="paramete
 <tr>
 <td><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></td>
 <td> return location for an error, or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>
 </td>
 </tr>
@@ -661,13 +699,13 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4041629"></a><h3>
+<a name="id4293944"></a><h3>
 <a name="gtk-builder-get-object"></a>gtk_builder_get_object ()</h3>
-<a class="indexterm" name="id4041645"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+<a class="indexterm" name="id4293959"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>*            gtk_builder_get_object              (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *name);</pre>
 <p>
 Gets the object named <em class="parameter"><code>name</code></em>. Note that this function does not
@@ -691,7 +729,7 @@ increment the reference count of the returned object.</p>
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
 <td> the object named <em class="parameter"><code>name</code></em> or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a> if it could not be 
    found in the object tree. 
 
@@ -704,10 +742,10 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4041766"></a><h3>
+<a name="id4294081"></a><h3>
 <a name="gtk-builder-get-objects"></a>gtk_builder_get_objects ()</h3>
-<a class="indexterm" name="id4041782"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
+<a class="indexterm" name="id4294097"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
 >GSList</a>*             gtk_builder_get_objects             (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);</pre>
 <p>
 Gets all objects that have been constructed by <em class="parameter"><code>builder</code></em>. Note that 
@@ -727,11 +765,11 @@ objects.</p>
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
 <td> a newly-allocated <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
 ><span class="type">GSList</span></a> containing all the objects
   constructed by the <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> instance. It should be freed by
   <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#g-slist-free"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#g-slist-free"
 ><code class="function">g_slist_free()</code></a>
 
 </td>
@@ -743,18 +781,18 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Singly-Link
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4041892"></a><h3>
+<a name="id4294207"></a><h3>
 <a name="gtk-builder-connect-signals"></a>gtk_builder_connect_signals ()</h3>
-<a class="indexterm" name="id4041908"></a><pre class="programlisting">void                gtk_builder_connect_signals         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+<a class="indexterm" name="id4294223"></a><pre class="programlisting">void                gtk_builder_connect_signals         (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);</pre>
 <p>
 This method is a simpler variation of <a href="GtkBuilder.html#gtk-builder-connect-signals-full"><code class="function">gtk_builder_connect_signals_full()</code></a>.
 It uses <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
 ><span class="type">GModule</span></a>'s introspective features (by opening the module <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>) 
 to look at the application's symbol table. From here it tries to match
 the signal handler names given in the interface description with
@@ -762,7 +800,7 @@ symbols in the application and connects the signals.
 </p>
 <p>
 Note that this function will not work correctly if <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
 ><span class="type">GModule</span></a> is not
 supported on the platform.</p>
 <p>
@@ -788,12 +826,12 @@ supported on the platform.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4042042"></a><h3>
+<a name="id4294357"></a><h3>
 <a name="gtk-builder-connect-signals-full"></a>gtk_builder_connect_signals_full ()</h3>
-<a class="indexterm" name="id4042058"></a><pre class="programlisting">void                gtk_builder_connect_signals_full    (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+<a class="indexterm" name="id4294373"></a><pre class="programlisting">void                gtk_builder_connect_signals_full    (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a href="GtkBuilder.html#GtkBuilderConnectFunc">GtkBuilderConnectFunc</a> func,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);</pre>
 <p>
 This function can be thought of the interpreted language binding
@@ -827,11 +865,11 @@ require GModule to function correctly.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4042183"></a><h3>
+<a name="id4294497"></a><h3>
 <a name="gtk-builder-set-translation-domain"></a>gtk_builder_set_translation_domain ()</h3>
-<a class="indexterm" name="id4042198"></a><pre class="programlisting">void                gtk_builder_set_translation_domain  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
+<a class="indexterm" name="id4294513"></a><pre class="programlisting">void                gtk_builder_set_translation_domain  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *domain);</pre>
 <p>
 Sets the translation domain of <em class="parameter"><code>builder</code></em>. 
@@ -850,7 +888,7 @@ See <a href="GtkBuilder.html#GtkBuilder--translation-domain"><span class="type">
 <tr>
 <td><span class="term"><em class="parameter"><code>domain</code></em>&#160;:</span></td>
 <td> the translation domain or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>
 </td>
 </tr>
@@ -861,10 +899,10 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4042310"></a><h3>
+<a name="id4294625"></a><h3>
 <a name="gtk-builder-get-translation-domain"></a>gtk_builder_get_translation_domain ()</h3>
-<a class="indexterm" name="id4042326"></a><pre class="programlisting">const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+<a class="indexterm" name="id4294641"></a><pre class="programlisting">const <a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*        gtk_builder_get_translation_domain  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder);</pre>
 <p>
 Gets the translation domain of <em class="parameter"><code>builder</code></em>.</p>
@@ -893,10 +931,10 @@ by the builder object and must not be modified or freed.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4042410"></a><h3>
+<a name="id4294724"></a><h3>
 <a name="gtk-builder-get-type-from-name"></a>gtk_builder_get_type_from_name ()</h3>
-<a class="indexterm" name="id4042423"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+<a class="indexterm" name="id4294740"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a>               gtk_builder_get_type_from_name      (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          const char *type_name);</pre>
 <p>
@@ -921,41 +959,42 @@ Looks up a type by name, using the virtual function that
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
 <td> the <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 ><span class="type">GType</span></a> found for <em class="parameter"><code>type_name</code></em> or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-INVALID:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-INVALID:CAPS"
 ><span class="type">G_TYPE_INVALID</span></a> 
   if no type was found
 
-Since 2.12
 </td>
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since  2.12
+</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4042546"></a><h3>
+<a name="id4294870"></a><h3>
 <a name="gtk-builder-value-from-string"></a>gtk_builder_value_from_string ()</h3>
-<a class="indexterm" name="id4042562"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+<a class="indexterm" name="id4294886"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_builder_value_from_string       (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 >GParamSpec</a> *pspec,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *string,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 >GValue</a> *value,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 This function demarshals a value from a string. This function
 calls <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init"
 ><code class="function">g_value_init()</code></a> on the <em class="parameter"><code>value</code></em> argument, so it need not be
 initialised beforehand.
 </p>
@@ -980,7 +1019,7 @@ still to come.</p>
 <tr>
 <td><span class="term"><em class="parameter"><code>pspec</code></em>&#160;:</span></td>
 <td> the <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 ><span class="type">GParamSpec</span></a> for the property
 </td>
 </tr>
@@ -992,21 +1031,21 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GPara
 <tr>
 <td><span class="term"><em class="parameter"><code>value</code></em>&#160;:</span></td>
 <td> the <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 ><span class="type">GValue</span></a> to store the result in
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></td>
 <td> return location for an error, or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
 <td> <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 ><code class="literal">TRUE</code></a> on success
 
 </td>
@@ -1018,32 +1057,32 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4042812"></a><h3>
+<a name="id4295136"></a><h3>
 <a name="gtk-builder-value-from-string-type"></a>gtk_builder_value_from_string_type ()</h3>
-<a class="indexterm" name="id4042828"></a><pre class="programlisting"><a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+<a class="indexterm" name="id4295152"></a><pre class="programlisting"><a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_builder_value_from_string_type  (<a href="GtkBuilder.html" title="GtkBuilder">GtkBuilder</a> *builder,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 >GType</a> type,
                                                          const <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *string,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 >GValue</a> *value,
                                                          <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 Like <a href="GtkBuilder.html#gtk-builder-value-from-string"><code class="function">gtk_builder_value_from_string()</code></a>, this function demarshals 
 a value from a string, but takes a <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 ><span class="type">GType</span></a> instead of <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 ><span class="type">GParamSpec</span></a>.
 This function calls <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init"
 ><code class="function">g_value_init()</code></a> on the <em class="parameter"><code>value</code></em> argument, so it 
 need not be initialised beforehand.</p>
 <p>
@@ -1060,7 +1099,7 @@ need not be initialised beforehand.</p>
 <tr>
 <td><span class="term"><em class="parameter"><code>type</code></em>&#160;:</span></td>
 <td> the <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 ><span class="type">GType</span></a> of the value
 </td>
 </tr>
@@ -1072,21 +1111,21 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Type-
 <tr>
 <td><span class="term"><em class="parameter"><code>value</code></em>&#160;:</span></td>
 <td> the <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 ><span class="type">GValue</span></a> to store the result in
 </td>
 </tr>
 <tr>
 <td><span class="term"><em class="parameter"><code>error</code></em>&#160;:</span></td>
 <td> return location for an error, or <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><span class="term"><span class="emphasis"><em>Returns</em></span>&#160;:</span></td>
 <td> <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 ><code class="literal">TRUE</code></a> on success
 
 </td>
@@ -1098,9 +1137,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4043073"></a><h3>
+<a name="id4295397"></a><h3>
 <a name="GTK-BUILDER-WARN-INVALID-CHILD-TYPE:CAPS"></a>GTK_BUILDER_WARN_INVALID_CHILD_TYPE()</h3>
-<a class="indexterm" name="id4043087"></a><pre class="programlisting">#define             GTK_BUILDER_WARN_INVALID_CHILD_TYPE(object, type)</pre>
+<a class="indexterm" name="id4295411"></a><pre class="programlisting">#define             GTK_BUILDER_WARN_INVALID_CHILD_TYPE(object, type)</pre>
 <p>
 
 </p>
@@ -1124,9 +1163,9 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id4043135"></a><h3>
+<a name="id4295459"></a><h3>
 <a name="GTK-BUILDER-ERROR:CAPS"></a>GTK_BUILDER_ERROR</h3>
-<a class="indexterm" name="id4043149"></a><pre class="programlisting">#define GTK_BUILDER_ERROR                (gtk_builder_error_quark ())
+<a class="indexterm" name="id4295472"></a><pre class="programlisting">#define GTK_BUILDER_ERROR                (gtk_builder_error_quark ())
 </pre>
 <p>
 
@@ -1134,18 +1173,18 @@ href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Ma
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id4043166"></a><h2>Property Details</h2>
+<a name="id4295490"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
-<a name="id4043176"></a><h3>
+<a name="id4295500"></a><h3>
 <a name="GtkBuilder--translation-domain"></a>The :<code class="literal">translation-domain</code> property</h3>
-<a class="indexterm" name="id4043193"></a><pre class="programlisting">  translation-domain       <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
+<a class="indexterm" name="id4295516"></a><pre class="programlisting">  translation-domain       <a
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#gchararray"
 >gchararray</a>            : Read / Write</pre>
 <p>
 The translation domain used when translating property values that
 have been marked as translatable in interface descriptions.
 If the translation domain is <a
-href="/home/mclasen/gnome-2.18/install//share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>, <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> uses <code class="function">gettext()</code>,
 otherwise <code class="function">dgettext()</code>.</p>
 <p>

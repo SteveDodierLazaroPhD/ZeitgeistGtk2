@@ -1672,58 +1672,93 @@ in an idle job in the background.
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2><title><anchor id="GtkTextView-backspace"/>The <literal>::backspace</literal> signal</title>
-<indexterm><primary>GtkTextView::backspace</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
+<indexterm><primary>GtkTextView::backspace</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+The ::backspace signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted when the user asks for it.
+</para>
+<para>
+The default bindings for this signal are
+Backspace and Shift-Backspace.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-copy-clipboard"/>The <literal>::copy-clipboard</literal> signal</title>
-<indexterm><primary>GtkTextView::copy-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
+<indexterm><primary>GtkTextView::copy-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+The ::copy-clipboard signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted to copy the selection to the clipboard.
+</para>
+<para>
+The default bindings for this signal are
+Ctrl-c and Ctrl-Insert.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-cut-clipboard"/>The <literal>::cut-clipboard</literal> signal</title>
-<indexterm><primary>GtkTextView::cut-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
+<indexterm><primary>GtkTextView::cut-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+The ::cut-clipboard signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted to cut the selection to the clipboard.
+</para>
+<para>
+The default bindings for this signal are
+Ctrl-x and Shift-Delete.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-delete-from-cursor"/>The <literal>::delete-from-cursor</literal> signal</title>
-<indexterm><primary>GtkTextView::delete-from-cursor</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link>  *textview,
-                                                        <link linkend="GtkDeleteType">GtkDeleteType</link> arg1,
-                                                        <link linkend="gint">gint</link>          arg2,
+<indexterm><primary>GtkTextView::delete-from-cursor</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link>  *text_view,
+                                                        <link linkend="GtkDeleteType">GtkDeleteType</link> type,
+                                                        <link linkend="gint">gint</link>          count,
                                                         <link linkend="gpointer">gpointer</link>      user_data)      : Run Last / Action</programlisting>
+<para>
+The ::delete-from-cursor signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted when the user initiates a text deletion.
+</para>
+<para>
+If the <parameter>type</parameter> is <link linkend="GTK-DELETE-CHARS:CAPS"><literal>GTK_DELETE_CHARS</literal></link>, GTK+ deletes the selection
+if there is one, otherwise it deletes the requested number
+of characters.
+</para>
+<para>
+The default bindings for this signal are
+Delete for deleting a character, Ctrl-Delete for 
+deleting a word and Ctrl-Backspace for deleting a word 
+backwords.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>type</parameter>&nbsp;:</term>
+<listitem><simpara> the granularity of the deletion, as a <link linkend="GtkDeleteType"><type>GtkDeleteType</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg2</parameter>&nbsp;:</term>
-<listitem><simpara>
-
+<varlistentry><term><parameter>count</parameter>&nbsp;:</term>
+<listitem><simpara> the number of <parameter>type</parameter> units to delete
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
@@ -1744,23 +1779,39 @@ in an idle job in the background.
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-move-cursor"/>The <literal>::move-cursor</literal> signal</title>
-<indexterm><primary>GtkTextView::move-cursor</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link>    *widget,
+<indexterm><primary>GtkTextView::move-cursor</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link>    *text_view,
                                                         <link linkend="GtkMovementStep">GtkMovementStep</link> step,
                                                         <link linkend="gint">gint</link>            count,
                                                         <link linkend="gboolean">gboolean</link>        extend_selection,
                                                         <link linkend="gpointer">gpointer</link>        user_data)             : Run Last / Action</programlisting>
 <para>
-The ::move-cursor signal is a keybinding signal which gets emitted
-when the user initiates a cursor movement. 
+The ::move-cursor signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted when the user initiates a cursor movement. 
+If the cursor is not visible in <parameter>text_view</parameter>, this signal causes
+the viewport to be moved instead.
 </para>
 <para>
 Applications should not connect to it, but may emit it with 
 <link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control scrolling 
-programmatically.</para>
+programmatically.
+</para>
+<para>
+The default bindings for this signal come in two variants,
+the variant with the Shift modifier extends the selection,
+the variant without the Shift modifer does not.
+There are too many key combinations to list them all here.
+<itemizedlist>
+<listitem>Arrow keys move by individual characters/lines</listitem>
+<listitem>Ctrl-arrow key combinations move by words/paragraphs</listitem>
+<listitem>Home/End keys move to the ends of the buffer</listitem>
+<listitem>PageUp/PageDown keys move vertically by pages</listitem>
+<listitem>Ctrl-PageUp/PageDown keys move horizontally by pages</listitem>
+</itemizedlist></para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>step</parameter>&nbsp;:</term>
@@ -1775,54 +1826,79 @@ programmatically.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-move-viewport"/>The <literal>::move-viewport</literal> signal</title>
-<indexterm><primary>GtkTextView::move-viewport</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link>  *textview,
-                                                        <link linkend="GtkScrollStep">GtkScrollStep</link> arg1,
-                                                        <link linkend="gint">gint</link>          arg2,
+<indexterm><primary>GtkTextView::move-viewport</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link>  *text_view,
+                                                        <link linkend="GtkScrollStep">GtkScrollStep</link> step,
+                                                        <link linkend="gint">gint</link>          count,
                                                         <link linkend="gpointer">gpointer</link>      user_data)      : Run Last / Action</programlisting>
+<para>
+The ::move-viewport signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which can be bound to key combinations to allow the user
+to move the viewport, i.e. change what part of the text view
+is visible in a containing scrolled window.
+</para>
+<para>
+There are no default bindings for this signal.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>step</parameter>&nbsp;:</term>
+<listitem><simpara> the granularity of the move, as a <link linkend="GtkMovementStep"><type>GtkMovementStep</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg2</parameter>&nbsp;:</term>
-<listitem><simpara>
-
+<varlistentry><term><parameter>count</parameter>&nbsp;:</term>
+<listitem><simpara> the number of <parameter>step</parameter> units to move
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-page-horizontally"/>The <literal>::page-horizontally</literal> signal</title>
-<indexterm><primary>GtkTextView::page-horizontally</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
-                                                        <link linkend="gint">gint</link>         arg1,
-                                                        <link linkend="gboolean">gboolean</link>     arg2,
-                                                        <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<indexterm><primary>GtkTextView::page-horizontally</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
+                                                        <link linkend="gint">gint</link>         count,
+                                                        <link linkend="gboolean">gboolean</link>     extend_selection,
+                                                        <link linkend="gpointer">gpointer</link>     user_data)             : Run Last / Action</programlisting>
+<para>
+The ::page-horizontally signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which can be bound to key combinations to allow the user
+to initiate horizontal cursor movement by pages.  
+</para>
+<para>
+This signal should not be used anymore, instead use the
+<link linkend="GtkTextview-move-cursor"><type>::move-cursor</type></link> signal with the <link linkend="GTK-MOVEMENT-HORIZONTAL-PAGES:CAPS"><type>GTK_MOVEMENT_HORIZONTAL_PAGES</type></link>
+granularity.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>count</parameter>&nbsp;:</term>
+<listitem><simpara> the number of <parameter>step</parameter> units to move
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg2</parameter>&nbsp;:</term>
-<listitem><simpara>
-
+<varlistentry><term><parameter>extend_selection</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the move should extend the selection
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-paste-clipboard"/>The <literal>::paste-clipboard</literal> signal</title>
-<indexterm><primary>GtkTextView::paste-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
+<indexterm><primary>GtkTextView::paste-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+The ::paste-clipboard signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted to paste the contents of the clipboard 
+into the text view.
+</para>
+<para>
+The default bindings for this signal are
+Ctrl-v and Shift-Insert.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
@@ -1843,18 +1919,26 @@ programmatically.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-select-all"/>The <literal>::select-all</literal> signal</title>
-<indexterm><primary>GtkTextView::select-all</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
-                                                        <link linkend="gboolean">gboolean</link>     arg1,
+<indexterm><primary>GtkTextView::select-all</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
+                                                        <link linkend="gboolean">gboolean</link>     select,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+The ::select-all signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted to select or unselect the complete
+contents of the text view.
+</para>
+<para>
+The default bindings for this signal are Ctrl-a and Ctrl-/ 
+for selecting and Shift-Ctrl-a and Ctrl-\ for unselecting.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
-<listitem><simpara>
-
+<varlistentry><term><parameter>select</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to select, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to unselect
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
@@ -1891,26 +1975,38 @@ programmatically.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-toggle-cursor-visible"/>The <literal>::toggle-cursor-visible</literal> signal</title>
-<indexterm><primary>GtkTextView::toggle-cursor-visible</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
+<indexterm><primary>GtkTextView::toggle-cursor-visible</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+The ::toggle-cursor-visible signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted to toggle the visibility of the cursor.
+</para>
+<para>
+The default binding for this signal is F7.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTextView-toggle-overwrite"/>The <literal>::toggle-overwrite</literal> signal</title>
-<indexterm><primary>GtkTextView::toggle-overwrite</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *textview,
+<indexterm><primary>GtkTextView::toggle-overwrite</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextView">GtkTextView</link> *text_view,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last / Action</programlisting>
+<para>
+The ::toggle-overwrite signal is a 
+<link linkend="keybinding-signals">keybinding signal</link> 
+which gets emitted to change the editability of the text view.
+</para>
+<para>
+The default bindings for this signal is Insert.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>textview</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
+<varlistentry><term><parameter>text_view</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>

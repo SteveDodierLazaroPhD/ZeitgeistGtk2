@@ -19,15 +19,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 # TODO:
-#  GtkComboBox.items -> GtkListStore
-#  GtkTextView.text -> GtkTextBuffer
 #  Toolbars
 
 """Usage: gtk-builder-convert [OPTION] [INPUT] [OUTPUT]
 Converts Glade files into XML files which can be loaded with GtkBuilder.
 The [INPUT] file is
 
-  -w, --skip-windows     Convert everything bug GtkWindow subclasses.
+  -w, --skip-windows     Convert everything but GtkWindow subclasses.
+  -r, --root             Convert only widget named root and its children
   -h, --help             display this help and exit
 
 When OUTPUT is -, write to standard input.
@@ -56,6 +55,7 @@ except ImportError:
     subprocess = None
 
 def get_child_nodes(node):
+    assert node.tagName == 'object'
     nodes = []
     for child in node.childNodes:
         if child.nodeType == Node.TEXT_NODE:
@@ -65,7 +65,8 @@ def get_child_nodes(node):
         nodes.append(child)
     return nodes
 
-def get_object_properties(node):
+def get_properties(node):
+    assert node.tagName == 'object'
     properties = {}
     for child in node.childNodes:
         if child.nodeType == Node.TEXT_NODE:
@@ -75,6 +76,31 @@ def get_object_properties(node):
         value = child.childNodes[0].data
         properties[child.getAttribute('name')] = value
     return properties
+
+def get_property(node, property_name):
+    assert node.tagName == 'object'
+    properties = get_properties(node)
+    return properties.get(property_name)
+
+def get_signal_nodes(node):
+    assert node.tagName == 'object'
+    signals = []
+    for child in node.childNodes:
+        if child.nodeType == Node.TEXT_NODE:
+            continue
+        if child.tagName == 'signal':
+            signals.append(child)
+    return signals
+
+def get_accelerator_nodes(node):
+    assert node.tagName == 'object'
+    accelerators = []
+    for child in node.childNodes:
+        if child.nodeType == Node.TEXT_NODE:
+            continue
+        if child.tagName == 'accelerator':
+            accelerators.append(child)
+    return accelerators
 
 def get_object_node(child_node):
     assert child_node.tagName == 'child'
@@ -87,10 +113,20 @@ def get_object_node(child_node):
     assert len(nodes) == 1, nodes
     return nodes[0]
 
+def copy_properties(node, props, prop_dict):
+    assert node.tagName == 'object'
+    for prop_name in props:
+        value = get_property(node, prop_name)
+        if value is not None:
+            prop_dict[prop_name] = value
+
 class GtkBuilderConverter(object):
 
-    def __init__(self, skip_windows):
+    def __init__(self, skip_windows, root):
         self.skip_windows = skip_windows
+        self.root = root
+        self.root_objects = []
+        self.objects = {}
 
     #
     # Public API
@@ -112,21 +148,24 @@ class GtkBuilderConverter(object):
     # Private
     #
 
-    def _get_widget(self, name):
-        result = self._get_widgets_by_attr("id", name)
-        if len(result) > 1:
-            raise ValueError(
-                "It is not possible to have more than one "
-                "widget with the same id (`%s')" % name)
-        elif len(result) == 1:
-            return result[0]
-        return None
+    def _get_object(self, name):
+        return self.objects.get(name)
 
-    def _get_widgets_by_attr(self, attribute, value):
+    def _get_objects_by_attr(self, attribute, value):
         return [w for w in self._dom.getElementsByTagName("object")
                       if w.getAttribute(attribute) == value]
 
-    def _create_object(self, obj_class, obj_id, **properties):
+    def _create_object(self, obj_class, obj_id, template=None, **properties):
+        if template is not None:
+            count = 1
+            while True:
+                obj_id = template + str(count)
+                widget = self._get_object(obj_id)
+                if widget is None:
+                    break
+
+                count += 1
+
         obj = self._dom.createElement('object')
         obj.setAttribute('class', obj_class)
         obj.setAttribute('id', obj_id)
@@ -135,16 +174,19 @@ class GtkBuilderConverter(object):
             prop.setAttribute('name', name)
             prop.appendChild(self._dom.createTextNode(value))
             obj.appendChild(prop)
+        self.objects[obj_id] = obj
         return obj
 
-    def _get_property(self, node, property_name):
-        properties = get_object_properties(node)
-        return properties.get(property_name)
+    def _create_root_object(self, obj_class, template, **properties):
+        obj = self._create_object(obj_class, None, template, **properties)
+        self.root_objects.append(obj)
+        return obj
 
     def _parse(self):
         glade_iface = self._dom.getElementsByTagName("glade-interface")
         assert glade_iface, ("Badly formed XML, there is "
                              "no <glade-interface> tag.")
+        # Rename glade-interface to interface
         glade_iface[0].tagName = 'interface'
         self._interface = glade_iface[0]
 
@@ -154,23 +196,38 @@ class GtkBuilderConverter(object):
                 if node.name == 'glade-interface':
                     self._dom.removeChild(node)
 
-        # Strip requires
-        requires = self._dom.getElementsByTagName("requires")
-        for require in requires:
-            require.parentNode.childNodes.remove(require)
+        # Strip unsupported tags
+        for tag in ['requires']:
+            for child in self._dom.getElementsByTagName(tag):
+                child.parentNode.removeChild(child)
 
-        for child in self._dom.getElementsByTagName("accessibility"):
-            child.parentNode.removeChild(child)
+        if self.root:
+            self._strip_root(self.root)
 
-        for node in self._dom.getElementsByTagName("widget"):
+        # Rename widget to object
+        objects = self._dom.getElementsByTagName("widget")
+        for node in objects:
             node.tagName = "object"
 
-        for node in self._dom.getElementsByTagName("object"):
+        for node in objects:
             self._convert(node.getAttribute("class"), node)
+            self.objects[node.getAttribute('id')] = node
+
+        # Remove empty properties
+        for node in self._dom.getElementsByTagName('property'):
+            if not node.childNodes:
+                node.parentNode.removeChild(node)
 
         # Convert Gazpachos UI tag
         for node in self._dom.getElementsByTagName("ui"):
             self._convert_ui(node)
+
+        # Output the newly created root objects and sort them
+        # by attribute id
+        for obj in sorted(self.root_objects,
+                          key=lambda n: n.getAttribute('id'),
+                          reverse=True):
+            self._interface.childNodes.insert(0, obj)
 
     def _convert(self, klass, node):
         if klass == 'GtkNotebook':
@@ -179,17 +236,11 @@ class GtkBuilderConverter(object):
             self._packing_prop_to_child_attr(
                 node, "type", "label_item", "label")
         elif klass == "GtkMenuBar":
-            if node.hasAttribute('constructor'):
-                uimgr = self._get_widget('uimanager')
-            else:
-                uimgr = node.ownerDocument.createElement('object')
-                uimgr.setAttribute('class', 'GtkUIManager')
-                uimgr.setAttribute('id', 'uimanager1')
-                self._interface.childNodes.insert(0, uimgr)
-            self._convert_menubar(uimgr, node)
+            self._convert_menubar(node)
+        elif klass == "GtkMenu":
+            self._convert_menu(node)
         elif klass in WINDOWS and self.skip_windows:
             self._remove_window(node)
-
         self._default_widget_converter(node)
 
     def _default_widget_converter(self, node):
@@ -211,6 +262,13 @@ class GtkBuilderConverter(object):
                 response = prop.childNodes[0].data
                 self._convert_dialog_response(node, object_id, response)
                 prop.parentNode.removeChild(prop)
+            elif prop_name == "adjustment":
+                self._convert_adjustment(prop)
+            elif prop_name == "items" and klass in ['GtkComboBox',
+                                                    'GtkComboBoxEntry']:
+                self._convert_combobox_items(node, prop)
+            elif prop_name == "text" and klass == 'GtkTextView':
+                self._convert_textview_text(prop)
 
     def _remove_window(self, node):
         object_node = get_object_node(get_child_nodes(node)[0])
@@ -218,14 +276,21 @@ class GtkBuilderConverter(object):
         parent.removeChild(node)
         parent.appendChild(object_node)
 
-    def _convert_menubar(self, uimgr, node):
+    def _convert_menubar(self, node):
+        if node.hasAttribute('constructor'):
+            return
+
+        uimgr = self._create_root_object('GtkUIManager',
+                                         template='uimanager')
+
         menubar = self._dom.createElement('menubar')
         menubar.setAttribute('name', node.getAttribute('id'))
         node.setAttribute('constructor', uimgr.getAttribute('id'))
 
         for child in get_child_nodes(node):
             obj_node = get_object_node(child)
-            self._convert_menuitem(uimgr, menubar, obj_node)
+            item = self._convert_menuitem(uimgr, obj_node)
+            menubar.appendChild(item)
             child.removeChild(obj_node)
             child.parentNode.removeChild(child)
 
@@ -234,7 +299,34 @@ class GtkBuilderConverter(object):
 
         ui.appendChild(menubar)
 
-    def _convert_menuitem(self, uimgr, menubar, obj_node):
+    def _convert_menu(self, node):
+        if node.hasAttribute('constructor'):
+            return
+
+        # Only convert toplevel menu objects
+        if node.parentNode != self._interface:
+            return
+        uimgr = self._create_root_object('GtkUIManager',
+                                         template='uimanager')
+
+        menu = self._dom.createElement('menubar')
+        menu.setAttribute('name', node.getAttribute('id'))
+
+        node.setAttribute('constructor', uimgr.getAttribute('id'))
+
+        for child in get_child_nodes(node):
+            obj_node = get_object_node(child)
+            item = self._convert_menuitem(uimgr, obj_node)
+            menu.appendChild(item)
+            child.removeChild(obj_node)
+            child.parentNode.removeChild(child)
+
+        ui = self._dom.createElement('ui')
+        uimgr.appendChild(ui)
+
+        ui.appendChild(menu)
+
+    def _convert_menuitem(self, uimgr, obj_node):
         children = get_child_nodes(obj_node)
         name = 'menuitem'
         if children:
@@ -245,55 +337,89 @@ class GtkBuilderConverter(object):
                 name = 'menu'
 
         object_class = obj_node.getAttribute('class')
-        if object_class in ['GtkMenuItem', 'GtkImageMenuItem']:
+        if object_class in ['GtkMenuItem',
+                            'GtkImageMenuItem',
+                            'GtkCheckMenuItem',
+                            'GtkRadioMenuItem']:
             menu = self._dom.createElement(name)
         elif object_class == 'GtkSeparatorMenuItem':
-            menu = self._dom.createElement('sep')
+            return self._dom.createElement('separator')
         else:
             raise NotImplementedError(object_class)
-        menu.setAttribute('name', obj_node.getAttribute('id'))
+
         menu.setAttribute('action', obj_node.getAttribute('id'))
-        menubar.appendChild(menu)
         self._add_action_from_menuitem(uimgr, obj_node)
         if children:
             for child in get_child_nodes(menu_node):
                 obj_node = get_object_node(child)
-                self._convert_menuitem(uimgr, menu, obj_node)
+                item = self._convert_menuitem(uimgr, obj_node)
+                menu.appendChild(item)
                 child.removeChild(obj_node)
                 child.parentNode.removeChild(child)
+        return menu
+
+    def _menuitem_to_action(self, node, properties):
+        copy_properties(node, ['label'], properties)
+
+    def _togglemenuitem_to_action(self, node, properties):
+        self._menuitem_to_action(node, properties)
+        copy_properties(node, ['active'], properties)
+
+    def _radiomenuitem_to_action(self, node, properties):
+        self._togglemenuitem_to_action(node, properties)
+        copy_properties(node, ['group'], properties)
 
     def _add_action_from_menuitem(self, uimgr, node):
         properties = {}
         object_class = node.getAttribute('class')
         object_id = node.getAttribute('id')
-        if object_class == 'GtkImageMenuItem':
+        if object_class == 'GtkMenuItem':
+            name = 'GtkAction'
+            self._menuitem_to_action(node, properties)
+        elif object_class == 'GtkCheckMenuItem':
+            name = 'GtkToggleAction'
+            self._togglemenuitem_to_action(node, properties)
+        elif object_class == 'GtkRadioMenuItem':
+            name = 'GtkRadioAction'
+            self._radiomenuitem_to_action(node, properties)
+        elif object_class == 'GtkImageMenuItem':
             name = 'GtkAction'
             children = get_child_nodes(node)
             if (children and
                 children[0].getAttribute('internal-child') == 'image'):
                 image = get_object_node(children[0])
-                properties['stock_id'] = self._get_property(image, 'stock')
-        elif object_class == 'GtkMenuItem':
-            name = 'GtkAction'
-            label = self._get_property(node, 'label')
-            if label is not None:
-                properties['label'] = label
+                stock_id = get_property(image, 'stock')
+                if stock_id is not None:
+                    properties['stock_id'] = stock_id
         elif object_class == 'GtkSeparatorMenuItem':
             return
         else:
             raise NotImplementedError(object_class)
 
-        if self._get_property(node, 'use_stock') == 'True':
-            properties['stock_id'] = self._get_property(node, 'label')
+        if get_property(node, 'use_stock') == 'True':
+            stock_id = get_property(node, 'label')
+            if stock_id is not None:
+                properties['stock_id'] = stock_id
+
         properties['name'] = object_id
         action = self._create_object(name,
                                      object_id,
                                      **properties)
+
+        for signal in get_signal_nodes(node):
+            signal_name = signal.getAttribute('name')
+            if signal_name == 'activate':
+                action.appendChild(signal)
+            else:
+                print 'Unhandled signal %s::%s' % (node.getAttribute('class'),
+                                                   signal_name)
+
         if not uimgr.childNodes:
             child = self._dom.createElement('child')
             uimgr.appendChild(child)
 
-            group = self._create_object('GtkActionGroup', 'actiongroup1')
+            group = self._create_object('GtkActionGroup', None,
+                                        template='actiongroup')
             child.appendChild(group)
         else:
             group = uimgr.childNodes[0].childNodes[0]
@@ -302,20 +428,26 @@ class GtkBuilderConverter(object):
         group.appendChild(child)
         child.appendChild(action)
 
+        for accelerator in get_accelerator_nodes(node):
+            signal = accelerator.getAttribute('signal')
+            if signal_name != 'activate':
+                print 'Unhandled accelerator signal for %s::%s' % (
+                    node.getAttribute('class'), signal_name)
+                continue
+            accelerator.removeAttribute('signal')
+            child.appendChild(accelerator)
+
     def _convert_sizegroup(self, node, prop):
         # This is Gazpacho only
         node.removeChild(prop)
-        obj = self._get_widget(prop.childNodes[0].data)
+        obj = self._get_object(prop.childNodes[0].data)
         if obj is None:
-            widgets = self._get_widgets_by_attr("class", "GtkSizeGroup")
+            widgets = self._get_objects_by_attr("class", "GtkSizeGroup")
             if widgets:
                 obj = widgets[-1]
             else:
-                obj = self._dom.createElement("object")
-                obj.setAttribute("class", "GtkSizeGroup")
-                obj.setAttribute("id", "sizegroup1")
-                self._interface.insertBefore(
-                    obj, self._interface.childNodes[0])
+                obj = self._create_root_object('GtkSizeGroup',
+                                               template='sizegroup')
 
         widgets = obj.getElementsByTagName("widgets")
         if widgets:
@@ -356,6 +488,81 @@ class GtkBuilderConverter(object):
         action.appendChild(self._dom.createTextNode(object_name))
         actions.appendChild(action)
 
+    def _convert_adjustment(self, prop):
+        data = prop.childNodes[0].data
+        value, lower, upper, step, page, page_size = data.split(' ')
+        adj = self._create_root_object("GtkAdjustment",
+                                       template='adjustment',
+                                       value=value,
+                                       lower=lower,
+                                       upper=upper,
+                                       step_increment=step,
+                                       page_increment=page,
+                                       page_size=page_size)
+        prop.childNodes[0].data = adj.getAttribute('id')
+
+    def _convert_combobox_items(self, node, prop):
+        if not prop.childNodes:
+            return
+        value = prop.childNodes[0].data
+        model = self._create_root_object("GtkListStore",
+                                         template="model")
+
+        columns = self._dom.createElement('columns')
+        model.appendChild(columns)
+
+        column = self._dom.createElement('column')
+        column.setAttribute('type', 'gchararray')
+        columns.appendChild(column)
+
+        data = self._dom.createElement('data')
+        model.appendChild(data)
+
+        for item in value.split('\n'):
+            row = self._dom.createElement('row')
+            data.appendChild(row)
+
+            col = self._dom.createElement('col')
+            col.setAttribute('id', '0')
+            col.appendChild(self._dom.createTextNode(item))
+            row.appendChild(col)
+
+        parent = prop.parentNode
+        model_prop = self._dom.createElement('property')
+        model_prop.setAttribute('name', 'model')
+        model_prop.appendChild(
+            self._dom.createTextNode(model.getAttribute('id')))
+        parent.appendChild(model_prop)
+
+        parent.removeChild(prop)
+
+        child = self._dom.createElement('child')
+        node.appendChild(child)
+        cell_renderer = self._create_object('GtkCellRendererText', None,
+                                            template='renderer')
+        child.appendChild(cell_renderer)
+
+        attributes = self._dom.createElement('attributes')
+        child.appendChild(attributes)
+
+        attribute = self._dom.createElement('attribute')
+        attributes.appendChild(attribute)
+        attribute.setAttribute('name', 'text')
+        attribute.appendChild(self._dom.createTextNode('0'))
+
+    def _convert_textview_text(self, prop):
+        if not prop.childNodes:
+            prop.parentNode.removeChild(prop)
+            return
+
+        data = prop.childNodes[0].data
+        if prop.hasAttribute('translatable'):
+            prop.removeAttribute('translatable')
+        tbuffer = self._create_root_object("GtkTextBuffer",
+                                           template='textbuffer',
+                                           text=data)
+        prop.childNodes[0].data = tbuffer.getAttribute('id')
+
     def _packing_prop_to_child_attr(self, node, prop_name, prop_val,
                                    attr_val=None):
         for child in node.getElementsByTagName("child"):
@@ -390,10 +597,31 @@ class GtkBuilderConverter(object):
 
         # Updating references made by widgets
         parent_id = node.parentNode.getAttribute("id")
-        for widget in self._get_widgets_by_attr("constructor",
+        for widget in self._get_objects_by_attr("constructor",
                                                 node.getAttribute("id")):
             widget.getAttributeNode("constructor").value = parent_id
         node.removeAttribute("id")
+
+    def _strip_root(self, root_name):
+        for widget in self._dom.getElementsByTagName("widget"):
+            if widget.getAttribute('id') == root_name:
+                break
+        else:
+            raise SystemExit("Could not find an object called `%s'" % (
+                root_name))
+
+        # If it's already a root object, don't do anything
+        if widget.parentNode is self._interface:
+            return
+
+        for child in self._interface.childNodes[:]:
+            if child.nodeType != Node.ELEMENT_NODE:
+                continue
+            child.parentNode.removeChild(child)
+
+        widget.parentNode.removeChild(widget)
+        self._interface.appendChild(widget)
+
 
 def _indent(output):
     if not subprocess:
@@ -418,8 +646,8 @@ def usage():
 
 def main(args):
     try:
-        opts, args = getopt.getopt(args[1:], "hw",
-                                   ["help", "skip-windows"])
+        opts, args = getopt.getopt(args[1:], "hwr:",
+                                   ["help", "skip-windows", "root="])
     except getopt.GetoptError:
         usage()
         return 2
@@ -432,14 +660,18 @@ def main(args):
 
     skip_windows = False
     split = False
+    root = None
     for o, a in opts:
         if o in ("-h", "--help"):
             usage()
             sys.exit()
+        elif o in ("-r", "--root"):
+            root = a
         elif o in ("-w", "--skip-windows"):
             skip_windows = True
 
-    conv = GtkBuilderConverter(skip_windows=skip_windows)
+    conv = GtkBuilderConverter(skip_windows=skip_windows,
+                               root=root)
     conv.parse_file(input_filename)
 
     xml = _indent(conv.to_xml())

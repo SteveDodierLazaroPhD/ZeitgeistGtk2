@@ -49,7 +49,6 @@
 #include <gobject/gobjectnotifyqueue.c>
 #include "gdk/gdkkeysyms.h"
 #include "gtkaccessible.h"
-#include "gtktooltips.h"
 #include "gtktooltip.h"
 #include "gtkinvisible.h"
 #include "gtkbuildable.h"
@@ -245,7 +244,7 @@ static void		gtk_widget_queue_shallow_draw		(GtkWidget        *widget);
 static gboolean         gtk_widget_real_can_activate_accel      (GtkWidget *widget,
                                                                  guint      signal_id);
 
-static void             gtk_widget_set_has_tooltip              (GtkWidget *widget,
+static void             gtk_widget_real_set_has_tooltip         (GtkWidget *widget,
 								 gboolean   has_tooltip,
 								 gboolean   force);
 static void             gtk_widget_buildable_interface_init     (GtkBuildableIface *iface);
@@ -262,12 +261,12 @@ static gboolean         gtk_widget_buildable_custom_tag_start   (GtkBuildable   
                                                                  const gchar      *tagname,
                                                                  GMarkupParser    *parser,
                                                                  gpointer         *data);
-static void             gtk_widget_buildable_custom_finshed     (GtkBuildable     *buildable,
+static void             gtk_widget_buildable_custom_finished    (GtkBuildable     *buildable,
                                                                  GtkBuilder       *builder,
                                                                  GObject          *child,
                                                                  const gchar      *tagname,
                                                                  gpointer          data);
-static void             gtk_widget_buildable_parser_finshed     (GtkBuildable     *buildable,
+static void             gtk_widget_buildable_parser_finished    (GtkBuildable     *buildable,
                                                                  GtkBuilder       *builder);
 
      
@@ -613,6 +612,11 @@ gtk_widget_class_init (GtkWidgetClass *klass)
  * the widget will be queried using #GtkWidget::query-tooltip to determine
  * whether it will provide a tooltip or not.
  *
+ * Note that setting this property to %TRUE for the first time will change
+ * the event masks of the GdkWindows of this widget to include leave-notify
+ * and motion-notify events.  This cannot and will not be undone when the
+ * property is set to %FALSE again.
+ *
  * Since: 2.12
  */
   g_object_class_install_property (gobject_class,
@@ -899,6 +903,23 @@ gtk_widget_class_init (GtkWidgetClass *klass)
                              G_TYPE_NONE,
                              1,
                              GTK_TYPE_DIRECTION_TYPE);
+  /**
+   * GtkWidget::event:
+   * @widget: the object which received the signal.
+   * @event: the #GdkEvent which triggered this signal
+   *
+   * The GTK+ main loop will emit three signals for each GDK event delivered
+   * to a widget: one generic ::event signal, another, more specific,
+   * signal that matches the type of event delivered (e.g. 
+   * #GtkWidget::key-press-event) and finally a generic 
+   * #GtkWidget::event-after signal.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event 
+   * and to cancel the emission of the second specific ::event signal.
+   *   %FALSE to propagate the event further and to allow the emission of 
+   *   the second signal. The ::event-after signal is emitted regardless of
+   *   the return value.
+   */
   widget_signals[EVENT] =
     g_signal_new (I_("event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -908,6 +929,17 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::event-after:
+   * @widget: the object which received the signal.
+   * @event: the #GdkEvent which triggered this signal
+   *
+   * After the emission of the #GtkWidget::event signal and (optionally) 
+   * the second more specific signal, ::event-after will be emitted 
+   * regardless of the previous two signals handlers return values.
+   *
+   */
   widget_signals[EVENT_AFTER] =
     g_signal_new (I_("event_after"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -917,6 +949,23 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_VOID__BOXED,
 		  G_TYPE_NONE, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::button-press-event:
+   * @widget: the object which received the signal.
+   * @event: the #GdkEventButton which triggered this signal
+   *
+   * The ::button-press-event signal will be emitted when a button
+   * (typically from a mouse) is pressed.
+   *
+   * To receive this signal, the #GdkWindow associated to the 
+   * widget needs to enable the #GDK_BUTTON_PRESS_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[BUTTON_PRESS_EVENT] =
     g_signal_new (I_("button_press_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -926,6 +975,23 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::button-release-event:
+   * @widget: the object which received the signal.
+   * @event: the #GdkEventButton which triggered this signal
+   *
+   * The ::button-release-event signal will be emitted when a button
+   * (typically from a mouse) is released.
+   *
+   * To receive this signal, the #GdkWindow associated to the 
+   * widget needs to enable the #GDK_BUTTON_RELEASE_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[BUTTON_RELEASE_EVENT] =
     g_signal_new (I_("button_release_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -935,6 +1001,24 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::scroll-event:
+   * @widget: the object which received the signal.
+   * @event: the #GdkEventScroll which triggered this signal
+   *
+   * The ::scroll-event signal is emitted when a button in the 4 to 7
+   * range is pressed. Wheel mice are usually configured to generate 
+   * button press events for buttons 4 and 5 when the wheel is turned.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_BUTTON_PRESS_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[SCROLL_EVENT] =
     g_signal_new (I_("scroll_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -944,6 +1028,22 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GtkWidget::motion-notify-event:
+   * @widget: the object which received the signal.
+   * @event: the #GdkEventMotion which triggered this signal
+   *
+   * The ::motion-notify-event signal is emitted when the pointer moves 
+   * over the widget's #GdkWindow.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget 
+   * needs to enable the #GDK_POINTER_MOTION_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[MOTION_NOTIFY_EVENT] =
     g_signal_new (I_("motion_notify_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1029,6 +1129,10 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    * from their window before they destroy it, so no widget owns the 
    * window at destroy time.
    * 
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_STRUCTURE_MASK mask. GDK will enable this mask
+   * automatically for all new windows.
+   *
    * Returns: %TRUE to stop other handlers from being invoked for the event. 
    *   %FALSE to propagate the event further.
    */
@@ -1041,6 +1145,23 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::expose-event:
+   * @widget: the object which received the signal.
+   * @event: the #GdkEventExpose which triggered this signal
+   *
+   * The ::expose-event signal is emitted when an area of a previously
+   * obscured #GdkWindow is made visible and needs to be redrawn.
+   * #GTK_NO_WINDOW widgets will get a synthesized event from their parent 
+   * widget.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_EXPOSURE_MASK mask.
+   * 
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[EXPOSE_EVENT] =
     g_signal_new (I_("expose_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1050,6 +1171,22 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::key-press-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventKey which triggered this signal
+   *
+   * The ::key-press-event signal is emitted when a key is pressed.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_KEY_PRESS_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[KEY_PRESS_EVENT] =
     g_signal_new (I_("key_press_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1059,6 +1196,22 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::key-release-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventKey which triggered this signal
+   *
+   * The ::key-release-event signal is emitted when a key is pressed.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_KEY_RELEASE_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[KEY_RELEASE_EVENT] =
     g_signal_new (I_("key_release_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1068,6 +1221,23 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::enter-notify-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventCrossing which triggered this signal
+   *
+   * The ::enter-notify-event will be emitted when the pointer enters
+   * the @widget's window.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_ENTER_NOTIFY_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[ENTER_NOTIFY_EVENT] =
     g_signal_new (I_("enter_notify_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1077,6 +1247,23 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::leave-notify-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventCrossing which triggered this signal
+   *
+   * The ::leave-notify-event will be emitted when the pointer leaves
+   * the @widget's window.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_LEAVE_NOTIFY_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[LEAVE_NOTIFY_EVENT] =
     g_signal_new (I_("leave_notify_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1086,6 +1273,22 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::configure-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventConfigure which triggered this signal
+   *
+   * The ::configure-event signal will be emitted when the size, position or
+   * stacking of the @widget's window has changed.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_STRUCTURE_MASK mask. GDK will enable this mask
+   * automatically for all new windows.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[CONFIGURE_EVENT] =
     g_signal_new (I_("configure_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1095,6 +1298,21 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::focus-in-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventFocus which triggered this signal
+   *
+   * The ::focus-in-event signal will be emitted when the keyboard focus
+   * enters the @widget's window.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_FOCUS_CHANGE_MASK mask.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[FOCUS_IN_EVENT] =
     g_signal_new (I_("focus_in_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1104,6 +1322,21 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::focus-out-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventFocus which triggered this signal
+   *
+   * The ::focus-out-event signal will be emitted when the keyboard focus
+   * leaves the @widget's window.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_FOCUS_CHANGE_MASK mask.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[FOCUS_OUT_EVENT] =
     g_signal_new (I_("focus_out_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1113,6 +1346,22 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::map-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventAny which triggered this signal
+   *
+   * The ::map-event signal will be emitted when the @widget's window is
+   * mapped. A window is mapped when it becomes visible on the screen.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_STRUCTURE_MASK mask. GDK will enable this mask
+   * automatically for all new windows.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[MAP_EVENT] =
     g_signal_new (I_("map_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1122,6 +1371,22 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::unmap-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventAny which triggered this signal
+   *
+   * The ::unmap-event signal will be emitted when the @widget's window is
+   * unmapped. A window is unmapped when it becomes invisible on the screen.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_STRUCTURE_MASK mask. GDK will enable this mask
+   * automatically for all new windows.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[UNMAP_EVENT] =
     g_signal_new (I_("unmap_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1131,6 +1396,21 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::property-notify-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventProperty which triggered this signal
+   *
+   * The ::property-notify-event signal will be emitted when a property on
+   * the @widget's window has been changed or deleted.
+   *
+   * To receive this signal, the #GdkWindow associated to the widget needs
+   * to enable the #GDK_PROPERTY_CHANGE_MASK mask.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[PROPERTY_NOTIFY_EVENT] =
     g_signal_new (I_("property_notify_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1140,6 +1420,18 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::selection-clear-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventSelection which triggered this signal
+   *
+   * The ::selection-clear-event signal will be emitted when the
+   * the @widget's window has lost ownership of a selection.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[SELECTION_CLEAR_EVENT] =
     g_signal_new (I_("selection_clear_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1149,6 +1441,19 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::selection-request-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventSelection which triggered this signal
+   *
+   * The ::selection-request-event signal will be emitted when
+   * another client requests ownership of the selection owned by
+   * the @widget's window.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[SELECTION_REQUEST_EVENT] =
     g_signal_new (I_("selection_request_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1158,6 +1463,7 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
   widget_signals[SELECTION_NOTIFY_EVENT] =
     g_signal_new (I_("selection_notify_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1167,6 +1473,7 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
   widget_signals[SELECTION_RECEIVED] =
     g_signal_new (I_("selection_received"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1177,6 +1484,7 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  G_TYPE_NONE, 2,
 		  GTK_TYPE_SELECTION_DATA | G_SIGNAL_TYPE_STATIC_SCOPE,
 		  G_TYPE_UINT);
+
   widget_signals[SELECTION_GET] =
     g_signal_new (I_("selection_get"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1188,6 +1496,20 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  GTK_TYPE_SELECTION_DATA | G_SIGNAL_TYPE_STATIC_SCOPE,
 		  G_TYPE_UINT,
 		  G_TYPE_UINT);
+
+  /**
+   * GtkWidget::proximity-in-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventProximity which triggered this signal
+   *
+   * To receive this signal the #GdkWindow associated to the widget needs
+   * to enable the #GDK_PROXIMITY_IN_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[PROXIMITY_IN_EVENT] =
     g_signal_new (I_("proximity_in_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1197,6 +1519,20 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::proximity-out-event
+   * @widget: the object which received the signal
+   * @event: the #GdkEventProximity which triggered this signal
+   *
+   * To receive this signal the #GdkWindow associated to the widget needs
+   * to enable the #GDK_PROXIMITY_OUT_MASK mask.
+   *
+   * This signal will be sent to the grab widget if there is one.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[PROXIMITY_OUT_EVENT] =
     g_signal_new (I_("proximity_out_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1477,69 +1813,70 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  G_TYPE_UINT,
 		  G_TYPE_UINT);
 
-/**
- * GtkWidget::drag-data-received:
- * @widget: the object which received the signal
- * @drag_context: the drag context
- * @x: where the drop happened
- * @y: where the drop happened
- * @data: the received data
- * @info: the info that has been registered with the target in the 
- *        #GtkTargetList
- * @time: the timestamp at which the data was received
- *
- * The ::drag-data-received signal is emitted on the drop site when the dragged 
- * data has been received. If the data was received in order to determine 
- * whether the drop will be accepted, the handler is expected to call 
- * gdk_drag_status() and <emphasis>not</emphasis> finish the drag. If the 
- * data was received in response to a #GtkWidget::drag-drop signal (and this 
- * is the last target to be received), the handler for this signal is expected 
- * to process the received data and then call gtk_drag_finish(), setting the 
- * @success parameter depending on whether the data was processed successfully. 
- * 
- * The handler may inspect and modify @drag_context->action before calling 
- * gtk_drag_finish(), e.g. to implement %GDK_ACTION_ASK as shown in the 
- * following example:
- * <informalexample><programlisting>
- * void  
- * drag_data_received (GtkWidget          *widget,
- *                     GdkDragContext     *drag_context,
- *                     gint                x,
- *                     gint                y,
- *                     GtkSelectionData   *data,
- *                     guint               info,
- *                     guint               time)
- * {
- *   if ((data->length >= 0) && (data->format == 8))
- *     {
- *       if (drag_context->action == GDK_ACTION_ASK) 
- *         {
- *           GtkWidget *dialog;
- *           gint response;
- *           
- *           dialog = gtk_message_dialog_new (NULL,
- *                                            GTK_DIALOG_MODAL | 
- *                                            GTK_DIALOG_DESTROY_WITH_PARENT,
- *                                            GTK_MESSAGE_INFO,
- *                                            GTK_BUTTONS_YES_NO,
- *                                            "Move the data ?\n");
- *           response = gtk_dialog_run (GTK_DIALOG (dialog));
- *           gtk_widget_destroy (dialog);
- *             
- *           if (response == GTK_RESPONSE_YES)
- *             drag_context->action = GDK_ACTION_MOVE;
- *           else
- *             drag_context->action = GDK_ACTION_COPY;
- *          }
- *          
- *       gtk_drag_finish (drag_context, TRUE, FALSE, time);
- *       return;
- *     }
- *       
- *    gtk_drag_finish (drag_context, FALSE, FALSE, time);
- *  }
- * </programlisting></informalexample>
- */
+  /**
+   * GtkWidget::drag-data-received:
+   * @widget: the object which received the signal
+   * @drag_context: the drag context
+   * @x: where the drop happened
+   * @y: where the drop happened
+   * @data: the received data
+   * @info: the info that has been registered with the target in the 
+   *        #GtkTargetList
+   * @time: the timestamp at which the data was received
+   *
+   * The ::drag-data-received signal is emitted on the drop site when the 
+   * dragged data has been received. If the data was received in order to 
+   * determine whether the drop will be accepted, the handler is expected 
+   * to call gdk_drag_status() and <emphasis>not</emphasis> finish the drag. 
+   * If the data was received in response to a #GtkWidget::drag-drop signal 
+   * (and this is the last target to be received), the handler for this 
+   * signal is expected to process the received data and then call 
+   * gtk_drag_finish(), setting the @success parameter depending on whether 
+   * the data was processed successfully. 
+   * 
+   * The handler may inspect and modify @drag_context->action before calling 
+   * gtk_drag_finish(), e.g. to implement %GDK_ACTION_ASK as shown in the 
+   * following example:
+   * <informalexample><programlisting>
+   * void  
+   * drag_data_received (GtkWidget          *widget,
+   *                     GdkDragContext     *drag_context,
+   *                     gint                x,
+   *                     gint                y,
+   *                     GtkSelectionData   *data,
+   *                     guint               info,
+   *                     guint               time)
+   * {
+   *   if ((data->length >= 0) && (data->format == 8))
+   *     {
+   *       if (drag_context->action == GDK_ACTION_ASK) 
+   *         {
+   *           GtkWidget *dialog;
+   *           gint response;
+   *           
+   *           dialog = gtk_message_dialog_new (NULL,
+   *                                            GTK_DIALOG_MODAL | 
+   *                                            GTK_DIALOG_DESTROY_WITH_PARENT,
+   *                                            GTK_MESSAGE_INFO,
+   *                                            GTK_BUTTONS_YES_NO,
+   *                                            "Move the data ?\n");
+   *           response = gtk_dialog_run (GTK_DIALOG (dialog));
+   *           gtk_widget_destroy (dialog);
+   *             
+   *           if (response == GTK_RESPONSE_YES)
+   *             drag_context->action = GDK_ACTION_MOVE;
+   *           else
+   *             drag_context->action = GDK_ACTION_COPY;
+   *          }
+   *          
+   *       gtk_drag_finish (drag_context, TRUE, FALSE, time);
+   *       return;
+   *     }
+   *       
+   *    gtk_drag_finish (drag_context, FALSE, FALSE, time);
+   *  }
+   * </programlisting></informalexample>
+   */
   widget_signals[DRAG_DATA_RECEIVED] =
     g_signal_new (I_("drag_data_received"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1554,6 +1891,21 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  GTK_TYPE_SELECTION_DATA | G_SIGNAL_TYPE_STATIC_SCOPE,
 		  G_TYPE_UINT,
 		  G_TYPE_UINT);
+  
+  /**
+   * GtkWidget::visibility-notify-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventVisibility which triggered this signal
+   *
+   * The ::visibility-notify-event will be emitted when the @widget's window
+   * is obscured or unobscured.
+   *
+   * To receive this signal the #GdkWindow associated to the widget needs
+   * to enable the #GDK_VISIBILITY_NOTIFY_MASK mask.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[VISIBILITY_NOTIFY_EVENT] =
     g_signal_new (I_("visibility_notify_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1563,6 +1915,19 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::client-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventClient which triggered this signal
+   *
+   * The ::client-event will be emitted when the @widget's window
+   * receives a message (via a ClientMessage event) from another
+   * application.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for 
+   *   the event. %FALSE to propagate the event further.
+   */
   widget_signals[CLIENT_EVENT] =
     g_signal_new (I_("client_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1572,6 +1937,21 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::no-expose-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventNoExpose which triggered this signal
+   *
+   * The ::no-expose-event will be emitted when the @widget's window is 
+   * drawn as a copy of another #GdkDrawable (with gdk_draw_drawable() or
+   * gdk_window_copy_area()) which was completely unobscured. If the source
+   * window was partially obscured #GdkEventExpose events will be generated
+   * for those areas.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *   %FALSE to propagate the event further.
+   */
   widget_signals[NO_EXPOSE_EVENT] =
     g_signal_new (I_("no_expose_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1581,6 +1961,22 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkWidget::window-state-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventWindowState which triggered this signal
+   *
+   * The ::window-state-event will be emitted when the state of the 
+   * toplevel window associated to the @widget changes.
+   *
+   * To receive this signal the #GdkWindow associated to the widget 
+   * needs to enable the #GDK_STRUCTURE_MASK mask. GDK will enable 
+   * this mask automatically for all new windows.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the 
+   *   event. %FALSE to propagate the event further.
+   */
   widget_signals[WINDOW_STATE_EVENT] =
     g_signal_new (I_("window_state_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1590,6 +1986,7 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
   /**
    * GtkWidget::grab-broken-event:
    * @widget: the object which received the signal
@@ -1602,8 +1999,8 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    * (i.e. it or one of its ancestors is unmapped), or if the same 
    * application grabs the pointer or keyboard again.
    *
-   * Returns: %TRUE to stop other handlers from being invoked for the event. 
-   *   %FALSE to propagate the event further.
+   * Returns: %TRUE to stop other handlers from being invoked for 
+   *   the event. %FALSE to propagate the event further.
    *
    * Since: 2.8
    */
@@ -1619,10 +2016,10 @@ gtk_widget_class_init (GtkWidgetClass *klass)
   /**
    * GtkWidget::query-tooltip:
    * @widget: the object which received the signal
-   * @x: the x coordinate of the cursor position where the request has been
-   *     emitted, relative to @widget->window
-   * @y: the y coordinate of the cursor position where the request has been
-   *     emitted, relative to @widget->window
+   * @x: the x coordinate of the cursor position where the request has 
+   *     been emitted, relative to @widget->window
+   * @y: the y coordinate of the cursor position where the request has 
+   *     been emitted, relative to @widget->window
    * @keyboard_mode: %TRUE if the tooltip was trigged using the keyboard
    * @tooltip: a #GtkTooltip
    *
@@ -1655,18 +2052,20 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  G_TYPE_INT,
 		  G_TYPE_BOOLEAN,
 		  GTK_TYPE_TOOLTIP);
-/**
- * GtkWidget::popup-menu
- * @widget: the object which received the signal
- * @returns: %TRUE if a menu was activated
- *
- * This signal gets emitted whenever a widget should pop up a context menu.  
- * This usually happens through the standard key binding mechanism; by
- * pressing a certain key while a widget is focused, the user can cause the
- * widget to pop up a menu.  For example, the #GtkEntry widget creates a 
- * menu with clipboard commands.  See <xref linkend="checklist-popup-menu"/> 
- * for an example of how to use this signal.
- */
+
+  /**
+   * GtkWidget::popup-menu
+   * @widget: the object which received the signal
+   *
+   * This signal gets emitted whenever a widget should pop up a context 
+   * menu. This usually happens through the standard key binding mechanism; 
+   * by pressing a certain key while a widget is focused, the user can cause 
+   * the widget to pop up a menu.  For example, the #GtkEntry widget creates 
+   * a menu with clipboard commands. See <xref linkend="checklist-popup-menu"/> 
+   * for an example of how to use this signal.
+   *
+   * Returns: %TRUE if a menu was activated
+   */
   widget_signals[POPUP_MENU] =
     g_signal_new (I_("popup_menu"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1692,15 +2091,16 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  NULL, NULL,
 		  _gtk_marshal_NONE__NONE,
 		  G_TYPE_NONE, 0);
-/**
- * GtkWidget::screen-changed:
- * @widget: the object on which the signal is emitted
- * @previous_screen: the previous screen, or %NULL if the
- *   widget was not associated with a screen before
- *
- * The ::screen-changed signal gets emitted when the
- * screen of a widget has changed.
- */
+
+  /**
+   * GtkWidget::screen-changed:
+   * @widget: the object on which the signal is emitted
+   * @previous_screen: the previous screen, or %NULL if the
+   *   widget was not associated with a screen before
+   *
+   * The ::screen-changed signal gets emitted when the
+   * screen of a widget has changed.
+   */
   widget_signals[SCREEN_CHANGED] =
     g_signal_new (I_("screen_changed"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1710,19 +2110,19 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  _gtk_marshal_VOID__OBJECT,
 		  G_TYPE_NONE, 1,
 		  GDK_TYPE_SCREEN);
-/**
- * GtkWidget::can-activate-accel:
- * @widget: the object which received the signal
- * @signal_id: the ID of a signal installed on @widget
- *
- * Determines whether an accelerator that activates the signal
- * identified by @signal_id can currently be activated.
- * This signal is present to allow applications and derived
- * widgets to override the default #GtkWidget handling
- * for determining whether an accelerator can be activated.
- *
- * Returns: %TRUE if the signal can be activated.
- */
+  /**
+   * GtkWidget::can-activate-accel:
+   * @widget: the object which received the signal
+   * @signal_id: the ID of a signal installed on @widget
+   *
+   * Determines whether an accelerator that activates the signal
+   * identified by @signal_id can currently be activated.
+   * This signal is present to allow applications and derived
+   * widgets to override the default #GtkWidget handling
+   * for determining whether an accelerator can be activated.
+   *
+   * Returns: %TRUE if the signal can be activated.
+   */
   widget_signals[CAN_ACTIVATE_ACCEL] =
      g_signal_new (I_("can_activate_accel"),
 		  G_TYPE_FROM_CLASS (gobject_class),
@@ -1800,14 +2200,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 							       0.0, 1.0, 0.04,
 							       GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:draw-border:
- *
- * The "draw-border" style property defines the size of areas outside 
- * the widget's allocation to draw.
- *
- * Since: 2.8
- */
+  /**
+   * GtkWidget:draw-border:
+   *
+   * The "draw-border" style property defines the size of areas outside 
+   * the widget's allocation to draw.
+   *
+   * Since: 2.8
+   */
   gtk_widget_class_install_style_property (klass,
 					   g_param_spec_boxed ("draw-border",
 							       P_("Draw Border"),
@@ -1815,13 +2215,13 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 							       GTK_TYPE_BORDER,
 							       GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:link-color:
- *
- * The "link-color" style property defines the color of unvisited links.
- *
- * Since: 2.10
- */
+  /**
+   * GtkWidget:link-color:
+   *
+   * The "link-color" style property defines the color of unvisited links.
+   *
+   * Since: 2.10
+   */
   gtk_widget_class_install_style_property (klass,
 					   g_param_spec_boxed ("link-color",
 							       P_("Unvisited Link Color"),
@@ -1829,13 +2229,13 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 							       GDK_TYPE_COLOR,
 							       GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:visited-link-color:
- *
- * The "visited-link-color" style property defines the color of visited links.
- *
- * Since: 2.10
- */
+  /**
+   * GtkWidget:visited-link-color:
+   *
+   * The "visited-link-color" style property defines the color of visited links.
+   *
+   * Since: 2.10
+   */
   gtk_widget_class_install_style_property (klass,
 					   g_param_spec_boxed ("visited-link-color",
 							       P_("Visited Link Color"),
@@ -1843,14 +2243,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 							       GDK_TYPE_COLOR,
 							       GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:wide-separators:
- *
- * The "wide-separators" style property defines whether separators have 
- * configurable width and should be drawn using a box instead of a line.
- *
- * Since: 2.10
- */
+  /**
+   * GtkWidget:wide-separators:
+   *
+   * The "wide-separators" style property defines whether separators have 
+   * configurable width and should be drawn using a box instead of a line.
+   *
+   * Since: 2.10
+   */
   gtk_widget_class_install_style_property (klass,
                                            g_param_spec_boolean ("wide-separators",
                                                                  P_("Wide Separators"),
@@ -1858,14 +2258,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
                                                                  FALSE,
                                                                  GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:separator-width:
- *
- * The "separator-width" style property defines the width of separators.
- * This property only takes effect if #GtkWidget:wide-separators is %TRUE.
- *
- * Since: 2.10
- */
+  /**
+   * GtkWidget:separator-width:
+   *
+   * The "separator-width" style property defines the width of separators.
+   * This property only takes effect if #GtkWidget:wide-separators is %TRUE.
+   *
+   * Since: 2.10
+   */
   gtk_widget_class_install_style_property (klass,
                                            g_param_spec_int ("separator-width",
                                                              P_("Separator Width"),
@@ -1873,14 +2273,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
                                                              0, G_MAXINT, 0,
                                                              GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:separator-height:
- *
- * The "separator-height" style property defines the height of separators.
- * This property only takes effect if #GtkWidget:wide-separators is %TRUE.
- *
- * Since: 2.10
- */
+  /**
+   * GtkWidget:separator-height:
+   *
+   * The "separator-height" style property defines the height of separators.
+   * This property only takes effect if #GtkWidget:wide-separators is %TRUE.
+   *
+   * Since: 2.10
+   */
   gtk_widget_class_install_style_property (klass,
                                            g_param_spec_int ("separator-height",
                                                              P_("Separator Height"),
@@ -1888,14 +2288,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
                                                              0, G_MAXINT, 0,
                                                              GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:scroll-arrow-hlength:
- *
- * The "scroll-arrow-hlength" style property defines the length of 
- * horizontal scroll arrows.
- *
- * Since: 2.10
- */
+  /**
+   * GtkWidget:scroll-arrow-hlength:
+   *
+   * The "scroll-arrow-hlength" style property defines the length of 
+   * horizontal scroll arrows.
+   *
+   * Since: 2.10
+   */
   gtk_widget_class_install_style_property (klass,
                                            g_param_spec_int ("scroll-arrow-hlength",
                                                              P_("Horizontal Scroll Arrow Length"),
@@ -1903,14 +2303,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
                                                              1, G_MAXINT, 16,
                                                              GTK_PARAM_READABLE));
 
-/**
- * GtkWidget:scroll-arrow-vlength:
- *
- * The "scroll-arrow-vlength" style property defines the length of 
- * vertical scroll arrows.
- *
- * Since: 2.10
- */
+  /**
+   * GtkWidget:scroll-arrow-vlength:
+   *
+   * The "scroll-arrow-vlength" style property defines the length of 
+   * vertical scroll arrows.
+   *
+   * Since: 2.10
+   */
   gtk_widget_class_install_style_property (klass,
                                            g_param_spec_int ("scroll-arrow-vlength",
                                                              P_("Vertical Scroll Arrow Length"),
@@ -1948,6 +2348,7 @@ gtk_widget_set_property (GObject         *object,
       gboolean tmp;
       guint32 saved_flags;
       gchar *tooltip_markup;
+      const gchar *tooltip_text;
       GtkWindow *tooltip_window;
       
     case PROP_NAME:
@@ -2024,7 +2425,8 @@ gtk_widget_set_property (GObject         *object,
       gtk_widget_set_no_show_all (widget, g_value_get_boolean (value));
       break;
     case PROP_HAS_TOOLTIP:
-      gtk_widget_set_has_tooltip (widget, g_value_get_boolean (value), FALSE);
+      gtk_widget_real_set_has_tooltip (widget,
+				       g_value_get_boolean (value), FALSE);
       break;
     case PROP_TOOLTIP_MARKUP:
       tooltip_window = g_object_get_qdata (object, quark_tooltip_window);
@@ -2034,16 +2436,18 @@ gtk_widget_set_property (GObject         *object,
 			       tooltip_markup, g_free);
 
       tmp = (tooltip_window != NULL || tooltip_markup != NULL);
-      gtk_widget_set_has_tooltip (widget, tmp, FALSE);
+      gtk_widget_real_set_has_tooltip (widget, tmp, FALSE);
       break;
     case PROP_TOOLTIP_TEXT:
       tooltip_window = g_object_get_qdata (object, quark_tooltip_window);
-      tooltip_markup = g_markup_escape_text (g_value_get_string (value), -1);
+      tooltip_text = g_value_get_string (value);
+      tooltip_markup = tooltip_text ? g_markup_escape_text (tooltip_text, -1) : NULL;
 
       g_object_set_qdata_full (object, quark_tooltip_markup,
                                tooltip_markup, g_free);
 
-      gtk_widget_set_has_tooltip (widget, TRUE, FALSE);
+      tmp = (tooltip_window != NULL || tooltip_markup != NULL);
+      gtk_widget_real_set_has_tooltip (widget, tmp, FALSE);
       break;
     default:
       break;
@@ -2851,7 +3255,9 @@ gtk_widget_realize (GtkWidget *widget)
       
       g_signal_emit (widget, widget_signals[REALIZE], 0);
 
-      gtk_widget_set_has_tooltip (widget, GPOINTER_TO_UINT (g_object_get_qdata (G_OBJECT (widget), quark_has_tooltip)), TRUE);
+      gtk_widget_real_set_has_tooltip (widget,
+				       GPOINTER_TO_UINT (g_object_get_qdata (G_OBJECT (widget), quark_has_tooltip)),
+				       TRUE);
 
       if (GTK_WIDGET_HAS_SHAPE_MASK (widget))
 	{
@@ -4681,7 +5087,6 @@ gtk_widget_real_show_help (GtkWidget        *widget,
 {
   if (help_type == GTK_WIDGET_HELP_TOOLTIP)
     {
-      _gtk_tooltips_toggle_keyboard_mode (widget);
       _gtk_tooltip_toggle_keyboard_mode (widget);
 
       return TRUE;
@@ -5749,6 +6154,11 @@ gtk_widget_propagate_screen_changed_recurse (GtkWidget *widget,
  * Whether @widget can rely on having its alpha channel
  * drawn correctly. On X11 this function returns whether a
  * compositing manager is running for @widget's screen.
+ *
+ * Please note that the semantics of this call will change
+ * in the future if used on a widget that has a composited
+ * window in its heirarchy (as set by
+ * gdk_window_set_composited()).
  * 
  * Return value: %TRUE if the widget can rely on its alpha
  * channel being drawn correctly.
@@ -8448,9 +8858,9 @@ gtk_widget_buildable_interface_init (GtkBuildableIface *iface)
   iface->set_name = gtk_widget_buildable_set_name;
   iface->get_name = gtk_widget_buildable_get_name;
   iface->set_buildable_property = gtk_widget_buildable_set_buildable_property;
-  iface->parser_finished = gtk_widget_buildable_parser_finshed;
+  iface->parser_finished = gtk_widget_buildable_parser_finished;
   iface->custom_tag_start = gtk_widget_buildable_custom_tag_start;
-  iface->custom_finished = gtk_widget_buildable_custom_finshed;
+  iface->custom_finished = gtk_widget_buildable_custom_finished;
 }
 
 static void
@@ -8483,8 +8893,8 @@ gtk_widget_buildable_set_buildable_property (GtkBuildable *buildable,
 }
 
 static void
-gtk_widget_buildable_parser_finshed (GtkBuildable *buildable,
-				     GtkBuilder   *builder)
+gtk_widget_buildable_parser_finished (GtkBuildable *buildable,
+				      GtkBuilder   *builder)
 {
   if (g_object_get_qdata (G_OBJECT (buildable), quark_builder_has_default))
     gtk_widget_grab_default (GTK_WIDGET (buildable));
@@ -8544,6 +8954,12 @@ static const GMarkupParser accel_group_parser =
     accel_group_start_element,
   };
 
+static const GMarkupParser accessibility_parser =
+  {
+    NULL,
+  };
+
+
 static gboolean
 gtk_widget_buildable_custom_tag_start (GtkBuildable     *buildable,
 				       GtkBuilder       *builder,
@@ -8558,21 +8974,36 @@ gtk_widget_buildable_custom_tag_start (GtkBuildable     *buildable,
 
   if (strcmp (tagname, "accelerator") == 0)
     {
-      parser_data = g_new0 (AccelGroupParserData, 1);
+      parser_data = g_slice_new0 (AccelGroupParserData);
       parser_data->object = g_object_ref (buildable);
       *parser = accel_group_parser;
       *data = parser_data;
+      return TRUE;
+    }
+  else if (strcmp (tagname, "accessibility") == 0)
+    {
+      static gboolean warning_showed = FALSE;
+
+      if (!warning_showed)
+	{
+	  g_warning ("<accessibility> is being ignored,\n"
+		     "see http://bugzilla.gnome.org/show_bug.cgi?id=454653\n");
+	  warning_showed = TRUE;
+	}
+
+      *parser = accessibility_parser;
+      *data = NULL;
       return TRUE;
     }
   return FALSE;
 }
 
 static void
-gtk_widget_buildable_custom_finshed (GtkBuildable *buildable,
-				     GtkBuilder   *builder,
-				     GObject      *child,
-				     const gchar  *tagname,
-				     gpointer      user_data)
+gtk_widget_buildable_custom_finished (GtkBuildable *buildable,
+				      GtkBuilder   *builder,
+				      GObject      *child,
+				      const gchar  *tagname,
+				      gpointer      user_data)
 {
   AccelGroupParserData *data;
   GtkWidget *toplevel;
@@ -8789,9 +9220,9 @@ gtk_widget_set_no_show_all (GtkWidget *widget,
 
 
 static void
-gtk_widget_set_has_tooltip (GtkWidget *widget,
-			    gboolean   has_tooltip,
-			    gboolean   force)
+gtk_widget_real_set_has_tooltip (GtkWidget *widget,
+			         gboolean   has_tooltip,
+			         gboolean   force)
 {
   gboolean priv_has_tooltip;
 
@@ -8859,7 +9290,7 @@ gtk_widget_set_tooltip_window (GtkWidget *widget,
 			   tooltip_window, g_object_unref);
 
   tmp = (tooltip_window != NULL || tooltip_markup != NULL);
-  gtk_widget_set_has_tooltip (widget, tmp, FALSE);
+  gtk_widget_real_set_has_tooltip (widget, tmp, FALSE);
 
   if (tmp)
     gtk_widget_trigger_tooltip_query (widget);
@@ -8994,6 +9425,47 @@ gtk_widget_get_tooltip_markup (GtkWidget *widget)
   return text;
 }
 
+/**
+ * gtk_widget_set_has_tooltip:
+ * @widget: a #GtkWidget
+ * @has_tooltip: whether or not @widget has a tooltip.
+ *
+ * Sets the has-tooltip property on @widget to @has_tooltip.  See
+ * GtkWidget:has-tooltip for more information.
+ *
+ * Since: 2.12
+ */
+void
+gtk_widget_set_has_tooltip (GtkWidget *widget,
+			    gboolean   has_tooltip)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+
+  g_object_set (G_OBJECT (widget), "has-tooltip", has_tooltip, NULL);
+}
+
+/**
+ * gtk_widget_get_has_tooltip:
+ * @widget: a #GtkWidget
+ *
+ * Returns the current value of the has-tooltip property.  See
+ * GtkWidget:has-tooltip for more information.
+ *
+ * Return value: current value of has-tooltip on @widget.
+ *
+ * Since: 2.12
+ */
+gboolean
+gtk_widget_get_has_tooltip (GtkWidget *widget)
+{
+  gboolean has_tooltip = FALSE;
+
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+
+  g_object_get (G_OBJECT (widget), "has-tooltip", &has_tooltip, NULL);
+
+  return has_tooltip;
+}
 
 #define __GTK_WIDGET_C__
 #include "gtkaliasdef.c"

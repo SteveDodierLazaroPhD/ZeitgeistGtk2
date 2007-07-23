@@ -158,6 +158,8 @@ struct _GtkIconViewPrivate
   gint pixbuf_cell;
   gint text_cell;
 
+  gint tooltip_column;
+
   /* Drag-and-drop. */
   GdkModifierType start_button_mask;
   gint pressed_button;
@@ -218,7 +220,8 @@ enum
   PROP_ROW_SPACING,
   PROP_COLUMN_SPACING,
   PROP_MARGIN,
-  PROP_REORDERABLE
+  PROP_REORDERABLE,
+  PROP_TOOLTIP_COLUMN
 };
 
 /* GObject vfuncs */
@@ -746,6 +749,18 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 							 FALSE,
 							 G_PARAM_READWRITE));
 
+    g_object_class_install_property (gobject_class,
+                                     PROP_TOOLTIP_COLUMN,
+                                     g_param_spec_int ("tooltip-column",
+                                                       P_("Tooltip Column"),
+                                                       P_("The column in the model containing the tooltip texts for the items"),
+                                                       -1,
+                                                       G_MAXINT,
+                                                       -1,
+                                                       GTK_PARAM_READWRITE));
+
+
+
   /* Style properties */
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_boxed ("selection-box-color",
@@ -950,6 +965,7 @@ gtk_icon_view_init (GtkIconView *icon_view)
   icon_view->priv->pixbuf_column = -1;
   icon_view->priv->text_cell = -1;
   icon_view->priv->pixbuf_cell = -1;  
+  icon_view->priv->tooltip_column = -1;  
 
   GTK_WIDGET_SET_FLAGS (icon_view, GTK_CAN_FOCUS);
   
@@ -1074,6 +1090,10 @@ gtk_icon_view_set_property (GObject      *object,
       gtk_icon_view_set_reorderable (icon_view, g_value_get_boolean (value));
       break;
       
+    case PROP_TOOLTIP_COLUMN:
+      gtk_icon_view_set_tooltip_column (icon_view, g_value_get_int (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -1130,6 +1150,9 @@ gtk_icon_view_get_property (GObject      *object,
       break;
     case PROP_REORDERABLE:
       g_value_set_boolean (value, icon_view->priv->reorderable);
+      break;
+    case PROP_TOOLTIP_COLUMN:
+      g_value_set_int (value, icon_view->priv->tooltip_column);
       break;
 
     default:
@@ -4518,6 +4541,39 @@ gtk_icon_view_new_with_model (GtkTreeModel *model)
   return g_object_new (GTK_TYPE_ICON_VIEW, "model", model, NULL);
 }
 
+/**
+ * gtk_icon_view_convert_widget_to_bin_window_coords:
+ * @wx: X coordinate relative to the widget
+ * @wy: Y coordinate relative to the widget
+ * @bx: return location for bin_window X coordinate
+ * @by: return location for bin_window Y coordinate
+ * 
+ * Converts widget coordinates to coordinates for the bin_window,
+ * as expected by e.g. gtk_icon_view_get_path_at_pos(). 
+ *
+ * Since: 2.12
+ */
+void
+gtk_icon_view_convert_widget_to_bin_window_coords (GtkIconView *icon_view,
+                                                   gint         wx,
+                                                   gint         wy, 
+                                                   gint        *bx,
+                                                   gint        *by)
+{
+  gint x, y;
+
+  g_return_if_fail (GTK_IS_ICON_VIEW (icon_view));
+
+  if (icon_view->priv->bin_window) 
+    gdk_window_get_position (icon_view->priv->bin_window, &x, &y);
+  else
+    x = y = 0;
+ 
+  if (bx)
+    *bx = wx - x;
+  if (by)
+    *by = wy - y;
+}
 
 /**
  * gtk_icon_view_get_path_at_pos:
@@ -4525,9 +4581,11 @@ gtk_icon_view_new_with_model (GtkTreeModel *model)
  * @x: The x position to be identified
  * @y: The y position to be identified
  * 
- * Finds the path at the point (@x, @y), relative to widget coordinates.
+ * Finds the path at the point (@x, @y), relative to bin_window coordinates.
  * See gtk_icon_view_get_item_at_pos(), if you are also interested in
- * the cell at the specified position.
+ * the cell at the specified position. 
+ * See gtk_icon_view_convert_widget_to_bin_window_coords() for converting
+ * widget coordinates to bin_window coordinates.
  * 
  * Return value: The #GtkTreePath corresponding to the icon or %NULL
  * if no icon exists at that position.
@@ -4563,10 +4621,12 @@ gtk_icon_view_get_path_at_pos (GtkIconView *icon_view,
  * @cell: Return location for the renderer responsible for the cell
  *   at (@x, @y), or %NULL
  * 
- * Finds the path at the point (@x, @y), relative to widget coordinates.
+ * Finds the path at the point (@x, @y), relative to bin_window coordinates.
  * In contrast to gtk_icon_view_get_path_at_pos(), this function also 
  * obtains the cell at the specified position. The returned path should
  * be freed with gtk_tree_path_free().
+ * See gtk_icon_view_convert_widget_to_bin_window_coords() for converting
+ * widget coordinates to bin_window coordinates.
  * 
  * Return value: %TRUE if an item exists at the specified position
  *
@@ -4605,6 +4665,261 @@ gtk_icon_view_get_item_at_pos (GtkIconView      *icon_view,
   return (item != NULL);
 }
 
+/**
+ * gtk_icon_view_set_tooltip_item:
+ * @icon_view: a #GtkIconView
+ * @tooltip: a #GtkTooltip
+ * @path: a #GtkTreePath
+ * 
+ * Sets the tip area of @tooltip to be the area covered by the item at @path.
+ * See also gtk_tooltip_set_tip_area().
+ * 
+ * Since: 2.12
+ */
+void 
+gtk_icon_view_set_tooltip_item (GtkIconView     *icon_view,
+                                GtkTooltip      *tooltip,
+                                GtkTreePath     *path)
+{
+  g_return_if_fail (GTK_IS_ICON_VIEW (icon_view));
+  g_return_if_fail (GTK_IS_TOOLTIP (tooltip));
+
+  gtk_icon_view_set_tooltip_cell (icon_view, tooltip, path, NULL);
+}
+
+/**
+ * gtk_icon_view_set_tooltip_cell:
+ * @icon_view: a #GtkIconView
+ * @tooltip: a #GtkTooltip
+ * @path: a #GtkTreePath
+ * @cell: a #GtkCellRenderer or %NULL
+ *
+ * Sets the tip area of @tooltip to the area which @cell occupies in
+ * the item pointed to by @path. See also gtk_tooltip_set_tip_area().
+ *
+ * Since: 2.12
+ */
+void
+gtk_icon_view_set_tooltip_cell (GtkIconView     *icon_view,
+                                GtkTooltip      *tooltip,
+                                GtkTreePath     *path,
+                                GtkCellRenderer *cell)
+{
+  GdkRectangle rect;
+  GtkIconViewItem *item = NULL;
+  GtkIconViewCellInfo *info = NULL;
+  gint x, y;
+ 
+  g_return_if_fail (GTK_IS_ICON_VIEW (icon_view));
+  g_return_if_fail (GTK_IS_TOOLTIP (tooltip));
+  g_return_if_fail (cell == NULL || GTK_IS_CELL_RENDERER (cell));
+
+  if (gtk_tree_path_get_depth (path) > 0)
+    item = g_list_nth_data (icon_view->priv->items,
+                            gtk_tree_path_get_indices(path)[0]);
+ 
+  if (!item)
+    return;
+
+  if (cell)
+    {
+      info = gtk_icon_view_get_cell_info (icon_view, cell);
+      gtk_icon_view_get_cell_area (icon_view, item, info, &rect);
+    }
+  else
+    {
+      rect.x = item->x;
+      rect.y = item->y;
+      rect.width = item->width;
+      rect.height = item->height;
+    }
+  
+  if (icon_view->priv->bin_window)
+    {
+      gdk_window_get_position (icon_view->priv->bin_window, &x, &y);
+      rect.x += x;
+      rect.y += y; 
+    }
+
+  gtk_tooltip_set_tip_area (tooltip, &rect); 
+}
+
+
+/**
+ * gtk_icon_view_get_tooltip_context:
+ * @icon_view: an #GtkIconView
+ * @x: the x coordinate (relative to widget coordinates)
+ * @y: the y coordinate (relative to widget coordinates)
+ * @keyboard_tip: whether this is a keyboard tooltip or not
+ * @model: a pointer to receive a #GtkTreeModel or %NULL
+ * @path: a pointer to receive a #GtkTreePath or %NULL
+ * @iter: a pointer to receive a #GtkTreeIter or %NULL
+ *
+ * This function is supposed to be used in a #GtkWidget::query-tooltip
+ * signal handler for #GtkIconView.  The @x, @y and @keyboard_tip values
+ * which are received in the signal handler, should be passed to this
+ * function without modification.
+ *
+ * The return value indicates whether there is an icon view item at the given
+ * coordinates (%TRUE) or not (%FALSE) for mouse tooltips. For keyboard
+ * tooltips the item returned will be the cursor item. When %TRUE, then any of
+ * @model, @path and @iter which have been provided will be set to point to
+ * that row and the corresponding model. @x and @y will always be converted
+ * to be relative to @icon_view's bin_window if @keyboard_tooltip is %FALSE.
+ *
+ * Return value: whether or not the given tooltip context points to a item
+ *
+ * Since: 2.12
+ */
+gboolean
+gtk_icon_view_get_tooltip_context (GtkIconView   *icon_view,
+                                   gint          *x,
+                                   gint          *y,
+                                   gboolean       keyboard_tip,
+                                   GtkTreeModel **model,
+                                   GtkTreePath  **path,
+                                   GtkTreeIter   *iter)
+{
+  GtkTreePath *tmppath = NULL;
+
+  g_return_val_if_fail (GTK_IS_ICON_VIEW (icon_view), FALSE);
+  g_return_val_if_fail (x != NULL, FALSE);
+  g_return_val_if_fail (y != NULL, FALSE);
+
+  if (keyboard_tip)
+    {
+      gtk_icon_view_get_cursor (icon_view, &tmppath, NULL);
+
+      if (!tmppath)
+        return FALSE;
+    }
+  else
+    {
+      gtk_icon_view_convert_widget_to_bin_window_coords (icon_view, *x, *y,
+                                                         x, y);
+
+      if (!gtk_icon_view_get_item_at_pos (icon_view, *x, *y, &tmppath, NULL))
+        return FALSE;
+    }
+
+  if (model)
+    *model = gtk_icon_view_get_model (icon_view);
+
+  if (iter)
+    gtk_tree_model_get_iter (gtk_icon_view_get_model (icon_view),
+                             iter, tmppath);
+
+  if (path)
+    *path = tmppath;
+  else
+    gtk_tree_path_free (tmppath);
+
+  return TRUE;
+}
+
+static gboolean
+gtk_icon_view_set_tooltip_query_cb (GtkWidget  *widget,
+                                    gint        x,
+                                    gint        y,
+                                    gboolean    keyboard_tip,
+                                    GtkTooltip *tooltip,
+                                    gpointer    data)
+{
+  gchar *str;
+  GtkTreeIter iter;
+  GtkTreePath *path;
+  GtkTreeModel *model;
+  GtkIconView *icon_view = GTK_ICON_VIEW (widget);
+
+  if (!gtk_icon_view_get_tooltip_context (GTK_ICON_VIEW (widget),
+                                          &x, &y,
+                                          keyboard_tip,
+                                          &model, &path, &iter))
+    return FALSE;
+
+  gtk_tree_model_get (model, &iter, icon_view->priv->tooltip_column, &str, -1);
+
+  if (!str)
+    {
+      gtk_tree_path_free (path);
+      return FALSE;
+    }
+
+  gtk_tooltip_set_markup (tooltip, str);
+  gtk_icon_view_set_tooltip_item (icon_view, tooltip, path);
+
+  gtk_tree_path_free (path);
+  g_free (str);
+
+  return TRUE;
+}
+
+
+/**
+ * gtk_icon_view_set_tooltip_column:
+ * @icon_view: a #GtkIconView
+ * 
+ * @column: an integer, which is a valid column number for @icon_view's model
+ *
+ * If you only plan to have simple (text-only) tooltips on full items, you
+ * can use this function to have #GtkIconView handle these automatically
+ * for you. @column should be set to the column in @icon_view's model
+ * containing the tooltip texts, or -1 to disable this feature.
+ *
+ * When enabled, #GtkWidget::has-tooltip will be set to %TRUE and
+ * @icon_view will connect a #GtkWidget::query-tooltip signal handler.
+ *
+ * Since: 2.12
+ */
+void
+gtk_icon_view_set_tooltip_column (GtkIconView *icon_view,
+                                  gint         column)
+{
+  g_return_if_fail (GTK_IS_ICON_VIEW (icon_view));
+
+  if (column == icon_view->priv->tooltip_column)
+    return;
+
+  if (column == -1)
+    {
+      g_signal_handlers_disconnect_by_func (icon_view,
+                                            gtk_icon_view_set_tooltip_query_cb,
+                                            NULL);
+      gtk_widget_set_has_tooltip (GTK_WIDGET (icon_view), FALSE);
+    }
+  else
+    {
+      if (icon_view->priv->tooltip_column == -1)
+        {
+          g_signal_connect (icon_view, "query-tooltip",
+                            G_CALLBACK (gtk_icon_view_set_tooltip_query_cb), NULL);
+          gtk_widget_set_has_tooltip (GTK_WIDGET (icon_view), TRUE);
+        }
+    }
+
+  icon_view->priv->tooltip_column = column;
+  g_object_notify (G_OBJECT (icon_view), "tooltip-column");
+}
+
+/** 
+ * gtk_icon_view_get_tooltip_column:
+ * @icon_view: a #GtkIconView
+ *
+ * Returns the column of @icon_view's model which is being used for
+ * displaying tooltips on @icon_view's rows.
+ *
+ * Return value: the index of the tooltip column that is currently being
+ * used, or -1 if this is disabled.
+ *
+ * Since 2.12
+ */
+gint
+gtk_icon_view_get_tooltip_column (GtkIconView *icon_view)
+{
+  g_return_val_if_fail (GTK_IS_ICON_VIEW (icon_view), 0);
+
+  return icon_view->priv->tooltip_column;
+}
 
 /**
  * gtk_icon_view_get_visible_range:

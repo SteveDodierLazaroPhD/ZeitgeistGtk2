@@ -234,11 +234,8 @@ gtk_recent_chooser_menu_init (GtkRecentChooserMenu *menu)
   priv->local_only = TRUE;
   
   priv->limit = FALLBACK_ITEM_LIMIT;
-
   priv->sort_type = GTK_RECENT_SORT_NONE;
-  
   priv->icon_size = FALLBACK_ICON_SIZE;
-  
   priv->label_width = DEFAULT_LABEL_WIDTH;
   
   priv->first_recent_item_pos = -1;
@@ -795,9 +792,21 @@ gtk_recent_chooser_menu_create_item (GtkRecentChooserMenu *menu,
       
       /* avoid clashing mnemonics */
       if (count <= 10)
-        text = g_strdup_printf ("_%d. %s", count, escaped);
+        /* This is the label format that is used for the first 10 items 
+         * in a recent files menu. The %d is the number of the item,
+         * the %s is the name of the item. Please keep the _ in front
+         * of the number to give these menu items a mnemonic.
+         *
+         * Don't include the prefix "recent menu label|" in the translation.
+         */
+        text = g_strdup_printf (Q_("recent menu label|_%d. %s"), count, escaped);
       else
-        text = g_strdup_printf ("%d. %s", count, escaped);
+        /* This is the format that is used for items in a recent files menu. 
+         * The %d is the number of the item, the %s is the name of the item. 
+         *
+         * Don't include the prefix "recent menu label|" in the translation.
+         */
+        text = g_strdup_printf (Q_("recent menu label|%d. %s"), count, escaped);
       
       item = gtk_image_menu_item_new_with_mnemonic (text);
       
@@ -921,6 +930,7 @@ typedef struct
   gint loaded_items;
   gint displayed_items;
   GtkRecentChooserMenu *menu;
+  GtkWidget *placeholder;
 } MenuPopulateData;
 
 static gboolean
@@ -943,10 +953,8 @@ idle_populate_func (gpointer data)
       if (!pdata->items)
         {
           /* show the placeholder here */
-          gtk_widget_show (priv->placeholder);
+          gtk_widget_show (pdata->placeholder);
           pdata->displayed_items = 1;
-
-          GDK_THREADS_LEAVE ();
 
 	  return FALSE;
 	}
@@ -1001,13 +1009,13 @@ static void
 idle_populate_clean_up (gpointer data)
 {
   MenuPopulateData *pdata = data;
-  GtkRecentChooserMenuPrivate *priv = pdata->menu->priv;
 
   /* show the placeholder in case no item survived
    * the filtering process in the idle loop
    */
   if (!pdata->displayed_items)
-    gtk_widget_show (priv->placeholder);
+    gtk_widget_show (pdata->placeholder);
+  g_object_unref (pdata->placeholder);
 
   g_slice_free (MenuPopulateData, data);
 }
@@ -1027,6 +1035,7 @@ gtk_recent_chooser_menu_populate (GtkRecentChooserMenu *menu)
   pdata->loaded_items = 0;
   pdata->displayed_items = 0;
   pdata->menu = menu;
+  pdata->placeholder = g_object_ref (priv->placeholder);
 
   priv->icon_size = get_icon_size_for_widget (GTK_WIDGET (menu));
   

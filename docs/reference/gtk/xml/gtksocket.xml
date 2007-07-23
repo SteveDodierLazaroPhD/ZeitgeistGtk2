@@ -123,7 +123,8 @@ When GTK+ is notified that the embedded window has been
 destroyed, then it will destroy the socket as well. You
 should always, therefore, be prepared for your sockets
 to be destroyed at any time when the main event loop
-is running.
+is running. To prevent this from happening, you can
+connect to the <link linkend="GtkSocket-plug-removed"><type>::plug-removed</type></link> signal.
 </para>
 
 <para>
@@ -245,31 +246,35 @@ before you can make this call.</para>
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2><title><anchor id="GtkSocket-plug-added"/>The <literal>::plug-added</literal> signal</title>
-<indexterm><primary>GtkSocket::plug-added</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkSocket">GtkSocket</link> *socket,
+<indexterm><primary>GtkSocket::plug-added</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkSocket">GtkSocket</link> *socket_,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
 This signal is emitted when a client is successfully
-added to the socket.
+added to the socket.</para>
+<para>
+
 </para><variablelist role="params">
-<varlistentry><term><parameter>socket</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>socket_</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkSocket-plug-removed"/>The <literal>::plug-removed</literal> signal</title>
-<indexterm><primary>GtkSocket::plug-removed</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkSocket">GtkSocket</link> *socket,
+<indexterm><primary>GtkSocket::plug-removed</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkSocket">GtkSocket</link> *socket_,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
-This signal is emitted when a client is removed from the socket. The
-default action is to destroy the <link linkend="GtkSocket"><type>GtkSocket</type></link> widget, so if you want to
-reuse it you must add a signal handler that returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.
+This signal is emitted when a client is removed from the socket. 
+The default action is to destroy the <link linkend="GtkSocket"><type>GtkSocket</type></link> widget, so if you 
+want to reuse it you must add a signal handler that returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.</para>
+<para>
+
 </para><variablelist role="params">
-<varlistentry><term><parameter>socket</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>socket_</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 </refsect1>

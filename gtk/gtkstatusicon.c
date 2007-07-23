@@ -35,7 +35,6 @@
 #include "gtkintl.h"
 #include "gtkiconfactory.h"
 #include "gtkmarshalers.h"
-#include "gtktooltips.h"
 #include "gtktrayicon.h"
 
 #include "gtkprivate.h"
@@ -93,7 +92,6 @@ struct _GtkStatusIconPrivate
 #ifdef GDK_WINDOWING_X11
   GtkWidget    *tray_icon;
   GtkWidget    *image;
-  GtkTooltips  *tooltips;
 #endif
 
 #ifdef GDK_WINDOWING_WIN32
@@ -362,7 +360,6 @@ gtk_status_icon_class_init (GtkStatusIconClass *class)
 static void
 build_button_event (GtkStatusIconPrivate *priv,
 		    GdkEventButton       *e,
-		    GdkEventType          type,
 		    guint                 button)
 {
   POINT pos;
@@ -370,8 +367,7 @@ build_button_event (GtkStatusIconPrivate *priv,
 
   /* We know that gdk/win32 puts the primary monitor at index 0 */
   gdk_screen_get_monitor_geometry (gdk_screen_get_default (), 0, &monitor0);
-  e->type = type;
-  e->window = gdk_get_default_root_window ();
+  e->window = g_object_ref (gdk_get_default_root_window ());
   e->send_event = TRUE;
   e->time = GetTickCount ();
   GetCursorPos (&pos);
@@ -385,6 +381,25 @@ build_button_event (GtkStatusIconPrivate *priv,
   e->y_root = e->y;
 }
 
+typedef struct
+{
+  GtkStatusIcon *status_icon;
+  GdkEventButton *event;
+} ButtonCallbackData;
+
+static gboolean
+button_callback (gpointer data)
+{
+  ButtonCallbackData *bc = (ButtonCallbackData *) data;
+
+  gtk_status_icon_button_press (bc->status_icon, bc->event);
+
+  gdk_event_free ((GdkEvent *) bc->event);
+  g_free (data);
+
+  return FALSE;
+}
+
 static LRESULT CALLBACK
 wndproc (HWND   hwnd,
 	 UINT   message,
@@ -393,16 +408,17 @@ wndproc (HWND   hwnd,
 {
   if (message == WM_GTK_TRAY_NOTIFICATION)
     {
-      GdkEventButton e;
-      GtkStatusIcon *status_icon = GTK_STATUS_ICON (wparam);
+      ButtonCallbackData *bc;
       
       switch (lparam)
 	{
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-	  build_button_event (status_icon->priv, &e, GDK_BUTTON_PRESS,
-			      (lparam == WM_LBUTTONDOWN) ? 1 : 3);
-	  gtk_status_icon_button_press (status_icon, &e);
+	  bc = g_new (ButtonCallbackData, 1);
+	  bc->event = (GdkEventButton *) gdk_event_new (GDK_BUTTON_PRESS);
+	  bc->status_icon = GTK_STATUS_ICON (wparam);
+	  build_button_event (bc->status_icon->priv, bc->event, (lparam == WM_LBUTTONDOWN) ? 1 : 3);
+	  g_idle_add (button_callback, bc);
 	  break;
 	default :
 	  break;
@@ -487,8 +503,6 @@ gtk_status_icon_init (GtkStatusIcon *status_icon)
   g_signal_connect_swapped (priv->image, "size-allocate",
 			    G_CALLBACK (gtk_status_icon_size_allocate), status_icon);
 
-  status_icon->priv->tooltips = gtk_tooltips_new ();
-  g_object_ref_sink (priv->tooltips);
 #endif
 
 #ifdef GDK_WINDOWING_WIN32
@@ -582,10 +596,6 @@ gtk_status_icon_finalize (GObject *object)
   priv->blank_icon = NULL;
 
 #ifdef GDK_WINDOWING_X11
-  if (priv->tooltips)
-    g_object_unref (priv->tooltips);
-  priv->tooltips = NULL;
-
   gtk_widget_destroy (priv->tray_icon);
 #endif
 
@@ -1583,8 +1593,9 @@ gtk_status_icon_set_tooltip (GtkStatusIcon *status_icon,
   priv = status_icon->priv;
 
 #ifdef GDK_WINDOWING_X11
-  gtk_tooltips_set_tip (priv->tooltips, priv->tray_icon,
-			tooltip_text, NULL);
+
+  gtk_widget_set_tooltip_text (priv->tray_icon, tooltip_text);
+
 #endif
 #ifdef GDK_WINDOWING_WIN32
   if (tooltip_text == NULL)

@@ -289,6 +289,8 @@ enum                <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosit
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-view-get-rubber-banding">gtk_tree_view_get_rubber_banding</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-set-rubber-banding">gtk_tree_view_set_rubber_banding</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="gboolean">gboolean</link> enable);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-view-is-rubber-banding-active">gtk_tree_view_is_rubber_banding_active</link>
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-view-get-enable-tree-lines">gtk_tree_view_get_enable_tree_lines</link> (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-set-enable-tree-lines">gtk_tree_view_set_enable_tree_lines</link> (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="gboolean">gboolean</link> enabled);
@@ -296,6 +298,24 @@ enum                <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</l
 <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</link> <link linkend="gtk-tree-view-get-grid-lines">gtk_tree_view_get_grid_lines</link>       (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-set-grid-lines">gtk_tree_view_set_grid_lines</link>        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeViewGridLines">GtkTreeViewGridLines</link> grid_lines);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-set-tooltip-row">gtk_tree_view_set_tooltip_row</link>       (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-set-tooltip-cell">gtk_tree_view_set_tooltip_cell</link>      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
+                                                         <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *column,
+                                                         <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-view-get-tooltip-context">gtk_tree_view_get_tooltip_context</link>   (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> *x,
+                                                         <link linkend="gint">gint</link> *y,
+                                                         <link linkend="gboolean">gboolean</link> keyboard_tip,
+                                                         <link linkend="GtkTreeModel">GtkTreeModel</link> **model,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> **path,
+                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter);
+<link linkend="gint">gint</link>                <link linkend="gtk-tree-view-get-tooltip-column">gtk_tree_view_get_tooltip_column</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
+<link linkend="void">void</link>                <link linkend="gtk-tree-view-set-tooltip-column">gtk_tree_view_set_tooltip_column</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> column);
 
 
 </synopsis>
@@ -347,6 +367,7 @@ GtkTreeView implements
   <link linkend="GtkTreeView--rules-hint">rules-hint</link>               <link linkend="gboolean">gboolean</link>              : Read / Write
   <link linkend="GtkTreeView--search-column">search-column</link>            <link linkend="gint">gint</link>                  : Read / Write
   <link linkend="GtkTreeView--show-expanders">show-expanders</link>           <link linkend="gboolean">gboolean</link>              : Read / Write
+  <link linkend="GtkTreeView--tooltip-column">tooltip-column</link>           <link linkend="gint">gint</link>                  : Read / Write
   <link linkend="GtkTreeView--vadjustment">vadjustment</link>              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write
 </synopsis>
 </refsect1>
@@ -1820,18 +1841,16 @@ tree (the full scrollable area of the tree).</para>
 <listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>bx</parameter>&nbsp;:</term>
-<listitem><simpara> return location for tree X coordinate
+<listitem><simpara> X coordinate relative to bin_window
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>by</parameter>&nbsp;:</term>
-<listitem><simpara> return location for tree Y coordinate
+<listitem><simpara> Y coordinate relative to bin_window
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> return location for tree X coordinate
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-
+<listitem><simpara> return location for tree Y coordinate
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
@@ -1844,7 +1863,7 @@ tree (the full scrollable area of the tree).</para>
                                                          <link linkend="gint">gint</link> *wx,
                                                          <link linkend="gint">gint</link> *wy);</programlisting>
 <para>
-Converts bin_window coordinates (see <link linkend="gtk-tree-view-get-bin-window"><function>gtk_tree_view_get_bin_window()</function></link>).
+Converts bin_window coordinates (see <link linkend="gtk-tree-view-get-bin-window"><function>gtk_tree_view_get_bin_window()</function></link>)
 to widget relative coordinates.</para>
 <para>
 
@@ -1915,16 +1934,16 @@ to widget coordinates.</para>
 <listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
-<listitem><simpara>
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
-<listitem><simpara>
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
 <listitem><simpara> X coordinate relative to the tree
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
 <listitem><simpara> Y coordinate relative to the tree
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wx</parameter>&nbsp;:</term>
+<listitem><simpara> return location for widget X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>wy</parameter>&nbsp;:</term>
+<listitem><simpara> return location for widget Y coordinate
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
@@ -1983,12 +2002,10 @@ tree (the full scrollable area of the tree).</para>
 <listitem><simpara> Y coordinate relative to the widget
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>tx</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> return location for tree X coordinate
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>ty</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-
+<listitem><simpara> return location for tree Y coordinate
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
@@ -2649,6 +2666,25 @@ multiple rows by dragging the mouse.</para>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
 <refsect2>
+<title><anchor id="gtk-tree-view-is-rubber-banding-active" role="function" condition="since:2.12"/>gtk_tree_view_is_rubber_banding_active ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_is_rubber_banding_active</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_view_is_rubber_banding_active
+                                                        (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);</programlisting>
+<para>
+Returns whether a rubber banding operation is currently being done
+in <parameter>tree_view</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if a rubber banding operation is currently being
+done in <parameter>tree_view</parameter>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
 <title><anchor id="gtk-tree-view-get-enable-tree-lines" role="function" condition="since:2.10"/>gtk_tree_view_get_enable_tree_lines ()</title>
 <indexterm role="2.10"><primary>gtk_tree_view_get_enable_tree_lines</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_view_get_enable_tree_lines (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);</programlisting>
 <para>
@@ -2729,6 +2765,153 @@ Sets which grid lines to draw in <parameter>tree_view</parameter>.</para>
 enable.
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-set-tooltip-row" role="function" condition="since:2.12"/>gtk_tree_view_set_tooltip_row ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_set_tooltip_row</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_set_tooltip_row       (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path);</programlisting>
+<para>
+Sets the tip area of <parameter>tooltip</parameter> to be the area covered by the row at <parameter>path</parameter>.
+See also <link linkend="gtk-tooltip-set-tip-area"><function>gtk_tooltip_set_tip_area()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tooltip</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTooltip"><type>GtkTooltip</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreePath"><type>GtkTreePath</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-set-tooltip-cell" role="function" condition="since:2.12"/>gtk_tree_view_set_tooltip_cell ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_set_tooltip_cell</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_set_tooltip_cell      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> *path,
+                                                         <link linkend="GtkTreeViewColumn">GtkTreeViewColumn</link> *column,
+                                                         <link linkend="GtkCellRenderer">GtkCellRenderer</link> *cell);</programlisting>
+<para>
+Sets the tip area of <parameter>tooltip</parameter> to the area <parameter>path</parameter>, <parameter>column</parameter> and <parameter>cell</parameter> have
+in common.  For example if <parameter>path</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link> and <parameter>column</parameter> is set, the tip
+area will be set to the full area covered by <parameter>column</parameter>.  See also
+<link linkend="gtk-tooltip-set-tip-area"><function>gtk_tooltip_set_tip_area()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tooltip</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTooltip"><type>GtkTooltip</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreePath"><type>GtkTreePath</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>column</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeViewColumn"><type>GtkTreeViewColumn</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>cell</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCellRendererText"><type>GtkCellRendererText</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-get-tooltip-context" role="function" condition="since:2.12"/>gtk_tree_view_get_tooltip_context ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_get_tooltip_context</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_view_get_tooltip_context   (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> *x,
+                                                         <link linkend="gint">gint</link> *y,
+                                                         <link linkend="gboolean">gboolean</link> keyboard_tip,
+                                                         <link linkend="GtkTreeModel">GtkTreeModel</link> **model,
+                                                         <link linkend="GtkTreePath">GtkTreePath</link> **path,
+                                                         <link linkend="GtkTreeIter">GtkTreeIter</link> *iter);</programlisting>
+<para>
+This function is supposed to be used in a <link linkend="GtkWidget-query-tooltip"><type>::query-tooltip</type></link>
+signal handler for <link linkend="GtkTreeView"><type>GtkTreeView</type></link>.  The <parameter>x</parameter>, <parameter>y</parameter> and <parameter>keyboard_tip</parameter> values
+which are received in the signal handler, should be passed to this
+function without modification.
+</para>
+<para>
+The return value indicates whether there is a tree view row at the given
+coordinates (<link linkend="TRUE:CAPS"><literal>TRUE</literal></link>) or not (<link linkend="FALSE:CAPS"><literal>FALSE</literal></link>) for mouse tooltips.  For keyboard
+tooltips the row returned will be the cursor row.  When <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, then any of
+<parameter>model</parameter>, <parameter>path</parameter> and <parameter>iter</parameter> which have been provided will be set to point to
+that row and the corresponding model.  <parameter>x</parameter> and <parameter>y</parameter> will always be converted
+to be relative to <parameter>tree_view</parameter>'s bin_window if <parameter>keyboard_tooltip</parameter> is <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
+<listitem><simpara> the x coordinate (relative to widget coordinates)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
+<listitem><simpara> the y coordinate (relative to widget coordinates)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>keyboard_tip</parameter>&nbsp;:</term>
+<listitem><simpara> whether this is a keyboard tooltip or not
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to receive a <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to receive a <link linkend="GtkTreePath"><type>GtkTreePath</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to receive a <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> whether or not the given tooltip context points to a row.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-get-tooltip-column" role="function"/>gtk_tree_view_get_tooltip_column ()</title>
+<indexterm><primary>gtk_tree_view_get_tooltip_column</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_tree_view_get_tooltip_column    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);</programlisting>
+<para>
+Returns the column of <parameter>tree_view</parameter>'s model which is being used for
+displaying tooltips on <parameter>tree_view</parameter>'s rows.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the index of the tooltip column that is currently being
+used, or -1 if this is disabled.
+
+Since 2.12
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2>
+<title><anchor id="gtk-tree-view-set-tooltip-column" role="function" condition="since:2.12"/>gtk_tree_view_set_tooltip_column ()</title>
+<indexterm role="2.12"><primary>gtk_tree_view_set_tooltip_column</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_set_tooltip_column    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
+                                                         <link linkend="gint">gint</link> column);</programlisting>
+<para>
+If you only plan to have simple (text-only) tooltips on full rows, you
+can use this function to have <link linkend="GtkTreeView"><type>GtkTreeView</type></link> handle these automatically
+for you. <parameter>column</parameter> should be set to the column in <parameter>tree_view</parameter>'s model
+containing the tooltip texts, or -1 to disable this feature.
+</para>
+<para>
+When enabled, <link linkend="GtkWidget-has-tooltip"><type>::has-tooltip</type></link> will be set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> and
+<parameter>tree_view</parameter> will connect a <link linkend="GtkWidget-query-tooltip"><type>::query-tooltip</type></link> signal handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tree_view</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTreeView"><type>GtkTreeView</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>column</parameter>&nbsp;:</term>
+<listitem><simpara> an integer, which is a valid column number for <parameter>tree_view</parameter>'s model
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.12
 </para></refsect2>
 
 </refsect1>
@@ -2847,6 +3030,11 @@ Extra indentation for each level.</para>
 </para><para>Default value: TRUE</para>
 <para>Since  2.12
 </para>
+</refsect2>
+<refsect2><title><anchor id="GtkTreeView--tooltip-column"/>The :<literal>tooltip-column</literal> property</title>
+<indexterm><primary>GtkTreeView:tooltip-column</primary></indexterm><programlisting>  tooltip-column           <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>The column in the model containing the tooltip texts for the rows.</para><para>Allowed values: &gt;= -1</para>
+<para>Default value: -1</para>
 </refsect2>
 <refsect2><title><anchor id="GtkTreeView--vadjustment"/>The :<literal>vadjustment</literal> property</title>
 <indexterm><primary>GtkTreeView:vadjustment</primary></indexterm><programlisting>  vadjustment              <link linkend="GtkAdjustment">GtkAdjustment</link>         : Read / Write</programlisting>
@@ -3158,7 +3346,7 @@ signal if you need to control the collapsibility of individual rows.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to allow expansion, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to reject
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to allow collapsing, <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to reject
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-test-expand-row"/>The <literal>::test-expand-row</literal> signal</title>
 <indexterm><primary>GtkTreeView::test-expand-row</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
@@ -3182,7 +3370,7 @@ signal if you need to control the expandability of individual rows.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to allow expansion, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to reject
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to allow expansion, <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to reject
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2><title><anchor id="GtkTreeView-toggle-cursor-row"/>The <literal>::toggle-cursor-row</literal> signal</title>
 <indexterm><primary>GtkTreeView::toggle-cursor-row</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkTreeView">GtkTreeView</link> *treeview,

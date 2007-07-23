@@ -259,6 +259,7 @@ gboolean test_uimanager_simple (void)
     "          <object class=\"GtkAction\" id=\"file\">"
     "            <property name=\"label\">_File</property>"
     "          </object>"
+    "          <accelerator key=\"n\" modifiers=\"GDK_CONTROL_MASK\"/>"
     "        </child>"
     "      </object>"
     "    </child>"
@@ -1038,6 +1039,7 @@ gboolean test_treeview_column (void)
   g_return_val_if_fail (treeview, FALSE);
   g_return_val_if_fail (GTK_IS_TREE_VIEW (treeview), FALSE);
   column = gtk_tree_view_get_column (GTK_TREE_VIEW (treeview), 0);
+  g_return_val_if_fail (GTK_IS_TREE_VIEW_COLUMN (column), FALSE);
   g_return_val_if_fail (strcmp (gtk_tree_view_column_get_title (column),
 				"Test") == 0, FALSE);
 
@@ -1154,15 +1156,15 @@ gboolean test_combo_box (void)
     "        <property name=\"visible\">True</property>"
     "        <child>"
     "          <object class=\"GtkCellRendererText\" id=\"renderer1\"/>"
-    "            <attributes>"
-    "              <attribute name=\"text\">0</attribute>"
-    "            </attributes>"
+    "          <attributes>"
+    "            <attribute name=\"text\">0</attribute>"
+    "          </attributes>"
     "        </child>"
     "        <child>"
     "          <object class=\"GtkCellRendererText\" id=\"renderer2\"/>"
-    "            <attributes>"
-    "              <attribute name=\"text\">1</attribute>"
-    "            </attributes>"
+    "          <attributes>"
+    "            <attribute name=\"text\">1</attribute>"
+    "          </attributes>"
     "        </child>"
     "      </object>"
     "    </child>"
@@ -1465,6 +1467,15 @@ gboolean test_widget (void)
     "    </child>"
     "  </object>"
    "</interface>";
+  gchar *buffer3 =
+    "<interface>"
+    "  <object class=\"GtkWindow\" id=\"window1\">"
+    "     <accessibility>"
+    "       <atkproperty name=\"AtkObject::accessible_name\" translatable=\"yes\">Contacts</atkproperty>"
+    "       <atkrelation target=\"button1\" type=\"labelled-by\"/>"
+    "     </accessibility>"
+    "  </object>"
+   "</interface>";
   GtkBuilder *builder;
   GObject *window1, *button1;
   
@@ -1487,6 +1498,12 @@ gboolean test_widget (void)
   window1 = gtk_builder_get_object (builder, "window1");
   gtk_widget_destroy (GTK_WIDGET (window1));
   g_object_unref (builder);
+
+  builder = builder_new_from_string (buffer3, -1, NULL);
+  window1 = gtk_builder_get_object (builder, "window1");
+  gtk_widget_destroy (GTK_WIDGET (window1));
+  g_object_unref (builder);
+
   return TRUE;
 }
 

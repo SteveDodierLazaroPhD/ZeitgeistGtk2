@@ -4391,6 +4391,9 @@ extern __typeof (gtk_icon_view_get_path_at_pos) IA__gtk_icon_view_get_path_at_po
 extern __typeof (gtk_icon_view_get_item_at_pos) IA__gtk_icon_view_get_item_at_pos __attribute((visibility("hidden")));
 #define gtk_icon_view_get_item_at_pos IA__gtk_icon_view_get_item_at_pos
 
+extern __typeof (gtk_icon_view_convert_widget_to_bin_window_coords) IA__gtk_icon_view_convert_widget_to_bin_window_coords __attribute((visibility("hidden")));
+#define gtk_icon_view_convert_widget_to_bin_window_coords IA__gtk_icon_view_convert_widget_to_bin_window_coords
+
 extern __typeof (gtk_icon_view_get_pixbuf_column) IA__gtk_icon_view_get_pixbuf_column __attribute((visibility("hidden")));
 #define gtk_icon_view_get_pixbuf_column IA__gtk_icon_view_get_pixbuf_column
 
@@ -4513,6 +4516,21 @@ extern __typeof (gtk_icon_view_get_dest_item_at_pos) IA__gtk_icon_view_get_dest_
 
 extern __typeof (gtk_icon_view_create_drag_icon) IA__gtk_icon_view_create_drag_icon __attribute((visibility("hidden")));
 #define gtk_icon_view_create_drag_icon IA__gtk_icon_view_create_drag_icon
+
+extern __typeof (gtk_icon_view_set_tooltip_item) IA__gtk_icon_view_set_tooltip_item __attribute((visibility("hidden")));
+#define gtk_icon_view_set_tooltip_item IA__gtk_icon_view_set_tooltip_item
+
+extern __typeof (gtk_icon_view_set_tooltip_cell) IA__gtk_icon_view_set_tooltip_cell __attribute((visibility("hidden")));
+#define gtk_icon_view_set_tooltip_cell IA__gtk_icon_view_set_tooltip_cell
+
+extern __typeof (gtk_icon_view_get_tooltip_context) IA__gtk_icon_view_get_tooltip_context __attribute((visibility("hidden")));
+#define gtk_icon_view_get_tooltip_context IA__gtk_icon_view_get_tooltip_context
+
+extern __typeof (gtk_icon_view_set_tooltip_column) IA__gtk_icon_view_set_tooltip_column __attribute((visibility("hidden")));
+#define gtk_icon_view_set_tooltip_column IA__gtk_icon_view_set_tooltip_column
+
+extern __typeof (gtk_icon_view_get_tooltip_column) IA__gtk_icon_view_get_tooltip_column __attribute((visibility("hidden")));
+#define gtk_icon_view_get_tooltip_column IA__gtk_icon_view_get_tooltip_column
 
 #endif
 #endif
@@ -5648,8 +5666,16 @@ extern __typeof (gtk_menu_tool_button_new) IA__gtk_menu_tool_button_new __attrib
 extern __typeof (gtk_menu_tool_button_new_from_stock) IA__gtk_menu_tool_button_new_from_stock __attribute((visibility("hidden")));
 #define gtk_menu_tool_button_new_from_stock IA__gtk_menu_tool_button_new_from_stock
 
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_menu_tool_button_set_arrow_tooltip) IA__gtk_menu_tool_button_set_arrow_tooltip __attribute((visibility("hidden")));
 #define gtk_menu_tool_button_set_arrow_tooltip IA__gtk_menu_tool_button_set_arrow_tooltip
+
+#endif
+extern __typeof (gtk_menu_tool_button_set_arrow_tooltip_markup) IA__gtk_menu_tool_button_set_arrow_tooltip_markup __attribute((visibility("hidden")));
+#define gtk_menu_tool_button_set_arrow_tooltip_markup IA__gtk_menu_tool_button_set_arrow_tooltip_markup
+
+extern __typeof (gtk_menu_tool_button_set_arrow_tooltip_text) IA__gtk_menu_tool_button_set_arrow_tooltip_text __attribute((visibility("hidden")));
+#define gtk_menu_tool_button_set_arrow_tooltip_text IA__gtk_menu_tool_button_set_arrow_tooltip_text
 
 extern __typeof (gtk_menu_tool_button_set_menu) IA__gtk_menu_tool_button_set_menu __attribute((visibility("hidden")));
 #define gtk_menu_tool_button_set_menu IA__gtk_menu_tool_button_set_menu
@@ -9680,8 +9706,16 @@ extern __typeof (gtk_tool_item_set_is_important) IA__gtk_tool_item_set_is_import
 extern __typeof (gtk_tool_item_set_proxy_menu_item) IA__gtk_tool_item_set_proxy_menu_item __attribute((visibility("hidden")));
 #define gtk_tool_item_set_proxy_menu_item IA__gtk_tool_item_set_proxy_menu_item
 
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_tool_item_set_tooltip) IA__gtk_tool_item_set_tooltip __attribute((visibility("hidden")));
 #define gtk_tool_item_set_tooltip IA__gtk_tool_item_set_tooltip
+
+#endif
+extern __typeof (gtk_tool_item_set_tooltip_markup) IA__gtk_tool_item_set_tooltip_markup __attribute((visibility("hidden")));
+#define gtk_tool_item_set_tooltip_markup IA__gtk_tool_item_set_tooltip_markup
+
+extern __typeof (gtk_tool_item_set_tooltip_text) IA__gtk_tool_item_set_tooltip_text __attribute((visibility("hidden")));
+#define gtk_tool_item_set_tooltip_text IA__gtk_tool_item_set_tooltip_text
 
 extern __typeof (gtk_tool_item_set_use_drag_window) IA__gtk_tool_item_set_use_drag_window __attribute((visibility("hidden")));
 #define gtk_tool_item_set_use_drag_window IA__gtk_tool_item_set_use_drag_window
@@ -9713,6 +9747,9 @@ extern __typeof (gtk_tooltip_set_markup) IA__gtk_tooltip_set_markup __attribute(
 
 extern __typeof (gtk_tooltip_set_text) IA__gtk_tooltip_set_text __attribute((visibility("hidden")));
 #define gtk_tooltip_set_text IA__gtk_tooltip_set_text
+
+extern __typeof (gtk_tooltip_set_tip_area) IA__gtk_tooltip_set_tip_area __attribute((visibility("hidden")));
+#define gtk_tooltip_set_tip_area IA__gtk_tooltip_set_tip_area
 
 extern __typeof (gtk_tooltip_trigger_tooltip_query) IA__gtk_tooltip_trigger_tooltip_query __attribute((visibility("hidden")));
 #define gtk_tooltip_trigger_tooltip_query IA__gtk_tooltip_trigger_tooltip_query
@@ -10595,6 +10632,12 @@ extern __typeof (gtk_tree_view_get_selection) IA__gtk_tree_view_get_selection __
 extern __typeof (gtk_tree_view_get_show_expanders) IA__gtk_tree_view_get_show_expanders __attribute((visibility("hidden")));
 #define gtk_tree_view_get_show_expanders IA__gtk_tree_view_get_show_expanders
 
+extern __typeof (gtk_tree_view_get_tooltip_column) IA__gtk_tree_view_get_tooltip_column __attribute((visibility("hidden")));
+#define gtk_tree_view_get_tooltip_column IA__gtk_tree_view_get_tooltip_column
+
+extern __typeof (gtk_tree_view_get_tooltip_context) IA__gtk_tree_view_get_tooltip_context __attribute((visibility("hidden")));
+#define gtk_tree_view_get_tooltip_context IA__gtk_tree_view_get_tooltip_context
+
 extern __typeof (gtk_tree_view_get_type) IA__gtk_tree_view_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_tree_view_get_type IA__gtk_tree_view_get_type
 
@@ -10723,6 +10766,15 @@ extern __typeof (gtk_tree_view_set_search_position_func) IA__gtk_tree_view_set_s
 
 extern __typeof (gtk_tree_view_set_show_expanders) IA__gtk_tree_view_set_show_expanders __attribute((visibility("hidden")));
 #define gtk_tree_view_set_show_expanders IA__gtk_tree_view_set_show_expanders
+
+extern __typeof (gtk_tree_view_set_tooltip_row) IA__gtk_tree_view_set_tooltip_row __attribute((visibility("hidden")));
+#define gtk_tree_view_set_tooltip_row IA__gtk_tree_view_set_tooltip_row
+
+extern __typeof (gtk_tree_view_set_tooltip_cell) IA__gtk_tree_view_set_tooltip_cell __attribute((visibility("hidden")));
+#define gtk_tree_view_set_tooltip_cell IA__gtk_tree_view_set_tooltip_cell
+
+extern __typeof (gtk_tree_view_set_tooltip_column) IA__gtk_tree_view_set_tooltip_column __attribute((visibility("hidden")));
+#define gtk_tree_view_set_tooltip_column IA__gtk_tree_view_set_tooltip_column
 
 extern __typeof (gtk_tree_view_set_vadjustment) IA__gtk_tree_view_set_vadjustment __attribute((visibility("hidden")));
 #define gtk_tree_view_set_vadjustment IA__gtk_tree_view_set_vadjustment
@@ -11088,6 +11140,9 @@ extern __typeof (gtk_widget_get_events) IA__gtk_widget_get_events __attribute((v
 extern __typeof (gtk_widget_get_extension_events) IA__gtk_widget_get_extension_events __attribute((visibility("hidden")));
 #define gtk_widget_get_extension_events IA__gtk_widget_get_extension_events
 
+extern __typeof (gtk_widget_get_has_tooltip) IA__gtk_widget_get_has_tooltip __attribute((visibility("hidden")));
+#define gtk_widget_get_has_tooltip IA__gtk_widget_get_has_tooltip
+
 extern __typeof (gtk_widget_get_modifier_style) IA__gtk_widget_get_modifier_style __attribute((visibility("hidden")));
 #define gtk_widget_get_modifier_style IA__gtk_widget_get_modifier_style
 
@@ -11317,6 +11372,9 @@ extern __typeof (gtk_widget_set_events) IA__gtk_widget_set_events __attribute((v
 
 extern __typeof (gtk_widget_set_extension_events) IA__gtk_widget_set_extension_events __attribute((visibility("hidden")));
 #define gtk_widget_set_extension_events IA__gtk_widget_set_extension_events
+
+extern __typeof (gtk_widget_set_has_tooltip) IA__gtk_widget_set_has_tooltip __attribute((visibility("hidden")));
+#define gtk_widget_set_has_tooltip IA__gtk_widget_set_has_tooltip
 
 extern __typeof (gtk_widget_set_name) IA__gtk_widget_set_name __attribute((visibility("hidden")));
 #define gtk_widget_set_name IA__gtk_widget_set_name
