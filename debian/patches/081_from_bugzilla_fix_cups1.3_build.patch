@@ -1,0 +1,22 @@
+Index: gtk+2.0-2.11.6/modules/printbackends/cups/gtkcupsutils.c
+===================================================================
+--- gtk+2.0-2.11.6.orig/modules/printbackends/cups/gtkcupsutils.c	2007-08-31 17:20:40.000000000 +0200
++++ gtk+2.0-2.11.6/modules/printbackends/cups/gtkcupsutils.c	2007-08-31 17:21:37.000000000 +0200
+@@ -635,7 +635,7 @@
+   httpSetField (request->http, HTTP_FIELD_CONTENT_LENGTH, length);
+   httpSetField (request->http, HTTP_FIELD_CONTENT_TYPE, "application/ipp");
+ #ifdef HAVE_HTTP_AUTHSTRING
+-  httpSetField (request->http, HTTP_FIELD_AUTHORIZATION, request->http->authstring);
++  httpSetField (request->http, HTTP_FIELD_AUTHORIZATION, httpGetAuthString (request->http));
+ #endif
+ 
+   if (httpPost (request->http, request->resource))
+@@ -974,7 +974,7 @@
+ 
+   httpClearFields (request->http);
+ #ifdef HAVE_HTTP_AUTHSTRING
+-  httpSetField (request->http, HTTP_FIELD_AUTHORIZATION, request->http->authstring);
++  httpSetField (request->http, HTTP_FIELD_AUTHORIZATION, httpGetAuthString (request->http));
+ #endif
+ 
+   if (httpGet (request->http, request->resource))
