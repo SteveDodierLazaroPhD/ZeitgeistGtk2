@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Migrating from EggRecent to GtkRecentChooser</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
 <link rel="prev" href="setting-the-page-flow.html" title="Setting the page flow">
 <link rel="next" href="gtkrecent-chooser.html" title="Displaying the Recently Used Documents">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -74,7 +74,7 @@
 <div><div class="author">
 <h3 class="author"><span class="firstname">Emmanuele</span></h3>
 <div class="affiliation"><div class="address"><p><br>
-	&#160;&#160;<code class="email">&lt;<a href="mailto:ebassigmail.com">ebassi<em class="parameter"><code>gmail.com</code></em></a>&gt;</code><br>
+	&#160;&#160;<code class="email">&lt;<a class="email" href="mailto:ebassigmail.com">ebassi<em class="parameter"><code>gmail.com</code></em></a>&gt;</code><br>
 	</p></div></div>
 </div></div>
 </div></div>
@@ -111,7 +111,7 @@
       </p></li>
 <li><p>
         New widgets for displaying the list, and better integration with
-	current <a href="GtkFileChooser.html" title="GtkFileChooser"><span class="type">GtkFileChooser</span></a> and <a href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> widgets
+	current <a class="link" href="GtkFileChooser.html" title="GtkFileChooser"><span class="type">GtkFileChooser</span></a> and <a class="link" href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> widgets
       </p></li>
 </ul></div>
 <p>
@@ -120,19 +120,19 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="gtkrecent-manager"></a>Managing the Recently Used Documents</h2></div></div></div>
 <p>
-      <a href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> is used to manage the Recently Used Documents. To
-      create a new <a href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a>, you simply call <a href="GtkRecentManager.html#gtk-recent-manager-new"><code class="function">gtk_recent_manager_new()</code></a>.
+      <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> is used to manage the Recently Used Documents. To
+      create a new <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a>, you simply call <a class="link" href="GtkRecentManager.html#gtk-recent-manager-new"><code class="function">gtk_recent_manager_new()</code></a>.
       Like the <span class="structname">EggRecentModel</span> inside EggRecent, the
-      <a href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> loads the list of the recent documents and notifies
+      <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> loads the list of the recent documents and notifies
       you of changes inside the list.
     </p>
 <p>
-      Usually, instead of creating a new <a href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> each time you
-      need it, you'll want to use the <a href="GtkRecentManager.html#gtk-recent-manager-get-default"><code class="function">gtk_recent_manager_get_default()</code></a>
+      Usually, instead of creating a new <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> each time you
+      need it, you'll want to use the <a class="link" href="GtkRecentManager.html#gtk-recent-manager-get-default"><code class="function">gtk_recent_manager_get_default()</code></a>
       function.
     </p>
 <p>
-      To add a document to the list, you can use <a href="GtkRecentManager.html#gtk-recent-manager-add-item"><code class="function">gtk_recent_manager_add_item()</code></a>,
+      To add a document to the list, you can use <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item"><code class="function">gtk_recent_manager_add_item()</code></a>,
       like:
       </p>
 <div class="informalexample"><pre class="programlisting">
@@ -148,10 +148,10 @@
 	g_object_unref (manager);
       </pre></div>
 <p>
-      The <a href="GtkRecentManager.html#gtk-recent-manager-add-item"><code class="function">gtk_recent_manager_add_item()</code></a> function will try and guess some of the
+      The <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item"><code class="function">gtk_recent_manager_add_item()</code></a> function will try and guess some of the
       meta-data associated to a URI. If you know some of meta-data about the
-      document yourself, set the desired fields of a <a href="GtkRecentManager.html#GtkRecentData"><span class="type">GtkRecentData</span></a> structure
-      and pass it to the <a href="GtkRecentManager.html#gtk-recent-manager-add-full"><code class="function">gtk_recent_manager_add_full()</code></a> function instead:
+      document yourself, set the desired fields of a <a class="link" href="GtkRecentManager.html#GtkRecentData"><span class="type">GtkRecentData</span></a> structure
+      and pass it to the <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-full"><code class="function">gtk_recent_manager_add_full()</code></a> function instead:
       </p>
 <div class="informalexample"><pre class="programlisting">
         GtkRecentManager *manager;
@@ -239,7 +239,7 @@
 	  }
       </pre></div>
 <p>
-      The <a href="GtkRecentManager.html#GtkRecentInfo"><span class="type">GtkRecentInfo</span></a> is a reference counted boxed type, and it holds all
+      The <a class="link" href="GtkRecentManager.html#GtkRecentInfo"><span class="type">GtkRecentInfo</span></a> is a reference counted boxed type, and it holds all
       the meta-data of a recently used document, like its display name, its
       description, the list of each application that has registered the
       document or the list of groups to which the document belong.

@@ -901,7 +901,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   /**
    * GtkSettings:gtk-entry-password-hint-timeout:
    *
-   * How long to show the last inputted character in hidden
+   * How long to show the last input character in hidden
    * entries. This value is in milliseconds. 0 disables showing the
    * last char. 600 is a good value for enabling it.
    *
@@ -909,7 +909,7 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   gtk_settings_install_property (g_param_spec_uint ("gtk-entry-password-hint-timeout",
                                                     P_("Password Hint Timeout"),
-                                                    P_("How long to show the last inputted character in hidden entries"),
+                                                    P_("How long to show the last input character in hidden entries"),
                                                     0, G_MAXUINT, 0,
                                                     GTK_PARAM_READWRITE));
 
@@ -3403,7 +3403,7 @@ gtk_entry_create_layout (GtkEntry *entry,
                              entry->text_length -
                              password_hint->password_hint_position);
 
-              /* Now remove this last inputted character, don't need
+              /* Now remove this last input character, don't need
                * it anymore
                */
               memset (password_hint->password_hint, 0, PASSWORD_HINT_MAX);
@@ -5849,6 +5849,14 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
         {
           gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (completion->priv->tree_view)));
           gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (completion->priv->action_view)));
+
+          if (completion->priv->inline_selection &&
+              completion->priv->completion_prefix)
+            {
+              gtk_entry_set_text (GTK_ENTRY (completion->priv->entry), 
+                                  completion->priv->completion_prefix);
+              gtk_editable_set_position (GTK_EDITABLE (widget), -1);
+            }
         }
       else if (completion->priv->current_selected < matches)
         {
@@ -5870,6 +5878,9 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
               if (!gtk_tree_selection_get_selected (sel, &model, &iter))
                 return FALSE;
               
+              if (completion->priv->completion_prefix == NULL)
+                completion->priv->completion_prefix = g_strdup (gtk_entry_get_text (GTK_ENTRY (completion->priv->entry)));
+
               g_signal_emit_by_name (completion, "cursor_on_match", model,
                                      &iter, &entry_set);
             }
@@ -5881,6 +5892,14 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
           path = gtk_tree_path_new_from_indices (completion->priv->current_selected - matches, -1);
           gtk_tree_view_set_cursor (GTK_TREE_VIEW (completion->priv->action_view),
                                     path, NULL, FALSE);
+
+          if (completion->priv->inline_selection &&
+              completion->priv->completion_prefix)
+            {
+              gtk_entry_set_text (GTK_ENTRY (completion->priv->entry), 
+                                  completion->priv->completion_prefix);
+              gtk_editable_set_position (GTK_EDITABLE (widget), -1);
+            }
         }
 
       gtk_tree_path_free (path);
@@ -5893,18 +5912,17 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
            event->keyval == GDK_Right ||
            event->keyval == GDK_KP_Right) 
     {
-      GtkTreeSelection *sel;
-      GtkTreeIter iter;
-      GtkTreeModel *model = NULL;
+      gboolean retval = TRUE;
 
       _gtk_entry_reset_im_context (GTK_ENTRY (widget));
       _gtk_entry_completion_popdown (completion);
 
-      sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (completion->priv->tree_view));
-      if (!gtk_tree_selection_get_selected (sel, &model, &iter))
-        return FALSE;
-
-      if (completion->priv->inline_selection)
+      if (completion->priv->current_selected < 0)
+        {
+          retval = FALSE;
+          goto keypress_completion_out;
+        }
+      else if (completion->priv->inline_selection)
         {
           /* Escape rejects the tentative completion */
           if (event->keyval == GDK_Escape)
@@ -5924,12 +5942,16 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
             gtk_editable_set_position (GTK_EDITABLE (widget), -1);
           else
             gtk_editable_set_position (GTK_EDITABLE (widget), 0);
+        }
 
+keypress_completion_out:
+      if (completion->priv->inline_selection)
+        {
           g_free (completion->priv->completion_prefix);
           completion->priv->completion_prefix = NULL;
         }
 
-      return TRUE;
+      return retval;
     }
   else if (event->keyval == GDK_Tab || 
 	   event->keyval == GDK_KP_Tab ||
@@ -5937,15 +5959,12 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
     {
       GtkDirectionType dir = event->keyval == GDK_ISO_Left_Tab ? 
 	GTK_DIR_TAB_BACKWARD : GTK_DIR_TAB_FORWARD;
-
+      
       _gtk_entry_reset_im_context (GTK_ENTRY (widget));
       _gtk_entry_completion_popdown (completion);
 
-      if (completion->priv->completion_prefix)
-        {
-           g_free (completion->priv->completion_prefix);
-           completion->priv->completion_prefix = NULL;
-        }
+      g_free (completion->priv->completion_prefix);
+      completion->priv->completion_prefix = NULL;
 
       gtk_widget_child_focus (gtk_widget_get_toplevel (widget), dir);
 
@@ -5955,6 +5974,8 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
            event->keyval == GDK_KP_Enter ||
 	   event->keyval == GDK_Return)
     {
+      gboolean retval = TRUE;
+
       _gtk_entry_reset_im_context (GTK_ENTRY (widget));
       _gtk_entry_completion_popdown (completion);
 
@@ -5966,31 +5987,31 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
           gboolean entry_set;
 
           sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (completion->priv->tree_view));
-          if (!gtk_tree_selection_get_selected (sel, &model, &iter))
-            return FALSE;
-
-	  g_signal_handler_block (widget, completion->priv->changed_id);
-          g_signal_emit_by_name (completion, "match_selected",
-                                 model, &iter, &entry_set);
-	  g_signal_handler_unblock (widget, completion->priv->changed_id);
-
-          if (!entry_set)
+          if (gtk_tree_selection_get_selected (sel, &model, &iter))
             {
-              gchar *str = NULL;
+              g_signal_handler_block (widget, completion->priv->changed_id);
+              g_signal_emit_by_name (completion, "match_selected",
+                                     model, &iter, &entry_set);
+              g_signal_handler_unblock (widget, completion->priv->changed_id);
 
-              gtk_tree_model_get (model, &iter,
-                                  completion->priv->text_column, &str,
-                                  -1);
+              if (!entry_set)
+                {
+                  gchar *str = NULL;
 
-              gtk_entry_set_text (GTK_ENTRY (widget), str);
+                  gtk_tree_model_get (model, &iter,
+                                      completion->priv->text_column, &str,
+                                      -1);
 
-              /* move the cursor to the end */
-              gtk_editable_set_position (GTK_EDITABLE (widget), -1);
+                  gtk_entry_set_text (GTK_ENTRY (widget), str);
 
-              g_free (str);
+                  /* move the cursor to the end */
+                  gtk_editable_set_position (GTK_EDITABLE (widget), -1);
+
+                  g_free (str);
+                }
             }
-
-          return TRUE;
+          else
+            retval = FALSE;
         }
       else if (completion->priv->current_selected - matches >= 0)
         {
@@ -6003,9 +6024,12 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
           g_signal_emit_by_name (completion, "action_activated",
                                  gtk_tree_path_get_indices (path)[0]);
           gtk_tree_path_free (path);
-
-          return TRUE;
         }
+
+      g_free (completion->priv->completion_prefix);
+      completion->priv->completion_prefix = NULL;
+
+      return retval;
     }
 
   return FALSE;

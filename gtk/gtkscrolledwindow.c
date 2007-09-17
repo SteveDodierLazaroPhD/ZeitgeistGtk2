@@ -43,9 +43,9 @@
  *   to be best suited to display its contents, including children.
  *   the width and/or height reported from a widget upon size requisition
  *   may be overidden by the user by specifying a width and/or height
- *   other than 0 through gtk_widget_set_usize().
+ *   other than 0 through gtk_widget_set_size_request().
  *
- * a scrolled window needs (for imlementing all three policy types) to
+ * a scrolled window needs (for implementing all three policy types) to
  * request its width and height based on two different rationales.
  * 1)   the user wants the scrolled window to just fit into the space
  *      that it gets allocated for a specifc dimension.
@@ -904,7 +904,7 @@ traverse_container (GtkWidget *widget,
   if (GTK_IS_SCROLLED_WINDOW (widget))
     {
       gtk_scrolled_window_update_real_placement (GTK_SCROLLED_WINDOW (widget));
-      gtk_widget_queue_draw (widget);
+      gtk_widget_queue_resize (widget);
     }
   else if (GTK_IS_CONTAINER (widget))
     gtk_container_forall (GTK_CONTAINER (widget), traverse_container, NULL);

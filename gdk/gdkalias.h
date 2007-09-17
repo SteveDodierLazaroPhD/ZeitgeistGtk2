@@ -1315,6 +1315,9 @@ extern __typeof (gdk_window_end_paint) IA__gdk_window_end_paint __attribute((vis
 extern __typeof (gdk_window_foreign_new) IA__gdk_window_foreign_new __attribute((visibility("hidden")));
 #define gdk_window_foreign_new IA__gdk_window_foreign_new
 
+extern __typeof (gdk_window_freeze_toplevel_updates_libgtk_only) IA__gdk_window_freeze_toplevel_updates_libgtk_only __attribute((visibility("hidden")));
+#define gdk_window_freeze_toplevel_updates_libgtk_only IA__gdk_window_freeze_toplevel_updates_libgtk_only
+
 extern __typeof (gdk_window_freeze_updates) IA__gdk_window_freeze_updates __attribute((visibility("hidden")));
 #define gdk_window_freeze_updates IA__gdk_window_freeze_updates
 
@@ -1386,6 +1389,9 @@ extern __typeof (gdk_window_set_debug_updates) IA__gdk_window_set_debug_updates 
 
 extern __typeof (gdk_window_set_user_data) IA__gdk_window_set_user_data __attribute((visibility("hidden")));
 #define gdk_window_set_user_data IA__gdk_window_set_user_data
+
+extern __typeof (gdk_window_thaw_toplevel_updates_libgtk_only) IA__gdk_window_thaw_toplevel_updates_libgtk_only __attribute((visibility("hidden")));
+#define gdk_window_thaw_toplevel_updates_libgtk_only IA__gdk_window_thaw_toplevel_updates_libgtk_only
 
 extern __typeof (gdk_window_thaw_updates) IA__gdk_window_thaw_updates __attribute((visibility("hidden")));
 #define gdk_window_thaw_updates IA__gdk_window_thaw_updates

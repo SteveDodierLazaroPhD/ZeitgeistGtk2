@@ -106,16 +106,16 @@ GtkDialog implements
 <title role="properties.title">Properties</title>
 <synopsis>
 
-  <link linkend="GtkDialog--has-separator">has-separator</link>            <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkDialog--has-separator">has-separator</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
 </synopsis>
 </refsect1>
 <refsect1 role="style_properties">
 <title role="style_properties.title">Style Properties</title>
 <synopsis>
 
-  <link linkend="GtkDialog--action-area-border">action-area-border</link>       <link linkend="gint">gint</link>                  : Read
-  <link linkend="GtkDialog--button-spacing">button-spacing</link>           <link linkend="gint">gint</link>                  : Read
-  <link linkend="GtkDialog--content-area-border">content-area-border</link>      <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkDialog--action-area-border">action-area-border</link>&quot;       <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkDialog--button-spacing">button-spacing</link>&quot;           <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkDialog--content-area-border">content-area-border</link>&quot;      <link linkend="gint">gint</link>                  : Read
 </synopsis>
 </refsect1>
 
@@ -123,8 +123,8 @@ GtkDialog implements
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  <link linkend="GtkDialog-close">close</link>                                          : Run Last / Action
-  <link linkend="GtkDialog-response">response</link>                                       : Run Last
+  &quot;<link linkend="GtkDialog-close">close</link>&quot;                                          : Run Last / Action
+  &quot;<link linkend="GtkDialog-response">response</link>&quot;                                       : Run Last
 </synopsis>
 </refsect1>
 
@@ -446,8 +446,8 @@ the list. Button text can be either a stock ID such as
 <link linkend="GTK-STOCK-OK:CAPS"><type>GTK_STOCK_OK</type></link>, or some arbitrary text. A response ID can be
 any positive number, or one of the values in the <link linkend="GtkResponseType"><type>GtkResponseType</type></link>
 enumeration. If the user clicks one of these dialog buttons,
-<link linkend="GtkDialog"><type>GtkDialog</type></link> will emit the <link linkend="GtkDialog-response"><type>::response</type></link> signal with the corresponding
-response ID. If a <link linkend="GtkDialog"><type>GtkDialog</type></link> receives the <link linkend="GtkWidget-delete-event"><type>::delete-event</type></link> signal, 
+<link linkend="GtkDialog"><type>GtkDialog</type></link> will emit the <link linkend="GtkDialog-response"><type>"response"</type></link> signal with the corresponding
+response ID. If a <link linkend="GtkDialog"><type>GtkDialog</type></link> receives the <link linkend="GtkWidget-delete-event"><type>"delete-event"</type></link> signal, 
 it will emit ::response with a response ID of <link linkend="GTK-RESPONSE-DELETE-EVENT:CAPS"><type>GTK_RESPONSE_DELETE_EVENT</type></link>.
 However, destroying a dialog does not emit the ::response signal;
 so be careful relying on ::response when using the 
@@ -492,7 +492,7 @@ Here's a simple example:
 <indexterm><primary>gtk_dialog_run</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_dialog_run                      (<link linkend="GtkDialog">GtkDialog</link> *dialog);</programlisting>
 <para>
 Blocks in a recursive main loop until the <parameter>dialog</parameter> either emits the
-<link linkend="GtkDialog-response"><type>::response</type></link> signal, or is destroyed. If the dialog is 
+<link linkend="GtkDialog-response"><type>"response"</type></link> signal, or is destroyed. If the dialog is 
 destroyed during the call to <link linkend="gtk-dialog-run"><function>gtk_dialog_run()</function></link>, <link linkend="gtk-dialog-run"><function>gtk_dialog_run()</function></link> returns 
 <link linkend="GTK-RESPONSE-NONE:CAPS"><type>GTK_RESPONSE_NONE</type></link>. Otherwise, it returns the response ID from the 
 ::response signal emission.
@@ -503,7 +503,7 @@ Before entering the recursive main loop, <link linkend="gtk-dialog-run"><functio
 need to show any children of the dialog yourself.
 </para>
 <para>
-During <link linkend="gtk-dialog-run"><function>gtk_dialog_run()</function></link>, the default behavior of <link linkend="GtkWidget-delete-event"><type>::delete-event</type></link> 
+During <link linkend="gtk-dialog-run"><function>gtk_dialog_run()</function></link>, the default behavior of <link linkend="GtkWidget-delete-event"><type>"delete-event"</type></link> 
 is disabled; if the dialog receives ::delete_event, it will not be
 destroyed as windows usually are, and <link linkend="gtk-dialog-run"><function>gtk_dialog_run()</function></link> will return
 <link linkend="GTK-RESPONSE-DELETE-EVENT:CAPS"><type>GTK_RESPONSE_DELETE_EVENT</type></link>. Also, during <link linkend="gtk-dialog-run"><function>gtk_dialog_run()</function></link> the dialog 
@@ -552,7 +552,7 @@ be triggered during a <link linkend="gtk-dialog-run"><function>gtk_dialog_run()<
 <indexterm><primary>gtk_dialog_response</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_dialog_response                 (<link linkend="GtkDialog">GtkDialog</link> *dialog,
                                                          <link linkend="gint">gint</link> response_id);</programlisting>
 <para>
-Emits the <link linkend="GtkDialog-response"><type>::response</type></link> signal with the given response ID. 
+Emits the <link linkend="GtkDialog-response"><type>"response"</type></link> signal with the given response ID. 
 Used to indicate that the user has responded to the dialog in some way;
 typically either you or <link linkend="gtk-dialog-run"><function>gtk_dialog_run()</function></link> will be monitoring the
 ::response signal and take appropriate action.</para>
@@ -574,7 +574,7 @@ typically either you or <link linkend="gtk-dialog-run"><function>gtk_dialog_run(
 <para>
 Adds a button with the given text (or a stock button, if <parameter>button_text</parameter> is a
 stock ID) and sets things up so that clicking the button will emit the
-<link linkend="GtkDialog-response"><type>::response</type></link> signal with the given <parameter>response_id</parameter>. The button is 
+<link linkend="GtkDialog-response"><type>"response"</type></link> signal with the given <parameter>response_id</parameter>. The button is 
 appended to the end of the dialog's action area. The button widget is 
 returned, but usually you don't need it.</para>
 <para>
@@ -622,7 +622,7 @@ text and response ID.</para>
                                                          <link linkend="gint">gint</link> response_id);</programlisting>
 <para>
 Adds an activatable widget to the action area of a <link linkend="GtkDialog"><type>GtkDialog</type></link>,
-connecting a signal handler that will emit the <link linkend="GtkDialog-response"><type>::response</type></link> 
+connecting a signal handler that will emit the <link linkend="GtkDialog-response"><type>"response"</type></link> 
 signal on the dialog when the widget is activated. The widget is 
 appended to the end of the dialog's action area. If you want to add a
 non-activatable widget, simply pack it into the <parameter>action_area</parameter> field 
@@ -766,7 +766,7 @@ notified if the button order setting changes.</para>
                                                          ...);</programlisting>
 <para>
 Sets an alternative button order. If the 
-<link linkend="GtkSettings--gtk-alternative-button-order"><type>:gtk-alternative-button-order</type></link> setting is set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, 
+<link linkend="GtkSettings--gtk-alternative-button-order"><type>"gtk-alternative-button-order"</type></link> setting is set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, 
 the dialog buttons are reordered according to the order of the 
 response ids passed to this function.
 </para>
@@ -824,7 +824,7 @@ gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
                                                          <link linkend="gint">gint</link> *new_order);</programlisting>
 <para>
 Sets an alternative button order. If the 
-<link linkend="GtkSettings--gtk-alternative-button-order"><type>:gtk-alternative-button-order</type></link> setting is set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, 
+<link linkend="GtkSettings--gtk-alternative-button-order"><type>"gtk-alternative-button-order"</type></link> setting is set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, 
 the dialog buttons are reordered according to the order of the 
 response ids in <parameter>new_order</parameter>.
 </para>
@@ -851,26 +851,26 @@ This function is for use by language bindings.</para>
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkDialog--has-separator"/>The :<literal>has-separator</literal> property</title>
-<indexterm><primary>GtkDialog:has-separator</primary></indexterm><programlisting>  has-separator            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2><title><anchor id="GtkDialog--has-separator"/>The <literal>&quot;has-separator&quot;</literal> property</title>
+<indexterm><primary>GtkDialog:has-separator</primary></indexterm><programlisting>  &quot;has-separator&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>The dialog has a separator bar above its buttons.</para><para>Default value: TRUE</para>
 </refsect2>
 
 </refsect1>
 <refsect1 role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
-<refsect2><title><anchor id="GtkDialog--action-area-border"/>The :<literal>action-area-border</literal> style property</title>
-<indexterm><primary>GtkDialog:action-area-border</primary></indexterm><programlisting>  action-area-border       <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkDialog--action-area-border"/>The <literal>&quot;action-area-border&quot;</literal> style property</title>
+<indexterm><primary>GtkDialog:action-area-border</primary></indexterm><programlisting>  &quot;action-area-border&quot;       <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Width of border around the button area at the bottom of the dialog.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 5</para>
 </refsect2>
-<refsect2><title><anchor id="GtkDialog--button-spacing"/>The :<literal>button-spacing</literal> style property</title>
-<indexterm><primary>GtkDialog:button-spacing</primary></indexterm><programlisting>  button-spacing           <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkDialog--button-spacing"/>The <literal>&quot;button-spacing&quot;</literal> style property</title>
+<indexterm><primary>GtkDialog:button-spacing</primary></indexterm><programlisting>  &quot;button-spacing&quot;           <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Spacing between buttons.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 6</para>
 </refsect2>
-<refsect2><title><anchor id="GtkDialog--content-area-border"/>The :<literal>content-area-border</literal> style property</title>
-<indexterm><primary>GtkDialog:content-area-border</primary></indexterm><programlisting>  content-area-border      <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2><title><anchor id="GtkDialog--content-area-border"/>The <literal>&quot;content-area-border&quot;</literal> style property</title>
+<indexterm><primary>GtkDialog:content-area-border</primary></indexterm><programlisting>  &quot;content-area-border&quot;      <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Width of border around the main dialog area.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 2</para>
 </refsect2>
@@ -879,7 +879,7 @@ This function is for use by language bindings.</para>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkDialog-close"/>The <literal>::close</literal> signal</title>
+<refsect2><title><anchor id="GtkDialog-close"/>The <literal>&quot;close&quot;</literal> signal</title>
 <indexterm><primary>GtkDialog::close</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkDialog">GtkDialog</link> *dialog,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
 <para>
@@ -891,7 +891,7 @@ This function is for use by language bindings.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkDialog-response"/>The <literal>::response</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkDialog-response"/>The <literal>&quot;response&quot;</literal> signal</title>
 <indexterm><primary>GtkDialog::response</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkDialog">GtkDialog</link> *dialog,
                                                         <link linkend="gint">gint</link>       arg1,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -936,4 +936,6 @@ response from the user.</para></listitem>
 </para>
 </refsect1>
 
+
+<refsect1><refsect2 /><refsect2 /></refsect1>
 </refentry>

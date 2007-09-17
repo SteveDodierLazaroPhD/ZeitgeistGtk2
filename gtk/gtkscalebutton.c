@@ -432,7 +432,7 @@ gtk_scale_button_get_property (GObject     *object,
   switch (prop_id)
     {
     case PROP_VALUE:
-      g_value_set_float (value, gtk_scale_button_get_value (button));
+      g_value_set_double (value, gtk_scale_button_get_value (button));
       break;
     case PROP_SIZE:
       g_value_set_enum (value, priv->size);
@@ -578,7 +578,7 @@ gtk_scale_button_set_value (GtkScaleButton *button,
  * Sets the icons to be used by the scale button. 
  * For details, see the #GtkScaleButton:icons property.
  *
- * Since 2.12
+ * Since: 2.12
  */
 void
 gtk_scale_button_set_icons (GtkScaleButton  *button,

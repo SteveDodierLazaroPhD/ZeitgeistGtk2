@@ -1128,6 +1128,22 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
 				  GTK_MOVEMENT_PAGES, 1);
 
 
+  gtk_binding_entry_add_signal (binding_set, GDK_Right, 0, "move_cursor", 2,
+				G_TYPE_ENUM, GTK_MOVEMENT_VISUAL_POSITIONS,
+				G_TYPE_INT, 1);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_Left, 0, "move_cursor", 2,
+				G_TYPE_ENUM, GTK_MOVEMENT_VISUAL_POSITIONS,
+				G_TYPE_INT, -1);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Right, 0, "move_cursor", 2,
+				G_TYPE_ENUM, GTK_MOVEMENT_VISUAL_POSITIONS,
+				G_TYPE_INT, 1);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Left, 0, "move_cursor", 2,
+				G_TYPE_ENUM, GTK_MOVEMENT_VISUAL_POSITIONS,
+				G_TYPE_INT, -1);
+
   gtk_binding_entry_add_signal (binding_set, GDK_Right, GDK_CONTROL_MASK,
                                 "move_cursor", 2,
 				G_TYPE_ENUM, GTK_MOVEMENT_VISUAL_POSITIONS,
@@ -1173,17 +1189,6 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
 				G_TYPE_BOOLEAN, TRUE,
 				G_TYPE_BOOLEAN, TRUE,
 				G_TYPE_BOOLEAN, FALSE);
-
-  gtk_binding_entry_add_signal (binding_set, GDK_Right, 0, "expand_collapse_cursor_row", 3,
-				G_TYPE_BOOLEAN, TRUE,
-				G_TYPE_BOOLEAN, TRUE,
-				G_TYPE_BOOLEAN, FALSE);
-
-  gtk_binding_entry_add_signal (binding_set, GDK_KP_Right, 0, "expand_collapse_cursor_row", 3,
-				G_TYPE_BOOLEAN, TRUE,
-				G_TYPE_BOOLEAN, TRUE,
-				G_TYPE_BOOLEAN, FALSE);
-
 
   gtk_binding_entry_add_signal (binding_set, GDK_asterisk, 0,
                                 "expand_collapse_cursor_row", 3,
@@ -1251,19 +1256,11 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
 				G_TYPE_BOOLEAN, TRUE,
 				G_TYPE_BOOLEAN, FALSE,
 				G_TYPE_BOOLEAN, FALSE);
-  gtk_binding_entry_add_signal (binding_set, GDK_Left, 0, "expand_collapse_cursor_row", 3,
-				G_TYPE_BOOLEAN, TRUE,
-				G_TYPE_BOOLEAN, FALSE,
-				G_TYPE_BOOLEAN, FALSE);
   gtk_binding_entry_add_signal (binding_set, GDK_minus, GDK_SHIFT_MASK, "expand_collapse_cursor_row", 3,
 				G_TYPE_BOOLEAN, TRUE,
 				G_TYPE_BOOLEAN, FALSE,
 				G_TYPE_BOOLEAN, TRUE);
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Subtract, 0, "expand_collapse_cursor_row", 3,
-				G_TYPE_BOOLEAN, TRUE,
-				G_TYPE_BOOLEAN, FALSE,
-				G_TYPE_BOOLEAN, FALSE);
-  gtk_binding_entry_add_signal (binding_set, GDK_KP_Left, 0, "expand_collapse_cursor_row", 3,
 				G_TYPE_BOOLEAN, TRUE,
 				G_TYPE_BOOLEAN, FALSE,
 				G_TYPE_BOOLEAN, FALSE);
@@ -1510,7 +1507,7 @@ gtk_tree_view_get_property (GObject    *object,
       g_value_set_boolean (value, tree_view->priv->tree_lines_enabled);
       break;
     case PROP_TOOLTIP_COLUMN:
-      g_value_set_boolean (value, tree_view->priv->tooltip_column);
+      g_value_set_int (value, tree_view->priv->tooltip_column);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -2433,6 +2430,30 @@ grab_focus_and_unset_draw_keyfocus (GtkTreeView *tree_view)
   GTK_TREE_VIEW_UNSET_FLAG (tree_view, GTK_TREE_VIEW_DRAW_KEYFOCUS);
 }
 
+static inline gboolean
+row_is_separator (GtkTreeView *tree_view,
+		  GtkTreeIter *iter,
+		  GtkTreePath *path)
+{
+  gboolean is_separator = FALSE;
+
+  if (tree_view->priv->row_separator_func)
+    {
+      GtkTreeIter tmpiter;
+
+      if (iter)
+	tmpiter = *iter;
+      else
+	gtk_tree_model_get_iter (tree_view->priv->model, &tmpiter, path);
+
+      is_separator = (* tree_view->priv->row_separator_func) (tree_view->priv->model,
+							      &tmpiter,
+							      tree_view->priv->row_separator_data);
+    }
+
+  return is_separator;
+}
+
 static gboolean
 gtk_tree_view_button_press (GtkWidget      *widget,
 			    GdkEventButton *event)
@@ -2445,6 +2466,7 @@ gtk_tree_view_button_press (GtkWidget      *widget,
   GdkRectangle cell_area;
   gint vertical_separator;
   gint horizontal_separator;
+  gboolean path_is_selectable;
   gboolean rtl;
 
   g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
@@ -2524,6 +2546,15 @@ gtk_tree_view_button_press (GtkWidget      *widget,
 
       /* Get the path and the node */
       path = _gtk_tree_view_find_path (tree_view, tree, node);
+      path_is_selectable = !row_is_separator (tree_view, NULL, path);
+
+      if (!path_is_selectable)
+	{
+	  gtk_tree_path_free (path);
+	  grab_focus_and_unset_draw_keyfocus (tree_view);
+	  return TRUE;
+	}
+
       depth = gtk_tree_path_get_depth (path);
       background_area.y = y_offset + event->y;
       background_area.height = ROW_HEIGHT (tree_view, GTK_RBNODE_GET_HEIGHT (node));
@@ -3696,6 +3727,22 @@ gtk_tree_view_update_rubber_band_selection_range (GtkTreeView *tree_view,
 
   do
     {
+      /* Small optimization by assuming insensitive nodes are never
+       * selected.
+       */
+      if (!GTK_RBNODE_FLAG_SET (start_node, GTK_RBNODE_IS_SELECTED))
+        {
+	  GtkTreePath *path;
+	  gboolean selectable;
+
+	  path = _gtk_tree_view_find_path (tree_view, start_tree, start_node);
+	  selectable = _gtk_tree_selection_row_is_selectable (tree_view->priv->selection, start_node, path);
+	  gtk_tree_path_free (path);
+
+	  if (!selectable)
+	    goto node_not_selectable;
+	}
+
       if (select)
         {
 	  if (tree_view->priv->rubber_band_shift)
@@ -3730,6 +3777,7 @@ gtk_tree_view_update_rubber_band_selection_range (GtkTreeView *tree_view,
 
       _gtk_tree_view_queue_draw_node (tree_view, start_tree, start_node, NULL);
 
+node_not_selectable:
       if (start_node == end_node)
 	break;
 
@@ -4274,12 +4322,7 @@ gtk_tree_view_bin_expose (GtkWidget      *widget,
       gboolean is_first = FALSE;
       gboolean is_last = FALSE;
       
-      if (tree_view->priv->row_separator_func)
-	{
-	  is_separator = (* tree_view->priv->row_separator_func) (tree_view->priv->model,
-								  &iter,
-								  tree_view->priv->row_separator_data);
-	}
+      is_separator = row_is_separator (tree_view, &iter, NULL);
 
       max_height = ROW_HEIGHT (tree_view, BACKGROUND_HEIGHT (node));
 
@@ -5297,7 +5340,8 @@ gtk_tree_view_key_press (GtkWidget   *widget,
 
   /* We pass the event to the search_entry.  If its text changes, then we start
    * the typeahead find capabilities. */
-  if (tree_view->priv->enable_search
+  if (GTK_WIDGET_HAS_FOCUS (tree_view)
+      && tree_view->priv->enable_search
       && !tree_view->priv->search_custom_entry_set)
     {
       GdkEvent *new_event;
@@ -5519,12 +5563,7 @@ validate_row (GtkTreeView *tree_view,
       ! GTK_RBNODE_FLAG_SET (node, GTK_RBNODE_COLUMN_INVALID))
     return FALSE;
 
-  if (tree_view->priv->row_separator_func)
-    {
-      is_separator = (* tree_view->priv->row_separator_func) (tree_view->priv->model,
-							      iter,
-							      tree_view->priv->row_separator_data);
-    }
+  is_separator = row_is_separator (tree_view, iter, NULL);
 
   gtk_widget_style_get (GTK_WIDGET (tree_view),
 			"focus-padding", &focus_pad,
@@ -7746,6 +7785,52 @@ gtk_tree_view_header_focus (GtkTreeView      *tree_view,
   return (focus_child != NULL);
 }
 
+/* This function returns in 'path' the first focusable path, if the given path
+ * is already focusable, it's the returned one.
+ */
+static gboolean
+search_first_focusable_path (GtkTreeView  *tree_view,
+			     GtkTreePath **path,
+			     gboolean      search_forward,
+			     GtkRBTree   **new_tree,
+			     GtkRBNode   **new_node)
+{
+  GtkRBTree *tree = NULL;
+  GtkRBNode *node = NULL;
+
+  if (!path || !*path)
+    return FALSE;
+
+  _gtk_tree_view_find_node (tree_view, *path, &tree, &node);
+
+  if (!tree || !node)
+    return FALSE;
+
+  while (node && row_is_separator (tree_view, NULL, *path))
+    {
+      if (search_forward)
+	_gtk_rbtree_next_full (tree, node, &tree, &node);
+      else
+	_gtk_rbtree_prev_full (tree, node, &tree, &node);
+
+      if (*path)
+	gtk_tree_path_free (*path);
+
+      if (node)
+	*path = _gtk_tree_view_find_path (tree_view, tree, node);
+      else
+	*path = NULL;
+    }
+
+  if (new_tree)
+    *new_tree = tree;
+
+  if (new_node)
+    *new_node = node;
+
+  return (*path != NULL);
+}
+
 static gint
 gtk_tree_view_focus (GtkWidget        *widget,
 		     GtkDirectionType  direction)
@@ -9496,21 +9581,22 @@ gtk_tree_view_focus_to_cursor (GtkTreeView *tree_view)
       (! GTK_WIDGET_REALIZED (tree_view)))
     return;
 
-  GTK_TREE_VIEW_SET_FLAG (tree_view, GTK_TREE_VIEW_DRAW_KEYFOCUS);
-
   cursor_path = NULL;
   if (tree_view->priv->cursor)
     cursor_path = gtk_tree_row_reference_get_path (tree_view->priv->cursor);
 
   if (cursor_path == NULL)
     {
-      /* Consult the selection before defaulting to the first element */
+      /* Consult the selection before defaulting to the
+       * first focusable element
+       */
+      GList *selected_rows;
+      GtkTreeModel *model;
       GtkTreeSelection *selection;
-      GtkTreeModel     *model;
-      GList            *selected_rows;
 
       selection = gtk_tree_view_get_selection (tree_view);
       selected_rows = gtk_tree_selection_get_selected_rows (selection, &model);
+
       if (selected_rows)
 	{
           cursor_path = gtk_tree_path_copy((const GtkTreePath *)(selected_rows->data));
@@ -9518,28 +9604,41 @@ gtk_tree_view_focus_to_cursor (GtkTreeView *tree_view)
 	  g_list_free (selected_rows);
         }
       else
-	cursor_path = gtk_tree_path_new_first ();
+	{
+	  cursor_path = gtk_tree_path_new_first ();
+	  search_first_focusable_path (tree_view, &cursor_path,
+				       TRUE, NULL, NULL);
+	}
 
       gtk_tree_row_reference_free (tree_view->priv->cursor);
       tree_view->priv->cursor = NULL;
 
-      if (tree_view->priv->selection->type == GTK_SELECTION_MULTIPLE)
-	gtk_tree_view_real_set_cursor (tree_view, cursor_path, FALSE, FALSE);
-      else
-	gtk_tree_view_real_set_cursor (tree_view, cursor_path, TRUE, FALSE);
-    }
-  gtk_tree_view_queue_draw_path (tree_view, cursor_path, NULL);
-  gtk_tree_path_free (cursor_path);
-
-  if (tree_view->priv->focus_column == NULL)
-    {
-      GList *list;
-      for (list = tree_view->priv->columns; list; list = list->next)
+      if (cursor_path)
 	{
-	  if (GTK_TREE_VIEW_COLUMN (list->data)->visible)
+	  if (tree_view->priv->selection->type == GTK_SELECTION_MULTIPLE)
+	    gtk_tree_view_real_set_cursor (tree_view, cursor_path, FALSE, FALSE);
+	  else
+	    gtk_tree_view_real_set_cursor (tree_view, cursor_path, TRUE, FALSE);
+	}
+    }
+
+  if (cursor_path)
+    {
+      GTK_TREE_VIEW_SET_FLAG (tree_view, GTK_TREE_VIEW_DRAW_KEYFOCUS);
+
+      gtk_tree_view_queue_draw_path (tree_view, cursor_path, NULL);
+      gtk_tree_path_free (cursor_path);
+
+      if (tree_view->priv->focus_column == NULL)
+	{
+	  GList *list;
+	  for (list = tree_view->priv->columns; list; list = list->next)
 	    {
-	      tree_view->priv->focus_column = GTK_TREE_VIEW_COLUMN (list->data);
-	      break;
+	      if (GTK_TREE_VIEW_COLUMN (list->data)->visible)
+		{
+		  tree_view->priv->focus_column = GTK_TREE_VIEW_COLUMN (list->data);
+		  break;
+		}
 	    }
 	}
     }
@@ -9594,9 +9693,23 @@ gtk_tree_view_move_cursor_up_down (GtkTreeView *tree_view,
 			       &new_cursor_tree, &new_cursor_node);
     }
 
+  if (new_cursor_node)
+    {
+      cursor_path = _gtk_tree_view_find_path (tree_view,
+					      new_cursor_tree, new_cursor_node);
+
+      search_first_focusable_path (tree_view, &cursor_path,
+				   (count != -1),
+				   &new_cursor_tree,
+				   &new_cursor_node);
+
+      if (cursor_path)
+	gtk_tree_path_free (cursor_path);
+    }
+
   /*
    * If the list has only one item and multi-selection is set then select
-   * the row.
+   * the row (if not yet selected).
    */
   if (tree_view->priv->selection->type == GTK_SELECTION_MULTIPLE &&
       new_cursor_node == NULL)
@@ -9608,7 +9721,8 @@ gtk_tree_view_move_cursor_up_down (GtkTreeView *tree_view,
         _gtk_rbtree_prev_full (cursor_tree, cursor_node,
 			       &new_cursor_tree, &new_cursor_node);
 
-      if (new_cursor_node == NULL)
+      if (new_cursor_node == NULL
+	  && !GTK_RBNODE_FLAG_SET (cursor_node, GTK_RBNODE_IS_SELECTED))
         {
           new_cursor_node = cursor_node;
           new_cursor_tree = cursor_tree;
@@ -9664,6 +9778,8 @@ gtk_tree_view_move_cursor_page_up_down (GtkTreeView *tree_view,
   GtkRBNode *cursor_node = NULL;
   GtkTreePath *old_cursor_path = NULL;
   GtkTreePath *cursor_path = NULL;
+  GtkRBTree *start_cursor_tree = NULL;
+  GtkRBNode *start_cursor_node = NULL;
   gint y;
   gint window_y;
   gint vertical_separator;
@@ -9711,7 +9827,33 @@ gtk_tree_view_move_cursor_page_up_down (GtkTreeView *tree_view,
 
   y -= tree_view->priv->cursor_offset;
   cursor_path = _gtk_tree_view_find_path (tree_view, cursor_tree, cursor_node);
-  g_return_if_fail (cursor_path != NULL);
+
+  start_cursor_tree = cursor_tree;
+  start_cursor_node = cursor_node;
+
+  if (! search_first_focusable_path (tree_view, &cursor_path,
+				     (count != -1),
+				     &cursor_tree, &cursor_node))
+    {
+      /* It looks like we reached the end of the view without finding
+       * a focusable row.  We will step backwards to find the last
+       * focusable row.
+       */
+      cursor_tree = start_cursor_tree;
+      cursor_node = start_cursor_node;
+      cursor_path = _gtk_tree_view_find_path (tree_view, cursor_tree, cursor_node);
+
+      search_first_focusable_path (tree_view, &cursor_path,
+				   (count == -1),
+				   &cursor_tree, &cursor_node);
+    }
+
+  if (!cursor_path)
+    goto cleanup;
+
+  /* update y */
+  y = _gtk_rbtree_node_find_offset (cursor_tree, cursor_node);
+
   gtk_tree_view_real_set_cursor (tree_view, cursor_path, TRUE, FALSE);
 
   y -= window_y;
@@ -9721,6 +9863,7 @@ gtk_tree_view_move_cursor_page_up_down (GtkTreeView *tree_view,
   if (!gtk_tree_path_compare (old_cursor_path, cursor_path))
     gtk_widget_error_bell (GTK_WIDGET (tree_view));
 
+cleanup:
   gtk_tree_path_free (old_cursor_path);
   gtk_tree_path_free (cursor_path);
 }
@@ -9847,6 +9990,11 @@ gtk_tree_view_move_cursor_start_end (GtkTreeView *tree_view,
     {
       while (cursor_node && cursor_node->left != cursor_tree->nil)
 	cursor_node = cursor_node->left;
+
+      /* Now go forward to find the first focusable row. */
+      path = _gtk_tree_view_find_path (tree_view, cursor_tree, cursor_node);
+      search_first_focusable_path (tree_view, &path,
+				   TRUE, &cursor_tree, &cursor_node);
     }
   else
     {
@@ -9861,9 +10009,15 @@ gtk_tree_view_move_cursor_start_end (GtkTreeView *tree_view,
 	  cursor_node = cursor_tree->root;
 	}
       while (1);
+
+      /* Now go backwards to find last focusable row. */
+      path = _gtk_tree_view_find_path (tree_view, cursor_tree, cursor_node);
+      search_first_focusable_path (tree_view, &path,
+				   FALSE, &cursor_tree, &cursor_node);
     }
 
-  path = _gtk_tree_view_find_path (tree_view, cursor_tree, cursor_node);
+  if (!path)
+    goto cleanup;
 
   if (gtk_tree_path_compare (old_path, path))
     {
@@ -9874,6 +10028,7 @@ gtk_tree_view_move_cursor_start_end (GtkTreeView *tree_view,
       gtk_widget_error_bell (GTK_WIDGET (tree_view));
     }
 
+cleanup:
   gtk_tree_path_free (old_path);
   gtk_tree_path_free (path);
 }
@@ -12351,11 +12506,18 @@ gtk_tree_view_real_set_cursor (GtkTreeView     *tree_view,
     }
 
   gtk_tree_row_reference_free (tree_view->priv->cursor);
+  tree_view->priv->cursor = NULL;
 
-  tree_view->priv->cursor = gtk_tree_row_reference_new_proxy (G_OBJECT (tree_view),
-							      tree_view->priv->model,
-							      path);
-  _gtk_tree_view_find_node (tree_view, path, &tree, &node);
+  /* One cannot set the cursor on a separator. */
+  if (!row_is_separator (tree_view, NULL, path))
+    {
+      tree_view->priv->cursor =
+	gtk_tree_row_reference_new_proxy (G_OBJECT (tree_view),
+					  tree_view->priv->model,
+					  path);
+      _gtk_tree_view_find_node (tree_view, path, &tree, &node);
+    }
+
   if (tree != NULL)
     {
       GtkRBTree *new_tree = NULL;
@@ -13549,12 +13711,7 @@ gtk_tree_view_create_row_drag_icon (GtkTreeView  *tree_view,
                                 path))
     return NULL;
   
-  if (tree_view->priv->row_separator_func)
-    {
-      is_separator = (* tree_view->priv->row_separator_func) (tree_view->priv->model,
-							      &iter,
-							      tree_view->priv->row_separator_data);
-    }
+  is_separator = row_is_separator (tree_view, &iter, NULL);
 
   cell_offset = x;
 
@@ -15219,12 +15376,17 @@ gtk_tree_view_set_tooltip_row (GtkTreeView *tree_view,
  * @tooltip: a #GtkTooltip
  * @path: a #GtkTreePath or %NULL
  * @column: a #GtkTreeViewColumn or %NULL
- * @cell: a #GtkCellRendererText or %NULL
+ * @cell: a #GtkCellRenderer or %NULL
  *
  * Sets the tip area of @tooltip to the area @path, @column and @cell have
  * in common.  For example if @path is %NULL and @column is set, the tip
  * area will be set to the full area covered by @column.  See also
  * gtk_tooltip_set_tip_area().
+ *
+ * Note that if @path is not specified and @cell is set and part of a column
+ * containing the expander, the tooltip might not show and hide at the correct
+ * position.  In such cases @path must be set to the current node under the
+ * mouse cursor for this function to operate correctly.
  *
  * Since: 2.12
  */
@@ -15252,10 +15414,15 @@ gtk_tree_view_set_tooltip_cell (GtkTreeView       *tree_view,
       GdkRectangle tmp;
       gint start, width;
 
-      gtk_tree_view_get_cell_area (tree_view, NULL, column, &tmp);
+      /* We always pass in path here, whether it is NULL or not.
+       * For cells in expander columns path must be specified so that
+       * we can correctly account for the indentation.  This also means
+       * that the tooltip is constrained vertically by the "Determine y
+       * values" code below; this is not a real problem since cells actually
+       * don't stretch vertically in constrast to columns.
+       */
+      gtk_tree_view_get_cell_area (tree_view, path, column, &tmp);
       gtk_tree_view_column_cell_get_position (column, cell, &start, &width);
-
-      /* FIXME: a need a path here to correctly correct for indent */
 
       gtk_tree_view_convert_bin_window_to_widget_coords (tree_view,
 							 tmp.x + start, 0,
@@ -15463,7 +15630,7 @@ gtk_tree_view_set_tooltip_column (GtkTreeView *tree_view,
  * Return value: the index of the tooltip column that is currently being
  * used, or -1 if this is disabled.
  *
- * Since 2.12
+ * Since: 2.12
  */
 gint
 gtk_tree_view_get_tooltip_column (GtkTreeView *tree_view)

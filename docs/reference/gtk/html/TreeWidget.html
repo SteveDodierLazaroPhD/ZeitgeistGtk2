@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Tree and List Widget Overview</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="next" href="GtkTreeModel.html" title="GtkTreeModel">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -77,10 +77,10 @@
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1" lang="en">
-<a name="id3507859"></a><h2>Overview</h2>
+<a name="id3259808"></a><h2>Overview</h2>
 <p>
-      To create a tree or list in GTK+, use the <a href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> interface in
-      conjunction with the <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget.  This widget is
+      To create a tree or list in GTK+, use the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> interface in
+      conjunction with the <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget.  This widget is
       designed around a <em class="firstterm">Model/View/Controller</em>
       design and consists of four major parts:
       </p>
@@ -108,10 +108,10 @@
     </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3508555"></a><h2>Creating a model</h2>
+<a name="id3260504"></a><h2>Creating a model</h2>
 <p>
-      GTK+ provides two simple models that can be used: the <a href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>
-      and the <a href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>.  GtkListStore is used to model list widgets, 
+      GTK+ provides two simple models that can be used: the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>
+      and the <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>.  GtkListStore is used to model list widgets, 
       while the GtkTreeStore models trees.  It is possible to develop a new 
       type of model, but the existing models should be satisfactory for all 
       but the most specialized of situations.  Creating the model is quite 
@@ -143,13 +143,13 @@ GtkTreeStore *store = gtk_tree_store_new (N_COLUMNS,       /* Total number of co
                                           G_TYPE_BOOLEAN); /* Is checked out?         */
 </pre></div>
 <p>
-      Adding data to the model is done using <a href="GtkTreeStore.html#gtk-tree-store-set"><code class="function">gtk_tree_store_set()</code></a> or 
-      <a href="GtkListStore.html#gtk-list-store-set"><code class="function">gtk_list_store_set()</code></a>, depending upon which sort of model was
-      created.  To do this, a <a href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> must be acquired.  The iterator 
+      Adding data to the model is done using <a class="link" href="GtkTreeStore.html#gtk-tree-store-set"><code class="function">gtk_tree_store_set()</code></a> or 
+      <a class="link" href="GtkListStore.html#gtk-list-store-set"><code class="function">gtk_list_store_set()</code></a>, depending upon which sort of model was
+      created.  To do this, a <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> must be acquired.  The iterator 
       points to the location where data will be added.
     </p>
 <p>
-      Once an iterator has been acquired, <a href="GtkTreeStore.html#gtk-tree-store-set"><code class="function">gtk_tree_store_set()</code></a> is used to
+      Once an iterator has been acquired, <a class="link" href="GtkTreeStore.html#gtk-tree-store-set"><code class="function">gtk_tree_store_set()</code></a> is used to
       apply data to the part of the model that the iterator points to.  
       Consider the following example:
     </p>
@@ -171,7 +171,7 @@ gtk_tree_store_set (store, &amp;iter,
     columns in a given row.
   </p>
 <p>
-    The third argument to <a href="GtkTreeStore.html#gtk-tree-store-append"><code class="function">gtk_tree_store_append()</code></a> is the parent iterator.  It
+    The third argument to <a class="link" href="GtkTreeStore.html#gtk-tree-store-append"><code class="function">gtk_tree_store_append()</code></a> is the parent iterator.  It
     is used to add a row to a GtkTreeStore as a child of an existing row.  This
     means that the new row will only be visible when its parent is visible and
     in its expanded state.  Consider the following example:
@@ -204,12 +204,12 @@ gtk_tree_store_set (store, &amp;iter2,
 </pre></div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3508719"></a><h2>Creating the view component</h2>
+<a name="id3260668"></a><h2>Creating the view component</h2>
 <p>
       While there are several different models to choose from, there is
       only one view widget to deal with.  It works with either the list
-      or the tree store.  Setting up a <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> is not a difficult
-      matter.  It needs a <a href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> to know where to retrieve its data 
+      or the tree store.  Setting up a <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> is not a difficult
+      matter.  It needs a <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> to know where to retrieve its data 
       from.
     </p>
 <div class="informalexample"><pre class="programlisting">
@@ -218,20 +218,20 @@ GtkWidget *tree;
 tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
 </pre></div>
 <div class="refsect2" lang="en">
-<a name="id3508775"></a><h3>Columns and cell renderers</h3>
+<a name="id3260724"></a><h3>Columns and cell renderers</h3>
 <p>
-	Once the <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget has a model, it will need to know how 
+	Once the <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget has a model, it will need to know how 
         to display the model.  It does this with columns and cell renderers.
       </p>
 <p>
         Cell renderers are used to draw the data in the tree model in a
         way.  There are a number of cell renderers that come with GTK+ 2.x,
-        including the <a href="GtkCellRendererText.html" title="GtkCellRendererText"><span class="type">GtkCellRendererText</span></a>, <a href="GtkCellRendererPixbuf.html" title="GtkCellRendererPixbuf"><span class="type">GtkCellRendererPixbuf</span></a> and
-        the <a href="GtkCellRendererToggle.html" title="GtkCellRendererToggle"><span class="type">GtkCellRendererToggle</span></a>.
+        including the <a class="link" href="GtkCellRendererText.html" title="GtkCellRendererText"><span class="type">GtkCellRendererText</span></a>, <a class="link" href="GtkCellRendererPixbuf.html" title="GtkCellRendererPixbuf"><span class="type">GtkCellRendererPixbuf</span></a> and
+        the <a class="link" href="GtkCellRendererToggle.html" title="GtkCellRendererToggle"><span class="type">GtkCellRendererToggle</span></a>.
         It is relatively easy to write a custom renderer.
       </p>
 <p>
-        A <a href="GtkTreeViewColumn.html" title="GtkTreeViewColumn"><span class="type">GtkTreeViewColumn</span></a> is the object that GtkTreeView uses to organize 
+        A <a class="link" href="GtkTreeViewColumn.html" title="GtkTreeViewColumn"><span class="type">GtkTreeViewColumn</span></a> is the object that GtkTreeView uses to organize 
         the vertical columns in the tree view.  It needs to know the name of 
         the column to label for the user, what type of cell renderer to use, 
         and which piece of data to retrieve from the model for a given row.
@@ -255,12 +255,12 @@ gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3508868"></a><h3>Selection handling</h3>
+<a name="id3260817"></a><h3>Selection handling</h3>
 <p>
         Most applications will need to not only deal with displaying data, but 
         also receiving input events from users.  To do this, simply get a 
         reference to a selection object and connect to the 
-        <a href="GtkTreeSelection.html#GtkTreeSelection-changed"><span class="type">::changed</span></a> signal.
+        <a class="link" href="GtkTreeSelection.html#GtkTreeSelection-changed"><span class="type">"changed"</span></a> signal.
       </p>
 <div class="informalexample"><pre class="programlisting">
 /* Prototype for selection handler callback */
@@ -299,13 +299,13 @@ tree_selection_changed_cb (GtkTreeSelection *selection, gpointer data)
 </div>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3508919"></a><h2>Simple Example</h2>
+<a name="id3260868"></a><h2>Simple Example</h2>
 <p>
-      Here is a simple example of using a <a href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget in context 
+      Here is a simple example of using a <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget in context 
       of the other widgets.  It simply creates a simple model and view, 
       and puts them together.  Note that the model is never populated 
       with data &#8212; that is left as an exercise for the reader.  
-      More information can be found on this in the <a href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> section.
+      More information can be found on this in the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> section.
       </p>
 <div class="informalexample"><pre class="programlisting">
 enum

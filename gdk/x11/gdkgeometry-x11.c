@@ -1052,7 +1052,8 @@ gdk_window_queue (GdkWindow          *window,
 	  GdkWindowQueueItem *item = tmp_list->data;
 	  GList *next = tmp_list->next;
 	  
-	  if (serial > item->serial)
+	  /* an overflow-safe (item->serial < serial) */
+	  if (item->serial - serial > (gulong) G_MAXLONG)
 	    {
 	      queue_delete_link (display_x11->translate_queue, tmp_list);
 	      queue_item_free (item);
@@ -1142,9 +1143,10 @@ _gdk_window_process_expose (GdkWindow    *window,
       while (tmp_list)
 	{
 	  GdkWindowQueueItem *item = tmp_list->data;
-	  tmp_list = tmp_list->next;
+          GList *next = tmp_list->next;
 	  
-	  if (serial < item->serial)
+	  /* an overflow-safe (serial < item->serial) */
+	  if (serial - item->serial > (gulong) G_MAXLONG)
 	    {
 	      if (item->window == window)
 		{
@@ -1172,10 +1174,10 @@ _gdk_window_process_expose (GdkWindow    *window,
 	    }
 	  else
 	    {
-	      queue_delete_link (display_x11->translate_queue, 
-				 display_x11->translate_queue->head);
+	      queue_delete_link (display_x11->translate_queue, tmp_list);
 	      queue_item_free (item);
 	    }
+	  tmp_list = next;
 	}
     }
 

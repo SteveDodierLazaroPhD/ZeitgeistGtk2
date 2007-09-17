@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Migrating from libglade to GtkBuilder</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
 <link rel="prev" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="next" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -71,9 +71,18 @@
 <div class="titlepage"><div><div><h2 class="title">
 <a name="gtk-migrating-GtkBuilder"></a>Migrating from libglade to GtkBuilder</h2></div></div></div>
 <p>
-    Since version 2.12, GTK+ provides <a href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> to construct
+    Since version 2.12, GTK+ provides <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> to construct
     user interfaces from XML descriptions, similar to the functionality
     provided by <span class="type">GladeXML</span> in the libglade library.
+  </p>
+<p>
+    A good way to start a migration from libglade to GtkBuilder is
+    to run the <a class="link" href="gtk-builder-convert.html" title="gtk-builder-convert">gtk-builder-convert</a>
+    utility on your glade file, and inspect the resulting output.
+    If your code uses the <em class="parameter"><code>root</code></em> parameter of <code class="function">glade_xml_new()</code>, you 
+    may want to split your glade file into multiple GtkBuilder files
+    by using the <code class="option">--root</code> option of 
+    <span class="application">gtk-builder-convert</span>.
   </p>
 <p>
     While GtkBuilder strives to be a complete replacement for
@@ -86,17 +95,16 @@
         the equivalent of the <em class="parameter"><code>root</code></em> parameter of <code class="function">glade_xml_new()</code>.
         Due to the way GtkBuilder parses its input, this is difficult 
         to implement, see 
-        <a href="http://bugzilla.gnome.org/show_bug.cgi?id=447998" target="_top">bug 
+        <a class="ulink" href="http://bugzilla.gnome.org/show_bug.cgi?id=447998" target="_top">bug 
         447998</a>. As a workaround, you can split your glade file 
-        into multiple GtkBuilder input files. The 
-        <span class="application">gtk-builder-convert</span> conversion script 
-        has a <code class="option">--root</code> option that can help with this.
+        into multiple GtkBuilder input files using the <code class="option">--root</code>
+        that was mentioned above.
       </p></li>
 <li><p>
         GtkBuilder does not yet implement support for accessibility 
         properties. It parses the same &lt;accessibility&gt; elements 
         as libglade, but ignores them. See 
-        <a href="http://bugzilla.gnome.org/show_bug.cgi?id=454653" target="_top">bug 
+        <a class="ulink" href="http://bugzilla.gnome.org/show_bug.cgi?id=454653" target="_top">bug 
         454983</a> for the current status of accessibility support 
         in GtkBuilder.
       </p></li>
@@ -104,7 +112,7 @@
         GtkBuilder supports context information in translatable
         properties in a slightly different way than libglade. 
         Intltool does not yet support this; see 
-        <a href="http://bugzilla.gnome.org/show_bug.cgi?id=454894" target="_top">bug 
+        <a class="ulink" href="http://bugzilla.gnome.org/show_bug.cgi?id=454894" target="_top">bug 
         454894</a> for the current status of intltool support for 
         GtkBuilder files. Thankfully, context in translations is a 
         rarely used feature, and if you are not using it, intltools 

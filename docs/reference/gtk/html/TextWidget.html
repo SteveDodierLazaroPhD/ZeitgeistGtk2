@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Text Widget Overview</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="TextWidgetObjects.html" title="Multiline Text Editor">
 <link rel="prev" href="TextWidgetObjects.html" title="Multiline Text Editor">
 <link rel="next" href="gtk-GtkTextIter.html" title="GtkTextIter">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -77,11 +77,11 @@
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1" lang="en">
-<a name="id3399068"></a><h2>Conceptual Overview</h2>
+<a name="id3150756"></a><h2>Conceptual Overview</h2>
 <p>
 GTK+ has an extremely powerful framework for multiline text editing.  The
-primary objects involved in the process are <a href="GtkTextBuffer.html" title="GtkTextBuffer"><span class="type">GtkTextBuffer</span></a>, which represents the 
-text being edited, and <a href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>, a widget which can display a <a href="GtkTextBuffer.html" title="GtkTextBuffer"><span class="type">GtkTextBuffer</span></a>. 
+primary objects involved in the process are <a class="link" href="GtkTextBuffer.html" title="GtkTextBuffer"><span class="type">GtkTextBuffer</span></a>, which represents the 
+text being edited, and <a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>, a widget which can display a <a class="link" href="GtkTextBuffer.html" title="GtkTextBuffer"><span class="type">GtkTextBuffer</span></a>. 
 Each buffer can be displayed by any number of views.
 </p>
 <p>
@@ -100,11 +100,11 @@ be called "bold" and make the text inside the tag bold. However, the tag
 concept is more general than that; tags don't have to affect appearance. They 
 can instead affect the behavior of mouse and key presses, "lock" a range of 
 text so the user can't edit it, or countless other things. A tag is 
-represented by a <a href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a> object. One <a href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a> can be applied to any 
+represented by a <a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a> object. One <a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a> can be applied to any 
 number of text ranges in any number of buffers.
 </p>
 <p>
-Each tag is stored in a <a href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a>. A tag table defines a set of
+Each tag is stored in a <a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a>. A tag table defines a set of
 tags that can be used together. Each buffer has one tag table associated with
 it; only tags from that tag table can be used with the buffer. A single tag
 table can be shared between multiple buffers, however.
@@ -116,8 +116,8 @@ is convenient if you're creating tags on-the-fly).
 </p>
 <p>
 Most text manipulation is accomplished with <em class="firstterm">iterators</em>,
-represented by a <a href="gtk-GtkTextIter.html#GtkTextIter"><span class="type">GtkTextIter</span></a>. An iterator represents a position between two 
-characters in the text buffer. <a href="gtk-GtkTextIter.html#GtkTextIter"><span class="type">GtkTextIter</span></a> is a struct designed to be 
+represented by a <a class="link" href="gtk-GtkTextIter.html#GtkTextIter"><span class="type">GtkTextIter</span></a>. An iterator represents a position between two 
+characters in the text buffer. <a class="link" href="gtk-GtkTextIter.html#GtkTextIter"><span class="type">GtkTextIter</span></a> is a struct designed to be 
 allocated on the stack; it's guaranteed to be copiable by value and never 
 contain any heap-allocated data. Iterators are not valid indefinitely; 
 whenever the buffer is modified in a way that affects the number of characters 
@@ -128,7 +128,7 @@ different number).
 </p>
 <p>
 Because of this, iterators can't be used to preserve positions across buffer
-modifications. To preserve a position, the <a href="GtkTextMark.html" title="GtkTextMark"><span class="type">GtkTextMark</span></a> object is ideal. You
+modifications. To preserve a position, the <a class="link" href="GtkTextMark.html" title="GtkTextMark"><span class="type">GtkTextMark</span></a> object is ideal. You
 can think of a mark as an invisible cursor or insertion point; it floats in 
 the buffer, saving a position. If the text surrounding the mark is deleted, 
 the mark remains in the position the text once occupied; if text is inserted 
@@ -139,13 +139,13 @@ stays to the right of inserted text.
 </p>
 <p>
 Like tags, marks can be either named or anonymous. There are two marks built-in
-to <a href="GtkTextBuffer.html" title="GtkTextBuffer"><span class="type">GtkTextBuffer</span></a>; these are named <code class="literal">"insert"</code> and 
+to <a class="link" href="GtkTextBuffer.html" title="GtkTextBuffer"><span class="type">GtkTextBuffer</span></a>; these are named <code class="literal">"insert"</code> and 
 <code class="literal">"selection_bound"</code> and refer to the insertion point and the 
 boundary of the selection which is not the insertion point, respectively. If 
 no text is selected, these two marks will be in the same position. You can 
 manipulate what is selected and where the cursor appears by moving these 
 marks around.
-<sup>[<a name="id3399872" href="#ftn.id3399872">2</a>]</sup>
+<sup>[<a name="id3151559" href="#ftn.id3151559" class="footnote">2</a>]</sup>
 </p>
 <p>
 Text buffers always contain at least one line, but may be empty (that
@@ -159,9 +159,9 @@ considered a line separator.
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3399908"></a><h2>Simple Example</h2>
+<a name="id3151596"></a><h2>Simple Example</h2>
 <p>
-The simplest usage of <a href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>  might look like this:
+The simplest usage of <a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>  might look like this:
 </p>
 <div class="informalexample"><pre class="programlisting">
   GtkWidget *view;
@@ -180,22 +180,22 @@ The simplest usage of <a href="GtkTextView.html" title="GtkTextView"><span class
 </pre></div>
 <p>
 In many cases it's also convenient to first create the buffer with 
-<a href="GtkTextBuffer.html#gtk-text-buffer-new"><code class="function">gtk_text_buffer_new()</code></a>, then create a widget for that buffer with 
-<a href="GtkTextView.html#gtk-text-view-new-with-buffer"><code class="function">gtk_text_view_new_with_buffer()</code></a>. Or you can change the buffer the widget 
-displays after the widget is created with <a href="GtkTextView.html#gtk-text-view-set-buffer"><code class="function">gtk_text_view_set_buffer()</code></a>.
+<a class="link" href="GtkTextBuffer.html#gtk-text-buffer-new"><code class="function">gtk_text_buffer_new()</code></a>, then create a widget for that buffer with 
+<a class="link" href="GtkTextView.html#gtk-text-view-new-with-buffer"><code class="function">gtk_text_view_new_with_buffer()</code></a>. Or you can change the buffer the widget 
+displays after the widget is created with <a class="link" href="GtkTextView.html#gtk-text-view-set-buffer"><code class="function">gtk_text_view_set_buffer()</code></a>.
 </p>
 </div>
 <div class="refsect1" lang="en">
-<a name="id3399984"></a><h2>Example of Changing Text Attributes</h2>
+<a name="id3151671"></a><h2>Example of Changing Text Attributes</h2>
 <p>
 
-There are two ways to affect text attributes in <a href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>.
-You can change the default attributes for a given <a href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>, and you can 
+There are two ways to affect text attributes in <a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>.
+You can change the default attributes for a given <a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>, and you can 
 apply tags that change the attributes for a region of text.  For text features 
 that come from the theme &#8212; such as font and foreground color &#8212; use 
-standard <a href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> functions such as <a href="GtkWidget.html#gtk-widget-modify-font"><code class="function">gtk_widget_modify_font()</code></a> or 
-<a href="GtkWidget.html#gtk-widget-modify-text"><code class="function">gtk_widget_modify_text()</code></a>. For other attributes there are dedicated methods on 
-<a href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a> such as <a href="GtkTextView.html#gtk-text-view-set-tabs"><code class="function">gtk_text_view_set_tabs()</code></a>.
+standard <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> functions such as <a class="link" href="GtkWidget.html#gtk-widget-modify-font"><code class="function">gtk_widget_modify_font()</code></a> or 
+<a class="link" href="GtkWidget.html#gtk-widget-modify-text"><code class="function">gtk_widget_modify_text()</code></a>. For other attributes there are dedicated methods on 
+<a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a> such as <a class="link" href="GtkTextView.html#gtk-text-view-set-tabs"><code class="function">gtk_text_view_set_tabs()</code></a>.
 
 </p>
 <div class="informalexample"><pre class="programlisting">
@@ -236,14 +236,14 @@ standard <a href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget
 </p>
 <p>
 The <span class="application">gtk-demo</span> application that comes with
-GTK+ contains more example code for <a href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>.
+GTK+ contains more example code for <a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>.
 </p>
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id3399872" href="#id3399872">2</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3151559" href="#id3151559" class="para">2</a>] </sup>
 If you want to place the cursor in response to a user action, be sure to use
-<a href="GtkTextBuffer.html#gtk-text-buffer-place-cursor"><code class="function">gtk_text_buffer_place_cursor()</code></a>, which moves both at once without causing a 
+<a class="link" href="GtkTextBuffer.html#gtk-text-buffer-place-cursor"><code class="function">gtk_text_buffer_place_cursor()</code></a>, which moves both at once without causing a 
 temporary selection (moving one then the other temporarily selects the range in 
 between the old and new positions).
 </p></div>

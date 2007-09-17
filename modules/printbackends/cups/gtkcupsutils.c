@@ -19,8 +19,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gtkcupsutils.h"
 #include "config.h"
+#include "gtkcupsutils.h"
 #include "gtkdebug.h"
 
 #include <errno.h>
@@ -29,10 +29,6 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <time.h>
-
-#if CUPS_VERSION_MAJOR > 1 || (CUPS_VERSION_MAJOR == 1 && CUPS_VERSION_MINOR > 1) || (CUPS_VERSION_MAJOR == 1 && CUPS_VERSION_MINOR == 1 && CUPS_VERSION_PATCH >= 20)
-#define HAVE_HTTP_AUTHSTRING 1
-#endif
 
 typedef void (*GtkCupsRequestStateFunc) (GtkCupsRequest *request);
 
@@ -634,8 +630,12 @@ _post_send (GtkCupsRequest *request)
   httpClearFields (request->http);
   httpSetField (request->http, HTTP_FIELD_CONTENT_LENGTH, length);
   httpSetField (request->http, HTTP_FIELD_CONTENT_TYPE, "application/ipp");
+#ifdef HAVE_HTTPGETAUTHSTRING
+  httpSetField (request->http, HTTP_FIELD_AUTHORIZATION, httpGetAuthString (request->http));
+#else
 #ifdef HAVE_HTTP_AUTHSTRING
   httpSetField (request->http, HTTP_FIELD_AUTHORIZATION, request->http->authstring);
+#endif
 #endif
 
   if (httpPost (request->http, request->resource))

@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Test for modifier keys correctly</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtk-migrating-checklist.html" title="Migration Checklist">
 <link rel="prev" href="checklist-gdkeventexpose-region.html" title="Use GdkEventExpose.region">
 <link rel="next" href="checklist-named-icons.html" title="Use named icons">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -71,44 +71,44 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="checklist-modifiers"></a>Test for modifier keys correctly</h2></div></div></div>
 <p><b>Why.&#160;</b>
-	With <a href="gtk-Keyboard-Accelerators.html#gtk-accelerator-get-default-mod-mask"><code class="function">gtk_accelerator_get_default_mod_mask()</code></a> you can test for 
+	With <a class="link" href="gtk-Keyboard-Accelerators.html#gtk-accelerator-get-default-mod-mask"><code class="function">gtk_accelerator_get_default_mod_mask()</code></a> you can test for 
         modifier keys reliably; this way your key event handlers will 
-        work correctly even if <span><strong class="keycap">NumLock</strong></span> or 
-        <span><strong class="keycap">CapsLock</strong></span> are activated.
+        work correctly even if <span class="keycap"><strong>NumLock</strong></span> or 
+        <span class="keycap"><strong>CapsLock</strong></span> are activated.
       </p>
 <p>
       In a <span class="structname">GdkEventKey</span>, the
       <em class="structfield"><code>state</code></em> field is a bit mask which
       indicates the modifier state at the time the key was pressed.
-      Modifiers are keys like <span><strong class="keycap">Control</strong></span> and
-      <span><strong class="keycap">NumLock</strong></span>.  When implementing a 
-      <a href="GtkWidget.html#GtkWidget-key-press-event"><span class="type">::key-press-event</span></a> handler, you should use 
-      <a href="gtk-Keyboard-Accelerators.html#gtk-accelerator-get-default-mod-mask"><code class="function">gtk_accelerator_get_default_mod_mask()</code></a> to
+      Modifiers are keys like <span class="keycap"><strong>Control</strong></span> and
+      <span class="keycap"><strong>NumLock</strong></span>.  When implementing a 
+      <a class="link" href="GtkWidget.html#GtkWidget-key-press-event"><span class="type">"key-press-event"</span></a> handler, you should use 
+      <a class="link" href="gtk-Keyboard-Accelerators.html#gtk-accelerator-get-default-mod-mask"><code class="function">gtk_accelerator_get_default_mod_mask()</code></a> to
       test against modifier keys.  This function returns a bit mask
       which encompasses all the modifiers which the user may be
-      actively pressing, such as <span><strong class="keycap">Control</strong></span>,
-      <span><strong class="keycap">Shift</strong></span>, and <span><strong class="keycap">Alt</strong></span>, but ignores
-      "innocuous" modifiers such as <span><strong class="keycap">NumLock</strong></span> and
-      <span><strong class="keycap">CapsLock</strong></span>.
+      actively pressing, such as <span class="keycap"><strong>Control</strong></span>,
+      <span class="keycap"><strong>Shift</strong></span>, and <span class="keycap"><strong>Alt</strong></span>, but ignores
+      "innocuous" modifiers such as <span class="keycap"><strong>NumLock</strong></span> and
+      <span class="keycap"><strong>CapsLock</strong></span>.
     </p>
 <p>
       Say you want to see if
-      <span><strong class="keycap">Control</strong></span>-<span><strong class="keycap">F10</strong></span>
+      <span class="keycap"><strong>Control</strong></span>+<span class="keycap"><strong>F10</strong></span>
       was pressed.  Doing a simple test like
       <code class="literal">event-&gt;keysym&#160;==&#160;GDK_F10 &amp;&amp;
       event-&gt;state&#160;==&#160;GDK_CONTROL_MASK</code> is not
-      enough.  If <span><strong class="keycap">CapsLock</strong></span> is pressed, then
+      enough.  If <span class="keycap"><strong>CapsLock</strong></span> is pressed, then
       <em class="structfield"><code>event-&gt;state</code></em> will be equal to
       <code class="literal">GDK_CONTROL_MASK | GDK_LOCK_MASK</code>, and the
       simple test will fail.  By taking the logical-and of
       <em class="structfield"><code>event-&gt;state</code></em> and
-      <a href="gtk-Keyboard-Accelerators.html#gtk-accelerator-get-default-mod-mask"><code class="function">gtk_accelerator_get_default_mod_mask()</code></a>, you
+      <a class="link" href="gtk-Keyboard-Accelerators.html#gtk-accelerator-get-default-mod-mask"><code class="function">gtk_accelerator_get_default_mod_mask()</code></a>, you
       can ignore the modifiers which are not actively pressed by the
       user at the same time as the base key.
     </p>
 <p>
       The following example correctly tests for
-      <span><strong class="keycap">Control</strong></span>-<span><strong class="keycap">F10</strong></span>
+      <span class="keycap"><strong>Control</strong></span>+<span class="keycap"><strong>F10</strong></span>
       being pressed.
     </p>
 <a name="default-mod-mask"></a><pre class="programlisting">

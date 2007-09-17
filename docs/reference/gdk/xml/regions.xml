@@ -183,8 +183,12 @@ Defines the position and size of a rectangle.
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *src2,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *dest);</programlisting>
 <para>
-Calculates the intersection of two rectangles.
-It is allowed for <parameter>dest</parameter> to be the same as either <parameter>src1</parameter> or <parameter>src2</parameter>.</para>
+Calculates the intersection of two rectangles. It is allowed for
+<parameter>dest</parameter> to be the same as either <parameter>src1</parameter> or <parameter>src2</parameter>. If the rectangles 
+do not intersect, <parameter>dest</parameter>'s width and height is set to 0 and its x 
+and y values are undefined. If you are only interested in whether
+the rectangles intersect, but not in the intersecting area itself,
+pass <link linkend="NULL:CAPS"><literal>NULL</literal></link> for <parameter>dest</parameter>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -195,7 +199,7 @@ It is allowed for <parameter>dest</parameter> to be the same as either <paramete
 <listitem><simpara> a <link linkend="GdkRectangle"><type>GdkRectangle</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>dest</parameter>&nbsp;:</term>
-<listitem><simpara> return location for the intersection of <parameter>src1</parameter> and <parameter>src2</parameter>
+<listitem><simpara> return location for the intersection of <parameter>src1</parameter> and <parameter>src2</parameter>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the rectangles intersect.
 </simpara></listitem></varlistentry>
@@ -681,4 +685,6 @@ Calls a function on each span in the intersection of <parameter>region</paramete
 
 
 
+
+<refsect1><refsect2 /><refsect2 /></refsect1>
 </refentry>

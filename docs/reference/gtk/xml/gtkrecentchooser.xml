@@ -118,13 +118,29 @@ GtkRecentChooser is implemented by
 
 </refsect1>
 
+<refsect1 role="properties">
+<title role="properties.title">Properties</title>
+<synopsis>
+
+  &quot;<link linkend="GtkRecentChooser--filter">filter</link>&quot;                   <link linkend="GtkRecentFilter">GtkRecentFilter</link>       : Read / Write
+  &quot;<link linkend="GtkRecentChooser--limit">limit</link>&quot;                    <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkRecentChooser--local-only">local-only</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkRecentChooser--recent-manager">recent-manager</link>&quot;           <link linkend="GtkRecentManager">GtkRecentManager</link>      : Write / Construct Only
+  &quot;<link linkend="GtkRecentChooser--select-multiple">select-multiple</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkRecentChooser--show-icons">show-icons</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkRecentChooser--show-not-found">show-not-found</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkRecentChooser--show-private">show-private</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkRecentChooser--show-tips">show-tips</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkRecentChooser--sort-type">sort-type</link>&quot;                <link linkend="GtkRecentSortType">GtkRecentSortType</link>     : Read / Write
+</synopsis>
+</refsect1>
 
 <refsect1 role="signal_proto">
 <title role="signal_proto.title">Signals</title>
 <synopsis>
 
-  <link linkend="GtkRecentChooser-item-activated">item-activated</link>                                 : Run Last
-  <link linkend="GtkRecentChooser-selection-changed">selection-changed</link>                              : Run Last
+  &quot;<link linkend="GtkRecentChooser-item-activated">item-activated</link>&quot;                                 : Run Last
+  &quot;<link linkend="GtkRecentChooser-selection-changed">selection-changed</link>&quot;                              : Run Last
 </synopsis>
 </refsect1>
 
@@ -443,7 +459,8 @@ and <link linkend="gtk-recent-chooser-get-uris"><function>gtk_recent_chooser_get
 <indexterm role="2.10"><primary>gtk_recent_chooser_set_show_tips</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_recent_chooser_set_show_tips    (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser,
                                                          <link linkend="gboolean">gboolean</link> show_tips);</programlisting>
 <para>
-Sets whether to show a tooltips on the widget.</para>
+Sets whether to show a tooltips containing the full path of each
+recently used resource in a <link linkend="GtkRecentChooser"><type>GtkRecentChooser</type></link> widget.</para>
 <para>
 
 </para><variablelist role="params">
@@ -459,7 +476,8 @@ Sets whether to show a tooltips on the widget.</para>
 <title><anchor id="gtk-recent-chooser-get-show-tips" role="function" condition="since:2.10"/>gtk_recent_chooser_get_show_tips ()</title>
 <indexterm role="2.10"><primary>gtk_recent_chooser_get_show_tips</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_recent_chooser_get_show_tips    (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser);</programlisting>
 <para>
-Gets whether <parameter>chooser</parameter> should display tooltips.</para>
+Gets whether <parameter>chooser</parameter> should display tooltips containing the full path
+of a recently user resource.</para>
 <para>
 
 </para><variablelist role="params">
@@ -473,15 +491,12 @@ Gets whether <parameter>chooser</parameter> should display tooltips.</para>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-recent-chooser-set-show-numbers" role="function" condition="since:2.10"/>gtk_recent_chooser_set_show_numbers ()</title>
-<indexterm role="2.10"><primary>gtk_recent_chooser_set_show_numbers</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_recent_chooser_set_show_numbers (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser,
+<title><anchor id="gtk-recent-chooser-set-show-numbers" role="function" condition="deprecated:2.12: Use gtk_recent_chooser_menu_set_show_numbers() instead.|since:2.10"/>gtk_recent_chooser_set_show_numbers ()</title>
+<indexterm role="deprecated"><primary>gtk_recent_chooser_set_show_numbers</primary></indexterm><indexterm role="2.10"><primary>gtk_recent_chooser_set_show_numbers</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_recent_chooser_set_show_numbers (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser,
                                                          <link linkend="gboolean">gboolean</link> show_numbers);</programlisting>
+<warning><para><literal>gtk_recent_chooser_set_show_numbers</literal> has been deprecated since version 2.12 and should not be used in newly-written code. Use <link linkend="gtk-recent-chooser-menu-set-show-numbers"><function>gtk_recent_chooser_menu_set_show_numbers()</function></link> instead.</para></warning>
 <para>
-Whether to show recently used resources prepended by a unique number.
-</para>
-<para>
-Do not use this function: use <link linkend="gtk-recent-chooser-menu-set-show-numbers"><function>gtk_recent_chooser_menu_set_show_numbers()</function></link>
-instead.</para>
+Whether to show recently used resources prepended by a unique number.</para>
 <para>
 
 </para><variablelist role="params">
@@ -494,15 +509,12 @@ instead.</para>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
 <refsect2>
-<title><anchor id="gtk-recent-chooser-get-show-numbers" role="function" condition="since:2.10"/>gtk_recent_chooser_get_show_numbers ()</title>
-<indexterm role="2.10"><primary>gtk_recent_chooser_get_show_numbers</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_recent_chooser_get_show_numbers (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser);</programlisting>
+<title><anchor id="gtk-recent-chooser-get-show-numbers" role="function" condition="deprecated:2.12: use gtk_recent_chooser_menu_get_show_numbers() instead.|since:2.10"/>gtk_recent_chooser_get_show_numbers ()</title>
+<indexterm role="deprecated"><primary>gtk_recent_chooser_get_show_numbers</primary></indexterm><indexterm role="2.10"><primary>gtk_recent_chooser_get_show_numbers</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_recent_chooser_get_show_numbers (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser);</programlisting>
+<warning><para><literal>gtk_recent_chooser_get_show_numbers</literal> has been deprecated since version 2.12 and should not be used in newly-written code. use <link linkend="gtk-recent-chooser-menu-get-show-numbers"><function>gtk_recent_chooser_menu_get_show_numbers()</function></link> instead.</para></warning>
 <para>
 Returns whether <parameter>chooser</parameter> should display recently used resources
-prepended by a unique number.
-</para>
-<para>
-Do not use this function: use <link linkend="gtk-recent-chooser-menu-get-show-numbers"><function>gtk_recent_chooser_menu_get_show_numbers()</function></link>
-instead.</para>
+prepended by a unique number.</para>
 <para>
 
 </para><variablelist role="params">
@@ -912,10 +924,118 @@ the display of the recently used resources.</para>
 </para></refsect2>
 
 </refsect1>
+<refsect1 role="property_details">
+<title role="property_details.title">Property Details</title>
+<refsect2><title><anchor id="GtkRecentChooser--filter"/>The <literal>&quot;filter&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:filter</primary></indexterm><programlisting>  &quot;filter&quot;                   <link linkend="GtkRecentFilter">GtkRecentFilter</link>       : Read / Write</programlisting>
+<para>
+The <link linkend="GtkRecentFilter"><type>GtkRecentFilter</type></link> object to be used when displaying
+the recently used resources.</para>
+<para>
+
+</para><para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--limit"/>The <literal>&quot;limit&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:limit</primary></indexterm><programlisting>  &quot;limit&quot;                    <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>
+The maximum number of recently used resources to be displayed,
+or -1 to display all items. By default, the
+GtkSetting:gtk-recent-files-limit setting is respected: you can
+override that limit on a particular instance of <link linkend="GtkRecentChooser"><type>GtkRecentChooser</type></link>
+by setting this property.</para>
+<para>
+
+</para><para>Allowed values: &gt;= -1</para>
+<para>Default value: -1</para>
+<para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--local-only"/>The <literal>&quot;local-only&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:local-only</primary></indexterm><programlisting>  &quot;local-only&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Whether this <link linkend="GtkRecentChooser"><type>GtkRecentChooser</type></link> should display only local (file:)
+resources.</para>
+<para>
+
+</para><para>Default value: TRUE</para>
+<para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--recent-manager"/>The <literal>&quot;recent-manager&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:recent-manager</primary></indexterm><programlisting>  &quot;recent-manager&quot;           <link linkend="GtkRecentManager">GtkRecentManager</link>      : Write / Construct Only</programlisting>
+<para>
+The <link linkend="GtkRecentManager"><type>GtkRecentManager</type></link> instance used by the <link linkend="GtkRecentChooser"><type>GtkRecentChooser</type></link> to
+display the list of recently used resources.</para>
+<para>
+
+</para><para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--select-multiple"/>The <literal>&quot;select-multiple&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:select-multiple</primary></indexterm><programlisting>  &quot;select-multiple&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Allow the user to select multiple resources.</para>
+<para>
+
+</para><para>Default value: FALSE</para>
+<para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--show-icons"/>The <literal>&quot;show-icons&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:show-icons</primary></indexterm><programlisting>  &quot;show-icons&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Whether this <link linkend="GtkRecentChooser"><type>GtkRecentChooser</type></link> should display an icon near the item.</para>
+<para>
+
+</para><para>Default value: TRUE</para>
+<para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--show-not-found"/>The <literal>&quot;show-not-found&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:show-not-found</primary></indexterm><programlisting>  &quot;show-not-found&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Whether this <link linkend="GtkRecentChooser"><type>GtkRecentChooser</type></link> should display the recently used resources
+even if not present anymore. Setting this to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> will perform a
+potentially expensive check on every local resource (every remote
+resource will always be displayed).</para>
+<para>
+
+</para><para>Default value: FALSE</para>
+<para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--show-private"/>The <literal>&quot;show-private&quot;</literal> property</title>
+<indexterm><primary>GtkRecentChooser:show-private</primary></indexterm><programlisting>  &quot;show-private&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>Whether the private items should be displayed.</para><para>Default value: FALSE</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--show-tips"/>The <literal>&quot;show-tips&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:show-tips</primary></indexterm><programlisting>  &quot;show-tips&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Whether this <link linkend="GtkRecentChooser"><type>GtkRecentChooser</type></link> should display a tooltip containing the
+full path of the recently used resources.</para>
+<para>
+
+</para><para>Default value: FALSE</para>
+<para>Since  2.10
+</para>
+</refsect2>
+<refsect2><title><anchor id="GtkRecentChooser--sort-type"/>The <literal>&quot;sort-type&quot;</literal> property</title>
+<indexterm role="2.10"><primary>GtkRecentChooser:sort-type</primary></indexterm><programlisting>  &quot;sort-type&quot;                <link linkend="GtkRecentSortType">GtkRecentSortType</link>     : Read / Write</programlisting>
+<para>
+Sorting order to be used when displaying the recently used resources.</para>
+<para>
+
+</para><para>Default value: GTK_RECENT_SORT_NONE</para>
+<para>Since  2.10
+</para>
+</refsect2>
+
+</refsect1>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkRecentChooser-item-activated"/>The <literal>::item-activated</literal> signal</title>
+<refsect2><title><anchor id="GtkRecentChooser-item-activated"/>The <literal>&quot;item-activated&quot;</literal> signal</title>
 <indexterm role="2.10"><primary>GtkRecentChooser::item-activated</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
 <para>
@@ -932,7 +1052,7 @@ in the recently used resources list, or by pressing
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkRecentChooser-selection-changed"/>The <literal>::selection-changed</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkRecentChooser-selection-changed"/>The <literal>&quot;selection-changed&quot;</literal> signal</title>
 <indexterm role="2.10"><primary>GtkRecentChooser::selection-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkRecentChooser">GtkRecentChooser</link> *chooser,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
 <para>
@@ -961,4 +1081,6 @@ explicitely calling functions to change the selection.</para>
 </para>
 </refsect1>
 
+
+<refsect1><refsect2 /><refsect2 /></refsect1>
 </refentry>

@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Migrating from GnomeUIInfo</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtk-migrating-GtkAction.html" title="Migrating from old menu and toolbar systems to GtkAction">
 <link rel="prev" href="ui-manager.html" title="User Interface Manager Object">
 <link rel="next" href="gtk-migrating-GtkComboBox.html" title="Migrating from GtkOptionMenu and GtkCombo to GtkComboBox and GtkComboBoxEntry">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -110,32 +110,32 @@
 <li><p>
 	  Separate your existing GnomeUIInfo entries into normal
 	  actions, toggle actions, and radio actions, and then create
-	  a separate array of <a href="GtkActionGroup.html#GtkActionEntry"><span class="type">GtkActionEntry</span></a> structures
+	  a separate array of <a class="link" href="GtkActionGroup.html#GtkActionEntry"><span class="type">GtkActionEntry</span></a> structures
 	  for each group.  This will allow you to create the necessary
-	  <a href="GtkActionGroup.html" title="GtkActionGroup"><span class="type">GtkActionGroup</span></a> objects.  Note that this does not describe 
+	  <a class="link" href="GtkActionGroup.html" title="GtkActionGroup"><span class="type">GtkActionGroup</span></a> objects.  Note that this does not describe 
           the actual "shape" that your menus and toolbars will have; 
           it simply defines the set of commands that will appear in them.
 	</p></li>
 <li><p>
 	  Create an XML description of your menus and toolbars for use
-	  with <a href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a>.  This defines the actual shape of the menus 
+	  with <a class="link" href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a>.  This defines the actual shape of the menus 
           and toolbars.
 	</p></li>
 <li><p>
 	  Port the code that uses gnome-app and gnome-app-helper to
-	  <a href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> and <a href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a>.
+	  <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> and <a class="link" href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a>.
 	</p></li>
 <li><p>
          If your GnomeUIInfo entries use GNOME_APP_PIXMAP_DATA or 
          GNOME_APP_PIXMAP_FILENAME for pixmaps, you have to create a 
-         <a href="gtk-Themeable-Stock-Images.html#GtkIconFactory"><span class="type">GtkIconFactory</span></a>, add it to the list of default factories, then 
-         create a <a href="gtk-Themeable-Stock-Images.html#GtkIconSet"><span class="type">GtkIconSet</span></a> for each of your own icons. Add the sets to 
-         the factory, and use the id in the <a href="GtkActionGroup.html#GtkActionEntry"><span class="type">GtkActionEntry</span></a> like a regular 
+         <a class="link" href="gtk-Themeable-Stock-Images.html#GtkIconFactory"><span class="type">GtkIconFactory</span></a>, add it to the list of default factories, then 
+         create a <a class="link" href="gtk-Themeable-Stock-Images.html#GtkIconSet"><span class="type">GtkIconSet</span></a> for each of your own icons. Add the sets to 
+         the factory, and use the id in the <a class="link" href="GtkActionGroup.html#GtkActionEntry"><span class="type">GtkActionEntry</span></a> like a regular 
          GTK+ stock id.
        </p></li>
 </ol></div>
 <div class="example">
-<a name="gnomeuiinfo-example"></a><p class="title"><b>Example&#160;54.&#160;GnomeUIInfo Example</b></p>
+<a name="gnomeuiinfo-example"></a><p class="title"><b>Example&#160;55.&#160;GnomeUIInfo Example</b></p>
 <div class="example-contents">
 <p>
 	The following code shows a declaration of a simple menu bar to
@@ -215,13 +215,13 @@ static GnomeUIInfo menubar[] = {
 </div>
 </div>
 <br class="example-break"><div class="example">
-<a name="gnomeuiinfo-action-entries"></a><p class="title"><b>Example&#160;55.&#160;<span class="structname">GtkActionEntry</span> Structures</b></p>
+<a name="gnomeuiinfo-action-entries"></a><p class="title"><b>Example&#160;56.&#160;<span class="structname">GtkActionEntry</span> Structures</b></p>
 <div class="example-contents">
 <p>
 	The following code is the set of actions that are present in
-	the <a href="migrating-gnomeuiinfo.html#gnomeuiinfo-example" title="Example&#160;54.&#160;GnomeUIInfo Example">previous
+	the <a class="link" href="migrating-gnomeuiinfo.html#gnomeuiinfo-example" title="Example&#160;55.&#160;GnomeUIInfo Example">previous
 	example</a>.  Note that the toggle and radio entries are
-	separate from normal actions.  Also, note that <a href="GtkActionGroup.html#GtkActionEntry"><span class="type">GtkActionEntry</span></a> 
+	separate from normal actions.  Also, note that <a class="link" href="GtkActionGroup.html#GtkActionEntry"><span class="type">GtkActionEntry</span></a> 
         structures take key names in the format of <code class="function">gdk_accelerator_parse()</code> 
         rather than key values plus modifiers; you will have to convert these
 	values by hand.  For example, <code class="literal">GDK_F11</code> with no modifiers is equivalent 
@@ -256,16 +256,16 @@ static const GtkRadioActionEntry radio_entries[] = {
 </div>
 </div>
 <br class="example-break"><div class="example">
-<a name="gnomeuiinfo-xml"></a><p class="title"><b>Example&#160;56.&#160;XML Description</b></p>
+<a name="gnomeuiinfo-xml"></a><p class="title"><b>Example&#160;57.&#160;XML Description</b></p>
 <div class="example-contents">
 <p>
 	After extracting the actions, you will need to create an XML
 	description of the actual layout of your menus and toolbars
-	for use with <a href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a>. The following code shows a simple 
-        menu bar that corresponds to the <a href="migrating-gnomeuiinfo.html#gnomeuiinfo-example" title="Example&#160;54.&#160;GnomeUIInfo Example">previous
+	for use with <a class="link" href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a>. The following code shows a simple 
+        menu bar that corresponds to the <a class="link" href="migrating-gnomeuiinfo.html#gnomeuiinfo-example" title="Example&#160;55.&#160;GnomeUIInfo Example">previous
 	example</a>.  Note that the <span class="guimenu">File</span> and
 	<span class="guimenu">View</span> menus have their names specified in
-	the <a href="migrating-gnomeuiinfo.html#gnomeuiinfo-action-entries" title="Example&#160;55.&#160;GtkActionEntry Structures">action
+	the <a class="link" href="migrating-gnomeuiinfo.html#gnomeuiinfo-action-entries" title="Example&#160;56.&#160;GtkActionEntry Structures">action
 	entries</a>, not in the XML itself.  This is because the
 	XML description only contains <span class="emphasis"><em>identifiers</em></span>
 	for the items in the GUI, rather than human-readable names.
@@ -294,14 +294,14 @@ static const char *ui_description =
 </div>
 </div>
 <br class="example-break"><div class="example">
-<a name="gnomeuiinfo-code"></a><p class="title"><b>Example&#160;57.&#160;Creating the Menu Bar</b></p>
+<a name="gnomeuiinfo-code"></a><p class="title"><b>Example&#160;58.&#160;Creating the Menu Bar</b></p>
 <div class="example-contents">
 <p>
-	In this last example, we will create a <a href="GtkActionGroup.html" title="GtkActionGroup"><span class="type">GtkActionGroup</span></a> based on the
-	<a href="migrating-gnomeuiinfo.html#gnomeuiinfo-action-entries" title="Example&#160;55.&#160;GtkActionEntry Structures">action entries</a> 
-        we created above.  We will then create a <a href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> with the <a href="migrating-gnomeuiinfo.html#gnomeuiinfo-xml" title="Example&#160;56.&#160;XML Description">XML description</a> of the menu
+	In this last example, we will create a <a class="link" href="GtkActionGroup.html" title="GtkActionGroup"><span class="type">GtkActionGroup</span></a> based on the
+	<a class="link" href="migrating-gnomeuiinfo.html#gnomeuiinfo-action-entries" title="Example&#160;56.&#160;GtkActionEntry Structures">action entries</a> 
+        we created above.  We will then create a <a class="link" href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> with the <a class="link" href="migrating-gnomeuiinfo.html#gnomeuiinfo-xml" title="Example&#160;57.&#160;XML Description">XML description</a> of the menu
 	layout.  We will also extract the accelerator group and the
-	widgets from the <a href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> put them into a window.
+	widgets from the <a class="link" href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> put them into a window.
       </p>
 <pre class="programlisting">
 GtkWidget *window;
@@ -346,7 +346,7 @@ gtk_widget_show_all (window);
 </div>
 </div>
 <br class="example-break"><div class="example">
-<a name="gnomeuiinfo-icons"></a><p class="title"><b>Example&#160;58.&#160;Registering the icons</b></p>
+<a name="gnomeuiinfo-icons"></a><p class="title"><b>Example&#160;59.&#160;Registering the icons</b></p>
 <div class="example-contents">
 <p>
 	Here we show how the <code class="function">register_my_stock_icons()</code> function

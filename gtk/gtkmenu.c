@@ -1251,10 +1251,12 @@ popup_grab_on_window (GdkWindow *window,
  * a mouse button press, such as a mouse button release or a keypress,
  * @button should be 0.
  *
- * The @activate_time parameter should be the time stamp of the event that
- * initiated the popup. If such an event is not available, use
- * gtk_get_current_event_time() instead.
- *
+ * The @activate_time parameter is used to conflict-resolve initiation of
+ * concurrent requests for mouse/keyboard grab requests. To function
+ * properly, this needs to be the time stamp of the user event (such as
+ * a mouse click or key press) that caused the initiation of the popup.
+ * Only if no such event is available, gtk_get_current_event_time() can
+ * be used instead.
  */
 void
 gtk_menu_popup (GtkMenu		    *menu,
@@ -2708,7 +2710,17 @@ gtk_menu_button_release (GtkWidget      *widget,
    */
   if (GTK_IS_MENU_SHELL (gtk_get_event_widget ((GdkEvent *) event)) &&
       pointer_in_menu_window (widget, event->x_root, event->y_root))
-    return TRUE;
+    {
+      /*  Ugly: make sure menu_shell->button gets reset to 0 when we
+       *  bail out early here so it is in a consistent state for the
+       *  next button_press/button_release in GtkMenuShell.
+       *  See bug #449371.
+       */
+      if (GTK_MENU_SHELL (widget)->active)
+        GTK_MENU_SHELL (widget)->button = 0;
+
+      return TRUE;
+    }
 
   return GTK_WIDGET_CLASS (gtk_menu_parent_class)->button_release_event (widget, event);
 }
@@ -2786,7 +2798,6 @@ gtk_menu_key_press (GtkWidget	*widget,
     {
       guint keyval = 0;
       GdkModifierType mods = 0;
-      gboolean handled = FALSE;
       
       gtk_accelerator_parse (accel, &keyval, &mods);
 
@@ -2797,15 +2808,15 @@ gtk_menu_key_press (GtkWidget	*widget,
        * thing, to properly consider i18n etc., but that probably requires
        * AccelGroup changes etc.
        */
-      if (event->keyval == keyval &&
-          (mods & event->state) == mods)
-	gtk_menu_shell_cancel (menu_shell);
-
-      g_free (accel);
-
-      if (handled)
-        return TRUE;
+      if (event->keyval == keyval && (mods & event->state) == mods)
+        {
+	  gtk_menu_shell_cancel (menu_shell);
+          g_free (accel);
+          return TRUE;
+        }
     }
+
+  g_free (accel);
   
   switch (event->keyval)
     {

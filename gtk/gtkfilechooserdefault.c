@@ -1276,7 +1276,23 @@ render_search_icon (GtkFileChooserDefault *impl)
 static GdkPixbuf *
 render_recent_icon (GtkFileChooserDefault *impl)
 {
-  return gtk_widget_render_icon (GTK_WIDGET (impl), GTK_STOCK_FILE, GTK_ICON_SIZE_MENU, NULL);
+  GtkIconTheme *theme;
+  GdkPixbuf *retval;
+
+  if (gtk_widget_has_screen (GTK_WIDGET (impl)))
+    theme = gtk_icon_theme_get_for_screen (gtk_widget_get_screen (GTK_WIDGET (impl)));
+  else
+    theme = gtk_icon_theme_get_default ();
+
+  retval = gtk_icon_theme_load_icon (theme, "document-open-recent",
+                                     impl->icon_size, 0,
+                                     NULL);
+
+  /* fallback */
+  if (!retval)
+    retval = gtk_widget_render_icon (GTK_WIDGET (impl), GTK_STOCK_FILE, GTK_ICON_SIZE_MENU, NULL);
+
+  return retval;
 }
 
 
@@ -2577,6 +2593,9 @@ filter_create (GtkFileChooserDefault *impl)
   g_signal_connect (impl->filter_combo, "changed",
 		    G_CALLBACK (filter_combo_changed), impl);
 
+  gtk_widget_set_tooltip_text (impl->filter_combo,
+			  _("Select which types of files are shown"));
+
   return impl->filter_combo;
 }
 
@@ -3059,7 +3078,7 @@ bookmarks_check_add_sensitivity (GtkFileChooserDefault *impl)
           tip = data.tip;
         }
 
-      gtk_tooltips_set_tip (impl->tooltips, impl->browse_shortcuts_add_button, tip, NULL);
+      gtk_widget_set_tooltip_text (impl->browse_shortcuts_add_button, tip);
       g_free (tip);
     }
 }
@@ -3087,8 +3106,7 @@ bookmarks_check_remove_sensitivity (GtkFileChooserDefault *impl)
       gchar *tip;
 
       tip = g_strdup_printf (_("Remove the bookmark '%s'"), name);
-      gtk_tooltips_set_tip (impl->tooltips, impl->browse_shortcuts_remove_button,
-			    tip, NULL);
+      gtk_widget_set_tooltip_text (impl->browse_shortcuts_remove_button, tip);
       g_free (tip);
     }
 
@@ -3514,7 +3532,7 @@ shortcuts_drop_uris (GtkFileChooserDefault *impl,
 	}
       else
 	{
-	  GError *error;
+	  GError *error = NULL;
 
 	  g_set_error (&error,
 		       GTK_FILE_CHOOSER_ERROR,
@@ -4010,8 +4028,8 @@ shortcuts_pane_create (GtkFileChooserDefault *impl,
 						  TRUE,
 						  G_CALLBACK (add_bookmark_button_clicked_cb));
   gtk_box_pack_start (GTK_BOX (hbox), impl->browse_shortcuts_add_button, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (impl->tooltips, impl->browse_shortcuts_add_button,
-                        _("Add the selected folder to the Bookmarks"), NULL);
+  gtk_widget_set_tooltip_text (impl->browse_shortcuts_add_button,
+                        _("Add the selected folder to the Bookmarks"));
 
   /* Remove bookmark button */
 
@@ -4022,8 +4040,8 @@ shortcuts_pane_create (GtkFileChooserDefault *impl,
 						     TRUE,
 						     G_CALLBACK (remove_bookmark_button_clicked_cb));
   gtk_box_pack_start (GTK_BOX (hbox), impl->browse_shortcuts_remove_button, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (impl->tooltips, impl->browse_shortcuts_remove_button,
-                        _("Remove the selected bookmark"), NULL);
+  gtk_widget_set_tooltip_text (impl->browse_shortcuts_remove_button,
+                        _("Remove the selected bookmark"));
 
   return vbox;
 }
@@ -4686,29 +4704,6 @@ create_path_bar (GtkFileChooserDefault *impl)
   return path_bar;
 }
 
-static void
-set_filter_tooltip (GtkWidget *widget, 
-		    gpointer   data)
-{
-  GtkTooltips *tooltips = (GtkTooltips *)data;
-
-  if (GTK_IS_BUTTON (widget))
-    gtk_tooltips_set_tip (tooltips, widget,
-			  _("Select which types of files are shown"), 
-			  NULL);
-}
-
-static void
-realize_filter_combo (GtkWidget *combo,
-		      gpointer   data)
-{
-  GtkFileChooserDefault *impl = (GtkFileChooserDefault *)data;
-
-  gtk_container_forall (GTK_CONTAINER (combo),
-			set_filter_tooltip,
-			impl->tooltips);
-}
-
 /* Creates the widgets for the files/folders pane */
 static GtkWidget *
 file_pane_create (GtkFileChooserDefault *impl,
@@ -4743,9 +4738,6 @@ file_pane_create (GtkFileChooserDefault *impl,
   impl->filter_combo_hbox = gtk_hbox_new (FALSE, 12);
 
   widget = filter_create (impl);
-
-  g_signal_connect (widget, "realize",
-		    G_CALLBACK (realize_filter_combo), impl);
 
   gtk_widget_show (widget);
   gtk_box_pack_end (GTK_BOX (impl->filter_combo_hbox), widget, FALSE, FALSE, 0);
@@ -5204,7 +5196,7 @@ location_button_create (GtkFileChooserDefault *impl)
 
   str = _("Type a file name");
 
-  gtk_tooltips_set_tip (impl->tooltips, impl->location_button, str, NULL);
+  gtk_widget_set_tooltip_text (impl->location_button, str);
   atk_object_set_name (gtk_widget_get_accessible (impl->location_button), str);
 }
 
@@ -8752,6 +8744,9 @@ search_hit_get_info_cb (GtkFileSystemHandle *handle,
   char *display_name;
   struct SearchHitInsertRequest *request = data;
 
+  if (!request->impl->search_model)
+    goto out;
+
   path = gtk_tree_row_reference_get_path (request->row_ref);
   if (!path)
     goto out;
@@ -9464,6 +9459,9 @@ recent_clear_model (GtkFileChooserDefault *impl,
     return;
 
   model = GTK_TREE_MODEL (impl->recent_model);
+  
+  if (remove_from_treeview)
+    gtk_tree_view_set_model (GTK_TREE_VIEW (impl->browse_files_tree_view), NULL);
 
   if (gtk_tree_model_get_iter_first (model, &iter))
     {
@@ -9499,9 +9497,6 @@ recent_clear_model (GtkFileChooserDefault *impl,
 
   g_object_unref (impl->recent_model_sort);
   impl->recent_model_sort = NULL;
-
-  if (remove_from_treeview)
-    gtk_tree_view_set_model (GTK_TREE_VIEW (impl->browse_files_tree_view), NULL);
 }
 
 /* Stops any ongoing loading of the recent files list; does
@@ -9754,9 +9749,6 @@ recent_setup_model (GtkFileChooserDefault *impl)
   gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (impl->recent_model_sort),
                                         RECENT_MODEL_COL_INFO,
                                         GTK_SORT_DESCENDING);
-
-  gtk_tree_view_set_model (GTK_TREE_VIEW (impl->browse_files_tree_view),
-                           GTK_TREE_MODEL (impl->recent_model_sort));
 }
 
 typedef struct
@@ -9773,6 +9765,9 @@ recent_idle_cleanup (gpointer data)
 {
   RecentLoadData *load_data = data;
   GtkFileChooserDefault *impl = load_data->impl;
+
+  gtk_tree_view_set_model (GTK_TREE_VIEW (impl->browse_files_tree_view),
+                           GTK_TREE_MODEL (impl->recent_model_sort));
 
   set_busy_cursor (impl, FALSE);
   
@@ -9806,6 +9801,9 @@ recent_item_get_info_cb (GtkFileSystemHandle *handle,
   GtkFileSystemHandle *model_handle;
   gboolean is_folder = FALSE;
   struct RecentItemInsertRequest *request = data;
+
+  if (!request->impl->recent_model)
+    goto out;
 
   path = gtk_tree_row_reference_get_path (request->row_ref);
   if (!path)

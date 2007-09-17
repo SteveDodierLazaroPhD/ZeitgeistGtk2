@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Migrating from GtkOptionMenu and GtkCombo to GtkComboBox and GtkComboBoxEntry</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
 <link rel="prev" href="migrating-gnomeuiinfo.html" title="Migrating from GnomeUIInfo">
 <link rel="next" href="migrating-GtkCombo.html" title="Migrating from GtkCombo to GtkComboBoxEntry">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -78,25 +78,25 @@
 </dl></div>
 <p>
     Prior to 2.4, GTK+ offered two widgets for the task of selecting one
-    item from a list of options. <a href="GtkOptionMenu.html" title="GtkOptionMenu"><span class="type">GtkOptionMenu</span></a> presents the list of 
-    options as a menu while <a href="GtkCombo.html" title="GtkCombo"><span class="type">GtkCombo</span></a> presents them in a Windows-style list 
-    popup. The only difference between the two is that a <a href="GtkCombo.html" title="GtkCombo"><span class="type">GtkCombo</span></a> allows to 
-    manually edit the selected value, while the <a href="GtkOptionMenu.html" title="GtkOptionMenu"><span class="type">GtkOptionMenu</span></a> does not.
+    item from a list of options. <a class="link" href="GtkOptionMenu.html" title="GtkOptionMenu"><span class="type">GtkOptionMenu</span></a> presents the list of 
+    options as a menu while <a class="link" href="GtkCombo.html" title="GtkCombo"><span class="type">GtkCombo</span></a> presents them in a Windows-style list 
+    popup. The only difference between the two is that a <a class="link" href="GtkCombo.html" title="GtkCombo"><span class="type">GtkCombo</span></a> allows to 
+    manually edit the selected value, while the <a class="link" href="GtkOptionMenu.html" title="GtkOptionMenu"><span class="type">GtkOptionMenu</span></a> does not.
   </p>
 <p>
     In GTK+ 2.4, a unified API for list selection was introduced, with 
-    <a href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> for the non-editable case and <a href="GtkComboBoxEntry.html" title="GtkComboBoxEntry"><span class="type">GtkComboBoxEntry</span></a> for the 
+    <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> for the non-editable case and <a class="link" href="GtkComboBoxEntry.html" title="GtkComboBoxEntry"><span class="type">GtkComboBoxEntry</span></a> for the 
     editable case. 
     The selection of the display style &#8212; menu or list &#8212;
     is no longer done at the API level, but has been made themeable via
-    the style property <span class="type">:appearance</span>.
+    the style property <span class="type">"appearance"</span>.
   </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="migrating-GtkOptionMenu"></a>Migrating from GtkOptionMenu to GtkComboBox</h2></div></div></div>
 <p>
       Here is an example of a simple, but typical use of 
-      <span class="type">:</span>
+      <span class="type">""</span>
       </p>
 <div class="informalexample"><pre class="programlisting">
 GtkWidget *option_menu, *menu, *menu_item;
@@ -118,11 +118,11 @@ gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
       </pre></div>
 <p>
       In order to react to the user's selection, connect to the "changed"
-      signal on the option menu and use <a href="GtkOptionMenu.html#gtk-option-menu-get-history"><code class="function">gtk_option_menu_get_history()</code></a>
+      signal on the option menu and use <a class="link" href="GtkOptionMenu.html#gtk-option-menu-get-history"><code class="function">gtk_option_menu_get_history()</code></a>
       to retrieve the index of the selected item.
     </p>
 <p>
-      And here is how it would be done with a <span class="type">:</span>
+      And here is how it would be done with a <span class="type">""</span>
       </p>
 <div class="informalexample"><pre class="programlisting">
 GtkWidget *combo_box;
@@ -135,7 +135,7 @@ gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), "Third Item");
       </pre></div>
 <p>
       In order to react to the user's selection, connect to the 
-      <a href="GtkComboBox.html#GtkComboBox-changed"><span class="type">::changed</span></a> signal and use <a href="GtkComboBox.html#gtk-combo-box-get-active"><code class="function">gtk_combo_box_get_active()</code></a>
+      <a class="link" href="GtkComboBox.html#GtkComboBox-changed"><span class="type">"changed"</span></a> signal and use <a class="link" href="GtkComboBox.html#gtk-combo-box-get-active"><code class="function">gtk_combo_box_get_active()</code></a>
       to retrieve the index of the selected item.
     </p>
 <p>
@@ -165,7 +165,7 @@ gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
 <p>
     </p>
 <p>
-      can be done using a <a href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> as follows:
+      can be done using a <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> as follows:
       </p>
 <div class="informalexample"><pre class="programlisting">
 GtkListStore *store;

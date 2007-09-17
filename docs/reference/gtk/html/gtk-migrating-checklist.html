@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Migration Checklist</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
 <link rel="prev" href="migrating.html" title="Part&#160;IV.&#160;Migrating from Previous Versions of GTK+">
 <link rel="next" href="checklist-gdkeventexpose-region.html" title="Use GdkEventExpose.region">
-<meta name="generator" content="GTK-Doc V1.7 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.8 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part&#160;I.&#160;GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part&#160;II.&#160;GTK+ Core Reference">
@@ -92,12 +92,12 @@
 	key bindings.
       </p>
 <p>
-      The <a href="GtkWidget.html#GtkWidget-popup-menu"><span class="type">::popup-menu</span></a> signal instructs the widget for which 
+      The <a class="link" href="GtkWidget.html#GtkWidget-popup-menu"><span class="type">"popup-menu"</span></a> signal instructs the widget for which 
       it is emitted to create a context-sensitive popup menu. By default, 
       the key binding mechanism is set to
       emit this signal when the
-      <span><strong class="keycap">Shift</strong></span>-<span><strong class="keycap">F10</strong></span>
-      or <span><strong class="keycap">Menu</strong></span> keys are pressed while a widget has the
+      <span class="keycap"><strong>Shift</strong></span>+<span class="keycap"><strong>F10</strong></span>
+      or <span class="keycap"><strong>Menu</strong></span> keys are pressed while a widget has the
       focus.  If a widget in your application shows a popup menu when
       you press a mouse button, you can make it work as well through
       the normal key binding mechanism in the following fahion:
@@ -107,7 +107,7 @@
 <p>
 	  Write a function to create and show a popup menu.  This
 	  function needs to know the button number and the event's
-	  time to pass them to <a href="GtkMenu.html#gtk-menu-popup"><code class="function">gtk_menu_popup()</code></a>.  You can implement
+	  time to pass them to <a class="link" href="GtkMenu.html#gtk-menu-popup"><code class="function">gtk_menu_popup()</code></a>.  You can implement
 	  such a function like this:
 	</p>
 <a name="do_popup_menu"></a><pre class="programlisting">
@@ -142,7 +142,7 @@ do_popup_menu (GtkWidget *my_widget, GdkEventButton *event)
 </li>
 <li>
 <p>
-	  In your <a href="GtkWidget.html#GtkWidget-button-press-event"><span class="type">::button-press-event</span></a> handler, call this function 
+	  In your <a class="link" href="GtkWidget.html#GtkWidget-button-press-event"><span class="type">"button-press-event"</span></a> handler, call this function 
           when you need to pop up a menu:
 	</p>
 <pre class="programlisting">
@@ -162,7 +162,7 @@ my_widget_button_press_event_handler (GtkWidget *widget, GdkEventButton *event)
 </li>
 <li>
 <p>
-	  Implement a handler for the <a href="GtkWidget.html#GtkWidget-popup-menu"><span class="type">::popup-menu</span></a> signal:
+	  Implement a handler for the <a class="link" href="GtkWidget.html#GtkWidget-popup-menu"><span class="type">"popup-menu"</span></a> signal:
 	</p>
 <pre class="programlisting">
 static gboolean
@@ -177,20 +177,20 @@ my_widget_popup_menu_handler (GtkWidget *widget)
 <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Note</h3>
 <p>
-	If you do not pass a positioning function to <a href="GtkMenu.html#gtk-menu-popup"><code class="function">gtk_menu_popup()</code></a>,
+	If you do not pass a positioning function to <a class="link" href="GtkMenu.html#gtk-menu-popup"><code class="function">gtk_menu_popup()</code></a>,
 	it will show the menu at the mouse position by default.  This
 	is what you usually want when the menu is shown as a result of
 	pressing a mouse button.  However, if you press the
-	<span><strong class="keycap">Shift</strong></span>-<span><strong class="keycap">F10</strong></span>
-	or <span><strong class="keycap">Menu</strong></span> keys while the widget is focused, the
-	mouse cursor may not be near the widget at all.  In the <a href="gtk-migrating-checklist.html#do_popup_menu">example above</a>, you may want to
-	provide your own <a href="GtkMenu.html#GtkMenuPositionFunc">menu-positioning function</a>
+	<span class="keycap"><strong>Shift</strong></span>+<span class="keycap"><strong>F10</strong></span>
+	or <span class="keycap"><strong>Menu</strong></span> keys while the widget is focused, the
+	mouse cursor may not be near the widget at all.  In the <a class="link" href="gtk-migrating-checklist.html#do_popup_menu">example above</a>, you may want to
+	provide your own <a class="link" href="GtkMenu.html#GtkMenuPositionFunc">menu-positioning function</a>
 	in the case where the <em class="parameter"><code>event</code></em> is
 	<a
-href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"
+href="../liboil/liboil-liboiljunk.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>.  This function should compute the desired position for 
         a menu when it is invoked through the keyboard.  For example, 
-        <a href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a> aligns the top edge of its popup menu with the bottom 
+        <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a> aligns the top edge of its popup menu with the bottom 
         edge of the entry.
       </p>
 </div>
@@ -201,7 +201,7 @@ href="/home/mclasen/gnome-2.18/install/share/gtk-doc/html/glib/glib-Standard-Mac
 	able to take the keyboard focus.  In general, widgets should
 	be fully usable through the keyboard and not just the mouse.
 	The very first step of this is to ensure that your widget
-	turns on the <a href="GtkWidget.html#GTK-CAN-FOCUS:CAPS"><code class="literal">GTK_CAN_FOCUS</code></a> flag.
+	turns on the <a class="link" href="GtkWidget.html#GTK-CAN-FOCUS:CAPS"><code class="literal">GTK_CAN_FOCUS</code></a> flag.
       </p>
 </div>
 </div>

@@ -1318,6 +1318,9 @@ extern __typeof (gdk_window_end_paint) gdk_window_end_paint __attribute((alias("
 #undef gdk_window_foreign_new 
 extern __typeof (gdk_window_foreign_new) gdk_window_foreign_new __attribute((alias("IA__gdk_window_foreign_new"), visibility("default")));
 
+#undef gdk_window_freeze_toplevel_updates_libgtk_only 
+extern __typeof (gdk_window_freeze_toplevel_updates_libgtk_only) gdk_window_freeze_toplevel_updates_libgtk_only __attribute((alias("IA__gdk_window_freeze_toplevel_updates_libgtk_only"), visibility("default")));
+
 #undef gdk_window_freeze_updates 
 extern __typeof (gdk_window_freeze_updates) gdk_window_freeze_updates __attribute((alias("IA__gdk_window_freeze_updates"), visibility("default")));
 
@@ -1389,6 +1392,9 @@ extern __typeof (gdk_window_set_debug_updates) gdk_window_set_debug_updates __at
 
 #undef gdk_window_set_user_data 
 extern __typeof (gdk_window_set_user_data) gdk_window_set_user_data __attribute((alias("IA__gdk_window_set_user_data"), visibility("default")));
+
+#undef gdk_window_thaw_toplevel_updates_libgtk_only 
+extern __typeof (gdk_window_thaw_toplevel_updates_libgtk_only) gdk_window_thaw_toplevel_updates_libgtk_only __attribute((alias("IA__gdk_window_thaw_toplevel_updates_libgtk_only"), visibility("default")));
 
 #undef gdk_window_thaw_updates 
 extern __typeof (gdk_window_thaw_updates) gdk_window_thaw_updates __attribute((alias("IA__gdk_window_thaw_updates"), visibility("default")));
