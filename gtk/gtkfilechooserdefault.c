@@ -5142,22 +5142,26 @@ location_mode_set (GtkFileChooserDefault *impl,
 }
 
 static void
-toggle_location_mode (GtkFileChooserDefault *impl,
-                      gboolean               set_button)
-{
-  LocationMode new_mode;
-
-  /* toggle value */
-  new_mode = (impl->location_mode == LOCATION_MODE_PATH_BAR) ?
-    LOCATION_MODE_FILENAME_ENTRY : LOCATION_MODE_PATH_BAR;
-
-  location_mode_set (impl, new_mode, set_button);
-}
-
-static void
 location_toggle_popup_handler (GtkFileChooserDefault *impl)
 {
-  toggle_location_mode (impl, TRUE);
+  /* If the file entry is not visible, show it.
+   * If it is visible, turn it off only if it is focused.  Otherwise, switch to the entry.
+   */
+  if (impl->location_mode == LOCATION_MODE_PATH_BAR)
+    {
+      location_mode_set (impl, LOCATION_MODE_FILENAME_ENTRY, TRUE);
+    }
+  else if (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY)
+    {
+      if (GTK_WIDGET_HAS_FOCUS (impl->location_entry))
+        {
+          location_mode_set (impl, LOCATION_MODE_PATH_BAR, TRUE);
+        }
+      else
+        {
+          gtk_widget_grab_focus (impl->location_entry);
+        }
+    }
 }
 
 /* Callback used when one of the location mode buttons is toggled */
@@ -5166,15 +5170,22 @@ location_button_toggled_cb (GtkToggleButton *toggle,
 			    GtkFileChooserDefault *impl)
 {
   gboolean is_active;
+  LocationMode new_mode;
 
   is_active = gtk_toggle_button_get_active (toggle);
 
   if (is_active)
-    g_assert (impl->location_mode == LOCATION_MODE_PATH_BAR);
+    {
+      g_assert (impl->location_mode == LOCATION_MODE_PATH_BAR);
+      new_mode = LOCATION_MODE_FILENAME_ENTRY;
+    }
   else
-    g_assert (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY);
+    {
+      g_assert (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY);
+      new_mode = LOCATION_MODE_PATH_BAR;
+    }
 
-  toggle_location_mode (impl, FALSE);
+  location_mode_set (impl, new_mode, FALSE);
 }
 
 /* Creates a toggle button for the location entry. */
@@ -8994,6 +9005,8 @@ search_stop_searching (GtkFileChooserDefault *impl,
   
   if (impl->search_engine)
     {
+      _gtk_search_engine_stop (impl->search_engine);
+      
       g_object_unref (impl->search_engine);
       impl->search_engine = NULL;
     }
@@ -11010,7 +11023,7 @@ list_mtime_data_func (GtkTreeViewColumn *tree_column,
 		      gpointer           data)
 {
   GtkFileChooserDefault *impl;
-  GtkFileTime time_mtime;
+  time_t time_mtime;
   gchar *date_str = NULL;
   gboolean sensitive = TRUE;
 
@@ -11050,7 +11063,7 @@ list_mtime_data_func (GtkTreeViewColumn *tree_column,
                           -1);
 
       if (info)
-        time_mtime = (GtkFileTime) gtk_recent_info_get_modified (info);
+        time_mtime = gtk_recent_info_get_modified (info);
       else
         time_mtime = 0;
 
@@ -11072,7 +11085,7 @@ list_mtime_data_func (GtkTreeViewColumn *tree_column,
 	  return;
 	}
 
-      time_mtime = gtk_file_info_get_modification_time (info);
+      time_mtime = (time_t) gtk_file_info_get_modification_time (info);
 
       if (impl->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER ||
 	  impl->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
@@ -11088,6 +11101,7 @@ list_mtime_data_func (GtkTreeViewColumn *tree_column,
       struct tm tm_mtime;
       time_t time_now;
       const gchar *format;
+      gchar *locale_format = NULL;
       gchar buf[256];
 
 #ifdef HAVE_LOCALTIME_R
@@ -11130,10 +11144,14 @@ list_mtime_data_func (GtkTreeViewColumn *tree_column,
 	    format = "%x"; /* Any other date */
 	}
 
-      if (strftime (buf, sizeof (buf), format, &tm_mtime) != 0)
-        date_str = g_strdup (buf);
+      locale_format = g_locale_from_utf8 (format, -1, NULL, NULL, NULL);
+
+      if (strftime (buf, sizeof (buf), locale_format, &tm_mtime) != 0)
+        date_str = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
       else
 	date_str = g_strdup (_("Unknown"));
+
+      g_free (locale_format);
     }
 
   g_object_set (cell,

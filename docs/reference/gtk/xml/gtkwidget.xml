@@ -376,7 +376,7 @@ GtkWidget is required by
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkWidget implements
- <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="AtkImplementorIface">AtkImplementorIface</link>.</para>
+ <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
 
 </refsect1>
 
@@ -1862,7 +1862,7 @@ by connecting to the <parameter>GtkAccelGroup</parameter>::accel-changed signal 
 <para>
 Determines whether an accelerator that activates the signal
 identified by <parameter>signal_id</parameter> can currently be activated.
-This is done by emitting the <link linkend="GtkWidget-can-activate-accel"><type>"can-activate-accel"</type></link>
+This is done by emitting the <link linkend="GtkWidget-can-activate-accel"><type>GtkWidget::can-activate-accel</type></link>
 signal on <parameter>widget</parameter>; if the signal isn't overridden by a
 handler or in a derived widget, then the default check is
 that the widget must be sensitive, and the widget and all
@@ -2509,7 +2509,7 @@ toplevel.</para>
 <title><anchor id="gtk-widget-hide-on-delete" role="function"/>gtk_widget_hide_on_delete ()</title>
 <indexterm><primary>gtk_widget_hide_on_delete</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_widget_hide_on_delete           (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
-Utility function; intended to be connected to the <link linkend="GtkWidget-delete-event"><type>"delete-event"</type></link>
+Utility function; intended to be connected to the <link linkend="GtkWidget-delete-event"><type>GtkWidget::delete-event</type></link>
 signal on a <link linkend="GtkWindow"><type>GtkWindow</type></link>. The function calls <link linkend="gtk-widget-hide"><function>gtk_widget_hide()</function></link> on its
 argument, then returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>. If connected to ::delete-event, the
 result is that clicking the close button for a window (on the
@@ -3106,7 +3106,7 @@ untouched. See also <link linkend="gtk-widget-modify-style"><function>gtk_widget
                                                          const <link linkend="GdkColor">GdkColor</link> *secondary);</programlisting>
 <para>
 Sets the cursor color to use in a widget, overriding the
-<link linkend="GtkWidget--cursor-color"><type>"cursor-color"</type></link> and <link linkend="GtkWidget--secondary-cursor-color"><type>"secondary-cursor-color"</type></link>
+<link linkend="GtkWidget--cursor-color"><type>GtkWidget:cursor-color</type></link> and <link linkend="GtkWidget--secondary-cursor-color"><type>GtkWidget:secondary-cursor-color</type></link>
 style properties. All other style values are left untouched. 
 See also <link linkend="gtk-widget-modify-style"><function>gtk_widget_modify_style()</function></link>.</para>
 <para>
@@ -3157,8 +3157,8 @@ match any changes to the widget's attributes.
 <para>
 If you create and keep a <link linkend="PangoLayout"><type>PangoLayout</type></link> using this context, you must
 deal with changes to the context by calling <link linkend="pango-layout-context-changed"><function>pango_layout_context_changed()</function></link>
-on the layout in response to the <link linkend="GtkWidget-style-set"><type>"style-set"</type></link> and 
-<link linkend="GtkWidget-direction-changed"><type>"direction-changed"</type></link> signals for the widget.</para>
+on the layout in response to the <link linkend="GtkWidget-style-set"><type>GtkWidget::style-set</type></link> and 
+<link linkend="GtkWidget-direction-changed"><type>GtkWidget::direction-changed</type></link> signals for the widget.</para>
 <para>
 
 </para><variablelist role="params">
@@ -3181,7 +3181,7 @@ this widget.
 If you keep a <link linkend="PangoLayout"><type>PangoLayout</type></link> created in this way around, in order to
 notify the layout of changes to the base direction or font of this
 widget, you must call <link linkend="pango-layout-context-changed"><function>pango_layout_context_changed()</function></link> in response to
-the <link linkend="GtkWidget-style-set"><type>"style-set"</type></link> and <link linkend="GtkWidget-direction-changed"><type>"direction-changed"</type></link> signals 
+the <link linkend="GtkWidget-style-set"><type>GtkWidget::style-set</type></link> and <link linkend="GtkWidget-direction-changed"><type>GtkWidget::direction-changed</type></link> signals 
 for the widget.</para>
 <para>
 
@@ -3386,7 +3386,7 @@ Recursively resets the shape on this widget and its descendants.</para>
                                                          <link linkend="gboolean">gboolean</link> app_paintable);</programlisting>
 <para>
 Sets whether the application intends to draw on the widget in
-an <link linkend="GtkWidget-expose-event"><type>"expose-event"</type></link> handler. 
+an <link linkend="GtkWidget-expose-event"><type>GtkWidget::expose-event</type></link> handler. 
 </para>
 <para>
 This is a hint to the widget and does not affect the behavior of 
@@ -3788,7 +3788,7 @@ functions instead.
 around the window using keyboard shortcuts. <parameter>direction</parameter> indicates
 what kind of motion is taking place (up, down, left, right, tab
 forward, tab backward). <link linkend="gtk-widget-child-focus"><function>gtk_widget_child_focus()</function></link> emits the
-<link linkend="GtkWidget-focus"><type>"focus"</type></link>" signal; widgets override the default handler
+<link linkend="GtkWidget-focus"><type>GtkWidget::focus</type></link>" signal; widgets override the default handler
 for this signal in order to implement appropriate focus behavior.
 </para>
 <para>
@@ -3822,7 +3822,7 @@ currently in a focusable state, so there's no need for those checks.</para>
 <indexterm><primary>gtk_widget_child_notify</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_child_notify             (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          const <link linkend="gchar">gchar</link> *child_property);</programlisting>
 <para>
-Emits a <link linkend="GtkWidget-child-notify"><type>"child-notify"</type></link> signal for the 
+Emits a <link linkend="GtkWidget-child-notify"><type>GtkWidget::child-notify</type></link> signal for the 
 <link linkend="child-properties">child property</link> <parameter>child_property</parameter> 
 on <parameter>widget</parameter>.
 </para>
@@ -3843,7 +3843,7 @@ This is the analogue of <link linkend="g-object-notify"><function>g_object_notif
 <title><anchor id="gtk-widget-freeze-child-notify" role="function"/>gtk_widget_freeze_child_notify ()</title>
 <indexterm><primary>gtk_widget_freeze_child_notify</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_freeze_child_notify      (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
-Stops emission of <link linkend="GtkWidget-child-notify"><type>"child-notify"</type></link> signals on <parameter>widget</parameter>. The 
+Stops emission of <link linkend="GtkWidget-child-notify"><type>GtkWidget::child-notify</type></link> signals on <parameter>widget</parameter>. The 
 signals are queued until <link linkend="gtk-widget-thaw-child-notify"><function>gtk_widget_thaw_child_notify()</function></link> is called 
 on <parameter>widget</parameter>. 
 </para>
@@ -4203,7 +4203,7 @@ This function is deprecated; it does nothing.
 <indexterm><primary>gtk_widget_thaw_child_notify</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_thaw_child_notify        (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 Reverts the effect of a previous call to <link linkend="gtk-widget-freeze-child-notify"><function>gtk_widget_freeze_child_notify()</function></link>.
-This causes all queued <link linkend="GtkWidget-child-notify"><type>"child-notify"</type></link> signals on <parameter>widget</parameter> to be 
+This causes all queued <link linkend="GtkWidget-child-notify"><type>GtkWidget::child-notify</type></link> signals on <parameter>widget</parameter> to be 
 emitted.</para>
 <para>
 
@@ -4217,7 +4217,7 @@ emitted.</para>
 <indexterm role="2.4"><primary>gtk_widget_set_no_show_all</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_set_no_show_all          (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="gboolean">gboolean</link> no_show_all);</programlisting>
 <para>
-Sets the <link linkend="GtkWidget--no-show-all"><type>"no-show-all"</type></link> property, which determines whether 
+Sets the <link linkend="GtkWidget--no-show-all"><type>GtkWidget:no-show-all</type></link> property, which determines whether 
 calls to <link linkend="gtk-widget-show-all"><function>gtk_widget_show_all()</function></link> and <link linkend="gtk-widget-hide-all"><function>gtk_widget_hide_all()</function></link> will affect 
 this widget. 
 </para>
@@ -4290,7 +4290,7 @@ this widget. (See <link linkend="gtk-widget-list-mnemonic-labels"><function>gtk_
 list of mnemonic labels for the widget is cleared when the
 widget is destroyed, so the caller must make sure to update
 its internal state at this point as well, by using a connection
-to the <link linkend="GtkWidget-destroy"><type>"destroy"</type></link> signal or a weak notifier.</para>
+to the <link linkend="GtkWidget-destroy"><type>GtkWidget::destroy</type></link> signal or a weak notifier.</para>
 <para>
 
 </para><variablelist role="params">
@@ -4371,7 +4371,7 @@ channel being drawn correctly.
 <indexterm role="2.12"><primary>gtk_widget_error_bell</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_error_bell               (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 Notifies the user about an input-related error on this widget. 
-If the <link linkend="GtkSettings--gtk-error-bell"><type>"gtk-error-bell"</type></link> setting is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, it calls
+If the <link linkend="GtkSettings--gtk-error-bell"><type>GtkSettings:gtk-error-bell</type></link> setting is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, it calls
 <link linkend="gdk-window-beep"><function>gdk_window_beep()</function></link>, otherwise it does nothing.
 </para>
 <para>
@@ -4393,7 +4393,7 @@ or window manager that is used.</para>
 <para>
 This function should be called whenever keyboard navigation within
 a single widget hits a boundary. The function emits the
-<link linkend="GtkWidget-keynav-changed"><type>"keynav-changed"</type></link> signal on the widget and its return 
+<link linkend="GtkWidget-keynav-changed"><type>GtkWidget::keynav-changed</type></link> signal on the widget and its return 
 value should be interpreted in a way similar to the return value of
 <link linkend="gtk-widget-child-focus"><function>gtk_widget_child_focus()</function></link>:
 </para>
@@ -4411,7 +4411,7 @@ navigation outside the widget, e.g. by calling
 The default ::keynav-failed handler returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> for 
 <link linkend="GTK-DIR-TAB-FORWARD:CAPS"><literal>GTK_DIR_TAB_FORWARD</literal></link> and <link linkend="GTK-DIR-TAB-BACKWARD:CAPS"><literal>GTK_DIR_TAB_BACKWARD</literal></link>. For the other 
 values of <link linkend="GtkDirectionType"><type>GtkDirectionType</type></link>, it looks at the 
-<link linkend="GtkSettings--gtk-keynav-cursor-only"><type>"gtk-keynav-cursor-only"</type></link>" setting and returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> 
+<link linkend="GtkSettings--gtk-keynav-cursor-only"><type>GtkSettings:gtk-keynav-cursor-only</type></link>" setting and returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> 
 if the setting is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>. This way the entire user interface
 becomes cursor-navigatable on input devices such as mobile phones
 which only have cursor keys but no tab key.
@@ -4644,44 +4644,44 @@ Frees a <link linkend="GtkRequisition"><type>GtkRequisition</type></link>.</para
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkWidget--app-paintable"/>The <literal>&quot;app-paintable&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--app-paintable"/>The &quot;<literal>app-paintable</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:app-paintable</primary></indexterm><programlisting>  &quot;app-paintable&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the application will paint directly on the widget.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--can-default"/>The <literal>&quot;can-default&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--can-default"/>The &quot;<literal>can-default</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:can-default</primary></indexterm><programlisting>  &quot;can-default&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the widget can be the default widget.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--can-focus"/>The <literal>&quot;can-focus&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--can-focus"/>The &quot;<literal>can-focus</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:can-focus</primary></indexterm><programlisting>  &quot;can-focus&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the widget can accept the input focus.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--composite-child"/>The <literal>&quot;composite-child&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--composite-child"/>The &quot;<literal>composite-child</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:composite-child</primary></indexterm><programlisting>  &quot;composite-child&quot;          <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Whether the widget is part of a composite widget.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--events"/>The <literal>&quot;events&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--events"/>The &quot;<literal>events</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:events</primary></indexterm><programlisting>  &quot;events&quot;                   <link linkend="GdkEventMask">GdkEventMask</link>          : Read / Write</programlisting>
 <para>The event mask that decides what kind of GdkEvents this widget gets.</para><para>Default value: GDK_STRUCTURE_MASK</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--extension-events"/>The <literal>&quot;extension-events&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--extension-events"/>The &quot;<literal>extension-events</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:extension-events</primary></indexterm><programlisting>  &quot;extension-events&quot;         <link linkend="GdkExtensionMode">GdkExtensionMode</link>      : Read / Write</programlisting>
 <para>The mask that decides what kind of extension events this widget gets.</para><para>Default value: GDK_EXTENSION_EVENTS_NONE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--has-default"/>The <literal>&quot;has-default&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--has-default"/>The &quot;<literal>has-default</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:has-default</primary></indexterm><programlisting>  &quot;has-default&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the widget is the default widget.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--has-focus"/>The <literal>&quot;has-focus&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--has-focus"/>The &quot;<literal>has-focus</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:has-focus</primary></indexterm><programlisting>  &quot;has-focus&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the widget has the input focus.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--has-tooltip"/>The <literal>&quot;has-tooltip&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--has-tooltip"/>The &quot;<literal>has-tooltip</literal>&quot; property</title>
 <indexterm role="2.12"><primary>GtkWidget:has-tooltip</primary></indexterm><programlisting>  &quot;has-tooltip&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
-Enables or disables the emission of <link linkend="GtkWidget-query-tooltip"><type>"query-tooltip"</type></link> on <parameter>widget</parameter>.  
+Enables or disables the emission of <link linkend="GtkWidget-query-tooltip"><type>GtkWidget::query-tooltip</type></link> on <parameter>widget</parameter>.  
 A value of <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> indicates that <parameter>widget</parameter> can have a tooltip, in this case
-the widget will be queried using <link linkend="GtkWidget-query-tooltip"><type>"query-tooltip"</type></link> to determine
+the widget will be queried using <link linkend="GtkWidget-query-tooltip"><type>GtkWidget::query-tooltip</type></link> to determine
 whether it will provide a tooltip or not.
 </para>
 <para>
@@ -4695,38 +4695,38 @@ property is set to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> ag
 <para>Since  2.12
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--height-request"/>The <literal>&quot;height-request&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--height-request"/>The &quot;<literal>height-request</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:height-request</primary></indexterm><programlisting>  &quot;height-request&quot;           <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>Override for height request of the widget, or -1 if natural request should be used.</para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--is-focus"/>The <literal>&quot;is-focus&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--is-focus"/>The &quot;<literal>is-focus</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:is-focus</primary></indexterm><programlisting>  &quot;is-focus&quot;                 <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the widget is the focus widget within the toplevel.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--name"/>The <literal>&quot;name&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--name"/>The &quot;<literal>name</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:name</primary></indexterm><programlisting>  &quot;name&quot;                     <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>The name of the widget.</para><para>Default value: NULL</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--no-show-all"/>The <literal>&quot;no-show-all&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--no-show-all"/>The &quot;<literal>no-show-all</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:no-show-all</primary></indexterm><programlisting>  &quot;no-show-all&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether gtk_widget_show_all() should not affect this widget.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--parent"/>The <literal>&quot;parent&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--parent"/>The &quot;<literal>parent</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:parent</primary></indexterm><programlisting>  &quot;parent&quot;                   <link linkend="GtkContainer">GtkContainer</link>          : Read / Write</programlisting>
 <para>The parent widget of this widget. Must be a Container widget.</para></refsect2>
-<refsect2><title><anchor id="GtkWidget--receives-default"/>The <literal>&quot;receives-default&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--receives-default"/>The &quot;<literal>receives-default</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:receives-default</primary></indexterm><programlisting>  &quot;receives-default&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If TRUE, the widget will receive the default action when it is focused.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--sensitive"/>The <literal>&quot;sensitive&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--sensitive"/>The &quot;<literal>sensitive</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:sensitive</primary></indexterm><programlisting>  &quot;sensitive&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the widget responds to input.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--style"/>The <literal>&quot;style&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--style"/>The &quot;<literal>style</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:style</primary></indexterm><programlisting>  &quot;style&quot;                    <link linkend="GtkStyle">GtkStyle</link>              : Read / Write</programlisting>
 <para>The style of the widget, which contains information about how it will look (colors etc).</para></refsect2>
-<refsect2><title><anchor id="GtkWidget--tooltip-markup"/>The <literal>&quot;tooltip-markup&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--tooltip-markup"/>The &quot;<literal>tooltip-markup</literal>&quot; property</title>
 <indexterm role="2.12"><primary>GtkWidget:tooltip-markup</primary></indexterm><programlisting>  &quot;tooltip-markup&quot;           <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 Sets the text of tooltip to be the given string, which is marked up
@@ -4735,16 +4735,16 @@ Also see <link linkend="gtk-tooltip-set-markup"><function>gtk_tooltip_set_markup
 </para>
 <para>
 This is a convenience property which will take care of getting the
-tooltip shown if the given string is not <link linkend="NULL:CAPS"><literal>NULL</literal></link>: <link linkend="GtkWidget--has-tooltip"><type>"has-tooltip"</type></link>
+tooltip shown if the given string is not <link linkend="NULL:CAPS"><literal>NULL</literal></link>: <link linkend="GtkWidget--has-tooltip"><type>GtkWidget:has-tooltip</type></link>
 will automatically be set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> and there will be taken care of
-<link linkend="GtkWidget-query-tooltip"><type>"query-tooltip"</type></link> in the default signal handler.</para>
+<link linkend="GtkWidget-query-tooltip"><type>GtkWidget::query-tooltip</type></link> in the default signal handler.</para>
 <para>
 
 </para><para>Default value: NULL</para>
 <para>Since  2.12
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--tooltip-text"/>The <literal>&quot;tooltip-text&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--tooltip-text"/>The &quot;<literal>tooltip-text</literal>&quot; property</title>
 <indexterm role="2.12"><primary>GtkWidget:tooltip-text</primary></indexterm><programlisting>  &quot;tooltip-text&quot;             <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 Sets the text of tooltip to be the given string.
@@ -4754,20 +4754,20 @@ Also see <link linkend="gtk-tooltip-set-text"><function>gtk_tooltip_set_text()</
 </para>
 <para>
 This is a convenience property which will take care of getting the
-tooltip shown if the given string is not <link linkend="NULL:CAPS"><literal>NULL</literal></link>: <link linkend="GtkWidget--has-tooltip"><type>"has-tooltip"</type></link>
+tooltip shown if the given string is not <link linkend="NULL:CAPS"><literal>NULL</literal></link>: <link linkend="GtkWidget--has-tooltip"><type>GtkWidget:has-tooltip</type></link>
 will automatically be set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> and there will be taken care of
-<link linkend="GtkWidget-query-tooltip"><type>"query-tooltip"</type></link> in the default signal handler.</para>
+<link linkend="GtkWidget-query-tooltip"><type>GtkWidget::query-tooltip</type></link> in the default signal handler.</para>
 <para>
 
 </para><para>Default value: NULL</para>
 <para>Since  2.12
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--visible"/>The <literal>&quot;visible&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--visible"/>The &quot;<literal>visible</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:visible</primary></indexterm><programlisting>  &quot;visible&quot;                  <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the widget is visible.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--width-request"/>The <literal>&quot;width-request&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkWidget--width-request"/>The &quot;<literal>width-request</literal>&quot; property</title>
 <indexterm><primary>GtkWidget:width-request</primary></indexterm><programlisting>  &quot;width-request&quot;            <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>Override for width request of the widget, or -1 if natural request should be used.</para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
@@ -4776,15 +4776,15 @@ will automatically be set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></
 </refsect1>
 <refsect1 role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
-<refsect2><title><anchor id="GtkWidget--cursor-aspect-ratio"/>The <literal>&quot;cursor-aspect-ratio&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--cursor-aspect-ratio"/>The &quot;<literal>cursor-aspect-ratio</literal>&quot; style property</title>
 <indexterm><primary>GtkWidget:cursor-aspect-ratio</primary></indexterm><programlisting>  &quot;cursor-aspect-ratio&quot;      <link linkend="gfloat">gfloat</link>                : Read</programlisting>
 <para>Aspect ratio with which to draw insertion cursor.</para><para>Allowed values: [0,1]</para>
 <para>Default value: 0.04</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--cursor-color"/>The <literal>&quot;cursor-color&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--cursor-color"/>The &quot;<literal>cursor-color</literal>&quot; style property</title>
 <indexterm><primary>GtkWidget:cursor-color</primary></indexterm><programlisting>  &quot;cursor-color&quot;             <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
 <para>Color with which to draw insertion cursor.</para></refsect2>
-<refsect2><title><anchor id="GtkWidget--draw-border"/>The <literal>&quot;draw-border&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--draw-border"/>The &quot;<literal>draw-border</literal>&quot; style property</title>
 <indexterm role="2.8"><primary>GtkWidget:draw-border</primary></indexterm><programlisting>  &quot;draw-border&quot;              <link linkend="GtkBorder">GtkBorder</link>             : Read</programlisting>
 <para>
 The "draw-border" style property defines the size of areas outside 
@@ -4794,25 +4794,25 @@ the widget's allocation to draw.</para>
 </para><para>Since  2.8
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--focus-line-pattern"/>The <literal>&quot;focus-line-pattern&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--focus-line-pattern"/>The &quot;<literal>focus-line-pattern</literal>&quot; style property</title>
 <indexterm><primary>GtkWidget:focus-line-pattern</primary></indexterm><programlisting>  &quot;focus-line-pattern&quot;       <link linkend="gchararray">gchararray</link>            : Read</programlisting>
 <para>Dash pattern used to draw the focus indicator.</para><para>Default value: "\001\001"</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--focus-line-width"/>The <literal>&quot;focus-line-width&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--focus-line-width"/>The &quot;<literal>focus-line-width</literal>&quot; style property</title>
 <indexterm><primary>GtkWidget:focus-line-width</primary></indexterm><programlisting>  &quot;focus-line-width&quot;         <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Width, in pixels, of the focus indicator line.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--focus-padding"/>The <literal>&quot;focus-padding&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--focus-padding"/>The &quot;<literal>focus-padding</literal>&quot; style property</title>
 <indexterm><primary>GtkWidget:focus-padding</primary></indexterm><programlisting>  &quot;focus-padding&quot;            <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Width, in pixels, between focus indicator and the widget 'box'.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 1</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--interior-focus"/>The <literal>&quot;interior-focus&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--interior-focus"/>The &quot;<literal>interior-focus</literal>&quot; style property</title>
 <indexterm><primary>GtkWidget:interior-focus</primary></indexterm><programlisting>  &quot;interior-focus&quot;           <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Whether to draw the focus indicator inside widgets.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--link-color"/>The <literal>&quot;link-color&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--link-color"/>The &quot;<literal>link-color</literal>&quot; style property</title>
 <indexterm role="2.10"><primary>GtkWidget:link-color</primary></indexterm><programlisting>  &quot;link-color&quot;               <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
 <para>
 The "link-color" style property defines the color of unvisited links.</para>
@@ -4821,7 +4821,7 @@ The "link-color" style property defines the color of unvisited links.</para>
 </para><para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--scroll-arrow-hlength"/>The <literal>&quot;scroll-arrow-hlength&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--scroll-arrow-hlength"/>The &quot;<literal>scroll-arrow-hlength</literal>&quot; style property</title>
 <indexterm role="2.10"><primary>GtkWidget:scroll-arrow-hlength</primary></indexterm><programlisting>  &quot;scroll-arrow-hlength&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>
 The "scroll-arrow-hlength" style property defines the length of 
@@ -4833,7 +4833,7 @@ horizontal scroll arrows.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--scroll-arrow-vlength"/>The <literal>&quot;scroll-arrow-vlength&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--scroll-arrow-vlength"/>The &quot;<literal>scroll-arrow-vlength</literal>&quot; style property</title>
 <indexterm role="2.10"><primary>GtkWidget:scroll-arrow-vlength</primary></indexterm><programlisting>  &quot;scroll-arrow-vlength&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>
 The "scroll-arrow-vlength" style property defines the length of 
@@ -4845,14 +4845,14 @@ vertical scroll arrows.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--secondary-cursor-color"/>The <literal>&quot;secondary-cursor-color&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--secondary-cursor-color"/>The &quot;<literal>secondary-cursor-color</literal>&quot; style property</title>
 <indexterm><primary>GtkWidget:secondary-cursor-color</primary></indexterm><programlisting>  &quot;secondary-cursor-color&quot;   <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
 <para>Color with which to draw the secondary insertion cursor when editing mixed right-to-left and left-to-right text.</para></refsect2>
-<refsect2><title><anchor id="GtkWidget--separator-height"/>The <literal>&quot;separator-height&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--separator-height"/>The &quot;<literal>separator-height</literal>&quot; style property</title>
 <indexterm role="2.10"><primary>GtkWidget:separator-height</primary></indexterm><programlisting>  &quot;separator-height&quot;         <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>
 The "separator-height" style property defines the height of separators.
-This property only takes effect if <link linkend="GtkWidget--wide-separators"><type>"wide-separators"</type></link> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.</para>
+This property only takes effect if <link linkend="GtkWidget--wide-separators"><type>GtkWidget:wide-separators</type></link> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.</para>
 <para>
 
 </para><para>Allowed values: &gt;= 0</para>
@@ -4860,11 +4860,11 @@ This property only takes effect if <link linkend="GtkWidget--wide-separators"><t
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--separator-width"/>The <literal>&quot;separator-width&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--separator-width"/>The &quot;<literal>separator-width</literal>&quot; style property</title>
 <indexterm role="2.10"><primary>GtkWidget:separator-width</primary></indexterm><programlisting>  &quot;separator-width&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>
 The "separator-width" style property defines the width of separators.
-This property only takes effect if <link linkend="GtkWidget--wide-separators"><type>"wide-separators"</type></link> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.</para>
+This property only takes effect if <link linkend="GtkWidget--wide-separators"><type>GtkWidget:wide-separators</type></link> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.</para>
 <para>
 
 </para><para>Allowed values: &gt;= 0</para>
@@ -4872,7 +4872,7 @@ This property only takes effect if <link linkend="GtkWidget--wide-separators"><t
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--visited-link-color"/>The <literal>&quot;visited-link-color&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--visited-link-color"/>The &quot;<literal>visited-link-color</literal>&quot; style property</title>
 <indexterm role="2.10"><primary>GtkWidget:visited-link-color</primary></indexterm><programlisting>  &quot;visited-link-color&quot;       <link linkend="GdkColor">GdkColor</link>              : Read</programlisting>
 <para>
 The "visited-link-color" style property defines the color of visited links.</para>
@@ -4881,7 +4881,7 @@ The "visited-link-color" style property defines the color of visited links.</par
 </para><para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkWidget--wide-separators"/>The <literal>&quot;wide-separators&quot;</literal> style property</title>
+<refsect2><title><anchor id="GtkWidget--wide-separators"/>The &quot;<literal>wide-separators</literal>&quot; style property</title>
 <indexterm role="2.10"><primary>GtkWidget:wide-separators</primary></indexterm><programlisting>  &quot;wide-separators&quot;          <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>
 The "wide-separators" style property defines whether separators have 
@@ -4897,7 +4897,7 @@ configurable width and should be drawn using a box instead of a line.</para>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkWidget-accel-closures-changed"/>The <literal>&quot;accel-closures-changed&quot;</literal> signal</title>
+<refsect2><title><anchor id="GtkWidget-accel-closures-changed"/>The &quot;accel-closures-changed&quot; signal</title>
 <indexterm><primary>GtkWidget::accel-closures-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)</programlisting>
 <para>
@@ -4909,7 +4909,7 @@ configurable width and should be drawn using a box instead of a line.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-button-press-event"/>The <literal>&quot;button-press-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-button-press-event"/>The &quot;button-press-event&quot; signal</title>
 <indexterm><primary>GtkWidget::button-press-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkEventButton">GdkEventButton</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
@@ -4937,7 +4937,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-button-release-event"/>The <literal>&quot;button-release-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-button-release-event"/>The &quot;button-release-event&quot; signal</title>
 <indexterm><primary>GtkWidget::button-release-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkEventButton">GdkEventButton</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
@@ -4965,7 +4965,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-can-activate-accel"/>The <literal>&quot;can-activate-accel&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-can-activate-accel"/>The &quot;can-activate-accel&quot; signal</title>
 <indexterm><primary>GtkWidget::can-activate-accel</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="guint">guint</link>      signal_id,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -4988,7 +4988,7 @@ for determining whether an accelerator can be activated.</para>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the signal can be activated.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-child-notify"/>The <literal>&quot;child-notify&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-child-notify"/>The &quot;child-notify&quot; signal</title>
 <indexterm><primary>GtkWidget::child-notify</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>  *widget,
                                                         <link linkend="GParamSpec">GParamSpec</link> *pspec,
                                                         <link linkend="gpointer">gpointer</link>    user_data)      : Run First / No Recursion / Has Details / No Hooks</programlisting>
@@ -5007,7 +5007,7 @@ changed on an object. The signal's detail holds the property name.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-client-event"/>The <literal>&quot;client-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-client-event"/>The &quot;client-event&quot; signal</title>
 <indexterm><primary>GtkWidget::client-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkEventClient">GdkEventClient</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
@@ -5029,7 +5029,7 @@ application.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for 
   the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-composited-changed"/>The <literal>&quot;composited-changed&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-composited-changed"/>The &quot;composited-changed&quot; signal</title>
 <indexterm><primary>GtkWidget::composited-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
 <para>
@@ -5044,7 +5044,7 @@ See <link linkend="gdk-screen-is-composited"><function>gdk_screen_is_composited(
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-configure-event"/>The <literal>&quot;configure-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-configure-event"/>The &quot;configure-event&quot; signal</title>
 <indexterm><primary>GtkWidget::configure-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventConfigure">GdkEventConfigure</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
@@ -5070,7 +5070,7 @@ automatically for all new windows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-delete-event"/>The <literal>&quot;delete-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-delete-event"/>The &quot;delete-event&quot; signal</title>
 <indexterm><primary>GtkWidget::delete-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -5094,7 +5094,7 @@ it can later be shown again without reconstructing it.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-destroy-event"/>The <literal>&quot;destroy-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-destroy-event"/>The &quot;destroy-event&quot; signal</title>
 <indexterm><primary>GtkWidget::destroy-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -5122,7 +5122,7 @@ automatically for all new windows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-direction-changed"/>The <literal>&quot;direction-changed&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-direction-changed"/>The &quot;direction-changed&quot; signal</title>
 <indexterm><primary>GtkWidget::direction-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>       *widget,
                                                         <link linkend="GtkTextDirection">GtkTextDirection</link> previous_direction,
                                                         <link linkend="gpointer">gpointer</link>         user_data)               : Run First</programlisting>
@@ -5140,7 +5140,7 @@ of a widget changes.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-begin"/>The <literal>&quot;drag-begin&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-begin"/>The &quot;drag-begin&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-begin</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link> *drag_context,
                                                         <link linkend="gpointer">gpointer</link>        user_data)         : Run Last</programlisting>
@@ -5159,7 +5159,7 @@ custom drag icon with <link linkend="gtk-drag-source-set-icon"><function>gtk_dra
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-data-delete"/>The <literal>&quot;drag-data-delete&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-data-delete"/>The &quot;drag-data-delete&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-data-delete</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link> *drag_context,
                                                         <link linkend="gpointer">gpointer</link>        user_data)         : Run Last</programlisting>
@@ -5179,7 +5179,7 @@ handler is responsible for deleting the data that has been dropped. What
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-data-get"/>The <literal>&quot;drag-data-get&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-data-get"/>The &quot;drag-data-get&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-data-get</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link>   *drag_context,
                                                         <link linkend="GtkSelectionData">GtkSelectionData</link> *data,
@@ -5213,7 +5213,7 @@ is indicated by <parameter>info</parameter>. See <link linkend="gtk-selection-da
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-data-received"/>The <literal>&quot;drag-data-received&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-data-received"/>The &quot;drag-data-received&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-data-received</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link>   *drag_context,
                                                         <link linkend="gint">gint</link>              x,
@@ -5227,7 +5227,7 @@ The ::drag-data-received signal is emitted on the drop site when the
 dragged data has been received. If the data was received in order to 
 determine whether the drop will be accepted, the handler is expected 
 to call <link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> and <emphasis>not</emphasis> finish the drag. 
-If the data was received in response to a <link linkend="GtkWidget-drag-drop"><type>"drag-drop"</type></link> signal 
+If the data was received in response to a <link linkend="GtkWidget-drag-drop"><type>GtkWidget::drag-drop</type></link> signal 
 (and this is the last target to be received), the handler for this 
 signal is expected to process the received data and then call 
 <link linkend="gtk-drag-finish"><function>gtk_drag_finish()</function></link>, setting the <parameter>success</parameter> parameter depending on whether 
@@ -5303,7 +5303,7 @@ drag_data_received (GtkWidget          *widget,
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-drop"/>The <literal>&quot;drag-drop&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-drop"/>The &quot;drag-drop&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-drop</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link> *drag_context,
                                                         <link linkend="gint">gint</link>            x,
@@ -5318,7 +5318,7 @@ zone, it returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> and 
 Otherwise, the handler returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>. In this case, the handler must 
 ensure that <link linkend="gtk-drag-finish"><function>gtk_drag_finish()</function></link> is called to let the source know that 
 the drop is done. The call to <link linkend="gtk-drag-finish"><function>gtk_drag_finish()</function></link> can be done either 
-directly or in a <link linkend="GtkWidget-drag-data-received"><type>"drag-data-received"</type></link> handler which gets 
+directly or in a <link linkend="GtkWidget-drag-data-received"><type>GtkWidget::drag-data-received</type></link> handler which gets 
 triggered by calling <link linkend="gtk-drag-get-data"><function>gtk_drag_get_data()</function></link> to receive the data for one 
 or more of the supported targets.</para>
 <para>
@@ -5344,14 +5344,14 @@ or more of the supported targets.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-end"/>The <literal>&quot;drag-end&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-end"/>The &quot;drag-end&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-end</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link> *drag_context,
                                                         <link linkend="gpointer">gpointer</link>        user_data)         : Run Last</programlisting>
 <para>
 The ::drag-end signal is emitted on the drag source when a drag is 
 finished.  A typical reason to connect to this signal is to undo 
-things done in <link linkend="GtkWidget-drag-begin"><type>"drag-begin"</type></link>.</para>
+things done in <link linkend="GtkWidget-drag-begin"><type>GtkWidget::drag-begin</type></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -5363,7 +5363,7 @@ things done in <link linkend="GtkWidget-drag-begin"><type>"drag-begin"</type></l
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-failed"/>The <literal>&quot;drag-failed&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-failed"/>The &quot;drag-failed&quot; signal</title>
 <indexterm role="2.12"><primary>GtkWidget::drag-failed</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link> *drag_context,
                                                         <link linkend="GtkDragResult">GtkDragResult</link>   result,
@@ -5392,7 +5392,7 @@ animation), otherwise it returns <link linkend="FALSE:CAPS"><literal>FALSE</lite
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.12
-</para></refsect2><refsect2><title><anchor id="GtkWidget-drag-leave"/>The <literal>&quot;drag-leave&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkWidget-drag-leave"/>The &quot;drag-leave&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-leave</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link> *drag_context,
                                                         <link linkend="guint">guint</link>           time,
@@ -5400,7 +5400,7 @@ animation), otherwise it returns <link linkend="FALSE:CAPS"><literal>FALSE</lite
 <para>
 The ::drag-leave signal is emitted on the drop site when the cursor 
 leaves the widget. A typical reason to connect to this signal is to 
-undo things done in <link linkend="GtkWidget-drag-motion"><type>"drag-motion"</type></link>, e.g. undo highlighting 
+undo things done in <link linkend="GtkWidget-drag-motion"><type>GtkWidget::drag-motion</type></link>, e.g. undo highlighting 
 with <link linkend="gtk-drag-unhighlight"><function>gtk_drag_unhighlight()</function></link></para>
 <para>
 
@@ -5416,7 +5416,7 @@ with <link linkend="gtk-drag-unhighlight"><function>gtk_drag_unhighlight()</func
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-motion"/>The <literal>&quot;drag-motion&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-drag-motion"/>The &quot;drag-motion&quot; signal</title>
 <indexterm><primary>GtkWidget::drag-motion</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkDragContext">GdkDragContext</link> *drag_context,
                                                         <link linkend="gint">gint</link>            x,
@@ -5434,12 +5434,12 @@ displaying feedback to the user, by calling <link linkend="gdk-drag-status"><fun
 decision whether the drop will be accepted or rejected can't be made
 based solely on the cursor position and the type of the data, the handler 
 may inspect the dragged data by calling <link linkend="gtk-drag-get-data"><function>gtk_drag_get_data()</function></link> and defer the 
-<link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> call to the <link linkend="GtkWidget-drag-data-received"><type>"drag-data-received"</type></link> handler. 
+<link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> call to the <link linkend="GtkWidget-drag-data-received"><type>GtkWidget::drag-data-received</type></link> handler. 
 </para>
 <para>
 Note that there is no drag-enter signal. The drag receiver has to keep 
 track of whether he has received any drag-motion signals since the last 
-<link linkend="GtkWidget-drag-leave"><type>"drag-leave"</type></link> and if not, treat the drag-motion signal as an 
+<link linkend="GtkWidget-drag-leave"><type>GtkWidget::drag-leave</type></link> and if not, treat the drag-motion signal as an 
 "enter" signal. Upon an "enter", the handler will typically highlight 
 the drop site with <link linkend="gtk-drag-highlight"><function>gtk_drag_highlight()</function></link>.
 </para>
@@ -5529,7 +5529,7 @@ drag_data_received (GtkWidget        *widget,
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-enter-notify-event"/>The <literal>&quot;enter-notify-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-enter-notify-event"/>The &quot;enter-notify-event&quot; signal</title>
 <indexterm><primary>GtkWidget::enter-notify-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GdkEventCrossing">GdkEventCrossing</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
@@ -5557,7 +5557,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-event"/>The <literal>&quot;event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-event"/>The &quot;event&quot; signal</title>
 <indexterm><primary>GtkWidget::event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -5565,8 +5565,8 @@ This signal will be sent to the grab widget if there is one.</para>
 The GTK+ main loop will emit three signals for each GDK event delivered
 to a widget: one generic ::event signal, another, more specific,
 signal that matches the type of event delivered (e.g. 
-<link linkend="GtkWidget-key-press-event"><type>"key-press-event"</type></link>) and finally a generic 
-<link linkend="GtkWidget-event-after"><type>"event-after"</type></link> signal.</para>
+<link linkend="GtkWidget-key-press-event"><type>GtkWidget::key-press-event</type></link>) and finally a generic 
+<link linkend="GtkWidget-event-after"><type>GtkWidget::event-after</type></link> signal.</para>
 <para>
 
 </para><variablelist role="params">
@@ -5584,12 +5584,12 @@ and to cancel the emission of the second specific ::event signal.
   the second signal. The ::event-after signal is emitted regardless of
   the return value.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-event-after"/>The <literal>&quot;event-after&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-event-after"/>The &quot;event-after&quot; signal</title>
 <indexterm><primary>GtkWidget::event-after</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)</programlisting>
 <para>
-After the emission of the <link linkend="GtkWidget-event"><type>"event"</type></link> signal and (optionally) 
+After the emission of the <link linkend="GtkWidget-event"><type>GtkWidget::event</type></link> signal and (optionally) 
 the second more specific signal, ::event-after will be emitted 
 regardless of the previous two signals handlers return values.</para>
 <para>
@@ -5603,7 +5603,7 @@ regardless of the previous two signals handlers return values.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-expose-event"/>The <literal>&quot;expose-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-expose-event"/>The &quot;expose-event&quot; signal</title>
 <indexterm><primary>GtkWidget::expose-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkEventExpose">GdkEventExpose</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
@@ -5630,7 +5630,7 @@ to enable the <link linkend="GDK-EXPOSURE-MASK:CAPS"><type>GDK_EXPOSURE_MASK</ty
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus"/>The <literal>&quot;focus&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus"/>The &quot;focus&quot; signal</title>
 <indexterm><primary>GtkWidget::focus</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>       *widget,
                                                         <link linkend="GtkDirectionType">GtkDirectionType</link> arg1,
                                                         <link linkend="gpointer">gpointer</link>         user_data)      : Run Last</programlisting>
@@ -5648,7 +5648,7 @@ to enable the <link linkend="GDK-EXPOSURE-MASK:CAPS"><type>GDK_EXPOSURE_MASK</ty
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus-in-event"/>The <literal>&quot;focus-in-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus-in-event"/>The &quot;focus-in-event&quot; signal</title>
 <indexterm><primary>GtkWidget::focus-in-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>     *widget,
                                                         <link linkend="GdkEventFocus">GdkEventFocus</link> *event,
                                                         <link linkend="gpointer">gpointer</link>       user_data)      : Run Last</programlisting>
@@ -5673,7 +5673,7 @@ to enable the <link linkend="GDK-FOCUS-CHANGE-MASK:CAPS"><type>GDK_FOCUS_CHANGE_
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus-out-event"/>The <literal>&quot;focus-out-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-focus-out-event"/>The &quot;focus-out-event&quot; signal</title>
 <indexterm><primary>GtkWidget::focus-out-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>     *widget,
                                                         <link linkend="GdkEventFocus">GdkEventFocus</link> *event,
                                                         <link linkend="gpointer">gpointer</link>       user_data)      : Run Last</programlisting>
@@ -5698,7 +5698,7 @@ to enable the <link linkend="GDK-FOCUS-CHANGE-MASK:CAPS"><type>GDK_FOCUS_CHANGE_
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-grab-broken-event"/>The <literal>&quot;grab-broken-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-grab-broken-event"/>The &quot;grab-broken-event&quot; signal</title>
 <indexterm role="2.8"><primary>GtkWidget::grab-broken-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -5726,7 +5726,7 @@ application grabs the pointer or keyboard again.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.8
-</para></refsect2><refsect2><title><anchor id="GtkWidget-grab-focus"/>The <literal>&quot;grab-focus&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkWidget-grab-focus"/>The &quot;grab-focus&quot; signal</title>
 <indexterm><primary>GtkWidget::grab-focus</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
 <para>
@@ -5738,7 +5738,7 @@ application grabs the pointer or keyboard again.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-grab-notify"/>The <literal>&quot;grab-notify&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-grab-notify"/>The &quot;grab-notify&quot; signal</title>
 <indexterm><primary>GtkWidget::grab-notify</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gboolean">gboolean</link>   was_grabbed,
                                                         <link linkend="gpointer">gpointer</link>   user_data)        : Run First</programlisting>
@@ -5764,7 +5764,7 @@ its ancestor.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-hide"/>The <literal>&quot;hide&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-hide"/>The &quot;hide&quot; signal</title>
 <indexterm><primary>GtkWidget::hide</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run First</programlisting>
 <para>
@@ -5776,7 +5776,7 @@ its ancestor.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-hierarchy-changed"/>The <literal>&quot;hierarchy-changed&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-hierarchy-changed"/>The &quot;hierarchy-changed&quot; signal</title>
 <indexterm><primary>GtkWidget::hierarchy-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GtkWidget">GtkWidget</link> *previous_toplevel,
                                                         <link linkend="gpointer">gpointer</link>   user_data)              : Run Last</programlisting>
@@ -5798,7 +5798,7 @@ a widget changes from un-anchored to anchored or vice-versa.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-key-press-event"/>The <literal>&quot;key-press-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-key-press-event"/>The &quot;key-press-event&quot; signal</title>
 <indexterm><primary>GtkWidget::key-press-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>   *widget,
                                                         <link linkend="GdkEventKey">GdkEventKey</link> *event,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
@@ -5825,7 +5825,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-key-release-event"/>The <literal>&quot;key-release-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-key-release-event"/>The &quot;key-release-event&quot; signal</title>
 <indexterm><primary>GtkWidget::key-release-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>   *widget,
                                                         <link linkend="GdkEventKey">GdkEventKey</link> *event,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run Last</programlisting>
@@ -5852,7 +5852,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-keynav-failed"/>The <literal>&quot;keynav-failed&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-keynav-failed"/>The &quot;keynav-failed&quot; signal</title>
 <indexterm role="2.12"><primary>GtkWidget::keynav-failed</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>       *widget,
                                                         <link linkend="GtkDirectionType">GtkDirectionType</link> direction,
                                                         <link linkend="gpointer">gpointer</link>         user_data)      : Run Last</programlisting>
@@ -5876,7 +5876,7 @@ See <link linkend="gtk-widget-keynav-failed"><function>gtk_widget_keynav_failed(
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.12
-</para></refsect2><refsect2><title><anchor id="GtkWidget-leave-notify-event"/>The <literal>&quot;leave-notify-event&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkWidget-leave-notify-event"/>The &quot;leave-notify-event&quot; signal</title>
 <indexterm><primary>GtkWidget::leave-notify-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GdkEventCrossing">GdkEventCrossing</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
@@ -5904,7 +5904,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-map"/>The <literal>&quot;map&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-map"/>The &quot;map&quot; signal</title>
 <indexterm><primary>GtkWidget::map</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run First</programlisting>
 <para>
@@ -5916,7 +5916,7 @@ This signal will be sent to the grab widget if there is one.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-map-event"/>The <literal>&quot;map-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-map-event"/>The &quot;map-event&quot; signal</title>
 <indexterm><primary>GtkWidget::map-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -5942,7 +5942,7 @@ automatically for all new windows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-mnemonic-activate"/>The <literal>&quot;mnemonic-activate&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-mnemonic-activate"/>The &quot;mnemonic-activate&quot; signal</title>
 <indexterm><primary>GtkWidget::mnemonic-activate</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gboolean">gboolean</link>   arg1,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -5960,7 +5960,7 @@ automatically for all new windows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-motion-notify-event"/>The <literal>&quot;motion-notify-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-motion-notify-event"/>The &quot;motion-notify-event&quot; signal</title>
 <indexterm><primary>GtkWidget::motion-notify-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkEventMotion">GdkEventMotion</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
@@ -5988,7 +5988,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-move-focus"/>The <literal>&quot;move-focus&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-move-focus"/>The &quot;move-focus&quot; signal</title>
 <indexterm><primary>GtkWidget::move-focus</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>       *widget,
                                                         <link linkend="GtkDirectionType">GtkDirectionType</link> arg1,
                                                         <link linkend="gpointer">gpointer</link>         user_data)      : Run Last / Action</programlisting>
@@ -6004,7 +6004,7 @@ This signal will be sent to the grab widget if there is one.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-no-expose-event"/>The <literal>&quot;no-expose-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-no-expose-event"/>The &quot;no-expose-event&quot; signal</title>
 <indexterm><primary>GtkWidget::no-expose-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GdkEventNoExpose">GdkEventNoExpose</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
@@ -6028,7 +6028,7 @@ for those areas.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-parent-set"/>The <literal>&quot;parent-set&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-parent-set"/>The &quot;parent-set&quot; signal</title>
 <indexterm><primary>GtkWidget::parent-set</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GtkObject">GtkObject</link> *old_parent,
                                                         <link linkend="gpointer">gpointer</link>   user_data)       : Run First</programlisting>
@@ -6047,7 +6047,7 @@ has been set on a widget.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-popup-menu"/>The <literal>&quot;popup-menu&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-popup-menu"/>The &quot;popup-menu&quot; signal</title>
 <indexterm><primary>GtkWidget::popup-menu</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
 <para>
@@ -6067,7 +6067,7 @@ for an example of how to use this signal.</para>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if a menu was activated
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-property-notify-event"/>The <literal>&quot;property-notify-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-property-notify-event"/>The &quot;property-notify-event&quot; signal</title>
 <indexterm><primary>GtkWidget::property-notify-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GdkEventProperty">GdkEventProperty</link> *event,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last</programlisting>
@@ -6092,7 +6092,7 @@ to enable the <link linkend="GDK-PROPERTY-CHANGE-MASK:CAPS"><type>GDK_PROPERTY_C
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-proximity-in-event"/>The <literal>&quot;proximity-in-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-proximity-in-event"/>The &quot;proximity-in-event&quot; signal</title>
 <indexterm><primary>GtkWidget::proximity-in-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventProximity">GdkEventProximity</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
@@ -6116,7 +6116,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-proximity-out-event"/>The <literal>&quot;proximity-out-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-proximity-out-event"/>The &quot;proximity-out-event&quot; signal</title>
 <indexterm><primary>GtkWidget::proximity-out-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventProximity">GdkEventProximity</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
@@ -6140,7 +6140,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-query-tooltip"/>The <literal>&quot;query-tooltip&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-query-tooltip"/>The &quot;query-tooltip&quot; signal</title>
 <indexterm role="2.12"><primary>GtkWidget::query-tooltip</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>  *widget,
                                                         <link linkend="gint">gint</link>        x,
                                                         <link linkend="gint">gint</link>        y,
@@ -6148,7 +6148,7 @@ This signal will be sent to the grab widget if there is one.</para>
                                                         <link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
                                                         <link linkend="gpointer">gpointer</link>    user_data)          : Run Last</programlisting>
 <para>
-Emitted when the <link linkend="GtkSettings--gtk-tooltip-timeout"><type>"gtk-tooltip-timeout"</type></link> has expired with 
+Emitted when the <link linkend="GtkSettings--gtk-tooltip-timeout"><type>GtkSettings:gtk-tooltip-timeout</type></link> has expired with 
 the cursor hovering "above" <parameter>widget</parameter>; or emitted when <parameter>widget</parameter> got 
 focus in keyboard mode.
 </para>
@@ -6188,7 +6188,7 @@ destined function calls.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.12
-</para></refsect2><refsect2><title><anchor id="GtkWidget-realize"/>The <literal>&quot;realize&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkWidget-realize"/>The &quot;realize&quot; signal</title>
 <indexterm><primary>GtkWidget::realize</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run First</programlisting>
 <para>
@@ -6200,7 +6200,7 @@ destined function calls.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-screen-changed"/>The <literal>&quot;screen-changed&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-screen-changed"/>The &quot;screen-changed&quot; signal</title>
 <indexterm><primary>GtkWidget::screen-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkScreen">GdkScreen</link> *previous_screen,
                                                         <link linkend="gpointer">gpointer</link>   user_data)            : Run Last</programlisting>
@@ -6219,7 +6219,7 @@ screen of a widget has changed.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-scroll-event"/>The <literal>&quot;scroll-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-scroll-event"/>The &quot;scroll-event&quot; signal</title>
 <indexterm><primary>GtkWidget::scroll-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GdkEventScroll">GdkEventScroll</link> *event,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run Last</programlisting>
@@ -6248,7 +6248,7 @@ This signal will be sent to the grab widget if there is one.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-clear-event"/>The <literal>&quot;selection-clear-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-clear-event"/>The &quot;selection-clear-event&quot; signal</title>
 <indexterm><primary>GtkWidget::selection-clear-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventSelection">GdkEventSelection</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
@@ -6269,7 +6269,7 @@ the <parameter>widget</parameter>'s window has lost ownership of a selection.</p
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-get"/>The <literal>&quot;selection-get&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-get"/>The &quot;selection-get&quot; signal</title>
 <indexterm><primary>GtkWidget::selection-get</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GtkSelectionData">GtkSelectionData</link> *data,
                                                         <link linkend="guint">guint</link>             info,
@@ -6293,7 +6293,7 @@ the <parameter>widget</parameter>'s window has lost ownership of a selection.</p
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-notify-event"/>The <literal>&quot;selection-notify-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-notify-event"/>The &quot;selection-notify-event&quot; signal</title>
 <indexterm><primary>GtkWidget::selection-notify-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventSelection">GdkEventSelection</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
@@ -6311,7 +6311,7 @@ the <parameter>widget</parameter>'s window has lost ownership of a selection.</p
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-received"/>The <literal>&quot;selection-received&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-received"/>The &quot;selection-received&quot; signal</title>
 <indexterm><primary>GtkWidget::selection-received</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GtkSelectionData">GtkSelectionData</link> *data,
                                                         <link linkend="guint">guint</link>             time,
@@ -6331,7 +6331,7 @@ the <parameter>widget</parameter>'s window has lost ownership of a selection.</p
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-request-event"/>The <literal>&quot;selection-request-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-selection-request-event"/>The &quot;selection-request-event&quot; signal</title>
 <indexterm><primary>GtkWidget::selection-request-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="GdkEventSelection">GdkEventSelection</link> *event,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
@@ -6353,7 +6353,7 @@ the <parameter>widget</parameter>'s window.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-show"/>The <literal>&quot;show&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-show"/>The &quot;show&quot; signal</title>
 <indexterm><primary>GtkWidget::show</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run First</programlisting>
 <para>
@@ -6365,7 +6365,7 @@ the <parameter>widget</parameter>'s window.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-show-help"/>The <literal>&quot;show-help&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-show-help"/>The &quot;show-help&quot; signal</title>
 <indexterm><primary>GtkWidget::show-help</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>        *widget,
                                                         <link linkend="GtkWidgetHelpType">GtkWidgetHelpType</link> arg1,
                                                         <link linkend="gpointer">gpointer</link>          user_data)      : Run Last / Action</programlisting>
@@ -6383,7 +6383,7 @@ the <parameter>widget</parameter>'s window.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
 
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-size-allocate"/>The <literal>&quot;size-allocate&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-size-allocate"/>The &quot;size-allocate&quot; signal</title>
 <indexterm><primary>GtkWidget::size-allocate</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>     *widget,
                                                         <link linkend="GtkAllocation">GtkAllocation</link> *allocation,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run First</programlisting>
@@ -6399,7 +6399,7 @@ the <parameter>widget</parameter>'s window.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-size-request"/>The <literal>&quot;size-request&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-size-request"/>The &quot;size-request&quot; signal</title>
 <indexterm><primary>GtkWidget::size-request</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>      *widget,
                                                         <link linkend="GtkRequisition">GtkRequisition</link> *requisition,
                                                         <link linkend="gpointer">gpointer</link>        user_data)        : Run First</programlisting>
@@ -6415,7 +6415,7 @@ the <parameter>widget</parameter>'s window.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-state-changed"/>The <literal>&quot;state-changed&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-state-changed"/>The &quot;state-changed&quot; signal</title>
 <indexterm><primary>GtkWidget::state-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link>   *widget,
                                                         <link linkend="GtkStateType">GtkStateType</link> state,
                                                         <link linkend="gpointer">gpointer</link>     user_data)      : Run First</programlisting>
@@ -6431,7 +6431,7 @@ the <parameter>widget</parameter>'s window.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-style-set"/>The <literal>&quot;style-set&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-style-set"/>The &quot;style-set&quot; signal</title>
 <indexterm><primary>GtkWidget::style-set</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GtkStyle">GtkStyle</link>  *previous_style,
                                                         <link linkend="gpointer">gpointer</link>   user_data)           : Run First</programlisting>
@@ -6451,7 +6451,7 @@ on a widget. Note that style-modifying functions like
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-unmap"/>The <literal>&quot;unmap&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-unmap"/>The &quot;unmap&quot; signal</title>
 <indexterm><primary>GtkWidget::unmap</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run First</programlisting>
 <para>
@@ -6463,7 +6463,7 @@ on a widget. Note that style-modifying functions like
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-unmap-event"/>The <literal>&quot;unmap-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-unmap-event"/>The &quot;unmap-event&quot; signal</title>
 <indexterm><primary>GtkWidget::unmap-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -6489,7 +6489,7 @@ automatically for all new windows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-unrealize"/>The <literal>&quot;unrealize&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-unrealize"/>The &quot;unrealize&quot; signal</title>
 <indexterm><primary>GtkWidget::unrealize</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
@@ -6501,7 +6501,7 @@ automatically for all new windows.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-visibility-notify-event"/>The <literal>&quot;visibility-notify-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-visibility-notify-event"/>The &quot;visibility-notify-event&quot; signal</title>
 <indexterm><primary>GtkWidget::visibility-notify-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>          *widget,
                                                         <link linkend="GdkEventVisibility">GdkEventVisibility</link> *event,
                                                         <link linkend="gpointer">gpointer</link>            user_data)      : Run Last</programlisting>
@@ -6526,7 +6526,7 @@ to enable the <link linkend="GDK-VISIBILITY-NOTIFY-MASK:CAPS"><type>GDK_VISIBILI
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-window-state-event"/>The <literal>&quot;window-state-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2><title><anchor id="GtkWidget-window-state-event"/>The &quot;window-state-event&quot; signal</title>
 <indexterm><primary>GtkWidget::window-state-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link>           *widget,
                                                         <link linkend="GdkEventWindowState">GdkEventWindowState</link> *event,
                                                         <link linkend="gpointer">gpointer</link>             user_data)      : Run Last</programlisting>
@@ -6557,6 +6557,4 @@ this mask automatically for all new windows.</para>
 
 
 
-
-<refsect1><refsect2 /><refsect2 /></refsect1>
 </refentry>

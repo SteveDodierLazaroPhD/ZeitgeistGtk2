@@ -129,7 +129,6 @@ GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
-GTKDOC_CHECK = @GTKDOC_CHECK@
 GTK_API_VERSION = @GTK_API_VERSION@
 GTK_BINARY_AGE = @GTK_BINARY_AGE@
 GTK_BINARY_VERSION = @GTK_BINARY_VERSION@
@@ -252,6 +251,7 @@ PO_IN_DATADIR_TRUE = @PO_IN_DATADIR_TRUE@
 RANLIB = @RANLIB@
 REBUILD = @REBUILD@
 REBUILD_PNGS = @REBUILD_PNGS@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -523,13 +523,7 @@ SCANOBJ_FILES = \
 	$(DOC_MODULE).signals
 
 
-REPORT_FILES = \
-	$(DOC_MODULE)-undocumented.txt \
-	$(DOC_MODULE)-undeclared.txt \
-	$(DOC_MODULE)-unused.txt
-
-
-CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
+CLEANFILES = $(SCANOBJ_FILES) $(DOC_MODULE)-unused.txt $(DOC_STAMPS)
 subdir = docs/reference/gdk
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -636,8 +630,7 @@ clean-am: clean-generic clean-libtool clean-local mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-libtool \
-	distclean-local
+distclean-am: clean-am distclean-generic distclean-libtool
 
 dvi: dvi-am
 
@@ -678,14 +671,14 @@ uninstall-am: uninstall-info-am uninstall-local
 
 .PHONY: all all-am all-local check check-am clean clean-generic \
 	clean-libtool clean-local distclean distclean-generic \
-	distclean-libtool distclean-local distdir dvi dvi-am info \
-	info-am install install-am install-data install-data-am \
-	install-data-local install-exec install-exec-am install-info \
-	install-info-am install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic maintainer-clean-local mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-am uninstall-info-am uninstall-local
+	distclean-libtool distdir dvi dvi-am info info-am install \
+	install-am install-data install-data-am install-data-local \
+	install-exec install-exec-am install-info install-info-am \
+	install-man install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	maintainer-clean-local mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
+	uninstall-info-am uninstall-local
 
 
 @ENABLE_GTK_DOC_TRUE@all-local: html-build.stamp
@@ -724,9 +717,6 @@ tmpl-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections
 tmpl.stamp: tmpl-build.stamp
 	@true
 
-tmpl/*.sgml:
-	@true
-
 #### xml ####
 
 sgml-build.stamp: tmpl.stamp $(HFILE_GLOB) $(CFILE_GLOB) $(DOC_MODULE)-sections.txt $(srcdir)/tmpl/*.sgml $(expand_content_files)
@@ -744,11 +734,11 @@ sgml.stamp: sgml-build.stamp
 html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
 	@echo 'gtk-doc: Building HTML'
 	@-chmod -R u+w $(srcdir)
-	rm -rf $(srcdir)/html
+	rm -rf $(srcdir)/html 
 	mkdir $(srcdir)/html
 	cd $(srcdir)/html && gtkdoc-mkhtml $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
 	test "x$(HTML_IMAGES)" = "x" || ( cd $(srcdir) && cp $(HTML_IMAGES) html )
-	@echo 'gtk-doc: Fixing cross-references'
+	@echo 'gtk-doc: Fixing cross-references' 
 	cd $(srcdir) && gtkdoc-fixxref --module-dir=html --html-dir=$(HTML_DIR) $(FIXXREF_OPTIONS)
 	touch html-build.stamp
 
@@ -758,13 +748,8 @@ clean-local:
 	rm -f *~ *.bak
 	rm -rf .libs
 
-distclean-local:
-	cd $(srcdir) && \
-	  rm -rf xml $(REPORT_FILES) \
-	         $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
-
 maintainer-clean-local: clean
-	cd $(srcdir) && rm -rf xml html
+	cd $(srcdir) && rm -rf xml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
 
 install-data-local:
 	installfiles=`echo $(srcdir)/html/*`; \
@@ -779,7 +764,6 @@ install-data-local:
 	  echo '-- Installing $(srcdir)/html/index.sgml' ; \
 	  $(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR) || :; \
 	fi
-	-gtkdoc-rebase --relative --destdir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)
 
 uninstall-local:
 	rm -f $(DESTDIR)$(TARGET_DIR)/*
@@ -799,7 +783,9 @@ dist-hook: dist-check-gtkdoc dist-hook-local
 	-cp $(srcdir)/tmpl/*.sgml $(distdir)/tmpl
 	-cp $(srcdir)/xml/*.xml $(distdir)/xml
 	cp $(srcdir)/html/* $(distdir)/html
-	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
+	if test -f $(srcdir)/$(DOC_MODULE).types; then \
+	  cp $(srcdir)/$(DOC_MODULE).types $(distdir)/$(DOC_MODULE).types; \
+	fi
 
 .PHONY : dist-hook-local docs
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

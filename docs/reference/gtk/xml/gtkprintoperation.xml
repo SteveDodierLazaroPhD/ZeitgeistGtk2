@@ -465,7 +465,7 @@ some platforms may not allow asynchronous operation.</para>
 <para>
 Call this when the result of a print operation is
 <link linkend="GTK-PRINT-OPERATION-RESULT-ERROR:CAPS"><literal>GTK_PRINT_OPERATION_RESULT_ERROR</literal></link>, either as returned by 
-<link linkend="gtk-print-operation-run"><function>gtk_print_operation_run()</function></link>, or in the <link linkend="GtkPrintOperation-done"><type>"done"</type></link> signal 
+<link linkend="gtk-print-operation-run"><function>gtk_print_operation_run()</function></link>, or in the <link linkend="GtkPrintOperation-done"><type>GtkPrintOperation::done</type></link> signal 
 handler. The returned <link linkend="GError"><type>GError</type></link> will contain more details on what went wrong.</para>
 <para>
 
@@ -489,7 +489,7 @@ Makes <parameter>default_page_setup</parameter> the default page setup for <para
 <para>
 This page setup will be used by <link linkend="gtk-print-operation-run"><function>gtk_print_operation_run()</function></link>,
 but it can be overridden on a per-page basis by connecting
-to the <link linkend="GtkPrintOperation-request-page-setup"><type>"request-page-setup"</type></link> signal.</para>
+to the <link linkend="GtkPrintOperation-request-page-setup"><type>GtkPrintOperation::request-page-setup</type></link> signal.</para>
 <para>
 
 </para><variablelist role="params">
@@ -593,12 +593,12 @@ Sets the number of pages in the document.
 <para>
 This <emphasis>must</emphasis> be set to a positive number
 before the rendering starts. It may be set in a 
-<link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link> signal hander.
+<link linkend="GtkPrintOperation-begin-print"><type>GtkPrintOperation::begin-print</type></link> signal hander.
 </para>
 <para>
 Note that the page numbers passed to the 
-<link linkend="GtkPrintOperation-request-page-setup"><type>"request-page-setup"</type></link> 
-and <link linkend="GtkPrintOperation-draw-page"><type>"draw-page"</type></link> signals are 0-based, i.e. if 
+<link linkend="GtkPrintOperation-request-page-setup"><type>GtkPrintOperation::request-page-setup</type></link> 
+and <link linkend="GtkPrintOperation-draw-page"><type>GtkPrintOperation::draw-page</type></link> signals are 0-based, i.e. if 
 the user chooses to print all pages, the last ::draw-page signal 
 will be for page <parameter>n_pages</parameter> - 1.</para>
 <para>
@@ -780,14 +780,14 @@ print settings in the print dialog, and then print the document.
 <para>
 Normally that this function does not return until the rendering of all 
 pages is complete. You can connect to the 
-<link linkend="GtkPrintOperation-status-changed"><type>"status-changed"</type></link> signal on <parameter>op</parameter> to obtain some 
+<link linkend="GtkPrintOperation-status-changed"><type>GtkPrintOperation::status-changed</type></link> signal on <parameter>op</parameter> to obtain some 
 information about the progress of the print operation. 
 Furthermore, it may use a recursive mainloop to show the print dialog.
 </para>
 <para>
 If you call <link linkend="gtk-print-operation-set-allow-async"><function>gtk_print_operation_set_allow_async()</function></link> or set the allow-async
 property the operation will run asyncronously if this is supported on the
-platform. The <link linkend="GtkPrintOperation-done"><type>"done"</type></link> signal will be emitted with the 
+platform. The <link linkend="GtkPrintOperation-done"><type>GtkPrintOperation::done</type></link> signal will be emitted with the 
 operation results when the operation is done (i.e. when the dialog is 
 canceled, or when the print succeeds or fails).
 </para>
@@ -861,8 +861,8 @@ given <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>.</
 <indexterm role="2.10"><primary>gtk_print_operation_cancel</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_operation_cancel          (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);</programlisting>
 <para>
 Cancels a running print operation. This function may
-be called from a <link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link>, 
-<link linkend="GtkPrintOperation-paginate"><type>"paginate"</type></link> or <link linkend="GtkPrintOperation-draw-page"><type>"draw-page"</type></link>
+be called from a <link linkend="GtkPrintOperation-begin-print"><type>GtkPrintOperation::begin-print</type></link>, 
+<link linkend="GtkPrintOperation-paginate"><type>GtkPrintOperation::paginate</type></link> or <link linkend="GtkPrintOperation-draw-page"><type>GtkPrintOperation::draw-page</type></link>
 signal handler to stop the currently running print 
 operation.</para>
 <para>
@@ -1075,7 +1075,7 @@ have been selected for printing.</para>
                                                          <link linkend="gint">gint</link> page_nr);</programlisting>
 <para>
 Renders a page to the preview, using the print context that
-was passed to the <link linkend="GtkPrintOperation-preview"><type>"preview"</type></link> handler together
+was passed to the <link linkend="GtkPrintOperation-preview"><type>GtkPrintOperation::preview</type></link> handler together
 with <parameter>preview</parameter>.
 </para>
 <para>
@@ -1096,7 +1096,7 @@ be associated with the print context.</para>
 </refsect1>
 <refsect1 role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2><title><anchor id="GtkPrintOperation--allow-async"/>The <literal>&quot;allow-async&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--allow-async"/>The &quot;<literal>allow-async</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:allow-async</primary></indexterm><programlisting>  &quot;allow-async&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Determines whether the print operation may run asynchronously or not.
@@ -1117,7 +1117,7 @@ operation.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--current-page"/>The <literal>&quot;current-page&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--current-page"/>The &quot;<literal>current-page</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:current-page</primary></indexterm><programlisting>  &quot;current-page&quot;             <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 The current page in the document.
@@ -1135,7 +1135,7 @@ Note that this only makes sense for pre-paginated documents.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--custom-tab-label"/>The <literal>&quot;custom-tab-label&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--custom-tab-label"/>The &quot;<literal>custom-tab-label</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:custom-tab-label</primary></indexterm><programlisting>  &quot;custom-tab-label&quot;         <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 Used as the label of the tab containing custom widgets.
@@ -1149,7 +1149,7 @@ If this is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, GTK+ uses a
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--default-page-setup"/>The <literal>&quot;default-page-setup&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--default-page-setup"/>The &quot;<literal>default-page-setup</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:default-page-setup</primary></indexterm><programlisting>  &quot;default-page-setup&quot;       <link linkend="GtkPageSetup">GtkPageSetup</link>          : Read / Write</programlisting>
 <para>
 The <link linkend="GtkPageSetup"><type>GtkPageSetup</type></link> used by default.
@@ -1157,13 +1157,13 @@ The <link linkend="GtkPageSetup"><type>GtkPageSetup</type></link> used by defaul
 <para>
 This page setup will be used by <link linkend="gtk-print-operation-run"><function>gtk_print_operation_run()</function></link>,
 but it can be overridden on a per-page basis by connecting
-to the <link linkend="GtkPrintOperation-request-page-setup"><type>"request-page-setup"</type></link> signal.</para>
+to the <link linkend="GtkPrintOperation-request-page-setup"><type>GtkPrintOperation::request-page-setup</type></link> signal.</para>
 <para>
 
 </para><para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--export-filename"/>The <literal>&quot;export-filename&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--export-filename"/>The &quot;<literal>export-filename</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:export-filename</primary></indexterm><programlisting>  &quot;export-filename&quot;          <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 The name of a file file to generate instead of showing 
@@ -1184,7 +1184,7 @@ list of printers in the print dialog.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--job-name"/>The <literal>&quot;job-name&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--job-name"/>The &quot;<literal>job-name</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:job-name</primary></indexterm><programlisting>  &quot;job-name&quot;                 <link linkend="gchararray">gchararray</link>            : Read / Write</programlisting>
 <para>
 A string used to identify the job (e.g. in monitoring 
@@ -1199,7 +1199,7 @@ by numbering successive print jobs.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--n-pages"/>The <literal>&quot;n-pages&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--n-pages"/>The &quot;<literal>n-pages</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:n-pages</primary></indexterm><programlisting>  &quot;n-pages&quot;                  <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 The number of pages in the document. 
@@ -1207,12 +1207,12 @@ The number of pages in the document.
 <para>
 This <emphasis>must</emphasis> be set to a positive number
 before the rendering starts. It may be set in a 
-<link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link> signal hander.
+<link linkend="GtkPrintOperation-begin-print"><type>GtkPrintOperation::begin-print</type></link> signal hander.
 </para>
 <para>
 Note that the page numbers passed to the 
-<link linkend="GtkPrintOperation-request-page-setup"><type>"request-page-setup"</type></link> and 
-<link linkend="GtkPrintOperation-draw-page"><type>"draw-page"</type></link> signals are 0-based, i.e. if 
+<link linkend="GtkPrintOperation-request-page-setup"><type>GtkPrintOperation::request-page-setup</type></link> and 
+<link linkend="GtkPrintOperation-draw-page"><type>GtkPrintOperation::draw-page</type></link> signals are 0-based, i.e. if 
 the user chooses to print all pages, the last ::draw-page signal 
 will be for page <parameter>n_pages</parameter> - 1.</para>
 <para>
@@ -1222,7 +1222,7 @@ will be for page <parameter>n_pages</parameter> - 1.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--print-settings"/>The <literal>&quot;print-settings&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--print-settings"/>The &quot;<literal>print-settings</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:print-settings</primary></indexterm><programlisting>  &quot;print-settings&quot;           <link linkend="GtkPrintSettings">GtkPrintSettings</link>      : Read / Write</programlisting>
 <para>
 The <link linkend="GtkPrintSettings"><type>GtkPrintSettings</type></link> used for initializing the dialog.
@@ -1236,7 +1236,7 @@ print settings from a previous print operation, see
 </para><para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--show-progress"/>The <literal>&quot;show-progress&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--show-progress"/>The &quot;<literal>show-progress</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:show-progress</primary></indexterm><programlisting>  &quot;show-progress&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Determines whether to show a progress dialog during the 
@@ -1247,7 +1247,7 @@ print operation.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--status"/>The <literal>&quot;status&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--status"/>The &quot;<literal>status</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:status</primary></indexterm><programlisting>  &quot;status&quot;                   <link linkend="GtkPrintStatus">GtkPrintStatus</link>        : Read</programlisting>
 <para>
 The status of the print operation.</para>
@@ -1257,7 +1257,7 @@ The status of the print operation.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--status-string"/>The <literal>&quot;status-string&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--status-string"/>The &quot;<literal>status-string</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:status-string</primary></indexterm><programlisting>  &quot;status-string&quot;            <link linkend="gchararray">gchararray</link>            : Read</programlisting>
 <para>
 A string representation of the status of the print operation. 
@@ -1273,7 +1273,7 @@ for programmatic use.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--track-print-status"/>The <literal>&quot;track-print-status&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--track-print-status"/>The &quot;<literal>track-print-status</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:track-print-status</primary></indexterm><programlisting>  &quot;track-print-status&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 If <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, the print operation will try to continue report on 
@@ -1288,7 +1288,7 @@ not be enabled unless needed.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--unit"/>The <literal>&quot;unit&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--unit"/>The &quot;<literal>unit</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:unit</primary></indexterm><programlisting>  &quot;unit&quot;                     <link linkend="GtkUnit">GtkUnit</link>               : Read / Write</programlisting>
 <para>
 The transformation for the cairo context obtained from
@@ -1300,7 +1300,7 @@ are measured in units of <parameter>unit</parameter>.</para>
 <para>Since  2.10
 </para>
 </refsect2>
-<refsect2><title><anchor id="GtkPrintOperation--use-full-page"/>The <literal>&quot;use-full-page&quot;</literal> property</title>
+<refsect2><title><anchor id="GtkPrintOperation--use-full-page"/>The &quot;<literal>use-full-page</literal>&quot; property</title>
 <indexterm role="2.10"><primary>GtkPrintOperation:use-full-page</primary></indexterm><programlisting>  &quot;use-full-page&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 If <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, the transformation for the cairo context obtained 
@@ -1320,7 +1320,7 @@ area (i.e. inside the margins).</para>
 
 <refsect1 role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2><title><anchor id="GtkPrintOperation-begin-print"/>The <literal>&quot;begin-print&quot;</literal> signal</title>
+<refsect2><title><anchor id="GtkPrintOperation-begin-print"/>The &quot;begin-print&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::begin-print</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="GtkPrintContext">GtkPrintContext</link>   *context,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
@@ -1344,7 +1344,7 @@ set the number of pages with <link linkend="gtk-print-operation-set-n-pages"><fu
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-create-custom-widget"/>The <literal>&quot;create-custom-widget&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-create-custom-widget"/>The &quot;create-custom-widget&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::create-custom-widget</primary></indexterm><programlisting><link linkend="GObject">GObject</link>*            user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
@@ -1356,7 +1356,7 @@ with multiple widgets in it.
 <para>
 The print dialog owns the returned widget, and its lifetime
 isn't controlled by the app. However, the widget is guaranteed
-to stay around until the <link linkend="GtkPrintOperation-custom-widget-apply"><type>"custom-widget-apply"</type></link> 
+to stay around until the <link linkend="GtkPrintOperation-custom-widget-apply"><type>GtkPrintOperation::custom-widget-apply</type></link> 
 signal is emitted on the operation. Then you can read out any 
 information you need from the widgets.</para>
 <para>
@@ -1372,13 +1372,13 @@ information you need from the widgets.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-custom-widget-apply"/>The <literal>&quot;custom-widget-apply&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-custom-widget-apply"/>The &quot;custom-widget-apply&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::custom-widget-apply</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="GtkWidget">GtkWidget</link>         *widget,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
-Emitted right before <link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link> if you added
-a custom widget in the <link linkend="GtkPrintOperation--"><type>""</type></link>;create-custom-widget handler. 
+Emitted right before <link linkend="GtkPrintOperation-begin-print"><type>GtkPrintOperation::begin-print</type></link> if you added
+a custom widget in the <link linkend="GtkPrintOperation--"><type>GtkPrintOperation:</type></link>;create-custom-widget handler. 
 When you get this signal you should read the information from the 
 custom widgets, as the widgets are not guaraneed to be around at a 
 later time.</para>
@@ -1394,7 +1394,7 @@ later time.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-done"/>The <literal>&quot;done&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-done"/>The &quot;done&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::done</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link>      *operation,
                                                         <link linkend="GtkPrintOperationResult">GtkPrintOperationResult</link> result,
                                                         <link linkend="gpointer">gpointer</link>                user_data)      : Run Last</programlisting>
@@ -1408,7 +1408,7 @@ about what happened during the run. If <parameter>result</parameter> is
 <para>
 If you enabled print status tracking then 
 <link linkend="gtk-print-operation-is-finished"><function>gtk_print_operation_is_finished()</function></link> may still return <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> 
-after <link linkend="GtkPrintOperation-done"><type>"done"</type></link> was emitted.</para>
+after <link linkend="GtkPrintOperation-done"><type>GtkPrintOperation::done</type></link> was emitted.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1421,7 +1421,7 @@ after <link linkend="GtkPrintOperation-done"><type>"done"</type></link> was emit
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-draw-page"/>The <literal>&quot;draw-page&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-draw-page"/>The &quot;draw-page&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::draw-page</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="GtkPrintContext">GtkPrintContext</link>   *context,
                                                         <link linkend="gint">gint</link>               page_nr,
@@ -1493,14 +1493,14 @@ needs.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-end-print"/>The <literal>&quot;end-print&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-end-print"/>The &quot;end-print&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::end-print</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="GtkPrintContext">GtkPrintContext</link>   *context,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
 Emitted after all pages have been rendered. 
 A handler for this signal can clean up any resources that have
-been allocated in the <link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link> handler.</para>
+been allocated in the <link linkend="GtkPrintOperation-begin-print"><type>GtkPrintOperation::begin-print</type></link> handler.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1513,12 +1513,12 @@ been allocated in the <link linkend="GtkPrintOperation-begin-print"><type>"begin
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-paginate"/>The <literal>&quot;paginate&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-paginate"/>The &quot;paginate&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::paginate</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="GtkPrintContext">GtkPrintContext</link>   *context,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
-Emitted after the <link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link> signal, but before 
+Emitted after the <link linkend="GtkPrintOperation-begin-print"><type>GtkPrintOperation::begin-print</type></link> signal, but before 
 the actual rendering starts. It keeps getting emitted until it 
 returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>. 
 </para>
@@ -1548,7 +1548,7 @@ from there.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-preview"/>The <literal>&quot;preview&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-preview"/>The &quot;preview&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::preview</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link>        *operation,
                                                         <link linkend="GtkPrintOperationPreview">GtkPrintOperationPreview</link> *preview,
                                                         <link linkend="GtkPrintContext">GtkPrintContext</link>          *context,
@@ -1595,7 +1595,7 @@ finished by calling <link linkend="gtk-print-operation-preview-end-preview"><fun
 
 </simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-request-page-setup"/>The <literal>&quot;request-page-setup&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-request-page-setup"/>The &quot;request-page-setup&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::request-page-setup</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="GtkPrintContext">GtkPrintContext</link>   *context,
                                                         <link linkend="gint">gint</link>               page_nr,
@@ -1623,7 +1623,7 @@ done to <parameter>setup</parameter> will be in force only for printing this pag
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-status-changed"/>The <literal>&quot;status-changed&quot;</literal> signal</title>
+</para></refsect2><refsect2><title><anchor id="GtkPrintOperation-status-changed"/>The &quot;status-changed&quot; signal</title>
 <indexterm role="2.10"><primary>GtkPrintOperation::status-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
@@ -1651,6 +1651,4 @@ status.</para>
 </para>
 </refsect1>
 
-
-<refsect1><refsect2 /><refsect2 /></refsect1>
 </refentry>

@@ -20,6 +20,7 @@
  */
 
 #include <config.h>
+#include <Carbon/Carbon.h>
 
 #include "gdk.h"
 #include "gdkprivate-quartz.h"
@@ -1062,17 +1063,58 @@ move_resize_window_internal (GdkWindow *window,
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
   GdkWindowImplQuartz *impl;
+  GdkRectangle old_visible;
+  GdkRectangle new_visible;
+  GdkRectangle scroll_rect;
+  GdkRegion *old_region;
+  GdkRegion *expose_region;
+  NSSize delta;
 
   if (GDK_WINDOW_DESTROYED (window))
     return;
 
   impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
 
+  if ((x == private->x) &&
+      (y == private->y) &&
+      (width == impl->width) &&
+      (height == impl->height))
+    {
+      return;
+    }
+
+  if (!impl->toplevel)
+    {
+      /* The previously visible area of this window in a coordinate
+       * system rooted at the origin of this window.
+       */
+      old_visible.x = -private->x;
+      old_visible.y = -private->y;
+
+      gdk_window_get_size (GDK_DRAWABLE (private->parent), 
+                           &old_visible.width, 
+                           &old_visible.height);
+    }
+
   if (x != -1)
-    private->x = x;
+    {
+      delta.width = x - private->x;
+      private->x = x;
+    }
+  else
+    {
+      delta.width = 0;
+    }
 
   if (y != -1)
-    private->y = y;
+    {
+      delta.height = y - private->y;
+      private->y = y;
+    }
+  else
+    {
+      delta.height = 0;
+    }
 
   if (width != -1)
     impl->width = width;
@@ -1096,13 +1138,69 @@ move_resize_window_internal (GdkWindow *window,
   else 
     {
       if (!private->input_only)
-	{
-	  NSRect nsrect;
+        {
+          NSRect nsrect;
 
-	  nsrect = NSMakeRect (private->x, private->y, impl->width, impl->height);
-	  [impl->view setFrame: nsrect];
-	  [impl->view setNeedsDisplay:YES];
-	}
+          nsrect = NSMakeRect (private->x, private->y, impl->width, impl->height);
+
+          /* The newly visible area of this window in a coordinate
+           * system rooted at the origin of this window.
+           */
+          new_visible.x = -private->x;
+          new_visible.y = -private->y;
+          new_visible.width = old_visible.width;   /* parent has not changed size */
+          new_visible.height = old_visible.height; /* parent has not changed size */
+
+          expose_region = gdk_region_rectangle (&new_visible);
+          old_region = gdk_region_rectangle (&old_visible);
+          gdk_region_subtract (expose_region, old_region);
+
+          /* Determine what (if any) part of the previously visible
+           * part of the window can be copied without a redraw
+           */
+          scroll_rect = old_visible;
+          scroll_rect.x -= delta.width;
+          scroll_rect.y -= delta.height;
+          gdk_rectangle_intersect (&scroll_rect, &old_visible, &scroll_rect);
+
+          if (!gdk_region_empty (expose_region))
+            {
+              GdkRectangle* rects;
+              gint n_rects;
+              gint n;
+
+              if (scroll_rect.width != 0 && scroll_rect.height != 0)
+                {
+                  [impl->view scrollRect:NSMakeRect (scroll_rect.x,
+                                                     scroll_rect.y,
+                                                     scroll_rect.width,
+                                                     scroll_rect.height)
+			              by:delta];
+                }
+
+              [impl->view setFrame:nsrect];
+
+              gdk_region_get_rectangles (expose_region, &rects, &n_rects);
+
+              for (n = 0; n < n_rects; ++n)
+                {
+                  [impl->view setNeedsDisplayInRect:NSMakeRect (rects[n].x,
+                                                                rects[n].y,
+                                                                rects[n].width,
+                                                                rects[n].height)];
+                }
+
+              g_free (rects);
+            }
+          else
+            {
+              [impl->view setFrame:nsrect];
+              [impl->view setNeedsDisplay:YES];
+            }
+
+          gdk_region_destroy (expose_region);
+          gdk_region_destroy (old_region);
+        }
     }
 
   GDK_QUARTZ_RELEASE_POOL;
@@ -1115,6 +1213,9 @@ gdk_window_move (GdkWindow *window,
 {
   g_return_if_fail (GDK_IS_WINDOW (window));
 
+  if (((GdkWindowObject *)window)->state & GDK_WINDOW_STATE_FULLSCREEN)
+    return;
+
   move_resize_window_internal (window, x, y, -1, -1);
 }
 
@@ -1124,6 +1225,9 @@ gdk_window_resize (GdkWindow *window,
 		   gint       height)
 {
   g_return_if_fail (GDK_IS_WINDOW (window));
+
+  if (((GdkWindowObject *)window)->state & GDK_WINDOW_STATE_FULLSCREEN)
+    return;
 
   if (width < 1)
     width = 1;
@@ -1935,9 +2039,23 @@ void
 gdk_window_focus (GdkWindow *window,
                   guint32    timestamp)
 {
+  GdkWindowObject *private;
+  GdkWindowImplQuartz *impl;
+	
   g_return_if_fail (GDK_IS_WINDOW (window));
 
-  /* FIXME: Implement */
+  private = (GdkWindowObject*) window;
+  impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+
+  if (impl->toplevel)
+    {
+      if (private->accept_focus && private->window_type != GDK_WINDOW_TEMP) 
+        {
+          GDK_QUARTZ_ALLOC_POOL;
+          [impl->toplevel makeKeyWindow];
+          GDK_QUARTZ_RELEASE_POOL;
+        }
+    }
 }
 
 void
@@ -2149,7 +2267,7 @@ gdk_window_set_decorations (GdkWindow       *window,
 			    GdkWMDecoration  decorations)
 {
   GdkWindowImplQuartz *impl;
-  int style_mask;
+  int old_mask, new_mask;
   NSView *old_view;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
@@ -2162,31 +2280,52 @@ gdk_window_set_decorations (GdkWindow       *window,
 
   if (decorations == 0 || GDK_WINDOW_TYPE (window) == GDK_WINDOW_TEMP)
     {
-      style_mask = NSBorderlessWindowMask;
+      new_mask = NSBorderlessWindowMask;
     }
   else
     {
-      /* FIXME: Honor other GTK_DECOR_* flags. */
-      style_mask = (NSTitledWindowMask | NSClosableWindowMask |
+      /* FIXME: Honor other GDK_DECOR_* flags. */
+      new_mask = (NSTitledWindowMask | NSClosableWindowMask |
                     NSMiniaturizableWindowMask | NSResizableWindowMask);
     }
 
   GDK_QUARTZ_ALLOC_POOL;
 
+  old_mask = [impl->toplevel styleMask];
+
   /* Note, there doesn't seem to be a way to change this without
    * recreating the toplevel. There might be bad side-effects of doing
    * that, but it seems alright.
    */
-  if ([impl->toplevel styleMask] != style_mask)
+  if (old_mask != new_mask)
     {
+      NSRect rect;
+
       old_view = [impl->toplevel contentView];
 
-      impl->toplevel = [impl->toplevel initWithContentRect:[impl->toplevel frame]
-                                                 styleMask:style_mask
+      rect = [impl->toplevel frame];
+
+      /* Properly update the size of the window when the titlebar is
+       * added or removed.
+       */
+      if (old_mask == NSBorderlessWindowMask &&
+          new_mask != NSBorderlessWindowMask)
+        {
+          rect = [NSWindow frameRectForContentRect:rect styleMask:new_mask];
+        }
+      else if (old_mask != NSBorderlessWindowMask &&
+               new_mask == NSBorderlessWindowMask)
+        {
+          rect = [NSWindow contentRectForFrameRect:rect styleMask:old_mask];
+        }
+
+      impl->toplevel = [impl->toplevel initWithContentRect:rect
+                                                 styleMask:new_mask
                                                    backing:NSBackingStoreBuffered
                                                      defer:NO];
 
       [impl->toplevel setContentView:old_view];
+      [impl->toplevel setFrame:rect display:YES];
     }
 
   GDK_QUARTZ_RELEASE_POOL;
@@ -2208,13 +2347,14 @@ gdk_window_get_decorations (GdkWindow       *window,
 
   if (decorations)
     {
-      if ([impl->toplevel styleMask] & NSBorderlessWindowMask)
+      /* Borderless is 0, so we can't check it as a bit being set. */
+      if ([impl->toplevel styleMask] == NSBorderlessWindowMask)
         {
           *decorations = 0;
         }
       else
         {
-          /* FIXME: Honor the other GTK_DECOR_* flags. */
+          /* FIXME: Honor the other GDK_DECOR_* flags. */
           *decorations = GDK_DECOR_ALL;
         }
     }
@@ -2374,20 +2514,79 @@ gdk_window_deiconify (GdkWindow *window)
     }
 }
 
+#define FULLSCREEN_DATA "fullscreen-data"
+
+typedef struct
+{
+  gint            x, y;
+  gint            width, height;
+  GdkWMDecoration decor;
+} FullscreenSavedGeometry;
+
 void
 gdk_window_fullscreen (GdkWindow *window)
 {
-  g_return_if_fail (GDK_IS_WINDOW (window));
+  FullscreenSavedGeometry *geometry;
+  GdkWindowObject *private = (GdkWindowObject *) window;
+  GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+  NSRect frame;
 
-  /* FIXME: Implement */
+  g_return_if_fail (GDK_IS_WINDOW (window));
+  g_return_if_fail (WINDOW_IS_TOPLEVEL (window));
+
+  geometry = g_new (FullscreenSavedGeometry, 1);
+
+  geometry->x = private->x;
+  geometry->y = private->y;
+  geometry->width = impl->width;
+  geometry->height = impl->height;
+  
+  if (!gdk_window_get_decorations (window, &geometry->decor))
+    geometry->decor = GDK_DECOR_ALL;
+
+  g_object_set_data_full (G_OBJECT (window),
+                          FULLSCREEN_DATA, geometry, 
+                          g_free);
+
+  HideMenuBar ();
+
+  gdk_window_set_decorations (window, 0);
+
+  frame = [[NSScreen mainScreen] frame];
+  move_resize_window_internal (window,
+                               0, 0, 
+                               frame.size.width, frame.size.height);
+
+  gdk_synthesize_window_state (window, 0, GDK_WINDOW_STATE_FULLSCREEN);
 }
 
 void
 gdk_window_unfullscreen (GdkWindow *window)
 {
-  g_return_if_fail (GDK_IS_WINDOW (window));
+  FullscreenSavedGeometry *geometry;
 
-  /* FIXME: Implement */
+  g_return_if_fail (GDK_IS_WINDOW (window));
+  g_return_if_fail (WINDOW_IS_TOPLEVEL (window));
+
+  geometry = g_object_get_data (G_OBJECT (window), FULLSCREEN_DATA);
+
+  if (geometry)
+    {
+
+      ShowMenuBar ();
+
+      move_resize_window_internal (window,
+                                   geometry->x,
+                                   geometry->y,
+                                   geometry->width,
+                                   geometry->height);
+      
+      gdk_window_set_decorations (window, geometry->decor);
+
+      g_object_set_data (G_OBJECT (window), FULLSCREEN_DATA, NULL);
+
+      gdk_synthesize_window_state (window, GDK_WINDOW_STATE_FULLSCREEN, 0);
+    }
 }
 
 void

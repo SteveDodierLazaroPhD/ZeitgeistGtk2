@@ -1606,7 +1606,7 @@ option_menu_get_props (GtkWidget * widget,
     if (tmp_size)
 	{
 	    *indicator_size = *tmp_size;
-	    g_free (tmp_size);
+	    gtk_requisition_free (tmp_size);
 	}
     else
 	*indicator_size = default_option_indicator_size;
@@ -1614,7 +1614,7 @@ option_menu_get_props (GtkWidget * widget,
     if (tmp_spacing)
 	{
 	    *indicator_spacing = *tmp_spacing;
-	    g_free (tmp_spacing);
+	    gtk_border_free (tmp_spacing);
 	}
     else
 	*indicator_spacing = default_option_indicator_spacing;
@@ -2260,10 +2260,6 @@ draw_tab (GtkStyle * style,
 		    return;
 		}
 	}
-
-    if (widget)
-	gtk_widget_style_get (widget, "indicator_size", &indicator_size,
-			      NULL);
 
     option_menu_get_props (widget, &indicator_size, &indicator_spacing);
 
@@ -3252,6 +3248,48 @@ draw_focus ( GtkStyle      *style,
 }
 
 static void
+draw_layout (GtkStyle        *style,
+	     GdkWindow       *window,
+	     GtkStateType     state_type,
+	     gboolean         use_text,
+	     GdkRectangle    *area,
+	     GtkWidget       *widget,
+	     const gchar     *detail,
+	     gint             old_x,
+	     gint             old_y,
+	     PangoLayout     *layout)
+{
+    GtkNotebook *notebook = NULL;
+    gint x = old_x;
+    gint y = old_y;
+
+    /* In the XP theme, labels don't appear correctly centered inside
+     * notebook tabs, so we give them a gentle nudge two pixels to the
+     * right.  A little hackish, but what are 'ya gonna do?  -- Cody
+     */
+    if (xp_theme_is_active () && detail && !strcmp (detail, "label"))
+      {
+	if (widget->parent != NULL)
+	  {
+	    if (GTK_IS_NOTEBOOK (widget->parent))
+	      {
+		notebook = GTK_NOTEBOOK (widget->parent);
+		int side = gtk_notebook_get_tab_pos (notebook);
+
+		if (side == GTK_POS_TOP || side == GTK_POS_BOTTOM)
+		  {
+		    x += 2;
+		  }
+	      }
+	  }
+      }
+
+    parent_class->draw_layout (style, window, state_type,
+			       use_text, area, widget,
+			       detail, x, y, layout);
+}
+
+static void
 msw_style_init_from_rc (GtkStyle * style, GtkRcStyle * rc_style)
 {
     setup_system_font (style);
@@ -3404,6 +3442,7 @@ msw_style_class_init (MswStyleClass * klass)
     style_class->draw_resize_grip = draw_resize_grip;
     style_class->draw_slider = draw_slider;
     style_class->draw_focus = draw_focus;
+    style_class->draw_layout = draw_layout;
 
     style_class->realize = msw_style_realize;
     style_class->unrealize = msw_style_unrealize;

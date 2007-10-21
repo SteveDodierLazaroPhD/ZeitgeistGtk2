@@ -1,4 +1,350 @@
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* === Released 2.12.1 ===
+
+	* NEWS: Updates
+
+	* gtk/gtkvolumebutton.c (gtk_volume_button_new): Update 
+	the docs.  (#477280, Christian Persch)
+
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtkentrycompletion.c: Update the docs for the 
+	::text-column property.  (#352643, Josselin Mouette)
+
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtkdnd.c (gtk_drag_drop_finished): Avoid a critical
+	warning.  (#456676, Campbell Barton)
+
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* gkt/gtkiconsize.c: Be more careful when handling 
+	(GtkIconSize)-1.  (#456137, Harry Lu, Chris Wang, et al)
+
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtktextiter.c (gtk_text_iter_forward_line): Improve 
+	the docs.  (#486155, Owen Taylor)
+
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* tests/testxinerama.c: Change testcase to not update
+	screen information on configure-event, since it hides
+	information for all available screens but add a button 
+	to query current monitor instead (#485437, Frederic Crozat)
+
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtkprinteroptionwidget.c (update_widgets): Actually use
+	the utf-8 version of the filename.  (#485301, Takao Fujiwara)
+
+2007-10-16  Matthias Clasen <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2007-10-15  Loïc Minier  <lool@dooz.org>
+
+	* gtk/gtkmain.c: (gtk_init): Fix "cannot open display" error message
+	when display is set by the DISPLAY env var. (#486636, Mike Hommey)
+
+2007-10-13  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtk-builder-convert 
+	(GtkBuilderConverter._add_action_from_menuitem): signal_name instead
+	of signal. (#486360, Xavier Claessens)
+
+2007-10-12  Matthias Clasen  <mclasen@redhat.com> 
+
+	* gtk/updateiconcache.c: Avoid double-free problems by not
+	freeing data that may be cached elsewhere.
+
+2007-10-10  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentmanager.c (gtk_recent_info_get_icon): Document
+	that you need to unref the returned GdkPixbuf. (#484132,
+	Christian Persch)
+
+	(build_recent_info): Use g_slist_prepend() when building
+	the applications list.
+
+2007-10-10  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkfilechooserdefault.c (list_mtime_data_func): Convert
+	the format to the current locale before passing it to
+	strtime(). Fixes corrupt dates with non-UTF8 encodings on
+	OpenSolaris. (#465380, Takao Fujiwara)
+
+2007-10-10  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkfilechooserdefault.c (list_mtime_data_func): Fix the
+	time_t typecasting on OpenSolaris. (#465380, Takao Fujiwara)
+
+2007-10-09  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Make the previous change work
+
+2007-10-09  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtktreeview.c (gtk_tree_view_move_cursor_page_up_down): make
+	sure the new cursor node is visible when we are done. (Fixes #472965,
+	Carlos Garnacho).
+
+2007-10-09  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtktreeview.c (gtk_tree_view_move_cursor_up_down): we should
+	only "don't move the cursor, but just select the current node" if the
+	cursor node is actually selectable.  (Fixes #483730, reported by
+	Geoff Bache).
+
+2007-10-08  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c: (gdk_window_focus): Implement,
+	patch from Paul Davis.
+
+2007-10-08  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c: (move_resize_window_internal):
+	Ignore if there are no changes, fixes bug #467269. Patch from
+	Jonathan Dempsey.
+
+2007-10-08  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c: (move_resize_window_internal):
+	Patch from Paul Davis to implement this in terms of scrollRect,
+	fixes bug #478377.
+
+2007-10-08  Cody Russell  <bratsche@gnome.org>
+	* modules/engines/ms-windows/msw_style.c:
+	(draw_tab): Fix memory leak, and fix two instances where
+	a GtkRequisition and a GtkBorder were being freed with
+	g_free() rather than gtk_requisition_free() and
+	gtk_border_free(). (#484730, Daniel Atallah)
+	
+2007-10-08  Cody Russell  <bratsche@gnome.org>
+	* docs/reference/gdk/tmpl/event_structs.sgml:
+	Fix a typo in GdkEventGrabBroken where it said
+	"@grab_window id NULL" and should say
+	"@grab_window is NULL". (#484650, Chris Lord)
+	
+2007-10-08  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtkfilesystemmodel.c (got_root_folder_cb),
+	(get_children_get_folder_cb): don't "corrupt" all iterators by
+	reversing the list after adding the items.  Reversing the list isn't
+	needed anyway as the order of the items in the model does not matter.
+	(Fixes #327243, comment 10).
+
+2007-10-08  Kristian Rietveld  <kris@imendio.com>
+
+	Fix #482841, patch by Karl Tomlinson.
+
+	* gtk/gtktooltip.c (gtk_tooltip_display_closed): use g_object_set_data
+	instead of g_object_set ...
+	(_gtk_tooltip_toggle_keyboard_mode),
+	(_gtk_tooltip_handle_event): connect to GdkDisplay::closed after
+	creating tooltip.
+
+2007-10-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Don't hardcode use of echo -n.  (#484008)
+
+2007-10-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/input/gtkimcontextxim.c: Clean up issues around
+	with life cycle handling.  (#483223, Karl Tomlinson)
+
+2007-10-05  Murray Cumming  <murrayc@murrayc.com>
+
+	* gtk/gtkprintoperation.c: (print_pages_idle):
+	Revert the change on 2007-04-29 ("Also check
+	the default handler when deciding whether to emit the
+	paginate signal.  (#345345, Yevgen Muntyan)").
+	This stopped printing from working in gtkmm, and is apparently 
+	not appropriate anyway. Bug #482089.
+
+2007-10-05  Hiroyuki Ikezoe  <poincare@ikezoe.net>
+
+	* gtk/gtkdnd.c: Use g_object_ref() instead of gtk_widget_ref().
+	(#483563)
+
+2007-10-04  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentaction.c:
+	(gtk_recent_action_set_sort_func), (set_current_filter): Iterate
+	on the proxies we hold when we change the sorting function and
+	the filter.
+
+	(gtk_recent_action_connect_proxy),
+	(gtk_recent_action_create_menu): Set the GtkRecentChooser:filter
+	property when we create/connect a proxy chooser. Thanks to
+	Jonh Wendell for pointing this bug out on gtk-list.
+
+	(gtk_recent_chooser_set_property): Bail out without iterating
+	over the proxies when there's no need to.
+
+2007-10-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* tests/testvolumebutton.c: Add a second volume button.
+
+	* gtk/gtkscalebutton.c: Doh, don't release grabs we don't hold.
+	(#478371, reported by Bill Nottingham)
+
+2007-10-04  Loïc Minier  <lool@dooz.org>
+
+	* gtk/gtkfilechooserdefault.c: (list_mtime_data_func): Fix warnings
+	and display of modified date / time in filechooser for some locales as
+	it was missing a locale to UTF-8 conversion. Fixes #482504.
+
+2007-10-03  Xan Lopez  <xan@gnome.org>
+
+	* gtk/gtknotebook.c: remove duplicated declaration of
+	gtk_notebook_create_window. Patch by Hiroyuki Ikezoe (#482837)
+
+2007-10-02  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c: (gdk_window_move),
+	(gdk_window_resize): Don't do anything while in fullscreen mode.
+	(gdk_window_set_decorations): Update the size of the window after
+	showing/hiding the title bar so the size of the content area
+	doesn't change.
+	(gdk_window_get_decorations): NSBorderlessWindowMask is 0, so
+	don't try to check it as a bit being set.
+	(gdk_window_fullscreen), (gdk_window_unfullscreen): Implement.
+
+2007-10-02  Federico Mena Quintero  <federico@novell.com>
+
+	Fix http://bugzilla.gnome.org/show_bug.cgi?id=455284 - In the file
+	chooser, Ctrl-L should switch to the location entry.  If we are
+	already on the location entry, turn it off.  Based on a patch by
+	Jaap A. Haitsma <jaap@haitsma.org> and an idea by Wouter
+	Bolsterlee.
+
+	* gtk/gtkfilechooserdefault.c (location_button_toggled_cb): Call
+	location_mode_set() directly instead of using toggle_location_mode().
+	(toggle_location_mode): Removed.
+	(location_toggle_popup_handler): If the file entry is not visible,
+	show it.  If it is visible, turn it off only if it is focused.
+	Otherwise, switch to the entry.
+
+2007-10-01  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtktreeviewcolumn.c (gtk_tree_view_column_update_button):
+	fix up if-condition to only set the true arrow type if
+	show_sort_indicator is TRUE.  (#448343, reported by Emil Nowak).
+
+2007-09-25  Emmanuele Bassi  <ebassi@gnome.org>
+
+	Fixes for bug #480123.
+
+	* gtk/gtksearchenginesimple.c:
+	(gtk_search_engine_simple_dispose), (search_thread_done_idle): Cancel
+	the file tree walking thread when disposing the search engine
+	implementation.
+
+	* gtk/gtkfilechooserdefault.c (search_stop_searching): Forcibly
+	stop the search engine implementation when stopping the search,
+	instead of just unreffing the object.
+
+2007-09-24  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtktooltips.c (gtk_tooltips_set_tip): add extra NULL check
+	for tooltipsdata to avoid code fiddling with active_tips_data
+	from crashing.  (Fixes #460194, Peter Wright, Matthijs De Smedt).
+
+2007-09-24  Matthias Clasen <mclasen@redhat.com>
+
+	* modules/printbackends/file/gtkprintbackendfile.c: Correct a comment.
+
+2007-09-24  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkprintoperation-win32.c (pageDlgProc): Set the
+	GtkWin32EmbedWidget we create here as modal. Fixes #389358.
+
+2007-09-21  Manish Singh  <yosh@gimp.org>
+
+	* gtk/gtkstyle.c (option_menu_get_props)
+	* gtk/gtkoptionmenu.c (gtk_option_menu_get_props): use
+	gtk_requisition_free() instead of g_free() for freeing
+	requisitions.
+
+2007-09-21  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtkprintoperation.c (print_pages_idle): Some more
+	fixed to prevent segfaults with missing or nonsensical ranges.
+
+2007-09-21  Jean Brefort  <jean.brefort@normalesup.org>
+
+	* gtk/gtkprintoperation.c: (print_pages_idle): abort printing 
+	when the range is NULL. (#478803)
+
+2007-09-21  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktextview.c (gtk_text_view_move_cursor_internal)
+	(gtk_text_view_move_viewport): merged patch from maemo-gtk which
+	handles failed keynav correctly also when the cursor is invisible.
+	(Tommi Komulainen)
+
+2007-09-21  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtktoolbar.c: Remove trailing commas from enumerations.
+
+2007-09-20  Cody Russell  <bratsche@gnome.org>
+
+	* modules/engines/ms-windows/msw_style.c: Override draw_layout
+	method in GtkStyle in order to adjust by 2 pixels any labels
+	that are in GtkNotebook tabs using XP theme, so that they appear
+	correctly centered. (#478637)
+
+2007-09-18  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtksearchenginetracker.c: Search libtrackerclient.so.0
+	as libtracker changed the shared library name. (#478173,
+	Michael Kuhn)
+
+2007-09-17  Hans Breuer  <hans@breuer.org>
+
+	* gtk/makefile.msc.in : updated msvc build
+	* gtk/gtkbuilderparser.c : fixed gccism - stack allocated variable 
+	size array
+	
+	* gtk/gtkselection.c(547) : error C4033: 'gtk_target_list_find' 
+	must return a value
+
+	* test/makefile.msc : added some more tests
+	* tests/autotestfilesystem.c : HAVE_UNISTD_H, _rmdir
+
+2007-09-17  Amitakhya Phukan  <amitakhya@svn.gnome.org>
+
+	* configure.in: Added as to ALL_LINGUAS.
+
+2007-09-15  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkselection.c (gtk_target_list_find): don't simply crash if
+	any of the pointer args are NULL. Instead, g_return_if_fail() on
+	"list != NULL" and allow to pass NULL as return location for "info".
+
+2007-09-14  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentaction.c:
+	* gtk/gtkrecentchoosermenu.c: Remove the warning for the
+	"select-multiple" property getter. (#476686, Christian Persch)
+
+2007-09-14  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmenubar.c (remove_from_window): no need to get the list
+	of menubars twice.
+
+	Some minor stylistic and indentation fixes.
+
 2007-09-13  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkiconcache.c: Turn off icon cache validation unless
+	icon theme debugging is turned on.  (#476342, Federico Mena Quintero)
+
+2007-09-13  Matthias Clasen  <mclasen@redhat.com>
+	
+	* configure.in: Bump version to 2.12.1
 
 	* === Released 2.12.0 ===
 
