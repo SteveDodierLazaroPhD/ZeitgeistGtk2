@@ -1,3 +1,35 @@
+gtk+2.0 (2.12.1-2) unstable; urgency=low
+
+  * Stop suggesting gtk-engines-pixmap.
+  * Remove the --enable-explicit-deps flag. Closes: #343711, thanks Tom
+    Parker. If some other packages still rely on having explicit X11
+    dependencies, they are buggy and need to be fixed anyway.
+  * Keep --enable-explicit-deps in the directfb build; otherwise this
+    breaks any binary linking against it because the rpath isn't passed.
+  * 033_treeview_resizing.patch: updated patch from Kristian Rietveld.
+    + Add a new sizing fix for the case where there is a scrollbar.
+  * 031_gtksearchenginetracker_fixes.patch: added back, only the name
+    change was fixed upstream.
+  * 034_gtkcupsutils_type_fix.patch: type-casting fix from Herbert
+    Valerio Riedel that allows remote printing. Closes: #448071.
+  * 040_filechooser_single-click.patch: allow a situation where no
+    shortcut is selected, to avoid issues for keyboard users.
+    Closes: #448674.
+  * 042_treeview_single_focus.patch: don't select the focused item for
+    GTK_SELECTION_SINGLE type treeviews. Allows the fix in
+    040_filechooser_single-click.patch to work.
+  * Conflict against libeel2-2.18. Closes: #443701, #499070.
+  * Conflict against xfwm4 < 4.4.1-3 (previous versions freeze on
+    startup).
+  * 021_loader-files-d.patch: enclose process_module_file in correct
+    #ifdef's.
+  * 040_filechooser_single-click.patch: filter out duplicate entries in
+    bookmarks. This avoids a situation where the selection is changed to
+    the duplicate during DnD, causing an assertion error.
+    Closes: #447279.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 04 Nov 2007 16:22:31 +0100
+
 gtk+2.0 (2.12.1-1) unstable; urgency=low
 
   * New upstream stable release; no API change; bug fixes and translation
