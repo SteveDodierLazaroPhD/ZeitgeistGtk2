@@ -21,7 +21,6 @@
  */
 
 #include <config.h>
-#include <ctype.h> /* tolower, toupper */
 #include <errno.h> /* errno */
 #include <stdlib.h> /* strtol, strtoul */
 #include <string.h> /* strlen */
@@ -66,9 +65,8 @@ struct _GtkBuilderPrivate
 {
   gchar *domain;
   GHashTable *objects;
-  GHashTable *delayed_properties;
+  GSList *delayed_properties;
   GSList *signals;
-  gchar *current_root;
   GSList *root_objects;
   gchar *filename;
 };
@@ -117,9 +115,6 @@ gtk_builder_init (GtkBuilder *builder)
   builder->priv->domain = NULL;
   builder->priv->objects = g_hash_table_new_full (g_str_hash, g_str_equal,
                                                   g_free, NULL);
-  builder->priv->delayed_properties = g_hash_table_new_full (g_str_hash,
-                                                             g_str_equal,
-                                                             g_free, NULL);
 }
 
 
@@ -130,19 +125,20 @@ gtk_builder_init (GtkBuilder *builder)
 static void
 gtk_builder_finalize (GObject *object)
 {
-  GtkBuilder *builder = GTK_BUILDER (object);
+  GtkBuilderPrivate *priv = GTK_BUILDER (object)->priv;
   
-  g_free (builder->priv->domain);
+  g_free (priv->domain);
+  g_free (priv->filename);
+  
+  g_hash_table_destroy (priv->objects);
 
-  g_free (builder->priv->current_root);
-  g_hash_table_destroy (builder->priv->delayed_properties);
-  builder->priv->delayed_properties = NULL;
-  g_slist_foreach (builder->priv->signals, (GFunc)_free_signal_info, NULL);
-  g_slist_free (builder->priv->signals);
-  g_hash_table_destroy (builder->priv->objects);
-  g_slist_foreach (builder->priv->root_objects, (GFunc)g_object_unref, NULL);
-  g_slist_free (builder->priv->root_objects);
-  g_free (builder->priv->filename);
+  g_slist_foreach (priv->signals, (GFunc) _free_signal_info, NULL);
+  g_slist_free (priv->signals);
+  
+  g_slist_foreach (priv->root_objects, (GFunc) g_object_unref, NULL);
+  g_slist_free (priv->root_objects);
+
+  G_OBJECT_CLASS (gtk_builder_parent_class)->finalize (object);
 }
 
 static void
@@ -210,13 +206,13 @@ _gtk_builder_resolve_type_lazily (const gchar *name)
     {
       c = name[i];
       /* skip if uppercase, first or previous is uppercase */
-      if ((c == toupper (c) &&
-           i > 0 && name[i-1] != toupper (name[i-1])) ||
-          (i > 2 && name[i]   == toupper (name[i]) &&
-           name[i-1] == toupper (name[i-1]) &&
-           name[i-2] == toupper (name[i-2])))
+      if ((c == g_ascii_toupper (c) &&
+           i > 0 && name[i-1] != g_ascii_toupper (name[i-1])) ||
+          (i > 2 && name[i]   == g_ascii_toupper (name[i]) &&
+           name[i-1] == g_ascii_toupper (name[i-1]) &&
+           name[i-2] == g_ascii_toupper (name[i-2])))
         g_string_append_c (symbol_name, '_');
-      g_string_append_c (symbol_name, tolower (c));
+      g_string_append_c (symbol_name, g_ascii_tolower (c));
     }
   g_string_append (symbol_name, "_get_type");
   
@@ -309,18 +305,13 @@ gtk_builder_get_parameters (GtkBuilder  *builder,
             }
           else
             {
-              GSList *delayed_properties;
-              
-              delayed_properties = g_hash_table_lookup (builder->priv->delayed_properties,
-                                                        builder->priv->current_root);
               property = g_slice_new (DelayedProperty);
               property->object = g_strdup (object_name);
               property->name = g_strdup (prop->name);
               property->value = g_strdup (prop->data);
-              delayed_properties = g_slist_prepend (delayed_properties, property);
-              g_hash_table_insert (builder->priv->delayed_properties,
-                                   g_strdup (builder->priv->current_root),
-                                   delayed_properties);
+              builder->priv->delayed_properties =
+                g_slist_prepend (builder->priv->delayed_properties, property);
+
               continue;
             }
         }
@@ -393,12 +384,6 @@ _gtk_builder_construct (GtkBuilder *builder,
   object_type = gtk_builder_get_type_from_name (builder, info->class_name);
   if (object_type == G_TYPE_INVALID)
     g_error ("Invalid type: %s", info->class_name);
-
-  if (!info->parent)
-    {
-      g_free (builder->priv->current_root);
-      builder->priv->current_root = g_strdup (info->id);
-    }
 
   gtk_builder_get_parameters (builder, object_type,
                               info->id,
@@ -498,8 +483,6 @@ _gtk_builder_construct (GtkBuilder *builder,
     }
   g_hash_table_insert (builder->priv->objects, g_strdup (info->id), obj);
   
-  builder->priv->signals = g_slist_concat (builder->priv->signals,
-                                           g_slist_copy (info->signals));
   return obj;
 }
 
@@ -546,20 +529,32 @@ _gtk_builder_add (GtkBuilder *builder,
   child_info->added = TRUE;
 }
 
-static void
-apply_delayed_properties (const gchar *window_name,
-                          GSList      *props,
-                          GtkBuilder  *builder)
+void
+_gtk_builder_add_signals (GtkBuilder *builder,
+			  GSList     *signals)
 {
-  GSList *l;
+  builder->priv->signals = g_slist_concat (builder->priv->signals,
+                                           g_slist_copy (signals));
+}
+
+static void
+gtk_builder_apply_delayed_properties (GtkBuilder *builder)
+{
+  GSList *l, *props;
   DelayedProperty *property;
   GObject *object;
   GType object_type;
   GObjectClass *oclass;
   GParamSpec *pspec;
 
-  g_assert (props != NULL);
-  props = g_slist_reverse (props);
+  /* take the list over from the builder->priv.
+   *
+   * g_slist_reverse does not copy the list, so the list now
+   * belongs to us (and we free it at the end of this function).
+   */
+  props = g_slist_reverse (builder->priv->delayed_properties);
+  builder->priv->delayed_properties = NULL;
+
   for (l = props; l; l = l->next)
     {
       property = (DelayedProperty*)l->data;
@@ -597,11 +592,9 @@ apply_delayed_properties (const gchar *window_name,
 }
 
 void
-_gtk_builder_finish (GtkBuilder  *builder)
+_gtk_builder_finish (GtkBuilder *builder)
 {
-  if (builder->priv->delayed_properties)
-    g_hash_table_foreach (builder->priv->delayed_properties,
-                          (GHFunc)apply_delayed_properties, builder);
+  gtk_builder_apply_delayed_properties (builder);
 }
 
 /**
@@ -652,19 +645,20 @@ gtk_builder_add_from_file (GtkBuilder   *builder,
       return 0;
     }
   
+  g_free (builder->priv->filename);
   builder->priv->filename = g_strdup (filename);
 
   _gtk_builder_parser_parse_buffer (builder, filename,
                                     buffer, length,
                                     &tmp_error);
 
+  g_free (buffer);
+
   if (tmp_error != NULL)
     {
       g_propagate_error (error, tmp_error);
       return 0;
     }
-
-  g_free (buffer);
 
   return 1;
 }
@@ -696,6 +690,7 @@ gtk_builder_add_from_string (GtkBuilder   *builder,
 
   tmp_error = NULL;
 
+  g_free (builder->priv->filename);
   builder->priv->filename = g_strdup (".");
 
   _gtk_builder_parser_parse_buffer (builder, "<input>",
@@ -1401,7 +1396,8 @@ _gtk_builder_flags_from_string (GType         type,
  * @type_name: type name to lookup
  *
  * Looks up a type by name, using the virtual function that 
- * #GtkBuilder has for that purpose.
+ * #GtkBuilder has for that purpose. This is mainly used when
+ * implementing the #GtkBuildable interface on a type.
  *
  * Returns: the #GType found for @type_name or #G_TYPE_INVALID 
  *   if no type was found

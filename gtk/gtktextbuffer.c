@@ -918,8 +918,7 @@ gtk_text_buffer_insert_at_cursor (GtkTextBuffer *buffer,
   g_return_if_fail (text != NULL);
 
   gtk_text_buffer_get_iter_at_mark (buffer, &iter,
-                                    gtk_text_buffer_get_mark (buffer,
-                                                              "insert"));
+                                    gtk_text_buffer_get_insert (buffer));
 
   gtk_text_buffer_insert (buffer, &iter, text, len);
 }
@@ -993,8 +992,7 @@ gtk_text_buffer_insert_interactive_at_cursor (GtkTextBuffer *buffer,
   g_return_val_if_fail (text != NULL, FALSE);
 
   gtk_text_buffer_get_iter_at_mark (buffer, &iter,
-                                    gtk_text_buffer_get_mark (buffer,
-                                                              "insert"));
+                                    gtk_text_buffer_get_insert (buffer));
 
   return gtk_text_buffer_insert_interactive (buffer, &iter, text, len,
                                              default_editable);
@@ -1416,7 +1414,6 @@ gtk_text_buffer_insert_range_interactive (GtkTextBuffer     *buffer,
   g_return_val_if_fail (gtk_text_iter_get_buffer (start)->tag_table ==
                         buffer->tag_table, FALSE);
 
-
   if (gtk_text_iter_can_insert (iter, default_editable))
     {
       gtk_text_buffer_real_insert_range (buffer, iter, start, end, TRUE);
@@ -1724,7 +1721,12 @@ gtk_text_buffer_delete_interactive (GtkTextBuffer *buffer,
 
           gtk_text_buffer_emit_delete (buffer, &start, &iter);
 
-          current_state = FALSE;
+	  /* It's more robust to ask for the state again then to assume that
+	   * we're on the next not-editable segment. We don't know what the
+	   * ::delete-range handler did.... maybe it deleted the following not-editable
+	   * segment because it was associated with the editable segment.
+	   */
+	  current_state = gtk_text_iter_editable (&iter, default_editable);
           deleted_stuff = TRUE;
 
           /* revalidate user's iterators. */
@@ -1739,9 +1741,7 @@ gtk_text_buffer_delete_interactive (GtkTextBuffer *buffer,
 
           g_assert (!current_state && new_state);
 
-          gtk_text_buffer_move_mark (buffer, start_mark,
-                                     &iter);
-
+          gtk_text_buffer_move_mark (buffer, start_mark, &iter);
 
           current_state = TRUE;
         }
@@ -1749,7 +1749,6 @@ gtk_text_buffer_delete_interactive (GtkTextBuffer *buffer,
       if (done)
         break;
     }
-
 
   gtk_text_buffer_delete_mark (buffer, start_mark);
   gtk_text_buffer_delete_mark (buffer, end_mark);
@@ -1925,7 +1924,6 @@ gtk_text_buffer_insert_child_anchor (GtkTextBuffer      *buffer,
   g_signal_emit (buffer, signals[INSERT_CHILD_ANCHOR], 0,
                  iter, anchor);
 }
-
 
 /**
  * gtk_text_buffer_create_child_anchor:
@@ -2216,7 +2214,6 @@ gtk_text_buffer_get_mark (GtkTextBuffer *buffer,
   return mark;
 }
 
-
 /**
  * gtk_text_buffer_move_mark_by_name:
  * @buffer: a #GtkTextBuffer
@@ -2291,8 +2288,7 @@ gtk_text_buffer_get_insert (GtkTextBuffer *buffer)
 {
   g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
 
-  /* FIXME use struct member in btree */
-  return gtk_text_buffer_get_mark (buffer, "insert");
+  return _gtk_text_btree_get_insert (get_btree (buffer));
 }
 
 /**
@@ -2318,8 +2314,7 @@ gtk_text_buffer_get_selection_bound (GtkTextBuffer *buffer)
 {
   g_return_val_if_fail (GTK_IS_TEXT_BUFFER (buffer), NULL);
 
-  /* FIXME use struct member in btree */
-  return gtk_text_buffer_get_mark (buffer, "selection_bound");
+  return _gtk_text_btree_get_selection_bound (get_btree (buffer));
 }
 
 /**
@@ -2365,7 +2360,6 @@ gtk_text_buffer_place_cursor (GtkTextBuffer     *buffer,
   gtk_text_buffer_select_range (buffer, where, where);
 }
 
-
 /**
  * gtk_text_buffer_select_range:
  * @buffer: a #GtkTextBuffer
@@ -2397,11 +2391,9 @@ gtk_text_buffer_select_range (GtkTextBuffer     *buffer,
 
   _gtk_text_btree_select_range (get_btree (buffer), &real_ins, &real_bound);
   gtk_text_buffer_mark_set (buffer, &real_ins,
-                            gtk_text_buffer_get_mark (buffer,
-                                                      "insert"));
+                            gtk_text_buffer_get_insert (buffer));
   gtk_text_buffer_mark_set (buffer, &real_bound,
-                            gtk_text_buffer_get_mark (buffer,
-                                                      "selection_bound"));
+                            gtk_text_buffer_get_selection_bound (buffer));
 }
 
 /*
@@ -2548,7 +2540,6 @@ gtk_text_buffer_emit_tag (GtkTextBuffer     *buffer,
                    tag, &start_tmp, &end_tmp);
 }
 
-
 /**
  * gtk_text_buffer_apply_tag:
  * @buffer: a #GtkTextBuffer
@@ -2605,7 +2596,6 @@ gtk_text_buffer_remove_tag (GtkTextBuffer     *buffer,
   
   gtk_text_buffer_emit_tag (buffer, tag, FALSE, start, end);
 }
-
 
 /**
  * gtk_text_buffer_apply_tag_by_name:
@@ -3088,13 +3078,13 @@ clipboard_clear_selection_cb (GtkClipboard *clipboard,
   GtkTextBuffer *buffer = GTK_TEXT_BUFFER (data);
 
   gtk_text_buffer_get_iter_at_mark (buffer, &insert,
-                                    gtk_text_buffer_get_mark (buffer, "insert"));
+                                    gtk_text_buffer_get_insert (buffer));
   gtk_text_buffer_get_iter_at_mark (buffer, &selection_bound,
-                                    gtk_text_buffer_get_mark (buffer, "selection_bound"));
+                                    gtk_text_buffer_get_selection_bound (buffer));
 
   if (!gtk_text_iter_equal (&insert, &selection_bound))
     gtk_text_buffer_move_mark (buffer,
-                               gtk_text_buffer_get_mark (buffer, "selection_bound"),
+                               gtk_text_buffer_get_selection_bound (buffer),
                                &insert);
 }
 
@@ -3260,8 +3250,7 @@ get_paste_point (GtkTextBuffer *buffer,
   else
     {
       gtk_text_buffer_get_iter_at_mark (buffer, &insert_point,
-                                        gtk_text_buffer_get_mark (buffer,
-                                                                  "insert"));
+                                        gtk_text_buffer_get_insert (buffer));
     }
 
   *iter = insert_point;
@@ -3995,7 +3984,6 @@ gtk_text_buffer_copy_clipboard (GtkTextBuffer *buffer,
   gtk_text_buffer_end_user_action (buffer);
 }
 
-
 /**
  * gtk_text_buffer_get_selection_bounds:
  * @buffer: a #GtkTextBuffer a #GtkTextBuffer
@@ -4212,7 +4200,6 @@ struct _CacheEntry
   gint char_len;
   PangoLogAttr *attrs;
 };
-
 
 struct _GtkTextLogAttrCache
 {

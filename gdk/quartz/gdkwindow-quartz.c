@@ -32,6 +32,9 @@ static guint   update_idle;
 
 static GSList *main_window_stack;
 
+static void update_toplevel_order (void);
+static void clear_toplevel_order (void);
+
 #define WINDOW_IS_TOPLEVEL(window)		   \
   (GDK_WINDOW_TYPE (window) != GDK_WINDOW_CHILD && \
    GDK_WINDOW_TYPE (window) != GDK_WINDOW_FOREIGN)
@@ -366,8 +369,10 @@ gdk_window_impl_quartz_process_updates (GdkPaintable *paintable,
 
   if (private->update_area)
     {
+      GDK_QUARTZ_ALLOC_POOL;
       gdk_window_quartz_process_updates_internal ((GdkWindow *) private);
       update_windows = g_slist_remove (update_windows, private);
+      GDK_QUARTZ_RELEASE_POOL;
     }
 }
 
@@ -467,23 +472,59 @@ find_child_window_helper (GdkWindow *window,
 			  gint       x_offset,
 			  gint       y_offset)
 {
+  GdkWindowImplQuartz *impl;
   GList *l;
 
-  for (l = GDK_WINDOW_OBJECT (window)->children; l; l = l->next)
+  impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (window)->impl);
+
+  if (window == _gdk_root)
+    update_toplevel_order ();
+
+  for (l = impl->sorted_children; l; l = l->next)
     {
-      GdkWindowObject *private = l->data;
-      GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+      GdkWindowObject *child_private = l->data;
+      GdkWindowImplQuartz *child_impl = GDK_WINDOW_IMPL_QUARTZ (child_private->impl);
       int temp_x, temp_y;
 
-      if (!GDK_WINDOW_IS_MAPPED (private))
+      if (!GDK_WINDOW_IS_MAPPED (child_private))
 	continue;
 
-      temp_x = x_offset + private->x;
-      temp_y = y_offset + private->y;
-      
-      /* FIXME: Are there off by one errors here? */
+      temp_x = x_offset + child_private->x;
+      temp_y = y_offset + child_private->y;
+
+      /* Special-case the root window. We have to include the title
+       * bar in the checks, otherwise the window below the title bar
+       * will be found i.e. events punch through. (If we can find a
+       * better way to deal with the events in gdkevents-quartz, this
+       * might not be needed.)
+       */
+      if (window == _gdk_root)
+        {
+          NSRect frame = NSMakeRect (0, 0, 100, 100);
+          NSRect content;
+          int mask;
+          int titlebar_height;
+
+          mask = [child_impl->toplevel styleMask];
+
+          /* Get the title bar height. */
+          content = [NSWindow contentRectForFrameRect:frame
+                                            styleMask:mask];
+          titlebar_height = frame.size.height - content.size.height;
+
+          if (titlebar_height > 0 &&
+              x >= temp_x && y >= temp_y - titlebar_height &&
+              x < temp_x + child_impl->width && y < temp_y)
+            {
+              /* The root means "unknown" i.e. a window not managed by
+               * GDK.
+               */
+              return (GdkWindow *)_gdk_root;
+            }
+        }
+
       if (x >= temp_x && y >= temp_y &&
-	  x < temp_x + impl->width && y < temp_y + impl->height) 
+	  x < temp_x + child_impl->width && y < temp_y + child_impl->height)
 	{
 	  /* Look for child windows. */
 	  return find_child_window_helper (l->data,
@@ -520,6 +561,8 @@ _gdk_quartz_window_did_become_main (GdkWindow *window)
 
   if (GDK_WINDOW_OBJECT (window)->window_type != GDK_WINDOW_TEMP)
     main_window_stack = g_slist_prepend (main_window_stack, window);
+
+  clear_toplevel_order ();
 }
 
 void
@@ -549,6 +592,8 @@ _gdk_quartz_window_did_resign_main (GdkWindow *window)
 
       [impl->toplevel makeKeyAndOrderFront:impl->toplevel];
     }
+
+  clear_toplevel_order ();
 }
 
 GdkWindow *
@@ -561,6 +606,7 @@ gdk_window_new (GdkWindow     *parent,
   GdkWindowImplQuartz *impl;
   GdkDrawableImplQuartz *draw_impl;
   GdkVisual *visual;
+  GdkWindowImplQuartz *parent_impl;
 
   if (parent && GDK_WINDOW_DESTROYED (parent))
     return NULL;
@@ -577,6 +623,7 @@ gdk_window_new (GdkWindow     *parent,
   draw_impl->wrapper = GDK_DRAWABLE (window);
 
   private->parent = (GdkWindowObject *)parent;
+  parent_impl = GDK_WINDOW_IMPL_QUARTZ (private->parent->impl);
 
   private->accept_focus = TRUE;
   private->focus_on_map = TRUE;
@@ -675,8 +722,13 @@ gdk_window_new (GdkWindow     *parent,
       g_object_ref (draw_impl->colormap);
     }
 
-  if (private->parent)
-    private->parent->children = g_list_prepend (private->parent->children, window);
+  private->parent->children = g_list_prepend (private->parent->children, window);
+
+  /* Maintain the z-ordered list of children. */
+  if (parent != _gdk_root)
+    parent_impl->sorted_children = g_list_prepend (parent_impl->sorted_children, window);
+  else
+    clear_toplevel_order ();
 
   gdk_window_set_cursor (window, ((attributes_mask & GDK_WA_CURSOR) ?
 				  (attributes->cursor) :
@@ -796,8 +848,26 @@ _gdk_windowing_window_destroy (GdkWindow *window,
 			       gboolean   recursing,
 			       gboolean   foreign_destroy)
 {
+  GdkWindowObject *private;
+  GdkWindowImplQuartz *impl;
+  GdkWindowObject *parent;
+
+  private = GDK_WINDOW_OBJECT (window);
+  impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+
   update_windows = g_slist_remove (update_windows, window);
   main_window_stack = g_slist_remove (main_window_stack, window);
+
+  g_list_free (impl->sorted_children);
+  impl->sorted_children = NULL;
+
+  parent = private->parent;
+  if (parent)
+    {
+      GdkWindowImplQuartz *parent_impl = GDK_WINDOW_IMPL_QUARTZ (parent->impl);
+
+      parent_impl->sorted_children = g_list_remove (parent_impl->sorted_children, window);
+    }
 
   /* If the destroyed window was targeted for a pointer or keyboard
    * grab, release the grab.
@@ -1126,13 +1196,14 @@ move_resize_window_internal (GdkWindow *window,
 
   if (impl->toplevel)
     {
-      NSRect content_rect = 
-	NSMakeRect (private->x, 
-		    _gdk_quartz_window_get_inverted_screen_y (private->y),
-		    impl->width, impl->height);
-      NSRect frame_rect = [impl->toplevel frameRectForContentRect:content_rect];
+      NSRect content_rect;
+      NSRect frame_rect;
+
+      content_rect =  NSMakeRect (private->x,
+                                  _gdk_quartz_window_get_inverted_screen_y (private->y + impl->height),
+                                  impl->width, impl->height);
       
-      frame_rect.origin.y -= frame_rect.size.height;
+      frame_rect = [impl->toplevel frameRectForContentRect:content_rect];
       [impl->toplevel setFrame:frame_rect display:YES];
     }
   else 
@@ -1284,6 +1355,57 @@ _gdk_windowing_window_clear_area_e (GdkWindow *window,
   /* FIXME: Implement */
 }
 
+/* Get the toplevel ordering from NSApp and update our own list. We do
+ * this on demand since the NSApp's list is not up to date directly
+ * after we get windowDidBecomeMain.
+ */
+static void
+update_toplevel_order (void)
+{
+  GdkWindowObject *root;
+  GdkWindowImplQuartz *root_impl;
+  NSEnumerator *enumerator;
+  id nswindow;
+  GList *toplevels = NULL;
+
+  root = GDK_WINDOW_OBJECT (_gdk_root);
+  root_impl = GDK_WINDOW_IMPL_QUARTZ (root->impl);
+
+  if (root_impl->sorted_children)
+    return;
+
+  GDK_QUARTZ_ALLOC_POOL;
+
+  enumerator = [[NSApp orderedWindows] objectEnumerator];
+  while ((nswindow = [enumerator nextObject]))
+    {
+      GdkWindow *window;
+
+      if (![[nswindow contentView] isKindOfClass:[GdkQuartzView class]])
+        continue;
+
+      window = [(GdkQuartzView *)[nswindow contentView] gdkWindow];
+      toplevels = g_list_prepend (toplevels, window);
+    }
+
+  GDK_QUARTZ_RELEASE_POOL;
+
+  root_impl->sorted_children = g_list_reverse (toplevels);
+}
+
+static void
+clear_toplevel_order (void)
+{
+  GdkWindowObject *root;
+  GdkWindowImplQuartz *root_impl;
+
+  root = GDK_WINDOW_OBJECT (_gdk_root);
+  root_impl = GDK_WINDOW_IMPL_QUARTZ (root->impl);
+
+  g_list_free (root_impl->sorted_children);
+  root_impl->sorted_children = NULL;
+}
+
 void
 gdk_window_raise (GdkWindow *window)
 {
@@ -1292,13 +1414,28 @@ gdk_window_raise (GdkWindow *window)
   if (GDK_WINDOW_DESTROYED (window))
     return;
 
-  /* FIXME: Only supported for toplevels currently. */
   if (WINDOW_IS_TOPLEVEL (window))
     {
       GdkWindowImplQuartz *impl;
 
       impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (window)->impl);
       [impl->toplevel orderFront:impl->toplevel];
+
+      clear_toplevel_order ();
+    }
+  else
+    {
+      GdkWindowObject *parent = GDK_WINDOW_OBJECT (window)->parent;
+
+      if (parent)
+        {
+          GdkWindowImplQuartz *impl;
+
+          impl = (GdkWindowImplQuartz *)parent->impl;
+
+          impl->sorted_children = g_list_remove (impl->sorted_children, window);
+          impl->sorted_children = g_list_prepend (impl->sorted_children, window);
+        }
     }
 }
 
@@ -1310,13 +1447,28 @@ gdk_window_lower (GdkWindow *window)
   if (GDK_WINDOW_DESTROYED (window))
     return;
 
-  /* FIXME: Only supported for toplevels currently. */
   if (WINDOW_IS_TOPLEVEL (window))
     {
       GdkWindowImplQuartz *impl;
 
       impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (window)->impl);
       [impl->toplevel orderBack:impl->toplevel];
+
+      clear_toplevel_order ();
+    }
+  else
+    {
+      GdkWindowObject *parent = GDK_WINDOW_OBJECT (window)->parent;
+
+      if (parent)
+        {
+          GdkWindowImplQuartz *impl;
+
+          impl = (GdkWindowImplQuartz *)parent->impl;
+
+          impl->sorted_children = g_list_remove (impl->sorted_children, window);
+          impl->sorted_children = g_list_append (impl->sorted_children, window);
+        }
     }
 }
 
@@ -2205,9 +2357,30 @@ gdk_window_begin_resize_drag (GdkWindow     *window,
                               gint           root_y,
                               guint32        timestamp)
 {
+  GdkWindowObject *private;
+  GdkWindowImplQuartz *impl;
+
   g_return_if_fail (GDK_IS_WINDOW (window));
 
-  /* FIXME: Implement */  
+  if (edge != GDK_WINDOW_EDGE_SOUTH_EAST)
+    {
+      g_warning ("Resizing is only implemented for GDK_WINDOW_EDGE_SOUTH_EAST on Mac OS");
+      return;
+    }
+
+  if (GDK_WINDOW_DESTROYED (window))
+    return;
+
+  private = GDK_WINDOW_OBJECT (window);
+  impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+
+  if (!impl->toplevel)
+    {
+      g_warning ("Can't call gdk_window_begin_resize_drag on non-toplevel window");
+      return;
+    }
+
+  [(GdkQuartzWindow *)impl->toplevel beginManualResize];
 }
 
 void
@@ -2217,9 +2390,24 @@ gdk_window_begin_move_drag (GdkWindow *window,
                             gint       root_y,
                             guint32    timestamp)
 {
+  GdkWindowObject *private;
+  GdkWindowImplQuartz *impl;
+
   g_return_if_fail (GDK_IS_WINDOW (window));
 
-  /* FIXME: Implement */
+  if (GDK_WINDOW_DESTROYED (window))
+    return;
+
+  private = GDK_WINDOW_OBJECT (window);
+  impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+
+  if (!impl->toplevel)
+    {
+      g_warning ("Can't call gdk_window_begin_move_drag on non-toplevel window");
+      return;
+    }
+
+  [(GdkQuartzWindow *)impl->toplevel beginManualMove];
 }
 
 void
@@ -2572,7 +2760,6 @@ gdk_window_unfullscreen (GdkWindow *window)
 
   if (geometry)
     {
-
       ShowMenuBar ();
 
       move_resize_window_internal (window,

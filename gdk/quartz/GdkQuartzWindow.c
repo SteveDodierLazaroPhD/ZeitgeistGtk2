@@ -98,21 +98,22 @@
  */
 -(void)windowWillMove:(NSNotification *)aNotification
 {
-  if (leftDown)
-    inMove = YES;
+  inMove = YES;
 }
 
 -(void)sendEvent:(NSEvent *)event
 {
   switch ([event type])
     {
-    case NSLeftMouseDown:
-      leftDown = YES;
+    case NSLeftMouseUp:
+      inManualMove = NO;
+      inManualResize = NO;
+      inMove = NO;
       break;
 
-    case NSLeftMouseUp:
-      leftDown = NO;
-      inMove = NO;
+    case NSLeftMouseDragged:
+      if ([self trackManualMove] || [self trackManualResize])
+        return;
       break;
 
     default:
@@ -136,7 +137,7 @@
   GdkEvent *event;
 
   private->x = content_rect.origin.x;
-  private->y = _gdk_quartz_window_get_inverted_screen_y (content_rect.origin.y) - impl->height;
+  private->y = _gdk_quartz_window_get_inverted_screen_y (content_rect.origin.y + content_rect.size.height);
 
   /* Synthesize a configure event */
   event = gdk_event_new (GDK_CONFIGURE);
@@ -256,6 +257,98 @@
   return YES;
 }
 
+- (BOOL)trackManualMove
+{
+  NSPoint currentLocation;
+  NSPoint newOrigin;
+  NSRect screenFrame = [[NSScreen mainScreen] visibleFrame];
+  NSRect windowFrame = [self frame];
+
+  if (!inManualMove)
+    return NO;
+
+  currentLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
+  newOrigin.x = currentLocation.x - initialMoveLocation.x;
+  newOrigin.y = currentLocation.y - initialMoveLocation.y;
+
+  /* Clamp vertical position to below the menu bar. */
+  if (newOrigin.y + windowFrame.size.height > screenFrame.origin.y + screenFrame.size.height)
+    newOrigin.y = screenFrame.origin.y + screenFrame.size.height - windowFrame.size.height;
+
+  [self setFrameOrigin:newOrigin];
+
+  return YES;
+}
+
+-(void)beginManualMove
+{
+  NSRect frame = [self frame];
+
+  if (inMove || inManualMove || inManualResize)
+    return;
+
+  inManualMove = YES;
+
+  initialMoveLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
+  initialMoveLocation.x -= frame.origin.x;
+  initialMoveLocation.y -= frame.origin.y;
+}
+
+- (BOOL)trackManualResize
+{
+  NSPoint currentLocation;
+  NSRect newFrame;
+  float dx, dy;
+  NSSize min_size;
+
+  if (!inManualResize)
+    return NO;
+
+  currentLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
+  currentLocation.x -= initialResizeFrame.origin.x;
+  currentLocation.y -= initialResizeFrame.origin.y;
+
+  dx = currentLocation.x - initialResizeLocation.x;
+  dy = -(currentLocation.y - initialResizeLocation.y);
+
+  newFrame = initialResizeFrame;
+  newFrame.size.width = initialResizeFrame.size.width + dx;
+  newFrame.size.height = initialResizeFrame.size.height + dy;
+
+  min_size = [self contentMinSize];
+  if (newFrame.size.width < min_size.width)
+    newFrame.size.width = min_size.width;
+  if (newFrame.size.height < min_size.height)
+    newFrame.size.height = min_size.height;
+
+  /* We could also apply aspect ratio:
+     newFrame.size.height = newFrame.size.width / [self aspectRatio].width * [self aspectRatio].height;
+  */
+
+  dy = newFrame.size.height - initialResizeFrame.size.height;
+
+  newFrame.origin.x = initialResizeFrame.origin.x;
+  newFrame.origin.y = initialResizeFrame.origin.y - dy;
+
+  [self setFrame:newFrame display:YES];
+
+  return YES;
+}
+
+-(void)beginManualResize
+{
+  if (inMove || inManualMove || inManualResize)
+    return;
+
+  inManualResize = YES;
+
+  initialResizeFrame = [self frame];
+  initialResizeLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
+  initialResizeLocation.x -= initialResizeFrame.origin.x;
+  initialResizeLocation.y -= initialResizeFrame.origin.y;
+}
+
+
 static GdkDragContext *current_context = NULL;
 
 static GdkDragAction
@@ -312,7 +405,8 @@ update_context_from_dragging_info (id <NSDraggingInfo> sender)
 
 - (void)draggingEnded:(id <NSDraggingInfo>)sender
 {
-  g_object_unref (current_context);
+  if (current_context)
+    g_object_unref (current_context);
   current_context = NULL;
 }
 

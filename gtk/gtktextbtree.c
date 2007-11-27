@@ -2196,6 +2196,8 @@ _gtk_text_btree_get_line_at_char (GtkTextBTree      *tree,
   return line;
 }
 
+/* It returns an array sorted by tags priority, ready to pass to
+ * _gtk_text_attributes_fill_from_tags() */
 GtkTextTag**
 _gtk_text_btree_get_tags (const GtkTextIter *iter,
                          gint *num_tags)
@@ -2304,6 +2306,10 @@ _gtk_text_btree_get_tags (const GtkTextIter *iter,
       g_free (tagInfo.tags);
       return NULL;
     }
+
+  /* Sort tags in ascending order of priority */
+  _gtk_text_tag_array_sort (tagInfo.tags, dst);
+
   return tagInfo.tags;
 }
 
@@ -2498,7 +2504,7 @@ _gtk_text_btree_char_is_invisible (const GtkTextIter *iter)
           || (seg->type == &gtk_text_toggle_off_type))
         {
           tag = seg->body.toggle.info->tag;
-          if (tag->invisible_set && tag->values->invisible)
+          if (tag->invisible_set)
             {
               tags[tag->priority] = tag;
               tagCnts[tag->priority]++;
@@ -2522,7 +2528,7 @@ _gtk_text_btree_char_is_invisible (const GtkTextIter *iter)
               || (seg->type == &gtk_text_toggle_off_type))
             {
               tag = seg->body.toggle.info->tag;
-              if (tag->invisible_set && tag->values->invisible)
+              if (tag->invisible_set)
                 {
                   tags[tag->priority] = tag;
                   tagCnts[tag->priority]++;
@@ -2551,7 +2557,7 @@ _gtk_text_btree_char_is_invisible (const GtkTextIter *iter)
               if (summary->toggle_count & 1)
                 {
                   tag = summary->info->tag;
-                  if (tag->invisible_set && tag->values->invisible)
+                  if (tag->invisible_set)
                     {
                       tags[tag->priority] = tag;
                       tagCnts[tag->priority] += summary->toggle_count;
@@ -2964,6 +2970,18 @@ _gtk_text_btree_mark_is_selection_bound (GtkTextBTree *tree,
                                          GtkTextMark *segment)
 {
   return segment == tree->selection_bound_mark;
+}
+
+GtkTextMark *
+_gtk_text_btree_get_insert (GtkTextBTree *tree)
+{
+  return tree->insert_mark;
+}
+
+GtkTextMark *
+_gtk_text_btree_get_selection_bound (GtkTextBTree *tree)
+{
+  return tree->selection_bound_mark;
 }
 
 GtkTextMark*

@@ -59,6 +59,7 @@ typedef struct {
 typedef struct {
   TagInfo tag;
   gchar *name;
+  GString *text;
   gchar *data;
   gboolean translatable;
   gchar *context;
@@ -105,6 +106,8 @@ GObject * _gtk_builder_construct (GtkBuilder *builder,
                                   ObjectInfo *info);
 void      _gtk_builder_add (GtkBuilder *builder,
                             ChildInfo *child_info);
+void      _gtk_builder_add_signals (GtkBuilder *builder,
+				    GSList     *signals);
 void      _gtk_builder_finish (GtkBuilder *builder);
 void _free_signal_info (SignalInfo *info,
                         gpointer user_data);

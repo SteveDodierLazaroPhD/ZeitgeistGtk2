@@ -484,7 +484,7 @@ gtk_toolbar_class_init (GtkToolbarClass *klass)
  						      P_("Toolbar Style"),
  						      P_("How to draw the toolbar"),
  						      GTK_TYPE_TOOLBAR_STYLE,
- 						      GTK_TOOLBAR_ICONS,
+ 						      DEFAULT_TOOLBAR_STYLE,
  						      GTK_PARAM_READWRITE));
   g_object_class_install_property (gobject_class,
 				   PROP_SHOW_ARROW,
@@ -3877,7 +3877,7 @@ struct _ToolbarContent
       GtkAllocation	goal_allocation;
       guint		is_placeholder : 1;
       guint		disappearing : 1;
-      TriState		has_menu : 2;
+      guint		has_menu : 2;
     } tool_item;
     
     struct

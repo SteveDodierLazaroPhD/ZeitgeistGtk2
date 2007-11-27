@@ -202,7 +202,7 @@ static const GDebugKey gtk_debug_keys[] = {
  *   The returned string is owned by GTK+ and should not be modified
  *   or freed.
  **/
-gchar*
+const gchar*
 gtk_check_version (guint required_major,
 		   guint required_minor,
 		   guint required_micro)
@@ -652,11 +652,10 @@ do_post_parse_initialization (int    *argc,
    * it isn't default:LTR or default:RTL it will not work 
    */
     char *e = _("default:LTR");
-    if (strcmp (e, "default:RTL")==0) {
+    if (strcmp (e, "default:RTL")==0) 
       gtk_widget_set_default_direction (GTK_TEXT_DIR_RTL);
-    } else if (strcmp (e, "default:LTR")) {
+    else if (strcmp (e, "default:LTR"))
       g_warning ("Whoever translated default:LTR did so wrongly.\n");
-    }
   }
 
   gtk_type_init (0);
@@ -732,7 +731,7 @@ post_parse_hook (GOptionContext *context,
  * with g_option_context_add_group(), if you are using 
  * g_option_context_parse() to parse your commandline arguments.
  *
- * Returns a #GOptionGroup for the commandline arguments recognized
+ * Returns: a #GOptionGroup for the commandline arguments recognized
  *   by GTK+
  *
  * Since: 2.6

@@ -52,10 +52,10 @@
 /* VOID:INT,INT,INT,INT (./gdk-pixbuf-marshal.list:26) */
 void
 _gdk_pixbuf_marshal_VOID__INT_INT_INT_INT (GClosure     *closure,
-                                           GValue       *return_value,
+                                           GValue       *return_value G_GNUC_UNUSED,
                                            guint         n_param_values,
                                            const GValue *param_values,
-                                           gpointer      invocation_hint,
+                                           gpointer      invocation_hint G_GNUC_UNUSED,
                                            gpointer      marshal_data)
 {
   typedef void (*GMarshalFunc_VOID__INT_INT_INT_INT) (gpointer     data1,
@@ -95,10 +95,10 @@ _gdk_pixbuf_marshal_VOID__INT_INT_INT_INT (GClosure     *closure,
 /* VOID:INT,INT (./gdk-pixbuf-marshal.list:28) */
 void
 _gdk_pixbuf_marshal_VOID__INT_INT (GClosure     *closure,
-                                   GValue       *return_value,
+                                   GValue       *return_value G_GNUC_UNUSED,
                                    guint         n_param_values,
                                    const GValue *param_values,
-                                   gpointer      invocation_hint,
+                                   gpointer      invocation_hint G_GNUC_UNUSED,
                                    gpointer      marshal_data)
 {
   typedef void (*GMarshalFunc_VOID__INT_INT) (gpointer     data1,

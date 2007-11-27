@@ -1,3 +1,444 @@
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.12.2 ===
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkmain.c:
+	* gtk/gtknotebook.c:
+	* gtk/gtkplugprivate.h:
+	* gtk/gtksocket.c:
+	* gtk/gtksocketprivate.h:
+	* gtk/gtktable.c: Fix up some doc comments to shut up gtk-doc.
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* configure.in: Use $CUPS_CONFIG instead of hardcoded cups-config.
+	(#495574, Richard Hult)
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtknotebook.c (gtk_notebook_update_labels): Short-circuit on
+	destroy.
+	(gtk_notebook_destroy): Destroy tab_label widgets.  (#388321, 
+	Morten Welinder)
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkassistant.c: Improve alternative button
+	ordering.  (#476827, Yevgen Muntyan, patch by Carlos Garnacho)
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkcalendar.c: Fix a theming problem with colors
+	in GtkCalendar.  (#499703, Michael Hofmann)
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkfilechooserbutton.c:
+	* gtk/gtktoolbar.c: Don't use guint8 for bitfields, since
+	some compilers choke on that.  (#467722)
+
+2007-11-26  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/win32/gdkwindow-win32.c (gdk_window_fullscreen): Use the
+	monitor the window currently is on, not always the primary
+	monitor. (#463865, Tim Evans)
+
+2007-11-25  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+	
+	* gtk/gtktreeview.c (gtk_tree_view_set_show_expanders): Fix a
+	typo.  (#498922)
+
+2007-11-22  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* modules/printbackends/cups/gtkcupsutils.c: Fix a casting problem.
+	(#485662, patch by Herbert Valerio Riedel)
+
+2007-11-22  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtktextiter.c: Fix an aliasing problem.  (#347585, Ed Catmur)
+
+2007-11-22  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* tests/testrichtext.c (setup_buffer): Fix C89 compilation issue.
+	(#467711, The Written Word)
+
+2007-11-22  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtktoolbar.c: Fix the default value of the toolbar-style
+	property.  (#489782, Jan Janech)
+
+2007-11-22  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkimage.c (animation_timeout): Avoid drawing one too many
+	frames.  (#107398, Owen Taylor, Miguel Gomez)
+
+2007-11-19 10:27:39  Tim Janik  <timj@imendio.com>
+
+	=== Branch for 2.12 ===
+
+2007-11-19  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktreestore.c: Fix the GtkBuildable implementation
+	to allow setting column types.  (#496795, James Stephenson)
+
+2007-11-19  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkmain.[hc]: Make gtk_check_version() return const.
+	(#496734, Nicolas Joseph)
+
+2007-11-19  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkaboutdialog.c: Correct docs for program-name property.
+	(#496689, Thomas Wood)
+
+2007-11-17  Paolo Borelli  <pborelli@katamail.com>
+
+	* gtk/gtktextbuffer.c:
+	* gtk/gtktextlayout.c:
+	* gtk/gtktextview.c:
+	Use gtk_text_buffer_get_insert instead of get_mark. Fixes Bug 497164.
+
+2007-11-15  Yevgen Muntyan  <muntyan@tamu.edu>
+
+	* gtk/gtktextbtree.h:
+	* gtk/gtktextbtree.c: new functions _gtk_text_btree_get_insert()
+	and _gtk_text_btree_get_selection_bound() (#497102).
+	* gtk/gtktextbuffer.c (gtk_text_buffer_get_insert),
+	(gtk_text_buffer_get_selection_bound): use them here instead of
+	hash table lookup.
+
+2007-11-15  Yevgen Muntyan  <muntyan@tamu.edu>
+
+	* gtk/gtktextbtree.c (_gtk_text_btree_get_tags): sort returned
+	tags array by tags priority (#497102).
+	* gtk/gtktextiter.c (gtk_text_iter_get_tags), (gtk_text_iter_get_attributes):
+	* gtk/gtktextlayout.c (get_tags_array_at_iter): and do not sort it here.
+
+2007-11-15  Yevgen Muntyan  <muntyan@tamu.edu>
+
+	* gtk/gtktextlayout.c: (gtk_text_layout_get_line_display),
+	(get_style): do not call _gtk_text_btree_get_iter_at_line() and
+	_gtk_text_btree_get_tags() for every segment, instead call them
+	once and then collect the tags while iterating over the segments.
+	(get_tags_array_at_iter), (tags_array_toggle_tag): new functions
+	for tags array handling.
+
+2007-11-14  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmenu.c (gtk_menu_popup): remove recently added
+	gdk_flush() again, it's not needed after all.
+
+2007-11-14  Michael Natterer  <mitch@imendio.com>
+
+	* tests/testbbox.c
+	* tests/testframe.c: use g_object_ref/unref instead of deprecated
+	functions.
+
+2007-11-14  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkstyle.c (gtk_default_draw_focus): cast pointers to fix
+	warnings about signdness.
+
+2007-11-12  Sven Herzberg  <herzi@imendio.com>
+
+	Reviewed by Richard:
+
+	* gdk/quartz/gdkquartz.h: include <gdk/gdkprivate.h> with angle
+	brackets and not with quotation marks
+
+2007-11-12  Alexander Larsson  <alexl@redhat.com>
+
+        * gdk/x11/gdkselection-x11.c:
+	Avoid loading the ISO8859-1 iconv module.
+	We're already doing all the required work anyway.
+	This saves 4kb private dirty memory per gtk+ process
+
+2007-11-11  Yevgen Muntyan  <muntyan@tamu.edu>
+
+	* gtk/gtktextview.c: Moved gtk_text_view_update_im_spot_location()
+	calls into an idle, fixes #494776.
+	GtkTextViewPrivate:im_spot_idle, do_update_im_spot_location(),
+	queue_update_im_spot_location(), flush_update_im_spot_location(): new
+	field and functions to queue the call;
+	(changed_handler): call queue_update_im_spot_location() instead of
+	gtk_text_view_update_im_spot_location();
+	(gtk_text_view_key_press_event): flush the idle here.
+
+2007-11-10  Ryan Lortie  <desrt@desrt.ca>
+
+	* gtk/gtkbuilder.c: Convert delayed_properties hashtable to linked
+	list.  Fixes #495769.
+
+2007-11-10  Matthias Clasen  <mclasen@redhat.com>
+
+	* tests/buildertest.c: Parse a file given on the cmdline.
+
+	* gtk/gtkbuilderparser.c (_gtk_builder_parser_parse_buffer):
+	Leak less in error paths.
+
+2007-11-10  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkbuilder.c (gtk_builder_add_from_file): Don't
+	leak buffer if an error occurs.  
+
+2007-11-09  Matthias Clasen  <mclasen@redhat.com>
+	
+	* gtk/gtkbuilderparser.c: More robustness improvements
+	for the parser.
+
+	* gtk/gtkbuilderparser.c (parse_signal): Handle misplaced
+	signal elements without asserting.
+
+	* gtk/gtkbuilderparser.c (parse_property): Handle misplaced
+	property elements without asserting.
+
+2007-11-09  Kristian Rietveld  <kris@imendio.com>
+
+	* gdk/gdkwindow.c (gdk_window_process_all_updates): guard for
+	windows with GDK_WINDOW_DESTROYED set.  (Fixes #482531, reported
+	by Sebastien Bacher).
+
+2007-11-09  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkmain.c:
+	* gtk/gtkstatusicon.c: Trivial coding style fixes.
+
+2007-11-08  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkbuilder.c: don't leak 'filename' field memory when loading
+	more than one file into the same GtkBuilder instance. Noticed by
+	Ryan Lortie.
+
+2007-11-08  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkbuildable.h: include <glib.h> instead of <glib/gmarkup.h>
+
+2007-11-07  Ryan Lortie  <desrt@desrt.ca>
+
+	* gtk/gtkbuilderprivate.h: Add GString 'text' to the property info
+	structure.  Used to accumulate property text across multiple 'text'
+	calls.
+
+	* gtk/gtkbuilderparser.c: Instead of translating/copying text on each
+	'text' call while in <property> accumulate the text until the end and
+	do it all in one go.  This fixes handling of <!-- --> inside
+	properties as well as <property/> cases.
+
+2007-11-06  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmenu.c (gtk_menu_popup): call gdk_flush() after showing
+	the menu so we can definitely grab on it. Grab failure found by
+	Xan Lopez.
+
+2007-11-06  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwidget.c (gtk_widget_keynav_failed): fixed docs.
+
+2007-11-04  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkkeys-quartz.c: (maybe_update_keymap): Make shift
+	tab work with unicode layouts (e.g. all Leopard layouts), fixes
+	bug #493404.
+
+2007-11-03  Richard Hult  <richard@imendio.com>
+
+	* gtk/gtkclipboard-quartz.c: (clipboard_owner_destroyed),
+	(gtk_clipboard_set_contents), (clipboard_unset): Fix bug #486369,
+	by passing the selection info along when pasting.
+
+2007-11-03  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/GdkQuartzWindow.c:
+	* gdk/quartz/GdkQuartzWindow.h: Make the grab breaking on window
+	move work on Leopard (as well as Tiger) by ignoring which mouse
+	button is pressed.
+
+2007-11-03  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c: (move_resize_window_internal):
+	Calculate the frame rect correctly when resizing toplevels, fixes
+	bug #492209.
+
+2007-11-01  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/GdkQuartzWindow.c:
+	* gdk/quartz/GdkQuartzWindow.h:
+	* gdk/quartz/gdkdnd-quartz.c:
+	* gdk/quartz/gdkquartz.h:
+	* gtk/gtkdnd-quartz.c: Redo the fix for bug #492117, by adding a
+	getter for the private drag context info so we don't need to
+	expose so much in the public quartz header file.
+
+2007-11-01  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/GdkQuartzWindow.h: Fix build, bug #492117.
+
+2007-10-31  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/GdkQuartzWindow.c:
+	* gdk/quartz/GdkQuartzWindow.h:
+	* gdk/quartz/gdkwindow-quartz.c: (gdk_window_begin_resize_drag),
+	(gdk_window_begin_move_drag): Implement manual resize and move.
+
+2007-10-31  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c:
+	(gdk_window_impl_quartz_process_updates): Setup autorelease pool,
+	plugs occasional leak on leopard.
+
+2007-10-31  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/GdkQuartzView.c: Fix build warning (trackingRect should be
+	0, not nil).
+
+2007-10-30  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkbuilder.c (gtk_builder_finalize): Chain up to the
+	parent's finalize virtual function.
+
+2007-10-28  Owen Taylor  <otaylor@redhat.com>
+
+	* gtk/gtktextbuffer.c (gtk_text_buffer_delete_interactive): Allow
+	the ::delete-range handler to delete text after the text it was
+	explicitly asked to delete without confusing us as to whether
+	we're currently on an editable or not-editable segment.
+	(#491207)
+
+2007-10-26  Cody Russell  <cody@jhu.edu>
+
+	* modules/engines/ms-windows/Theme/gtk-2.0/gtkrc:
+	Disable beeps when backspacing in textviews by default on
+	Win32 systems. (#490624, Daniel Atallah)
+
+2007-10-26  Owen Taylor  <otaylor@redhat.com>
+
+	* gtk/gtktextbtree.c (_gtk_text_btree_char_is_invisible):
+	Pay attention to tags that turn invisibility off as well
+	as tags that turn invsibility on. (#488051, Mathias Hasselmann)	
+
+2007-10-24  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilder.c: Improve gtk_builder_get_type_from_name()
+	documentation. (#461222, Murray Cumming)
+
+2007-10-24  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c: (update_toplevel_order): Use an
+	autorelease pool.
+
+2007-10-24  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtk-builder-convert 
+	(GtkBuilderConverter._convert_dialog_response): 
+	Give up instead of raising an error if we can't find
+	the parent dialog when converting response ids.
+	(#479463, Priyank)
+
+2007-10-24  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilder.c: (_gtk_builder_construct),
+	(_gtk_builder_add_signals):
+	* gtk/gtkbuilderparser.c: (end_element):
+	* gtk/gtkbuilderprivate.h:
+	* tests/buildertest.c: (test_connect_signals):
+
+	Parse signals after <child> tags and add tests.
+	(#468793, Benjamin Otte)
+
+2007-10-24  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilderparser.c (end_element): Allow empty property nodes
+	so we can set empty strings. (#486420, Xavier Claessens)
+
+2007-10-23  Richard Hult  <richard@imendio.com>
+
+	* gtk/gtkquartz.c:
+	(_gtk_quartz_get_selection_data_from_pasteboard): Handle
+	NSFilenamesPboardType in addition to NSURLPboardType to support
+	dnd with multiple files from Finder, based on patch from Paul
+	Davis (bug #467490).
+
+2007-10-23  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkwindow-quartz.c:
+	(gdk_window_raise, gdk_window_lower, gdk_window_new,
+	_gdk_windowing_window_destroy): Maintain a list for the stacking
+	order of windows. Implement lower and raise for child windows. The
+	list for toplevels is created on demand, and cleared when a window
+	gets or resigns main status and when new windows are created.
+	(find_child_window_helper): Use the sorted list to go through
+	windows from top to bottom. Take any titlebar in consideration for
+	toplevels, to stop events from sometimes punching through (bugs
+	#473813 and #489370).
+
+2007-10-22  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbuilder.c: Use gtk_ascii_tolower/toupper instead of the C 
+	library variants. (#488918, Sertaç Ö. Yıldız)
+
+2007-10-19  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/win32/gdkevents-win32.c (gdk_event_translate): Add a block
+	around the WM_ACTIVATE case to avoid declaring variables in the
+	middle of a block. (#488017)
+
+2007-10-18  Cody Russell  <cody@jhu.edu>
+
+	* modules/engines/ms-windows/msw_style.c: Draw focus rect for
+	buttons with relief set to GTK_RELIEF_NONE. (#487954)
+
+2007-10-17  Cody Russell  <cody@jhu.edu>
+
+	* gdk/win32/gdkevents-win32.c
+	* gdk/win32/gdkwindow-win32.[ch]: Force non-modal transient dialogs
+	to iconify with their parents on Win32.  Maintain a list of transient
+	children, and whenever a window is hidden or restored we now do the
+	same thing to all connected transient windows above and below the
+	current window in the chain.  See comment under WM_ACTIVATE for the
+	reasons why.  (#164537, #371036, #405178)
+
+2007-10-17  Owen Taylor  <otaylor@redhat.com>
+
+	* gtk/Makefile.am (libgtk_win32_2_0_la_LDFLAGS): Move -Wl,-luuid
+	to LDFLAGS to make libtool happy.
+
+2007-10-17  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/Makefile.am (libgtk_win32_2_0_la_LIBADD): Use -Wl,-luuid
+	instead of -luuid to work around libtool lossage.
+
+2007-10-17  Matthias Clasen <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2007-10-16  Matthias Clasen <mclasen@redhat.com>
 
 	* === Released 2.12.1 ===

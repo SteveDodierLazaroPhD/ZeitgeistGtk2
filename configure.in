@@ -12,10 +12,10 @@ AC_PREREQ(2.54)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [12])
-m4_define([gtk_micro_version], [1])
+m4_define([gtk_micro_version], [2])
 m4_define([gtk_version],
           [gtk_major_version.gtk_minor_version.gtk_micro_version])
-m4_define([gtk_interface_age], [1])
+m4_define([gtk_interface_age], [2])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 # This is the X.Y used in -lgtk-FOO-X.Y
@@ -1553,10 +1553,10 @@ AC_SUBST(GTK_XIM_FLAGS)
 
 AC_PATH_PROG(CUPS_CONFIG, cups-config, no)
 if test "x$CUPS_CONFIG" != "xno"; then
-  CUPS_CFLAGS=`cups-config --cflags | sed 's/-O[0-9]*//' | sed 's/-m[^\t]*//g'`
-  CUPS_LIBS=`cups-config --libs`
+  CUPS_CFLAGS=`$CUPS_CONFIG --cflags | sed 's/-O[0-9]*//' | sed 's/-m[^\t]*//g'`
+  CUPS_LIBS=`$CUPS_CONFIG --libs`
 
-  CUPS_API_VERSION=`cups-config --api-version`
+  CUPS_API_VERSION=`$CUPS_CONFIG --api-version`
   CUPS_API_MAJOR=`echo $ECHO_N $CUPS_API_VERSION | awk -F. '{print $1}'`
   CUPS_API_MINOR=`echo $ECHO_N $CUPS_API_VERSION | awk -F. '{print $2}'`
 
