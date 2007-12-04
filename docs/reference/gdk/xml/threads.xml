@@ -1,6 +1,6 @@
 <refentry id="gdk-Threads">
 <refmeta>
-<refentrytitle role="top_of_page">Threads</refentrytitle>
+<refentrytitle role="top_of_page" id="gdk-Threads.top_of_page">Threads</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>GDK Library</refmiscinfo>
 </refmeta>
@@ -11,7 +11,7 @@
 <!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
-<refsynopsisdiv role="synopsis">
+<refsynopsisdiv id="gdk-Threads.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
 <synopsis>
@@ -53,7 +53,7 @@ extern              GMutex *<link linkend="gdk-threads-mutex">gdk_threads_mutex<
 
 
 
-<refsect1 role="desc">
+<refsect1 id="gdk-Threads.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
 For thread safety, GDK relies on the thread primitives in GLib, 
@@ -294,11 +294,11 @@ int main (int argc, char *argv[])
 </informalexample>
 </refsect1>
 
-<refsect1 role="details">
+<refsect1 id="gdk-Threads.details" role="details">
 <title role="details.title">Details</title>
-<refsect2>
-<title><anchor id="GDK-THREADS-ENTER:CAPS" role="macro"/>GDK_THREADS_ENTER()</title>
-<indexterm><primary>GDK_THREADS_ENTER</primary></indexterm><programlisting>#define             GDK_THREADS_ENTER()</programlisting>
+<refsect2 id="GDK-THREADS-ENTER:CAPS" role="macro">
+<title>GDK_THREADS_ENTER()</title>
+<indexterm zone="GDK-THREADS-ENTER:CAPS"><primary>GDK_THREADS_ENTER</primary></indexterm><programlisting>#define             GDK_THREADS_ENTER()</programlisting>
 <para>
 This macro marks the beginning of a critical section in which GDK and
 GTK+ functions can be called safely and without causing race
@@ -307,16 +307,16 @@ section. The macro expands to a no-op if <link linkend="G-THREADS-ENABLED:CAPS">
 been defined. Typically <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link> should be used instead of
 this macro.
 </para></refsect2>
-<refsect2>
-<title><anchor id="GDK-THREADS-LEAVE:CAPS" role="macro"/>GDK_THREADS_LEAVE()</title>
-<indexterm><primary>GDK_THREADS_LEAVE</primary></indexterm><programlisting>#define             GDK_THREADS_LEAVE()</programlisting>
+<refsect2 id="GDK-THREADS-LEAVE:CAPS" role="macro">
+<title>GDK_THREADS_LEAVE()</title>
+<indexterm zone="GDK-THREADS-LEAVE:CAPS"><primary>GDK_THREADS_LEAVE</primary></indexterm><programlisting>#define             GDK_THREADS_LEAVE()</programlisting>
 <para>
 This macro marks the end of a critical section 
 begun with <link linkend="GDK-THREADS-ENTER:CAPS"><type>GDK_THREADS_ENTER</type></link>.
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-init" role="function"/>gdk_threads_init ()</title>
-<indexterm><primary>gdk_threads_init</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_init                    (void);</programlisting>
+<refsect2 id="gdk-threads-init" role="function">
+<title>gdk_threads_init ()</title>
+<indexterm zone="gdk-threads-init"><primary>gdk_threads_init</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_init                    (void);</programlisting>
 <para>
 Initializes GDK so that it can be used from multiple threads
 in conjunction with <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link> and <link linkend="gdk-threads-leave"><function>gdk_threads_leave()</function></link>.
@@ -328,33 +328,33 @@ GTK+; to be safe, call it before <link linkend="gtk-init"><function>gtk_init()</
 <para>
 
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-enter" role="function"/>gdk_threads_enter ()</title>
-<indexterm><primary>gdk_threads_enter</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_enter                   (void);</programlisting>
+<refsect2 id="gdk-threads-enter" role="function">
+<title>gdk_threads_enter ()</title>
+<indexterm zone="gdk-threads-enter"><primary>gdk_threads_enter</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_enter                   (void);</programlisting>
 <para>
 This macro marks the beginning of a critical section in which GDK and
 GTK+ functions can be called safely and without causing race
 conditions.  Only one thread at a time can be in such a critial
 section.
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-leave" role="function"/>gdk_threads_leave ()</title>
-<indexterm><primary>gdk_threads_leave</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_leave                   (void);</programlisting>
+<refsect2 id="gdk-threads-leave" role="function">
+<title>gdk_threads_leave ()</title>
+<indexterm zone="gdk-threads-leave"><primary>gdk_threads_leave</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_leave                   (void);</programlisting>
 <para>
 Leaves a critical region begun with <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link>. 
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-mutex" role="variable" condition="deprecated:"/>gdk_threads_mutex</title>
-<indexterm role="deprecated"><primary>gdk_threads_mutex</primary></indexterm><programlisting>extern GMutex *gdk_threads_mutex; /* private */
+<refsect2 id="gdk-threads-mutex" role="variable" condition="deprecated:">
+<title>gdk_threads_mutex</title>
+<indexterm zone="gdk-threads-mutex" role="deprecated"><primary>gdk_threads_mutex</primary></indexterm><programlisting>extern GMutex *gdk_threads_mutex; /* private */
 </programlisting>
 <warning><para><literal>gdk_threads_mutex</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 The <link linkend="GMutex"><type>GMutex</type></link> used to implement the critical region for
 <link linkend="gdk-threads-enter"><function>gdk_threads_enter()</function></link>/<link linkend="gdk-threads-leave"><function>gdk_threads_leave()</function></link>. 
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-set-lock-functions" role="function" condition="since:2.4"/>gdk_threads_set_lock_functions ()</title>
-<indexterm role="2.4"><primary>gdk_threads_set_lock_functions</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_set_lock_functions      (<link linkend="GCallback">GCallback</link> enter_fn,
+<refsect2 id="gdk-threads-set-lock-functions" role="function" condition="since:2.4">
+<title>gdk_threads_set_lock_functions ()</title>
+<indexterm zone="gdk-threads-set-lock-functions" role="2.4"><primary>gdk_threads_set_lock_functions</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_threads_set_lock_functions      (<link linkend="GCallback">GCallback</link> enter_fn,
                                                          <link linkend="GCallback">GCallback</link> leave_fn);</programlisting>
 <para>
 Allows the application to replace the standard method that
@@ -393,9 +393,9 @@ be called multiple times.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-add-idle" role="function" condition="since:2.12"/>gdk_threads_add_idle ()</title>
-<indexterm role="2.12"><primary>gdk_threads_add_idle</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_idle                (<link linkend="GSourceFunc">GSourceFunc</link> function,
+<refsect2 id="gdk-threads-add-idle" role="function" condition="since:2.12">
+<title>gdk_threads_add_idle ()</title>
+<indexterm zone="gdk-threads-add-idle" role="2.12"><primary>gdk_threads_add_idle</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_idle                (<link linkend="GSourceFunc">GSourceFunc</link> function,
                                                          <link linkend="gpointer">gpointer</link> data);</programlisting>
 <para>
 A wrapper for the common usage of <link linkend="gdk-threads-add-idle-full"><function>gdk_threads_add_idle_full()</function></link> 
@@ -417,9 +417,9 @@ See <link linkend="gdk-threads-add-idle-full"><function>gdk_threads_add_idle_ful
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-add-idle-full" role="function" condition="since:2.12"/>gdk_threads_add_idle_full ()</title>
-<indexterm role="2.12"><primary>gdk_threads_add_idle_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_idle_full           (<link linkend="gint">gint</link> priority,
+<refsect2 id="gdk-threads-add-idle-full" role="function" condition="since:2.12">
+<title>gdk_threads_add_idle_full ()</title>
+<indexterm zone="gdk-threads-add-idle-full" role="2.12"><primary>gdk_threads_add_idle_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_idle_full           (<link linkend="gint">gint</link> priority,
                                                          <link linkend="GSourceFunc">GSourceFunc</link> function,
                                                          <link linkend="gpointer">gpointer</link> data,
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> notify);</programlisting>
@@ -488,9 +488,9 @@ some_widget_finalize (GObject *object)
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-add-timeout" role="function" condition="since:2.12"/>gdk_threads_add_timeout ()</title>
-<indexterm role="2.12"><primary>gdk_threads_add_timeout</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout             (<link linkend="guint">guint</link> interval,
+<refsect2 id="gdk-threads-add-timeout" role="function" condition="since:2.12">
+<title>gdk_threads_add_timeout ()</title>
+<indexterm zone="gdk-threads-add-timeout" role="2.12"><primary>gdk_threads_add_timeout</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout             (<link linkend="guint">guint</link> interval,
                                                          <link linkend="GSourceFunc">GSourceFunc</link> function,
                                                          <link linkend="gpointer">gpointer</link> data);</programlisting>
 <para>
@@ -517,9 +517,9 @@ See <link linkend="gdk-threads-add-timeout-full"><function>gdk_threads_add_timeo
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
-<refsect2>
-<title><anchor id="gdk-threads-add-timeout-full" role="function" condition="since:2.12"/>gdk_threads_add_timeout_full ()</title>
-<indexterm role="2.12"><primary>gdk_threads_add_timeout_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout_full        (<link linkend="gint">gint</link> priority,
+<refsect2 id="gdk-threads-add-timeout-full" role="function" condition="since:2.12">
+<title>gdk_threads_add_timeout_full ()</title>
+<indexterm zone="gdk-threads-add-timeout-full" role="2.12"><primary>gdk_threads_add_timeout_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout_full        (<link linkend="gint">gint</link> priority,
                                                          <link linkend="guint">guint</link> interval,
                                                          <link linkend="GSourceFunc">GSourceFunc</link> function,
                                                          <link linkend="gpointer">gpointer</link> data,
@@ -602,6 +602,4 @@ static void some_widget_finalize (GObject *object)
 
 
 
-
-<refsect1><refsect2 /><refsect2 /></refsect1>
 </refentry>

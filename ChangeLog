@@ -1,3 +1,107 @@
+2007-12-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.12.3 ===
+
+2007-12-04  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (_gdk_windowing_window_init):
+	Fully initialize the root window, fixes bug #501583.
+
+2007-12-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2007-12-04  Matthias Clasen  <mclasen@redhat.com>
+
+	Merge from trunk:
+
+	* gtk/gtknotebook.c: Modify the tab-label-destroy fix to not
+	crash epiphany.
+
+2007-12-03  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gtk/gtkquartz.c: (_gtk_quartz_set_selection_data_for_pasteboard):
+	Don't crash when dragging from a source that doesn't support uri
+	lists (bug #499868, Paul Davis).
+
+2007-12-03  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c:
+	(gdk_window_impl_quartz_begin_paint_region): Don't crash when a
+	parent relative bg pixmap is set, and no parent has a bg
+	pixmap. Fixes bug #500804.
+
+2007-12-1  Cody Russell  <bratsche@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtkpaned.c: (gtk_paned_set_position) [Win32]:      
+	On Windows, queue a redraw of child2 whenever we set
+	the pane handle position.  This is unfortunately kind
+	of hacky, but solves the visual artifacts that were
+	occuring on at least certain types of child widgets
+	(e.g., text views and tree views) that are inside
+	horizontal or vertical panes. (#144269)
+
+2007-11-28  Tor Lillqvist  <tml@novell.com>
+
+	Merged from trunk: 
+
+	A proper build of GNU libintl is supposed to export the variable
+	_nl_msg_cat_cntr. configure looks for that variable in order to
+	recognize GNU gettext. If it sees that it is indeed GNU gettext
+	that is used, it decides to install message catalogs in
+	share/locale, otherwise in lib/locale. Until now on Windows I have
+	built GTK+ against a build of GNU gettext that did not export
+	_nl_msg_cat_cntr. But this will change, so we can't assume message
+	catalogs are always in lib/locale.
+
+	* gtk/gtkmain.c: (_gtk_get_localedir) [Win32]: Rework to handle
+	GTK_LOCALEDIR being either in "lib" or "share". Move the function
+	before the inclusion of gtkprivate.h so that it sees the original
+	GTK_LOCALEDIR.
+
+	* gtk-zip.sh.in: Check whether the message catalogs are in
+	share/locale or lib/locale.
+
+	* config.h.win32.in: Tack on "/share/locale" to GTK_LOCALEDIR so
+	that the code in _gtk_get_localedir() will find the slashes.
+
+2007-11-28  Tor Lillqvist  <tml@novell.com>
+
+	Merged from trunk: Fix #375893, patch by Ben Hague:
+
+	* gtk/gtkfilesystemwin32.c (get_viewable_logical_drives): Wrapper
+	around GetLogicalDrives() that takes also the viewable drive
+	restrictions in the Registry (which are usually the result of an
+	Active Directory Group Policy) into account.
+
+	(check_volumes, gtk_file_system_win32_list_volumes) Call
+	get_viewable_logical_drives() instead of GetLogicalDrives().
+
+2007-11-27  Matthias Clasen <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkwindow.c (gtk_window_move_resize): Zero some
+	variables to silence valgrind.  (#495124, Morten Welinder)
+
+2007-11-27  Mart Raudsepp  <leio@gentoo.org>
+
+	Merged from trunk:
+
+	* tests/buildertest.c: (test_window): fix invalid free
+
+2007-11-26  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2007-11-26  Matthias Clasen  <mclasen@redhat.com>
 
 	* === Released 2.12.2 ===
