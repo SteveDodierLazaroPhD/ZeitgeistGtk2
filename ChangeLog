@@ -1,3 +1,232 @@
+2008-01-08  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.12.5 ===
+
+2008-01-08  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
+	* === Released 2.12.4 ===
+
+2008-01-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2008-01-07  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkassistant.c (remove_page): Be more robust when removing
+	the current page.  (#499951, Andreas Sandberg)
+	
+2007-01-06  Johan Dahlin  <johan@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtk-builder-convert (GtkBuilderConverter._strip_root): 
+	Make sure that --root works for toplevel widgets.
+	(#491847, Phil Lello)
+
+2008-01-04  Michael Natterer  <mitch@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/x11/gdkinput-x11.c (_gdk_device_get_history): don't forget
+	to set the time in the returned GdkTimeCoords.
+
+2008-01-03  Emmanuele Bassi  <ebassi@gnome.org>
+
+	Backport from trunk
+
+	* gtk/gtkfilechooserdefault.c (recent_sort_mru): Use the
+	correct comparison function (kudos to Christian Persch and
+	Claudio Saavedra for spotting this).
+
+	* gtk/gtkrecentchooserutils.c:
+	(sort_recent_items_mru),
+	(sort_recent_items_lru): Ditto as above.
+
+2007-12-30  Johannes Schmid <jhs@gnome.org>
+
+	* gtk/gtknotebook.c: (gtk_notebook_stop_reorder):
+	Also reorder menu when reordering tabs by drag & drop
+	
+	* tests/testnotebookdnd.c: (create_notebook_with_notebooks):
+	Add a menu to one of the notebooks to have a test-case for
+	the change mentioned above.
+
+2007-12-31  Christian Persch  <chpe@gnome.org>
+
+	* gtk/gtkprintunixdialog.c: (gtk_print_unix_dialog_get_property):
+	Plug a mem leak. Bug #506107.
+
+2007-12-28  Johan Dahlin  <johan@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtkdialog.c (gtk_dialog_buildable_custom_finished)
+	(gtk_dialog_buildable_custom_tag_start): Chain up. 
+	This makes it possible to have accelerators tags on GtkDialog 
+	subclasses.
+
+2007-12-27  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gkt/gtksignal.h: Fix 0<>NULL confusion in gtk_signal_connect...
+	defines.  (#505708,  MINAMI Hirokazu)
+
+2007-12-23  Cody Russell  <bratsche@gnome.org>
+
+	Merged from trunk:
+
+	* gdk/win32/gdkevents-win32.c (show_window_recurse): Check that
+	the window is mapped before setting SW_RESTORE or SW_MINIMIZE.
+	Fixes a regression caused by #164537 patch where transient
+	windows that are hidden get shown (incorrectly) when their
+	parents are minimized. (#504984)
+
+2007-12-23  Xan Lopez  <xan@gnome.org>
+
+	* gtk/gtktreeview.c (gtk_tree_view_build_tree): pass correct argument
+	to g_signal_emit for TEST_EXPAND_ROW (GtkTreeIter* vs. GtkTreeIter**).
+
+	Patch by Sadrul Habib Chowdhury (#504804)
+
+2007-12-21  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (_gdk_windowing_window_destroy):
+	Plug leak of destroyed subviews, fixes bug #504753.
+
+2007-12-20  Johan Dahlin  <johan@gnome.org>
+
+	* gtk/gtk-builder-convert (GtkBuilderConverter._remove_window): 
+	Refactor to avoid some duplication.
+	Convert toplevel GtkMenu's top popups and not menubars in the ui manager.
+	Fixes #504749, Yuri Pimenov
+
+2007-12-20  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/GdkQuartzWindow.c:
+	* gdk/quartz/GdkQuartzWindow.h: Make manual resizing smoother by
+	processing events after changing the size.
+
+2007-12-17  Kristian Rietveld  <kris@imendio.com>
+
+	Merge from trunk.
+
+	* gtk/gtktooltip.c (gtk_tooltip_finalize),
+	(gtk_tooltip_set_last_window): use a weak pointer to set last_window
+	to NULL as soon as it's destroyed.  (#496546, patch from
+	Benjamin Berg).
+
+2007-12-16  Mathias Hasselmann  <mathias@openismus.com>
+
+	Prevent assertion failure in gtk_paned_find_neighbours. (#503824,
+	Sébastien Granjoux)
+
+	* gtk/gtkpaned.c: Call gtk_container_forall instead of
+	gtk_container_foreach in get_child_panes.
+
+2007-12-15  Xan Lopez  <xan.lopez@nokia.com>
+
+	Merged from trunk:
+
+	* gtk/gtktreeviewcolumn.c (gtk_tree_view_column_cell_layout_reorder):
+
+	Plug leak: When reordering the info in the list the old node is
+	removed but not freed. (#503569)
+
+2007-12-15  Sebastian Dröge  <slomo@circular-chaos.org>
+
+	Merged from trunk:
+
+	* gdk/directfb/gdkcursor-directfb.c: (gdk_cursor_new_for_display):
+	Use u32 instead of __u32 and u8 instead of __u8 as the other types
+	are deprecated since DirectFB 1.0.0. If compiling with an older
+	version define the new type name to the old types. Fixes bug #503190.
+
+2007-12-10  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkdrawable-quartz.c:
+	(gdk_quartz_drawable_get_context),
+	(gdk_quartz_drawable_release_context):
+	* gdk/quartz/gdkeventloop-quartz.c: (gdk_event_prepare),
+	(gdk_event_check), (gdk_event_dispatch), (poll_func):
+	* gdk/quartz/gdkwindow-quartz.h: Replace the autorelease pools
+	used for each drawing context and in prepare, dispatch and poll
+	with one that exists across each main loop iteration. Fixes leaks
+	on leopard and protects against future leaks introduce when the
+	underlying system changes again (bug #492977).
+
+2007-12-10  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (move_resize_window_internal):
+	Fix the check for no changes to position and size.
+
+2007-12-10  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/GdkQuartzView.c: Ignore drawRect calls with zero
+	sized areas at (0, 0), patch from Paul Davis.
+
+2007-12-10  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkprivate-quartz.h: 
+	* gdk/quartz/gdkeventloop-quartz.c:
+	(_gdk_quartz_event_loop_get_pending),
+	(_gdk_quartz_event_loop_check_pending),
+	(_gdk_quartz_event_loop_release_event), (gdk_event_prepare),
+	(gdk_event_check), (gdk_event_dispatch):
+	* gdk/quartz/gdkevents-quartz.c: (gdk_events_pending)
+	(_gdk_events_queue): Fix a bug where we could end up trying to
+	handle the same event more than once. Based on patch from Paul
+	Davis.
+
+2007-12-10  Tor Lillqvist  <tml@novell.com>
+
+	Merged from trunk:
+
+	* gtk-zip.sh.in: Include bin/gtk-builder-convert in the dev
+	package. (#502850)
+
+2007-12-10  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtknotebook.c (gtk_notebook_real_remove): Another fix
+	to avoid further fallout from the fix for bug 388321.
+
+2007-12-07  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkfilechooserdefault.c (shortcuts_reload_icons): Don't
+	leak pixbufs.  (#502250, Yevgen Muntyan)
+
+2007-12-06  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkevents-quartz.c:
+	(synthesize_crossing_events_for_ns_event): Fix warning when
+	switching spaces in leopard.
+
+2007-12-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2007-12-04  Matthias Clasen  <mclasen@redhat.com>
 
 	* === Released 2.12.3 ===

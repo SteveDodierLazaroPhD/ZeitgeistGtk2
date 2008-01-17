@@ -352,6 +352,8 @@ static GList * gtk_notebook_search_page      (GtkNotebook      *notebook,
 					      GList            *list,
 					      gint              direction,
 					      gboolean          find_visible);
+static void  gtk_notebook_child_reordered    (GtkNotebook      *notebook,
+			                      GtkNotebookPage  *page);
 
 /*** GtkNotebook Drawing Functions ***/
 static void gtk_notebook_paint               (GtkWidget        *widget,
@@ -2765,7 +2767,8 @@ gtk_notebook_stop_reorder (GtkNotebook *notebook)
 	  element = get_drop_position (notebook, page->pack);
 	  old_page_num = g_list_position (notebook->children, notebook->focus_tab);
 	  page_num = reorder_tab (notebook, element, notebook->focus_tab);
-
+          gtk_notebook_child_reordered (notebook, page);
+          
 	  if (priv->has_scrolled || old_page_num != page_num)
 	    g_signal_emit (notebook,
 			   notebook_signals[PAGE_REORDERED], 0,
@@ -4349,12 +4352,15 @@ gtk_notebook_real_remove (GtkNotebook *notebook,
   gtk_widget_unparent (page->child);
 
   tab_label = page->tab_label;
-  g_object_ref (tab_label);
-  gtk_notebook_remove_tab_label (notebook, page);
-  if (destroying)
-    gtk_widget_destroy (tab_label);
-  g_object_unref (tab_label);
-  
+  if (tab_label)
+    {
+      g_object_ref (tab_label);
+      gtk_notebook_remove_tab_label (notebook, page);
+      if (destroying)
+        gtk_widget_destroy (tab_label);
+      g_object_unref (tab_label);
+    }
+
   if (notebook->menu)
     {
       gtk_container_remove (GTK_CONTAINER (notebook->menu), 

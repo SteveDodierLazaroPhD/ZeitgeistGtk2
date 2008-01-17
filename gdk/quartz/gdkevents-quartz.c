@@ -130,7 +130,7 @@ gboolean
 gdk_events_pending (void)
 {
   return (_gdk_event_queue_find_first (_gdk_display) ||
-	  (_gdk_quartz_event_loop_get_current () != NULL));
+	  (_gdk_quartz_event_loop_check_pending ()));
 }
 
 GdkEvent*
@@ -1172,7 +1172,8 @@ synthesize_crossing_events_for_ns_event (NSEvent *nsevent)
 
         /* If there is a window other than the root window at this
          * position, it means we didn't exit to the root window and we
-         * ignore the event.
+         * ignore the event. (Note that we can get NULL here when swithing
+         * spaces for example.)
          *
          * FIXME: This is not enough, it doesn't catch the case where
          * we leave a GDK window to a non-GDK window that has GDK
@@ -1180,9 +1181,12 @@ synthesize_crossing_events_for_ns_event (NSEvent *nsevent)
          */
         mouse_window = _gdk_quartz_window_find_child (_gdk_root, x, y);
 
-        if (gdk_window_get_toplevel (mouse_window) == 
+        if (!mouse_window ||
+            gdk_window_get_toplevel (mouse_window) ==
             gdk_window_get_toplevel (current_mouse_window))
-          mouse_window = _gdk_root;
+          {
+            mouse_window = _gdk_root;
+          }
 
         if (mouse_window == _gdk_root)
           synthesize_crossing_events (_gdk_root, GDK_CROSSING_NORMAL, nsevent, x, y);
@@ -1825,14 +1829,15 @@ gdk_event_translate (NSEvent *nsevent)
 void
 _gdk_events_queue (GdkDisplay *display)
 {  
-  NSEvent *current_event = _gdk_quartz_event_loop_get_current ();
+  NSEvent *event;
 
-  if (current_event)
+  event = _gdk_quartz_event_loop_get_pending ();
+  if (event)
     {
-      if (!gdk_event_translate (current_event)) 
-	[NSApp sendEvent:current_event];
-		
-      _gdk_quartz_event_loop_release_current ();
+      if (!gdk_event_translate (event))
+        [NSApp sendEvent:event];
+
+      _gdk_quartz_event_loop_release_event (event);
     }
 }
 

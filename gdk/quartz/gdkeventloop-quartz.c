@@ -23,6 +23,30 @@ static GPollFD *pipe_pollfd;
 static guint n_pollfds;
 static CFRunLoopSourceRef select_main_thread_source;
 static CFRunLoopRef main_thread_run_loop;
+static NSAutoreleasePool *autorelease_pool;
+
+gboolean
+_gdk_quartz_event_loop_check_pending (void)
+{
+  return current_event != NULL;
+}
+
+NSEvent*
+_gdk_quartz_event_loop_get_pending (void)
+{
+  NSEvent *event;
+
+  event = current_event;
+  current_event = NULL;
+
+  return event;
+}
+
+void
+_gdk_quartz_event_loop_release_event (NSEvent *event)
+{
+  [event release];
+}
 
 static gboolean
 gdk_event_prepare (GSource *source,
@@ -30,9 +54,9 @@ gdk_event_prepare (GSource *source,
 {
   NSEvent *event;
   gboolean retval;
-  
-  GDK_QUARTZ_ALLOC_POOL;
 
+  GDK_THREADS_ENTER ();
+  
   *timeout = -1;
 
   event = [NSApp nextEventMatchingMask: NSAnyEventMask
@@ -43,7 +67,7 @@ gdk_event_prepare (GSource *source,
   retval = (_gdk_event_queue_find_first (_gdk_display) != NULL ||
 	    event != NULL);
 
-  GDK_QUARTZ_RELEASE_POOL;
+  GDK_THREADS_LEAVE ();
 
   return retval;
 }
@@ -51,13 +75,23 @@ gdk_event_prepare (GSource *source,
 static gboolean
 gdk_event_check (GSource *source)
 {
+  gboolean retval;
+
+  GDK_THREADS_ENTER ();
+
+  if (autorelease_pool)
+    [autorelease_pool release];
+  autorelease_pool = [[NSAutoreleasePool alloc] init];
+
   if (_gdk_event_queue_find_first (_gdk_display) != NULL ||
-      current_event)
-    return TRUE;
+      _gdk_quartz_event_loop_check_pending ())
+    retval = TRUE;
+  else
+    retval = FALSE;
 
-  /* FIXME: We should maybe try to fetch an event again here */
+  GDK_THREADS_LEAVE ();
 
-  return FALSE;
+  return retval;
 }
 
 static gboolean
@@ -67,7 +101,7 @@ gdk_event_dispatch (GSource     *source,
 {
   GdkEvent *event;
 
-  GDK_QUARTZ_ALLOC_POOL;
+  GDK_THREADS_ENTER ();
 
   _gdk_events_queue (_gdk_display);
 
@@ -81,7 +115,7 @@ gdk_event_dispatch (GSource     *source,
       gdk_event_free (event);
     }
 
-  GDK_QUARTZ_RELEASE_POOL;
+  GDK_THREADS_LEAVE ();
 
   return TRUE;
 }
@@ -163,8 +197,6 @@ poll_func (GPollFD *ufds, guint nfds, gint timeout_)
   NSDate *limit_date;
   int n_active = 0;
   int i;
-
-  GDK_QUARTZ_ALLOC_POOL;
 
   if (nfds > 1)
     {
@@ -264,17 +296,10 @@ poll_func (GPollFD *ufds, guint nfds, gint timeout_)
     {
       ufds[0].revents = G_IO_IN;
 
-      /* FIXME: We can't assert here, but we might need to have a
-       * queue for events instead.
-       */
-      /*g_assert (current_event == NULL);*/
-
       current_event = [event retain];
 
       n_active ++;
     }
-
-  GDK_QUARTZ_RELEASE_POOL;
 
   return n_active;
 }
@@ -295,19 +320,7 @@ _gdk_quartz_event_loop_init (void)
 
   old_poll_func = g_main_context_get_poll_func (NULL);
   g_main_context_set_poll_func (NULL, poll_func);  
- 
-}
 
-NSEvent *
-_gdk_quartz_event_loop_get_current (void)
-{
-  return current_event;
-}
-
-void
-_gdk_quartz_event_loop_release_current (void)
-{
-  [current_event release];
-  current_event = NULL;
+  autorelease_pool = [[NSAutoreleasePool alloc] init];
 }
 
