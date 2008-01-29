@@ -1,4 +1,145 @@
+2008-01-28  Matthias Clasen  <mclasen@redhat.com>
+	
+	* === Released 2.12.6 ===
+
+	* NEWS: Updates
+
+	* configure.in: Bump version
+
+2008-01-28  Paolo Borelli  <pborelli@katamail.com>
+
+	* gtk/gtkprintunixdialog.c (draw_page_cb): do not leak the pango
+	layout, fixes #512375.
+
+2008-01-25  Johan Dahlin  <johan@gnome.org>
+
+	Merge from trunk:
+
+	* gtk/gtk-builder-convert
+	(GtkBuilderConverter._convert_adjustment): Handle the case where
+	there is no child text node.
+	(GtkBuilderConverter): Allow xml comments in most places.
+
+	* gtk/gtk-builder-convert
+	(GtkBuilderConverter._convert_combobox_items): Remove the items
+	even if there are no items set.
+	(GtkBuilderConverter._add_action_from_menuitem): Convert toggled
+	signals and tooltips for all menu items subclasses and 
+	GtkImageMenuItem:label. 
+	Makes it possible to fully convert and run Jokosher.glade.
+
+	* gtk/gtkwidget.c: (gtk_widget_buildable_interface_init),
+	(gtk_widget_buildable_get_internal_child), (free_action),
+	(free_relation), (gtk_widget_buildable_parser_finished),
+	(accessibility_start_element),
+	(gtk_widget_buildable_custom_tag_start),
+	(gtk_widget_buildable_custom_finished):
+	Implement accessible support, fixes #454653.
+
+	* gtk/gtk-builder-convert:
+	Add support for migrating old glade files
+	
+	* tests/buildertest.c: (test_widget), (test_file):
+	Add accessible tests and imprve the test_file function to display
+	toplevels and run dialogs.
+
+2008-01-25  Sven Herzberg  <sven@imendio.com>
+
+	Merge from trunk:
+
+	Reviewed by Johan Dahlin.
+
+	* gtk/gtkuimanager.c (gtk_ui_manager_remove_ui): emit a warning if
+	this is called with something that's not a GtkUIManager
+
+2008-01-18  Johan Dahlin  <johan@gnome.org>
+
+	Merge from trunk:
+
+	* gtk/gtk-builder-convert (get_property_node): New method
+	(GtkBuilderConverter._create_object): Conditionally take a node as
+	a property value, so don't lose translate/context attributes if they
+	are set. 
+	(GtkBuilderConverter._add_action_from_menuitem): Send in Node as
+	property values instead of strings.
+	(#509153, Erik van Pienbroek)
+
+2008-01-12  Andre Klapper  <a9016009@gmx.de>
+
+	* configure.in: add Kannada (kn) and Sinhala (si) to ALL_LINGUAS.
+
+2008-01-10  Cody Russell  <bratsche@gnome.org>
+
+	Merge from trunk:
+
+	* gdk/win32/gdkwindow-win32.c: (gdk_window_set_transient_for),
+	Properly ref/unref windows and parents.  (#506769)
+
+2008-01-10  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (show_window_internal),
+	(gdk_window_hide), (move_resize_window_internal): Move the
+	tracking rect workaround from here...
+
+	* gdk/quartz/GdkQuartzWindow.c:
+	* gdk/quartz/GdkQuartzWindow.h: ...to here, and ignore window
+	movements during showing/hiding operations. Fixes bug #508516.
+
+2008-01-10  Kristian Rietveld  <kris@imendio.com>
+
+	Merge from trunk:
+
+	* gtk/gtktreeview.c (gtk_tree_view_motion_draw_column_motion_arrow),
+	(_gtk_tree_view_column_start_drag): fully initialize GdkWindowAttr to
+	avoid valgrind warnings.  (#507751, patch from Christian Persch).
+
+2008-01-10  Kristian Rietveld  <kris@imendio.com>
+
+	Merge from trunk:
+
+	* gtk/gtktreemodelfilter.c (gtk_tree_model_filter_get_path): Fix
+	a leak of the path (#504611, patch from Sadrul Habib Chowdhury).
+
+2008-01-10  Kristian Rietveld  <kris@imendio.com>
+
+	Merge from trunk (omitted unit test updates):
+
+	Fix #477175, reported by Juri Pakaste.
+
+	* gtk/gtktreeprivate.h:
+	* gtk/gtktreeview.c (gtk_tree_view_top_row_to_dy): do not set
+	tree_view->priv->dy here directly, just calculate the new value
+	and set it on the adjustment,
+	(gtk_tree_view_adjustment_changed): add guards to not call
+	gtk_tree_view_dy_to_top_row() if we are currently in
+	gtk_tree_view_top_row_to_dy(),
+	(gtk_tree_view_put): fix coordinate annotation: these are bin_window
+	coordinates, not tree coordinates,
+	(gtk_tree_view_real_start_editing): add cast.
+
+2007-01-06  Johan Dahlin  <johan@gnome.org>
+
+	Merged from trunk:
+
+	* gtkbuilder.c: remove concept of root objects and just refcount
+	all objects in the builder.  Fixes #496651.
+
+	* docs/reference/gtk/tmpl/gtkbuildable.sgml: add clarification stating
+	that the construct_child function is responsible for returning a
+	reference.
+	* gtkbuilder.c (_gtk_builder_construct): remove g_object_ref() for
+	objects from constructors
+	* gtkuimanager.c (gtk_ui_manager_buildable_construct_child): add
+	g_object_ref() to this construction function (it's the only
+	implementer in GTK)
+
+	Fixes #496645.
+
 2008-01-08  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.12.5 ===
 

@@ -3332,17 +3332,16 @@ gtk_tree_view_motion_draw_column_motion_arrow (GtkTreeView *tree_view)
 
 	  attributes.window_type = GDK_WINDOW_CHILD;
 	  attributes.wclass = GDK_INPUT_OUTPUT;
+          attributes.x = tree_view->priv->drag_column_x;
+          attributes.y = 0;
+	  width = attributes.width = tree_view->priv->drag_column->button->allocation.width;
+	  height = attributes.height = tree_view->priv->drag_column->button->allocation.height;
 	  attributes.visual = gtk_widget_get_visual (GTK_WIDGET (tree_view));
 	  attributes.colormap = gtk_widget_get_colormap (GTK_WIDGET (tree_view));
 	  attributes.event_mask = GDK_VISIBILITY_NOTIFY_MASK | GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK;
 	  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 	  tree_view->priv->drag_highlight_window = gdk_window_new (tree_view->priv->header_window, &attributes, attributes_mask);
 	  gdk_window_set_user_data (tree_view->priv->drag_highlight_window, GTK_WIDGET (tree_view));
-
-	  width = tree_view->priv->drag_column->button->allocation.width;
-	  height = tree_view->priv->drag_column->button->allocation.height;
-	  gdk_window_move_resize (tree_view->priv->drag_highlight_window,
-				  tree_view->priv->drag_column_x, 0, width, height);
 
 	  mask = gdk_pixmap_new (tree_view->priv->drag_highlight_window, width, height, 1);
 	  gc = gdk_gc_new (mask);
@@ -3399,6 +3398,8 @@ gtk_tree_view_motion_draw_column_motion_arrow (GtkTreeView *tree_view)
 	  attributes.colormap = gtk_widget_get_colormap (GTK_WIDGET (tree_view));
 	  attributes.event_mask = GDK_VISIBILITY_NOTIFY_MASK | GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK;
 	  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+          attributes.x = x;
+          attributes.y = y;
 	  attributes.width = width;
 	  attributes.height = height;
 	  tree_view->priv->drag_highlight_window = gdk_window_new (gtk_widget_get_root_window (widget),
@@ -3473,6 +3474,8 @@ gtk_tree_view_motion_draw_column_motion_arrow (GtkTreeView *tree_view)
 	  attributes.colormap = gtk_widget_get_colormap (GTK_WIDGET (tree_view));
 	  attributes.event_mask = GDK_VISIBILITY_NOTIFY_MASK | GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK;
 	  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+          attributes.x = x;
+          attributes.y = y;
 	  attributes.width = width;
 	  attributes.height = height;
 	  tree_view->priv->drag_highlight_window = gdk_window_new (NULL, &attributes, attributes_mask);
@@ -6367,6 +6370,7 @@ gtk_tree_view_top_row_to_dy (GtkTreeView *tree_view)
   GtkTreePath *path;
   GtkRBTree *tree;
   GtkRBNode *node;
+  int new_dy;
 
   if (tree_view->priv->top_row)
     path = gtk_tree_row_reference_get_path (tree_view->priv->top_row);
@@ -6400,16 +6404,17 @@ gtk_tree_view_top_row_to_dy (GtkTreeView *tree_view)
       return;
     }
 
-  tree_view->priv->dy = _gtk_rbtree_node_find_offset (tree, node);
-  tree_view->priv->dy += tree_view->priv->top_row_dy;
+  new_dy = _gtk_rbtree_node_find_offset (tree, node);
+  new_dy += tree_view->priv->top_row_dy;
 
-  if (tree_view->priv->dy + tree_view->priv->vadjustment->page_size > tree_view->priv->height)
-    tree_view->priv->dy = tree_view->priv->height - tree_view->priv->vadjustment->page_size;
+  if (new_dy + tree_view->priv->vadjustment->page_size > tree_view->priv->height)
+    new_dy = tree_view->priv->height - tree_view->priv->vadjustment->page_size;
 
-  tree_view->priv->dy = MAX (0, tree_view->priv->dy);
+  new_dy = MAX (0, new_dy);
 
-  gtk_adjustment_set_value (tree_view->priv->vadjustment,
-			    (gdouble)tree_view->priv->dy);
+  tree_view->priv->in_top_row_to_dy = TRUE;
+  gtk_adjustment_set_value (tree_view->priv->vadjustment, (gdouble)new_dy);
+  tree_view->priv->in_top_row_to_dy = FALSE;
 }
 
 
@@ -8081,7 +8086,7 @@ gtk_tree_view_real_move_cursor (GtkTreeView       *tree_view,
 static void
 gtk_tree_view_put (GtkTreeView *tree_view,
 		   GtkWidget   *child_widget,
-		   /* in tree coordinates */
+		   /* in bin_window coordinates */
 		   gint         x,
 		   gint         y,
 		   gint         width,
@@ -9337,6 +9342,10 @@ _gtk_tree_view_column_start_drag (GtkTreeView       *tree_view,
 
       attributes.window_type = GDK_WINDOW_CHILD;
       attributes.wclass = GDK_INPUT_OUTPUT;
+      attributes.x = column->button->allocation.x;
+      attributes.y = 0;
+      attributes.width = column->button->allocation.width;
+      attributes.height = column->button->allocation.height;
       attributes.visual = gtk_widget_get_visual (GTK_WIDGET (tree_view));
       attributes.colormap = gtk_widget_get_colormap (GTK_WIDGET (tree_view));
       attributes.event_mask = GDK_VISIBILITY_NOTIFY_MASK | GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK;
@@ -9378,12 +9387,6 @@ _gtk_tree_view_column_start_drag (GtkTreeView       *tree_view,
 
   gtk_propagate_event (column->button, send_event);
   gdk_event_free (send_event);
-
-  gdk_window_move_resize (tree_view->priv->drag_window,
-			  column->button->allocation.x,
-			  0,
-			  column->button->allocation.width,
-			  column->button->allocation.height);
 
   /* Kids, don't try this at home */
   g_object_ref (column->button);
@@ -10613,7 +10616,9 @@ gtk_tree_view_adjustment_changed (GtkAdjustment *adjustment,
         {
           /* update our dy and top_row */
           tree_view->priv->dy = (int) tree_view->priv->vadjustment->value;
-          gtk_tree_view_dy_to_top_row (tree_view);
+
+          if (!tree_view->priv->in_top_row_to_dy)
+            gtk_tree_view_dy_to_top_row (tree_view);
 	}
     }
 }
@@ -14792,8 +14797,7 @@ gtk_tree_view_real_start_editing (GtkTreeView       *tree_view,
   _gtk_tree_view_column_start_editing (column, GTK_CELL_EDITABLE (cell_editable));
 
   gtk_tree_view_real_set_cursor (tree_view, path, FALSE, TRUE);
-
-  cell_area->y += pre_val - tree_view->priv->vadjustment->value;
+  cell_area->y += pre_val - (int)tree_view->priv->vadjustment->value;
 
   gtk_widget_size_request (GTK_WIDGET (cell_editable), &requisition);
 
