@@ -1,4 +1,293 @@
+2008-02-12  Matthias Clasen  <mclasne@redhat.com>
+
+	* === Released 2.12.8 ===
+
+	* NEWS: Updates
+
+2008-02-12  Matthias Clasen  <mclasne@redhat.com>
+
+	* gtk/gtkpapersize.c:
+	* gtk/gtkprintoperation.c:
+	* gtk/gtkvolumebutton.c:
+	* gtk/gtkbulderparser.c: Fix some i18n errors. Pointed
+	out by Behdad Esfahbod.
+
+2008-02-12  Cody Russell  <bratsche@gnome.org>
+
+	Merged from trunk:
+
+	* gdk/win32/gdkprivate-win32.h
+	* gdk/win32/gdkevents-win32.c
+	* gdk/win32/gdkwindow-win32.c
+	* gdk/win32/gdkwindow-win32.h
+	* gdk/win32/gdkwin32.h:
+	Modal window rework.  (#455627, #511111, #514643, #514789)
+
+2008-02-12  Cody Russell  <bratsche@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtkfilechooser.c (gtk_file_chooser_get_current_folder_uri):
+	Check the return value of _gtk_file_chooser_get_file_system () for
+	NULL before passing it to gtk_file_system_path_to_uri ().
+	(#515667, Francesco Montorsi)
+
+2008-02-12  Federico Mena Quintero  <federico@novell.com>
+
+	* gtk/gtkfilechooserdefault.c (switch_to_shortcut): Don't focus
+	the file list (this was the last place where we would focus the
+	file list explicitly).  If you are in the location entry, for
+	example, you don't want Alt-Home to take you to the file list; you
+	just want the current folder to change.  Thanks to Olle Bergkvist
+	<olle.bergkvist@yahoo.se> for pointing this out in
+	http://bugzilla.gnome.org/show_bug.cgi?id=419737#c51.
+	(focus_browse_tree_view_if_possible): Removed.
+
+2008-02-12  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	Skip exensions when selecting filenames in the save-as dialog.
+	(#362516, Carlos Garnacho)
+
+	* gtk/gtkfilechooserentry.h:
+	* gtk/gtkfilechooserentry.c (_gtk_file_chooser_entry_select_filename):
+	New function to skip the extension part when selecting a filename.
+	(_gtk_file_chooser_entry_set_base_folder): Use it here.
+
+	* gtkfilechooserdefault.c (gtk_file_chooser_entry_grab_focus):
+	...and here.
+
+2008-02-12  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtkiconview.c: Fix state change reporting for
+	accessibility.  (#499835, Rich Burridge, patch by LiYan Zhang)
+
+2008-02-12  Emmanuele Bassi  <ebassi@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtkrecentchooser.c:
+	(gtk_recent_chooser_class_init): Set the default value of the
+	show-not-found property to TRUE, as every implementation sets
+	it to TRUE already.
+
+	* gtk/gtkrecentchooserdefault.c:
+	(_gtk_recent_chooser_default_init): Sync show_tips to the
+	default value of the :show-tips property.
+
+2008-02-12  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/*.c: Unify the handling of various "Enter" keysyms
+	all over the place.  (#515047, Christian Persch)
+
+2008-02-12  Kristian Rietveld  <kris@imendio.com>
+
+	Merge from trunk:
+
+	* gtk/gtktreeview.c (gtk_tree_view_real_select_cursor_row),
+	(gtk_tree_view_real_toggle_cursor_row): guard against people
+	deleting the row in question in the selection-changed callback.
+	(#514621, Andreas Koehler).
+
+2008-02-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	Support keynav in status icons.  (#473786, Li Yuan)
+
+	* gtk/gtkstatusicon.c: Handle keynav, make the tray icon
+	focusable.
+
+	* gtk/gtktrayicon-x11.c: Draw a focus rectangle when
+	focused.
+
+2008-02-11  Kristian Rietveld  <kris@imendio.com>
+
+	Merge from trunk:
+
+	* gtk/gtkcellview.c (gtk_cell_view_cell_layout_reorder)
+	* gtk/gtkiconview.c (gtk_icon_view_cell_layout_reorder): plug leak
+	wrt. link deletion from list; contination of fix for #503569.
+
+2008-02-11  Emmanuele Bassi  <ebassi@gnome.org>
+
+	Merge from trunk:
+
+	* gtk/gtkrecentchoosermenu.c:
+	(gtk_recent_chooser_menu_constructor): Set no-show-all flag
+	on the placeholder menu item.
+
+	* tests/testrecentchoosermenu.c: 
+	(create_recent_chooser_menu): Use gtk_widget_show_all() to test
+	whether the placeholder menu item gets shown.
+
+2008-02-10  Matthias Clasen  <mclasen@redhat.com>
+
+	Merge from trunk:
+
+	* gtk/gtkrecentaction.c: Propagate local-only.  (#511987,
+	Jonh Wendell)
+
+2008-02-08  Richard Hult  <richard@imendio.com>
+
+	Merge from trunk:
+
+	* gdk/quartz/gdkevents-quartz.c (gdk_event_translate): Ignore the
+	delta from the NSEvent for now, generating multiple scroll events
+	results in a lot of events getting queued up and things get really
+	slow.
+
+2008-02-08  Sven Herzberg  <sven@imendio.com>
+
+	Merge from trunk:
+
+	Adjust the code to match the documentation, examples, "common sense"
+	and existing applications.
+
+	* gtk/gtkaction.c: (_gtk_action_sync_menu_visible): take into account
+	that a GtkMenu for a <popup> element doesn't have to have a GtkAction
+	assigned
+
+2008-02-06  Cody Russell  <bratsche@gnome.org>
+
+	Merge from trunk:
+
+	* gdk/win32/gdkevents-win32.c: Check if the window is a temp window,
+	otherwise things get wonky when you click on a menu.  This fixes
+	a regression caused in #505928.  Thanks to Tor for spotting this
+	one!  (#514789)
+
+2008-02-05  Matthias Clasen  <mclasen@redhat.com>
+
+	Merge from trunk:
+
+	* gtk/gtkprintsettings.c (gtk_print_settings_get_page_ranges):
+	Allow to store half-open ranges.
+
+2008-02-05  Federico Mena Quintero  <federico@novell.com>
+
+	Don't focus the file list when shortcuts get activated.  This
+	removes a lot of ambiguity in when the file selection should
+	change, and makes the overall code flow simpler.
+
+	This fixes http://bugzilla.gnome.org/show_bug.cgi?id=419737 -
+	file/save dialog clears the filename entry when changing
+	directories.
+
+	Also fixes http://bugzilla.gnome.org/show_bug.cgi?id=499940 -
+	focus should not go to the file list when a shortcut is activated.
+
+	* gtk/gtkfilechooserdefault.c
+	(shortcuts_activate_volume_mount_cb): Don't focus the file list
+	(shortcuts_activate_get_info_cb): Likewise.
+
+2008-02-05  Federico Mena Quintero  <federico@novell.com>
+
+	Don't focus the file list when shortcuts get activated.  This
+	removes a lot of ambiguity in when the file selection should
+	change, and makes the overall code flow simpler.
+
+	This fixes http://bugzilla.gnome.org/show_bug.cgi?id=419737 -
+	file/save dialog clears the filename entry when changing
+	directories.
+
+	Also fixes http://bugzilla.gnome.org/show_bug.cgi?id=499940 -
+	focus should not go to the file list when a shortcut is activated.
+
+	* gtk/gtkfilechooserdefault.c
+	(shortcuts_activate_volume_mount_cb): Don't focus the file list
+	(shortcuts_activate_get_info_cb): Likewise.
+
+2008-02-05  Federico Mena Quintero  <federico@novell.com>
+
+	Merged from trunk (patch by Josselin Mouette <joss@malsain.org>):
+	
+	reviewed by: Federico Mena Quintero
+
+	* gtk/gtkfilechooserdefault.c: (shortcuts_append_paths),
+	(shortcuts_add_bookmarks), (shortcuts_selection_changed_cb),
+	(shortcuts_list_create), (gtk_file_chooser_default_should_respond):
+	Make the shortcuts activate with a single click. (#148828)
+        Fix a few things affected by the change:
+	  - Set selection mode to GTK_SELECTION_SINGLE to allow a case 
+	    where no shortcut is selected.
+	  - Don't activate a shortcut in the response callback.
+	  - Filter out duplicate entries in volumes and bookmarks to 
+	    avoid the selection to change when reordering them with DnD.
+
+2008-02-05  Matthias Clasen  <mclasen@redhat.com>
+
+	Merge from trunk:
+
+	* gtk/updateiconcache.c: Ignore images in the toplevel theme
+	directory, avoiding one source of invalid caches that
+	has been spotted in the wild.
+
+	* gtk/updateiconcache.c: Install a printerr handler that
+	prepends the program name, since gtk-update-icon-cache output
+	often appears in the middle of other output, e.g. rpm
+	update logs.
+
+2008-02-01  Cody Russell  <cody@jhu.edu>
+
+	Merge from trunk:
+
+	* modules/engines/ms-windows/xp_theme.[ch]
+	* modules/engines/ms-windows/xp_theme_defs.h
+	* modules/engines/ms-windows/msw_rc_style.c
+	* modules/engines/ms-windows/msw_theme_main.c
+	* modules/engines/ms-windows/msw_style.c: Re-indented and generally
+	attempted to stylize more like the rest of the gtk+ stack's code.
+
+2008-02-01  Sven Neumann  <sven@gimp.org>
+
+	* gdk/directfb/gdkdrawable-directfb.c
+	* gdk/directfb/gdkimage-directfb.c
+	* gdk/directfb/gdkinput-directfb.c
+	* gdk/directfb/gdkpixmap-directfb.c
+	* gdk/directfb/gdkwindow-directfb.c: applied
+	directfb-deprecation-fixes.patch from Debian. Fixes build with
+	GLib 2.15 deprecation of G_GNUC_FUNCTION in favor of G_STRLOC.
+
+2008-01-31  Cody Russell  <bratsche@gnome.org>
+
+	Merge from trunk:
+
+        * gdk/win32/gdkevents-win32.c:
+	Refactored some of the window hiding/showing code from
+	WM_ACTIVATE to WM_SIZE and WM_SYSCOMMAND.  Having this
+	under WM_ACTIVATE was causing the application to go into
+	a weird state when the user right-clicked on the taskbar
+	entry of a window that was minimized.  (#505928)
+	
+2008-01-31  Cody Russell  <bratsche@gnome.org>
+
+	Merge from trunk:
+
+	* gtk/gtkpaned.c (gtk_paned_set_position):
+	Change queue_resize() to queue_draw(), and add a check for
+	child2 != NULL in case someone calls this before there is
+	a child packed in there.  (#144269 again)
+
+2008-01-31  Richard Hult  <richard@imendio.com>
+
+	Merge from trunk, except for the reverting since that part wasn't
+	applied here yet:
+
+	* gdk/quartz/GdkQuartzView.c: Another attempt at fixing focus
+	issues with undecorated windows. Revert the change done on
+	2008-01-25 and fix it by using the view's bounds instead. The
+	bounds will always be up to date when setting up the tracking
+	rect, so this should be more robust.
+
 2008-01-29  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.12.7 ===
 
@@ -7476,6 +7765,9 @@ Fri Jan 26 13:07:07 2007  Tim Janik  <timj@imendio.com>
 	* modules/printbackend/cups/*.c: Coding style cleanups.
 
 2007-01-03  Matthias Clasen  <mclasen@redhat.com>
+=======
+2008-02-07  Cody Russell  <bratsche@gnome.org>
+>>>>>>> 5cc1ee6... 2008-02-08  Sven Herzberg  <sven@imendio.com>:ChangeLog
 
 	* configure.in: Export SED to make sourcing of
 	libtool work. Tighten up the directfb pkgconfig check.

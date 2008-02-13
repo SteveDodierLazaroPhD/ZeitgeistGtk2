@@ -479,6 +479,9 @@ gtk_paned_class_init (GtkPanedClass *class)
 				GDK_Return, 0,
 				"accept_position", 0);
   gtk_binding_entry_add_signal (binding_set,
+				GDK_ISO_Enter, 0,
+				"accept_position", 0);
+  gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Enter, 0,
 				"accept_position", 0);
   gtk_binding_entry_add_signal (binding_set,
@@ -1235,7 +1238,10 @@ gtk_paned_set_position (GtkPaned *paned,
 
 #ifdef G_OS_WIN32
   /* Hacky work-around for bug #144269 */
-  gtk_widget_queue_resize (paned->child2);
+  if (paned->child2 != NULL)
+    {
+      gtk_widget_queue_draw (paned->child2);
+    }
 #endif
 }
 

@@ -1,7 +1,7 @@
 /* GDK - The GIMP Drawing Kit
  * Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh MacDonald
  * Copyright (C) 1998-2002 Tor Lillqvist
- * Copyright (C) 2007 Cody Russell
+ * Copyright (C) 2007-2008 Cody Russell
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -94,6 +94,7 @@ static gboolean gdk_event_dispatch (GSource     *source,
 				    gpointer     user_data);
 
 static void append_event (GdkEvent *event);
+static gboolean is_modally_blocked (GdkWindow   *window);
 
 /* Private variable declarations
  */
@@ -1266,6 +1267,19 @@ apply_filters (GdkWindow  *window,
   return result;
 }
 
+/*
+ * On Windows, transient windows will not have their own taskbar entries.
+ * Because of this, we must hide and restore groups of transients in both
+ * directions.  That is, all transient children must be hidden or restored
+ * with this window, but if this window's transient owner also has a
+ * transient owner then this window's transient owner must be hidden/restored
+ * with this one.  And etc, up the chain until we hit an ancestor that has no
+ * transient owner.
+ *
+ * It would be a good idea if applications don't chain transient windows
+ * together.  There's a limit to how much evil GTK can try to shield you
+ * from.
+ */
 static void
 show_window_recurse (GdkWindow *window, gboolean hide_window)
 {
@@ -1297,6 +1311,32 @@ show_window_recurse (GdkWindow *window, gboolean hide_window)
 	}
 
       impl->changing_state = FALSE;
+    }
+}
+
+static void
+show_window_internal (GdkWindow *window, gboolean hide_window)
+{
+  GdkWindow *tmp_window = NULL;
+  GdkWindowImplWin32 *tmp_impl = GDK_WINDOW_IMPL_WIN32 (GDK_WINDOW_OBJECT (window)->impl);
+
+  if (!tmp_impl->changing_state)
+    {
+      /* Find the top-level window in our transient chain. */
+      while (tmp_impl->transient_owner != NULL)
+	{
+	  tmp_window = tmp_impl->transient_owner;
+	  tmp_impl = GDK_WINDOW_IMPL_WIN32 (GDK_WINDOW_OBJECT (tmp_window)->impl);
+	}
+
+      /* If we couldn't find one, use the window provided. */
+      if (tmp_window == NULL)
+	{
+	  tmp_window = window;
+	}
+
+      /* Recursively show/hide every window in the chain. */
+      show_window_recurse (tmp_window, hide_window);
     }
 }
 
@@ -1728,6 +1768,13 @@ static gboolean
 doesnt_want_key (gint mask,
 		 MSG *msg)
 {
+  GdkWindow *modal_current = _gdk_modal_current ();
+  GdkWindow *window = (GdkWindow *) gdk_win32_handle_table_lookup ((GdkNativeWindow)msg->hwnd);
+  gboolean modally_blocked = modal_current != NULL ? gdk_window_get_toplevel (window) != modal_current : FALSE;
+
+  if (modally_blocked == TRUE)
+    return TRUE;
+
   return (((msg->message == WM_KEYUP || msg->message == WM_SYSKEYUP) &&
 	   !(mask & GDK_KEY_RELEASE_MASK)) ||
 	  ((msg->message == WM_KEYDOWN || msg->message == WM_SYSKEYDOWN) &&
@@ -2766,12 +2813,27 @@ gdk_event_translate (MSG  *msg,
       break;
 
      case WM_MOUSEACTIVATE:
-       if (gdk_window_get_window_type (window) == GDK_WINDOW_TEMP 
-	   || !((GdkWindowObject *)window)->accept_focus)
-	 {
-	   *ret_valp = MA_NOACTIVATE;
-	   return_val = TRUE;
-	 }
+       {
+	 GdkWindow *tmp;
+	 if (gdk_window_get_window_type (window) == GDK_WINDOW_TEMP 
+	     || !((GdkWindowObject *)window)->accept_focus)
+	   {
+	     *ret_valp = MA_NOACTIVATE;
+	     return_val = TRUE;
+	   }
+
+	 tmp = _gdk_modal_current ();
+
+	 if (tmp != NULL)
+	   {
+	     if (gdk_window_get_toplevel (window) != tmp)
+	       {
+		 *ret_valp = MA_NOACTIVATEANDEAT;
+		 return_val = TRUE;
+	       }
+	   }
+       }
+
        break;
 
     case WM_KILLFOCUS:
@@ -2875,6 +2937,18 @@ gdk_event_translate (MSG  *msg,
       return_val = TRUE;
       break;
 
+    case WM_SYSCOMMAND:
+
+      switch (msg->wParam)
+	{
+	case SC_MINIMIZE:
+	case SC_RESTORE:
+	  show_window_internal (window, msg->wParam == SC_MINIMIZE ? TRUE : FALSE);
+	  break;
+	}
+
+      break;
+
     case WM_SIZE:
       GDK_NOTE (EVENTS,
 		g_print (" %s %dx%d",
@@ -2898,6 +2972,7 @@ gdk_event_translate (MSG  *msg,
 	  gdk_synthesize_window_state (window,
 				       GDK_WINDOW_STATE_WITHDRAWN,
 				       GDK_WINDOW_STATE_ICONIFIED);
+	  show_window_internal (window, TRUE);
 	}
       else if ((msg->wParam == SIZE_RESTORED ||
 		msg->wParam == SIZE_MAXIMIZED) &&
@@ -2910,16 +2985,25 @@ gdk_event_translate (MSG  *msg,
 	    handle_configure_event (msg, window);
 	  
 	  if (msg->wParam == SIZE_RESTORED)
-	    gdk_synthesize_window_state (window,
-					 GDK_WINDOW_STATE_ICONIFIED |
-					 GDK_WINDOW_STATE_MAXIMIZED |
-					 withdrawn_bit,
-					 0);
+	    {
+	      gdk_synthesize_window_state (window,
+					   GDK_WINDOW_STATE_ICONIFIED |
+					   GDK_WINDOW_STATE_MAXIMIZED |
+					   withdrawn_bit,
+					   0);
+
+	      if (GDK_WINDOW_TYPE (window) != GDK_WINDOW_TEMP && !GDK_WINDOW_IS_MAPPED (window))
+		{
+		  show_window_internal (window, FALSE);
+		}
+	    }
 	  else if (msg->wParam == SIZE_MAXIMIZED)
-	    gdk_synthesize_window_state (window,
-					 GDK_WINDOW_STATE_ICONIFIED |
-					 withdrawn_bit,
-					 GDK_WINDOW_STATE_MAXIMIZED);
+	    {
+	      gdk_synthesize_window_state (window,
+					   GDK_WINDOW_STATE_ICONIFIED |
+					   withdrawn_bit,
+					   GDK_WINDOW_STATE_MAXIMIZED);
+	    }
 
 	  if (((GdkWindowObject *) window)->resize_count > 1)
 	    ((GdkWindowObject *) window)->resize_count -= 1;
@@ -3175,6 +3259,7 @@ gdk_event_translate (MSG  *msg,
 		  break;
 		}
 	    }
+
 	  *ret_valp = TRUE;
 	  return_val = TRUE;
 	  GDK_NOTE (EVENTS, g_print (" (handled ASPECT: %s)",
@@ -3308,7 +3393,10 @@ gdk_event_translate (MSG  *msg,
           append_event (event);
 	}
       else
-	return_val = TRUE;
+	{
+	  return_val = TRUE;
+	}
+
       break;
 
     case WM_RENDERFORMAT:
@@ -3343,7 +3431,9 @@ gdk_event_translate (MSG  *msg,
 
 	  /* Now the clipboard owner should have rendered */
 	  if (!_delayed_rendering_data)
-	    GDK_NOTE (EVENTS, g_print (" (no _delayed_rendering_data?)"));
+	    {
+	      GDK_NOTE (EVENTS, g_print (" (no _delayed_rendering_data?)"));
+	    }
 	  else
 	    {
 	      if (msg->wParam == CF_DIB)
@@ -3357,6 +3447,7 @@ gdk_event_translate (MSG  *msg,
 		      break;
 		    }
 		}
+
 	      /* The requestor is holding the clipboard, no
 	       * OpenClipboard() is required/possible
 	       */
@@ -3366,46 +3457,19 @@ gdk_event_translate (MSG  *msg,
 	}
       break;
 
-    case WM_ACTIVATE: {
-      /*
-       * On Windows, transient windows will not have their own taskbar entries.
-       * Because of this, we must hide and restore groups of transients in both
-       * directions.  That is, all transient children must be hidden or restored
-       * with this window, but if this window's transient owner also has a
-       * transient owner then this window's transient owner must be hidden/restored
-       * with this one.  And etc, up the chain until we hit an ancestor that has no
-       * transient owner.
-       *
-       * It would be a good idea if applications don't chain transient windows
-       * together.  There's a limit to how much evil GTK can try to shield you
-       * from.
-       */
-      GdkWindow *tmp_window = NULL;
-      GdkWindowImplWin32 *tmp_impl = GDK_WINDOW_IMPL_WIN32 (GDK_WINDOW_OBJECT (window)->impl);
+    case WM_ACTIVATE:
 
-      while (tmp_impl->transient_owner != NULL)
+      /* We handle mouse clicks for modally-blocked windows under WM_MOUSEACTIVATE,
+       * but we still need to deal with alt-tab, or with SetActiveWindow() type
+       * situations. */
+      if (is_modally_blocked (window) && msg->wParam == WA_ACTIVE)
 	{
-	  tmp_window = tmp_impl->transient_owner;
-	  tmp_impl = GDK_WINDOW_IMPL_WIN32 (GDK_WINDOW_OBJECT (tmp_window)->impl);
+	  GdkWindow *modal_current = _gdk_modal_current ();
+	  SetActiveWindow (GDK_WINDOW_HWND (modal_current));
+	  *ret_valp = 0;
+	  return_val = TRUE;
+	  break;
 	}
-
-      if (tmp_window == NULL)
-	tmp_window = window;
-
-      if (LOWORD (msg->wParam) == WA_INACTIVE && HIWORD (msg->wParam))
-        {
-	  if (!tmp_impl->changing_state)
-	    {
-	      show_window_recurse (tmp_window, TRUE);
-	    }
-        }
-      else if (LOWORD (msg->wParam) == WA_ACTIVE && HIWORD (msg->wParam))
-	{
-	  if (!tmp_impl->changing_state)
-	    {
-	      show_window_recurse (tmp_window, FALSE);
-	    }
-        }
 
       /* Bring any tablet contexts to the top of the overlap order when
        * one of our windows is activated.
@@ -3415,7 +3479,7 @@ gdk_event_translate (MSG  *msg,
       if (LOWORD(msg->wParam) != WA_INACTIVE)
 	_gdk_input_set_tablet_active ();
       break;
-    }
+
 
       /* Handle WINTAB events here, as we know that gdkinput.c will
        * use the fixed WT_DEFBASE as lcMsgBase, and we thus can use the
@@ -3442,10 +3506,12 @@ gdk_event_translate (MSG  *msg,
       event = gdk_event_new (GDK_NOTHING);
       event->any.window = window;
       g_object_ref (window);
+
       if (_gdk_input_other_event (event, msg, window))
 	append_event (event);
       else
 	gdk_event_free (event);
+
       break;
     }
 
@@ -3503,11 +3569,15 @@ gdk_event_check (GSource *source)
   GDK_THREADS_ENTER ();
 
   if (event_poll_fd.revents & G_IO_IN)
-    retval = (_gdk_event_queue_find_first (_gdk_display) != NULL ||
-	      (modal_win32_dialog == NULL &&
-	       PeekMessageW (&msg, NULL, 0, 0, PM_NOREMOVE)));
+    {
+      retval = (_gdk_event_queue_find_first (_gdk_display) != NULL ||
+		(modal_win32_dialog == NULL &&
+		 PeekMessageW (&msg, NULL, 0, 0, PM_NOREMOVE)));
+    }
   else
-    retval = FALSE;
+    {
+      retval = FALSE;
+    }
 
   GDK_THREADS_LEAVE ();
 
@@ -3545,6 +3615,13 @@ gdk_win32_set_modal_dialog_libgtk_only (HWND window)
   modal_win32_dialog = window;
 }
 
+static gboolean
+is_modally_blocked (GdkWindow *window)
+{
+  GdkWindow *modal_current = _gdk_modal_current ();
+  return modal_current != NULL ? gdk_window_get_toplevel (window) != modal_current : FALSE;
+}
+
 static void
 check_for_too_much_data (GdkEvent *event)
 {
@@ -3552,7 +3629,9 @@ check_for_too_much_data (GdkEvent *event)
       event->client.data.l[2] ||
       event->client.data.l[3] ||
       event->client.data.l[4])
-    g_warning ("Only four bytes of data are passed in client messages on Win32\n");
+    {
+      g_warning ("Only four bytes of data are passed in client messages on Win32\n");
+    }
 }
 
 gboolean

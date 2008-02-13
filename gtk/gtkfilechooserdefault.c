@@ -390,10 +390,6 @@ static void check_preview_change (GtkFileChooserDefault *impl);
 
 static void filter_combo_changed       (GtkComboBox           *combo_box,
 					GtkFileChooserDefault *impl);
-static void     shortcuts_row_activated_cb (GtkTreeView           *tree_view,
-					    GtkTreePath           *path,
-					    GtkTreeViewColumn     *column,
-					    GtkFileChooserDefault *impl);
 
 static gboolean shortcuts_key_press_event_cb (GtkWidget             *widget,
 					      GdkEventKey           *event,
@@ -1996,9 +1992,7 @@ shortcuts_append_paths (GtkFileChooserDefault *impl,
 
   profile_start ("start", NULL);
 
-  /* As there is no separator now, we want to start there.
-   */
-  start_row = shortcuts_get_index (impl, SHORTCUTS_BOOKMARKS_SEPARATOR);
+  start_row = shortcuts_get_index (impl, SHORTCUTS_BOOKMARKS_SEPARATOR) + 1;
   num_inserted = 0;
 
   for (; paths; paths = paths->next)
@@ -2010,6 +2004,8 @@ shortcuts_append_paths (GtkFileChooserDefault *impl,
       if (impl->local_only &&
 	  !gtk_file_system_path_is_local (impl->file_system, path))
 	continue;
+      if (shortcut_find_position (impl, path) != -1)
+        continue;
 
       label = gtk_file_system_get_bookmark_label (impl->file_system, path);
 
@@ -2239,13 +2235,14 @@ shortcuts_add_bookmarks (GtkFileChooserDefault *impl)
 			   impl->num_bookmarks + 1);
 
   impl->num_bookmarks = 0;
+  shortcuts_insert_separator (impl, SHORTCUTS_BOOKMARKS_SEPARATOR);
 
   bookmarks = gtk_file_system_list_bookmarks (impl->file_system);
   shortcuts_append_paths (impl, bookmarks);
   gtk_file_paths_free (bookmarks);
 
-  if (impl->num_bookmarks > 0)
-    shortcuts_insert_separator (impl, SHORTCUTS_BOOKMARKS_SEPARATOR);
+  if (impl->num_bookmarks == 0)
+    shortcuts_remove_rows (impl, shortcuts_get_index (impl, SHORTCUTS_BOOKMARKS_SEPARATOR), 1);
 
   if (impl->shortcuts_pane_filter_model)
     gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (impl->shortcuts_pane_filter_model));
@@ -3651,8 +3648,22 @@ static void
 shortcuts_selection_changed_cb (GtkTreeSelection      *selection,
 				GtkFileChooserDefault *impl)
 {
+  GtkTreeIter iter;
+  GtkTreeIter child_iter;
+
   bookmarks_check_remove_sensitivity (impl);
   shortcuts_check_popup_sensitivity (impl);
+
+  if (impl->changing_folder)
+    return;
+
+  if (gtk_tree_selection_get_selected(selection, NULL, &iter))
+    {
+      gtk_tree_model_filter_convert_iter_to_child_iter (GTK_TREE_MODEL_FILTER (impl->shortcuts_pane_filter_model),
+							&child_iter,
+							&iter);
+      shortcuts_activate_iter (impl, &child_iter);
+    }
 }
 
 static gboolean
@@ -3924,16 +3935,13 @@ shortcuts_list_create (GtkFileChooserDefault *impl)
 		     GDK_ACTION_COPY | GDK_ACTION_MOVE);
 
   selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (impl->browse_shortcuts_tree_view));
-  gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
+  gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
   gtk_tree_selection_set_select_function (selection,
 					  shortcuts_select_func,
 					  impl, NULL);
 
   g_signal_connect (selection, "changed",
 		    G_CALLBACK (shortcuts_selection_changed_cb), impl);
-
-  g_signal_connect (impl->browse_shortcuts_tree_view, "row_activated",
-		    G_CALLBACK (shortcuts_row_activated_cb), impl);
 
   g_signal_connect (impl->browse_shortcuts_tree_view, "key_press_event",
 		    G_CALLBACK (shortcuts_key_press_event_cb), impl);
@@ -4070,7 +4078,8 @@ trap_activate_cb (GtkWidget   *widget,
   if ((event->keyval == GDK_Return
        || event->keyval == GDK_ISO_Enter
        || event->keyval == GDK_KP_Enter
-       || event->keyval == GDK_space)
+       || event->keyval == GDK_space
+       || event->keyval == GDK_KP_Space)
       && ((event->state & modifiers) == 0)
       && !(impl->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER ||
 	   impl->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER))
@@ -6851,8 +6860,12 @@ update_chooser_entry (GtkFileChooserDefault *impl)
 	    change_entry = TRUE;                                /* ... unless we are in one of the folder modes */
 
           if (change_entry)
-	    _gtk_file_chooser_entry_set_file_part (GTK_FILE_CHOOSER_ENTRY (impl->location_entry),
-                                                   impl->browse_files_last_selected_name);
+            {
+              _gtk_file_chooser_entry_set_file_part (GTK_FILE_CHOOSER_ENTRY (impl->location_entry), impl->browse_files_last_selected_name);
+
+              if (impl->action == GTK_FILE_CHOOSER_ACTION_SAVE)
+                _gtk_file_chooser_entry_select_filename (GTK_FILE_CHOOSER_ENTRY (impl->location_entry));
+            }
 
           return;
         }
@@ -8187,23 +8200,6 @@ should_respond_after_confirm_overwrite (GtkFileChooserDefault *impl,
     }
 }
 
-/* Gives the focus to the browse tree view only if it is visible */
-static void
-focus_browse_tree_view_if_possible (GtkFileChooserDefault *impl)
-{
-  gboolean do_focus;
-
-  if ((impl->action == GTK_FILE_CHOOSER_ACTION_SAVE ||
-       impl->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
-      && !gtk_expander_get_expanded (GTK_EXPANDER (impl->save_expander)))
-    do_focus = FALSE;
-  else
-    do_focus = TRUE;
-
-  if (do_focus)
-    gtk_widget_grab_focus (impl->browse_files_tree_view);
-}
-
 static void
 action_create_folder_cb (GtkFileSystemHandle *handle,
 			 const GtkFilePath   *path,
@@ -8597,25 +8593,6 @@ gtk_file_chooser_default_should_respond (GtkFileChooserEmbed *chooser_embed)
 
       gtk_file_path_free (path);
       return retval;
-    }
-  else if (impl->toplevel_last_focus_widget == impl->browse_shortcuts_tree_view)
-    {
-      /* The focus is on a dialog's action area button, *and* the widget that
-       * was focused immediately before it is the shortcuts list.  Switch to the
-       * selected shortcut and tell the caller not to respond.
-       */
-      GtkTreeIter iter;
-
-      if (shortcuts_get_selected (impl, &iter))
-	{
-	  shortcuts_activate_iter (impl, &iter);
-	  
-	  focus_browse_tree_view_if_possible (impl);
-	}
-      else
-	goto file_list;
-
-      return FALSE;
     }
   else if (impl->toplevel_last_focus_widget == impl->browse_files_tree_view)
     {
@@ -10321,8 +10298,6 @@ shortcuts_activate_volume_mount_cb (GtkFileSystemHandle *handle,
   if (path != NULL)
     {
       change_folder_and_display_error (impl, path, FALSE);
-      focus_browse_tree_view_if_possible (impl);
-      
       gtk_file_path_free (path);
     }
 
@@ -10405,10 +10380,7 @@ shortcuts_activate_get_info_cb (GtkFileSystemHandle *handle,
     goto out;
 
   if (!error && gtk_file_info_get_is_folder (info))
-    {
-      change_folder_and_display_error (data->impl, data->path, FALSE);
-      focus_browse_tree_view_if_possible (data->impl);
-    }
+    change_folder_and_display_error (data->impl, data->path, FALSE);
   else
     gtk_file_chooser_default_select_path (GTK_FILE_CHOOSER (data->impl),
                                           data->path,
@@ -10474,25 +10446,6 @@ shortcuts_activate_iter (GtkFileChooserDefault *impl,
     {
       recent_activate (impl);
     }
-}
-
-/* Callback used when a row in the shortcuts list is activated */
-static void
-shortcuts_row_activated_cb (GtkTreeView           *tree_view,
-			    GtkTreePath           *path,
-			    GtkTreeViewColumn     *column,
-			    GtkFileChooserDefault *impl)
-{
-  GtkTreeIter iter;
-  GtkTreeIter child_iter;
-
-  if (!gtk_tree_model_get_iter (impl->shortcuts_pane_filter_model, &iter, path))
-    return;
-
-  gtk_tree_model_filter_convert_iter_to_child_iter (GTK_TREE_MODEL_FILTER (impl->shortcuts_pane_filter_model),
-						    &child_iter,
-						    &iter);
-  shortcuts_activate_iter (impl, &child_iter);
 }
 
 /* Handler for GtkWidget::key-press-event on the shortcuts list */
@@ -11273,7 +11226,6 @@ switch_to_shortcut (GtkFileChooserDefault *impl,
     g_assert_not_reached ();
 
   shortcuts_activate_iter (impl, &iter);
-  focus_browse_tree_view_if_possible (impl);
 }
 
 /* Handler for the "home-folder" keybinding signal */
