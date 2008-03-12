@@ -20,6 +20,7 @@
  */
 
 #include <config.h>
+#include <ctype.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -1403,6 +1404,158 @@ cups_request_ppd (GtkPrinter *printer)
                         (GDestroyNotify)get_ppd_data_free);
 }
 
+/* Ordering matters for default preference */
+static const char *lpoptions_locations[] = {
+  "/etc/cups/lpoptions",
+  ".lpoptions", 
+  ".cups/lpoptions"
+};
+
+static void
+cups_parse_user_default_printer (const char  *filename,
+                                 char       **printer_name)
+{
+  FILE *fp;
+  char line[1024], *lineptr, *defname = NULL;
+  
+  if ((fp = g_fopen (filename, "r")) == NULL)
+    return;
+
+  while (fgets (line, sizeof (line), fp) != NULL)
+    {
+      if (strncasecmp (line, "default", 7) != 0 || !isspace (line[7]))
+        continue;
+
+      lineptr = line + 8;
+      while (isspace (*lineptr))
+        lineptr++;
+
+      if (!*lineptr)
+        continue;
+
+      defname = lineptr;
+      while (!isspace (*lineptr) && *lineptr && *lineptr != '/')
+        lineptr++;
+
+      *lineptr = '\0';
+
+      if (*printer_name != NULL)
+        g_free (*printer_name);
+
+      *printer_name = g_strdup (defname);
+    }
+
+  fclose (fp);
+}
+
+static void
+cups_get_user_default_printer (char **printer_name)
+{
+  int i;
+
+  for (i = 0; i < G_N_ELEMENTS (lpoptions_locations); i++)
+    {
+      if (g_path_is_absolute (lpoptions_locations[i]))
+        {
+          cups_parse_user_default_printer (lpoptions_locations[i],
+                                           printer_name);
+        }
+      else 
+        {
+          char *filename;
+
+          filename = g_build_filename (g_get_home_dir (), 
+                                       lpoptions_locations[i], NULL);
+          cups_parse_user_default_printer (filename, printer_name);
+          g_free (filename);
+        }
+    }
+}
+
+static int
+cups_parse_user_options (const char     *filename,
+                         const char     *printer_name,
+                         int             num_options,
+                         cups_option_t **options)
+{
+  FILE *fp;
+  gchar line[1024], *lineptr, *name;
+
+  if ((fp = g_fopen (filename, "r")) == NULL)
+    return num_options;
+
+  while (fgets (line, sizeof (line), fp) != NULL)
+    {
+      if (strncasecmp (line, "dest", 4) == 0 && isspace (line[4]))
+        lineptr = line + 4;
+      else if (strncasecmp (line, "default", 7) == 0 && isspace (line[7]))
+        lineptr = line + 7;
+      else
+        continue;
+
+      /* Skip leading whitespace */
+      while (isspace (*lineptr))
+        lineptr++;
+
+      if (!*lineptr)
+        continue;
+
+      /* NUL-terminate the name, stripping the instance name */
+      name = lineptr;
+      while (!isspace (*lineptr) && *lineptr)
+        {
+          if (*lineptr == '/')
+            *lineptr = '\0';
+          lineptr++;
+        }
+
+      if (!*lineptr)
+        continue;
+
+      *lineptr++ = '\0';
+
+      if (strncasecmp (name, printer_name, strlen (printer_name)) != 0)
+          continue;
+
+      /* We found our printer, parse the options */
+      num_options = cupsParseOptions (lineptr, num_options, options);
+    }
+
+  fclose (fp);
+
+  return num_options;
+}
+
+static int
+cups_get_user_options (const char     *printer_name,
+                       int             num_options,
+                       cups_option_t **options)
+{
+  int i;
+
+  for (i = 0; i < G_N_ELEMENTS (lpoptions_locations); i++)
+    {
+      if (g_path_is_absolute (lpoptions_locations[i]))
+        { 
+           num_options = cups_parse_user_options (lpoptions_locations[i],
+                                                  printer_name,
+                                                  num_options,
+                                                  options);
+        }
+      else
+        {
+          char *filename;
+
+          filename = g_build_filename (g_get_home_dir (), 
+                                       lpoptions_locations[i], NULL);
+          num_options = cups_parse_user_options (filename, printer_name,
+                                                 num_options, options);
+          g_free (filename);
+        }
+    }
+
+  return num_options;
+}
 
 static void
 cups_request_default_printer_cb (GtkPrintBackendCups *print_backend,
@@ -1431,6 +1584,7 @@ cups_request_default_printer (GtkPrintBackendCups *print_backend)
 {
   GtkCupsRequest *request;
   const char *str;
+  char *name = NULL;
 
   if ((str = g_getenv ("LPDEST")) != NULL)
     {
@@ -1446,6 +1600,15 @@ cups_request_default_printer (GtkPrintBackendCups *print_backend)
       return;
     }
   
+  /* Figure out user setting for default printer */  
+  cups_get_user_default_printer (&name);
+  if (name != NULL)
+    {
+       print_backend->default_printer = name;
+       print_backend->got_default_printer = TRUE;
+       return;
+    }
+
   request = gtk_cups_request_new (NULL,
                                   GTK_CUPS_POST,
                                   CUPS_GET_DEFAULT,
@@ -2214,6 +2377,9 @@ cups_printer_get_options (GtkPrinter           *printer,
   char *prio_display[] = {N_("Urgent"), N_("High"), N_("Medium"), N_("Low") };
   char *cover[] = {"none", "classified", "confidential", "secret", "standard", "topsecret", "unclassified" };
   char *cover_display[] = {N_("None"), N_("Classified"), N_("Confidential"), N_("Secret"), N_("Standard"), N_("Top Secret"), N_("Unclassified"),};
+  char *name;
+  int num_opts;
+  cups_option_t *opts = NULL;
 
 
   set = gtk_printer_option_set_new ();
@@ -2298,10 +2464,12 @@ cups_printer_get_options (GtkPrinter           *printer,
       else
         {
           gchar *custom_name;
+	  char width[G_ASCII_DTOSTR_BUF_SIZE];
+	  char height[G_ASCII_DTOSTR_BUF_SIZE];
 
-	  custom_name = g_strdup_printf (_("Custom %.2fx%.2f"),
-					 gtk_paper_size_get_width (paper_size, GTK_UNIT_POINTS),
-					 gtk_paper_size_get_height (paper_size, GTK_UNIT_POINTS));
+	  g_ascii_formatd (width, sizeof (width), "%.2f", gtk_paper_size_get_width (paper_size, GTK_UNIT_POINTS));
+	  g_ascii_formatd (height, sizeof (height), "%.2f", gtk_paper_size_get_height (paper_size, GTK_UNIT_POINTS));
+	  custom_name = g_strdup_printf (_("Custom %sx%s"), width, height);
           strncpy (option->defchoice, custom_name, PPD_MAX_NAME);
           g_free (custom_name);
         }
@@ -2309,6 +2477,23 @@ cups_printer_get_options (GtkPrinter           *printer,
       for (i = 0; i < ppd_file->num_groups; i++)
         handle_group (set, ppd_file, &ppd_file->groups[i], &ppd_file->groups[i], settings);
     }
+
+  /* Now honor the user set defaults for this printer */
+  num_opts = cups_get_user_options (gtk_printer_get_name (printer), 0, &opts);
+
+  for (i = 0; i < num_opts; i++)
+    {
+      if (STRING_IN_TABLE (opts->name, cups_option_blacklist))
+        continue;
+
+      name = get_option_name (opts[i].name);
+      option = gtk_printer_option_set_lookup (set, name);
+      if (option)
+        gtk_printer_option_set (option, opts[i].value);
+      g_free (name);
+    }
+
+  cupsFreeOptions (num_opts, opts);
 
   return set;
 }
@@ -2794,9 +2979,12 @@ cups_printer_prepare_for_print (GtkPrinter       *printer,
     gtk_print_settings_set (settings, "cups-PageSize", ppd_paper_name);
   else
     {
-      char *custom_name = g_strdup_printf ("Custom.%2fx%.2f",
-					   gtk_paper_size_get_width (paper_size, GTK_UNIT_POINTS),
-					   gtk_paper_size_get_height (paper_size, GTK_UNIT_POINTS));
+      char width[G_ASCII_DTOSTR_BUF_SIZE];
+      char height[G_ASCII_DTOSTR_BUF_SIZE];
+
+      g_ascii_formatd (width, sizeof (width), "%.2f", gtk_paper_size_get_width (paper_size, GTK_UNIT_POINTS));
+      g_ascii_formatd (height, sizeof (height), "%.2f", gtk_paper_size_get_height (paper_size, GTK_UNIT_POINTS));
+      char *custom_name = g_strdup_printf (("Custom.%sx%s"), width, height);
       gtk_print_settings_set (settings, "cups-PageSize", custom_name);
       g_free (custom_name);
     }

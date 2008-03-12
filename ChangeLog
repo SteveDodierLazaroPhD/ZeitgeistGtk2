@@ -1,4 +1,335 @@
+2008-03-12  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.12.9 ===
+
+	* NEWS: Updates
+
+2008-03-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Use
+	g_ascii_formatd when formatting custom paper sizes, since
+	cups doesn't handle , as decimal separator.  (#521548)
+
+2008-03-11  Tor Lillqvist  <tml@novell.com>
+
+	Bug 469868 - Filenames with colon ":" are not saved correctly
+
+	* gtk/gtkfilechooserentry.c (insert_text_callback)
+	(delete_text_callback) [Win32]: New functions to make sure that
+	colons used otherwise than as a separator after a drive letter, or
+	characters that are always illegal in file names, are rejected on
+	input. This means that the GTK+ file chooser can't be used to
+	input full names of alternate data streams, but oh well. There are
+	still more checks that could be done on the file names, see the
+	bug report. But this will do for now.
+	(_gtk_file_chooser_entry_init) [Win32]: Connect above functions.
+
+2008-03-11  Alberto Ruiz  <aruiz@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtkcombobox.c (gtk_combo_box_size_allocate):
+	Take thickness into account in the size allocation of the child widgets in
+	list mode.
+	Fixes #521442
+
+2008-03-10  Wouter Bolsterlee  <wbolster@svn.gnome.org>
+
+	reviewed by: Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/printbackends/cups/gtkprintbackendcups.c
+	(cups_get_user_options):
+
+	Bug 469210 – Honor CUPS user default options for GtkPrint
+
+	Correctly iterate over filename list, avoiding a
+	critical warning/crash.
+
+2008-03-07  Alberto Ruiz  <aruiz@gnome.org>
+
+	Merged from trunk:
+
+	* modules/engines/ms-windows/msw_style.c (draw_shadow):
+	Do not draw frame if parent if combobox.
+	(draw_box):
+	Uses scrollbar width system metrics for combobox button.
+	Fixes #461805 for XP theme engine.
+
+2008-03-06  Federico Mena Quintero  <federico@novell.com>
+
+	Merged from trunk:
+
+	Fix http://bugzilla.gnome.org/show_bug.cgi?id=505857 -
+	GtkFileChooserDialog should set a default response button if the
+	app doesn't set it.  Based on a patch by Chris Wang <chris.wang@sun.com>.
+
+	* gtk/gtkfilechooserdialog.c (is_stock_accept_response_id): New
+	function, refactor from where there was duplicated code.
+	(gtk_file_chooser_dialog_map): Look at the buttons in our
+	action_area.  If the response ID for a button is one of the stock
+	ones, make it the default response button.
+
+2008-03-04  Alberto Ruiz  <aruiz@gnome.org>
+	* configure.in: Add --disable-cups option.
+		(#513826, Alberto Ruiz)
+
+2008-03-04  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* modules/printbackends/cups/gtkprintbackendcups.c:
+	Honor cups user default options from ~/.cups/lpoptions
+	(#469210, Stijn Hoop)
+
+2008-03-03  Carlos Garnacho  <carlos@imendio.com>
+
+	Merged from trunk:
+
+	Fix http://bugzilla.gnome.org/show_bug.cgi?id=417389 - Make the
+	scrollwheel work in GtkPathBar.
+
+	* gtk/gtkpathbar.h (struct _GtkPathBar): New field event_window.
+
+	* gtk/gtkpathbar.c (gtk_path_bar_realize): New function.  Create
+	an input-only window, event_window, which we'll use to capture
+	scroll events.
+	(gtk_path_bar_map): Show the event_window under the rest of the
+	windows, so it will be a catch-all for unhandled events.
+
+2008-03-03  Sven Neumann  <sven@gimp.org>
+
+	Merged from trunk:
+
+	* gtk/gtkfilechooserbutton.c (G_DEFINE_TYPE_WITH_CODE): fixed a
+	typo in the documentation of the GtkFileChooserButtons::file-set
+	signal (see bug #353196).
+
+2008-03-01  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkprivate-quartz.h:
+	* gdk/quartz/gdkwindow-quartz.c: Add debugging code to highlight a
+	gdkwindow.
+
+2008-02-29  Johan Dahlin  <johan@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtkbuilder.c:
+	* gtk/gtkbuilderparser.c:
+	* gtk/gtkbuilderprivate.h:
+	Do not use g_error for a few more errors, instead set
+	the GError sent in through add_from_file/add_from_string.
+	* tests/buildertest.c:
+	Add a couple of new parsing tests.
+	(#519199, Pavel Syomin)
+
+2008-02-29  Federico Mena Quintero  <federico@novell.com>
+
+	Merged from trunk:
+
+	* gtk/gtkfilesystemunix.c (gtk_file_system_unix_get_folder): When
+	refreshing an existing folder (i.e. when we are about to reload
+	its file list), turn off the folder's is_finished_loading flag.
+	Otherwise callers which do ::is_finished_loading() followed by
+	::list_children() will get nothing.
+
+2008-02-27  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/GdkQuartzView.c:
+	* gdk/quartz/GdkQuartzView.h:
+	* gdk/quartz/gdkwindow-quartz.c: (gdk_window_set_decorations):
+	Fix performance regression for borderless transparent windows
+	with shadow.
+
+2008-02-27  Sven Neumann  <sven@gimp.org>
+
+	Merged from trunk:
+
+	* gtk/Makefile.am (GTK_PRINT_PREVIEW_COMMAND): when building the
+	Quartz backend, use a native Mac OS X application for the print
+	preview (bug #518624).
+
+2008-02-26  Michael Natterer  <mitch@imendio.com>
+
+	Merged from trunk:
+
+	* gtk/gtktextbufferserialize.c (parse_info_free): don't g_free()
+	the members of info->tag_stack since they are a) gobjects and b)
+	not even owned by us, ugh... Fixes crash when deserializing fails.
+
+2008-02-25  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtksearchenginebeagle.c: Look for libbeagle.so.1, and
+	don't use beagle_query_add_hit_type.
+	
+2008-02-25  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkevents-quartz.c
+	(_gdk_quartz_events_trigger_crossing_events): Fix build on tiger.
+
+2008-02-24  Cody Russell  <bratsche@gnome.org>
+
+	* gdk/win32/gdkwindow-win32.c: Fixed declaration in the middle of
+	a block that was causing compile problems on old compilers.
+	(#518398, reported by Kazuki IWAMOTO)
+
+2008-02-24  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/GdkQuartzWindow.c: Prevent hidden windows from being
+	shown without gdk's control when clicking the dock icon.
+
+2008-02-24  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkprivate-quartz.h:
+	* gdk/quartz/gdkeventloop-quartz.c: (got_fd_activity), (poll_func):
+	Use the subtype field for the custom event that is used to wake up
+	the mainloop so we can have other custom event types.
+
+	* gdk/quartz/gdkevents-quartz.c:
+	(_gdk_quartz_events_trigger_crossing_events):
+	* gdk/quartz/gdkwindow-quartz.c: (show_window_internal): Create
+	crossing events after showing a window if necessary, to work
+	around problems with the tracking rect API.
+
+2008-02-21  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkfilechooserdefault.c (list_mtime_data_func) [Win32]: Must
+	pass the format string to strftime in the C library's locale's
+	charset, not the system's. Correspondingly, the return value from
+	strftime() is in the C library's locale's charset. (#509885)
+
+2008-02-20  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (gdk_window_set_decorations): Set
+	the right window level and shadow after recreating the window.
+
+	* gdk/quartz/GdkQuartzView.c: (drawRect): Invalidate the shadow if
+	necessary after drawing (bug #517338).
+
+2008-02-20  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/GdkQuartzWindow.c: (showAndMakeKey): Update the
+	position after showing the window since the window manager might
+	not place it where we requested in the first place.
+
+2008-02-20  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (show_window_internal),
+	(_gdk_quartz_window_detach_from_parent),
+	(_gdk_quartz_window_attach_to_parent), (gdk_window_focus): Clear
+	the toplevel ordering list in all places where the order is
+	potentially changed. Fixes mouse focus issues for windows with
+	a transient parent set.
+
+2008-02-17  Johan Dahlin  <johan@gnome.org>
+
+	Merged from trunk:
+
+	* gtk/gtk-builder-convert (GtkBuilderConverter._add_action_from_menuitem): 
+	When converting a stock item based on the label, remove the label property.
+
+2008-02-15  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/GdkQuartzView.c: Adapt to the change to use frame
+	instead of bounds when resizing windows.
+
+2008-02-16  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkevents-quartz.c (create_scroll_event): Add state
+	to the scroll event (bug #516757, Paul Davis).
+
+2008-02-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gtk/gtknotebook.c (gtk_notebook_stop_reorder): Prevent
+	a crash with hidden, reorderable tabs.  (#513230,
+	Mike Massonnet, patch by Carlos Garnacho)
+
+2008-02-15  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkfilesystemwin32.c (get_viewable_logical_drives): Don't
+	leak Registry key handles. (#516578)
+
+2008-02-14  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (gdk_window_focus): Using
+	makeKeyWindow unfortunately doesn't work in all cases, we must use
+	makeKeyAndOrderFront.
+
+2008-02-14  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkwindow-quartz.c: (get_fullscreen_geometry),
+	(gdk_window_hide), (gdk_window_fullscreen),
+	(gdk_window_unfullscreen): Make sure we leave fullscreen mode if
+	the window is hidden.
+
+2008-02-14  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/GdkQuartzWindow.c: Set frame, not bounds when
+	resizing to be consistent and to avoid introducing an internal
+	transform in the view.
+
+2008-02-13  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gtk/gtkclipboard-quartz.c: (gtk_clipboard_wait_for_contents):
+	Remove unused variables.
+	(gtk_clipboard_set_contents),
+	(gtk_clipboard_get_owner), (clipboard_unset),
+	(gtk_clipboard_request_targets): Notify the previous clipboard
+	owner when the owner changes. Fixes bug #493406.
+
+2008-02-13  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkcolor-quartz.c: (gdk_colormap_alloc_colors): Fix
+	the return value (return number of colors that failed), and handle
+	RGBA colormap.
+	(gdk_colormap_free_colors): Fix typo in comment.
+
+2008-02-13  Emmanuele Bassi  <ebassi@gnome.org>
+
+	Merge from trunk:
+
+	* gtk/gtkrecentchoosermenu.c:
+	(idle_populate_func), (idle_populate_clean_up): Fix possible
+	recursion by resetting the idle source id. (#507605, William
+	Pitcock)
+
 2008-02-12  Matthias Clasen  <mclasne@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.12.8 ===
 

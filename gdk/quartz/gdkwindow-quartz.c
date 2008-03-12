@@ -32,8 +32,20 @@ static guint   update_idle;
 
 static GSList *main_window_stack;
 
+#define FULLSCREEN_DATA "fullscreen-data"
+
+typedef struct
+{
+  gint            x, y;
+  gint            width, height;
+  GdkWMDecoration decor;
+} FullscreenSavedGeometry;
+
+
 static void update_toplevel_order (void);
-static void clear_toplevel_order (void);
+static void clear_toplevel_order  (void);
+
+static FullscreenSavedGeometry *get_fullscreen_geometry (GdkWindow *window);
 
 #define WINDOW_IS_TOPLEVEL(window)		   \
   (GDK_WINDOW_TYPE (window) != GDK_WINDOW_CHILD && \
@@ -450,6 +462,87 @@ get_default_title (void)
     title = g_get_prgname ();
 
   return title;
+}
+
+static void
+get_ancestor_coordinates_from_child (GdkWindow *child_window,
+				     gint       child_x,
+				     gint       child_y,
+				     GdkWindow *ancestor_window, 
+				     gint      *ancestor_x, 
+				     gint      *ancestor_y)
+{
+  GdkWindowObject *child_private = GDK_WINDOW_OBJECT (child_window);
+  GdkWindowObject *ancestor_private = GDK_WINDOW_OBJECT (ancestor_window);
+
+  while (child_private != ancestor_private)
+    {
+      child_x += child_private->x;
+      child_y += child_private->y;
+
+      child_private = child_private->parent;
+    }
+
+  *ancestor_x = child_x;
+  *ancestor_y = child_y;
+}
+
+void
+_gdk_quartz_window_debug_highlight (GdkWindow *window)
+{
+  GdkWindowObject *private = GDK_WINDOW_OBJECT (window);
+  GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+  gint x, y;
+  GdkWindow *toplevel;
+  gint tx, ty;
+  static NSWindow *debug_window;
+  static NSRect old_rect;
+  NSRect rect;
+
+  if (window == _gdk_root)
+    return;
+
+  if (window == NULL)
+    return;
+
+  toplevel = gdk_window_get_toplevel (window);
+  get_ancestor_coordinates_from_child (window, 0, 0, toplevel, &x, &y);
+
+  gdk_window_get_origin (toplevel, &tx, &ty);
+  x += tx;
+  y += ty;
+
+  rect =  NSMakeRect (x,
+                      _gdk_quartz_window_get_inverted_screen_y (y + impl->height),
+                      impl->width, impl->height);
+
+  if (debug_window &&
+      rect.origin.x == old_rect.origin.x &&
+      rect.origin.y == old_rect.origin.y &&
+      rect.size.width == old_rect.size.width &&
+      rect.size.height == old_rect.size.height)
+    {
+      return;
+    }
+
+  old_rect = rect;
+
+  if (debug_window)
+    [debug_window close];
+
+  debug_window = [[NSWindow alloc] initWithContentRect:rect
+                                             styleMask:NSBorderlessWindowMask
+			                       backing:NSBackingStoreBuffered
+			                         defer:NO];
+
+  [debug_window setBackgroundColor:[NSColor redColor]];
+  [debug_window setAlphaValue:0.4];
+  [debug_window setOpaque:NO];
+  [debug_window setReleasedWhenClosed:YES];
+  [debug_window setIgnoresMouseEvents:YES];
+  [debug_window setLevel:NSFloatingWindowLevel];
+
+  [debug_window orderFront:nil];
 }
 
 gboolean
@@ -971,6 +1064,7 @@ show_window_internal (GdkWindow *window,
                   private->window_type != GDK_WINDOW_TEMP);
 
       [(GdkQuartzWindow*)impl->toplevel showAndMakeKey:make_key];
+      clear_toplevel_order ();
     }
   else
     {
@@ -992,6 +1086,9 @@ show_window_internal (GdkWindow *window,
 
   if (impl->transient_for && !GDK_WINDOW_DESTROYED (impl->transient_for))
     _gdk_quartz_window_attach_to_parent (window);
+
+  if (impl->toplevel)
+    _gdk_quartz_events_trigger_crossing_events ();
 
   GDK_QUARTZ_RELEASE_POOL;
 }
@@ -1016,6 +1113,7 @@ _gdk_quartz_window_detach_from_parent (GdkWindow *window)
 
       parent_impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (impl->transient_for)->impl);
       [parent_impl->toplevel removeChildWindow:impl->toplevel];
+      clear_toplevel_order ();
     }
 }
 
@@ -1037,6 +1135,7 @@ _gdk_quartz_window_attach_to_parent (GdkWindow *window)
 
       parent_impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (impl->transient_for)->impl);
       [parent_impl->toplevel addChildWindow:impl->toplevel ordered:NSWindowAbove];
+      clear_toplevel_order ();
     }
 }
 
@@ -1065,6 +1164,10 @@ gdk_window_hide (GdkWindow *window)
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
+  /* Make sure we're not stuck in fullscreen mode. */
+  if (get_fullscreen_geometry (window))
+    ShowMenuBar ();
+
   if (GDK_WINDOW_DESTROYED (window))
     return;
 
@@ -1084,9 +1187,6 @@ gdk_window_hide (GdkWindow *window)
 
   if (impl->toplevel) 
     {
-      NSRect content_rect;
-      NSRect frame_rect;
-
      /* Update main window. */
       main_window_stack = g_slist_remove (main_window_stack, window);
       if ([NSApp mainWindow] == impl->toplevel)
@@ -2202,7 +2302,8 @@ gdk_window_focus (GdkWindow *window,
       if (private->accept_focus && private->window_type != GDK_WINDOW_TEMP) 
         {
           GDK_QUARTZ_ALLOC_POOL;
-          [impl->toplevel makeKeyWindow];
+          [impl->toplevel makeKeyAndOrderFront:impl->toplevel];
+          clear_toplevel_order ();
           GDK_QUARTZ_RELEASE_POOL;
         }
     }
@@ -2510,8 +2611,17 @@ gdk_window_set_decorations (GdkWindow       *window,
                                                    backing:NSBackingStoreBuffered
                                                      defer:NO];
 
+      [impl->toplevel setHasShadow: window_type_hint_to_shadow (impl->type_hint)];
+      [impl->toplevel setLevel: window_type_hint_to_level (impl->type_hint)];
+
       [impl->toplevel setContentView:old_view];
       [impl->toplevel setFrame:rect display:YES];
+
+      /* Invalidate the window shadow for non-opaque views that have shadow
+       * enabled, to get the shadow shape updated.
+       */
+      if (![old_view isOpaque] && [impl->toplevel hasShadow])
+        [(GdkQuartzView*)old_view setNeedsInvalidateShadow:YES];
     }
 
   GDK_QUARTZ_RELEASE_POOL;
@@ -2700,14 +2810,11 @@ gdk_window_deiconify (GdkWindow *window)
     }
 }
 
-#define FULLSCREEN_DATA "fullscreen-data"
-
-typedef struct
+static FullscreenSavedGeometry *
+get_fullscreen_geometry (GdkWindow *window)
 {
-  gint            x, y;
-  gint            width, height;
-  GdkWMDecoration decor;
-} FullscreenSavedGeometry;
+  return g_object_get_data (G_OBJECT (window), FULLSCREEN_DATA);
+}
 
 void
 gdk_window_fullscreen (GdkWindow *window)
@@ -2720,28 +2827,32 @@ gdk_window_fullscreen (GdkWindow *window)
   g_return_if_fail (GDK_IS_WINDOW (window));
   g_return_if_fail (WINDOW_IS_TOPLEVEL (window));
 
-  geometry = g_new (FullscreenSavedGeometry, 1);
+  geometry = get_fullscreen_geometry (window);
+  if (!geometry)
+    {
+      geometry = g_new (FullscreenSavedGeometry, 1);
 
-  geometry->x = private->x;
-  geometry->y = private->y;
-  geometry->width = impl->width;
-  geometry->height = impl->height;
-  
-  if (!gdk_window_get_decorations (window, &geometry->decor))
-    geometry->decor = GDK_DECOR_ALL;
+      geometry->x = private->x;
+      geometry->y = private->y;
+      geometry->width = impl->width;
+      geometry->height = impl->height;
 
-  g_object_set_data_full (G_OBJECT (window),
-                          FULLSCREEN_DATA, geometry, 
-                          g_free);
+      if (!gdk_window_get_decorations (window, &geometry->decor))
+        geometry->decor = GDK_DECOR_ALL;
+
+      g_object_set_data_full (G_OBJECT (window),
+                              FULLSCREEN_DATA, geometry, 
+                              g_free);
+
+      gdk_window_set_decorations (window, 0);
+
+      frame = [[NSScreen mainScreen] frame];
+      move_resize_window_internal (window,
+                                   0, 0, 
+                                   frame.size.width, frame.size.height);
+    }
 
   HideMenuBar ();
-
-  gdk_window_set_decorations (window, 0);
-
-  frame = [[NSScreen mainScreen] frame];
-  move_resize_window_internal (window,
-                               0, 0, 
-                               frame.size.width, frame.size.height);
 
   gdk_synthesize_window_state (window, 0, GDK_WINDOW_STATE_FULLSCREEN);
 }
@@ -2754,8 +2865,7 @@ gdk_window_unfullscreen (GdkWindow *window)
   g_return_if_fail (GDK_IS_WINDOW (window));
   g_return_if_fail (WINDOW_IS_TOPLEVEL (window));
 
-  geometry = g_object_get_data (G_OBJECT (window), FULLSCREEN_DATA);
-
+  geometry = get_fullscreen_geometry (window);
   if (geometry)
     {
       ShowMenuBar ();

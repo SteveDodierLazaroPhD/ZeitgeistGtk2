@@ -116,7 +116,18 @@
 
   gdk_region_destroy (region);
 
+  if (needsInvalidateShadow)
+    {
+      [[self window] invalidateShadow];
+      needsInvalidateShadow = NO;
+    }
+
   GDK_QUARTZ_RELEASE_POOL;
+}
+
+-(void)setNeedsInvalidateShadow:(BOOL)invalidate
+{
+  needsInvalidateShadow = invalidate;
 }
 
 /* For information on setting up tracking rects properly, see here:
@@ -165,9 +176,9 @@
     }
 }
 
--(void)setBounds:(NSRect)bounds
+-(void)setFrame:(NSRect)frame
 {
-  [super setBounds:bounds];
+  [super setFrame:frame];
   [self updateTrackingRect];
 }
 
