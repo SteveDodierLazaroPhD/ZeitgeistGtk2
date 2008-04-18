@@ -2,6 +2,14 @@ Index: gtk+2.0-2.11.3/gdk-pixbuf/gdk-pixbuf-io.c
 ===================================================================
 --- gtk+2.0-2.11.3.orig/gdk-pixbuf/gdk-pixbuf-io.c	2007-06-16 14:25:47.000000000 +0200
 +++ gtk+2.0-2.11.3/gdk-pixbuf/gdk-pixbuf-io.c	2007-06-16 14:26:24.000000000 +0200
+@@ -32,6 +32,7 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
++#include <sys/utsname.h>
+ 
+ #include "gdk-pixbuf-private.h"
+ #include "gdk-pixbuf-io.h"
 @@ -280,8 +280,20 @@
    gchar *result = g_strdup (g_getenv ("GDK_PIXBUF_MODULE_FILE"));
  
@@ -25,6 +33,39 @@ Index: gtk+2.0-2.11.3/gdk-pixbuf/gdk-pixbuf-io.c
    return result;
  }
  
+@@ -524,6 +525,21 @@
+ 
+ #endif /* USE_GMODULE */
+ 
++static gchar*
++_gdk_pixbuf_libdir (void)
++{
++#if defined(__linux__) && defined (__i386__)
++	struct utsname uts;
++
++	uname(&uts);
++	if (!strcmp("x86_64", uts.machine)
++	    && !access("/usr/lib32/gtk-2.0", R_OK|X_OK))
++		return "/usr/lib32/gtk-2.0/2.10.0/loaders";
++	else
++#endif
++	return PIXBUF_LIBDIR;
++}
++
+ static void 
+ gdk_pixbuf_io_init (void)
+ {
+@@ -531,7 +547,9 @@
+ 	GIOChannel *channel;
+ 	gchar *gdkpixbuf_module_file_str = gdk_pixbuf_get_module_file ();
+ 	/* FIXME: using an absolute path requires patching Makefile.am */
+-	gchar *gdkpixbuf_module_files_d_str = g_build_filename (PIXBUF_LIBDIR,
++	/*   ... and breaks using the 32bit lib on a 64 bit system \o/ */
++
++	gchar *gdkpixbuf_module_files_d_str = g_build_filename (_gdk_pixbuf_libdir(),
+ 							 "..",
+ 							 "loader-files.d",
+ 							 NULL);
 Index: gtk+2.0-2.11.3/gtk/gtkrc.c
 ===================================================================
 --- gtk+2.0-2.11.3.orig/gtk/gtkrc.c	2007-06-15 20:07:37.000000000 +0200
@@ -97,3 +138,5 @@ Index: gtk+2.0-2.11.3/gtk/gtkrc.c
  	  gtk_rc_add_default_file (str);
  	  g_free (str);
  	}
+--- gdk-pixbuf/gdk-pixbuf-io.c~	2008-04-17 09:56:14.355807617 +0200
++++ gdk-pixbuf/gdk-pixbuf-io.c	2008-04-17 10:05:00.843749567 +0200
