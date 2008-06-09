@@ -35,6 +35,7 @@
 #include <cairo-pdf.h>
 #include <cairo-ps.h>
 
+#include <glib/gstdio.h>
 #include <glib/gi18n-lib.h>
 #include <gmodule.h>
 
@@ -2483,7 +2484,7 @@ cups_printer_get_options (GtkPrinter           *printer,
 
   for (i = 0; i < num_opts; i++)
     {
-      if (STRING_IN_TABLE (opts->name, cups_option_blacklist))
+      if (STRING_IN_TABLE (opts[i].name, cups_option_blacklist))
         continue;
 
       name = get_option_name (opts[i].name);
@@ -2981,10 +2982,11 @@ cups_printer_prepare_for_print (GtkPrinter       *printer,
     {
       char width[G_ASCII_DTOSTR_BUF_SIZE];
       char height[G_ASCII_DTOSTR_BUF_SIZE];
+      char *custom_name;
 
       g_ascii_formatd (width, sizeof (width), "%.2f", gtk_paper_size_get_width (paper_size, GTK_UNIT_POINTS));
       g_ascii_formatd (height, sizeof (height), "%.2f", gtk_paper_size_get_height (paper_size, GTK_UNIT_POINTS));
-      char *custom_name = g_strdup_printf (("Custom.%sx%s"), width, height);
+      custom_name = g_strdup_printf (("Custom.%sx%s"), width, height);
       gtk_print_settings_set (settings, "cups-PageSize", custom_name);
       g_free (custom_name);
     }

@@ -48,7 +48,9 @@ host_triplet = @host@
 @OS_UNIX_TRUE@	gtkprinter-private.h		\
 @OS_UNIX_TRUE@	gtkprinteroption.h		\
 @OS_UNIX_TRUE@	gtkprinteroptionset.h		\
-@OS_UNIX_TRUE@	gtkprinteroptionwidget.h
+@OS_UNIX_TRUE@	gtkprinteroptionwidget.h	\
+@OS_UNIX_TRUE@	gtksearchenginebeagle.h		\
+@OS_UNIX_TRUE@	gtksearchenginetracker.h
 
 @OS_UNIX_TRUE@am__append_5 = $(gtk_os_unix_c_sources)
 @OS_WIN32_TRUE@am__append_6 = gtkfilesystemwin32.h gtkprint-win32.h
@@ -104,6 +106,7 @@ DEPDIR = @DEPDIR@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -243,6 +246,7 @@ MSGFMT_OPTS = @MSGFMT_OPTS@
 MS_LIB_AVAILABLE_FALSE = @MS_LIB_AVAILABLE_FALSE@
 MS_LIB_AVAILABLE_TRUE = @MS_LIB_AVAILABLE_TRUE@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OS_LINUX_FALSE = @OS_LINUX_FALSE@
@@ -392,7 +396,7 @@ gtarget = $(gdktarget)
 @PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
 
 @OS_WIN32_TRUE@gtk_def = gtk.def
-@OS_WIN32_TRUE@gtk_win32_symbols = -export-symbols gtk.def
+@OS_WIN32_TRUE@gtk_win32_symbols = -export-symbols $(srcdir)/gtk.def
 
 @OS_WIN32_TRUE@gtk_win32_res = gtk-win32-res.o
 @OS_WIN32_TRUE@gtk_win32_res_ldflag = -Wl,gtk-win32-res.o
@@ -642,8 +646,6 @@ gtk_semi_private_h_sources = \
 gtk_private_h_sources = \
 	gtkquery.h		\
 	gtksearchengine.h	\
-	gtksearchenginebeagle.h	\
-	gtksearchenginetracker.h\
 	gtksearchenginesimple.h	\
 	gtkdndcursors.h		\
 	gtkentryprivate.h	\
@@ -690,8 +692,6 @@ $(am__append_4) $(am__append_6) $(am__append_8) $(am__append_10) $(am__append_12
 gtk_base_c_sources = \
 	gtkquery.c		\
 	gtksearchengine.c	\
-	gtksearchenginebeagle.c	\
-	gtksearchenginetracker.c\
 	gtksearchenginesimple.c	\
 	fnmatch.c		\
 	gtkaboutdialog.c	\
@@ -929,7 +929,9 @@ gtk_os_unix_c_sources = \
 	gtkprintjob.c			\
 	gtkprintoperation-unix.c	\
 	gtkprintunixdialog.c		\
-        gtkprintbackend.c
+        gtkprintbackend.c		\
+	gtksearchenginebeagle.c		\
+	gtksearchenginetracker.c
 
 
 gtk_os_win32_c_sources = \
@@ -1364,7 +1366,6 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 @OS_UNIX_FALSE@	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
 @OS_UNIX_FALSE@	$(top_builddir)/gdk/$(gdktargetlib)
 am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
-	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtksearchenginesimple.c fnmatch.c gtkaboutdialog.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
@@ -1433,6 +1434,7 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
 	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
 	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtkfilesystemwin32.c gtkprint-win32.c gtkprintoperation-win32.c \
 	gtkplug-x11.c gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
 	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
@@ -1441,9 +1443,8 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 @USE_QUARTZ_TRUE@am__objects_1 = gtkclipboard-quartz.lo gtkdnd-quartz.lo \
 @USE_QUARTZ_TRUE@	gtkquartz.lo
 @USE_QUARTZ_FALSE@am__objects_1 = gtkclipboard.lo gtkdnd.lo
-am__objects_2 = gtkquery.lo gtksearchengine.lo gtksearchenginebeagle.lo \
-	gtksearchenginetracker.lo gtksearchenginesimple.lo fnmatch.lo \
-	gtkaboutdialog.lo gtkaccelgroup.lo gtkaccellabel.lo \
+am__objects_2 = gtkquery.lo gtksearchengine.lo gtksearchenginesimple.lo \
+	fnmatch.lo gtkaboutdialog.lo gtkaccelgroup.lo gtkaccellabel.lo \
 	gtkaccelmap.lo gtkaccessible.lo gtkaction.lo gtkactiongroup.lo \
 	gtkadjustment.lo gtkalignment.lo gtkarrow.lo gtkaspectframe.lo \
 	gtkassistant.lo gtkbbox.lo gtkbin.lo gtkbindings.lo gtkbox.lo \
@@ -1514,7 +1515,8 @@ am__objects_3 = gtkfilesystemunix.lo gtkpagesetupunixdialog.lo \
 	gtkprinter.lo gtkprinteroption.lo gtkprinteroptionset.lo \
 	gtkprinteroptionwidget.lo gtkprintjob.lo \
 	gtkprintoperation-unix.lo gtkprintunixdialog.lo \
-	gtkprintbackend.lo
+	gtkprintbackend.lo gtksearchenginebeagle.lo \
+	gtksearchenginetracker.lo
 @OS_UNIX_TRUE@am__objects_4 = $(am__objects_3)
 am__objects_5 = gtkfilesystemwin32.lo gtkprint-win32.lo \
 	gtkprintoperation-win32.lo
@@ -1545,7 +1547,6 @@ libgtk_directfb_2_0_la_OBJECTS = $(am_libgtk_directfb_2_0_la_OBJECTS)
 @OS_UNIX_FALSE@	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
 @OS_UNIX_FALSE@	$(top_builddir)/gdk/$(gdktargetlib)
 am__libgtk_linux_fb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
-	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtksearchenginesimple.c fnmatch.c gtkaboutdialog.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
@@ -1614,6 +1615,7 @@ am__libgtk_linux_fb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
 	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
 	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtkfilesystemwin32.c gtkprint-win32.c gtkprintoperation-win32.c \
 	gtkplug-x11.c gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
 	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
@@ -1629,7 +1631,6 @@ libgtk_linux_fb_2_0_la_OBJECTS = $(am_libgtk_linux_fb_2_0_la_OBJECTS)
 @OS_UNIX_FALSE@	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
 @OS_UNIX_FALSE@	$(top_builddir)/gdk/$(gdktargetlib)
 am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
-	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtksearchenginesimple.c fnmatch.c gtkaboutdialog.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
@@ -1698,6 +1699,7 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
 	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
 	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtkfilesystemwin32.c gtkprint-win32.c gtkprintoperation-win32.c \
 	gtkplug-x11.c gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
 	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
@@ -1706,7 +1708,6 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 am_libgtk_quartz_2_0_la_OBJECTS = $(am__objects_15)
 libgtk_quartz_2_0_la_OBJECTS = $(am_libgtk_quartz_2_0_la_OBJECTS)
 am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
-	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtksearchenginesimple.c fnmatch.c gtkaboutdialog.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
@@ -1775,6 +1776,7 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
 	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
 	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtkfilesystemwin32.c gtkprint-win32.c gtkprintoperation-win32.c \
 	gtkplug-x11.c gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
 	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
@@ -1790,7 +1792,6 @@ libgtk_win32_2_0_la_OBJECTS = $(am_libgtk_win32_2_0_la_OBJECTS)
 @OS_UNIX_FALSE@	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
 @OS_UNIX_FALSE@	$(top_builddir)/gdk/$(gdktargetlib)
 am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
-	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtksearchenginesimple.c fnmatch.c gtkaboutdialog.c \
 	gtkaccelgroup.c gtkaccellabel.c gtkaccelmap.c gtkaccessible.c \
 	gtkaction.c gtkactiongroup.c gtkadjustment.c gtkalignment.c \
@@ -1859,6 +1860,7 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
 	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
 	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
 	gtkfilesystemwin32.c gtkprint-win32.c gtkprintoperation-win32.c \
 	gtkplug-x11.c gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
 	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
@@ -2973,7 +2975,7 @@ uninstall-info: uninstall-info-recursive
 @OS_WIN32_TRUE@	$(WINDRES) gtk-win32.rc $@
 
 @OS_WIN32_TRUE@install-def-file: gtk.def
-@OS_WIN32_TRUE@	$(INSTALL) gtk.def $(DESTDIR)$(libdir)/gtk-win32-2.0.def
+@OS_WIN32_TRUE@	$(INSTALL) $(srcdir)/gtk.def $(DESTDIR)$(libdir)/gtk-win32-2.0.def
 @OS_WIN32_TRUE@uninstall-def-file:
 @OS_WIN32_TRUE@	-rm $(DESTDIR)$(libdir)/gtk-win32-2.0.def
 @OS_WIN32_FALSE@install-def-file:
@@ -2990,8 +2992,10 @@ uninstall-info: uninstall-info-recursive
 @MS_LIB_AVAILABLE_FALSE@install-ms-lib:
 @MS_LIB_AVAILABLE_FALSE@uninstall-ms-lib:
 
+# This places the generated .def file in srcdir, since it is expected to be there.
+# (The one from a tarball is)
 gtk.def: gtk.symbols
-	(echo -e EXPORTS; $(CPP) -P -DINCLUDE_VARIABLES -DG_OS_WIN32 -DALL_FILES - <$(srcdir)/gtk.symbols | sed -e '/^$$/d' -e 's/^/	/' -e 's/G_GNUC_[^ ]*//g') > gtk.def
+	(echo -e EXPORTS; $(CPP) -P -DINCLUDE_VARIABLES -DG_OS_WIN32 -DALL_FILES - <$(srcdir)/gtk.symbols | sed -e '/^$$/d' -e 's/^/	/' -e 's/G_GNUC_[^ ]*//g') > $(srcdir)/gtk.def
 
 gtkalias.h: gtk.symbols
 	  $(PERL) $(srcdir)/makegtkalias.pl < $(srcdir)/gtk.symbols > gtkalias.h

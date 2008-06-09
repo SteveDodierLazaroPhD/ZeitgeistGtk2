@@ -433,6 +433,10 @@ gdk_pixbuf_io_init (void)
 				have_error = TRUE;
 			}			
 			module->info->description = g_strdup (tmp_buf->str);
+
+			if (scan_string (&p, tmp_buf)) {
+				module->info->license = g_strdup (tmp_buf->str);
+			}
 		}
 		else if (!module->info->mime_types) {
 			int n = 1;
@@ -1299,6 +1303,8 @@ gdk_pixbuf_new_from_xpm_data (const char **data)
         GError *error = NULL;
 	GdkPixbufModule *xpm_module;
 	gboolean locked;
+
+	g_return_val_if_fail (data != NULL, NULL);
 
 	xpm_module = _gdk_pixbuf_get_named_module ("xpm", &error);
 	if (xpm_module == NULL) {

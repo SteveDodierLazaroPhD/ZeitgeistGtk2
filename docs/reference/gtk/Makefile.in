@@ -86,6 +86,7 @@ DEPDIR = @DEPDIR@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -225,6 +226,7 @@ MSGFMT_OPTS = @MSGFMT_OPTS@
 MS_LIB_AVAILABLE_FALSE = @MS_LIB_AVAILABLE_FALSE@
 MS_LIB_AVAILABLE_TRUE = @MS_LIB_AVAILABLE_TRUE@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OS_LINUX_FALSE = @OS_LINUX_FALSE@
@@ -672,11 +674,11 @@ FIXXREF_OPTIONS = --extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html \
 	--extra-dir=$(PANGO_PREFIX)/share/gtk-doc/html/pango \
 	--extra-dir=$(CAIRO_PREFIX)/share/gtk-doc/html/cairo
 
-@GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
+@GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 
-@GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_CC = $(LIBTOOL) --mode=compile $(CC) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
-@GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_LD = $(CC) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS)
-@GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_LD = $(LIBTOOL) --mode=link $(CC) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS)
+@GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_CC = $(LIBTOOL) --mode=compile $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+@GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_LD = $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+@GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_LD = $(LIBTOOL) --mode=link $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
 
 # We set GPATH here; this gives us semantics for GNU make
 # which are more like other make's VPATH, when it comes to
@@ -1013,7 +1015,7 @@ maintainer-clean-local: clean
 	cd $(srcdir) && rm -rf xml html
 
 install-data-local:
-	installfiles=`echo $(srcdir)/html/*`; \
+	-installfiles=`echo $(srcdir)/html/*`; \
 	if test "$$installfiles" = '$(srcdir)/html/*'; \
 	then echo '-- Nothing to install' ; \
 	else \
@@ -1024,8 +1026,8 @@ install-data-local:
 	  done; \
 	  echo '-- Installing $(srcdir)/html/index.sgml' ; \
 	  $(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR) || :; \
-	  (which gtkdoc-rebase >& /dev/null && \
-            gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR)) || : ; \
+	  which gtkdoc-rebase >/dev/null && \
+	    gtkdoc-rebase --relative --dest-dir=$(DESTDIR) --html-dir=$(DESTDIR)$(TARGET_DIR) ; \
 	fi
 
 uninstall-local:
@@ -1046,8 +1048,8 @@ dist-hook: dist-check-gtkdoc dist-hook-local
 	-cp $(srcdir)/tmpl/*.sgml $(distdir)/tmpl
 	-cp $(srcdir)/xml/*.xml $(distdir)/xml
 	cp $(srcdir)/html/* $(distdir)/html
-	cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
-	cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
+	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
 	cd $(distdir) && rm -f $(DISTCLEANFILES)
 	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
 

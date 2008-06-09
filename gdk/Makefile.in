@@ -80,6 +80,7 @@ DEPDIR = @DEPDIR@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -219,6 +220,7 @@ MSGFMT_OPTS = @MSGFMT_OPTS@
 MS_LIB_AVAILABLE_FALSE = @MS_LIB_AVAILABLE_FALSE@
 MS_LIB_AVAILABLE_TRUE = @MS_LIB_AVAILABLE_TRUE@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OS_LINUX_FALSE = @OS_LINUX_FALSE@
@@ -497,7 +499,7 @@ libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la $(GDK_DEP_LIBS) \
   $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
 
 libgdk_win32_2_0_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o gdk.def
-libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols gdk.def $(LDADD)
+libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(srcdir)/gdk.def $(LDADD)
 
 @MS_LIB_AVAILABLE_TRUE@noinst_DATA = gdk-win32-$(GTK_API_VERSION).lib
 
@@ -1153,7 +1155,7 @@ uninstall-info: uninstall-info-recursive
 
 
 @OS_WIN32_TRUE@install-def-file: gdk.def
-@OS_WIN32_TRUE@	$(INSTALL) gdk.def $(DESTDIR)$(libdir)/gdk-win32-2.0.def
+@OS_WIN32_TRUE@	$(INSTALL) $(srcdir)/gdk.def $(DESTDIR)$(libdir)/gdk-win32-2.0.def
 @OS_WIN32_TRUE@uninstall-def-file:
 @OS_WIN32_TRUE@	-rm $(DESTDIR)$(libdir)/gdk-win32-2.0.def
 @OS_WIN32_FALSE@install-def-file:
@@ -1170,8 +1172,10 @@ uninstall-info: uninstall-info-recursive
 @MS_LIB_AVAILABLE_FALSE@install-ms-lib:
 @MS_LIB_AVAILABLE_FALSE@uninstall-ms-lib:
 
+# This places the generated .def file in srcdir, since it is expected to be there.
+# (The one from a tarball is)
 gdk.def: gdk.symbols
-	(echo -e EXPORTS; $(CPP) -P -DALL_FILES -DGDK_WINDOWING_WIN32 -DINCLUDE_VARIABLES - <$(srcdir)/gdk.symbols | sed -e '/^$$/d' -e 's/^/	/' -e 's/G_GNUC_[^ ]*//g') > gdk.def
+	(echo -e EXPORTS; $(CPP) -P -DALL_FILES -DGDK_WINDOWING_WIN32 -DINCLUDE_VARIABLES - <$(srcdir)/gdk.symbols | sed -e '/^$$/d' -e 's/^/	/' -e 's/G_GNUC_[^ ]*//g') > $(srcdir)/gdk.def
 
 gdkalias.h: gdk.symbols
 	 $(PERL) $(srcdir)/makegdkalias.pl < $(srcdir)/gdk.symbols > gdkalias.h

@@ -1305,9 +1305,16 @@ show_window_recurse (GdkWindow *window, gboolean hide_window)
       if (GDK_WINDOW_IS_MAPPED (window))
 	{
 	  if (!hide_window)
-	    ShowWindow (GDK_WINDOW_HWND (window), SW_RESTORE);
+	    {
+	      if (GDK_WINDOW_OBJECT (window)->state & GDK_WINDOW_STATE_ICONIFIED)
+		{
+		  ShowWindow (GDK_WINDOW_HWND (window), SW_RESTORE);
+		}
+	    }
 	  else
-	    ShowWindow (GDK_WINDOW_HWND (window), SW_MINIMIZE);
+	    {
+	      ShowWindow (GDK_WINDOW_HWND (window), SW_MINIMIZE);
+	    }
 	}
 
       impl->changing_state = FALSE;
@@ -1934,6 +1941,7 @@ handle_wm_paint (MSG        *msg,
   if (GetUpdateRgn (msg->hwnd, hrgn, FALSE) == ERROR)
     {
       WIN32_GDI_FAILED ("GetUpdateRgn");
+      DeleteObject (hrgn);
       return;
     }
 
@@ -2006,6 +2014,7 @@ handle_wm_paint (MSG        *msg,
 	    }
 	}
 
+      DeleteObject (hrgn);
       return;
     }
 

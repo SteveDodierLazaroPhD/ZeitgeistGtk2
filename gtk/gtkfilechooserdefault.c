@@ -84,7 +84,7 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
+#include <locale.h> /* LC_ALL */
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -258,7 +258,7 @@ static const int num_file_list_source_targets = G_N_ELEMENTS (file_list_source_t
 
 /* Target types for dropping into the file list */
 static const GtkTargetEntry file_list_dest_targets[] = {
-  { "text/uri-list", 0, TEXT_URI_LIST }
+  { "text/uri-list", GTK_TARGET_OTHER_WIDGET, TEXT_URI_LIST }
 };
 
 static const int num_file_list_dest_targets = G_N_ELEMENTS (file_list_dest_targets); 
@@ -4632,7 +4632,7 @@ create_file_list (GtkFileChooserDefault *impl)
 					  GDK_BUTTON1_MASK,
 					  file_list_source_targets,
 					  num_file_list_source_targets,
-					  GDK_ACTION_COPY);
+					  GDK_ACTION_COPY | GDK_ACTION_MOVE);
 
   g_signal_connect (selection, "changed",
 		    G_CALLBACK (list_selection_changed), impl);
@@ -5148,6 +5148,14 @@ location_mode_set (GtkFileChooserDefault *impl,
 static void
 location_toggle_popup_handler (GtkFileChooserDefault *impl)
 {
+  /* when in search or recent files mode, we are not showing the
+   * location_entry_box container, so there's no point in switching
+   * to it.
+   */
+  if (impl->operation_mode == OPERATION_MODE_SEARCH ||
+      impl->operation_mode == OPERATION_MODE_RECENT)
+    return;
+
   /* If the file entry is not visible, show it.
    * If it is visible, turn it off only if it is focused.  Otherwise, switch to the entry.
    */
@@ -8093,9 +8101,14 @@ confirm_dialog_should_accept_filename (GtkFileChooserDefault *impl,
 					    folder_display_name);
 
   gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
-  add_custom_button_to_dialog (GTK_DIALOG (dialog), _("_Replace"), GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT);
+  add_custom_button_to_dialog (GTK_DIALOG (dialog), _("_Replace"),
+                               GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT);
+  gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
+                                           GTK_RESPONSE_ACCEPT,
+                                           GTK_RESPONSE_CANCEL,
+                                           -1);
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
-  
+
   if (toplevel->group)
     gtk_window_group_add_window (toplevel->group, GTK_WINDOW (dialog));
 
@@ -10288,7 +10301,7 @@ shortcuts_activate_volume_mount_cb (GtkFileSystemHandle *handle,
       char *msg;
 
       msg = g_strdup_printf (_("Could not mount %s"),
-			     gtk_file_system_volume_get_display_name (impl->file_system, volume));
+                             gtk_file_system_volume_get_display_name (impl->file_system, volume));
       error_message (impl, msg, error->message);
       g_free (msg);
 
@@ -10377,7 +10390,7 @@ shortcuts_activate_get_info_cb (GtkFileSystemHandle *handle,
 
   data->impl->shortcuts_activate_iter_handle = NULL;
 
-  if (cancelled)
+  if (cancelled || g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_INTR))
     goto out;
 
   if (!error && gtk_file_info_get_is_folder (info))

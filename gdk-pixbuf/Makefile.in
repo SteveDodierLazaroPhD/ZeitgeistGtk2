@@ -80,6 +80,7 @@ DEPDIR = @DEPDIR@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -219,6 +220,7 @@ MSGFMT_OPTS = @MSGFMT_OPTS@
 MS_LIB_AVAILABLE_FALSE = @MS_LIB_AVAILABLE_FALSE@
 MS_LIB_AVAILABLE_TRUE = @MS_LIB_AVAILABLE_TRUE@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OS_LINUX_FALSE = @OS_LINUX_FALSE@
@@ -334,7 +336,7 @@ SUBDIRS = pixops
 @PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
 
 @OS_WIN32_TRUE@gdk_pixbuf_def = gdk_pixbuf.def
-@OS_WIN32_TRUE@gdk_pixbuf_symbols = -export-symbols gdk_pixbuf.def
+@OS_WIN32_TRUE@gdk_pixbuf_symbols = -export-symbols $(srcdir)/gdk_pixbuf.def
 
 @OS_WIN32_TRUE@gdk_pixbuf_win32_res = gdk_pixbuf-win32-res.o
 @OS_WIN32_TRUE@gdk_pixbuf_win32_res_ldflag = -Wl,gdk_pixbuf-win32-res.o
@@ -1547,7 +1549,7 @@ uninstall-info: uninstall-info-recursive
 @OS_WIN32_TRUE@	$(WINDRES) gdk_pixbuf.rc $@
 
 @OS_WIN32_TRUE@install-def-file:
-@OS_WIN32_TRUE@	$(INSTALL) gdk_pixbuf.def $(DESTDIR)$(libdir)/gdk_pixbuf-$(GTK_API_VERSION).def
+@OS_WIN32_TRUE@	$(INSTALL) $(srcdir)/gdk_pixbuf.def $(DESTDIR)$(libdir)/gdk_pixbuf-$(GTK_API_VERSION).def
 @OS_WIN32_TRUE@uninstall-def-file:
 @OS_WIN32_TRUE@	-rm $(DESTDIR)$(libdir)/gdk_pixbuf-$(GTK_API_VERSION).def
 @OS_WIN32_FALSE@install-def-file:
@@ -1564,8 +1566,10 @@ uninstall-info: uninstall-info-recursive
 @MS_LIB_AVAILABLE_FALSE@install-ms-lib:
 @MS_LIB_AVAILABLE_FALSE@uninstall-ms-lib:
 
+# This places the generated .def file in srcdir, since it is expected to be there.
+# (The one from a tarball is)
 gdk_pixbuf.def: gdk-pixbuf.symbols
-	(echo -e EXPORTS; $(CPP) -P -DINCLUDE_VARIABLES -DG_OS_WIN32 -DALL_FILES - <$(srcdir)/gdk-pixbuf.symbols | sed -e '/^$$/d' -e 's/^/	/' -e 's/G_GNUC_[^ ]*//g') > gdk_pixbuf.def
+	(echo -e EXPORTS; $(CPP) -P -DINCLUDE_VARIABLES -DG_OS_WIN32 -DALL_FILES - <$(srcdir)/gdk-pixbuf.symbols | sed -e '/^$$/d' -e 's/^/	/' -e 's/G_GNUC_[^ ]*//g') > $(srcdir)/gdk_pixbuf.def
 
 gdk-pixbuf-alias.h: gdk-pixbuf.symbols
 	 $(PERL) $(srcdir)/makegdkpixbufalias.pl < $(srcdir)/gdk-pixbuf.symbols > gdk-pixbuf-alias.h
