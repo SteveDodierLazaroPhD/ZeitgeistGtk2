@@ -17,6 +17,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_IM_CONTEXT_SIMPLE_H__
 #define __GTK_IM_CONTEXT_SIMPLE_H__
 
@@ -38,13 +42,13 @@ typedef struct _GtkIMContextSimple       GtkIMContextSimple;
 typedef struct _GtkIMContextSimpleClass  GtkIMContextSimpleClass;
 
 #define GTK_MAX_COMPOSE_LEN 7
-  
+
 struct _GtkIMContextSimple
 {
   GtkIMContext object;
 
   GSList *tables;
-  
+
   guint compose_buffer[GTK_MAX_COMPOSE_LEN + 1];
   gunichar tentative_match;
   gint tentative_match_len;

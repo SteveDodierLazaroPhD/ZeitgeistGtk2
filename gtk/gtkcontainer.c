@@ -537,8 +537,8 @@ container_set_child_property (GtkContainer       *container,
  * @container: a #GtkContainer
  * @child: a widget which is a child of @container
  * @first_property_name: the name of the first property to get
- * @var_args: a %NULL-terminated list of property names and #GValue*, 
- *           starting with @first_prop_name.
+ * @var_args: return location for the first property, followed 
+ *     optionally by more name/return location pairs, followed by %NULL
  * 
  * Gets the values of one or more child properties for @child and @container.
  **/
@@ -871,8 +871,8 @@ gtk_container_child_set (GtkContainer      *container,
  * @container: a #GtkContainer
  * @child: a widget which is a child of @container
  * @first_prop_name: the name of the first property to get
- * @Varargs: a %NULL-terminated list of property names and #GValue*, 
- *           starting with @first_prop_name
+ * @Varargs: return location for the first property, followed 
+ *     optionally by more name/return location pairs, followed by %NULL
  * 
  * Gets the values of one or more child properties for @child and @container.
  **/
@@ -1537,6 +1537,17 @@ gtk_container_foreach_full (GtkContainer       *container,
     notify (callback_data);
 }
 
+/**
+ * gtk_container_set_focus_child:
+ * @container: a #GtkContainer
+ * @widget: a #GtkWidget, or %NULL
+ *
+ * Sets, or unsets if @widget is %NULL, the focused child of @container.
+ *
+ * This function emits the GtkContainer::set_focus_child signal of
+ * @container. Implementations of #GtkContainer can override the
+ * default behaviour by overriding the class closure of this signal.
+ */
 void
 gtk_container_set_focus_child (GtkContainer *container,
 			       GtkWidget    *widget)
@@ -1867,8 +1878,8 @@ old_focus_coords (GtkContainer *container,
 {
   GtkWidget *widget = GTK_WIDGET (container);
   GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
-  
-  if (toplevel && GTK_IS_WINDOW (toplevel) && GTK_WINDOW (toplevel)->focus_widget)
+
+  if (GTK_IS_WINDOW (toplevel) && GTK_WINDOW (toplevel)->focus_widget)
     {
       GtkWidget *old_focus = GTK_WINDOW (toplevel)->focus_widget;
       

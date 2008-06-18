@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkPrintOperation</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="Printing.html" title="Printing">
 <link rel="prev" href="Printing.html" title="Printing">
 <link rel="next" href="GtkPrintContext.html" title="GtkPrintContext">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -297,6 +298,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-preview" title='The "preview" signal'>preview</a>"                                        : Run Last
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-request-page-setup" title='The "request-page-setup" signal'>request-page-setup</a>"                             : Run Last
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-status-changed" title='The "status-changed" signal'>status-changed</a>"                                 : Run Last
+  "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperationPreview-got-page-size" title='The "got-page-size" signal'>got-page-size</a>"                                  : Run Last
+  "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperationPreview-ready" title='The "ready" signal'>ready</a>"                                          : Run Last
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -324,7 +327,7 @@ When the user finished the dialog various signals will be emitted on the
 to catch and render the page on the provided <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> using Cairo.
 </p>
 <div class="example">
-<a name="id3789420"></a><p class="title"><b>Example 39. The high-level printing API</b></p>
+<a name="id3720733"></a><p class="title"><b>Example 41. The high-level printing API</b></p>
 <div class="example-contents"><pre class="programlisting">
 static GtkPrintSettings *settings = NULL;
 
@@ -1154,8 +1157,6 @@ platform. The <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOpe
 operation results when the operation is done (i.e. when the dialog is 
 canceled, or when the print succeeds or fails).
 </p>
-<p>
-</p>
 <div class="informalexample"><pre class="programlisting">
 if (settings != NULL)
   gtk_print_operation_set_print_settings (print, settings);
@@ -1168,7 +1169,10 @@ g_signal_connect (print, "begin-print",
 g_signal_connect (print, "draw-page", 
                   G_CALLBACK (draw_page), &amp;data);
  
-res = gtk_print_operation_run (print, GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, parent, &amp;error);
+res = gtk_print_operation_run (print, 
+                               GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, 
+                               parent, 
+                               &amp;error);
  
 if (res == GTK_PRINT_OPERATION_RESULT_ERROR)
  {
@@ -2107,8 +2111,6 @@ Emitted for every page that is printed. The signal handler
 must render the <em class="parameter"><code>page_nr</code></em>'s page onto the cairo context obtained
 from <em class="parameter"><code>context</code></em> using <a class="link" href="GtkPrintContext.html#gtk-print-context-get-cairo-context" title="gtk_print_context_get_cairo_context ()"><code class="function">gtk_print_context_get_cairo_context()</code></a>.
 </p>
-<p>
-</p>
 <div class="informalexample"><pre class="programlisting">
 static void
 draw_page (GtkPrintOperation *operation,
@@ -2447,6 +2449,76 @@ status.</p>
 </table></div>
 <p>Since  2.10
 </p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkPrintOperationPreview-got-page-size"></a><h3>The <code class="literal">"got-page-size"</code> signal</h3>
+<pre class="programlisting">void                user_function                      (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperationPreview">GtkPrintOperationPreview</a> *printoperationpreview,
+                                                        <a class="link" href="GtkPrintContext.html" title="GtkPrintContext">GtkPrintContext</a>          *arg1,
+                                                        <a class="link" href="GtkPageSetup.html" title="GtkPageSetup">GtkPageSetup</a>             *arg2,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>                  user_data)                  : Run Last</pre>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>printoperationpreview</code></em> :</span></p></td>
+<td>the object which received the signal.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>arg2</code></em> :</span></p></td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkPrintOperationPreview-ready"></a><h3>The <code class="literal">"ready"</code> signal</h3>
+<pre class="programlisting">void                user_function                      (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperationPreview">GtkPrintOperationPreview</a> *printoperationpreview,
+                                                        <a class="link" href="GtkPrintContext.html" title="GtkPrintContext">GtkPrintContext</a>          *arg1,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>                  user_data)                  : Run Last</pre>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>printoperationpreview</code></em> :</span></p></td>
+<td>the object which received the signal.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 </div>
 <div class="refsect1" lang="en">

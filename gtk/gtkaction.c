@@ -119,9 +119,7 @@ G_DEFINE_TYPE_WITH_CODE (GtkAction, gtk_action, G_TYPE_OBJECT,
 						gtk_action_buildable_init))
 
 
-static GQuark      accel_path_id  = 0;
 static GQuark      quark_gtk_action_proxy  = 0;
-static const gchar accel_path_key[] = "GtkAction::accel_path";
 static const gchar gtk_action_proxy_key[] = "gtk-action";
 
 static void gtk_action_finalize     (GObject *object);
@@ -176,7 +174,6 @@ gtk_action_class_init (GtkActionClass *klass)
 {
   GObjectClass *gobject_class;
 
-  accel_path_id = g_quark_from_static_string (accel_path_key);
   quark_gtk_action_proxy = g_quark_from_static_string (gtk_action_proxy_key);
 
   gobject_class = G_OBJECT_CLASS (klass);
@@ -820,7 +817,12 @@ connect_proxy (GtkAction     *action,
 	}
       else 
 	{
-	  if (GTK_BIN (proxy)->child == NULL || 
+	  GtkWidget *image;
+
+	  image = gtk_button_get_image (GTK_BUTTON (proxy));
+
+	  if (GTK_IS_IMAGE (image) ||
+	      GTK_BIN (proxy)->child == NULL || 
 	      GTK_IS_LABEL (GTK_BIN (proxy)->child))
 	    {
 	      /* synchronise the label */
@@ -829,6 +831,12 @@ connect_proxy (GtkAction     *action,
 			    "use-underline", TRUE,
 			    NULL);
 	    }
+
+	  if (GTK_IS_IMAGE (image) &&
+	      (gtk_image_get_storage_type (GTK_IMAGE (image)) == GTK_IMAGE_EMPTY ||
+	       gtk_image_get_storage_type (GTK_IMAGE (image)) == GTK_IMAGE_ICON_NAME))
+	    gtk_image_set_from_icon_name (GTK_IMAGE (image),
+					  action->private_data->icon_name, GTK_ICON_SIZE_MENU);
 	}
       /* we leave the button alone if there is a custom child */
       g_signal_connect_object (proxy, "clicked",
@@ -1377,15 +1385,20 @@ gtk_action_set_short_label (GtkAction	*action,
       proxy = (GtkWidget *)p->data;
 
       if (GTK_IS_TOOL_BUTTON (proxy))
-	gtk_tool_button_set_label (GTK_TOOL_BUTTON (proxy), 
+	gtk_tool_button_set_label (GTK_TOOL_BUTTON (proxy),
 				   action->private_data->short_label);
       else if (GTK_IS_BUTTON (proxy) &&
 	       !gtk_button_get_use_stock (GTK_BUTTON (proxy)))
 	{
+	  GtkWidget *image;
+
 	  child = GTK_BIN (proxy)->child;
-	  
-	  if (child == NULL || GTK_IS_LABEL (child))
-	    gtk_button_set_label (GTK_BUTTON (proxy), 
+
+	  image = gtk_button_get_image (GTK_BUTTON (proxy));
+
+	  if (GTK_IS_IMAGE (image) ||
+	      child == NULL || GTK_IS_LABEL (child))
+	    gtk_button_set_label (GTK_BUTTON (proxy),
 				  action->private_data->short_label);
 	}
     }
@@ -1645,8 +1658,6 @@ static void
 gtk_action_set_action_group (GtkAction	    *action,
 			     GtkActionGroup *action_group)
 {
-  g_return_if_fail (GTK_IS_ACTION (action));
-
   if (action->private_data->action_group == NULL)
     g_return_if_fail (GTK_IS_ACTION_GROUP (action_group));
   else
@@ -1663,6 +1674,10 @@ gtk_action_set_action_group (GtkAction	    *action,
  * Sets the accel path for this action.  All proxy widgets associated
  * with the action will have this accel path, so that their
  * accelerators are consistent.
+ *
+ * Note that @accel_path string will be stored in a #GQuark. Therefore, if you
+ * pass a static string, you can save some memory by interning it first with 
+ * g_intern_static_string().
  *
  * Since: 2.4
  */

@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkTreeModelSort</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkTreeSortable.html" title="GtkTreeSortable">
 <link rel="next" href="GtkTreeModelFilter.html" title="GtkTreeModelFilter">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -99,7 +100,9 @@
 <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a>*        <a class="link" href="GtkTreeModelSort.html#gtk-tree-model-sort-convert-child-path-to-path" title="gtk_tree_model_sort_convert_child_path_to_path ()">gtk_tree_model_sort_convert_child_path_to_path</a>
                                                         (<a class="link" href="GtkTreeModelSort.html" title="GtkTreeModelSort">GtkTreeModelSort</a> *tree_model_sort,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *child_path);
-void                <a class="link" href="GtkTreeModelSort.html#gtk-tree-model-sort-convert-child-iter-to-iter" title="gtk_tree_model_sort_convert_child_iter_to_iter ()">gtk_tree_model_sort_convert_child_iter_to_iter</a>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="GtkTreeModelSort.html#gtk-tree-model-sort-convert-child-iter-to-iter" title="gtk_tree_model_sort_convert_child_iter_to_iter ()">gtk_tree_model_sort_convert_child_iter_to_iter</a>
                                                         (<a class="link" href="GtkTreeModelSort.html" title="GtkTreeModelSort">GtkTreeModelSort</a> *tree_model_sort,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *sort_iter,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *child_iter);
@@ -163,7 +166,7 @@ sort the second.
 <p>
 </p>
 <div class="example">
-<a name="id3457197"></a><p class="title"><b>Example 18. Using a <span class="structname">GtkTreeModelSort</span></b></p>
+<a name="id3385184"></a><p class="title"><b>Example 20. Using a <span class="structname">GtkTreeModelSort</span></b></p>
 <div class="example-contents"><pre class="programlisting">
 {
   GtkTreeView *tree_view1;
@@ -203,7 +206,7 @@ child model, and change the row there.
 <p>
 </p>
 <div class="example">
-<a name="id3457246"></a><p class="title"><b>Example 19. Accessing the child model of in a selection changed callback</b></p>
+<a name="id3385233"></a><p class="title"><b>Example 21. Accessing the child model of in a selection changed callback</b></p>
 <div class="example-contents"><pre class="programlisting">
 void
 selection_changed (GtkTreeSelection *selection, gpointer data)
@@ -353,13 +356,18 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-tree-model-sort-convert-child-iter-to-iter"></a><h3>gtk_tree_model_sort_convert_child_iter_to_iter ()</h3>
-<pre class="programlisting">void                gtk_tree_model_sort_convert_child_iter_to_iter
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            gtk_tree_model_sort_convert_child_iter_to_iter
                                                         (<a class="link" href="GtkTreeModelSort.html" title="GtkTreeModelSort">GtkTreeModelSort</a> *tree_model_sort,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *sort_iter,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *child_iter);</pre>
 <p>
 Sets <em class="parameter"><code>sort_iter</code></em> to point to the row in <em class="parameter"><code>tree_model_sort</code></em> that corresponds to
-the row pointed at by <em class="parameter"><code>child_iter</code></em>.</p>
+the row pointed at by <em class="parameter"><code>child_iter</code></em>.  If <em class="parameter"><code>sort_iter</code></em> was not set, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>
+is returned.  Note: a boolean is only returned since 2.14.</p>
 <p>
 
 </p>
@@ -379,6 +387,14 @@ the row pointed at by <em class="parameter"><code>child_iter</code></em>.</p>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>child_iter</code></em> :</span></p></td>
 <td> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> pointing to a row on the child model
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>sort_iter</code></em> was set, i.e. if <em class="parameter"><code>sort_iter</code></em> is a
+valid iterator pointer to a visible row in the child model.
 </td>
 </tr>
 </tbody>

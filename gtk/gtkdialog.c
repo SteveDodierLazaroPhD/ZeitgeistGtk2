@@ -133,6 +133,11 @@ gtk_dialog_class_init (GtkDialogClass *class)
   
   g_type_class_add_private (gobject_class, sizeof (GtkDialogPrivate));
 
+  /**
+   * GtkDialog:has-separator:
+   *
+   * When %TRUE, the dialog has a separator bar above its buttons.
+   */
   g_object_class_install_property (gobject_class,
                                    PROP_HAS_SEPARATOR,
                                    g_param_spec_boolean ("has-separator",
@@ -140,7 +145,17 @@ gtk_dialog_class_init (GtkDialogClass *class)
 							 P_("The dialog has a separator bar above its buttons"),
                                                          TRUE,
                                                          GTK_PARAM_READWRITE));
-  
+
+  /**
+   * GtkDialog::response:
+   * @dialog: the object on which the signal is emitted
+   * @response_id: the response ID
+   * 
+   * Emitted when an action widget is clicked, the dialog receives a 
+   * delete event, or the application programmer calls gtk_dialog_response(). 
+   * On a delete event, the response ID is #GTK_RESPONSE_DELETE_EVENT. 
+   * Otherwise, it depends on which action widget was clicked.
+   */
   dialog_signals[RESPONSE] =
     g_signal_new (I_("response"),
 		  G_OBJECT_CLASS_TYPE (class),
@@ -151,6 +166,16 @@ gtk_dialog_class_init (GtkDialogClass *class)
 		  G_TYPE_NONE, 1,
 		  G_TYPE_INT);
 
+  /**
+   * GtkDialog::close:
+   *
+   * The ::close signal is a 
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which getrs emitted when the user uses a keybinding to close
+   * the dialog.
+   *
+   * The default binding for this signal is the Escape key.
+   */ 
   dialog_signals[CLOSE] =
     g_signal_new (I_("close"),
 		  G_OBJECT_CLASS_TYPE (class),
@@ -188,8 +213,7 @@ gtk_dialog_class_init (GtkDialogClass *class)
 
   binding_set = gtk_binding_set_by_class (class);
   
-  gtk_binding_entry_add_signal (binding_set, GDK_Escape, 0,
-                                "close", 0);
+  gtk_binding_entry_add_signal (binding_set, GDK_Escape, 0, "close", 0);
 }
 
 static void
@@ -277,7 +301,9 @@ gtk_dialog_buildable_get_internal_child (GtkBuildable *buildable,
     else if (strcmp (childname, "action_area") == 0)
       return G_OBJECT (GTK_DIALOG (buildable)->action_area);
 
-    return NULL;
+    return parent_buildable_iface->get_internal_child (buildable,
+						       builder,
+						       childname);
 }
 
 static void 
@@ -506,7 +532,7 @@ gtk_dialog_new_empty (const gchar     *title,
  * so the first button in the list will be the leftmost button in the dialog.
  *
  * Here's a simple example:
- * <informalexample><programlisting>
+ * |[
  *  GtkWidget *dialog = gtk_dialog_new_with_buttons ("My dialog",
  *                                                   main_app_window,
  *                                                   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -515,7 +541,7 @@ gtk_dialog_new_empty (const gchar     *title,
  *                                                   GTK_STOCK_CANCEL,
  *                                                   GTK_RESPONSE_REJECT,
  *                                                   NULL);
- * </programlisting></informalexample>
+ * ]|
  * 
  * Return value: a new #GtkDialog
  **/
@@ -968,19 +994,19 @@ run_destroy_handler (GtkDialog *dialog, gpointer data)
  * destroying the dialog if you wish to do so.
  *
  * Typical usage of this function might be:
- * <informalexample><programlisting>
+ * |[
  *   gint result = gtk_dialog_run (GTK_DIALOG (dialog));
  *   switch (result)
  *     {
  *       case GTK_RESPONSE_ACCEPT:
- *          do_application_specific_something (<!-- -->);
+ *          do_application_specific_something ();
  *          break;
  *       default:
- *          do_nothing_since_dialog_was_cancelled (<!-- -->);
+ *          do_nothing_since_dialog_was_cancelled ();
  *          break;
  *     }
  *   gtk_widget_destroy (dialog);
- * </programlisting></informalexample>
+ * ]|
  * 
  * Note that even though the recursive main loop gives the effect of a
  * modal dialog (it prevents the user from interacting with other 
@@ -1174,7 +1200,7 @@ gtk_dialog_set_alternative_button_order_valist (GtkDialog *dialog,
  *
  * Use this function after adding all the buttons to your dialog, as the 
  * following example shows:
- * <informalexample><programlisting>
+ * |[
  * cancel_button = gtk_dialog_add_button (GTK_DIALOG (dialog),
  *                                        GTK_STOCK_CANCEL,
  *                                        GTK_RESPONSE_CANCEL);
@@ -1194,7 +1220,7 @@ gtk_dialog_set_alternative_button_order_valist (GtkDialog *dialog,
  *                                          GTK_RESPONSE_CANCEL,
  *                                          GTK_RESPONSE_HELP,
  *                                          -1);
- * </programlisting></informalexample>
+ * ]|
  * 
  * Since: 2.6
  */

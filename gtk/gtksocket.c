@@ -303,13 +303,10 @@ gtk_socket_get_id (GtkSocket *socket)
 static void
 gtk_socket_realize (GtkWidget *widget)
 {
-  GtkSocket *socket;
+  GtkSocket *socket = GTK_SOCKET (widget);
   GdkWindowAttr attributes;
   gint attributes_mask;
 
-  g_return_if_fail (GTK_IS_SOCKET (widget));
-
-  socket = GTK_SOCKET (widget);
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
 
   attributes.window_type = GDK_WINDOW_CHILD;
@@ -337,8 +334,6 @@ gtk_socket_realize (GtkWidget *widget)
 			 _gtk_socket_windowing_filter_func,
 			 widget);
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
-
   /* We sync here so that we make sure that if the XID for
    * our window is passed to another application, SubstructureRedirectMask
    * will be set by the time the other app creates its window.
@@ -360,7 +355,7 @@ _gtk_socket_end_embedding (GtkSocket *socket)
   GtkWidget *toplevel = gtk_widget_get_toplevel (GTK_WIDGET (socket));
   gint i;
   
-  if (toplevel && GTK_IS_WINDOW (toplevel))
+  if (GTK_IS_WINDOW (toplevel))
     _gtk_socket_windowing_end_embedding_toplevel (socket);
 
   g_object_unref (socket->plug_window);
@@ -429,12 +424,7 @@ static void
 gtk_socket_size_allocate (GtkWidget     *widget,
 			  GtkAllocation *allocation)
 {
-  GtkSocket *socket;
-
-  g_return_if_fail (GTK_IS_SOCKET (widget));
-  g_return_if_fail (allocation != NULL);
-
-  socket = GTK_SOCKET (widget);
+  GtkSocket *socket = GTK_SOCKET (widget);
 
   widget->allocation = *allocation;
   if (GTK_WIDGET_REALIZED (widget))
@@ -749,11 +739,7 @@ static gboolean
 gtk_socket_focus (GtkWidget       *widget,
 		  GtkDirectionType direction)
 {
-  GtkSocket *socket;
-
-  g_return_val_if_fail (GTK_IS_SOCKET (widget), FALSE);
-  
-  socket = GTK_SOCKET (widget);
+  GtkSocket *socket = GTK_SOCKET (widget);
 
   if (socket->plug_widget)
     return gtk_widget_child_focus (socket->plug_widget, direction);
@@ -890,7 +876,7 @@ _gtk_socket_add_window (GtkSocket       *socket,
       /* Add a pointer to the socket on our toplevel window */
 
       toplevel = gtk_widget_get_toplevel (GTK_WIDGET (socket));
-      if (toplevel && GTK_IS_WINDOW (toplevel))
+      if (GTK_IS_WINDOW (toplevel))
 	gtk_window_add_embedded_xid (GTK_WINDOW (toplevel), xid);
 
       _gtk_socket_windowing_embed_notify (socket);

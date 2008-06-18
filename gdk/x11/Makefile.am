@@ -1,4 +1,5 @@
 ## Process this file with automake to produce Makefile.in
+include $(top_srcdir)/Makefile.decl
 
 libgdkincludedir = $(includedir)/gtk-2.0/gdk
 
@@ -18,6 +19,7 @@ noinst_LTLIBRARIES = libgdk-x11.la
 
 libgdk_x11_la_SOURCES =    	\
 	MwmUtil.h	   	\
+	gdkapplaunchcontext-x11.c \
 	gdkasync.c		\
 	gdkasync.h		\
 	gdkcolor-x11.c	   	\
@@ -44,6 +46,7 @@ libgdk_x11_la_SOURCES =    	\
 	gdkscreen-x11.h		\
 	gdkselection-x11.c 	\
 	gdkspawn-x11.c		\
+	gdktestutils-x11.c	\
 	gdkvisual-x11.c	   	\
 	gdkwindow-x11.c    	\
 	gdkwindow-x11.h		\
@@ -75,7 +78,7 @@ TESTS = checksettings
 
 # We need to include all these C files here since the conditionals
 # don't seem to be correctly expanded for the dist files.
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	gdkinput-x11.c		\
 	gdkinput-xfree.c	\
 	gdkinput-none.c		\

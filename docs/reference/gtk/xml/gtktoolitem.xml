@@ -7,7 +7,7 @@
 
 <refnamediv>
 <refname>GtkToolItem</refname>
-<refpurpose>The base class of widgets that can be added to GtkToolbar</refpurpose>
+<refpurpose>The base class of widgets that can be added to <link linkend="GtkToolShell"><type>GtkToolShell</type></link></refpurpose>
 <!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
@@ -60,6 +60,7 @@
                                                          const <link linkend="gchar">gchar</link> *menu_item_id,
                                                          <link linkend="GtkWidget">GtkWidget</link> *menu_item);
 <link linkend="void">void</link>                <link linkend="gtk-tool-item-rebuild-menu">gtk_tool_item_rebuild_menu</link>          (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);
+<link linkend="void">void</link>                <link linkend="gtk-tool-item-toolbar-reconfigured">gtk_tool_item_toolbar_reconfigured</link>  (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);
 </synopsis>
 </refsynopsisdiv>
 
@@ -121,8 +122,11 @@ widget to the tool item.
 For toolbar items that contain buttons, see the <link linkend="GtkToolButton"><type>GtkToolButton</type></link>,
 <link linkend="GtkToggleToolButton"><type>GtkToggleToolButton</type></link> and <link linkend="GtkRadioToolButton"><type>GtkRadioToolButton</type></link> classes.
 </para>
-See the <link linkend="GtkToolbar"><type>GtkToolbar</type></link> class for a description of the toolbar widget.
 <para>
+See the <link linkend="GtkToolbar"><type>GtkToolbar</type></link> class for a description of the toolbar widget, and
+<link linkend="GtkToolShell"><type>GtkToolShell</type></link> for a description of the tool shell interface.</para>
+<para>
+
 </para>
 </refsect1>
 
@@ -132,8 +136,10 @@ See the <link linkend="GtkToolbar"><type>GtkToolbar</type></link> class for a de
 <title>GtkToolItem</title>
 <indexterm zone="GtkToolItem-struct"><primary>GtkToolItem</primary></indexterm><programlisting>typedef struct _GtkToolItem GtkToolItem;</programlisting>
 <para>
-The GtkToolItem struct contains only private data. It should only be
-accessed through the functions described below.
+The GtkToolItem struct contains only private data.
+It should only be accessed through the functions described below.</para>
+<para>
+
 </para></refsect2>
 <refsect2 id="gtk-tool-item-new" role="function" condition="since:2.4">
 <title>gtk_tool_item_new ()</title>
@@ -622,6 +628,21 @@ signal.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.6
 </para></refsect2>
+<refsect2 id="gtk-tool-item-toolbar-reconfigured" role="function" condition="since:2.14">
+<title>gtk_tool_item_toolbar_reconfigured ()</title>
+<indexterm zone="gtk-tool-item-toolbar-reconfigured" role="2.14"><primary>gtk_tool_item_toolbar_reconfigured</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tool_item_toolbar_reconfigured  (<link linkend="GtkToolItem">GtkToolItem</link> *tool_item);</programlisting>
+<para>
+Emits the signal <link linkend="GtkToolItem-toolbar-reconfigured"><type>"toolbar_reconfigured"</type></link> on <parameter>tool_item</parameter>.
+<link linkend="GtkToolbar"><type>GtkToolbar</type></link> and other <link linkend="GtkToolShell"><type>GtkToolShell</type></link> implementations use this function
+to notify children, when some aspect of their configuration changes.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tool_item</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkToolItem"><type>GtkToolItem</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkToolItem.property-details" role="property_details">
@@ -718,10 +739,10 @@ This signal is emitted when some property of the toolbar that the
 item is a child of changes. For custom subclasses of <link linkend="GtkToolItem"><type>GtkToolItem</type></link>,
 the default handler of this signal use the functions
 <itemizedlist>
-<listitem><link linkend="gtk-toolbar-get-orientation"><function>gtk_toolbar_get_orientation()</function></link></listitem>
-<listitem><link linkend="gtk-toolbar-get-style"><function>gtk_toolbar_get_style()</function></link></listitem>
-<listitem><link linkend="gtk-toolbar-get-icon-size"><function>gtk_toolbar_get_icon_size()</function></link></listitem>
-<listitem><link linkend="gtk-toolbar-get-relief-style"><function>gtk_toolbar_get_relief_style()</function></link></listitem>
+<listitem><link linkend="gtk-tool-shell-get-orientation"><function>gtk_tool_shell_get_orientation()</function></link></listitem>
+<listitem><link linkend="gtk-tool-shell-get-style"><function>gtk_tool_shell_get_style()</function></link></listitem>
+<listitem><link linkend="gtk-tool-shell-get-icon-size"><function>gtk_tool_shell_get_icon_size()</function></link></listitem>
+<listitem><link linkend="gtk-tool-shell-get-relief-style"><function>gtk_tool_shell_get_relief_style()</function></link></listitem>
 </itemizedlist>
 to find out what the toolbar should look like and change
 themselves accordingly.</para>

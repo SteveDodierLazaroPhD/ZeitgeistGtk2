@@ -26,10 +26,6 @@
 
 #include <string.h>
 
-#include <gdk/gdkcolor.h>
-#include <gdk/gdkcursor.h>
-#include <gdk/gdkdisplay.h>
-
 #include "gtkclipboard.h"
 #include "gtkdnd.h"
 #include "gtkimagemenuitem.h"
@@ -38,6 +34,7 @@
 #include "gtkmenu.h"
 #include "gtkmenuitem.h"
 #include "gtkstock.h"
+#include "gtktooltip.h"
 
 #include "gtklinkbutton.h"
 
@@ -57,7 +54,7 @@ struct _GtkLinkButtonPrivate
 enum
 {
   PROP_0,
-  
+
   PROP_URI
 };
 
@@ -92,6 +89,12 @@ static void gtk_link_button_drag_data_get_cb (GtkWidget        *widget,
 					      guint             _info,
 					      guint             _time,
 					      gpointer          user_data);
+static gboolean gtk_link_button_query_tooltip_cb (GtkWidget    *widget,
+                                                  gint          x,
+                                                  gint          y,
+                                                  gboolean      keyboard_tip,
+                                                  GtkTooltip   *tooltip,
+                                                  gpointer      data);
 
 
 static const GtkTargetEntry link_drop_types[] = {
@@ -131,7 +134,7 @@ gtk_link_button_class_init (GtkLinkButtonClass *klass)
   /**
    * GtkLinkButton:uri
    * 
-   * The URI bound to this button.
+   * The URI bound to this button. 
    *
    * Since: 2.10
    */
@@ -140,7 +143,7 @@ gtk_link_button_class_init (GtkLinkButtonClass *klass)
   				   g_param_spec_string ("uri",
   				   			_("URI"),
   				   			_("The URI bound to this button"),
-  				   			"http://www.gtk.org",
+  				   			NULL,
   				   			G_PARAM_READWRITE));
   
   g_type_class_add_private (gobject_class, sizeof (GtkLinkButtonPrivate));
@@ -159,6 +162,9 @@ gtk_link_button_init (GtkLinkButton *link_button)
   		    G_CALLBACK (gtk_link_button_leave_cb), NULL);
   g_signal_connect (link_button, "drag_data_get",
   		    G_CALLBACK (gtk_link_button_drag_data_get_cb), NULL);
+  g_object_set (link_button, "has-tooltip", TRUE, NULL);
+  g_signal_connect (link_button, "query-tooltip",
+                    G_CALLBACK (gtk_link_button_query_tooltip_cb), NULL);
   
   /* enable drag source */
   gtk_drag_source_set (GTK_WIDGET (link_button),
@@ -225,19 +231,19 @@ set_link_color (GtkLinkButton *link_button)
 
   if (link_button->priv->visited)
     {
-      gtk_widget_style_get (GTK_WIDGET (link_button), 
+      gtk_widget_style_get (GTK_WIDGET (link_button),
 			    "visited-link-color", &link_color, NULL);
       if (!link_color)
-	link_color = &default_visited_link_color;
+	link_color = (GdkColor *) &default_visited_link_color;
     }
   else
     {
-      gtk_widget_style_get (GTK_WIDGET (link_button), 
+      gtk_widget_style_get (GTK_WIDGET (link_button),
 			    "link-color", &link_color, NULL);
       if (!link_color)
-	link_color = &default_link_color;
+	link_color = (GdkColor *) &default_link_color;
     }
-  
+
   gtk_widget_modify_fg (label, GTK_STATE_NORMAL, link_color);
   gtk_widget_modify_fg (label, GTK_STATE_ACTIVE, link_color);
   gtk_widget_modify_fg (label, GTK_STATE_PRELIGHT, link_color);
@@ -538,8 +544,8 @@ gtk_link_button_new (const gchar *uri)
     }
   
   retval = g_object_new (GTK_TYPE_LINK_BUTTON,
-  			 "uri", uri,
   			 "label", utf8_uri,
+  			 "uri", uri,
   			 NULL);
   
   g_free (utf8_uri);
@@ -577,6 +583,30 @@ gtk_link_button_new_with_label (const gchar *uri,
   return retval;
 }
 
+static gboolean 
+gtk_link_button_query_tooltip_cb (GtkWidget    *widget,
+                                  gint          x,
+                                  gint          y,
+                                  gboolean      keyboard_tip,
+                                  GtkTooltip   *tooltip,
+                                  gpointer      data)
+{
+  GtkLinkButton *link_button = GTK_LINK_BUTTON (widget);
+  const gchar *label, *uri;
+
+  label = gtk_button_get_label (GTK_BUTTON (link_button));
+  uri = link_button->priv->uri;
+
+  if (label && *label != '\0' && uri && strcmp (label, uri) != 0)
+    {
+      gtk_tooltip_set_text (tooltip, uri);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+
 /**
  * gtk_link_button_set_uri:
  * @link_button: a #GtkLinkButton
@@ -590,17 +620,18 @@ void
 gtk_link_button_set_uri (GtkLinkButton *link_button,
 			 const gchar   *uri)
 {
-  gchar *tmp;
+  GtkLinkButtonPrivate *priv;
 
   g_return_if_fail (GTK_IS_LINK_BUTTON (link_button));
   g_return_if_fail (uri != NULL);
-  
-  tmp = link_button->priv->uri;
-  link_button->priv->uri = g_strdup (uri);
-  g_free (tmp);
 
-  link_button->priv->visited = FALSE;
-  
+  priv = link_button->priv;
+
+  g_free (priv->uri);
+  priv->uri = g_strdup (uri);
+
+  priv->visited = FALSE;
+
   g_object_notify (G_OBJECT (link_button), "uri");
 }
 

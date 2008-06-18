@@ -373,12 +373,17 @@ EXPORTS
 	gtk_calendar_thaw
 	gtk_calendar_clear_marks
 	gtk_calendar_get_date
+	gtk_calendar_get_detail_height_rows
+	gtk_calendar_get_detail_width_chars
 	gtk_calendar_get_display_options
 	gtk_calendar_get_type 
 	gtk_calendar_mark_day
 	gtk_calendar_new
 	gtk_calendar_select_day
 	gtk_calendar_select_month
+	gtk_calendar_set_detail_func
+	gtk_calendar_set_detail_height_rows
+	gtk_calendar_set_detail_width_chars
 	gtk_calendar_set_display_options
 	gtk_calendar_unmark_day
 	gtk_cell_editable_editing_done
@@ -823,6 +828,7 @@ EXPORTS
 	gtk_status_icon_is_embedded
 	gtk_status_icon_position_menu
 	gtk_status_icon_get_geometry
+	gtk_status_icon_get_x11_window_id
 	gtk_draw_arrow
 	gtk_draw_box
 	gtk_draw_box_gap
@@ -870,6 +876,7 @@ EXPORTS
 	gtk_paint_slider
 	gtk_paint_tab
 	gtk_paint_vline
+	gtk_border_new 
 	gtk_border_copy
 	gtk_border_free
 	gtk_border_get_type 
@@ -1068,66 +1075,6 @@ EXPORTS
 	gtk_file_filter_get_type 
 	gtk_file_filter_new
 	gtk_file_filter_set_name
-	gtk_file_folder_get_info
-	gtk_file_folder_get_type 
-	gtk_file_folder_is_finished_loading
-	gtk_file_folder_list_children
-	gtk_file_info_copy
-	gtk_file_info_free
-	gtk_file_info_get_display_key
-	gtk_file_info_get_display_name
-	gtk_file_info_get_icon_name
-	gtk_file_info_get_is_folder
-	gtk_file_info_get_is_hidden
-	gtk_file_info_get_mime_type
-	gtk_file_info_get_modification_time
-	gtk_file_info_get_size
-	gtk_file_info_get_type 
-	gtk_file_info_new
-	gtk_file_info_render_icon
-	gtk_file_info_set_display_name
-	gtk_file_info_set_icon_name
-	gtk_file_info_set_is_folder
-	gtk_file_info_set_is_hidden
-	gtk_file_info_set_mime_type
-	gtk_file_info_set_modification_time
-	gtk_file_info_set_size
-	gtk_file_path_get_type 
-	gtk_file_paths_copy
-	gtk_file_paths_free
-	gtk_file_paths_sort
-	gtk_file_system_cancel_operation
-	gtk_file_system_create
-	gtk_file_system_create_folder
-	gtk_file_system_error_quark
-	gtk_file_system_filename_to_path
-	gtk_file_system_get_info
-	gtk_file_system_get_folder
-	gtk_file_system_get_parent
-	gtk_file_system_get_type 
-	gtk_file_system_get_volume_for_path
-	gtk_file_system_handle_get_type 
-	gtk_file_system_insert_bookmark
-	gtk_file_system_list_bookmarks
-	gtk_file_system_list_volumes
-	gtk_file_system_make_path
-	gtk_file_system_parse
-	gtk_file_system_path_is_local
-	gtk_file_system_path_to_filename
-	gtk_file_system_path_to_uri
-	gtk_file_system_remove_bookmark
-	gtk_file_system_uri_to_path
-	gtk_file_system_volume_free
-	gtk_file_system_volume_get_base_path
-	gtk_file_system_volume_get_display_name
-	gtk_file_system_volume_get_icon_name
-	gtk_file_system_volume_get_is_mounted
-	gtk_file_system_volume_mount
-	gtk_file_system_volume_render_icon
-	gtk_file_system_get_bookmark_label
-	gtk_file_system_set_bookmark_label
-	gtk_file_system_win32_get_type 
-	gtk_file_system_win32_new
 	gtk_file_selection_complete
 	gtk_file_selection_get_filename PRIVATE
 	gtk_file_selection_get_filename_utf8
@@ -1274,6 +1221,7 @@ EXPORTS
 	gtk_icon_source_set_state_wildcarded
 	gtk_icon_info_copy
 	gtk_icon_info_free
+	gtk_icon_info_new_for_pixbuf
 	gtk_icon_info_get_attach_points
 	gtk_icon_info_get_base_size
 	gtk_icon_info_get_builtin_pixbuf
@@ -1300,6 +1248,7 @@ EXPORTS
 	gtk_icon_theme_list_icons
 	gtk_icon_theme_load_icon
 	gtk_icon_theme_lookup_icon
+	gtk_icon_theme_lookup_by_gicon
 	gtk_icon_theme_choose_icon
 	gtk_icon_theme_new
 	gtk_icon_theme_prepend_search_path PRIVATE
@@ -1377,6 +1326,7 @@ EXPORTS
 	gtk_image_get_pixel_size
 	gtk_image_get_pixmap
 	gtk_image_get_stock
+	gtk_image_get_gicon
 	gtk_image_get_storage_type
 	gtk_image_get_type 
 	gtk_image_new
@@ -1389,6 +1339,7 @@ EXPORTS
 	gtk_image_new_from_pixbuf
 	gtk_image_new_from_pixmap
 	gtk_image_new_from_stock
+	gtk_image_new_from_gicon
 	gtk_image_set_from_animation
 	gtk_image_set_from_file PRIVATE
 	gtk_image_set_from_file_utf8
@@ -1398,6 +1349,7 @@ EXPORTS
 	gtk_image_set_from_pixbuf
 	gtk_image_set_from_pixmap
 	gtk_image_set_from_stock
+	gtk_image_set_from_gicon
 	gtk_image_set_pixel_size
 	gtk_image_menu_item_get_image
 	gtk_image_menu_item_get_type 
@@ -1722,6 +1674,13 @@ EXPORTS
 	gtk_misc_get_type 
 	gtk_misc_set_alignment
 	gtk_misc_set_padding
+	gtk_mount_operation_get_type 
+	gtk_mount_operation_new
+	gtk_mount_operation_is_showing
+	gtk_mount_operation_set_parent
+	gtk_mount_operation_get_parent
+	gtk_mount_operation_set_screen
+	gtk_mount_operation_get_screen
 	gtk_notebook_append_page
 	gtk_notebook_append_page_menu
 	gtk_notebook_get_current_page
@@ -1847,6 +1806,8 @@ EXPORTS
 	gtk_page_setup_new
 	gtk_page_setup_new_from_file
 	gtk_page_setup_new_from_key_file
+	gtk_page_setup_load_file
+	gtk_page_setup_load_key_file
 	gtk_page_setup_to_file
 	gtk_page_setup_to_key_file
 	gtk_page_setup_copy
@@ -1933,6 +1894,8 @@ EXPORTS
 	gtk_print_settings_new
 	gtk_print_settings_new_from_file
 	gtk_print_settings_new_from_key_file
+	gtk_print_settings_load_file
+	gtk_print_settings_load_key_file
 	gtk_print_settings_to_file
 	gtk_print_settings_to_key_file
 	gtk_print_settings_copy
@@ -2220,6 +2183,22 @@ EXPORTS
 	gtk_recent_info_is_local
 	gtk_recent_info_exists
 	gtk_recent_info_match
+	gtk_test_create_simple_window
+	gtk_test_create_widget
+	gtk_test_display_button_window
+	gtk_test_find_label
+	gtk_test_find_sibling
+	gtk_test_find_widget
+	gtk_test_init
+	gtk_test_register_all_types
+	gtk_test_list_all_types
+	gtk_test_slider_get_value
+	gtk_test_slider_set_perc
+	gtk_test_spin_button_click
+	gtk_test_text_get
+	gtk_test_text_set
+	gtk_test_widget_click
+	gtk_test_widget_send_key
 	gtk_text_buffer_deserialize
 	gtk_text_buffer_deserialize_get_can_create_tags
 	gtk_text_buffer_deserialize_set_can_create_tags
@@ -2354,6 +2333,7 @@ EXPORTS
 	gtk_size_group_remove_widget
 	gtk_size_group_set_ignore_hidden
 	gtk_size_group_set_mode
+	gtk_show_uri
 	gtk_socket_add_id
 	gtk_socket_get_id
 	gtk_socket_get_type 
@@ -2789,6 +2769,12 @@ EXPORTS
 	gtk_toolbar_set_style
 	gtk_toolbar_set_tooltips
 	gtk_toolbar_unset_style
+	gtk_tool_shell_get_type 
+	gtk_tool_shell_get_icon_size
+	gtk_tool_shell_get_orientation
+	gtk_tool_shell_get_style
+	gtk_tool_shell_get_relief_style
+	gtk_tool_shell_rebuild_menu
 	gtk_tool_button_get_icon_name
 	gtk_tool_button_get_icon_widget
 	gtk_tool_button_get_label
@@ -2829,10 +2815,12 @@ EXPORTS
 	gtk_tool_item_set_use_drag_window
 	gtk_tool_item_set_visible_horizontal
 	gtk_tool_item_set_visible_vertical
+	gtk_tool_item_toolbar_reconfigured
 	gtk_tooltip_get_type 
 	gtk_tooltip_set_custom
 	gtk_tooltip_set_icon
 	gtk_tooltip_set_icon_from_stock
+	gtk_tooltip_set_icon_from_icon_name
 	gtk_tooltip_set_markup
 	gtk_tooltip_set_text
 	gtk_tooltip_set_tip_area
@@ -3272,6 +3260,7 @@ EXPORTS
 	gtk_widget_get_screen
 	gtk_widget_get_settings
 	gtk_widget_get_size_request
+	gtk_widget_get_snapshot
 	gtk_widget_get_style
 	gtk_widget_get_tooltip_markup
 	gtk_widget_get_tooltip_text

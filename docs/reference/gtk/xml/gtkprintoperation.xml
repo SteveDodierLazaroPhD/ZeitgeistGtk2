@@ -167,6 +167,8 @@ GtkPrintOperationPreview is implemented by
   &quot;<link linkend="GtkPrintOperation-preview">preview</link>&quot;                                        : Run Last
   &quot;<link linkend="GtkPrintOperation-request-page-setup">request-page-setup</link>&quot;                             : Run Last
   &quot;<link linkend="GtkPrintOperation-status-changed">status-changed</link>&quot;                                 : Run Last
+  &quot;<link linkend="GtkPrintOperationPreview-got-page-size">got-page-size</link>&quot;                                  : Run Last
+  &quot;<link linkend="GtkPrintOperationPreview-ready">ready</link>&quot;                                          : Run Last
 </synopsis>
 </refsect1>
 
@@ -783,8 +785,6 @@ property the operation will run asyncronously if this is supported on the
 platform. The <link linkend="GtkPrintOperation-done"><type>"done"</type></link> signal will be emitted with the 
 operation results when the operation is done (i.e. when the dialog is 
 canceled, or when the print succeeds or fails).
-</para>
-<para>
 <informalexample><programlisting>
 if (settings != NULL)
   gtk_print_operation_set_print_settings (print, settings);
@@ -797,7 +797,10 @@ g_signal_connect (print, "begin-print",
 g_signal_connect (print, "draw-page", 
                   G_CALLBACK (draw_page), &amp;data);
  
-res = gtk_print_operation_run (print, GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, parent, &amp;error);
+res = gtk_print_operation_run (print, 
+                               GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, 
+                               parent, 
+                               &amp;error);
  
 if (res == GTK_PRINT_OPERATION_RESULT_ERROR)
  {
@@ -805,7 +808,7 @@ if (res == GTK_PRINT_OPERATION_RESULT_ERROR)
   			                     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_MESSAGE_ERROR,
 					     GTK_BUTTONS_CLOSE,
-					     "Error printing file:\n&percnt;s",
+					     "Error printing file:\n%s",
 					     error->message);
    g_signal_connect (error_dialog, "response", 
                      G_CALLBACK (gtk_widget_destroy), NULL);
@@ -1423,8 +1426,6 @@ after <link linkend="GtkPrintOperation-done"><type>"done"</type></link> was emit
 Emitted for every page that is printed. The signal handler
 must render the <parameter>page_nr</parameter>'s page onto the cairo context obtained
 from <parameter>context</parameter> using <link linkend="gtk-print-context-get-cairo-context"><function>gtk_print_context_get_cairo_context()</function></link>.
-</para>
-<para>
 <informalexample><programlisting>
 static void
 draw_page (GtkPrintOperation *operation,
@@ -1633,7 +1634,43 @@ status.</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
-</para></refsect2>
+</para></refsect2><refsect2 id="GtkPrintOperationPreview-got-page-size"><title>The <literal>&quot;got-page-size&quot;</literal> signal</title>
+<indexterm zone="GtkPrintOperationPreview-got-page-size"><primary>GtkPrintOperationPreview::got-page-size</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperationPreview">GtkPrintOperationPreview</link> *printoperationpreview,
+                                                        <link linkend="GtkPrintContext">GtkPrintContext</link>          *arg1,
+                                                        <link linkend="GtkPageSetup">GtkPageSetup</link>             *arg2,
+                                                        <link linkend="gpointer">gpointer</link>                  user_data)                  : Run Last</programlisting>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printoperationpreview</parameter>&nbsp;:</term>
+<listitem><simpara>the object which received the signal.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arg2</parameter>&nbsp;:</term>
+<listitem><simpara>
+
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="GtkPrintOperationPreview-ready"><title>The <literal>&quot;ready&quot;</literal> signal</title>
+<indexterm zone="GtkPrintOperationPreview-ready"><primary>GtkPrintOperationPreview::ready</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperationPreview">GtkPrintOperationPreview</link> *printoperationpreview,
+                                                        <link linkend="GtkPrintContext">GtkPrintContext</link>          *arg1,
+                                                        <link linkend="gpointer">gpointer</link>                  user_data)                  : Run Last</programlisting>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printoperationpreview</parameter>&nbsp;:</term>
+<listitem><simpara>the object which received the signal.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
+<listitem><simpara>
+
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 </refsect1>
 
 

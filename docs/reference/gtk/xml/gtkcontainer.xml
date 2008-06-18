@@ -561,10 +561,17 @@ redrawn if any of their children changed allocation.</para>
 <indexterm zone="gtk-container-set-focus-child"><primary>gtk_container_set_focus_child</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_child       (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child);</programlisting>
 <para>
+Sets, or unsets if <parameter>widget</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, the focused child of <parameter>container</parameter>.
+</para>
+<para>
+This function emits the GtkContainer::set_focus_child signal of
+<parameter>container</parameter>. Implementations of <link linkend="GtkContainer"><type>GtkContainer</type></link> can override the
+default behaviour by overriding the class closure of this signal.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>container</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> a <link linkend="GtkContainer"><type>GtkContainer</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>child</parameter>&nbsp;:</term>
 <listitem><simpara>
@@ -708,8 +715,8 @@ Gets the values of one or more child properties for <parameter>child</parameter>
 <listitem><simpara> the name of the first property to get
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>...</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="NULL:CAPS"><literal>NULL</literal></link>-terminated list of property names and <link linkend="GValue"><type>GValue</type></link>*, 
-          starting with <parameter>first_prop_name</parameter>
+<listitem><simpara> return location for the first property, followed 
+    optionally by more name/return location pairs, followed by <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-set" role="function">
@@ -806,8 +813,8 @@ Gets the values of one or more child properties for <parameter>child</parameter>
 <listitem><simpara> the name of the first property to get
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>var_args</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="NULL:CAPS"><literal>NULL</literal></link>-terminated list of property names and <link linkend="GValue"><type>GValue</type></link>*, 
-          starting with <parameter>first_prop_name</parameter>.
+<listitem><simpara> return location for the first property, followed 
+    optionally by more name/return location pairs, followed by <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-set-valist" role="function">

@@ -36,7 +36,6 @@
 #include "gtkiconfactory.h"
 #include "gtkimage.h"
 #include "gtktreeselection.h"
-#include "gtkmessagedialog.h"
 #include "gtknotebook.h"
 #include "gtkscrolledwindow.h"
 #include "gtkcombobox.h"
@@ -134,6 +133,7 @@ struct GtkPrintUnixDialogPrivate
   GtkTreeModelFilter *printer_list_filter;
 
   GtkPageSetup *page_setup;
+  gboolean page_setup_set;
 
   GtkWidget *all_pages_radio;
   GtkWidget *current_page_radio;
@@ -409,6 +409,7 @@ gtk_print_unix_dialog_init (GtkPrintUnixDialog *dialog)
   priv->current_page = -1;
 
   priv->page_setup = gtk_page_setup_new ();
+  priv->page_setup_set = FALSE;
 
   g_signal_connect (dialog, 
                     "destroy", 
@@ -430,6 +431,11 @@ gtk_print_unix_dialog_init (GtkPrintUnixDialog *dialog)
 			  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			  GTK_STOCK_PRINT, GTK_RESPONSE_OK,
                           NULL);
+  gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
+					   GTK_RESPONSE_APPLY,
+					   GTK_RESPONSE_OK,
+					   GTK_RESPONSE_CANCEL,
+					   -1);
 
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
   gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_OK, FALSE);
@@ -1444,6 +1450,20 @@ selected_printer_changed (GtkTreeSelection   *selection,
 
   if (printer != NULL)
     {
+      if (!priv->page_setup_set)
+	{
+	  /* if no explicit page setup has been set, use the printer default */	  
+  	  GtkPageSetup *page_setup;
+
+	  page_setup = gtk_printer_get_default_page_size (printer);
+
+	  if (!page_setup)
+	    page_setup = gtk_page_setup_new ();
+
+	  g_object_unref (priv->page_setup);
+	  priv->page_setup = page_setup;
+	}
+
       priv->printer_capabilities = gtk_printer_get_capabilities (printer);
       priv->options = _gtk_printer_get_options (printer, 
 						priv->initial_settings,
@@ -1533,6 +1553,8 @@ draw_collate_cb (GtkWidget	    *widget,
   text_x = rtl ? 4 : 11;
 
   cr = gdk_cairo_create (widget->window);
+
+  cairo_translate (cr, widget->allocation.x, widget->allocation.y);
 
   if (copies == 1)
     {
@@ -1679,18 +1701,18 @@ create_main_page (GtkPrintUnixDialog *dialog)
   table = gtk_table_new (3, 2, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 12);
-  frame = wrap_in_frame (_("Print Pages"), table);
+  frame = wrap_in_frame (_("Range"), table);
   gtk_box_pack_start (GTK_BOX (hbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (table);
 
-  radio = gtk_radio_button_new_with_mnemonic (NULL, _("_All"));
+  radio = gtk_radio_button_new_with_mnemonic (NULL, _("_All Pages"));
   priv->all_pages_radio = radio;
   gtk_widget_show (radio);
   gtk_table_attach (GTK_TABLE (table), radio,
 		    0, 2, 0, 1,  GTK_FILL, 0,
 		    0, 0);
   radio = gtk_radio_button_new_with_mnemonic (gtk_radio_button_get_group (GTK_RADIO_BUTTON (radio)),
-					      _("C_urrent"));
+					      _("C_urrent Page"));
   if (priv->current_page == -1)
     gtk_widget_set_sensitive (radio, FALSE);    
   priv->current_page_radio = radio;
@@ -1699,7 +1721,7 @@ create_main_page (GtkPrintUnixDialog *dialog)
 		    0, 2, 1, 2,  GTK_FILL, 0,
 		    0, 0);
  
-  radio = gtk_radio_button_new_with_mnemonic (gtk_radio_button_get_group (GTK_RADIO_BUTTON (radio)), _("Ra_nge"));
+  radio = gtk_radio_button_new_with_mnemonic (gtk_radio_button_get_group (GTK_RADIO_BUTTON (radio)), _("Pag_es:"));
   gtk_widget_set_tooltip_text (radio, _("Specify one or more page ranges,\n e.g. 1-3,7,11"));
  
   priv->page_range_radio = radio;
@@ -1759,13 +1781,16 @@ create_main_page (GtkPrintUnixDialog *dialog)
 		    0, 0);
 
   image = gtk_drawing_area_new ();
+  GTK_WIDGET_SET_FLAGS (image, GTK_NO_WINDOW);
+
   priv->collate_image = image;
   gtk_widget_show (image);
   gtk_widget_set_size_request (image, 70, 90);
   gtk_table_attach (GTK_TABLE (table), image,
 		    1, 2, 1, 3, GTK_FILL, 0,
 		    0, 0);
-  g_signal_connect (image, "expose-event", G_CALLBACK (draw_collate_cb), dialog);
+  g_signal_connect (image, "expose-event",
+                    G_CALLBACK (draw_collate_cb), dialog);
 
   label = gtk_label_new (_("General"));
   gtk_widget_show (label);
@@ -2042,6 +2067,8 @@ draw_page_cb (GtkWidget	         *widget,
   
   cr = gdk_cairo_create (widget->window);
   
+  cairo_translate (cr, widget->allocation.x, widget->allocation.y);
+
   ratio = G_SQRT2;
 
   w = (EXAMPLE_PAGE_AREA_SIZE - 3) / ratio;
@@ -2305,6 +2332,7 @@ create_page_setup_page (GtkPrintUnixDialog *dialog)
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox2, TRUE, TRUE, 0);
 
   draw = gtk_drawing_area_new ();
+  GTK_WIDGET_SET_FLAGS (draw, GTK_NO_WINDOW);
   priv->page_layout_preview = draw;
   gtk_widget_set_size_request (draw, 200, 200);
   g_signal_connect (draw, "expose-event", G_CALLBACK (draw_page_cb), dialog);
@@ -2653,6 +2681,8 @@ gtk_print_unix_dialog_set_page_setup (GtkPrintUnixDialog *dialog,
     {
       g_object_unref (priv->page_setup);
       priv->page_setup = g_object_ref (page_setup);
+
+      priv->page_setup_set = TRUE;
 
       g_object_notify (G_OBJECT (dialog), "page-setup");
     }

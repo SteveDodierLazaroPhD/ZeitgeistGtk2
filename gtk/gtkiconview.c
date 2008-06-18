@@ -33,7 +33,6 @@
 #include "gtkbindings.h"
 #include "gtkdnd.h"
 #include "gtkmain.h"
-#include "gtksignal.h"
 #include "gtkintl.h"
 #include "gtkaccessible.h"
 #include "gtkwindow.h"
@@ -1256,11 +1255,7 @@ static void
 gtk_icon_view_style_set (GtkWidget *widget,
 			 GtkStyle *previous_style)
 {
-  GtkIconView *icon_view;
-
-  g_return_if_fail (GTK_IS_ICON_VIEW (widget));
-
-  icon_view = GTK_ICON_VIEW (widget);
+  GtkIconView *icon_view = GTK_ICON_VIEW (widget);
 
   if (GTK_WIDGET_REALIZED (widget))
     {
@@ -1275,10 +1270,8 @@ static void
 gtk_icon_view_size_request (GtkWidget      *widget,
 			    GtkRequisition *requisition)
 {
-  GtkIconView *icon_view;
+  GtkIconView *icon_view = GTK_ICON_VIEW (widget);
   GList *tmp_list;
-
-  icon_view = GTK_ICON_VIEW (widget);
 
   requisition->width = icon_view->priv->width;
   requisition->height = icon_view->priv->height;
@@ -2982,7 +2975,7 @@ gtk_icon_view_paint_item (GtkIconView     *icon_view,
 			  gint             y,
 			  gboolean         draw_focus)
 {
-  gint focus_width, focus_pad;
+  gint focus_width;
   gint padding;
   GdkRectangle cell_area, box;
   GList *l;
@@ -2997,7 +2990,6 @@ gtk_icon_view_paint_item (GtkIconView     *icon_view,
 
   gtk_widget_style_get (GTK_WIDGET (icon_view),
 			"focus-line-width", &focus_width,
-			"focus-padding", &focus_pad,
 			NULL);
   
   padding = focus_width; 
@@ -5631,10 +5623,10 @@ gtk_icon_view_unselect_path (GtkIconView *icon_view,
  * To do this, you can use gtk_tree_row_reference_new().
  *
  * To free the return value, use:
- * <informalexample><programlisting>
+ * |[
  * g_list_foreach (list, gtk_tree_path_free, NULL);
  * g_list_free (list);
- * </programlisting></informalexample>
+ * ]|
  *
  * Return value: A #GList containing a #GtkTreePath for each selected row.
  *

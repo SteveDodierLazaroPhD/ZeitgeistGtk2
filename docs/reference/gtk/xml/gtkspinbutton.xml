@@ -818,18 +818,39 @@ the type of border that surrounds the arrows of a spin button.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkSpinButton-output"><title>The <literal>&quot;output&quot;</literal> signal</title>
-<indexterm zone="GtkSpinButton-output"><primary>GtkSpinButton::output</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkSpinButton">GtkSpinButton</link> *spinbutton,
-                                                        <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
+<indexterm zone="GtkSpinButton-output"><primary>GtkSpinButton::output</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkSpinButton">GtkSpinButton</link> *spin_button,
+                                                        <link linkend="gpointer">gpointer</link>       user_data)        : Run Last</programlisting>
+<para>
+The ::output signal can be used to change to formatting
+of the value that is displayed in the spin buttons entry.
+<informalexample><programlisting>
+/&ast; show leading zeros &ast;/
+static gboolean
+on_output (GtkSpinButton *spin,
+           gpointer       data)
+{
+   GtkAdjustment *adj;
+   gchar *text;
+   int value;
+   
+   adj = gtk_spin_button_get_adjustment (spin);
+   value = (int)gtk_adjustment_get_value (adj);
+   text = g_strdup_printf ("%02d", value);
+   gtk_entry_set_text (GTK_ENTRY (spin), text);
+   g_free (text);
+   
+   return TRUE;
+}
+</programlisting></informalexample></para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>spinbutton</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>spin_button</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the value has been displayed.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkSpinButton-value-changed"><title>The <literal>&quot;value-changed&quot;</literal> signal</title>
 <indexterm zone="GtkSpinButton-value-changed"><primary>GtkSpinButton::value-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkSpinButton">GtkSpinButton</link> *spinbutton,

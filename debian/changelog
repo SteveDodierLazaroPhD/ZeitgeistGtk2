@@ -1,3 +1,61 @@
+gtk+2.0 (2.13.3-0ubuntu1) intrepid; urgency=low
+
+  * New upstream version:
+    - Support runtime font configuration changes
+    - Use GIO for mime information
+    - Use GIO directly for the file chooser, do not load filesystem
+      implementation modules. This change causes some regressions on Win32, 
+      which will be addressed by improved Win32 support in GIO.
+    - GTK+ no longer uses translations when the application is not 
+      translated to the current locale
+    - Bugs fixed: 
+    520874 Should use gio directly
+    536185 monitor font configuration
+    536757 openoffice.org menus are placed at wrong position
+    536990 updateiconcache.c: 'close ()' is redundant 
+    535608 do not string-copy accel paths in the menu code
+    488119 critical warnings from gtk_tree_view_get_visible_range
+    536730 memory corruption in gtktreeview
+    131920 gtkNotebook sends incorrect switch_page value
+    526987 GtkCellRendererCombo should allow model to be NULL
+    536765 GtkComboBox should set COMBO type hint for its menu
+    503071 Application direction changes to right to left even if...
+    517706 Connecting GtkButton with "use-stock" == FALSE to a...
+    519092 Add accessibility support to GtkVolumeButton
+    524222 GtkToolbar with mix of buttons with and without icons...
+    537985 gtk_init_with_args() doesn't open a display after...
+    531960 crash in eog-image.c:1154: 
+    408154 Change GtkEntryCompletion max-items to style property...
+    506853 gtk_tree_view_enable_model_drag_[source|dest] problem
+    536430 Libs and Cflags paths in gail-uninstalled.pc.in are out o...
+    537685 print to file crashes when the target can not be written 
+  * debian/control.in:
+    - build-depends on libxrandr-dev
+    - updated glib, pango, atk, cairo requirements
+    - use conflicts and replaces on the different libgail binaries since the
+      library is in gtk now
+  * debian/libgtk2.0-0.install.in:
+    - updated for the new version changes
+  * debian/patches/009_gtk-export-filechooser.patch:
+    - updated to apply but it might require other changes to work correctly
+  * debian/patches/020_immodules-files-d.patch,
+    debian/patches/021_loader-files-d.patch,
+    debian/patches/070_mandatory-relibtoolize.patch:
+    - new version update
+  * debian/patches/071_correct_directfb_declarations.patch:
+    - rename functions for the offscreen rendering changes
+  * debian/patches/072_workaround_directfb_build.patch:
+    - don't use an incorrect structure variable to fix build issue
+  * debian/patches/092_openoffice-menus.patch,
+    debian/patches/095_gtk-im-module-setting.patch:
+    - those changes are in the new version
+  * debian/rules:
+    - don't use the print backend test configure option so it breaks the build
+    - update shlibs version
+    - use --without-libjasper for now since the option breaks the build
+
+ -- Sebastien Bacher <seb128@canonical.com>  Wed, 18 Jun 2008 14:41:39 +0200
+
 gtk+2.0 (2.12.10-2ubuntu1) intrepid; urgency=low
 
   * Sync on Debian

@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkLabel</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="DisplayWidgets.html" title="Display Widgets">
 <link rel="prev" href="GtkImage.html" title="GtkImage">
 <link rel="next" href="GtkProgressBar.html" title="GtkProgressBar">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -351,7 +352,28 @@ implies, most labels are used to label another widget such as a
 <a class="link" href="GtkButton.html" title="GtkButton"><span class="type">GtkButton</span></a>, a <a class="link" href="GtkMenuItem.html" title="GtkMenuItem"><span class="type">GtkMenuItem</span></a>, or a <a class="link" href="GtkOptionMenu.html" title="GtkOptionMenu"><span class="type">GtkOptionMenu</span></a>.
 </p>
 <div class="refsect2" lang="en">
-<a name="id3098248"></a><h3>Mnemonics</h3>
+<a name="GtkLabel-BUILDER-UI"></a><h3>GtkLabel as GtkBuildable</h3>
+<p>
+The GtkLabel implementation of the GtkBuildable interface supports a 
+custom &lt;attributes&gt; element, which supports any number of &lt;attribute&gt;
+elements. the &lt;attribute&gt; element has attributes named name, value,
+start and end and allows you to specify <span class="type">PangoAttributs</span> for this label.
+</p>
+<div class="example">
+<a name="id3025832"></a><p class="title"><b>Example 11. A UI definition fragment specifying pango attributes</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkLabel"&gt;
+  &lt;attributes&gt;
+    &lt;attribute name=\"weight\" value=\"PANGO_WEIGHT_BOLD\"/&gt;
+  &lt;/attributes&gt;
+&lt;/object&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="id3025849"></a><h3>Mnemonics</h3>
 <p>
 Labels may contain <em class="firstterm">mnemonics</em>. Mnemonics are
 underlined characters in the label, used for keyboard navigation.
@@ -401,7 +423,7 @@ To create a mnemonic for a widget alongside the label, such as a
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3098383"></a><h3>Markup (styled text)</h3>
+<a name="id3025983"></a><h3>Markup (styled text)</h3>
 <p>
 To make it easy to format text in a label (changing colors, fonts,
 etc.), label text can be provided in a simple <a
@@ -449,7 +471,7 @@ being displayed, so translations will cause problems.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3098521"></a><h3>Selectable labels</h3>
+<a name="id3026122"></a><h3>Selectable labels</h3>
 <p>
 Labels can be made selectable with <a class="link" href="GtkLabel.html#gtk-label-set-selectable" title="gtk_label_set_selectable ()"><code class="function">gtk_label_set_selectable()</code></a>. 
 Selectable labels allow the user to copy the label contents to 
@@ -459,7 +481,7 @@ the clipboard. Only labels that contain useful-to-copy information
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3098542"></a><h3>Text layout</h3>
+<a name="id3026143"></a><h3>Text layout</h3>
 <p>
 A label can contain any number of paragraphs, but will have
 performance problems if it contains more than a small number.
@@ -2049,7 +2071,7 @@ to set a label's width are <a class="link" href="GtkWidget.html#gtk-widget-set-s
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write</pre>
 <p>The text of the label.</p>
-<p>Default value: NULL</p>
+<p>Default value: ""</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">

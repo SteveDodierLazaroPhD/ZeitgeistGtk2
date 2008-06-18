@@ -59,6 +59,12 @@
                                                          <link linkend="char">char</link> **option_keys,
                                                          <link linkend="char">char</link> **option_values,
                                                          <link linkend="GError">GError</link> **error);
+<link linkend="gboolean">gboolean</link>            <link linkend="gdk-pixbuf-save-to-stream">gdk_pixbuf_save_to_stream</link>           (<link linkend="GdkPixbuf">GdkPixbuf</link> *pixbuf,
+                                                         <link linkend="GOutputStream">GOutputStream</link> *stream,
+                                                         const <link linkend="char">char</link> *type,
+                                                         <link linkend="GCancellable">GCancellable</link> *cancellable,
+                                                         <link linkend="GError">GError</link> **error,
+                                                         ...);
 </synopsis>
 </refsynopsisdiv>
 
@@ -139,8 +145,8 @@ void add_if_writable (GdkPixbufFormat *data, GSList **list)
   if (gdk_pixbuf_format_is_writable (data))
     *list = g_slist_prepend (*list, data);
 }
-<!-- -->
-GSList *formats = gdk_pixbuf_get_formats (<!-- -->);
+
+GSList *formats = gdk_pixbuf_get_formats ();
 GSList *writable_formats = NULL;
 g_slist_foreach (formats, add_if_writable, &amp;writable_formats);
 g_slist_free (formats);
@@ -371,7 +377,8 @@ See <link linkend="gdk-pixbuf-save"><function>gdk_pixbuf_save()</function></link
                                                          <link linkend="GError">GError</link> **error);</programlisting>
 <para>
 Saves pixbuf to a new buffer in format <parameter>type</parameter>, which is currently "jpeg",
-"tiff", "png", "ico" or "bmp".  See <link linkend="gdk-pixbuf-save-to-buffer"><function>gdk_pixbuf_save_to_buffer()</function></link> for more details.</para>
+"tiff", "png", "ico" or "bmp".  See <link linkend="gdk-pixbuf-save-to-buffer"><function>gdk_pixbuf_save_to_buffer()</function></link> 
+for more details.</para>
 <para>
 
 </para><variablelist role="params">
@@ -400,6 +407,56 @@ Saves pixbuf to a new buffer in format <parameter>type</parameter>, which is cur
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+</para></refsect2>
+<refsect2 id="gdk-pixbuf-save-to-stream" role="function" condition="since:2.14">
+<title>gdk_pixbuf_save_to_stream ()</title>
+<indexterm zone="gdk-pixbuf-save-to-stream" role="2.14"><primary>gdk_pixbuf_save_to_stream</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_pixbuf_save_to_stream           (<link linkend="GdkPixbuf">GdkPixbuf</link> *pixbuf,
+                                                         <link linkend="GOutputStream">GOutputStream</link> *stream,
+                                                         const <link linkend="char">char</link> *type,
+                                                         <link linkend="GCancellable">GCancellable</link> *cancellable,
+                                                         <link linkend="GError">GError</link> **error,
+                                                         ...);</programlisting>
+<para>
+Saves <parameter>pixbuf</parameter> to an output stream.
+</para>
+<para>
+Supported file formats are currently "jpeg", "tiff", "png", "ico" or 
+"bmp". See <link linkend="gdk-pixbuf-save-to-buffer"><function>gdk_pixbuf_save_to_buffer()</function></link> for more details.
+</para>
+<para>
+The <parameter>cancellable</parameter> can be used to abort the operation from another 
+thread. If the operation was cancelled, the error <link linkend="GIO-ERROR-CANCELLED:CAPS"><literal>GIO_ERROR_CANCELLED</literal></link> 
+will be returned. Other possible errors are in the <link linkend="GDK-PIXBUF-ERROR:CAPS"><type>GDK_PIXBUF_ERROR</type></link> 
+and <link linkend="G-IO-ERROR:CAPS"><literal>G_IO_ERROR</literal></link> domains. 
+</para>
+<para>
+The stream is not closed.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>pixbuf</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>stream</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GOutputStream"><type>GOutputStream</type></link> to save the pixbuf to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&nbsp;:</term>
+<listitem><simpara> name of file format
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>cancellable</parameter>&nbsp;:</term>
+<listitem><simpara> optional <link linkend="GCancellable"><type>GCancellable</type></link> object, <link linkend="NULL:CAPS"><literal>NULL</literal></link> to ignore
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&nbsp;:</term>
+<listitem><simpara> list of key-value save options
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the pixbuf was saved successfully, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if an
+    error was set.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 
 </refsect1>

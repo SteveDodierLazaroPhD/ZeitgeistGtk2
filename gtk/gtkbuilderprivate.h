@@ -21,9 +21,6 @@
 #ifndef __GTK_BUILDER_PRIVATE_H__
 #define __GTK_BUILDER_PRIVATE_H__
 
-#include <glib/gmarkup.h>
-#include <glib/gslist.h>
-
 #include <glib-object.h>
 #include "gtkbuilder.h"
 
@@ -75,6 +72,13 @@ typedef struct {
 } SignalInfo;
 
 typedef struct {
+  TagInfo  tag;
+  gchar   *library;
+  gint     major;
+  gint     minor;
+} RequiresInfo;
+
+typedef struct {
   GMarkupParser *parser;
   gchar *tagname;
   const gchar *start;
@@ -97,6 +101,7 @@ typedef struct {
 
 typedef GType (*GTypeGetFunc) (void);
 
+/* Things only GtkBuilder should use */
 void _gtk_builder_parser_parse_buffer (GtkBuilder *builder,
                                        const gchar *filename,
                                        const gchar *buffer,
@@ -112,12 +117,23 @@ void      _gtk_builder_add_signals (GtkBuilder *builder,
 void      _gtk_builder_finish (GtkBuilder *builder);
 void _free_signal_info (SignalInfo *info,
                         gpointer user_data);
+
+/* Internal API which might be made public at some point */
 gboolean _gtk_builder_boolean_from_string (const gchar  *string,
 					   gboolean     *value,
 					   GError      **error);
+gboolean _gtk_builder_enum_from_string (GType         type,
+                                        const gchar  *string,
+                                        gint         *enum_value,
+                                        GError      **error);
 gboolean  _gtk_builder_flags_from_string (GType       type,
 					  const char *string,
-					  gint       *value,
+					  guint      *value,
 					  GError    **error);
+gchar * _gtk_builder_parser_translate (const gchar *domain,
+				       const gchar *context,
+				       const gchar *text);
+gchar *   _gtk_builder_get_absolute_filename (GtkBuilder *builder,
+					      const gchar *string);
 
 #endif /* __GTK_BUILDER_PRIVATE_H__ */

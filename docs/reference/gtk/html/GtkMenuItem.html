@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkMenuItem</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="MenusAndCombos.html" title="Menus, Combo Box, Toolbar">
 <link rel="prev" href="GtkMenuBar.html" title="GtkMenuBar">
 <link rel="next" href="GtkImageMenuItem.html" title="GtkImageMenuItem">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -170,6 +171,9 @@ GtkMenuItem implements
 <div class="refsect1" lang="en">
 <a name="GtkMenuItem.style-properties"></a><h2>Style Properties</h2>
 <pre class="synopsis">
+  "<a class="link" href="GtkMenuItem.html#GtkMenuItem--arrow-scaling" title='The "arrow-scaling" style property'>arrow-scaling</a>"            <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"
+>gfloat</a>                : Read
   "<a class="link" href="GtkMenuItem.html#GtkMenuItem--arrow-spacing" title='The "arrow-spacing" style property'>arrow-spacing</a>"            <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read
@@ -376,7 +380,16 @@ the menu item.
 </p>
 <p>
 Note that you do need to set an accelerator on the parent menu with
-<a class="link" href="GtkMenu.html#gtk-menu-set-accel-group" title="gtk_menu_set_accel_group ()"><code class="function">gtk_menu_set_accel_group()</code></a> for this to work.</p>
+<a class="link" href="GtkMenu.html#gtk-menu-set-accel-group" title="gtk_menu_set_accel_group ()"><code class="function">gtk_menu_set_accel_group()</code></a> for this to work.
+</p>
+<p>
+Note that <em class="parameter"><code>accel_path</code></em> string will be stored in a <a
+href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+><span class="type">GQuark</span></a>. Therefore, if you
+pass a static string, you can save some memory by interning it first with 
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#g-intern-static-string"
+><code class="function">g_intern_static_string()</code></a>.</p>
 <p>
 
 </p>
@@ -634,6 +647,16 @@ The submenu attached to the menu item, or NULL if it has none.</p>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkMenuItem.style-property-details"></a><h2>Style Property Details</h2>
+<div class="refsect2" lang="en">
+<a name="GtkMenuItem--arrow-scaling"></a><h3>The <code class="literal">"arrow-scaling"</code> style property</h3>
+<pre class="programlisting">  "arrow-scaling"            <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"
+>gfloat</a>                : Read</pre>
+<p>Amount of space used up by arrow, relative to the menu item's font size.</p>
+<p>Allowed values: [0,2]</p>
+<p>Default value: 0.8</p>
+</div>
+<hr>
 <div class="refsect2" lang="en">
 <a name="GtkMenuItem--arrow-spacing"></a><h3>The <code class="literal">"arrow-spacing"</code> style property</h3>
 <pre class="programlisting">  "arrow-spacing"            <a

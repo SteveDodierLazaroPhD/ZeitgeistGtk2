@@ -152,7 +152,6 @@ static void     gtk_menu_get_child_property(GtkContainer     *container,
                                             GValue           *value,
                                             GParamSpec       *pspec);
 static void     gtk_menu_destroy           (GtkObject        *object);
-static void     gtk_menu_finalize          (GObject          *object);
 static void     gtk_menu_realize           (GtkWidget        *widget);
 static void     gtk_menu_unrealize         (GtkWidget        *widget);
 static void     gtk_menu_size_request      (GtkWidget        *widget,
@@ -265,6 +264,12 @@ menu_queue_resize (GtkMenu *menu)
   gtk_widget_queue_resize (GTK_WIDGET (menu));
 }
 
+static void
+attach_info_free (AttachInfo *info)
+{
+  g_slice_free (AttachInfo, info);
+}
+
 static AttachInfo *
 get_attach_info (GtkWidget *child)
 {
@@ -273,8 +278,9 @@ get_attach_info (GtkWidget *child)
 
   if (!ai)
     {
-      ai = g_new0 (AttachInfo, 1);
-      g_object_set_data_full (object, I_(ATTACH_INFO_KEY), ai, g_free);
+      ai = g_slice_new0 (AttachInfo);
+      g_object_set_data_full (object, I_(ATTACH_INFO_KEY), ai,
+                              (GDestroyNotify) attach_info_free);
     }
 
   return ai;
@@ -431,7 +437,6 @@ gtk_menu_class_init (GtkMenuClass *class)
   GtkMenuShellClass *menu_shell_class = GTK_MENU_SHELL_CLASS (class);
   GtkBindingSet *binding_set;
   
-  gobject_class->finalize = gtk_menu_finalize;
   gobject_class->set_property = gtk_menu_set_property;
   gobject_class->get_property = gtk_menu_get_property;
 
@@ -483,7 +488,7 @@ gtk_menu_class_init (GtkMenuClass *class)
                                    g_param_spec_string ("tearoff-title",
                                                         P_("Tearoff Title"),
                                                         P_("A title that may be displayed by the window manager when this menu is torn-off"),
-                                                        "",
+                                                        NULL,
                                                         GTK_PARAM_READWRITE));
 
   /**
@@ -902,13 +907,9 @@ gtk_menu_init (GtkMenu *menu)
 static void
 gtk_menu_destroy (GtkObject *object)
 {
-  GtkMenu *menu;
+  GtkMenu *menu = GTK_MENU (object);
   GtkMenuAttachData *data;
   GtkMenuPrivate *priv; 
-
-  g_return_if_fail (GTK_IS_MENU (object));
-
-  menu = GTK_MENU (object);
 
   gtk_menu_remove_scroll_timeout (menu);
   
@@ -958,16 +959,6 @@ gtk_menu_destroy (GtkObject *object)
     }
 
   GTK_OBJECT_CLASS (gtk_menu_parent_class)->destroy (object);
-}
-
-static void
-gtk_menu_finalize (GObject *object)
-{
-  GtkMenu *menu = GTK_MENU (object);
-
-  g_free (menu->accel_path);
-  
-  G_OBJECT_CLASS (gtk_menu_parent_class)->finalize (object);
 }
 
 static void
@@ -1028,7 +1019,7 @@ gtk_menu_attach_to_widget (GtkMenu	       *menu,
   
   g_object_ref_sink (menu);
   
-  data = g_new (GtkMenuAttachData, 1);
+  data = g_slice_new (GtkMenuAttachData);
   data->attach_widget = attach_widget;
   
   g_signal_connect (attach_widget, "screen_changed",
@@ -1102,7 +1093,7 @@ gtk_menu_detach (GtkMenu *menu)
   if (GTK_WIDGET_REALIZED (menu))
     gtk_widget_unrealize (GTK_WIDGET (menu));
   
-  g_free (data);
+  g_slice_free (GtkMenuAttachData, data);
   
   /* Fallback title for menu comes from attach widget */
   gtk_menu_update_title (menu);
@@ -1114,12 +1105,9 @@ static void
 gtk_menu_remove (GtkContainer *container,
 		 GtkWidget    *widget)
 {
-  GtkMenu *menu;
+  GtkMenu *menu = GTK_MENU (container);
 
-  g_return_if_fail (GTK_IS_MENU (container));
   g_return_if_fail (GTK_IS_MENU_ITEM (widget));
-
-  menu = GTK_MENU (container);
 
   /* Clear out old_active_menu_item if it matches the item we are removing
    */
@@ -1393,7 +1381,7 @@ gtk_menu_popup (GtkMenu		    *menu,
     }
 
   /* Set transient for to get the right window group and parent relationship */
-  if (parent_toplevel && GTK_IS_WINDOW (parent_toplevel))
+  if (GTK_IS_WINDOW (parent_toplevel))
     gtk_window_set_transient_for (GTK_WINDOW (menu->toplevel),
 				  GTK_WINDOW (parent_toplevel));
   
@@ -1646,17 +1634,22 @@ gtk_menu_real_can_activate_accel (GtkWidget *widget,
  * Assigning accel paths to menu items then enables the user to change
  * their accelerators at runtime. More details about accelerator paths
  * and their default setups can be found at gtk_accel_map_add_entry().
+ * 
+ * Note that @accel_path string will be stored in a #GQuark. Therefore, if you
+ * pass a static string, you can save some memory by interning it first with 
+ * g_intern_static_string().
  */
 void
 gtk_menu_set_accel_path (GtkMenu     *menu,
 			 const gchar *accel_path)
 {
+  gchar *old_accel_path;
+
   g_return_if_fail (GTK_IS_MENU (menu));
   if (accel_path)
     g_return_if_fail (accel_path[0] == '<' && strchr (accel_path, '/')); /* simplistic check */
 
-  g_free (menu->accel_path);
-  menu->accel_path = g_strdup (accel_path);
+  menu->accel_path = g_intern_string (accel_path);
   if (menu->accel_path)
     _gtk_menu_refresh_accel_paths (menu, FALSE);
 }
@@ -2169,11 +2162,7 @@ menu_grab_transfer_window_destroy (GtkMenu *menu)
 static void
 gtk_menu_unrealize (GtkWidget *widget)
 {
-  GtkMenu *menu;
-
-  g_return_if_fail (GTK_IS_MENU (widget));
-
-  menu = GTK_MENU (widget);
+  GtkMenu *menu = GTK_MENU (widget);
 
   menu_grab_transfer_window_destroy (menu);
 
@@ -2516,7 +2505,7 @@ gtk_menu_paint (GtkWidget      *widget,
 			 widget->window,
 			 priv->upper_arrow_state,
                          GTK_SHADOW_OUT,
-			 &event->area, widget, "menu",
+			 &event->area, widget, "menu_scroll_arrow_up",
                          upper.x,
                          upper.y,
                          upper.width,
@@ -2540,7 +2529,7 @@ gtk_menu_paint (GtkWidget      *widget,
 			 widget->window,
 			 priv->lower_arrow_state,
                          GTK_SHADOW_OUT,
-			 &event->area, widget, "menu",
+			 &event->area, widget, "menu_scroll_arrow_down",
                          lower.x,
                          lower.y,
                          lower.width,

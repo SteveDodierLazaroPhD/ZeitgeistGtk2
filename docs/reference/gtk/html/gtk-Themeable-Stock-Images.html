@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Themeable Stock Images</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Stock-Items.html" title="Stock Items">
 <link rel="next" href="gtk-Resource-Files.html" title="Resource Files">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -72,7 +73,9 @@
                    | 
                   <a href="#gtk-Themeable-Stock-Images.description" class="shortcut">Description</a>
                    | 
-                  <a href="#gtk-Themeable-Stock-Images.object-hierarchy" class="shortcut">Object Hierarchy</a></nobr></td></tr>
+                  <a href="#gtk-Themeable-Stock-Images.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#gtk-Themeable-Stock-Images.implemented-interfaces" class="shortcut">Implemented Interfaces</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gtk-Themeable-Stock-Images"></a><div class="titlepage"></div>
@@ -240,6 +243,12 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 </pre>
 </div>
 <div class="refsect1" lang="en">
+<a name="gtk-Themeable-Stock-Images.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+GtkIconFactory implements
+ <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
+</div>
+<div class="refsect1" lang="en">
 <a name="gtk-Themeable-Stock-Images.description"></a><h2>Description</h2>
 <p>
 Browse the available stock icons in the list of stock IDs found <a class="link" href="gtk-Stock-Items.html" title="Stock Items">here</a>. You can also use 
@@ -264,6 +273,71 @@ will display the icon, or the convenience function
 <a class="link" href="GtkWidget.html#gtk-widget-render-icon" title="gtk_widget_render_icon ()"><code class="function">gtk_widget_render_icon()</code></a>. These functions take the theme into account when
 looking up the icon to use for a given stock ID.
 </p>
+<div class="refsect2" lang="en">
+<a name="GtkIconFactory-BUILDER-UI"></a><h3>GtkIconFactory as GtkBuildable</h3>
+<p>
+GtkIconFactory supports a custom &lt;sources&gt; element, which 
+can contain multiple &lt;source&gt; elements. 
+The following attributes are allowed:
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">stock-id</span></p></td>
+<td><p>The stock id of the source, a string.
+This attribute is mandatory</p></td>
+</tr>
+<tr>
+<td><p><span class="term">filename</span></p></td>
+<td><p>The filename of the source, a string.
+This attribute is optional</p></td>
+</tr>
+<tr>
+<td><p><span class="term">icon-name</span></p></td>
+<td><p>The icon name for the source, a string.
+This attribute is optional.</p></td>
+</tr>
+<tr>
+<td><p><span class="term">size</span></p></td>
+<td><p>Size of the icon, a <a class="link" href="gtk-Themeable-Stock-Images.html#GtkIconSize" title="enum GtkIconSize"><span class="type">GtkIconSize</span></a> enum value. 
+This attribute is optional.</p></td>
+</tr>
+<tr>
+<td><p><span class="term">direction</span></p></td>
+<td><p>Direction of the source, a <a class="link" href="GtkWidget.html#GtkTextDirection" title="enum GtkTextDirection"><span class="type">GtkTextDirection</span></a> enum value.
+This attribute is optional.</p></td>
+</tr>
+<tr>
+<td><p><span class="term">state</span></p></td>
+<td><p>State of the source, a <a class="link" href="gtk-Standard-Enumerations.html#GtkStateType" title="enum GtkStateType"><span class="type">GtkStateType</span></a> enum value.
+This attribute is optional.</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>
+
+</p>
+<div class="example">
+<a name="id2779583"></a><p class="title"><b>Example 4. A <span class="structname">GtkIconFactory</span> UI definition fragment.</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkIconFactory" id="iconfactory1"&gt;
+  &lt;sources&gt;
+    &lt;source stock-id="apple-red" filename="apple-red.png"/&gt;
+  &lt;/sources&gt;
+&lt;/object&gt;
+&lt;object class="GtkWindow" id="window1"&gt;
+  &lt;child&gt;
+    &lt;object class="GtkButton" id="apple_button"&gt;
+      &lt;property name="label"&gt;apple-red&lt;/property&gt;
+      &lt;property name="use-stock"&gt;True&lt;/property&gt;
+    &lt;/object&gt;
+  &lt;/child&gt;
+&lt;/object&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
 </div>
 <div class="refsect1" lang="en">
 <a name="gtk-Themeable-Stock-Images.details"></a><h2>Details</h2>

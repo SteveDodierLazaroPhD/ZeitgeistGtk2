@@ -1,5 +1,5 @@
-/* GtkPrintJob 
- * Copyright (C) 2006 Red Hat,Inc. 
+/* GtkPrintJob
+ * Copyright (C) 2006 Red Hat,Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,14 +16,18 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_UNIX_PRINT_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtkunixprint.h> can be included directly."
+#endif
+
 #ifndef __GTK_PRINT_JOB_H__
 #define __GTK_PRINT_JOB_H__
 
-#include <glib-object.h>
 #include <cairo.h>
 
+#include <gtk/gtk.h>
 #include <gtk/gtkprinter.h>
-#include <gtk/gtkprintoperation.h>
 
 G_BEGIN_DECLS
 
@@ -39,7 +43,7 @@ typedef struct _GtkPrintJobClass     GtkPrintJobClass;
 typedef struct _GtkPrintJobPrivate   GtkPrintJobPrivate;
 
 typedef void (*GtkPrintJobCompleteFunc) (GtkPrintJob *print_job,
-                                         gpointer     user_data, 
+                                         gpointer     user_data,
                                          GError      *error);
 
 struct _GtkPrinter;

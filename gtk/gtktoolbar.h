@@ -5,7 +5,7 @@
  * Copyright (C) 2002 Anders Carlsson <andersca@gnome.org>
  * Copyright (C) 2002 James Henstridge <james@daa.com.au>
  * Copyright (C) 2003 Soeren Sandmann <sandmann@daimi.au.dk>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -26,8 +26,12 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
 
 #ifndef __GTK_TOOLBAR_H__
 #define __GTK_TOOLBAR_H__
@@ -36,8 +40,7 @@
 #include <gtk/gtkcontainer.h>
 #include <gtk/gtkenums.h>
 #include <gtk/gtktooltips.h>
-
-#include "gtktoolitem.h"
+#include <gtk/gtktoolitem.h>
 
 #ifndef GTK_DISABLE_DEPRECATED
 
@@ -98,13 +101,13 @@ struct _GtkToolbar
   GtkOrientation   orientation;
   GtkToolbarStyle  style;
   GtkIconSize      icon_size;
-  
+
 #ifndef GTK_DISABLE_DEPRECATED
   GtkTooltips     *tooltips;
 #else
   gpointer         _tooltips;
 #endif
-  
+
   /*< private >*/
   gint             button_maxw;		/* maximum width of homogeneous children */
   gint             button_maxh;		/* maximum height of homogeneous children */
@@ -119,7 +122,7 @@ struct _GtkToolbar
 struct _GtkToolbarClass
 {
   GtkContainerClass parent_class;
-  
+
   /* signals */
   void     (* orientation_changed) (GtkToolbar       *toolbar,
 				    GtkOrientation    orientation);
@@ -129,7 +132,7 @@ struct _GtkToolbarClass
 				    gint              x,
 				    gint              y,
 				    gint              button_number);
-  
+
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
   void (*_gtk_reserved2) (void);
@@ -169,13 +172,12 @@ void            gtk_toolbar_set_drop_highlight_item (GtkToolbar      *toolbar,
 						     gint             index_);
 
 /* internal functions */
-gchar *         _gtk_toolbar_elide_underscores      (const gchar     *original);
-void            _gtk_toolbar_paint_space_line       (GtkWidget       *widget,
-						     GtkToolbar      *toolbar,
-						     GdkRectangle    *area,
-						     GtkAllocation   *allocation);
+gchar *         _gtk_toolbar_elide_underscores      (const gchar         *original);
+void            _gtk_toolbar_paint_space_line       (GtkWidget           *widget,
+						     GtkToolbar          *toolbar,
+						     const GdkRectangle  *area,
+						     const GtkAllocation *allocation);
 gint            _gtk_toolbar_get_default_space_size (void);
-void            _gtk_toolbar_rebuild_menu           (GtkToolbar      *toolbar);
 
 
 void       gtk_toolbar_set_icon_size   (GtkToolbar      *toolbar,

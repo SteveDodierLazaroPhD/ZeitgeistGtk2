@@ -127,6 +127,7 @@ enum {
   QUERY_TOOLTIP,
   KEYNAV_FAILED,
   DRAG_FAILED,
+  DAMAGE_EVENT,
   LAST_SIGNAL
 };
 
@@ -1661,28 +1662,31 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    * @time: the timestamp of the motion event
    * @returns: whether the cursor position is in a drop zone
    *
-   * The ::drag-motion signal is emitted on the drop site when the user 
-   * moves the cursor over the widget during a drag. The signal handler 
-   * must determine whether the cursor position is in a drop zone or not. 
-   * If it is not in a drop zone, it returns %FALSE and no further processing 
-   * is necessary. Otherwise, the handler returns %TRUE. In this case, the 
-   * handler is responsible for providing the necessary information for 
-   * displaying feedback to the user, by calling gdk_drag_status(). If the 
-   * decision whether the drop will be accepted or rejected can't be made
-   * based solely on the cursor position and the type of the data, the handler 
-   * may inspect the dragged data by calling gtk_drag_get_data() and defer the 
-   * gdk_drag_status() call to the #GtkWidget::drag-data-received handler. 
+   * The drag-motion signal is emitted on the drop site when the user
+   * moves the cursor over the widget during a drag. The signal handler
+   * must determine whether the cursor position is in a drop zone or not.
+   * If it is not in a drop zone, it returns %FALSE and no further processing
+   * is necessary. Otherwise, the handler returns %TRUE. In this case, the
+   * handler is responsible for providing the necessary information for
+   * displaying feedback to the user, by calling gdk_drag_status().
    *
-   * Note that there is no drag-enter signal. The drag receiver has to keep 
-   * track of whether he has received any drag-motion signals since the last 
-   * #GtkWidget::drag-leave and if not, treat the drag-motion signal as an 
-   * "enter" signal. Upon an "enter", the handler will typically highlight 
+   * If the decision whether the drop will be accepted or rejected can't be
+   * made based solely on the cursor position and the type of the data, the
+   * handler may inspect the dragged data by calling gtk_drag_get_data() and
+   * defer the gdk_drag_status() call to the #GtkWidget::drag-data-received
+   * handler. Note that you cannot not pass #GTK_DEST_DEFAULT_DROP,
+   * #GTK_DEST_DEFAULT_MOTION or #GTK_DEST_DEFAULT_ALL to gtk_drag_dest_set()
+   * when using the drag-motion signal that way.
+   *
+   * Also note that there is no drag-enter signal. The drag receiver has to
+   * keep track of whether he has received any drag-motion signals since the
+   * last #GtkWidget::drag-leave and if not, treat the drag-motion signal as
+   * an "enter" signal. Upon an "enter", the handler will typically highlight
    * the drop site with gtk_drag_highlight().
-   *
-   * <informalexample><programlisting> 
+   * |[
    * static void
    * drag_motion (GtkWidget *widget,
-   *       	  GdkDragContext *context,
+   *              GdkDragContext *context,
    *              gint x,
    *              gint y,
    *              guint time)
@@ -1724,11 +1728,11 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    *    {
    *      private_data->suggested_action = 0;
    *      
-   *     /<!-- -->* We are getting this data due to a request in drag_motion,
+   *     /&ast; We are getting this data due to a request in drag_motion,
    *      * rather than due to a request in drag_drop, so we are just
-   *      * supposed to call gdk_drag_status(<!-- -->), not actually paste in 
+   *      * supposed to call gdk_drag_status (), not actually paste in 
    *      * the data.
-   *      *<!-- -->/
+   *      &ast;/
    *      str = gtk_selection_data_get_text (selection_data);
    *      if (!data_is_acceptable (str)) 
    *        gdk_drag_status (context, 0, time);
@@ -1737,10 +1741,10 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    *    }
    *   else
    *    {
-   *      /<!-- -->* accept the drop *<!-- -->/
+   *      /&ast; accept the drop &ast;/
    *    }
    * }
-   * </programlisting></informalexample>
+   * ]|
    */
   widget_signals[DRAG_MOTION] =
     g_signal_new (I_("drag_motion"),
@@ -1840,7 +1844,7 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    * The handler may inspect and modify @drag_context->action before calling 
    * gtk_drag_finish(), e.g. to implement %GDK_ACTION_ASK as shown in the 
    * following example:
-   * <informalexample><programlisting>
+   * |[
    * void  
    * drag_data_received (GtkWidget          *widget,
    *                     GdkDragContext     *drag_context,
@@ -1878,7 +1882,7 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    *       
    *    gtk_drag_finish (drag_context, FALSE, FALSE, time);
    *  }
-   * </programlisting></informalexample>
+   * ]|
    */
   widget_signals[DRAG_DATA_RECEIVED] =
     g_signal_new (I_("drag_data_received"),
@@ -1991,6 +1995,28 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
   /**
+   * GtkWidget::damage-event:
+   * @widget: the object which received the signal
+   * @event: the #GdkEventExpose event
+   *
+   * Emitted when a redirected window belonging to @widget gets drawn into.
+   * The region/area members of the event shows what area of the redirected
+   * drawable was drawn into.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event.
+   *   %FALSE to propagate the event further.
+   *
+   * Since: 2.14
+   */
+  widget_signals[DAMAGE_EVENT] =
+    g_signal_new ("damage_event",
+		  G_TYPE_FROM_CLASS (gobject_class),
+		  G_SIGNAL_RUN_LAST, 0,
+		  _gtk_boolean_handled_accumulator, NULL,
+		  _gtk_marshal_BOOLEAN__BOXED,
+		  G_TYPE_BOOLEAN, 1,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+/**
    * GtkWidget::grab-broken-event:
    * @widget: the object which received the signal
    * @event: the #GdkEventGrabBroken event
@@ -2453,6 +2479,7 @@ gtk_widget_set_property (GObject         *object,
       gtk_widget_real_set_has_tooltip (widget, tmp, FALSE);
       break;
     default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
 }
@@ -2467,14 +2494,14 @@ gtk_widget_get_property (GObject         *object,
   
   switch (prop_id)
     {
-      gint *eventp;
-      GdkExtensionMode *modep;
+      gpointer *eventp;
+      gpointer *modep;
 
     case PROP_NAME:
       if (widget->name)
 	g_value_set_string (value, widget->name);
       else
-	g_value_set_string (value, "");
+	g_value_set_static_string (value, "");
       break;
     case PROP_PARENT:
       if (widget->parent)
@@ -2531,17 +2558,11 @@ gtk_widget_get_property (GObject         *object,
       break;
     case PROP_EVENTS:
       eventp = g_object_get_qdata (G_OBJECT (widget), quark_event_mask);
-      if (!eventp)
-	g_value_set_flags (value, 0);
-      else
-	g_value_set_flags (value, *eventp);
+      g_value_set_flags (value, GPOINTER_TO_INT (eventp));
       break;
     case PROP_EXTENSION_EVENTS:
       modep = g_object_get_qdata (G_OBJECT (widget), quark_extension_event_mode);
-      if (!modep)
- 	g_value_set_enum (value, 0);
-      else
- 	g_value_set_enum (value, (GdkExtensionMode) *modep);
+      g_value_set_enum (value, GPOINTER_TO_INT (modep));
       break;
     case PROP_NO_SHOW_ALL:
       g_value_set_boolean (value, gtk_widget_get_no_show_all (widget));
@@ -3225,7 +3246,7 @@ gtk_widget_set_extension_events_internal (GtkWidget        *widget,
  * isn't very useful otherwise. Many times when you think you might
  * need it, a better approach is to connect to a signal that will be
  * called after the widget is realized automatically, such as
- * GtkWidget::expose-event. Or simply g_signal_connect_after() to the
+ * GtkWidget::expose-event. Or simply g_signal_connect () to the
  * GtkWidget::realize signal.
  **/
 void
@@ -3583,8 +3604,8 @@ gtk_widget_queue_resize_no_redraw (GtkWidget *widget)
  * a better choice if you want to draw a region of a widget.
  **/
 void
-gtk_widget_draw (GtkWidget    *widget,
-		 GdkRectangle *area)
+gtk_widget_draw (GtkWidget          *widget,
+		 const GdkRectangle *area)
 {
   g_return_if_fail (GTK_IS_WIDGET (widget));
 
@@ -4323,6 +4344,10 @@ destroy_accel_path (gpointer data)
  * Even when you you aren't using #GtkUIManager, if you only want to
  * set up accelerators on menu items gtk_menu_item_set_accel_path()
  * provides a somewhat more convenient interface.
+ * 
+ * Note that @accel_path string will be stored in a #GQuark. Therefore, if you
+ * pass a static string, you can save some memory by interning it first with 
+ * g_intern_static_string().
  **/
 void
 gtk_widget_set_accel_path (GtkWidget     *widget,
@@ -4669,6 +4694,9 @@ gtk_widget_event_internal (GtkWidget *widget,
 	case GDK_GRAB_BROKEN:
 	  signal_num = GRAB_BROKEN;
 	  break;
+	case GDK_DAMAGE:
+	  signal_num = DAMAGE_EVENT;
+	  break;
 	default:
 	  g_warning ("gtk_widget_event(): unhandled event type: %d", event->type);
 	  signal_num = -1;
@@ -4762,12 +4790,12 @@ gtk_widget_reparent_subwindows (GtkWidget *widget,
 
       for (tmp_list = children; tmp_list; tmp_list = tmp_list->next)
 	{
-	  GtkWidget *child;
 	  GdkWindow *window = tmp_list->data;
+	  gpointer child;
 
-	  gdk_window_get_user_data (window, (void **)&child);
+	  gdk_window_get_user_data (window, &child);
 	  while (child && child != widget)
-	    child = child->parent;
+	    child = ((GtkWidget*) child)->parent;
 
 	  if (child)
 	    gdk_window_reparent (window, new_window, 0, 0);
@@ -4790,10 +4818,11 @@ gtk_widget_reparent_subwindows (GtkWidget *widget,
 	 
 	 for (tmp_list = children; tmp_list; tmp_list = tmp_list->next)
 	   {
-	     GtkWidget *child;
 	     GdkWindow *window = tmp_list->data;
-	     
-	     gdk_window_get_user_data (window, (void **)&child);
+	     gpointer child;
+
+	     gdk_window_get_user_data (window, &child);
+
 	     if (child == widget)
 	       gdk_window_reparent (window, new_window, 0, 0);
 	   }
@@ -4881,9 +4910,9 @@ gtk_widget_reparent (GtkWidget *widget,
  * Return value: %TRUE if there was an intersection
  **/
 gboolean
-gtk_widget_intersect (GtkWidget	   *widget,
-		      GdkRectangle *area,
-		      GdkRectangle *intersection)
+gtk_widget_intersect (GtkWidget	         *widget,
+		      const GdkRectangle *area,
+		      GdkRectangle       *intersection)
 {
   GdkRectangle *dest;
   GdkRectangle tmp;
@@ -4926,8 +4955,8 @@ gtk_widget_intersect (GtkWidget	   *widget,
  * check.
  **/
 GdkRegion *
-gtk_widget_region_intersect (GtkWidget *widget,
-			     GdkRegion *region)
+gtk_widget_region_intersect (GtkWidget       *widget,
+			     const GdkRegion *region)
 {
   GdkRectangle rect;
   GdkRegion *dest;
@@ -5320,11 +5349,11 @@ gtk_widget_set_state (GtkWidget           *widget,
  * Note that the background is still drawn when the widget is mapped.
  * If this is not suitable (e.g. because you want to make a transparent
  * window using an RGBA visual), you can work around this by doing:
- * <informalexample><programlisting>
+ * |[
  *  gtk_widget_realize (window);
  *  gdk_window_set_back_pixmap (window->window, NULL, FALSE);
  *  gtk_widget_show (window);
- * </programlisting></informalexample> 
+ * ]|
  **/
 void
 gtk_widget_set_app_paintable (GtkWidget *widget,
@@ -7115,27 +7144,11 @@ void
 gtk_widget_set_events (GtkWidget *widget,
 		       gint	  events)
 {
-  gint *eventp;
-  
   g_return_if_fail (GTK_IS_WIDGET (widget));
   g_return_if_fail (!GTK_WIDGET_REALIZED (widget));
   
-  eventp = g_object_get_qdata (G_OBJECT (widget), quark_event_mask);
-  
-  if (events)
-    {
-      if (!eventp)
-	eventp = g_slice_new (gint);
-      
-      *eventp = events;
-      g_object_set_qdata (G_OBJECT (widget), quark_event_mask, eventp);
-    }
-  else if (eventp)
-    {
-      g_slice_free (gint, eventp);
-      g_object_set_qdata (G_OBJECT (widget), quark_event_mask, NULL);
-    }
-
+  g_object_set_qdata (G_OBJECT (widget), quark_event_mask,
+                      GINT_TO_POINTER (events));
   g_object_notify (G_OBJECT (widget), "events");
 }
 
@@ -7177,28 +7190,13 @@ void
 gtk_widget_add_events (GtkWidget *widget,
 		       gint	  events)
 {
-  gint *eventp;
-  
+  gint old_events;
+
   g_return_if_fail (GTK_IS_WIDGET (widget));
 
-  eventp = g_object_get_qdata (G_OBJECT (widget), quark_event_mask);
-  
-  if (events)
-    {
-      if (!eventp)
-	{
-	  eventp = g_slice_new (gint);
-	  *eventp = 0;
-	}
-      
-      *eventp |= events;
-      g_object_set_qdata (G_OBJECT (widget), quark_event_mask, eventp);
-    }
-  else if (eventp)
-    {
-      g_slice_free (gint, eventp);
-      g_object_set_qdata (G_OBJECT (widget), quark_event_mask, NULL);
-    }
+  old_events = GPOINTER_TO_INT (g_object_get_qdata (G_OBJECT (widget), quark_event_mask));
+  g_object_set_qdata (G_OBJECT (widget), quark_event_mask,
+                      GINT_TO_POINTER (old_events | events));
 
   if (GTK_WIDGET_REALIZED (widget))
     {
@@ -7229,20 +7227,13 @@ void
 gtk_widget_set_extension_events (GtkWidget *widget,
 				 GdkExtensionMode mode)
 {
-  GdkExtensionMode *modep;
-
   g_return_if_fail (GTK_IS_WIDGET (widget));
-
-  modep = g_object_get_qdata (G_OBJECT (widget), quark_extension_event_mode);
-
-  if (!modep)
-    modep = g_slice_new (GdkExtensionMode);
 
   if (GTK_WIDGET_REALIZED (widget))
     gtk_widget_set_extension_events_internal (widget, mode, NULL);
 
-  *modep = mode;
-  g_object_set_qdata (G_OBJECT (widget), quark_extension_event_mode, modep);
+  g_object_set_qdata (G_OBJECT (widget), quark_extension_event_mode,
+                      GINT_TO_POINTER (mode));
   g_object_notify (G_OBJECT (widget), "extension-events");
 }
 
@@ -7267,13 +7258,13 @@ gtk_widget_set_extension_events (GtkWidget *widget,
  * To reliably find the toplevel #GtkWindow, use
  * gtk_widget_get_toplevel() and check if the %TOPLEVEL flags
  * is set on the result.
- * <informalexample><programlisting>
+ * |[
  *  GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
  *  if (GTK_WIDGET_TOPLEVEL (toplevel))
  *    {
- *      [ Perform action on toplevel. ]
+ *      /&ast; Perform action on toplevel. &ast;/
  *    }
- * </programlisting></informalexample>
+ * ]|
  *
  * Return value: the topmost ancestor of @widget, or @widget itself 
  *    if there's no ancestor.
@@ -7435,15 +7426,9 @@ gtk_widget_set_colormap (GtkWidget   *widget,
 gint
 gtk_widget_get_events (GtkWidget *widget)
 {
-  gint *events;
-  
   g_return_val_if_fail (GTK_IS_WIDGET (widget), 0);
-  
-  events = g_object_get_qdata (G_OBJECT (widget), quark_event_mask);
-  if (events)
-    return *events;
-  
-  return 0;
+
+  return GPOINTER_TO_INT (g_object_get_qdata (G_OBJECT (widget), quark_event_mask));
 }
 
 /**
@@ -7458,15 +7443,9 @@ gtk_widget_get_events (GtkWidget *widget)
 GdkExtensionMode
 gtk_widget_get_extension_events (GtkWidget *widget)
 {
-  GdkExtensionMode *mode;
-  
   g_return_val_if_fail (GTK_IS_WIDGET (widget), 0);
-  
-  mode = g_object_get_qdata (G_OBJECT (widget), quark_extension_event_mode);
-  if (mode)
-    return *mode;
-  
-  return 0;
+
+  return GPOINTER_TO_INT (g_object_get_qdata (G_OBJECT (widget), quark_extension_event_mode));
 }
 
 /**
@@ -7596,15 +7575,15 @@ gtk_widget_get_composite_name (GtkWidget *widget)
  * builders might want to treat them in a different way.
  * 
  * Here is a simple example:
- * <informalexample><programlisting>
- *   gtk_widget_push_composite_child (<!-- -->);
+ * |[
+ *   gtk_widget_push_composite_child ();
  *   scrolled_window->hscrollbar = gtk_hscrollbar_new (hadjustment);
  *   gtk_widget_set_composite_name (scrolled_window->hscrollbar, "hscrollbar");
- *   gtk_widget_pop_composite_child (<!-- -->);
+ *   gtk_widget_pop_composite_child ();
  *   gtk_widget_set_parent (scrolled_window->hscrollbar, 
  *                          GTK_WIDGET (scrolled_window));
  *   g_object_ref (scrolled_window->hscrollbar);
- * </programlisting></informalexample>
+ * ]|
  **/
 void
 gtk_widget_push_composite_child (void)
@@ -7881,8 +7860,6 @@ gtk_widget_finalize (GObject *object)
 {
   GtkWidget *widget = GTK_WIDGET (object);
   GtkWidgetAuxInfo *aux_info;
-  gint *events;
-  GdkExtensionMode *mode;
   GtkAccessible *accessible;
   
   gtk_grab_remove (widget);
@@ -7895,14 +7872,6 @@ gtk_widget_finalize (GObject *object)
   aux_info =_gtk_widget_get_aux_info (widget, FALSE);
   if (aux_info)
     gtk_widget_aux_info_destroy (aux_info);
-  
-  events = g_object_get_qdata (G_OBJECT (widget), quark_event_mask);
-  if (events)
-    g_slice_free (gint, events);
-  
-  mode = g_object_get_qdata (G_OBJECT (widget), quark_extension_event_mode);
-  if (mode)
-    g_slice_free (GdkExtensionMode, mode);
 
   accessible = g_object_get_qdata (G_OBJECT (widget), quark_accessible_object);
   if (accessible)
@@ -8346,6 +8315,182 @@ gtk_widget_unref (GtkWidget *widget)
   g_object_unref ((GObject*) widget);
 }
 
+/**
+ * gtk_widget_get_snapshot:
+ * @widget:    a #GtkWidget
+ * @clip_rect: a #GdkRectangle or %NULL
+ *
+ * Create a #GdkPixmap of the contents of the widget and its children.
+ *
+ * Works even if the widget is obscured. The depth and visual of the
+ * resulting pixmap is dependent on the widget being snapshot and likely
+ * differs from those of a target widget displaying the pixmap.
+ * The function gdk_pixbuf_get_from_drawable() can be used to convert
+ * the pixmap to a visual independant representation.
+ *
+ * The snapshot area used by this function is the @widget's allocation plus
+ * any extra space occupied by additional windows belonging to this widget
+ * (such as the arrows of a spin button).
+ * Thus, the resulting snapshot pixmap is possibly larger than the allocation.
+ * 
+ * If @clip_rect is non-%NULL, the resulting pixmap is shrunken to
+ * match the specified clip_rect. The (x,y) coordinates of @clip_rect are
+ * interpreted widget relative. If width or height of @clip_rect are 0 or
+ * negative, the width or height of the resulting pixmap will be shrunken
+ * by the respective amount.
+ * For instance a @clip_rect <literal>{ +5, +5, -10, -10 }</literal> will
+ * chop off 5 pixels at each side of the snapshot pixmap.
+ * If non-%NULL, @clip_rect will contain the exact widget-relative snapshot
+ * coordinates upon return. A @clip_rect of <literal>{ -1, -1, 0, 0 }</literal>
+ * can be used to preserve the auto-grown snapshot area and use @clip_rect
+ * as a pure output parameter.
+ *
+ * The returned pixmap can be %NULL, if the resulting @clip_area was empty.
+ *
+ * Return value: #GdkPixmap snapshot of the widget
+ * 
+ * Since: 2.14
+ **/
+GdkPixmap*
+gtk_widget_get_snapshot (GtkWidget    *widget,
+                         GdkRectangle *clip_rect)
+{
+  int x, y, width, height;
+  GdkWindow *parent_window = NULL;
+  GdkPixmap *pixmap;
+  GList *windows = NULL, *list;
+
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+  if (!GTK_WIDGET_VISIBLE (widget))
+    return NULL;
+
+  /* the widget (and parent_window) must be realized to be drawable */
+  if (widget->parent && !GTK_WIDGET_REALIZED (widget->parent))
+    gtk_widget_realize (widget->parent);
+  if (!GTK_WIDGET_REALIZED (widget))
+    gtk_widget_realize (widget);
+
+  /* determine snapshot rectangle */
+  x = widget->allocation.x;
+  y = widget->allocation.y;
+  width = widget->allocation.width;
+  height = widget->allocation.height;
+
+  if (widget->parent && !GTK_WIDGET_NO_WINDOW (widget))
+    {
+      /* grow snapshot rectangle to cover all widget windows */
+      parent_window = gtk_widget_get_parent_window (widget);
+      for (list = gdk_window_peek_children (parent_window); list; list = list->next)
+        {
+          GdkWindow *subwin = list->data;
+          gpointer windata;
+          int wx, wy, ww, wh;
+          gdk_window_get_user_data (subwin, &windata);
+          if (windata != widget)
+            continue;
+          windows = g_list_prepend (windows, subwin);
+          gdk_window_get_position (subwin, &wx, &wy);
+          gdk_drawable_get_size (subwin, &ww, &wh);
+          /* grow snapshot rectangle by extra widget sub window */
+          if (wx < x)
+            {
+              width += x - wx;
+              x = wx;
+            }
+          if (wy < y)
+            {
+              height += y - wy;
+              y = wy;
+            }
+          if (x + width < wx + ww)
+            width += wx + ww - (x + width);
+          if (y + height < wy + wh)
+            height += wy + wh - (y + height);
+        }
+    }
+  else if (!widget->parent)
+    x = y = 0; /* toplevel */
+
+  /* at this point, (x,y,width,height) is the parent_window relative
+   * snapshot area covering all of widget's windows.
+   */
+
+  /* shrink snapshot size by clip_rectangle */
+  if (clip_rect)
+    {
+      GdkRectangle snap = { x, y, width, height }, clip = *clip_rect;
+      clip.x = clip.x < 0 ? x : clip.x;
+      clip.y = clip.y < 0 ? y : clip.y;
+      clip.width = clip.width <= 0 ? MAX (0, width + clip.width) : clip.width;
+      clip.height = clip.height <= 0 ? MAX (0, height + clip.height) : clip.height;
+      if (widget->parent)
+        {
+          /* offset clip_rect, so it's parent_window relative */
+          if (clip_rect->x >= 0)
+            clip.x += widget->allocation.x;
+          if (clip_rect->y >= 0)
+            clip.y += widget->allocation.y;
+        }
+      if (!gdk_rectangle_intersect (&snap, &clip, &snap))
+        {
+          g_list_free (windows);
+          clip_rect->width = clip_rect->height = 0;
+          return NULL; /* empty snapshot area */
+        }
+      x = snap.x;
+      y = snap.y;
+      width = snap.width;
+      height = snap.height;
+    }
+
+  /* render snapshot */
+  pixmap = gdk_pixmap_new (widget->window, width, height, gdk_drawable_get_depth (widget->window));
+  for (list = windows; list; list = list->next) /* !NO_WINDOW widgets */
+    {
+      GdkWindow *subwin = list->data;
+      int wx, wy;
+      gdk_window_get_position (subwin, &wx, &wy);
+      gdk_window_redirect_to_drawable (subwin, pixmap, MAX (0, x - wx), MAX (0, y - wy),
+                                       MAX (0, wx - x), MAX (0, wy - y), width, height);
+      gdk_window_invalidate_rect (subwin, NULL, TRUE);
+    }
+  if (!windows) /* NO_WINDOW || toplevel => parent_window == NULL || parent_window == widget->window */
+    {
+      gdk_window_redirect_to_drawable (widget->window, pixmap, x, y, 0, 0, width, height);
+      gdk_window_invalidate_rect (widget->window, NULL, TRUE);
+    }
+  gtk_widget_queue_draw (widget);
+  if (parent_window)
+    gdk_window_process_updates (parent_window, TRUE);
+  for (list = windows; list; list = list->next)
+    gdk_window_process_updates (list->data, TRUE);
+  gdk_window_process_updates (widget->window, TRUE);
+  for (list = windows; list; list = list->next)
+    gdk_window_remove_redirection (list->data);
+  if (!windows) /* NO_WINDOW || toplevel */
+    gdk_window_remove_redirection (widget->window);
+  g_list_free (windows);
+
+  /* return pixmap and snapshot rectangle coordinates */
+  if (clip_rect)
+    {
+      clip_rect->x = x;
+      clip_rect->y = y;
+      clip_rect->width = width;
+      clip_rect->height = height;
+      if (widget->parent)
+        {
+          /* offset clip_rect from parent_window so it's widget relative */
+          clip_rect->x -= widget->allocation.x;
+          clip_rect->y -= widget->allocation.y;
+        }
+      if (0)
+        g_printerr ("gtk_widget_get_snapshot: %s (%d,%d, %dx%d)\n",
+                    G_OBJECT_TYPE_NAME (widget),
+                    clip_rect->x, clip_rect->y, clip_rect->width, clip_rect->height);
+    }
+  return pixmap;
+}
 
 /* style properties
  */
@@ -9166,7 +9311,7 @@ accel_group_start_element (GMarkupParseContext *context,
 
   if (key == 0 || signal == NULL)
     {
-      g_warning ("<accelerator> requires a key or signal attribute");
+      g_warning ("<accelerator> requires key and signal attributes");
       return;
     }
   parser_data->key = key;

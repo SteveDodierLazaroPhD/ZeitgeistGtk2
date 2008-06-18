@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkIconTheme</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Drag-and-Drop.html" title="Drag and Drop">
 <link rel="next" href="gtk-Stock-Items.html" title="Stock Items">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -153,6 +154,14 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> size,
                                                          <a class="link" href="GtkIconTheme.html#GtkIconLookupFlags" title="enum GtkIconLookupFlags">GtkIconLookupFlags</a> flags);
+<a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a>*        <a class="link" href="GtkIconTheme.html#gtk-icon-theme-lookup-by-gicon" title="gtk_icon_theme_lookup_by_gicon ()">gtk_icon_theme_lookup_by_gicon</a>      (<a class="link" href="GtkIconTheme.html" title="GtkIconTheme">GtkIconTheme</a> *icon_theme,
+                                                         <a
+href="/usr/share/gtk-doc/html/gio/GIcon.html"
+>GIcon</a> *icon,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> size,
+                                                         <a class="link" href="GtkIconTheme.html#GtkIconLookupFlags" title="enum GtkIconLookupFlags">GtkIconLookupFlags</a> flags);
 <a
 href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 >GdkPixbuf</a>*          <a class="link" href="GtkIconTheme.html#gtk-icon-theme-load-icon" title="gtk_icon_theme_load_icon ()">gtk_icon_theme_load_icon</a>            (<a class="link" href="GtkIconTheme.html" title="GtkIconTheme">GtkIconTheme</a> *icon_theme,
@@ -197,6 +206,10 @@ href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 >GdkPixbuf</a> *pixbuf);
 <a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a>*        <a class="link" href="GtkIconTheme.html#gtk-icon-info-copy" title="gtk_icon_info_copy ()">gtk_icon_info_copy</a>                  (<a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a> *icon_info);
 void                <a class="link" href="GtkIconTheme.html#gtk-icon-info-free" title="gtk_icon_info_free ()">gtk_icon_info_free</a>                  (<a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a> *icon_info);
+<a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a>*        <a class="link" href="GtkIconTheme.html#gtk-icon-info-new-for-pixbuf" title="gtk_icon_info_new_for_pixbuf ()">gtk_icon_info_new_for_pixbuf</a>        (<a class="link" href="GtkIconTheme.html" title="GtkIconTheme">GtkIconTheme</a> *icon_theme,
+                                                         <a
+href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
+>GdkPixbuf</a> *pixbuf);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                <a class="link" href="GtkIconTheme.html#gtk-icon-info-get-base-size" title="gtk_icon_info_get_base_size ()">gtk_icon_info_get_base_size</a>         (<a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a> *icon_info);
@@ -365,10 +378,11 @@ object and set the icon theme name explicitely using
 <a name="GtkIconLookupFlags"></a><h3>enum GtkIconLookupFlags</h3>
 <pre class="programlisting">typedef enum
 {
-  GTK_ICON_LOOKUP_NO_SVG = 1 &lt;&lt; 0,
-  GTK_ICON_LOOKUP_FORCE_SVG = 1 &lt;&lt; 1,
-  GTK_ICON_LOOKUP_USE_BUILTIN = 1 &lt;&lt; 2,
-  GTK_ICON_LOOKUP_GENERIC_FALLBACK = 1 &lt;&lt; 3
+  GTK_ICON_LOOKUP_NO_SVG           = 1 &lt;&lt; 0,
+  GTK_ICON_LOOKUP_FORCE_SVG        = 1 &lt;&lt; 1,
+  GTK_ICON_LOOKUP_USE_BUILTIN      = 1 &lt;&lt; 2,
+  GTK_ICON_LOOKUP_GENERIC_FALLBACK = 1 &lt;&lt; 3,
+  GTK_ICON_LOOKUP_FORCE_SIZE       = 1 &lt;&lt; 4
 } GtkIconLookupFlags;
 </pre>
 <p>
@@ -407,6 +421,12 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 <td> Try to shorten icon name at '-'
   characters before looking at inherited themes. For more general
   fallback, see <a class="link" href="GtkIconTheme.html#gtk-icon-theme-choose-icon" title="gtk_icon_theme_choose_icon ()"><code class="function">gtk_icon_theme_choose_icon()</code></a>. Since 2.12.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-ICON-LOOKUP-FORCE-SIZE:CAPS"></a><span class="term"><code class="literal">GTK_ICON_LOOKUP_FORCE_SIZE</code></span></p></td>
+<td> Always return the icon scaled to the
+  requested size. Since 2.14.
 </td>
 </tr>
 </tbody>
@@ -941,6 +961,65 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="gtk-icon-theme-lookup-by-gicon"></a><h3>gtk_icon_theme_lookup_by_gicon ()</h3>
+<pre class="programlisting"><a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a>*        gtk_icon_theme_lookup_by_gicon      (<a class="link" href="GtkIconTheme.html" title="GtkIconTheme">GtkIconTheme</a> *icon_theme,
+                                                         <a
+href="/usr/share/gtk-doc/html/gio/GIcon.html"
+>GIcon</a> *icon,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> size,
+                                                         <a class="link" href="GtkIconTheme.html#GtkIconLookupFlags" title="enum GtkIconLookupFlags">GtkIconLookupFlags</a> flags);</pre>
+<p>
+Looks up an icon and returns a structure containing
+information such as the filename of the icon. 
+The icon can then be rendered into a pixbuf using
+<a class="link" href="GtkIconTheme.html#gtk-icon-info-load-icon" title="gtk_icon_info_load_icon ()"><code class="function">gtk_icon_info_load_icon()</code></a> or <code class="function">gtk_icon_info_load_at_size()</code>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>icon_theme</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkIconTheme.html" title="GtkIconTheme"><span class="type">GtkIconTheme</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>icon</code></em> :</span></p></td>
+<td> the <a
+href="/usr/share/gtk-doc/html/gio/GIcon.html"
+><span class="type">GIcon</span></a> to look up
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
+<td> desired icon size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
+<td> flags modifying the behavior of the icon lookup
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a <a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo"><span class="type">GtkIconInfo</span></a> structure containing 
+    information about the icon, or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if the icon 
+    wasn't found. Free with <a class="link" href="GtkIconTheme.html#gtk-icon-info-free" title="gtk_icon_info_free ()"><code class="function">gtk_icon_info_free()</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="gtk-icon-theme-load-icon"></a><h3>gtk_icon_theme_load_icon ()</h3>
 <pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
@@ -1344,6 +1423,42 @@ Free a <a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="gtk-icon-info-new-for-pixbuf"></a><h3>gtk_icon_info_new_for_pixbuf ()</h3>
+<pre class="programlisting"><a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo">GtkIconInfo</a>*        gtk_icon_info_new_for_pixbuf        (<a class="link" href="GtkIconTheme.html" title="GtkIconTheme">GtkIconTheme</a> *icon_theme,
+                                                         <a
+href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
+>GdkPixbuf</a> *pixbuf);</pre>
+<p>
+Creates a <a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo"><span class="type">GtkIconInfo</span></a> for a <span class="type">GtkPixbuf</span>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>icon_theme</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkIconTheme.html" title="GtkIconTheme"><span class="type">GtkIconTheme</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pixbuf</code></em> :</span></p></td>
+<td> the pixbuf to wrap in a <a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo"><span class="type">GtkIconInfo</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a <a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo"><span class="type">GtkIconInfo</span></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="gtk-icon-info-get-base-size"></a><h3>gtk_icon_info_get_base_size ()</h3>
 <pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -1476,7 +1591,10 @@ pixbuf may not be exactly this size; an icon theme may have icons
 that differ slightly from their nominal sizes, and in addition GTK+
 will avoid scaling icons that it considers sufficiently close to the
 requested size or for which the source image would have to be scaled
-up too far. (This maintains sharpness.)</p>
+up too far. (This maintains sharpness.). This behaviour can be changed
+by passing the <a class="link" href="GtkIconTheme.html#GTK-ICON-LOOKUP-FORCE-SIZE:CAPS"><code class="literal">GTK_ICON_LOOKUP_FORCE_SIZE</code></a> flag when obtaining
+the <a class="link" href="GtkIconTheme.html#GtkIconInfo" title="GtkIconInfo"><span class="type">GtkIconInfo</span></a>. If this flag has been specified, the pixbuf
+returned by this function will be scaled to the exact size.</p>
 <p>
 
 </p>

@@ -161,6 +161,27 @@ implies, most labels are used to label another widget such as a
 <link linkend="GtkButton"><type>GtkButton</type></link>, a <link linkend="GtkMenuItem"><type>GtkMenuItem</type></link>, or a <link linkend="GtkOptionMenu"><type>GtkOptionMenu</type></link>.
 </para>
 
+<refsect2 id="GtkLabel-BUILDER-UI">
+<title>GtkLabel as GtkBuildable</title>
+<para>
+The GtkLabel implementation of the GtkBuildable interface supports a 
+custom &lt;attributes&gt; element, which supports any number of &lt;attribute&gt;
+elements. the &lt;attribute&gt; element has attributes named name, value,
+start and end and allows you to specify <link linkend="PangoAttributs"><type>PangoAttributs</type></link> for this label.
+</para>
+<example>
+<title>A UI definition fragment specifying pango attributes</title>
+<programlisting><![CDATA[
+<object class="GtkLabel">
+  <attributes>
+    <attribute name=\"weight\" value=\"PANGO_WEIGHT_BOLD\"/>
+  </attributes>
+</object>
+]]></programlisting>
+</example>
+</refsect2>
+
+
 <refsect2>
 <title>Mnemonics</title>
 
@@ -359,7 +380,7 @@ external data, you may need to escape it with <link linkend="g-markup-escape-tex
 <link linkend="g-markup-printf-escaped"><function>g_markup_printf_escaped()</function></link><!-- -->:
 <informalexample><programlisting>
 char *markup;
-<!-- -->
+
 markup = g_markup_printf_escaped ("&lt;span style=\"italic\"&gt;&percnt;s&lt;/span&gt;", str);
 gtk_label_set_markup (GTK_LABEL (label), markup);
 g_free (markup);
@@ -1176,7 +1197,7 @@ to set a label's width are <link linkend="gtk-widget-set-size-request"><function
 </refsect2>
 <refsect2 id="GtkLabel--label"><title>The <literal>&quot;label&quot;</literal> property</title>
 <indexterm zone="GtkLabel--label"><primary>GtkLabel:label</primary></indexterm><programlisting>  &quot;label&quot;                    <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
-<para>The text of the label.</para><para>Default value: NULL</para>
+<para>The text of the label.</para><para>Default value: ""</para>
 </refsect2>
 <refsect2 id="GtkLabel--max-width-chars"><title>The <literal>&quot;max-width-chars&quot;</literal> property</title>
 <indexterm zone="GtkLabel--max-width-chars" role="2.6"><primary>GtkLabel:max-width-chars</primary></indexterm><programlisting>  &quot;max-width-chars&quot;          <link linkend="gint">gint</link>                  : Read / Write</programlisting>

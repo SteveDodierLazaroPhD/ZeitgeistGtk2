@@ -176,7 +176,7 @@ gtk_stock_lookup (const gchar  *stock_id,
 	  if (translate != NULL && translate->func != NULL)
 	    item->label = (* translate->func) (item->label, translate->data);
 	  else
-	    item->label = dgettext (item->translation_domain, item->label);
+	    item->label = g_dgettext (item->translation_domain, item->label);
 	}
     }
 
@@ -374,6 +374,7 @@ static const GtkStockItem builtin_items [] =
   { GTK_STOCK_ORIENTATION_PORTRAIT, N_("Portrait"), 0, 0, GETTEXT_PACKAGE },
   { GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE, N_("Reverse landscape"), 0, 0, GETTEXT_PACKAGE },
   { GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT, N_("Reverse portrait"), 0, 0, GETTEXT_PACKAGE },
+  { GTK_STOCK_PAGE_SETUP, N_("Page Set_up"), 0, 0, GETTEXT_PACKAGE },
   { GTK_STOCK_PASTE, N_("_Paste"), GDK_CONTROL_MASK, 'v', GETTEXT_PACKAGE },
   { GTK_STOCK_PREFERENCES, N_("_Preferences"), 0, 0, GETTEXT_PACKAGE },
   { GTK_STOCK_PRINT, N_("_Print"), 0, 0, GETTEXT_PACKAGE },
@@ -416,7 +417,7 @@ static const GtkStockItem builtin_items [] =
  * a stock item.
  *
  * If no function is registered for a translation domain,
- * dgettext() is used.
+ * g_dgettext() is used.
  *
  * Since: 2.8
  * 
@@ -456,7 +457,7 @@ sgettext_swapped (const gchar *msgid,
 {
   gchar *domainname = data;
 
-  return (gchar *)g_strip_context (msgid, dgettext (domainname, msgid));
+  return (gchar *)g_strip_context (msgid, g_dgettext (domainname, msgid));
 }
 
 

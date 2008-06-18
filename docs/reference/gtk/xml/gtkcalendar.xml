@@ -19,7 +19,13 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <link linkend="GtkCalendar-struct">GtkCalendar</link>;
+<link linkend="gchar">gchar</link>*              (<link linkend="GtkCalendarDetailFunc">*GtkCalendarDetailFunc</link>)            (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="guint">guint</link> year,
+                                                         <link linkend="guint">guint</link> month,
+                                                         <link linkend="guint">guint</link> day,
+                                                         <link linkend="gpointer">gpointer</link> user_data);
 enum                <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</link>;
+
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-calendar-new">gtk_calendar_new</link>                    (void);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-calendar-select-month">gtk_calendar_select_month</link>           (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
                                                          <link linkend="guint">guint</link> month,
@@ -31,16 +37,29 @@ enum                <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplay
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-calendar-unmark-day">gtk_calendar_unmark_day</link>             (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
                                                          <link linkend="guint">guint</link> day);
 <link linkend="void">void</link>                <link linkend="gtk-calendar-clear-marks">gtk_calendar_clear_marks</link>            (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);
+
 <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</link> <link linkend="gtk-calendar-get-display-options">gtk_calendar_get_display_options</link>
                                                         (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);
 <link linkend="void">void</link>                <link linkend="gtk-calendar-set-display-options">gtk_calendar_set_display_options</link>    (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
-                                                         <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</link> flags);
-<link linkend="void">void</link>                <link linkend="gtk-calendar-display-options">gtk_calendar_display_options</link>        (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
                                                          <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</link> flags);
 <link linkend="void">void</link>                <link linkend="gtk-calendar-get-date">gtk_calendar_get_date</link>               (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
                                                          <link linkend="guint">guint</link> *year,
                                                          <link linkend="guint">guint</link> *month,
                                                          <link linkend="guint">guint</link> *day);
+
+<link linkend="void">void</link>                <link linkend="gtk-calendar-set-detail-func">gtk_calendar_set_detail_func</link>        (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="GtkCalendarDetailFunc">GtkCalendarDetailFunc</link> func,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);
+<link linkend="gint">gint</link>                <link linkend="gtk-calendar-get-detail-width-chars">gtk_calendar_get_detail_width_chars</link> (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);
+<link linkend="void">void</link>                <link linkend="gtk-calendar-set-detail-width-chars">gtk_calendar_set_detail_width_chars</link> (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="gint">gint</link> chars);
+<link linkend="gint">gint</link>                <link linkend="gtk-calendar-get-detail-height-rows">gtk_calendar_get_detail_height_rows</link> (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);
+<link linkend="void">void</link>                <link linkend="gtk-calendar-set-detail-height-rows">gtk_calendar_set_detail_height_rows</link> (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="gint">gint</link> rows);
+
+<link linkend="void">void</link>                <link linkend="gtk-calendar-display-options">gtk_calendar_display_options</link>        (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</link> flags);
 <link linkend="void">void</link>                <link linkend="gtk-calendar-freeze">gtk_calendar_freeze</link>                 (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);
 <link linkend="void">void</link>                <link linkend="gtk-calendar-thaw">gtk_calendar_thaw</link>                   (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);
 </synopsis>
@@ -73,9 +92,12 @@ GtkCalendar implements
 <title role="properties.title">Properties</title>
 <synopsis>
   &quot;<link linkend="GtkCalendar--day">day</link>&quot;                      <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkCalendar--detail-height-rows">detail-height-rows</link>&quot;       <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkCalendar--detail-width-chars">detail-width-chars</link>&quot;       <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkCalendar--month">month</link>&quot;                    <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkCalendar--no-month-change">no-month-change</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkCalendar--show-day-names">show-day-names</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkCalendar--show-details">show-details</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkCalendar--show-heading">show-heading</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkCalendar--show-week-numbers">show-week-numbers</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkCalendar--year">year</link>&quot;                     <link linkend="gint">gint</link>                  : Read / Write
@@ -151,6 +173,41 @@ are 0-11) while <structfield>selected_day</structfield> is one-based
 (i.e. allowed values are 1-31). 
 </para>
 </note></refsect2>
+<refsect2 id="GtkCalendarDetailFunc" role="function" condition="since:2.16">
+<title>GtkCalendarDetailFunc ()</title>
+<indexterm zone="GtkCalendarDetailFunc" role="2.16"><primary>GtkCalendarDetailFunc</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              (*GtkCalendarDetailFunc)            (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="guint">guint</link> year,
+                                                         <link linkend="guint">guint</link> month,
+                                                         <link linkend="guint">guint</link> day,
+                                                         <link linkend="gpointer">gpointer</link> user_data);</programlisting>
+<para>
+This kind of functions provide Pango markup with detail information for the
+specified day. Examples for such details are holidays or appointments. The
+function returns <link linkend="NULL:CAPS"><literal>NULL</literal></link> when no information is available.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>year</parameter>&nbsp;:</term>
+<listitem><simpara> the year for which details are needed.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>month</parameter>&nbsp;:</term>
+<listitem><simpara> the month for which details are needed.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>day</parameter>&nbsp;:</term>
+<listitem><simpara> the day of <parameter>month</parameter> for which details are needed.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> the data passed with <link linkend="gtk-calendar-set-detail-func"><function>gtk_calendar_set_detail_func()</function></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> Newly allocated string with Pango markup with details
+for the specified day, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.16
+
+</para></refsect2>
 <refsect2 id="GtkCalendarDisplayOptions" role="enum">
 <title>enum GtkCalendarDisplayOptions</title>
 <indexterm zone="GtkCalendarDisplayOptions"><primary>GtkCalendarDisplayOptions</primary></indexterm><programlisting>typedef enum
@@ -159,38 +216,45 @@ are 0-11) while <structfield>selected_day</structfield> is one-based
   GTK_CALENDAR_SHOW_DAY_NAMES		= 1 &lt;&lt; 1,
   GTK_CALENDAR_NO_MONTH_CHANGE		= 1 &lt;&lt; 2,
   GTK_CALENDAR_SHOW_WEEK_NUMBERS	= 1 &lt;&lt; 3,
-  GTK_CALENDAR_WEEK_START_MONDAY	= 1 &lt;&lt; 4
+  GTK_CALENDAR_WEEK_START_MONDAY	= 1 &lt;&lt; 4,
+  GTK_CALENDAR_SHOW_DETAILS		= 1 &lt;&lt; 5
 } GtkCalendarDisplayOptions;
 </programlisting>
 <para>
-These options can be used to influence the display and behaviour of a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+These options can be used to influence the display and behaviour of a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.</para>
+<para>
 </para><variablelist role="enum">
 <varlistentry id="GTK-CALENDAR-SHOW-HEADING:CAPS" role="constant">
 <term><literal>GTK_CALENDAR_SHOW_HEADING</literal></term>
-<listitem><simpara>Specifies that the month and year should be displayed.
+<listitem><simpara> Specifies that the month and year should be displayed.
 </simpara></listitem>
 </varlistentry>
 <varlistentry id="GTK-CALENDAR-SHOW-DAY-NAMES:CAPS" role="constant">
 <term><literal>GTK_CALENDAR_SHOW_DAY_NAMES</literal></term>
-<listitem><simpara>Specifies that three letter day descriptions should be present.
+<listitem><simpara> Specifies that three letter day descriptions should be present.
 </simpara></listitem>
 </varlistentry>
 <varlistentry id="GTK-CALENDAR-NO-MONTH-CHANGE:CAPS" role="constant">
 <term><literal>GTK_CALENDAR_NO_MONTH_CHANGE</literal></term>
-<listitem><simpara>Prevents the user from switching months with the calendar.
+<listitem><simpara> Prevents the user from switching months with the calendar.
 </simpara></listitem>
 </varlistentry>
 <varlistentry id="GTK-CALENDAR-SHOW-WEEK-NUMBERS:CAPS" role="constant">
 <term><literal>GTK_CALENDAR_SHOW_WEEK_NUMBERS</literal></term>
-<listitem><simpara>Displays each week numbers of the current year, down the left side 
- of the calendar.
+<listitem><simpara> Displays each week numbers of the current year, down the
+left side of the calendar.
 </simpara></listitem>
 </varlistentry>
 <varlistentry id="GTK-CALENDAR-WEEK-START-MONDAY:CAPS" role="constant">
 <term><literal>GTK_CALENDAR_WEEK_START_MONDAY</literal></term>
-<listitem><simpara>Since GTK+ 2.4, this option is deprecated and ignored by GTK+. 
- The information on which day the calendar week starts is derived from the locale.
-
+<listitem><simpara> Since GTK+ 2.4, this option is deprecated and ignored by GTK+.
+The information on which day the calendar week starts is derived from the locale.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="GTK-CALENDAR-SHOW-DETAILS:CAPS" role="constant">
+<term><literal>GTK_CALENDAR_SHOW_DETAILS</literal></term>
+<listitem><simpara> Just show an indicator, not the full details
+text when details are provided. See <link linkend="gtk-calendar-set-detail-func"><function>gtk_calendar_set_detail_func()</function></link>.
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
@@ -321,22 +385,6 @@ headings).</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
 </para></refsect2>
-<refsect2 id="gtk-calendar-display-options" role="function" condition="deprecated:">
-<title>gtk_calendar_display_options ()</title>
-<indexterm zone="gtk-calendar-display-options" role="deprecated"><primary>gtk_calendar_display_options</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_calendar_display_options        (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
-                                                         <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</link> flags);</programlisting>
-<warning><para><literal>gtk_calendar_display_options</literal> is deprecated and should not be used in newly-written code. </para></warning>
-<para>
-Sets display options (whether to display the heading and the month headings).</para>
-<para>
-</para><variablelist role="params">
-<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>flags</parameter>&nbsp;:</term>
-<listitem><simpara> the display options to set.
-</simpara></listitem></varlistentry>
-</variablelist></refsect2>
 <refsect2 id="gtk-calendar-get-date" role="function">
 <title>gtk_calendar_get_date ()</title>
 <indexterm zone="gtk-calendar-get-date"><primary>gtk_calendar_get_date</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_calendar_get_date               (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
@@ -358,6 +406,127 @@ Obtains the selected date from a <link linkend="GtkCalendar"><type>GtkCalendar</
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>day</parameter>&nbsp;:</term>
 <listitem><simpara> location to store the day number (between 1 and 31), or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="gtk-calendar-set-detail-func" role="function" condition="since:2.14">
+<title>gtk_calendar_set_detail_func ()</title>
+<indexterm zone="gtk-calendar-set-detail-func" role="2.14"><primary>gtk_calendar_set_detail_func</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_calendar_set_detail_func        (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="GtkCalendarDetailFunc">GtkCalendarDetailFunc</link> func,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
+<para>
+Installs a function which provides Pango markup with detail information
+for each day. Examples for such details are holidays or appointments. That
+information is shown below each day when <link linkend="GtkCalendar--show-details"><type>"show-details"</type></link> is set.
+A tooltip containing with full detail information is provided, if the entire
+text should not fit into the details area, or if <link linkend="GtkCalendar--show-details"><type>"show-details"</type></link>
+is not set.
+</para>
+<para>
+The size of the details area can be restricted by setting the
+<link linkend="GtkCalendar--detail-width-chars"><type>"detail-width-chars"</type></link> and <link linkend="GtkCalendar--detail-height-rows"><type>"detail-height-rows"</type></link>
+properties.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>func</parameter>&nbsp;:</term>
+<listitem><simpara> a function providing details for each day.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara> data to pass to <parameter>func</parameter> invokations.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>destroy</parameter>&nbsp;:</term>
+<listitem><simpara> a function for releasing <parameter>data</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-calendar-get-detail-width-chars" role="function" condition="since:2.14">
+<title>gtk_calendar_get_detail_width_chars ()</title>
+<indexterm zone="gtk-calendar-get-detail-width-chars" role="2.14"><primary>gtk_calendar_get_detail_width_chars</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_calendar_get_detail_width_chars (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);</programlisting>
+<para>
+Queries the width of detail cells, in characters.
+See <link linkend="GtkCalendar--detail-width-chars"><type>"detail-width-chars"</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The width of detail cells, in characters.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+
+</para></refsect2>
+<refsect2 id="gtk-calendar-set-detail-width-chars" role="function" condition="since:2.14">
+<title>gtk_calendar_set_detail_width_chars ()</title>
+<indexterm zone="gtk-calendar-set-detail-width-chars" role="2.14"><primary>gtk_calendar_set_detail_width_chars</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_calendar_set_detail_width_chars (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="gint">gint</link> chars);</programlisting>
+<para>
+Updates the width of detail cells.
+See <link linkend="GtkCalendar--detail-width-chars"><type>"detail-width-chars"</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>chars</parameter>&nbsp;:</term>
+<listitem><simpara> detail width in characters.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-calendar-get-detail-height-rows" role="function" condition="since:2.14">
+<title>gtk_calendar_get_detail_height_rows ()</title>
+<indexterm zone="gtk-calendar-get-detail-height-rows" role="2.14"><primary>gtk_calendar_get_detail_height_rows</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_calendar_get_detail_height_rows (<link linkend="GtkCalendar">GtkCalendar</link> *calendar);</programlisting>
+<para>
+Queries the height of detail cells, in rows.
+See <link linkend="GtkCalendar--detail-width-chars"><type>"detail-width-chars"</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The height of detail cells, in rows.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+
+</para></refsect2>
+<refsect2 id="gtk-calendar-set-detail-height-rows" role="function" condition="since:2.14">
+<title>gtk_calendar_set_detail_height_rows ()</title>
+<indexterm zone="gtk-calendar-set-detail-height-rows" role="2.14"><primary>gtk_calendar_set_detail_height_rows</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_calendar_set_detail_height_rows (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="gint">gint</link> rows);</programlisting>
+<para>
+Updates the height of detail cells.
+See <link linkend="GtkCalendar--detail-height-rows"><type>"detail-height-rows"</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>rows</parameter>&nbsp;:</term>
+<listitem><simpara> detail height in rows.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-calendar-display-options" role="function" condition="deprecated:">
+<title>gtk_calendar_display_options ()</title>
+<indexterm zone="gtk-calendar-display-options" role="deprecated"><primary>gtk_calendar_display_options</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_calendar_display_options        (<link linkend="GtkCalendar">GtkCalendar</link> *calendar,
+                                                         <link linkend="GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</link> flags);</programlisting>
+<warning><para><literal>gtk_calendar_display_options</literal> is deprecated and should not be used in newly-written code. </para></warning>
+<para>
+Sets display options (whether to display the heading and the month headings).</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>calendar</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkCalendar"><type>GtkCalendar</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>flags</parameter>&nbsp;:</term>
+<listitem><simpara> the display options to set.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-calendar-freeze" role="function" condition="deprecated:2.8:">
@@ -392,12 +561,47 @@ since the last <link linkend="gtk-calendar-freeze"><function>gtk_calendar_freeze
 <title role="property_details.title">Property Details</title>
 <refsect2 id="GtkCalendar--day"><title>The <literal>&quot;day&quot;</literal> property</title>
 <indexterm zone="GtkCalendar--day"><primary>GtkCalendar:day</primary></indexterm><programlisting>  &quot;day&quot;                      <link linkend="gint">gint</link>                  : Read / Write</programlisting>
-<para>The selected day (as a number between 1 and 31, or 0 to unselect the currently selected day).</para><para>Allowed values: [0,31]</para>
+<para>
+The selected day (as a number between 1 and 31, or 0 
+to unselect the currently selected day).
+This property gets initially set to the current day.</para>
+<para>
+
+</para><para>Allowed values: [0,31]</para>
 <para>Default value: 0</para>
+</refsect2>
+<refsect2 id="GtkCalendar--detail-height-rows"><title>The <literal>&quot;detail-height-rows&quot;</literal> property</title>
+<indexterm zone="GtkCalendar--detail-height-rows" role="2.14"><primary>GtkCalendar:detail-height-rows</primary></indexterm><programlisting>  &quot;detail-height-rows&quot;       <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>
+Height of a detail cell, in rows.
+A value of 0 allows any width. See <link linkend="gtk-calendar-set-detail-func"><function>gtk_calendar_set_detail_func()</function></link>.</para>
+<para>
+
+</para><para>Allowed values: [0,127]</para>
+<para>Default value: 0</para>
+<para>Since  2.14
+</para>
+</refsect2>
+<refsect2 id="GtkCalendar--detail-width-chars"><title>The <literal>&quot;detail-width-chars&quot;</literal> property</title>
+<indexterm zone="GtkCalendar--detail-width-chars" role="2.14"><primary>GtkCalendar:detail-width-chars</primary></indexterm><programlisting>  &quot;detail-width-chars&quot;       <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>
+Width of a detail cell, in characters.
+A value of 0 allows any width. See <link linkend="gtk-calendar-set-detail-func"><function>gtk_calendar_set_detail_func()</function></link>.</para>
+<para>
+
+</para><para>Allowed values: [0,127]</para>
+<para>Default value: 0</para>
+<para>Since  2.14
+</para>
 </refsect2>
 <refsect2 id="GtkCalendar--month"><title>The <literal>&quot;month&quot;</literal> property</title>
 <indexterm zone="GtkCalendar--month"><primary>GtkCalendar:month</primary></indexterm><programlisting>  &quot;month&quot;                    <link linkend="gint">gint</link>                  : Read / Write</programlisting>
-<para>The selected month (as a number between 0 and 11).</para><para>Allowed values: [0,11]</para>
+<para>
+The selected month (as a number between 0 and 11). 
+This property gets initially set to the current month.</para>
+<para>
+
+</para><para>Allowed values: [0,11]</para>
 <para>Default value: 0</para>
 </refsect2>
 <refsect2 id="GtkCalendar--no-month-change"><title>The <literal>&quot;no-month-change&quot;</literal> property</title>
@@ -418,6 +622,18 @@ Determines whether day names are displayed.</para>
 
 </para><para>Default value: TRUE</para>
 <para>Since  2.4
+</para>
+</refsect2>
+<refsect2 id="GtkCalendar--show-details"><title>The <literal>&quot;show-details&quot;</literal> property</title>
+<indexterm zone="GtkCalendar--show-details" role="2.14"><primary>GtkCalendar:show-details</primary></indexterm><programlisting>  &quot;show-details&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Determines whether details are shown directly in the widget, or if they are
+available only as tooltip. When this property is set days with details are
+marked.</para>
+<para>
+
+</para><para>Default value: TRUE</para>
+<para>Since  2.14
 </para>
 </refsect2>
 <refsect2 id="GtkCalendar--show-heading"><title>The <literal>&quot;show-heading&quot;</literal> property</title>
@@ -442,7 +658,12 @@ Determines whether week numbers are displayed.</para>
 </refsect2>
 <refsect2 id="GtkCalendar--year"><title>The <literal>&quot;year&quot;</literal> property</title>
 <indexterm zone="GtkCalendar--year"><primary>GtkCalendar:year</primary></indexterm><programlisting>  &quot;year&quot;                     <link linkend="gint">gint</link>                  : Read / Write</programlisting>
-<para>The selected year.</para><para>Allowed values: &gt;= 0</para>
+<para>
+The selected year. 
+This property gets initially set to the current year.</para>
+<para>
+
+</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
 </refsect2>
 

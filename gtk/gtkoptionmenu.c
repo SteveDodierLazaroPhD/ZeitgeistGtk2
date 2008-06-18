@@ -109,8 +109,7 @@ enum
 enum
 {
   PROP_0,
-  PROP_MENU,
-  LAST_PROP
+  PROP_MENU
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
@@ -372,11 +371,7 @@ gtk_option_menu_get_property (GObject            *object,
 static void
 gtk_option_menu_destroy (GtkObject *object)
 {
-  GtkOptionMenu *option_menu;
-
-  g_return_if_fail (GTK_IS_OPTION_MENU (object));
-
-  option_menu = GTK_OPTION_MENU (object);
+  GtkOptionMenu *option_menu = GTK_OPTION_MENU (object);
 
   if (option_menu->menu)
     gtk_widget_destroy (option_menu->menu);
@@ -898,6 +893,10 @@ gtk_option_menu_position (GtkMenu  *menu,
 
   active = gtk_menu_get_active (GTK_MENU (option_menu->menu));
   gdk_window_get_origin (widget->window, &menu_xpos, &menu_ypos);
+
+  /* set combo box type hint for menu popup */
+  gtk_window_set_type_hint (GTK_MENU (option_menu->menu)->toplevel,
+			    GDK_WINDOW_TYPE_HINT_COMBO);
 
   menu_xpos += widget->allocation.x;
   menu_ypos += widget->allocation.y + widget->allocation.height / 2 - 2;

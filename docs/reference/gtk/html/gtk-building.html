@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Compiling the GTK+ libraries</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="prev" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="next" href="gtk-compiling.html" title="Compiling GTK+ Applications">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -231,20 +232,20 @@ How to compile GTK+ itself
 	  The GLib library provides core non-graphical functionality
 	  such as high level data types, Unicode manipulation, and
 	  an object and type system to C programs. It is available
-	  from the <a class="ulink" href="ftp://ftp.gtk.org/pub/gtk/v2.6/" target="_top">GTK+
+	  from the <a class="ulink" href="ftp://ftp.gtk.org/pub/glib/" target="_top">GTK+
 	  FTP site.</a>
 	</p></li>
 <li><p>
 	  <a class="ulink" href="http://www.pango.org" target="_top">Pango</a> is a library
 	  for internationalized text handling. It is available from
-	  the <a class="ulink" href="ftp://ftp.gtk.org/pub/gtk/v2.6/" target="_top">GTK+ FTP
+	  the <a class="ulink" href="ftp://ftp.gtk.org/pub/pango/" target="_top">GTK+ FTP
 	  site.</a>. 
 	</p></li>
 <li><p>
 	  ATK is the Accessibility Toolkit. It provides a set of generic
 	  interfaces allowing accessibility technologies such as
 	  screen readers to interact with a graphical user interface.
-	  It is available from the <a class="ulink" href="ftp://ftp.gtk.org/pub/gtk/v2.6/" target="_top">GTK+ FTP site.</a>
+	  It is available from the <a class="ulink" href="ftp://ftp.gtk.org/pub/atk/" target="_top">GTK+ FTP site.</a>
 	</p></li>
 <li><p>
 	  The <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">GNU
@@ -340,7 +341,7 @@ How to compile GTK+ itself
 	the documentation distributed with the those libraries.)
 
 	</p>
-<div class="cmdsynopsis"><p><code class="command">configure</code>  [[--disable-modules] |  [--enable-modules]] [[--with-included-loaders==LOADER1,LOADER2,...]] [[--enable-debug=[no|minimum|yes]]] [[--disable-visibility] |  [--enable-visibility]] [[--disable-shm] |  [--enable-shm]] [[--disable-xim] |  [--enable-xim]] [[--disable-xim-inst] |  [--enable-xim-inst]] [[--disable-xkb] |  [--enable-xkb]] [[--disable-xinerama] |  [--enable-xinerama]] [[--disable-gtk-doc] |  [--enable-gtk-doc]] [[--with-xinput=[no|yes]]] [[--with-gdktarget=[x11|win32|quartz|directfb]]]</p></div>
+<div class="cmdsynopsis"><p><code class="command">configure</code>  [[--disable-modules] |  [--enable-modules]] [[--with-included-loaders==LOADER1,LOADER2,...]] [[--with-included-immodules=MODULE1,MODULE2,...]] [[--enable-debug=[no|minimum|yes]]] [[--disable-visibility] |  [--enable-visibility]] [[--disable-shm] |  [--enable-shm]] [[--disable-xim] |  [--enable-xim]] [[--disable-xim-inst] |  [--enable-xim-inst]] [[--disable-xkb] |  [--enable-xkb]] [[--disable-xinerama] |  [--enable-xinerama]] [[--disable-gtk-doc] |  [--enable-gtk-doc]] [[--disable-cups] |  [--enable-cups]] [[--with-xinput=[no|yes]]] [[--with-gdktarget=[x11|win32|quartz|directfb]]]</p></div>
 <p>
       </p>
 <p><b><code class="systemitem">--disable-modules</code> and
@@ -360,6 +361,10 @@ How to compile GTK+ itself
          This option allows you to specify which image loaders you
          want to include; for example, you might include only the PNG
          loader to create a smaller GdkPixbuf binary.
+	</p>
+<p><b><code class="systemitem">--with-included-immodules</code>. </b>
+         This option allows you to specify which input method modules you
+         want to include. 
 	</p>
 <p><b><code class="systemitem">--enable-debug</code>. </b>
          Turns on various amounts of debugging support. Setting this to 'no' 
@@ -453,6 +458,13 @@ How to compile GTK+ itself
 	  enabled, pre-generated HTML files distributed with GTK+
 	  will be installed.
 	</p>
+<p><b><code class="systemitem">--disable-cups</code> and
+	  <code class="systemitem">--enable-cups</code>. </b>
+          By default the <span class="command"><strong>configure</strong></span> script will try
+          to build the cups print backend if the cups libraries are found.
+          These options can be used to explicitly control whether
+          the cups print backend should be built.
+        </p>
 <p><b><code class="systemitem">--with-xinput</code>. </b>
 	  Controls whether GTK+ is built with support for the XInput
 	  extension. The XInput extension provides an interface

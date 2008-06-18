@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkBuilder</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="Builder.html" title="Interface builder">
 <link rel="prev" href="gtk-gtkbuildable.html" title="GtkBuildable">
 <link rel="next" href="DeprecatedObjects.html" title="Deprecated">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -264,10 +265,11 @@ which are more limited in scope.
 <p>
 </p>
 <pre class="programlisting">
-&lt;!ELEMENT interface object* &gt;
+&lt;!ELEMENT interface (requires|object)* &gt;
 &lt;!ELEMENT object    (property|signal|child|ANY)* &gt;
 &lt;!ELEMENT property  PCDATA &gt;
 &lt;!ELEMENT signal    EMPTY &gt;
+&lt;!ELEMENT requires  EMPTY &gt;
 &lt;!ELEMENT child     (object|ANY*) &gt;
 
 &lt;!ATTLIST interface  domain         	    #IMPLIED &gt;
@@ -275,6 +277,8 @@ which are more limited in scope.
                      class          	    #REQUIRED
                      type-func      	    #IMPLIED
                      constructor    	    #IMPLIED &gt;
+&lt;!ATTLIST requires   lib             	    #REQUIRED
+                     version          	    #REQUIRED &gt;
 &lt;!ATTLIST property   name           	    #REQUIRED
                      translatable   	    #IMPLIED 
                      comments               #IMPLIED
@@ -305,6 +309,11 @@ elements, which describe child objects (most often widgets
 inside a container, but also e.g. actions in an action group,
 or columns in a tree model). A &lt;child&gt; element contains
 an &lt;object&gt; element which describes the child object.
+The target toolkit version(s) are described by &lt;requires&gt;
+elements, the "lib" attribute specifies the widget library in
+question (currently the only supported value is "gtk+") and the "version" 
+attribute specifies the target version in the form "&lt;major&gt;.&lt;minor&gt;".
+The builder will error out if the version requirements are not met.
 </p>
 <p>
 Typically, the specific kind of object represented by an
@@ -399,7 +408,7 @@ The possible values for the "type" attribute are described in
 the sections describing the widget-specific portions of UI definitions.
 </p>
 <div class="example">
-<a name="id4121640"></a><p class="title"><b>Example 51. A GtkBuilder UI Definition</b></p>
+<a name="id4059747"></a><p class="title"><b>Example 53. A GtkBuilder UI Definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;interface&gt;
   &lt;object class="GtkDialog" id="dialog1"&gt;
@@ -436,6 +445,7 @@ gets parsed by the custom tag handler of the object.
 These XML fragments are explained in the documentation of the
 respective objects, see 
 <a class="link" href="GtkWidget.html#GtkWidget-BUILDER-UI" title="GtkWidget as GtkBuildable">GtkWidget</a>,
+<a class="link" href="GtkLabel.html#GtkLabel-BUILDER-UI" title="GtkLabel as GtkBuildable">GtkLabel</a>,
 <a class="link" href="GtkContainer.html#GtkContainer-BUILDER-UI" title="GtkContainer as GtkBuildable">GtkContainer</a>,
 <a class="link" href="GtkDialog.html#GtkDialog-BUILDER-UI" title="GtkDialog as GtkBuildable">GtkDialog</a>,
 <a class="link" href="GtkCellLayout.html#GtkCellLayout-BUILDER-UI" title="GtkCellLayouts as GtkBuildable">GtkCellLayout</a>,
@@ -556,7 +566,8 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
   GTK_BUILDER_ERROR_INVALID_ATTRIBUTE,
   GTK_BUILDER_ERROR_INVALID_TAG,
   GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
-  GTK_BUILDER_ERROR_INVALID_VALUE
+  GTK_BUILDER_ERROR_INVALID_VALUE,
+  GTK_BUILDER_ERROR_VERSION_MISMATCH
 } GtkBuilderError;
 </pre>
 <p>
@@ -792,7 +803,16 @@ symbols in the application and connects the signals.
 Note that this function will not work correctly if <a
 href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
 ><span class="type">GModule</span></a> is not
-supported on the platform.</p>
+supported on the platform.
+</p>
+<p>
+When compiling applications for Windows, you must declare signal callbacks
+with <a
+href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#G-MODULE-EXPORT:CAPS"
+><span class="type">G_MODULE_EXPORT</span></a>, or they will not be put in the symbol table.
+On Linux and Unices, this is not necessary; applications should instead
+be compiled with the -Wl,--export-dynamic CFLAGS, and linked against
+gmodule-export-2.0.</p>
 <p>
 
 </p>
@@ -1171,8 +1191,8 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 href="/usr/share/gtk-doc/html/libnautilus-extension/libnautilus-extension-nautilus-extension-i18n.html#gettext"
 ><code class="function">gettext()</code></a>,
 otherwise <a
-href="/usr/share/gtk-doc/html/libnautilus-extension/libnautilus-extension-nautilus-extension-i18n.html#dgettext"
-><code class="function">dgettext()</code></a>.</p>
+href="/usr/share/gtk-doc/html/glib/glib-I18N.html#g-dgettext"
+><code class="function">g_dgettext()</code></a>.</p>
 <p>
 
 </p>

@@ -24,7 +24,7 @@
 <link linkend="GtkTreePath">GtkTreePath</link>*        <link linkend="gtk-tree-model-sort-convert-child-path-to-path">gtk_tree_model_sort_convert_child_path_to_path</link>
                                                         (<link linkend="GtkTreeModelSort">GtkTreeModelSort</link> *tree_model_sort,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *child_path);
-<link linkend="void">void</link>                <link linkend="gtk-tree-model-sort-convert-child-iter-to-iter">gtk_tree_model_sort_convert_child_iter_to_iter</link>
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-model-sort-convert-child-iter-to-iter">gtk_tree_model_sort_convert_child_iter_to_iter</link>
                                                         (<link linkend="GtkTreeModelSort">GtkTreeModelSort</link> *tree_model_sort,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *sort_iter,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *child_iter);
@@ -243,13 +243,14 @@ path on the child model, then <link linkend="NULL:CAPS"><literal>NULL</literal><
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-model-sort-convert-child-iter-to-iter" role="function">
 <title>gtk_tree_model_sort_convert_child_iter_to_iter ()</title>
-<indexterm zone="gtk-tree-model-sort-convert-child-iter-to-iter"><primary>gtk_tree_model_sort_convert_child_iter_to_iter</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_model_sort_convert_child_iter_to_iter
+<indexterm zone="gtk-tree-model-sort-convert-child-iter-to-iter"><primary>gtk_tree_model_sort_convert_child_iter_to_iter</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_model_sort_convert_child_iter_to_iter
                                                         (<link linkend="GtkTreeModelSort">GtkTreeModelSort</link> *tree_model_sort,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *sort_iter,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *child_iter);</programlisting>
 <para>
 Sets <parameter>sort_iter</parameter> to point to the row in <parameter>tree_model_sort</parameter> that corresponds to
-the row pointed at by <parameter>child_iter</parameter>.</para>
+the row pointed at by <parameter>child_iter</parameter>.  If <parameter>sort_iter</parameter> was not set, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>
+is returned.  Note: a boolean is only returned since 2.14.</para>
 <para>
 
 </para><variablelist role="params">
@@ -261,6 +262,9 @@ the row pointed at by <parameter>child_iter</parameter>.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>child_iter</parameter>&nbsp;:</term>
 <listitem><simpara> A valid <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> pointing to a row on the child model
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, if <parameter>sort_iter</parameter> was set, i.e. if <parameter>sort_iter</parameter> is a
+valid iterator pointer to a visible row in the child model.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-model-sort-convert-path-to-child-path" role="function">

@@ -1,12 +1,12 @@
 /* GTK - The GIMP Toolkit
  * gtklinkbutton.h - an hyperlink-enabled button
- * 
+ *
  * Copyright (C) 2005 Emmanuele Bassi <ebassi@gmail.com>
  * All rights reserved.
  *
  * Based on gnome-href code by:
  * 	James Henstridge <james@daa.com.au>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
@@ -21,6 +21,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Cambridge, MA 02139, USA.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
 
 #ifndef __GTK_LINK_BUTTON_H__
 #define __GTK_LINK_BUTTON_H__
@@ -48,14 +52,14 @@ typedef void (*GtkLinkButtonUriFunc) (GtkLinkButton *button,
 struct _GtkLinkButton
 {
   GtkButton parent_instance;
-  
+
   GtkLinkButtonPrivate *priv;
 };
 
 struct _GtkLinkButtonClass
 {
   GtkButtonClass parent_class;
-  
+
   void (*_gtk_padding1) (void);
   void (*_gtk_padding2) (void);
   void (*_gtk_padding3) (void);

@@ -21,8 +21,12 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
 
 #ifndef __GTK_RANGE_H__
 #define __GTK_RANGE_H__
@@ -59,13 +63,13 @@ struct _GtkRange
   guint inverted : 1;
 
   /*< protected >*/
-  
+
   guint flippable : 1;
-  
+
   /* Steppers are: < > ---- < >
    *               a b      c d
    */
-   
+
   guint has_stepper_a : 1;
   guint has_stepper_b : 1;
   guint has_stepper_c : 1;
@@ -74,7 +78,7 @@ struct _GtkRange
   guint need_recalc : 1;
 
   guint slider_size_fixed : 1;
-  
+
   gint min_slider_size;
 
   GtkOrientation orientation;
@@ -86,7 +90,7 @@ struct _GtkRange
 
   /* Round off value to this many digits, -1 for no rounding */
   gint round_digits;
-  
+
   /*< private >*/
   guint trough_click_forward : 1;  /* trough click was on the forward side of slider */
   guint update_pending : 1;        /* need to emit value_changed */
@@ -109,7 +113,7 @@ struct _GtkRangeClass
   void (* value_changed)    (GtkRange     *range);
   void (* adjust_bounds)    (GtkRange     *range,
                              gdouble	   new_value);
-  
+
   /* action signals for keybindings */
   void (* move_slider)      (GtkRange     *range,
                              GtkScrollType scroll);

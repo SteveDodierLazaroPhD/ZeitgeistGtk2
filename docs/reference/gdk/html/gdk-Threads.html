@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Threads</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GDK Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GDK Reference Manual">
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Properties-and-Atoms.html" title="Properties and Atoms">
 <link rel="next" href="gdk-Input.html" title="Input">
@@ -19,6 +19,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -571,14 +572,14 @@ in thread B:
 static gboolean
 idle_callback (gpointer data)
 {
-   // gdk_threads_enter(); would be needed for g_idle_add()
+   /* gdk_threads_enter(); would be needed for g_idle_add() */
 
    SomeWidget *self = data;
    /* do stuff with self */
 
    self-&gt;idle_id = 0;
 
-   // gdk_threads_leave(); would be needed for g_idle_add()
+   /* gdk_threads_leave(); would be needed for g_idle_add() */
    return FALSE;
 }
 
@@ -586,7 +587,7 @@ static void
 some_widget_do_stuff_later (SomeWidget *self)
 {
    self-&gt;idle_id = gdk_threads_add_idle (idle_callback, self)
-   // using g_idle_add() here would require thread protection in the callback
+   /* using g_idle_add() here would require thread protection in the callback */
 }
 
 static void
@@ -761,7 +762,7 @@ static void some_widget_do_stuff_later (SomeWidget *self)
  
 static void some_widget_finalize (GObject *object)
 {
-   SomeWidget *self = SOME_WIDGET(object);
+   SomeWidget *self = SOME_WIDGET (object);
    
    if (self-&gt;timeout_id)
      g_source_remove (self-&gt;timeout_id);

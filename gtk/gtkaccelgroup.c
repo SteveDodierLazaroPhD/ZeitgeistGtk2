@@ -397,10 +397,10 @@ quick_accel_add (GtkAccelGroup  *accel_group,
 
 static void
 quick_accel_remove (GtkAccelGroup      *accel_group,
-		    GtkAccelGroupEntry *entry)
+                    guint               pos)
 {
-  guint pos = entry - accel_group->priv_accels;
   GQuark accel_quark = 0;
+  GtkAccelGroupEntry *entry = accel_group->priv_accels + pos;
   guint accel_key = entry->key.accel_key;
   GdkModifierType accel_mods = entry->key.accel_mods;
   GClosure *closure = entry->closure;
@@ -525,6 +525,10 @@ gtk_accel_group_connect (GtkAccelGroup	*accel_group,
  * for the path.
  *
  * The signature used for the @closure is that of #GtkAccelGroupActivate.
+ * 
+ * Note that @accel_path string will be stored in a #GQuark. Therefore, if you
+ * pass a static string, you can save some memory by interning it first with 
+ * g_intern_static_string().
  */
 void
 gtk_accel_group_connect_by_path (GtkAccelGroup	*accel_group,
@@ -577,7 +581,7 @@ gtk_accel_group_disconnect (GtkAccelGroup *accel_group,
     if (accel_group->priv_accels[i].closure == closure)
       {
 	g_object_ref (accel_group);
-	quick_accel_remove (accel_group, accel_group->priv_accels + i);
+	quick_accel_remove (accel_group, i);
 	g_object_unref (accel_group);
 	return TRUE;
       }
@@ -723,6 +727,22 @@ gtk_accel_group_from_accel_closure (GClosure *closure)
   return NULL;
 }
 
+/**
+ * gtk_accel_group_activate:
+ * @accel_group:   a #GtkAccelGroup
+ * @accel_quark:   the quark for the accelerator name
+ * @acceleratable: the #GObject, usually a #GtkWindow, on which
+ *                 to activate the accelerator.
+ * @accel_key:     accelerator keyval from a key event
+ * @accel_mods:    keyboard state mask from a key event
+ * @returns:       %TRUE if the accelerator was handled, %FALSE otherwise
+ * 
+ * Finds the first accelerator in @accel_group 
+ * that matches @accel_key and @accel_mods, and
+ * activates it.
+ *
+ * Returns: %TRUE if an accelerator was activated and handled this keypress
+ */
 gboolean
 gtk_accel_group_activate (GtkAccelGroup   *accel_group,
                           GQuark	   accel_quark,
@@ -753,8 +773,8 @@ gtk_accel_group_activate (GtkAccelGroup   *accel_group,
  * Finds the first accelerator in any #GtkAccelGroup attached
  * to @object that matches @accel_key and @accel_mods, and
  * activates that accelerator.
- * If an accelerator was activated and handled this keypress, %TRUE
- * is returned.
+ *
+ * Returns: %TRUE if an accelerator was activated and handled this keypress
  */
 gboolean
 gtk_accel_groups_activate (GObject	  *object,

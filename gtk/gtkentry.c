@@ -47,6 +47,7 @@
 #include "gtkseparatormenuitem.h"
 #include "gtkselection.h"
 #include "gtksettings.h"
+#include "gtkspinbutton.h"
 #include "gtkstock.h"
 #include "gtktextutil.h"
 #include "gtkwindow.h"
@@ -348,6 +349,11 @@ static void         get_text_area_size                 (GtkEntry       *entry,
 							gint           *y,
 							gint           *width,
 							gint           *height);
+static void         gtk_entry_get_text_area_size       (GtkEntry       *entry,
+							gint           *x,
+							gint           *y,
+							gint           *width,
+							gint           *height);
 static void         get_widget_window_size             (GtkEntry       *entry,
 							gint           *x,
 							gint           *y,
@@ -466,6 +472,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   class->paste_clipboard = gtk_entry_paste_clipboard;
   class->toggle_overwrite = gtk_entry_toggle_overwrite;
   class->activate = gtk_entry_real_activate;
+  class->get_text_area_size = gtk_entry_get_text_area_size;
   
   quark_inner_border = g_quark_from_static_string ("gtk-entry-inner-border");
   quark_password_hint = g_quark_from_static_string ("gtk-entry-password-hint");
@@ -1409,6 +1416,23 @@ get_text_area_size (GtkEntry *entry,
                     gint     *width,
                     gint     *height)
 {
+  GtkEntryClass *class;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  class = GTK_ENTRY_GET_CLASS (entry);
+
+  if (class->get_text_area_size)
+    class->get_text_area_size (entry, x, y, width, height);
+}
+
+static void
+gtk_entry_get_text_area_size (GtkEntry *entry,
+                              gint     *x,
+			      gint     *y,
+			      gint     *width,
+			      gint     *height)
+{
   gint frame_height;
   gint xborder, yborder;
   GtkRequisition requisition;
@@ -1536,9 +1560,22 @@ gtk_entry_draw_frame (GtkWidget    *widget,
 {
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
   gint x = 0, y = 0, width, height;
-  
+
   gdk_drawable_get_size (widget->window, &width, &height);
-  
+
+  /* Fix a problem with some themes which assume that entry->text_area's
+   * width equals widget->window's width */
+  if (GTK_IS_SPIN_BUTTON (widget))
+    {
+      gint xborder, yborder;
+
+      get_text_area_size (GTK_ENTRY (widget), &x, NULL, &width, NULL);
+      _gtk_entry_get_borders (GTK_ENTRY (widget), &xborder, &yborder);
+
+      x -= xborder;
+      width += xborder * 2;
+    }
+
   if (GTK_WIDGET_HAS_FOCUS (widget) && !priv->interior_focus)
     {
       x += priv->focus_width;
@@ -1575,8 +1612,7 @@ gtk_entry_expose (GtkWidget      *widget,
   else if (entry->text_area == event->window)
     {
       gint area_width, area_height;
-
-      get_text_area_size (entry, NULL, NULL, &area_width, &area_height);
+      gdk_drawable_get_size (entry->text_area, &area_width, &area_height);
 
       gtk_paint_flat_box (widget->style, entry->text_area, 
 			  GTK_WIDGET_STATE(widget), GTK_SHADOW_NONE,
@@ -4276,35 +4312,25 @@ primary_clear_cb (GtkClipboard *clipboard,
 static void
 gtk_entry_update_primary_selection (GtkEntry *entry)
 {
-  static GtkTargetEntry targets[] = {
-    { "UTF8_STRING", 0, 0 },
-    { "STRING", 0, 0 },
-    { "TEXT",   0, 0 }, 
-    { "COMPOUND_TEXT", 0, 0 },
-    { "text/plain;charset=utf-8",   0, 0 }, 
-    { NULL,   0, 0 },
-    { "text/plain", 0, 0 }
-  };
-  
+  GtkTargetList *list;
+  GtkTargetEntry *targets;
   GtkClipboard *clipboard;
   gint start, end;
-
-  if (targets[5].target == NULL)
-    {
-      const gchar *charset;
-
-      g_get_charset (&charset);
-      targets[5].target = g_strdup_printf ("text/plain;charset=%s", charset);
-    }
+  gint n_targets;
 
   if (!GTK_WIDGET_REALIZED (entry))
     return;
+
+  list = gtk_target_list_new (NULL, 0);
+  gtk_target_list_add_text_targets (list, 0);
+
+  targets = gtk_target_table_new_from_list (list, &n_targets);
 
   clipboard = gtk_widget_get_clipboard (GTK_WIDGET (entry), GDK_SELECTION_PRIMARY);
   
   if (gtk_editable_get_selection_bounds (GTK_EDITABLE (entry), &start, &end))
     {
-      if (!gtk_clipboard_set_with_owner (clipboard, targets, G_N_ELEMENTS (targets),
+      if (!gtk_clipboard_set_with_owner (clipboard, targets, n_targets,
 					 primary_get_cb, primary_clear_cb, G_OBJECT (entry)))
 	primary_clear_cb (clipboard, entry);
     }
@@ -4313,6 +4339,9 @@ gtk_entry_update_primary_selection (GtkEntry *entry)
       if (gtk_clipboard_get_owner (clipboard) == G_OBJECT (entry))
 	gtk_clipboard_clear (clipboard);
     }
+
+  gtk_target_table_free (targets, n_targets);
+  gtk_target_list_unref (list);
 }
 
 /* Public API
@@ -5201,7 +5230,7 @@ popup_targets_received (GtkClipboard     *clipboard,
       gboolean show_input_method_menu;
       gboolean show_unicode_menu;
       
-        clipboard_contains_text = gtk_selection_data_targets_include_text (data);
+      clipboard_contains_text = gtk_selection_data_targets_include_text (data);
       if (entry->popup_menu)
 	gtk_widget_destroy (entry->popup_menu);
       

@@ -64,7 +64,6 @@ static void gtk_menu_item_get_property   (GObject          *object,
 					  guint             prop_id,
 					  GValue           *value,
 					  GParamSpec       *pspec);
-static void gtk_menu_item_finalize       (GObject          *object);
 static void gtk_menu_item_destroy        (GtkObject        *object);
 static void gtk_menu_item_size_request   (GtkWidget        *widget,
 					  GtkRequisition   *requisition);
@@ -123,7 +122,6 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
 
   gobject_class->set_property = gtk_menu_item_set_property;
   gobject_class->get_property = gtk_menu_item_get_property;
-  gobject_class->finalize = gtk_menu_item_finalize;
 
   object_class->destroy = gtk_menu_item_destroy;
 
@@ -241,6 +239,13 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
 							     G_MAXINT,
 							     10,
 							     GTK_PARAM_READABLE));
+
+  gtk_widget_class_install_style_property (widget_class,
+                                           g_param_spec_float ("arrow-scaling",
+                                                               P_("Arrow Scaling"),
+                                                               P_("Amount of space used up by arrow, relative to the menu item's font size"),
+                                                               0.0, 2.0, 0.8,
+                                                               GTK_PARAM_READABLE));
 }
 
 static void
@@ -352,16 +357,6 @@ gtk_menu_item_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
-}
-
-static void
-gtk_menu_item_finalize (GObject *object)
-{
-  GtkMenuItem *menu_item = GTK_MENU_ITEM (object);
-
-  g_free (menu_item->accel_path);
-
-  G_OBJECT_CLASS (gtk_menu_item_parent_class)->finalize (object);
 }
 
 static void
@@ -862,31 +857,31 @@ gtk_menu_item_paint (GtkWidget    *widget,
 	  gint arrow_size;
 	  gint arrow_extent;
 	  guint horizontal_padding;
+          gfloat arrow_scaling;
 	  GtkTextDirection direction;
 	  GtkArrowType arrow_type;
 	  PangoContext *context;
 	  PangoFontMetrics *metrics;
-	  gint ascent, descent;
 
 	  direction = gtk_widget_get_direction (widget);
       
  	  gtk_widget_style_get (widget,
  				"horizontal-padding", &horizontal_padding,
+                                "arrow-scaling", &arrow_scaling,
  				NULL);
  	  
 	  context = gtk_widget_get_pango_context (GTK_BIN (menu_item)->child);
 	  metrics = pango_context_get_metrics (context, 
 					       GTK_WIDGET (GTK_BIN (menu_item)->child)->style->font_desc,
 					       pango_context_get_language (context));
-	  
-	  ascent = pango_font_metrics_get_ascent (metrics);
-	  descent = pango_font_metrics_get_descent (metrics);
-	  pango_font_metrics_unref (metrics);
-	  
-	  arrow_size = PANGO_PIXELS (ascent + descent) - 2 * widget->style->ythickness;
 
-	  arrow_extent = arrow_size * 0.8;
-	  
+	  arrow_size = (PANGO_PIXELS (pango_font_metrics_get_ascent (metrics) +
+                                      pango_font_metrics_get_descent (metrics)));
+
+	  pango_font_metrics_unref (metrics);
+
+	  arrow_extent = arrow_size * arrow_scaling;
+
 	  shadow_type = GTK_SHADOW_OUT;
 	  if (state_type == GTK_STATE_PRELIGHT)
 	    shadow_type = GTK_SHADOW_IN;
@@ -1070,6 +1065,12 @@ gtk_real_menu_item_toggle_size_allocate (GtkMenuItem *menu_item,
 }
 
 static void
+free_timeval (GTimeVal *val)
+{
+  g_slice_free (GTimeVal, val);
+}
+
+static void
 gtk_menu_item_real_popup_submenu (GtkWidget *widget,
                                   gboolean   remember_exact_time)
 {
@@ -1085,13 +1086,13 @@ gtk_menu_item_real_popup_submenu (GtkWidget *widget,
 
       if (remember_exact_time)
         {
-          GTimeVal *popup_time = g_new0 (GTimeVal, 1);
+          GTimeVal *popup_time = g_slice_new0 (GTimeVal);
 
           g_get_current_time (popup_time);
 
           g_object_set_data_full (G_OBJECT (menu_item->submenu),
                                   "gtk-menu-exact-popup-time", popup_time,
-                                  (GDestroyNotify) g_free);
+                                  (GDestroyNotify) free_timeval);
         }
       else
         {
@@ -1554,14 +1555,19 @@ _gtk_menu_item_refresh_accel_path (GtkMenuItem   *menu_item,
       path = menu_item->accel_path;
       if (!path && prefix)
 	{
-	  gchar *postfix = NULL;
+	  const gchar *postfix = NULL;
+          gchar *new_path;
 
 	  /* try to construct one from label text */
 	  gtk_container_foreach (GTK_CONTAINER (menu_item),
 				 gtk_menu_item_accel_name_foreach,
 				 &postfix);
-	  menu_item->accel_path = postfix ? g_strconcat (prefix, "/", postfix, NULL) : NULL;
-	  path = menu_item->accel_path;
+          if (postfix)
+            {
+              new_path = g_strconcat (prefix, "/", postfix, NULL);
+              path = menu_item->accel_path = g_intern_string (new_path);
+              g_free (new_path);
+            }
 	}
       if (path)
 	gtk_widget_set_accel_path (widget, path, accel_group);
@@ -1590,12 +1596,17 @@ _gtk_menu_item_refresh_accel_path (GtkMenuItem   *menu_item,
  *
  * Note that you do need to set an accelerator on the parent menu with
  * gtk_menu_set_accel_group() for this to work.
+ *
+ * Note that @accel_path string will be stored in a #GQuark. Therefore, if you
+ * pass a static string, you can save some memory by interning it first with 
+ * g_intern_static_string().
  */
 void
 gtk_menu_item_set_accel_path (GtkMenuItem *menu_item,
 			      const gchar *accel_path)
 {
   GtkWidget *widget;
+  gchar *old_accel_path;
 
   g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
   g_return_if_fail (accel_path == NULL ||
@@ -1604,14 +1615,13 @@ gtk_menu_item_set_accel_path (GtkMenuItem *menu_item,
   widget = GTK_WIDGET (menu_item);
 
   /* store new path */
-  g_free (menu_item->accel_path);
-  menu_item->accel_path = g_strdup (accel_path);
+  menu_item->accel_path = g_intern_string (accel_path);
 
   /* forget accelerators associated with old path */
   gtk_widget_set_accel_path (widget, NULL, NULL);
 
   /* install accelerators associated with new path */
-  if (widget->parent && GTK_IS_MENU (widget->parent))
+  if (GTK_IS_MENU (widget->parent))
     {
       GtkMenu *menu = GTK_MENU (widget->parent);
 

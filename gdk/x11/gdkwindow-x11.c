@@ -153,7 +153,7 @@ _gdk_x11_window_get_toplevel (GdkWindow *window)
   
   g_return_val_if_fail (GDK_IS_WINDOW (window), NULL);
 
-  if (GDK_WINDOW_TYPE (window) == GDK_WINDOW_CHILD)
+  if (!WINDOW_IS_TOPLEVEL (window))
     return NULL;
 
   private = (GdkWindowObject *)window;
@@ -498,6 +498,8 @@ get_default_title (void)
   title = g_get_application_name ();
   if (!title)
     title = g_get_prgname ();
+  if (!title)
+    title = "";
 
   return title;
 }
@@ -645,24 +647,10 @@ setup_toplevel_window (GdkWindow *window,
   ensure_sync_counter (window);
 }
 
-/**
- * gdk_window_new:
- * @parent: a #GdkWindow, or %NULL to create the window as a child of
- *   the default root window for the default display.
- * @attributes: attributes of the new window
- * @attributes_mask: mask indicating which fields in @attributes are valid
- * 
- * Creates a new #GdkWindow using the attributes from
- * @attributes. See #GdkWindowAttr and #GdkWindowAttributesType for
- * more details.  Note: to use this on displays other than the default
- * display, @parent must be specified.
- * 
- * Return value: the new #GdkWindow
- **/
 GdkWindow*
-gdk_window_new (GdkWindow     *parent,
-		GdkWindowAttr *attributes,
-		gint           attributes_mask)
+_gdk_window_new (GdkWindow     *parent,
+		 GdkWindowAttr *attributes,
+		 gint           attributes_mask)
 {
   GdkWindow *window;
   GdkWindowObject *private;
@@ -1845,38 +1833,17 @@ gdk_window_move_resize (GdkWindow *window,
     }
 }
 
-/**
- * gdk_window_reparent:
- * @window: a #GdkWindow
- * @new_parent: new parent to move @window into
- * @x: X location inside the new parent
- * @y: Y location inside the new parent
- *
- * Reparents @window into the given @new_parent. The window being
- * reparented will be unmapped as a side effect.
- * 
- **/
 void
-gdk_window_reparent (GdkWindow *window,
-		     GdkWindow *new_parent,
-		     gint       x,
-		     gint       y)
+_gdk_window_reparent (GdkWindow *window,
+		      GdkWindow *new_parent,
+		      gint       x,
+		      gint       y)
 {
   GdkWindowObject *window_private;
   GdkWindowObject *parent_private;
   GdkWindowObject *old_parent_private;
   GdkWindowImplX11 *impl;
   gboolean was_toplevel;
-  
-  g_return_if_fail (GDK_IS_WINDOW (window));
-  g_return_if_fail (new_parent == NULL || GDK_IS_WINDOW (new_parent));
-  g_return_if_fail (GDK_WINDOW_TYPE (window) != GDK_WINDOW_ROOT);
-
-  if (GDK_WINDOW_DESTROYED (window) ||
-      (new_parent && GDK_WINDOW_DESTROYED (new_parent)))
-    {
-      return;
-    }
   
   if (!new_parent)
     new_parent = gdk_screen_get_root_window (GDK_WINDOW_SCREEN (window));
@@ -2590,9 +2557,9 @@ gdk_window_set_urgency_hint (GdkWindow *window,
  *
  **/
 void 
-gdk_window_set_geometry_hints (GdkWindow      *window,
-			       GdkGeometry    *geometry,
-			       GdkWindowHints  geom_mask)
+gdk_window_set_geometry_hints (GdkWindow         *window,
+			       const GdkGeometry *geometry,
+			       GdkWindowHints     geom_mask)
 {
   XSizeHints size_hints;
   
@@ -3412,6 +3379,7 @@ gdk_window_get_frame_extents (GdkWindow    *window,
   Window xwindow;
   Window xparent;
   Window root;
+  Window child;
   Window *children;
   guchar *data;
   Window *vroots;
@@ -3470,13 +3438,15 @@ gdk_window_get_frame_extents (GdkWindow    *window,
       if ((type_return == XA_CARDINAL) && (format_return == 32) &&
 	  (nitems_return == 4) && (data))
         {
-	  guint32 *ldata = (guint32 *) data;
+	  gulong *ldata = (gulong *) data;
 	  got_frame_extents = TRUE;
 
 	  /* try to get the real client window geometry */
 	  if (XGetGeometry (GDK_DISPLAY_XDISPLAY (display), xwindow,
-			    &root, &wx, &wy, &ww, &wh, &wb, &wd))
-	    {
+			    &root, &wx, &wy, &ww, &wh, &wb, &wd) &&
+              XTranslateCoordinates (GDK_DISPLAY_XDISPLAY (display),
+	  			     xwindow, root, 0, 0, &wx, &wy, &child))
+            {
 	      rect->x = wx;
 	      rect->y = wy;
 	      rect->width = ww;
@@ -4066,11 +4036,11 @@ gdk_window_input_shape_combine_mask (GdkWindow *window,
 
 
 static void
-do_shape_combine_region (GdkWindow *window,
-			 GdkRegion *shape_region,
-			 gint       offset_x,
-			 gint       offset_y,
-			 gint       shape)
+do_shape_combine_region (GdkWindow       *window,
+			 const GdkRegion *shape_region,
+			 gint             offset_x,
+			 gint             offset_y,
+			 gint             shape)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
   gint xoffset, yoffset;
@@ -4149,10 +4119,10 @@ do_shape_combine_region (GdkWindow *window,
  * 
  **/
 void
-gdk_window_shape_combine_region (GdkWindow *window,
-                                 GdkRegion *shape_region,
-                                 gint       offset_x,
-                                 gint       offset_y)
+gdk_window_shape_combine_region (GdkWindow       *window,
+                                 const GdkRegion *shape_region,
+                                 gint             offset_x,
+                                 gint             offset_y)
 { 
   do_shape_combine_region (window, shape_region, offset_x, offset_y, ShapeBounding);
 }
@@ -4184,10 +4154,10 @@ gdk_window_shape_combine_region (GdkWindow *window,
  * Since: 2.10
  */
 void 
-gdk_window_input_shape_combine_region (GdkWindow *window,
-				       GdkRegion *shape_region,
-				       gint       offset_x,
-				       gint       offset_y)
+gdk_window_input_shape_combine_region (GdkWindow       *window,
+				       const GdkRegion *shape_region,
+				       gint             offset_x,
+				       gint             offset_y)
 {
 #ifdef ShapeInput
   do_shape_combine_region (window, shape_region, offset_x, offset_y, ShapeInput);

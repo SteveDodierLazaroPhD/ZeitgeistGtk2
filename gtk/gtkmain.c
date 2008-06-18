@@ -31,10 +31,6 @@
 
 #include <locale.h>
 
-#ifdef HAVE_BIND_TEXTDOMAIN_CODESET
-#include <libintl.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,8 +44,6 @@
 #include <windows.h>
 #undef STRICT
 #endif
-
-#include <pango/pango-types.h>	/* For pango_language_from_string */
 
 #include "gtkintl.h"
 
@@ -529,22 +523,13 @@ enum_locale_proc (LPTSTR locale)
 #endif
 
 static void
-do_pre_parse_initialization (int    *argc,
-			     char ***argv)
+setlocale_initialization (void)
 {
-  const gchar *env_string;
-  
-#if	0
-  g_set_error_handler (gtk_error);
-  g_set_warning_handler (gtk_warning);
-  g_set_message_handler (gtk_message);
-  g_set_print_handler (gtk_print);
-#endif
+  static gboolean initialized = FALSE;
 
-  if (pre_initialized)
+  if (initialized)
     return;
-
-  pre_initialized = TRUE;
+  initialized = TRUE;
 
   if (do_setlocale)
     {
@@ -609,6 +594,25 @@ do_pre_parse_initialization (int    *argc,
 	g_warning ("Locale not supported by C library.\n\tUsing the fallback 'C' locale.");
 #endif
     }
+}
+
+static void
+do_pre_parse_initialization (int    *argc,
+			     char ***argv)
+{
+  const gchar *env_string;
+  
+#if	0
+  g_set_error_handler (gtk_error);
+  g_set_warning_handler (gtk_warning);
+  g_set_message_handler (gtk_message);
+  g_set_print_handler (gtk_print);
+#endif
+
+  if (pre_initialized)
+    return;
+
+  pre_initialized = TRUE;
 
   gdk_pre_parse_libgtk_only ();
   gdk_event_handler_set ((GdkEventFunc)gtk_main_do_event, NULL, NULL);
@@ -632,6 +636,8 @@ do_pre_parse_initialization (int    *argc,
 static void
 gettext_initialization (void)
 {
+  setlocale_initialization ();
+
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, GTK_LOCALEDIR);
   bindtextdomain (GETTEXT_PACKAGE "-properties", GTK_LOCALEDIR);
@@ -813,7 +819,7 @@ gtk_init_with_args (int            *argc,
   gboolean retval;
 
   if (gtk_initialized)
-    return TRUE;
+    return gdk_display_open_default_libgtk_only () != NULL;
 
   gettext_initialization ();
 
@@ -1531,6 +1537,7 @@ gtk_main_do_event (GdkEvent *event)
     case GDK_VISIBILITY_NOTIFY:
     case GDK_WINDOW_STATE:
     case GDK_GRAB_BROKEN:
+    case GDK_DAMAGE:
       gtk_widget_event (event_widget, event);
       break;
 
@@ -1636,7 +1643,7 @@ gtk_main_get_window_group (GtkWidget   *widget)
   if (widget)
     toplevel = gtk_widget_get_toplevel (widget);
 
-  if (toplevel && GTK_IS_WINDOW (toplevel))
+  if (GTK_IS_WINDOW (toplevel))
     return gtk_window_get_group (GTK_WINDOW (toplevel));
   else
     return gtk_window_get_group (NULL);
@@ -2293,7 +2300,7 @@ gtk_propagate_event (GtkWidget *widget,
       GtkWidget *window;
 
       window = gtk_widget_get_toplevel (widget);
-      if (window && GTK_IS_WINDOW (window))
+      if (GTK_IS_WINDOW (window))
 	{
 	  /* If there is a grab within the window, give the grab widget
 	   * a first crack at the key event
@@ -2304,7 +2311,7 @@ gtk_propagate_event (GtkWidget *widget,
 	  if (!handled_event)
 	    {
 	      window = gtk_widget_get_toplevel (widget);
-	      if (window && GTK_IS_WINDOW (window))
+	      if (GTK_IS_WINDOW (window))
 		{
 		  if (GTK_WIDGET_IS_SENSITIVE (window))
 		    gtk_widget_event (window, event);

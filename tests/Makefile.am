@@ -1,4 +1,5 @@
 ## Makefile.am for gtk+/tests
+include $(top_srcdir)/Makefile.decl
 
 INCLUDES =					\
 	-I$(top_srcdir)				\
@@ -24,13 +25,35 @@ if USE_X11
 testsocket_programs = testsocket testsocket_child
 endif
 
-TESTS = floatingtest buildertest
+TEST_PROGS			+= floatingtest
+floatingtest_DEPENDENCIES	 = $(TEST_DEPS)
+floatingtest_LDADD		 = $(LDADDS)
+TEST_PROGS                      += objecttests
+objecttests_SOURCES              = objecttests.c pixbuf-init.c
+objecttests_LDADD                = $(LDADDS)
+objecttests_DEPENDENCIES         = $(TEST_DEPS)
+# this doesn't work in make distcheck, since it doesn't
+# find file-chooser-test-dir 
+# TEST_PROGS                      += autotestfilechooser
+autotestfilechooser_DEPENDENCIES = $(TEST_DEPS)
+autotestfilechooser_LDADD        = $(LDADDS)
+autotestfilechooser_SOURCES      = autotestfilechooser.c pixbuf-init.c
+TEST_PROGS                      += buildertest
+buildertest_DEPENDENCIES 	 = $(TEST_DEPS)
+buildertest_LDADD 		 = $(LDADDS)
+buildertest_LDFLAGS 		 = -export-dynamic
+if OS_UNIX
+TEST_PROGS                      += defaultvaluetest 
+endif
+defaultvaluetest_DEPENDENCIES 	 = $(TEST_DEPS)
+defaultvaluetest_LDADD 		 = $(LDADDS)
+defaultvaluetest_SOURCES   	 = defaultvaluetest.c pixbuf-init.c	
+TEST_PROGS                      += textbuffertest
+textbuffertest_DEPENDENCIES 	 = $(TEST_DEPS)
+textbuffertest_LDADD 		 = $(LDADDS)
+textbuffertest_SOURCES           = textbuffertest.c pixbuf-init.c
 
-noinst_PROGRAMS =			\
-	autotestfilechooser		\
-	autotestkeywords		\
-	floatingtest			\
-	buildertest			\
+noinst_PROGRAMS =  $(TEST_PROGS)	\
 	simple				\
 	print-editor			\
 	testaccel			\
@@ -54,6 +77,7 @@ noinst_PROGRAMS =			\
 	testinput			\
 	testmenus			\
 	testmenubars			\
+	testmountoperation		\
 	testmultidisplay		\
 	testmultiscreen			\
 	testnotebookdnd			\
@@ -68,7 +92,6 @@ noinst_PROGRAMS =			\
 	testspinbutton			\
 	teststatusicon			\
 	testtext			\
-        testtextbuffer			\
 	testtoolbar			\
 	stresstest-toolbar		\
 	testtreeedit			\
@@ -93,7 +116,7 @@ noinst_PROGRAMS =			\
 
 if HAVE_CXX
 noinst_PROGRAMS += autotestkeywords
-TESTS += autotestkeywords
+TESTS = autotestkeywords
 
 autotestkeywords_SOURCES = autotestkeywords.cc
 autotestkeywords_CPPFLAGS = -I$(srcdir)/dummy-headers
@@ -105,10 +128,7 @@ endif
 
 endif
 
-autotestfilechooser_DEPENDENCIES = $(TEST_DEPS)
 simple_DEPENDENCIES = $(TEST_DEPS)
-floatingtest_DEPENDENCIES = $(TEST_DEPS)
-buildertest_DEPENDENCIES = $(TEST_DEPS)
 print_editor_DEPENDENCIES = $(TEST_DEPS)
 testicontheme_DEPENDENCIES = $(TEST_DEPS)
 testiconview_DEPENDENCIES = $(TEST_DEPS)
@@ -131,6 +151,7 @@ testinput_DEPENDENCIES = $(TEST_DEPS)
 testimage_DEPENDENCIES = $(TEST_DEPS)
 testmenus_DEPENDENCIES = $(TEST_DEPS)
 testmenubars_DEPENDENCIES = $(TEST_DEPS)
+testmountoperation_DEPENDENCIES = $(TEST_DEPS)
 testmultidisplay_DEPENDENCIES = $(TEST_DEPS)
 testmultiscreen_DEPENDENCIES = $(TEST_DEPS)
 testnotebookdnd_DEPENDENCIES = $(TEST_DEPS)
@@ -146,7 +167,6 @@ testsocket_child_DEPENDENCIES = $(DEPS)
 testspinbutton_DEPENDENCIES = $(TEST_DEPS)
 teststatusicon_DEPENDENCIES = $(TEST_DEPS)
 testtext_DEPENDENCIES = $(TEST_DEPS)
-testtextbuffer_DEPENDENCIES = $(TEST_DEPS)
 testtreeedit_DEPENDENCIES = $(DEPS)
 testtreemodel_DEPENDENCIES = $(DEPS)
 testtreeview_DEPENDENCIES = $(DEPS)
@@ -162,10 +182,7 @@ testgrouping_DEPENDENCIES = $(TEST_DEPS)
 testtooltips_DEPENDENCIES = $(TEST_DEPS)
 testvolumebutton_DEPENDENCIES = $(TEST_DEPS)
 
-autotestfilechooser_LDADD = $(LDADDS)
 simple_LDADD = $(LDADDS)
-floatingtest_LDADD = $(LDADDS)
-buildertest_LDADD = $(LDADDS)
 print_editor_LDADD = $(LDADDS)
 testaccel_LDADD = $(LDADDS)
 testassistant_LDADD = $(LDADDS)
@@ -188,6 +205,7 @@ testinput_LDADD = $(LDADDS)
 testimage_LDADD = $(LDADDS)
 testmenus_LDADD = $(LDADDS)
 testmenubars_LDADD = $(LDADDS)
+testmountoperation_LDADD = $(LDADDS)
 testmultidisplay_LDADD = $(LDADDS)
 testmultiscreen_LDADD = $(LDADDS)
 testnotebookdnd_LDADD = $(LDADDS)
@@ -202,7 +220,6 @@ testsocket_LDADD = $(LDADDS)
 testsocket_child_LDADD = $(LDADDS)
 testspinbutton_LDADD = $(LDADDS)
 teststatusicon_LDADD = $(LDADDS)
-testtextbuffer_LDADD = $(LDADDS)
 testtoolbar_LDADD = $(LDADDS)
 stresstest_toolbar_LDADD = $(LDADDS)
 testtreeedit_LDADD = $(LDADDS)
@@ -226,10 +243,6 @@ testgrouping_LDADD = $(LDADDS)
 testtooltips_LDADD = $(LDADDS)
 testvolumebutton_LDADD = $(LDADDS)
 
-buildertest_LDFLAGS = -export-dynamic
-
-autotestfilechooser_SOURCES =	\
-	autotestfilechooser.c
 
 testentrycompletion_SOURCES = 	\
 	prop-editor.c		\
@@ -317,7 +330,7 @@ testrecentchoosermenu_SOURCES =	\
 testvolumebutton_SOURCES =	\
 	testvolumebutton.c
 
-EXTRA_DIST = 			\
+EXTRA_DIST += 			\
 	prop-editor.h		\
 	testgtk.1 		\
 	testgtkrc 		\
@@ -337,5 +350,7 @@ EXTRA_DIST = 			\
 	merge-2.ui		\
 	merge-3.ui		\
 	gnome-textfile.png	\
-	makefile.msc
+	makefile.msc		\
+	file-chooser-test-dir/empty \
+	file-chooser-test-dir/text.txt
 

@@ -17,6 +17,11 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_BUILDER_H__
 #define __GTK_BUILDER_H__
 
@@ -45,7 +50,8 @@ typedef enum
   GTK_BUILDER_ERROR_INVALID_ATTRIBUTE,
   GTK_BUILDER_ERROR_INVALID_TAG,
   GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
-  GTK_BUILDER_ERROR_INVALID_VALUE
+  GTK_BUILDER_ERROR_INVALID_VALUE,
+  GTK_BUILDER_ERROR_VERSION_MISMATCH
 } GtkBuilderError;
 
 GQuark gtk_builder_error_quark (void);

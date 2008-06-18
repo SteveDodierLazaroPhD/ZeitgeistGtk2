@@ -49,6 +49,12 @@
                                                          <link linkend="gint">gint</link> y);
 <link linkend="gint">gint</link>                <link linkend="gdk-screen-get-monitor-at-window">gdk_screen_get_monitor_at_window</link>    (<link linkend="GdkScreen">GdkScreen</link> *screen,
                                                          <link linkend="GdkWindow">GdkWindow</link> *window);
+<link linkend="gint">gint</link>                <link linkend="gdk-screen-get-monitor-height-mm">gdk_screen_get_monitor_height_mm</link>    (<link linkend="GdkScreen">GdkScreen</link> *screen,
+                                                         <link linkend="gint">gint</link> monitor_num);
+<link linkend="gint">gint</link>                <link linkend="gdk-screen-get-monitor-width-mm">gdk_screen_get_monitor_width_mm</link>     (<link linkend="GdkScreen">GdkScreen</link> *screen,
+                                                         <link linkend="gint">gint</link> monitor_num);
+<link linkend="gchar">gchar</link>*              <link linkend="gdk-screen-get-monitor-plug-name">gdk_screen_get_monitor_plug_name</link>    (<link linkend="GdkScreen">GdkScreen</link> *screen,
+                                                         <link linkend="gint">gint</link> monitor_num);
 <link linkend="void">void</link>                <link linkend="gdk-screen-broadcast-client-message">gdk_screen_broadcast_client_message</link> (<link linkend="GdkScreen">GdkScreen</link> *screen,
                                                          <link linkend="GdkEvent">GdkEvent</link> *event);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-screen-get-setting">gdk_screen_get_setting</link>              (<link linkend="GdkScreen">GdkScreen</link> *screen,
@@ -115,6 +121,7 @@ const <link linkend="cairo-font-options-t">cairo_font_options_t</link>* <link li
 <title role="signal_proto.title">Signals</title>
 <synopsis>
   &quot;<link linkend="GdkScreen-composited-changed">composited-changed</link>&quot;                             : Run Last
+  &quot;<link linkend="GdkScreen-monitors-changed">monitors-changed</link>&quot;                               : Run Last
   &quot;<link linkend="GdkScreen-size-changed">size-changed</link>&quot;                                   : Run Last
 </synopsis>
 </refsect1>
@@ -608,6 +615,69 @@ bounding rectangle of <parameter>window</parameter> resides.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.2
 </para></refsect2>
+<refsect2 id="gdk-screen-get-monitor-height-mm" role="function" condition="since:2.14">
+<title>gdk_screen_get_monitor_height_mm ()</title>
+<indexterm zone="gdk-screen-get-monitor-height-mm" role="2.14"><primary>gdk_screen_get_monitor_height_mm</primary></indexterm><programlisting><link linkend="gint">gint</link>                gdk_screen_get_monitor_height_mm    (<link linkend="GdkScreen">GdkScreen</link> *screen,
+                                                         <link linkend="gint">gint</link> monitor_num);</programlisting>
+<para>
+Gets the height in millimeters of the specified monitor.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkScreen"><type>GdkScreen</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>monitor_num</parameter>&nbsp;:</term>
+<listitem><simpara> number of the monitor
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the height of the monitor, or -1 if not available
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gdk-screen-get-monitor-width-mm" role="function" condition="since:2.14">
+<title>gdk_screen_get_monitor_width_mm ()</title>
+<indexterm zone="gdk-screen-get-monitor-width-mm" role="2.14"><primary>gdk_screen_get_monitor_width_mm</primary></indexterm><programlisting><link linkend="gint">gint</link>                gdk_screen_get_monitor_width_mm     (<link linkend="GdkScreen">GdkScreen</link> *screen,
+                                                         <link linkend="gint">gint</link> monitor_num);</programlisting>
+<para>
+Gets the width in millimeters of the specified monitor, if available.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkScreen"><type>GdkScreen</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>monitor_num</parameter>&nbsp;:</term>
+<listitem><simpara> number of the monitor
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the width of the monitor, or -1 if not available
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gdk-screen-get-monitor-plug-name" role="function" condition="since:2.14">
+<title>gdk_screen_get_monitor_plug_name ()</title>
+<indexterm zone="gdk-screen-get-monitor-plug-name" role="2.14"><primary>gdk_screen_get_monitor_plug_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gdk_screen_get_monitor_plug_name    (<link linkend="GdkScreen">GdkScreen</link> *screen,
+                                                         <link linkend="gint">gint</link> monitor_num);</programlisting>
+<para>
+Returns the output name of the specified monitor. 
+Usually something like VGA, DVI, or TV, not the actual
+product name of the display device.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkScreen"><type>GdkScreen</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>monitor_num</parameter>&nbsp;:</term>
+<listitem><simpara> number of the monitor
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly-allocated string containing the name of the monitor,
+  or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if the name cannot be determined
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gdk-screen-broadcast-client-message" role="function" condition="since:2.2">
 <title>gdk_screen_broadcast_client_message ()</title>
 <indexterm zone="gdk-screen-broadcast-client-message" role="2.2"><primary>gdk_screen_broadcast_client_message</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_screen_broadcast_client_message (<link linkend="GdkScreen">GdkScreen</link> *screen,
@@ -999,6 +1069,25 @@ status of the screen changes</para>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since  2.10
+</para></refsect2><refsect2 id="GdkScreen-monitors-changed"><title>The <literal>&quot;monitors-changed&quot;</literal> signal</title>
+<indexterm zone="GdkScreen-monitors-changed" role="2.14"><primary>GdkScreen::monitors-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkScreen">GdkScreen</link> *screen,
+                                                        <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
+<para>
+The ::monitors_changed signal is emitted when the number, size
+or position of the monitors attached to the screen change. 
+</para>
+<para>
+Only for X for now. Future implementations for Win32 and
+OS X may be a possibility.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>screen</parameter>&nbsp;:</term>
+<listitem><simpara> the object on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since  2.14
 </para></refsect2><refsect2 id="GdkScreen-size-changed"><title>The <literal>&quot;size-changed&quot;</literal> signal</title>
 <indexterm zone="GdkScreen-size-changed" role="2.2"><primary>GdkScreen::size-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkScreen">GdkScreen</link> *screen,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>

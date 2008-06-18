@@ -132,10 +132,11 @@ which are more limited in scope.
 </para>
 <para>
 <programlisting><![CDATA[
-<!ELEMENT interface object* >
+<!ELEMENT interface (requires|object)* >
 <!ELEMENT object    (property|signal|child|ANY)* >
 <!ELEMENT property  PCDATA >
 <!ELEMENT signal    EMPTY >
+<!ELEMENT requires  EMPTY >
 <!ELEMENT child     (object|ANY*) >
 
 <!ATTLIST interface  domain         	    #IMPLIED >
@@ -143,6 +144,8 @@ which are more limited in scope.
                      class          	    #REQUIRED
                      type-func      	    #IMPLIED
                      constructor    	    #IMPLIED >
+<!ATTLIST requires   lib             	    #REQUIRED
+                     version          	    #REQUIRED >
 <!ATTLIST property   name           	    #REQUIRED
                      translatable   	    #IMPLIED 
                      comments               #IMPLIED
@@ -170,6 +173,11 @@ elements, which describe child objects (most often widgets
 inside a container, but also e.g. actions in an action group,
 or columns in a tree model). A &lt;child&gt; element contains
 an &lt;object&gt; element which describes the child object.
+The target toolkit version(s) are described by &lt;requires&gt;
+elements, the "lib" attribute specifies the widget library in
+question (currently the only supported value is "gtk+") and the "version" 
+attribute specifies the target version in the form "&lt;major&gt;.&lt;minor&gt;".
+The builder will error out if the version requirements are not met.
 </para>
 <para>
 Typically, the specific kind of object represented by an
@@ -285,6 +293,7 @@ gets parsed by the custom tag handler of the object.
 These XML fragments are explained in the documentation of the
 respective objects, see 
 <link linkend="GtkWidget-BUILDER-UI">GtkWidget</link>,
+<link linkend="GtkLabel-BUILDER-UI">GtkLabel</link>,
 <link linkend="GtkContainer-BUILDER-UI">GtkContainer</link>,
 <link linkend="GtkDialog-BUILDER-UI">GtkDialog</link>,
 <link linkend="GtkCellLayout-BUILDER-UI">GtkCellLayout</link>,
@@ -363,7 +372,8 @@ connection process.</para>
   GTK_BUILDER_ERROR_INVALID_ATTRIBUTE,
   GTK_BUILDER_ERROR_INVALID_TAG,
   GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
-  GTK_BUILDER_ERROR_INVALID_VALUE
+  GTK_BUILDER_ERROR_INVALID_VALUE,
+  GTK_BUILDER_ERROR_VERSION_MISMATCH
 } GtkBuilderError;
 </programlisting>
 <para>
@@ -491,7 +501,14 @@ symbols in the application and connects the signals.
 </para>
 <para>
 Note that this function will not work correctly if <link linkend="GModule"><type>GModule</type></link> is not
-supported on the platform.</para>
+supported on the platform.
+</para>
+<para>
+When compiling applications for Windows, you must declare signal callbacks
+with <link linkend="G-MODULE-EXPORT:CAPS"><type>G_MODULE_EXPORT</type></link>, or they will not be put in the symbol table.
+On Linux and Unices, this is not necessary; applications should instead
+be compiled with the -Wl,--export-dynamic CFLAGS, and linked against
+gmodule-export-2.0.</para>
 <para>
 
 </para><variablelist role="params">
@@ -691,7 +708,7 @@ need not be initialised beforehand.</para>
 The translation domain used when translating property values that
 have been marked as translatable in interface descriptions.
 If the translation domain is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, <link linkend="GtkBuilder"><type>GtkBuilder</type></link> uses <link linkend="gettext"><function>gettext()</function></link>,
-otherwise <link linkend="dgettext"><function>dgettext()</function></link>.</para>
+otherwise <link linkend="g-dgettext"><function>g_dgettext()</function></link>.</para>
 <para>
 
 </para><para>Default value: NULL</para>

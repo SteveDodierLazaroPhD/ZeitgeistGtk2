@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkSpinButton</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="NumericEntry.html" title="Numeric/Text Data Entry">
 <link rel="prev" href="GtkVScale.html" title="GtkVScale">
 <link rel="next" href="GtkEditable.html" title="GtkEditable">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -285,7 +286,7 @@ The main properties of a <a class="link" href="GtkSpinButton.html" title="GtkSpi
 <p>
 </p>
 <div class="example">
-<a name="id3193823"></a><p class="title"><b>Example 12. Using a <span class="structname">GtkSpinButton</span> to get an integer.</b></p>
+<a name="id3121746"></a><p class="title"><b>Example 14. Using a <span class="structname">GtkSpinButton</span> to get an integer.</b></p>
 <div class="example-contents"><pre class="programlisting">
 
 /* Provides a function to retrieve an integer value from a GtkSpinButton
@@ -321,7 +322,7 @@ void create_integer_spin_button (void) {
 <p>
 </p>
 <div class="example">
-<a name="id3193856"></a><p class="title"><b>Example 13. Using a <span class="structname">GtkSpinButton</span> to get a floating point value.</b></p>
+<a name="id3121778"></a><p class="title"><b>Example 15. Using a <span class="structname">GtkSpinButton</span> to get a floating point value.</b></p>
 <div class="example-contents"><pre class="programlisting">
 
 /* Provides a function to retrieve a floating point value from a
@@ -1398,10 +1399,33 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <a name="GtkSpinButton-output"></a><h3>The <code class="literal">"output"</code> signal</h3>
 <pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>            user_function                      (<a class="link" href="GtkSpinButton.html" title="GtkSpinButton">GtkSpinButton</a> *spinbutton,
+>gboolean</a>            user_function                      (<a class="link" href="GtkSpinButton.html" title="GtkSpinButton">GtkSpinButton</a> *spin_button,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
->gpointer</a>       user_data)       : Run Last</pre>
+>gpointer</a>       user_data)        : Run Last</pre>
+<p>
+The ::output signal can be used to change to formatting
+of the value that is displayed in the spin buttons entry.
+</p>
+<div class="informalexample"><pre class="programlisting">
+/* show leading zeros */
+static gboolean
+on_output (GtkSpinButton *spin,
+           gpointer       data)
+{
+   GtkAdjustment *adj;
+   gchar *text;
+   int value;
+   
+   adj = gtk_spin_button_get_adjustment (spin);
+   value = (int)gtk_adjustment_get_value (adj);
+   text = g_strdup_printf ("%02d", value);
+   gtk_entry_set_text (GTK_ENTRY (spin), text);
+   g_free (text);
+   
+   return TRUE;
+}
+</pre></div>
 <p>
 
 </p>
@@ -1409,8 +1433,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>spinbutton</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td><p><span class="term"><em class="parameter"><code>spin_button</code></em> :</span></p></td>
+<td> the object which received the signal
 </td>
 </tr>
 <tr>
@@ -1419,8 +1443,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the value has been displayed.
 </td>
 </tr>
 </tbody>

@@ -156,8 +156,7 @@ enum
   PROP_CURSOR_VISIBLE,
   PROP_BUFFER,
   PROP_OVERWRITE,
-  PROP_ACCEPTS_TAB,
-  LAST_PROP
+  PROP_ACCEPTS_TAB
 };
 
 static void gtk_text_view_destroy              (GtkObject        *object);
@@ -2886,7 +2885,7 @@ gtk_text_view_set_property (GObject         *object,
       break;
       
     default:
-      g_assert_not_reached ();
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
 }
@@ -7952,7 +7951,7 @@ text_window_invalidate_rect (GtkTextWindow *win,
       break;
 
     default:
-      g_warning ("%s: bug!", G_STRLOC);
+      g_warning ("%s: bug!", G_STRFUNC);
       return;
       break;
     }
@@ -8119,12 +8118,12 @@ gtk_text_view_get_window (GtkTextView *text_view,
       break;
 
     case GTK_TEXT_WINDOW_PRIVATE:
-      g_warning ("%s: You can't get GTK_TEXT_WINDOW_PRIVATE, it has \"PRIVATE\" in the name because it is private.", G_GNUC_FUNCTION);
+      g_warning ("%s: You can't get GTK_TEXT_WINDOW_PRIVATE, it has \"PRIVATE\" in the name because it is private.", G_STRFUNC);
       return NULL;
       break;
     }
 
-  g_warning ("%s: Unknown GtkTextWindowType", G_GNUC_FUNCTION);
+  g_warning ("%s: Unknown GtkTextWindowType", G_STRFUNC);
   return NULL;
 }
 
@@ -8292,11 +8291,11 @@ gtk_text_view_buffer_to_window_coords (GtkTextView      *text_view,
       break;
 
     case GTK_TEXT_WINDOW_PRIVATE:
-      g_warning ("%s: can't get coords for private windows", G_STRLOC);
+      g_warning ("%s: can't get coords for private windows", G_STRFUNC);
       break;
 
     default:
-      g_warning ("%s: Unknown GtkTextWindowType", G_STRLOC);
+      g_warning ("%s: Unknown GtkTextWindowType", G_STRFUNC);
       break;
     }
 }
@@ -8432,11 +8431,11 @@ gtk_text_view_window_to_buffer_coords (GtkTextView      *text_view,
       break;
 
     case GTK_TEXT_WINDOW_PRIVATE:
-      g_warning ("%s: can't get coords for private windows", G_STRLOC);
+      g_warning ("%s: can't get coords for private windows", G_STRFUNC);
       break;
 
     default:
-      g_warning ("%s: Unknown GtkTextWindowType", G_STRLOC);
+      g_warning ("%s: Unknown GtkTextWindowType", G_STRFUNC);
       break;
     }
 }

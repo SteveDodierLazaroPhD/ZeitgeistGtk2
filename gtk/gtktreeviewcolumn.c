@@ -925,8 +925,7 @@ gtk_tree_view_column_update_button (GtkTreeViewColumn *tree_column)
 					  &sort_column_id,
 					  NULL);
 
-  if (tree_column->show_sort_indicator
-      && (sort_column_id >= 0 && sort_column_id == tree_column->sort_column_id))
+  if (tree_column->show_sort_indicator)
     {
       gboolean alternative;
 
@@ -1444,12 +1443,12 @@ gtk_tree_view_column_new (void)
  * gtk_tree_view_column_set_attributes() on the newly created #GtkTreeViewColumn.
  *
  * Here's a simple example:
- * <informalexample><programlisting>
+ * |[
  *  enum { TEXT_COLUMN, COLOR_COLUMN, N_COLUMNS };
  *  ...
  *  {
  *    GtkTreeViewColumn *column;
- *    GtkCellRenderer   *renderer = gtk_cell_renderer_text_new (<!-- -->);
+ *    GtkCellRenderer   *renderer = gtk_cell_renderer_text_new ();
  *  
  *    column = gtk_tree_view_column_new_with_attributes ("Title",
  *                                                       renderer,
@@ -1457,7 +1456,7 @@ gtk_tree_view_column_new (void)
  *                                                       "foreground", COLOR_COLUMN,
  *                                                       NULL);
  *  }
- * </programlisting></informalexample>
+ * ]|
  * 
  * Return value: A newly created #GtkTreeViewColumn.
  **/
@@ -2569,12 +2568,12 @@ gtk_tree_view_column_cell_set_cell_data (GtkTreeViewColumn *tree_column,
  * primarily by the #GtkTreeView.
  **/
 void
-gtk_tree_view_column_cell_get_size (GtkTreeViewColumn *tree_column,
-				    GdkRectangle      *cell_area,
-				    gint              *x_offset,
-				    gint              *y_offset,
-				    gint              *width,
-				    gint              *height)
+gtk_tree_view_column_cell_get_size (GtkTreeViewColumn  *tree_column,
+				    const GdkRectangle *cell_area,
+				    gint               *x_offset,
+				    gint               *y_offset,
+				    gint               *width,
+				    gint               *height)
 {
   GList *list;
   gboolean first_cell = TRUE;
@@ -2636,11 +2635,11 @@ enum {
 static gboolean
 gtk_tree_view_column_cell_process_action (GtkTreeViewColumn  *tree_column,
 					  GdkWindow          *window,
-					  GdkRectangle       *background_area,
-					  GdkRectangle       *cell_area,
+					  const GdkRectangle *background_area,
+					  const GdkRectangle *cell_area,
 					  guint               flags,
 					  gint                action,
-					  GdkRectangle       *expose_area,     /* RENDER */
+					  const GdkRectangle *expose_area,     /* RENDER */
 					  GdkRectangle       *focus_rectangle, /* FOCUS  */
 					  GtkCellEditable   **editable_widget, /* EVENT  */
 					  GdkEvent           *event,           /* EVENT  */
@@ -3114,12 +3113,12 @@ gtk_tree_view_column_cell_process_action (GtkTreeViewColumn  *tree_column,
  * #GtkTreeView.
  **/
 void
-_gtk_tree_view_column_cell_render (GtkTreeViewColumn *tree_column,
-				   GdkWindow         *window,
-				   GdkRectangle      *background_area,
-				   GdkRectangle      *cell_area,
-				   GdkRectangle      *expose_area,
-				   guint              flags)
+_gtk_tree_view_column_cell_render (GtkTreeViewColumn  *tree_column,
+				   GdkWindow          *window,
+				   const GdkRectangle *background_area,
+				   const GdkRectangle *cell_area,
+				   const GdkRectangle *expose_area,
+				   guint               flags)
 {
   g_return_if_fail (GTK_IS_TREE_VIEW_COLUMN (tree_column));
   g_return_if_fail (background_area != NULL);
@@ -3141,8 +3140,8 @@ _gtk_tree_view_column_cell_event (GtkTreeViewColumn  *tree_column,
 				  GtkCellEditable   **editable_widget,
 				  GdkEvent           *event,
 				  gchar              *path_string,
-				  GdkRectangle       *background_area,
-				  GdkRectangle       *cell_area,
+				  const GdkRectangle *background_area,
+				  const GdkRectangle *cell_area,
 				  guint               flags)
 {
   g_return_val_if_fail (GTK_IS_TREE_VIEW_COLUMN (tree_column), FALSE);
@@ -3160,10 +3159,10 @@ _gtk_tree_view_column_cell_event (GtkTreeViewColumn  *tree_column,
 }
 
 void
-_gtk_tree_view_column_get_focus_area (GtkTreeViewColumn *tree_column,
-				      GdkRectangle      *background_area,
-				      GdkRectangle      *cell_area,
-				      GdkRectangle      *focus_area)
+_gtk_tree_view_column_get_focus_area (GtkTreeViewColumn  *tree_column,
+				      const GdkRectangle *background_area,
+				      const GdkRectangle *cell_area,
+				      GdkRectangle       *focus_area)
 {
   gtk_tree_view_column_cell_process_action (tree_column,
 					    NULL,
@@ -3426,12 +3425,12 @@ _gtk_tree_view_column_cell_focus (GtkTreeViewColumn *tree_column,
 }
 
 void
-_gtk_tree_view_column_cell_draw_focus (GtkTreeViewColumn       *tree_column,
-				       GdkWindow               *window,
-				       GdkRectangle            *background_area,
-				       GdkRectangle            *cell_area,
-				       GdkRectangle            *expose_area,
-				       guint                    flags)
+_gtk_tree_view_column_cell_draw_focus (GtkTreeViewColumn  *tree_column,
+				       GdkWindow          *window,
+				       const GdkRectangle *background_area,
+				       const GdkRectangle *cell_area,
+				       const GdkRectangle *expose_area,
+				       guint               flags)
 {
   gint focus_line_width;
   GtkStateType cell_state;

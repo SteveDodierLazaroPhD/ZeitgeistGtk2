@@ -49,6 +49,12 @@
 </synopsis>
 </refsect1>
 
+<refsect1 id="GtkCellRendererCombo.signals" role="signal_proto">
+<title role="signal_proto.title">Signals</title>
+<synopsis>
+  &quot;<link linkend="GtkCellRendererCombo-changed">changed</link>&quot;                                        : Run Last
+</synopsis>
+</refsect1>
 
 
 <refsect1 id="GtkCellRendererCombo.description" role="desc">
@@ -151,6 +157,45 @@ this column to its combo box.</para>
 
 </refsect1>
 
+<refsect1 id="GtkCellRendererCombo.signal-details" role="signals">
+<title role="signals.title">Signal Details</title>
+<refsect2 id="GtkCellRendererCombo-changed"><title>The <literal>&quot;changed&quot;</literal> signal</title>
+<indexterm zone="GtkCellRendererCombo-changed" role="2.14"><primary>GtkCellRendererCombo::changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkCellRendererCombo">GtkCellRendererCombo</link> *combo,
+                                                        <link linkend="gchar">gchar</link>                *path_string,
+                                                        <link linkend="GtkTreeIter">GtkTreeIter</link>          *new_iter,
+                                                        <link linkend="gpointer">gpointer</link>              user_data)        : Run Last</programlisting>
+<para>
+This signal is emitted each time after the user selected an item in
+the combo box, either by using the mouse or the arrow keys.  Contrary
+to GtkComboBox, GtkCellRendererCombo::changed is not emitted for
+changes made to a selected item in the entry.  The argument <parameter>new_iter</parameter>
+corresponds to the newly selected item in the combo box and it is relative
+to the GtkTreeModel set via the model property on GtkCellRendererCombo.
+</para>
+<para>
+Note that as soon as you change the model displayed in the tree view,
+the tree view will immediately cease the editing operating.  This
+means that you most probably want to refrain from changing the model
+until the combo cell renderer emits the edited or editing_canceled signal.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>combo</parameter>&nbsp;:</term>
+<listitem><simpara> the object on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>path_string</parameter>&nbsp;:</term>
+<listitem><simpara> a string of the path identifying the edited cell
+              (relative to the tree view model)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>new_iter</parameter>&nbsp;:</term>
+<listitem><simpara> the new iter selected in the combo box
+           (relative to the combo box model)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since  2.14
+</para></refsect2>
+</refsect1>
 
 
 

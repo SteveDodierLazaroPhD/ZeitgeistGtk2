@@ -250,29 +250,43 @@ constraints on an entry in a <link linkend="GtkTargetTable"><type>GtkTargetTable
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="GdkDragAction">GdkDragAction</link> actions);</programlisting>
 <para>
-Sets a widget as a potential drop destination.
+Sets a widget as a potential drop destination, and adds default behaviors.
+</para>
+<para>
+The default behaviors listed in <parameter>flags</parameter> have an effect similar
+to installing default handlers for the widget's drag-and-drop signals
+(<link linkend="GtkWidget--drag-motion"><type>"drag-motion"</type></link>, <link linkend="GtkWidget--drag-drop"><type>"drag-drop"</type></link>, ...). They all exist
+for convenience. When passing <link linkend="GTK-DEST-DEFAULT-ALL:CAPS"><type>GTK_DEST_DEFAULT_ALL</type></link> for instance it is
+sufficient to connect to the widget's <link linkend="GtkWidget-drag-data-received"><type>"drag-data-received"</type></link>
+signal to get primitive, but consistent drag-and-drop support.
+</para>
+<para>
+Things become more complicated when you try to preview the dragged data,
+as described in the documentation for <link linkend="GtkWidget--drag-motion"><type>"drag-motion"</type></link>. The default
+behaviors described by <parameter>flags</parameter> make some assumptions, that can conflict
+with your own signal handlers. For instance <link linkend="GTK-DEST-DEFAULT-DROP:CAPS"><type>GTK_DEST_DEFAULT_DROP</type></link> causes
+invokations of <link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> in the context of <link linkend="GtkWidget--drag-motion"><type>"drag-motion"</type></link>,
+and invokations of <link linkend="gtk-drag-finish"><function>gtk_drag_finish()</function></link> in <link linkend="GtkWidget--drag-data-received"><type>"drag-data-received"</type></link>.
+Especially the later is dramatic, when your own <link linkend="GtkWidget--drag-motion"><type>"drag-motion"</type></link>
+handler calls <link linkend="gtk-drag-get-data"><function>gtk_drag_get_data()</function></link> to inspect the dragged data.</para>
+<para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>flags</parameter>&nbsp;:</term>
-<listitem><simpara>the flags that specify what actions GTK+ should take
- on behalf of a widget for drops onto that widget. The <parameter>targets</parameter>
- and <parameter>actions</parameter> fields only are used if <link linkend="GTK-DEST-DEFAULT-MOTION:CAPS"><literal>GTK_DEST_DEFAULT_MOTION</literal></link>
- or <link linkend="GTK-DEST-DEFAULT-DROP:CAPS"><literal>GTK_DEST_DEFAULT_DROP</literal></link> are given.
+<listitem><simpara> which types of default drag behavior to use
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>targets</parameter>&nbsp;:</term>
-<listitem><simpara>a pointer to an array of <link linkend="GtkTargetEntry"><type>GtkTargetEntry</type></link><!-- -->s indicating
- the drop types that this widget will accept.
+<listitem><simpara> a pointer to an array of <link linkend="GtkTargetEntry"><type>GtkTargetEntry</type></link><!-- -->s indicating
+the drop types that this <parameter>widget</parameter> will accept. Later you can access the list
+with <link linkend="gtk-drag-dest-get-target-list"><function>gtk_drag_dest_get_target_list()</function></link> and <link linkend="gtk-drag-dest-find-target"><function>gtk_drag_dest_find_target()</function></link>.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>n_targets</parameter>&nbsp;:</term>
-<listitem><simpara>the number of entries in <parameter>targets</parameter>.
+<listitem><simpara> the number of entries in <parameter>targets</parameter>.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>actions</parameter>&nbsp;:</term>
-<listitem><simpara>a bitmask of possible actions for a drop onto this
- widget.
-
-
+<listitem><simpara> a bitmask of possible actions for a drop onto this <parameter>widget</parameter>.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-drag-dest-set-proxy" role="function">

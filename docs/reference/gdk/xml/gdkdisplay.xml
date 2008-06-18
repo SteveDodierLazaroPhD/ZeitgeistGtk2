@@ -39,7 +39,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gdk-display-get-
 <link linkend="GdkEvent">GdkEvent</link>*           <link linkend="gdk-display-get-event">gdk_display_get_event</link>               (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="GdkEvent">GdkEvent</link>*           <link linkend="gdk-display-peek-event">gdk_display_peek_event</link>              (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="void">void</link>                <link linkend="gdk-display-put-event">gdk_display_put_event</link>               (<link linkend="GdkDisplay">GdkDisplay</link> *display,
-                                                         <link linkend="GdkEvent">GdkEvent</link> *event);
+                                                         const <link linkend="GdkEvent">GdkEvent</link> *event);
 <link linkend="void">void</link>                <link linkend="gdk-display-add-client-message-filter">gdk_display_add_client_message_filter</link>
                                                         (<link linkend="GdkDisplay">GdkDisplay</link> *display,
                                                          <link linkend="GdkAtom">GdkAtom</link> message_type,
@@ -82,7 +82,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gdk-display-get-
 <link linkend="void">void</link>                <link linkend="gdk-display-store-clipboard">gdk_display_store_clipboard</link>         (<link linkend="GdkDisplay">GdkDisplay</link> *display,
                                                          <link linkend="GdkWindow">GdkWindow</link> *clipboard_window,
                                                          <link linkend="guint32">guint32</link> time_,
-                                                         <link linkend="GdkAtom">GdkAtom</link> *targets,
+                                                         const <link linkend="GdkAtom">GdkAtom</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-display-supports-shapes">gdk_display_supports_shapes</link>         (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-display-supports-input-shapes">gdk_display_supports_input_shapes</link>   (<link linkend="GdkDisplay">GdkDisplay</link> *display);
@@ -165,10 +165,8 @@ Opens a display.</para>
 <indexterm zone="gdk-display-get-default" role="2.2"><primary>gdk_display_get_default</primary></indexterm><programlisting><link linkend="GdkDisplay">GdkDisplay</link>*         gdk_display_get_default             (void);</programlisting>
 <para>
 Gets the default <link linkend="GdkDisplay"><type>GdkDisplay</type></link>. This is a convenience
-function for:
-<programlisting>
-  gdk_display_manager_get_default_display (gdk_display_manager_get ())
-</programlisting></para>
+function for
+<literal>gdk_display_manager_get_default_display (<link linkend="gdk-display-manager-get"><function>gdk_display_manager_get()</function></link>)</literal>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -427,7 +425,7 @@ if no events are in the queue. The returned <link linkend="GdkEvent"><type>GdkEv
 <refsect2 id="gdk-display-put-event" role="function" condition="since:2.2">
 <title>gdk_display_put_event ()</title>
 <indexterm zone="gdk-display-put-event" role="2.2"><primary>gdk_display_put_event</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_display_put_event               (<link linkend="GdkDisplay">GdkDisplay</link> *display,
-                                                         <link linkend="GdkEvent">GdkEvent</link> *event);</programlisting>
+                                                         const <link linkend="GdkEvent">GdkEvent</link> *event);</programlisting>
 <para>
 Appends a copy of the given event onto the front of the event
 queue for <parameter>display</parameter>.</para>
@@ -845,7 +843,7 @@ running.</para>
 <indexterm zone="gdk-display-store-clipboard" role="2.6"><primary>gdk_display_store_clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_display_store_clipboard         (<link linkend="GdkDisplay">GdkDisplay</link> *display,
                                                          <link linkend="GdkWindow">GdkWindow</link> *clipboard_window,
                                                          <link linkend="guint32">guint32</link> time_,
-                                                         <link linkend="GdkAtom">GdkAtom</link> *targets,
+                                                         const <link linkend="GdkAtom">GdkAtom</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets);</programlisting>
 <para>
 Issues a request to the clipboard manager to store the

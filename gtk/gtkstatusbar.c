@@ -22,7 +22,7 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 #include <config.h>
@@ -51,9 +51,9 @@ enum
   SIGNAL_LAST
 };
 
-enum 
+enum
 {
-  PROP_ZERO,
+  PROP_0,
   PROP_HAS_RESIZE_GRIP
 };
 
@@ -483,12 +483,8 @@ gtk_statusbar_get_has_resize_grip (GtkStatusbar *statusbar)
 static void
 gtk_statusbar_destroy (GtkObject *object)
 {
-  GtkStatusbar *statusbar;
+  GtkStatusbar *statusbar = GTK_STATUSBAR (object);
   GSList *list;
-
-  g_return_if_fail (GTK_IS_STATUSBAR (object));
-
-  statusbar = GTK_STATUSBAR (object);
 
   for (list = statusbar->messages; list; list = list->next)
     {
@@ -825,6 +821,10 @@ has_extra_children (GtkStatusbar *statusbar)
   GList *l;
   GtkBoxChild *child, *frame;
 
+  /* If the internal frame has been modified assume we have extra children */
+  if (gtk_bin_get_child (GTK_BIN (statusbar->frame)) != statusbar->label)
+    return TRUE;
+
   frame = NULL;
   for (l = GTK_BOX (statusbar)->children; l; l = l->next)
     {
@@ -858,7 +858,6 @@ gtk_statusbar_size_allocate  (GtkWidget     *widget,
 
   if (statusbar->has_resize_grip)
     {
-      widget->allocation = *allocation;
       get_grip_rect (statusbar, &rect);    
       
       extra_children = has_extra_children (statusbar);

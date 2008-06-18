@@ -79,6 +79,25 @@ _gdk_event_queue_find_first (GdkDisplay *display)
 }
 
 /**
+ * _gdk_event_queue_prepend:
+ * @display: a #GdkDisplay
+ * @event: Event to prepend.
+ *
+ * Prepends an event before the head of the event queue.
+ *
+ * Returns: the newly prepended list node.
+ **/
+GList*
+_gdk_event_queue_prepend (GdkDisplay *display,
+			  GdkEvent   *event)
+{
+  display->queued_events = g_list_prepend (display->queued_events, event);
+  if (!display->queued_tail)
+    display->queued_tail = display->queued_events;
+  return display->queued_events;
+}
+
+/**
  * _gdk_event_queue_append:
  * @display: a #GdkDisplay
  * @event: Event to append.
@@ -237,7 +256,7 @@ gdk_event_peek (void)
  * queue if event->any.window is %NULL. See gdk_display_put_event().
  **/
 void
-gdk_event_put (GdkEvent *event)
+gdk_event_put (const GdkEvent *event)
 {
   GdkDisplay *display;
   
@@ -332,7 +351,7 @@ gdk_event_new (GdkEventType type)
 }
 
 static gboolean
-gdk_event_is_allocated (GdkEvent *event)
+gdk_event_is_allocated (const GdkEvent *event)
 {
   if (event_hash)
     return g_hash_table_lookup (event_hash, event) != NULL;
@@ -351,7 +370,7 @@ gdk_event_is_allocated (GdkEvent *event)
  * gdk_event_free().
  **/
 GdkEvent*
-gdk_event_copy (GdkEvent *event)
+gdk_event_copy (const GdkEvent *event)
 {
   GdkEventPrivate *new_private;
   GdkEvent *new_event;
@@ -420,6 +439,9 @@ gdk_event_copy (GdkEvent *event)
     default:
       break;
     }
+
+  if (gdk_event_is_allocated (event))
+    _gdk_windowing_event_data_copy (event, new_event);
   
   return new_event;
 }
@@ -485,6 +507,8 @@ gdk_event_free (GdkEvent *event)
       break;
     }
 
+  _gdk_windowing_event_data_free (event);
+
   g_hash_table_remove (event_hash, event);
   g_slice_free (GdkEventPrivate, (GdkEventPrivate*) event);
 }
@@ -499,7 +523,7 @@ gdk_event_free (GdkEvent *event)
  * Return value: time stamp field from @event
  **/
 guint32
-gdk_event_get_time (GdkEvent *event)
+gdk_event_get_time (const GdkEvent *event)
 {
   if (event)
     switch (event->type)
@@ -541,6 +565,7 @@ gdk_event_get_time (GdkEvent *event)
       case GDK_CONFIGURE:
       case GDK_FOCUS_CHANGE:
       case GDK_NOTHING:
+      case GDK_DAMAGE:
       case GDK_DELETE:
       case GDK_DESTROY:
       case GDK_EXPOSE:
@@ -570,8 +595,8 @@ gdk_event_get_time (GdkEvent *event)
  * Return value: %TRUE if there was a state field in the event 
  **/
 gboolean
-gdk_event_get_state (GdkEvent        *event,
-                     GdkModifierType *state)
+gdk_event_get_state (const GdkEvent        *event,
+                     GdkModifierType       *state)
 {
   g_return_val_if_fail (state != NULL, FALSE);
   
@@ -611,6 +636,7 @@ gdk_event_get_state (GdkEvent        *event,
       case GDK_SELECTION_NOTIFY:
       case GDK_PROXIMITY_IN:
       case GDK_PROXIMITY_OUT:
+      case GDK_DAMAGE:
       case GDK_DRAG_ENTER:
       case GDK_DRAG_LEAVE:
       case GDK_DRAG_MOTION:
@@ -646,9 +672,9 @@ gdk_event_get_state (GdkEvent        *event,
  * Return value: %TRUE if the event delivered event window coordinates
  **/
 gboolean
-gdk_event_get_coords (GdkEvent *event,
-		      gdouble  *x_win,
-		      gdouble  *y_win)
+gdk_event_get_coords (const GdkEvent *event,
+		      gdouble        *x_win,
+		      gdouble        *y_win)
 {
   gdouble x = 0, y = 0;
   gboolean fetched = TRUE;
@@ -705,9 +731,9 @@ gdk_event_get_coords (GdkEvent *event,
  * Return value: %TRUE if the event delivered root window coordinates
  **/
 gboolean
-gdk_event_get_root_coords (GdkEvent *event,
-			   gdouble  *x_root,
-			   gdouble  *y_root)
+gdk_event_get_root_coords (const GdkEvent *event,
+			   gdouble        *x_root,
+			   gdouble        *y_root)
 {
   gdouble x = 0, y = 0;
   gboolean fetched = TRUE;
@@ -770,9 +796,9 @@ gdk_event_get_root_coords (GdkEvent *event,
  * Return value: %TRUE if the specified axis was found, otherwise %FALSE
  **/
 gboolean
-gdk_event_get_axis (GdkEvent   *event,
-		    GdkAxisUse  axis_use,
-		    gdouble    *value)
+gdk_event_get_axis (const GdkEvent *event,
+		    GdkAxisUse      axis_use,
+		    gdouble        *value)
 {
   gdouble *axes;
   GdkDevice *device;
@@ -843,19 +869,20 @@ gdk_event_get_axis (GdkEvent   *event,
  * core pointer. Coordinate extraction, processing and requesting more
  * motion events from a %GDK_MOTION_NOTIFY event usually works like this:
  *
- * <informalexample><programlisting>
- * {  // motion_event handler
+ * |[
+ * { 
+ *   /&ast; motion_event handler &ast;/
  *   x = motion_event->x;
  *   y = motion_event->y;
- *   ; // handle (x,y) motion
- *   gdk_event_request_motions (motion_event); // handles is_hint events
+ *   /&ast; handle (x,y) motion &ast;/
+ *   gdk_event_request_motions (motion_event); /&ast; handles is_hint events &ast;/
  * }
- * </programlisting></informalexample>
+ * ]|
  *
  * Since: 2.12
  **/
 void
-gdk_event_request_motions (GdkEventMotion *event)
+gdk_event_request_motions (const GdkEventMotion *event)
 {
   g_return_if_fail (event != NULL);
   if (event->type == GDK_MOTION_NOTIFY && event->is_hint)
@@ -903,7 +930,7 @@ gdk_event_set_screen (GdkEvent  *event,
  * Since: 2.2
  **/
 GdkScreen *
-gdk_event_get_screen (GdkEvent *event)
+gdk_event_get_screen (const GdkEvent *event)
 {
   if (gdk_event_is_allocated (event))
     {

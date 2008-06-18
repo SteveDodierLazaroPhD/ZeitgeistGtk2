@@ -56,7 +56,21 @@ gdk_quartz_window_get_nsview (GdkWindow *window)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
 
+  if (GDK_WINDOW_DESTROYED (window))
+    return NULL;
+
   return ((GdkWindowImplQuartz *)private->impl)->view;
+}
+
+NSWindow *
+gdk_quartz_window_get_nswindow (GdkWindow *window)
+{
+  GdkWindowObject *private = (GdkWindowObject *)window;
+
+  if (GDK_WINDOW_DESTROYED (window))
+    return NULL;
+
+  return ((GdkWindowImplQuartz *)private->impl)->toplevel;
 }
 
 static void
@@ -165,8 +179,8 @@ gdk_window_impl_quartz_init (GdkWindowImplQuartz *impl)
 }
 
 static void
-gdk_window_impl_quartz_begin_paint_region (GdkPaintable *paintable,
-					   GdkRegion    *region)
+gdk_window_impl_quartz_begin_paint_region (GdkPaintable    *paintable,
+					   const GdkRegion *region)
 {
   GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (paintable);
   GdkDrawableImplQuartz *drawable_impl;
@@ -379,18 +393,16 @@ gdk_window_quartz_process_all_updates (void)
 static gboolean
 gdk_window_quartz_update_idle (gpointer data)
 {
-  GDK_THREADS_ENTER ();
   gdk_window_quartz_process_all_updates ();
-  GDK_THREADS_LEAVE ();
 
   return FALSE;
 }
 
 static void
-gdk_window_impl_quartz_invalidate_maybe_recurse (GdkPaintable *paintable,
-						 GdkRegion    *region,
-						 gboolean    (*child_func) (GdkWindow *, gpointer),
-						 gpointer      user_data)
+gdk_window_impl_quartz_invalidate_maybe_recurse (GdkPaintable    *paintable,
+						 const GdkRegion *region,
+						 gboolean        (*child_func) (GdkWindow *, gpointer),
+						 gpointer         user_data)
 {
   GdkWindowImplQuartz *window_impl = GDK_WINDOW_IMPL_QUARTZ (paintable);
   GdkDrawableImplQuartz *drawable_impl = (GdkDrawableImplQuartz *) window_impl;
@@ -408,12 +420,17 @@ gdk_window_impl_quartz_invalidate_maybe_recurse (GdkPaintable *paintable,
     }
   else
     {
-      update_windows = g_slist_prepend (update_windows, window);
+      /* FIXME: When the update_window/update_area handling is abstracted in
+       * some way, we can remove this check. Currently it might be cleared
+       * in the generic code without us knowing, see bug #530801.
+       */
+      if (!g_slist_find (update_windows, window))
+        update_windows = g_slist_prepend (update_windows, window);
       private->update_area = visible_region;
 
       if (update_idle == 0)
-	update_idle = g_idle_add_full (GDK_PRIORITY_REDRAW,
-				       gdk_window_quartz_update_idle, NULL, NULL);
+        update_idle = gdk_threads_add_idle_full (GDK_PRIORITY_REDRAW,
+                                                 gdk_window_quartz_update_idle, NULL, NULL);
     }
 }
 
@@ -764,9 +781,9 @@ _gdk_quartz_window_did_resign_main (GdkWindow *window)
 }
 
 GdkWindow *
-gdk_window_new (GdkWindow     *parent,
-		GdkWindowAttr *attributes,
-		gint           attributes_mask)
+_gdk_window_new (GdkWindow     *parent,
+                 GdkWindowAttr *attributes,
+                 gint           attributes_mask)
 {
   GdkWindow *window;
   GdkWindowObject *private;
@@ -1233,7 +1250,7 @@ gdk_window_hide (GdkWindow *window)
 
   /* Make sure we're not stuck in fullscreen mode. */
   if (get_fullscreen_geometry (window))
-    ShowMenuBar ();
+    SetSystemUIMode (kUIModeNormal, 0);
 
   if (GDK_WINDOW_DESTROYED (window))
     return;
@@ -1489,15 +1506,52 @@ gdk_window_move_resize (GdkWindow *window,
 }
 
 void
-gdk_window_reparent (GdkWindow *window,
-		     GdkWindow *new_parent,
-		     gint       x,
-		     gint       y)
+_gdk_window_reparent (GdkWindow *window,
+                      GdkWindow *new_parent,
+                      gint       x,
+                      gint       y)
 {
-  g_warning ("gdk_window_reparent: %p %p (%d, %d)", 
-	     window, new_parent, x, y);
+  GdkWindowObject *private, *old_parent_private, *new_parent_private;
+  GdkWindowImplQuartz *impl, *old_parent_impl, *new_parent_impl;
+  NSView *view, *new_parent_view;
 
-  /* FIXME: Implement */
+  if (!new_parent || new_parent == _gdk_root)
+    {
+      /* Could be added, just needs implementing. */
+      g_warning ("Reparenting to root window is not supported yet in the Mac OS X backend");
+      return;
+    }
+
+  private = GDK_WINDOW_OBJECT (window);
+  impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+  view = impl->view;
+
+  new_parent_private = GDK_WINDOW_OBJECT (new_parent);
+  new_parent_impl = GDK_WINDOW_IMPL_QUARTZ (new_parent_private->impl);
+  new_parent_view = new_parent_impl->view;
+
+  old_parent_private = GDK_WINDOW_OBJECT (private->parent);
+  old_parent_impl = GDK_WINDOW_IMPL_QUARTZ (old_parent_private->impl);
+
+  [view retain];
+
+  [view removeFromSuperview];
+  [new_parent_view addSubview:view];
+
+  [view release];
+
+  private->x = x;
+  private->y = y;
+  private->parent = (GdkWindowObject *)new_parent;
+
+  if (old_parent_private)
+    {
+      old_parent_private->children = g_list_remove (old_parent_private->children, window);
+      old_parent_impl->sorted_children = g_list_remove (old_parent_impl->sorted_children, window);
+    }
+
+  new_parent_private->children = g_list_prepend (new_parent_private->children, window);
+  new_parent_impl->sorted_children = g_list_prepend (new_parent_impl->sorted_children, window);
 }
 
 void
@@ -2068,9 +2122,9 @@ gdk_window_set_urgency_hint (GdkWindow *window,
 }
 
 void 
-gdk_window_set_geometry_hints (GdkWindow      *window,
-			       GdkGeometry    *geometry,
-			       GdkWindowHints  geom_mask)
+gdk_window_set_geometry_hints (GdkWindow         *window,
+			       const GdkGeometry *geometry,
+			       GdkWindowHints     geom_mask)
 {
   GdkWindowImplQuartz *impl;
 
@@ -2227,10 +2281,10 @@ gdk_window_set_transient_for (GdkWindow *window,
 }
 
 void
-gdk_window_shape_combine_region (GdkWindow *window,
-                                 GdkRegion *shape,
-                                 gint       x,
-                                 gint       y)
+gdk_window_shape_combine_region (GdkWindow       *window,
+                                 const GdkRegion *shape,
+                                 gint             x,
+                                 gint             y)
 {
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -2245,7 +2299,7 @@ gdk_window_shape_combine_mask (GdkWindow *window,
   /* FIXME: Implement */
 }
 
-void 
+void
 gdk_window_input_shape_combine_mask (GdkWindow *window,
 				     GdkBitmap *mask,
 				     gint       x,
@@ -2254,11 +2308,11 @@ gdk_window_input_shape_combine_mask (GdkWindow *window,
   /* FIXME: Implement */
 }
 
-void 
-gdk_window_input_shape_combine_region (GdkWindow *window,
-				       GdkRegion *shape_region,
-				       gint       offset_x,
-				       gint       offset_y)
+void
+gdk_window_input_shape_combine_region (GdkWindow       *window,
+                                       const GdkRegion *shape_region,
+                                       gint             offset_x,
+                                       gint             offset_y)
 {
   /* FIXME: Implement */
 }
@@ -2666,6 +2720,7 @@ gdk_window_set_decorations (GdkWindow       *window,
           new_mask != NSBorderlessWindowMask)
         {
           rect = [NSWindow frameRectForContentRect:rect styleMask:new_mask];
+
         }
       else if (old_mask != NSBorderlessWindowMask &&
                new_mask == NSBorderlessWindowMask)
@@ -2919,7 +2974,7 @@ gdk_window_fullscreen (GdkWindow *window)
                                    frame.size.width, frame.size.height);
     }
 
-  HideMenuBar ();
+  SetSystemUIMode (kUIModeAllHidden, kUIOptionAutoShowMenuBar);
 
   gdk_synthesize_window_state (window, 0, GDK_WINDOW_STATE_FULLSCREEN);
 }
@@ -2935,7 +2990,7 @@ gdk_window_unfullscreen (GdkWindow *window)
   geometry = get_fullscreen_geometry (window);
   if (geometry)
     {
-      ShowMenuBar ();
+      SetSystemUIMode (kUIModeNormal, 0);
 
       move_resize_window_internal (window,
                                    geometry->x,

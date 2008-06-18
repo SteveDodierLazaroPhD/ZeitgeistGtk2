@@ -79,7 +79,7 @@ enum                <link linkend="GtkWidgetHelpType">GtkWidgetHelpType</link>;
 <link linkend="void">void</link>                <link linkend="gtk-widget-queue-resize">gtk_widget_queue_resize</link>             (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="void">void</link>                <link linkend="gtk-widget-queue-resize-no-redraw">gtk_widget_queue_resize_no_redraw</link>   (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="void">void</link>                <link linkend="gtk-widget-draw">gtk_widget_draw</link>                     (<link linkend="GtkWidget">GtkWidget</link> *widget,
-                                                         <link linkend="GdkRectangle">GdkRectangle</link> *area);
+                                                         const <link linkend="GdkRectangle">GdkRectangle</link> *area);
 <link linkend="void">void</link>                <link linkend="gtk-widget-size-request">gtk_widget_size_request</link>             (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GtkRequisition">GtkRequisition</link> *requisition);
 <link linkend="void">void</link>                <link linkend="gtk-widget-get-child-requisition">gtk_widget_get_child_requisition</link>    (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -108,7 +108,7 @@ enum                <link linkend="GtkWidgetHelpType">GtkWidgetHelpType</link>;
 <link linkend="void">void</link>                <link linkend="gtk-widget-reparent">gtk_widget_reparent</link>                 (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GtkWidget">GtkWidget</link> *new_parent);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-intersect">gtk_widget_intersect</link>                (<link linkend="GtkWidget">GtkWidget</link> *widget,
-                                                         <link linkend="GdkRectangle">GdkRectangle</link> *area,
+                                                         const <link linkend="GdkRectangle">GdkRectangle</link> *area,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *intersection);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-is-focus">gtk_widget_is_focus</link>                 (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="void">void</link>                <link linkend="gtk-widget-grab-focus">gtk_widget_grab_focus</link>               (<link linkend="GtkWidget">GtkWidget</link> *widget);
@@ -263,7 +263,7 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
                                                         (<link linkend="GtkWidgetClass">GtkWidgetClass</link> *klass,
                                                          <link linkend="guint">guint</link> *n_properties);
 <link linkend="GdkRegion">GdkRegion</link>*          <link linkend="gtk-widget-region-intersect">gtk_widget_region_intersect</link>         (<link linkend="GtkWidget">GtkWidget</link> *widget,
-                                                         <link linkend="GdkRegion">GdkRegion</link> *region);
+                                                         const <link linkend="GdkRegion">GdkRegion</link> *region);
 <link linkend="gint">gint</link>                <link linkend="gtk-widget-send-expose">gtk_widget_send_expose</link>              (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkEvent">GdkEvent</link> *event);
 <link linkend="void">void</link>                <link linkend="gtk-widget-style-get">gtk_widget_style_get</link>                (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -329,6 +329,8 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
 <link linkend="void">void</link>                <link linkend="gtk-widget-set-has-tooltip">gtk_widget_set_has_tooltip</link>          (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="gboolean">gboolean</link> has_tooltip);
 <link linkend="void">void</link>                <link linkend="gtk-widget-trigger-tooltip-query">gtk_widget_trigger_tooltip_query</link>    (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="GdkPixmap">GdkPixmap</link>*          <link linkend="gtk-widget-get-snapshot">gtk_widget_get_snapshot</link>             (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         <link linkend="GdkRectangle">GdkRectangle</link> *clip_rect);
 
 <link linkend="GtkRequisition">GtkRequisition</link>*     <link linkend="gtk-requisition-copy">gtk_requisition_copy</link>                (const <link linkend="GtkRequisition">GtkRequisition</link> *requisition);
 <link linkend="void">void</link>                <link linkend="gtk-requisition-free">gtk_requisition_free</link>                (<link linkend="GtkRequisition">GtkRequisition</link> *requisition);
@@ -364,7 +366,7 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
 <title role="derived_interfaces.title">Known Derived Interfaces</title>
 <para>
 GtkWidget is required by
- <link linkend="GtkFileChooser">GtkFileChooser</link> and  <link linkend="GtkCellEditable">GtkCellEditable</link>.</para>
+ <link linkend="GtkFileChooser">GtkFileChooser</link>,  <link linkend="GtkCellEditable">GtkCellEditable</link> and  <link linkend="GtkToolShell">GtkToolShell</link>.</para>
 
 </refsect1>
 
@@ -435,6 +437,7 @@ GtkWidget implements
   &quot;<link linkend="GtkWidget-client-event">client-event</link>&quot;                                   : Run Last
   &quot;<link linkend="GtkWidget-composited-changed">composited-changed</link>&quot;                             : Run Last / Action
   &quot;<link linkend="GtkWidget-configure-event">configure-event</link>&quot;                                : Run Last
+  &quot;<link linkend="GtkWidget-damage-event">damage-event</link>&quot;                                   : Run Last
   &quot;<link linkend="GtkWidget-delete-event">delete-event</link>&quot;                                   : Run Last
   &quot;<link linkend="GtkWidget-destroy-event">destroy-event</link>&quot;                                  : Run Last
   &quot;<link linkend="GtkWidget-direction-changed">direction-changed</link>&quot;                              : Run First
@@ -1262,7 +1265,7 @@ widget by its parent. It is a subregion of its parents allocation. See
   GdkAtom	target;
   GdkAtom	type;
   gint		format;
-  guchar       *data;  
+  guchar       *data;
   gint		length;
   GdkDisplay   *display;
 } GtkSelectionData;
@@ -1576,7 +1579,7 @@ This function is primarily used in widget implementations, and
 isn't very useful otherwise. Many times when you think you might
 need it, a better approach is to connect to a signal that will be
 called after the widget is realized automatically, such as
-GtkWidget::expose-event. Or simply <link linkend="g-signal-connect-after"><function>g_signal_connect_after()</function></link> to the
+GtkWidget::expose-event. Or simply <link linkend="g-signal-connect"><function>g_signal_connect()</function></link> to the
 GtkWidget::realize signal.</para>
 <para>
 
@@ -1645,7 +1648,7 @@ except that the widget is not invalidated.</para>
 <refsect2 id="gtk-widget-draw" role="function" condition="deprecated:">
 <title>gtk_widget_draw ()</title>
 <indexterm zone="gtk-widget-draw" role="deprecated"><primary>gtk_widget_draw</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_draw                     (<link linkend="GtkWidget">GtkWidget</link> *widget,
-                                                         <link linkend="GdkRectangle">GdkRectangle</link> *area);</programlisting>
+                                                         const <link linkend="GdkRectangle">GdkRectangle</link> *area);</programlisting>
 <warning><para><literal>gtk_widget_draw</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 In GTK+ 1.2, this function would immediately render the
@@ -1840,7 +1843,12 @@ automatically.
 <para>
 Even when you you aren't using <link linkend="GtkUIManager"><type>GtkUIManager</type></link>, if you only want to
 set up accelerators on menu items <link linkend="gtk-menu-item-set-accel-path"><function>gtk_menu_item_set_accel_path()</function></link>
-provides a somewhat more convenient interface.</para>
+provides a somewhat more convenient interface.
+</para>
+<para>
+Note that <parameter>accel_path</parameter> string will be stored in a <link linkend="GQuark"><type>GQuark</type></link>. Therefore, if you
+pass a static string, you can save some memory by interning it first with 
+<link linkend="g-intern-static-string"><function>g_intern_static_string()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1962,7 +1970,7 @@ count issues to avoid destroying the widget.</para>
 <refsect2 id="gtk-widget-intersect" role="function">
 <title>gtk_widget_intersect ()</title>
 <indexterm zone="gtk-widget-intersect"><primary>gtk_widget_intersect</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_widget_intersect                (<link linkend="GtkWidget">GtkWidget</link> *widget,
-                                                         <link linkend="GdkRectangle">GdkRectangle</link> *area,
+                                                         const <link linkend="GdkRectangle">GdkRectangle</link> *area,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *intersection);</programlisting>
 <para>
 Computes the intersection of a <parameter>widget</parameter>'s area and <parameter>area</parameter>, storing
@@ -2336,7 +2344,7 @@ is set on the result.
  GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
  if (GTK_WIDGET_TOPLEVEL (toplevel))
    {
-     [ Perform action on toplevel. ]
+     /&ast; Perform action on toplevel. &ast;/
    }
 </programlisting></informalexample></para>
 <para>
@@ -3277,10 +3285,10 @@ builders might want to treat them in a different way.
 <para>
 Here is a simple example:
 <informalexample><programlisting>
-  gtk_widget_push_composite_child (<!-- -->);
+  gtk_widget_push_composite_child ();
   scrolled_window->hscrollbar = gtk_hscrollbar_new (hadjustment);
   gtk_widget_set_composite_name (scrolled_window->hscrollbar, "hscrollbar");
-  gtk_widget_pop_composite_child (<!-- -->);
+  gtk_widget_pop_composite_child ();
   gtk_widget_set_parent (scrolled_window->hscrollbar, 
                          GTK_WIDGET (scrolled_window));
   g_object_ref (scrolled_window->hscrollbar);
@@ -3645,7 +3653,7 @@ Returns all style properties of a widget class.</para>
 <refsect2 id="gtk-widget-region-intersect" role="function">
 <title>gtk_widget_region_intersect ()</title>
 <indexterm zone="gtk-widget-region-intersect"><primary>gtk_widget_region_intersect</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link>*          gtk_widget_region_intersect         (<link linkend="GtkWidget">GtkWidget</link> *widget,
-                                                         <link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
+                                                         const <link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
 <para>
 Computes the intersection of a <parameter>widget</parameter>'s area and <parameter>region</parameter>, returning
 the intersection. The result may be empty, use <link linkend="gdk-region-empty"><function>gdk_region_empty()</function></link> to
@@ -4632,6 +4640,55 @@ information.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
+<refsect2 id="gtk-widget-get-snapshot" role="function" condition="since:2.14">
+<title>gtk_widget_get_snapshot ()</title>
+<indexterm zone="gtk-widget-get-snapshot" role="2.14"><primary>gtk_widget_get_snapshot</primary></indexterm><programlisting><link linkend="GdkPixmap">GdkPixmap</link>*          gtk_widget_get_snapshot             (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         <link linkend="GdkRectangle">GdkRectangle</link> *clip_rect);</programlisting>
+<para>
+Create a <link linkend="GdkPixmap"><type>GdkPixmap</type></link> of the contents of the widget and its children.
+</para>
+<para>
+Works even if the widget is obscured. The depth and visual of the
+resulting pixmap is dependent on the widget being snapshot and likely
+differs from those of a target widget displaying the pixmap.
+The function <link linkend="gdk-pixbuf-get-from-drawable"><function>gdk_pixbuf_get_from_drawable()</function></link> can be used to convert
+the pixmap to a visual independant representation.
+</para>
+<para>
+The snapshot area used by this function is the <parameter>widget</parameter>'s allocation plus
+any extra space occupied by additional windows belonging to this widget
+(such as the arrows of a spin button).
+Thus, the resulting snapshot pixmap is possibly larger than the allocation.
+</para>
+<para>
+If <parameter>clip_rect</parameter> is non-<link linkend="NULL:CAPS"><literal>NULL</literal></link>, the resulting pixmap is shrunken to
+match the specified clip_rect. The (x,y) coordinates of <parameter>clip_rect</parameter> are
+interpreted widget relative. If width or height of <parameter>clip_rect</parameter> are 0 or
+negative, the width or height of the resulting pixmap will be shrunken
+by the respective amount.
+For instance a <parameter>clip_rect</parameter> <literal>{ +5, +5, -10, -10 }</literal> will
+chop off 5 pixels at each side of the snapshot pixmap.
+If non-<link linkend="NULL:CAPS"><literal>NULL</literal></link>, <parameter>clip_rect</parameter> will contain the exact widget-relative snapshot
+coordinates upon return. A <parameter>clip_rect</parameter> of <literal>{ -1, -1, 0, 0 }</literal>
+can be used to preserve the auto-grown snapshot area and use <parameter>clip_rect</parameter>
+as a pure output parameter.
+</para>
+<para>
+The returned pixmap can be <link linkend="NULL:CAPS"><literal>NULL</literal></link>, if the resulting <parameter>clip_area</parameter> was empty.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara>    a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>clip_rect</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GdkRectangle"><type>GdkRectangle</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="GdkPixmap"><type>GdkPixmap</type></link> snapshot of the widget
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-requisition-copy" role="function">
 <title>gtk_requisition_copy ()</title>
 <indexterm zone="gtk-requisition-copy"><primary>gtk_requisition_copy</primary></indexterm><programlisting><link linkend="GtkRequisition">GtkRequisition</link>*     gtk_requisition_copy                (const <link linkend="GtkRequisition">GtkRequisition</link> *requisition);</programlisting>
@@ -5088,7 +5145,31 @@ automatically for all new windows.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. 
   <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 </simpara></listitem></varlistentry>
-</variablelist></refsect2><refsect2 id="GtkWidget-delete-event"><title>The <literal>&quot;delete-event&quot;</literal> signal</title>
+</variablelist></refsect2><refsect2 id="GtkWidget-damage-event"><title>The <literal>&quot;damage-event&quot;</literal> signal</title>
+<indexterm zone="GtkWidget-damage-event" role="2.14"><primary>GtkWidget::damage-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                        <link linkend="GdkEvent">GdkEvent</link>  *event,
+                                                        <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
+<para>
+Emitted when a redirected window belonging to <parameter>widget</parameter> gets drawn into.
+The region/area members of the event shows what area of the redirected
+drawable was drawn into.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> the object which received the signal
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>event</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GdkEventExpose"><type>GdkEventExpose</type></link> event
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event.
+  <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
+
+</simpara></listitem></varlistentry>
+</variablelist><para>Since  2.14
+</para></refsect2><refsect2 id="GtkWidget-delete-event"><title>The <literal>&quot;delete-event&quot;</literal> signal</title>
 <indexterm zone="GtkWidget-delete-event"><primary>GtkWidget::delete-event</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                         <link linkend="GdkEvent">GdkEvent</link>  *event,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
@@ -5442,30 +5523,33 @@ with <link linkend="gtk-drag-unhighlight"><function>gtk_drag_unhighlight()</func
                                                         <link linkend="guint">guint</link>           time,
                                                         <link linkend="gpointer">gpointer</link>        user_data)         : Run Last</programlisting>
 <para>
-The ::drag-motion signal is emitted on the drop site when the user 
-moves the cursor over the widget during a drag. The signal handler 
-must determine whether the cursor position is in a drop zone or not. 
-If it is not in a drop zone, it returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> and no further processing 
-is necessary. Otherwise, the handler returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>. In this case, the 
-handler is responsible for providing the necessary information for 
-displaying feedback to the user, by calling <link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link>. If the 
-decision whether the drop will be accepted or rejected can't be made
-based solely on the cursor position and the type of the data, the handler 
-may inspect the dragged data by calling <link linkend="gtk-drag-get-data"><function>gtk_drag_get_data()</function></link> and defer the 
-<link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> call to the <link linkend="GtkWidget-drag-data-received"><type>"drag-data-received"</type></link> handler. 
+The drag-motion signal is emitted on the drop site when the user
+moves the cursor over the widget during a drag. The signal handler
+must determine whether the cursor position is in a drop zone or not.
+If it is not in a drop zone, it returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> and no further processing
+is necessary. Otherwise, the handler returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>. In this case, the
+handler is responsible for providing the necessary information for
+displaying feedback to the user, by calling <link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link>.
 </para>
 <para>
-Note that there is no drag-enter signal. The drag receiver has to keep 
-track of whether he has received any drag-motion signals since the last 
-<link linkend="GtkWidget-drag-leave"><type>"drag-leave"</type></link> and if not, treat the drag-motion signal as an 
-"enter" signal. Upon an "enter", the handler will typically highlight 
+If the decision whether the drop will be accepted or rejected can't be
+made based solely on the cursor position and the type of the data, the
+handler may inspect the dragged data by calling <link linkend="gtk-drag-get-data"><function>gtk_drag_get_data()</function></link> and
+defer the <link linkend="gdk-drag-status"><function>gdk_drag_status()</function></link> call to the <link linkend="GtkWidget-drag-data-received"><type>"drag-data-received"</type></link>
+handler. Note that you cannot not pass <link linkend="GTK-DEST-DEFAULT-DROP:CAPS"><type>GTK_DEST_DEFAULT_DROP</type></link>,
+<link linkend="GTK-DEST-DEFAULT-MOTION:CAPS"><type>GTK_DEST_DEFAULT_MOTION</type></link> or <link linkend="GTK-DEST-DEFAULT-ALL:CAPS"><type>GTK_DEST_DEFAULT_ALL</type></link> to <link linkend="gtk-drag-dest-set"><function>gtk_drag_dest_set()</function></link>
+when using the drag-motion signal that way.
+</para>
+<para>
+Also note that there is no drag-enter signal. The drag receiver has to
+keep track of whether he has received any drag-motion signals since the
+last <link linkend="GtkWidget-drag-leave"><type>"drag-leave"</type></link> and if not, treat the drag-motion signal as
+an "enter" signal. Upon an "enter", the handler will typically highlight
 the drop site with <link linkend="gtk-drag-highlight"><function>gtk_drag_highlight()</function></link>.
-</para>
-<para>
-<informalexample><programlisting> 
+<informalexample><programlisting>
 static void
 drag_motion (GtkWidget *widget,
-      	  GdkDragContext *context,
+             GdkDragContext *context,
              gint x,
              gint y,
              guint time)
@@ -5507,11 +5591,11 @@ drag_data_received (GtkWidget        *widget,
    {
      private_data->suggested_action = 0;
      
-    /<!-- -->* We are getting this data due to a request in drag_motion,
+    /&ast; We are getting this data due to a request in drag_motion,
      * rather than due to a request in drag_drop, so we are just
-     * supposed to call gdk_drag_status(<!-- -->), not actually paste in 
+     * supposed to call gdk_drag_status (), not actually paste in 
      * the data.
-     *<!-- -->/
+     &ast;/
      str = gtk_selection_data_get_text (selection_data);
      if (!data_is_acceptable (str)) 
        gdk_drag_status (context, 0, time);
@@ -5520,7 +5604,7 @@ drag_data_received (GtkWidget        *widget,
    }
   else
    {
-     /<!-- -->* accept the drop *<!-- -->/
+     /&ast; accept the drop &ast;/
    }
 }
 </programlisting></informalexample></para>

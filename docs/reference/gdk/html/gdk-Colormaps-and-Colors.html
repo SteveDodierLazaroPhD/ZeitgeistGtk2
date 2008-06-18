@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Colormaps and Colors</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GDK Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GDK Reference Manual">
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Pixbufs.html" title="Pixbufs">
 <link rel="next" href="gdk-Visuals.html" title="Visuals">
@@ -19,6 +19,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -70,7 +71,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
                                                          <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor">GdkColor</a> *colors,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> ncolors,
+>gint</a> n_colors,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> writeable,
@@ -91,10 +92,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> best_match);
 void                <a class="link" href="gdk-Colormaps-and-Colors.html#gdk-colormap-free-colors" title="gdk_colormap_free_colors ()">gdk_colormap_free_colors</a>            (<a class="link" href="gdk-Colormaps-and-Colors.html#GdkColormap" title="GdkColormap">GdkColormap</a> *colormap,
-                                                         <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor">GdkColor</a> *colors,
+                                                         const <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor">GdkColor</a> *colors,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> ncolors);
+>gint</a> n_colors);
 void                <a class="link" href="gdk-Colormaps-and-Colors.html#gdk-colormap-query-color" title="gdk_colormap_query_color ()">gdk_colormap_query_color</a>            (<a class="link" href="gdk-Colormaps-and-Colors.html#GdkColormap" title="GdkColormap">GdkColormap</a> *colormap,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"
@@ -468,7 +469,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
                                                          <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor">GdkColor</a> *colors,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> ncolors,
+>gint</a> n_colors,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> writeable,
@@ -497,7 +498,7 @@ Allocates colors from a colormap.</p>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>ncolors</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>n_colors</code></em> :</span></p></td>
 <td> The number of colors in <em class="parameter"><code>colors</code></em>.
 </td>
 </tr>
@@ -597,10 +598,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 <div class="refsect2" lang="en">
 <a name="gdk-colormap-free-colors"></a><h3>gdk_colormap_free_colors ()</h3>
 <pre class="programlisting">void                gdk_colormap_free_colors            (<a class="link" href="gdk-Colormaps-and-Colors.html#GdkColormap" title="GdkColormap">GdkColormap</a> *colormap,
-                                                         <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor">GdkColor</a> *colors,
+                                                         const <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor">GdkColor</a> *colors,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> ncolors);</pre>
+>gint</a> n_colors);</pre>
 <p>
 Frees previously allocated colors.</p>
 <p>
@@ -619,7 +620,7 @@ Frees previously allocated colors.</p>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>ncolors</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>n_colors</code></em> :</span></p></td>
 <td> the number of colors in <em class="parameter"><code>colors</code></em>.
 </td>
 </tr>
@@ -1023,17 +1024,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *spec,
                                                          <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor">GdkColor</a> *color);</pre>
 <p>
-Parses a textual specification of a color and fill in
-the <em class="structfield"><code>red</code></em>,
-<em class="structfield"><code>green</code></em>, and 
-<em class="structfield"><code>blue</code></em> fields of a 
-<a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> structure. The color is <span class="emphasis"><em>not</em></span> 
-allocated, you must call <a class="link" href="gdk-Colormaps-and-Colors.html#gdk-colormap-alloc-color" title="gdk_colormap_alloc_color ()"><code class="function">gdk_colormap_alloc_color()</code></a> yourself.
-The text string can be in any of the forms accepted
-by <code class="function">XParseColor</code>; these include
-name for a color from <code class="filename">rgb.txt</code>, such as
-<code class="literal">DarkSlateGray</code>, or a hex specification
-such as <code class="literal">#3050b2</code> or <code class="literal">#35b</code>.</p>
+Parses a textual specification of a color and fill in the
+<em class="structfield"><code>red</code></em>, <em class="structfield"><code>green</code></em>,
+and <em class="structfield"><code>blue</code></em> fields of a <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a>
+structure. The color is <span class="emphasis"><em>not</em></span> allocated, you
+must call <a class="link" href="gdk-Colormaps-and-Colors.html#gdk-colormap-alloc-color" title="gdk_colormap_alloc_color ()"><code class="function">gdk_colormap_alloc_color()</code></a> yourself. The string can
+either one of a large set of standard names. (Taken from the X11
+<code class="filename">rgb.txt</code> file), or it can be a hex value in the
+form '#rgb' '#rrggbb' '#rrrgggbbb' or
+'#rrrrggggbbbb' where 'r', 'g' and 'b' are hex digits of the
+red, green, and blue components of the color, respectively. (White
+in the four forms is '#fff' '#ffffff' '#fffffffff' and
+'#ffffffffffff')</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">

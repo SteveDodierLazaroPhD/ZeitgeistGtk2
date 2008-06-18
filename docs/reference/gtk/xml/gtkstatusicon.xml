@@ -58,6 +58,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-status-icon-
                                                          <link linkend="GdkScreen">GdkScreen</link> **screen,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *area,
                                                          <link linkend="GtkOrientation">GtkOrientation</link> *orientation);
+<link linkend="guint32">guint32</link>             <link linkend="gtk-status-icon-get-x11-window-id">gtk_status_icon_get_x11_window_id</link>   (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
 </synopsis>
 </refsynopsisdiv>
 
@@ -627,6 +628,33 @@ is embedded in a notification area, see
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2 id="gtk-status-icon-get-x11-window-id" role="function" condition="since:2.14">
+<title>gtk_status_icon_get_x11_window_id ()</title>
+<indexterm zone="gtk-status-icon-get-x11-window-id" role="2.14"><primary>gtk_status_icon_get_x11_window_id</primary></indexterm><programlisting><link linkend="guint32">guint32</link>             gtk_status_icon_get_x11_window_id   (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);</programlisting>
+<para>
+This function is only useful on the X11/freedesktop.org platform.
+It returns a window ID for the widget in the underlying
+status icon implementation.  This is useful for the Galago 
+notification service, which can send a window ID in the protocol 
+in order for the server to position notification windows 
+pointing to a status icon reliably.
+</para>
+<para>
+This function is not intended for other use cases which are
+more likely to be met by one of the non-X11 specific methods, such
+as <link linkend="gtk-status-icon-position-menu"><function>gtk_status_icon_position_menu()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>status_icon</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> An 32 bit unsigned integer identifier for the 
+underlying X11 Window
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 
 </refsect1>

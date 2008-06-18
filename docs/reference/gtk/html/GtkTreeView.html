@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkTreeView</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkTreeViewColumn.html" title="GtkTreeViewColumn">
 <link rel="next" href="gtk-GtkTreeView-drag-and-drop.html" title="GtkTreeView drag-and-drop">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -830,7 +831,7 @@ The GtkTreeView implementation of the GtkBuildable interface accepts
 GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
 </p>
 <div class="example">
-<a name="id3375704"></a><p class="title"><b>Example 17. A UI definition fragment with GtkTreeView</b></p>
+<a name="id3303686"></a><p class="title"><b>Example 19. A UI definition fragment with GtkTreeView</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkTreeView"&gt;
   &lt;property name="model"&gt;liststore1&lt;/property&gt;
@@ -3956,15 +3957,16 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> column);</pre>
 <p>
 Sets <em class="parameter"><code>column</code></em> as the column where the interactive search code should
-search in. 
+search in for the current model. 
 </p>
 <p>
-If the sort column is set, users can use the "start-interactive-search"
+If the search column is set, users can use the "start-interactive-search"
 key binding to bring up search popup. The enable-search property controls
 whether simply typing text will also start an interactive search.
 </p>
 <p>
-Note that <em class="parameter"><code>column</code></em> refers to a column of the model.</p>
+Note that <em class="parameter"><code>column</code></em> refers to a column of the current model. The search 
+column is reset to -1 when the model is changed.</p>
 <p>
 
 </p>
@@ -4836,7 +4838,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 <hr>
 <div class="refsect2" lang="en">
 <a name="GtkTreeViewGridLines"></a><h3>enum GtkTreeViewGridLines</h3>
-<pre class="programlisting">typedef enum {
+<pre class="programlisting">typedef enum
+{
   GTK_TREE_VIEW_GRID_LINES_NONE,
   GTK_TREE_VIEW_GRID_LINES_HORIZONTAL,
   GTK_TREE_VIEW_GRID_LINES_VERTICAL,
@@ -5238,7 +5241,7 @@ information on this option.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>Column headers respond to click events.</p>
-<p>Default value: FALSE</p>
+<p>Default value: TRUE</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">

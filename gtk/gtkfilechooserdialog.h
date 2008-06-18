@@ -18,11 +18,15 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_FILE_CHOOSER_DIALOG_H__
 #define __GTK_FILE_CHOOSER_DIALOG_H__
 
 #include <gtk/gtkdialog.h>
-#include "gtkfilechooser.h"
+#include <gtk/gtkfilechooser.h>
 
 G_BEGIN_DECLS
 
@@ -33,21 +37,20 @@ G_BEGIN_DECLS
 #define GTK_IS_FILE_CHOOSER_DIALOG_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_FILE_CHOOSER_DIALOG))
 #define GTK_FILE_CHOOSER_DIALOG_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_FILE_CHOOSER_DIALOG, GtkFileChooserDialogClass))
 
-typedef struct _GtkFileChooserDialog      GtkFileChooserDialog;
-typedef struct _GtkFileChooserDialogClass GtkFileChooserDialogClass;
-
+typedef struct _GtkFileChooserDialog        GtkFileChooserDialog;
 typedef struct _GtkFileChooserDialogPrivate GtkFileChooserDialogPrivate;
-
-struct _GtkFileChooserDialogClass
-{
-  GtkDialogClass parent_class;
-};
+typedef struct _GtkFileChooserDialogClass   GtkFileChooserDialogClass;
 
 struct _GtkFileChooserDialog
 {
   GtkDialog parent_instance;
 
   GtkFileChooserDialogPrivate *priv;
+};
+
+struct _GtkFileChooserDialogClass
+{
+  GtkDialogClass parent_class;
 };
 
 GType      gtk_file_chooser_dialog_get_type         (void) G_GNUC_CONST;

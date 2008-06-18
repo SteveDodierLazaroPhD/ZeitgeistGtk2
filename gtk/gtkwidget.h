@@ -21,8 +21,12 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
 
 #ifndef __GTK_WIDGET_H__
 #define __GTK_WIDGET_H__
@@ -33,7 +37,7 @@
 #include <gtk/gtkadjustment.h>
 #include <gtk/gtkstyle.h>
 #include <gtk/gtksettings.h>
-#include <atk/atkobject.h>
+#include <atk/atk.h>
 
 G_BEGIN_DECLS
 
@@ -416,6 +420,10 @@ struct _GtkWidgetClass
 				       gint        y,
 				       gboolean    keyboard_tooltip,
 				       GtkTooltip *tooltip);
+  /* Signals without a C default handler class slot:
+   * gboolean	(*damage_event)	(GtkWidget      *widget,
+   *                             GdkEventExpose *event);
+   */
 
   /* Padding for future expansion */
   void (*_gtk_reserved5) (void);
@@ -489,7 +497,7 @@ void	   gtk_widget_queue_resize	  (GtkWidget	       *widget);
 void	   gtk_widget_queue_resize_no_redraw (GtkWidget *widget);
 #ifndef GTK_DISABLE_DEPRECATED
 void	   gtk_widget_draw		  (GtkWidget	       *widget,
-					   GdkRectangle	       *area);
+					   const GdkRectangle  *area);
 #endif /* GTK_DISABLE_DEPRECATED */
 void	   gtk_widget_size_request	  (GtkWidget	       *widget,
 					   GtkRequisition      *requisition);
@@ -530,10 +538,10 @@ gboolean   gtk_widget_set_scroll_adjustments (GtkWidget        *widget,
 void	   gtk_widget_reparent		  (GtkWidget	       *widget,
 					   GtkWidget	       *new_parent);
 gboolean   gtk_widget_intersect		  (GtkWidget	       *widget,
-					   GdkRectangle	       *area,
+					   const GdkRectangle  *area,
 					   GdkRectangle	       *intersection);
 GdkRegion *gtk_widget_region_intersect	  (GtkWidget	       *widget,
-					   GdkRegion	       *region);
+					   const GdkRegion     *region);
 
 void	gtk_widget_freeze_child_notify	  (GtkWidget	       *widget);
 void	gtk_widget_child_notify		  (GtkWidget	       *widget,
@@ -610,6 +618,8 @@ GdkWindow *   gtk_widget_get_root_window (GtkWidget *widget);
 GtkSettings*  gtk_widget_get_settings    (GtkWidget *widget);
 GtkClipboard *gtk_widget_get_clipboard   (GtkWidget *widget,
 					  GdkAtom    selection);
+GdkPixmap *   gtk_widget_get_snapshot    (GtkWidget    *widget,
+                                          GdkRectangle *clip_rect);
 
 #ifndef GTK_DISABLE_DEPRECATED
 #define gtk_widget_set_visual(widget,visual)  ((void) 0)

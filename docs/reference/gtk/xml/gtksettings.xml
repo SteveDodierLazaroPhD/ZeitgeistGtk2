@@ -99,8 +99,10 @@
   &quot;<link linkend="GtkSettings--gtk-fallback-icon-theme">gtk-fallback-icon-theme</link>&quot;  <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkSettings--gtk-file-chooser-backend">gtk-file-chooser-backend</link>&quot; <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkSettings--gtk-font-name">gtk-font-name</link>&quot;            <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkSettings--gtk-fontconfig-timestamp">gtk-fontconfig-timestamp</link>&quot; <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkSettings--gtk-icon-sizes">gtk-icon-sizes</link>&quot;           <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkSettings--gtk-icon-theme-name">gtk-icon-theme-name</link>&quot;      <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkSettings--gtk-im-module">gtk-im-module</link>&quot;            <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkSettings--gtk-key-theme-name">gtk-key-theme-name</link>&quot;       <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkSettings--gtk-keynav-cursor-only">gtk-keynav-cursor-only</link>&quot;   <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkSettings--gtk-keynav-wrap-around">gtk-keynav-wrap-around</link>&quot;   <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -114,6 +116,7 @@
   &quot;<link linkend="GtkSettings--gtk-print-backends">gtk-print-backends</link>&quot;       <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkSettings--gtk-print-preview-command">gtk-print-preview-command</link>&quot; <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkSettings--gtk-recent-files-limit">gtk-recent-files-limit</link>&quot;   <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkSettings--gtk-recent-files-max-age">gtk-recent-files-max-age</link>&quot; <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkSettings--gtk-scrolled-window-placement">gtk-scrolled-window-placement</link>&quot; <link linkend="GtkCornerType">GtkCornerType</link>         : Read / Write
   &quot;<link linkend="GtkSettings--gtk-show-input-method-menu">gtk-show-input-method-menu</link>&quot; <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkSettings--gtk-show-unicode-menu">gtk-show-unicode-menu</link>&quot;    <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -658,6 +661,10 @@ window or similar visual effects.</para>
 <indexterm zone="GtkSettings--gtk-font-name"><primary>GtkSettings:gtk-font-name</primary></indexterm><programlisting>  &quot;gtk-font-name&quot;            <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>Name of default font to use.</para><para>Default value: "Sans 10"</para>
 </refsect2>
+<refsect2 id="GtkSettings--gtk-fontconfig-timestamp"><title>The <literal>&quot;gtk-fontconfig-timestamp&quot;</literal> property</title>
+<indexterm zone="GtkSettings--gtk-fontconfig-timestamp"><primary>GtkSettings:gtk-fontconfig-timestamp</primary></indexterm><programlisting>  &quot;gtk-fontconfig-timestamp&quot; <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>Timestamp of current fontconfig configuration.</para><para>Default value: 0</para>
+</refsect2>
 <refsect2 id="GtkSettings--gtk-icon-sizes"><title>The <literal>&quot;gtk-icon-sizes&quot;</literal> property</title>
 <indexterm zone="GtkSettings--gtk-icon-sizes"><primary>GtkSettings:gtk-icon-sizes</primary></indexterm><programlisting>  &quot;gtk-icon-sizes&quot;           <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>List of icon sizes (gtk-menu=16,16:gtk-button=20,20...</para><para>Default value: NULL</para>
@@ -665,6 +672,14 @@ window or similar visual effects.</para>
 <refsect2 id="GtkSettings--gtk-icon-theme-name"><title>The <literal>&quot;gtk-icon-theme-name&quot;</literal> property</title>
 <indexterm zone="GtkSettings--gtk-icon-theme-name"><primary>GtkSettings:gtk-icon-theme-name</primary></indexterm><programlisting>  &quot;gtk-icon-theme-name&quot;      <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>Name of icon theme to use.</para><para>Default value: "hicolor"</para>
+</refsect2>
+<refsect2 id="GtkSettings--gtk-im-module"><title>The <literal>&quot;gtk-im-module&quot;</literal> property</title>
+<indexterm zone="GtkSettings--gtk-im-module"><primary>GtkSettings:gtk-im-module</primary></indexterm><programlisting>  &quot;gtk-im-module&quot;            <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+Which IM module should be used by default.</para>
+<para>
+
+</para><para>Default value: NULL</para>
 </refsect2>
 <refsect2 id="GtkSettings--gtk-key-theme-name"><title>The <literal>&quot;gtk-key-theme-name&quot;</literal> property</title>
 <indexterm zone="GtkSettings--gtk-key-theme-name"><primary>GtkSettings:gtk-key-theme-name</primary></indexterm><programlisting>  &quot;gtk-key-theme-name&quot;       <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
@@ -766,6 +781,20 @@ The number of recently used files that should be displayed by default by
 </para><para>Allowed values: &gt;= -1</para>
 <para>Default value: 50</para>
 <para>Since  2.12
+</para>
+</refsect2>
+<refsect2 id="GtkSettings--gtk-recent-files-max-age"><title>The <literal>&quot;gtk-recent-files-max-age&quot;</literal> property</title>
+<indexterm zone="GtkSettings--gtk-recent-files-max-age" role="2.14"><primary>GtkSettings:gtk-recent-files-max-age</primary></indexterm><programlisting>  &quot;gtk-recent-files-max-age&quot; <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<para>
+The maximum age, in days, of the items inside the recently used
+resources list. Items older than this setting will be excised
+from the list. If set to 0, the list will always be empty; if
+set to -1, no item will be removed.</para>
+<para>
+
+</para><para>Allowed values: &gt;= -1</para>
+<para>Default value: 30</para>
+<para>Since  2.14
 </para>
 </refsect2>
 <refsect2 id="GtkSettings--gtk-scrolled-window-placement"><title>The <literal>&quot;gtk-scrolled-window-placement&quot;</literal> property</title>

@@ -28,11 +28,14 @@
 <link linkend="void">void</link>                <link linkend="gtk-tooltip-set-icon-from-stock">gtk_tooltip_set_icon_from_stock</link>     (<link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
                                                          const <link linkend="gchar">gchar</link> *stock_id,
                                                          <link linkend="GtkIconSize">GtkIconSize</link> size);
+<link linkend="void">void</link>                <link linkend="gtk-tooltip-set-icon-from-icon-name">gtk_tooltip_set_icon_from_icon_name</link> (<link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         const <link linkend="gchar">gchar</link> *icon_name,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> size);
 <link linkend="void">void</link>                <link linkend="gtk-tooltip-set-custom">gtk_tooltip_set_custom</link>              (<link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
                                                          <link linkend="GtkWidget">GtkWidget</link> *custom_widget);
 <link linkend="void">void</link>                <link linkend="gtk-tooltip-trigger-tooltip-query">gtk_tooltip_trigger_tooltip_query</link>   (<link linkend="GdkDisplay">GdkDisplay</link> *display);
 <link linkend="void">void</link>                <link linkend="gtk-tooltip-set-tip-area">gtk_tooltip_set_tip_area</link>            (<link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
-                                                         <link linkend="GdkRectangle">GdkRectangle</link> *rect);
+                                                         const <link linkend="GdkRectangle">GdkRectangle</link> *rect);
 </synopsis>
 </refsynopsisdiv>
 
@@ -201,12 +204,35 @@ by <parameter>size</parameter>.  If <parameter>stock_id</parameter> is <link lin
 <listitem><simpara> a <link linkend="GtkTooltip"><type>GtkTooltip</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>stock_id</parameter>&nbsp;:</term>
-<listitem><simpara> a stock icon name, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<listitem><simpara> a stock id, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>size</parameter>&nbsp;:</term>
 <listitem><simpara> a stock icon size
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2 id="gtk-tooltip-set-icon-from-icon-name" role="function" condition="since:2.14">
+<title>gtk_tooltip_set_icon_from_icon_name ()</title>
+<indexterm zone="gtk-tooltip-set-icon-from-icon-name" role="2.14"><primary>gtk_tooltip_set_icon_from_icon_name</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tooltip_set_icon_from_icon_name (<link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
+                                                         const <link linkend="gchar">gchar</link> *icon_name,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> size);</programlisting>
+<para>
+Sets the icon of the tooltip (which is in front of the text) to be
+the icon indicated by <parameter>icon_name</parameter> with the size indicated
+by <parameter>size</parameter>.  If <parameter>icon_name</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, the image will be hidden.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>tooltip</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkTooltip"><type>GtkTooltip</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon_name</parameter>&nbsp;:</term>
+<listitem><simpara> an icon name, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> a stock icon size
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-tooltip-set-custom" role="function" condition="since:2.12">
 <title>gtk_tooltip_set_custom ()</title>
@@ -247,7 +273,7 @@ key press.</para>
 <refsect2 id="gtk-tooltip-set-tip-area" role="function" condition="since:2.12">
 <title>gtk_tooltip_set_tip_area ()</title>
 <indexterm zone="gtk-tooltip-set-tip-area" role="2.12"><primary>gtk_tooltip_set_tip_area</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tooltip_set_tip_area            (<link linkend="GtkTooltip">GtkTooltip</link> *tooltip,
-                                                         <link linkend="GdkRectangle">GdkRectangle</link> *rect);</programlisting>
+                                                         const <link linkend="GdkRectangle">GdkRectangle</link> *rect);</programlisting>
 <para>
 Sets the area of the widget, where the contents of this tooltip apply,
 to be <parameter>rect</parameter> (in widget coordinates).  This is especially useful for

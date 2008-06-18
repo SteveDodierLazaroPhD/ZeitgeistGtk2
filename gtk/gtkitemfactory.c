@@ -470,12 +470,8 @@ gtk_item_factory_from_path (const gchar      *path)
 static void
 gtk_item_factory_destroy (GtkObject *object)
 {
-  GtkItemFactory *ifactory;
+  GtkItemFactory *ifactory = (GtkItemFactory*) object;
   GSList *slist;
-
-  g_return_if_fail (GTK_IS_ITEM_FACTORY (object));
-
-  ifactory = (GtkItemFactory*) object;
 
   if (ifactory->widget)
     {
@@ -508,13 +504,11 @@ gtk_item_factory_destroy (GtkObject *object)
 static void
 gtk_item_factory_finalize (GObject *object)
 {
-  GtkItemFactory *ifactory;
+  GtkItemFactory *ifactory = GTK_ITEM_FACTORY (object);
 
-  g_return_if_fail (GTK_IS_ITEM_FACTORY (object));
+  if (ifactory->accel_group)
+    g_object_unref (ifactory->accel_group);
 
-  ifactory = GTK_ITEM_FACTORY (object);
-
-  g_object_unref (ifactory->accel_group);
   g_free (ifactory->path);
   g_assert (ifactory->widget == NULL);
 

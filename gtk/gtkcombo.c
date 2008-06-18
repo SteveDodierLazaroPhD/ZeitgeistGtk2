@@ -913,7 +913,7 @@ gtk_combo_init (GtkCombo * combo)
   combo->value_in_list = FALSE;
   combo->ok_if_empty = TRUE;
   combo->use_arrows = TRUE;
-  combo->use_arrows_always = FALSE;
+  combo->use_arrows_always = TRUE;
   combo->entry = gtk_entry_new ();
   combo->button = gtk_button_new ();
   combo->current_button = 0;
@@ -1134,14 +1134,9 @@ static void
 gtk_combo_size_allocate (GtkWidget     *widget,
 			 GtkAllocation *allocation)
 {
-  GtkCombo *combo;
-
-  g_return_if_fail (GTK_IS_COMBO (widget));
-  g_return_if_fail (allocation != NULL);
+  GtkCombo *combo = GTK_COMBO (widget);
 
   GTK_WIDGET_CLASS (gtk_combo_parent_class)->size_allocate (widget, allocation);
-  
-  combo = GTK_COMBO (widget);
 
   if (combo->entry->allocation.height > combo->entry->requisition.height)
     {

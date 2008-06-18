@@ -32,7 +32,6 @@
 #include "gtkwindow.h"
 #include "gtkentry.h"
 #include "gtkmain.h"
-#include "gtksignal.h"
 #include "gtkmarshalers.h"
 
 #include "gtkprivate.h"
@@ -99,6 +98,7 @@ static void     gtk_entry_completion_clear_attributes    (GtkCellLayout         
 static void     gtk_entry_completion_reorder             (GtkCellLayout         *cell_layout,
                                                           GtkCellRenderer       *cell,
                                                           gint                   position);
+static GList *  gtk_entry_completion_get_cells           (GtkCellLayout         *cell_layout);
 
 static gboolean gtk_entry_completion_visible_func        (GtkTreeModel       *model,
                                                           GtkTreeIter        *iter,
@@ -411,6 +411,7 @@ gtk_entry_completion_cell_layout_init (GtkCellLayoutIface *iface)
   iface->set_cell_data_func = gtk_entry_completion_set_cell_data_func;
   iface->clear_attributes = gtk_entry_completion_clear_attributes;
   iface->reorder = gtk_entry_completion_reorder;
+  iface->get_cells = gtk_entry_completion_get_cells;
 }
 
 static void
@@ -671,8 +672,6 @@ gtk_entry_completion_pack_start (GtkCellLayout   *cell_layout,
 {
   GtkEntryCompletionPrivate *priv;
 
-  g_return_if_fail (GTK_IS_ENTRY_COMPLETION (cell_layout));
-
   priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
 
   gtk_tree_view_column_pack_start (priv->column, cell, expand);
@@ -685,8 +684,6 @@ gtk_entry_completion_pack_end (GtkCellLayout   *cell_layout,
 {
   GtkEntryCompletionPrivate *priv;
 
-  g_return_if_fail (GTK_IS_ENTRY_COMPLETION (cell_layout));
-
   priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
 
   gtk_tree_view_column_pack_end (priv->column, cell, expand);
@@ -696,8 +693,6 @@ static void
 gtk_entry_completion_clear (GtkCellLayout *cell_layout)
 {
   GtkEntryCompletionPrivate *priv;
-
-  g_return_if_fail (GTK_IS_ENTRY_COMPLETION (cell_layout));
 
   priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
 
@@ -711,8 +706,6 @@ gtk_entry_completion_add_attribute (GtkCellLayout   *cell_layout,
                                     gint             column)
 {
   GtkEntryCompletionPrivate *priv;
-
-  g_return_if_fail (GTK_IS_ENTRY_COMPLETION (cell_layout));
 
   priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
 
@@ -728,8 +721,6 @@ gtk_entry_completion_set_cell_data_func (GtkCellLayout          *cell_layout,
 {
   GtkEntryCompletionPrivate *priv;
 
-  g_return_if_fail (GTK_IS_ENTRY_COMPLETION (cell_layout));
-
   priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
 
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (priv->column),
@@ -741,8 +732,6 @@ gtk_entry_completion_clear_attributes (GtkCellLayout   *cell_layout,
                                        GtkCellRenderer *cell)
 {
   GtkEntryCompletionPrivate *priv;
-
-  g_return_if_fail (GTK_IS_ENTRY_COMPLETION (cell_layout));
 
   priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
 
@@ -756,11 +745,19 @@ gtk_entry_completion_reorder (GtkCellLayout   *cell_layout,
 {
   GtkEntryCompletionPrivate *priv;
 
-  g_return_if_fail (GTK_IS_ENTRY_COMPLETION (cell_layout));
-
   priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
 
   gtk_cell_layout_reorder (GTK_CELL_LAYOUT (priv->column), cell, position);
+}
+
+static GList *
+gtk_entry_completion_get_cells (GtkCellLayout *cell_layout)
+{
+  GtkEntryCompletionPrivate *priv;
+
+  priv = GTK_ENTRY_COMPLETION_GET_PRIVATE (cell_layout);
+
+  return gtk_tree_view_column_get_cell_renderers (priv->column);
 }
 
 /* all those callbacks */
@@ -1386,8 +1383,6 @@ _gtk_entry_completion_resize_popup (GtkEntryCompletion *completion)
 
   matches = gtk_tree_model_iter_n_children (GTK_TREE_MODEL (completion->priv->filter_model), NULL);
 
-  items = MIN (matches, 15);
-
   gtk_tree_view_column_cell_get_size (completion->priv->column, NULL,
                                       NULL, NULL, NULL, &height);
 
@@ -1399,15 +1394,22 @@ _gtk_entry_completion_resize_popup (GtkEntryCompletion *completion)
   
   gtk_widget_realize (completion->priv->tree_view);
 
-  if (items <= 0)
-    gtk_widget_hide (completion->priv->scrolled_window);
-  else
-    gtk_widget_show (completion->priv->scrolled_window);
-
   screen = gtk_widget_get_screen (GTK_WIDGET (completion->priv->entry));
   monitor_num = gdk_screen_get_monitor_at_window (screen, 
 						  GTK_WIDGET (completion->priv->entry)->window);
   gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
+
+  
+
+  if (y > monitor.height / 2)
+    items = MIN (matches, (monitor.y + y) / height);
+  else
+    items = MIN (matches, (monitor.height - y) / height - 1);
+
+  if (items <= 0)
+    gtk_widget_hide (completion->priv->scrolled_window);
+  else
+    gtk_widget_show (completion->priv->scrolled_window);
 
   if (completion->priv->popup_set_width)
     width = MIN (completion->priv->entry->allocation.width, monitor.width) - 2 * x_border;

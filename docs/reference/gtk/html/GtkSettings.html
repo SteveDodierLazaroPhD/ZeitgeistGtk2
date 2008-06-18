@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Settings</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Resource-Files.html" title="Resource Files">
 <link rel="next" href="gtk-Bindings.html" title="Bindings">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -281,10 +282,16 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
   "<a class="link" href="GtkSettings.html#GtkSettings--gtk-font-name" title='The "gtk-font-name" property'>gtk-font-name</a>"            <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write
+  "<a class="link" href="GtkSettings.html#GtkSettings--gtk-fontconfig-timestamp" title='The "gtk-fontconfig-timestamp" property'>gtk-fontconfig-timestamp</a>" <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write
   "<a class="link" href="GtkSettings.html#GtkSettings--gtk-icon-sizes" title='The "gtk-icon-sizes" property'>gtk-icon-sizes</a>"           <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write
   "<a class="link" href="GtkSettings.html#GtkSettings--gtk-icon-theme-name" title='The "gtk-icon-theme-name" property'>gtk-icon-theme-name</a>"      <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>*                : Read / Write
+  "<a class="link" href="GtkSettings.html#GtkSettings--gtk-im-module" title='The "gtk-im-module" property'>gtk-im-module</a>"            <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write
   "<a class="link" href="GtkSettings.html#GtkSettings--gtk-key-theme-name" title='The "gtk-key-theme-name" property'>gtk-key-theme-name</a>"       <a
@@ -324,6 +331,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write
   "<a class="link" href="GtkSettings.html#GtkSettings--gtk-recent-files-limit" title='The "gtk-recent-files-limit" property'>gtk-recent-files-limit</a>"   <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write
+  "<a class="link" href="GtkSettings.html#GtkSettings--gtk-recent-files-max-age" title='The "gtk-recent-files-max-age" property'>gtk-recent-files-max-age</a>" <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write
   "<a class="link" href="GtkSettings.html#GtkSettings--gtk-scrolled-window-placement" title='The "gtk-scrolled-window-placement" property'>gtk-scrolled-window-placement</a>" <a class="link" href="gtk-Standard-Enumerations.html#GtkCornerType" title="enum GtkCornerType">GtkCornerType</a>         : Read / Write
@@ -1316,6 +1326,15 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="GtkSettings--gtk-fontconfig-timestamp"></a><h3>The <code class="literal">"gtk-fontconfig-timestamp"</code> property</h3>
+<pre class="programlisting">  "gtk-fontconfig-timestamp" <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write</pre>
+<p>Timestamp of current fontconfig configuration.</p>
+<p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="GtkSettings--gtk-icon-sizes"></a><h3>The <code class="literal">"gtk-icon-sizes"</code> property</h3>
 <pre class="programlisting">  "gtk-icon-sizes"           <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -1331,6 +1350,19 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write</pre>
 <p>Name of icon theme to use.</p>
 <p>Default value: "hicolor"</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkSettings--gtk-im-module"></a><h3>The <code class="literal">"gtk-im-module"</code> property</h3>
+<pre class="programlisting">  "gtk-im-module"            <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>*                : Read / Write</pre>
+<p>
+Which IM module should be used by default.</p>
+<p>
+
+</p>
+<p>Default value: NULL</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1501,6 +1533,25 @@ The number of recently used files that should be displayed by default by
 <p>Allowed values: &gt;= -1</p>
 <p>Default value: 50</p>
 <p>Since  2.12
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkSettings--gtk-recent-files-max-age"></a><h3>The <code class="literal">"gtk-recent-files-max-age"</code> property</h3>
+<pre class="programlisting">  "gtk-recent-files-max-age" <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write</pre>
+<p>
+The maximum age, in days, of the items inside the recently used
+resources list. Items older than this setting will be excised
+from the list. If set to 0, the list will always be empty; if
+set to -1, no item will be removed.</p>
+<p>
+
+</p>
+<p>Allowed values: &gt;= -1</p>
+<p>Default value: 30</p>
+<p>Since  2.14
 </p>
 </div>
 <hr>

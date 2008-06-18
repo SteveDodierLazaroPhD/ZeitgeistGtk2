@@ -1136,7 +1136,7 @@ gdk_win32_selection_add_targets (GdkWindow  *owner,
 		  break;
 		}
 	    }
-	    g_strfreev(mime_types);
+	  g_strfreev(mime_types);
 	}
       g_free (target_name);
     }

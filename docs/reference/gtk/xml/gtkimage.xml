@@ -37,6 +37,9 @@ enum                <link linkend="GtkImageType">GtkImageType</link>;
 <link linkend="void">void</link>                <link linkend="gtk-image-get-icon-name">gtk_image_get_icon_name</link>             (<link linkend="GtkImage">GtkImage</link> *image,
                                                          G_CONST_RETURN <link linkend="gchar">gchar</link> **icon_name,
                                                          <link linkend="GtkIconSize">GtkIconSize</link> *size);
+<link linkend="void">void</link>                <link linkend="gtk-image-get-gicon">gtk_image_get_gicon</link>                 (<link linkend="GtkImage">GtkImage</link> *image,
+                                                         <link linkend="GIcon">GIcon</link> **gicon,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> *size);
 <link linkend="GtkImageType">GtkImageType</link>        <link linkend="gtk-image-get-storage-type">gtk_image_get_storage_type</link>          (<link linkend="GtkImage">GtkImage</link> *image);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-image-new-from-file">gtk_image_new_from_file</link>             (const <link linkend="gchar">gchar</link> *filename);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-image-new-from-icon-set">gtk_image_new_from_icon_set</link>         (<link linkend="GtkIconSet">GtkIconSet</link> *icon_set,
@@ -50,6 +53,8 @@ enum                <link linkend="GtkImageType">GtkImageType</link>;
                                                          <link linkend="GtkIconSize">GtkIconSize</link> size);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-image-new-from-animation">gtk_image_new_from_animation</link>        (<link linkend="GdkPixbufAnimation">GdkPixbufAnimation</link> *animation);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-image-new-from-icon-name">gtk_image_new_from_icon_name</link>        (const <link linkend="gchar">gchar</link> *icon_name,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> size);
+<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-image-new-from-gicon">gtk_image_new_from_gicon</link>            (<link linkend="GIcon">GIcon</link> *icon,
                                                          <link linkend="GtkIconSize">GtkIconSize</link> size);
 <link linkend="void">void</link>                <link linkend="gtk-image-set-from-file">gtk_image_set_from_file</link>             (<link linkend="GtkImage">GtkImage</link> *image,
                                                          const <link linkend="gchar">gchar</link> *filename);
@@ -71,6 +76,9 @@ enum                <link linkend="GtkImageType">GtkImageType</link>;
                                                          <link linkend="GdkPixbufAnimation">GdkPixbufAnimation</link> *animation);
 <link linkend="void">void</link>                <link linkend="gtk-image-set-from-icon-name">gtk_image_set_from_icon_name</link>        (<link linkend="GtkImage">GtkImage</link> *image,
                                                          const <link linkend="gchar">gchar</link> *icon_name,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> size);
+<link linkend="void">void</link>                <link linkend="gtk-image-set-from-gicon">gtk_image_set_from_gicon</link>            (<link linkend="GtkImage">GtkImage</link> *image,
+                                                         <link linkend="GIcon">GIcon</link> *icon,
                                                          <link linkend="GtkIconSize">GtkIconSize</link> size);
 <link linkend="void">void</link>                <link linkend="gtk-image-clear">gtk_image_clear</link>                     (<link linkend="GtkImage">GtkImage</link> *image);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-image-new">gtk_image_new</link>                       (void);
@@ -114,6 +122,7 @@ GtkImage implements
 <title role="properties.title">Properties</title>
 <synopsis>
   &quot;<link linkend="GtkImage--file">file</link>&quot;                     <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkImage--gicon">gicon</link>&quot;                    <link linkend="GIcon">GIcon</link>*                : Read / Write
   &quot;<link linkend="GtkImage--icon-name">icon-name</link>&quot;                <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkImage--icon-set">icon-set</link>&quot;                 <link linkend="GtkIconSet">GtkIconSet</link>*           : Read / Write
   &quot;<link linkend="GtkImage--icon-size">icon-size</link>&quot;                <link linkend="gint">gint</link>                  : Read / Write
@@ -244,7 +253,8 @@ below.
   GTK_IMAGE_STOCK,
   GTK_IMAGE_ICON_SET,
   GTK_IMAGE_ANIMATION,
-  GTK_IMAGE_ICON_NAME
+  GTK_IMAGE_ICON_NAME,
+  GTK_IMAGE_GICON
 } GtkImageType;
 </programlisting>
 <para>
@@ -295,6 +305,11 @@ functions), but they will all return <link linkend="NULL:CAPS"><literal>NULL</li
 <term><literal>GTK_IMAGE_ICON_NAME</literal></term>
 <listitem><simpara>the widget contains a named icon. 
   This image type was added in GTK+ 2.6
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="GTK-IMAGE-GICON:CAPS" role="constant">
+<term><literal>GTK_IMAGE_GICON</literal></term>
+<listitem><simpara>
 
 </simpara></listitem>
 </varlistentry>
@@ -453,6 +468,31 @@ be freed.</para>
 <listitem><simpara> place to store an icon size
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.6
+</para></refsect2>
+<refsect2 id="gtk-image-get-gicon" role="function" condition="since:2.14">
+<title>gtk_image_get_gicon ()</title>
+<indexterm zone="gtk-image-get-gicon" role="2.14"><primary>gtk_image_get_gicon</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_image_get_gicon                 (<link linkend="GtkImage">GtkImage</link> *image,
+                                                         <link linkend="GIcon">GIcon</link> **gicon,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> *size);</programlisting>
+<para>
+Gets the <link linkend="GIcon"><type>GIcon</type></link> and size being displayed by the <link linkend="GtkImage"><type>GtkImage</type></link>.
+The storage type of the image must be <link linkend="GTK-IMAGE-EMPTY:CAPS"><literal>GTK_IMAGE_EMPTY</literal></link> or
+<link linkend="GTK-IMAGE-GICON:CAPS"><literal>GTK_IMAGE_GICON</literal></link> (see <link linkend="gtk-image-get-storage-type"><function>gtk_image_get_storage_type()</function></link>).
+The caller of this function does not own a reference to the
+returned <link linkend="GIcon"><type>GIcon</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>image</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkImage"><type>GtkImage</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>gicon</parameter>&nbsp;:</term>
+<listitem><simpara> place to store a <link linkend="GIcon"><type>GIcon</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> place to store an icon size
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-image-get-storage-type" role="function">
 <title>gtk_image_get_storage_type ()</title>
@@ -666,6 +706,29 @@ will be updated appropriately.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.6
 </para></refsect2>
+<refsect2 id="gtk-image-new-from-gicon" role="function" condition="since:2.14">
+<title>gtk_image_new_from_gicon ()</title>
+<indexterm zone="gtk-image-new-from-gicon" role="2.14"><primary>gtk_image_new_from_gicon</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_image_new_from_gicon            (<link linkend="GIcon">GIcon</link> *icon,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> size);</programlisting>
+<para>
+Creates a <link linkend="GtkImage"><type>GtkImage</type></link> displaying an icon from the current icon theme.
+If the icon name isn't known, a "broken image" icon will be
+displayed instead.  If the current icon theme is changed, the icon
+will be updated appropriately.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon</parameter>&nbsp;:</term>
+<listitem><simpara> an icon
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> a stock icon size
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkImage"><type>GtkImage</type></link> displaying the themed icon
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-image-set-from-file" role="function">
 <title>gtk_image_set_from_file ()</title>
 <indexterm zone="gtk-image-set-from-file"><primary>gtk_image_set_from_file</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_image_set_from_file             (<link linkend="GtkImage">GtkImage</link> *image,
@@ -816,6 +879,27 @@ See <link linkend="gtk-image-new-from-icon-name"><function>gtk_image_new_from_ic
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.6
 </para></refsect2>
+<refsect2 id="gtk-image-set-from-gicon" role="function" condition="since:2.14">
+<title>gtk_image_set_from_gicon ()</title>
+<indexterm zone="gtk-image-set-from-gicon" role="2.14"><primary>gtk_image_set_from_gicon</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_image_set_from_gicon            (<link linkend="GtkImage">GtkImage</link> *image,
+                                                         <link linkend="GIcon">GIcon</link> *icon,
+                                                         <link linkend="GtkIconSize">GtkIconSize</link> size);</programlisting>
+<para>
+See <link linkend="gtk-image-new-from-gicon"><function>gtk_image_new_from_gicon()</function></link> for details.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>image</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkImage"><type>GtkImage</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon</parameter>&nbsp;:</term>
+<listitem><simpara> an icon
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> an icon size
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-image-clear" role="function" condition="since:2.8">
 <title>gtk_image_clear ()</title>
 <indexterm zone="gtk-image-clear" role="2.8"><primary>gtk_image_clear</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_image_clear                     (<link linkend="GtkImage">GtkImage</link> *image);</programlisting>
@@ -924,6 +1008,17 @@ Gets the pixel size used for named icons.</para>
 <refsect2 id="GtkImage--file"><title>The <literal>&quot;file&quot;</literal> property</title>
 <indexterm zone="GtkImage--file"><primary>GtkImage:file</primary></indexterm><programlisting>  &quot;file&quot;                     <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>Filename to load and display.</para><para>Default value: NULL</para>
+</refsect2>
+<refsect2 id="GtkImage--gicon"><title>The <literal>&quot;gicon&quot;</literal> property</title>
+<indexterm zone="GtkImage--gicon" role="2.14"><primary>GtkImage:gicon</primary></indexterm><programlisting>  &quot;gicon&quot;                    <link linkend="GIcon">GIcon</link>*                : Read / Write</programlisting>
+<para>
+The GIcon displayed in the GtkImage. For themed icons,
+If the icon theme is changed, the image will be updated
+automatically.</para>
+<para>
+
+</para><para>Since  2.14
+</para>
 </refsect2>
 <refsect2 id="GtkImage--icon-name"><title>The <literal>&quot;icon-name&quot;</literal> property</title>
 <indexterm zone="GtkImage--icon-name" role="2.6"><primary>GtkImage:icon-name</primary></indexterm><programlisting>  &quot;icon-name&quot;                <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>

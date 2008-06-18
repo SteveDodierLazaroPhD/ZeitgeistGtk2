@@ -118,7 +118,7 @@ gtk_printer_class_init (GtkPrinterClass *class)
                                    g_param_spec_string ("name",
 						        P_("Name"),
 						        P_("Name of the printer"),
-						        NULL,
+						        "",
 							GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
   g_object_class_install_property (G_OBJECT_CLASS (class),
                                    PROP_BACKEND,
@@ -153,21 +153,21 @@ gtk_printer_class_init (GtkPrinterClass *class)
                                    g_param_spec_string ("state-message",
 						        P_("State Message"),
 						        P_("String giving the current state of the printer"),
-						        NULL,
+						        "",
 							GTK_PARAM_READABLE));
   g_object_class_install_property (G_OBJECT_CLASS (class),
                                    PROP_LOCATION,
                                    g_param_spec_string ("location",
 						        P_("Location"),
 						        P_("The location of the printer"),
-						        NULL,
+						        "",
 							GTK_PARAM_READABLE));
   g_object_class_install_property (G_OBJECT_CLASS (class),
                                    PROP_ICON_NAME,
                                    g_param_spec_string ("icon-name",
 						        P_("Icon Name"),
 						        P_("The icon name to use for the printer"),
-						        NULL,
+						        "",
 							GTK_PARAM_READABLE));
   g_object_class_install_property (G_OBJECT_CLASS (class),
                                    PROP_JOB_COUNT,
@@ -292,7 +292,7 @@ gtk_printer_get_property (GObject    *object,
       if (priv->name)
 	g_value_set_string (value, priv->name);
       else
-	g_value_set_string (value, "");
+	g_value_set_static_string (value, "");
       break;
     case PROP_BACKEND:
       g_value_set_object (value, priv->backend);
@@ -301,19 +301,19 @@ gtk_printer_get_property (GObject    *object,
       if (priv->state_message)
 	g_value_set_string (value, priv->state_message);
       else
-	g_value_set_string (value, "");
+	g_value_set_static_string (value, "");
       break;
     case PROP_LOCATION:
       if (priv->location)
 	g_value_set_string (value, priv->location);
       else
-	g_value_set_string (value, "");
+	g_value_set_static_string (value, "");
       break;
     case PROP_ICON_NAME:
       if (priv->icon_name)
 	g_value_set_string (value, priv->icon_name);
       else
-	g_value_set_string (value, "");
+	g_value_set_static_string (value, "");
       break;
     case PROP_JOB_COUNT:
       g_value_set_int (value, priv->job_count);
@@ -830,6 +830,27 @@ gtk_printer_list_papers (GtkPrinter *printer)
 
   backend_class = GTK_PRINT_BACKEND_GET_CLASS (printer->priv->backend);
   return backend_class->printer_list_papers (printer);
+}
+
+/**
+ * gtk_printer_get_default_page_size:
+ * @printer: a #GtkPrinter
+ * 
+ * Returns default page size of @printer.
+ * 
+ * Return value: a newly allocated #GtkPageSetup with default page size of the printer.
+ *
+ * Since: 2.13
+ */
+GtkPageSetup  *
+gtk_printer_get_default_page_size (GtkPrinter *printer)
+{
+  GtkPrintBackendClass *backend_class;
+
+  g_return_val_if_fail (GTK_IS_PRINTER (printer), NULL);
+
+  backend_class = GTK_PRINT_BACKEND_GET_CLASS (printer->priv->backend);
+  return backend_class->printer_get_default_page_size (printer);
 }
 
 void

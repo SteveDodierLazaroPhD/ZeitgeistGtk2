@@ -1071,26 +1071,41 @@ gtk_drag_dest_set_internal (GtkWidget       *widget,
   g_object_set_data_full (G_OBJECT (widget), I_("gtk-drag-dest"),
 			  site, gtk_drag_dest_site_destroy);
 }
-			    
 
-/*************************************************************
+/**
  * gtk_drag_dest_set:
- *     Register a drop site, and possibly add default behaviors.
- *   arguments:
- *     widget:    
- *     flags:     Which types of default drag behavior to use
- *     targets:   Table of targets that can be accepted
- *     n_targets: Number of of entries in targets
- *     actions:   
- *   results:
- *************************************************************/
-
-void 
-gtk_drag_dest_set   (GtkWidget            *widget,
-		     GtkDestDefaults       flags,
-		     const GtkTargetEntry *targets,
-		     gint                  n_targets,
-		     GdkDragAction         actions)
+ * @widget: a #GtkWidget
+ * @flags: which types of default drag behavior to use
+ * @targets: a pointer to an array of #GtkTargetEntry<!-- -->s indicating
+ * the drop types that this @widget will accept. Later you can access the list
+ * with gtk_drag_dest_get_target_list() and gtk_drag_dest_find_target().
+ * @n_targets: the number of entries in @targets.
+ * @actions: a bitmask of possible actions for a drop onto this @widget.
+ *
+ * Sets a widget as a potential drop destination, and adds default behaviors.
+ *
+ * The default behaviors listed in @flags have an effect similar
+ * to installing default handlers for the widget's drag-and-drop signals
+ * (#GtkWidget:drag-motion, #GtkWidget:drag-drop, ...). They all exist
+ * for convenience. When passing #GTK_DEST_DEFAULT_ALL for instance it is
+ * sufficient to connect to the widget's #GtkWidget::drag-data-received
+ * signal to get primitive, but consistent drag-and-drop support.
+ *
+ * Things become more complicated when you try to preview the dragged data,
+ * as described in the documentation for #GtkWidget:drag-motion. The default
+ * behaviors described by @flags make some assumptions, that can conflict
+ * with your own signal handlers. For instance #GTK_DEST_DEFAULT_DROP causes
+ * invokations of gdk_drag_status() in the context of #GtkWidget:drag-motion,
+ * and invokations of gtk_drag_finish() in #GtkWidget:drag-data-received.
+ * Especially the later is dramatic, when your own #GtkWidget:drag-motion
+ * handler calls gtk_drag_get_data() to inspect the dragged data.
+ */
+void
+gtk_drag_dest_set (GtkWidget            *widget,
+		   GtkDestDefaults       flags,
+		   const GtkTargetEntry *targets,
+		   gint                  n_targets,
+		   GdkDragAction         actions)
 {
   GtkDragDestSite *site;
   
@@ -3080,7 +3095,7 @@ gtk_drag_set_icon_stock  (GdkDragContext *context,
  *            with a  context for the source side of a drag)
  * @colormap: the colormap of the icon 
  * @pixmap: the image data for the icon 
- * @mask: the transparency mask for the icon
+ * @mask: the transparency mask for the icon or %NULL for none.
  * @hot_x: the X offset within @pixmap of the hotspot.
  * @hot_y: the Y offset within @pixmap of the hotspot.
  * 

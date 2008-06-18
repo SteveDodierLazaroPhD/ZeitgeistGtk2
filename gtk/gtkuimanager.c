@@ -467,7 +467,7 @@ child_hierarchy_changed_cb (GtkWidget *widget,
     return;
   
   group = gtk_ui_manager_get_accel_group (uimgr);
-  groups = gtk_accel_groups_from_object (toplevel);
+  groups = gtk_accel_groups_from_object (G_OBJECT (toplevel));
   if (g_slist_find (groups, group) == NULL)
     gtk_window_add_accel_group (GTK_WINDOW (toplevel), group);
 
@@ -696,10 +696,31 @@ gtk_ui_manager_insert_action_group (GtkUIManager   *self,
 				    GtkActionGroup *action_group, 
 				    gint            pos)
 {
+#ifdef G_ENABLE_DEBUG
+  GList *l;
+  const char *group_name;
+#endif 
+
   g_return_if_fail (GTK_IS_UI_MANAGER (self));
   g_return_if_fail (GTK_IS_ACTION_GROUP (action_group));
   g_return_if_fail (g_list_find (self->private_data->action_groups, 
 				 action_group) == NULL);
+
+#ifdef G_ENABLE_DEBUG
+  group_name  = gtk_action_group_get_name (action_group);
+
+  for (l = self->private_data->action_groups; l; l = l->next) 
+    {
+      GtkActionGroup *group = l->data;
+
+      if (strcmp (gtk_action_group_get_name (group), group_name) == 0)
+        {
+          g_warning ("Inserting action group '%s' into UI manager which "
+		     "already has a group with this name\n", group_name);
+          break;
+        }
+    }
+#endif /* G_ENABLE_DEBUG */
 
   g_object_ref (action_group);
   self->private_data->action_groups = 
@@ -1214,20 +1235,9 @@ start_element_handler (GMarkupParseContext *context,
 	{
 	  expand = !strcmp (attribute_values[i], "true");
 	}
-      else
-	{
-	  gint line_number, char_number;
-	  
-	  g_markup_parse_context_get_position (context,
-					       &line_number, &char_number);
-	  g_set_error (error,
-		       G_MARKUP_ERROR,
-		       G_MARKUP_ERROR_UNKNOWN_ATTRIBUTE,
-		       _("Unknown attribute '%s' on line %d char %d"),
-		       attribute_names[i],
-		       line_number, char_number);
-	  return;
-	}
+      /*  else silently skip unknown attributes to be compatible with
+       *  future additional attributes.
+       */
     }
 
   /* Work out a name for this node.  Either the name attribute, or
@@ -2784,8 +2794,7 @@ queue_update (GtkUIManager *self)
  * UI in an idle function. A typical example where this function is
  * useful is to enforce that the menubar and toolbar have been added to 
  * the main window before showing it:
- * <informalexample>
- * <programlisting>
+ * |[
  * gtk_container_add (GTK_CONTAINER (window), vbox); 
  * g_signal_connect (merge, "add_widget", 
  *                   G_CALLBACK (add_widget), vbox);
@@ -2793,8 +2802,7 @@ queue_update (GtkUIManager *self)
  * gtk_ui_manager_add_ui_from_file (merge, "my-toolbars");
  * gtk_ui_manager_ensure_update (merge);  
  * gtk_widget_show (window);
- * </programlisting>
- * </informalexample>
+ * ]|
  *
  * Since: 2.4
  **/

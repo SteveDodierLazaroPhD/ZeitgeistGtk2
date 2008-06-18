@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkMenu</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="MenusAndCombos.html" title="Menus, Combo Box, Toolbar">
 <link rel="prev" href="GtkComboBoxEntry.html" title="GtkComboBoxEntry">
 <link rel="next" href="GtkMenuBar.html" title="GtkMenuBar">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -297,7 +298,7 @@ Applications can display a <a class="link" href="GtkMenu.html" title="GtkMenu"><
 can pop up a menu when the 3rd mouse button is pressed.  
 </p>
 <div class="example">
-<a name="id3537470"></a><p class="title"><b>Example 24. Connecting the popup signal handler.</b></p>
+<a name="id3465928"></a><p class="title"><b>Example 26. Connecting the popup signal handler.</b></p>
 <div class="example-contents"><pre class="programlisting">
     /* connect our handler which will popup the menu */
     g_signal_connect_swapped (window, "button_press_event",
@@ -305,7 +306,7 @@ can pop up a menu when the 3rd mouse button is pressed.
 </pre></div>
 </div>
 <br class="example-break"><div class="example">
-<a name="id3537486"></a><p class="title"><b>Example 25. Signal handler which displays a popup menu.</b></p>
+<a name="id3465943"></a><p class="title"><b>Example 27. Signal handler which displays a popup menu.</b></p>
 <div class="example-contents"><pre class="programlisting">
 static gint
 my_popup_handler (GtkWidget *widget, GdkEvent *event)
@@ -759,7 +760,16 @@ has been called, assign its items the accel paths:
 <code class="literal">"&lt;Gnumeric-Sheet&gt;/File/New"</code> and <code class="literal">"&lt;Gnumeric-Sheet&gt;/File/Exit"</code>.
 Assigning accel paths to menu items then enables the user to change
 their accelerators at runtime. More details about accelerator paths
-and their default setups can be found at <a class="link" href="gtk-Accelerator-Maps.html#gtk-accel-map-add-entry" title="gtk_accel_map_add_entry ()"><code class="function">gtk_accel_map_add_entry()</code></a>.</p>
+and their default setups can be found at <a class="link" href="gtk-Accelerator-Maps.html#gtk-accel-map-add-entry" title="gtk_accel_map_add_entry ()"><code class="function">gtk_accel_map_add_entry()</code></a>.
+</p>
+<p>
+Note that <em class="parameter"><code>accel_path</code></em> string will be stored in a <a
+href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"
+><span class="type">GQuark</span></a>. Therefore, if you
+pass a static string, you can save some memory by interning it first with 
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#g-intern-static-string"
+><code class="function">g_intern_static_string()</code></a>.</p>
 <p>
 
 </p>
@@ -1273,7 +1283,7 @@ A boolean that indicates whether the menu is torn-off.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write</pre>
 <p>A title that may be displayed by the window manager when this menu is torn-off.</p>
-<p>Default value: ""</p>
+<p>Default value: NULL</p>
 </div>
 </div>
 <div class="refsect1" lang="en">

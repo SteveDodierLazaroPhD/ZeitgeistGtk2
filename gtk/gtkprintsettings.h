@@ -17,11 +17,16 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_PRINT_SETTINGS_H__
 #define __GTK_PRINT_SETTINGS_H__
 
 #include <glib-object.h>
-#include "gtkpapersize.h"
+#include <gtk/gtkpapersize.h>
 
 G_BEGIN_DECLS
 
@@ -49,10 +54,17 @@ GtkPrintSettings *gtk_print_settings_copy                    (GtkPrintSettings  
 
 GtkPrintSettings *gtk_print_settings_new_from_file           (const gchar          *file_name,
 							      GError              **error);
+gboolean          gtk_print_settings_load_file               (GtkPrintSettings     *settings,
+							      const gchar          *file_name,
+							      GError              **error);
 gboolean          gtk_print_settings_to_file                 (GtkPrintSettings     *settings,
 							      const gchar          *file_name,
 							      GError              **error);
 GtkPrintSettings *gtk_print_settings_new_from_key_file       (GKeyFile             *key_file,
+							      const gchar          *group_name,
+							      GError              **error);
+gboolean          gtk_print_settings_load_key_file           (GtkPrintSettings     *settings,
+							      GKeyFile             *key_file,
 							      const gchar          *group_name,
 							      GError              **error);
 void              gtk_print_settings_to_key_file             (GtkPrintSettings     *settings,

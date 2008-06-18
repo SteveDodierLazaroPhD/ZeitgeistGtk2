@@ -30,8 +30,12 @@
  * Modified by the GTK+ Team and others 2007.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
+
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
 
 #ifndef __GTK_SCALE_BUTTON_H__
 #define __GTK_SCALE_BUTTON_H__
@@ -51,29 +55,30 @@ typedef struct _GtkScaleButton        GtkScaleButton;
 typedef struct _GtkScaleButtonClass   GtkScaleButtonClass;
 typedef struct _GtkScaleButtonPrivate GtkScaleButtonPrivate;
 
+struct _GtkScaleButton
+{
+  GtkButton parent;
+
+  GtkWidget *plus_button;
+  GtkWidget *minus_button;
+
+  /*< private >*/
+  GtkScaleButtonPrivate *priv;
+};
+
 struct _GtkScaleButtonClass
 {
   GtkButtonClass parent_class;
 
   /* signals */
-  void	(* value_changed) (GtkScaleButton *button, gdouble value);
+  void	(* value_changed) (GtkScaleButton *button,
+                           gdouble         value);
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
   void (*_gtk_reserved2) (void);
   void (*_gtk_reserved3) (void);
   void (*_gtk_reserved4) (void);
-};
-
-struct _GtkScaleButton
-{
-  GtkButton parent;
-  
-  GtkWidget *plus_button;
-  GtkWidget *minus_button;
-  
-  /*< private >*/
-  GtkScaleButtonPrivate *priv;
 };
 
 GType		gtk_scale_button_get_type	(void) G_GNUC_CONST;
@@ -94,4 +99,3 @@ void		gtk_scale_button_set_adjustment	(GtkScaleButton *button,
 G_END_DECLS
 
 #endif /* __GTK_SCALE_BUTTON_H__ */
-

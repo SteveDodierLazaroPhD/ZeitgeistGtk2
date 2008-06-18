@@ -24,6 +24,10 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_TEXT_BUFFER_H__
 #define __GTK_TEXT_BUFFER_H__
 
@@ -80,7 +84,7 @@ struct _GtkTextBuffer
   GtkTextLogAttrCache *log_attr_cache;
 
   guint user_action_count;
-  
+
   /* Whether the buffer has been modified since last save */
   guint modified : 1;
 
@@ -103,7 +107,7 @@ struct _GtkTextBufferClass
   void (* insert_child_anchor)   (GtkTextBuffer      *buffer,
                                   GtkTextIter        *pos,
                                   GtkTextChildAnchor *anchor);
-  
+
   void (* delete_range)     (GtkTextBuffer *buffer,
                              GtkTextIter   *start,
                              GtkTextIter   *end);
@@ -377,7 +381,7 @@ gboolean        gtk_text_buffer_get_selection_bounds    (GtkTextBuffer *buffer,
                                                          GtkTextIter   *end);
 gboolean        gtk_text_buffer_delete_selection        (GtkTextBuffer *buffer,
                                                          gboolean       interactive,
-                                                         gboolean       default_editable);                                                    
+                                                         gboolean       default_editable);
 
 /* Called to specify atomic user actions, used to implement undo */
 void            gtk_text_buffer_begin_user_action       (GtkTextBuffer *buffer);

@@ -104,6 +104,8 @@ struct _GtkComboBoxPrivate
   guint reordered_id;
   guint changed_id;
   guint popup_idle_id;
+  guint activate_button;
+  guint32 activate_time;
   guint scroll_timer;
   guint resize_idle_id;
 
@@ -800,7 +802,7 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
                                    g_param_spec_string ("tearoff-title",
                                                         P_("Tearoff Title"),
                                                         P_("A title that may be displayed by the window manager when the popup is torn-off"),
-                                                        "",
+                                                        NULL,
                                                         GTK_PARAM_READWRITE));
 
 
@@ -896,28 +898,30 @@ gtk_combo_box_cell_editable_init (GtkCellEditableIface *iface)
 static void
 gtk_combo_box_init (GtkComboBox *combo_box)
 {
-  combo_box->priv = GTK_COMBO_BOX_GET_PRIVATE (combo_box);
+  GtkComboBoxPrivate *priv = GTK_COMBO_BOX_GET_PRIVATE (combo_box);
 
-  combo_box->priv->cell_view = gtk_cell_view_new ();
-  gtk_widget_set_parent (combo_box->priv->cell_view, GTK_WIDGET (combo_box));
-  GTK_BIN (combo_box)->child = combo_box->priv->cell_view;
-  gtk_widget_show (combo_box->priv->cell_view);
+  priv->cell_view = gtk_cell_view_new ();
+  gtk_widget_set_parent (priv->cell_view, GTK_WIDGET (combo_box));
+  GTK_BIN (combo_box)->child = priv->cell_view;
+  gtk_widget_show (priv->cell_view);
 
-  combo_box->priv->width = 0;
-  combo_box->priv->height = 0;
-  combo_box->priv->wrap_width = 0;
+  priv->width = 0;
+  priv->height = 0;
+  priv->wrap_width = 0;
 
-  combo_box->priv->active_row = NULL;
-  combo_box->priv->col_column = -1;
-  combo_box->priv->row_column = -1;
+  priv->active_row = NULL;
+  priv->col_column = -1;
+  priv->row_column = -1;
 
-  combo_box->priv->popup_shown = FALSE;
-  combo_box->priv->add_tearoffs = FALSE;
-  combo_box->priv->has_frame = TRUE;
-  combo_box->priv->is_cell_renderer = FALSE;
-  combo_box->priv->editing_canceled = FALSE;
-  combo_box->priv->auto_scroll = FALSE;
-  combo_box->priv->focus_on_click = TRUE;
+  priv->popup_shown = FALSE;
+  priv->add_tearoffs = FALSE;
+  priv->has_frame = TRUE;
+  priv->is_cell_renderer = FALSE;
+  priv->editing_canceled = FALSE;
+  priv->auto_scroll = FALSE;
+  priv->focus_on_click = TRUE;
+
+  combo_box->priv = priv;
 
   gtk_combo_box_check_appearance (combo_box);
 }
@@ -971,16 +975,13 @@ gtk_combo_box_set_property (GObject      *object,
 
       case PROP_POPUP_SHOWN:
         if (g_value_get_boolean (value))
-          {
-            gtk_combo_box_popup (combo_box);
-          }
+          gtk_combo_box_popup (combo_box);
         else
-          {
-            gtk_combo_box_popdown (combo_box);
-          }
+          gtk_combo_box_popdown (combo_box);
         break;
 
       default:
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
     }
 }
@@ -1046,11 +1047,12 @@ gtk_combo_box_state_changed (GtkWidget    *widget,
 			     GtkStateType  previous)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   if (GTK_WIDGET_REALIZED (widget))
     {
-      if (combo_box->priv->tree_view && combo_box->priv->cell_view)
-	gtk_cell_view_set_background_color (GTK_CELL_VIEW (combo_box->priv->cell_view), 
+      if (priv->tree_view && priv->cell_view)
+	gtk_cell_view_set_background_color (GTK_CELL_VIEW (priv->cell_view), 
 					    &widget->style->base[GTK_WIDGET_STATE (widget)]);
     }
 
@@ -1063,18 +1065,18 @@ gtk_combo_box_button_state_changed (GtkWidget    *widget,
 				    gpointer      data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   if (GTK_WIDGET_REALIZED (widget))
     {
-      if (!combo_box->priv->tree_view && combo_box->priv->cell_view)
+      if (!priv->tree_view && priv->cell_view)
 	{
 	  if ((GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE) !=
-	      (GTK_WIDGET_STATE (combo_box->priv->cell_view) == GTK_STATE_INSENSITIVE))
-	    gtk_widget_set_sensitive (combo_box->priv->cell_view, GTK_WIDGET_SENSITIVE (widget));
+	      (GTK_WIDGET_STATE (priv->cell_view) == GTK_STATE_INSENSITIVE))
+	    gtk_widget_set_sensitive (priv->cell_view, GTK_WIDGET_SENSITIVE (widget));
 	  
-	  gtk_widget_set_state (combo_box->priv->cell_view, 
+	  gtk_widget_set_state (priv->cell_view, 
 				GTK_WIDGET_STATE (widget));
-	  
 	}
     }
 
@@ -1084,12 +1086,13 @@ gtk_combo_box_button_state_changed (GtkWidget    *widget,
 static void
 gtk_combo_box_check_appearance (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gboolean appears_as_list;
 
   /* if wrap_width > 0, then we are in grid-mode and forced to use
    * unix style
    */
-  if (combo_box->priv->wrap_width)
+  if (priv->wrap_width)
     appears_as_list = FALSE;
   else
     gtk_widget_style_get (GTK_WIDGET (combo_box),
@@ -1099,26 +1102,26 @@ gtk_combo_box_check_appearance (GtkComboBox *combo_box)
   if (appears_as_list)
     {
       /* Destroy all the menu mode widgets, if they exist. */
-      if (GTK_IS_MENU (combo_box->priv->popup_widget))
+      if (GTK_IS_MENU (priv->popup_widget))
 	gtk_combo_box_menu_destroy (combo_box);
 
       /* Create the list mode widgets, if they don't already exist. */
-      if (!GTK_IS_TREE_VIEW (combo_box->priv->tree_view))
+      if (!GTK_IS_TREE_VIEW (priv->tree_view))
 	gtk_combo_box_list_setup (combo_box);
     }
   else
     {
       /* Destroy all the list mode widgets, if they exist. */
-      if (GTK_IS_TREE_VIEW (combo_box->priv->tree_view))
+      if (GTK_IS_TREE_VIEW (priv->tree_view))
 	gtk_combo_box_list_destroy (combo_box);
 
       /* Create the menu mode widgets, if they don't already exist. */
-      if (!GTK_IS_MENU (combo_box->priv->popup_widget))
+      if (!GTK_IS_MENU (priv->popup_widget))
 	gtk_combo_box_menu_setup (combo_box, TRUE);
     }
 
   gtk_widget_style_get (GTK_WIDGET (combo_box),
-			"shadow-type", &combo_box->priv->shadow_type,
+			"shadow-type", &priv->shadow_type,
 			NULL);
 }
 
@@ -1127,16 +1130,17 @@ gtk_combo_box_style_set (GtkWidget *widget,
                          GtkStyle  *previous)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   gtk_combo_box_check_appearance (combo_box);
 
-  if (combo_box->priv->tree_view && combo_box->priv->cell_view)
-    gtk_cell_view_set_background_color (GTK_CELL_VIEW (combo_box->priv->cell_view), 
+  if (priv->tree_view && priv->cell_view)
+    gtk_cell_view_set_background_color (GTK_CELL_VIEW (priv->cell_view), 
 					&widget->style->base[GTK_WIDGET_STATE (widget)]);
 
   if (GTK_IS_ENTRY (GTK_BIN (combo_box)->child))
     g_object_set (GTK_BIN (combo_box)->child, "shadow-type",
-                  GTK_SHADOW_NONE == combo_box->priv->shadow_type ?
+                  GTK_SHADOW_NONE == priv->shadow_type ?
                   GTK_SHADOW_IN : GTK_SHADOW_NONE, NULL);
 }
 
@@ -1160,10 +1164,11 @@ gtk_combo_box_add (GtkContainer *container,
                    GtkWidget    *widget)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (container);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
-  if (combo_box->priv->cell_view && combo_box->priv->cell_view->parent)
+  if (priv->cell_view && priv->cell_view->parent)
     {
-      gtk_widget_unparent (combo_box->priv->cell_view);
+      gtk_widget_unparent (priv->cell_view);
       GTK_BIN (container)->child = NULL;
       gtk_widget_queue_resize (GTK_WIDGET (container));
     }
@@ -1171,25 +1176,25 @@ gtk_combo_box_add (GtkContainer *container,
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
   GTK_BIN (container)->child = widget;
 
-  if (combo_box->priv->cell_view &&
-      widget != combo_box->priv->cell_view)
+  if (priv->cell_view &&
+      widget != priv->cell_view)
     {
       /* since the cell_view was unparented, it's gone now */
-      combo_box->priv->cell_view = NULL;
+      priv->cell_view = NULL;
 
-      if (!combo_box->priv->tree_view && combo_box->priv->separator)
+      if (!priv->tree_view && priv->separator)
         {
-	  gtk_container_remove (GTK_CONTAINER (combo_box->priv->separator->parent),
-				combo_box->priv->separator);
-	  combo_box->priv->separator = NULL;
+	  gtk_container_remove (GTK_CONTAINER (priv->separator->parent),
+				priv->separator);
+	  priv->separator = NULL;
 
           gtk_widget_queue_resize (GTK_WIDGET (container));
         }
-      else if (combo_box->priv->cell_view_frame)
+      else if (priv->cell_view_frame)
         {
-          gtk_widget_unparent (combo_box->priv->cell_view_frame);
-          combo_box->priv->cell_view_frame = NULL;
-          combo_box->priv->box = NULL;
+          gtk_widget_unparent (priv->cell_view_frame);
+          priv->cell_view_frame = NULL;
+          priv->box = NULL;
         }
     }
 }
@@ -1199,11 +1204,12 @@ gtk_combo_box_remove (GtkContainer *container,
 		      GtkWidget    *widget)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (container);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkTreePath *path;
   gboolean appears_as_list;
 
-  if (widget == combo_box->priv->cell_view)
-    combo_box->priv->cell_view = NULL;
+  if (widget == priv->cell_view)
+    priv->cell_view = NULL;
 
   gtk_widget_unparent (widget);
   GTK_BIN (container)->child = NULL;
@@ -1213,30 +1219,30 @@ gtk_combo_box_remove (GtkContainer *container,
 
   gtk_widget_queue_resize (GTK_WIDGET (container));
 
-  if (!combo_box->priv->tree_view)
+  if (!priv->tree_view)
     appears_as_list = FALSE;
   else
     appears_as_list = TRUE;
   
   if (appears_as_list)
     gtk_combo_box_list_destroy (combo_box);
-  else if (GTK_IS_MENU (combo_box->priv->popup_widget))
+  else if (GTK_IS_MENU (priv->popup_widget))
     {
       gtk_combo_box_menu_destroy (combo_box);
-      gtk_menu_detach (GTK_MENU (combo_box->priv->popup_widget));
-      combo_box->priv->popup_widget = NULL;
+      gtk_menu_detach (GTK_MENU (priv->popup_widget));
+      priv->popup_widget = NULL;
     }
 
-  if (!combo_box->priv->cell_view)
+  if (!priv->cell_view)
     {
-      combo_box->priv->cell_view = gtk_cell_view_new ();
-      gtk_widget_set_parent (combo_box->priv->cell_view, GTK_WIDGET (container));
-      GTK_BIN (container)->child = combo_box->priv->cell_view;
+      priv->cell_view = gtk_cell_view_new ();
+      gtk_widget_set_parent (priv->cell_view, GTK_WIDGET (container));
+      GTK_BIN (container)->child = priv->cell_view;
       
-      gtk_widget_show (combo_box->priv->cell_view);
-      gtk_cell_view_set_model (GTK_CELL_VIEW (combo_box->priv->cell_view),
-			       combo_box->priv->model);
-      gtk_combo_box_sync_cells (combo_box, GTK_CELL_LAYOUT (combo_box->priv->cell_view));
+      gtk_widget_show (priv->cell_view);
+      gtk_cell_view_set_model (GTK_CELL_VIEW (priv->cell_view),
+			       priv->model);
+      gtk_combo_box_sync_cells (combo_box, GTK_CELL_LAYOUT (priv->cell_view));
     }
 
 
@@ -1245,9 +1251,9 @@ gtk_combo_box_remove (GtkContainer *container,
   else
     gtk_combo_box_menu_setup (combo_box, TRUE);
 
-  if (gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  if (gtk_tree_row_reference_valid (priv->active_row))
     {
-      path = gtk_tree_row_reference_get_path (combo_box->priv->active_row);
+      path = gtk_tree_row_reference_get_path (priv->active_row);
       gtk_combo_box_set_active_internal (combo_box, path);
       gtk_tree_path_free (path);
     }
@@ -1277,13 +1283,14 @@ gtk_combo_box_menu_show (GtkWidget *menu,
                          gpointer   user_data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   gtk_combo_box_child_show (menu, user_data);
 
-  combo_box->priv->popup_in_progress = TRUE;
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (combo_box->priv->button),
+  priv->popup_in_progress = TRUE;
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->button),
                                 TRUE);
-  combo_box->priv->popup_in_progress = FALSE;
+  priv->popup_in_progress = FALSE;
 }
 
 static void
@@ -1292,7 +1299,7 @@ gtk_combo_box_menu_hide (GtkWidget *menu,
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
 
-  gtk_combo_box_child_hide(menu,user_data);
+  gtk_combo_box_child_hide (menu,user_data);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (combo_box->priv->button),
                                 FALSE);
@@ -1302,12 +1309,10 @@ static void
 gtk_combo_box_detacher (GtkWidget *widget,
 			GtkMenu	  *menu)
 {
-  GtkComboBox *combo_box;
+  GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
-  g_return_if_fail (GTK_IS_COMBO_BOX (widget));
-
-  combo_box = GTK_COMBO_BOX (widget);
-  g_return_if_fail (combo_box->priv->popup_widget == (GtkWidget*) menu);
+  g_return_if_fail (priv->popup_widget == (GtkWidget *) menu);
 
   g_signal_handlers_disconnect_by_func (menu->toplevel,
 					gtk_combo_box_menu_show,
@@ -1316,35 +1321,37 @@ gtk_combo_box_detacher (GtkWidget *widget,
 					gtk_combo_box_menu_hide,
 					combo_box);
   
-  combo_box->priv->popup_widget = NULL;
+  priv->popup_widget = NULL;
 }
 
 static void
 gtk_combo_box_set_popup_widget (GtkComboBox *combo_box,
                                 GtkWidget   *popup)
 {
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
+  GtkComboBoxPrivate *priv = combo_box->priv;
+
+  if (GTK_IS_MENU (priv->popup_widget))
     {
-      gtk_menu_detach (GTK_MENU (combo_box->priv->popup_widget));
-      combo_box->priv->popup_widget = NULL;
+      gtk_menu_detach (GTK_MENU (priv->popup_widget));
+      priv->popup_widget = NULL;
     }
-  else if (combo_box->priv->popup_widget)
+  else if (priv->popup_widget)
     {
-      gtk_container_remove (GTK_CONTAINER (combo_box->priv->scrolled_window),
-                            combo_box->priv->popup_widget);
-      g_object_unref (combo_box->priv->popup_widget);
-      combo_box->priv->popup_widget = NULL;
+      gtk_container_remove (GTK_CONTAINER (priv->scrolled_window),
+                            priv->popup_widget);
+      g_object_unref (priv->popup_widget);
+      priv->popup_widget = NULL;
     }
 
   if (GTK_IS_MENU (popup))
     {
-      if (combo_box->priv->popup_window)
+      if (priv->popup_window)
         {
-          gtk_widget_destroy (combo_box->priv->popup_window);
-          combo_box->priv->popup_window = NULL;
+          gtk_widget_destroy (priv->popup_window);
+          priv->popup_window = NULL;
         }
 
-      combo_box->priv->popup_widget = popup;
+      priv->popup_widget = popup;
 
       /* 
        * Note that we connect to show/hide on the toplevel, not the
@@ -1362,20 +1369,20 @@ gtk_combo_box_set_popup_widget (GtkComboBox *combo_box,
     }
   else
     {
-      if (!combo_box->priv->popup_window)
+      if (!priv->popup_window)
         {
 	  GtkWidget *toplevel;
 	  
-          combo_box->priv->popup_window = gtk_window_new (GTK_WINDOW_POPUP);
-          gtk_widget_set_name (combo_box->priv->popup_window, "gtk-combobox-popup-window");
+          priv->popup_window = gtk_window_new (GTK_WINDOW_POPUP);
+          gtk_widget_set_name (priv->popup_window, "gtk-combobox-popup-window");
 
-	  gtk_window_set_type_hint (GTK_WINDOW (combo_box->priv->popup_window),
+	  gtk_window_set_type_hint (GTK_WINDOW (priv->popup_window),
 				    GDK_WINDOW_TYPE_HINT_COMBO);
 
-	  g_signal_connect (GTK_WINDOW(combo_box->priv->popup_window),"show",
+	  g_signal_connect (GTK_WINDOW (priv->popup_window),"show",
 			    G_CALLBACK (gtk_combo_box_child_show),
 			    combo_box);
-	  g_signal_connect (GTK_WINDOW(combo_box->priv->popup_window),"hide",
+	  g_signal_connect (GTK_WINDOW (priv->popup_window),"hide",
 			    G_CALLBACK (gtk_combo_box_child_hide),
 			    combo_box);
   	  
@@ -1383,35 +1390,35 @@ gtk_combo_box_set_popup_widget (GtkComboBox *combo_box,
 	  if (GTK_IS_WINDOW (toplevel))
 	    {
 	      gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)), 
-					   GTK_WINDOW (combo_box->priv->popup_window));
-	      gtk_window_set_transient_for (GTK_WINDOW (combo_box->priv->popup_window),
+					   GTK_WINDOW (priv->popup_window));
+	      gtk_window_set_transient_for (GTK_WINDOW (priv->popup_window),
 					    GTK_WINDOW (toplevel));
 	    }
 
-	  gtk_window_set_resizable (GTK_WINDOW (combo_box->priv->popup_window), FALSE);
-          gtk_window_set_screen (GTK_WINDOW (combo_box->priv->popup_window),
+	  gtk_window_set_resizable (GTK_WINDOW (priv->popup_window), FALSE);
+          gtk_window_set_screen (GTK_WINDOW (priv->popup_window),
                                  gtk_widget_get_screen (GTK_WIDGET (combo_box)));
 
-	  combo_box->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	  priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	  
-	  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (combo_box->priv->scrolled_window),
+	  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->scrolled_window),
 					  GTK_POLICY_NEVER,
 					  GTK_POLICY_NEVER);
-	  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (combo_box->priv->scrolled_window),
+	  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (priv->scrolled_window),
 					       GTK_SHADOW_IN);
 
-          gtk_widget_show (combo_box->priv->scrolled_window);
+          gtk_widget_show (priv->scrolled_window);
 	  
-	  gtk_container_add (GTK_CONTAINER (combo_box->priv->popup_window),
-			     combo_box->priv->scrolled_window);
+	  gtk_container_add (GTK_CONTAINER (priv->popup_window),
+			     priv->scrolled_window);
         }
 
-      gtk_container_add (GTK_CONTAINER (combo_box->priv->scrolled_window),
+      gtk_container_add (GTK_CONTAINER (priv->scrolled_window),
                          popup);
 
       gtk_widget_show (popup);
       g_object_ref (popup);
-      combo_box->priv->popup_widget = popup;
+      priv->popup_widget = popup;
     }
 }
 
@@ -1431,26 +1438,26 @@ gtk_combo_box_menu_position_below (GtkMenu  *menu,
   GdkRectangle monitor;
   
   /* FIXME: is using the size request here broken? */
-   child = GTK_BIN (combo_box)->child;
+  child = GTK_BIN (combo_box)->child;
    
-   gdk_window_get_origin (child->window, &sx, &sy);
+  gdk_window_get_origin (child->window, &sx, &sy);
    
-   if (GTK_WIDGET_NO_WINDOW (child))
-      {
-	sx += child->allocation.x;
-	sy += child->allocation.y;
-      }
+  if (GTK_WIDGET_NO_WINDOW (child))
+    {
+      sx += child->allocation.x;
+      sy += child->allocation.y;
+    }
 
-   if (GTK_SHADOW_NONE != combo_box->priv->shadow_type)
-     sx -= GTK_WIDGET (combo_box)->style->xthickness;
+  if (GTK_SHADOW_NONE != combo_box->priv->shadow_type)
+    sx -= GTK_WIDGET (combo_box)->style->xthickness;
 
-   gtk_widget_size_request (GTK_WIDGET (menu), &req);
+  gtk_widget_size_request (GTK_WIDGET (menu), &req);
 
-   if (gtk_widget_get_direction (GTK_WIDGET (combo_box)) == GTK_TEXT_DIR_LTR)
-     *x = sx;
-   else
-     *x = sx + child->allocation.width - req.width;
-   *y = sy;
+  if (gtk_widget_get_direction (GTK_WIDGET (combo_box)) == GTK_TEXT_DIR_LTR)
+    *x = sx;
+  else
+    *x = sx + child->allocation.width - req.width;
+  *y = sy;
 
   screen = gtk_widget_get_screen (GTK_WIDGET (combo_box));
   monitor_num = gdk_screen_get_monitor_at_window (screen, 
@@ -1492,8 +1499,6 @@ gtk_combo_box_menu_position_over (GtkMenu  *menu,
   gint menu_ypos;
   gint menu_width;
 
-  g_return_if_fail (GTK_IS_COMBO_BOX (user_data));
-  
   combo_box = GTK_COMBO_BOX (user_data);
   widget = GTK_WIDGET (combo_box);
 
@@ -1553,24 +1558,26 @@ gtk_combo_box_menu_position (GtkMenu  *menu,
 			     gint     *push_in,
 			     gpointer  user_data)
 {
-  GtkComboBox *combo_box;
+  GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkWidget *menu_item;
 
-  combo_box = GTK_COMBO_BOX (user_data);
 
-  if (combo_box->priv->wrap_width > 0 || combo_box->priv->cell_view == NULL)	
+  if (priv->wrap_width > 0 || priv->cell_view == NULL)	
     gtk_combo_box_menu_position_below (menu, x, y, push_in, user_data);
   else
     {
       /* FIXME handle nested menus better */
-      menu_item = gtk_menu_get_active (GTK_MENU (combo_box->priv->popup_widget));
+      menu_item = gtk_menu_get_active (GTK_MENU (priv->popup_widget));
       if (menu_item)
-	gtk_menu_shell_select_item (GTK_MENU_SHELL (combo_box->priv->popup_widget), 
+	gtk_menu_shell_select_item (GTK_MENU_SHELL (priv->popup_widget), 
 				    menu_item);
 
       gtk_combo_box_menu_position_over (menu, x, y, push_in, user_data);
     }
 
+  gtk_window_set_type_hint (GTK_WINDOW (GTK_MENU (priv->popup_widget)->toplevel),
+                            GDK_WINDOW_TYPE_HINT_COMBO);
 }
 
 static void
@@ -1580,6 +1587,7 @@ gtk_combo_box_list_position (GtkComboBox *combo_box,
 			     gint        *width,
 			     gint        *height)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GdkScreen *screen;
   gint monitor_num;
   GdkRectangle monitor;
@@ -1601,16 +1609,16 @@ gtk_combo_box_list_position (GtkComboBox *combo_box,
   *width = sample->allocation.width;
 
   hpolicy = vpolicy = GTK_POLICY_NEVER;
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (combo_box->priv->scrolled_window),
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->scrolled_window),
 				  hpolicy, vpolicy);
-  gtk_widget_size_request (combo_box->priv->scrolled_window, &popup_req);
+  gtk_widget_size_request (priv->scrolled_window, &popup_req);
 
   if (popup_req.width > *width)
     {
       hpolicy = GTK_POLICY_ALWAYS;
-      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (combo_box->priv->scrolled_window),
+      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->scrolled_window),
 				      hpolicy, vpolicy);
-      gtk_widget_size_request (combo_box->priv->scrolled_window, &popup_req);
+      gtk_widget_size_request (priv->scrolled_window, &popup_req);
     }
 
   *height = popup_req.height;
@@ -1644,7 +1652,7 @@ gtk_combo_box_list_position (GtkComboBox *combo_box,
     {
       vpolicy = GTK_POLICY_ALWAYS;
       
-      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (combo_box->priv->scrolled_window),
+      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->scrolled_window),
 				      hpolicy, vpolicy);
     }
 } 
@@ -1658,15 +1666,12 @@ cell_view_is_sensitive (GtkCellView *cell_view)
   cells = gtk_cell_view_get_cell_renderers (cell_view);
 
   sensitive = FALSE;
-  list = cells;
-  while (list)
+  for (list = cells; list; list = list->next)
     {
       g_object_get (list->data, "sensitive", &sensitive, NULL);
       
       if (sensitive)
 	break;
-
-      list = list->next;
     }
   g_list_free (cells);
 
@@ -1677,35 +1682,33 @@ static gboolean
 tree_column_row_is_sensitive (GtkComboBox *combo_box,
 			      GtkTreeIter *iter)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GList *cells, *list;
   gboolean sensitive;
 
-  if (!combo_box->priv->column)
+  if (!priv->column)
     return TRUE;
 
-  if (combo_box->priv->row_separator_func)
+  if (priv->row_separator_func)
     {
-      if ((*combo_box->priv->row_separator_func) (combo_box->priv->model, iter,
-						  combo_box->priv->row_separator_data))
+      if ((*priv->row_separator_func) (priv->model, iter,
+				       priv->row_separator_data))
 	return FALSE;
     }
 
-  gtk_tree_view_column_cell_set_cell_data (combo_box->priv->column,
-					   combo_box->priv->model,
+  gtk_tree_view_column_cell_set_cell_data (priv->column,
+					   priv->model,
 					   iter, FALSE, FALSE);
 
-  cells = gtk_tree_view_column_get_cell_renderers (combo_box->priv->column);
+  cells = gtk_tree_view_column_get_cell_renderers (priv->column);
 
   sensitive = FALSE;
-  list = cells;
-  while (list)
+  for (list = cells; list; list = list->next)
     {
       g_object_get (list->data, "sensitive", &sensitive, NULL);
       
       if (sensitive)
 	break;
-
-      list = list->next;
     }
   g_list_free (cells);
 
@@ -1716,12 +1719,13 @@ static void
 update_menu_sensitivity (GtkComboBox *combo_box,
 			 GtkWidget   *menu)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GList *children, *child;
   GtkWidget *item, *submenu, *separator;
   GtkWidget *cell_view;
   gboolean sensitive;
 
-  if (!combo_box->priv->model)
+  if (!priv->model)
     return;
 
   children = gtk_container_get_children (GTK_CONTAINER (menu));
@@ -1744,7 +1748,7 @@ update_menu_sensitivity (GtkComboBox *combo_box,
 	{
 	  sensitive = cell_view_is_sensitive (GTK_CELL_VIEW (cell_view));
 
-	  if (menu != combo_box->priv->popup_widget && child == children)
+	  if (menu != priv->popup_widget && child == children)
 	    {
 	      separator = GTK_WIDGET (child->next->data);
 	      g_object_set (item, "visible", sensitive, NULL);
@@ -1763,38 +1767,39 @@ gtk_combo_box_menu_popup (GtkComboBox *combo_box,
 			  guint        button, 
 			  guint32      activate_time)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkTreePath *path;
   gint active_item;
   GtkRequisition requisition;
   gint width;
   
-  update_menu_sensitivity (combo_box, combo_box->priv->popup_widget);
+  update_menu_sensitivity (combo_box, priv->popup_widget);
 
   active_item = -1;
-  if (gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  if (gtk_tree_row_reference_valid (priv->active_row))
     {
-      path = gtk_tree_row_reference_get_path (combo_box->priv->active_row);
+      path = gtk_tree_row_reference_get_path (priv->active_row);
       active_item = gtk_tree_path_get_indices (path)[0];
       gtk_tree_path_free (path);
       
-      if (combo_box->priv->add_tearoffs)
+      if (priv->add_tearoffs)
 	active_item++;
     }
 
   /* FIXME handle nested menus better */
-  gtk_menu_set_active (GTK_MENU (combo_box->priv->popup_widget), active_item);
+  gtk_menu_set_active (GTK_MENU (priv->popup_widget), active_item);
   
-  if (combo_box->priv->wrap_width == 0)
+  if (priv->wrap_width == 0)
     {
       width = GTK_WIDGET (combo_box)->allocation.width;
-      gtk_widget_set_size_request (combo_box->priv->popup_widget, -1, -1);
-      gtk_widget_size_request (combo_box->priv->popup_widget, &requisition);
+      gtk_widget_set_size_request (priv->popup_widget, -1, -1);
+      gtk_widget_size_request (priv->popup_widget, &requisition);
       
-      gtk_widget_set_size_request (combo_box->priv->popup_widget,
+      gtk_widget_set_size_request (priv->popup_widget,
 				   MAX (width, requisition.width), -1);
     }
   
-  gtk_menu_popup (GTK_MENU (combo_box->priv->popup_widget),
+  gtk_menu_popup (GTK_MENU (priv->popup_widget),
 		  NULL, NULL,
 		  gtk_combo_box_menu_position, combo_box,
 		  button, activate_time);
@@ -1847,6 +1852,7 @@ gtk_combo_box_popup (GtkComboBox *combo_box)
 static void
 gtk_combo_box_real_popup (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gint x, y, width, height;
   GtkTreePath *path = NULL, *ppath;
   GtkWidget *toplevel;
@@ -1854,63 +1860,65 @@ gtk_combo_box_real_popup (GtkComboBox *combo_box)
   if (!GTK_WIDGET_REALIZED (combo_box))
     return;
 
-  if (GTK_WIDGET_MAPPED (combo_box->priv->popup_widget))
+  if (GTK_WIDGET_MAPPED (priv->popup_widget))
     return;
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
+  if (GTK_IS_MENU (priv->popup_widget))
     {
-      gtk_combo_box_menu_popup (combo_box, 0, 0);
+      gtk_combo_box_menu_popup (combo_box, 
+                                priv->activate_button,
+                                priv->activate_time);
       return;
     }
 
   toplevel = gtk_widget_get_toplevel (GTK_WIDGET (combo_box));
   if (GTK_IS_WINDOW (toplevel))
     gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)), 
-				 GTK_WINDOW (combo_box->priv->popup_window));
+				 GTK_WINDOW (priv->popup_window));
 
-  gtk_widget_show_all (combo_box->priv->scrolled_window);
+  gtk_widget_show_all (priv->scrolled_window);
   gtk_combo_box_list_position (combo_box, &x, &y, &width, &height);
   
-  gtk_widget_set_size_request (combo_box->priv->popup_window, width, height);  
-  gtk_window_move (GTK_WINDOW (combo_box->priv->popup_window), x, y);
+  gtk_widget_set_size_request (priv->popup_window, width, height);  
+  gtk_window_move (GTK_WINDOW (priv->popup_window), x, y);
 
-  if (gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  if (gtk_tree_row_reference_valid (priv->active_row))
     {
-      path = gtk_tree_row_reference_get_path (combo_box->priv->active_row);
+      path = gtk_tree_row_reference_get_path (priv->active_row);
       ppath = gtk_tree_path_copy (path);
       if (gtk_tree_path_up (ppath))
-	gtk_tree_view_expand_to_path (GTK_TREE_VIEW (combo_box->priv->tree_view),
+	gtk_tree_view_expand_to_path (GTK_TREE_VIEW (priv->tree_view),
 				      ppath);
       gtk_tree_path_free (ppath);
     }
-  gtk_tree_view_set_hover_expand (GTK_TREE_VIEW (combo_box->priv->tree_view), 
+  gtk_tree_view_set_hover_expand (GTK_TREE_VIEW (priv->tree_view), 
 				  TRUE);
   
   /* popup */
-  gtk_widget_show (combo_box->priv->popup_window);
+  gtk_widget_show (priv->popup_window);
 
   if (path)
     {
-      gtk_tree_view_set_cursor (GTK_TREE_VIEW (combo_box->priv->tree_view),
+      gtk_tree_view_set_cursor (GTK_TREE_VIEW (priv->tree_view),
 				path, NULL, FALSE);
       gtk_tree_path_free (path);
     }
 
-  gtk_widget_grab_focus (combo_box->priv->popup_window);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (combo_box->priv->button),
+  gtk_widget_grab_focus (priv->popup_window);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->button),
                                 TRUE);
 
-  if (!GTK_WIDGET_HAS_FOCUS (combo_box->priv->tree_view))
-    gtk_widget_grab_focus (combo_box->priv->tree_view);
+  if (!GTK_WIDGET_HAS_FOCUS (priv->tree_view))
+    gtk_widget_grab_focus (priv->tree_view);
 
-  if (!popup_grab_on_window (combo_box->priv->popup_window->window,
+  if (!popup_grab_on_window (priv->popup_window->window,
 			     GDK_CURRENT_TIME, TRUE))
     {
-      gtk_widget_hide (combo_box->priv->popup_window);
+      gtk_widget_hide (priv->popup_window);
       return;
     }
 
-  gtk_grab_add (combo_box->priv->popup_window);
+  gtk_grab_add (priv->popup_window);
 }
 
 static gboolean
@@ -1939,20 +1947,22 @@ gtk_combo_box_real_popdown (GtkComboBox *combo_box)
 void
 gtk_combo_box_popdown (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
+
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
+  if (GTK_IS_MENU (priv->popup_widget))
     {
-      gtk_menu_popdown (GTK_MENU (combo_box->priv->popup_widget));
+      gtk_menu_popdown (GTK_MENU (priv->popup_widget));
       return;
     }
 
   if (!GTK_WIDGET_REALIZED (GTK_WIDGET (combo_box)))
     return;
 
-  gtk_grab_remove (combo_box->priv->popup_window);
-  gtk_widget_hide_all (combo_box->priv->popup_window);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (combo_box->priv->button),
+  gtk_grab_remove (priv->popup_window);
+  gtk_widget_hide_all (priv->popup_window);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->button),
                                 FALSE);
 }
 
@@ -1960,11 +1970,12 @@ static gint
 gtk_combo_box_calc_requested_width (GtkComboBox *combo_box,
                                     GtkTreePath *path)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gint padding;
   GtkRequisition req;
 
-  if (combo_box->priv->cell_view)
-    gtk_widget_style_get (combo_box->priv->cell_view,
+  if (priv->cell_view)
+    gtk_widget_style_get (priv->cell_view,
                           "focus-line-width", &padding,
                           NULL);
   else
@@ -1973,8 +1984,8 @@ gtk_combo_box_calc_requested_width (GtkComboBox *combo_box,
   /* add some pixels for good measure */
   padding += BONUS_PADDING;
 
-  if (combo_box->priv->cell_view)
-    gtk_cell_view_get_size_of_row (GTK_CELL_VIEW (combo_box->priv->cell_view),
+  if (priv->cell_view)
+    gtk_cell_view_get_size_of_row (GTK_CELL_VIEW (priv->cell_view),
                                    path, &req);
   else
     req.width = 0;
@@ -1985,15 +1996,16 @@ gtk_combo_box_calc_requested_width (GtkComboBox *combo_box,
 static void
 gtk_combo_box_remeasure (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkTreeIter iter;
   GtkTreePath *path;
 
-  if (!combo_box->priv->model ||
-      !gtk_tree_model_get_iter_first (combo_box->priv->model, &iter))
+  if (!priv->model ||
+      !gtk_tree_model_get_iter_first (priv->model, &iter))
     return;
 
-  combo_box->priv->width = 0;
-  combo_box->priv->height = 0;
+  priv->width = 0;
+  priv->height = 0;
 
   path = gtk_tree_path_new_from_indices (0, -1);
 
@@ -2001,8 +2013,8 @@ gtk_combo_box_remeasure (GtkComboBox *combo_box)
     {
       GtkRequisition req;
 
-      if (combo_box->priv->cell_view)
-	gtk_cell_view_get_size_of_row (GTK_CELL_VIEW (combo_box->priv->cell_view), 
+      if (priv->cell_view)
+	gtk_cell_view_get_size_of_row (GTK_CELL_VIEW (priv->cell_view), 
                                        path, &req);
       else
         {
@@ -2010,12 +2022,12 @@ gtk_combo_box_remeasure (GtkComboBox *combo_box)
           req.height = 0;
         }
 
-      combo_box->priv->width = MAX (combo_box->priv->width, req.width);
-      combo_box->priv->height = MAX (combo_box->priv->height, req.height);
+      priv->width = MAX (priv->width, req.width);
+      priv->height = MAX (priv->height, req.height);
 
       gtk_tree_path_next (path);
     }
-  while (gtk_tree_model_iter_next (combo_box->priv->model, &iter));
+  while (gtk_tree_model_iter_next (priv->model, &iter));
 
   gtk_tree_path_free (path);
 }
@@ -2034,12 +2046,13 @@ gtk_combo_box_size_request (GtkWidget      *widget,
   PangoFontDescription *font_desc;
 
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
+  GtkComboBoxPrivate *priv = combo_box->priv;
  
   /* common */
   gtk_widget_size_request (GTK_BIN (widget)->child, &bin_req);
   gtk_combo_box_remeasure (combo_box);
-  bin_req.width = MAX (bin_req.width, combo_box->priv->width);
-  bin_req.height = MAX (bin_req.height, combo_box->priv->height);
+  bin_req.width = MAX (bin_req.width, priv->width);
+  bin_req.height = MAX (bin_req.height, priv->height);
 
   gtk_widget_style_get (GTK_WIDGET (widget),
 			"focus-line-width", &focus_width,
@@ -2057,27 +2070,27 @@ gtk_combo_box_size_request (GtkWidget      *widget,
 
   arrow_size = MAX (arrow_size, font_size);
 
-  gtk_widget_set_size_request (combo_box->priv->arrow, arrow_size, arrow_size);
+  gtk_widget_set_size_request (priv->arrow, arrow_size, arrow_size);
 
-  if (!combo_box->priv->tree_view)
+  if (!priv->tree_view)
     {
       /* menu mode */
 
-      if (combo_box->priv->cell_view)
+      if (priv->cell_view)
         {
           GtkRequisition button_req, sep_req, arrow_req;
           gint border_width, xthickness, ythickness;
 
-          gtk_widget_size_request (combo_box->priv->button, &button_req);
+          gtk_widget_size_request (priv->button, &button_req);
 	  border_width = GTK_CONTAINER (combo_box)->border_width;
-          xthickness = combo_box->priv->button->style->xthickness;
-          ythickness = combo_box->priv->button->style->ythickness;
+          xthickness = priv->button->style->xthickness;
+          ythickness = priv->button->style->ythickness;
 
-          bin_req.width = MAX (bin_req.width, combo_box->priv->width);
-          bin_req.height = MAX (bin_req.height, combo_box->priv->height);
+          bin_req.width = MAX (bin_req.width, priv->width);
+          bin_req.height = MAX (bin_req.height, priv->height);
 
-          gtk_widget_size_request (combo_box->priv->separator, &sep_req);
-          gtk_widget_size_request (combo_box->priv->arrow, &arrow_req);
+          gtk_widget_size_request (priv->separator, &sep_req);
+          gtk_widget_size_request (priv->arrow, &arrow_req);
 
           height = MAX (sep_req.height, arrow_req.height);
           height = MAX (height, bin_req.height);
@@ -2094,7 +2107,7 @@ gtk_combo_box_size_request (GtkWidget      *widget,
         {
           GtkRequisition but_req;
 
-          gtk_widget_size_request (combo_box->priv->button, &but_req);
+          gtk_widget_size_request (priv->button, &but_req);
 
           requisition->width = bin_req.width + but_req.width;
           requisition->height = MAX (bin_req.height, but_req.height);
@@ -2110,28 +2123,28 @@ gtk_combo_box_size_request (GtkWidget      *widget,
 
       requisition->width += 2 * focus_width;
       
-      if (combo_box->priv->cell_view_frame)
+      if (priv->cell_view_frame)
         {
-	  gtk_widget_size_request (combo_box->priv->cell_view_frame, &frame_req);
-	  if (combo_box->priv->has_frame)
+	  gtk_widget_size_request (priv->cell_view_frame, &frame_req);
+	  if (priv->has_frame)
 	    {
 	      requisition->width += 2 *
-		(GTK_CONTAINER (combo_box->priv->cell_view_frame)->border_width +
-		 GTK_WIDGET (combo_box->priv->cell_view_frame)->style->xthickness);
+		(GTK_CONTAINER (priv->cell_view_frame)->border_width +
+		 GTK_WIDGET (priv->cell_view_frame)->style->xthickness);
 	      requisition->height += 2 *
-		(GTK_CONTAINER (combo_box->priv->cell_view_frame)->border_width +
-		 GTK_WIDGET (combo_box->priv->cell_view_frame)->style->ythickness);
+		(GTK_CONTAINER (priv->cell_view_frame)->border_width +
+		 GTK_WIDGET (priv->cell_view_frame)->style->ythickness);
 	    }
         }
 
       /* the button */
-      gtk_widget_size_request (combo_box->priv->button, &button_req);
+      gtk_widget_size_request (priv->button, &button_req);
 
       requisition->height = MAX (requisition->height, button_req.height);
       requisition->width += button_req.width;
     }
 
-  if (GTK_SHADOW_NONE != combo_box->priv->shadow_type)
+  if (GTK_SHADOW_NONE != priv->shadow_type)
     {
       requisition->height += 2 * widget->style->ythickness;
       requisition->width += 2 * widget->style->xthickness;
@@ -2159,6 +2172,7 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
                              GtkAllocation *allocation)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gint shadow_width, shadow_height;
   gint focus_width, focus_pad;
   GtkAllocation child;
@@ -2172,7 +2186,7 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
 			"focus-padding", &focus_pad,
 			NULL);
 
-  if (GTK_SHADOW_NONE != combo_box->priv->shadow_type)
+  if (GTK_SHADOW_NONE != priv->shadow_type)
     {
       shadow_width = widget->style->xthickness;
       shadow_height = widget->style->ythickness;
@@ -2183,9 +2197,9 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
       shadow_height = 0;
     }
 
-  if (!combo_box->priv->tree_view)
+  if (!priv->tree_view)
     {
-      if (combo_box->priv->cell_view)
+      if (priv->cell_view)
         {
           gint border_width, xthickness, ythickness;
           gint width;
@@ -2196,19 +2210,19 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
           allocation->width -= 2 * shadow_width;
           allocation->height -= 2 * shadow_height;
 
-          gtk_widget_size_allocate (combo_box->priv->button, allocation);
+          gtk_widget_size_allocate (priv->button, allocation);
 
           /* set some things ready */
-          border_width = GTK_CONTAINER (combo_box->priv->button)->border_width;
-          xthickness = combo_box->priv->button->style->xthickness;
-          ythickness = combo_box->priv->button->style->ythickness;
+          border_width = GTK_CONTAINER (priv->button)->border_width;
+          xthickness = priv->button->style->xthickness;
+          ythickness = priv->button->style->ythickness;
 
           child.x = allocation->x;
           child.y = allocation->y;
 	  width = allocation->width;
 	  child.height = allocation->height;
 
-	  if (!combo_box->priv->is_cell_renderer)
+	  if (!priv->is_cell_renderer)
 	    {
 	      child.x += border_width + xthickness + focus_width + focus_pad;
 	      child.y += border_width + ythickness + focus_width + focus_pad;
@@ -2218,22 +2232,22 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
 
 
           /* handle the children */
-          gtk_widget_size_request (combo_box->priv->arrow, &req);
+          gtk_widget_size_request (priv->arrow, &req);
           child.width = req.width;
           if (!is_rtl)
             child.x += width - req.width;
 	  child.width = MAX (1, child.width);
 	  child.height = MAX (1, child.height);
-          gtk_widget_size_allocate (combo_box->priv->arrow, &child);
+          gtk_widget_size_allocate (priv->arrow, &child);
           if (is_rtl)
             child.x += req.width;
-          gtk_widget_size_request (combo_box->priv->separator, &req);
+          gtk_widget_size_request (priv->separator, &req);
           child.width = req.width;
           if (!is_rtl)
             child.x -= req.width;
 	  child.width = MAX (1, child.width);
 	  child.height = MAX (1, child.height);
-          gtk_widget_size_allocate (combo_box->priv->separator, &child);
+          gtk_widget_size_allocate (priv->separator, &child);
 
           if (is_rtl)
             {
@@ -2290,27 +2304,27 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
       child.width = allocation->width - req.width;
       child.height = allocation->height;
 
-      if (combo_box->priv->cell_view_frame)
+      if (priv->cell_view_frame)
         {
           child.x += delta_x;
           child.y += delta_y;
           child.width = MAX (1, child.width - delta_x * 2);
           child.height = MAX (1, child.height - delta_y * 2);
-          gtk_widget_size_allocate (combo_box->priv->cell_view_frame, &child);
+          gtk_widget_size_allocate (priv->cell_view_frame, &child);
 
           /* the sample */
-          if (combo_box->priv->has_frame)
+          if (priv->has_frame)
             {
-              delta_x = GTK_CONTAINER (combo_box->priv->cell_view_frame)->border_width +
-                GTK_WIDGET (combo_box->priv->cell_view_frame)->style->xthickness;
-              delta_y = GTK_CONTAINER (combo_box->priv->cell_view_frame)->border_width +
-                GTK_WIDGET (combo_box->priv->cell_view_frame)->style->ythickness;
+              delta_x = GTK_CONTAINER (priv->cell_view_frame)->border_width +
+                GTK_WIDGET (priv->cell_view_frame)->style->xthickness;
+              delta_y = GTK_CONTAINER (priv->cell_view_frame)->border_width +
+                GTK_WIDGET (priv->cell_view_frame)->style->ythickness;
 
               child.x += delta_x;
               child.y += delta_y;
               child.width -= delta_x * 2;
               child.height -= delta_y * 2;
-	          }
+            }
         }
       else
         {
@@ -2332,40 +2346,42 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
 static void
 gtk_combo_box_unset_model (GtkComboBox *combo_box)
 {
-  if (combo_box->priv->model)
+  GtkComboBoxPrivate *priv = combo_box->priv;
+
+  if (priv->model)
     {
-      g_signal_handler_disconnect (combo_box->priv->model,
-				   combo_box->priv->inserted_id);
-      g_signal_handler_disconnect (combo_box->priv->model,
-				   combo_box->priv->deleted_id);
-      g_signal_handler_disconnect (combo_box->priv->model,
-				   combo_box->priv->reordered_id);
-      g_signal_handler_disconnect (combo_box->priv->model,
-				   combo_box->priv->changed_id);
+      g_signal_handler_disconnect (priv->model,
+				   priv->inserted_id);
+      g_signal_handler_disconnect (priv->model,
+				   priv->deleted_id);
+      g_signal_handler_disconnect (priv->model,
+				   priv->reordered_id);
+      g_signal_handler_disconnect (priv->model,
+				   priv->changed_id);
     }
 
   /* menu mode */
-  if (!combo_box->priv->tree_view)
+  if (!priv->tree_view)
     {
-      if (combo_box->priv->popup_widget)
-        gtk_container_foreach (GTK_CONTAINER (combo_box->priv->popup_widget),
+      if (priv->popup_widget)
+        gtk_container_foreach (GTK_CONTAINER (priv->popup_widget),
                                (GtkCallback)gtk_widget_destroy, NULL);
     }
 
-  if (combo_box->priv->model)
+  if (priv->model)
     {
-      g_object_unref (combo_box->priv->model);
-      combo_box->priv->model = NULL;
+      g_object_unref (priv->model);
+      priv->model = NULL;
     }
 
-  if (combo_box->priv->active_row)
+  if (priv->active_row)
     {
-      gtk_tree_row_reference_free (combo_box->priv->active_row);
-      combo_box->priv->active_row = NULL;
+      gtk_tree_row_reference_free (priv->active_row);
+      priv->active_row = NULL;
     }
 
-  if (combo_box->priv->cell_view)
-    gtk_cell_view_set_model (GTK_CELL_VIEW (combo_box->priv->cell_view), NULL);
+  if (priv->cell_view)
+    gtk_cell_view_set_model (GTK_CELL_VIEW (priv->cell_view), NULL);
 }
 
 static void
@@ -2375,13 +2391,14 @@ gtk_combo_box_forall (GtkContainer *container,
                       gpointer      callback_data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (container);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   if (include_internals)
     {
-      if (combo_box->priv->button)
-	(* callback) (combo_box->priv->button, callback_data);
-      if (combo_box->priv->cell_view_frame)
-	(* callback) (combo_box->priv->cell_view_frame, callback_data);
+      if (priv->button)
+	(* callback) (priv->button, callback_data);
+      if (priv->cell_view_frame)
+	(* callback) (priv->cell_view_frame, callback_data);
     }
 
   if (GTK_BIN (container)->child)
@@ -2413,25 +2430,25 @@ gtk_combo_box_expose_event (GtkWidget      *widget,
                             GdkEventExpose *event)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   if (GTK_WIDGET_DRAWABLE (widget) &&
-      GTK_SHADOW_NONE != combo_box->priv->shadow_type)
+      GTK_SHADOW_NONE != priv->shadow_type)
     {
       gtk_paint_shadow (widget->style, widget->window,
-                        GTK_STATE_NORMAL, combo_box->priv->shadow_type,
+                        GTK_STATE_NORMAL, priv->shadow_type,
                         NULL, widget, "combobox",
                         widget->allocation.x, widget->allocation.y,
                         widget->allocation.width, widget->allocation.height);
     }
 
   gtk_container_propagate_expose (GTK_CONTAINER (widget),
-				  combo_box->priv->button, event);
+				  priv->button, event);
 
-  if (combo_box->priv->tree_view &&
-      combo_box->priv->cell_view_frame)
+  if (priv->tree_view && priv->cell_view_frame)
     {
       gtk_container_propagate_expose (GTK_CONTAINER (widget),
-				      combo_box->priv->cell_view_frame, event);
+				      priv->cell_view_frame, event);
     }
 
   gtk_container_propagate_expose (GTK_CONTAINER (widget),
@@ -2681,9 +2698,10 @@ static void
 gtk_combo_box_sync_cells (GtkComboBox   *combo_box,
 			  GtkCellLayout *cell_layout)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GSList *k;
 
-  for (k = combo_box->priv->cells; k; k = k->next)
+  for (k = priv->cells; k; k = k->next)
     {
       GSList *j;
       ComboCellInfo *info = (ComboCellInfo *)k->data;
@@ -2713,54 +2731,51 @@ static void
 gtk_combo_box_menu_setup (GtkComboBox *combo_box,
                           gboolean     add_children)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkWidget *menu;
 
-  if (combo_box->priv->cell_view)
+  if (priv->cell_view)
     {
-      combo_box->priv->button = gtk_toggle_button_new ();
-      gtk_button_set_focus_on_click (GTK_BUTTON (combo_box->priv->button),
-				     combo_box->priv->focus_on_click);
+      priv->button = gtk_toggle_button_new ();
+      gtk_button_set_focus_on_click (GTK_BUTTON (priv->button),
+				     priv->focus_on_click);
 
-      g_signal_connect (combo_box->priv->button, "toggled",
+      g_signal_connect (priv->button, "toggled",
                         G_CALLBACK (gtk_combo_box_button_toggled), combo_box);
-      gtk_widget_set_parent (combo_box->priv->button,
+      gtk_widget_set_parent (priv->button,
                              GTK_BIN (combo_box)->child->parent);
 
-      combo_box->priv->box = gtk_hbox_new (FALSE, 0);
-      gtk_container_add (GTK_CONTAINER (combo_box->priv->button), 
-			 combo_box->priv->box);
+      priv->box = gtk_hbox_new (FALSE, 0);
+      gtk_container_add (GTK_CONTAINER (priv->button), priv->box);
 
-      combo_box->priv->separator = gtk_vseparator_new ();
-      gtk_container_add (GTK_CONTAINER (combo_box->priv->box), 
-			 combo_box->priv->separator);
+      priv->separator = gtk_vseparator_new ();
+      gtk_container_add (GTK_CONTAINER (priv->box), priv->separator);
 
-      combo_box->priv->arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-      gtk_container_add (GTK_CONTAINER (combo_box->priv->box), 
-			 combo_box->priv->arrow);
+      priv->arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+      gtk_container_add (GTK_CONTAINER (priv->box), priv->arrow);
 
-      gtk_widget_show_all (combo_box->priv->button);
+      gtk_widget_show_all (priv->button);
     }
   else
     {
-      combo_box->priv->button = gtk_toggle_button_new ();
-      gtk_button_set_focus_on_click (GTK_BUTTON (combo_box->priv->button),
-				     combo_box->priv->focus_on_click);
+      priv->button = gtk_toggle_button_new ();
+      gtk_button_set_focus_on_click (GTK_BUTTON (priv->button),
+				     priv->focus_on_click);
 
-      g_signal_connect (combo_box->priv->button, "toggled",
+      g_signal_connect (priv->button, "toggled",
                         G_CALLBACK (gtk_combo_box_button_toggled), combo_box);
-      gtk_widget_set_parent (combo_box->priv->button,
+      gtk_widget_set_parent (priv->button,
                              GTK_BIN (combo_box)->child->parent);
 
-      combo_box->priv->arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-      gtk_container_add (GTK_CONTAINER (combo_box->priv->button),
-                         combo_box->priv->arrow);
-      gtk_widget_show_all (combo_box->priv->button);
+      priv->arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+      gtk_container_add (GTK_CONTAINER (priv->button), priv->arrow);
+      gtk_widget_show_all (priv->button);
     }
 
-  g_signal_connect (combo_box->priv->button, "button_press_event",
+  g_signal_connect (priv->button, "button_press_event",
                     G_CALLBACK (gtk_combo_box_menu_button_press),
                     combo_box);
-  g_signal_connect (combo_box->priv->button, "state_changed",
+  g_signal_connect (priv->button, "state_changed",
 		    G_CALLBACK (gtk_combo_box_button_state_changed), 
 		    combo_box);
 
@@ -2777,10 +2792,9 @@ gtk_combo_box_menu_setup (GtkComboBox *combo_box,
     gtk_combo_box_menu_fill (combo_box);
 
   /* the column is needed in tree_column_row_is_sensitive() */
-  combo_box->priv->column = gtk_tree_view_column_new ();
-  g_object_ref_sink (combo_box->priv->column);
-  gtk_combo_box_sync_cells (combo_box, 
-			    GTK_CELL_LAYOUT (combo_box->priv->column));
+  priv->column = gtk_tree_view_column_new ();
+  g_object_ref_sink (priv->column);
+  gtk_combo_box_sync_cells (combo_box, GTK_CELL_LAYOUT (priv->column));
 
   gtk_combo_box_update_title (combo_box);
 }
@@ -2788,22 +2802,22 @@ gtk_combo_box_menu_setup (GtkComboBox *combo_box,
 static void
 gtk_combo_box_menu_fill (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkWidget *menu;
 
-  if (!combo_box->priv->model)
+  if (!priv->model)
     return;
 
-  menu = combo_box->priv->popup_widget;
+  menu = priv->popup_widget;
 
-  if (combo_box->priv->add_tearoffs)
+  if (priv->add_tearoffs)
     {
       GtkWidget *tearoff = gtk_tearoff_menu_item_new ();
 
       gtk_widget_show (tearoff);
       
-      if (combo_box->priv->wrap_width)
-	gtk_menu_attach (GTK_MENU (menu), tearoff, 
-			 0, combo_box->priv->wrap_width, 0, 1);
+      if (priv->wrap_width)
+	gtk_menu_attach (GTK_MENU (menu), tearoff, 0, priv->wrap_width, 0, 1);
       else
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), tearoff);
     }
@@ -2842,7 +2856,8 @@ gtk_combo_box_menu_fill_level (GtkComboBox *combo_box,
 			       GtkWidget   *menu,
 			       GtkTreeIter *parent)
 {
-  GtkTreeModel *model = combo_box->priv->model;
+  GtkComboBoxPrivate *priv = combo_box->priv;
+  GtkTreeModel *model = priv->model;
   GtkWidget *item, *submenu, *subitem, *separator;
   GtkTreeIter iter;
   gboolean is_separator;
@@ -2857,9 +2872,9 @@ gtk_combo_box_menu_fill_level (GtkComboBox *combo_box,
     {
       gtk_tree_model_iter_nth_child (model, &iter, parent, i);
 
-      if (combo_box->priv->row_separator_func)
-	is_separator = (*combo_box->priv->row_separator_func) (combo_box->priv->model, &iter,
-							       combo_box->priv->row_separator_data);
+      if (priv->row_separator_func)
+	is_separator = (*priv->row_separator_func) (priv->model, &iter,
+						    priv->row_separator_data);
       else
 	is_separator = FALSE;
       
@@ -2903,7 +2918,7 @@ gtk_combo_box_menu_fill_level (GtkComboBox *combo_box,
 	}
       
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-      if (combo_box->priv->wrap_width && menu == combo_box->priv->popup_widget)
+      if (priv->wrap_width && menu == priv->popup_widget)
         gtk_combo_box_relayout_item (combo_box, item, &iter, last);
       gtk_widget_show (item);
       
@@ -2914,25 +2929,27 @@ gtk_combo_box_menu_fill_level (GtkComboBox *combo_box,
 static void
 gtk_combo_box_menu_destroy (GtkComboBox *combo_box)
 {
-  g_signal_handlers_disconnect_matched (combo_box->priv->button,
+  GtkComboBoxPrivate *priv = combo_box->priv;
+
+  g_signal_handlers_disconnect_matched (priv->button,
                                         G_SIGNAL_MATCH_DATA,
                                         0, 0, NULL,
                                         gtk_combo_box_menu_button_press, NULL);
-  g_signal_handlers_disconnect_matched (combo_box->priv->button,
+  g_signal_handlers_disconnect_matched (priv->button,
                                         G_SIGNAL_MATCH_DATA,
                                         0, 0, NULL,
                                         gtk_combo_box_button_state_changed, combo_box);
 
   /* unparent will remove our latest ref */
-  gtk_widget_unparent (combo_box->priv->button);
+  gtk_widget_unparent (priv->button);
   
-  combo_box->priv->box = NULL;
-  combo_box->priv->button = NULL;
-  combo_box->priv->arrow = NULL;
-  combo_box->priv->separator = NULL;
+  priv->box = NULL;
+  priv->button = NULL;
+  priv->arrow = NULL;
+  priv->separator = NULL;
 
-  g_object_unref (combo_box->priv->column);
-  combo_box->priv->column = NULL;
+  g_object_unref (priv->column);
+  priv->column = NULL;
 
   /* changing the popup window will unref the menu and the children */
 }
@@ -2976,15 +2993,16 @@ gtk_combo_box_relayout_item (GtkComboBox *combo_box,
                              GtkTreeIter *iter,
 			     GtkWidget   *last)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gint current_col = 0, current_row = 0;
   gint rows = 1, cols = 1;
-  GtkWidget *menu = combo_box->priv->popup_widget;
+  GtkWidget *menu = priv->popup_widget;
 
   if (!GTK_IS_MENU_SHELL (menu))
     return;
   
-  if (combo_box->priv->col_column == -1 &&
-      combo_box->priv->row_column == -1 &&
+  if (priv->col_column == -1 &&
+      priv->row_column == -1 &&
       last)
     {
       gtk_container_child_get (GTK_CONTAINER (menu), 
@@ -2992,7 +3010,7 @@ gtk_combo_box_relayout_item (GtkComboBox *combo_box,
 			       "right-attach", &current_col,
 			       "top-attach", &current_row,
 			       NULL);
-      if (current_col + cols > combo_box->priv->wrap_width)
+      if (current_col + cols > priv->wrap_width)
 	{
 	  current_col = 0;
 	  current_row++;
@@ -3000,18 +3018,18 @@ gtk_combo_box_relayout_item (GtkComboBox *combo_box,
     }
   else
     {
-      if (combo_box->priv->col_column != -1)
-	gtk_tree_model_get (combo_box->priv->model, iter,
-			    combo_box->priv->col_column, &cols,
+      if (priv->col_column != -1)
+	gtk_tree_model_get (priv->model, iter,
+			    priv->col_column, &cols,
 			    -1);
-      if (combo_box->priv->row_column != -1)
-	gtk_tree_model_get (combo_box->priv->model, iter,
-			    combo_box->priv->row_column, &rows,
+      if (priv->row_column != -1)
+	gtk_tree_model_get (priv->model, iter,
+			    priv->row_column, &rows,
 			    -1);
 
       while (1)
 	{
-	  if (current_col + cols > combo_box->priv->wrap_width)
+	  if (current_col + cols > priv->wrap_width)
 	    {
 	      current_col = 0;
 	      current_row++;
@@ -3061,13 +3079,14 @@ gtk_combo_box_menu_button_press (GtkWidget      *widget,
                                  gpointer        user_data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget) &&
+  if (GTK_IS_MENU (priv->popup_widget) &&
       event->type == GDK_BUTTON_PRESS && event->button == 1)
     {
-      if (combo_box->priv->focus_on_click && 
-	  !GTK_WIDGET_HAS_FOCUS (combo_box->priv->button))
-	gtk_widget_grab_focus (combo_box->priv->button);
+      if (priv->focus_on_click && 
+	  !GTK_WIDGET_HAS_FOCUS (priv->button))
+	gtk_widget_grab_focus (priv->button);
 
       gtk_combo_box_menu_popup (combo_box, event->button, event->time);
 
@@ -3123,15 +3142,16 @@ gtk_combo_box_model_row_deleted (GtkTreeModel     *model,
 				 gpointer          user_data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
-  if (!gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  if (!gtk_tree_row_reference_valid (priv->active_row))
     {
-      if (combo_box->priv->cell_view)
-	gtk_cell_view_set_displayed_row (GTK_CELL_VIEW (combo_box->priv->cell_view), NULL);
+      if (priv->cell_view)
+	gtk_cell_view_set_displayed_row (GTK_CELL_VIEW (priv->cell_view), NULL);
       g_signal_emit (combo_box, combo_box_signals[CHANGED], 0);
     }
   
-  if (combo_box->priv->tree_view)
+  if (priv->tree_view)
     gtk_combo_box_list_popup_resize (combo_box);
   else
     gtk_combo_box_menu_row_deleted (model, path, user_data);  
@@ -3159,19 +3179,20 @@ gtk_combo_box_model_row_changed (GtkTreeModel     *model,
 				 gpointer          user_data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkTreePath *active_path;
 
   /* FIXME this belongs to GtkCellView */
-  if (gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  if (gtk_tree_row_reference_valid (priv->active_row))
     {
-      active_path = gtk_tree_row_reference_get_path (combo_box->priv->active_row);
+      active_path = gtk_tree_row_reference_get_path (priv->active_row);
       if (gtk_tree_path_compare (path, active_path) == 0 &&
-	  combo_box->priv->cell_view)
-	gtk_widget_queue_resize (GTK_WIDGET (combo_box->priv->cell_view));
+	  priv->cell_view)
+	gtk_widget_queue_resize (GTK_WIDGET (priv->cell_view));
       gtk_tree_path_free (active_path);
     }
       
-  if (combo_box->priv->tree_view)
+  if (priv->tree_view)
     gtk_combo_box_list_row_changed (model, path, iter, user_data);
   else
     gtk_combo_box_menu_row_changed (model, path, iter, user_data);
@@ -3180,21 +3201,19 @@ gtk_combo_box_model_row_changed (GtkTreeModel     *model,
 static gboolean
 list_popup_resize_idle (gpointer user_data)
 {
-  GtkComboBox *combo_box;
+  GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gint x, y, width, height;
 
-  combo_box = GTK_COMBO_BOX (user_data);
-
-  if (combo_box->priv->tree_view &&
-      GTK_WIDGET_MAPPED (combo_box->priv->popup_window))
+  if (priv->tree_view && GTK_WIDGET_MAPPED (priv->popup_window))
     {
       gtk_combo_box_list_position (combo_box, &x, &y, &width, &height);
   
-      gtk_widget_set_size_request (combo_box->priv->popup_window, width, height);
-      gtk_window_move (GTK_WINDOW (combo_box->priv->popup_window), x, y);
+      gtk_widget_set_size_request (priv->popup_window, width, height);
+      gtk_window_move (GTK_WINDOW (priv->popup_window), x, y);
     }
 
-  combo_box->priv->resize_idle_id = 0;
+  priv->resize_idle_id = 0;
 
   return FALSE;
 }
@@ -3202,8 +3221,10 @@ list_popup_resize_idle (gpointer user_data)
 static void
 gtk_combo_box_list_popup_resize (GtkComboBox *combo_box)
 {
-  if (!combo_box->priv->resize_idle_id)
-    combo_box->priv->resize_idle_id = 
+  GtkComboBoxPrivate *priv = combo_box->priv;
+
+  if (!priv->resize_idle_id)
+    priv->resize_idle_id = 
       gdk_threads_add_idle (list_popup_resize_idle, combo_box);
 }
 
@@ -3325,15 +3346,16 @@ gtk_combo_box_menu_row_inserted (GtkTreeModel *model,
                                  GtkTreeIter  *iter,
                                  gpointer      user_data)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkWidget *parent;
   GtkWidget *item, *menu, *separator;
-  GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
   GtkTreePath *ppath;
   GtkTreeIter piter;
   gint depth, pos;
   gboolean is_separator;
 
-  if (!combo_box->priv->popup_widget)
+  if (!priv->popup_widget)
     return;
 
   depth = gtk_tree_path_get_depth (path);
@@ -3342,7 +3364,7 @@ gtk_combo_box_menu_row_inserted (GtkTreeModel *model,
     {
       ppath = gtk_tree_path_copy (path);
       gtk_tree_path_up (ppath);
-      parent = find_menu_by_path (combo_box->priv->popup_widget, ppath, FALSE);
+      parent = find_menu_by_path (priv->popup_widget, ppath, FALSE);
       gtk_tree_path_free (ppath);
 
       menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (parent));
@@ -3373,14 +3395,14 @@ gtk_combo_box_menu_row_inserted (GtkTreeModel *model,
     }
   else
     {
-      menu = combo_box->priv->popup_widget;
-      if (combo_box->priv->add_tearoffs)
+      menu = priv->popup_widget;
+      if (priv->add_tearoffs)
 	pos += 1;
     }
   
-  if (combo_box->priv->row_separator_func)
-    is_separator = (*combo_box->priv->row_separator_func) (model, iter,
-							   combo_box->priv->row_separator_data);
+  if (priv->row_separator_func)
+    is_separator = (*priv->row_separator_func) (model, iter,
+					        priv->row_separator_data);
   else
     is_separator = FALSE;
 
@@ -3411,13 +3433,14 @@ gtk_combo_box_menu_row_deleted (GtkTreeModel *model,
                                 gpointer      user_data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkWidget *menu;
   GtkWidget *item;
 
-  if (!combo_box->priv->popup_widget)
+  if (!priv->popup_widget)
     return;
 
-  item = find_menu_by_path (combo_box->priv->popup_widget, path, FALSE);
+  item = find_menu_by_path (priv->popup_widget, path, FALSE);
   menu = gtk_widget_get_parent (item);
   gtk_container_remove (GTK_CONTAINER (menu), item);
 
@@ -3433,7 +3456,7 @@ gtk_combo_box_menu_row_deleted (GtkTreeModel *model,
 
       if (!gtk_tree_model_iter_has_child (model, &iter))
 	{
-	  parent = find_menu_by_path (combo_box->priv->popup_widget, 
+	  parent = find_menu_by_path (priv->popup_widget, 
 				      parent_path, FALSE);
 	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (parent), NULL);
 	}
@@ -3459,18 +3482,19 @@ gtk_combo_box_menu_row_changed (GtkTreeModel *model,
                                 gpointer      user_data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (user_data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkWidget *item;
   gint width;
   gboolean is_separator;
 
-  if (!combo_box->priv->popup_widget)
+  if (!priv->popup_widget)
     return;
 
-  item = find_menu_by_path (combo_box->priv->popup_widget, path, FALSE);
+  item = find_menu_by_path (priv->popup_widget, path, FALSE);
 
-  if (combo_box->priv->row_separator_func)
-    is_separator = (*combo_box->priv->row_separator_func) (model, iter,
-							   combo_box->priv->row_separator_data);
+  if (priv->row_separator_func)
+    is_separator = (*priv->row_separator_func) (model, iter,
+						priv->row_separator_data);
   else
     is_separator = FALSE;
 
@@ -3480,8 +3504,7 @@ gtk_combo_box_menu_row_changed (GtkTreeModel *model,
       gtk_combo_box_menu_row_inserted (model, path, iter, combo_box);
     }
 
-  if (combo_box->priv->wrap_width
-      && item->parent == combo_box->priv->popup_widget)
+  if (priv->wrap_width && item->parent == priv->popup_widget)
     {
       GtkWidget *pitem = NULL;
       GtkTreePath *prev;
@@ -3489,13 +3512,13 @@ gtk_combo_box_menu_row_changed (GtkTreeModel *model,
       prev = gtk_tree_path_copy (path);
 
       if (gtk_tree_path_prev (prev))
-        pitem = find_menu_by_path (combo_box->priv->popup_widget, prev, FALSE);
+        pitem = find_menu_by_path (priv->popup_widget, prev, FALSE);
 
       gtk_tree_path_free (prev);
 
       /* unattach item so gtk_combo_box_relayout_item() won't spuriously
          move it */
-      gtk_container_child_set (GTK_CONTAINER (combo_box->priv->popup_widget),
+      gtk_container_child_set (GTK_CONTAINER (priv->popup_widget),
                                item, 
 			       "left-attach", -1, 
 			       "right-attach", -1,
@@ -3508,14 +3531,14 @@ gtk_combo_box_menu_row_changed (GtkTreeModel *model,
 
   width = gtk_combo_box_calc_requested_width (combo_box, path);
 
-  if (width > combo_box->priv->width)
+  if (width > priv->width)
     {
-      if (combo_box->priv->cell_view)
+      if (priv->cell_view)
 	{
-	  gtk_widget_set_size_request (combo_box->priv->cell_view, width, -1);
-	  gtk_widget_queue_resize (combo_box->priv->cell_view);
+	  gtk_widget_set_size_request (priv->cell_view, width, -1);
+	  gtk_widget_queue_resize (priv->cell_view);
 	}
-      combo_box->priv->width = width;
+      priv->width = width;
     }
 }
 
@@ -3526,35 +3549,35 @@ gtk_combo_box_menu_row_changed (GtkTreeModel *model,
 static void
 gtk_combo_box_list_setup (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkTreeSelection *sel;
 
-  combo_box->priv->button = gtk_toggle_button_new ();
-  gtk_widget_set_parent (combo_box->priv->button,
+  priv->button = gtk_toggle_button_new ();
+  gtk_widget_set_parent (priv->button,
                          GTK_BIN (combo_box)->child->parent);
-  g_signal_connect (combo_box->priv->button, "button_press_event",
+  g_signal_connect (priv->button, "button_press_event",
                     G_CALLBACK (gtk_combo_box_list_button_pressed), combo_box);
-  g_signal_connect (combo_box->priv->button, "toggled",
+  g_signal_connect (priv->button, "toggled",
                     G_CALLBACK (gtk_combo_box_button_toggled), combo_box);
 
-  combo_box->priv->arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-  gtk_container_add (GTK_CONTAINER (combo_box->priv->button),
-                     combo_box->priv->arrow);
-  combo_box->priv->separator = NULL;
-  gtk_widget_show_all (combo_box->priv->button);
+  priv->arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+  gtk_container_add (GTK_CONTAINER (priv->button), priv->arrow);
+  priv->separator = NULL;
+  gtk_widget_show_all (priv->button);
 
-  if (combo_box->priv->cell_view)
+  if (priv->cell_view)
     {
-      gtk_cell_view_set_background_color (GTK_CELL_VIEW (combo_box->priv->cell_view), 
+      gtk_cell_view_set_background_color (GTK_CELL_VIEW (priv->cell_view), 
 					  &GTK_WIDGET (combo_box)->style->base[GTK_WIDGET_STATE (combo_box)]);
 
-      combo_box->priv->box = gtk_event_box_new ();
-      gtk_event_box_set_visible_window (GTK_EVENT_BOX (combo_box->priv->box), 
+      priv->box = gtk_event_box_new ();
+      gtk_event_box_set_visible_window (GTK_EVENT_BOX (priv->box), 
 					FALSE);
 
-      if (combo_box->priv->has_frame)
+      if (priv->has_frame)
 	{
-	  combo_box->priv->cell_view_frame = gtk_frame_new (NULL);
-	  gtk_frame_set_shadow_type (GTK_FRAME (combo_box->priv->cell_view_frame),
+	  priv->cell_view_frame = gtk_frame_new (NULL);
+	  gtk_frame_set_shadow_type (GTK_FRAME (priv->cell_view_frame),
 				     GTK_SHADOW_IN);
 	}
       else 
@@ -3564,116 +3587,115 @@ gtk_combo_box_list_setup (GtkComboBox *combo_box)
 					    FALSE);
 	}
       
-      gtk_widget_set_parent (combo_box->priv->cell_view_frame,
+      gtk_widget_set_parent (priv->cell_view_frame,
 			     GTK_BIN (combo_box)->child->parent);
-      gtk_container_add (GTK_CONTAINER (combo_box->priv->cell_view_frame),
-			 combo_box->priv->box);
-      gtk_widget_show_all (combo_box->priv->cell_view_frame);
+      gtk_container_add (GTK_CONTAINER (priv->cell_view_frame), priv->box);
+      gtk_widget_show_all (priv->cell_view_frame);
 
-      g_signal_connect (combo_box->priv->box, "button_press_event",
+      g_signal_connect (priv->box, "button_press_event",
 			G_CALLBACK (gtk_combo_box_list_button_pressed), 
 			combo_box);
     }
 
-  combo_box->priv->tree_view = gtk_tree_view_new ();
-  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (combo_box->priv->tree_view));
+  priv->tree_view = gtk_tree_view_new ();
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
   gtk_tree_selection_set_mode (sel, GTK_SELECTION_BROWSE);
   gtk_tree_selection_set_select_function (sel,
 					  gtk_combo_box_list_select_func,
 					  NULL, NULL);
-  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (combo_box->priv->tree_view),
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view),
                                      FALSE);
-  gtk_tree_view_set_hover_selection (GTK_TREE_VIEW (combo_box->priv->tree_view),
+  gtk_tree_view_set_hover_selection (GTK_TREE_VIEW (priv->tree_view),
 				     TRUE);
-  if (combo_box->priv->row_separator_func)
-    gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (combo_box->priv->tree_view), 
-					  combo_box->priv->row_separator_func, 
-					  combo_box->priv->row_separator_data, 
+  if (priv->row_separator_func)
+    gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (priv->tree_view), 
+					  priv->row_separator_func, 
+					  priv->row_separator_data, 
 					  NULL);
-  if (combo_box->priv->model)
-    gtk_tree_view_set_model (GTK_TREE_VIEW (combo_box->priv->tree_view),
-			     combo_box->priv->model);
+  if (priv->model)
+    gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), priv->model);
     
-  combo_box->priv->column = gtk_tree_view_column_new ();
-  gtk_tree_view_append_column (GTK_TREE_VIEW (combo_box->priv->tree_view),
-                               combo_box->priv->column);
+  priv->column = gtk_tree_view_column_new ();
+  gtk_tree_view_append_column (GTK_TREE_VIEW (priv->tree_view), priv->column);
 
   /* sync up */
   gtk_combo_box_sync_cells (combo_box, 
-			    GTK_CELL_LAYOUT (combo_box->priv->column));
+			    GTK_CELL_LAYOUT (priv->column));
 
-  if (gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  if (gtk_tree_row_reference_valid (priv->active_row))
     {
       GtkTreePath *path;
 
-      path = gtk_tree_row_reference_get_path (combo_box->priv->active_row);
-      gtk_tree_view_set_cursor (GTK_TREE_VIEW (combo_box->priv->tree_view),
+      path = gtk_tree_row_reference_get_path (priv->active_row);
+      gtk_tree_view_set_cursor (GTK_TREE_VIEW (priv->tree_view),
 				path, NULL, FALSE);
       gtk_tree_path_free (path);
     }
 
   /* set sample/popup widgets */
-  gtk_combo_box_set_popup_widget (combo_box, combo_box->priv->tree_view);
+  gtk_combo_box_set_popup_widget (combo_box, priv->tree_view);
 
-  g_signal_connect (combo_box->priv->tree_view, "key_press_event",
+  g_signal_connect (priv->tree_view, "key_press_event",
                     G_CALLBACK (gtk_combo_box_list_key_press),
                     combo_box);
-  g_signal_connect (combo_box->priv->tree_view, "enter_notify_event",
+  g_signal_connect (priv->tree_view, "enter_notify_event",
                     G_CALLBACK (gtk_combo_box_list_enter_notify),
                     combo_box);
-  g_signal_connect (combo_box->priv->tree_view, "row_expanded",
+  g_signal_connect (priv->tree_view, "row_expanded",
 		    G_CALLBACK (gtk_combo_box_model_row_expanded),
 		    combo_box);
-  g_signal_connect (combo_box->priv->tree_view, "row_collapsed",
+  g_signal_connect (priv->tree_view, "row_collapsed",
 		    G_CALLBACK (gtk_combo_box_model_row_expanded),
 		    combo_box);
-  g_signal_connect (combo_box->priv->popup_window, "button_press_event",
+  g_signal_connect (priv->popup_window, "button_press_event",
                     G_CALLBACK (gtk_combo_box_list_button_pressed),
                     combo_box);
-  g_signal_connect (combo_box->priv->popup_window, "button_release_event",
+  g_signal_connect (priv->popup_window, "button_release_event",
                     G_CALLBACK (gtk_combo_box_list_button_released),
                     combo_box);
 
-  gtk_widget_show (combo_box->priv->tree_view);
+  gtk_widget_show (priv->tree_view);
 }
 
 static void
 gtk_combo_box_list_destroy (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
+
   /* disconnect signals */
-  g_signal_handlers_disconnect_matched (combo_box->priv->tree_view,
+  g_signal_handlers_disconnect_matched (priv->tree_view,
                                         G_SIGNAL_MATCH_DATA,
                                         0, 0, NULL, NULL, combo_box);
-  g_signal_handlers_disconnect_matched (combo_box->priv->button,
+  g_signal_handlers_disconnect_matched (priv->button,
                                         G_SIGNAL_MATCH_DATA,
                                         0, 0, NULL,
                                         gtk_combo_box_list_button_pressed,
                                         NULL);
-  g_signal_handlers_disconnect_matched (combo_box->priv->popup_window,
+  g_signal_handlers_disconnect_matched (priv->popup_window,
                                         G_SIGNAL_MATCH_DATA,
                                         0, 0, NULL,
                                         gtk_combo_box_list_button_pressed,
                                         NULL);
-  g_signal_handlers_disconnect_matched (combo_box->priv->popup_window,
+  g_signal_handlers_disconnect_matched (priv->popup_window,
                                         G_SIGNAL_MATCH_DATA,
                                         0, 0, NULL,
                                         gtk_combo_box_list_button_released,
                                         NULL);
 
-  g_signal_handlers_disconnect_matched (combo_box->priv->popup_window,
+  g_signal_handlers_disconnect_matched (priv->popup_window,
 					G_SIGNAL_MATCH_DATA,
 					0, 0, NULL, 
 					gtk_combo_box_child_show,
 					NULL);
 
-  g_signal_handlers_disconnect_matched (combo_box->priv->popup_window,
+  g_signal_handlers_disconnect_matched (priv->popup_window,
 					G_SIGNAL_MATCH_DATA,
 					0, 0, NULL, 
 					gtk_combo_box_child_hide,
 					NULL);
   
-  if (combo_box->priv->box)
-    g_signal_handlers_disconnect_matched (combo_box->priv->box,
+  if (priv->box)
+    g_signal_handlers_disconnect_matched (priv->box,
 					  G_SIGNAL_MATCH_DATA,
 					  0, 0, NULL,
 					  gtk_combo_box_list_button_pressed,
@@ -3682,43 +3704,43 @@ gtk_combo_box_list_destroy (GtkComboBox *combo_box)
   /* destroy things (unparent will kill the latest ref from us)
    * last unref on button will destroy the arrow
    */
-  gtk_widget_unparent (combo_box->priv->button);
-  combo_box->priv->button = NULL;
-  combo_box->priv->arrow = NULL;
+  gtk_widget_unparent (priv->button);
+  priv->button = NULL;
+  priv->arrow = NULL;
 
-  if (combo_box->priv->cell_view)
+  if (priv->cell_view)
     {
-      g_object_set (combo_box->priv->cell_view,
+      g_object_set (priv->cell_view,
                     "background-set", FALSE,
                     NULL);
     }
 
-  if (combo_box->priv->cell_view_frame)
+  if (priv->cell_view_frame)
     {
-      gtk_widget_unparent (combo_box->priv->cell_view_frame);
-      combo_box->priv->cell_view_frame = NULL;
-      combo_box->priv->box = NULL;
+      gtk_widget_unparent (priv->cell_view_frame);
+      priv->cell_view_frame = NULL;
+      priv->box = NULL;
     }
 
-  if (combo_box->priv->scroll_timer)
+  if (priv->scroll_timer)
     {
-      g_source_remove (combo_box->priv->scroll_timer);
-      combo_box->priv->scroll_timer = 0;
+      g_source_remove (priv->scroll_timer);
+      priv->scroll_timer = 0;
     }
 
-  if (combo_box->priv->resize_idle_id)
+  if (priv->resize_idle_id)
     {
-      g_source_remove (combo_box->priv->resize_idle_id);
-      combo_box->priv->resize_idle_id = 0;
+      g_source_remove (priv->resize_idle_id);
+      priv->resize_idle_id = 0;
     }
 
-  gtk_widget_destroy (combo_box->priv->tree_view);
+  gtk_widget_destroy (priv->tree_view);
 
-  combo_box->priv->tree_view = NULL;
-  if (combo_box->priv->popup_widget)
+  priv->tree_view = NULL;
+  if (priv->popup_widget)
     {
-      g_object_unref (combo_box->priv->popup_widget);
-      combo_box->priv->popup_widget = NULL;
+      g_object_unref (priv->popup_widget);
+      priv->popup_widget = NULL;
     }
 }
 
@@ -3730,32 +3752,32 @@ gtk_combo_box_list_button_pressed (GtkWidget      *widget,
                                    gpointer        data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   GtkWidget *ewidget = gtk_get_event_widget ((GdkEvent *)event);
 
-  if (ewidget == combo_box->priv->popup_window)
+  if (ewidget == priv->popup_window)
     return TRUE;
 
-  if ((ewidget != combo_box->priv->button && ewidget != combo_box->priv->box) ||
-      gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (combo_box->priv->button)))
+  if ((ewidget != priv->button && ewidget != priv->box) ||
+      gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->button)))
     return FALSE;
 
-  if (combo_box->priv->focus_on_click && 
-      !GTK_WIDGET_HAS_FOCUS (combo_box->priv->button))
-    gtk_widget_grab_focus (combo_box->priv->button);
+  if (priv->focus_on_click && 
+      !GTK_WIDGET_HAS_FOCUS (priv->button))
+    gtk_widget_grab_focus (priv->button);
 
   gtk_combo_box_popup (combo_box);
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (combo_box->priv->button),
-                                TRUE);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->button), TRUE);
 
-  combo_box->priv->auto_scroll = FALSE;
-  if (combo_box->priv->scroll_timer == 0)
-    combo_box->priv->scroll_timer = gdk_threads_add_timeout (SCROLL_TIME, 
-						   (GSourceFunc) gtk_combo_box_list_scroll_timeout, 
+  priv->auto_scroll = FALSE;
+  if (priv->scroll_timer == 0)
+    priv->scroll_timer = gdk_threads_add_timeout (SCROLL_TIME, 
+						  (GSourceFunc) gtk_combo_box_list_scroll_timeout, 
 						   combo_box);
 
-  combo_box->priv->popup_in_progress = TRUE;
+  priv->popup_in_progress = TRUE;
 
   return TRUE;
 }
@@ -3770,39 +3792,39 @@ gtk_combo_box_list_button_released (GtkWidget      *widget,
   GtkTreeIter iter;
 
   GtkComboBox *combo_box = GTK_COMBO_BOX (data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
 
   gboolean popup_in_progress = FALSE;
 
   GtkWidget *ewidget = gtk_get_event_widget ((GdkEvent *)event);
 
-  if (combo_box->priv->popup_in_progress)
+  if (priv->popup_in_progress)
     {
       popup_in_progress = TRUE;
-      combo_box->priv->popup_in_progress = FALSE;
+      priv->popup_in_progress = FALSE;
     }
 
-  gtk_tree_view_set_hover_expand (GTK_TREE_VIEW (combo_box->priv->tree_view), 
+  gtk_tree_view_set_hover_expand (GTK_TREE_VIEW (priv->tree_view), 
 				  FALSE);
-  if (combo_box->priv->scroll_timer)
+  if (priv->scroll_timer)
     {
-      g_source_remove (combo_box->priv->scroll_timer);
-      combo_box->priv->scroll_timer = 0;
+      g_source_remove (priv->scroll_timer);
+      priv->scroll_timer = 0;
     }
 
-  if (ewidget != combo_box->priv->tree_view)
+  if (ewidget != priv->tree_view)
     {
-      if ((ewidget == combo_box->priv->button || 
-	   ewidget == combo_box->priv->box) &&
+      if ((ewidget == priv->button || 
+	   ewidget == priv->box) &&
           !popup_in_progress &&
-          gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (combo_box->priv->button)))
+          gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->button)))
         {
           gtk_combo_box_popdown (combo_box);
           return TRUE;
         }
 
       /* released outside treeview */
-      if (ewidget != combo_box->priv->button && 
-	  ewidget != combo_box->priv->box)
+      if (ewidget != priv->button && ewidget != priv->box)
         {
           gtk_combo_box_popdown (combo_box);
 
@@ -3813,7 +3835,7 @@ gtk_combo_box_list_button_released (GtkWidget      *widget,
     }
 
   /* select something cool */
-  ret = gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (combo_box->priv->tree_view),
+  ret = gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (priv->tree_view),
                                        event->x, event->y,
                                        &path,
                                        NULL, NULL, NULL);
@@ -3821,7 +3843,7 @@ gtk_combo_box_list_button_released (GtkWidget      *widget,
   if (!ret)
     return TRUE; /* clicked outside window? */
 
-  gtk_tree_model_get_iter (combo_box->priv->model, &iter, path);
+  gtk_tree_model_get_iter (priv->model, &iter, path);
   gtk_tree_path_free (path);
 
   gtk_combo_box_popdown (combo_box);
@@ -3936,12 +3958,12 @@ gtk_combo_box_list_auto_scroll (GtkComboBox *combo_box,
 static gboolean
 gtk_combo_box_list_scroll_timeout (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gint x, y;
 
-  if (combo_box->priv->auto_scroll)
+  if (priv->auto_scroll)
     {
-      gdk_window_get_pointer (combo_box->priv->tree_view->window, 
-			      &x, &y, NULL);
+      gdk_window_get_pointer (priv->tree_view->window, &x, &y, NULL);
       gtk_combo_box_list_auto_scroll (combo_box, x, y);
     }
 
@@ -4012,18 +4034,19 @@ gtk_combo_box_list_row_changed (GtkTreeModel *model,
                                 gpointer      data)
 {
   GtkComboBox *combo_box = GTK_COMBO_BOX (data);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   gint width;
 
   width = gtk_combo_box_calc_requested_width (combo_box, path);
 
-  if (width > combo_box->priv->width)
+  if (width > priv->width)
     {
-      if (combo_box->priv->cell_view) 
+      if (priv->cell_view) 
 	{
-	  gtk_widget_set_size_request (combo_box->priv->cell_view, width, -1);
-	  gtk_widget_queue_resize (combo_box->priv->cell_view);
+	  gtk_widget_set_size_request (priv->cell_view, width, -1);
+	  gtk_widget_queue_resize (priv->cell_view);
 	}
-      combo_box->priv->width = width;
+      priv->width = width;
     }
 }
 
@@ -4059,13 +4082,11 @@ gtk_combo_box_cell_layout_pack_start (GtkCellLayout   *layout,
                                       GtkCellRenderer *cell,
                                       gboolean         expand)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
   ComboCellInfo *info;
-  GtkComboBox *combo_box;
+  GtkComboBoxPrivate *priv;
 
-  g_return_if_fail (GTK_IS_COMBO_BOX (layout));
-  g_return_if_fail (GTK_IS_CELL_RENDERER (cell));
-
-  combo_box = GTK_COMBO_BOX (layout);
+  priv = combo_box->priv;
 
   g_object_ref_sink (cell);
 
@@ -4074,17 +4095,17 @@ gtk_combo_box_cell_layout_pack_start (GtkCellLayout   *layout,
   info->expand = expand;
   info->pack = GTK_PACK_START;
 
-  combo_box->priv->cells = g_slist_append (combo_box->priv->cells, info);
+  priv->cells = g_slist_append (priv->cells, info);
 
-  if (combo_box->priv->cell_view)
-    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_box->priv->cell_view),
+  if (priv->cell_view)
+    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->cell_view),
                                 cell, expand);
 
-  if (combo_box->priv->column)
-    gtk_tree_view_column_pack_start (combo_box->priv->column, cell, expand);
+  if (priv->column)
+    gtk_tree_view_column_pack_start (priv->column, cell, expand);
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
-    pack_start_recurse (combo_box->priv->popup_widget, cell, expand);
+  if (GTK_IS_MENU (priv->popup_widget))
+    pack_start_recurse (priv->popup_widget, cell, expand);
 }
 
 static void
@@ -4115,13 +4136,11 @@ gtk_combo_box_cell_layout_pack_end (GtkCellLayout   *layout,
                                     GtkCellRenderer *cell,
                                     gboolean         expand)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
   ComboCellInfo *info;
-  GtkComboBox *combo_box;
+  GtkComboBoxPrivate *priv;
 
-  g_return_if_fail (GTK_IS_COMBO_BOX (layout));
-  g_return_if_fail (GTK_IS_CELL_RENDERER (cell));
-
-  combo_box = GTK_COMBO_BOX (layout);
+  priv = combo_box->priv;
 
   g_object_ref_sink (cell);
 
@@ -4130,29 +4149,25 @@ gtk_combo_box_cell_layout_pack_end (GtkCellLayout   *layout,
   info->expand = expand;
   info->pack = GTK_PACK_END;
 
-  combo_box->priv->cells = g_slist_append (combo_box->priv->cells, info);
+  priv->cells = g_slist_append (priv->cells, info);
 
-  if (combo_box->priv->cell_view)
-    gtk_cell_layout_pack_end (GTK_CELL_LAYOUT (combo_box->priv->cell_view),
+  if (priv->cell_view)
+    gtk_cell_layout_pack_end (GTK_CELL_LAYOUT (priv->cell_view),
                               cell, expand);
 
-  if (combo_box->priv->column)
-    gtk_tree_view_column_pack_end (combo_box->priv->column, cell, expand);
+  if (priv->column)
+    gtk_tree_view_column_pack_end (priv->column, cell, expand);
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
-    pack_end_recurse (combo_box->priv->popup_widget, cell, expand);
+  if (GTK_IS_MENU (priv->popup_widget))
+    pack_end_recurse (priv->popup_widget, cell, expand);
 }
 
 static GList *
 gtk_combo_box_cell_layout_get_cells (GtkCellLayout *layout)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
   GSList *list;
   GList *retval = NULL;
-  GtkComboBox *combo_box;
-
-  g_return_val_if_fail (GTK_IS_COMBO_BOX (layout), NULL);
-
-  combo_box = GTK_COMBO_BOX (layout);
 
   for (list = combo_box->priv->cells; list; list = list->next)
     {
@@ -4187,20 +4202,17 @@ clear_recurse (GtkWidget *menu)
 static void
 gtk_combo_box_cell_layout_clear (GtkCellLayout *layout)
 {
-  GtkComboBox *combo_box;
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GSList *i;
   
-  g_return_if_fail (GTK_IS_COMBO_BOX (layout));
+  if (priv->cell_view)
+    gtk_cell_layout_clear (GTK_CELL_LAYOUT (priv->cell_view));
 
-  combo_box = GTK_COMBO_BOX (layout);
- 
-  if (combo_box->priv->cell_view)
-    gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo_box->priv->cell_view));
+  if (priv->column)
+    gtk_tree_view_column_clear (priv->column);
 
-  if (combo_box->priv->column)
-    gtk_tree_view_column_clear (combo_box->priv->column);
-
-  for (i = combo_box->priv->cells; i; i = i->next)
+  for (i = priv->cells; i; i = i->next)
     {
      ComboCellInfo *info = (ComboCellInfo *)i->data;
 
@@ -4209,11 +4221,11 @@ gtk_combo_box_cell_layout_clear (GtkCellLayout *layout)
       g_free (info);
       i->data = NULL;
     }
-  g_slist_free (combo_box->priv->cells);
-  combo_box->priv->cells = NULL;
+  g_slist_free (priv->cells);
+  priv->cells = NULL;
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
-    clear_recurse (combo_box->priv->popup_widget);
+  if (GTK_IS_MENU (priv->popup_widget))
+    clear_recurse (priv->popup_widget);
 }
 
 static void
@@ -4246,15 +4258,11 @@ gtk_combo_box_cell_layout_add_attribute (GtkCellLayout   *layout,
                                          const gchar     *attribute,
                                          gint             column)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
   ComboCellInfo *info;
-  GtkComboBox *combo_box;
-
-  g_return_if_fail (GTK_IS_COMBO_BOX (layout));
-  g_return_if_fail (GTK_IS_CELL_RENDERER (cell));
-
-  combo_box = GTK_COMBO_BOX (layout);
 
   info = gtk_combo_box_get_cell_info (combo_box, cell);
+  g_return_if_fail (info != NULL);
 
   info->attributes = g_slist_prepend (info->attributes,
                                       GINT_TO_POINTER (column));
@@ -4299,9 +4307,9 @@ combo_cell_data_func (GtkCellLayout   *cell_layout,
 
 
 static void 
-set_cell_data_func_recurse (GtkWidget             *menu,
-			    GtkCellRenderer       *cell,
-			    ComboCellInfo         *info)
+set_cell_data_func_recurse (GtkWidget       *menu,
+			    GtkCellRenderer *cell,
+			    ComboCellInfo   *info)
 {
   GList *i, *list;
   GtkWidget *submenu;    
@@ -4336,12 +4344,9 @@ gtk_combo_box_cell_layout_set_cell_data_func (GtkCellLayout         *layout,
                                               gpointer               func_data,
                                               GDestroyNotify         destroy)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
+  GtkComboBoxPrivate *priv = combo_box->priv;
   ComboCellInfo *info;
-  GtkComboBox *combo_box;
-
-  g_return_if_fail (GTK_IS_COMBO_BOX (layout));
-
-  combo_box = GTK_COMBO_BOX (layout);
 
   info = gtk_combo_box_get_cell_info (combo_box, cell);
   g_return_if_fail (info != NULL);
@@ -4358,21 +4363,21 @@ gtk_combo_box_cell_layout_set_cell_data_func (GtkCellLayout         *layout,
   info->func_data = func_data;
   info->destroy = destroy;
 
-  if (combo_box->priv->cell_view)
-    gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo_box->priv->cell_view), cell, func, func_data, NULL);
+  if (priv->cell_view)
+    gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (priv->cell_view), cell, func, func_data, NULL);
 
-  if (combo_box->priv->column)
-    gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo_box->priv->column), cell, func, func_data, NULL);
+  if (priv->column)
+    gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (priv->column), cell, func, func_data, NULL);
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
-    set_cell_data_func_recurse (combo_box->priv->popup_widget, cell, info);
+  if (GTK_IS_MENU (priv->popup_widget))
+    set_cell_data_func_recurse (priv->popup_widget, cell, info);
 
   gtk_widget_queue_resize (GTK_WIDGET (combo_box));
 }
 
 static void 
-clear_attributes_recurse (GtkWidget             *menu,
-			  GtkCellRenderer       *cell)
+clear_attributes_recurse (GtkWidget       *menu,
+			  GtkCellRenderer *cell)
 {
   GList *i, *list;
   GtkWidget *submenu;    
@@ -4396,14 +4401,12 @@ static void
 gtk_combo_box_cell_layout_clear_attributes (GtkCellLayout   *layout,
                                             GtkCellRenderer *cell)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
+  GtkComboBoxPrivate *priv;
   ComboCellInfo *info;
-  GtkComboBox *combo_box;
   GSList *list;
 
-  g_return_if_fail (GTK_IS_COMBO_BOX (layout));
-  g_return_if_fail (GTK_IS_CELL_RENDERER (cell));
-
-  combo_box = GTK_COMBO_BOX (layout);
+  priv = combo_box->priv;
 
   info = gtk_combo_box_get_cell_info (combo_box, cell);
   g_return_if_fail (info != NULL);
@@ -4417,14 +4420,14 @@ gtk_combo_box_cell_layout_clear_attributes (GtkCellLayout   *layout,
   g_slist_free (info->attributes);
   info->attributes = NULL;
 
-  if (combo_box->priv->cell_view)
-    gtk_cell_layout_clear_attributes (GTK_CELL_LAYOUT (combo_box->priv->cell_view), cell);
+  if (priv->cell_view)
+    gtk_cell_layout_clear_attributes (GTK_CELL_LAYOUT (priv->cell_view), cell);
 
-  if (combo_box->priv->column)
-    gtk_cell_layout_clear_attributes (GTK_CELL_LAYOUT (combo_box->priv->column), cell);
+  if (priv->column)
+    gtk_cell_layout_clear_attributes (GTK_CELL_LAYOUT (priv->column), cell);
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
-    clear_attributes_recurse (combo_box->priv->popup_widget, cell);
+  if (GTK_IS_MENU (priv->popup_widget))
+    clear_attributes_recurse (priv->popup_widget, cell);
 
   gtk_widget_queue_resize (GTK_WIDGET (combo_box));
 }
@@ -4457,38 +4460,35 @@ gtk_combo_box_cell_layout_reorder (GtkCellLayout   *layout,
                                    GtkCellRenderer *cell,
                                    gint             position)
 {
+  GtkComboBox *combo_box = GTK_COMBO_BOX (layout);
+  GtkComboBoxPrivate *priv;
   ComboCellInfo *info;
-  GtkComboBox *combo_box;
   GSList *link;
 
-  g_return_if_fail (GTK_IS_COMBO_BOX (layout));
-  g_return_if_fail (GTK_IS_CELL_RENDERER (cell));
-
-  combo_box = GTK_COMBO_BOX (layout);
+  priv = combo_box->priv;
 
   info = gtk_combo_box_get_cell_info (combo_box, cell);
 
   g_return_if_fail (info != NULL);
   g_return_if_fail (position >= 0);
 
-  link = g_slist_find (combo_box->priv->cells, info);
+  link = g_slist_find (priv->cells, info);
 
   g_return_if_fail (link != NULL);
 
-  combo_box->priv->cells = g_slist_delete_link (combo_box->priv->cells, link);
-  combo_box->priv->cells = g_slist_insert (combo_box->priv->cells, info,
-                                           position);
+  priv->cells = g_slist_delete_link (priv->cells, link);
+  priv->cells = g_slist_insert (priv->cells, info, position);
 
-  if (combo_box->priv->cell_view)
-    gtk_cell_layout_reorder (GTK_CELL_LAYOUT (combo_box->priv->cell_view),
+  if (priv->cell_view)
+    gtk_cell_layout_reorder (GTK_CELL_LAYOUT (priv->cell_view),
                              cell, position);
 
-  if (combo_box->priv->column)
-    gtk_cell_layout_reorder (GTK_CELL_LAYOUT (combo_box->priv->column),
+  if (priv->column)
+    gtk_cell_layout_reorder (GTK_CELL_LAYOUT (priv->column),
                              cell, position);
 
-  if (GTK_IS_MENU (combo_box->priv->popup_widget))
-    reorder_recurse (combo_box->priv->popup_widget, cell, position);
+  if (GTK_IS_MENU (priv->popup_widget))
+    reorder_recurse (priv->popup_widget, cell, position);
 
   gtk_widget_queue_draw (GTK_WIDGET (combo_box));
 }
@@ -4569,12 +4569,16 @@ void
 gtk_combo_box_set_wrap_width (GtkComboBox *combo_box,
                               gint         width)
 {
+  GtkComboBoxPrivate *priv;
+
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
   g_return_if_fail (width >= 0);
 
-  if (width != combo_box->priv->wrap_width)
+  priv = combo_box->priv;
+
+  if (width != priv->wrap_width)
     {
-      combo_box->priv->wrap_width = width;
+      priv->wrap_width = width;
 
       gtk_combo_box_check_appearance (combo_box);
       gtk_combo_box_relayout (combo_box);
@@ -4616,16 +4620,19 @@ void
 gtk_combo_box_set_row_span_column (GtkComboBox *combo_box,
                                    gint         row_span)
 {
+  GtkComboBoxPrivate *priv;
   gint col;
 
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 
-  col = gtk_tree_model_get_n_columns (combo_box->priv->model);
+  priv = combo_box->priv;
+
+  col = gtk_tree_model_get_n_columns (priv->model);
   g_return_if_fail (row_span >= -1 && row_span < col);
 
-  if (row_span != combo_box->priv->row_column)
+  if (row_span != priv->row_column)
     {
-      combo_box->priv->row_column = row_span;
+      priv->row_column = row_span;
       
       gtk_combo_box_relayout (combo_box);
  
@@ -4666,16 +4673,19 @@ void
 gtk_combo_box_set_column_span_column (GtkComboBox *combo_box,
                                       gint         column_span)
 {
+  GtkComboBoxPrivate *priv;
   gint col;
 
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 
-  col = gtk_tree_model_get_n_columns (combo_box->priv->model);
+  priv = combo_box->priv;
+
+  col = gtk_tree_model_get_n_columns (priv->model);
   g_return_if_fail (column_span >= -1 && column_span < col);
 
-  if (column_span != combo_box->priv->col_column)
+  if (column_span != priv->col_column)
     {
-      combo_box->priv->col_column = column_span;
+      priv->col_column = column_span;
       
       gtk_combo_box_relayout (combo_box);
 
@@ -4701,14 +4711,18 @@ gtk_combo_box_set_column_span_column (GtkComboBox *combo_box,
 gint
 gtk_combo_box_get_active (GtkComboBox *combo_box)
 {
+  GtkComboBoxPrivate *priv;
   gint result;
+
   g_return_val_if_fail (GTK_IS_COMBO_BOX (combo_box), 0);
 
-  if (gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  priv = combo_box->priv;
+
+  if (gtk_tree_row_reference_valid (priv->active_row))
     {
       GtkTreePath *path;
 
-      path = gtk_tree_row_reference_get_path (combo_box->priv->active_row);      
+      path = gtk_tree_row_reference_get_path (priv->active_row);      
       result = gtk_tree_path_get_indices (path)[0];
       gtk_tree_path_free (path);
     }
@@ -4749,58 +4763,59 @@ static void
 gtk_combo_box_set_active_internal (GtkComboBox *combo_box,
 				   GtkTreePath *path)
 {
+  GtkComboBoxPrivate *priv = combo_box->priv;
   GtkTreePath *active_path;
   gint path_cmp;
 
-  if (path && gtk_tree_row_reference_valid (combo_box->priv->active_row))
+  if (path && gtk_tree_row_reference_valid (priv->active_row))
     {
-      active_path = gtk_tree_row_reference_get_path (combo_box->priv->active_row);
+      active_path = gtk_tree_row_reference_get_path (priv->active_row);
       path_cmp = gtk_tree_path_compare (path, active_path);
       gtk_tree_path_free (active_path);
       if (path_cmp == 0)
 	return;
     }
 
-  if (combo_box->priv->active_row)
+  if (priv->active_row)
     {
-      gtk_tree_row_reference_free (combo_box->priv->active_row);
-      combo_box->priv->active_row = NULL;
+      gtk_tree_row_reference_free (priv->active_row);
+      priv->active_row = NULL;
     }
   
   if (!path)
     {
-      if (combo_box->priv->tree_view)
-        gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (combo_box->priv->tree_view)));
+      if (priv->tree_view)
+        gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)));
       else
         {
-          GtkMenu *menu = GTK_MENU (combo_box->priv->popup_widget);
+          GtkMenu *menu = GTK_MENU (priv->popup_widget);
 
           if (GTK_IS_MENU (menu))
             gtk_menu_set_active (menu, -1);
         }
 
-      if (combo_box->priv->cell_view)
-        gtk_cell_view_set_displayed_row (GTK_CELL_VIEW (combo_box->priv->cell_view), NULL);
+      if (priv->cell_view)
+        gtk_cell_view_set_displayed_row (GTK_CELL_VIEW (priv->cell_view), NULL);
     }
   else
     {
-      combo_box->priv->active_row = 
-	gtk_tree_row_reference_new (combo_box->priv->model, path);
+      priv->active_row = 
+	gtk_tree_row_reference_new (priv->model, path);
 
-      if (combo_box->priv->tree_view)
+      if (priv->tree_view)
 	{
-	  gtk_tree_view_set_cursor (GTK_TREE_VIEW (combo_box->priv->tree_view), 
+	  gtk_tree_view_set_cursor (GTK_TREE_VIEW (priv->tree_view), 
 				    path, NULL, FALSE);
 	}
-      else if (GTK_IS_MENU (combo_box->priv->popup_widget))
+      else if (GTK_IS_MENU (priv->popup_widget))
         {
 	  /* FIXME handle nested menus better */
-	  gtk_menu_set_active (GTK_MENU (combo_box->priv->popup_widget), 
+	  gtk_menu_set_active (GTK_MENU (priv->popup_widget), 
 			       gtk_tree_path_get_indices (path)[0]);
         }
 
-      if (combo_box->priv->cell_view)
-	gtk_cell_view_set_displayed_row (GTK_CELL_VIEW (combo_box->priv->cell_view), 
+      if (priv->cell_view)
+	gtk_cell_view_set_displayed_row (GTK_CELL_VIEW (priv->cell_view), 
 					 path);
     }
 
@@ -4889,7 +4904,7 @@ gtk_combo_box_set_model (GtkComboBox  *combo_box,
   gtk_combo_box_unset_model (combo_box);
 
   if (model == NULL)
-    return;
+    goto out;
 
   combo_box->priv->model = model;
   g_object_ref (combo_box->priv->model);
@@ -4929,6 +4944,9 @@ gtk_combo_box_set_model (GtkComboBox  *combo_box,
   if (combo_box->priv->cell_view)
     gtk_cell_view_set_model (GTK_CELL_VIEW (combo_box->priv->cell_view),
                              combo_box->priv->model);
+
+out:
+  g_object_notify (G_OBJECT (combo_box), "model");
 }
 
 /**
@@ -5394,6 +5412,8 @@ popup_idle (gpointer data)
   gtk_combo_box_popup (combo_box);
 
   combo_box->priv->popup_idle_id = 0;
+  combo_box->priv->activate_button = 0;
+  combo_box->priv->activate_time = 0;
 
   return FALSE;
 }
@@ -5429,7 +5449,18 @@ gtk_combo_box_start_editing (GtkCellEditable *cell_editable,
    */  
   if (combo_box->priv->is_cell_renderer && 
       combo_box->priv->cell_view && !combo_box->priv->tree_view)
-    combo_box->priv->popup_idle_id = gdk_threads_add_idle (popup_idle, combo_box);
+    {
+      if (event && event->type == GDK_BUTTON_PRESS)
+        {
+          GdkEventButton *event_button = (GdkEventButton *)event;
+
+          combo_box->priv->activate_button = event_button->button;
+          combo_box->priv->activate_time = event_button->time;
+        }
+
+      combo_box->priv->popup_idle_id = 
+          gdk_threads_add_idle (popup_idle, combo_box);
+    }
 }
 
 
@@ -5520,13 +5551,17 @@ void
 gtk_combo_box_set_title (GtkComboBox *combo_box,
 			 const gchar *title)
 {
+  GtkComboBoxPrivate *priv;
+
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 
+  priv = combo_box->priv;
+
   if (strcmp (title ? title : "", 
-	      combo_box->priv->tearoff_title ? combo_box->priv->tearoff_title : "") != 0)
+	      priv->tearoff_title ? priv->tearoff_title : "") != 0)
     {
-      g_free (combo_box->priv->tearoff_title);
-      combo_box->priv->tearoff_title = g_strdup (title);
+      g_free (priv->tearoff_title);
+      priv->tearoff_title = g_strdup (title);
 
       gtk_combo_box_update_title (combo_box);
 

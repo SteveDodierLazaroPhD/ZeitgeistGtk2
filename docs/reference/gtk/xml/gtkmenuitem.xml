@@ -81,6 +81,7 @@ GtkMenuItem implements
 <refsect1 id="GtkMenuItem.style-properties" role="style_properties">
 <title role="style_properties.title">Style Properties</title>
 <synopsis>
+  &quot;<link linkend="GtkMenuItem--arrow-scaling">arrow-scaling</link>&quot;            <link linkend="gfloat">gfloat</link>                : Read
   &quot;<link linkend="GtkMenuItem--arrow-spacing">arrow-spacing</link>&quot;            <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkMenuItem--horizontal-padding">horizontal-padding</link>&quot;       <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkMenuItem--selected-shadow-type">selected-shadow-type</link>&quot;     <link linkend="GtkShadowType">GtkShadowType</link>         : Read
@@ -220,7 +221,12 @@ the menu item.
 </para>
 <para>
 Note that you do need to set an accelerator on the parent menu with
-<link linkend="gtk-menu-set-accel-group"><function>gtk_menu_set_accel_group()</function></link> for this to work.</para>
+<link linkend="gtk-menu-set-accel-group"><function>gtk_menu_set_accel_group()</function></link> for this to work.
+</para>
+<para>
+Note that <parameter>accel_path</parameter> string will be stored in a <link linkend="GQuark"><type>GQuark</type></link>. Therefore, if you
+pass a static string, you can save some memory by interning it first with 
+<link linkend="g-intern-static-string"><function>g_intern_static_string()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -379,6 +385,11 @@ The submenu attached to the menu item, or NULL if it has none.</para>
 </refsect1>
 <refsect1 id="GtkMenuItem.style-property-details" role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
+<refsect2 id="GtkMenuItem--arrow-scaling"><title>The <literal>&quot;arrow-scaling&quot;</literal> style property</title>
+<indexterm zone="GtkMenuItem--arrow-scaling"><primary>GtkMenuItem:arrow-scaling</primary></indexterm><programlisting>  &quot;arrow-scaling&quot;            <link linkend="gfloat">gfloat</link>                : Read</programlisting>
+<para>Amount of space used up by arrow, relative to the menu item's font size.</para><para>Allowed values: [0,2]</para>
+<para>Default value: 0.8</para>
+</refsect2>
 <refsect2 id="GtkMenuItem--arrow-spacing"><title>The <literal>&quot;arrow-spacing&quot;</literal> style property</title>
 <indexterm zone="GtkMenuItem--arrow-spacing"><primary>GtkMenuItem:arrow-spacing</primary></indexterm><programlisting>  &quot;arrow-spacing&quot;            <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Space between label and arrow.</para><para>Allowed values: &gt;= 0</para>

@@ -26,12 +26,16 @@
 
 /* Uninstalled header defining types and functions internal to GDK */
 
+#ifndef __GDK_INTERNALS_H__
+#define __GDK_INTERNALS_H__
+
+#include <gio/gio.h>
 #include <gdk/gdktypes.h>
 #include <gdk/gdkwindow.h>
 #include <gdk/gdkprivate.h>
-
-#ifndef __GDK_INTERNALS_H__
-#define __GDK_INTERNALS_H__
+#ifdef USE_MEDIALIB
+#include <gdk/gdkmedialib.h>
+#endif
 
 G_BEGIN_DECLS
 
@@ -162,6 +166,7 @@ struct _GdkEventPrivate
   GdkEvent   event;
   guint      flags;
   GdkScreen *screen;
+  gpointer   windowing_data;
 };
 
 extern GdkEventFunc   _gdk_event_func;    /* Callback for events */
@@ -179,10 +184,16 @@ GdkEvent* _gdk_event_unqueue (GdkDisplay *display);
 GList* _gdk_event_queue_find_first  (GdkDisplay *display);
 void   _gdk_event_queue_remove_link (GdkDisplay *display,
 				     GList      *node);
+GList*  _gdk_event_queue_prepend    (GdkDisplay *display,
+				     GdkEvent   *event);
 GList*  _gdk_event_queue_append     (GdkDisplay *display,
 				     GdkEvent   *event);
 void _gdk_event_button_generate     (GdkDisplay *display,
 				     GdkEvent   *event);
+
+void _gdk_windowing_event_data_copy (const GdkEvent *src,
+                                     GdkEvent       *dst);
+void _gdk_windowing_event_data_free (GdkEvent       *event);
 
 void gdk_synthesize_window_state (GdkWindow     *window,
                                   GdkWindowState unset_flags,
@@ -219,11 +230,11 @@ cairo_surface_t *_gdk_drawable_ref_cairo_surface (GdkDrawable *drawable);
 GdkGC *_gdk_drawable_get_scratch_gc (GdkDrawable *drawable,
 				     gboolean     graphics_exposures);
 
-void _gdk_gc_update_context (GdkGC     *gc,
-			     cairo_t   *cr,
-			     GdkColor  *override_foreground,
-			     GdkBitmap *override_stipple,
-			     gboolean   gc_changed);
+void _gdk_gc_update_context (GdkGC          *gc,
+			     cairo_t        *cr,
+			     const GdkColor *override_foreground,
+			     GdkBitmap      *override_stipple,
+			     gboolean        gc_changed);
 
 /*************************************
  * Interfaces used by windowing code *
@@ -301,6 +312,14 @@ GdkWindow* _gdk_windowing_window_at_pointer  (GdkDisplay       *display,
 gint _gdk_windowing_get_bits_for_depth (GdkDisplay *display,
 					gint        depth);
 
+GdkWindow* _gdk_window_new                        (GdkWindow     *parent,
+						   GdkWindowAttr *attributes,
+						   gint           attributes_mask);
+void       _gdk_window_reparent                   (GdkWindow     *window,
+						   GdkWindow     *new_parent,
+						   gint           x,
+						   gint           y);
+
 #define GDK_WINDOW_IS_MAPPED(window) ((((GdkWindowObject*)window)->state & GDK_WINDOW_STATE_WITHDRAWN) == 0)
 
 /* Called before processing updates for a window. This gives the windowing
@@ -309,8 +328,8 @@ gint _gdk_windowing_get_bits_for_depth (GdkDisplay *display,
  * the region; if the result is TRUE, then the windowing layer is responsible
  * for destroying the region later.
  */
-gboolean _gdk_windowing_window_queue_antiexpose (GdkWindow  *window,
-						 GdkRegion  *area);
+gboolean _gdk_windowing_window_queue_antiexpose (GdkWindow *window,
+						 GdkRegion *area);
 
 /* Called to do the windowing system specific part of gdk_window_destroy(),
  *
@@ -354,16 +373,16 @@ struct _GdkPaintableIface
 {
   GTypeInterface g_iface;
   
-  void (* begin_paint_region) (GdkPaintable *paintable,
-			       GdkRegion    *region);
-  void (* end_paint)          (GdkPaintable *paintable);
+  void (* begin_paint_region)       (GdkPaintable    *paintable,
+                                     const GdkRegion *region);
+  void (* end_paint)                (GdkPaintable    *paintable);
 
-  void (* invalidate_maybe_recurse) (GdkPaintable *paintable,
-				     GdkRegion    *region,
-				     gboolean    (*child_func) (GdkWindow *, gpointer),
-				     gpointer      user_data);
-  void (* process_updates)          (GdkPaintable *paintable,
-				     gboolean      update_children);
+  void (* invalidate_maybe_recurse) (GdkPaintable    *paintable,
+				     const GdkRegion *region,
+				     gboolean       (*child_func) (GdkWindow *, gpointer),
+				     gpointer         user_data);
+  void (* process_updates)          (GdkPaintable    *paintable,
+				     gboolean         update_children);
 };
 
 GType _gdk_paintable_get_type (void) G_GNUC_CONST;
@@ -387,8 +406,8 @@ GType _gdk_pixmap_impl_get_type (void) G_GNUC_CONST;
  * When this function is called, _gdk_gc_get_clip_region
  * will already return the new region.
  **/
-void _gdk_windowing_gc_set_clip_region (GdkGC     *gc,
-					GdkRegion *region);
+void _gdk_windowing_gc_set_clip_region (GdkGC           *gc,
+					const GdkRegion *region);
 
 /**
  * _gdk_windowing_gc_copy:
@@ -408,6 +427,23 @@ void _gdk_windowing_gc_get_foreground (GdkGC    *gc,
 /* Queries the current background color of a GdkGC */
 void _gdk_windowing_gc_get_background (GdkGC    *gc,
 				       GdkColor *color);
+
+struct GdkAppLaunchContextPrivate
+{
+  GdkDisplay *display;
+  GdkScreen *screen;
+  gint workspace;
+  guint32 timestamp;
+  GIcon *icon;
+  char *icon_name;
+};
+
+char *_gdk_windowing_get_startup_notify_id (GAppLaunchContext *context,
+					    GAppInfo          *info, 
+					    GList             *files);
+void  _gdk_windowing_launch_failed         (GAppLaunchContext *context, 
+				            const char        *startup_notify_id);
+
 
 /************************************
  * Initialization and exit routines *

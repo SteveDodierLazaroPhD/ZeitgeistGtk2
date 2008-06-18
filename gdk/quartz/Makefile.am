@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.decl
+
 libgdkincludedir = $(includedir)/gtk-2.0/gdk
 
 INCLUDES = 				\
@@ -19,6 +21,7 @@ libgdk_quartz_la_SOURCES =    	\
 	GdkQuartzView.h		\
 	GdkQuartzWindow.c	\
 	GdkQuartzWindow.h	\
+	gdkapplaunchcontext-quartz.c \
 	gdkcolor-quartz.c	\
 	gdkcursor-quartz.c	\
 	gdkdisplay-quartz.c	\
@@ -45,7 +48,12 @@ libgdk_quartz_la_SOURCES =    	\
 	gdkscreen-quartz.c	\
 	gdkselection-quartz.c	\
 	gdkspawn-quartz.c	\
+	gdktestutils-quartz.c	\
 	gdkvisual-quartz.c	\
 	gdkwindow-quartz.c	\
 	gdkwindow-quartz.h	\
 	xcursors.h
+
+libgdkinclude_HEADERS = 	\
+	gdkquartz.h
+

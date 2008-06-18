@@ -1125,6 +1125,9 @@ gtk_about_dialog_get_website (GtkAboutDialog *about)
  * 
  * Sets the URL to use for the website link.
  *
+ * Note that that the hook functions need to be set up
+ * before calling this function.
+ *
  * Since: 2.6
  **/
 void
@@ -1452,9 +1455,9 @@ gtk_about_dialog_get_translator_credits (GtkAboutDialog *about)
  * of the language which is currently used in the user interface.
  * Using gettext(), a simple way to achieve that is to mark the
  * string for translation:
- * <informalexample><programlisting>
+ * |[
  *  gtk_about_dialog_set_translator_credits (about, _("translator-credits"));
- * </programlisting></informalexample>
+ * ]|
  * It is a good idea to use the customary msgid "translator-credits" for this
  * purpose, since translators will already know the purpose of that msgid, and
  * since #GtkAboutDialog will detect if "translator-credits" is untranslated
@@ -1964,21 +1967,23 @@ add_credits_page (GtkAboutDialog *about,
 	      gchar *link;
 	      const gchar *link_type;
 	      GtkTextTag *tag;
-	      
-	      gtk_text_buffer_insert_at_cursor (buffer, q0, q1 - q0);
-	      gtk_text_buffer_get_end_iter (buffer, &end);
+
+	      if (*q1 == '<')
+		{
+		  gtk_text_buffer_insert_at_cursor (buffer, q0, (q1 - q0) + 1);
+		  gtk_text_buffer_get_end_iter (buffer, &end);
+		  q1++;
+		  link_type = I_("email");
+		}
+	      else
+		{
+		  gtk_text_buffer_insert_at_cursor (buffer, q0, q1 - q0);
+		  gtk_text_buffer_get_end_iter (buffer, &end);
+		  link_type = I_("url");
+		}
 
 	      q0 = q2;
 
-	      if (*q1 == '<') 
-		{
-		  q1++;
-		  q0++;
-		  link_type = I_("email");
-		}
-	      else 
-		link_type = I_("url");
-	      
 	      link = g_strndup (q1, q2 - q1);
 
 	      if (g_slist_find_custom (priv->visited_links, link, (GCompareFunc)strcmp))

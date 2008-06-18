@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkDialog</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="WindowWidgets.html" title="Windows">
 <link rel="prev" href="WindowWidgets.html" title="Windows">
 <link rel="next" href="GtkInvisible.html" title="GtkInvisible">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -296,7 +297,7 @@ For the simple dialog in the following example, in reality you'd probably use
 dialog contents manually if you had more than a simple message in the dialog.
 </p>
 <div class="example">
-<a name="id3003143"></a><p class="title"><b>Example 4. Simple <span class="structname">GtkDialog</span> usage.</b></p>
+<a name="id2929328"></a><p class="title"><b>Example 5. Simple <span class="structname">GtkDialog</span> usage.</b></p>
 <div class="example-contents"><pre class="programlisting">
 
 /* Function to open a dialog box displaying the message provided. */
@@ -347,7 +348,7 @@ attribute specifies a numeric response, and the content of the element
 is the id of widget (which should be a child of the dialogs <em class="parameter"><code>action_area</code></em>).
 </p>
 <div class="example">
-<a name="id3003219"></a><p class="title"><b>Example 5. A <span class="structname">GtkDialog</span> UI definition fragment.</b></p>
+<a name="id2929404"></a><p class="title"><b>Example 6. A <span class="structname">GtkDialog</span> UI definition fragment.</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkDialog" id="dialog1"&gt;
   &lt;child internal-child="vbox"&gt;"
@@ -1228,7 +1229,13 @@ This function is for use by language bindings.</p>
 <pre class="programlisting">  "has-separator"            <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
-<p>The dialog has a separator bar above its buttons.</p>
+<p>
+When <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>, the dialog has a separator bar above its buttons.</p>
+<p>
+
+</p>
 <p>Default value: TRUE</p>
 </div>
 </div>
@@ -1268,27 +1275,27 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <a name="GtkDialog.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
 <a name="GtkDialog-close"></a><h3>The <code class="literal">"close"</code> signal</h3>
-<pre class="programlisting">void                user_function                      (<a class="link" href="GtkDialog.html" title="GtkDialog">GtkDialog</a> *dialog,
+<pre class="programlisting">void                user_function                      (<a class="link" href="GtkDialog.html" title="GtkDialog">GtkDialog</a> *arg0,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>   user_data)      : Run Last / Action</pre>
+<p>
+The ::close signal is a 
+keybinding signal
+which getrs emitted when the user uses a keybinding to close
+the dialog.
+</p>
+<p>
+The default binding for this signal is the Escape key.</p>
 <p>
 
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>dialog</code></em> :</span></p></td>
-<td>the object which received the signal.
-
-</td>
-</tr>
-<tr>
+<tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
 <td>user data set when the signal handler was connected.</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table></div>
 </div>
 <hr>
@@ -1297,28 +1304,29 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <pre class="programlisting">void                user_function                      (<a class="link" href="GtkDialog.html" title="GtkDialog">GtkDialog</a> *dialog,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a>       arg1,
+>gint</a>       response_id,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
->gpointer</a>   user_data)      : Run Last</pre>
+>gpointer</a>   user_data)        : Run Last</pre>
 <p>
-Emitted when an action widget is clicked, the dialog receives a delete event, or
-the application programmer calls <a class="link" href="GtkDialog.html#gtk-dialog-response" title="gtk_dialog_response ()"><code class="function">gtk_dialog_response()</code></a>. On a delete event, the
-response ID is <a class="link" href="GtkDialog.html#GTK-RESPONSE-NONE:CAPS"><span class="type">GTK_RESPONSE_NONE</span></a>. Otherwise, it depends on which action widget
-was clicked.
+Emitted when an action widget is clicked, the dialog receives a 
+delete event, or the application programmer calls <a class="link" href="GtkDialog.html#gtk-dialog-response" title="gtk_dialog_response ()"><code class="function">gtk_dialog_response()</code></a>. 
+On a delete event, the response ID is <a class="link" href="GtkDialog.html#GTK-RESPONSE-DELETE-EVENT:CAPS"><span class="type">GTK_RESPONSE_DELETE_EVENT</span></a>. 
+Otherwise, it depends on which action widget was clicked.</p>
+<p>
+
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dialog</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the object on which the signal is emitted
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>the response ID
-
+<td><p><span class="term"><em class="parameter"><code>response_id</code></em> :</span></p></td>
+<td> the response ID
 </td>
 </tr>
 <tr>

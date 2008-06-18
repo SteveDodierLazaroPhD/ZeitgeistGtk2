@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Drag and Drop</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Clipboards.html" title="Clipboards">
 <link rel="next" href="GtkIconTheme.html" title="GtkIconTheme">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -453,41 +454,57 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/gdk/gdk-Drag-and-Drop.html#GdkDragAction"
 >GdkDragAction</a> actions);</pre>
 <p>
-Sets a widget as a potential drop destination.
+Sets a widget as a potential drop destination, and adds default behaviors.
+</p>
+<p>
+The default behaviors listed in <em class="parameter"><code>flags</code></em> have an effect similar
+to installing default handlers for the widget's drag-and-drop signals
+(<span class="type">"drag-motion"</span>, <span class="type">"drag-drop"</span>, ...). They all exist
+for convenience. When passing <a class="link" href="gtk-Drag-and-Drop.html#GTK-DEST-DEFAULT-ALL:CAPS"><span class="type">GTK_DEST_DEFAULT_ALL</span></a> for instance it is
+sufficient to connect to the widget's <a class="link" href="GtkWidget.html#GtkWidget-drag-data-received" title='The "drag-data-received" signal'><span class="type">"drag-data-received"</span></a>
+signal to get primitive, but consistent drag-and-drop support.
+</p>
+<p>
+Things become more complicated when you try to preview the dragged data,
+as described in the documentation for <span class="type">"drag-motion"</span>. The default
+behaviors described by <em class="parameter"><code>flags</code></em> make some assumptions, that can conflict
+with your own signal handlers. For instance <a class="link" href="gtk-Drag-and-Drop.html#GTK-DEST-DEFAULT-DROP:CAPS"><span class="type">GTK_DEST_DEFAULT_DROP</span></a> causes
+invokations of <a
+href="/usr/share/gtk-doc/html/gdk/gdk-Drag-and-Drop.html#gdk-drag-status"
+><code class="function">gdk_drag_status()</code></a> in the context of <span class="type">"drag-motion"</span>,
+and invokations of <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-finish" title="gtk_drag_finish ()"><code class="function">gtk_drag_finish()</code></a> in <span class="type">"drag-data-received"</span>.
+Especially the later is dramatic, when your own <span class="type">"drag-motion"</span>
+handler calls <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-get-data" title="gtk_drag_get_data ()"><code class="function">gtk_drag_get_data()</code></a> to inspect the dragged data.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
-<td>the flags that specify what actions GTK+ should take
- on behalf of a widget for drops onto that widget. The <em class="parameter"><code>targets</code></em>
- and <em class="parameter"><code>actions</code></em> fields only are used if <a class="link" href="gtk-Drag-and-Drop.html#GTK-DEST-DEFAULT-MOTION:CAPS"><code class="literal">GTK_DEST_DEFAULT_MOTION</code></a>
- or <a class="link" href="gtk-Drag-and-Drop.html#GTK-DEST-DEFAULT-DROP:CAPS"><code class="literal">GTK_DEST_DEFAULT_DROP</code></a> are given.
+<td> which types of default drag behavior to use
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>targets</code></em> :</span></p></td>
-<td>a pointer to an array of <a class="link" href="gtk-Selections.html#GtkTargetEntry" title="GtkTargetEntry"><span class="type">GtkTargetEntry</span></a>s indicating
- the drop types that this widget will accept.
+<td> a pointer to an array of <a class="link" href="gtk-Selections.html#GtkTargetEntry" title="GtkTargetEntry"><span class="type">GtkTargetEntry</span></a>s indicating
+the drop types that this <em class="parameter"><code>widget</code></em> will accept. Later you can access the list
+with <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-dest-get-target-list" title="gtk_drag_dest_get_target_list ()"><code class="function">gtk_drag_dest_get_target_list()</code></a> and <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-dest-find-target" title="gtk_drag_dest_find_target ()"><code class="function">gtk_drag_dest_find_target()</code></a>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>n_targets</code></em> :</span></p></td>
-<td>the number of entries in <em class="parameter"><code>targets</code></em>.
+<td> the number of entries in <em class="parameter"><code>targets</code></em>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>actions</code></em> :</span></p></td>
-<td>a bitmask of possible actions for a drop onto this
- widget.
-
-
+<td> a bitmask of possible actions for a drop onto this <em class="parameter"><code>widget</code></em>.
 </td>
 </tr>
 </tbody>

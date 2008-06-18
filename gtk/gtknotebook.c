@@ -565,9 +565,9 @@ gtk_notebook_class_init (GtkNotebookClass *class)
 				   g_param_spec_int ("page",
  						     P_("Page"),
  						     P_("The index of the current page"),
- 						     0,
+ 						     -1,
  						     G_MAXINT,
- 						     0,
+ 						     -1,
  						     GTK_PARAM_READWRITE));
   g_object_class_install_property (gobject_class,
 				   PROP_TAB_POS,
@@ -1528,6 +1528,7 @@ gtk_notebook_set_property (GObject         *object,
       gtk_notebook_set_group (notebook, g_value_get_pointer (value));
       break;
     default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
 }
@@ -3653,7 +3654,7 @@ gtk_notebook_get_child_property (GtkContainer    *container,
     case CHILD_PROP_TAB_LABEL:
       label = gtk_notebook_get_tab_label (notebook, child);
 
-      if (label && GTK_IS_LABEL (label))
+      if (GTK_IS_LABEL (label))
 	g_value_set_string (value, GTK_LABEL (label)->label);
       else
 	g_value_set_string (value, NULL);
@@ -3661,7 +3662,7 @@ gtk_notebook_get_child_property (GtkContainer    *container,
     case CHILD_PROP_MENU_LABEL:
       label = gtk_notebook_get_menu_label (notebook, child);
 
-      if (label && GTK_IS_LABEL (label))
+      if (GTK_IS_LABEL (label))
 	g_value_set_string (value, GTK_LABEL (label)->label);
       else
 	g_value_set_string (value, NULL);
@@ -4322,9 +4323,11 @@ gtk_notebook_real_remove (GtkNotebook *notebook,
   priv = GTK_NOTEBOOK_GET_PRIVATE (notebook);
   destroying = GTK_OBJECT_FLAGS (notebook) & GTK_IN_DESTRUCTION;
   
-  next_list = gtk_notebook_search_page (notebook, list, STEP_PREV, TRUE);
+  next_list = gtk_notebook_search_page (notebook, list, STEP_NEXT, TRUE);
   if (!next_list)
-    next_list = gtk_notebook_search_page (notebook, list, STEP_NEXT, TRUE);
+    next_list = gtk_notebook_search_page (notebook, list, STEP_PREV, TRUE);
+
+  notebook->children = g_list_remove_link (notebook->children, list);
 
   if (notebook->cur_page == list->data)
     { 
@@ -4358,7 +4361,7 @@ gtk_notebook_real_remove (GtkNotebook *notebook,
       if (destroying)
         gtk_widget_destroy (tab_label);
       g_object_unref (tab_label);
-    }
+    } 
 
   if (notebook->menu)
     {
@@ -4369,7 +4372,6 @@ gtk_notebook_real_remove (GtkNotebook *notebook,
   if (!page->default_menu)
     g_object_unref (page->menu_label);
   
-  notebook->children = g_list_remove_link (notebook->children, list);
   g_list_free (list);
 
   if (page->last_focus_child)
@@ -4425,9 +4427,9 @@ gtk_notebook_update_labels (GtkNotebook *notebook)
 	}
       if (notebook->menu && page->default_menu)
 	{
-	  if (page->tab_label && GTK_IS_LABEL (page->tab_label))
+	  if (GTK_IS_LABEL (page->tab_label))
 	    gtk_label_set_text (GTK_LABEL (page->menu_label),
-			   GTK_LABEL (page->tab_label)->label);
+                                GTK_LABEL (page->tab_label)->label);
 	  else
 	    gtk_label_set_text (GTK_LABEL (page->menu_label), string);
 	}
@@ -5927,7 +5929,7 @@ gtk_notebook_menu_item_create (GtkNotebook *notebook,
   page = list->data;
   if (page->default_menu)
     {
-      if (page->tab_label && GTK_IS_LABEL (page->tab_label))
+      if (GTK_IS_LABEL (page->tab_label))
 	page->menu_label = gtk_label_new (GTK_LABEL (page->tab_label)->label);
       else
 	page->menu_label = gtk_label_new ("");
@@ -6979,7 +6981,7 @@ gtk_notebook_get_tab_label_text (GtkNotebook *notebook,
 
   tab_label = gtk_notebook_get_tab_label (notebook, child);
 
-  if (tab_label && GTK_IS_LABEL (tab_label))
+  if (GTK_IS_LABEL (tab_label))
     return gtk_label_get_text (GTK_LABEL (tab_label));
   else
     return NULL;
@@ -7114,7 +7116,7 @@ gtk_notebook_get_menu_label_text (GtkNotebook *notebook,
  
   menu_label = gtk_notebook_get_menu_label (notebook, child);
 
-  if (menu_label && GTK_IS_LABEL (menu_label))
+  if (GTK_IS_LABEL (menu_label))
     return gtk_label_get_text (GTK_LABEL (menu_label));
   else
     return NULL;
@@ -7524,8 +7526,7 @@ gtk_notebook_get_tab_detachable (GtkNotebook *notebook,
  * destination and accept the target "GTK_NOTEBOOK_TAB". The notebook
  * will fill the selection with a GtkWidget** pointing to the child
  * widget that corresponds to the dropped tab.
- *
- * <informalexample><programlisting>
+ * |[
  *  static void
  *  on_drop_zone_drag_data_received (GtkWidget        *widget,
  *                                   GdkDragContext   *context,
@@ -7545,7 +7546,7 @@ gtk_notebook_get_tab_detachable (GtkNotebook *notebook,
  *    process_widget (*child);
  *    gtk_container_remove (GTK_CONTAINER (notebook), *child);
  *  }
- * </programlisting></informalexample>
+ * ]|
  *
  * If you want a notebook to accept drags from other widgets,
  * you will have to set your own DnD code to do it.

@@ -111,6 +111,13 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-icon-source-
 
 
 
+<refsect1 id="gtk-Themeable-Stock-Images.implemented-interfaces" role="impl_interfaces">
+<title role="impl_interfaces.title">Implemented Interfaces</title>
+<para>
+GtkIconFactory implements
+ <link linkend="GtkBuildable">GtkBuildable</link>.</para>
+
+</refsect1>
 
 
 
@@ -146,6 +153,77 @@ will display the icon, or the convenience function
 <link linkend="gtk-widget-render-icon"><function>gtk_widget_render_icon()</function></link>. These functions take the theme into account when
 looking up the icon to use for a given stock ID.
 </para>
+
+<refsect2 id="GtkIconFactory-BUILDER-UI"><title>GtkIconFactory as GtkBuildable</title>
+<para>
+GtkIconFactory supports a custom &lt;sources&gt; element, which 
+can contain multiple &lt;source&gt; elements. 
+The following attributes are allowed:
+<variablelist>
+
+<varlistentry>
+<term>stock-id</term>
+<listitem><para>The stock id of the source, a string.
+This attribute is mandatory</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>filename</term>
+<listitem><para>The filename of the source, a string.
+This attribute is optional</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>icon-name</term>
+<listitem><para>The icon name for the source, a string.
+This attribute is optional.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>size</term>
+<listitem><para>Size of the icon, a <link linkend="GtkIconSize"><type>GtkIconSize</type></link> enum value. 
+This attribute is optional.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>direction</term>
+<listitem><para>Direction of the source, a <link linkend="GtkTextDirection"><type>GtkTextDirection</type></link> enum value.
+This attribute is optional.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>state</term>
+<listitem><para>State of the source, a <link linkend="GtkStateType"><type>GtkStateType</type></link> enum value.
+This attribute is optional.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</para>
+<example>
+<title>A <structname>GtkIconFactory</structname> UI definition fragment.</title>
+<programlisting><![CDATA[
+<object class="GtkIconFactory" id="iconfactory1">
+  <sources>
+    <source stock-id="apple-red" filename="apple-red.png"/>
+  </sources>
+</object>
+<object class="GtkWindow" id="window1">
+  <child>
+    <object class="GtkButton" id="apple_button">
+      <property name="label">apple-red</property>
+      <property name="use-stock">True</property>
+    </object>
+  </child>
+</object>
+]]></programlisting>
+</example>
+</refsect2>
 </refsect1>
 
 <refsect1 id="gtk-Themeable-Stock-Images.details" role="details">

@@ -32,6 +32,15 @@
 <link linkend="GdkPixbufFormat">GdkPixbufFormat</link>*    <link linkend="gdk-pixbuf-get-file-info">gdk_pixbuf_get_file_info</link>            (const <link linkend="gchar">gchar</link> *filename,
                                                          <link linkend="gint">gint</link> *width,
                                                          <link linkend="gint">gint</link> *height);
+<link linkend="GdkPixbuf">GdkPixbuf</link>*          <link linkend="gdk-pixbuf-new-from-stream">gdk_pixbuf_new_from_stream</link>          (<link linkend="GInputStream">GInputStream</link> *stream,
+                                                         <link linkend="GCancellable">GCancellable</link> *cancellable,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="GdkPixbuf">GdkPixbuf</link>*          <link linkend="gdk-pixbuf-new-from-stream-at-scale">gdk_pixbuf_new_from_stream_at_scale</link> (<link linkend="GInputStream">GInputStream</link> *stream,
+                                                         <link linkend="gint">gint</link> width,
+                                                         <link linkend="gint">gint</link> height,
+                                                         <link linkend="gboolean">gboolean</link> preserve_aspect_ratio,
+                                                         <link linkend="GCancellable">GCancellable</link> *cancellable,
+                                                         <link linkend="GError">GError</link> **error);
 </synopsis>
 </refsynopsisdiv>
 
@@ -194,6 +203,100 @@ Parses an image file far enough to determine its format and size.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+</para></refsect2>
+<refsect2 id="gdk-pixbuf-new-from-stream" role="function" condition="since:2.14">
+<title>gdk_pixbuf_new_from_stream ()</title>
+<indexterm zone="gdk-pixbuf-new-from-stream" role="2.14"><primary>gdk_pixbuf_new_from_stream</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link>*          gdk_pixbuf_new_from_stream          (<link linkend="GInputStream">GInputStream</link> *stream,
+                                                         <link linkend="GCancellable">GCancellable</link> *cancellable,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Creates a new pixbuf by loading an image from an input stream.  
+</para>
+<para>
+The file format is detected automatically. If <link linkend="NULL:CAPS"><literal>NULL</literal></link> is returned, then 
+<parameter>error</parameter> will be set. The <parameter>cancellable</parameter> can be used to abort the operation
+from another thread. If the operation was cancelled, the error 
+<link linkend="GIO-ERROR-CANCELLED:CAPS"><literal>GIO_ERROR_CANCELLED</literal></link> will be returned. Other possible errors are in 
+the <link linkend="GDK-PIXBUF-ERROR:CAPS"><type>GDK_PIXBUF_ERROR</type></link> and <link linkend="G-IO-ERROR:CAPS"><literal>G_IO_ERROR</literal></link> domains. 
+</para>
+<para>
+The stream is not closed.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>stream</parameter>&nbsp;:</term>
+<listitem><simpara>  a <link linkend="GInputStream"><type>GInputStream</type></link> to load the pixbuf from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>cancellable</parameter>&nbsp;:</term>
+<listitem><simpara> optional <link linkend="GCancellable"><type>GCancellable</type></link> object, <link linkend="NULL:CAPS"><literal>NULL</literal></link> to ignore
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> Return location for an error
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly-created pixbuf, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if any of several error 
+conditions occurred: the file could not be opened, the image format is 
+not supported, there was not enough memory to allocate the image buffer, 
+the stream contained invalid data, or the operation was cancelled.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gdk-pixbuf-new-from-stream-at-scale" role="function" condition="since:2.14">
+<title>gdk_pixbuf_new_from_stream_at_scale ()</title>
+<indexterm zone="gdk-pixbuf-new-from-stream-at-scale" role="2.14"><primary>gdk_pixbuf_new_from_stream_at_scale</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link>*          gdk_pixbuf_new_from_stream_at_scale (<link linkend="GInputStream">GInputStream</link> *stream,
+                                                         <link linkend="gint">gint</link> width,
+                                                         <link linkend="gint">gint</link> height,
+                                                         <link linkend="gboolean">gboolean</link> preserve_aspect_ratio,
+                                                         <link linkend="GCancellable">GCancellable</link> *cancellable,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Creates a new pixbuf by loading an image from an input stream.  
+</para>
+<para>
+The file format is detected automatically. If <link linkend="NULL:CAPS"><literal>NULL</literal></link> is returned, then 
+<parameter>error</parameter> will be set. The <parameter>cancellable</parameter> can be used to abort the operation
+from another thread. If the operation was cancelled, the error 
+<link linkend="GIO-ERROR-CANCELLED:CAPS"><literal>GIO_ERROR_CANCELLED</literal></link> will be returned. Other possible errors are in 
+the <link linkend="GDK-PIXBUF-ERROR:CAPS"><type>GDK_PIXBUF_ERROR</type></link> and <link linkend="G-IO-ERROR:CAPS"><literal>G_IO_ERROR</literal></link> domains. 
+</para>
+<para>
+The image will be scaled to fit in the requested size, optionally 
+preserving the image's aspect ratio. When preserving the aspect ratio, 
+a <parameter>width</parameter> of -1 will cause the image to be scaled to the exact given 
+height, and a <parameter>height</parameter> of -1 will cause the image to be scaled to the 
+exact given width. When not preserving aspect ratio, a <parameter>width</parameter> or 
+<parameter>height</parameter> of -1 means to not scale the image at all in that dimension.
+</para>
+<para>
+The stream is not closed.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>stream</parameter>&nbsp;:</term>
+<listitem><simpara>  a <link linkend="GInputStream"><type>GInputStream</type></link> to load the pixbuf from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>width</parameter>&nbsp;:</term>
+<listitem><simpara> The width the image should have or -1 to not constrain the width
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>height</parameter>&nbsp;:</term>
+<listitem><simpara> The height the image should have or -1 to not constrain the height
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>preserve_aspect_ratio</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to preserve the image's aspect ratio
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>cancellable</parameter>&nbsp;:</term>
+<listitem><simpara> optional <link linkend="GCancellable"><type>GCancellable</type></link> object, <link linkend="NULL:CAPS"><literal>NULL</literal></link> to ignore
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> Return location for an error
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly-created pixbuf, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if any of several error 
+conditions occurred: the file could not be opened, the image format is 
+not supported, there was not enough memory to allocate the image buffer, 
+the stream contained invalid data, or the operation was cancelled.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 
 </refsect1>

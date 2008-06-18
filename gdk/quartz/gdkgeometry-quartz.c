@@ -38,6 +38,10 @@ gdk_window_scroll (GdkWindow *window,
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
+  /* Move the current invalid region */
+  if (private->update_area)
+    gdk_region_offset (private->update_area, dx, dy);
+
   visible_nsrect = [impl->view visibleRect];
 
   visible_rect.x = visible_nsrect.origin.x;
@@ -79,10 +83,10 @@ gdk_window_scroll (GdkWindow *window,
 }
 
 void
-gdk_window_move_region (GdkWindow *window,
-			GdkRegion *region,
-			gint       dx,
-			gint       dy)
+gdk_window_move_region (GdkWindow       *window,
+                        const GdkRegion *region,
+                        gint             dx,
+                        gint             dy)
 {
   /* FIXME: Implement */
 }

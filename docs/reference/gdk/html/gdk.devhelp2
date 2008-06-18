@@ -32,6 +32,8 @@
       <sub name="Pango Interaction" link="gdk-Pango-Interaction.html"/>
       <sub name="Cairo Interaction" link="gdk-Cairo-Interaction.html"/>
       <sub name="X Window System Interaction" link="gdk-X-Window-System-Interaction.html"/>
+      <sub name="Application launching" link="gdk-Application-launching.html"/>
+      <sub name="Testing" link="gdk-Testing.html"/>
     </sub>
     <sub name="Index" link="ix01.html"/>
     <sub name="Index of deprecated symbols" link="ix02.html"/>
@@ -41,6 +43,7 @@
     <sub name="Index of new symbols in 2.8" link="ix06.html"/>
     <sub name="Index of new symbols in 2.10" link="ix07.html"/>
     <sub name="Index of new symbols in 2.12" link="ix08.html"/>
+    <sub name="Index of new symbols in 2.14" link="ix09.html"/>
   </chapters>
   <functions>
     <keyword type="function" name="gdk_init ()" link="gdk-General.html#gdk-init"/>
@@ -146,6 +149,9 @@
     <keyword type="function" name="gdk_screen_get_monitor_geometry ()" link="GdkScreen.html#gdk-screen-get-monitor-geometry" since="2.2"/>
     <keyword type="function" name="gdk_screen_get_monitor_at_point ()" link="GdkScreen.html#gdk-screen-get-monitor-at-point" since="2.2"/>
     <keyword type="function" name="gdk_screen_get_monitor_at_window ()" link="GdkScreen.html#gdk-screen-get-monitor-at-window" since="2.2"/>
+    <keyword type="function" name="gdk_screen_get_monitor_height_mm ()" link="GdkScreen.html#gdk-screen-get-monitor-height-mm" since="2.14"/>
+    <keyword type="function" name="gdk_screen_get_monitor_width_mm ()" link="GdkScreen.html#gdk-screen-get-monitor-width-mm" since="2.14"/>
+    <keyword type="function" name="gdk_screen_get_monitor_plug_name ()" link="GdkScreen.html#gdk-screen-get-monitor-plug-name" since="2.14"/>
     <keyword type="function" name="gdk_screen_broadcast_client_message ()" link="GdkScreen.html#gdk-screen-broadcast-client-message" since="2.2"/>
     <keyword type="function" name="gdk_screen_get_setting ()" link="GdkScreen.html#gdk-screen-get-setting" since="2.2"/>
     <keyword type="function" name="gdk_screen_get_font_options ()" link="GdkScreen.html#gdk-screen-get-font-options" since="2.10"/>
@@ -160,6 +166,7 @@
     <keyword type="" name="The &quot;font-options&quot; property" link="GdkScreen.html#GdkScreen--font-options"/>
     <keyword type="" name="The &quot;resolution&quot; property" link="GdkScreen.html#GdkScreen--resolution"/>
     <keyword type="" name="The &quot;composited-changed&quot; signal" link="GdkScreen.html#GdkScreen-composited-changed"/>
+    <keyword type="" name="The &quot;monitors-changed&quot; signal" link="GdkScreen.html#GdkScreen-monitors-changed"/>
     <keyword type="" name="The &quot;size-changed&quot; signal" link="GdkScreen.html#GdkScreen-size-changed"/>
     <keyword type="struct" name="GdkPoint" link="gdk-Points-Rectangles-and-Regions.html#GdkPoint"/>
     <keyword type="struct" name="GdkRectangle" link="gdk-Points-Rectangles-and-Regions.html#GdkRectangle"/>
@@ -544,6 +551,9 @@
     <keyword type="function" name="gdk_get_default_root_window ()" link="gdk-Windows.html#gdk-get-default-root-window"/>
     <keyword type="struct" name="GdkPointerHooks" link="gdk-Windows.html#GdkPointerHooks"/>
     <keyword type="function" name="gdk_set_pointer_hooks ()" link="gdk-Windows.html#gdk-set-pointer-hooks"/>
+    <keyword type="struct" name="GdkWindowRedirect" link="gdk-Windows.html#GdkWindowRedirect"/>
+    <keyword type="function" name="gdk_window_redirect_to_drawable ()" link="gdk-Windows.html#gdk-window-redirect-to-drawable"/>
+    <keyword type="function" name="gdk_window_remove_redirection ()" link="gdk-Windows.html#gdk-window-remove-redirection"/>
     <keyword type="enum" name="enum GdkEventType" link="gdk-Events.html#GdkEventType"/>
     <keyword type="enum" name="enum GdkEventMask" link="gdk-Events.html#GdkEventMask"/>
     <keyword type="macro" name="GDK_CURRENT_TIME" link="gdk-Events.html#GDK-CURRENT-TIME:CAPS"/>
@@ -801,6 +811,7 @@
     <keyword type="function" name="gdk_net_wm_supports ()" link="gdk-X-Window-System-Interaction.html#gdk-net-wm-supports"/>
     <keyword type="function" name="gdk_x11_screen_supports_net_wm_hint ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-screen-supports-net-wm-hint" since="2.2"/>
     <keyword type="function" name="gdk_x11_screen_get_window_manager_name ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-screen-get-window-manager-name" since="2.2"/>
+    <keyword type="function" name="gdk_x11_screen_get_monitor_output ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-screen-get-monitor-output" since="2.14"/>
     <keyword type="function" name="gdk_x11_screen_lookup_visual ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-screen-lookup-visual" since="2.2"/>
     <keyword type="function" name="gdk_x11_window_set_user_time ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-window-set-user-time" since="2.6"/>
     <keyword type="function" name="gdk_x11_window_move_to_current_desktop ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-window-move-to-current-desktop" since="2.8"/>
@@ -842,5 +853,16 @@
     <keyword type="function" name="gdk_x11_get_xatom_by_name_for_display ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-get-xatom-by-name-for-display" since="2.2"/>
     <keyword type="function" name="gdk_x11_get_xatom_name ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-get-xatom-name"/>
     <keyword type="function" name="gdk_x11_get_xatom_name_for_display ()" link="gdk-X-Window-System-Interaction.html#gdk-x11-get-xatom-name-for-display" since="2.2"/>
+    <keyword type="typedef" name="GdkAppLaunchContext" link="gdk-Application-launching.html#GdkAppLaunchContext"/>
+    <keyword type="function" name="gdk_app_launch_context_new ()" link="gdk-Application-launching.html#gdk-app-launch-context-new" since="2.14"/>
+    <keyword type="function" name="gdk_app_launch_context_set_display ()" link="gdk-Application-launching.html#gdk-app-launch-context-set-display" since="2.14"/>
+    <keyword type="function" name="gdk_app_launch_context_set_screen ()" link="gdk-Application-launching.html#gdk-app-launch-context-set-screen" since="2.14"/>
+    <keyword type="function" name="gdk_app_launch_context_set_desktop ()" link="gdk-Application-launching.html#gdk-app-launch-context-set-desktop" since="2.14"/>
+    <keyword type="function" name="gdk_app_launch_context_set_timestamp ()" link="gdk-Application-launching.html#gdk-app-launch-context-set-timestamp" since="2.14"/>
+    <keyword type="function" name="gdk_app_launch_context_set_icon ()" link="gdk-Application-launching.html#gdk-app-launch-context-set-icon" since="2.14"/>
+    <keyword type="function" name="gdk_app_launch_context_set_icon_name ()" link="gdk-Application-launching.html#gdk-app-launch-context-set-icon-name" since="2.14"/>
+    <keyword type="function" name="gdk_test_render_sync ()" link="gdk-Testing.html#gdk-test-render-sync" since="2.14"/>
+    <keyword type="function" name="gdk_test_simulate_button ()" link="gdk-Testing.html#gdk-test-simulate-button" since="2.14"/>
+    <keyword type="function" name="gdk_test_simulate_key ()" link="gdk-Testing.html#gdk-test-simulate-key" since="2.14"/>
   </functions>
 </book>

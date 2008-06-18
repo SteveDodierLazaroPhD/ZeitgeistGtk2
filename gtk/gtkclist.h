@@ -22,7 +22,7 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 #ifndef GTK_DISABLE_DEPRECATED
@@ -38,7 +38,6 @@
 #include <gtk/gtkhscrollbar.h>
 #include <gtk/gtkvscrollbar.h>
 #include <gtk/gtkenums.h>
-
 
 G_BEGIN_DECLS
 
@@ -56,7 +55,7 @@ enum {
   GTK_CLIST_USE_DRAG_ICONS      = 1 <<  8,
   GTK_CLIST_DRAW_DRAG_LINE      = 1 <<  9,
   GTK_CLIST_DRAW_DRAG_RECT      = 1 << 10
-}; 
+};
 
 /* cell types */
 typedef enum
@@ -156,7 +155,7 @@ struct _GtkCList
 
   guint freeze_count;
   
-  /* allocation rectangle after the conatiner_border_width
+  /* allocation rectangle after the container_border_width
    * and the width of the shadow border */
   GdkRectangle internal_allocation;
   

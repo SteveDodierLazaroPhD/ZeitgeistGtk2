@@ -22,19 +22,16 @@
 #define __GTK_PRINT_BACKEND_H__
 
 /* This is a "semi-private" header; it is meant only for
- * alternate GtkPrintDialog backend modules; no stability guarantees 
+ * alternate GtkPrintDialog backend modules; no stability guarantees
  * are made at this point
  */
 #ifndef GTK_PRINT_BACKEND_ENABLE_UNSUPPORTED
 #error "GtkPrintBackend is not supported API for general use"
 #endif
 
-#include <glib-object.h>
-#include <cairo.h>
-
-#include "gtkprintsettings.h"
-#include "gtkprinteroptionset.h"
-#include "gtkprintjob.h"
+#include <gtk/gtk.h>
+#include <gtk/gtkunixprint.h>
+#include <gtk/gtkprinteroptionset.h>
 
 G_BEGIN_DECLS
 
@@ -99,6 +96,7 @@ struct _GtkPrintBackendClass
 							      GtkPrintSettings    *settings,
 							      GtkPageSetup        *page_setup);
   GList  *              (*printer_list_papers)               (GtkPrinter          *printer);
+  GtkPageSetup *        (*printer_get_default_page_size)     (GtkPrinter          *printer);
   void                  (*printer_get_hard_margins)          (GtkPrinter          *printer,
 							      double              *top,
 							      double              *bottom,
@@ -123,7 +121,6 @@ struct _GtkPrintBackendClass
   void (*_gtk_reserved4) (void);
   void (*_gtk_reserved5) (void);
   void (*_gtk_reserved6) (void);
-  void (*_gtk_reserved7) (void);
 };
 
 GType   gtk_print_backend_get_type       (void) G_GNUC_CONST;

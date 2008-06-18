@@ -516,10 +516,10 @@ Typical usage of this function might be:
   switch (result)
     {
       case GTK_RESPONSE_ACCEPT:
-         do_application_specific_something (<!-- -->);
+         do_application_specific_something ();
          break;
       default:
-         do_nothing_since_dialog_was_cancelled (<!-- -->);
+         do_nothing_since_dialog_was_cancelled ();
          break;
     }
   gtk_widget_destroy (dialog);
@@ -846,7 +846,11 @@ This function is for use by language bindings.</para>
 <title role="property_details.title">Property Details</title>
 <refsect2 id="GtkDialog--has-separator"><title>The <literal>&quot;has-separator&quot;</literal> property</title>
 <indexterm zone="GtkDialog--has-separator"><primary>GtkDialog:has-separator</primary></indexterm><programlisting>  &quot;has-separator&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
-<para>The dialog has a separator bar above its buttons.</para><para>Default value: TRUE</para>
+<para>
+When <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, the dialog has a separator bar above its buttons.</para>
+<para>
+
+</para><para>Default value: TRUE</para>
 </refsect2>
 
 </refsect1>
@@ -873,33 +877,38 @@ This function is for use by language bindings.</para>
 <refsect1 id="GtkDialog.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2 id="GtkDialog-close"><title>The <literal>&quot;close&quot;</literal> signal</title>
-<indexterm zone="GtkDialog-close"><primary>GtkDialog::close</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkDialog">GtkDialog</link> *dialog,
+<indexterm zone="GtkDialog-close"><primary>GtkDialog::close</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkDialog">GtkDialog</link> *arg0,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last / Action</programlisting>
+<para>
+The ::close signal is a 
+<link linkend="keybinding-signals">keybinding signal</link>
+which getrs emitted when the user uses a keybinding to close
+the dialog.
+</para>
+<para>
+The default binding for this signal is the Escape key.</para>
 <para>
 
 </para><variablelist role="params">
-<varlistentry><term><parameter>dialog</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
-
-</simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkDialog-response"><title>The <literal>&quot;response&quot;</literal> signal</title>
 <indexterm zone="GtkDialog-response"><primary>GtkDialog::response</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkDialog">GtkDialog</link> *dialog,
-                                                        <link linkend="gint">gint</link>       arg1,
-                                                        <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
+                                                        <link linkend="gint">gint</link>       response_id,
+                                                        <link linkend="gpointer">gpointer</link>   user_data)        : Run Last</programlisting>
 <para>
-Emitted when an action widget is clicked, the dialog receives a delete event, or
-the application programmer calls <link linkend="gtk-dialog-response"><function>gtk_dialog_response()</function></link>. On a delete event, the
-response ID is <link linkend="GTK-RESPONSE-NONE:CAPS"><type>GTK_RESPONSE_NONE</type></link>. Otherwise, it depends on which action widget
-was clicked.
+Emitted when an action widget is clicked, the dialog receives a 
+delete event, or the application programmer calls <link linkend="gtk-dialog-response"><function>gtk_dialog_response()</function></link>. 
+On a delete event, the response ID is <link linkend="GTK-RESPONSE-DELETE-EVENT:CAPS"><type>GTK_RESPONSE_DELETE_EVENT</type></link>. 
+Otherwise, it depends on which action widget was clicked.</para>
+<para>
+
 </para><variablelist role="params">
 <varlistentry><term><parameter>dialog</parameter>&nbsp;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object on which the signal is emitted
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
-<listitem><simpara>the response ID
-
+<varlistentry><term><parameter>response_id</parameter>&nbsp;:</term>
+<listitem><simpara> the response ID
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>

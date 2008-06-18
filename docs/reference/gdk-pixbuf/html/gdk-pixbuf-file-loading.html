@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>File Loading</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="The gdk-pixbuf Library">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="The gdk-pixbuf Library">
 <link rel="up" href="rn01.html" title="API Reference">
 <link rel="prev" href="gdk-pixbuf-refcounting.html" title="Reference Counting and Memory Mangement">
 <link rel="next" href="gdk-pixbuf-file-saving.html" title="File saving">
@@ -18,6 +18,7 @@
 <link rel="index" href="ix04.html" title="Index of new symbols in 2.4">
 <link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
+<link rel="index" href="ix07.html" title="Index of new symbols in 2.14">
 <link rel="appendix" href="apa.html" title="Appendix A. Porting applications from Imlib to gdk-pixbuf">
 <link rel="appendix" href="license.html" title="Appendix B. License">
 </head>
@@ -27,7 +28,7 @@
 <td><a accesskey="p" href="gdk-pixbuf-refcounting.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="rn01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">The <span class="application">gdk-pixbuf</span> Library</th>
+<th width="100%" align="center">The gdk-pixbuf Library</th>
 <td><a accesskey="n" href="gdk-pixbuf-file-saving.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts"><nobr><a href="#gdk-pixbuf-file-loading.synopsis" class="shortcut">Top</a>
@@ -77,6 +78,33 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> *height);
+<a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf">GdkPixbuf</a>*          <a class="link" href="gdk-pixbuf-file-loading.html#gdk-pixbuf-new-from-stream" title="gdk_pixbuf_new_from_stream ()">gdk_pixbuf_new_from_stream</a>          (<a
+href="/usr/share/gtk-doc/html/gio/GInputStream.html"
+>GInputStream</a> *stream,
+                                                         <a
+href="/usr/share/gtk-doc/html/gio/GCancellable.html"
+>GCancellable</a> *cancellable,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);
+<a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf">GdkPixbuf</a>*          <a class="link" href="gdk-pixbuf-file-loading.html#gdk-pixbuf-new-from-stream-at-scale" title="gdk_pixbuf_new_from_stream_at_scale ()">gdk_pixbuf_new_from_stream_at_scale</a> (<a
+href="/usr/share/gtk-doc/html/gio/GInputStream.html"
+>GInputStream</a> *stream,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> width,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> height,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> preserve_aspect_ratio,
+                                                         <a
+href="/usr/share/gtk-doc/html/gio/GCancellable.html"
+>GCancellable</a> *cancellable,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -333,6 +361,182 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tbody>
 </table></div>
 <p class="since">Since  2.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gdk-pixbuf-new-from-stream"></a><h3>gdk_pixbuf_new_from_stream ()</h3>
+<pre class="programlisting"><a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf">GdkPixbuf</a>*          gdk_pixbuf_new_from_stream          (<a
+href="/usr/share/gtk-doc/html/gio/GInputStream.html"
+>GInputStream</a> *stream,
+                                                         <a
+href="/usr/share/gtk-doc/html/gio/GCancellable.html"
+>GCancellable</a> *cancellable,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);</pre>
+<p>
+Creates a new pixbuf by loading an image from an input stream.  
+</p>
+<p>
+The file format is detected automatically. If <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> is returned, then 
+<em class="parameter"><code>error</code></em> will be set. The <em class="parameter"><code>cancellable</code></em> can be used to abort the operation
+from another thread. If the operation was cancelled, the error 
+<code class="literal">GIO_ERROR_CANCELLED</code> will be returned. Other possible errors are in 
+the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a> and <a
+href="/usr/share/gtk-doc/html/gio/gio-GIOError.html#G-IO-ERROR:CAPS"
+><code class="literal">G_IO_ERROR</code></a> domains. 
+</p>
+<p>
+The stream is not closed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
+<td>  a <a
+href="/usr/share/gtk-doc/html/gio/GInputStream.html"
+><span class="type">GInputStream</span></a> to load the pixbuf from
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> optional <a
+href="/usr/share/gtk-doc/html/gio/GCancellable.html"
+><span class="type">GCancellable</span></a> object, <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to ignore
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> Return location for an error
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A newly-created pixbuf, or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if any of several error 
+conditions occurred: the file could not be opened, the image format is 
+not supported, there was not enough memory to allocate the image buffer, 
+the stream contained invalid data, or the operation was cancelled.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gdk-pixbuf-new-from-stream-at-scale"></a><h3>gdk_pixbuf_new_from_stream_at_scale ()</h3>
+<pre class="programlisting"><a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf">GdkPixbuf</a>*          gdk_pixbuf_new_from_stream_at_scale (<a
+href="/usr/share/gtk-doc/html/gio/GInputStream.html"
+>GInputStream</a> *stream,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> width,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> height,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> preserve_aspect_ratio,
+                                                         <a
+href="/usr/share/gtk-doc/html/gio/GCancellable.html"
+>GCancellable</a> *cancellable,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+>GError</a> **error);</pre>
+<p>
+Creates a new pixbuf by loading an image from an input stream.  
+</p>
+<p>
+The file format is detected automatically. If <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> is returned, then 
+<em class="parameter"><code>error</code></em> will be set. The <em class="parameter"><code>cancellable</code></em> can be used to abort the operation
+from another thread. If the operation was cancelled, the error 
+<code class="literal">GIO_ERROR_CANCELLED</code> will be returned. Other possible errors are in 
+the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a> and <a
+href="/usr/share/gtk-doc/html/gio/gio-GIOError.html#G-IO-ERROR:CAPS"
+><code class="literal">G_IO_ERROR</code></a> domains. 
+</p>
+<p>
+The image will be scaled to fit in the requested size, optionally 
+preserving the image's aspect ratio. When preserving the aspect ratio, 
+a <em class="parameter"><code>width</code></em> of -1 will cause the image to be scaled to the exact given 
+height, and a <em class="parameter"><code>height</code></em> of -1 will cause the image to be scaled to the 
+exact given width. When not preserving aspect ratio, a <em class="parameter"><code>width</code></em> or 
+<em class="parameter"><code>height</code></em> of -1 means to not scale the image at all in that dimension.
+</p>
+<p>
+The stream is not closed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
+<td>  a <a
+href="/usr/share/gtk-doc/html/gio/GInputStream.html"
+><span class="type">GInputStream</span></a> to load the pixbuf from
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
+<td> The width the image should have or -1 to not constrain the width
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
+<td> The height the image should have or -1 to not constrain the height
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>preserve_aspect_ratio</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> to preserve the image's aspect ratio
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td> optional <a
+href="/usr/share/gtk-doc/html/gio/GCancellable.html"
+><span class="type">GCancellable</span></a> object, <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> to ignore
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td> Return location for an error
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A newly-created pixbuf, or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> if any of several error 
+conditions occurred: the file could not be opened, the image format is 
+not supported, there was not enough memory to allocate the image buffer, 
+the stream contained invalid data, or the operation was cancelled.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
 </p>
 </div>
 </div>

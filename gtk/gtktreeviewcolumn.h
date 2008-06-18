@@ -17,6 +17,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_TREE_VIEW_COLUMN_H__
 #define __GTK_TREE_VIEW_COLUMN_H__
 
@@ -55,14 +59,14 @@ typedef void (* GtkTreeCellDataFunc) (GtkTreeViewColumn *tree_column,
 				      GtkTreeIter       *iter,
 				      gpointer           data);
 
-  
+
 struct _GtkTreeViewColumn
 {
   GtkObject parent;
 
   GtkWidget *tree_view;
   GtkWidget *button;
-  GtkWidget *child;  
+  GtkWidget *child;
   GtkWidget *arrow;
   GtkWidget *alignment;
   GdkWindow *window;
@@ -218,7 +222,7 @@ void                    gtk_tree_view_column_cell_set_cell_data  (GtkTreeViewCol
 								  gboolean                 is_expander,
 								  gboolean                 is_expanded);
 void                    gtk_tree_view_column_cell_get_size       (GtkTreeViewColumn       *tree_column,
-								  GdkRectangle            *cell_area,
+								  const GdkRectangle      *cell_area,
 								  gint                    *x_offset,
 								  gint                    *y_offset,
 								  gint                    *width,
@@ -238,4 +242,3 @@ G_END_DECLS
 
 
 #endif /* __GTK_TREE_VIEW_COLUMN_H__ */
-

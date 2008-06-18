@@ -1,3 +1,4 @@
+#ifndef GDK_PIXBUF_DISABLE_DEPRECATED
 
 #ifndef ___gdk_pixbuf_marshal_MARSHAL_H__
 #define ___gdk_pixbuf_marshal_MARSHAL_H__
@@ -32,3 +33,4 @@ G_END_DECLS
 
 #endif /* ___gdk_pixbuf_marshal_MARSHAL_H__ */
 
+#endif /* GDK_PIXBUF_DISABLE_DEPRECATED */

@@ -41,6 +41,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-has-details">gtk_printer_has_details</link>             (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="void">void</link>                <link linkend="gtk-printer-request-details">gtk_printer_request_details</link>         (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link> <link linkend="gtk-printer-get-capabilities">gtk_printer_get_capabilities</link>       (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
+<link linkend="GtkPageSetup">GtkPageSetup</link>*       <link linkend="gtk-printer-get-default-page-size">gtk_printer_get_default_page_size</link>   (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            (<link linkend="GtkPrinterFunc">*GtkPrinterFunc</link>)                   (<link linkend="GtkPrinter">GtkPrinter</link> *printer,
                                                          <link linkend="gpointer">gpointer</link> data);
 <link linkend="void">void</link>                <link linkend="gtk-enumerate-printers">gtk_enumerate_printers</link>              (<link linkend="GtkPrinterFunc">GtkPrinterFunc</link> func,
@@ -440,6 +441,22 @@ This will return 0 unless the printer's details are available, see
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
+<refsect2 id="gtk-printer-get-default-page-size" role="function" condition="since:2.13">
+<title>gtk_printer_get_default_page_size ()</title>
+<indexterm zone="gtk-printer-get-default-page-size" role="2.13"><primary>gtk_printer_get_default_page_size</primary></indexterm><programlisting><link linkend="GtkPageSetup">GtkPageSetup</link>*       gtk_printer_get_default_page_size   (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
+<para>
+Returns default page size of <parameter>printer</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrinter"><type>GtkPrinter</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly allocated <link linkend="GtkPageSetup"><type>GtkPageSetup</type></link> with default page size of the printer.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.13
+</para></refsect2>
 <refsect2 id="GtkPrinterFunc" role="function">
 <title>GtkPrinterFunc ()</title>
 <indexterm zone="GtkPrinterFunc"><primary>GtkPrinterFunc</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            (*GtkPrinterFunc)                   (<link linkend="GtkPrinter">GtkPrinter</link> *printer,
@@ -504,7 +521,7 @@ If <parameter>func</parameter> returns <link linkend="TRUE:CAPS"><literal>TRUE</
 <para>Backend for the printer.</para></refsect2>
 <refsect2 id="GtkPrinter--icon-name"><title>The <literal>&quot;icon-name&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--icon-name"><primary>GtkPrinter:icon-name</primary></indexterm><programlisting>  &quot;icon-name&quot;                <link linkend="gchar">gchar</link>*                : Read</programlisting>
-<para>The icon name to use for the printer.</para><para>Default value: NULL</para>
+<para>The icon name to use for the printer.</para><para>Default value: ""</para>
 </refsect2>
 <refsect2 id="GtkPrinter--is-virtual"><title>The <literal>&quot;is-virtual&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--is-virtual"><primary>GtkPrinter:is-virtual</primary></indexterm><programlisting>  &quot;is-virtual&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
@@ -517,15 +534,15 @@ If <parameter>func</parameter> returns <link linkend="TRUE:CAPS"><literal>TRUE</
 </refsect2>
 <refsect2 id="GtkPrinter--location"><title>The <literal>&quot;location&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--location"><primary>GtkPrinter:location</primary></indexterm><programlisting>  &quot;location&quot;                 <link linkend="gchar">gchar</link>*                : Read</programlisting>
-<para>The location of the printer.</para><para>Default value: NULL</para>
+<para>The location of the printer.</para><para>Default value: ""</para>
 </refsect2>
 <refsect2 id="GtkPrinter--name"><title>The <literal>&quot;name&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--name"><primary>GtkPrinter:name</primary></indexterm><programlisting>  &quot;name&quot;                     <link linkend="gchar">gchar</link>*                : Read / Write / Construct Only</programlisting>
-<para>Name of the printer.</para><para>Default value: NULL</para>
+<para>Name of the printer.</para><para>Default value: ""</para>
 </refsect2>
 <refsect2 id="GtkPrinter--state-message"><title>The <literal>&quot;state-message&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--state-message"><primary>GtkPrinter:state-message</primary></indexterm><programlisting>  &quot;state-message&quot;            <link linkend="gchar">gchar</link>*                : Read</programlisting>
-<para>String giving the current state of the printer.</para><para>Default value: NULL</para>
+<para>String giving the current state of the printer.</para><para>Default value: ""</para>
 </refsect2>
 
 </refsect1>

@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkContainer</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="AbstractObjects.html" title="Abstract Base Classes">
 <link rel="prev" href="GtkButtonBox.html" title="GtkButtonBox">
 <link rel="next" href="GtkItem.html" title="GtkItem">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -412,7 +413,7 @@ contain multiple &lt;property&gt; elements that specify
 child properties for the child.
 </p>
 <div class="example">
-<a name="id3917056"></a><p class="title"><b>Example 45. Child properties in UI definitions</b></p>
+<a name="id3854033"></a><p class="title"><b>Example 47. Child properties in UI definitions</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkVBox"&gt;
   &lt;child&gt;
@@ -857,6 +858,15 @@ redrawn if any of their children changed allocation.</p>
 <pre class="programlisting">void                gtk_container_set_focus_child       (<a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child);</pre>
 <p>
+Sets, or unsets if <em class="parameter"><code>widget</code></em> is <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a>, the focused child of <em class="parameter"><code>container</code></em>.
+</p>
+<p>
+This function emits the GtkContainer::set_focus_child signal of
+<em class="parameter"><code>container</code></em>. Implementations of <a class="link" href="GtkContainer.html" title="GtkContainer"><span class="type">GtkContainer</span></a> can override the
+default behaviour by overriding the class closure of this signal.</p>
+<p>
 
 </p>
 <div class="variablelist"><table border="0">
@@ -864,7 +874,7 @@ redrawn if any of their children changed allocation.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>container</code></em> :</span></p></td>
-<td>
+<td> a <a class="link" href="GtkContainer.html" title="GtkContainer"><span class="type">GtkContainer</span></a>
 </td>
 </tr>
 <tr>
@@ -1095,12 +1105,10 @@ Gets the values of one or more child properties for <em class="parameter"><code>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
-<td> a <a
+<td> return location for the first property, followed 
+    optionally by more name/return location pairs, followed by <a
 href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>-terminated list of property names and <a
-href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
-><span class="type">GValue</span></a>*, 
-          starting with <em class="parameter"><code>first_prop_name</code></em>
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1267,12 +1275,10 @@ Gets the values of one or more child properties for <em class="parameter"><code>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>var_args</code></em> :</span></p></td>
-<td> a <a
+<td> return location for the first property, followed 
+    optionally by more name/return location pairs, followed by <a
 href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>-terminated list of property names and <a
-href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
-><span class="type">GValue</span></a>*, 
-          starting with <em class="parameter"><code>first_prop_name</code></em>.
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>

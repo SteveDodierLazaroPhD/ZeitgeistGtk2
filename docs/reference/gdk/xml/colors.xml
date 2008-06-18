@@ -30,7 +30,7 @@
                                                          <link linkend="gint">gint</link> ncolors);
 <link linkend="gint">gint</link>                <link linkend="gdk-colormap-alloc-colors">gdk_colormap_alloc_colors</link>           (<link linkend="GdkColormap">GdkColormap</link> *colormap,
                                                          <link linkend="GdkColor">GdkColor</link> *colors,
-                                                         <link linkend="gint">gint</link> ncolors,
+                                                         <link linkend="gint">gint</link> n_colors,
                                                          <link linkend="gboolean">gboolean</link> writeable,
                                                          <link linkend="gboolean">gboolean</link> best_match,
                                                          <link linkend="gboolean">gboolean</link> *success);
@@ -39,8 +39,8 @@
                                                          <link linkend="gboolean">gboolean</link> writeable,
                                                          <link linkend="gboolean">gboolean</link> best_match);
 <link linkend="void">void</link>                <link linkend="gdk-colormap-free-colors">gdk_colormap_free_colors</link>            (<link linkend="GdkColormap">GdkColormap</link> *colormap,
-                                                         <link linkend="GdkColor">GdkColor</link> *colors,
-                                                         <link linkend="gint">gint</link> ncolors);
+                                                         const <link linkend="GdkColor">GdkColor</link> *colors,
+                                                         <link linkend="gint">gint</link> n_colors);
 <link linkend="void">void</link>                <link linkend="gdk-colormap-query-color">gdk_colormap_query_color</link>            (<link linkend="GdkColormap">GdkColormap</link> *colormap,
                                                          <link linkend="gulong">gulong</link> pixel,
                                                          <link linkend="GdkColor">GdkColor</link> *result);
@@ -282,7 +282,7 @@ should not be used. See <link linkend="gdk-color-change"><function>gdk_color_cha
 <title>gdk_colormap_alloc_colors ()</title>
 <indexterm zone="gdk-colormap-alloc-colors"><primary>gdk_colormap_alloc_colors</primary></indexterm><programlisting><link linkend="gint">gint</link>                gdk_colormap_alloc_colors           (<link linkend="GdkColormap">GdkColormap</link> *colormap,
                                                          <link linkend="GdkColor">GdkColor</link> *colors,
-                                                         <link linkend="gint">gint</link> ncolors,
+                                                         <link linkend="gint">gint</link> n_colors,
                                                          <link linkend="gboolean">gboolean</link> writeable,
                                                          <link linkend="gboolean">gboolean</link> best_match,
                                                          <link linkend="gboolean">gboolean</link> *success);</programlisting>
@@ -297,7 +297,7 @@ Allocates colors from a colormap.</para>
 <listitem><simpara> The color values to allocate. On return, the pixel
    values for allocated colors will be filled in.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>ncolors</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>n_colors</parameter>&nbsp;:</term>
 <listitem><simpara> The number of colors in <parameter>colors</parameter>.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>writeable</parameter>&nbsp;:</term>
@@ -351,8 +351,8 @@ Allocates a single color from a colormap.</para>
 <refsect2 id="gdk-colormap-free-colors" role="function">
 <title>gdk_colormap_free_colors ()</title>
 <indexterm zone="gdk-colormap-free-colors"><primary>gdk_colormap_free_colors</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_colormap_free_colors            (<link linkend="GdkColormap">GdkColormap</link> *colormap,
-                                                         <link linkend="GdkColor">GdkColor</link> *colors,
-                                                         <link linkend="gint">gint</link> ncolors);</programlisting>
+                                                         const <link linkend="GdkColor">GdkColor</link> *colors,
+                                                         <link linkend="gint">gint</link> n_colors);</programlisting>
 <para>
 Frees previously allocated colors.</para>
 <para>
@@ -363,7 +363,7 @@ Frees previously allocated colors.</para>
 <varlistentry><term><parameter>colors</parameter>&nbsp;:</term>
 <listitem><simpara> the colors to free.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>ncolors</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>n_colors</parameter>&nbsp;:</term>
 <listitem><simpara> the number of colors in <parameter>colors</parameter>.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
@@ -581,17 +581,18 @@ value has already benn allocated.</para>
 <indexterm zone="gdk-color-parse"><primary>gdk_color_parse</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_color_parse                     (const <link linkend="gchar">gchar</link> *spec,
                                                          <link linkend="GdkColor">GdkColor</link> *color);</programlisting>
 <para>
-Parses a textual specification of a color and fill in
-the <structfield>red</structfield>,
-<structfield>green</structfield>, and 
-<structfield>blue</structfield> fields of a 
-<link linkend="GdkColor"><type>GdkColor</type></link> structure. The color is <emphasis>not</emphasis> 
-allocated, you must call <link linkend="gdk-colormap-alloc-color"><function>gdk_colormap_alloc_color()</function></link> yourself.
-The text string can be in any of the forms accepted
-by <function>XParseColor</function>; these include
-name for a color from <filename>rgb.txt</filename>, such as
-<literal>DarkSlateGray</literal>, or a hex specification
-such as <literal>&num;3050b2</literal> or <literal>&num;35b</literal>.</para>
+Parses a textual specification of a color and fill in the
+<structfield>red</structfield>, <structfield>green</structfield>,
+and <structfield>blue</structfield> fields of a <link linkend="GdkColor"><type>GdkColor</type></link>
+structure. The color is <emphasis>not</emphasis> allocated, you
+must call <link linkend="gdk-colormap-alloc-color"><function>gdk_colormap_alloc_color()</function></link> yourself. The string can
+either one of a large set of standard names. (Taken from the X11
+<filename>rgb.txt</filename> file), or it can be a hex value in the
+form '&num;rgb' '&num;rrggbb' '&num;rrrgggbbb' or
+'&num;rrrrggggbbbb' where 'r', 'g' and 'b' are hex digits of the
+red, green, and blue components of the color, respectively. (White
+in the four forms is '&num;fff' '&num;ffffff' '&num;fffffffff' and
+'&num;ffffffffffff')</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>spec</parameter>&nbsp;:</term>

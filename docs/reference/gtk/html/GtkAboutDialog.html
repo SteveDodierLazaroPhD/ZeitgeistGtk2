@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkAboutDialog</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="WindowWidgets.html" title="Windows">
 <link rel="prev" href="GtkWindowGroup.html" title="GtkWindowGroup">
 <link rel="next" href="GtkAssistant.html" title="GtkAssistant">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -322,6 +323,19 @@ authors, documenters and artists properties are recognized by looking for
 <code class="literal">&lt;user@host&gt;</code>, URLs are 
 recognized by looking for <code class="literal">http://url</code>, with 
 <code class="literal">url</code> extending to the next space, tab or line break.
+</p>
+<p><a name="gtk-about-dialog-hook-setup"></a>
+When setting the website and email hooks for the <a class="link" href="GtkAboutDialog.html" title="GtkAboutDialog"><span class="type">GtkAboutDialog</span></a> widget, 
+you should remember that the order is important: you should set the hook 
+functions before setting the website and email URL properties, like this:
+</p>
+<div class="informalexample"><pre class="programlisting">
+gtk_about_dialog_set_url_hook (GTK_ABOUT_DIALOG (dialog), launch_url, NULL, NULL);
+gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), app_url);
+</pre></div>
+<p>
+Otherwise the GtkAboutDialog widget will not display the website and the 
+email addresses as clickable.
 </p>
 <p>
 To make constructing a <a class="link" href="GtkAboutDialog.html" title="GtkAboutDialog"><span class="type">GtkAboutDialog</span></a> as convenient as possible, you can
@@ -875,7 +889,11 @@ Returns the website URL.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *website);</pre>
 <p>
-Sets the URL to use for the website link.</p>
+Sets the URL to use for the website link.
+</p>
+<p>
+Note that that the hook functions need to be set up
+before calling this function.</p>
 <p>
 
 </p>

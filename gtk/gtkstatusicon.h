@@ -21,6 +21,10 @@
  *      Mark McLoughlin <mark@skynet.ie>
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_STATUS_ICON_H__
 #define __GTK_STATUS_ICON_H__
 
@@ -63,7 +67,7 @@ struct _GtkStatusIconClass
   void (*__gtk_reserved3);
   void (*__gtk_reserved4);
   void (*__gtk_reserved5);
-  void (*__gtk_reserved6);  
+  void (*__gtk_reserved6);
 };
 
 GType                 gtk_status_icon_get_type           (void) G_GNUC_CONST;
@@ -117,6 +121,8 @@ gboolean              gtk_status_icon_get_geometry       (GtkStatusIcon      *st
 							  GdkScreen         **screen,
 							  GdkRectangle       *area,
 							  GtkOrientation     *orientation);
+
+guint32               gtk_status_icon_get_x11_window_id  (GtkStatusIcon      *status_icon);
 
 G_END_DECLS
 

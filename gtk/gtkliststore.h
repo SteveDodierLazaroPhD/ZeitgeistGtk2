@@ -17,6 +17,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_LIST_STORE_H__
 #define __GTK_LIST_STORE_H__
 
@@ -45,7 +49,7 @@ struct _GtkListStore
   gint stamp;
   gpointer seq;		/* head of the list */
   gpointer _gtk_reserved1;
-  GList *sort_list;	
+  GList *sort_list;
   gint n_columns;
   gint sort_column_id;
   GtkSortType order;
@@ -89,7 +93,7 @@ void          gtk_list_store_set              (GtkListStore *list_store,
 					       ...);
 void          gtk_list_store_set_valuesv      (GtkListStore *list_store,
 					       GtkTreeIter  *iter,
-					       gint         *columns, 
+					       gint         *columns,
 					       GValue       *values,
 					       gint          n_values);
 void          gtk_list_store_set_valist       (GtkListStore *list_store,
@@ -113,7 +117,7 @@ void          gtk_list_store_insert_with_values  (GtkListStore *list_store,
 void          gtk_list_store_insert_with_valuesv (GtkListStore *list_store,
 						  GtkTreeIter  *iter,
 						  gint          position,
-						  gint         *columns, 
+						  gint         *columns,
 						  GValue       *values,
 						  gint          n_values);
 void          gtk_list_store_prepend          (GtkListStore *list_store,

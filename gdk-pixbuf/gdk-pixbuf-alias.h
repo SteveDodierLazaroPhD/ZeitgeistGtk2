@@ -102,6 +102,12 @@ extern __typeof (gdk_pixbuf_new_from_file_at_scale_utf8) IA__gdk_pixbuf_new_from
 extern __typeof (gdk_pixbuf_new_from_xpm_data) IA__gdk_pixbuf_new_from_xpm_data __attribute((visibility("hidden")));
 #define gdk_pixbuf_new_from_xpm_data IA__gdk_pixbuf_new_from_xpm_data
 
+extern __typeof (gdk_pixbuf_new_from_stream) IA__gdk_pixbuf_new_from_stream __attribute((visibility("hidden")));
+#define gdk_pixbuf_new_from_stream IA__gdk_pixbuf_new_from_stream
+
+extern __typeof (gdk_pixbuf_new_from_stream_at_scale) IA__gdk_pixbuf_new_from_stream_at_scale __attribute((visibility("hidden")));
+#define gdk_pixbuf_new_from_stream_at_scale IA__gdk_pixbuf_new_from_stream_at_scale
+
 extern __typeof (gdk_pixbuf_save) IA__gdk_pixbuf_save __attribute((visibility("hidden"))) G_GNUC_NULL_TERMINATED;
 #define gdk_pixbuf_save IA__gdk_pixbuf_save
 
@@ -130,6 +136,9 @@ extern __typeof (gdk_pixbuf_savev_utf8) IA__gdk_pixbuf_savev_utf8 __attribute((v
 #define gdk_pixbuf_savev_utf8 IA__gdk_pixbuf_savev_utf8
 
 #endif
+extern __typeof (gdk_pixbuf_save_to_stream) IA__gdk_pixbuf_save_to_stream __attribute((visibility("hidden")));
+#define gdk_pixbuf_save_to_stream IA__gdk_pixbuf_save_to_stream
+
 #endif
 #endif
 #if IN_HEADER(GDK_PIXBUF_CORE_H)
@@ -233,6 +242,9 @@ extern __typeof (gdk_pixbuf_animation_unref) IA__gdk_pixbuf_animation_unref __at
 #endif
 extern __typeof (gdk_pixbuf_non_anim_new) IA__gdk_pixbuf_non_anim_new __attribute((visibility("hidden")));
 #define gdk_pixbuf_non_anim_new IA__gdk_pixbuf_non_anim_new
+
+extern __typeof (gdk_pixbuf_non_anim_get_type) IA__gdk_pixbuf_non_anim_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gdk_pixbuf_non_anim_get_type IA__gdk_pixbuf_non_anim_get_type
 
 #endif
 #endif

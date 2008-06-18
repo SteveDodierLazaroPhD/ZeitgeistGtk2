@@ -25,6 +25,19 @@ extern __typeof (gdk_events_pending) gdk_events_pending __attribute((alias("IA__
 
 #endif
 #endif
+#if IN_HEADER(__GDK_TEST_UTILS_H__)
+#if IN_FILE(__GDK_TEST_UTILS_X11_C__)
+#undef gdk_test_simulate_button 
+extern __typeof (gdk_test_simulate_button) gdk_test_simulate_button __attribute((alias("IA__gdk_test_simulate_button"), visibility("default")));
+
+#undef gdk_test_simulate_key 
+extern __typeof (gdk_test_simulate_key) gdk_test_simulate_key __attribute((alias("IA__gdk_test_simulate_key"), visibility("default")));
+
+#undef gdk_test_render_sync 
+extern __typeof (gdk_test_render_sync) gdk_test_render_sync __attribute((alias("IA__gdk_test_render_sync"), visibility("default")));
+
+#endif
+#endif
 #if IN_HEADER(__GDK_EVENTS_H__)
 #if IN_FILE(__GDK_EVENTS_C__)
 #undef gdk_event_copy 
@@ -1285,6 +1298,12 @@ extern __typeof (gdk_window_impl_x11_get_type) gdk_window_impl_x11_get_type __at
 #undef gdk_get_default_root_window 
 extern __typeof (gdk_get_default_root_window) gdk_get_default_root_window __attribute((alias("IA__gdk_get_default_root_window"), visibility("default")));
 
+#undef gdk_window_new 
+extern __typeof (gdk_window_new) gdk_window_new __attribute((alias("IA__gdk_window_new"), visibility("default")));
+
+#undef gdk_window_reparent 
+extern __typeof (gdk_window_reparent) gdk_window_reparent __attribute((alias("IA__gdk_window_reparent"), visibility("default")));
+
 #undef gdk_window_add_filter 
 extern __typeof (gdk_window_add_filter) gdk_window_add_filter __attribute((alias("IA__gdk_window_add_filter"), visibility("default")));
 
@@ -1384,8 +1403,14 @@ extern __typeof (gdk_window_process_all_updates) gdk_window_process_all_updates 
 #undef gdk_window_process_updates 
 extern __typeof (gdk_window_process_updates) gdk_window_process_updates __attribute((alias("IA__gdk_window_process_updates"), visibility("default")));
 
+#undef gdk_window_redirect_to_drawable 
+extern __typeof (gdk_window_redirect_to_drawable) gdk_window_redirect_to_drawable __attribute((alias("IA__gdk_window_redirect_to_drawable"), visibility("default")));
+
 #undef gdk_window_remove_filter 
 extern __typeof (gdk_window_remove_filter) gdk_window_remove_filter __attribute((alias("IA__gdk_window_remove_filter"), visibility("default")));
+
+#undef gdk_window_remove_redirection 
+extern __typeof (gdk_window_remove_redirection) gdk_window_remove_redirection __attribute((alias("IA__gdk_window_remove_redirection"), visibility("default")));
 
 #undef gdk_window_set_debug_updates 
 extern __typeof (gdk_window_set_debug_updates) gdk_window_set_debug_updates __attribute((alias("IA__gdk_window_set_debug_updates"), visibility("default")));
@@ -1423,9 +1448,6 @@ extern __typeof (gdk_window_move_region) gdk_window_move_region __attribute((ali
 #endif
 #if IN_HEADER(__GDK_WINDOW_H__)
 #if IN_FILE(__GDK_WINDOW_X11_C__)
-#undef gdk_window_new 
-extern __typeof (gdk_window_new) gdk_window_new __attribute((alias("IA__gdk_window_new"), visibility("default")));
-
 #undef gdk_window_foreign_new_for_display 
 extern __typeof (gdk_window_foreign_new_for_display) gdk_window_foreign_new_for_display __attribute((alias("IA__gdk_window_foreign_new_for_display"), visibility("default")));
 
@@ -1455,9 +1477,6 @@ extern __typeof (gdk_window_resize) gdk_window_resize __attribute((alias("IA__gd
 
 #undef gdk_window_move_resize 
 extern __typeof (gdk_window_move_resize) gdk_window_move_resize __attribute((alias("IA__gdk_window_move_resize"), visibility("default")));
-
-#undef gdk_window_reparent 
-extern __typeof (gdk_window_reparent) gdk_window_reparent __attribute((alias("IA__gdk_window_reparent"), visibility("default")));
 
 #undef gdk_window_raise 
 extern __typeof (gdk_window_raise) gdk_window_raise __attribute((alias("IA__gdk_window_raise"), visibility("default")));
@@ -2194,6 +2213,15 @@ extern __typeof (gdk_screen_get_n_monitors) gdk_screen_get_n_monitors __attribut
 #undef gdk_screen_get_monitor_geometry 
 extern __typeof (gdk_screen_get_monitor_geometry) gdk_screen_get_monitor_geometry __attribute((alias("IA__gdk_screen_get_monitor_geometry"), visibility("default")));
 
+#undef gdk_screen_get_monitor_width_mm 
+extern __typeof (gdk_screen_get_monitor_width_mm) gdk_screen_get_monitor_width_mm __attribute((alias("IA__gdk_screen_get_monitor_width_mm"), visibility("default")));
+
+#undef gdk_screen_get_monitor_height_mm 
+extern __typeof (gdk_screen_get_monitor_height_mm) gdk_screen_get_monitor_height_mm __attribute((alias("IA__gdk_screen_get_monitor_height_mm"), visibility("default")));
+
+#undef gdk_screen_get_monitor_plug_name 
+extern __typeof (gdk_screen_get_monitor_plug_name) gdk_screen_get_monitor_plug_name __attribute((alias("IA__gdk_screen_get_monitor_plug_name"), visibility("default")));
+
 #undef gdk_screen_get_rgba_colormap 
 extern __typeof (gdk_screen_get_rgba_colormap) gdk_screen_get_rgba_colormap __attribute((alias("IA__gdk_screen_get_rgba_colormap"), visibility("default")));
 
@@ -2490,6 +2518,9 @@ extern __typeof (gdk_x11_screen_get_screen_number) gdk_x11_screen_get_screen_num
 #undef gdk_x11_screen_get_xscreen 
 extern __typeof (gdk_x11_screen_get_xscreen) gdk_x11_screen_get_xscreen __attribute((alias("IA__gdk_x11_screen_get_xscreen"), visibility("default")));
 
+#undef gdk_x11_screen_get_monitor_output 
+extern __typeof (gdk_x11_screen_get_monitor_output) gdk_x11_screen_get_monitor_output __attribute((alias("IA__gdk_x11_screen_get_monitor_output"), visibility("default")));
+
 #endif
 #if IN_FILE(__GDK_VISUAL_X11_C__)
 #undef gdk_x11_screen_lookup_visual 
@@ -2518,6 +2549,34 @@ extern __typeof (gdk_xid_table_lookup) gdk_xid_table_lookup __attribute((alias("
 extern __typeof (gdk_xid_table_lookup_for_display) gdk_xid_table_lookup_for_display __attribute((alias("IA__gdk_xid_table_lookup_for_display"), visibility("default")));
 
 #endif
+#endif
+#endif
+#if IN_HEADER(__GDK_APP_LAUNCH_CONTEXT_H__)
+#if IN_FILE(__GDK_APP_LAUNCH_CONTEXT_C__)
+#undef gdk_app_launch_context_get_type 
+extern __typeof (gdk_app_launch_context_get_type) gdk_app_launch_context_get_type __attribute((alias("IA__gdk_app_launch_context_get_type"), visibility("default")));
+
+#undef gdk_app_launch_context_new 
+extern __typeof (gdk_app_launch_context_new) gdk_app_launch_context_new __attribute((alias("IA__gdk_app_launch_context_new"), visibility("default")));
+
+#undef gdk_app_launch_context_set_display 
+extern __typeof (gdk_app_launch_context_set_display) gdk_app_launch_context_set_display __attribute((alias("IA__gdk_app_launch_context_set_display"), visibility("default")));
+
+#undef gdk_app_launch_context_set_screen 
+extern __typeof (gdk_app_launch_context_set_screen) gdk_app_launch_context_set_screen __attribute((alias("IA__gdk_app_launch_context_set_screen"), visibility("default")));
+
+#undef gdk_app_launch_context_set_desktop 
+extern __typeof (gdk_app_launch_context_set_desktop) gdk_app_launch_context_set_desktop __attribute((alias("IA__gdk_app_launch_context_set_desktop"), visibility("default")));
+
+#undef gdk_app_launch_context_set_timestamp 
+extern __typeof (gdk_app_launch_context_set_timestamp) gdk_app_launch_context_set_timestamp __attribute((alias("IA__gdk_app_launch_context_set_timestamp"), visibility("default")));
+
+#undef gdk_app_launch_context_set_icon 
+extern __typeof (gdk_app_launch_context_set_icon) gdk_app_launch_context_set_icon __attribute((alias("IA__gdk_app_launch_context_set_icon"), visibility("default")));
+
+#undef gdk_app_launch_context_set_icon_name 
+extern __typeof (gdk_app_launch_context_set_icon_name) gdk_app_launch_context_set_icon_name __attribute((alias("IA__gdk_app_launch_context_set_icon_name"), visibility("default")));
+
 #endif
 #endif
 #ifdef GDK_WINDOWING_X11

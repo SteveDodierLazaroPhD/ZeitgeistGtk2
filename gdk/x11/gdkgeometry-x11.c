@@ -499,10 +499,10 @@ gdk_window_scroll (GdkWindow *window,
  * Since: 2.8
  **/
 void
-gdk_window_move_region (GdkWindow *window,
-			GdkRegion *region,
-			gint       dx,
-			gint       dy)
+gdk_window_move_region (GdkWindow       *window,
+			const GdkRegion *region,
+			gint             dx,
+			gint             dy)
 {
   GdkWindowImplX11 *impl;
   GdkWindowObject *private;
@@ -731,7 +731,7 @@ _gdk_window_move_resize_child (GdkWindow *window,
       impl->position_info = new_info;
     }
 
-  if (GDK_WINDOW_IS_MAPPED (obj) && obj->parent)
+  if (GDK_WINDOW_IS_MAPPED (obj) && obj->parent && !obj->input_only)
     gdk_window_invalidate_rect ((GdkWindow *)obj->parent, &old_pos, FALSE);
 }
 

@@ -1011,6 +1011,7 @@ gtk_window_set_property (GObject      *object,
       gtk_window_set_opacity (window, g_value_get_double (value));
       break;
     default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
 }
@@ -1161,6 +1162,8 @@ gtk_window_buildable_parser_finished (GtkBuildable *buildable,
 
   if (priv->builder_visible)
     gtk_widget_show (GTK_WIDGET (buildable));
+
+    parent_buildable_iface->parser_finished (buildable, builder);
 }
 
 /**
@@ -3980,8 +3983,8 @@ gtk_window_move (GtkWindow *window,
 /**
  * gtk_window_get_position:
  * @window: a #GtkWindow
- * @root_x: return location for X coordinate of gravity-determined reference p\oint
- * @root_y: return location for Y coordinate of gravity-determined reference p\oint
+ * @root_x: return location for X coordinate of gravity-determined reference point
+ * @root_y: return location for Y coordinate of gravity-determined reference point
  *
  * This function returns the position you need to pass to
  * gtk_window_move() to keep @window in its current position.  This
@@ -6076,7 +6079,7 @@ gtk_window_move_resize (GtkWindow *window)
 
 	  /* Directly size allocate for override redirect (popup) windows. */
           allocation.x = 0;
-          allocation.y = 0;
+	  allocation.y = 0;
 	  allocation.width = new_request.width;
 	  allocation.height = new_request.height;
 
@@ -7679,14 +7682,13 @@ gtk_XParseGeometry (const char   *string,
  * to be called when the window has its "final" size, i.e. after calling
  * gtk_widget_show_all() on the contents and gtk_window_set_geometry_hints()
  * on the window.
- * 
- * <informalexample><programlisting>
- * #include &lt;gtk/gtk.h&gt;
+ * |[
+ * #include <gtk/gtk.h>
  *    
  * static void
  * fill_with_content (GtkWidget *vbox)
  * {
- *   /<!-- -->* fill with content... *<!-- -->/
+ *   /&ast; fill with content... &ast;/
  * }
  *    
  * int
@@ -7697,7 +7699,7 @@ gtk_XParseGeometry (const char   *string,
  *     100, 50, 0, 0, 100, 50, 10, 10, 0.0, 0.0, GDK_GRAVITY_NORTH_WEST  
  *   };
  *    
- *   gtk_init (&amp;argc, &amp;argv);
+ *   gtk_init (&argc, &argv);
  *   
  *   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
  *   vbox = gtk_vbox_new (FALSE, 0);
@@ -7708,7 +7710,7 @@ gtk_XParseGeometry (const char   *string,
  *   
  *   gtk_window_set_geometry_hints (GTK_WINDOW (window),
  * 	  			    window,
- * 				    &amp;size_hints,
+ * 				    &size_hints,
  * 				    GDK_HINT_MIN_SIZE | 
  * 				    GDK_HINT_BASE_SIZE | 
  * 				    GDK_HINT_RESIZE_INC);
@@ -7716,7 +7718,7 @@ gtk_XParseGeometry (const char   *string,
  *   if (argc &gt; 1)
  *     {
  *       if (!gtk_window_parse_geometry (GTK_WINDOW (window), argv[1]))
- *         fprintf (stderr, "Failed to parse '&percnt;s'\n", argv[1]);
+ *         fprintf (stderr, "Failed to parse '%s'\n", argv[1]);
  *     }
  *    
  *   gtk_widget_show_all (window);
@@ -7724,7 +7726,7 @@ gtk_XParseGeometry (const char   *string,
  *    
  *   return 0;
  * }
- * </programlisting></informalexample>
+ * ]|
  *
  * Return value: %TRUE if string was parsed successfully
  **/
@@ -7956,22 +7958,21 @@ gtk_window_free_key_hash (GtkWindow *window)
  * called by the default ::key_press_event handler for toplevel windows,
  * however in some cases it may be useful to call this directly when
  * overriding the standard key handling for a toplevel window.
- * 
+ *
  * Return value: %TRUE if a mnemonic or accelerator was found and activated.
  **/
 gboolean
 gtk_window_activate_key (GtkWindow   *window,
 			 GdkEventKey *event)
 {
-  GtkKeyHash *key_hash = g_object_get_qdata (G_OBJECT (window), quark_gtk_window_key_hash);
+  GtkKeyHash *key_hash;
   GtkWindowKeyEntry *found_entry = NULL;
 
-  if (!key_hash)
-    {
-      gtk_window_keys_changed (window);
-      key_hash = g_object_get_qdata (G_OBJECT (window), quark_gtk_window_key_hash);
-    }
-  
+  g_return_val_if_fail (GTK_IS_WINDOW (window), FALSE);
+  g_return_val_if_fail (event != NULL, FALSE);
+
+  key_hash = gtk_window_get_key_hash (window);
+
   if (key_hash)
     {
       GSList *entries = _gtk_key_hash_lookup (key_hash,

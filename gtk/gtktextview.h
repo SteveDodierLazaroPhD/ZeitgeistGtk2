@@ -24,6 +24,10 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_TEXT_VIEW_H__
 #define __GTK_TEXT_VIEW_H__
 
@@ -75,7 +79,7 @@ struct _GtkTextView
   gint pixels_above_lines;
   gint pixels_below_lines;
   gint pixels_inside_wrap;
-  GtkWrapMode wrap_mode;  
+  GtkWrapMode wrap_mode;
   GtkJustification justify;
   gint left_margin;
   gint right_margin;
@@ -83,18 +87,16 @@ struct _GtkTextView
   PangoTabArray *tabs;
   guint editable : 1;
 
-  
-  
   guint overwrite_mode : 1;
   guint cursor_visible : 1;
 
-  /* if we have reset the IM since the last character entered */  
-  guint  need_im_reset : 1;	
+  /* if we have reset the IM since the last character entered */
+  guint  need_im_reset : 1;
 
   guint accepts_tab : 1;
-  
+
   guint width_changed : 1;
-  
+
   /* debug flag - means that we've validated onscreen since the
    * last "invalidate" signal from the layout
    */
@@ -160,7 +162,7 @@ struct _GtkTextViewClass
 
   void (* populate_popup)           (GtkTextView    *text_view,
                                      GtkMenu        *menu);
-  
+
   /* These are all RUN_ACTION signals for keybindings */
 
   /* move insertion point */
@@ -176,7 +178,7 @@ struct _GtkTextViewClass
   void (* page_horizontally) (GtkTextView *text_view,
                               gint         count,
                               gboolean     extend_selection);
-  
+
   /* move the "anchor" (what Emacs calls the mark) to the cursor position */
   void (* set_anchor)  (GtkTextView    *text_view);
 

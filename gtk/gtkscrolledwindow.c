@@ -88,8 +88,7 @@ enum {
   PROP_VSCROLLBAR_POLICY,
   PROP_WINDOW_PLACEMENT,
   PROP_WINDOW_PLACEMENT_SET,
-  PROP_SHADOW_TYPE,
-  PROP_LAST
+  PROP_SHADOW_TYPE
 };
 
 /* Signals */
@@ -785,11 +784,7 @@ gtk_scrolled_window_get_shadow_type (GtkScrolledWindow *scrolled_window)
 static void
 gtk_scrolled_window_destroy (GtkObject *object)
 {
-  GtkScrolledWindow *scrolled_window;
-
-  g_return_if_fail (GTK_IS_SCROLLED_WINDOW (object));
-
-  scrolled_window = GTK_SCROLLED_WINDOW (object);
+  GtkScrolledWindow *scrolled_window = GTK_SCROLLED_WINDOW (object);
 
   gtk_widget_unparent (scrolled_window->hscrollbar);
   gtk_widget_unparent (scrolled_window->vscrollbar);

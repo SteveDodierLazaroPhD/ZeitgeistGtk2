@@ -64,6 +64,13 @@
 <link linkend="GtkPageSetup">GtkPageSetup</link>*       <link linkend="gtk-page-setup-new-from-key-file">gtk_page_setup_new_from_key_file</link>    (<link linkend="GKeyFile">GKeyFile</link> *key_file,
                                                          const <link linkend="gchar">gchar</link> *group_name,
                                                          <link linkend="GError">GError</link> **error);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-page-setup-load-file">gtk_page_setup_load_file</link>            (<link linkend="GtkPageSetup">GtkPageSetup</link> *setup,
+                                                         const <link linkend="char">char</link> *file_name,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-page-setup-load-key-file">gtk_page_setup_load_key_file</link>        (<link linkend="GtkPageSetup">GtkPageSetup</link> *setup,
+                                                         <link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name,
+                                                         <link linkend="GError">GError</link> **error);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-page-setup-to-file">gtk_page_setup_to_file</link>              (<link linkend="GtkPageSetup">GtkPageSetup</link> *setup,
                                                          const <link linkend="char">char</link> *file_name,
                                                          <link linkend="GError">GError</link> **error);
@@ -576,6 +583,61 @@ page setup, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if an er
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2 id="gtk-page-setup-load-file" role="function" condition="since:2.14">
+<title>gtk_page_setup_load_file ()</title>
+<indexterm zone="gtk-page-setup-load-file" role="2.14"><primary>gtk_page_setup_load_file</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_page_setup_load_file            (<link linkend="GtkPageSetup">GtkPageSetup</link> *setup,
+                                                         const <link linkend="char">char</link> *file_name,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Reads the page setup from the file <parameter>file_name</parameter>.
+See <link linkend="gtk-page-setup-load-file"><function>gtk_page_setup_load_file()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>setup</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPageSetup"><type>GtkPageSetup</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>file_name</parameter>&nbsp;:</term>
+<listitem><simpara> the filename to read the page setup from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for an error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> on success
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-page-setup-load-key-file" role="function" condition="since:2.14">
+<title>gtk_page_setup_load_key_file ()</title>
+<indexterm zone="gtk-page-setup-load-key-file" role="2.14"><primary>gtk_page_setup_load_key_file</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_page_setup_load_key_file        (<link linkend="GtkPageSetup">GtkPageSetup</link> *setup,
+                                                         <link linkend="GKeyFile">GKeyFile</link> *key_file,
+                                                         const <link linkend="gchar">gchar</link> *group_name,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Reads the page setup from the group <parameter>group_name</parameter> in the key file
+<parameter>key_file</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>setup</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPageSetup"><type>GtkPageSetup</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>key_file</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GKeyFile"><type>GKeyFile</type></link> to retrieve the page_setup from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>group_name</parameter>&nbsp;:</term>
+<listitem><simpara> the name of the group in the key_file to read, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+             to use the default name "Page Setup"
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for an error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> on success
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-page-setup-to-file" role="function" condition="since:2.12">
 <title>gtk_page_setup_to_file ()</title>

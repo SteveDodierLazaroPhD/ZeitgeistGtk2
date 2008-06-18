@@ -1,5 +1,4 @@
-#include <gtk/gtkprintunixdialog.h>
-#include <gtk/gtkpagesetupunixdialog.h>
+#include <gtk/gtkunixprint.h>
 #include <gdk/gdkkeysyms.h>
 #include <X11/Xatom.h>
 #include <gdkx.h>
@@ -17,7 +16,7 @@ static Window
 find_toplevel_window (Window xid)
 {
   Window root, parent, *children;
-  int nchildren;
+  guint nchildren;
 
   do
     {

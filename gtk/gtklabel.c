@@ -43,6 +43,7 @@
 #include "gtknotebook.h"
 #include "gtkstock.h"
 #include "gtkbindings.h"
+#include "gtkbuildable.h"
 #include "gtkprivate.h"
 #include "gtkalias.h"
 
@@ -179,6 +180,20 @@ static void     gtk_label_drag_data_get     (GtkWidget         *widget,
 					     guint              info,
 					     guint              time);
 
+static void     gtk_label_buildable_interface_init     (GtkBuildableIface *iface);
+static gboolean gtk_label_buildable_custom_tag_start   (GtkBuildable     *buildable,
+							GtkBuilder       *builder,
+							GObject          *child,
+							const gchar      *tagname,
+							GMarkupParser    *parser,
+							gpointer         *data);
+
+static void     gtk_label_buildable_custom_finished    (GtkBuildable     *buildable,
+							GtkBuilder       *builder,
+							GObject          *child,
+							const gchar      *tagname,
+							gpointer          user_data);
+
 
 /* For selectable lables: */
 static void gtk_label_move_cursor        (GtkLabel        *label,
@@ -197,7 +212,11 @@ static gint gtk_label_move_backward_word (GtkLabel        *label,
 
 static GQuark quark_angle = 0;
 
-G_DEFINE_TYPE (GtkLabel, gtk_label, GTK_TYPE_MISC)
+static GtkBuildableIface *buildable_parent_iface = NULL;
+
+G_DEFINE_TYPE_WITH_CODE (GtkLabel, gtk_label, GTK_TYPE_MISC,
+			 G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
+						gtk_label_buildable_interface_init));
 
 static void
 add_move_binding (GtkBindingSet  *binding_set,
@@ -296,7 +315,7 @@ gtk_label_class_init (GtkLabelClass *class)
                                    g_param_spec_string ("label",
                                                         P_("Label"),
                                                         P_("The text of the label"),
-                                                        NULL,
+                                                        "",
                                                         GTK_PARAM_READWRITE));
   g_object_class_install_property (gobject_class,
 				   PROP_ATTRIBUTES,
@@ -811,6 +830,332 @@ gtk_label_init (GtkLabel *label)
   gtk_label_set_text (label, "");
 }
 
+
+static void
+gtk_label_buildable_interface_init (GtkBuildableIface *iface)
+{
+  buildable_parent_iface = g_type_interface_peek_parent (iface);
+
+  iface->custom_tag_start = gtk_label_buildable_custom_tag_start;
+  iface->custom_finished = gtk_label_buildable_custom_finished;
+}
+
+typedef struct {
+  GtkBuilder    *builder;
+  GObject       *object;
+  PangoAttrList *attrs;
+} PangoParserData;
+
+static PangoAttribute *
+attribute_from_text (GtkBuilder   *builder,
+		     const gchar  *name, 
+		     const gchar  *value,
+		     GError      **error)
+{
+  PangoAttribute *attribute = NULL;
+  PangoAttrType   type;
+  PangoLanguage  *language;
+  PangoFontDescription *font_desc;
+  GdkColor       *color;
+  GValue          val = { 0, };
+
+  if (!gtk_builder_value_from_string_type (builder, PANGO_TYPE_ATTR_TYPE, name, &val, error))
+    return NULL;
+
+  type = g_value_get_enum (&val);
+  g_value_unset (&val);
+
+  switch (type)
+    {
+      /* PangoAttrLanguage */
+    case PANGO_ATTR_LANGUAGE:
+      if ((language = pango_language_from_string (value)))
+	{
+	  attribute = pango_attr_language_new (language);
+	  g_value_init (&val, G_TYPE_INT);
+	}
+      break;
+      /* PangoAttrInt */
+    case PANGO_ATTR_STYLE:
+      if (gtk_builder_value_from_string_type (builder, PANGO_TYPE_STYLE, value, &val, error))
+	attribute = pango_attr_style_new (g_value_get_enum (&val));
+      break;
+    case PANGO_ATTR_WEIGHT:
+      if (gtk_builder_value_from_string_type (builder, PANGO_TYPE_WEIGHT, value, &val, error))
+	attribute = pango_attr_weight_new (g_value_get_enum (&val));
+      break;
+    case PANGO_ATTR_VARIANT:
+      if (gtk_builder_value_from_string_type (builder, PANGO_TYPE_VARIANT, value, &val, error))
+	attribute = pango_attr_variant_new (g_value_get_enum (&val));
+      break;
+    case PANGO_ATTR_STRETCH:
+      if (gtk_builder_value_from_string_type (builder, PANGO_TYPE_STRETCH, value, &val, error))
+	attribute = pango_attr_stretch_new (g_value_get_enum (&val));
+      break;
+    case PANGO_ATTR_UNDERLINE:
+      if (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, value, &val, error))
+	attribute = pango_attr_underline_new (g_value_get_boolean (&val));
+      break;
+    case PANGO_ATTR_STRIKETHROUGH:	
+      if (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, value, &val, error))
+	attribute = pango_attr_strikethrough_new (g_value_get_boolean (&val));
+      break;
+    case PANGO_ATTR_GRAVITY:
+      if (gtk_builder_value_from_string_type (builder, PANGO_TYPE_GRAVITY, value, &val, error))
+	attribute = pango_attr_gravity_new (g_value_get_enum (&val));
+      break;
+    case PANGO_ATTR_GRAVITY_HINT:
+      if (gtk_builder_value_from_string_type (builder, PANGO_TYPE_GRAVITY_HINT, 
+					      value, &val, error))
+	attribute = pango_attr_gravity_hint_new (g_value_get_enum (&val));
+      break;
+
+      /* PangoAttrString */	  
+    case PANGO_ATTR_FAMILY:
+      attribute = pango_attr_family_new (value);
+      g_value_init (&val, G_TYPE_INT);
+      break;
+
+      /* PangoAttrSize */	  
+    case PANGO_ATTR_SIZE:
+      if (gtk_builder_value_from_string_type (builder, G_TYPE_INT, 
+					      value, &val, error))
+	attribute = pango_attr_size_new (g_value_get_int (&val));
+      break;
+    case PANGO_ATTR_ABSOLUTE_SIZE:
+      if (gtk_builder_value_from_string_type (builder, G_TYPE_INT, 
+					      value, &val, error))
+	attribute = pango_attr_size_new_absolute (g_value_get_int (&val));
+      break;
+    
+      /* PangoAttrFontDesc */
+    case PANGO_ATTR_FONT_DESC:
+      if ((font_desc = pango_font_description_from_string (value)))
+	{
+	  attribute = pango_attr_font_desc_new (font_desc);
+	  pango_font_description_free (font_desc);
+	  g_value_init (&val, G_TYPE_INT);
+	}
+      break;
+
+      /* PangoAttrColor */
+    case PANGO_ATTR_FOREGROUND:
+      if (gtk_builder_value_from_string_type (builder, GDK_TYPE_COLOR, 
+					      value, &val, error))
+	{
+	  color = g_value_get_boxed (&val);
+	  attribute = pango_attr_foreground_new (color->red, color->green, color->blue);
+	}
+      break;
+    case PANGO_ATTR_BACKGROUND: 
+      if (gtk_builder_value_from_string_type (builder, GDK_TYPE_COLOR, 
+					      value, &val, error))
+	{
+	  color = g_value_get_boxed (&val);
+	  attribute = pango_attr_background_new (color->red, color->green, color->blue);
+	}
+      break;
+    case PANGO_ATTR_UNDERLINE_COLOR:
+      if (gtk_builder_value_from_string_type (builder, GDK_TYPE_COLOR, 
+					      value, &val, error))
+	{
+	  color = g_value_get_boxed (&val);
+	  attribute = pango_attr_underline_color_new (color->red, color->green, color->blue);
+	}
+      break;
+    case PANGO_ATTR_STRIKETHROUGH_COLOR:
+      if (gtk_builder_value_from_string_type (builder, GDK_TYPE_COLOR, 
+					      value, &val, error))
+	{
+	  color = g_value_get_boxed (&val);
+	  attribute = pango_attr_strikethrough_color_new (color->red, color->green, color->blue);
+	}
+      break;
+      
+      /* PangoAttrShape */
+    case PANGO_ATTR_SHAPE:
+      /* Unsupported for now */
+      break;
+      /* PangoAttrFloat */
+    case PANGO_ATTR_SCALE:
+      if (gtk_builder_value_from_string_type (builder, G_TYPE_DOUBLE, 
+					      value, &val, error))
+	attribute = pango_attr_scale_new (g_value_get_double (&val));
+      break;
+
+    case PANGO_ATTR_INVALID:
+    case PANGO_ATTR_LETTER_SPACING:
+    case PANGO_ATTR_RISE:
+    case PANGO_ATTR_FALLBACK:
+    default:
+      break;
+    }
+
+  g_value_unset (&val);
+
+  return attribute;
+}
+
+
+static void
+pango_start_element (GMarkupParseContext *context,
+		     const gchar         *element_name,
+		     const gchar        **names,
+		     const gchar        **values,
+		     gpointer             user_data,
+		     GError             **error)
+{
+  PangoParserData *data = (PangoParserData*)user_data;
+  GValue val = { 0, };
+  guint i;
+  gint line_number, char_number;
+
+  if (strcmp (element_name, "attribute") == 0)
+    {
+      PangoAttribute *attr = NULL;
+      const gchar *name = NULL;
+      const gchar *value = NULL;
+      const gchar *start = NULL;
+      const gchar *end = NULL;
+      guint start_val = 0;
+      guint end_val   = G_MAXUINT;
+
+      for (i = 0; names[i]; i++)
+	{
+	  if (strcmp (names[i], "name") == 0)
+	    name = values[i];
+	  else if (strcmp (names[i], "value") == 0)
+	    value = values[i];
+	  else if (strcmp (names[i], "start") == 0)
+	    start = values[i];
+	  else if (strcmp (names[i], "end") == 0)
+	    end = values[i];
+	  else
+	    {
+	      g_markup_parse_context_get_position (context,
+						   &line_number,
+						   &char_number);
+	      g_set_error (error,
+			   GTK_BUILDER_ERROR,
+			   GTK_BUILDER_ERROR_INVALID_ATTRIBUTE,
+			   "%s:%d:%d '%s' is not a valid attribute of <%s>",
+			   "<input>",
+			   line_number, char_number, names[i], "attribute");
+	      return;
+	    }
+	}
+
+      if (!name || !value)
+	{
+	  g_markup_parse_context_get_position (context,
+					       &line_number,
+					       &char_number);
+	  g_set_error (error,
+		       GTK_BUILDER_ERROR,
+		       GTK_BUILDER_ERROR_MISSING_ATTRIBUTE,
+		       "%s:%d:%d <%s> requires attribute \"%s\"",
+		       "<input>",
+		       line_number, char_number, "attribute",
+		       name ? "value" : "name");
+	  return;
+	}
+
+      if (start)
+	{
+	  if (!gtk_builder_value_from_string_type (data->builder, G_TYPE_UINT, 
+						   start, &val, error))
+	    return;
+	  start_val = g_value_get_uint (&val);
+	  g_value_unset (&val);
+	}
+
+      if (end)
+	{
+	  if (!gtk_builder_value_from_string_type (data->builder, G_TYPE_UINT, 
+						   end, &val, error))
+	    return;
+	  end_val = g_value_get_uint (&val);
+	  g_value_unset (&val);
+	}
+
+      attr = attribute_from_text (data->builder, name, value, error);
+      attr->start_index = start_val;
+      attr->end_index   = end_val;
+
+      if (attr)
+	{
+	  if (!data->attrs)
+	    data->attrs = pango_attr_list_new ();
+
+	  pango_attr_list_insert (data->attrs, attr);
+	}
+    }
+  else if (strcmp (element_name, "attributes") == 0)
+    ;
+  else
+    g_warning ("Unsupported tag for GtkLabel: %s\n", element_name);
+}
+
+static const GMarkupParser pango_parser =
+  {
+    pango_start_element,
+  };
+
+static gboolean
+gtk_label_buildable_custom_tag_start (GtkBuildable     *buildable,
+				      GtkBuilder       *builder,
+				      GObject          *child,
+				      const gchar      *tagname,
+				      GMarkupParser    *parser,
+				      gpointer         *data)
+{
+  if (buildable_parent_iface->custom_tag_start (buildable, builder, child, 
+						tagname, parser, data))
+    return TRUE;
+
+  if (strcmp (tagname, "attributes") == 0)
+    {
+      PangoParserData *parser_data;
+
+      parser_data = g_slice_new0 (PangoParserData);
+      parser_data->builder = g_object_ref (builder);
+      parser_data->object = g_object_ref (buildable);
+      *parser = pango_parser;
+      *data = parser_data;
+      return TRUE;
+    }
+  return FALSE;
+}
+
+static void
+gtk_label_buildable_custom_finished (GtkBuildable *buildable,
+				     GtkBuilder   *builder,
+				     GObject      *child,
+				     const gchar  *tagname,
+				     gpointer      user_data)
+{
+  PangoParserData *data;
+
+  buildable_parent_iface->custom_finished (buildable, builder, child, 
+					   tagname, user_data);
+
+  if (strcmp (tagname, "attributes") == 0)
+    {
+      data = (PangoParserData*)user_data;
+
+      if (data->attrs)
+	{
+	  gtk_label_set_attributes (GTK_LABEL (buildable), data->attrs);
+	  pango_attr_list_unref (data->attrs);
+	}
+
+      g_object_unref (data->object);
+      g_object_unref (data->builder);
+      g_slice_free (PangoParserData, data);
+    }
+}
+
+
 /**
  * gtk_label_new:
  * @str: The text of the label
@@ -882,15 +1227,15 @@ gtk_label_mnemonic_activate (GtkWidget *widget,
    */
   parent = widget->parent;
 
-  if (parent && GTK_IS_NOTEBOOK (parent))
+  if (GTK_IS_NOTEBOOK (parent))
     return FALSE;
   
   while (parent)
     {
       if (GTK_WIDGET_CAN_FOCUS (parent) ||
 	  (!group_cycling && GTK_WIDGET_GET_CLASS (parent)->activate_signal) ||
-          (parent->parent && GTK_IS_NOTEBOOK (parent->parent)) ||
-	  (GTK_IS_MENU_ITEM (parent)))
+          GTK_IS_NOTEBOOK (parent->parent) ||
+	  GTK_IS_MENU_ITEM (parent))
 	return gtk_widget_mnemonic_activate (parent, group_cycling);
       parent = parent->parent;
     }
@@ -949,7 +1294,7 @@ gtk_label_setup_mnemonic (GtkLabel *label,
 	  mnemonic_menu = menu_shell;
 	}
       
-      if (!(menu_shell && GTK_IS_MENU (menu_shell)))
+      if (!GTK_IS_MENU (menu_shell))
 	{
 	  gtk_window_add_mnemonic (GTK_WINDOW (toplevel),
 				   label->mnemonic_keyval,
@@ -1409,13 +1754,13 @@ set_markup (GtkLabel    *label,
  * label's text and attribute list based on the parse results. If the @str is
  * external data, you may need to escape it with g_markup_escape_text() or
  * g_markup_printf_escaped()<!-- -->:
- * <informalexample><programlisting>
+ * |[
  * char *markup;
- * <!-- -->
+ * 
  * markup = g_markup_printf_escaped ("&lt;span style=\"italic\"&gt;&percnt;s&lt;/span&gt;", str);
  * gtk_label_set_markup (GTK_LABEL (label), markup);
  * g_free (markup);
- * </programlisting></informalexample>
+ * ]|
  **/
 void
 gtk_label_set_markup (GtkLabel    *label,
@@ -1877,12 +2222,8 @@ gtk_label_destroy (GtkObject *object)
 static void
 gtk_label_finalize (GObject *object)
 {
-  GtkLabel *label;
-  
-  g_return_if_fail (GTK_IS_LABEL (object));
-  
-  label = GTK_LABEL (object);
-  
+  GtkLabel *label = GTK_LABEL (object);
+
   g_free (label->label);
   g_free (label->text);
 
@@ -2130,16 +2471,12 @@ static void
 gtk_label_size_request (GtkWidget      *widget,
 			GtkRequisition *requisition)
 {
-  GtkLabel *label;
+  GtkLabel *label = GTK_LABEL (widget);
   GtkLabelPrivate *priv;
   gint width, height;
   PangoRectangle logical_rect;
   GtkWidgetAuxInfo *aux_info;
-  
-  g_return_if_fail (GTK_IS_LABEL (widget));
-  g_return_if_fail (requisition != NULL);
-  
-  label = GTK_LABEL (widget);
+
   priv = GTK_LABEL_GET_PRIVATE (widget);
 
   /*  
@@ -2289,11 +2626,7 @@ static void
 gtk_label_style_set (GtkWidget *widget,
 		     GtkStyle  *previous_style)
 {
-  GtkLabel *label;
-  
-  g_return_if_fail (GTK_IS_LABEL (widget));
-  
-  label = GTK_LABEL (widget);
+  GtkLabel *label = GTK_LABEL (widget);
 
   /* We have to clear the layout, fonts etc. may have changed */
   gtk_label_clear_layout (label);
@@ -2322,6 +2655,7 @@ get_layout_location (GtkLabel  *label,
   GtkLabelPrivate *priv;
   gfloat xalign;
   gint req_width, x, y;
+  PangoRectangle logical;
   
   misc = GTK_MISC (label);
   widget = GTK_WIDGET (label);
@@ -2332,13 +2666,13 @@ get_layout_location (GtkLabel  *label,
   else
     xalign = 1.0 - misc->xalign;
 
+  pango_layout_get_pixel_extents (label->layout, NULL, &logical);
+
   if (label->ellipsize || priv->width_chars > 0)
     {
       int width;
-      PangoRectangle logical;
 
       width = pango_layout_get_width (label->layout);
-      pango_layout_get_pixel_extents (label->layout, NULL, &logical);
 
       req_width = logical.width;
       if (width != -1)
@@ -2355,6 +2689,7 @@ get_layout_location (GtkLabel  *label,
     x = MAX (x, widget->allocation.x + misc->xpad);
   else
     x = MIN (x, widget->allocation.x + widget->allocation.width - misc->xpad);
+  x -= logical.x;
 
   y = floor (widget->allocation.y + (gint)misc->ypad 
              + MAX (((widget->allocation.height - widget->requisition.height) * misc->yalign),
@@ -3415,13 +3750,6 @@ gtk_label_select_region_index (GtkLabel *label,
                                gint      anchor_index,
                                gint      end_index)
 {
-  static const GtkTargetEntry targets[] = {
-    { "STRING", 0, 0 },
-    { "TEXT",   0, 0 }, 
-    { "COMPOUND_TEXT", 0, 0 },
-    { "UTF8_STRING", 0, 0 }
-  };
-
   g_return_if_fail (GTK_IS_LABEL (label));
   
   if (label->select_info)
@@ -3440,12 +3768,22 @@ gtk_label_select_region_index (GtkLabel *label,
       
       if (anchor_index != end_index)
         {
+          GtkTargetList *list;
+          GtkTargetEntry *targets;
+          gint n_targets;
+
+          list = gtk_target_list_new (NULL, 0);
+          gtk_target_list_add_text_targets (list, 0);
+          targets = gtk_target_table_new_from_list (list, &n_targets);
+
           gtk_clipboard_set_with_owner (clipboard,
-                                        targets,
-                                        G_N_ELEMENTS (targets),
+                                        targets, n_targets,
                                         get_text_callback,
                                         clear_text_callback,
                                         G_OBJECT (label));
+
+          gtk_target_table_free (targets, n_targets);
+          gtk_target_list_unref (list);
         }
       else
         {

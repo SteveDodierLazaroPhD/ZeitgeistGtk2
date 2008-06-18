@@ -21,16 +21,20 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 #ifndef __GDK_H__
 #define __GDK_H__
 
+#define __GDK_H_INSIDE__
+
+#include <gdk/gdkapplaunchcontext.h>
 #include <gdk/gdkcairo.h>
 #include <gdk/gdkcolor.h>
 #include <gdk/gdkcursor.h>
 #include <gdk/gdkdisplay.h>
+#include <gdk/gdkdisplaymanager.h>
 #include <gdk/gdkdnd.h>
 #include <gdk/gdkdrawable.h>
 #include <gdk/gdkenumtypes.h>
@@ -40,7 +44,6 @@
 #include <gdk/gdkimage.h>
 #include <gdk/gdkinput.h>
 #include <gdk/gdkkeys.h>
-#include <gdk/gdkdisplaymanager.h>
 #include <gdk/gdkpango.h>
 #include <gdk/gdkpixbuf.h>
 #include <gdk/gdkpixmap.h>
@@ -50,9 +53,12 @@
 #include <gdk/gdkscreen.h>
 #include <gdk/gdkselection.h>
 #include <gdk/gdkspawn.h>
+#include <gdk/gdktestutils.h>
 #include <gdk/gdktypes.h>
 #include <gdk/gdkvisual.h>
 #include <gdk/gdkwindow.h>
+
+#undef __GDK_H_INSIDE__
 
 G_BEGIN_DECLS
 
@@ -145,12 +151,12 @@ void gdk_set_double_click_time             (guint       msec);
 
 /* Rectangle utilities
  */
-gboolean gdk_rectangle_intersect (GdkRectangle *src1,
-				  GdkRectangle *src2,
-				  GdkRectangle *dest);
-void     gdk_rectangle_union     (GdkRectangle *src1,
-				  GdkRectangle *src2,
-				  GdkRectangle *dest);
+gboolean gdk_rectangle_intersect (const GdkRectangle *src1,
+				  const GdkRectangle *src2,
+				  GdkRectangle       *dest);
+void     gdk_rectangle_union     (const GdkRectangle *src1,
+				  const GdkRectangle *src2,
+				  GdkRectangle       *dest);
 
 GType gdk_rectangle_get_type (void) G_GNUC_CONST;
 

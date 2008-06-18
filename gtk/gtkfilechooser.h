@@ -18,10 +18,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#error "Only <gtk/gtk.h> can be included directly."
+#endif
+
 #ifndef __GTK_FILE_CHOOSER_H__
 #define __GTK_FILE_CHOOSER_H__
 
-#include "gtkfilefilter.h"
+#include <gtk/gtkfilefilter.h>
 #include <gtk/gtkwidget.h>
 
 G_BEGIN_DECLS

@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkCellRendererCombo</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkCellRendererAccel.html" title="GtkCellRendererAccel">
 <link rel="next" href="GtkCellRendererPixbuf.html" title="GtkCellRendererPixbuf">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -74,7 +75,9 @@
                    | 
                   <a href="#GtkCellRendererCombo.object-hierarchy" class="shortcut">Object Hierarchy</a>
                    | 
-                  <a href="#GtkCellRendererCombo.properties" class="shortcut">Properties</a></nobr></td></tr>
+                  <a href="#GtkCellRendererCombo.properties" class="shortcut">Properties</a>
+                   | 
+                  <a href="#GtkCellRendererCombo.signals" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkCellRendererCombo"></a><div class="titlepage"></div>
@@ -120,6 +123,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
   "<a class="link" href="GtkCellRendererCombo.html#GtkCellRendererCombo--text-column" title='The "text-column" property'>text-column</a>"              <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkCellRendererCombo.signals"></a><h2>Signals</h2>
+<pre class="synopsis">
+  "<a class="link" href="GtkCellRendererCombo.html#GtkCellRendererCombo-changed" title='The "changed" signal'>changed</a>"                                        : Run Last
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -238,6 +247,64 @@ this column to its combo box.</p>
 <p>Allowed values: &gt;= -1</p>
 <p>Default value: -1</p>
 <p>Since  2.6
+</p>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkCellRendererCombo.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2" lang="en">
+<a name="GtkCellRendererCombo-changed"></a><h3>The <code class="literal">"changed"</code> signal</h3>
+<pre class="programlisting">void                user_function                      (<a class="link" href="GtkCellRendererCombo.html" title="GtkCellRendererCombo">GtkCellRendererCombo</a> *combo,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>                *path_string,
+                                                        <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a>          *new_iter,
+                                                        <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a>              user_data)        : Run Last</pre>
+<p>
+This signal is emitted each time after the user selected an item in
+the combo box, either by using the mouse or the arrow keys.  Contrary
+to GtkComboBox, GtkCellRendererCombo::changed is not emitted for
+changes made to a selected item in the entry.  The argument <em class="parameter"><code>new_iter</code></em>
+corresponds to the newly selected item in the combo box and it is relative
+to the GtkTreeModel set via the model property on GtkCellRendererCombo.
+</p>
+<p>
+Note that as soon as you change the model displayed in the tree view,
+the tree view will immediately cease the editing operating.  This
+means that you most probably want to refrain from changing the model
+until the combo cell renderer emits the edited or editing_canceled signal.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>combo</code></em> :</span></p></td>
+<td> the object on which the signal is emitted
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>path_string</code></em> :</span></p></td>
+<td> a string of the path identifying the edited cell
+              (relative to the tree view model)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_iter</code></em> :</span></p></td>
+<td> the new iter selected in the combo box
+           (relative to the combo box model)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Since  2.14
 </p>
 </div>
 </div>

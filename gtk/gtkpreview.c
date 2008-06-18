@@ -35,9 +35,7 @@
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
-#include "gdk/gdkrgb.h"
 #include "gtkpreview.h"
-#include "gtksignal.h"
 #include "gtkprivate.h"
 #include "gtkintl.h"
 #include "gtkalias.h"
@@ -410,11 +408,8 @@ gtk_preview_get_info (void)
 static void
 gtk_preview_finalize (GObject *object)
 {
-  GtkPreview *preview;
+  GtkPreview *preview = GTK_PREVIEW (object);
 
-  g_return_if_fail (GTK_IS_PREVIEW (object));
-
-  preview = GTK_PREVIEW (object);
   g_free (preview->buffer);
 
   G_OBJECT_CLASS (gtk_preview_parent_class)->finalize (object);
@@ -423,14 +418,11 @@ gtk_preview_finalize (GObject *object)
 static void
 gtk_preview_realize (GtkWidget *widget)
 {
-  GtkPreview *preview;
+  GtkPreview *preview = GTK_PREVIEW (widget);
   GdkWindowAttr attributes;
   gint attributes_mask;
 
-  g_return_if_fail (GTK_IS_PREVIEW (widget));
-
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
-  preview = GTK_PREVIEW (widget);
 
   attributes.window_type = GDK_WINDOW_CHILD;
 
@@ -463,12 +455,9 @@ static void
 gtk_preview_size_allocate (GtkWidget        *widget,
 			   GtkAllocation    *allocation)
 {
-  GtkPreview *preview;
+  GtkPreview *preview = GTK_PREVIEW (widget);
   gint width, height;
 
-  g_return_if_fail (GTK_IS_PREVIEW (widget));
-
-  preview = GTK_PREVIEW (widget);
   widget->allocation = *allocation;
 
   if (GTK_WIDGET_REALIZED (widget))
@@ -497,9 +486,6 @@ gtk_preview_expose (GtkWidget      *widget,
 {
   GtkPreview *preview;
   gint width, height;
-
-  g_return_val_if_fail (GTK_IS_PREVIEW (widget), FALSE);
-  g_return_val_if_fail (event != NULL, FALSE);
 
   if (GTK_WIDGET_DRAWABLE (widget))
     {

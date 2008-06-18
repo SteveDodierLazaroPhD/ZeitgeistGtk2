@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GdkDisplay</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GDK Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GDK Reference Manual">
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="multihead.html" title="Multi-head Support Overview">
 <link rel="next" href="GdkDisplayManager.html" title="GdkDisplayManager">
@@ -19,6 +19,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -89,7 +90,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 <a class="link" href="gdk-Event-Structures.html#GdkEvent" title="union GdkEvent">GdkEvent</a>*           <a class="link" href="GdkDisplay.html#gdk-display-get-event" title="gdk_display_get_event ()">gdk_display_get_event</a>               (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display);
 <a class="link" href="gdk-Event-Structures.html#GdkEvent" title="union GdkEvent">GdkEvent</a>*           <a class="link" href="GdkDisplay.html#gdk-display-peek-event" title="gdk_display_peek_event ()">gdk_display_peek_event</a>              (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display);
 void                <a class="link" href="GdkDisplay.html#gdk-display-put-event" title="gdk_display_put_event ()">gdk_display_put_event</a>               (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
-                                                         <a class="link" href="gdk-Event-Structures.html#GdkEvent" title="union GdkEvent">GdkEvent</a> *event);
+                                                         const <a class="link" href="gdk-Event-Structures.html#GdkEvent" title="union GdkEvent">GdkEvent</a> *event);
 void                <a class="link" href="GdkDisplay.html#gdk-display-add-client-message-filter" title="gdk_display_add_client_message_filter ()">gdk_display_add_client_message_filter</a>
                                                         (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
                                                          <a class="link" href="gdk-Properties-and-Atoms.html#GdkAtom" title="GdkAtom">GdkAtom</a> message_type,
@@ -168,7 +169,7 @@ void                <a class="link" href="GdkDisplay.html#gdk-display-store-clip
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"
 >guint32</a> time_,
-                                                         <a class="link" href="gdk-Properties-and-Atoms.html#GdkAtom" title="GdkAtom">GdkAtom</a> *targets,
+                                                         const <a class="link" href="gdk-Properties-and-Atoms.html#GdkAtom" title="GdkAtom">GdkAtom</a> *targets,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_targets);
@@ -271,11 +272,8 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 <pre class="programlisting"><a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a>*         gdk_display_get_default             (void);</pre>
 <p>
 Gets the default <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a>. This is a convenience
-function for:
-</p>
-<pre class="programlisting">
-  gdk_display_manager_get_default_display (gdk_display_manager_get ())
-</pre>
+function for
+<code class="literal">gdk_display_manager_get_default_display (<a class="link" href="GdkDisplayManager.html#gdk-display-manager-get" title="gdk_display_manager_get ()"><code class="function">gdk_display_manager_get()</code></a>)</code>.</p>
 <p>
 
 </p>
@@ -712,7 +710,7 @@ if no events are in the queue. The returned <a class="link" href="gdk-Event-Stru
 <div class="refsect2" lang="en">
 <a name="gdk-display-put-event"></a><h3>gdk_display_put_event ()</h3>
 <pre class="programlisting">void                gdk_display_put_event               (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
-                                                         <a class="link" href="gdk-Event-Structures.html#GdkEvent" title="union GdkEvent">GdkEvent</a> *event);</pre>
+                                                         const <a class="link" href="gdk-Event-Structures.html#GdkEvent" title="union GdkEvent">GdkEvent</a> *event);</pre>
 <p>
 Appends a copy of the given event onto the front of the event
 queue for <em class="parameter"><code>display</code></em>.</p>
@@ -1406,7 +1404,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"
 >guint32</a> time_,
-                                                         <a class="link" href="gdk-Properties-and-Atoms.html#GdkAtom" title="GdkAtom">GdkAtom</a> *targets,
+                                                         const <a class="link" href="gdk-Properties-and-Atoms.html#GdkAtom" title="GdkAtom">GdkAtom</a> *targets,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_targets);</pre>

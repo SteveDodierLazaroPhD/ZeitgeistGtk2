@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkCalendar</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="index.html" title="GTK+ Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="MiscObjects.html" title="Miscellaneous">
 <link rel="prev" href="GtkArrow.html" title="GtkArrow">
 <link rel="next" href="GtkDrawingArea.html" title="GtkDrawingArea">
@@ -58,6 +58,7 @@
 <link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
 <link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
 <link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
+<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -96,7 +97,23 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <a class="link" href="GtkCalendar.html#GtkCalendar-struct" title="GtkCalendar">GtkCalendar</a>;
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>*              (<a class="link" href="GtkCalendar.html#GtkCalendarDetailFunc" title="GtkCalendarDetailFunc ()">*GtkCalendarDetailFunc</a>)            (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> year,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> month,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> day,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> user_data);
 enum                <a class="link" href="GtkCalendar.html#GtkCalendarDisplayOptions" title="enum GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</a>;
+
 <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkCalendar.html#gtk-calendar-new" title="gtk_calendar_new ()">gtk_calendar_new</a>                    (void);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
@@ -124,11 +141,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> day);
 void                <a class="link" href="GtkCalendar.html#gtk-calendar-clear-marks" title="gtk_calendar_clear_marks ()">gtk_calendar_clear_marks</a>            (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);
+
 <a class="link" href="GtkCalendar.html#GtkCalendarDisplayOptions" title="enum GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</a> <a class="link" href="GtkCalendar.html#gtk-calendar-get-display-options" title="gtk_calendar_get_display_options ()">gtk_calendar_get_display_options</a>
                                                         (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);
 void                <a class="link" href="GtkCalendar.html#gtk-calendar-set-display-options" title="gtk_calendar_set_display_options ()">gtk_calendar_set_display_options</a>    (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
-                                                         <a class="link" href="GtkCalendar.html#GtkCalendarDisplayOptions" title="enum GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</a> flags);
-void                <a class="link" href="GtkCalendar.html#gtk-calendar-display-options" title="gtk_calendar_display_options ()">gtk_calendar_display_options</a>        (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
                                                          <a class="link" href="GtkCalendar.html#GtkCalendarDisplayOptions" title="enum GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</a> flags);
 void                <a class="link" href="GtkCalendar.html#gtk-calendar-get-date" title="gtk_calendar_get_date ()">gtk_calendar_get_date</a>               (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
                                                          <a
@@ -140,6 +156,32 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> *day);
+
+void                <a class="link" href="GtkCalendar.html#gtk-calendar-set-detail-func" title="gtk_calendar_set_detail_func ()">gtk_calendar_set_detail_func</a>        (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a class="link" href="GtkCalendar.html#GtkCalendarDetailFunc" title="GtkCalendarDetailFunc ()">GtkCalendarDetailFunc</a> func,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"
+>GDestroyNotify</a> destroy);
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                <a class="link" href="GtkCalendar.html#gtk-calendar-get-detail-width-chars" title="gtk_calendar_get_detail_width_chars ()">gtk_calendar_get_detail_width_chars</a> (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);
+void                <a class="link" href="GtkCalendar.html#gtk-calendar-set-detail-width-chars" title="gtk_calendar_set_detail_width_chars ()">gtk_calendar_set_detail_width_chars</a> (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> chars);
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                <a class="link" href="GtkCalendar.html#gtk-calendar-get-detail-height-rows" title="gtk_calendar_get_detail_height_rows ()">gtk_calendar_get_detail_height_rows</a> (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);
+void                <a class="link" href="GtkCalendar.html#gtk-calendar-set-detail-height-rows" title="gtk_calendar_set_detail_height_rows ()">gtk_calendar_set_detail_height_rows</a> (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> rows);
+
+void                <a class="link" href="GtkCalendar.html#gtk-calendar-display-options" title="gtk_calendar_display_options ()">gtk_calendar_display_options</a>        (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a class="link" href="GtkCalendar.html#GtkCalendarDisplayOptions" title="enum GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</a> flags);
 void                <a class="link" href="GtkCalendar.html#gtk-calendar-freeze" title="gtk_calendar_freeze ()">gtk_calendar_freeze</a>                 (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);
 void                <a class="link" href="GtkCalendar.html#gtk-calendar-thaw" title="gtk_calendar_thaw ()">gtk_calendar_thaw</a>                   (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);
 </pre>
@@ -170,6 +212,12 @@ GtkCalendar implements
   "<a class="link" href="GtkCalendar.html#GtkCalendar--day" title='The "day" property'>day</a>"                      <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write
+  "<a class="link" href="GtkCalendar.html#GtkCalendar--detail-height-rows" title='The "detail-height-rows" property'>detail-height-rows</a>"       <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write
+  "<a class="link" href="GtkCalendar.html#GtkCalendar--detail-width-chars" title='The "detail-width-chars" property'>detail-width-chars</a>"       <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write
   "<a class="link" href="GtkCalendar.html#GtkCalendar--month" title='The "month" property'>month</a>"                    <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write
@@ -177,6 +225,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write
   "<a class="link" href="GtkCalendar.html#GtkCalendar--show-day-names" title='The "show-day-names" property'>show-day-names</a>"           <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write
+  "<a class="link" href="GtkCalendar.html#GtkCalendar--show-details" title='The "show-details" property'>show-details</a>"             <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write
   "<a class="link" href="GtkCalendar.html#GtkCalendar--show-heading" title='The "show-heading" property'>show-heading</a>"             <a
@@ -260,6 +311,75 @@ are 0-11) while <em class="structfield"><code>selected_day</code></em> is one-ba
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="GtkCalendarDetailFunc"></a><h3>GtkCalendarDetailFunc ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a>*              (*GtkCalendarDetailFunc)            (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> year,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> month,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
+>guint</a> day,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> user_data);</pre>
+<p>
+This kind of functions provide Pango markup with detail information for the
+specified day. Examples for such details are holidays or appointments. The
+function returns <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> when no information is available.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>year</code></em> :</span></p></td>
+<td> the year for which details are needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>month</code></em> :</span></p></td>
+<td> the month for which details are needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>day</code></em> :</span></p></td>
+<td> the day of <em class="parameter"><code>month</code></em> for which details are needed.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> the data passed with <a class="link" href="GtkCalendar.html#gtk-calendar-set-detail-func" title="gtk_calendar_set_detail_func ()"><code class="function">gtk_calendar_set_detail_func()</code></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Newly allocated string with Pango markup with details
+for the specified day, or <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a>.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.16
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="GtkCalendarDisplayOptions"></a><h3>enum GtkCalendarDisplayOptions</h3>
 <pre class="programlisting">typedef enum
 {
@@ -267,41 +387,48 @@ are 0-11) while <em class="structfield"><code>selected_day</code></em> is one-ba
   GTK_CALENDAR_SHOW_DAY_NAMES		= 1 &lt;&lt; 1,
   GTK_CALENDAR_NO_MONTH_CHANGE		= 1 &lt;&lt; 2,
   GTK_CALENDAR_SHOW_WEEK_NUMBERS	= 1 &lt;&lt; 3,
-  GTK_CALENDAR_WEEK_START_MONDAY	= 1 &lt;&lt; 4
+  GTK_CALENDAR_WEEK_START_MONDAY	= 1 &lt;&lt; 4,
+  GTK_CALENDAR_SHOW_DETAILS		= 1 &lt;&lt; 5
 } GtkCalendarDisplayOptions;
 </pre>
 <p>
-These options can be used to influence the display and behaviour of a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+These options can be used to influence the display and behaviour of a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><a name="GTK-CALENDAR-SHOW-HEADING:CAPS"></a><span class="term"><code class="literal">GTK_CALENDAR_SHOW_HEADING</code></span></p></td>
-<td>Specifies that the month and year should be displayed.
+<td> Specifies that the month and year should be displayed.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-CALENDAR-SHOW-DAY-NAMES:CAPS"></a><span class="term"><code class="literal">GTK_CALENDAR_SHOW_DAY_NAMES</code></span></p></td>
-<td>Specifies that three letter day descriptions should be present.
+<td> Specifies that three letter day descriptions should be present.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-CALENDAR-NO-MONTH-CHANGE:CAPS"></a><span class="term"><code class="literal">GTK_CALENDAR_NO_MONTH_CHANGE</code></span></p></td>
-<td>Prevents the user from switching months with the calendar.
+<td> Prevents the user from switching months with the calendar.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-CALENDAR-SHOW-WEEK-NUMBERS:CAPS"></a><span class="term"><code class="literal">GTK_CALENDAR_SHOW_WEEK_NUMBERS</code></span></p></td>
-<td>Displays each week numbers of the current year, down the left side 
- of the calendar.
+<td> Displays each week numbers of the current year, down the
+left side of the calendar.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-CALENDAR-WEEK-START-MONDAY:CAPS"></a><span class="term"><code class="literal">GTK_CALENDAR_WEEK_START_MONDAY</code></span></p></td>
-<td>Since GTK+ 2.4, this option is deprecated and ignored by GTK+. 
- The information on which day the calendar week starts is derived from the locale.
-
+<td> Since GTK+ 2.4, this option is deprecated and ignored by GTK+.
+The information on which day the calendar week starts is derived from the locale.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-CALENDAR-SHOW-DETAILS:CAPS"></a><span class="term"><code class="literal">GTK_CALENDAR_SHOW_DETAILS</code></span></p></td>
+<td> Just show an indicator, not the full details
+text when details are provided. See <a class="link" href="GtkCalendar.html#gtk-calendar-set-detail-func" title="gtk_calendar_set_detail_func ()"><code class="function">gtk_calendar_set_detail_func()</code></a>.
 </td>
 </tr>
 </tbody>
@@ -545,35 +672,6 @@ headings).</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="gtk-calendar-display-options"></a><h3>gtk_calendar_display_options ()</h3>
-<pre class="programlisting">void                gtk_calendar_display_options        (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
-                                                         <a class="link" href="GtkCalendar.html#GtkCalendarDisplayOptions" title="enum GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</a> flags);</pre>
-<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
-<h3 class="title">Warning</h3>
-<p><code class="literal">gtk_calendar_display_options</code> is deprecated and should not be used in newly-written code. </p>
-</div>
-<p>
-Sets display options (whether to display the heading and the month headings).</p>
-<p>
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
-<td> the display options to set.
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
 <a name="gtk-calendar-get-date"></a><h3>gtk_calendar_get_date ()</h3>
 <pre class="programlisting">void                gtk_calendar_get_date               (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
                                                          <a
@@ -616,6 +714,213 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 <td> location to store the day number (between 1 and 31), or <a
 href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-calendar-set-detail-func"></a><h3>gtk_calendar_set_detail_func ()</h3>
+<pre class="programlisting">void                gtk_calendar_set_detail_func        (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a class="link" href="GtkCalendar.html#GtkCalendarDetailFunc" title="GtkCalendarDetailFunc ()">GtkCalendarDetailFunc</a> func,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
+>gpointer</a> data,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"
+>GDestroyNotify</a> destroy);</pre>
+<p>
+Installs a function which provides Pango markup with detail information
+for each day. Examples for such details are holidays or appointments. That
+information is shown below each day when <a class="link" href="GtkCalendar.html#GtkCalendar--show-details" title='The "show-details" property'><span class="type">"show-details"</span></a> is set.
+A tooltip containing with full detail information is provided, if the entire
+text should not fit into the details area, or if <a class="link" href="GtkCalendar.html#GtkCalendar--show-details" title='The "show-details" property'><span class="type">"show-details"</span></a>
+is not set.
+</p>
+<p>
+The size of the details area can be restricted by setting the
+<a class="link" href="GtkCalendar.html#GtkCalendar--detail-width-chars" title='The "detail-width-chars" property'><span class="type">"detail-width-chars"</span></a> and <a class="link" href="GtkCalendar.html#GtkCalendar--detail-height-rows" title='The "detail-height-rows" property'><span class="type">"detail-height-rows"</span></a>
+properties.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
+<td> a function providing details for each day.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td> data to pass to <em class="parameter"><code>func</code></em> invokations.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>destroy</code></em> :</span></p></td>
+<td> a function for releasing <em class="parameter"><code>data</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-calendar-get-detail-width-chars"></a><h3>gtk_calendar_get_detail_width_chars ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                gtk_calendar_get_detail_width_chars (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);</pre>
+<p>
+Queries the width of detail cells, in characters.
+See <a class="link" href="GtkCalendar.html#GtkCalendar--detail-width-chars" title='The "detail-width-chars" property'><span class="type">"detail-width-chars"</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The width of detail cells, in characters.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-calendar-set-detail-width-chars"></a><h3>gtk_calendar_set_detail_width_chars ()</h3>
+<pre class="programlisting">void                gtk_calendar_set_detail_width_chars (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> chars);</pre>
+<p>
+Updates the width of detail cells.
+See <a class="link" href="GtkCalendar.html#GtkCalendar--detail-width-chars" title='The "detail-width-chars" property'><span class="type">"detail-width-chars"</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>chars</code></em> :</span></p></td>
+<td> detail width in characters.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-calendar-get-detail-height-rows"></a><h3>gtk_calendar_get_detail_height_rows ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                gtk_calendar_get_detail_height_rows (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar);</pre>
+<p>
+Queries the height of detail cells, in rows.
+See <a class="link" href="GtkCalendar.html#GtkCalendar--detail-width-chars" title='The "detail-width-chars" property'><span class="type">"detail-width-chars"</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The height of detail cells, in rows.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-calendar-set-detail-height-rows"></a><h3>gtk_calendar_set_detail_height_rows ()</h3>
+<pre class="programlisting">void                gtk_calendar_set_detail_height_rows (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> rows);</pre>
+<p>
+Updates the height of detail cells.
+See <a class="link" href="GtkCalendar.html#GtkCalendar--detail-height-rows" title='The "detail-height-rows" property'><span class="type">"detail-height-rows"</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rows</code></em> :</span></p></td>
+<td> detail height in rows.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-calendar-display-options"></a><h3>gtk_calendar_display_options ()</h3>
+<pre class="programlisting">void                gtk_calendar_display_options        (<a class="link" href="GtkCalendar.html" title="GtkCalendar">GtkCalendar</a> *calendar,
+                                                         <a class="link" href="GtkCalendar.html#GtkCalendarDisplayOptions" title="enum GtkCalendarDisplayOptions">GtkCalendarDisplayOptions</a> flags);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_calendar_display_options</code> is deprecated and should not be used in newly-written code. </p>
+</div>
+<p>
+Sets display options (whether to display the heading and the month headings).</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>calendar</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCalendar.html" title="GtkCalendar"><span class="type">GtkCalendar</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
+<td> the display options to set.
 </td>
 </tr>
 </tbody>
@@ -673,9 +978,49 @@ since the last <a class="link" href="GtkCalendar.html#gtk-calendar-freeze" title
 <pre class="programlisting">  "day"                      <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write</pre>
-<p>The selected day (as a number between 1 and 31, or 0 to unselect the currently selected day).</p>
+<p>
+The selected day (as a number between 1 and 31, or 0 
+to unselect the currently selected day).
+This property gets initially set to the current day.</p>
+<p>
+
+</p>
 <p>Allowed values: [0,31]</p>
 <p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkCalendar--detail-height-rows"></a><h3>The <code class="literal">"detail-height-rows"</code> property</h3>
+<pre class="programlisting">  "detail-height-rows"       <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write</pre>
+<p>
+Height of a detail cell, in rows.
+A value of 0 allows any width. See <a class="link" href="GtkCalendar.html#gtk-calendar-set-detail-func" title="gtk_calendar_set_detail_func ()"><code class="function">gtk_calendar_set_detail_func()</code></a>.</p>
+<p>
+
+</p>
+<p>Allowed values: [0,127]</p>
+<p>Default value: 0</p>
+<p>Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkCalendar--detail-width-chars"></a><h3>The <code class="literal">"detail-width-chars"</code> property</h3>
+<pre class="programlisting">  "detail-width-chars"       <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                  : Read / Write</pre>
+<p>
+Width of a detail cell, in characters.
+A value of 0 allows any width. See <a class="link" href="GtkCalendar.html#gtk-calendar-set-detail-func" title="gtk_calendar_set_detail_func ()"><code class="function">gtk_calendar_set_detail_func()</code></a>.</p>
+<p>
+
+</p>
+<p>Allowed values: [0,127]</p>
+<p>Default value: 0</p>
+<p>Since  2.14
+</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -683,7 +1028,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <pre class="programlisting">  "month"                    <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write</pre>
-<p>The selected month (as a number between 0 and 11).</p>
+<p>
+The selected month (as a number between 0 and 11). 
+This property gets initially set to the current month.</p>
+<p>
+
+</p>
 <p>Allowed values: [0,11]</p>
 <p>Default value: 0</p>
 </div>
@@ -715,6 +1065,23 @@ Determines whether day names are displayed.</p>
 </p>
 <p>Default value: TRUE</p>
 <p>Since  2.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkCalendar--show-details"></a><h3>The <code class="literal">"show-details"</code> property</h3>
+<pre class="programlisting">  "show-details"             <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write</pre>
+<p>
+Determines whether details are shown directly in the widget, or if they are
+available only as tooltip. When this property is set days with details are
+marked.</p>
+<p>
+
+</p>
+<p>Default value: TRUE</p>
+<p>Since  2.14
 </p>
 </div>
 <hr>
@@ -753,7 +1120,12 @@ Determines whether week numbers are displayed.</p>
 <pre class="programlisting">  "year"                     <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write</pre>
-<p>The selected year.</p>
+<p>
+The selected year. 
+This property gets initially set to the current year.</p>
+<p>
+
+</p>
 <p>Allowed values: &gt;= 0</p>
 <p>Default value: 0</p>
 </div>

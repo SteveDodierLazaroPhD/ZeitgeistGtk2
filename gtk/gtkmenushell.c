@@ -506,8 +506,6 @@ gtk_menu_shell_realize (GtkWidget *widget)
   GdkWindowAttr attributes;
   gint attributes_mask;
 
-  g_return_if_fail (GTK_IS_MENU_SHELL (widget));
-
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
 
   attributes.x = widget->allocation.x;
@@ -773,13 +771,8 @@ static gint
 gtk_menu_shell_key_press (GtkWidget   *widget,
 			  GdkEventKey *event)
 {
-  GtkMenuShell *menu_shell;
+  GtkMenuShell *menu_shell = GTK_MENU_SHELL (widget);
   gboolean enable_mnemonics;
-  
-  g_return_val_if_fail (GTK_IS_MENU_SHELL (widget), FALSE);
-  g_return_val_if_fail (event != NULL, FALSE);
-      
-  menu_shell = GTK_MENU_SHELL (widget);
 
   if (!menu_shell->active_menu_item && menu_shell->parent_menu_shell)
     return gtk_widget_event (menu_shell->parent_menu_shell, (GdkEvent *)event);
@@ -801,12 +794,7 @@ static gint
 gtk_menu_shell_enter_notify (GtkWidget        *widget,
 			     GdkEventCrossing *event)
 {
-  GtkMenuShell *menu_shell;
-
-  g_return_val_if_fail (GTK_IS_MENU_SHELL (widget), FALSE);
-  g_return_val_if_fail (event != NULL, FALSE);
-
-  menu_shell = GTK_MENU_SHELL (widget);
+  GtkMenuShell *menu_shell = GTK_MENU_SHELL (widget);
 
   if (menu_shell->active)
     {
@@ -873,17 +861,11 @@ static gint
 gtk_menu_shell_leave_notify (GtkWidget        *widget,
 			     GdkEventCrossing *event)
 {
-  GtkMenuShell *menu_shell;
-  GtkMenuItem *menu_item;
-  GtkWidget *event_widget;
-
-  g_return_val_if_fail (GTK_IS_MENU_SHELL (widget), FALSE);
-  g_return_val_if_fail (event != NULL, FALSE);
-
   if (GTK_WIDGET_VISIBLE (widget))
     {
-      menu_shell = GTK_MENU_SHELL (widget);
-      event_widget = gtk_get_event_widget ((GdkEvent*) event);
+      GtkMenuShell *menu_shell = GTK_MENU_SHELL (widget);
+      GtkWidget *event_widget = gtk_get_event_widget ((GdkEvent*) event);
+      GtkMenuItem *menu_item;
 
       if (!event_widget || !GTK_IS_MENU_ITEM (event_widget))
 	return TRUE;
@@ -929,14 +911,10 @@ static void
 gtk_menu_shell_remove (GtkContainer *container,
 		       GtkWidget    *widget)
 {
-  GtkMenuShell *menu_shell;
+  GtkMenuShell *menu_shell = GTK_MENU_SHELL (container);
   gint was_visible;
-  
-  g_return_if_fail (GTK_IS_MENU_SHELL (container));
-  g_return_if_fail (GTK_IS_MENU_ITEM (widget));
-  
+
   was_visible = GTK_WIDGET_VISIBLE (widget);
-  menu_shell = GTK_MENU_SHELL (container);
   menu_shell->children = g_list_remove (menu_shell->children, widget);
   
   if (widget == menu_shell->active_menu_item)
@@ -960,14 +938,9 @@ gtk_menu_shell_forall (GtkContainer *container,
 		       GtkCallback   callback,
 		       gpointer      callback_data)
 {
-  GtkMenuShell *menu_shell;
+  GtkMenuShell *menu_shell = GTK_MENU_SHELL (container);
   GtkWidget *child;
   GList *children;
-
-  g_return_if_fail (GTK_IS_MENU_SHELL (container));
-  g_return_if_fail (callback != NULL);
-
-  menu_shell = GTK_MENU_SHELL (container);
 
   children = menu_shell->children;
   while (children)
@@ -1021,7 +994,7 @@ gtk_menu_shell_is_item (GtkMenuShell *menu_shell,
   g_return_val_if_fail (child != NULL, FALSE);
 
   parent = child->parent;
-  while (parent && GTK_IS_MENU_SHELL (parent))
+  while (GTK_IS_MENU_SHELL (parent))
     {
       if (parent == (GtkWidget*) menu_shell)
 	return TRUE;
@@ -1325,8 +1298,13 @@ gtk_real_menu_shell_move_current (GtkMenuShell         *menu_shell,
 {
   GtkMenuShell *parent_menu_shell = NULL;
   gboolean had_selection;
+  gboolean touchscreen_mode;
 
   had_selection = menu_shell->active_menu_item != NULL;
+
+  g_object_get (gtk_widget_get_settings (GTK_WIDGET (menu_shell)),
+                "gtk-touchscreen-mode", &touchscreen_mode,
+                NULL);
 
   if (menu_shell->parent_menu_shell)
     parent_menu_shell = GTK_MENU_SHELL (menu_shell->parent_menu_shell);
@@ -1334,14 +1312,21 @@ gtk_real_menu_shell_move_current (GtkMenuShell         *menu_shell,
   switch (direction)
     {
     case GTK_MENU_DIR_PARENT:
-      if (parent_menu_shell)
+      if (touchscreen_mode &&
+          menu_shell->active_menu_item &&
+          GTK_MENU_ITEM (menu_shell->active_menu_item)->submenu &&
+          GTK_WIDGET_VISIBLE (GTK_MENU_ITEM (menu_shell->active_menu_item)->submenu))
+        {
+          /* if we are on a menu item that has an open submenu but the
+           * focus is not in that submenu (e.g. because it's empty or
+           * has only insensitive items), close that submenu instead
+           * of running into the code below which would close *this*
+           * menu.
+           */
+          _gtk_menu_item_popdown_submenu (menu_shell->active_menu_item);
+        }
+      else if (parent_menu_shell)
 	{
-          gboolean touchscreen_mode;
-
-          g_object_get (gtk_widget_get_settings (GTK_WIDGET (menu_shell)),
-                        "gtk-touchscreen-mode", &touchscreen_mode,
-                        NULL);
-
           if (touchscreen_mode)
             {
               /* close menu when returning from submenu. */
