@@ -1,7 +1,2092 @@
+2008-07-05  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.13.4 ===
+
+2008-07-05  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtk.symbols: move gtk_draw_insertion_cursor() out of the
+	deprecated section because it isn't deprecated.
+
+2008-07-05  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkprogressbar.c: remove #if HAVE_CONFIG_H and clean up
+	other include weirdness in this file.
+
+2008-07-05  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2008-07-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkiconview.c:
+	* gtk/gtkfontsel.c:
+	* gtk/gtkscalebutton.c: Small doc fixes.
+
+2008-07-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/gdkevents.c:
+	* gdk/x11/gdktestutils-x11.c: Small doc fixes
+
+2008-07-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/tests/defaultvalue.c: Omit some more untestable properties.
+
+	* gtk/gtkmenu.c: Fix the initial value of the monitor property.
+
+	* gtk/gtkentry.c: Fix the property getter for text-length property.
+
+	* gtk/gtkaccelgroup.c: Fix default value for modifier-mask property.
+
+2008-07-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkmenu.c: Debork the attach-widget property.
+
+2008-07-04  Michael Natterer  <mitch@imendio.com>
+
+	Fix make check:
+
+	* gtk/Makefile.am: remove GTK_DISABLE_DEPRECATED from INCLUDES
+	again :-(
+
+	* gtk/gtkclist.c
+	* gtk/gtkcombo.c
+	* gtk/gtkctree.c
+	* gtk/gtklist.c
+	* gtk/gtklistitem.c
+	* gtk/gtknotebook.c
+	* gtk/gtkobject.c
+	* gtk/gtkoldeditable.c
+	* gtk/gtkpixmap.c
+	* gtk/gtktext.c
+	* gtk/gtktipsquery.c
+	* gtk/gtktree.c
+	* gtk/gtktreeitem.c: don't #define it again before including
+	gtkalias.h after it has been #undef'ed before.
+
+2008-07-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkentry.c (_gtk_entry_reset_im_context): set need_im_reset
+	to FALSE instead of 0.
+
+2008-07-04  Michael Natterer  <mitch@imendio.com>
+
+	Allocate with GSlice:
+
+	* gtk/gtkassistant.c: GtkAssistantPage
+	* gtk/gtkcellview.c: GtkCellViewCellInfo
+	* gtk/gtkentry.c: GtkEntryPasswordHint, PopupInfo
+	* gtk/gtkfilefilter.c: FilterRule
+	* gtk/gtknotebook.c: GtkNotebookPage
+
+2008-07-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkcombobox.c: allocate ComboCellInfo with GSlice.
+
+2008-07-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkprintoperation.c (print_pages): change "error_dialog"
+	variable to GtkWidget fo fix two warnings.
+
+2008-07-04  Michael Natterer  <mitch@imendio.com>
+
+	Bug 539944 – Add GtkScaleButton API so struct fields can be marked
+	as private
+
+	* gtk/gtk.symbols
+	* gtk/gtkscalebutton.[ch]: add gtk_scale_button_get_plus_button()
+	and _get_minus_button(). Patch by Christian Dywan.
+
+2008-07-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkscalebutton.c:
+	* gdk/gdk.symbols: 
+	* gdk/gdkwindowimpl.c: Fix make check.
+
+2008-07-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 540618 – gtk_menu_shell_select_first prints warning on GtkMenubar
+	constructed using GtkUIManager
+
+	* gtk/gtkmenuitem.c: Fall back to the default positioning when
+	the menuitem is not realized. Patch by Björn Lindqvist.
+
+2008-07-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 540612 – mem leak in filechooser
+
+	* gtk/gtkfilesystem.c (get_volumes_list): Fix a memory leak.
+	Patch by Christian Persch.
+
+2008-07-04  Tor Lillqvist  <tml@novell.com>
+
+	Bug 540861 - invalid UTF-8 in input device name
+
+	* gdk/win32/gdkinput-win32.c: Fetch the device and cursor names in
+	Unicode, and convert to UTF-8 for the GdkDevice's name field.
+
+2008-07-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 538863 – Fixes assertion on entering empty folder
+
+	* gtk/gtkfilechooserdefault.c (browse_files_select_first_row): Don't
+	select the first row if the folder is empty.
+	Patch by Olle Bergkvist.
+
+2008-07-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 540915 – GtkBuilder sets properties in reverse order
+
+	* gtk/gtkbuilderparser.c (parse_custom): Set properties in the order 
+	in which they are specified in the xml file.  
+
+2008-07-03  Matthias Clasen  <mclasen@redhat.com>
+	
+	Bug 539944 – Add GtkScaleButton API so struct fields can be marked as
+	private
+
+	* gtk/gtk.symbols:
+	* gtk/gtkscalebutton.[hc] (gtk_scale_button_get_popup): Add an
+	accessor for the popup. Patch by Christian Dywan
+
+2008-07-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 535498 – Printing demo broken
+
+	* demos/gtk-demo/printing.c: Use monospace as font name, 
+	not mono. Also use the right advance when moving from line to line.
+	Patch by Yevgen Muntyan.
+
+2008-07-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 538547 – Update doc-shooter in gtk documentation
+
+	* docs/tools/Makefile.am:
+	* docs/tools/folder.png:
+	* docs/tools/gnome.png: New images
+
+	* docs/tools/widgets.c: Use the new images.
+	Patch by Baptiste Mille-Mathias.
+
+2008-07-03  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkscalebutton.c: remove "_from_bindings" suffix from the
+	names of binding signal implementations.
+
+2008-07-03  Li Yuan  <li.yuan@sun.com>
+
+	* gail-uninstalled.pc.in:
+	Bug #536430. Add libgailutil.la into gail-uninstalled.pc.in.
+
+2008-07-03  Cody Russell  <bratsche@gnome.org>
+
+	Bug 540529 – Remove all GIMP references
+
+	* gtk+-2.0.pc.in:
+	* gdk-2.0.pc.in:
+	* gtk+-unix-print-2.0.pc.in:
+	* gtk+-2.0-uninstalled.pc.in:
+	* gdk-2.0-uninstalled.pc.in: Changed GIMP Toolkit to say
+	GTK+ Graphical UI Library in the pkg-config files.
+
+2008-07-02  Cody Russell  <bratsche@gnome.org>
+
+	Bug 541305 – [Win32] Scrolling was broken after GdkWindow refactoring
+
+	* gdk/win32/gdkwindow-win32.c: Reverted some logic so that scrolling
+	works again.
+
+	* gdk/win32/gdkgeometry-win32.c: Removed some more unnecessary checks.
+	* gdk/win32/gdkkeys-win32.c: Removed unused variable to fix compile-time
+	warnings.
+
+2008-07-02  Cody Russell  <bratsche@gnome.org>
+
+	Bug 541249 – [Win32] Fix some internal static methods
+
+	* gdk/gdkwindow-win32.c: Make the interface implementation methods
+	static.
+
+2008-07-02  Michael Natterer  <mitch@imendio.com>
+
+	Bug 537591 – Don't hardcode minimum width of menuitems
+
+	* gtk/gtkmenuitem.c: applied patch from Christian Dywan which
+	introduces a "width-chars" style property which replaces the
+	hardcoded minimum width of menuitems with submenu. Patch
+	extracted from Maemo-GTK+.
+
+2008-07-02  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfilechooserdefault.c: remove some of the million includes.
+
+2008-07-02  Kristian Rietveld  <kris@imendio.com>
+
+	* gtk/gtkcellrendererpixbuf.c (gtk_cell_renderer_pixbuf_class_init):
+	Since s/2.16/2.14/ for the new gicon property.
+
+2008-07-02  Kristian Rietveld  <kris@imendio.com>
+
+	Bug 455268 - Add gtk-enable-tooltips GtkSetting
+
+	* gtk/gtk.symbols:
+	* gtk/gtktoolbar.[ch] (gtk_toolbar_[gs]et_tooltips): deprecated.
+
+	* gtk/gtksettings.c: introduce gtk-enable-tooltips XSetting.
+
+	* gtk/gtktooltip.c (_gtk_tooltip_handle_event): take the newly
+	introduced XSetting into account.
+
+	* demos/gtk-demo/appwindow.c: don't use the now deprecated
+	gtk_toolbar_set_tooltips().
+
+2008-07-02  Cody Russell  <bratsche@gnome.org>
+
+	Bug 541162 – [Win32] Update for the new GdkWindowImpl stuff
+
+	* gdk/win32/gdkprivate-win32.h:
+	* gdk/win32/gdkgeometry-win32.c:
+	* gdk/win32/gdkevents-win32.c:
+	* gdk/win32/gdkwindow-win32.c: Update Win32 backend according to
+	the newly refactored GdkWindow code.
+	
+2008-07-01  Cody Russell  <bratsche@gnome.org>
+
+	Bug 539164 – Windows' System Menu blocks main loop
+
+	* gdk/win32/gdkevents-win32.c: Use a modal timer proc in between
+	receiving WM_ENTERMENULOOP and WM_EXITMENULOOP and pump the
+	GLib mainloop from there.
+
+2008-07-01  Richard Hult  <richard@imendio.com>
+
+	Some aftermath from the window impl cleanups:
+
+	* gdk/quartz/gdkwindow-quartz.c:
+	(gdk_window_merge_child_input_shapes): Rename and export again.
+	(gdk_window_quartz_get_offsets): Make static.
+
+2008-07-01  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkscalebutton.h: forgot to commit the header, fixed now.
+
+2008-07-01  Matthias Clasen  <mclasen@redhat.com>
+
+	539790 – [PATCH] Please add three new settings to GtkSettings
+
+	* gdk/x11/gdksettings.c: 
+	* gtk/gtksettings.c: Add event sound settings.
+	Patch by Lennart Poettering.
+
+2008-07-01  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 434535 – printoperation's create_surface doesn't check temp file
+	creation for success
+
+	Patch by Marek Kasik:
+
+	* gtk/gtkprintoperation-unix.c
+	(_gtk_print_operation_platform_backend_create_preview_surface): 
+	Handle failure to create temp file by returning NULL.
+
+	* gtk/gtkprintoperation.c (gtk_print_operation_preview_handler):
+	Return FALSE if surface creation fails.
+
+	(print_pages): If the preiew signal is not handled, show an
+	error dialog.
+
+2008-07-01  Michael Natterer  <mitch@imendio.com>
+
+	Bug 442042 – GtkScaleButton is too limited
+
+	* gtk/gtkscalebutton.[ch]: turn "orientation" into a normal
+	property that can be changed at any time after widget
+	creation. Add public API for it.
+
+	* gtk/gtk.symbols: add gtk_scale_button_get/set_orientation.
+
+2008-06-30  Michael Natterer  <mitch@imendio.com>
+
+	Some unrelated cleanups found while reviewing
+	the offscreen window patch:
+
+	* gdk/gdkwindow.c: add missing Since: 2.14 to the redirection
+	functions, fix some function header indentation, update
+	documentation of redirect_to_drawable().
+
+	* gdk/x11/gdkwindow-x11.c
+	* gdk/x11/gdkpixmap-x11.c: fix function header
+	formatting/indentation.
+
+	* gtk/gtkwidget.c: use I_() on "damage_event".
+
+2008-06-30  Michael Natterer  <mitch@imendio.com>
+
+	* gdk/gdkinternals.h: remove duplicate declaration of
+	_gdk_window_new().
+
+2008-06-30  Michael Natterer  <mitch@imendio.com>
+
+	* gdk/Makefile.am: reorder source lists alphabetically.
+
+2008-06-30  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 540310 – Avoid unnecessary repaints when resizing GtkWindow
+
+	* gtk/gtkwindow.c: Avoid unnecessary redraws when resizing.
+	Patch by Owen Taylor
+
+2008-06-29  Behdad Esfahbod  <behdad@gnome.org>
+
+	Bug 530255 – GtkAboutDialog cuts off comments label
+	Followup patch from  Jan Arne Petersen
+
+	* gtk/gtklabel.c (gtk_label_get_layout_offsets): Ensure layout.
+
+2008-06-28  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkselection.h: properly indent the newly added
+	GtkSelectionData accessors. Some newlines can't hurt either.
+
+2008-06-27  Mikael Hallendal  <micke@imendio.com>
+
+	* gtk/gtkbox.c (gtk_box_pack): Removed accidental empty row.
+
+2008-06-27  Mikael Hallendal  <micke@imendio.com>
+
+	* gtk/gtkbox.c (gtk_box_pack, gtk_box_pack_start, gtk_box_pack_end):
+	Factored out gtk_box_pack from gtk_box_pack_start and use it from both
+	pack_start and pack_end in order to reduce the code duplication.
+
+2008-06-27  Michael Natterer  <mitch@imendio.com>
+
+	Bug 442042 – GtkScaleButton is too limited
+
+	* gtk/gtkscalebutton.c (gtk_scale_button_init): set the name
+	"gtk-scalebutton-popup-window" on the popup window so it is
+	properly themeable.
+
+2008-06-27  Kristian Rietveld  <kris@imendio.com>
+
+	* gdk/quartz/gdkgeometry-quartz.c:
+	* gdk/quartz/gdkwindow-quartz.c:
+	* gdk/quartz/gdkprivate-quartz.h: adapt to use GdkWindowImpl
+	interface.
+
+2008-06-27  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtkrecentmanager.c (get_icon_for_mime_type): Fix two potential
+	critical warnings. Bug #539470.
+
+2008-06-27  Emmanuele Bassi  <ebassi@gnome.org>
+
+	Abstract some GdkWindow API into an interface that the backends
+	must implement. (based on a patch by Alex Larsson)
+
+	* gdk/Makefile.am: Add gdkwindowimpl.[ch]
+
+	* gdk/gdk.symbols: Move symbols around.
+
+	* gdk/gdkinternals.h:
+	* gdk/gdkwindowimpl.[ch]: Move some of the GdkWindow API we require
+	from the backends to a GInterface that the backends should implement
+	instead.
+
+	* gdk/gdkwindow.c: Provide some of the GdkWindow public API as a
+	wrapper call around the GdkWindowImpl interface vtable.
+
+	* gdk/x11/gdkevents-x11.c:
+	* gdk/x11/gdkgeometry-x11.c:
+	* gdk/x11/gdkprivate-x11.h:
+	* gdk/x11/gdkwindow-x11.c:
+	* gdk/x11/gdkwindow-x11.h: Update the X11 backend to implement
+	the GdkWindowImpl interface.
+
+2008-06-27  Martyn Russell  <martyn@imendio.com>
+
+	Bug 540318 - Invalid URL
+	
+	* gtk/gtkcontainer.c: (gtk_container_add): Fixed the FAQ location
+	in the warning produced here.
+
+2008-06-27  Michael Natterer  <mitch@imendio.com>
+
+	Bug 442042 – GtkScaleButton is too limited
+
+	* gtk/gtkscalebutton.c: add "orientation" property. Make sure the
+	stuff that is part of the public API continues to be created in
+	init() to stay compatible. Move creating of the popup scale to
+	constructor(). Add an internal HScale class. Changed popup
+	positioning for horizontal scales accordingly.
+
+2008-06-26  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkscalebutton.c
+	* gtk/gtkvolumebutton.c: remove redundant init() and class_init()
+	prototypes, remove redundant includes, remove a little trailing
+	whitespace.
+
+2008-06-26  Richard Hult  <richard@imendio.com>
+
+	* gtk/gtkclipboard-quartz.c: (gtk_clipboard_wait_for_contents):
+	* gtk/gtkquartz.c:
+	(_gtk_quartz_get_selection_data_from_pasteboard),
+	(_gtk_quartz_set_selection_data_for_pasteboard): Patch from
+	Christian Dywan to clean up selection data setting.
+
+2008-06-26  Richard Hult  <richard@imendio.com>
+
+	* gtk/gtkdnd-quartz.c (gtk_drag_begin_internal): Don't use
+	deprecated function gtk_widget_ref, replace with g_object_ref.
+
+2008-06-26  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfilesystem.c: #include "config.h"
+
+2008-06-26  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtkfilechooserdefault.c
+	(gtk_file_chooser_default_get_current_folder): current_folder can be
+	NULL here, do not try to reference it (Bug #540235)
+	(gtk_file_chooser_default_get_files): Deal better with
+	gtk_file_chooser_default_get_current_folder() being able to return
+	NULL.
+
+2008-06-26  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktextutil.c (_gtk_text_util_append_special_char_menuitems):
+	allocate the GtkTextUtilCallbackInfo structs with GSlice.
+
+2008-06-25  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktypeutils.h: there is no reason to include
+	<gtk/gtktypebuiltins.h> in the middle of the file, move it to top,
+	replacing the <glib-object.h> include. Also move the remaining few
+	non-deprecated things to the top and move some deprecated things
+	around to clean up the mess with too many deprecated sections even
+	more.
+
+2008-06-24  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktypeutils.h: deprecate gtk_type_init() unconditionally
+	(also for GTK_COMPILATION). Move some deprecated typedefs around
+	to reduce the mess with zillions of deprecated sections.
+
+	* gtk/gtkmain.c (do_post_parse_initialization): replace the call
+	to gtk_type_init() by g_type_init() and gtk_object_get_type() even
+	though the latter is probably completely pointless.
+
+2008-06-24  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkdialog.c (gtk_dialog_init): also revert change in how
+	the dialog's vbox was added (bug #539732).
+
+2008-06-24  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtkdialog.[ch]: Remove container implementation, which isn't
+	thought for handling non-direct children. Fixes #539732.
+	(gtk_dialog_pack_start) (gtk_dialog_pack_end): Removed as well, it
+	doesn't provide enough control to API users (removing, reordering...),
+	this is better handled through:
+	(gtk_dialog_get_content_area): New function which just returns
+	dialog->vbox.
+	* gtk/gtk.symbols: Modify accordingly.
+	* docs/reference/gtk/tmpl/gtkdialog.sgml: Update docs to recommend
+	using gtk_dialog_get_[action|content]_area() instead of accessing
+	dialog struct members directly.
+
+2008-06-24  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkassistant.h
+	* gtk/gtkcellrenderer.h
+	* gtk/gtkfilechooserentry.h
+	* gtk/gtkprivate.h
+	* gtk/gtktooltip.h
+	* gtk/gtktreeview.h
+	* gtk/gtkwindow.h: no need to include gtkwidget.h or gtkobject.h
+	if there is any other widget included, they all have to include
+	their respective parent classes (the is-a relation works for
+	includes too).
+
+2008-06-24  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktextutil.h: remove includes from this internal header.
+
+	* gtk/gtktextutil.c: include gtktextbuffer.h before gtktextutil.h.
+
+2008-06-23  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkinvisible.h: formatting.
+
+2008-06-23  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkaction.h
+	* gtk/gtkbuildable.h
+	* gtk/gtkbuilderprivate.h
+	* gtk/gtkcelllayout.h
+	* gtk/gtkentrycompletion.h
+	* gtk/gtkfilechoosersettings.h
+	* gtk/gtkfilesystem.h
+	* gtk/gtkfilesystemmodel.h
+	* gtk/gtkicontheme.h
+	* gtk/gtklinkbutton.h
+	* gtk/gtkpagesetup.h
+	* gtk/gtkpapersize.h
+	* gtk/gtkprintcontext.h
+	* gtk/gtkprintoperation.h
+	* gtk/gtkprintoperationpreview.h
+	* gtk/gtkprintsettings.h
+	* gtk/gtkrecentchooserprivate.h
+	* gtk/gtkrecentmanager.h
+	* gtk/gtksearchengine.h
+	* gtk/gtktexttag.h
+	* gtk/gtktreeselection.h
+	* gtk/gtktreeviewcolumn.h
+	* gtk/gtkuimanager.h: remove redundant inclusion of <glib.h> and
+	<glib-object.h>. There is no point in relying on them being pulled
+	in by other headers in some places and placing them explicitly in
+	other places, so choose the "as little includes as possible"
+	approach and get rid of them.
+
+2008-06-23  Kristian Rietveld  <kris@imendio.com>
+
+	* gdk/gdkenumtypes.h.template:
+	* gdk-pixbuf/gdk-pixbuf-enum-types.h.template:
+	* gtk/gtktypebuiltins.h.template:
+	* perf/typebuiltins.h.template: do not hard code the prefix of the
+	enum, use @ENUMPREFIX@ instead (you need an up to date glib for this).
+
+2008-06-23  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmountoperation.h
+	* gtk/gtktestutils.h
+	* gtk/gtkshow.[ch]: remove as many includes as possible from these
+	new files. They can't be included individually, so nothing can break.
+
+2008-06-22  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkaccelgroup.c: use g_param_spec_flags(), not enum() when
+	registering the "modifier-mask" property.
+
+2008-06-21  Johan Dahlin  <jdahlin@async.com.br>
+
+    * *.[ch]: Include "config.h" instead of <config.h>
+	Command used:
+	find -name \*.[ch]|xargs perl -p -i -e 's/^#include <config.h>/#include "config.h"/g'
+	Rubberstamped by Mitch and Tim
+
+2008-06-21  Carlos Garnacho  <carlos@imendio.com>
+
+	Bug 539466 – GtkMenuShell API/ABI break in trunk.
+
+	* gtk/gtkmenushell.h: Fix API/ABI break, two guint fields had
+	different name and packing width.
+
+2008-06-21  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkiconcachevalidator.c (check_pixel_data): Cast to guint8* to avoid
+	a compiler warning.
+
+2008-06-21  Michael Natterer  <mitch@imendio.com>
+
+	* gdk/gdkapplaunchcontext.h: remove redundant include, fix
+	indentation, replace header by a GDK copyright header (don't say
+	"The Gnome Library"), remove trailing whitespace.
+
+2008-06-21  Hans Breuer  <hans@breuer.org>
+
+	* gtk/gtkprintoperation-win32.c(1713) : fix 'function' : incompatible 
+	types - from 'struct _cairo *' to 'struct _cairo_surface *' by
+	passing the surface to cairo_surface_show_page(), not the context
+	* gtk/gtkprintoperation-win32.c(866) : get rid of warning C4018: 
+	'<' : signed/unsigned mismatch by using guint for the loop
+
+	* gtk/gtkmenu.c(gtk_menu_get_property) : property 'menu::active' is 
+	an uint, gtk_menu_get_active() returns the widget pointer. Convert
+	the latter to the former by calculating the index in menu::children
+	Also fix some occurences of g_return_if_fail() where 
+	g_return_val_if_fail() was meant
+
+2008-06-21  Björn Lindqvist  <bjourne@gmail.com>
+
+	Bug 539363 – Segfault when creating GtkPlugs
+
+	* gtk/gtkplug.c (gtk_plug_class_init): Spaces not allowed in
+	property names. "socket window" => "socket-window"
+
+2008-06-20  Jody Goldberg <jody@gnome.org>
+
+	* gtk/gtkprintoperation-win32.c (gtk_print_run_page_setup_dialog) : 
+	  Fix life cycle to avoid crash. [#536966]
+
+2008-06-20  Hans Breuer  <hans@breuer.org>
+
+	* gtk/gtkmenuitem.c gtk/gtkmessagedialog.c gtk/gtkplug.c : must return
+	a value of the appropriate type with g_return_val_if_fail
+	
+	* gdk/gdkconfig.h.win32 : add the GSEAL definition here as well
+
+	* gtk/gtkfilesystem.c : don't add the "File System" on win32
+
+	* tests/makefile.msc : remove broken autotestfile(system|chooser) 
+	from build
+
+2008-06-20  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkbutton.c: Document a style property
+
+	* gtk/gtkeditable.c: Document and use - instead of _ in signal names.
+
+	* gtk/gtkbutton.c:
+	* gtk/gtkcolorsel.c:
+	* gtk/gtkentry.c:
+	* gtk/gtkitemfactory.c:
+	* gtk/gtknotebook.c:
+	Fix up deprecated markup syntax. Add version numbers and
+	a message on the remaning ones.
+
+2008-06-20  Mikael Hallendal  <micke@imendio.com>
+
+	* tests/testthreads.c: Use g_signal_connect instead of
+	gtk_signal_connect.
+
+	* demos/testgtk/main.c: switched to use GSignal instead of GtkSignal.
+	While the code is not built, people may still look at it.
+
+2008-06-20  Kjartan Maraas  <kmaraas@gnome.org>
+
+	reviewed by: <Carlos Garnacho <garnacho@gnome.org>
+
+	* gtk/gtkbuilder.h:
+	* gtk/gtkliststore.h:
+	* gtk/gtkobject.h:
+	* gtk/gtktextchild.h:
+	* gtk/gtktreemodelfilter.h:
+	* gtk/gtktreemodelsort.h:
+	* gtk/gtktreestore.h:
+	#include <gdkconfig.h> not <gdk/gdkconfig.h>
+
+2008-06-20  Martyn Russell  <martyn@imendio.com>
+
+	* gtk/gtkaccelgroup.c: Fix warnings from calling
+	g_object_notify() on a GtkAccelGroup without casting to a
+	GObject.
+
+2008-06-20  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkcolorsel.c: Modernize and order things as most
+	other objects. Defines at the top, class init before init
+	before gobject methods before object method before widget
+	methods. No changes to the logic done.
+
+2008-06-20  Martyn Russell  <martyn@imendio.com>
+
+	* gtk/gtkaccelgroup.c: Don't call g_object_notify() with
+	properties that don't exist. Also, make sure we notify for
+	the "is-locked" property.
+
+2008-06-20  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtklayout.c (enum): Remove left-over unused property enum.
+
+2008-06-20  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkscalebutton.c: Fix gtk-doc syntax, add missing trailing colon.
+
+	* gtk/gtk.symbols: Add all newly added accessors so abicheck.sh passes
+
+	* gtk/gtkwidget.c (gtk_widget_get_allocation): Initialize the
+	allocation to avoid compiler warnings
+
+2008-06-20  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkaccellabel.h
+	* gtk/gtkactiongroup.h
+	* gtk/gtkalignment.h
+	* gtk/gtkarrow.h
+	* gtk/gtkaspectframe.h
+	* gtk/gtkbin.h
+	* gtk/gtkhandlebox.h
+	* gtk/gtkprogressbar.h
+	* gtk/gtkrange.h
+	* gtk/gtkscale.h
+	* gtk/gtkscalebutton.h
+	* gtk/gtkselection.h: fix some formatting and spacing uglyness
+	that got merged from the GSEAL branch.
+
+2008-06-20  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtk.symbols:
+	* gtk/gtkmessagedialog.c (gtk_message_dialog_get_image):
+	* gtk/gtkmessagedialog.h:
+	Add missing accessor for sealed field GtkMessageDialog->image.
+
+2008-06-20  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkprinter.h: the GSEAL branch added two includes for no
+	reason.
+
+2008-06-20  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkaccelgroup.c:
+	* gtk/gtkcolorseldialog.c:
+	* gtk/gtkcontainer.c:
+	* gtk/gtkdialog.c:
+	* gtk/gtkentry.c (gtk_entry_class_init):
+	* gtk/gtkfontsel.c:
+	* gtk/gtkhandlebox.c:
+	* gtk/gtklayout.c:
+	* gtk/gtkmenu.c (gtk_menu_class_init):
+	* gtk/gtkmenuitem.c (gtk_menu_item_class_init):
+	* gtk/gtkplug.c (gtk_plug_class_init):
+	* gtk/gtkselection.c:
+	* gtk/gtksocket.c:
+	* gtk/gtktreeselection.c:
+	* gtk/gtkwidget.c (gtk_widget_class_init):
+	* gtk/gtkwindow.c:
+	Add missing Since: gtk-doc markup for newly added GSEAL API.
+	Change all Since: GSEAL-branch to Since: 2.14.
+
+2008-06-20  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkaccelgroup.[ch]: fix some formatting and whitespace in
+	the code merged from the GSEAL branch.
+
+2008-06-20  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkdialog.[ch] (gtk_dialog_get_action_area): change return
+	value from GtkHButtonBox to GtkWidget.
+
+2008-06-20  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkhandlebox.h (struct _GtkHandleBox): deuglify formatting
+	of sealed fields.
+
+2008-06-20  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwindow.[ch]
+	* gtk/gtk.symbols: rename gtk_window_group_get_windows() to
+	gtk_window_group_list_windows().
+
+2008-06-20 12:35:20 +0200 Tim Janik
+
+	* Fixed wrongly resolved merge conflicts.
+
+2008-06-19 19:01:41 +0200 Carlos Garnacho
+
+	Add gtk_window_group_get_windows().
+
+	* gtk/gtk.symbols:
+	* gtk/gtkwindow.[ch] (gtk_window_group_get_windows): New function.
+
+2008-06-19 18:39:47 +0200 Carlos Garnacho
+
+	Document gtk_dialog_get_action_area(), gtk_dialog_pack_start() and gtk_dialog_pack_end()
+
+	* gtk/gtkdialog.c: Add missing documentation for new fucntions.
+
+2008-06-19 18:38:35 +0200 Carlos Garnacho
+
+	Document gtk_container_get_focus_child().
+
+	* gtk/gtkcontainer.c: Add documentation for gtk_container_get_focus_child().
+
+2008-06-19 13:50:06 +0200 Christian Dywan
+
+	Add gtk_plug_get_socket_window
+
+2008-06-19 13:11:52 +0200 Christian Dywan
+
+	Remove superflous gtkselection accessors and merge _get_data
+
+2008-06-13 15:56:51 +0200 Christian Dywan
+
+	Implement gtk_selection_get_display, style fixes
+
+2008-06-13 15:45:00 +0200 Christian Dywan
+
+	Fix indentation of a comment.
+
+2008-06-13 15:10:08 +0200 Christian Dywan
+
+	Change docs and signature of gtk_widget_get_allocation
+
+2008-06-13 14:22:17 +0200 Christian Dywan
+
+	Remove unneeded GtkColorSelectionDialog accessors
+
+2008-06-13 12:57:54 +0200 Christian Dywan
+
+	Fix documentaion of gtk_menu_item_get_accel_path
+
+2008-06-11 13:49:34 +0200 Christian Dywan
+
+	Fix gtk_widget_get_allocation
+
+2008-06-07 15:37:18 +0200 Carlos Garnacho
+
+	Switch to "guint GSEAL (foo) : width;" when packing fields in guints.
+
+	* gtk/gtkbox.h:
+	* gtk/gtkbutton.h:
+	* gtk/gtkcellrenderer.h:
+	* gtk/gtkcellrenderertext.h:
+	* gtk/gtkcheckmenuitem.h:
+	* gtk/gtkcontainer.h:
+	* gtk/gtkentry.h:
+	* gtk/gtkhandlebox.h:
+	* gtk/gtkimcontextsimple.h:
+	* gtk/gtklabel.h:
+	* gtk/gtkliststore.h:
+	* gtk/gtkmenu.h:
+	* gtk/gtkmenuitem.h:
+	* gtk/gtkmenushell.h:
+	* gtk/gtknotebook.h:
+	* gtk/gtkpaned.h:
+	* gtk/gtkplug.h:
+	* gtk/gtkprintjob.h:
+	* gtk/gtkprogressbar.h:
+	* gtk/gtkrange.h:
+	* gtk/gtkscale.h:
+	* gtk/gtkscrolledwindow.h:
+	* gtk/gtksizegroup.h:
+	* gtk/gtksocket.h:
+	* gtk/gtkspinbutton.h:
+	* gtk/gtkstatusbar.h:
+	* gtk/gtktable.h:
+	* gtk/gtktearoffmenuitem.h:
+	* gtk/gtktextbuffer.h:
+	* gtk/gtktextview.h:
+	* gtk/gtktogglebutton.h:
+	* gtk/gtktoolbar.h:
+	* gtk/gtktreestore.h:
+	* gtk/gtktreeviewcolumn.h:
+	* gtk/gtkwindow.h: Do not specify width inside GSEAL() when packing fields in guints.
+
+2008-06-06 19:02:17 +0200 Christian Dywan
+
+	Seal GtkWidget
+
+2008-06-06 17:58:21 +0200 Christian Dywan
+
+	Seal GtkSelectionData
+
+2008-06-06 17:57:23 +0200 Christian Dywan
+
+	Fix GtkDialog, don't add vbox via gtk_container_add.
+
+2008-06-06 13:39:34 +0200 Kristian Rietveld
+
+	Make GtkCellRenderer::editing read-only.  (Catched by Matthias)
+
+2008-06-03 09:11:50 +0200 Kristian Rietveld
+
+	Seal GtkTextView.
+
+2008-05-30 16:48:12 +0100 Martyn Russell
+
+	Seal GtkFontSelection & GtkFontSelectionDialog
+
+2008-05-29 10:35:29 +0200 Kristian Rietveld
+
+	Seal GtkTearoffMenuItem.
+
+	(the torn_off field is for internal state keeping, you can retrieve
+	the value from the parent menu's tearoff_state).
+
+2008-05-27 18:34:12 +0200 Christian Dywan
+
+	Seal GtkObject
+
+2008-05-27 18:17:44 +0200 Christian Dywan
+
+	Seal GtkRange
+
+2008-05-27 15:10:02 +0200 Christian Dywan
+
+	Seal GtkPlug
+
+2008-05-27 14:17:45 +0200 Christian Dywan
+
+	Seal GtkMenuItem
+
+2008-05-27 14:04:31 +0200 Christian Dywan
+
+	Seal GtkMenuShell
+
+2008-05-27 12:40:08 +0200 Christian Dywan
+
+	Seal GtkInputDialog
+
+2008-05-27 12:39:49 +0200 Christian Dywan
+
+	Seal GtkIMMultiContext
+
+2008-05-27 12:39:17 +0200 Christian Dywan
+
+	Seal GtkIMContextSimple
+
+2008-05-27 12:14:53 +0200 Christian Dywan
+
+	Seal GtkImage
+
+2008-05-27 11:14:21 +0200 Christian Dywan
+
+	Seal GtkSocket
+
+2008-05-27 10:54:20 +0200 Christian Dywan
+
+	Fix the build by including gdkconfig.h in gtkprinter.h.
+
+2008-05-27 10:38:02 +0200 Christian Dywan
+
+	Seal GtkGammaCurve
+
+2008-05-27 10:20:56 +0200 Christian Dywan
+
+	Seal GtkHandleBox
+
+2008-05-26 17:58:19 +0200 Kristian Rietveld
+
+	Seal GtkInvisible.
+
+2008-05-26 17:54:56 +0200 Kristian Rietveld
+
+	Seal GtkPrintJob.
+
+2008-05-26 17:48:23 +0200 Kristian Rietveld
+
+	Seal GtkTextBuffer.
+
+2008-05-26 17:39:38 +0200 Kristian Rietveld
+
+	Seal GtkSpinButton.
+
+2008-05-26 17:31:06 +0200 Kristian Rietveld
+
+	Seal GtkTable.
+
+2008-05-26 17:27:22 +0200 Kristian Rietveld
+
+	Seal GtkRuler.
+
+2008-05-26 17:07:43 +0200 Kristian Rietveld
+
+	Seal GtkStatusBar.
+
+2008-05-26 17:07:37 +0200 Kristian Rietveld
+
+	Seal GtkTextMark.
+
+2008-05-26 16:39:27 +0200 Kristian Rietveld
+
+	Seal GtkTextTagTable.
+
+2008-05-26 16:34:13 +0200 Kristian Rietveld
+
+	Seal GtkViewPort.
+
+2008-05-26 17:08:19 +0200 Christian Dywan
+
+	Seal GtkSettings.h
+
+2008-05-26 16:40:05 +0200 Christian Dywan
+
+	Seal GtkMenu
+
+2008-05-26 16:37:54 +0200 Christian Dywan
+
+	Seal GtkLayout
+
+2008-05-26 14:09:32 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkToggleToolButton.
+
+2008-05-26 14:04:51 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkUIManager.
+
+2008-05-26 14:01:32 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkToolItem.
+
+2008-05-26 14:01:12 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkToolButton.
+
+2008-05-26 14:00:24 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkToggleAction.
+
+2008-05-26 13:58:01 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkStatusIcon.
+
+2008-05-26 13:57:33 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkSeparatorToolItem.
+
+2008-05-26 13:56:33 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkScaleButton.
+
+2008-05-26 13:55:57 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkRecentManager.
+
+2008-05-26 13:55:25 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkRecentChooserWidget.
+
+2008-05-26 13:54:39 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkRecentChooserMenu.
+
+2008-05-26 13:54:15 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkRecentChooserDialog.
+
+2008-05-26 13:52:40 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkRecentAction.
+
+2008-05-26 13:51:47 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkRadioAction.
+
+2008-05-26 13:50:49 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkPrintUnixDialog.
+
+2008-05-26 13:50:08 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkPrintOperation.
+
+2008-05-26 13:49:41 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkPrinter.
+
+2008-05-26 13:48:49 +0200 Kristian Rietveld
+
+	Seal priv pointer in  GtkPageSetupUnixDialog.
+
+2008-05-26 13:47:39 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkMenuToolButton.
+
+2008-05-26 13:47:29 +0200 Kristian Rietveld
+
+	Add gdkconfig.h include to GtkBuilder for GSEAL macro.
+
+2008-05-26 13:23:45 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkLinkButton.
+
+2008-05-26 13:22:25 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkIconView.
+
+2008-05-26 13:22:04 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkIconTheme.
+
+2008-05-26 13:13:49 +0200 Kristian Rietveld
+
+	Seal child_allocation field in GtkFrame.
+
+2008-05-26 13:10:17 +0200 Kristian Rietveld
+
+	Sealed priv pointer in GtkFontButton.
+
+2008-05-26 13:07:14 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkFileChooserButton.
+
+2008-05-26 13:06:43 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkExpander.
+
+2008-05-26 13:03:24 +0200 Kristian Rietveld
+
+	Sealed remaining (private) fields in GtkContainer.
+
+2008-05-26 13:02:26 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkComboBoxEntry.
+
+2008-05-26 13:01:40 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkComboBox.
+
+2008-05-26 13:00:59 +0200 Kristian Rietveld
+
+	Seal private_data pointer in GtkColorSel.
+
+2008-05-26 12:57:50 +0200 Kristian Rietveld
+
+	Seal 3 remaining fields in GtkButton.
+
+2008-05-26 12:55:24 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkBuilder.
+
+2008-05-26 12:52:44 +0200 Kristian Rietveld
+
+	Seal center_allocation field in GtkAspectFrame.
+
+2008-05-26 12:48:18 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkAction.
+
+2008-05-26 12:46:11 +0200 Kristian Rietveld
+
+	Seal priv pointer in GtkAboutDialog.
+
+2008-05-26 12:41:46 +0200 Kristian Rietveld
+
+	Seal GtkSizeGroup.
+
+2008-05-26 12:39:54 +0200 Kristian Rietveld
+
+	Seal GtkPaned.
+
+2008-05-26 11:59:35 +0200 Kristian Rietveld
+
+	Set the Since: values in the API docs to GSEAL-branch for the newly added accessors/properties.
+
+2008-05-26 11:52:20 +0200 Kristian Rietveld
+
+	Add new GtkColorSelectionDialog accessors to gtk.symbols.
+
+2008-05-26 11:41:47 +0200 Kristian Rietveld
+
+	gtklabel.h: include bit-size of fields inside GSEAL parens.
+
+2008-05-26 11:40:07 +0200 Kristian Rietveld
+
+	gtktoolbar.h: include bit-size of fields inside GSEAL parens.
+
+2008-05-26 11:39:35 +0200 Kristian Rietveld
+
+	gtkentry.h: include bit-size of fields inside GSEAL parens.
+
+2008-05-26 11:34:14 +0200 Kristian Rietveld
+
+	Add new accessors for GtkEntry to gtk.symbols.
+
+2008-05-26 11:23:56 +0200 Kristian Rietveld
+
+	Also seal GtkWindowGroup in gtkwindow.h
+
+2008-05-26 10:48:48 +0200 Kristian Rietveld
+
+	Fix the build by including gdkconfig.h in gtktextchild.h.
+
+2008-05-23 18:48:56 +0200 Christian Dywan
+
+	Seal GtkLabel
+
+2008-05-23 18:28:39 +0200 Christian Dywan
+
+	Seal GtkToolbar
+
+2008-05-23 18:28:07 +0200 Christian Dywan
+
+	Seal GtkColorSelectionDialog
+
+2008-05-23 18:03:44 +0200 Carlos Garnacho
+
+	Seal GtkTextChildAnchor.
+
+	* gtk/gtktextchild.h: Sealed private member.
+
+2008-05-23 17:42:01 +0200 Carlos Garnacho
+
+	Seal GtkWindow.
+
+	* gtk/gtkwindow.h: Seal all fields.
+
+2008-05-23 17:40:09 +0200 Carlos Garnacho
+
+	Add gtk_window_get_default()
+
+	* gtk/gtkwindow.[ch]: Add gtk_window_get_default().
+	* gtk/gtk.symbols: same here.
+
+2008-05-09 15:41:57 +0100 Martyn Russell
+
+	Seal GtkAccelGroup - fixed some issues with the initial attempt thanks to comments from Tim
+
+2008-05-02 16:31:40 +0200 Martyn Russell
+
+	Seal GtkEntry
+
+2008-05-02 16:30:09 +0200 Martyn Russell
+
+	Seal GtkContainer - fixed Carlos' missing gtk_container_get_focus_child() header declaration
+
+2008-04-27 18:49:50 +0200 Kristian Rietveld
+
+	Seal GtkToggleButton.
+
+	* gtk/gtktogglebutton.h: Seal all member fields.
+
+2008-04-27 18:41:46 +0200 Kristian Rietveld
+
+	Seal GtkTreeViewColumn.
+
+	* gtk/gtktreeviewcolumn.h: Seal all public member fields.  The button field is
+	still troublesome.  We are probably going to need an accessor for this and
+	deprecated it immediately in GTK+ 3.0.  Accessors for requested_width and
+	resized_width can be useful, but I really consider them to be private and
+	of not much use to applications.
+
+2008-04-27 18:23:23 +0200 Kristian Rietveld
+
+	Seal GtkRadioMenuItem.
+
+	* gtk/gtkradiomenuitem.h: Seal member field.
+
+2008-04-27 18:21:29 +0200 Kristian Rietveld
+
+	Seal GtkRadioButton.
+
+	* gtk/gtkradiobutton.h: seal member field.
+
+2008-04-27 18:11:41 +0200 Kristian Rietveld
+
+	Seal GtkTreeSelection.
+
+	* gtk/gtktreeselection.h: Seal all member fields.
+
+2008-04-27 18:09:46 +0200 Kristian Rietveld
+
+	Add gtk_tree_selection_get_select_function().
+
+	* gtk/gtktreeselection.[ch] (gtk_tree_selection_get_select_function): new
+	function.
+	* gtk/gtk.symbols: add new function.
+
+2008-04-27 16:05:02 +0200 Kristian Rietveld
+
+	Seal GtkScrolledWindow.
+
+	* gtk/gtkscrolledwindow.h: Seal all object member fields.
+
+2008-04-27 15:56:33 +0200 Kristian Rietveld
+
+	Seal GtkCellRenderer.
+
+	* gtk/gtkcellrenderer.h: seal all member fields.  All member fields are
+	already accessible via GObject properties.
+
+2008-04-27 15:56:01 +0200 Kristian Rietveld
+
+	Add "editing" GObject property to GtkCellRenderer.
+
+	* gtk/gtkcellrenderer.c (gtk_cell_renderer_class_init),
+	(gtk_cell_renderer_get_property),
+	(gtk_cell_renderer_set_property): add the property and hook
+	it up.
+
+2008-04-27 15:42:08 +0200 Kristian Rietveld
+
+	Seal GtkCellRendererText.
+
+	* gtk/gtkcellrenderertext.h: seal all member fields (all of them were already
+	marked as private).
+
+2008-04-27 15:40:47 +0200 Kristian Rietveld
+
+	Seal GtkCellRendererCombo.
+
+	* gtk/gtkcellrenderercombo.h: seal all member fields.  The members fields
+	that were not marked as private are already accessible via GObject properties.
+
+2008-04-27 15:39:41 +0200 Kristian Rietveld
+
+	Seal GtkCellRendererAccel.
+
+	* gtk/gtkcellrendereraccel.h: seal all member fields that were already
+	marked as private.
+
+2008-04-18 16:55:44 +0200 Kristian Rietveld
+
+	Seal GtkTreeView
+
+	* gtk/gtktreeview.h: seal private pointer.
+
+2008-04-18 16:52:54 +0200 Kristian Rietveld
+
+	Seal GtkTreeModelFilter
+
+	* gtk/gtktreemodelfilter.h: include gdkconfig.h for GSEAL, seal private
+	pointer.
+
+2008-04-18 16:50:55 +0200 Kristian Rietveld
+
+	Seal GtkTreeModelSort
+
+	* gtk/gtktreemodelsort.h: include gdkconfig.h to get GSEAL defined, seal
+	all public member fields.
+
+2008-04-18 16:42:28 +0200 Kristian Rietveld
+
+	Seal GtkTreeStore
+
+	* gtk/gtktreestore.h: include gdkconfig.h to get GSEAL defined, seal
+	public member fields.
+
+2008-04-18 16:37:43 +0200 Kristian Rietveld
+
+	Seal GtkListStore
+
+	* gtk/gtkliststore.h: include gdkconfig.h to get GSEAL defined; seal
+	public member fields.
+
+2008-04-18 18:26:31 +0200 Carlos Garnacho
+
+	* gtk/gtkcontainer.c (gtk_container_get_focus_child): add accessor.
+
+2008-04-18 18:25:22 +0200 Carlos Garnacho
+
+	* gtk/gtkcontainer.h: seal members.
+
+2008-04-11 17:28:54 +0200 Carlos Garnacho
+
+	* gtk/gtkmisc.h: seal members.
+
+2008-04-11 17:28:05 +0200 Carlos Garnacho
+
+	*gtk/gtkfixed.h: seal members.
+
+2008-04-11 16:04:23 +0200 Michael Natterer
+
+	* gtk/gtkcellrendererpixbuf.h: seal all members.
+
+2008-04-11 16:01:19 +0200 Michael Natterer
+
+	* gtk/gtkcellrendererprogress.h: seal private member.
+
+2008-04-11 15:43:22 +0200 Michael Natterer
+
+	* gtk/gtkcellrenderertoggle.h: seal all members.
+
+2008-04-04 18:50:05 +0200 Carlos Garnacho
+
+	* gtk/gtkfilechooserwidget.h: Seal the private member.
+
+2008-04-04 18:46:47 +0200 Carlos Garnacho
+
+	gtk/gtkfilechooserdialog.h: seal the private member.
+
+2008-04-04 18:42:17 +0200 Carlos Garnacho
+
+	* gtk/gtkentrycompletion.h: Seal private member.
+
+2008-04-04 18:36:35 +0200 Carlos Garnacho
+
+	* gtk/gtkcellview.h: Seal the private member.
+
+2008-04-04 18:28:00 +0200 Carlos Garnacho
+
+	* gtk/gtkcolorbutton.h: seal private member.
+
+2008-04-04 18:27:26 +0200 Carlos Garnacho
+
+	* gtk/gtkcheckmenuitem.h: seal public struct members.
+
+2008-04-04 18:25:25 +0200 Carlos Garnacho
+
+	* gtk/gtkcalendar.h: seal public struct members.
+
+2008-04-04 18:24:15 +0200 Carlos Garnacho
+
+	* gtk/gtkdialog.h: Also seal variables marked as private.
+
+2008-04-04 17:35:48 +0200 Michael Natterer
+
+	* gtk/gtkimagemenuitem.h: seal private member.
+
+2008-04-04 17:28:56 +0200 Michael Natterer
+
+	* gtk/gtkiconfactory.h: seal private member.
+
+2008-03-28 16:56:53 +0000 Martyn Russell
+
+	Seal GtkActionGroup
+
+	* gtk/gtkactiongroup.[ch]: Use GSEAL macro on ->private_data public
+	  member and clean up .c file to reflect this.
+
+2008-03-28 15:00:09 +0100 Sven Herzberg
+
+	Seal GtkAccelLabel
+
+	gtk/gtkaccellabel.h: deprecate direct field access to GtkAccelLabel fields
+
+2008-03-28 16:38:00 +0100 Michael Natterer
+
+	* gtk/gtkdrawingarea.h: seal instance struct member.
+
+2008-03-28 16:23:32 +0100 Christian Dywan
+
+	Seal GtkScaleButton public fields
+
+	* gtk/gtkscalebutton.h: Deprecate direct access through GSEAL().
+
+2008-03-28 16:07:50 +0100 Christian Dywan
+
+	Seal GtkScale public fields
+
+	* gtk/gtkscale.h: Deprecate direct access through GSEAL().
+
+2008-03-14 20:45:34 +0100 Christian Dywan
+
+	Seal GtkProgressBar public fields
+
+
+2008-03-14 20:32:12 +0100 Christian Dywan
+
+	Seal GtkFrame public vars
+
+2008-03-14 18:57:35 +0100 Carlos Garnacho
+
+	Deprecate direct access to public variables in GtkButton.
+
+	* gtk/gtkbutton.h: Deprecate direct access through GSEAL().
+
+2008-03-14 18:56:23 +0100 Carlos Garnacho
+
+	Deprecate direct access to public variables in GtkButtonBox.
+
+	* gtk/gtkbbox.h: Deprecate direct access through GSEAL().
+
+2008-03-14 18:54:35 +0100 Carlos Garnacho
+
+	Deprecate direct access to public variables in GtkBox.
+
+	* gtk/gtkbox.h: Deprecate direct access through GSEAL().
+
+2008-03-09 11:50:41 +0100 Carlos Garnacho
+
+	Seal GtkMessageDialog public vars
+
+2008-03-09 11:38:00 +0100 Carlos Garnacho
+
+	Seal GtkDialog public vars
+
+2008-03-09 11:32:05 +0100 Carlos Garnacho
+
+	Add accessors for GtkDialog public vars, also implement GtkContainer::add/remove
+
+2008-03-09 11:31:46 +0100 Carlos Garnacho
+
+	Seal GtkAssistant public fields
+
+2008-03-09 11:31:30 +0100 Carlos Garnacho
+
+	Seal GtkNotebook public fields
+
+2008-03-07 20:29:47 +0100 Mikael Hallendal
+
+	Deprecate direct access to child in GtkBin.
+
+	* gtk/gtkbin.h: Deprecate direct access to child by GSEAL.
+
+2008-03-07 18:25:59 +0000 Martyn Russell
+
+	Sealed GtkAccelGroup and added
+
+	* gtk/gtkaccelgroup.[ch]: Added GObject properties for lock_count,
+	  modifier_mask, acceleratables, n_accels and priv_accels. Added seal
+	  macro for public struct members which should be private.
+
+2008-03-07 18:54:22 +0100 Mikael Hallendal
+
+	Deprecate xalign, yalign, ratio and obey_child direct access in GtkAspectFrame.
+
+	* gtk/gtkaspectframe.h: Deprecate public object fields by GSEAL.
+
+2008-03-07 18:48:29 +0100 Mikael Hallendal
+
+	Deprecate arrow_type and shadow_type direct access in GtkArrow.
+
+	* gtk/gtkarrow.h: Deprecate public object fields by GSEAL.
+
+2008-03-07 18:35:12 +0100 Mikael Hallendal
+
+	Added GSEAL to GtkAlignment.
+
+	* gtk/gtkalignment.h: Seal the object data with GSEAL.
+
+2008-03-07 15:24:27 +0100 Tim Janik
+
+	Introduce GSEAL() macro.
+
+	* configure.in: define GSEAL() when generating gdkconfig.h
+
+2008-06-20  Michael Natterer  <mitch@imendio.com>
+
+	Bug 538395 – gtk_combo_box_append_text() on non-compliant model
+	segfaults
+
+	* gtk/gtkcombobox.c (gtk_combo_box_append_text)
+	(gtk_combo_box_insert_text)
+	(gtk_combo_box_prepend_text)
+	(gtk_combo_box_remove_text)
+	(gtk_combo_box_real_get_active_text): apply patch from Christian
+	Dywan which adds the needed g_return_if_fail() to prevent the
+	crashes.
+
+2008-06-20  Cody Russell  <cody@jhu.edu>
+
+	* gdk/directfb/gdkwindow-directfb.c:
+
+	Rename gdk_window_new -> _gdk_window_new and
+	gdk_window_reparent -> _gdk_window_reparent to fix
+	the build.  (#539095, Sebastien Bacher)
+
+2008-06-19  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkmenuitem.c: remove an unused variable and cast
+	accel_path to gchar, just like in gtkmenu.c
+
+2008-06-19  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkrecentmanager.c (get_icon_for_mime_type): Use GIO
+	for this.
+
+2008-06-19  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkprintbackend.c: Fix a typo in a comment
+
+	* gtk/gtkhsv.c (paint_ring, paint_triangle):
+	Cast buf to unsigned char to avoid two compiler
+	warnings.
+
+	* gtk/gtkclist.c:
+	* gtk/gtkstyle.c (gtk_style_finalize):
+	Do not ignore the return value of g_slist_remove.
+	gtkstyle.c changes rubberstamped by Owen.
+
+2008-06-19  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtktreeview.c (gtk_tree_view_set_grid_lines),
+	(gtk_tree_view_set_enable_tree_lines):
+	gdk_gc_set_dashes expects a list of gint8, not guint8.
+
+2008-06-19  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkmenu.c (gtk_menu_set_accel_path):
+	Remove an unused variable and cast to gchar to avoid a compiler
+	warning.
+
+2008-06-19  Christian Persch  <chpe@gnome.org>
+
+	* docs/reference/gtk/gtk-sections.txt:
+	* gtk/gtk.symbols:
+	* gtk/gtkclipboard.c:
+	* gtk/gtkclipboard.h: Add clipboard convenience functions  for URI 
+	targets. Bug #537639.
+
+2008-06-19  Christian Persch  <chpe@gnome.org>
+
+        * gtk/gtkfilechooserdefault.c: Use gtk_drag_*_add_*_targets instead of
+	hardcoded target tables. Bug #516092.
+
+2008-06-19  Christian Persch  <chpe@gnome.org>
+
+	* gdk-pixbuf/gdk-pixbuf-io.c:
+	* gdk-pixbuf/gdk-pixdata.c:
+	* gdk-pixbuf/io-ani.c:
+	* gdk-pixbuf/io-bmp.c:
+	* gdk-pixbuf/io-gdip-utils.c:
+	* gdk-pixbuf/io-gif.c:
+	* gdk-pixbuf/io-icns.c:
+	* gdk-pixbuf/io-ico.c:
+	* gdk-pixbuf/io-jasper.c:
+	* gdk-pixbuf/io-jpeg.c:
+	* gdk-pixbuf/io-pcx.c:
+	* gdk-pixbuf/io-png.c:
+	* gdk-pixbuf/io-pnm.c:
+	* gdk-pixbuf/io-ras.c:
+	* gdk-pixbuf/io-tga.c:
+	* gdk-pixbuf/io-tiff.c:
+	* gdk-pixbuf/io-wbmp.c:
+	* gdk-pixbuf/io-xbm.c:
+	* gdk-pixbuf/io-xpm.c:
+	* gtk/gtkfilechooserdefault.c:
+	* gtk/gtkfilesystemmodel.c:
+	* gtk/gtkiconfactory.c:
+	* gtk/gtkicontheme.c:
+	* gtk/gtkmain.c:
+	* gtk/gtkpagesetup.c:
+	* gtk/gtkpapersize.c:
+	* gtk/gtkprintoperation-win32.c:
+	* gtk/gtktextbufferserialize.c:
+	* tests/testfilechooser.c: Use g_set_error_literal where appropriate. Bug #538640.
+
+	* configure.in: Update glib requirement to 2.17.3.
+
+2008-06-19  Johan Dahlin  <jdahlin@async.com.br>
+
+	* demos/testpixbuf.c (new_testrgb_window):
+	* gtk/gtkctree.c (gtk_ctree_new_with_titles):
+	* gtk/gtkitemfactory.c (gtk_item_factory_construct),
+	(gtk_item_factory_create_item):
+	* gtk/gtkmenu.c (gtk_menu_set_tearoff_state)
+	* gtk/gtkprogressbar.c (gtk_progress_bar_new),
+	(gtk_progress_bar_new_with_adjustment):
+	* gtk/gtkscrolledwindow.c (gtk_scrolled_window_new):
+	* gtk/gtktext.c (gtk_text_new):
+	* gtk/gtkviewport.c (gtk_viewport_new):
+	* tests/simple.c (main):
+	* tests/testgtk.c (create_statusbar), (create_get_image),
+	(create_saved_position), (create_tooltips), (create_cursors),
+	(create_display_screen), (create_progress_bar), (create_idle_test):
+	* tests/testmultidisplay.c (make_selection_dialog), (main):
+	* tests/testmultiscreen.c (main):
+	* tests/testrgb.c (new_testrgb_window):
+	Use g_object_new instead of gtk_widget_new
+
+2008-06-19  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkcellrendererpixbuf.c: Remove an unused prototype.
+
+	* gtk/gtklabel.c (gtk_label_set_text_with_mnemonic): Remove
+	an unused variable.
+
+	* gtk/gtkactiongroup.c: Use GdkModifierType instedd of guint,
+	to avoid a gcc warning.
+
+2008-06-18  Olle Bergkvist <olle.bergkvist@yahoo.se>
+
+	http://bugzilla.gnome.org/show_bug.cgi?id=538784 - Don't change
+	the filename in the name entry in CREATE_FOLDER mode when changing
+	folders, so that you can enter a new subfolder name, double-click on a
+	folder to change to it, and close the dialog.
+
+	* gtk/gtkfilechooserdefault.c (update_chooser_entry): Don't change
+	the filename in the entry in CREATE_FOLDER mode, either.
+
+2008-06-18  Olle Bergkvist <olle.bergkvist@yahoo.se>
+
+	http://bugzilla.gnome.org/show_bug.cgi?id=419737#c59 - The file
+	chooser clears the filename entry in SAVE/CREATE_FOLDER modes when
+	it shouldn't.
+
+	* gtk/gtkfilechooserdefault.c (shortcuts_activate_iter): Don't
+	clear the entry for CREATE_FOLDER either; this needs the same
+	behavior as SAVE mode.
+	(update_chooser_entry): Only clear the entry in OPEN/SELECT_FOLDER
+	modes.
+
+2008-06-18  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkfilesystem.c (_gtk_file_system_volume_render_icon):
+	* gtk/gtkfilechooserbutton.c (change_icon_theme):
+	(model_add_bookmarks):
+	(model_update_current_folder):
+	* gtk/gtkfilechooserdefault.c (shortcuts_insert_file):
+	(shortcuts_reload_icons): Use standard icon names.
+
+2008-06-18  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/Makefile.am: Add some more aliases for standard
+	icon names to the builtin icon theme: drive-harddisk,
+	folder, folder-remote, text-x-generic.
+
+2008-06-18  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkcalendar.c: set the maximum of the "year" property to
+	G_MAXINT >> 8 instead of G_MAXINT to fix overflows in internal
+	calculations which in turn caused writing beyond the boundaries of
+	the calendar->day_month[] and day[] arrays which in turn caused a
+	SEGV. This limits the lifetime of GTK+ to the year 8,388,608 ;)
+
+2008-06-18  Michael Natterer  <mitch@imendio.com>
+
+	* tests/Makefile.am
+	* tests/autotestfilechooser.c
+	* tests/buildertest.c
+	* tests/defaultvaluetest.c
+	* tests/floatingtest.c
+	* tests/objecttests.c
+	* tests/pixbuf-init.c
+	* tests/textbuffertest.c: remove unit tests here...
+
+	* gtk/tests/Makefile.am
+	* gtk/tests/builder.c
+	* gtk/tests/defaultvalue.c
+	* gtk/tests/filechooser.c
+	* gtk/tests/floating.c
+	* gtk/tests/object.c
+	* gtk/tests/pixbuf-init.c
+	* gtk/tests/textbuffer.c: ...and add them here.
+
+2008-06-18  Michael Natterer  <mitch@imendio.com>
+
+	* gdk/gdk.h: deprecate GdkDestroyNotify.
+
+	* gdk/gdkevents.c
+	* gdk/gdktypes.h
+	* gdk/x11/gdkevents-x11.c
+	* gtk/gtkmain.c: s/GdkDestroyNotify/GDestroyNotify/g.
+
+2008-06-18  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktypeutils.h: deprecate GtkDestroyNotify.
+
+	* gtk/gtkactiongroup.[ch]
+	* gtk/gtkcombobox.[ch]
+	* gtk/gtkcontainer.[ch]
+	* gtk/gtkliststore.[ch]
+	* gtk/gtkmain.[ch]
+	* gtk/gtkmenu.c
+	* gtk/gtkstock.[ch]
+	* gtk/gtktreedatalist.[ch]
+	* gtk/gtktreemodelfilter.[ch]
+	* gtk/gtktreemodelsort.[ch]
+	* gtk/gtktreeprivate.h
+	* gtk/gtktreeselection.[ch]
+	* gtk/gtktreesortable.[ch]
+	* gtk/gtktreestore.[ch]
+	* gtk/gtktreeview.[ch]
+	* gtk/gtktreeviewcolumn.[ch]: s/GtkDestroyNotify/GDestroyNotify/g.
+
+2008-06-18  Michael Natterer  <mitch@imendio.com>
+
+	* tests/testgtk.c: some more undeprecation.
+
+2008-06-18  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktypeutils.h: deprecate GtkType, GtkSignalFunc and
+	GTK_SIGNAL_FUNC().
+
+	(struct GtkArg): s/GtkType/GType/ and s/GtkSignalFunc/GCallback/
+
+2008-06-18  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktypeutils.[ch]: deprecate gtk_type_class().
+
+	* gtk/gtk.symbols: changed accordingly.
+
+	* gtk/gtksettings.c (gtk_settings_install_property)
+	(gtk_settings_install_property_parser): get rid of using
+	gtk_type_class() by keeping a static reference to GtkSettingsClass
+	around in both functions and passing that pointer on to
+	settings_install_property_parser().
+
+	* tests/testgtk.c: use g_type_class_ref()/unref() instead of
+	gtk_type_class().
+
+	* gtk/gtkobject.c: #undef GTK_DISABLE_DEPRECATED around including
+	gtktypeutils.h.
+
+2008-06-17  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkstyle.c: Add deprecated version
+	and change the deprecation markup used by ref/unref 
+
+2008-06-17  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkwidget.c: 
+	Add deprecated versions and fixup markup.
+
+2008-06-17  Johan Dahlin  <jdahlin@async.com.br>
+
+	* gtk/gtkaboutdialog.c:
+	* gtk/gtkbutton.c (gtk_button_class_init):
+	Don't markup deprecated in italics.
+
+2008-06-18  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtkfilesystem.[ch]: Remove GtkFileSystemError, use
+	GtkFileChooserError instead. (#538378, patch by Matthias Clasen)
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* examples/gtkdial/gtkdial.[ch]: undeprecate.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkobject.c: remove bogus extern declaration of non-existing
+	function gtk_object_init_type().
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkbindings.c (gtk_binding_entry_add_signal):
+	* gtk/gtktoolbutton.c (gtk_tool_button_get_type): 
+	* examples/gtkdial/gtkdial.h (gtk_dial_get_type): 
+	s/GtkType/GType/
+
+2008-06-17  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtknotebook.c: Need to do the GTK_DISABLE_DEPRECATED
+	#undef/#define dance here, too, because
+	gtk_notebook_set_group_id() is deprecated but used here before it
+	is defined, and gcc complains about conflicting type from the
+	implicit int declaration when it sees the actual void definition.
+
+	* modules/input/gtkimcontextime.h: Don't use the deprecated GTK_*
+	GtkType macros.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/Makefile.am: build with GTK_DISABLE_DEPRECATED.
+
+	* gtk/gtkclist.c
+	* gtk/gtkcombo.c
+	* gtk/gtkctree.c
+	* gtk/gtklist.c
+	* gtk/gtklistitem.c
+	* gtk/gtkoldeditable.c
+	* gtk/gtkpixmap.c
+	* gtk/gtktext.c
+	* gtk/gtktipsquery.c
+	* gtk/gtktree.c
+	* gtk/gtktreeitem.c: whenever we #undef GTK_DISABLE_DEPRECATED and
+	actually use deprecated symbols (not just types or macros),
+	#define it again before #include "gtkalias.h" so the symbols match
+	and the beast links.
+
+2008-06-17  Paolo Borelli  <pborelli@katamail.com>
+
+	* gtk/tests/recentmanager.c: more tests for GtkRecentManager.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* modules/input/gtkimcontextmultipress.h
+	* modules/input/gtkimcontextthai.h
+	* modules/input/gtkimcontextxim.h: use G_TYPE instead of GTK_CHECK
+	type checking macros.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktypeutils.h: really move the GtkType typedef to an
+	undeprecated section.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktypeutils.h: deprecate GTK_CHECK_CAST,	GTK_CHECK_CLASS_CAST,
+	GTK_CHECK_GET_CLASS, GTK_CHECK_TYPE and GTK_CHECK_CLASS_TYPE.
+	Move the GtkType typedef to an undeprecated section.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkprogress.h: use G_TYPE macros for type checking instead
+	of GTK_CHECK ones because it's the parent class of an undeprecated
+	class and the GTK_CHECK stuff will soon be deprecated.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfilesel.c
+	* gtk/gtkinputdialog.c
+	* gtk/gtkmenutoolbutton.c
+	* gtk/gtkoptionmenu.c
+	* gtk/gtktoolitem.c
+	* gtk/gtktooltips.c: add or move around
+	#undef GTK_DISABLE_DEPRECATED so it's possible to build without
+	deprecated stuff again (with the minor glitch that it doesn't
+	link ;) but at least it's a tool to keep the code clean).
+
+2008-06-17  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentmanager.c:
+	(gtk_recent_manager_remove_item): Fix dumb typo in the previous
+	commit.
+
+2008-06-17  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentmanager.c:
+	(gtk_recent_manager_remove_item),
+	(gtk_recent_manager_move_item): Increase the consistency of the
+	errors returned by GtkRecentManager. (Paolo Borelli)
+
+2008-06-17  Paolo Borelli  <pborelli@katamail.com>
+
+	* gtk/tests/recentmanager.c: add some unit tests for GtkRecentManager.
+
+2008-06-17  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentmanager.c:
+	(gtk_recent_manager_remove_item): Consistently use the same
+	error when removing a URI from an empty GtkRecentManager.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfilechooserdefault.c: remove static integer variables
+	which hold the number of members in GtkTargetEntry arrays and use
+	G_N_ELEMENTS() directly instead.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtk.symbols: move some deprecated symbols into
+	#ifndef GTK_DISABLE_DEPRECATED.
+
+2008-06-17  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkfilechooserdefault.c:
+	(gtk_file_chooser_default_init),
+	(gtk_file_chooser_default_constructor),
+	(gtk_file_chooser_default_screen_changed),
+	(recent_start_loading): Remove the GtkRecentManager screen
+	dance, as it has been deprecated since 2.12. Now we get the
+	GtkRecentManager singleton whewn we create the FileChooserDefault
+	instance. (Michael Natterer)
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkoptionmenu.c (gtk_option_menu_position): cast menu's
+	toplevel to GtkWindow when passing to gtk_window_set_type_hint().
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktestutils.c: #undef GTK_DISABLE_DEPRECATED, clean up
+	includes a bit.
+
+	* gtk/gtkuimanager.c: #include "gtkwindow.h", it was only pulled
+	in via deprecated headers.
+
+2008-06-16  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 508751 – gnome-terminal crashed with SIGSEGV after keypress
+
+	* gdk/x11/gdkkeys-x11.c (_gdk_keymap_key_is_modifier): Protect
+	against XKB being stupid. Reported by Pedro Villavicencio.
+
+2008-06-17  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkplug.c (_gtk_plug_send_delete_event): use g_object_ref()
+	and unref() instead of the deprecated gtk_widget_ref() and unref().
+
+2008-06-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkentry.c: removed function drag_begin_cb(), which was in
+	svn since 2.8 but was never used.
+
+2008-06-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkbindings.c (_gtk_binding_entry_add_signall): use
+	gtk_binding_entry_clear() instead of gtk_binding_entry_add()
+	(the former is deprecated and #defined to gtk_binding_entry_clear)
+
+2008-06-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkprintoperation-unix.c: don't include the deprecated (and
+	unused) "gtkmarshal.h".
+
+2008-06-16  Behdad Esfahbod  <behdad@gnome.org>
+
+	Bug 538182 – pango_cairo_context_update_layout is not noop after
+	gtk_widget_create_pango_layout
+
+	* gtk/gtksettings.c (settings_update_font_options): Make sure all
+	font option fields are set to non-DEFAULT values.
+
+2008-06-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfontsel.c
+	* gtk/gtkrc.c
+	* gtk/gtkstyle.c
+	* gtk/gtkwidget.c: use g_object_unref() instead of the deprecated
+	gtk_rc_style_unref().
+
+2008-06-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkcombobox.c (gtk_combo_box_class_init): use
+	_gtk_marshal_BOOLEAN__VOID instead of the deprecated
+	gtk_marshal_BOOLEAN__VOID.
+
+2008-06-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkcellrendereraccel.h
+	* gtk/gtkiconview.h
+	* gtk/gtkobject.h: use G_TYPE macros instead of the old GTK_CHECK
+	macros for type checking.
+
+	(gtk_object_get_type): change prototype to return GType instead of
+	GtkType.
+
+2008-06-16  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/Makefile.am: Make folder, user-home and user-desktop links 
+	to gtk-directory in the builtin icon theme, so that we can
+	use these icon names without risk of ending up without an icon.
+
+2008-06-16  Tor Lillqvist  <tml@novell.com>
+
+	Bug 538362 - Get Win32 icons back in the file chooser
+
+	* gtk/gtkicontheme.c (choose_icon): Check if the icon name is a
+	reference to an icon resource in a DLL or .EXE in the same format
+	as the DefaultIcon strings in the Registry. In that case, extract
+	the icon and convert to a GdkPixbuf. Patch by Hans Breuer. This
+	code has to be in sync with the corresponding code in
+	glib/gio/gcontenttype.c.
+
+2008-06-16  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/stock-icons/24/audio-volume*: Add icons used by GtkVolumeButton
+	to the builtin icon theme, to avoid showing broken images when
+	there is no icon theme around.  The new icons are thanks to
+	Lapo Calamandrei.
+
+2008-06-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfilechooserprivate.h: remove GtkTooltips member from the
+	GtkFileChooserDefault struct.
+
+	* gtk/gtkfilechooserdefault.c: don't allocate and free the
+	GtkTooltips.
+
+2008-06-16  Carlos Garnacho  <carlos@imendio.com>
+
+	Bug 538519 – GtkCellRendererPixbuf doesn't allow unsetting the icon
+	anymore
+
+	* gtk/gtkcellrendererpixbuf.c (gtk_cell_renderer_pixbuf_set_property):
+	Allow again setting any of the properties to render an image back to
+	NULL.
+
+2008-06-15  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkimage.c: When pixel-size is specified, use
+	GTK_ICON_LOOKUP_FORCE_SIZE when loading themed icons.
+
+2008-06-15  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtkfilechooser.c (gtk_file_chooser_get_filename): Return full 
+	path here as expected, not just the basename.
+
+	* gtk/gtkfilechooserdefault.c
+	(gtk_file_chooser_default_update_current_folder): Ensure that we keep
+	a reference to file, since it can be destroyed when switching back to
+	browse mode.
+
+	* gtk/gtkfilesystem.c (get_icon_for_special_directory): Removed, home
+	and desktop directories are dealt by the filechooser as normal files,
+	not volumes, so the icon for these is handled directly by GIO.
+	(_gtk_file_system_volume_render_icon): Update caller.
+
+2008-06-15  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkcellrendererpixbuf.c: Add a gicon property.
+
+2008-06-14  Cody Russell  <bratsche@gnome.org>
+
+	* gdk/win32/gdkselection-win32.c (gdk_win32_selection_add_targets):
+
+	Initialize hwnd to NULL.  This fixes OpenClipboard() failure and,
+	according to MSDN docs, associates the open clipboard with the
+	current task.  (#378158, reported by Andreas Köhler)
+
 2008-06-13  Matthias Clasen  <mclasen@redhat.com>
 
+	* configure.in: Bump version
+
 	* === Released 2.13.3 ===
-	
+
 2008-06-13  Matthias Clasen  <mclasen@redhat.com>
 
 	* gtk/gtkaccelgroup.c: Add some docs
@@ -330,7 +2415,7 @@
 	Bug 536990 - updateiconcache.c: 'close ()' is redundant
 
 	* gtk/updateiconcache.c (build_cache): Drop redundant close()
-	calls. fclose() on a fdopen()ed strema closes the underlying file
+	calls. fclose() on a fdopen()ed stream closes the underlying file
 	descriptor.
 
 2008-06-06  Matthias Clasen  <mclasen@redhat.com>

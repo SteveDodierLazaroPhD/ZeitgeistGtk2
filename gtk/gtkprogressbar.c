@@ -24,15 +24,9 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#if HAVE_CONFIG_H
-#  include <config.h>
-#  if STDC_HEADERS
-#    include <string.h>
-#    include <stdio.h>
-#  endif
-#else
-#  include <stdio.h>
-#endif
+#include "config.h"
+
+#include <string.h>
 
 #include "gtkprogressbar.h"
 #include "gtkprivate.h"
@@ -344,7 +338,7 @@ gtk_progress_bar_new (void)
 {
   GtkWidget *pbar;
 
-  pbar = gtk_widget_new (GTK_TYPE_PROGRESS_BAR, NULL);
+  pbar = g_object_new (GTK_TYPE_PROGRESS_BAR, NULL);
 
   return pbar;
 }
@@ -356,7 +350,7 @@ gtk_progress_bar_new_with_adjustment (GtkAdjustment *adjustment)
 
   g_return_val_if_fail (GTK_IS_ADJUSTMENT (adjustment), NULL);
 
-  pbar = gtk_widget_new (GTK_TYPE_PROGRESS_BAR,
+  pbar = g_object_new (GTK_TYPE_PROGRESS_BAR,
 			 "adjustment", adjustment,
 			 NULL);
 

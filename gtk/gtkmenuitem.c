@@ -26,7 +26,7 @@
 
 #define GTK_MENU_INTERNALS
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 
 #include "gtkaccellabel.h"
@@ -52,7 +52,9 @@ enum {
 
 enum {
   PROP_0,
-  PROP_SUBMENU
+  PROP_RIGHT_JUSTIFIED,
+  PROP_SUBMENU,
+  PROP_ACCEL_PATH
 };
 
 
@@ -190,6 +192,21 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
 		  G_TYPE_INT);
 
   /**
+   * GtkMenuItem:right-justified:
+   *
+   * Sets whether the menu item appears justified at the right side of a menu bar.
+   *
+   * Since: 2.14
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_RIGHT_JUSTIFIED,
+                                   g_param_spec_boolean ("right-justified",
+                                                         P_("Right Justified"),
+                                                         P_("Sets whether the menu item appears justified at the right side of a menu bar"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE));
+
+  /**
    * GtkMenuItem:submenu:
    *
    * The submenu attached to the menu item, or NULL if it has none.
@@ -202,6 +219,23 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
                                                         P_("Submenu"),
                                                         P_("The submenu attached to the menu item, or NULL if it has none"),
                                                         GTK_TYPE_MENU,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkMenuItem:accel-path:
+   *
+   * Sets the accelerator path of the menu item, through which runtime
+   * changes of the menu item's accelerator caused by the user can be
+   * identified and saved to persistant storage.
+   *
+   * Since: 2.14
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_ACCEL_PATH,
+                                   g_param_spec_string ("accel-path",
+                                                        P_("Accel Path"),
+                                                        P_("Sets the accelerator path of the menu item"),
+                                                        NULL,
                                                         GTK_PARAM_READWRITE));
 
   gtk_widget_class_install_style_property_parser (widget_class,
@@ -246,6 +280,20 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
                                                                P_("Amount of space used up by arrow, relative to the menu item's font size"),
                                                                0.0, 2.0, 0.8,
                                                                GTK_PARAM_READABLE));
+
+  /**
+   * GtkMenuItem:width-chars:
+   *
+   * The minimum desired width of the menu item in characters.
+   *
+   * Since: 2.14
+   **/
+  gtk_widget_class_install_style_property (widget_class,
+                                           g_param_spec_int ("width-chars",
+                                                             P_("Width in Characters"),
+                                                             P_("The minimum desired width of the menu item in characters"),
+                                                             0, G_MAXINT, 12,
+                                                             GTK_PARAM_READABLE));
 }
 
 static void
@@ -329,8 +377,14 @@ gtk_menu_item_set_property (GObject      *object,
   
   switch (prop_id)
     {
+    case PROP_RIGHT_JUSTIFIED:
+      gtk_menu_item_set_right_justified (menu_item, g_value_get_boolean (value));
+      break;
     case PROP_SUBMENU:
       gtk_menu_item_set_submenu (menu_item, g_value_get_object (value));
+      break;
+    case PROP_ACCEL_PATH:
+      gtk_menu_item_set_accel_path (menu_item, g_value_get_string (value));
       break;
 
     default:
@@ -349,8 +403,14 @@ gtk_menu_item_get_property (GObject    *object,
   
   switch (prop_id)
     {
+    case PROP_RIGHT_JUSTIFIED:
+      g_value_set_boolean (value, gtk_menu_item_get_right_justified (menu_item));
+      break;
     case PROP_SUBMENU:
       g_value_set_object (value, gtk_menu_item_get_submenu (menu_item));
+      break;
+    case PROP_ACCEL_PATH:
+      g_value_set_string (value, gtk_menu_item_get_accel_path (menu_item));
       break;
 
     default:
@@ -551,19 +611,21 @@ get_minimum_width (GtkWidget *widget)
 {
   PangoContext *context;
   PangoFontMetrics *metrics;
-  gint height;
+  gint width;
+  gint width_chars;
 
   context = gtk_widget_get_pango_context (widget);
   metrics = pango_context_get_metrics (context,
 				       widget->style->font_desc,
 				       pango_context_get_language (context));
 
-  height = pango_font_metrics_get_ascent (metrics) +
-      pango_font_metrics_get_descent (metrics);
-  
+  width = pango_font_metrics_get_approximate_char_width (metrics);
+
   pango_font_metrics_unref (metrics);
 
-  return PANGO_PIXELS (7 * height);
+  gtk_widget_style_get (widget, "width-chars", &width_chars, NULL);
+
+  return PANGO_PIXELS (width_chars * width);
 }
 
 static void
@@ -1079,6 +1141,7 @@ gtk_menu_item_real_popup_submenu (GtkWidget *widget,
   if (GTK_WIDGET_IS_SENSITIVE (menu_item->submenu))
     {
       gboolean take_focus;
+      GtkMenuPositionFunc menu_position_func;
 
       take_focus = gtk_menu_shell_get_take_focus (GTK_MENU_SHELL (widget->parent));
       gtk_menu_shell_set_take_focus (GTK_MENU_SHELL (menu_item->submenu),
@@ -1100,10 +1163,21 @@ gtk_menu_item_real_popup_submenu (GtkWidget *widget,
                              "gtk-menu-exact-popup-time", NULL);
         }
 
+      /* gtk_menu_item_position_menu positions the submenu from the
+       * menuitems position. If the menuitem doesn't have a window,
+       * that doesn't work. In that case we use the default
+       * positioning function instead which places the submenu at the
+       * mouse cursor.
+       */
+      if (widget->window)
+        menu_position_func = gtk_menu_item_position_menu;
+      else
+        menu_position_func = NULL;
+
       gtk_menu_popup (GTK_MENU (menu_item->submenu),
                       widget->parent,
                       widget,
-                      gtk_menu_item_position_menu,
+                      menu_position_func,
                       menu_item,
                       GTK_MENU_SHELL (widget->parent)->button,
                       0);
@@ -1565,7 +1639,7 @@ _gtk_menu_item_refresh_accel_path (GtkMenuItem   *menu_item,
           if (postfix)
             {
               new_path = g_strconcat (prefix, "/", postfix, NULL);
-              path = menu_item->accel_path = g_intern_string (new_path);
+              path = menu_item->accel_path = (char*)g_intern_string (new_path);
               g_free (new_path);
             }
 	}
@@ -1606,7 +1680,6 @@ gtk_menu_item_set_accel_path (GtkMenuItem *menu_item,
 			      const gchar *accel_path)
 {
   GtkWidget *widget;
-  gchar *old_accel_path;
 
   g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
   g_return_if_fail (accel_path == NULL ||
@@ -1615,7 +1688,7 @@ gtk_menu_item_set_accel_path (GtkMenuItem *menu_item,
   widget = GTK_WIDGET (menu_item);
 
   /* store new path */
-  menu_item->accel_path = g_intern_string (accel_path);
+  menu_item->accel_path = (char*)g_intern_string (accel_path);
 
   /* forget accelerators associated with old path */
   gtk_widget_set_accel_path (widget, NULL, NULL);
@@ -1631,6 +1704,27 @@ gtk_menu_item_set_accel_path (GtkMenuItem *menu_item,
 					   menu->accel_group,
 					   FALSE);
     }
+}
+
+/**
+ * gtk_menu_item_get_accel_path
+ * @menu_item:  a valid #GtkMenuItem
+ *
+ * Retrieve the accelerator path that was previously set on @menu_item.
+ *
+ * See gtk_menu_item_set_accel_path() for details.
+ *
+ * Returns: the accelerator path corresponding to this menu item's
+ *              functionality, or %NULL if not set
+ *
+ * Since: 2.14
+ */
+G_CONST_RETURN gchar *
+gtk_menu_item_get_accel_path (GtkMenuItem *menu_item)
+{
+  g_return_val_if_fail (GTK_IS_MENU_ITEM (menu_item), NULL);
+
+  return menu_item->accel_path;
 }
 
 static void

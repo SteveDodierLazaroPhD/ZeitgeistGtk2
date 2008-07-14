@@ -29,9 +29,8 @@
  */
 
 #undef GDK_DISABLE_DEPRECATED
-#undef GTK_DISABLE_DEPRECATED
 
-#include <config.h>
+#include "config.h"
 #include <stdlib.h>
 #include "gtkctree.h"
 #include "gtkbindings.h"
@@ -40,6 +39,7 @@
 #include "gtkdnd.h"
 #include "gtkintl.h"
 #include <gdk/gdkkeysyms.h>
+
 #include "gtkalias.h"
 
 #define PM_SIZE                    8
@@ -3570,7 +3570,7 @@ gtk_ctree_new_with_titles (gint         columns,
   g_return_val_if_fail (columns > 0, NULL);
   g_return_val_if_fail (tree_column >= 0 && tree_column < columns, NULL);
 
-  widget = gtk_widget_new (GTK_TYPE_CTREE,
+  widget = g_object_new (GTK_TYPE_CTREE,
 			   "n_columns", columns,
 			   "tree_column", tree_column,
 			   NULL);

@@ -470,17 +470,17 @@ gdk_public_h_sources = \
 	gdkcolor.h				\
 	gdkcursor.h				\
 	gdkdisplay.h				\
+	gdkdisplaymanager.h			\
 	gdkdnd.h				\
 	gdkdrawable.h				\
 	gdkevents.h				\
 	gdkfont.h				\
 	gdkgc.h					\
-	gdkkeysyms.h				\
 	gdki18n.h				\
 	gdkimage.h				\
 	gdkinput.h				\
 	gdkkeys.h				\
-	gdkdisplaymanager.h			\
+	gdkkeysyms.h				\
 	gdkpango.h				\
 	gdkpixbuf.h				\
 	gdkpixmap.h				\
@@ -502,6 +502,8 @@ gdk_built_public_sources = \
 
 
 gdk_built_private_headers = \
+	gdkprivate.h				\
+	gdkwindowimpl.h				\
 	gdkalias.h
 
 
@@ -513,32 +515,33 @@ gdk_c_sources = \
 	gdkcolor.c		\
 	gdkcursor.c		\
 	gdkdisplay.c		\
+	gdkdisplaymanager.c	\
 	gdkdnd.c		\
 	gdkdraw.c		\
 	gdkevents.c     	\
 	gdkfont.c		\
 	gdkgc.c			\
 	gdkglobals.c		\
-	gdkkeys.c		\
-	gdkkeyuni.c		\
 	gdkimage.c		\
 	gdkinternals.h  	\
 	gdkintl.h		\
-	gdkdisplaymanager.c	\
+	gdkkeys.c		\
+	gdkkeyuni.c		\
 	gdkpango.c		\
 	gdkpixbuf-drawable.c	\
 	gdkpixbuf-render.c	\
 	gdkpixmap.c		\
 	gdkpoly-generic.h	\
 	gdkpolyreg-generic.c	\
-	gdkrgb.c		\
 	gdkrectangle.c		\
 	gdkregion-generic.c	\
 	gdkregion-generic.h	\
+	gdkrgb.c		\
 	gdkscreen.c		\
 	gdkselection.c		\
 	gdkvisual.c		\
-	gdkwindow.c
+	gdkwindow.c		\
+	gdkwindowimpl.c
 
 
 gdk_built_sources = \
@@ -623,24 +626,24 @@ libgdk_directfb_2_0_la_DEPENDENCIES = directfb/libgdk-directfb.la \
 	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
 am__libgdk_directfb_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
-	gdkdisplay.c gdkdnd.c gdkdraw.c gdkevents.c gdkfont.c gdkgc.c \
-	gdkglobals.c gdkkeys.c gdkkeyuni.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkdisplaymanager.c gdkpango.c gdkpixbuf-drawable.c \
+	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
+	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
 	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrgb.c gdkrectangle.c \
-	gdkregion-generic.c gdkregion-generic.h gdkscreen.c \
-	gdkselection.c gdkvisual.c gdkwindow.c gdkenumtypes.c \
+	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
+	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
+	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
 	gdkmarshalers.h
 @USE_MEDIALIB_TRUE@am__objects_1 = gdkmedialib.lo
 @USE_MEDIALIB_FALSE@am__objects_1 =
 am__objects_2 = $(am__objects_1) gdk.lo gdkapplaunchcontext.lo \
-	gdkcairo.lo gdkcolor.lo gdkcursor.lo gdkdisplay.lo gdkdnd.lo \
-	gdkdraw.lo gdkevents.lo gdkfont.lo gdkgc.lo gdkglobals.lo \
-	gdkkeys.lo gdkkeyuni.lo gdkimage.lo gdkdisplaymanager.lo \
-	gdkpango.lo gdkpixbuf-drawable.lo gdkpixbuf-render.lo \
-	gdkpixmap.lo gdkpolyreg-generic.lo gdkrgb.lo gdkrectangle.lo \
-	gdkregion-generic.lo gdkscreen.lo gdkselection.lo gdkvisual.lo \
-	gdkwindow.lo
+	gdkcairo.lo gdkcolor.lo gdkcursor.lo gdkdisplay.lo \
+	gdkdisplaymanager.lo gdkdnd.lo gdkdraw.lo gdkevents.lo \
+	gdkfont.lo gdkgc.lo gdkglobals.lo gdkimage.lo gdkkeys.lo \
+	gdkkeyuni.lo gdkpango.lo gdkpixbuf-drawable.lo \
+	gdkpixbuf-render.lo gdkpixmap.lo gdkpolyreg-generic.lo \
+	gdkrectangle.lo gdkregion-generic.lo gdkrgb.lo gdkscreen.lo \
+	gdkselection.lo gdkvisual.lo gdkwindow.lo gdkwindowimpl.lo
 am__objects_3 = $(am__objects_2) gdkenumtypes.lo
 am_libgdk_directfb_2_0_la_OBJECTS = $(am__objects_3)
 libgdk_directfb_2_0_la_OBJECTS = $(am_libgdk_directfb_2_0_la_OBJECTS)
@@ -648,25 +651,25 @@ libgdk_quartz_2_0_la_DEPENDENCIES = quartz/libgdk-quartz.la \
 	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
 am__libgdk_quartz_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
-	gdkdisplay.c gdkdnd.c gdkdraw.c gdkevents.c gdkfont.c gdkgc.c \
-	gdkglobals.c gdkkeys.c gdkkeyuni.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkdisplaymanager.c gdkpango.c gdkpixbuf-drawable.c \
+	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
+	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
 	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrgb.c gdkrectangle.c \
-	gdkregion-generic.c gdkregion-generic.h gdkscreen.c \
-	gdkselection.c gdkvisual.c gdkwindow.c gdkenumtypes.c \
+	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
+	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
+	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
 	gdkmarshalers.h gdkkeynames.c
 am_libgdk_quartz_2_0_la_OBJECTS = $(am__objects_3) gdkkeynames.lo
 libgdk_quartz_2_0_la_OBJECTS = $(am_libgdk_quartz_2_0_la_OBJECTS)
 am__libgdk_win32_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
-	gdkdisplay.c gdkdnd.c gdkdraw.c gdkevents.c gdkfont.c gdkgc.c \
-	gdkglobals.c gdkkeys.c gdkkeyuni.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkdisplaymanager.c gdkpango.c gdkpixbuf-drawable.c \
+	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
+	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
 	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrgb.c gdkrectangle.c \
-	gdkregion-generic.c gdkregion-generic.h gdkscreen.c \
-	gdkselection.c gdkvisual.c gdkwindow.c gdkenumtypes.c \
+	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
+	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
+	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
 	gdkmarshalers.h gdkkeynames.c
 am_libgdk_win32_2_0_la_OBJECTS = $(am__objects_3) gdkkeynames.lo
 libgdk_win32_2_0_la_OBJECTS = $(am_libgdk_win32_2_0_la_OBJECTS)
@@ -674,13 +677,13 @@ libgdk_x11_2_0_la_DEPENDENCIES = x11/libgdk-x11.la \
 	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
 am__libgdk_x11_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
-	gdkdisplay.c gdkdnd.c gdkdraw.c gdkevents.c gdkfont.c gdkgc.c \
-	gdkglobals.c gdkkeys.c gdkkeyuni.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkdisplaymanager.c gdkpango.c gdkpixbuf-drawable.c \
+	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
+	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
 	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrgb.c gdkrectangle.c \
-	gdkregion-generic.c gdkregion-generic.h gdkscreen.c \
-	gdkselection.c gdkvisual.c gdkwindow.c gdkenumtypes.c \
+	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
+	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
+	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
 	gdkmarshalers.h
 am_libgdk_x11_2_0_la_OBJECTS = $(am__objects_3)
 libgdk_x11_2_0_la_OBJECTS = $(am_libgdk_x11_2_0_la_OBJECTS)
@@ -711,7 +714,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/gdkregion-generic.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkrgb.Plo ./$(DEPDIR)/gdkscreen.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkselection.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/gdkvisual.Plo ./$(DEPDIR)/gdkwindow.Plo
+@AMDEP_TRUE@	./$(DEPDIR)/gdkvisual.Plo ./$(DEPDIR)/gdkwindow.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gdkwindowimpl.Plo
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -821,6 +825,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkselection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkvisual.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkwindow.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkwindowimpl.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \

@@ -25,6 +25,7 @@
 #ifndef __GTK_BUILDER_H__
 #define __GTK_BUILDER_H__
 
+#include <gdkconfig.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -60,7 +61,7 @@ struct _GtkBuilder
 {
   GObject parent_instance;
 
-  GtkBuilderPrivate *priv;
+  GtkBuilderPrivate *GSEAL (priv);
 };
 
 struct _GtkBuilderClass

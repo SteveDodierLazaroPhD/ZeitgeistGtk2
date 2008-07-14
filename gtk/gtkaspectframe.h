@@ -52,12 +52,12 @@ struct _GtkAspectFrame
 {
   GtkFrame frame;
 
-  gfloat xalign;
-  gfloat yalign;
-  gfloat ratio;
-  gboolean obey_child;
+  gfloat   GSEAL (xalign);
+  gfloat   GSEAL (yalign);
+  gfloat   GSEAL (ratio);
+  gboolean GSEAL (obey_child);
 
-  GtkAllocation center_allocation;
+  GtkAllocation GSEAL (center_allocation);
 };
 
 struct _GtkAspectFrameClass

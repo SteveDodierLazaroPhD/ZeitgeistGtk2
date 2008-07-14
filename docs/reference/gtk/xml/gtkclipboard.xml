@@ -83,6 +83,9 @@
                                                          <link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          <link linkend="GtkClipboardRichTextReceivedFunc">GtkClipboardRichTextReceivedFunc</link> callback,
                                                          <link linkend="gpointer">gpointer</link> user_data);
+<link linkend="void">void</link>                <link linkend="gtk-clipboard-request-uris">gtk_clipboard_request_uris</link>          (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard,
+                                                         <link linkend="GtkClipboardURIReceivedFunc">GtkClipboardURIReceivedFunc</link> callback,
+                                                         <link linkend="gpointer">gpointer</link> user_data);
 <link linkend="GtkSelectionData">GtkSelectionData</link>*   <link linkend="gtk-clipboard-wait-for-contents">gtk_clipboard_wait_for_contents</link>     (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard,
                                                          <link linkend="GdkAtom">GdkAtom</link> target);
 <link linkend="gchar">gchar</link>*              <link linkend="gtk-clipboard-wait-for-text">gtk_clipboard_wait_for_text</link>         (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard);
@@ -91,6 +94,7 @@
                                                          <link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer,
                                                          <link linkend="GdkAtom">GdkAtom</link> *format,
                                                          <link linkend="gsize">gsize</link> *length);
+<link linkend="gchar">gchar</link>**             <link linkend="gtk-clipboard-wait-for-uris">gtk_clipboard_wait_for_uris</link>         (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-clipboard-wait-is-text-available">gtk_clipboard_wait_is_text_available</link>
                                                         (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-clipboard-wait-is-image-available">gtk_clipboard_wait_is_image_available</link>
@@ -98,6 +102,8 @@
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-clipboard-wait-is-rich-text-available">gtk_clipboard_wait_is_rich_text_available</link>
                                                         (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard,
                                                          <link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-clipboard-wait-is-uris-available">gtk_clipboard_wait_is_uris_available</link>
+                                                        (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-clipboard-wait-for-targets">gtk_clipboard_wait_for_targets</link>      (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard,
                                                          <link linkend="GdkAtom">GdkAtom</link> **targets,
                                                          <link linkend="gint">gint</link> *n_targets);
@@ -791,6 +797,36 @@ contents of the clipboard could not be converted into rich text form.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
+<refsect2 id="gtk-clipboard-request-uris" role="function" condition="since:2.14">
+<title>gtk_clipboard_request_uris ()</title>
+<indexterm zone="gtk-clipboard-request-uris" role="2.14"><primary>gtk_clipboard_request_uris</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_clipboard_request_uris          (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard,
+                                                         <link linkend="GtkClipboardURIReceivedFunc">GtkClipboardURIReceivedFunc</link> callback,
+                                                         <link linkend="gpointer">gpointer</link> user_data);</programlisting>
+<para>
+Requests the contents of the clipboard as URIs. When the URIs are
+later received <parameter>callback</parameter> will be called.
+</para>
+<para>
+The <parameter>uris</parameter> parameter to <parameter>callback</parameter> will contain the resulting array of
+URIs if the request succeeded, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if it failed. This could happen
+for various reasons, in particular if the clipboard was empty or if the
+contents of the clipboard could not be converted into URI form.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>clipboard</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkClipboard"><type>GtkClipboard</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>callback</parameter>&nbsp;:</term>
+<listitem><simpara>  a function to call when the URIs are received,
+            or the retrieval fails. (It will always be called
+            one way or the other.)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to <parameter>callback</parameter>.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-clipboard-wait-for-contents" role="function">
 <title>gtk_clipboard_wait_for_contents ()</title>
 <indexterm zone="gtk-clipboard-wait-for-contents"><primary>gtk_clipboard_wait_for_contents</primary></indexterm><programlisting><link linkend="GtkSelectionData">GtkSelectionData</link>*   gtk_clipboard_wait_for_contents     (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard,
@@ -896,6 +932,29 @@ timeouts, etc, may be dispatched during the wait.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
+<refsect2 id="gtk-clipboard-wait-for-uris" role="function" condition="since:2.14">
+<title>gtk_clipboard_wait_for_uris ()</title>
+<indexterm zone="gtk-clipboard-wait-for-uris" role="2.14"><primary>gtk_clipboard_wait_for_uris</primary></indexterm><programlisting><link linkend="gchar">gchar</link>**             gtk_clipboard_wait_for_uris         (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard);</programlisting>
+<para>
+Requests the contents of the clipboard as URIs. This function waits
+for the data to be received using the main loop, so events,
+timeouts, etc, may be dispatched during the wait.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>clipboard</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkClipboard"><type>GtkClipboard</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly-allocated <link linkend="NULL:CAPS"><literal>NULL</literal></link>-terminated array of strings which must
+              be freed with <link linkend="g-strfreev"><function>g_strfreev()</function></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if
+              retrieving the selection data failed. (This 
+              could happen for various reasons, in particular 
+              if the clipboard was empty or if the contents of 
+              the clipboard could not be converted into URI form.)
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-clipboard-wait-is-text-available" role="function">
 <title>gtk_clipboard_wait_is_text_available ()</title>
 <indexterm zone="gtk-clipboard-wait-is-text-available"><primary>gtk_clipboard_wait_is_text_available</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_clipboard_wait_is_text_available
@@ -975,6 +1034,32 @@ the actual text.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2 id="gtk-clipboard-wait-is-uris-available" role="function" condition="since:2.14">
+<title>gtk_clipboard_wait_is_uris_available ()</title>
+<indexterm zone="gtk-clipboard-wait-is-uris-available" role="2.14"><primary>gtk_clipboard_wait_is_uris_available</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_clipboard_wait_is_uris_available
+                                                        (<link linkend="GtkClipboard">GtkClipboard</link> *clipboard);</programlisting>
+<para>
+Test to see if there is a list of URIs available to be pasted
+This is done by requesting the TARGETS atom and checking
+if it contains the URI targets. This function
+waits for the data to be received using the main loop, so events, 
+timeouts, etc, may be dispatched during the wait.
+</para>
+<para>
+This function is a little faster than calling
+<link linkend="gtk-clipboard-wait-for-uris"><function>gtk_clipboard_wait_for_uris()</function></link> since it doesn't need to retrieve
+the actual URI data.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>clipboard</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkClipboard"><type>GtkClipboard</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> is there is an URI list available, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-clipboard-wait-for-targets" role="function" condition="since:2.4">
 <title>gtk_clipboard_wait_for_targets ()</title>

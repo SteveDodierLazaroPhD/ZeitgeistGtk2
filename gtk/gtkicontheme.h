@@ -24,7 +24,6 @@
 #ifndef __GTK_ICON_THEME_H__
 #define __GTK_ICON_THEME_H__
 
-#include <glib-object.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gdk/gdk.h>
 
@@ -49,7 +48,7 @@ struct _GtkIconTheme
   /*< private >*/
   GObject parent_instance;
 
-  GtkIconThemePrivate *priv;
+  GtkIconThemePrivate *GSEAL (priv);
 };
 
 struct _GtkIconThemeClass

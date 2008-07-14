@@ -25,7 +25,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 
 #include "gdk/gdkkeysyms.h"
@@ -298,6 +298,25 @@ gtk_socket_get_id (GtkSocket *socket)
     gtk_widget_realize (GTK_WIDGET (socket));
 
   return _gtk_socket_windowing_get_id (socket);
+}
+
+/**
+ * gtk_socket_get_plug_window:
+ * @socket_: a #GtkSocket.
+ *
+ * Retrieves the window of the plug. Use this to check if the plug has
+ * been created inside of the socket.
+ *
+ * Return value: the window of the plug if available, or %NULL
+ *
+ * Since:  2.14
+ **/
+GdkWindow*
+gtk_socket_get_plug_window (GtkSocket *socket)
+{
+  g_return_val_if_fail (GTK_IS_SOCKET (socket), NULL);
+
+  return socket->plug_window;
 }
 
 static void

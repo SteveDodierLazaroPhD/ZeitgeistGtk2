@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <gtk/gtk.h>
 #include "gailpixmap.h"
@@ -126,7 +126,7 @@ gail_pixmap_get_image_size (AtkImage       *obj,
   pixmap = GTK_PIXMAP (widget);
 
   if (pixmap->pixmap)
-    gdk_window_get_size (pixmap->pixmap, width, height);
+    gdk_drawable_get_size (pixmap->pixmap, width, height);
 }
 
 static gboolean 

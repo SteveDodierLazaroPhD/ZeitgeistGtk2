@@ -38,6 +38,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = @host@
+@OS_UNIX_TRUE@am__append_1 = defaultvalue
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
@@ -384,7 +385,7 @@ GTESTER_REPORT = gtester-report		# in $PATH for non-GLIB packages
 # initialize variables for unconditional += appending
 EXTRA_DIST = 
 
-TEST_PROGS = testing liststore treestore treeview-scrolling
+TEST_PROGS = testing liststore treestore treeview-scrolling recentmanager floating object builder $(am__append_1) textbuffer
 
 ### testing rules
 
@@ -411,24 +412,26 @@ XVFB_START = \
 
 
 INCLUDES = \
-	   -I$(top_srcdir)                      \
-	   -I$(top_builddir)/gdk                \
-	   -I$(top_srcdir)/gdk                  \
-	   -DGDK_PIXBUF_DISABLE_DEPRECATED	\
-	   -DGDK_DISABLE_DEPRECATED             \
-	   -DGTK_DISABLE_DEPRECATED             \
-	   $(GTK_DEBUG_FLAGS)                   \
-	   $(GTK_DEP_CFLAGS)
+	-I$(top_srcdir)			\
+	-I$(top_builddir)/gdk		\
+	-I$(top_srcdir)/gdk		\
+	-DGDK_PIXBUF_DISABLE_DEPRECATED	\
+	-DGDK_DISABLE_DEPRECATED	\
+	-DGTK_DISABLE_DEPRECATED	\
+	$(GTK_DEBUG_FLAGS)		\
+	$(GTK_DEP_CFLAGS)
 
 
-DEPS = $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la  \
-        $(top_builddir)/gdk/$(gdktargetlib)                             \
-        $(top_builddir)/gtk/$(gtktargetlib)
+DEPS = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la	\
+	$(top_builddir)/gdk/$(gdktargetlib)				\
+	$(top_builddir)/gtk/$(gtktargetlib)
 
 
-progs_ldadd = $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
-		  $(top_builddir)/gdk/$(gdktargetlib)                            \
-		  $(top_builddir)/gtk/$(gtktargetlib)
+progs_ldadd = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la	\
+	$(top_builddir)/gdk/$(gdktargetlib)				\
+	$(top_builddir)/gtk/$(gtktargetlib)
 
 
 noinst_PROGRAMS = $(TEST_PROGS)
@@ -440,15 +443,62 @@ treestore_SOURCES = treestore.c
 treestore_LDADD = $(progs_ldadd)
 treeview_scrolling_SOURCES = treeview-scrolling.c
 treeview_scrolling_LDADD = $(progs_ldadd)
+recentmanager_SOURCES = recentmanager.c
+recentmanager_LDADD = $(progs_ldadd)
+floating_SOURCES = floating.c
+floating_LDADD = $(progs_ldadd)
+object_SOURCES = object.c pixbuf-init.c
+object_LDADD = $(progs_ldadd)
+
+# this doesn't work in make distcheck, since it doesn't
+# find file-chooser-test-dir 
+# TEST_PROGS			+= filechooser
+filechooser_SOURCES = filechooser.c pixbuf-init.c
+filechooser_LDADD = $(progs_ldadd)
+builder_SOURCES = builder.c
+builder_LDADD = $(progs_ldadd)
+builder_LDFLAGS = -export-dynamic
+defaultvalue_SOURCES = defaultvalue.c pixbuf-init.c	
+defaultvalue_LDADD = $(progs_ldadd)
+textbuffer_SOURCES = textbuffer.c pixbuf-init.c
+textbuffer_LDADD = $(progs_ldadd)
 subdir = gtk/tests
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = testing$(EXEEXT) liststore$(EXEEXT) treestore$(EXEEXT) \
-	treeview-scrolling$(EXEEXT)
+@OS_UNIX_TRUE@noinst_PROGRAMS = testing$(EXEEXT) liststore$(EXEEXT) \
+@OS_UNIX_TRUE@	treestore$(EXEEXT) treeview-scrolling$(EXEEXT) \
+@OS_UNIX_TRUE@	recentmanager$(EXEEXT) floating$(EXEEXT) \
+@OS_UNIX_TRUE@	object$(EXEEXT) builder$(EXEEXT) \
+@OS_UNIX_TRUE@	defaultvalue$(EXEEXT) textbuffer$(EXEEXT)
+@OS_UNIX_FALSE@noinst_PROGRAMS = testing$(EXEEXT) liststore$(EXEEXT) \
+@OS_UNIX_FALSE@	treestore$(EXEEXT) treeview-scrolling$(EXEEXT) \
+@OS_UNIX_FALSE@	recentmanager$(EXEEXT) floating$(EXEEXT) \
+@OS_UNIX_FALSE@	object$(EXEEXT) builder$(EXEEXT) \
+@OS_UNIX_FALSE@	textbuffer$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
+am_builder_OBJECTS = builder.$(OBJEXT)
+builder_OBJECTS = $(am_builder_OBJECTS)
+builder_DEPENDENCIES = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(top_builddir)/gdk/$(gdktargetlib) \
+	$(top_builddir)/gtk/$(gtktargetlib)
+am_defaultvalue_OBJECTS = defaultvalue.$(OBJEXT) pixbuf-init.$(OBJEXT)
+defaultvalue_OBJECTS = $(am_defaultvalue_OBJECTS)
+defaultvalue_DEPENDENCIES = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(top_builddir)/gdk/$(gdktargetlib) \
+	$(top_builddir)/gtk/$(gtktargetlib)
+defaultvalue_LDFLAGS =
+am_floating_OBJECTS = floating.$(OBJEXT)
+floating_OBJECTS = $(am_floating_OBJECTS)
+floating_DEPENDENCIES = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(top_builddir)/gdk/$(gdktargetlib) \
+	$(top_builddir)/gtk/$(gtktargetlib)
+floating_LDFLAGS =
 am_liststore_OBJECTS = liststore.$(OBJEXT)
 liststore_OBJECTS = $(am_liststore_OBJECTS)
 liststore_DEPENDENCIES = \
@@ -456,6 +506,20 @@ liststore_DEPENDENCIES = \
 	$(top_builddir)/gdk/$(gdktargetlib) \
 	$(top_builddir)/gtk/$(gtktargetlib)
 liststore_LDFLAGS =
+am_object_OBJECTS = object.$(OBJEXT) pixbuf-init.$(OBJEXT)
+object_OBJECTS = $(am_object_OBJECTS)
+object_DEPENDENCIES = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(top_builddir)/gdk/$(gdktargetlib) \
+	$(top_builddir)/gtk/$(gtktargetlib)
+object_LDFLAGS =
+am_recentmanager_OBJECTS = recentmanager.$(OBJEXT)
+recentmanager_OBJECTS = $(am_recentmanager_OBJECTS)
+recentmanager_DEPENDENCIES = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(top_builddir)/gdk/$(gdktargetlib) \
+	$(top_builddir)/gtk/$(gtktargetlib)
+recentmanager_LDFLAGS =
 am_testing_OBJECTS = testing.$(OBJEXT)
 testing_OBJECTS = $(am_testing_OBJECTS)
 testing_DEPENDENCIES = \
@@ -463,6 +527,13 @@ testing_DEPENDENCIES = \
 	$(top_builddir)/gdk/$(gdktargetlib) \
 	$(top_builddir)/gtk/$(gtktargetlib)
 testing_LDFLAGS =
+am_textbuffer_OBJECTS = textbuffer.$(OBJEXT) pixbuf-init.$(OBJEXT)
+textbuffer_OBJECTS = $(am_textbuffer_OBJECTS)
+textbuffer_DEPENDENCIES = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(top_builddir)/gdk/$(gdktargetlib) \
+	$(top_builddir)/gtk/$(gtktargetlib)
+textbuffer_LDFLAGS =
 am_treestore_OBJECTS = treestore.$(OBJEXT)
 treestore_OBJECTS = $(am_treestore_OBJECTS)
 treestore_DEPENDENCIES = \
@@ -481,8 +552,12 @@ treeview_scrolling_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/liststore.Po ./$(DEPDIR)/testing.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/treestore.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/builder.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/defaultvalue.Po ./$(DEPDIR)/floating.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/liststore.Po ./$(DEPDIR)/object.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pixbuf-init.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/recentmanager.Po ./$(DEPDIR)/testing.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/textbuffer.Po ./$(DEPDIR)/treestore.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/treeview-scrolling.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -491,11 +566,14 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(liststore_SOURCES) $(testing_SOURCES) \
-	$(treestore_SOURCES) $(treeview_scrolling_SOURCES)
+DIST_SOURCES = $(builder_SOURCES) $(defaultvalue_SOURCES) \
+	$(floating_SOURCES) $(liststore_SOURCES) $(object_SOURCES) \
+	$(recentmanager_SOURCES) $(testing_SOURCES) \
+	$(textbuffer_SOURCES) $(treestore_SOURCES) \
+	$(treeview_scrolling_SOURCES)
 DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl \
 	Makefile.am
-SOURCES = $(liststore_SOURCES) $(testing_SOURCES) $(treestore_SOURCES) $(treeview_scrolling_SOURCES)
+SOURCES = $(builder_SOURCES) $(defaultvalue_SOURCES) $(floating_SOURCES) $(liststore_SOURCES) $(object_SOURCES) $(recentmanager_SOURCES) $(testing_SOURCES) $(textbuffer_SOURCES) $(treestore_SOURCES) $(treeview_scrolling_SOURCES)
 
 all: all-am
 
@@ -513,12 +591,30 @@ clean-noinstPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
+builder$(EXEEXT): $(builder_OBJECTS) $(builder_DEPENDENCIES) 
+	@rm -f builder$(EXEEXT)
+	$(LINK) $(builder_LDFLAGS) $(builder_OBJECTS) $(builder_LDADD) $(LIBS)
+defaultvalue$(EXEEXT): $(defaultvalue_OBJECTS) $(defaultvalue_DEPENDENCIES) 
+	@rm -f defaultvalue$(EXEEXT)
+	$(LINK) $(defaultvalue_LDFLAGS) $(defaultvalue_OBJECTS) $(defaultvalue_LDADD) $(LIBS)
+floating$(EXEEXT): $(floating_OBJECTS) $(floating_DEPENDENCIES) 
+	@rm -f floating$(EXEEXT)
+	$(LINK) $(floating_LDFLAGS) $(floating_OBJECTS) $(floating_LDADD) $(LIBS)
 liststore$(EXEEXT): $(liststore_OBJECTS) $(liststore_DEPENDENCIES) 
 	@rm -f liststore$(EXEEXT)
 	$(LINK) $(liststore_LDFLAGS) $(liststore_OBJECTS) $(liststore_LDADD) $(LIBS)
+object$(EXEEXT): $(object_OBJECTS) $(object_DEPENDENCIES) 
+	@rm -f object$(EXEEXT)
+	$(LINK) $(object_LDFLAGS) $(object_OBJECTS) $(object_LDADD) $(LIBS)
+recentmanager$(EXEEXT): $(recentmanager_OBJECTS) $(recentmanager_DEPENDENCIES) 
+	@rm -f recentmanager$(EXEEXT)
+	$(LINK) $(recentmanager_LDFLAGS) $(recentmanager_OBJECTS) $(recentmanager_LDADD) $(LIBS)
 testing$(EXEEXT): $(testing_OBJECTS) $(testing_DEPENDENCIES) 
 	@rm -f testing$(EXEEXT)
 	$(LINK) $(testing_LDFLAGS) $(testing_OBJECTS) $(testing_LDADD) $(LIBS)
+textbuffer$(EXEEXT): $(textbuffer_OBJECTS) $(textbuffer_DEPENDENCIES) 
+	@rm -f textbuffer$(EXEEXT)
+	$(LINK) $(textbuffer_LDFLAGS) $(textbuffer_OBJECTS) $(textbuffer_LDADD) $(LIBS)
 treestore$(EXEEXT): $(treestore_OBJECTS) $(treestore_DEPENDENCIES) 
 	@rm -f treestore$(EXEEXT)
 	$(LINK) $(treestore_LDFLAGS) $(treestore_OBJECTS) $(treestore_LDADD) $(LIBS)
@@ -532,8 +628,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/builder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/defaultvalue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/liststore.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/object.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pixbuf-init.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/recentmanager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testing.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/textbuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/treestore.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/treeview-scrolling.Po@am__quote@
 

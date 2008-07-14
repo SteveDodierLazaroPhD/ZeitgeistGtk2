@@ -164,6 +164,10 @@ editable by the user.</entry>
                                                          <link linkend="gint">gint</link> start,
                                                          <link linkend="gint">gint</link> end);</programlisting>
 <para>
+Selects the text between <parameter>start</parameter> and <parameter>end</parameter>. Both <parameter>start</parameter> and <parameter>end</parameter> are
+relative to the start of the content. Note that positions are specified
+in characters, not bytes.</para>
+<para>
 Selects a region of text. The characters that
 are selected are those characters at positions from
 <parameter>start_pos</parameter> up to, but not including <parameter>end_pos</parameter>. If 
@@ -172,15 +176,13 @@ will be those characters from <parameter>start_pos</parameter> to the end
 of the text.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>start</parameter>&nbsp;:</term>
-<listitem><simpara>the starting position.
+<listitem><simpara> start of region
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>end</parameter>&nbsp;:</term>
-<listitem><simpara>the end position.
-
-
+<listitem><simpara> end of region
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-get-selection-bounds" role="function">
@@ -189,10 +191,15 @@ of the text.
                                                          <link linkend="gint">gint</link> *start,
                                                          <link linkend="gint">gint</link> *end);</programlisting>
 <para>
+Retrieves the selection bound of the editable. <parameter>start_pos</parameter> will be filled
+with the start of the selection and <parameter>end_pos</parameter> with end. If no text was selected
+both will be identical and <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> will be returned. Note that positions are
+specified in characters, not bytes.</para>
+<para>
 Gets the current selection bounds, if there is a selection.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>start</parameter>&nbsp;:</term>
 <listitem><simpara>location to store the starting position, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
@@ -200,8 +207,7 @@ Gets the current selection bounds, if there is a selection.
 <varlistentry><term><parameter>end</parameter>&nbsp;:</term>
 <listitem><simpara>location to store the end position, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if there is a selection.
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if an area is selected, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
@@ -212,24 +218,22 @@ Gets the current selection bounds, if there is a selection.
                                                          <link linkend="gint">gint</link> new_text_length,
                                                          <link linkend="gint">gint</link> *position);</programlisting>
 <para>
+Appends <parameter>new_text_length</parameter> characters of <parameter>text</parameter> to the contents of the widget,
+at position <parameter>position</parameter>. Note that this position is in characters, not in bytes.</para>
+<para>
 Inserts text at a given position.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>new_text</parameter>&nbsp;:</term>
-<listitem><simpara>the text to insert.
+<listitem><simpara> the text to append
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>new_text_length</parameter>&nbsp;:</term>
-<listitem><simpara>the length of the text to insert, in bytes
+<listitem><simpara> the text to append
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>position</parameter>&nbsp;:</term>
-<listitem><simpara>an inout parameter. The caller initializes it to
-           the position at which to insert the text. After the
-           call it points at the position after the newly
-           inserted text.
-
-
+<listitem><simpara> position text will be inserted at
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-delete-text" role="function">
@@ -237,6 +241,9 @@ Inserts text at a given position.
 <indexterm zone="gtk-editable-delete-text"><primary>gtk_editable_delete_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_editable_delete_text            (<link linkend="GtkEditable">GtkEditable</link> *editable,
                                                          <link linkend="gint">gint</link> start_pos,
                                                          <link linkend="gint">gint</link> end_pos);</programlisting>
+<para>
+Deletes the content of the editable between <parameter>start_pos</parameter> and <parameter>end_pos</parameter>.
+Note that positions are specified in characters, not bytes.</para>
 <para>
 Deletes a sequence of characters. The characters that
 are deleted are those characters at positions from
@@ -246,15 +253,13 @@ will be those characters from <parameter>start_pos</parameter> to the end
 of the text.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>start_pos</parameter>&nbsp;:</term>
-<listitem><simpara>the starting position.
+<listitem><simpara> start position
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>end_pos</parameter>&nbsp;:</term>
-<listitem><simpara>the end position.
-
-
+<listitem><simpara> end position
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-get-chars" role="function">
@@ -262,6 +267,9 @@ of the text.
 <indexterm zone="gtk-editable-get-chars"><primary>gtk_editable_get_chars</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_editable_get_chars              (<link linkend="GtkEditable">GtkEditable</link> *editable,
                                                          <link linkend="gint">gint</link> start_pos,
                                                          <link linkend="gint">gint</link> end_pos);</programlisting>
+<para>
+Retreives the content of the editable between <parameter>start</parameter> and <parameter>end</parameter>.
+Note that positions are specified in characters, not bytes.</para>
 <para>
 Retrieves a sequence of characters. The characters that
 are retrieved are those characters at positions from
@@ -271,7 +279,7 @@ will be those characters from <parameter>start_pos</parameter> to the end
 of the text.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>start_pos</parameter>&nbsp;:</term>
 <listitem><simpara>the starting position.
@@ -279,64 +287,66 @@ of the text.
 <varlistentry><term><parameter>end_pos</parameter>&nbsp;:</term>
 <listitem><simpara>the end position.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the characters in the indicated region.
-          The result must be freed with <link linkend="g-free"><function>g_free()</function></link> when
-          the application is finished with it.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a pointer to the contents of the widget as a
+     string. This string is allocated by the <link linkend="GtkEditable"><type>GtkEditable</type></link>
+     implementation and should be freed by the caller.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-cut-clipboard" role="function">
 <title>gtk_editable_cut_clipboard ()</title>
 <indexterm zone="gtk-editable-cut-clipboard"><primary>gtk_editable_cut_clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_editable_cut_clipboard          (<link linkend="GtkEditable">GtkEditable</link> *editable);</programlisting>
 <para>
+Removes the contents of the currently selected content in the editable and
+puts it on the clipboard.</para>
+<para>
 Causes the characters in the current selection to
 be copied to the clipboard and then deleted from
 the widget.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
-
-
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-copy-clipboard" role="function">
 <title>gtk_editable_copy_clipboard ()</title>
 <indexterm zone="gtk-editable-copy-clipboard"><primary>gtk_editable_copy_clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_editable_copy_clipboard         (<link linkend="GtkEditable">GtkEditable</link> *editable);</programlisting>
 <para>
+Copies the contents of the currently selected content in the editable and
+puts it on the clipboard.</para>
+<para>
 Causes the characters in the current selection to
 be copied to the clipboard.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
-
-
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-paste-clipboard" role="function">
 <title>gtk_editable_paste_clipboard ()</title>
 <indexterm zone="gtk-editable-paste-clipboard"><primary>gtk_editable_paste_clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_editable_paste_clipboard        (<link linkend="GtkEditable">GtkEditable</link> *editable);</programlisting>
 <para>
+Pastes the content of the clipboard to the current position of the
+cursor in the editable.</para>
+<para>
 Causes the contents of the clipboard to be pasted into
 the given widget at the current cursor position.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
-
-
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-delete-selection" role="function">
 <title>gtk_editable_delete_selection ()</title>
 <indexterm zone="gtk-editable-delete-selection"><primary>gtk_editable_delete_selection</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_editable_delete_selection       (<link linkend="GtkEditable">GtkEditable</link> *editable);</programlisting>
 <para>
+Deletes the currently selected text of the editable.
+This call will not do anything if there is no selected text.</para>
+<para>
 Deletes the current contents of the widgets selection and
 disclaims the selection.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
-
-
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-set-position" role="function">
@@ -344,41 +354,36 @@ disclaims the selection.
 <indexterm zone="gtk-editable-set-position"><primary>gtk_editable_set_position</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_editable_set_position           (<link linkend="GtkEditable">GtkEditable</link> *editable,
                                                          <link linkend="gint">gint</link> position);</programlisting>
 <para>
+Sets the cursor position in the editable to the given value.</para>
+<para>
 Sets the cursor position.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>position</parameter>&nbsp;:</term>
-<listitem><simpara>the position of the cursor. The cursor is displayed
-           before the character with the given (base 0) index
-           in the widget. The value must be less than or
-           equal to the number of characters in the widget.
-           A value of -1 indicates that the position should
-           be set after the last character in the entry.
-           Note that this position is in characters, not in
-           bytes.
-
-
+<listitem><simpara>  the position of the cursor. The cursor is displayed
+   before the character with the given (base 0) index in the editable. 
+   The value must be less than or equal to the number of characters 
+   in the editable. A value of -1 indicates that the position should
+   be set after the last character of the editable. Note that this 
+   position is in characters, not in bytes.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-get-position" role="function">
 <title>gtk_editable_get_position ()</title>
 <indexterm zone="gtk-editable-get-position"><primary>gtk_editable_get_position</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_editable_get_position           (<link linkend="GtkEditable">GtkEditable</link> *editable);</programlisting>
 <para>
+Retrieves the current position of the cursor relative to the start
+of the content of the editable. Note that this position is in characters,
+not in bytes.</para>
+<para>
 Retrieves the current cursor position.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the position of the cursor. The cursor is displayed
-           before the character with the given (base 0) index
-           in the widget. The value will be less than or
-           equal to the number of characters in the widget.
-           Note that this position is in characters, not in
-           bytes.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the cursor position
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-set-editable" role="function">
@@ -387,16 +392,17 @@ Retrieves the current cursor position.
                                                          <link linkend="gboolean">gboolean</link> is_editable);</programlisting>
 <para>
 Determines if the user can edit the text in the editable
+widget or not.</para>
+<para>
+Determines if the user can edit the text in the editable
 widget or not.
 </para><variablelist role="params">
 <varlistentry><term><parameter>editable</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkEditable"><type>GtkEditable</type></link> widget.
+<listitem><simpara> a <link linkend="GtkEditable"><type>GtkEditable</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>is_editable</parameter>&nbsp;:</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the user is allowed to edit the text
-  in the widget.
-
-
+<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the user is allowed to edit the text
+  in the widget
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-editable-get-editable" role="function">

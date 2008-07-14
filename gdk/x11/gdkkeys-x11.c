@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1661,7 +1661,7 @@ _gdk_keymap_key_is_modifier (GdkKeymap *keymap,
     {
       XkbDescRec *xkb = get_xkb (keymap_x11);
       
-      if (xkb->map->modmap[keycode] != 0)
+      if (xkb->map->modmap && xkb->map->modmap[keycode] != 0)
 	return TRUE;
     }
   else

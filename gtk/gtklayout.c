@@ -28,7 +28,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include "gdkconfig.h"
 
 #include "gtklayout.h"
@@ -140,6 +140,24 @@ gtk_layout_new (GtkAdjustment *hadjustment,
 			 NULL);
 
   return GTK_WIDGET (layout);
+}
+
+/**
+ * gtk_layout_get_bin_window:
+ * @layout: a #GtkLayout
+ * 
+ * Retrieve the bin window of the layout used for drawing operations.
+ * 
+ * Return value: a #GdkWindow
+ *
+ * Since: 2.14
+ **/
+GdkWindow*
+gtk_layout_get_bin_window (GtkLayout *layout)
+{
+  g_return_val_if_fail (GTK_IS_LAYOUT (layout), NULL);
+
+  return layout->bin_window;
 }
 
 /**

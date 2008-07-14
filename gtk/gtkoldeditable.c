@@ -26,7 +26,7 @@
 
 #undef GTK_DISABLE_DEPRECATED
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 #include "gdk/gdkkeysyms.h"
 #include "gdk/gdki18n.h"
@@ -37,6 +37,7 @@
 #include "gtkselection.h"
 #include "gtksignal.h"
 #include "gtkintl.h"
+
 #include "gtkalias.h"
 
 #define MIN_EDITABLE_WIDTH  150
@@ -395,7 +396,7 @@ gtk_old_editable_insert_text (GtkEditable *editable,
   if (new_text_length > 63)
     g_free (text);
 
-  gtk_widget_unref (GTK_WIDGET (editable));
+  g_object_unref (editable);
 }
 
 static void
@@ -414,7 +415,7 @@ gtk_old_editable_delete_text (GtkEditable *editable,
       old_editable->has_selection)
     gtk_old_editable_claim_selection (old_editable, FALSE, GDK_CURRENT_TIME);
   
-  gtk_widget_unref (GTK_WIDGET (old_editable));
+  g_object_unref (old_editable);
 }
 
 static void

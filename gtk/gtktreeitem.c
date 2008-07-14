@@ -26,7 +26,8 @@
 
 #undef GTK_DISABLE_DEPRECATED
 
-#include <config.h>
+#include "config.h"
+
 #include "gtklabel.h"
 #include "gtkeventbox.h"
 #include "gtkpixmap.h"
@@ -37,6 +38,7 @@
 #include "gtktree.h"
 #include "gtktreeitem.h"
 #include "gtkintl.h"
+
 #include "gtkalias.h"
 
 #include "tree_plus.xpm"
@@ -848,7 +850,7 @@ gtk_tree_item_destroy (GtkObject *object)
       gtk_widget_ref (child);
       gtk_widget_unparent (child);
       gtk_widget_destroy (child);
-      gtk_widget_unref (child);
+      g_object_unref (child);
       item->subtree = NULL;
     }
   
@@ -859,7 +861,7 @@ gtk_tree_item_destroy (GtkObject *object)
       gtk_widget_ref (child);
       gtk_widget_unparent (child);
       gtk_widget_destroy (child);
-      gtk_widget_unref (child);
+      g_object_unref (child);
       item->pixmaps_box = NULL;
     }
   
@@ -868,7 +870,7 @@ gtk_tree_item_destroy (GtkObject *object)
   if (item->plus_pix_widget)
     {
       gtk_widget_destroy (item->plus_pix_widget);
-      gtk_widget_unref (item->plus_pix_widget);
+      g_object_unref (item->plus_pix_widget);
       item->plus_pix_widget = NULL;
     }
   
@@ -876,7 +878,7 @@ gtk_tree_item_destroy (GtkObject *object)
   if (item->minus_pix_widget)
     {
       gtk_widget_destroy (item->minus_pix_widget);
-      gtk_widget_unref (item->minus_pix_widget);
+      g_object_unref (item->minus_pix_widget);
       item->minus_pix_widget = NULL;
     }
   

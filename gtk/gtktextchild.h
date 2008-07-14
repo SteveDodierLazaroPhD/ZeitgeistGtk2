@@ -31,6 +31,7 @@
 #ifndef __GTK_TEXT_CHILD_H__
 #define __GTK_TEXT_CHILD_H__
 
+#include <gdkconfig.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -55,7 +56,7 @@ struct _GtkTextChildAnchor
 {
   GObject parent_instance;
 
-  gpointer segment;
+  gpointer GSEAL (segment);
 };
 
 struct _GtkTextChildAnchorClass

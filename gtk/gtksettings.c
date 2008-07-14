@@ -18,7 +18,7 @@
 
 #define PANGO_ENABLE_BACKEND /* for pango_fc_font_map_cache_clear() */
 
-#include <config.h>
+#include "config.h"
 
 #include <string.h>
 
@@ -112,7 +112,11 @@ enum {
   PROP_RECENT_FILES_LIMIT,
   PROP_IM_MODULE,
   PROP_RECENT_FILES_MAX_AGE,
-  PROP_FONTCONFIG_TIMESTAMP
+  PROP_FONTCONFIG_TIMESTAMP,
+  PROP_SOUND_THEME_NAME,
+  PROP_ENABLE_INPUT_FEEDBACK_SOUNDS,
+  PROP_ENABLE_EVENT_SOUNDS,
+  PROP_ENABLE_TOOLTIPS
 };
 
 
@@ -856,7 +860,88 @@ gtk_settings_class_init (GtkSettingsClass *class)
 					     NULL);
   
   g_assert (result == PROP_FONTCONFIG_TIMESTAMP);
-  
+
+  /**
+   * GtkSettings:gtk-sound-theme-name:
+   *
+   * The XDG sound theme to use for event sounds.
+   *
+   * See the <ulink url="http://www.freedesktop.org/wiki/Specifications/sound-theme-spec">Sound Theme spec</ulink> 
+   * for more information on event sounds and sound themes.
+   *
+   * GTK+ itself does not support event sounds, you have to use a loadable 
+   * module like the one that comes with libcanberra.
+   *
+   * Since: 2.14
+   */
+  result = settings_install_property_parser (class,
+                                             g_param_spec_string ("gtk-sound-theme-name",
+                                                                  P_("Sound Theme Name"),
+                                                                  P_("XDG sound theme name"),
+                                                                  "freedesktop",
+                                                                  GTK_PARAM_READWRITE),
+                                             NULL);
+  g_assert (result == PROP_SOUND_THEME_NAME);
+
+  /**
+   * GtkSettings:gtk-enable-input-feedback-sounds:
+   *
+   * Whether to play event sounds as feedback to user input.
+   *
+   * See the <ulink url="http://www.freedesktop.org/wiki/Specifications/sound-theme-spec">Sound Theme spec</ulink> 
+   * for more information on event sounds and sound themes.
+   *
+   * GTK+ itself does not support event sounds, you have to use a loadable 
+   * module like the one that comes with libcanberra.
+   *
+   * Since: 2.14
+   */
+  result = settings_install_property_parser (class,
+                                             g_param_spec_boolean ("gtk-enable-input-feedback-sounds",
+								   P_("Aureal Input Feedback"),
+								   P_("Whether to play event sounds as feedback to user input"),
+								   TRUE,
+								   GTK_PARAM_READWRITE),
+                                             NULL);
+  g_assert (result == PROP_ENABLE_INPUT_FEEDBACK_SOUNDS);
+
+  /**
+   * GtkSettings:gtk-enable-event-sounds:
+   *
+   * Whether to play any event sounds at all.
+   *
+   * See the <ulink url="http://www.freedesktop.org/wiki/Specifications/sound-theme-spec">Sound Theme spec</ulink> 
+   * for more information on event sounds and sound themes.
+   *
+   * GTK+ itself does not support event sounds, you have to use a loadable 
+   * module like the one that comes with libcanberra.
+   *
+   * Since: 2.14
+   */
+  result = settings_install_property_parser (class,
+                                             g_param_spec_boolean ("gtk-enable-event-sounds",
+								   P_("Enable Event Sounds"),
+								   P_("Whether to play any event sounds at all"),
+								   TRUE,
+								   GTK_PARAM_READWRITE),
+                                             NULL);
+  g_assert (result == PROP_ENABLE_EVENT_SOUNDS);
+
+  /**
+   * GtkSettings:gtk-enable-tooltips:
+   *
+   * Whether tooltips should be shown on widgets.
+   *
+   * Since: 2.14
+   */
+  result = settings_install_property_parser (class,
+                                             g_param_spec_boolean ("gtk-enable-tooltips",
+                                                                   P_("Enable Tooltips"),
+                                                                   P_("Whether tooltips should be shown on widgets"),
+                                                                   TRUE,
+                                                                   GTK_PARAM_READWRITE),
+                                             NULL);
+  g_assert (result == PROP_ENABLE_TOOLTIPS);
 }
 
 static void
@@ -1280,23 +1365,33 @@ _gtk_rc_property_parser_from_type (GType type)
 void
 gtk_settings_install_property (GParamSpec *pspec)
 {
+  static GtkSettingsClass *klass = NULL;
+
   GtkRcPropertyParser parser;
 
   g_return_if_fail (G_IS_PARAM_SPEC (pspec));
 
+  if (! klass)
+    klass = g_type_class_ref (GTK_TYPE_SETTINGS);
+
   parser = _gtk_rc_property_parser_from_type (G_PARAM_SPEC_VALUE_TYPE (pspec));
 
-  settings_install_property_parser (gtk_type_class (GTK_TYPE_SETTINGS), pspec, parser);
+  settings_install_property_parser (klass, pspec, parser);
 }
 
 void
 gtk_settings_install_property_parser (GParamSpec          *pspec,
 				      GtkRcPropertyParser  parser)
 {
+  static GtkSettingsClass *klass = NULL;
+
   g_return_if_fail (G_IS_PARAM_SPEC (pspec));
   g_return_if_fail (parser != NULL);
-  
-  settings_install_property_parser (gtk_type_class (GTK_TYPE_SETTINGS), pspec, parser);
+
+  if (! klass)
+    klass = g_type_class_ref (GTK_TYPE_SETTINGS);
+
+  settings_install_property_parser (klass, pspec, parser);
 }
 
 static void
@@ -1905,9 +2000,9 @@ settings_update_font_options (GtkSettings *settings)
 {
   gint hinting;
   gchar *hint_style_str;
-  cairo_hint_style_t hint_style = CAIRO_HINT_STYLE_DEFAULT;
+  cairo_hint_style_t hint_style = CAIRO_HINT_STYLE_NONE;
   gint antialias;
-  cairo_antialias_t antialias_mode = CAIRO_ANTIALIAS_DEFAULT;
+  cairo_antialias_t antialias_mode = CAIRO_ANTIALIAS_GRAY;
   gchar *rgba_str;
   cairo_subpixel_order_t subpixel_order = CAIRO_SUBPIXEL_ORDER_DEFAULT;
   cairo_font_options_t *options;
@@ -1920,6 +2015,8 @@ settings_update_font_options (GtkSettings *settings)
 		NULL);
 
   options = cairo_font_options_create ();
+
+  cairo_font_options_set_hint_metrics (options, CAIRO_HINT_METRICS_ON);
   
   if (hinting >= 0 && !hinting)
     {

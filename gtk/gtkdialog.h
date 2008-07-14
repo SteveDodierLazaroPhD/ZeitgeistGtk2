@@ -100,11 +100,11 @@ struct _GtkDialog
   GtkWindow window;
 
   /*< public >*/
-  GtkWidget *vbox;
-  GtkWidget *action_area;
+  GtkWidget *GSEAL (vbox);
+  GtkWidget *GSEAL (action_area);
 
   /*< private >*/
-  GtkWidget *separator;
+  GtkWidget *GSEAL (separator);
 };
 
 struct _GtkDialogClass
@@ -171,6 +171,8 @@ void gtk_dialog_response           (GtkDialog *dialog,
 /* Returns response_id */
 gint gtk_dialog_run                (GtkDialog *dialog);
 
+GtkWidget * gtk_dialog_get_action_area  (GtkDialog *dialog);
+GtkWidget * gtk_dialog_get_content_area (GtkDialog *dialog);
 
 /* For private use only */
 void _gtk_dialog_set_ignore_separator (GtkDialog *dialog,

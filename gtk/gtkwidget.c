@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <stdarg.h>
 #include <string.h>
 #include <locale.h>
@@ -153,7 +153,8 @@ enum {
   PROP_NO_SHOW_ALL,
   PROP_HAS_TOOLTIP,
   PROP_TOOLTIP_MARKUP,
-  PROP_TOOLTIP_TEXT
+  PROP_TOOLTIP_TEXT,
+  PROP_WINDOW
 };
 
 typedef	struct	_GtkStateData	 GtkStateData;
@@ -672,6 +673,21 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 							P_("The contents of the tooltip for this widget"),
 							NULL,
 							GTK_PARAM_READWRITE));
+
+  /**
+   * GtkWidget:window:
+   *
+   * The widget's window if it is realized, %NULL otherwise.
+   *
+   * Since: 2.14
+   */
+  g_object_class_install_property (gobject_class,
+				   PROP_WINDOW,
+				   g_param_spec_object ("window",
+ 							P_("Window"),
+							P_("The widget's window if it is realized"),
+							GDK_TYPE_WINDOW,
+							GTK_PARAM_READABLE));
 
   widget_signals[SHOW] =
     g_signal_new (I_("show"),
@@ -2009,9 +2025,10 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    * Since: 2.14
    */
   widget_signals[DAMAGE_EVENT] =
-    g_signal_new ("damage_event",
+    g_signal_new (I_("damage_event"),
 		  G_TYPE_FROM_CLASS (gobject_class),
-		  G_SIGNAL_RUN_LAST, 0,
+		  G_SIGNAL_RUN_LAST,
+                  0,
 		  _gtk_boolean_handled_accumulator, NULL,
 		  _gtk_marshal_BOOLEAN__BOXED,
 		  G_TYPE_BOOLEAN, 1,
@@ -2585,6 +2602,9 @@ gtk_widget_get_property (GObject         *object,
     case PROP_TOOLTIP_MARKUP:
       g_value_set_string (value, g_object_get_qdata (object, quark_tooltip_markup));
       break;
+    case PROP_WINDOW:
+      g_value_set_object (value, gtk_widget_get_window (widget));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -2771,7 +2791,7 @@ gtk_widget_new (GType        type,
  * 
  * Precursor of g_object_set().
  *
- * Deprecated: Use g_object_set() instead.
+ * Deprecated: 2.0: Use g_object_set() instead.
  **/
 void
 gtk_widget_set (GtkWidget   *widget,
@@ -3521,7 +3541,7 @@ gtk_widget_queue_draw (GtkWidget *widget)
  * gtk_widget_queue_draw_area() would not. Now both functions ensure
  * the background will be redrawn.
  * 
- * Deprecated: Use gtk_widget_queue_draw_area() instead.
+ * Deprecated: 2.2: Use gtk_widget_queue_draw_area() instead.
  **/
 void	   
 gtk_widget_queue_clear_area (GtkWidget *widget,
@@ -3541,7 +3561,7 @@ gtk_widget_queue_clear_area (GtkWidget *widget,
  * 
  * This function does the same as gtk_widget_queue_draw().
  *
- * Deprecated: Use gtk_widget_queue_draw() instead.
+ * Deprecated: 2.2: Use gtk_widget_queue_draw() instead.
  **/
 void	   
 gtk_widget_queue_clear (GtkWidget *widget)
@@ -5713,7 +5733,7 @@ gtk_widget_modify_style (GtkWidget      *widget,
   g_object_set_qdata_full (G_OBJECT (widget),
 			   quark_rc_style,
 			   gtk_rc_style_copy (style),
-			   (GDestroyNotify) gtk_rc_style_unref);
+			   (GDestroyNotify) g_object_unref);
 
   /* note that "style" may be invalid here if it was the old
    * modifier style and the only reference was our own.
@@ -5759,7 +5779,7 @@ gtk_widget_get_modifier_style (GtkWidget      *widget)
       g_object_set_qdata_full (G_OBJECT (widget),
 			       quark_rc_style,
 			       rc_style,
-			       (GDestroyNotify) gtk_rc_style_unref);
+			       (GDestroyNotify) g_object_unref);
     }
 
   return rc_style;
@@ -7026,7 +7046,7 @@ gtk_widget_set_usize_internal (GtkWidget *widget,
  * basically impossible to hardcode a size that will always be
  * correct.
  * 
- * Deprecated: Use gtk_widget_set_size_request() instead.
+ * Deprecated: 2.2: Use gtk_widget_set_size_request() instead.
  **/
 void
 gtk_widget_set_usize (GtkWidget *widget,
@@ -8289,7 +8309,7 @@ gtk_widget_reset_shapes (GtkWidget *widget)
  * 
  * Return value: the widget that was referenced
  *
- * Deprecated:2.12: Use g_object_ref() instead.
+ * Deprecated: 2.12: Use g_object_ref() instead.
  **/
 GtkWidget*
 gtk_widget_ref (GtkWidget *widget)
@@ -8305,7 +8325,7 @@ gtk_widget_ref (GtkWidget *widget)
  *
  * Inverse of gtk_widget_ref(). Equivalent to g_object_unref().
  * 
- * Deprecated:2.12: Use g_object_unref() instead.
+ * Deprecated: 2.12: Use g_object_unref() instead.
  **/
 void
 gtk_widget_unref (GtkWidget *widget)
@@ -9865,6 +9885,43 @@ gtk_widget_get_has_tooltip (GtkWidget *widget)
   g_object_get (G_OBJECT (widget), "has-tooltip", &has_tooltip, NULL);
 
   return has_tooltip;
+}
+
+/**
+ * gtk_widget_get_allocation:
+ * @widget: a #GtkWidget
+ *
+ * Retrieves the widget's allocation.
+ *
+ * Return value: widget's allocation
+ *
+ * Since: 2.14
+ */
+GtkAllocation
+gtk_widget_get_allocation (GtkWidget *widget)
+{
+  static GtkAllocation allocation = { 0 };
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), allocation);
+
+  return widget->allocation;
+}
+
+/**
+ * gtk_widget_get_window:
+ * @widget: a #GtkWidget
+ *
+ * Returns the widget's window if it is realized, %NULL otherwise
+ *
+ * Return value: @widget's window.
+ *
+ * Since: 2.14
+ */
+GdkWindow*
+gtk_widget_get_window (GtkWidget *widget)
+{
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+
+  return widget->window;
 }
 
 #define __GTK_WIDGET_C__

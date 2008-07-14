@@ -91,6 +91,13 @@
 
 
 
+<refsect1 id="gtk-Keyboard-Accelerators.properties" role="properties">
+<title role="properties.title">Properties</title>
+<synopsis>
+  &quot;<link linkend="GtkAccelGroup--is-locked">is-locked</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read
+  &quot;<link linkend="GtkAccelGroup--modifier-mask">modifier-mask</link>&quot;            <link linkend="GdkModifierType">GdkModifierType</link>       : Read
+</synopsis>
+</refsect1>
 
 <refsect1 id="gtk-Keyboard-Accelerators.signals" role="signal_proto">
 <title role="signal_proto.title">Signals</title>
@@ -362,26 +369,29 @@ Queries an accelerator group for all entries matching <parameter>accel_key</para
                                                          <link linkend="guint">guint</link> accel_key,
                                                          <link linkend="GdkModifierType">GdkModifierType</link> accel_mods);</programlisting>
 <para>
+Finds the first accelerator in <parameter>accel_group</parameter> 
+that matches <parameter>accel_key</parameter> and <parameter>accel_mods</parameter>, and
+activates it.</para>
+<para>
 
 </para><variablelist role="params">
 <varlistentry><term><parameter>accel_group</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>   a <link linkend="GtkAccelGroup"><type>GtkAccelGroup</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>accel_quark</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>   the quark for the accelerator name
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>acceleratable</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> the <link linkend="GObject"><type>GObject</type></link>, usually a <link linkend="GtkWindow"><type>GtkWindow</type></link>, on which
+                to activate the accelerator.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>accel_key</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>     accelerator keyval from a key event
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>accel_mods</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara>    keyboard state mask from a key event
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>       <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the accelerator was handled, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-accel-group-lock" role="function">
@@ -441,9 +451,7 @@ see <link linkend="gtk-accel-group-connect"><function>gtk_accel_group_connect()<
 <para>
 Finds the first accelerator in any <link linkend="GtkAccelGroup"><type>GtkAccelGroup</type></link> attached
 to <parameter>object</parameter> that matches <parameter>accel_key</parameter> and <parameter>accel_mods</parameter>, and
-activates that accelerator.
-If an accelerator was activated and handled this keypress, <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>
-is returned.</para>
+activates that accelerator.</para>
 <para>
 
 </para><variablelist role="params">
@@ -641,6 +649,18 @@ Gets the value set by <link linkend="gtk-accelerator-set-default-mod-mask"><func
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the default accelerator modifier mask
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+
+</refsect1>
+<refsect1 id="gtk-Keyboard-Accelerators.property-details" role="property_details">
+<title role="property_details.title">Property Details</title>
+<refsect2 id="GtkAccelGroup--is-locked"><title>The <literal>&quot;is-locked&quot;</literal> property</title>
+<indexterm zone="GtkAccelGroup--is-locked"><primary>GtkAccelGroup:is-locked</primary></indexterm><programlisting>  &quot;is-locked&quot;                <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<para>Is the accel group locked.</para><para>Default value: FALSE</para>
+</refsect2>
+<refsect2 id="GtkAccelGroup--modifier-mask"><title>The <literal>&quot;modifier-mask&quot;</literal> property</title>
+<indexterm zone="GtkAccelGroup--modifier-mask"><primary>GtkAccelGroup:modifier-mask</primary></indexterm><programlisting>  &quot;modifier-mask&quot;            <link linkend="GdkModifierType">GdkModifierType</link>       : Read</programlisting>
+<para>Modifier Mask.</para><para>Default value: GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK|GDK_SUPER_MASK|GDK_HYPER_MASK|GDK_META_MASK</para>
+</refsect2>
 
 </refsect1>
 

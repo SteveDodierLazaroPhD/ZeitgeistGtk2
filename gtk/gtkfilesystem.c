@@ -20,9 +20,12 @@
  * Authors: Carlos Garnacho <carlos@imendio.com>
  */
 
+#include "config.h"
+
+#include <string.h>
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <string.h>
 
 #include "gtkfilesystem.h"
 #include "gtkprivate.h"
@@ -133,12 +136,6 @@ static void gtk_folder_add_file             (GtkFolder *folder,
 					     GFile     *file,
 					     GFileInfo *info);
 
-
-GQuark
-_gtk_file_system_error_quark (void)
-{
-  return g_quark_from_static_string ("gtk-file-system-error-quark");
-}
 
 /* GtkFileSystemBookmark methods */
 void
@@ -421,6 +418,8 @@ get_volumes_list (GtkFileSystem *file_system)
 
 	      g_object_unref (volume);
             }
+  
+           g_list_free (volumes);
         }
       else if (g_drive_is_media_removable (drive) && !g_drive_is_media_check_automatic (drive))
 	{
@@ -561,8 +560,10 @@ _gtk_file_system_list_volumes (GtkFileSystem *file_system)
 
   list = g_slist_copy (priv->volumes);
 
+#ifndef G_OS_WIN32
   /* Prepend root volume */
   list = g_slist_prepend (list, (gpointer) root_volume_token);
+#endif
 
   return list;
 }
@@ -641,8 +642,8 @@ _gtk_file_system_parse (GtkFileSystem     *file_system,
       if (!parent_file)
 	{
 	  g_set_error (error,
-		       GTK_FILE_SYSTEM_ERROR,
-		       GTK_FILE_SYSTEM_ERROR_NONEXISTENT,
+		       GTK_FILE_CHOOSER_ERROR,
+		       GTK_FILE_CHOOSER_ERROR_NONEXISTENT,
 		       "Could not get parent file");
 	  *folder = NULL;
 	  *file_part = NULL;
@@ -989,8 +990,8 @@ _gtk_file_system_insert_bookmark (GtkFileSystem  *file_system,
       gchar *uri = g_file_get_uri (file);
 
       g_set_error (error,
-		   GTK_FILE_SYSTEM_ERROR,
-		   GTK_FILE_SYSTEM_ERROR_ALREADY_EXISTS,
+		   GTK_FILE_CHOOSER_ERROR,
+		   GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS,
 		   "%s already exists in the bookmarks list",
 		   uri);
 
@@ -1052,8 +1053,8 @@ _gtk_file_system_remove_bookmark (GtkFileSystem  *file_system,
       gchar *uri = g_file_get_uri (file);
 
       g_set_error (error,
-		   GTK_FILE_SYSTEM_ERROR,
-		   GTK_FILE_SYSTEM_ERROR_NONEXISTENT,
+		   GTK_FILE_CHOOSER_ERROR,
+		   GTK_FILE_CHOOSER_ERROR_NONEXISTENT,
 		   "%s does not exist in the bookmarks list",
 		   uri);
 
@@ -1662,50 +1663,6 @@ get_pixbuf_from_gicon (GIcon      *icon,
   return pixbuf;
 }
 
-static GIcon *
-get_icon_for_special_directory (GFile *file)
-{
-  const gchar *special_dir;
-  GFile *special_file;
-
-  special_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-  special_file = g_file_new_for_path (special_dir);
-
-  if (g_file_equal (file, special_file))
-    {
-      const char *names[] = { 
-        "user-desktop", 
-        "gnome-fs-desktop", 
-        "folder", 
-        "gtk-directory",
-        NULL 
-      };
-      g_object_unref (special_file);
-      return g_themed_icon_new_from_names ((char **)names, -1);
-    }
-
-  g_object_unref (special_file);
-  special_dir = g_get_home_dir ();
-  special_file = g_file_new_for_path (special_dir);
-
-  if (g_file_equal (file, special_file))
-    {
-      const char *names[] = { 
-        "user-home", 
-        "gnome-fs-home", 
-        "folder", 
-        "gtk-directory",
-        NULL 
-      };
-      g_object_unref (special_file);
-      return g_themed_icon_new_from_names ((char **)names, -1);
-    }
-
-  g_object_unref (special_file);
-
-  return NULL;
-}
-
 GdkPixbuf *
 _gtk_file_system_volume_render_icon (GtkFileSystemVolume  *volume,
 				     GtkWidget            *widget,
@@ -1714,33 +1671,17 @@ _gtk_file_system_volume_render_icon (GtkFileSystemVolume  *volume,
 {
   GIcon *icon = NULL;
   GdkPixbuf *pixbuf;
-  const char *harddisk_icons[] = { 
-    "drive-harddisk", 
-    "gnome-dev-harddisk", 
-    "gtk-harddisk",
-    NULL
-  };
 
   DEBUG ("volume_get_icon_name");
 
   if (IS_ROOT_VOLUME (volume))
-    icon = g_themed_icon_new_from_names ((char **)harddisk_icons, -1);
+    icon = g_themed_icon_new ("drive-harddisk");
   else if (G_IS_DRIVE (volume))
     icon = g_drive_get_icon (G_DRIVE (volume));
   else if (G_IS_VOLUME (volume))
     icon = g_volume_get_icon (G_VOLUME (volume));
   else if (G_IS_MOUNT (volume))
-    {
-      GMount *mount = G_MOUNT (volume);
-      GFile *file;
-
-      file = g_mount_get_root (mount);
-      icon = get_icon_for_special_directory (file);
-      g_object_unref (file);
-
-      if (!icon)
-	icon = g_mount_get_icon (mount);
-    }
+    icon = g_mount_get_icon (G_MOUNT (volume));
 
   if (!icon)
     return NULL;

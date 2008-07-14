@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -57,8 +57,8 @@ typedef struct
 } _GdkPixmapInfo;
 
 static void gdk_pixmap_impl_x11_get_size   (GdkDrawable        *drawable,
-                                        gint               *width,
-                                        gint               *height);
+                                            gint               *width,
+                                            gint               *height);
 
 static void gdk_pixmap_impl_x11_dispose    (GObject            *object);
 static void gdk_pixmap_impl_x11_finalize   (GObject            *object);

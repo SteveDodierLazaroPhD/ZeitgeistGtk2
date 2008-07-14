@@ -27,7 +27,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 #include <stdarg.h>
 #include <gdkkeysyms.h>
@@ -864,7 +864,7 @@ _gtk_binding_entry_add_signall (GtkBindingSet  *binding_set,
   entry = binding_ht_lookup_entry (binding_set, keyval, modifiers);
   if (!entry)
     {
-      gtk_binding_entry_add (binding_set, keyval, modifiers);
+      gtk_binding_entry_clear (binding_set, keyval, modifiers);
       entry = binding_ht_lookup_entry (binding_set, keyval, modifiers);
     }
   signal_p = &entry->signals;
@@ -911,7 +911,7 @@ gtk_binding_entry_add_signal (GtkBindingSet  *binding_set,
       arg = g_slice_new0 (GtkBindingArg);
       slist = g_slist_prepend (slist, arg);
 
-      arg->arg_type = va_arg (args, GtkType);
+      arg->arg_type = va_arg (args, GType);
       switch (G_TYPE_FUNDAMENTAL (arg->arg_type))
 	{
 	case G_TYPE_CHAR:

@@ -25,7 +25,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 
 #include "gdk.h"
 #include "gdkprivate-x11.h"
@@ -72,7 +72,7 @@ struct _GdkIOClosure
 {
   GdkInputFunction function;
   GdkInputCondition condition;
-  GdkDestroyNotify notify;
+  GDestroyNotify notify;
   gpointer data;
 };
 
@@ -1043,7 +1043,7 @@ gdk_event_translate (GdkDisplay *display,
 
   if (window)
     {
-      _gdk_windowing_window_get_offsets (window, &xoffset, &yoffset);
+      _gdk_x11_window_get_offsets (window, &xoffset, &yoffset);
     }
   else
     {

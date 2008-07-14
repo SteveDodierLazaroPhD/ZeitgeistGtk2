@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include "gtkcombobox.h"
 
 #include "gtkarrow.h"
@@ -39,7 +39,6 @@
 #include "gtkvseparator.h"
 #include "gtkwindow.h"
 #include "gtkprivate.h"
-#include "gtkmarshal.h"
 
 #include <gdk/gdkkeysyms.h>
 
@@ -124,7 +123,7 @@ struct _GtkComboBoxPrivate
 
   GtkTreeViewRowSeparatorFunc row_separator_func;
   gpointer                    row_separator_data;
-  GtkDestroyNotify            row_separator_destroy;
+  GDestroyNotify              row_separator_destroy;
 
   gchar *tearoff_title;
 };
@@ -588,7 +587,7 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
                              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                              G_CALLBACK (gtk_combo_box_real_popdown),
                              NULL, NULL,
-                             gtk_marshal_BOOLEAN__VOID,
+                             _gtk_marshal_BOOLEAN__VOID,
                              G_TYPE_BOOLEAN, 0);
 
   /* key bindings */
@@ -4090,7 +4089,7 @@ gtk_combo_box_cell_layout_pack_start (GtkCellLayout   *layout,
 
   g_object_ref_sink (cell);
 
-  info = g_new0 (ComboCellInfo, 1);
+  info = g_slice_new0 (ComboCellInfo);
   info->cell = cell;
   info->expand = expand;
   info->pack = GTK_PACK_START;
@@ -4144,7 +4143,7 @@ gtk_combo_box_cell_layout_pack_end (GtkCellLayout   *layout,
 
   g_object_ref_sink (cell);
 
-  info = g_new0 (ComboCellInfo, 1);
+  info = g_slice_new0 (ComboCellInfo);
   info->cell = cell;
   info->expand = expand;
   info->pack = GTK_PACK_END;
@@ -4214,11 +4213,11 @@ gtk_combo_box_cell_layout_clear (GtkCellLayout *layout)
 
   for (i = priv->cells; i; i = i->next)
     {
-     ComboCellInfo *info = (ComboCellInfo *)i->data;
+      ComboCellInfo *info = (ComboCellInfo *)i->data;
 
       gtk_combo_box_cell_layout_clear_attributes (layout, info->cell);
       g_object_unref (info->cell);
-      g_free (info);
+      g_slice_free (ComboCellInfo, info);
       i->data = NULL;
     }
   g_slist_free (priv->cells);
@@ -5024,6 +5023,8 @@ gtk_combo_box_append_text (GtkComboBox *combo_box,
 
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
   g_return_if_fail (GTK_IS_LIST_STORE (combo_box->priv->model));
+  g_return_if_fail (gtk_tree_model_get_column_type (combo_box->priv->model, 0)
+		    == G_TYPE_STRING);
   g_return_if_fail (text != NULL);
 
   store = GTK_LIST_STORE (combo_box->priv->model);
@@ -5055,6 +5056,8 @@ gtk_combo_box_insert_text (GtkComboBox *combo_box,
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
   g_return_if_fail (GTK_IS_LIST_STORE (combo_box->priv->model));
   g_return_if_fail (position >= 0);
+  g_return_if_fail (gtk_tree_model_get_column_type (combo_box->priv->model, 0)
+		    == G_TYPE_STRING);
   g_return_if_fail (text != NULL);
 
   store = GTK_LIST_STORE (combo_box->priv->model);
@@ -5083,6 +5086,8 @@ gtk_combo_box_prepend_text (GtkComboBox *combo_box,
 
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
   g_return_if_fail (GTK_IS_LIST_STORE (combo_box->priv->model));
+  g_return_if_fail (gtk_tree_model_get_column_type (combo_box->priv->model, 0)
+		    == G_TYPE_STRING);
   g_return_if_fail (text != NULL);
 
   store = GTK_LIST_STORE (combo_box->priv->model);
@@ -5110,6 +5115,8 @@ gtk_combo_box_remove_text (GtkComboBox *combo_box,
 
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
   g_return_if_fail (GTK_IS_LIST_STORE (combo_box->priv->model));
+  g_return_if_fail (gtk_tree_model_get_column_type (combo_box->priv->model, 0)
+		    == G_TYPE_STRING);
   g_return_if_fail (position >= 0);
 
   store = GTK_LIST_STORE (combo_box->priv->model);
@@ -5154,6 +5161,8 @@ gtk_combo_box_real_get_active_text (GtkComboBox *combo_box)
   gchar *text = NULL;
 
   g_return_val_if_fail (GTK_IS_LIST_STORE (combo_box->priv->model), NULL);
+  g_return_val_if_fail (gtk_tree_model_get_column_type (combo_box->priv->model, 0)
+                        == G_TYPE_STRING, NULL);
 
   if (gtk_combo_box_get_active_iter (combo_box, &iter))
     gtk_tree_model_get (combo_box->priv->model, &iter, 
@@ -5334,7 +5343,7 @@ gtk_combo_box_finalize (GObject *object)
       g_slist_free (info->attributes);
 
       g_object_unref (info->cell);
-      g_free (info);
+      g_slice_free (ComboCellInfo, info);
     }
    g_slist_free (combo_box->priv->cells);
 
@@ -5641,7 +5650,7 @@ void
 gtk_combo_box_set_row_separator_func (GtkComboBox                 *combo_box,
 				      GtkTreeViewRowSeparatorFunc  func,
 				      gpointer                     data,
-				      GtkDestroyNotify             destroy)
+				      GDestroyNotify               destroy)
 {
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 

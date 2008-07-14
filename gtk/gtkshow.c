@@ -20,10 +20,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
-#include <glib.h>
-#include <gio/gio.h>
+#include <gdk/gdk.h>
 
 #include "gtkshow.h"
 

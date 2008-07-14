@@ -26,7 +26,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <config.h>
+#include "config.h"
 #include "gtkbutton.h"
 #include "gtkdialog.h"
 #include "gtkhbbox.h"
@@ -256,16 +256,16 @@ gtk_dialog_init (GtkDialog *dialog)
                     "delete_event",
                     G_CALLBACK (gtk_dialog_delete_event_handler),
                     NULL);
-  
+
   dialog->vbox = gtk_vbox_new (FALSE, 0);
-  
+
   gtk_container_add (GTK_CONTAINER (dialog), dialog->vbox);
   gtk_widget_show (dialog->vbox);
 
   dialog->action_area = gtk_hbutton_box_new ();
 
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog->action_area),
-                             GTK_BUTTONBOX_END);  
+                             GTK_BUTTONBOX_END);
 
   gtk_box_pack_end (GTK_BOX (dialog->vbox), dialog->action_area,
                     FALSE, TRUE, 0);
@@ -1443,6 +1443,42 @@ gtk_dialog_buildable_custom_finished (GtkBuildable *buildable,
     }
   g_slist_free (parser_data->items);
   g_slice_free (ActionWidgetsSubParserData, parser_data);
+}
+
+/**
+ * gtk_dialog_get_action_area:
+ * @dialog: a #GtkDialog
+ *
+ * Returns the action area of @dialog.
+ *
+ * Returns: the action area.
+ *
+ * Since: 2.14
+ **/
+GtkWidget *
+gtk_dialog_get_action_area (GtkDialog *dialog)
+{
+  g_return_val_if_fail (GTK_IS_DIALOG (dialog), NULL);
+
+  return dialog->action_area;
+}
+
+/**
+ * gtk_dialog_get_content_area:
+ * @dialog: a #GtkDialog
+ *
+ * Returns the content area of @dialog.
+ *
+ * Returns: the content area #GtkVBox.
+ *
+ * Since: 2.14
+ **/
+GtkWidget *
+gtk_dialog_get_content_area (GtkDialog *dialog)
+{
+  g_return_val_if_fail (GTK_IS_DIALOG (dialog), NULL);
+
+  return dialog->vbox;
 }
 
 #define __GTK_DIALOG_C__

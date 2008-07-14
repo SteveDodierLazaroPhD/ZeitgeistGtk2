@@ -32,6 +32,7 @@
 #define __GTK_OBJECT_H__
 
 
+#include <gdkconfig.h>
 #include <gtk/gtkenums.h>
 #include <gtk/gtktypeutils.h>
 #include <gtk/gtkdebug.h>
@@ -42,12 +43,12 @@ G_BEGIN_DECLS
  * and to test whether `object' and `klass' are of type GTK_TYPE_OBJECT.
  * these are the standard macros for all GtkObject-derived classes.
  */
-#define	GTK_TYPE_OBJECT			(gtk_object_get_type ())
-#define GTK_OBJECT(object)		(GTK_CHECK_CAST ((object), GTK_TYPE_OBJECT, GtkObject))
-#define GTK_OBJECT_CLASS(klass)		(GTK_CHECK_CLASS_CAST ((klass), GTK_TYPE_OBJECT, GtkObjectClass))
-#define GTK_IS_OBJECT(object)		(GTK_CHECK_TYPE ((object), GTK_TYPE_OBJECT))
-#define GTK_IS_OBJECT_CLASS(klass)	(GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_OBJECT))
-#define	GTK_OBJECT_GET_CLASS(object)	(GTK_CHECK_GET_CLASS ((object), GTK_TYPE_OBJECT, GtkObjectClass))
+#define GTK_TYPE_OBJECT              (gtk_object_get_type ())
+#define GTK_OBJECT(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), GTK_TYPE_OBJECT, GtkObject))
+#define GTK_OBJECT_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_OBJECT, GtkObjectClass))
+#define GTK_IS_OBJECT(object)        (G_TYPE_CHECK_INSTANCE_TYPE ((object), GTK_TYPE_OBJECT))
+#define GTK_IS_OBJECT_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_OBJECT))
+#define GTK_OBJECT_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS ((object), GTK_TYPE_OBJECT, GtkObjectClass))
 
 /* Macros for extracting various fields from GtkObject and GtkObjectClass.
  */
@@ -93,7 +94,7 @@ struct _GtkObject
    *  aligned on 4 or 8 byte boundaries. If a new bitfield were
    *  used in GtkWidget much space would be wasted.
    */
-  guint32 flags;
+  guint32 GSEAL (flags);
 };
 
 struct _GtkObjectClass
@@ -123,7 +124,7 @@ struct _GtkObjectClass
 
 /* Application-level methods */
 
-GtkType	gtk_object_get_type		(void) G_GNUC_CONST;
+GType gtk_object_get_type (void) G_GNUC_CONST;
 
 #ifndef GTK_DISABLE_DEPRECATED
 void gtk_object_sink	  (GtkObject *object);

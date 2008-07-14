@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -711,10 +711,10 @@ gail_focus_tracker_init (void)
       /*
        * We cannot be sure that the classes exist so we make sure that they do.
        */
-      gtk_type_class (GTK_TYPE_WIDGET);
-      gtk_type_class (GTK_TYPE_ITEM);
-      gtk_type_class (GTK_TYPE_MENU_SHELL);
-      gtk_type_class (GTK_TYPE_NOTEBOOK);
+      g_type_class_ref (GTK_TYPE_WIDGET);
+      g_type_class_ref (GTK_TYPE_ITEM);
+      g_type_class_ref (GTK_TYPE_MENU_SHELL);
+      g_type_class_ref (GTK_TYPE_NOTEBOOK);
 
       /*
        * We listen for event_after signal and then check that the

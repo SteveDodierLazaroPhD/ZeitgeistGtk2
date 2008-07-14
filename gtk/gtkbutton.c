@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 #include "gtkalignment.h"
 #include "gtkbutton.h"
@@ -309,7 +309,7 @@ gtk_button_class_init (GtkButtonClass *klass)
    *
    * Emitted when the button is pressed.
    * 
-   * @Deprecated: Use the #GtkWidget::button-press-event signal.
+   * Deprecated: 2.8: Use the #GtkWidget::button-press-event signal.
    */ 
   button_signals[PRESSED] =
     g_signal_new (I_("pressed"),
@@ -326,7 +326,7 @@ gtk_button_class_init (GtkButtonClass *klass)
    *
    * Emitted when the button is released.
    * 
-   * @Deprecated: Use the #GtkWidget::button-release-event signal.
+   * Deprecated: 2.8: Use the #GtkWidget::button-release-event signal.
    */ 
   button_signals[RELEASED] =
     g_signal_new (I_("released"),
@@ -358,7 +358,7 @@ gtk_button_class_init (GtkButtonClass *klass)
    *
    * Emitted when the pointer enters the button.
    * 
-   * @Deprecated: Use the #GtkWidget::enter-notify-event signal.
+   * Deprecated: 2.8: Use the #GtkWidget::enter-notify-event signal.
    */ 
   button_signals[ENTER] =
     g_signal_new (I_("enter"),
@@ -375,7 +375,7 @@ gtk_button_class_init (GtkButtonClass *klass)
    *
    * Emitted when the pointer leaves the button.
    * 
-   * @Deprecated: Use the #GtkWidget::leave-notify-event signal.
+   * Deprecated: 2.8: Use the #GtkWidget::leave-notify-event signal.
    */ 
   button_signals[LEAVE] =
     g_signal_new (I_("leave"),
@@ -447,8 +447,8 @@ gtk_button_class_init (GtkButtonClass *klass)
 					   g_param_spec_boolean ("displace-focus",
 								 P_("Displace focus"),
 								 P_("Whether the child_displacement_x/_y properties should also affect the focus rectangle"),
-						       FALSE,
-						       GTK_PARAM_READABLE));
+								 FALSE,
+								 GTK_PARAM_READABLE));
 
   /**
    * GtkButton:inner-border:
@@ -479,8 +479,14 @@ gtk_button_class_init (GtkButtonClass *klass)
 							     G_MAXINT,
 							     2,
 							     GTK_PARAM_READABLE));
-  
 
+  /**
+   * GtkButton::gtk-button-images:
+   * 
+   * If stock icon in buttons should be shown at all.
+   * 
+   * Since: 2.4
+   */
   gtk_settings_install_property (g_param_spec_boolean ("gtk-button-images",
 						       P_("Show button images"),
 						       P_("Whether stock icons should be shown in buttons"),

@@ -8,7 +8,7 @@
 <link rel="up" href="Builder.html" title="Interface builder">
 <link rel="prev" href="gtk-gtkbuildable.html" title="GtkBuildable">
 <link rel="next" href="DeprecatedObjects.html" title="Deprecated">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,13 +69,15 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="DeprecatedObjects.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkBuilder.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkBuilder.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkBuilder.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkBuilder.properties" class="shortcut">Properties</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkBuilder.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkBuilder.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkBuilder.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkBuilder.properties" class="shortcut">Properties</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkBuilder"></a><div class="titlepage"></div>
@@ -129,9 +131,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *buffer,
-                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"
->gsize</a> length,
+                                                         gsize length,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);
@@ -377,9 +377,7 @@ before it can be used as the value of a construct-only property.
 Signal handlers are set up with the &lt;signal&gt; element.
 The "name" attribute specifies the name of the signal, and the
 "handler" attribute specifies the function to connect to the signal.
-By default, GTK+ tries to find the handler using <a
-href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#g-module-symbol"
-><code class="function">g_module_symbol()</code></a>,
+By default, GTK+ tries to find the handler using <code class="function">g_module_symbol()</code>,
 but this can be changed by passing a custom <a class="link" href="GtkBuilder.html#GtkBuilderConnectFunc" title="GtkBuilderConnectFunc ()"><span class="type">GtkBuilderConnectFunc</span></a>
 to <a class="link" href="GtkBuilder.html#gtk-builder-connect-signals-full" title="gtk_builder_connect_signals_full ()"><code class="function">gtk_builder_connect_signals_full()</code></a>. The remaining attributes,
 "after", "swapped" and "object", have the same meaning as the 
@@ -408,7 +406,7 @@ The possible values for the "type" attribute are described in
 the sections describing the widget-specific portions of UI definitions.
 </p>
 <div class="example">
-<a name="id4059747"></a><p class="title"><b>Example 53. A GtkBuilder UI Definition</b></p>
+<a name="id4324803"></a><p class="title"><b>Example 53. A GtkBuilder UI Definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;interface&gt;
   &lt;object class="GtkDialog" id="dialog1"&gt;
@@ -653,9 +651,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *buffer,
-                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"
->gsize</a> length,
+                                                         gsize length,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
@@ -790,9 +786,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);</pre>
 <p>
 This method is a simpler variation of <a class="link" href="GtkBuilder.html#gtk-builder-connect-signals-full" title="gtk_builder_connect_signals_full ()"><code class="function">gtk_builder_connect_signals_full()</code></a>.
-It uses <a
-href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
-><span class="type">GModule</span></a>'s introspective features (by opening the module <a
+It uses <span class="type">GModule</span>'s introspective features (by opening the module <a
 href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 ><code class="literal">NULL</code></a>) 
 to look at the application's symbol table. From here it tries to match
@@ -800,16 +794,12 @@ the signal handler names given in the interface description with
 symbols in the application and connects the signals.
 </p>
 <p>
-Note that this function will not work correctly if <a
-href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
-><span class="type">GModule</span></a> is not
+Note that this function will not work correctly if <span class="type">GModule</span> is not
 supported on the platform.
 </p>
 <p>
 When compiling applications for Windows, you must declare signal callbacks
-with <a
-href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#G-MODULE-EXPORT:CAPS"
-><span class="type">G_MODULE_EXPORT</span></a>, or they will not be put in the symbol table.
+with <span class="type">G_MODULE_EXPORT</span>, or they will not be put in the symbol table.
 On Linux and Unices, this is not necessary; applications should instead
 be compiled with the -Wl,--export-dynamic CFLAGS, and linked against
 gmodule-export-2.0.</p>
@@ -1204,6 +1194,6 @@ href="/usr/share/gtk-doc/html/glib/glib-I18N.html#g-dgettext"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

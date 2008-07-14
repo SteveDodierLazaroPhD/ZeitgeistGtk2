@@ -18,7 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include "gtkfilechooser.h"
 #include "gtkfilechooserprivate.h"
 #include "gtkintl.h"
@@ -454,7 +454,7 @@ gtk_file_chooser_get_filename (GtkFileChooser *chooser)
 
   if (file)
     {
-      result = g_file_get_basename (file);
+      result = g_file_get_path (file);
       g_object_unref (file);
     }
 

@@ -25,7 +25,7 @@
  */
 
 #define GTK_MENU_INTERNALS
-#include <config.h>
+#include "config.h"
 #include <string.h> /* memset */
 #include "gdk/gdkkeysyms.h"
 #include "gtkaccellabel.h"
@@ -121,8 +121,13 @@ enum {
 
 enum {
   PROP_0,
+  PROP_ACTIVE,
+  PROP_ACCEL_GROUP,
+  PROP_ACCEL_PATH,
+  PROP_ATTACH_WIDGET,
   PROP_TEAROFF_STATE,
-  PROP_TEAROFF_TITLE
+  PROP_TEAROFF_TITLE,
+  PROP_MONITOR
 };
 
 enum {
@@ -482,7 +487,70 @@ gtk_menu_class_init (GtkMenuClass *class)
 			     _gtk_marshal_VOID__ENUM,
 			     G_TYPE_NONE, 1,
 			     GTK_TYPE_SCROLL_TYPE);
-  
+
+  /**
+   * GtkMenu:active:
+   *
+   * The index of the currently selected menu item, or -1 if no
+   * menu item is selected.
+   *
+   * Since: 2.14
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_ACTIVE,
+                                   g_param_spec_int ("active",
+				                     P_("Active"),
+						     P_("The currently selected menu item"),
+						     -1, G_MAXINT, -1,
+						     GTK_PARAM_READWRITE));
+
+  /**
+   * GtkMenu:accel-group:
+   *
+   * The accel group holding accelerators for the menu.
+   *
+   * Since: 2.14
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_ACCEL_GROUP,
+                                   g_param_spec_object ("accel-group",
+				                        P_("Accel Group"),
+						        P_("The accel group holding accelerators for the menu"),
+						        GTK_TYPE_ACCEL_GROUP,
+						        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkMenu:accel-path:
+   *
+   * An accel path used to conveniently construct accel paths of child items.
+   *
+   * Since: 2.14
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_ACCEL_PATH,
+                                   g_param_spec_string ("accel-path",
+				                        P_("Accel Path"),
+						        P_("An accel path used to conveniently construct accel paths of child items"),
+						        NULL,
+						        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkMenu:attach-widget:
+   *
+   * The widget the menu is attached to. Setting this property attaches
+   * the menu without a #GtkMenuDetachFunc. If you need to use a detacher,
+   * use gtk_menu_attach_to_widget() directly.
+   *
+   * Since: 2.14
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_ATTACH_WIDGET,
+                                   g_param_spec_object ("attach-widget",
+				                        P_("Attach Widget"),
+						        P_("The widget the menu is attached to"),
+						        GTK_TYPE_WIDGET,
+						        GTK_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class,
                                    PROP_TEAROFF_TITLE,
                                    g_param_spec_string ("tearoff-title",
@@ -505,6 +573,21 @@ gtk_menu_class_init (GtkMenuClass *class)
 							 P_("A boolean that indicates whether the menu is torn-off"),
 							 FALSE,
 							 GTK_PARAM_READWRITE));
+
+  /**
+   * GtkMenu:monitor:
+   *
+   * The monitor the menu will be popped up on.
+   *
+   * Since: 2.14
+   **/
+  g_object_class_install_property (gobject_class,
+                                   PROP_MONITOR,
+                                   g_param_spec_int ("monitor",
+				                     P_("Monitor"),
+						     P_("The monitor the menu will be popped up on"),
+						     -1, G_MAXINT, -1,
+						     GTK_PARAM_READWRITE));
 
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("vertical-padding",
@@ -702,12 +785,37 @@ gtk_menu_set_property (GObject      *object,
   
   switch (prop_id)
     {
+    case PROP_ACTIVE:
+      gtk_menu_set_active (menu, g_value_get_int (value));
+      break;
+    case PROP_ACCEL_GROUP:
+      gtk_menu_set_accel_group (menu, g_value_get_object (value));
+      break;
+    case PROP_ACCEL_PATH:
+      gtk_menu_set_accel_path (menu, g_value_get_string (value));
+      break;
+    case PROP_ATTACH_WIDGET:
+      {
+        GtkWidget *widget;
+
+        widget = gtk_menu_get_attach_widget (menu);
+        if (widget)
+          gtk_menu_detach (menu);
+
+        widget = (GtkWidget*) g_value_get_object (value); 
+        if (widget)
+          gtk_menu_attach_to_widget (menu, widget, NULL);
+      }
+      break;
     case PROP_TEAROFF_STATE:
       gtk_menu_set_tearoff_state (menu, g_value_get_boolean (value));
       break;
     case PROP_TEAROFF_TITLE:
       gtk_menu_set_title (menu, g_value_get_string (value));
-      break;	  
+      break;
+    case PROP_MONITOR:
+      gtk_menu_set_monitor (menu, g_value_get_int (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -726,11 +834,26 @@ gtk_menu_get_property (GObject     *object,
   
   switch (prop_id)
     {
+    case PROP_ACTIVE:
+      g_value_set_int (value, g_list_index (GTK_MENU_SHELL (menu)->children, gtk_menu_get_active (menu)));
+      break;
+    case PROP_ACCEL_GROUP:
+      g_value_set_object (value, gtk_menu_get_accel_group (menu));
+      break;
+    case PROP_ACCEL_PATH:
+      g_value_set_string (value, gtk_menu_get_accel_path (menu));
+      break;
+    case PROP_ATTACH_WIDGET:
+      g_value_set_object (value, gtk_menu_get_attach_widget (menu));
+      break;
     case PROP_TEAROFF_STATE:
       g_value_set_boolean (value, gtk_menu_get_tearoff_state (menu));
       break;
     case PROP_TEAROFF_TITLE:
       g_value_set_string (value, gtk_menu_get_title (menu));
+      break;
+    case PROP_MONITOR:
+      g_value_set_int (value, gtk_menu_get_monitor (menu));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -902,6 +1025,7 @@ gtk_menu_init (GtkMenu *menu)
   priv->lower_arrow_state = GTK_STATE_NORMAL;
 
   priv->have_layout = FALSE;
+  priv->monitor_num = -1;
 }
 
 static void
@@ -1033,8 +1157,9 @@ gtk_menu_attach_to_widget (GtkMenu	       *menu,
     {
       list = g_list_prepend (list, menu);
     }
-  g_object_set_data_full (G_OBJECT (attach_widget), I_(ATTACHED_MENUS), list, (GtkDestroyNotify) g_list_free);
-  
+  g_object_set_data_full (G_OBJECT (attach_widget), I_(ATTACHED_MENUS), list,
+                          (GDestroyNotify) g_list_free);
+
   if (GTK_WIDGET_STATE (menu) != GTK_STATE_NORMAL)
     gtk_widget_set_state (GTK_WIDGET (menu), GTK_STATE_NORMAL);
   
@@ -1086,7 +1211,8 @@ gtk_menu_detach (GtkMenu *menu)
   list = g_object_steal_data (G_OBJECT (data->attach_widget), ATTACHED_MENUS);
   list = g_list_remove (list, menu);
   if (list)
-    g_object_set_data_full (G_OBJECT (data->attach_widget), I_(ATTACHED_MENUS), list, (GtkDestroyNotify) g_list_free);
+    g_object_set_data_full (G_OBJECT (data->attach_widget), I_(ATTACHED_MENUS), list,
+                            (GDestroyNotify) g_list_free);
   else
     g_object_set_data (G_OBJECT (data->attach_widget), I_(ATTACHED_MENUS), NULL);
   
@@ -1643,15 +1769,30 @@ void
 gtk_menu_set_accel_path (GtkMenu     *menu,
 			 const gchar *accel_path)
 {
-  gchar *old_accel_path;
-
   g_return_if_fail (GTK_IS_MENU (menu));
   if (accel_path)
     g_return_if_fail (accel_path[0] == '<' && strchr (accel_path, '/')); /* simplistic check */
 
-  menu->accel_path = g_intern_string (accel_path);
+  /* FIXME: accel_path should be defined as const gchar* */
+  menu->accel_path = (gchar*)g_intern_string (accel_path);
   if (menu->accel_path)
     _gtk_menu_refresh_accel_paths (menu, FALSE);
+}
+
+/**
+ * gtk_menu_get_accel_path
+ * @menu: a valid #GtkMenu
+ *
+ * Retrieves the accelerator path set on the menu.
+ *
+ * Since: 2.14
+ */
+const gchar*
+gtk_menu_get_accel_path (GtkMenu     *menu)
+{
+  g_return_val_if_fail (GTK_IS_MENU (menu), NULL);
+
+  return menu->accel_path;
 }
 
 typedef struct {
@@ -1812,7 +1953,7 @@ gtk_menu_set_tearoff_state (GtkMenu  *menu,
 	    {
 	      GtkWidget *toplevel;
 
-	      menu->tearoff_window = gtk_widget_new (GTK_TYPE_WINDOW,
+	      menu->tearoff_window = g_object_new (GTK_TYPE_WINDOW,
 						     "type", GTK_WINDOW_TOPLEVEL,
 						     "screen", gtk_widget_get_screen (menu->toplevel),
 						     "app-paintable", TRUE,
@@ -4916,6 +5057,28 @@ gtk_menu_set_monitor (GtkMenu *menu,
   priv = gtk_menu_get_private (menu);
   
   priv->monitor_num = monitor_num;
+}
+
+/**
+ * gtk_menu_get_monitor:
+ * @menu: a #GtkMenu
+ *
+ * Retrieves the number of the monitor on which to show the menu.
+ *
+ * Returns: the number of the monitor on which the menu should
+ *    be popped up or -1, if no monitor has been set
+ *
+ * Since: 2.14
+ **/
+gint
+gtk_menu_get_monitor (GtkMenu *menu)
+{
+  GtkMenuPrivate *priv;
+  g_return_val_if_fail (GTK_IS_MENU (menu), -1);
+
+  priv = gtk_menu_get_private (menu);
+  
+  return priv->monitor_num;
 }
 
 /**

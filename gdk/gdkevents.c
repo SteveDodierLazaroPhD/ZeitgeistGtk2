@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>		/* For memset() */
 
 #include "gdk.h"
@@ -37,7 +37,7 @@ struct _GdkIOClosure
 {
   GdkInputFunction function;
   GdkInputCondition condition;
-  GdkDestroyNotify notify;
+  GDestroyNotify notify;
   gpointer data;
 };
 
@@ -1020,7 +1020,7 @@ gdk_input_add_full (gint	      source,
 		    GdkInputCondition condition,
 		    GdkInputFunction  function,
 		    gpointer	      data,
-		    GdkDestroyNotify  destroy)
+		    GDestroyNotify    destroy)
 {
   guint result;
   GdkIOClosure *closure = g_new (GdkIOClosure, 1);
@@ -1259,7 +1259,7 @@ gdk_event_get_type (void)
  * Obtains a desktop-wide setting, such as the double-click time,
  * for the default screen. See gdk_screen_get_setting().
  *
- * Returns : %TRUE if the setting existed and a value was stored
+ * Returns: %TRUE if the setting existed and a value was stored
  *   in @value, %FALSE otherwise.
  **/
 gboolean

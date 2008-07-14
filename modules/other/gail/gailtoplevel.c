@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -110,7 +110,7 @@ gail_toplevel_init (GailToplevel *toplevel)
         }
     }
 
-  gtk_type_class (GTK_TYPE_WINDOW);
+  g_type_class_ref (GTK_TYPE_WINDOW);
 
   signal_id  = g_signal_lookup ("show", GTK_TYPE_WINDOW);
   g_signal_add_emission_hook (signal_id, 0,

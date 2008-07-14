@@ -25,7 +25,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <stdio.h>
 #include <math.h>
 #include <gdk/gdkkeysyms.h>
@@ -330,7 +330,7 @@ gtk_range_class_init (GtkRangeClass *class)
                   G_TYPE_BOOLEAN, 2,
                   GTK_TYPE_SCROLL_TYPE,
                   G_TYPE_DOUBLE);
-  
+
   g_object_class_install_property (gobject_class,
                                    PROP_UPDATE_POLICY,
                                    g_param_spec_enum ("update-policy",

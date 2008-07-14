@@ -25,7 +25,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -1028,7 +1028,7 @@ gdk_win32_selection_add_targets (GdkWindow  *owner,
 				 gint	     n_targets,
 				 GdkAtom    *targets)
 {
-  HWND hwnd;
+  HWND hwnd = NULL;
   guint formatid;
   gint i;
   GSList *convertable_formats, *format;

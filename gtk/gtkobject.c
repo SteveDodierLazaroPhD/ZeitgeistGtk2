@@ -24,14 +24,19 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
+
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
+
+#undef GTK_DISABLE_DEPRECATED
+
 #include "gtkobject.h"
 #include "gtkintl.h"
 #include "gtkmarshalers.h"
 #include "gtkprivate.h"
+
 #include "gtkalias.h"
 
 
@@ -45,7 +50,6 @@ enum {
 };
 
 
-extern void	  gtk_object_init_type           (void);	/* for gtktypeutils.h */
 static void       gtk_object_base_class_init     (GtkObjectClass *class);
 static void       gtk_object_base_class_finalize (GtkObjectClass *class);
 static void       gtk_object_class_init          (GtkObjectClass *klass);

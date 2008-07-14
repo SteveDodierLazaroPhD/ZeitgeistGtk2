@@ -96,7 +96,7 @@ enum                <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosit
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeViewColumnDropFunc">GtkTreeViewColumnDropFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> user_data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-scroll-to-point">gtk_tree_view_scroll_to_point</link>       (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="gint">gint</link> tree_x,
                                                          <link linkend="gint">gint</link> tree_y);
@@ -243,7 +243,7 @@ enum                <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosit
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-set-search-equal-func">gtk_tree_view_set_search_equal_func</link> (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeViewSearchEqualFunc">GtkTreeViewSearchEqualFunc</link> search_equal_func,
                                                          <link linkend="gpointer">gpointer</link> search_user_data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> search_destroy);
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> search_destroy);
 <link linkend="GtkEntry">GtkEntry</link>*           <link linkend="gtk-tree-view-get-search-entry">gtk_tree_view_get_search_entry</link>      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-set-search-entry">gtk_tree_view_set_search_entry</link>      (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkEntry">GtkEntry</link> *entry);
@@ -274,7 +274,7 @@ enum                <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosit
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeDestroyCountFunc">GtkTreeDestroyCountFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);
 <link linkend="gboolean">gboolean</link>            (<link linkend="GtkTreeViewRowSeparatorFunc">*GtkTreeViewRowSeparatorFunc</link>)      (<link linkend="GtkTreeModel">GtkTreeModel</link> *model,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                          <link linkend="gpointer">gpointer</link> data);
@@ -284,7 +284,7 @@ enum                <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosit
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeViewRowSeparatorFunc">GtkTreeViewRowSeparatorFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-view-get-rubber-banding">gtk_tree_view_get_rubber_banding</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);
 <link linkend="void">void</link>                <link linkend="gtk-tree-view-set-rubber-banding">gtk_tree_view_set_rubber_banding</link>    (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="gboolean">gboolean</link> enable);
@@ -560,7 +560,7 @@ spot to the user.
 <varlistentry><term><parameter>data</parameter>&nbsp;:</term>
 <listitem><simpara>user data
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, if <link linkend="column"><type>column</type></link> can be dropped in this spot
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE, if <link linkend="column"><type>column</type></link> can be dropped in this spot
 
 
 </simpara></listitem></varlistentry>
@@ -614,7 +614,7 @@ has some similarity to <link linkend="strcmp"><function>strcmp()</function></lin
 <varlistentry><term><parameter>search_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data from <link linkend="gtk-tree-view-set-search-equal-func"><function>gtk_tree_view_set_search_equal_func()</function></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if the row matches, <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> otherwise.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%FALSE if the row matches, <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> otherwise.
 
 
 </simpara></listitem></varlistentry>
@@ -1188,7 +1188,7 @@ column has the expander arrow drawn next to it.</para>
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeViewColumnDropFunc">GtkTreeViewColumnDropFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> user_data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);</programlisting>
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <para>
 Sets a user function for determining where a column may be dropped when
 dragged.  This function is called on every column pair in turn at the
@@ -2269,7 +2269,7 @@ Returns the compare function currently in use.</para>
 <indexterm zone="gtk-tree-view-set-search-equal-func"><primary>gtk_tree_view_set_search_equal_func</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_set_search_equal_func (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeViewSearchEqualFunc">GtkTreeViewSearchEqualFunc</link> search_equal_func,
                                                          <link linkend="gpointer">gpointer</link> search_user_data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> search_destroy);</programlisting>
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> search_destroy);</programlisting>
 <para>
 Sets the compare function for the interactive search capabilities; note
 that somewhat like <link linkend="strcmp"><function>strcmp()</function></link> returning 0 for equality
@@ -2531,7 +2531,7 @@ moves over them.</para>
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeDestroyCountFunc">GtkTreeDestroyCountFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);</programlisting>
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <para>
 This function should almost never be used.  It is meant for private use by
 ATK for determining the number of visible children that are removed when the
@@ -2572,7 +2572,7 @@ returns.
 <varlistentry><term><parameter>data</parameter>&nbsp;:</term>
 <listitem><simpara>user data
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the row is a separator
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE if the row is a separator
 
 
 </simpara></listitem></varlistentry>
@@ -2600,7 +2600,7 @@ Returns the current row separator function.</para>
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="GtkTreeViewRowSeparatorFunc">GtkTreeViewRowSeparatorFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);</programlisting>
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <para>
 Sets the row separator function, which is used to determine
 whether a row should be drawn as a separator. If the row separator

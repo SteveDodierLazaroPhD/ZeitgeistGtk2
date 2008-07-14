@@ -35,9 +35,6 @@
 #ifndef __GTK_UI_MANAGER_H__
 #define __GTK_UI_MANAGER_H__
 
-
-#include <glib.h>
-#include <glib-object.h>
 #include <gtk/gtkaccelgroup.h>
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkaction.h>
@@ -62,7 +59,7 @@ struct _GtkUIManager {
 
   /*< private >*/
 
-  GtkUIManagerPrivate *private_data;
+  GtkUIManagerPrivate *GSEAL (private_data);
 };
 
 struct _GtkUIManagerClass {

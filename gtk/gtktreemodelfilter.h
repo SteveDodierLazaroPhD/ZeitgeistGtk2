@@ -25,6 +25,7 @@
 #ifndef __GTK_TREE_MODEL_FILTER_H__
 #define __GTK_TREE_MODEL_FILTER_H__
 
+#include <gdkconfig.h>
 #include <gtk/gtktreemodel.h>
 
 G_BEGIN_DECLS
@@ -54,7 +55,7 @@ struct _GtkTreeModelFilter
   GObject parent;
 
   /*< private >*/
-  GtkTreeModelFilterPrivate *priv;
+  GtkTreeModelFilterPrivate *GSEAL (priv);
 };
 
 struct _GtkTreeModelFilterClass
@@ -75,13 +76,13 @@ GtkTreeModel *gtk_tree_model_filter_new                        (GtkTreeModel    
 void          gtk_tree_model_filter_set_visible_func           (GtkTreeModelFilter           *filter,
                                                                 GtkTreeModelFilterVisibleFunc func,
                                                                 gpointer                      data,
-                                                                GtkDestroyNotify              destroy);
+                                                                GDestroyNotify                destroy);
 void          gtk_tree_model_filter_set_modify_func            (GtkTreeModelFilter           *filter,
                                                                 gint                          n_columns,
                                                                 GType                        *types,
                                                                 GtkTreeModelFilterModifyFunc  func,
                                                                 gpointer                      data,
-                                                                GtkDestroyNotify              destroy);
+                                                                GDestroyNotify                destroy);
 void          gtk_tree_model_filter_set_visible_column         (GtkTreeModelFilter           *filter,
                                                                 gint                          column);
 

@@ -25,7 +25,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 
 #include "gtkmessagedialog.h"
@@ -641,6 +641,22 @@ gtk_message_dialog_set_image (GtkMessageDialog *dialog,
   dialog->image = image;
 
   g_object_notify (G_OBJECT (dialog), "image");
+}
+
+/**
+ * gtk_message_dialog_get_image:
+ * @dialog: a #GtkMessageDialog
+ *
+ * Return value: the dialog's image
+ *
+ * Since: 2.14
+ **/
+GtkWidget *
+gtk_message_dialog_get_image (GtkMessageDialog *dialog)
+{
+  g_return_val_if_fail (GTK_IS_MESSAGE_DIALOG (dialog), NULL);
+
+  return dialog->image;
 }
 
 /**

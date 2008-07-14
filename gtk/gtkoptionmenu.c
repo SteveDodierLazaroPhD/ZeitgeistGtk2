@@ -24,17 +24,18 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
-#include "gtkintl.h"
-#include "gtkmenu.h"
-#include "gtkmenuitem.h"
-#include "gtkmarshalers.h"
+#include "config.h"
+
 #include "gdk/gdkkeysyms.h"
 
 #undef GTK_DISABLE_DEPRECATED
-#include "gtkoptionmenu.h"
 
+#include "gtkmenu.h"
+#include "gtkmenuitem.h"
+#include "gtkmarshalers.h"
+#include "gtkoptionmenu.h"
 #include "gtkprivate.h"
+#include "gtkintl.h"
 #include "gtkalias.h"
 
 #define CHILD_LEFT_SPACING        4
@@ -895,7 +896,7 @@ gtk_option_menu_position (GtkMenu  *menu,
   gdk_window_get_origin (widget->window, &menu_xpos, &menu_ypos);
 
   /* set combo box type hint for menu popup */
-  gtk_window_set_type_hint (GTK_MENU (option_menu->menu)->toplevel,
+  gtk_window_set_type_hint (GTK_WINDOW (GTK_MENU (option_menu->menu)->toplevel),
 			    GDK_WINDOW_TYPE_HINT_COMBO);
 
   menu_xpos += widget->allocation.x;

@@ -20,7 +20,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
+
+#include <string.h>
+
+#undef GTK_DISABLE_DEPRECATED /* GtkTooltips */
+
 #include "gtktoolitem.h"
 #include "gtkmarshalers.h"
 #include "gtktoolshell.h"
@@ -29,8 +34,6 @@
 #include "gtkmain.h"
 #include "gtkprivate.h"
 #include "gtkalias.h"
-
-#include <string.h>
 
 /**
  * SECTION:gtktoolitem

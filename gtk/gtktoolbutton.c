@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include "gtktoolbutton.h"
 #include "gtkbutton.h"
 #include "gtkhbox.h"
@@ -100,7 +100,7 @@ struct _GtkToolButtonPrivate
 GType
 gtk_tool_button_get_type (void)
 {
-  static GtkType type = 0;
+  static GType type = 0;
 
   if (!type)
     type = g_type_register_static_simple (GTK_TYPE_TOOL_ITEM,

@@ -25,21 +25,27 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
+
+#include <stdio.h>
 #include <string.h>
+
+#include <gdk/gdkkeysyms.h>
+
+#undef GTK_DISABLE_DEPRECATED
+
 #include "gtknotebook.h"
 #include "gtkmain.h"
 #include "gtkmenu.h"
 #include "gtkmenuitem.h"
 #include "gtklabel.h"
-#include <gdk/gdkkeysyms.h>
-#include <stdio.h>
 #include "gtkintl.h"
 #include "gtkmarshalers.h"
 #include "gtkbindings.h"
 #include "gtkprivate.h"
 #include "gtkdnd.h"
 #include "gtkbuildable.h"
+
 #include "gtkalias.h"
 
 #define SCROLL_DELAY_FACTOR   5
@@ -4037,7 +4043,7 @@ gtk_notebook_real_insert_page (GtkNotebook *notebook,
 
   gtk_widget_freeze_child_notify (child);
 
-  page = g_new0 (GtkNotebookPage, 1);
+  page = g_slice_new0 (GtkNotebookPage);
   page->child = child;
 
   nchildren = g_list_length (notebook->children);
@@ -4380,7 +4386,7 @@ gtk_notebook_real_remove (GtkNotebook *notebook,
       page->last_focus_child = NULL;
     }
   
-  g_free (page);
+  g_slice_free (GtkNotebookPage, page);
 
   gtk_notebook_update_labels (notebook);
   if (need_resize)
@@ -7332,7 +7338,7 @@ gtk_notebook_set_window_creation_hook (GtkNotebookWindowCreationFunc  func,
  * not be able to exchange tabs with any other notebook.
  * 
  * Since: 2.10
- * Deprecated:2.12: use gtk_notebook_set_group() instead.
+ * Deprecated: 2.12: use gtk_notebook_set_group() instead.
  */
 void
 gtk_notebook_set_group_id (GtkNotebook *notebook,
@@ -7386,7 +7392,7 @@ gtk_notebook_set_group (GtkNotebook *notebook,
  * Return Value: the group identificator, or -1 if none is set.
  *
  * Since: 2.10
- * Deprecated:2.12: use gtk_notebook_get_group() instead.
+ * Deprecated: 2.12: use gtk_notebook_get_group() instead.
  */
 gint
 gtk_notebook_get_group_id (GtkNotebook *notebook)

@@ -36,7 +36,7 @@
 #include "gdkinternals.h"
 #include "gdkkeysyms.h"
 
-#include <config.h>
+#include "config.h"
 
 guint _gdk_keymap_serial = 0;
 gboolean _gdk_keyboard_has_altgr = FALSE;
@@ -366,7 +366,6 @@ update_keymap (void)
 	  for (shift = 0; shift < 4; shift++)
 	    {
 	      guint *ksymp = keysym_tab + vk*4 + shift;
-	      guchar chars[2];
 	      
 	      set_shift_vks (key_state, shift);
 

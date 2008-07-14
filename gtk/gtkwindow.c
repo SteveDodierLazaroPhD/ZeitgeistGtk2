@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -1513,6 +1513,25 @@ gtk_window_set_default (GtkWindow *window,
     }
 }
 
+/**
+ * gtk_window_get_default:
+ * @window: a #GtkWindow
+ *
+ * Returns the default widget for @window. See gtk_window_set_default()
+ * for more details.
+ *
+ * Returns: the default widget, or %NULL if there is none.
+ *
+ * Since: 2.14
+ **/
+GtkWidget *
+gtk_window_get_default (GtkWindow *window)
+{
+  g_return_val_if_fail (GTK_IS_WINDOW (window), NULL);
+
+  return window->default_widget;
+}
+
 void
 gtk_window_set_policy (GtkWindow *window,
 		       gboolean   allow_shrink,
@@ -1530,7 +1549,7 @@ gtk_window_set_policy (GtkWindow *window,
   g_object_notify (G_OBJECT (window), "resizable");
   g_object_thaw_notify (G_OBJECT (window));
   
-  gtk_widget_queue_resize (GTK_WIDGET (window));
+  gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
 }
 
 static gboolean
@@ -1746,7 +1765,7 @@ gtk_window_set_position (GtkWindow         *window,
        */
       info->position_constraints_changed = TRUE;
 
-      gtk_widget_queue_resize (GTK_WIDGET (window));
+      gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
     }
 
   window->position = position;
@@ -2671,7 +2690,7 @@ gtk_window_set_geometry_hints (GtkWindow       *window,
       gtk_window_set_gravity (window, geometry->win_gravity);
     }
   
-  gtk_widget_queue_resize (GTK_WIDGET (window));
+  gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
 }
 
 /**
@@ -3670,7 +3689,7 @@ gtk_window_set_default_size_internal (GtkWindow    *window,
   
   g_object_thaw_notify (G_OBJECT (window));
   
-  gtk_widget_queue_resize (GTK_WIDGET (window));
+  gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
 }
 
 /**
@@ -3785,7 +3804,7 @@ gtk_window_resize (GtkWindow *window,
   info->resize_width = width;
   info->resize_height = height;
 
-  gtk_widget_queue_resize (GTK_WIDGET (window));
+  gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
 }
 
 /**
@@ -6020,7 +6039,7 @@ gtk_window_move_resize (GtkWindow *window)
            */
 	  info->last = saved_last_info;
           
-	  gtk_widget_queue_resize (widget); /* migth recurse for GTK_RESIZE_IMMEDIATE */
+	  gtk_widget_queue_resize_no_redraw (widget); /* migth recurse for GTK_RESIZE_IMMEDIATE */
 	}
 
       return;			/* Bail out, we didn't really process the move/resize */
@@ -6113,7 +6132,7 @@ gtk_window_move_resize (GtkWindow *window)
 	   */
 	  if (container->resize_mode == GTK_RESIZE_QUEUE)
 	    {
-	      gtk_widget_queue_resize (widget);
+	      gtk_widget_queue_resize_no_redraw (widget);
 	      _gtk_container_dequeue_resize_handler (container);
 	    }
 	}
@@ -7030,7 +7049,7 @@ gtk_window_set_gravity (GtkWindow *window,
 
       /* gtk_window_move_resize() will adapt gravity
        */
-      gtk_widget_queue_resize (GTK_WIDGET (window));
+      gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
 
       g_object_notify (G_OBJECT (window), "gravity");
     }
@@ -7435,6 +7454,37 @@ gtk_window_group_remove_window (GtkWindowGroup *window_group,
   
   g_object_unref (window_group);
   g_object_unref (window);
+}
+
+/**
+ * gtk_window_group_list_windows:
+ * @window_group: a #GtkWindowGroup
+ *
+ * Returns a list of the #GtkWindows that belong to @window_group.
+ *
+ * Returns: A newly-allocated list of windows inside the group.
+ *
+ * Since: 2.14
+ **/
+GList *
+gtk_window_group_list_windows (GtkWindowGroup *window_group)
+{
+  GList *toplevels, *toplevel, *group_windows;
+
+  g_return_val_if_fail (GTK_IS_WINDOW_GROUP (window_group), NULL);
+
+  group_windows = NULL;
+  toplevels = gtk_window_list_toplevels ();
+
+  for (toplevel = toplevels; toplevel; toplevel = toplevel->next)
+    {
+      GtkWindow *window = toplevel->data;
+
+      if (window_group == window->group)
+	group_windows = g_list_prepend (group_windows, window);
+    }
+
+  return g_list_reverse (group_windows);
 }
 
 /**

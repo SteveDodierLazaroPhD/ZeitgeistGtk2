@@ -36,7 +36,6 @@
 #define __GTK_ACTION_H__
 
 #include <gtk/gtkwidget.h>
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -57,7 +56,7 @@ struct _GtkAction
 
   /*< private >*/
 
-  GtkActionPrivate *private_data;
+  GtkActionPrivate *GSEAL (private_data);
 };
 
 struct _GtkActionClass

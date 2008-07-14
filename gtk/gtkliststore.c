@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -111,11 +111,11 @@ static void     gtk_list_store_set_sort_func         (GtkTreeSortable        *so
 						      gint                    sort_column_id,
 						      GtkTreeIterCompareFunc  func,
 						      gpointer                data,
-						      GtkDestroyNotify        destroy);
+						      GDestroyNotify          destroy);
 static void     gtk_list_store_set_default_sort_func (GtkTreeSortable        *sortable,
 						      GtkTreeIterCompareFunc  func,
 						      gpointer                data,
-						      GtkDestroyNotify        destroy);
+						      GDestroyNotify          destroy);
 static gboolean gtk_list_store_has_default_sort_func (GtkTreeSortable        *sortable);
 
 
@@ -392,7 +392,7 @@ gtk_list_store_finalize (GObject *object)
   
   if (list_store->default_sort_destroy)
     {
-      GtkDestroyNotify d = list_store->default_sort_destroy;
+      GDestroyNotify d = list_store->default_sort_destroy;
 
       list_store->default_sort_destroy = NULL;
       d (list_store->default_sort_data);
@@ -1831,7 +1831,7 @@ gtk_list_store_set_sort_func (GtkTreeSortable        *sortable,
 			      gint                    sort_column_id,
 			      GtkTreeIterCompareFunc  func,
 			      gpointer                data,
-			      GtkDestroyNotify        destroy)
+			      GDestroyNotify          destroy)
 {
   GtkListStore *list_store = (GtkListStore *) sortable;
 
@@ -1847,13 +1847,13 @@ static void
 gtk_list_store_set_default_sort_func (GtkTreeSortable        *sortable,
 				      GtkTreeIterCompareFunc  func,
 				      gpointer                data,
-				      GtkDestroyNotify        destroy)
+				      GDestroyNotify          destroy)
 {
   GtkListStore *list_store = (GtkListStore *) sortable;
 
   if (list_store->default_sort_destroy)
     {
-      GtkDestroyNotify d = list_store->default_sort_destroy;
+      GDestroyNotify d = list_store->default_sort_destroy;
 
       list_store->default_sort_destroy = NULL;
       d (list_store->default_sort_data);

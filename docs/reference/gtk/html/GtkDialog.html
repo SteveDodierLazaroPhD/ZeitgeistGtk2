@@ -8,7 +8,7 @@
 <link rel="up" href="WindowWidgets.html" title="Windows">
 <link rel="prev" href="WindowWidgets.html" title="Windows">
 <link rel="next" href="GtkInvisible.html" title="GtkInvisible">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,19 +69,21 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkInvisible.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkDialog.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkDialog.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkDialog.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkDialog.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-                   | 
-                  <a href="#GtkDialog.properties" class="shortcut">Properties</a>
-                   | 
-                  <a href="#GtkDialog.style-properties" class="shortcut">Style Properties</a>
-                   | 
-                  <a href="#GtkDialog.signals" class="shortcut">Signals</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkDialog.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkDialog.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkDialog.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkDialog.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                 | 
+                <a href="#GtkDialog.properties" class="shortcut">Properties</a>
+                 | 
+                <a href="#GtkDialog.style-properties" class="shortcut">Style Properties</a>
+                 | 
+                <a href="#GtkDialog.signals" class="shortcut">Signals</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkDialog"></a><div class="titlepage"></div>
@@ -264,9 +266,8 @@ buttons.
 </p>
 <p>
 If 'dialog' is a newly created dialog, the two primary areas of the window 
-can be accessed as <code class="literal">GTK_DIALOG(dialog)-&gt;vbox</code> and 
-<code class="literal">GTK_DIALOG(dialog)-&gt;action_area</code>,
-as can be seen from the example, below.
+can be accessed through <code class="function">gtk_dialog_get_content_area()</code> and
+<code class="function">gtk_dialog_get_action_area()</code>, as can be seen from the example, below.
 </p>
 <p>
 A 'modal' dialog (that is, one which freezes the rest of the application from
@@ -297,14 +298,14 @@ For the simple dialog in the following example, in reality you'd probably use
 dialog contents manually if you had more than a simple message in the dialog.
 </p>
 <div class="example">
-<a name="id2929328"></a><p class="title"><b>Example 5. Simple <span class="structname">GtkDialog</span> usage.</b></p>
+<a name="id3192165"></a><p class="title"><b>Example 5. Simple <span class="structname">GtkDialog</span> usage.</b></p>
 <div class="example-contents"><pre class="programlisting">
 
 /* Function to open a dialog box displaying the message provided. */
 
 void quick_message (gchar *message) {
 
-   GtkWidget *dialog, *label;
+   GtkWidget *dialog, *label, *content_area;
    
    /* Create the widgets */
    
@@ -314,6 +315,7 @@ void quick_message (gchar *message) {
                                          GTK_STOCK_OK,
                                          GTK_RESPONSE_NONE,
                                          NULL);
+   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
    label = gtk_label_new (message);
    
    /* Ensure that the dialog box is destroyed when the user responds. */
@@ -325,8 +327,7 @@ void quick_message (gchar *message) {
 
    /* Add the label, and show everything we've added to the dialog. */
 
-   gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)-&gt;vbox),
-                      label);
+   gtk_container_add (GTK_CONTAINER (content_area), label);
    gtk_widget_show_all (dialog);
 }
 
@@ -348,7 +349,7 @@ attribute specifies a numeric response, and the content of the element
 is the id of widget (which should be a child of the dialogs <em class="parameter"><code>action_area</code></em>).
 </p>
 <div class="example">
-<a name="id2929404"></a><p class="title"><b>Example 6. A <span class="structname">GtkDialog</span> UI definition fragment.</b></p>
+<a name="id3192243"></a><p class="title"><b>Example 6. A <span class="structname">GtkDialog</span> UI definition fragment.</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkDialog" id="dialog1"&gt;
   &lt;child internal-child="vbox"&gt;"
@@ -380,8 +381,8 @@ is the id of widget (which should be a child of the dialogs <em class="parameter
 <div class="refsect2" lang="en">
 <a name="GtkDialog-struct"></a><h3>GtkDialog</h3>
 <pre class="programlisting">typedef struct {
-  GtkWidget *vbox;
-  GtkWidget *action_area;
+  GtkWidget *GSEAL (vbox);
+  GtkWidget *GSEAL (action_area);
 } GtkDialog;
 </pre>
 <p>
@@ -1365,6 +1366,6 @@ response from the user.</p></td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

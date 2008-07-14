@@ -29,9 +29,9 @@
 G_BEGIN_DECLS
 
 
-#define GTK_DIAL(obj)          GTK_CHECK_CAST (obj, gtk_dial_get_type (), GtkDial)
-#define GTK_DIAL_CLASS(klass)  GTK_CHECK_CLASS_CAST (klass, gtk_dial_get_type (), GtkDialClass)
-#define GTK_IS_DIAL(obj)       GTK_CHECK_TYPE (obj, gtk_dial_get_type ())
+#define GTK_DIAL(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gtk_dial_get_type (), GtkDial)
+#define GTK_DIAL_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gtk_dial_get_type (), GtkDialClass)
+#define GTK_IS_DIAL(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gtk_dial_get_type ())
 
 
 typedef struct _GtkDial        GtkDial;
@@ -74,7 +74,7 @@ struct _GtkDialClass
 
 
 GtkWidget*     gtk_dial_new                    (GtkAdjustment *adjustment);
-GtkType        gtk_dial_get_type               (void);
+GType          gtk_dial_get_type               (void);
 GtkAdjustment* gtk_dial_get_adjustment         (GtkDial      *dial);
 void           gtk_dial_set_update_policy      (GtkDial      *dial,
 						GtkUpdateType  policy);

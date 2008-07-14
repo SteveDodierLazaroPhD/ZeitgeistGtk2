@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 #include "gtktreeselection.h"
 #include "gtktreeprivate.h"
@@ -77,7 +77,7 @@ gtk_tree_selection_finalize (GObject *object)
 
   if (selection->destroy)
     {
-      GtkDestroyNotify d = selection->destroy;
+      GDestroyNotify d = selection->destroy;
 
       selection->destroy = NULL;
       d (selection->user_data);
@@ -256,14 +256,14 @@ void
 gtk_tree_selection_set_select_function (GtkTreeSelection     *selection,
 					GtkTreeSelectionFunc  func,
 					gpointer              data,
-					GtkDestroyNotify      destroy)
+					GDestroyNotify        destroy)
 {
   g_return_if_fail (GTK_IS_TREE_SELECTION (selection));
   g_return_if_fail (func != NULL);
 
   if (selection->destroy)
     {
-      GtkDestroyNotify d = selection->destroy;
+      GDestroyNotify d = selection->destroy;
 
       selection->destroy = NULL;
       d (selection->user_data);
@@ -272,6 +272,24 @@ gtk_tree_selection_set_select_function (GtkTreeSelection     *selection,
   selection->user_func = func;
   selection->user_data = data;
   selection->destroy = destroy;
+}
+
+/**
+ * gtk_tree_selection_get_select_function:
+ * @selection: A #GtkTreeSelection.
+ *
+ * Returns the current selection function.
+ *
+ * Return value: The function.
+ *
+ * Since: 2.14
+ **/
+GtkTreeSelectionFunc
+gtk_tree_selection_get_select_function (GtkTreeSelection *selection)
+{
+  g_return_val_if_fail (GTK_IS_TREE_SELECTION (selection), NULL);
+
+  return selection->user_func;
 }
 
 /**

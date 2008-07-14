@@ -25,7 +25,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 
 #include <pango/pango.h>
@@ -133,7 +133,9 @@ enum {
   PROP_TEXT,
   PROP_XALIGN,
   PROP_TRUNCATE_MULTILINE,
-  PROP_SHADOW_TYPE
+  PROP_SHADOW_TYPE,
+  PROP_OVERWRITE_MODE,
+  PROP_TEXT_LENGTH
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
@@ -632,6 +634,37 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                       GTK_SHADOW_IN,
                                                       GTK_PARAM_READWRITE));
 
+  /**
+   * GtkEntry:overwrite-mode:
+   *
+   * If text is overwritten when typing in the #GtkEntry.
+   *
+   * Since: 2.14
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_OVERWRITE_MODE,
+                                   g_param_spec_boolean ("overwrite-mode",
+                                                         P_("Overwrite mode"),
+                                                         P_("Whether new text overwrites existing text"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE));
+  /**
+   * GtkEntry:text-length:
+   *
+   * The length of the text in the #GtkEntry.
+   *
+   * Since: 2.14
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_TEXT_LENGTH,
+                                   g_param_spec_uint ("text-length",
+                                                      P_("Text length"),
+                                                      P_("Length of the text currently in the entry"),
+                                                      0, 
+                                                      G_MAXUINT16,
+                                                      0,
+                                                      GTK_PARAM_READABLE));
+
   signals[POPULATE_POPUP] =
     g_signal_new (I_("populate_popup"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -1026,6 +1059,10 @@ gtk_entry_set_property (GObject         *object,
       priv->shadow_type = g_value_get_enum (value);
       break;
 
+    case PROP_OVERWRITE_MODE:
+      gtk_entry_set_overwrite_mode (entry, g_value_get_boolean (value));
+      break;
+
     case PROP_SCROLL_OFFSET:
     case PROP_CURSOR_POSITION:
     default:
@@ -1089,6 +1126,12 @@ gtk_entry_get_property (GObject         *object,
       break;
     case PROP_SHADOW_TYPE:
       g_value_set_enum (value, priv->shadow_type);
+      break;
+    case PROP_OVERWRITE_MODE:
+      g_value_set_boolean (value, entry->overwrite_mode);
+      break;
+    case PROP_TEXT_LENGTH:
+      g_value_set_uint (value, entry->text_length);
       break;
 
     default:
@@ -1894,14 +1937,6 @@ _gtk_entry_get_selected_text (GtkEntry *entry)
   return text;
 }
 
-static void
-drag_begin_cb (GtkWidget      *widget,
-               GdkDragContext *context,
-               gpointer        data)
-{
-  g_signal_handlers_disconnect_by_func (widget, drag_begin_cb, NULL);
-}
-
 static gint
 gtk_entry_motion_notify (GtkWidget      *widget,
 			 GdkEventMotion *event)
@@ -2465,7 +2500,7 @@ gtk_entry_password_hint_free (GtkEntryPasswordHint *password_hint)
   if (password_hint->password_hint_timeout_id)
     g_source_remove (password_hint->password_hint_timeout_id);
 
-  g_free (password_hint);
+  g_slice_free (GtkEntryPasswordHint, password_hint);
 }
 
 /* Default signal handlers
@@ -2563,7 +2598,7 @@ gtk_entry_real_insert_text (GtkEditable *editable,
 
           if (!password_hint)
             {
-              password_hint = g_new0 (GtkEntryPasswordHint, 1);
+              password_hint = g_slice_new0 (GtkEntryPasswordHint);
               g_object_set_qdata_full (G_OBJECT (entry), quark_password_hint,
                                        password_hint,
                                        (GDestroyNotify) gtk_entry_password_hint_free);
@@ -3753,7 +3788,7 @@ _gtk_entry_reset_im_context (GtkEntry *entry)
 {
   if (entry->need_im_reset)
     {
-      entry->need_im_reset = 0;
+      entry->need_im_reset = FALSE;
       gtk_im_context_reset (entry->im_context);
     }
 }
@@ -4438,9 +4473,7 @@ gtk_entry_set_text (GtkEntry    *entry,
  *
  * Appends the given text to the contents of the widget.
  *
- * Deprecated: gtk_entry_append_text() is deprecated and should not
- *   be used in newly-written code. Use gtk_editable_insert_text()
- *   instead.
+ * Deprecated: 2.0: Use gtk_editable_insert_text() instead.
  */
 void
 gtk_entry_append_text (GtkEntry *entry,
@@ -4462,9 +4495,7 @@ gtk_entry_append_text (GtkEntry *entry,
  *
  * Prepends the given text to the contents of the widget.
  *
- * Deprecated: gtk_entry_prepend_text() is deprecated and should not
- *    be used in newly-written code. Use gtk_editable_insert_text()
- *    instead.
+ * Deprecated: 2.0: Use gtk_editable_insert_text() instead.
  */
 void
 gtk_entry_prepend_text (GtkEntry *entry,
@@ -4491,7 +4522,7 @@ gtk_entry_prepend_text (GtkEntry *entry,
  *
  * Sets the cursor position in an entry to the given value. 
  *
- * Deprecated: Use gtk_editable_set_position() instead.
+ * Deprecated: 2.0: Use gtk_editable_set_position() instead.
  */
 void
 gtk_entry_set_position (GtkEntry *entry,
@@ -4626,7 +4657,7 @@ gtk_entry_get_invisible_char (GtkEntry *entry)
  * Determines if the user can edit the text in the editable
  * widget or not. 
  *
- * Deprecated: Use gtk_editable_set_editable() instead.
+ * Deprecated: 2.0: Use gtk_editable_set_editable() instead.
  */
 void
 gtk_entry_set_editable (GtkEntry *entry,
@@ -4635,6 +4666,47 @@ gtk_entry_set_editable (GtkEntry *entry,
   g_return_if_fail (GTK_IS_ENTRY (entry));
 
   gtk_editable_set_editable (GTK_EDITABLE (entry), editable);
+}
+
+/**
+ * gtk_entry_set_overwrite_mode:
+ * @entry: a #GtkEntry
+ * @setting: new value
+ * 
+ * Sets whether the text is overwritten when typing in the #GtkEntry.
+ *
+ * Since: 2.14
+ **/
+void
+gtk_entry_set_overwrite_mode (GtkEntry *entry,
+                              gboolean  setting)
+{
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  
+  if (entry->overwrite_mode == setting) 
+    return;
+  
+  gtk_entry_toggle_overwrite (entry);
+
+  g_object_notify (G_OBJECT (entry), "overwrite-mode");
+}
+
+/**
+ * gtk_entry_get_overwrite_mode:
+ * @entry: a #GtkEntry
+ * 
+ * Gets the value set by gtk_entry_set_overwrite_mode().
+ * 
+ * Return value: whether the text is overwritten when typing.
+ *
+ * Since: 2.14
+ **/
+gboolean
+gtk_entry_get_overwrite_mode (GtkEntry *entry)
+{
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), FALSE);
+
+  return entry->overwrite_mode;
 }
 
 /**
@@ -4669,7 +4741,7 @@ gtk_entry_get_text (GtkEntry *entry)
  * selected will be those characters from @start_pos to the end of 
  * the text. 
  *
- * Deprecated: Use gtk_editable_select_region() instead.
+ * Deprecated: 2.0: Use gtk_editable_select_region() instead.
  */
 void       
 gtk_entry_select_region  (GtkEntry       *entry,
@@ -4721,6 +4793,26 @@ gtk_entry_get_max_length (GtkEntry *entry)
   g_return_val_if_fail (GTK_IS_ENTRY (entry), 0);
 
   return entry->text_max_length;
+}
+
+/**
+ * gtk_entry_get_text_length:
+ * @entry: a #GtkEntry
+ *
+ * Retrieves the current length of the text in
+ * @entry. 
+ *
+ * Return value: the current number of characters
+ *               in #GtkEntry, or 0 if there are none.
+ *
+ * Since: 2.14
+ **/
+guint16
+gtk_entry_get_text_length (GtkEntry *entry)
+{
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), 0);
+
+  return entry->text_length;
 }
 
 /**
@@ -5328,14 +5420,14 @@ popup_targets_received (GtkClipboard     *clipboard,
     }
 
   g_object_unref (entry);
-  g_free (info);
+  g_slice_free (PopupInfo, info);
 }
 			
 static void
 gtk_entry_do_popup (GtkEntry       *entry,
                     GdkEventButton *event)
 {
-  PopupInfo *info = g_new (PopupInfo, 1);
+  PopupInfo *info = g_slice_new (PopupInfo);
 
   /* In order to know what entries we should make sensitive, we
    * ask for the current targets of the clipboard, and when

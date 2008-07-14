@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include "gtkviewport.h"
 #include "gtkintl.h"
 #include "gtkmarshalers.h"
@@ -221,7 +221,7 @@ gtk_viewport_new (GtkAdjustment *hadjustment,
 {
   GtkWidget *viewport;
 
-  viewport = gtk_widget_new (GTK_TYPE_VIEWPORT,
+  viewport = g_object_new (GTK_TYPE_VIEWPORT,
 			     "hadjustment", hadjustment,
 			     "vadjustment", vadjustment,
 			     NULL);

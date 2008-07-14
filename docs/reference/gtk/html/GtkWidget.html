@@ -8,7 +8,7 @@
 <link rel="up" href="AbstractObjects.html" title="Abstract Base Classes">
 <link rel="prev" href="GtkSeparator.html" title="GtkSeparator">
 <link rel="next" href="GtkIMContext.html" title="GtkIMContext">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,21 +69,23 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkIMContext.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkWidget.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkWidget.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkWidget.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkWidget.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-                   | 
-                  <a href="#GtkWidget.derived-interfaces" class="shortcut">Known Derived Interfaces</a>
-                   | 
-                  <a href="#GtkWidget.properties" class="shortcut">Properties</a>
-                   | 
-                  <a href="#GtkWidget.style-properties" class="shortcut">Style Properties</a>
-                   | 
-                  <a href="#GtkWidget.signals" class="shortcut">Signals</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkWidget.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkWidget.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkWidget.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkWidget.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                 | 
+                <a href="#GtkWidget.derived-interfaces" class="shortcut">Known Derived Interfaces</a>
+                 | 
+                <a href="#GtkWidget.properties" class="shortcut">Properties</a>
+                 | 
+                <a href="#GtkWidget.style-properties" class="shortcut">Style Properties</a>
+                 | 
+                <a href="#GtkWidget.signals" class="shortcut">Signals</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkWidget"></a><div class="titlepage"></div>
@@ -790,6 +792,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
   "<a class="link" href="GtkWidget.html#GtkWidget--width-request" title='The "width-request" property'>width-request</a>"            <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write
+  "<a class="link" href="GtkWidget.html#GtkWidget--window" title='The "window" property'>window</a>"                   <a
+href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
+>GdkWindow</a>*            : Read
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -939,7 +944,7 @@ custom &lt;accelerator&gt; element, which has attributes named key,
 modifiers and signal and allows to specify accelerators.
 </p>
 <div class="example">
-<a name="id3914414"></a><p class="title"><b>Example 49. A UI definition fragment specifying an accelerator</b></p>
+<a name="id4179483"></a><p class="title"><b>Example 49. A UI definition fragment specifying an accelerator</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkButton"&gt;
   &lt;accelerator key="q" modifiers="GDK_CONTROL_MASK" signal="clicked"/&gt;
@@ -952,7 +957,7 @@ custom &lt;accessible&gt; element, which supports actions and relations.
 Properties on the accessible implementation of an object can be set by accessing the 
 internal child "accessible" of a <span class="structname">GtkWidget</span>.
 <div class="example">
-<a name="id3914445"></a><p class="title"><b>Example 50. A UI definition fragment specifying an accessible</b></p>
+<a name="id4179514"></a><p class="title"><b>Example 50. A UI definition fragment specifying an accessible</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkButton" id="label1"/&gt;
   &lt;property name="label"&gt;I am a Label for a Button&lt;/property&gt;
@@ -983,66 +988,30 @@ internal child "accessible" of a <span class="structname">GtkWidget</span>.
    *  along with graphics contexts used to draw with and
    *  the font to use for text.
    */
-  GtkStyle *style;
+  GtkStyle *GSEAL (style);
   
   /* The widget's desired size.
    */
-  GtkRequisition requisition;
+  GtkRequisition GSEAL (requisition);
   
   /* The widget's allocated size.
    */
-  GtkAllocation allocation;
+  GtkAllocation GSEAL (allocation);
   
   /* The widget's window or its parent window if it does
    *  not have a window. (Which will be indicated by the
    *  GTK_NO_WINDOW flag being set).
    */
-  GdkWindow *window;
+  GdkWindow *GSEAL (window);
   
   /* The widget's parent.
    */
-  GtkWidget *parent;
+  GtkWidget *GSEAL (parent);
 } GtkWidget;
 </pre>
 <p>
 
 </p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *<em class="structfield"><code>style</code></em>;</span></p></td>
-<td>The style for the widget. The style contains the colors the widget should be 
- drawn in for each state along with graphics contexts used to draw with and the font 
- to use for text.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition">GtkRequisition</a> <em class="structfield"><code>requisition</code></em>;</span></p></td>
-<td>The widget's desired size.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="GtkWidget.html#GtkAllocation" title="struct GtkAllocation">GtkAllocation</a> <em class="structfield"><code>allocation</code></em>;</span></p></td>
-<td>The widget's allocated size.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a
-href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
->GdkWindow</a> *<em class="structfield"><code>window</code></em>;</span></p></td>
-<td>The widget's window or its parent window if it does not have a window. (Which 
- will be indicated by the <a class="link" href="GtkWidget.html#GTK-NO-WINDOW:CAPS"><span class="type">GTK_NO_WINDOW</span></a> flag being set).
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *<em class="structfield"><code>parent</code></em>;</span></p></td>
-<td>
-
-</td>
-</tr>
-</tbody>
-</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1930,13 +1899,13 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <div class="refsect2" lang="en">
 <a name="GtkSelectionData"></a><h3>GtkSelectionData</h3>
 <pre class="programlisting">typedef struct {
-  GdkAtom	selection;
-  GdkAtom	target;
-  GdkAtom	type;
-  gint		format;
-  guchar       *data;
-  gint		length;
-  GdkDisplay   *display;
+  GdkAtom       GSEAL (selection);
+  GdkAtom       GSEAL (target);
+  GdkAtom       GSEAL (type);
+  gint          GSEAL (format);
+  guchar       *GSEAL (data);
+  gint          GSEAL (length);
+  GdkDisplay   *GSEAL (display);
 } GtkSelectionData;
 </pre>
 <p>
@@ -2183,7 +2152,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
                                                          ...);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_widget_set</code> is deprecated and should not be used in newly-written code. Use <a
+<p><code class="literal">gtk_widget_set</code> has been deprecated since version 2.0 and should not be used in newly-written code. Use <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set"
 ><code class="function">g_object_set()</code></a> instead.</p>
 </div>
@@ -3429,7 +3398,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> height);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_widget_set_usize</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-set-size-request" title="gtk_widget_set_size_request ()"><code class="function">gtk_widget_set_size_request()</code></a> instead.</p>
+<p><code class="literal">gtk_widget_set_usize</code> has been deprecated since version 2.2 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-set-size-request" title="gtk_widget_set_size_request ()"><code class="function">gtk_widget_set_size_request()</code></a> instead.</p>
 </div>
 <p>
 Sets the minimum size of a widget; that is, the widget's size
@@ -5240,7 +5209,7 @@ Here is a simple example:
 <pre class="programlisting">void                gtk_widget_queue_clear              (<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_widget_queue_clear</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-queue-draw" title="gtk_widget_queue_draw ()"><code class="function">gtk_widget_queue_draw()</code></a> instead.</p>
+<p><code class="literal">gtk_widget_queue_clear</code> has been deprecated since version 2.2 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-queue-draw" title="gtk_widget_queue_draw ()"><code class="function">gtk_widget_queue_draw()</code></a> instead.</p>
 </div>
 <p>
 This function does the same as <a class="link" href="GtkWidget.html#gtk-widget-queue-draw" title="gtk_widget_queue_draw ()"><code class="function">gtk_widget_queue_draw()</code></a>.</p>
@@ -5274,7 +5243,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> height);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_widget_queue_clear_area</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-queue-draw-area" title="gtk_widget_queue_draw_area ()"><code class="function">gtk_widget_queue_draw_area()</code></a> instead.</p>
+<p><code class="literal">gtk_widget_queue_clear_area</code> has been deprecated since version 2.2 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-queue-draw-area" title="gtk_widget_queue_draw_area ()"><code class="function">gtk_widget_queue_draw_area()</code></a> instead.</p>
 </div>
 <p>
 This function is no longer different from
@@ -7878,6 +7847,22 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <p>Allowed values: &gt;= -1</p>
 <p>Default value: -1</p>
 </div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkWidget--window"></a><h3>The <code class="literal">"window"</code> property</h3>
+<pre class="programlisting">  "window"                   <a
+href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
+>GdkWindow</a>*            : Read</pre>
+<p>
+The widget's window if it is realized, <a
+href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
+><code class="literal">NULL</code></a> otherwise.</p>
+<p>
+
+</p>
+<p>Since  2.14
+</p>
+</div>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkWidget.style-property-details"></a><h2>Style Property Details</h2>
@@ -9537,10 +9522,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> to stop other handlers from being invoked for the event. <a
+<td>%TRUE to stop other handlers from being invoked for the event. <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 ><code class="literal">FALSE</code></a> to propagate the event further.
 
@@ -10957,10 +10939,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> to stop other handlers from being invoked for the event. <a
+<td>%TRUE to stop other handlers from being invoked for the event. <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 ><code class="literal">FALSE</code></a> to propagate the event further.
 
@@ -11485,6 +11464,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

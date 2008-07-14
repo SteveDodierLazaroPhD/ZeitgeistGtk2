@@ -39,7 +39,7 @@
 
 #include "gdkinternals.h"
 
-#include <config.h>
+#include "config.h"
 
 #define GDK_TYPE_GC_X11              (_gdk_gc_x11_get_type ())
 #define GDK_GC_X11(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), GDK_TYPE_GC_X11, GdkGCX11))
@@ -127,6 +127,14 @@ void _gdk_window_move_resize_child (GdkWindow     *window,
 void _gdk_window_process_expose    (GdkWindow     *window,
                                     gulong         serial,
                                     GdkRectangle  *area);
+
+void _gdk_x11_window_scroll        (GdkWindow       *window,
+                                    gint             dx,
+                                    gint             dy);
+void _gdk_x11_window_move_region   (GdkWindow       *window,
+                                    const GdkRegion *region,
+                                    gint             dx,
+                                    gint             dy);
 
 void     _gdk_selection_window_destroyed   (GdkWindow            *window);
 gboolean _gdk_selection_filter_clear_event (XSelectionClearEvent *event);

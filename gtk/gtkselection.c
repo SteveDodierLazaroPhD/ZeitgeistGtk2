@@ -51,7 +51,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <stdarg.h>
 #include <string.h>
 #include "gdk.h"
@@ -1109,6 +1109,92 @@ gtk_selection_convert (GtkWidget *widget,
   return TRUE;
 }
 
+/**
+ * gtk_selection_data_get_target:
+ * @selection_data: a pointer to a #GtkSelectionData structure.
+ *
+ * Retrieves the target of the selection.
+ *
+ * Since: 2.14
+ **/
+GdkAtom
+gtk_selection_data_get_target (GtkSelectionData *selection_data)
+{
+  g_return_val_if_fail (selection_data != NULL, 0);
+
+  return selection_data->target;
+}
+
+/**
+ * gtk_selection_data_get_data_type:
+ * @selection_data: a pointer to a #GtkSelectionData structure.
+ *
+ * Retrieves the data type of the selection.
+ *
+ * Since: 2.14
+ **/
+GdkAtom
+gtk_selection_data_get_data_type (GtkSelectionData *selection_data)
+{
+  g_return_val_if_fail (selection_data != NULL, 0);
+
+  return selection_data->type;
+}
+
+/**
+ * gtk_selection_data_get_format:
+ * @selection_data: a pointer to a #GtkSelectionData structure.
+ *
+ * Retrieves the format of the selection.
+ *
+ * Since: 2.14
+ **/
+gint
+gtk_selection_data_get_format (GtkSelectionData *selection_data)
+{
+  g_return_val_if_fail (selection_data != NULL, 0);
+
+  return selection_data->format;
+}
+
+/**
+ * gtk_selection_data_get_data:
+ * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @length: an integer to be filled in, or %NULL
+ *
+ * Retrieves the raw data of the selection.
+ *
+ * If @length is not %NULL it is filled with the length of data.
+ *
+ * Since: 2.14
+ **/
+const guchar*
+gtk_selection_data_get_data (GtkSelectionData *selection_data,
+                             guint	      *length)
+{
+  g_return_val_if_fail (selection_data != NULL, NULL);
+
+  if (length)
+      *length = selection_data->length;
+
+  return selection_data->data;
+}
+
+/**
+ * gtk_selection_data_get_display:
+ * @selection_data: a pointer to a #GtkSelectionData structure.
+ *
+ * Retrieves the display of the selection.
+ *
+ * Since: 2.14
+ **/
+GdkDisplay *
+gtk_selection_data_get_display (GtkSelectionData *selection_data)
+{
+  g_return_val_if_fail (selection_data != NULL, NULL);
+
+  return selection_data->display;
+}
 
 /**
  * gtk_selection_data_set:

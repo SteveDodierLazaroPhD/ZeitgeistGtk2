@@ -1018,7 +1018,12 @@ gtk_recent_manager_remove_item (GtkRecentManager  *manager,
   g_bookmark_file_remove_item (priv->recent_items, uri, &remove_error);
   if (remove_error)
     {
-      g_propagate_error (error, remove_error);
+      g_error_free (remove_error);
+
+      g_set_error (error, GTK_RECENT_MANAGER_ERROR,
+		   GTK_RECENT_MANAGER_ERROR_NOT_FOUND,
+		   _("Unable to find an item with URI '%s'"),
+		   uri);
       
       return FALSE;
     }
@@ -1214,6 +1219,15 @@ gtk_recent_manager_move_item (GtkRecentManager  *recent_manager,
   
   priv = recent_manager->priv;
 
+  if (!priv->recent_items)
+    {
+      g_set_error (error, GTK_RECENT_MANAGER_ERROR,
+      		   GTK_RECENT_MANAGER_ERROR_NOT_FOUND,
+      		   _("Unable to find an item with URI '%s'"),
+      		   uri);
+      return FALSE;
+    }
+
   if (!g_bookmark_file_has_item (priv->recent_items, uri))
     {
       g_set_error (error, GTK_RECENT_MANAGER_ERROR,
@@ -1229,7 +1243,12 @@ gtk_recent_manager_move_item (GtkRecentManager  *recent_manager,
                                    &move_error);
   if (move_error)
     {
-      g_propagate_error (error, move_error);
+      g_error_free (move_error);
+
+      g_set_error (error, GTK_RECENT_MANAGER_ERROR,
+      		   GTK_RECENT_MANAGER_ERROR_NOT_FOUND,
+      		   _("Unable to find an item with URI '%s'"),
+      		   uri);
       return FALSE;
     }
   
@@ -1862,52 +1881,31 @@ get_icon_for_mime_type (const char *mime_type,
 			gint        pixel_size)
 {
   GtkIconTheme *icon_theme;
-  const char *separator;
-  GString *icon_name;
+  char *content_type;
+  GIcon *icon;
+  GtkIconInfo *info;
   GdkPixbuf *pixbuf;
-
-  separator = strchr (mime_type, '/');
-  if (!separator)
-    return NULL;
 
   icon_theme = gtk_icon_theme_get_default ();
 
-  /* try with the three icon name variants for MIME types */
+  content_type = g_content_type_from_mime_type (mime_type);
 
-  /* canonicalize MIME type: foo/x-bar -> foo-x-bar */
-  icon_name = g_string_new (NULL);
-  g_string_append_len (icon_name, mime_type, separator - mime_type);
-  g_string_append_c (icon_name, '-');
-  g_string_append (icon_name, separator + 1);
-  pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name->str,
-                                     pixel_size,
-                                     0,
-                                     NULL);
-  g_string_free (icon_name, TRUE);
-  if (pixbuf)
-    return pixbuf;
+  if (!content_type)
+    return NULL;
 
-  /* canonicalize MIME type, and prepend "gnome-mime-" */
-  icon_name = g_string_new ("gnome-mime-");
-  g_string_append_len (icon_name, mime_type, separator - mime_type);
-  g_string_append_c (icon_name, '-');
-  g_string_append (icon_name, separator + 1);
-  pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name->str,
-                                     pixel_size,
-                                     0,
-                                     NULL);
-  g_string_free (icon_name, TRUE);
-  if (pixbuf)
-    return pixbuf;
+  icon = g_content_type_get_icon (content_type);
+  info = gtk_icon_theme_lookup_by_gicon (icon_theme, 
+                                         icon, 
+                                         pixel_size, 
+                                         GTK_ICON_LOOKUP_USE_BUILTIN);
+  g_free (content_type);
+  g_object_unref (icon);
 
-  /* try the MIME family icon */
-  icon_name = g_string_new ("gnome-mime-");
-  g_string_append_len (icon_name, mime_type, separator - mime_type);
-  pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name->str,
-                                     pixel_size,
-                                     0,
-                                     NULL);
-  g_string_free (icon_name, TRUE);
+  if (!info)
+    return NULL;
+
+  pixbuf = gtk_icon_info_load_icon (info, NULL);
+  gtk_icon_info_free (info);
 
   return pixbuf;
 }

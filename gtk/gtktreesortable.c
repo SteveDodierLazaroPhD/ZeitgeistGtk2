@@ -18,7 +18,7 @@
  */
 
 
-#include <config.h>
+#include "config.h"
 #include "gtktreesortable.h"
 #include "gtkmarshalers.h"
 #include "gtkintl.h"
@@ -165,7 +165,7 @@ gtk_tree_sortable_set_sort_func (GtkTreeSortable        *sortable,
 				 gint                    sort_column_id,
 				 GtkTreeIterCompareFunc  sort_func,
 				 gpointer                user_data,
-				 GtkDestroyNotify        destroy)
+				 GDestroyNotify          destroy)
 {
   GtkTreeSortableIface *iface;
 
@@ -202,7 +202,7 @@ void
 gtk_tree_sortable_set_default_sort_func (GtkTreeSortable        *sortable,
 					 GtkTreeIterCompareFunc  sort_func,
 					 gpointer                user_data,
-					 GtkDestroyNotify        destroy)
+					 GDestroyNotify          destroy)
 {
   GtkTreeSortableIface *iface;
 

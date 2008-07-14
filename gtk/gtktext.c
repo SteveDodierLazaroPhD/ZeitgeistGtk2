@@ -24,14 +24,18 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#undef GDK_DISABLE_DEPRECATED
-#undef GTK_DISABLE_DEPRECATED
+#include "config.h"
 
-#include <config.h>
 #include <ctype.h>
 #include <string.h>
+
+#undef GDK_DISABLE_DEPRECATED
+
 #include "gdk/gdkkeysyms.h"
 #include "gdk/gdki18n.h"
+
+#undef GTK_DISABLE_DEPRECATED
+
 #include "gtkmain.h"
 #include "gtkmarshalers.h"
 #include "gtkselection.h"
@@ -43,6 +47,7 @@
 #include "line-arrow.xbm"
 #include "gtkprivate.h"
 #include "gtkintl.h"
+
 #include "gtkalias.h"
 
 
@@ -704,7 +709,7 @@ gtk_text_new (GtkAdjustment *hadj,
   if (vadj)
     g_return_val_if_fail (GTK_IS_ADJUSTMENT (vadj), NULL);
 
-  text = gtk_widget_new (GTK_TYPE_TEXT,
+  text = g_object_new (GTK_TYPE_TEXT,
 			 "hadjustment", hadj,
 			 "vadjustment", vadj,
 			 NULL);
@@ -791,13 +796,13 @@ gtk_text_set_adjustments (GtkText       *text,
   if (text->hadj && (text->hadj != hadj))
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (text->hadj), text);
-      gtk_object_unref (GTK_OBJECT (text->hadj));
+      g_object_unref (text->hadj);
     }
   
   if (text->vadj && (text->vadj != vadj))
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (text->vadj), text);
-      gtk_object_unref (GTK_OBJECT (text->vadj));
+      g_object_unref (text->vadj);
     }
   
   g_object_freeze_notify (G_OBJECT (text));
@@ -1169,13 +1174,13 @@ gtk_text_destroy (GtkObject *object)
   if (text->hadj)
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (text->hadj), text);
-      gtk_object_unref (GTK_OBJECT (text->hadj));
+      g_object_unref (text->hadj);
       text->hadj = NULL;
     }
   if (text->vadj)
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (text->vadj), text);
-      gtk_object_unref (GTK_OBJECT (text->vadj));
+      g_object_unref (text->vadj);
       text->vadj = NULL;
     }
 

@@ -23,7 +23,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <math.h>
 #include <string.h>
 #include "gtklabel.h"
@@ -3041,8 +3041,6 @@ void
 gtk_label_set_text_with_mnemonic (GtkLabel    *label,
 				  const gchar *str)
 {
-  guint last_keyval;
-  
   g_return_if_fail (GTK_IS_LABEL (label));
   g_return_if_fail (str != NULL);
 
@@ -3943,7 +3941,9 @@ gtk_label_get_layout_offsets (GtkLabel *label,
                               gint     *y)
 {
   g_return_if_fail (GTK_IS_LABEL (label));
-  
+
+  gtk_label_ensure_layout (label);
+
   get_layout_location (label, x, y);
 }
 

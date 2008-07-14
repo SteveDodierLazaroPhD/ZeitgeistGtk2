@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-General.html" title="Main loop and Events">
 <link rel="next" href="gtk-Accelerator-Maps.html" title="Accelerator Maps">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,13 +69,17 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-Accelerator-Maps.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#gtk-Keyboard-Accelerators.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#gtk-Keyboard-Accelerators.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#gtk-Keyboard-Accelerators.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#gtk-Keyboard-Accelerators.signals" class="shortcut">Signals</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#gtk-Keyboard-Accelerators.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#gtk-Keyboard-Accelerators.description" class="shortcut">Description</a>
+                 | 
+                <a href="#gtk-Keyboard-Accelerators.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#gtk-Keyboard-Accelerators.properties" class="shortcut">Properties</a>
+                 | 
+                <a href="#gtk-Keyboard-Accelerators.signals" class="shortcut">Signals</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gtk-Keyboard-Accelerators"></a><div class="titlepage"></div>
@@ -252,6 +256,17 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 >GObject</a>
    +----GtkAccelGroup
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="gtk-Keyboard-Accelerators.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup--is-locked" title='The "is-locked" property'>is-locked</a>"                <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read
+  "<a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup--modifier-mask" title='The "modifier-mask" property'>modifier-mask</a>"            <a
+href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a>       : Read
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -718,6 +733,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> accel_mods);</pre>
 <p>
+Finds the first accelerator in <em class="parameter"><code>accel_group</code></em> 
+that matches <em class="parameter"><code>accel_key</code></em> and <em class="parameter"><code>accel_mods</code></em>, and
+activates it.</p>
+<p>
 
 </p>
 <div class="variablelist"><table border="0">
@@ -725,34 +744,39 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>accel_group</code></em> :</span></p></td>
-<td>
+<td>   a <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="type">GtkAccelGroup</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>accel_quark</code></em> :</span></p></td>
-<td>
+<td>   the quark for the accelerator name
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>acceleratable</code></em> :</span></p></td>
-<td>
+<td> the <a
+href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
+><span class="type">GObject</span></a>, usually a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>, on which
+                to activate the accelerator.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>accel_key</code></em> :</span></p></td>
-<td>
+<td>     accelerator keyval from a key event
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>accel_mods</code></em> :</span></p></td>
-<td>
+<td>    keyboard state mask from a key event
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-
-
+<td>       <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the accelerator was handled, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a> otherwise
 </td>
 </tr>
 </tbody>
@@ -853,11 +877,7 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
 <p>
 Finds the first accelerator in any <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="type">GtkAccelGroup</span></a> attached
 to <em class="parameter"><code>object</code></em> that matches <em class="parameter"><code>accel_key</code></em> and <em class="parameter"><code>accel_mods</code></em>, and
-activates that accelerator.
-If an accelerator was activated and handled this keypress, <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a>
-is returned.</p>
+activates that accelerator.</p>
 <p>
 
 </p>
@@ -1210,6 +1230,26 @@ Gets the value set by <a class="link" href="gtk-Keyboard-Accelerators.html#gtk-a
 </div>
 </div>
 <div class="refsect1" lang="en">
+<a name="gtk-Keyboard-Accelerators.property-details"></a><h2>Property Details</h2>
+<div class="refsect2" lang="en">
+<a name="GtkAccelGroup--is-locked"></a><h3>The <code class="literal">"is-locked"</code> property</h3>
+<pre class="programlisting">  "is-locked"                <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read</pre>
+<p>Is the accel group locked.</p>
+<p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkAccelGroup--modifier-mask"></a><h3>The <code class="literal">"modifier-mask"</code> property</h3>
+<pre class="programlisting">  "modifier-mask"            <a
+href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
+>GdkModifierType</a>       : Read</pre>
+<p>Modifier Mask.</p>
+<p>Default value: GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK|GDK_SUPER_MASK|GDK_HYPER_MASK|GDK_META_MASK</p>
+</div>
+</div>
+<div class="refsect1" lang="en">
 <a name="gtk-Keyboard-Accelerators.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
 <a name="GtkAccelGroup-accel-activate"></a><h3>The <code class="literal">"accel-activate"</code> signal</h3>
@@ -1341,6 +1381,6 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GClosure"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

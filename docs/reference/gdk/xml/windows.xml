@@ -1082,17 +1082,17 @@ Attributes to use for a newly-created window.
 </varlistentry>
 <varlistentry>
 <term><link linkend="GdkWindowClass">GdkWindowClass</link>&nbsp;<structfield>wclass</structfield>;</term>
-<listitem><simpara><link linkend="GDK-INPUT-OUTPUT:CAPS"><type>GDK_INPUT_OUTPUT</type></link> (normal window) or <link linkend="GDK-INPUT-ONLY:CAPS"><type>GDK_INPUT_ONLY</type></link> (invisible window that receives events)
+<listitem><simpara>#GDK_INPUT_OUTPUT (normal window) or <link linkend="GDK-INPUT-ONLY:CAPS"><type>GDK_INPUT_ONLY</type></link> (invisible window that receives events)
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><link linkend="GdkVisual">GdkVisual</link>&nbsp;*<structfield>visual</structfield>;</term>
-<listitem><simpara><link linkend="GdkVisual"><type>GdkVisual</type></link> for window
+<listitem><simpara>#GdkVisual for window
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
 <term><link linkend="GdkColormap">GdkColormap</link>&nbsp;*<structfield>colormap</structfield>;</term>
-<listitem><simpara><link linkend="GdkColormap"><type>GdkColormap</type></link> for window
+<listitem><simpara>#GdkColormap for window
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
@@ -1117,7 +1117,7 @@ Attributes to use for a newly-created window.
 </varlistentry>
 <varlistentry>
 <term><link linkend="gboolean">gboolean</link>&nbsp;<structfield>override_redirect</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to bypass the window manager
+<listitem><simpara>%TRUE to bypass the window manager
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
@@ -2792,9 +2792,6 @@ buggy. On servers without the shape extension, this function
 will do nothing.
 </para>
 <para>
-On the Win32 platform the functionality is always present.
-</para>
-<para>
 This function works on both toplevel and child windows.</para>
 <para>
 
@@ -2834,9 +2831,6 @@ widely available on most common platforms, but not available on
 very old X servers, and occasionally the implementation will be
 buggy. On servers without the shape extension, this function
 will do nothing.
-</para>
-<para>
-On the Win32 platform, this functionality is always present.
 </para>
 <para>
 This function works on both toplevel and child windows.</para>
@@ -3135,12 +3129,15 @@ See also <link linkend="gdk-window-set-back-pixmap"><function>gdk_window_set_bac
                                                          <link linkend="GdkPixmap">GdkPixmap</link> *pixmap,
                                                          <link linkend="gboolean">gboolean</link> parent_relative);</programlisting>
 <para>
-Sets the background pixmap of <parameter>window</parameter>. May also be used to set a background of
-"None" on <parameter>window</parameter>, by setting a background pixmap of <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
-A background pixmap will be tiled, positioning the first tile at the origin of
-<parameter>window</parameter>, or if <parameter>parent_relative</parameter> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, the tiling will be done based on the
-origin of the parent window (useful to align tiles in a parent with tiles
-in a child).
+Sets the background pixmap of <parameter>window</parameter>. May also be used to set a
+background of "None" on <parameter>window</parameter>, by setting a background pixmap
+of <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
+</para>
+<para>
+A background pixmap will be tiled, positioning the first tile at
+the origin of <parameter>window</parameter>, or if <parameter>parent_relative</parameter> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, the tiling
+will be done based on the origin of the parent window (useful to
+align tiles in a parent with tiles in a child).
 </para>
 <para>
 A background pixmap of <link linkend="NULL:CAPS"><literal>NULL</literal></link> means that the window will have no
@@ -3163,7 +3160,8 @@ when the window is obscured then exposed, and when you call
 <listitem><simpara> a <link linkend="GdkPixmap"><type>GdkPixmap</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>parent_relative</parameter>&nbsp;:</term>
-<listitem><simpara> whether the tiling origin is at the origin of <parameter>window</parameter>'s parent
+<listitem><simpara> whether the tiling origin is at the origin of
+  <parameter>window</parameter>'s parent
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GDK-PARENT-RELATIVE:CAPS" role="macro">
@@ -3248,9 +3246,9 @@ position from the most recent configure event.
 </para>
 <para>
 <note>
-If <parameter>window</parameter> is not a toplevel, it is <emphasis>much</emphasis> better 
-to call <link linkend="gdk-window-get-position"><function>gdk_window_get_position()</function></link> and <link linkend="gdk-drawable-get-size"><function>gdk_drawable_get_size()</function></link> instead, 
-because it avoids the roundtrip to the X server and because 
+If <parameter>window</parameter> is not a toplevel, it is <emphasis>much</emphasis> better
+to call <link linkend="gdk-window-get-position"><function>gdk_window_get_position()</function></link> and <link linkend="gdk-drawable-get-size"><function>gdk_drawable_get_size()</function></link> instead,
+because it avoids the roundtrip to the X server and because
 <link linkend="gdk-drawable-get-size"><function>gdk_drawable_get_size()</function></link> supports the full 32-bit coordinate space,
 whereas <link linkend="gdk-window-get-geometry"><function>gdk_window_get_geometry()</function></link> is restricted to the 16-bit
 coordinates of X11.
@@ -4354,9 +4352,9 @@ see <link linkend="gdk-display-set-pointer-hooks"><function>gdk_display_set_poin
 <para>
 
 </para></refsect2>
-<refsect2 id="gdk-window-redirect-to-drawable" role="function">
+<refsect2 id="gdk-window-redirect-to-drawable" role="function" condition="since:2.14.">
 <title>gdk_window_redirect_to_drawable ()</title>
-<indexterm zone="gdk-window-redirect-to-drawable"><primary>gdk_window_redirect_to_drawable</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_redirect_to_drawable     (<link linkend="GdkWindow">GdkWindow</link> *window,
+<indexterm zone="gdk-window-redirect-to-drawable" role="2.14."><primary>gdk_window_redirect_to_drawable</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_redirect_to_drawable     (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkDrawable">GdkDrawable</link> *drawable,
                                                          <link linkend="gint">gint</link> src_x,
                                                          <link linkend="gint">gint</link> src_y,
@@ -4371,8 +4369,9 @@ window in the rectangle specified by <parameter>src_x</parameter>, <parameter>sr
 <parameter>dest_x</parameter>, <parameter>dest_y</parameter>.
 </para>
 <para>
-Only drawing between <link linkend="gdk-window-begin-paint-region"><function>gdk_window_begin_paint_region()</function></link> and
-<link linkend="gdk-window-end-paint"><function>gdk_window_end_paint()</function></link> is redirected.
+Only drawing between <link linkend="gdk-window-begin-paint-region"><function>gdk_window_begin_paint_region()</function></link> or
+<link linkend="gdk-window-begin-paint-rect"><function>gdk_window_begin_paint_rect()</function></link> and <link linkend="gdk-window-end-paint"><function>gdk_window_end_paint()</function></link> is
+redirected.
 </para>
 <para>
 Redirection is active until <link linkend="gdk-window-remove-redirection"><function>gdk_window_remove_redirection()</function></link>
@@ -4390,37 +4389,30 @@ redirection.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>drawable</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GdkDrawable"><type>GdkDrawable</type></link>
-src_x: x position in <parameter>window</parameter>
-src_y: y position in <parameter>window</parameter>
-dest_x: x position in <parameter>drawable</parameter>
-dest_y: y position in <parameter>drawable</parameter>
-width: width of redirection
-height: height of redirection
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>src_x</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> x position in <parameter>window</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>src_y</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> y position in <parameter>window</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>dest_x</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> x position in <parameter>drawable</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>dest_y</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> y position in <parameter>drawable</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>width</parameter>&nbsp;:</term>
-<listitem><simpara>
+<listitem><simpara> width of redirection
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>height</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-
+<listitem><simpara> height of redirection
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="gdk-window-remove-redirection" role="function">
+</variablelist><para role="since">Since  2.14.
+</para></refsect2>
+<refsect2 id="gdk-window-remove-redirection" role="function" condition="since:2.14">
 <title>gdk_window_remove_redirection ()</title>
-<indexterm zone="gdk-window-remove-redirection"><primary>gdk_window_remove_redirection</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_remove_redirection       (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<indexterm zone="gdk-window-remove-redirection" role="2.14"><primary>gdk_window_remove_redirection</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_remove_redirection       (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
 <para>
 Removes and active redirection started by
 <link linkend="gdk-window-redirect-to-drawable"><function>gdk_window_redirect_to_drawable()</function></link>.</para>
@@ -4430,7 +4422,8 @@ Removes and active redirection started by
 <varlistentry><term><parameter>window</parameter>&nbsp;:</term>
 <listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 
 </refsect1>
 

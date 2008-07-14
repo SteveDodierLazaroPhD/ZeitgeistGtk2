@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -209,7 +209,7 @@ gail_image_get_image_size (AtkImage *image,
     {	
       GdkPixmap *pixmap;
       gtk_image_get_pixmap(gtk_image, &pixmap, NULL);
-      gdk_window_get_size (pixmap, width, height);
+      gdk_drawable_get_size (pixmap, width, height);
       break;
     }
     case GTK_IMAGE_PIXBUF:

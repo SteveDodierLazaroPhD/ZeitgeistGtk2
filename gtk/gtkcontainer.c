@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
@@ -819,6 +819,7 @@ gtk_container_add_with_properties (GtkContainer *container,
   g_return_if_fail (GTK_IS_CONTAINER (container));
   g_return_if_fail (GTK_IS_WIDGET (widget));
   g_return_if_fail (widget->parent == NULL);
+  g_return_if_fail (widget->parent == container);
 
   g_object_ref (container);
   g_object_ref (widget);
@@ -1145,7 +1146,8 @@ gtk_container_add (GtkContainer *container,
     {
       g_warning ("Attempting to add a widget with type %s to a container of "
                  "type %s, but the widget is already inside a container of type %s, "
-                 "the GTK+ FAQ at http://www.gtk.org/faq/ explains how to reparent a widget.",
+                 "the GTK+ FAQ at http://library.gnome.org/devel/gtk-faq/stable/ "
+                 "explains how to reparent a widget.",
                  g_type_name (G_OBJECT_TYPE (widget)),
                  g_type_name (G_OBJECT_TYPE (container)),
                  g_type_name (G_OBJECT_TYPE (widget->parent)));
@@ -1512,7 +1514,7 @@ gtk_container_foreach_full (GtkContainer       *container,
 			    GtkCallback         callback,
 			    GtkCallbackMarshal  marshal,
 			    gpointer            callback_data,
-			    GtkDestroyNotify    notify)
+			    GDestroyNotify      notify)
 {
   g_return_if_fail (GTK_IS_CONTAINER (container));
 
@@ -1557,6 +1559,25 @@ gtk_container_set_focus_child (GtkContainer *container,
     g_return_if_fail (GTK_IS_WIDGET (widget));
 
   g_signal_emit (container, container_signals[SET_FOCUS_CHILD], 0, widget);
+}
+
+/**
+ * gtk_container_get_focus_child:
+ * @container: a #GtkContainer
+ *
+ * Returns the current focus child widget inside @container.
+ *
+ * Returns: The child widget which has the focus
+ *          inside @container, or %NULL if none is set.
+ *
+ * Since: 2.14
+ **/
+GtkWidget *
+gtk_container_get_focus_child (GtkContainer *container)
+{
+  g_return_val_if_fail (GTK_IS_CONTAINER (container), NULL);
+
+  return container->focus_child;
 }
 
 /**

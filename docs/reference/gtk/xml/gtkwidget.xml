@@ -403,6 +403,7 @@ GtkWidget implements
   &quot;<link linkend="GtkWidget--tooltip-text">tooltip-text</link>&quot;             <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkWidget--visible">visible</link>&quot;                  <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkWidget--width-request">width-request</link>&quot;            <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkWidget--window">window</link>&quot;                   <link linkend="GdkWindow">GdkWindow</link>*            : Read
 </synopsis>
 </refsect1>
 <refsect1 id="GtkWidget.style-properties" role="style_properties">
@@ -573,60 +574,30 @@ internal child "accessible" of a <structname>GtkWidget</structname>.
    *  along with graphics contexts used to draw with and
    *  the font to use for text.
    */
-  GtkStyle *style;
+  GtkStyle *GSEAL (style);
   
   /* The widget's desired size.
    */
-  GtkRequisition requisition;
+  GtkRequisition GSEAL (requisition);
   
   /* The widget's allocated size.
    */
-  GtkAllocation allocation;
+  GtkAllocation GSEAL (allocation);
   
   /* The widget's window or its parent window if it does
    *  not have a window. (Which will be indicated by the
    *  GTK_NO_WINDOW flag being set).
    */
-  GdkWindow *window;
+  GdkWindow *GSEAL (window);
   
   /* The widget's parent.
    */
-  GtkWidget *parent;
+  GtkWidget *GSEAL (parent);
 } GtkWidget;
 </programlisting>
 <para>
 
-</para><variablelist role="struct">
-<varlistentry>
-<term><link linkend="GtkStyle">GtkStyle</link>&nbsp;*<structfield>style</structfield>;</term>
-<listitem><simpara>The style for the widget. The style contains the colors the widget should be 
- drawn in for each state along with graphics contexts used to draw with and the font 
- to use for text.
-</simpara></listitem>
-</varlistentry>
-<varlistentry>
-<term><link linkend="GtkRequisition">GtkRequisition</link>&nbsp;<structfield>requisition</structfield>;</term>
-<listitem><simpara>The widget's desired size.
-</simpara></listitem>
-</varlistentry>
-<varlistentry>
-<term><link linkend="GtkAllocation">GtkAllocation</link>&nbsp;<structfield>allocation</structfield>;</term>
-<listitem><simpara>The widget's allocated size.
-</simpara></listitem>
-</varlistentry>
-<varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
-<listitem><simpara>The widget's window or its parent window if it does not have a window. (Which 
- will be indicated by the <link linkend="GTK-NO-WINDOW:CAPS"><type>GTK_NO_WINDOW</type></link> flag being set).
-</simpara></listitem>
-</varlistentry>
-<varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>parent</structfield>;</term>
-<listitem><simpara>
-
-</simpara></listitem>
-</varlistentry>
-</variablelist></refsect2>
+</para></refsect2>
 <refsect2 id="GtkWidgetClass" role="struct">
 <title>GtkWidgetClass</title>
 <indexterm zone="GtkWidgetClass"><primary>GtkWidgetClass</primary></indexterm><programlisting>typedef struct {
@@ -1261,13 +1232,13 @@ widget by its parent. It is a subregion of its parents allocation. See
 <refsect2 id="GtkSelectionData" role="struct">
 <title>GtkSelectionData</title>
 <indexterm zone="GtkSelectionData"><primary>GtkSelectionData</primary></indexterm><programlisting>typedef struct {
-  GdkAtom	selection;
-  GdkAtom	target;
-  GdkAtom	type;
-  gint		format;
-  guchar       *data;
-  gint		length;
-  GdkDisplay   *display;
+  GdkAtom       GSEAL (selection);
+  GdkAtom       GSEAL (target);
+  GdkAtom       GSEAL (type);
+  gint          GSEAL (format);
+  guchar       *GSEAL (data);
+  gint          GSEAL (length);
+  GdkDisplay   *GSEAL (display);
 } GtkSelectionData;
 </programlisting>
 <para>
@@ -1417,12 +1388,12 @@ of the same dialog.</para>
 <listitem><simpara> address of a variable that contains <parameter>widget</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-widget-set" role="function" condition="deprecated:Use g_object_set() instead.">
+<refsect2 id="gtk-widget-set" role="function" condition="deprecated:2.0: Use g_object_set() instead.">
 <title>gtk_widget_set ()</title>
 <indexterm zone="gtk-widget-set" role="deprecated"><primary>gtk_widget_set</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_set                      (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          const <link linkend="gchar">gchar</link> *first_property_name,
                                                          ...);</programlisting>
-<warning><para><literal>gtk_widget_set</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-set"><function>g_object_set()</function></link> instead.</para></warning>
+<warning><para><literal>gtk_widget_set</literal> has been deprecated since version 2.0 and should not be used in newly-written code. Use <link linkend="g-object-set"><function>g_object_set()</function></link> instead.</para></warning>
 <para>
 Precursor of <link linkend="g-object-set"><function>g_object_set()</function></link>.</para>
 <para>
@@ -2205,12 +2176,12 @@ is not honoured unless both <parameter>x</parameter> and <parameter>y</parameter
 <listitem><simpara> y position; -1 to unset y; -2 to leave y unchanged
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-widget-set-usize" role="function" condition="deprecated:Use gtk_widget_set_size_request() instead.">
+<refsect2 id="gtk-widget-set-usize" role="function" condition="deprecated:2.2: Use gtk_widget_set_size_request() instead.">
 <title>gtk_widget_set_usize ()</title>
 <indexterm zone="gtk-widget-set-usize" role="deprecated"><primary>gtk_widget_set_usize</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_set_usize                (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="gint">gint</link> width,
                                                          <link linkend="gint">gint</link> height);</programlisting>
-<warning><para><literal>gtk_widget_set_usize</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-widget-set-size-request"><function>gtk_widget_set_size_request()</function></link> instead.</para></warning>
+<warning><para><literal>gtk_widget_set_usize</literal> has been deprecated since version 2.2 and should not be used in newly-written code. Use <link linkend="gtk-widget-set-size-request"><function>gtk_widget_set_size_request()</function></link> instead.</para></warning>
 <para>
 Sets the minimum size of a widget; that is, the widget's size
 request will be <parameter>width</parameter> by <parameter>height</parameter>. You can use this function to
@@ -3296,10 +3267,10 @@ Here is a simple example:
 <para>
 
 </para></refsect2>
-<refsect2 id="gtk-widget-queue-clear" role="function" condition="deprecated:Use gtk_widget_queue_draw() instead.">
+<refsect2 id="gtk-widget-queue-clear" role="function" condition="deprecated:2.2: Use gtk_widget_queue_draw() instead.">
 <title>gtk_widget_queue_clear ()</title>
 <indexterm zone="gtk-widget-queue-clear" role="deprecated"><primary>gtk_widget_queue_clear</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_queue_clear              (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
-<warning><para><literal>gtk_widget_queue_clear</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-widget-queue-draw"><function>gtk_widget_queue_draw()</function></link> instead.</para></warning>
+<warning><para><literal>gtk_widget_queue_clear</literal> has been deprecated since version 2.2 and should not be used in newly-written code. Use <link linkend="gtk-widget-queue-draw"><function>gtk_widget_queue_draw()</function></link> instead.</para></warning>
 <para>
 This function does the same as <link linkend="gtk-widget-queue-draw"><function>gtk_widget_queue_draw()</function></link>.</para>
 <para>
@@ -3309,14 +3280,14 @@ This function does the same as <link linkend="gtk-widget-queue-draw"><function>g
 <listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-widget-queue-clear-area" role="function" condition="deprecated:Use gtk_widget_queue_draw_area() instead.">
+<refsect2 id="gtk-widget-queue-clear-area" role="function" condition="deprecated:2.2: Use gtk_widget_queue_draw_area() instead.">
 <title>gtk_widget_queue_clear_area ()</title>
 <indexterm zone="gtk-widget-queue-clear-area" role="deprecated"><primary>gtk_widget_queue_clear_area</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_queue_clear_area         (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="gint">gint</link> x,
                                                          <link linkend="gint">gint</link> y,
                                                          <link linkend="gint">gint</link> width,
                                                          <link linkend="gint">gint</link> height);</programlisting>
-<warning><para><literal>gtk_widget_queue_clear_area</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-widget-queue-draw-area"><function>gtk_widget_queue_draw_area()</function></link> instead.</para></warning>
+<warning><para><literal>gtk_widget_queue_clear_area</literal> has been deprecated since version 2.2 and should not be used in newly-written code. Use <link linkend="gtk-widget-queue-draw-area"><function>gtk_widget_queue_draw_area()</function></link> instead.</para></warning>
 <para>
 This function is no longer different from
 <link linkend="gtk-widget-queue-draw-area"><function>gtk_widget_queue_draw_area()</function></link>, though it once was. Now it just calls
@@ -4847,6 +4818,15 @@ will automatically be set to <link linkend="TRUE:CAPS"><literal>TRUE</literal></
 <para>Override for width request of the widget, or -1 if natural request should be used.</para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
 </refsect2>
+<refsect2 id="GtkWidget--window"><title>The <literal>&quot;window&quot;</literal> property</title>
+<indexterm zone="GtkWidget--window" role="2.14"><primary>GtkWidget:window</primary></indexterm><programlisting>  &quot;window&quot;                   <link linkend="GdkWindow">GdkWindow</link>*            : Read</programlisting>
+<para>
+The widget's window if it is realized, <link linkend="NULL:CAPS"><literal>NULL</literal></link> otherwise.</para>
+<para>
+
+</para><para>Since  2.14
+</para>
+</refsect2>
 
 </refsect1>
 <refsect1 id="GtkWidget.style-property-details" role="style_properties_details">
@@ -5747,7 +5727,7 @@ to enable the <link linkend="GDK-EXPOSURE-MASK:CAPS"><type>GDK_EXPOSURE_MASK</ty
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkWidget-focus-in-event"><title>The <literal>&quot;focus-in-event&quot;</literal> signal</title>
@@ -6410,7 +6390,7 @@ the <parameter>widget</parameter>'s window has lost ownership of a selection.</p
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkWidget-selection-received"><title>The <literal>&quot;selection-received&quot;</literal> signal</title>

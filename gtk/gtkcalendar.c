@@ -29,7 +29,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
@@ -441,7 +441,7 @@ gtk_calendar_class_init (GtkCalendarClass *class)
                                    g_param_spec_int ("year",
 						     P_("Year"),
 						     P_("The selected year"),
-						     0, G_MAXINT, 0,
+						     0, G_MAXINT >> 8, 0,
 						     GTK_PARAM_READWRITE));
 
   /**

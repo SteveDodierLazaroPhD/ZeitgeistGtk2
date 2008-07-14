@@ -24,8 +24,6 @@
 #ifndef __GTK_ENTRY_COMPLETION_H__
 #define __GTK_ENTRY_COMPLETION_H__
 
-#include <glib-object.h>
-
 #include <gtk/gtktreemodel.h>
 #include <gtk/gtkliststore.h>
 #include <gtk/gtktreeviewcolumn.h>
@@ -55,7 +53,7 @@ struct _GtkEntryCompletion
   GObject parent_instance;
 
   /*< private >*/
-  GtkEntryCompletionPrivate *priv;
+  GtkEntryCompletionPrivate *GSEAL (priv);
 };
 
 struct _GtkEntryCompletionClass

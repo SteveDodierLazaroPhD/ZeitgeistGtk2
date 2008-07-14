@@ -24,7 +24,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <glib.h>
 #include "gdkconfig.h"
@@ -127,14 +127,14 @@ struct _GtkQuitFunction
   GtkCallbackMarshal marshal;
   GtkFunction function;
   gpointer data;
-  GtkDestroyNotify destroy;
+  GDestroyNotify destroy;
 };
 
 struct _GtkClosure
 {
   GtkCallbackMarshal marshal;
   gpointer data;
-  GtkDestroyNotify destroy;
+  GDestroyNotify destroy;
 };
 
 struct _GtkKeySnooperData
@@ -682,8 +682,11 @@ do_post_parse_initialization (int    *argc,
       g_warning ("Whoever translated default:LTR did so wrongly.\n");
   }
 
-  gtk_type_init (0);
- _gtk_accel_map_init ();  
+  /* do what the call to gtk_type_init() used to do */
+  g_type_init ();
+  gtk_object_get_type ();
+
+  _gtk_accel_map_init ();
   _gtk_rc_init ();
 
   /* Set the 'initialized' flag.
@@ -734,7 +737,7 @@ post_parse_hook (GOptionContext *context,
 	  g_set_error (error, 
 		       G_OPTION_ERROR, 
 		       G_OPTION_ERROR_FAILED,
-		       "cannot open display: %s",
+		       _("Cannot open display: %s"),
 		       display_name ? display_name : "" );
 	  
 	  return FALSE;
@@ -1867,7 +1870,7 @@ gtk_quit_add_full (guint		main_level,
 		   GtkFunction		function,
 		   GtkCallbackMarshal	marshal,
 		   gpointer		data,
-		   GtkDestroyNotify	destroy)
+		   GDestroyNotify	destroy)
 {
   static guint quit_id = 1;
   GtkQuitFunction *quitf;
@@ -1985,7 +1988,7 @@ gtk_timeout_add_full (guint32		 interval,
 		      GtkFunction	 function,
 		      GtkCallbackMarshal marshal,
 		      gpointer		 data,
-		      GtkDestroyNotify	 destroy)
+		      GDestroyNotify	 destroy)
 {
   if (marshal)
     {
@@ -2024,7 +2027,7 @@ gtk_idle_add_full (gint			priority,
 		   GtkFunction		function,
 		   GtkCallbackMarshal	marshal,
 		   gpointer		data,
-		   GtkDestroyNotify	destroy)
+		   GDestroyNotify	destroy)
 {
   if (marshal)
     {
@@ -2078,7 +2081,7 @@ gtk_input_add_full (gint		source,
 		    GdkInputFunction	function,
 		    GtkCallbackMarshal	marshal,
 		    gpointer		data,
-		    GtkDestroyNotify	destroy)
+		    GDestroyNotify	destroy)
 {
   if (marshal)
     {
@@ -2093,7 +2096,7 @@ gtk_input_add_full (gint		source,
 				 condition,
 				 (GdkInputFunction) gtk_invoke_input,
 				 closure,
-				 (GdkDestroyNotify) gtk_destroy_closure);
+				 (GDestroyNotify) gtk_destroy_closure);
     }
   else
     return gdk_input_add_full (source, condition, function, data, destroy);

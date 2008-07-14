@@ -46,7 +46,7 @@ struct _GtkComboBox
   GtkBin parent_instance;
 
   /*< private >*/
-  GtkComboBoxPrivate *priv;
+  GtkComboBoxPrivate *GSEAL (priv);
 };
 
 struct _GtkComboBoxClass
@@ -112,7 +112,7 @@ GtkTreeViewRowSeparatorFunc gtk_combo_box_get_row_separator_func (GtkComboBox   
 void                        gtk_combo_box_set_row_separator_func (GtkComboBox                *combo_box,
 								  GtkTreeViewRowSeparatorFunc func,
 								  gpointer                    data,
-								  GtkDestroyNotify            destroy);
+								  GDestroyNotify              destroy);
 
 /* convenience -- text */
 GtkWidget    *gtk_combo_box_new_text         (void);

@@ -844,7 +844,7 @@ static void
 dialog_to_print_settings (GtkPrintOperation *op,
 			  LPPRINTDLGEXW printdlgex)
 {
-  int i;
+  guint i;
   GtkPrintSettings *settings;
 
   settings = gtk_print_settings_new ();
@@ -1483,10 +1483,10 @@ _gtk_print_operation_platform_backend_run_dialog (GtkPrintOperation *op,
   if (!printdlgex)
     {
       result = GTK_PRINT_OPERATION_RESULT_ERROR;
-      g_set_error (&priv->error,
-		   GTK_PRINT_ERROR,
-		   GTK_PRINT_ERROR_NOMEM,
-		   _("Not enough free memory"));
+      g_set_error_literal (&priv->error,
+                           GTK_PRINT_ERROR,
+                           GTK_PRINT_ERROR_NOMEM,
+                           _("Not enough free memory"));
       goto out;
     }      
 
@@ -1506,10 +1506,10 @@ _gtk_print_operation_platform_backend_run_dialog (GtkPrintOperation *op,
   if (!page_ranges) 
     {
       result = GTK_PRINT_OPERATION_RESULT_ERROR;
-      g_set_error (&priv->error,
-		   GTK_PRINT_ERROR,
-		   GTK_PRINT_ERROR_NOMEM,
-		   _("Not enough free memory"));
+      g_set_error_literal (&priv->error,
+                           GTK_PRINT_ERROR,
+                           GTK_PRINT_ERROR_NOMEM,
+                           _("Not enough free memory"));
       goto out;
     }
 
@@ -1554,30 +1554,30 @@ _gtk_print_operation_platform_backend_run_dialog (GtkPrintOperation *op,
     {
       result = GTK_PRINT_OPERATION_RESULT_ERROR;
       if (hResult == E_OUTOFMEMORY)
-	g_set_error (&priv->error,
-		     GTK_PRINT_ERROR,
-		     GTK_PRINT_ERROR_NOMEM,
-		     _("Not enough free memory"));
+	g_set_error_literal (&priv->error,
+                             GTK_PRINT_ERROR,
+                             GTK_PRINT_ERROR_NOMEM,
+                             _("Not enough free memory"));
       else if (hResult == E_INVALIDARG)
-	g_set_error (&priv->error,
-		     GTK_PRINT_ERROR,
-		     GTK_PRINT_ERROR_INTERNAL_ERROR,
-		     _("Invalid argument to PrintDlgEx"));
+	g_set_error_literal (&priv->error,
+                             GTK_PRINT_ERROR,
+                             GTK_PRINT_ERROR_INTERNAL_ERROR,
+                             _("Invalid argument to PrintDlgEx"));
       else if (hResult == E_POINTER)
-	g_set_error (&priv->error,
-		     GTK_PRINT_ERROR,
-		     GTK_PRINT_ERROR_INTERNAL_ERROR,
-		     _("Invalid pointer to PrintDlgEx"));
+	g_set_error_literal (&priv->error,
+                             GTK_PRINT_ERROR,
+                             GTK_PRINT_ERROR_INTERNAL_ERROR,
+                             _("Invalid pointer to PrintDlgEx"));
       else if (hResult == E_HANDLE)
-	g_set_error (&priv->error,
-		     GTK_PRINT_ERROR,
-		     GTK_PRINT_ERROR_INTERNAL_ERROR,
-		     _("Invalid handle to PrintDlgEx"));
+	g_set_error_literal (&priv->error,
+                             GTK_PRINT_ERROR,
+                             GTK_PRINT_ERROR_INTERNAL_ERROR,
+                             _("Invalid handle to PrintDlgEx"));
       else /* E_FAIL */
-	g_set_error (&priv->error,
-		     GTK_PRINT_ERROR,
-		     GTK_PRINT_ERROR_GENERAL,
-		     _("Unspecified error"));
+	g_set_error_literal (&priv->error,
+                             GTK_PRINT_ERROR,
+                             GTK_PRINT_ERROR_GENERAL,
+                             _("Unspecified error"));
       goto out;
     }
 
@@ -1626,10 +1626,10 @@ _gtk_print_operation_platform_backend_run_dialog (GtkPrintOperation *op,
       if (job_id <= 0) 
 	{
 	  result = GTK_PRINT_OPERATION_RESULT_ERROR;
-	  g_set_error (&priv->error,
-		       GTK_PRINT_ERROR,
-		       GTK_PRINT_ERROR_GENERAL,
-		     _("Error from StartDoc"));
+	  g_set_error_literal (&priv->error,
+                               GTK_PRINT_ERROR,
+                               GTK_PRINT_ERROR_GENERAL,
+                               _("Error from StartDoc"));
 	  *do_print = FALSE;
 	  cairo_surface_destroy (op_win32->surface);
 	  op_win32->surface = NULL;
@@ -1710,7 +1710,7 @@ _gtk_print_operation_platform_backend_preview_end_page (GtkPrintOperation *op,
 {
   HDC dc;
 
-  cairo_surface_show_page (cr);
+  cairo_surface_show_page (surface);
 
   /* TODO: Enhanced metafiles don't support multiple pages.
    */
@@ -1867,9 +1867,6 @@ gtk_print_run_page_setup_dialog (GtkWindow        *parent,
 	devmode_to_settings (settings, pagesetupdlg->hDevMode);
     }
   
-  if (free_settings)
-    g_object_unref (settings);
-
   if (res)
     {
       gtk_page_setup_set_orientation (page_setup, 
@@ -1906,6 +1903,9 @@ gtk_print_run_page_setup_dialog (GtkWindow        *parent,
 					unit);
     }
   
+  if (free_settings)
+    g_object_unref (settings);
+
   return page_setup;
 }
 

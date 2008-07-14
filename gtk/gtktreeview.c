@@ -18,7 +18,7 @@
  */
 
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -11496,7 +11496,7 @@ void
 gtk_tree_view_set_column_drag_function (GtkTreeView               *tree_view,
 					GtkTreeViewColumnDropFunc  func,
 					gpointer                   user_data,
-					GtkDestroyNotify           destroy)
+					GDestroyNotify             destroy)
 {
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
@@ -13779,7 +13779,7 @@ void
 gtk_tree_view_set_destroy_count_func (GtkTreeView             *tree_view,
 				      GtkTreeDestroyCountFunc  func,
 				      gpointer                 data,
-				      GtkDestroyNotify         destroy)
+				      GDestroyNotify           destroy)
 {
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
@@ -13917,7 +13917,7 @@ void
 gtk_tree_view_set_search_equal_func (GtkTreeView                *tree_view,
 				     GtkTreeViewSearchEqualFunc  search_equal_func,
 				     gpointer                    search_user_data,
-				     GtkDestroyNotify            search_destroy)
+				     GDestroyNotify              search_destroy)
 {
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
   g_return_if_fail (search_equal_func != NULL);
@@ -14982,10 +14982,10 @@ gtk_tree_view_get_row_separator_func (GtkTreeView *tree_view)
  * Since: 2.6
  **/
 void
-gtk_tree_view_set_row_separator_func (GtkTreeView                *tree_view,
-				      GtkTreeViewRowSeparatorFunc func,
-				      gpointer                    data,
-				      GtkDestroyNotify            destroy)
+gtk_tree_view_set_row_separator_func (GtkTreeView                 *tree_view,
+				      GtkTreeViewRowSeparatorFunc  func,
+				      gpointer                     data,
+				      GDestroyNotify               destroy)
 {
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
@@ -15088,7 +15088,7 @@ gtk_tree_view_set_grid_lines (GtkTreeView           *tree_view,
 	  !priv->grid_line_gc)
 	{
 	  gint line_width;
-	  guint8 *dash_list;
+	  gint8 *dash_list;
 
 	  gtk_widget_style_get (widget,
 				"grid-line-width", &line_width,
@@ -15174,7 +15174,7 @@ gtk_tree_view_set_enable_tree_lines (GtkTreeView *tree_view,
       if (enabled && !priv->tree_line_gc)
 	{
 	  gint line_width;
-	  guint8 *dash_list;
+	  gint8 *dash_list;
 	  gtk_widget_style_get (widget,
 				"tree-line-width", &line_width,
 				"tree-line-pattern", (gchar *)&dash_list,

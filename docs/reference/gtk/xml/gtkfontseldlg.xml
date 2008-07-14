@@ -97,42 +97,26 @@ name "font_selection". It also exposes the buttons with the names
 <refsect2 id="GtkFontSelectionDialog-struct" role="struct">
 <title>GtkFontSelectionDialog</title>
 <indexterm zone="GtkFontSelectionDialog-struct"><primary>GtkFontSelectionDialog</primary></indexterm><programlisting>typedef struct {
-  GtkWidget *ok_button;
-  GtkWidget *apply_button;
-  GtkWidget *cancel_button;
+  GtkWidget *GSEAL (ok_button);
+  GtkWidget *GSEAL (apply_button);
+  GtkWidget *GSEAL (cancel_button);
 } GtkFontSelectionDialog;
 </programlisting>
-<variablelist role="struct">
-<varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>ok_button</structfield>;</term>
-<listitem><simpara>The OK button of the dialog
-</simpara></listitem>
-</varlistentry>
-<varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>apply_button</structfield>;</term>
-<listitem><simpara>The Apply button of the dialog. This button is hidden
-by default but you can show/hide it
-</simpara></listitem>
-</varlistentry>
-<varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>cancel_button</structfield>;</term>
-<listitem><simpara>The Cancel button of the dialog
-
-</simpara></listitem>
-</varlistentry>
-</variablelist></refsect2>
+</refsect2>
 <refsect2 id="gtk-font-selection-dialog-new" role="function">
 <title>gtk_font_selection_dialog_new ()</title>
 <indexterm zone="gtk-font-selection-dialog-new"><primary>gtk_font_selection_dialog_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_font_selection_dialog_new       (const <link linkend="gchar">gchar</link> *title);</programlisting>
 <para>
+The <parameter>title</parameter> is used to set the title of the <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>
+returned. This <link linkend="GtkDialog"><type>GtkDialog</type></link> is specifically catered with widgets for
+selecting a font from those installed.</para>
+<para>
 Creates a new <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>.
 </para><variablelist role="params">
 <varlistentry><term><parameter>title</parameter>&nbsp;:</term>
-<listitem><simpara>the title of the dialog box.
+<listitem><simpara> a pointer to a string
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a new <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-dialog-get-font" role="function" condition="deprecated:">
@@ -140,14 +124,15 @@ Creates a new <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialo
 <indexterm zone="gtk-font-selection-dialog-get-font" role="deprecated"><primary>gtk_font_selection_dialog_get_font</primary></indexterm><programlisting><link linkend="GdkFont">GdkFont</link>*            gtk_font_selection_dialog_get_font  (<link linkend="GtkFontSelectionDialog">GtkFontSelectionDialog</link> *fsd);</programlisting>
 <warning><para><literal>gtk_font_selection_dialog_get_font</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
+</para>
+<para>
 Gets the currently-selected font.
 </para><variablelist role="params">
 <varlistentry><term><parameter>fsd</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>.
+<listitem><simpara> a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the currently-selected font, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if no font is selected.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GdkFont"><type>GdkFont</type></link> from the <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link> for the
+currently selected font in the dialog.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-dialog-get-font-name" role="function">
@@ -176,17 +161,18 @@ is selected.  You must free this string with <link linkend="g-free"><function>g_
                                                         (<link linkend="GtkFontSelectionDialog">GtkFontSelectionDialog</link> *fsd,
                                                          const <link linkend="gchar">gchar</link> *fontname);</programlisting>
 <para>
+Sets the currently selected font.</para>
+<para>
 Sets the currently-selected font.
 </para><variablelist role="params">
 <varlistentry><term><parameter>fsd</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>.
+<listitem><simpara> a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>fontname</parameter>&nbsp;:</term>
-<listitem><simpara>a fontname.
+<listitem><simpara> a pointer to a string
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the font was found.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the font selected in <parameter>fsd</parameter> is now the
+<parameter>fontname</parameter> specified. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise. 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-dialog-get-preview-text" role="function">
@@ -194,15 +180,17 @@ Sets the currently-selected font.
 <indexterm zone="gtk-font-selection-dialog-get-preview-text"><primary>gtk_font_selection_dialog_get_preview_text</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_font_selection_dialog_get_preview_text
                                                         (<link linkend="GtkFontSelectionDialog">GtkFontSelectionDialog</link> *fsd);</programlisting>
 <para>
+The text returned is the preview text used to show how the selected
+font looks.</para>
+<para>
 Gets the text displayed in the preview area.
 </para><variablelist role="params">
 <varlistentry><term><parameter>fsd</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>.
+<listitem><simpara> a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the text displayed in the preview area. This string is owned
-   by the widget and should not be modified or freed.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> pointer to the preview text string. This string
+points to internally allocated storage in the widget and must not
+be freed, modified or stored. 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-dialog-set-preview-text" role="function">
@@ -211,15 +199,15 @@ Gets the text displayed in the preview area.
                                                         (<link linkend="GtkFontSelectionDialog">GtkFontSelectionDialog</link> *fsd,
                                                          const <link linkend="gchar">gchar</link> *text);</programlisting>
 <para>
+The <parameter>text</parameter> is used to show how the selected font looks.</para>
+<para>
 Sets the text displayed in the preview area.
 </para><variablelist role="params">
 <varlistentry><term><parameter>fsd</parameter>&nbsp;:</term>
-<listitem><simpara>a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>.
+<listitem><simpara> a <link linkend="GtkFontSelectionDialog"><type>GtkFontSelectionDialog</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>text</parameter>&nbsp;:</term>
-<listitem><simpara>the text to display in the preview area.
-
-
+<listitem><simpara> a pointer to a string
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

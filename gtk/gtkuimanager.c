@@ -28,7 +28,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <string.h>
 #include "gtkbuildable.h"
@@ -43,6 +43,7 @@
 #include "gtktearoffmenuitem.h"
 #include "gtktoolbar.h"
 #include "gtkuimanager.h"
+#include "gtkwindow.h"
 #include "gtkprivate.h"
 #include "gtkalias.h"
 

@@ -25,13 +25,14 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#undef GDK_DISABLE_DEPRECATED
-#undef GTK_DISABLE_DEPRECATED
-
-#include <config.h>
+#include "config.h"
 
 #include <stdlib.h>
 #include <string.h>
+
+#undef GDK_DISABLE_DEPRECATED
+
+#include <gdk/gdkkeysyms.h>
 
 #include "gtkmain.h"
 #include "gtkobject.h"
@@ -41,7 +42,7 @@
 #include "gtkdnd.h"
 #include "gtkmarshalers.h"
 #include "gtkintl.h"
-#include <gdk/gdkkeysyms.h>
+
 #include "gtkalias.h"
 
 /* length of button_actions array */
@@ -1158,7 +1159,7 @@ gtk_clist_set_hadjustment (GtkCList      *clist,
   if (clist->hadjustment)
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (clist->hadjustment), clist);
-      gtk_object_unref (GTK_OBJECT (clist->hadjustment));
+      g_object_unref (clist->hadjustment);
     }
 
   clist->hadjustment = adjustment;
@@ -1205,7 +1206,7 @@ gtk_clist_set_vadjustment (GtkCList      *clist,
   if (clist->vadjustment)
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (clist->vadjustment), clist);
-      gtk_object_unref (GTK_OBJECT (clist->vadjustment));
+      g_object_unref (clist->vadjustment);
     }
 
   clist->vadjustment = adjustment;
@@ -2594,7 +2595,7 @@ cell_size_request (GtkCList       *clist,
       requisition->width = logical_rect.width;
       requisition->height = logical_rect.height;
       
-      g_object_unref (G_OBJECT (layout));
+      g_object_unref (layout);
     }
   else
     {
@@ -2822,7 +2823,7 @@ real_remove_row (GtkCList *clist,
     clist->row_list = g_list_next (list);
   if (clist->row_list_end == list)
     clist->row_list_end = g_list_previous (list);
-  g_list_remove (list, clist_row);
+  list = g_list_remove (list, clist_row);
 
   if (row < ROW_FROM_YPIXEL (clist, 0))
     clist->voffset += clist->row_height + CELL_SPACING;
@@ -4380,13 +4381,13 @@ gtk_clist_destroy (GtkObject *object)
   if (clist->hadjustment)
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (clist->hadjustment), clist);
-      gtk_object_unref (GTK_OBJECT (clist->hadjustment));
+      g_object_unref (clist->hadjustment);
       clist->hadjustment = NULL;
     }
   if (clist->vadjustment)
     {
       gtk_signal_disconnect_by_data (GTK_OBJECT (clist->vadjustment), clist);
-      gtk_object_unref (GTK_OBJECT (clist->vadjustment));
+      g_object_unref (clist->vadjustment);
       clist->vadjustment = NULL;
     }
 
@@ -5848,7 +5849,7 @@ draw_row (GtkCList     *clist,
 			       offset,
 			       row_rectangle.y + row_center_offset + clist_row->cell[i].vertical,
 			       layout);
-              g_object_unref (G_OBJECT (layout));
+              g_object_unref (layout);
 	      gdk_gc_set_clip_rectangle (fg_gc, NULL);
 	    }
 	  break;

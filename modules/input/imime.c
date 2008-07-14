@@ -17,10 +17,10 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * $Id: imime.c 19902 2008-03-18 21:29:00Z tml $
+ * $Id: imime.c 20669 2008-06-22 14:28:52Z johan $
  */
 
-#include <config.h>
+#include "config.h"
 #include <string.h>
 
 #include "gtk/gtkintl.h"
