@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkPrinter">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkPrinter.top_of_page">GtkPrinter</refentrytitle>
@@ -31,6 +38,8 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-icon-name">gtk_printer_get_icon_name</link>           (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gint">gint</link>                <link linkend="gtk-printer-get-job-count">gtk_printer_get_job_count</link>           (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-is-active">gtk_printer_is_active</link>               (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-is-paused">gtk_printer_is_paused</link>               (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-is-accepting-jobs">gtk_printer_is_accepting_jobs</link>       (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-is-virtual">gtk_printer_is_virtual</link>              (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-is-default">gtk_printer_is_default</link>              (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-printer-accepts-ps">gtk_printer_accepts_ps</link>              (<link linkend="GtkPrinter">GtkPrinter</link> *printer);
@@ -71,6 +80,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-
 <refsect1 id="GtkPrinter.properties" role="properties">
 <title role="properties.title">Properties</title>
 <synopsis>
+  &quot;<link linkend="GtkPrinter--accepting-jobs">accepting-jobs</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read
   &quot;<link linkend="GtkPrinter--accepts-pdf">accepts-pdf</link>&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
   &quot;<link linkend="GtkPrinter--accepts-ps">accepts-ps</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only
   &quot;<link linkend="GtkPrinter--backend">backend</link>&quot;                  <link linkend="GtkPrintBackend">GtkPrintBackend</link>*      : Read / Write / Construct Only
@@ -79,6 +89,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-printer-get-
   &quot;<link linkend="GtkPrinter--job-count">job-count</link>&quot;                <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkPrinter--location">location</link>&quot;                 <link linkend="gchar">gchar</link>*                : Read
   &quot;<link linkend="GtkPrinter--name">name</link>&quot;                     <link linkend="gchar">gchar</link>*                : Read / Write / Construct Only
+  &quot;<link linkend="GtkPrinter--paused">paused</link>&quot;                   <link linkend="gboolean">gboolean</link>              : Read
   &quot;<link linkend="GtkPrinter--state-message">state-message</link>&quot;            <link linkend="gchar">gchar</link>*                : Read
 </synopsis>
 </refsect1>
@@ -278,6 +289,40 @@ accepts new jobs).</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
+<refsect2 id="gtk-printer-is-paused" role="function" condition="since:2.14">
+<title>gtk_printer_is_paused ()</title>
+<indexterm zone="gtk-printer-is-paused" role="2.14"><primary>gtk_printer_is_paused</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_printer_is_paused               (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
+<para>
+Returns whether the printer is currently paused.
+A paused printer still accepts jobs, but it is not
+printing them.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrinter"><type>GtkPrinter</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>printer</parameter> is paused
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-printer-is-accepting-jobs" role="function" condition="since:2.14">
+<title>gtk_printer_is_accepting_jobs ()</title>
+<indexterm zone="gtk-printer-is-accepting-jobs" role="2.14"><primary>gtk_printer_is_accepting_jobs</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_printer_is_accepting_jobs       (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
+<para>
+Returns whether the printer is accepting jobs</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>printer</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkPrinter"><type>GtkPrinter</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>printer</parameter> is accepting jobs
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-printer-is-virtual" role="function" condition="since:2.10">
 <title>gtk_printer_is_virtual ()</title>
 <indexterm zone="gtk-printer-is-virtual" role="2.10"><primary>gtk_printer_is_virtual</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_printer_is_virtual              (<link linkend="GtkPrinter">GtkPrinter</link> *printer);</programlisting>
@@ -472,7 +517,7 @@ a reference to it after the function has returned.
 <varlistentry><term><parameter>data</parameter>&nbsp;:</term>
 <listitem><simpara>user data passed to <link linkend="gtk-enumerate-printers"><function>gtk_enumerate_printers()</function></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE to stop the enumeration, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to continue
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop the enumeration, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to continue
 
 
 </simpara></listitem></varlistentry>
@@ -508,6 +553,16 @@ If <parameter>func</parameter> returns <link linkend="TRUE:CAPS"><literal>TRUE</
 </refsect1>
 <refsect1 id="GtkPrinter.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
+<refsect2 id="GtkPrinter--accepting-jobs"><title>The <literal>&quot;accepting-jobs&quot;</literal> property</title>
+<indexterm zone="GtkPrinter--accepting-jobs" role="2.14"><primary>GtkPrinter:accepting-jobs</primary></indexterm><programlisting>  &quot;accepting-jobs&quot;           <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<para>
+This property is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the printer is accepting jobs.</para>
+<para>
+
+</para><para>Default value: TRUE</para>
+<para>Since  2.14
+</para>
+</refsect2>
 <refsect2 id="GtkPrinter--accepts-pdf"><title>The <literal>&quot;accepts-pdf&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--accepts-pdf"><primary>GtkPrinter:accepts-pdf</primary></indexterm><programlisting>  &quot;accepts-pdf&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write / Construct Only</programlisting>
 <para>TRUE if this printer can accept PDF.</para><para>Default value: TRUE</para>
@@ -539,6 +594,18 @@ If <parameter>func</parameter> returns <link linkend="TRUE:CAPS"><literal>TRUE</
 <refsect2 id="GtkPrinter--name"><title>The <literal>&quot;name&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--name"><primary>GtkPrinter:name</primary></indexterm><programlisting>  &quot;name&quot;                     <link linkend="gchar">gchar</link>*                : Read / Write / Construct Only</programlisting>
 <para>Name of the printer.</para><para>Default value: ""</para>
+</refsect2>
+<refsect2 id="GtkPrinter--paused"><title>The <literal>&quot;paused&quot;</literal> property</title>
+<indexterm zone="GtkPrinter--paused" role="2.14"><primary>GtkPrinter:paused</primary></indexterm><programlisting>  &quot;paused&quot;                   <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<para>
+This property is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if this printer is paused. 
+A paused printer still accepts jobs, but it does 
+not print them.</para>
+<para>
+
+</para><para>Default value: FALSE</para>
+<para>Since  2.14
+</para>
 </refsect2>
 <refsect2 id="GtkPrinter--state-message"><title>The <literal>&quot;state-message&quot;</literal> property</title>
 <indexterm zone="GtkPrinter--state-message"><primary>GtkPrinter:state-message</primary></indexterm><programlisting>  &quot;state-message&quot;            <link linkend="gchar">gchar</link>*                : Read</programlisting>

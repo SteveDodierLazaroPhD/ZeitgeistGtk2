@@ -570,93 +570,103 @@ _gtk_file_chooser_default_class_init (GtkFileChooserDefaultClass *class)
   widget_class->size_allocate = gtk_file_chooser_default_size_allocate;
 
   signals[LOCATION_POPUP] =
-    _gtk_binding_signal_new (I_("location-popup"),
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (location_popup_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__STRING,
-			     G_TYPE_NONE, 1, G_TYPE_STRING);
+    g_signal_new_class_handler (I_("location-popup"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (location_popup_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__STRING,
+                                G_TYPE_NONE, 1, G_TYPE_STRING);
+
   signals[LOCATION_POPUP_ON_PASTE] =
-    _gtk_binding_signal_new ("location-popup-on-paste",
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (location_popup_on_paste_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("location-popup-on-paste"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (location_popup_on_paste_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[LOCATION_TOGGLE_POPUP] =
-    _gtk_binding_signal_new (I_("location-toggle-popup"),
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (location_toggle_popup_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("location-toggle-popup"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (location_toggle_popup_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[UP_FOLDER] =
-    _gtk_binding_signal_new (I_("up-folder"),
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (up_folder_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("up-folder"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (up_folder_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[DOWN_FOLDER] =
-    _gtk_binding_signal_new (I_("down-folder"),
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (down_folder_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("down-folder"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (down_folder_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[HOME_FOLDER] =
-    _gtk_binding_signal_new (I_("home-folder"),
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (home_folder_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("home-folder"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (home_folder_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[DESKTOP_FOLDER] =
-    _gtk_binding_signal_new (I_("desktop-folder"),
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (desktop_folder_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("desktop-folder"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (desktop_folder_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[QUICK_BOOKMARK] =
-    _gtk_binding_signal_new (I_("quick-bookmark"),
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (quick_bookmark_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__INT,
-			     G_TYPE_NONE, 1, G_TYPE_INT);
+    g_signal_new_class_handler (I_("quick-bookmark"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (quick_bookmark_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__INT,
+                                G_TYPE_NONE, 1, G_TYPE_INT);
+
   signals[SHOW_HIDDEN] =
-    _gtk_binding_signal_new ("show-hidden",
-			     G_OBJECT_CLASS_TYPE (class),
-			     G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-			     G_CALLBACK (show_hidden_handler),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("show-hidden"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (show_hidden_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[SEARCH_SHORTCUT] =
-    _gtk_binding_signal_new ("search-shortcut",
-                             G_OBJECT_CLASS_TYPE (class),
-                             G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-                             G_CALLBACK (search_shortcut_handler),
-                             NULL, NULL,
-                             _gtk_marshal_VOID__VOID,
-                             G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("search-shortcut"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (search_shortcut_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
   signals[RECENT_SHORTCUT] =
-    _gtk_binding_signal_new ("recent-shortcut",
-                             G_OBJECT_CLASS_TYPE (class),
-                             G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-                             G_CALLBACK (recent_shortcut_handler),
-                             NULL, NULL,
-                             _gtk_marshal_VOID__VOID,
-                             G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("recent-shortcut"),
+                                G_OBJECT_CLASS_TYPE (class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (recent_shortcut_handler),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
 
   binding_set = gtk_binding_set_by_class (class);
 
@@ -1621,37 +1631,42 @@ _gtk_file_chooser_label_for_file (GFile *file)
   uri = g_file_get_uri (file);
 
   start = strstr (uri, "://");
-  start += 3;
-  path = strchr (start, '/');
+  if (start)
+    {
+      start += 3;
+      path = strchr (start, '/');
+      if (path)
+        end = path;
+      else
+        {
+          end = uri + strlen (uri);
+          path = "/";
+        }
+
+      /* strip username */
+      p = strchr (start, '@');
+      if (p && p < end)
+        start = p + 1;
   
-  if (path)
-    end = path;
+      p = strchr (start, ':');
+      if (p && p < end)
+        end = p;
+  
+      host = g_strndup (start, end - start);
+  
+      /* Translators: the first string is a path and the second string 
+       * is a hostname. Nautilus and the panel contain the same string 
+       * to translate. 
+       */
+      label = g_strdup_printf (_("%1$s on %2$s"), path, host);
+  
+      g_free (host);
+    }
   else
     {
-      end = uri + strlen (uri);
-      path = "/";
-    }
-
-  /* strip username */
-  p = strchr (start, '@');
-  if (p && p < end)
-    {
-      start = p + 1;
+      label = g_strdup (uri);
     }
   
-  p = strchr (start, ':');
-  if (p && p < end)
-    end = p;
-  
-  host = g_strndup (start, end - start);
-
-  /* Translators: the first string is a path and the second string 
-   * is a hostname. Nautilus and the panel contain the same string 
-   * to translate. 
-   */
-  label = g_strdup_printf (_("%1$s on %2$s"), path, host);
-  
-  g_free (host);
   g_free (uri);
 
   return label;
@@ -3703,14 +3718,13 @@ shortcuts_build_popup_menu (GtkFileChooserDefault *impl)
 		    G_CALLBACK (rename_shortcut_cb), impl);
   gtk_widget_show (item);
   gtk_menu_shell_append (GTK_MENU_SHELL (impl->browse_shortcuts_popup_menu), item);
-
-  shortcuts_check_popup_sensitivity (impl);
 }
 
 static void
 shortcuts_update_popup_menu (GtkFileChooserDefault *impl)
 {
   shortcuts_build_popup_menu (impl);  
+  shortcuts_check_popup_sensitivity (impl);
 }
 
 static void

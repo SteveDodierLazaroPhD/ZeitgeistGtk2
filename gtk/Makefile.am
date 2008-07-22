@@ -380,7 +380,8 @@ gtk_private_h_sources =		\
 	gtktoggleactionprivate.h\
 	gtktreedatalist.h	\
 	gtktreeprivate.h	\
-	gtkwindow-decorate.h
+	gtkwindow-decorate.h	\
+	$(gtk_clipboard_dnd_h_sources)
 
 # GTK+ C sources to build the library from
 gtk_base_c_sources =            \
@@ -715,7 +716,8 @@ endif
 endif
 
 if USE_QUARTZ
-gtk_clipboard_dnd_c_sources = gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c gtkquartz.h
+gtk_clipboard_dnd_c_sources = gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c
+gtk_clipboard_dnd_h_sources = gtkquartz.h
 gtk_clipboard_dnd_c_sources_CFLAGS = "-xobjective-c"
 else
 gtk_clipboard_dnd_c_sources = gtkclipboard.c gtkdnd.c
@@ -1000,6 +1002,7 @@ STOCK_ICONS = \
 	stock-icons/16/gtk-preferences.png    		\
 	stock-icons/16/gtk-print.png  			\
 	stock-icons/16/gtk-print-error.png  		\
+	stock-icons/16/gtk-print-paused.png  		\
 	stock-icons/16/gtk-print-preview.png  		\
 	stock-icons/16/gtk-print-report.png  		\
 	stock-icons/16/gtk-print-warning.png  		\
@@ -1108,7 +1111,11 @@ STOCK_ICONS = \
 	stock-icons/24/gtk-paste.png  			\
 	stock-icons/24/gtk-preferences.png    		\
 	stock-icons/24/gtk-print.png  			\
+	stock-icons/24/gtk-print-error.png  		\
+	stock-icons/24/gtk-print-paused.png  		\
 	stock-icons/24/gtk-print-preview.png  		\
+	stock-icons/24/gtk-print-report.png  		\
+	stock-icons/24/gtk-print-warning.png  		\
 	stock-icons/24/gtk-properties.png     		\
 	stock-icons/24/gtk-quit.png   			\
 	stock-icons/24/gtk-redo-ltr.png       		\

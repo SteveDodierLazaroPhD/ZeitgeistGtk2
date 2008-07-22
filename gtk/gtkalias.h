@@ -988,15 +988,17 @@ extern __typeof (gtk_box_get_type) IA__gtk_box_get_type __attribute((visibility(
 extern __typeof (gtk_box_pack_end) IA__gtk_box_pack_end __attribute((visibility("hidden")));
 #define gtk_box_pack_end IA__gtk_box_pack_end
 
-extern __typeof (gtk_box_pack_end_defaults) IA__gtk_box_pack_end_defaults __attribute((visibility("hidden")));
-#define gtk_box_pack_end_defaults IA__gtk_box_pack_end_defaults
-
 extern __typeof (gtk_box_pack_start) IA__gtk_box_pack_start __attribute((visibility("hidden")));
 #define gtk_box_pack_start IA__gtk_box_pack_start
+
+#ifndef GTK_DISABLE_DEPRECATED
+extern __typeof (gtk_box_pack_end_defaults) IA__gtk_box_pack_end_defaults __attribute((visibility("hidden")));
+#define gtk_box_pack_end_defaults IA__gtk_box_pack_end_defaults
 
 extern __typeof (gtk_box_pack_start_defaults) IA__gtk_box_pack_start_defaults __attribute((visibility("hidden")));
 #define gtk_box_pack_start_defaults IA__gtk_box_pack_start_defaults
 
+#endif
 extern __typeof (gtk_box_query_child_packing) IA__gtk_box_query_child_packing __attribute((visibility("hidden")));
 #define gtk_box_query_child_packing IA__gtk_box_query_child_packing
 
@@ -1058,6 +1060,12 @@ extern __typeof (gtk_builder_add_from_file) IA__gtk_builder_add_from_file __attr
 
 extern __typeof (gtk_builder_add_from_string) IA__gtk_builder_add_from_string __attribute((visibility("hidden")));
 #define gtk_builder_add_from_string IA__gtk_builder_add_from_string
+
+extern __typeof (gtk_builder_add_objects_from_file) IA__gtk_builder_add_objects_from_file __attribute((visibility("hidden")));
+#define gtk_builder_add_objects_from_file IA__gtk_builder_add_objects_from_file
+
+extern __typeof (gtk_builder_add_objects_from_string) IA__gtk_builder_add_objects_from_string __attribute((visibility("hidden")));
+#define gtk_builder_add_objects_from_string IA__gtk_builder_add_objects_from_string
 
 extern __typeof (gtk_builder_error_quark) IA__gtk_builder_error_quark __attribute((visibility("hidden")));
 #define gtk_builder_error_quark IA__gtk_builder_error_quark
@@ -6426,6 +6434,12 @@ extern __typeof (gtk_printer_set_icon_name) IA__gtk_printer_set_icon_name __attr
 extern __typeof (gtk_printer_set_is_active) IA__gtk_printer_set_is_active __attribute((visibility("hidden")));
 #define gtk_printer_set_is_active IA__gtk_printer_set_is_active
 
+extern __typeof (gtk_printer_set_is_paused) IA__gtk_printer_set_is_paused __attribute((visibility("hidden")));
+#define gtk_printer_set_is_paused IA__gtk_printer_set_is_paused
+
+extern __typeof (gtk_printer_set_is_accepting_jobs) IA__gtk_printer_set_is_accepting_jobs __attribute((visibility("hidden")));
+#define gtk_printer_set_is_accepting_jobs IA__gtk_printer_set_is_accepting_jobs
+
 extern __typeof (gtk_printer_set_is_default) IA__gtk_printer_set_is_default __attribute((visibility("hidden")));
 #define gtk_printer_set_is_default IA__gtk_printer_set_is_default
 
@@ -6443,6 +6457,12 @@ extern __typeof (gtk_printer_set_state_message) IA__gtk_printer_set_state_messag
 
 extern __typeof (gtk_printer_is_active) IA__gtk_printer_is_active __attribute((visibility("hidden")));
 #define gtk_printer_is_active IA__gtk_printer_is_active
+
+extern __typeof (gtk_printer_is_paused) IA__gtk_printer_is_paused __attribute((visibility("hidden")));
+#define gtk_printer_is_paused IA__gtk_printer_is_paused
+
+extern __typeof (gtk_printer_is_accepting_jobs) IA__gtk_printer_is_accepting_jobs __attribute((visibility("hidden")));
+#define gtk_printer_is_accepting_jobs IA__gtk_printer_is_accepting_jobs
 
 extern __typeof (gtk_printer_is_new) IA__gtk_printer_is_new __attribute((visibility("hidden")));
 #define gtk_printer_is_new IA__gtk_printer_is_new

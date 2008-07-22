@@ -503,6 +503,7 @@ noinst_PROGRAMS = $(TEST_PROGS)	\
 	testtreefocus			\
 	testtreeflow			\
 	testtreecolumns			\
+	testtreecolumnsizing		\
 	testtreesort			\
 	treestoretest			\
 	testxinerama			\
@@ -568,6 +569,7 @@ testtreeview_DEPENDENCIES = $(DEPS)
 testtreefocus_DEPENDENCIES = $(DEPS)
 testtreeflow_DEPENDENCIES = $(DEPS)
 testtreecolumns_DEPENDENCIES = $(DEPS)
+testtreecolumnsizing_DEPENDENCIES = $(DEPS)
 testtreesort_DEPENDENCIES = $(DEPS)
 treestoretest_DEPENDENCIES = $(TEST_DEPS)
 testxinerama_DEPENDENCIES = $(TEST_DEPS)
@@ -623,6 +625,7 @@ testtreeview_LDADD = $(LDADDS)
 testtreefocus_LDADD = $(LDADDS)
 testtreeflow_LDADD = $(LDADDS)
 testtreecolumns_LDADD = $(LDADDS)
+testtreecolumnsizing_LDADD = $(LDADDS)
 testtreesort_LDADD = $(LDADDS)
 testtext_LDADD = $(LDADDS)
 treestoretest_LDADD = $(LDADDS)
@@ -799,6 +802,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreefocus$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreeflow$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreecolumnsizing$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testxinerama$(EXEEXT) \
@@ -857,6 +861,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreefocus$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreeflow$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreecolumnsizing$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testxinerama$(EXEEXT) \
@@ -917,6 +922,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreefocus$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreeflow$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreecolumnsizing$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testxinerama$(EXEEXT) \
@@ -976,6 +982,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreefocus$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreeflow$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreecolumns$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreecolumnsizing$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testxinerama$(EXEEXT) \
@@ -1187,6 +1194,9 @@ testtooltips_LDFLAGS =
 testtreecolumns_SOURCES = testtreecolumns.c
 testtreecolumns_OBJECTS = testtreecolumns.$(OBJEXT)
 testtreecolumns_LDFLAGS =
+testtreecolumnsizing_SOURCES = testtreecolumnsizing.c
+testtreecolumnsizing_OBJECTS = testtreecolumnsizing.$(OBJEXT)
+testtreecolumnsizing_LDFLAGS =
 am_testtreeedit_OBJECTS = testtreeedit.$(OBJEXT)
 testtreeedit_OBJECTS = $(am_testtreeedit_OBJECTS)
 testtreeedit_LDFLAGS =
@@ -1264,6 +1274,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/testtext.Po ./$(DEPDIR)/testtoolbar.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testtooltips.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testtreecolumns.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testtreecolumnsizing.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testtreeedit.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testtreeflow.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testtreefocus.Po \
@@ -1306,13 +1317,13 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) pixbuf-lowmem.c \
 	$(testsocket_child_SOURCES) $(testspinbutton_SOURCES) \
 	$(teststatusicon_SOURCES) $(testtext_SOURCES) \
 	$(testtoolbar_SOURCES) $(testtooltips_SOURCES) \
-	testtreecolumns.c $(testtreeedit_SOURCES) testtreeflow.c \
-	testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c \
-	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
-	testxinerama.c treestoretest.c
+	testtreecolumns.c testtreecolumnsizing.c \
+	$(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c \
+	$(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) \
+	$(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl \
 	Makefile.am
-SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 
 all: all-am
 
@@ -1486,6 +1497,9 @@ testtooltips$(EXEEXT): $(testtooltips_OBJECTS) $(testtooltips_DEPENDENCIES)
 testtreecolumns$(EXEEXT): $(testtreecolumns_OBJECTS) $(testtreecolumns_DEPENDENCIES) 
 	@rm -f testtreecolumns$(EXEEXT)
 	$(LINK) $(testtreecolumns_LDFLAGS) $(testtreecolumns_OBJECTS) $(testtreecolumns_LDADD) $(LIBS)
+testtreecolumnsizing$(EXEEXT): $(testtreecolumnsizing_OBJECTS) $(testtreecolumnsizing_DEPENDENCIES) 
+	@rm -f testtreecolumnsizing$(EXEEXT)
+	$(LINK) $(testtreecolumnsizing_LDFLAGS) $(testtreecolumnsizing_OBJECTS) $(testtreecolumnsizing_LDADD) $(LIBS)
 testtreeedit$(EXEEXT): $(testtreeedit_OBJECTS) $(testtreeedit_DEPENDENCIES) 
 	@rm -f testtreeedit$(EXEEXT)
 	$(LINK) $(testtreeedit_LDFLAGS) $(testtreeedit_OBJECTS) $(testtreeedit_LDADD) $(LIBS)
@@ -1575,6 +1589,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtoolbar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtooltips.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtreecolumns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtreecolumnsizing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtreeedit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtreeflow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtreefocus.Po@am__quote@

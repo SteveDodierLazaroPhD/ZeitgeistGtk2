@@ -1,3 +1,501 @@
+2008-07-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.13.5 ===
+
+2008-07-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktestutils.c:
+	* gtk/gtkscalebutton.c:
+	* gtk/gtkmessagedialog.c:
+	* gtk/gtkmenu.c:
+	* gtk/gtkcontainer.c:
+	* gtk/gtkcolorseldialog.c:
+	* gtk/gtkaccelgroup.c:
+	* gtk/gtkentry.c:
+	* gtk/gtkfontsel.c: Fix some doc problems.
+
+2008-07-21  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkbox.c (gtk_box_add): use gtk_box_pack_start() instead of
+	the deprecated gtk_box_pack_start_defaults().
+
+	* gtk/gtkbindings.c (gtk_binding_entry_add_signal)
+	(gtk_binding_parse_signal): use _gtk_binding_entry_add_signall()
+	instead of the deprecated gtk_binding_entry_add_signall().
+
+2008-07-21  Emmanuele Bassi  <ebassi@gnome.org>
+
+	* gtk/gtkrecentmanager.c:
+	(recent_app_info_new), (recent_app_info_free): Use GSlice to
+	allocate the application data for recently used resources;
+	do not call time() to initialize the timestamp, as it will
+	be overwritten anyway later. (#535223, Michael Meeks)
+
+2008-07-21  Kristian Rietveld  <kris@gtk.org>
+
+	Bug 543989 - Crash in gtk_tree_view_size_allocate_columns
+
+	* gtk/gtktreeview.c (gtk_tree_view_size_allocate_columns): check
+	for width_changed != NULL.  (Patch by Josselin Mouette).
+
+2008-07-21  Michael Natterer  <mitch@imendio.com>
+
+	Bug 442042 – GtkScaleButton is too limited
+
+	* tests/testvolumebutton.c: forgot to commit code that tests
+	toggling the button's orientation. Also fixes the file's coding
+	style.
+
+2008-07-21  Cody Russell  <bratsche@gnome.org>
+
+	Bug 153567 – Repaint glitches in widgets
+
+	* gdk/win32/gdkevents-win32.c: Set a sync timer when
+	we receive WM_SYNCPAINT, and RedrawWindow() once
+	the timer expires.
+
+2008-07-21  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktoolbar.c (gtk_toolbar_class_init): use the simpler
+	g_signal_override_class_handler() instead of
+	g_signal_override_class_closure().
+
+	* gtk/gtktextview.c (gtk_text_view_class_init): ditto.
+
+	(gtk_text_view_compat_move_focus): chain up using
+	g_signal_chain_from_overridden_handler() instead of the generic
+	g_signal_chain_from_overridden() which needs manual fiddling with
+	millions of GValues.
+
+2008-07-21  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkuimanager.c: remove redundant include.
+
+2008-07-21  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkbindings.[ch]: remove _gtk_binding_signal_new().
+
+	* gtk/gtkfilechooserdefault.c
+	* gtk/gtkmenu.c
+	* gtk/gtkmenushell.c
+	* gtk/gtkscalebutton.c
+	* gtk/gtktextview.c
+	* gtk/gtktoolbar.c
+	* gtk/gtkwidget.c: use g_signal_new_class_handler() instead. Add
+	some missing I_() to the signal names.
+
+2008-07-21  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkspinbutton.c: remove g_return_if_fail() from private
+	functions and virtual function implementations. Some minor
+	cleanups.
+
+2008-07-20  Andre Klapper  <a9016009@gmx.de>
+
+	Bug 543915 - translation issues
+
+	* modules/printbackends/cups/gtkprintbackendcups.c:
+	Add translator comments for several strings.
+
+2008-07-20  Sven Herzberg  <sven@imendio.com>
+
+	reviewed by: Richard Hult
+
+	Fixes #543868: GdkPixmap is upside down on quartz
+
+	* gdk/quartz/gdkdrawable-quartz.c (gdk_quartz_draw_drawable): flip the
+	coordinate space from GTK+ orientation to CoreGraphics orientation
+	before calling CoreGraphics code
+	* gdk/quartz/gdkgc-quartz.c (gdk_quartz_draw_tiled_pattern): drop the
+	coordinate space flipping (we always get it right, now)
+	* gdk/quartz/gdkpixmap-quartz.c
+	(gdk_pixmap_impl_quartz_get_context): flip the coordinate space when
+	creating the CGContextRef
+
+2008-07-20  Sven Herzberg  <sven@imendio.com>
+
+	reviewed by: Richard Hult
+
+	Extracted the CGContextRef creation into a virtual function of
+	GdkDrawableImplQuartz; implement get_context() for GdkPixmap and
+	GdkWindow
+
+	* gdk/quartz/gdkdrawable-quartz.c
+	(gdk_quartz_drawable_get_context): dropped the different
+	implementations; forward to the virtual function now
+	* gdk/quartz/gdkdrawable-quartz.h: added the virtual function
+	* gdk/quartz/gdkpixmap-quartz.c
+	(gdk_pixmap_impl_quartz_get_context),
+	(gdk_pixmap_impl_quartz_class_init): implemented get_context()
+	* gdk/quartz/gdkwindow-quartz.c
+	(gdk_window_impl_quartz_get_context),
+	(gdk_window_impl_quartz_class_init): implemented get_context()
+
+2007-08-19  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2007-08-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 543545 – GtkAssistant crashes when gtk_widget_hide() is called
+	inside "apply" signal handler
+
+	* gtk/gtkassistant.c: Don't emit signals with extra parameters.
+	Patch by Antti Kaijanmäki
+
+2007-08-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 543217 – GTK application crashed with directfb backend
+
+	*  gdk/directfb/gdkvisual-directfb.c: Avoid a crash in
+	_gdk_visual_init().  Patch by Huimin He.
+
+2008-07-18  Federico Mena Quintero  <federico@novell.com>
+
+	* gtk/updateiconcache.c (build_cache): If the resulting cache file
+	would be empty, erase the old cache file as well as the temporary file.
+
+2008-07-18  Federico Mena Quintero  <federico@novell.com>
+
+	* demos/gtk-demo/changedisplay.c (find_toplevel_at_pointer): Don't
+	do funny casts to avoid compiler warnings.
+
+	* demos/gtk-demo/textview.c (easter_egg_callback): Likewise.
+
+	* gtk/gtkmain.c (rewrite_event_for_grabs, gtk_get_event_widget): Likewise.
+
+	* gtk/gtkmodules.c (load_module): Likewise.
+
+	* gtk/gtkselection.c (gtk_selection_convert): Likewise.
+
+	* gtk/gtktipsquery.c (gtk_tips_query_event): Likewise.
+
+	* gtk/queryimmodules.c (query_module): Likewise.
+
+	* tests/testgtk.c (create_gridded_geometry, create_key_lookup)
+	(find_widget_at_pointer): Likewise.
+
+2008-07-08  Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Add a forgotten
+	hunk of the previous commit.
+
+2008-07-18  Sven Herzberg  <sven@imendio.com>
+
+	Make aliasfilecheck.sh pass for the quartz backend, too.
+
+	* gtk/Makefile.am: don't include gtkquartz.h in the list of c files
+
+2008-07-17  Runa Bhattacharjee <runabh@gmail.com>
+
+	* configure.in: Added Pashto (ps) to ALL_LINGUAS
+
+2008-07-15  Paolo Borelli  <pborelli@katamail.com>
+
+	Bug 447998 - GtkBuilder does not support building parts of the xml tree
+
+	* gtk/gtkbuilder.c:
+	* gtk/gtkbuilder.h:
+	* gtk/gtkbuilderprivate.h:
+	* gtk/gtkbuilderparser.c:
+	* gtk/gtk.symbols:
+	Add two new functions that allow cherry picking and construct
+	objects from a ui description file or string.
+
+	* gtk/tests/builder.c: tests for the above.
+
+2008-07-15  Paolo Borelli  <pborelli@katamail.com>
+
+	* gtk/tests/builder.c: fix up broken test (cellview has no "clicked"
+	signal) case and plug a couple of leaks.
+
+2008-07-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 543244 – crashes when renaming a bookmark
+
+	* gtk/gtkfilesystem.c (_gtk_file_system_set_bookmark_label): Don't
+	free a GFile. Reported by Sebastien Bacher
+
+2008-07-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 339591 – Detect list of availible cover pages
+
+	Patch by Marek Kasik:
+	* modules/printbackends/cups/gtkprintbackendcups.c: Get the list of
+	available cover pages and the default front and back cover pages 
+	from the cups server.
+
+2008-07-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 384940 – handle rejecting jobs and authentication meaningfully
+
+	Patch by Marek Kasik, icons by Mike Langlie:
+	* gtk/gtk.symbols:
+	* gtk/gtkprintbackend.h:
+	* gtk/gtkprinter.[hc]: Add new paused and accepting-jobs properties
+	and getters/setters.
+
+	* gtk/gtkstock.h:
+	* gtk/gtkiconfactory.c:
+	* gtk/Makefile.am:
+	* gtk/stock-icons/{16,24}/gtk-print-paused.{png,svg}: New icon.
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: 
+	* gtk/gtkprintunixdialog.c: Handle paused and job-rejecting 
+	printers.
+
+2008-07-15  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Add a test to see if GIO can sniff image data,
+	this should make gdk-pixbuf use its own sniffing again, on OS X.
+
+2008-07-15  Xavier Claessens  <xclaesse@gmail.com>
+
+	Bug 542523 – GtkTextTag should handle setting properties to NULL
+
+	* gtk/gtktexttag.c (gtk_text_tag_set_property): Unset the color when
+	setting it to NULL instead of displaying a warning.
+
+2008-07-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 479780 – Bookmarks in left pane of FileChooser cannot be renamed
+
+	* gtk/gtkfilechooserdefault.c (shortcuts_build_popup_menu):
+	Call shortcuts_check_popup_sensitivity() every time the
+	menu is popped up. Problem reported by Hong Jen Yee
+	
+2008-07-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 488766 – GtkFileChooserButton doesn't clear icon after
+	gtk_file_chooser_unselect_all
+
+	* gtk/gtkfilechooserbutton.c (update_label_and_image): Unset
+	the image when the label is set to "(None)". Reported by
+	Neil Roberts
+
+	* tests/testfilechooserbutton.c: Add an "Unselect all" button.
+
+2008-07-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 507394 – mem leak from gtk_selection_add_targets
+
+	* gtk/gtkoldeditable.c: Free target lists in finalize.
+	Reported by Christian Persch
+
+2008-07-14  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtktypeutils.[hc]: Complete the deprecation of gtk_type_class.
+
+2008-07-14  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtklabel.c: Trivial doc fix.
+
+2008-07-14  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 542853 – jasper test fails due to incomplete library arguments
+
+	* configure.in: Add -ljpeg when checking for jasper.
+	Reported by Mike Calmus
+
+2008-07-14  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/Makefile.am: Add some missing stock-icons. Noticed by Marek 
+	Kasik.
+
+2008-07-11  Kristian Rietveld  <kris@gtk.org>
+
+	Bug 316087 - Resizing columns is chaotic
+
+	* gtk/gtktreeprivate.h: add new member fields.
+
+	* gtk/gtktreeview.c (gtk_tree_view_init), (validate_row): set post
+	validation flag,
+	(gtk_tree_view_size_allocate_columns): rework the size allocation
+	mechanism to only recalculate the expand values if the width of the
+	widget, content or the column configuration has changed,
+	(gtk_tree_view_size_allocate): move call to size_allocate_columns()
+	to before the adjustment updates so the proper width is used after
+	we updated it,
+	(gtk_tree_view_button_press), (gtk_tree_view_motion_resize_column):
+	use the column width minus the expand value for the resized width,
+	(gtk_tree_view_move_column_after): update call to
+	gtk_tree_view_size_allocate_columns().
+
+	* gtk/gtktreeviewcolumn.c (gtk_tree_view_column_set_expand): set use
+	resized width to FALSE.
+
+	* tests/Makefile.am:
+	* tests/testtreecolumnsizing.c: new interactive test program
+	for testing column resizing with different column configurations.
+
+2008-07-11  Simos Xenitellis  <simos@gnome.org>
+
+	* gtk/compose-parse.py:
+	* gtk/gtkimcontextsimple.c:
+	Fixed typo for the name of Markus Kuhn, issue mentioned 
+	in bug #321896 (comment 61).
+	
+2008-07-11  Simos Xenitellis  <simos@gnome.org>	
+
+	Bug 334418 – Support easy input of ellipsis
+
+	* gtk/gtkimcontextsimpleseqs.h: Fixed 18 compose sequences
+	that listed the wrong codepoint.  Reported by Wouter Bolsterlee.
+
+2008-07-03  Murray Cumming  <murrayc@murrayc.com>
+
+	* gtk/gtkwidget.c (gtk_widget_set_property):  tooltip-text and 
+	tooltip-markup properties: Interpret an empty string as a NULL 
+	string because an empty tooltip is silly. This will help 
+	language bindings that do not bother to have the two types of 
+	empty/null strings.
+	Bug #541399.
+
+2008-07-10  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 542234 – iconview a11y implementation segfaults
+
+	* gtk/gtkiconview.c: Fix a segfault in the a11y code.
+	Patch by Li Yuan.
+
+2008-07-08  Christian Neumair  <cneumair@gnome.org>
+
+	* gtk/gtkuimanager.c (update_node):
+	Skip update of accelerator child node if it has no associated action.
+	Fixes #541950.
+
+2008-07-07  Cody Russell  <bratsche@gnome.org>
+
+	Bug 541964 – [Win32] Setting modal hint to current value might confuse the stack
+
+	* gdk/win32/gdkwindow-win32.c: Check if the value is the same as the
+	existing modal hint value before setting it.
+
+2008-07-07  Cody Russell  <bratsche@gnome.org>
+
+	Bug 540994 – [Win32] Some windows don't appear at the top when created
+
+	* gdk/win32/gdkwindow-win32.c: Raise the window when setting it modal.
+
+	I actually already committed this one by accident, probably when I committed
+	#541305, but just wanted to document it here in the ChangeLog.
+
+2008-07-07  Johan Dahlin  <johan@gnome.org>
+
+	* gtk/tests/builder.c (test_cell_view):
+	Add a test case for 528845.
+
+2008-07-07  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/win32/gdkwindow-win32.c
+	(gdk_window_foreign_new_for_display): Need to initialise
+	private->impl here, too.
+
+2008-07-07  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfilesystem.c: include the two needed headers instead of
+	<gtk/gtk.h>.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 528845 – segv from GtkBuilder on attempting <accelerator> under
+	GtkCellView
+
+	* gtk/gtkcellview.c: Don't blindly chain up in the buildable
+	implementation.  Reported by Kevin Ryde.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 469068 – clarify gdk_cairo_create()
+
+	* gdk/gdkcairo.c (gdk_cairo_create): Add a note that cairo
+	contexts cannot be cached for handling expose events.
+	Proposed by Behdad Esfahbod.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 507953 – gtk_tree_view_set_tooltip_column() shows markups
+
+	* gtk/gtktreeview.c (gtk_tree_view_set_tooltip_column): Mention
+	that the tooltip is set as markup. Proposed by Czirkos Zoltan.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 510225 – gtk_widget_get_composite_name retval should be freed
+
+	* gtk/gtkwidget.c (gtk_widget_get_composite_name): Clarify the
+	docs. Pointed out by Wolfgang Oertl
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 531129 – gtk_style_copy() does not include a return value or 
+	description
+
+	* gtk/gtkstyle.c: Document gtk_style_copy.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 541540 – Dead link to pkg-config site in GTK+ online FAQ
+	Bug 513580 – Broken link in GTK+ FAQ
+
+	* docs/faq/gtk-faq.sgml: Remove or update some outdated links.
+
+2008-07-07  Christian Dywan  <christian@imendio.com>
+
+	* gtk/gtkcontainer.c (gtk_container_add_with_properties): Remove
+	erroneously added g_return_if_fail (bug #541811).
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 343663 – source-buffer highlighting highlights "char" in
+	gtk_text_iter_forward_char
+
+	* demos/gtk-demo/*.c: Fix up the handrolled hilighting a bit.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 327582 – Incomplete docs for GtkSettings::gtk-icon-sizes
+	
+	* gtk/gtksettings.c: Improve the documentation of the
+	gtk-icon-sizes setting. Proposed by Tommi Komulainen.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 539248 – gtk_calender_query_tooltip calls ->detail_func with
+	invalid dates
+
+	* gtk/gtkcalendar.c (gtk_calendar_query_tooltip):
+	Check that the cursor is over a valid date before retrieving
+	its details.  Patch by Chris Wilson
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 493008 – gdk_screen_get_window_stack is not 64-bit-compatible
+
+	* gdk/x11/gdkscreen-x11.c (gdk_screen_get_window_stack): Fix
+	64-bit brokenness. Reported by Christian Hammond.
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 541645 – gtkfilechooserdefault segfaults when bookmark does not
+	contain ://
+
+	* gtk/gtkfilechooserdefault.c (_gtk_file_chooser_label_for_file):
+	Be more robust. Reported by  Jelte van der Hoek
+
+2008-07-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 540917 – deprecate pack_start_defaults()
+
+	* gtk/gtk.symbols:
+	* gtk/gtkbox.[hc]: Deprecated gtk_box_pack_{start,end}_defaults.
+	Proposed by Owen Taylor
+
+2008-07-05  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2008-07-05  Matthias Clasen  <mclasen@redhat.com>
 
 	* === Released 2.13.4 ===

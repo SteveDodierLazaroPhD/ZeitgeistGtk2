@@ -378,14 +378,12 @@ gtk_toolbar_class_init (GtkToolbarClass *klass)
   widget_class->style_set = gtk_toolbar_style_set;
   widget_class->focus = gtk_toolbar_focus;
 
-  /* need to override the base class function via override_class_closure,
+  /* need to override the base class function via override_class_handler,
    * because the signal slot is not available in GtkWidgetClass
    */
-  g_signal_override_class_closure (g_signal_lookup ("move_focus",
-                                                    GTK_TYPE_WIDGET),
+  g_signal_override_class_handler ("move-focus",
                                    GTK_TYPE_TOOLBAR,
-                                   g_cclosure_new (G_CALLBACK (gtk_toolbar_move_focus),
-                                                   NULL, NULL));
+                                   G_CALLBACK (gtk_toolbar_move_focus));
 
   widget_class->screen_changed = gtk_toolbar_screen_changed;
   widget_class->realize = gtk_toolbar_realize;
@@ -478,15 +476,15 @@ gtk_toolbar_class_init (GtkToolbarClass *klass)
    * Return value: %TRUE if the signal was handled, %FALSE if not
    */
   toolbar_signals[FOCUS_HOME_OR_END] =
-    _gtk_binding_signal_new (I_("focus_home_or_end"),
-			     G_OBJECT_CLASS_TYPE (klass),
-			     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			     G_CALLBACK (gtk_toolbar_focus_home_or_end),
-			     NULL, NULL,
-			     _gtk_marshal_BOOLEAN__BOOLEAN,
-			     G_TYPE_BOOLEAN, 1,
-			     G_TYPE_BOOLEAN);
-  
+    g_signal_new_class_handler (I_("focus_home_or_end"),
+                                G_OBJECT_CLASS_TYPE (klass),
+                                G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                G_CALLBACK (gtk_toolbar_focus_home_or_end),
+                                NULL, NULL,
+                                _gtk_marshal_BOOLEAN__BOOLEAN,
+                                G_TYPE_BOOLEAN, 1,
+                                G_TYPE_BOOLEAN);
+
   /* properties */
   g_object_class_install_property (gobject_class,
 				   PROP_ORIENTATION,

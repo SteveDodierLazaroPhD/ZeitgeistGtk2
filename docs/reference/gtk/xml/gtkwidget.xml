@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkWidget">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkWidget.top_of_page">GtkWidget</refentrytitle>
@@ -331,6 +338,8 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
 <link linkend="void">void</link>                <link linkend="gtk-widget-trigger-tooltip-query">gtk_widget_trigger_tooltip_query</link>    (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="GdkPixmap">GdkPixmap</link>*          <link linkend="gtk-widget-get-snapshot">gtk_widget_get_snapshot</link>             (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *clip_rect);
+<link linkend="GdkWindow">GdkWindow</link>*          <link linkend="gtk-widget-get-window">gtk_widget_get_window</link>               (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="GtkAllocation">GtkAllocation</link>       <link linkend="gtk-widget-get-allocation">gtk_widget_get_allocation</link>           (<link linkend="GtkWidget">GtkWidget</link> *widget);
 
 <link linkend="GtkRequisition">GtkRequisition</link>*     <link linkend="gtk-requisition-copy">gtk_requisition_copy</link>                (const <link linkend="GtkRequisition">GtkRequisition</link> *requisition);
 <link linkend="void">void</link>                <link linkend="gtk-requisition-free">gtk_requisition_free</link>                (<link linkend="GtkRequisition">GtkRequisition</link> *requisition);
@@ -2895,7 +2904,7 @@ Obtains the composite name of a widget.</para>
 <listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the composite name of <parameter>widget</parameter>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if <parameter>widget</parameter> is not
-  a composite child. The string should not be freed when it is no 
+  a composite child. The string should be freed when it is no 
   longer needed.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
@@ -4660,6 +4669,38 @@ The returned pixmap can be <link linkend="NULL:CAPS"><literal>NULL</literal></li
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.14
 </para></refsect2>
+<refsect2 id="gtk-widget-get-window" role="function" condition="since:2.14">
+<title>gtk_widget_get_window ()</title>
+<indexterm zone="gtk-widget-get-window" role="2.14"><primary>gtk_widget_get_window</primary></indexterm><programlisting><link linkend="GdkWindow">GdkWindow</link>*          gtk_widget_get_window               (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<para>
+Returns the widget's window if it is realized, <link linkend="NULL:CAPS"><literal>NULL</literal></link> otherwise</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <parameter>widget</parameter>'s window.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-widget-get-allocation" role="function" condition="since:2.14">
+<title>gtk_widget_get_allocation ()</title>
+<indexterm zone="gtk-widget-get-allocation" role="2.14"><primary>gtk_widget_get_allocation</primary></indexterm><programlisting><link linkend="GtkAllocation">GtkAllocation</link>       gtk_widget_get_allocation           (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<para>
+Retrieves the widget's allocation.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> widget's allocation
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-requisition-copy" role="function">
 <title>gtk_requisition_copy ()</title>
 <indexterm zone="gtk-requisition-copy"><primary>gtk_requisition_copy</primary></indexterm><programlisting><link linkend="GtkRequisition">GtkRequisition</link>*     gtk_requisition_copy                (const <link linkend="GtkRequisition">GtkRequisition</link> *requisition);</programlisting>
@@ -5727,7 +5768,7 @@ to enable the <link linkend="GDK-EXPOSURE-MASK:CAPS"><type>GDK_EXPOSURE_MASK</ty
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkWidget-focus-in-event"><title>The <literal>&quot;focus-in-event&quot;</literal> signal</title>
@@ -6390,7 +6431,7 @@ the <parameter>widget</parameter>'s window has lost ownership of a selection.</p
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to stop other handlers from being invoked for the event. <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> to propagate the event further.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkWidget-selection-received"><title>The <literal>&quot;selection-received&quot;</literal> signal</title>

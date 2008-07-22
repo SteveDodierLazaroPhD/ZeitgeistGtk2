@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkContainer">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkContainer.top_of_page">GtkContainer</refentrytitle>
@@ -47,6 +54,7 @@
 <link linkend="void">void</link>                <link linkend="gtk-container-set-reallocate-redraws">gtk_container_set_reallocate_redraws</link>
                                                         (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="gboolean">gboolean</link> needs_redraws);
+<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-container-get-focus-child">gtk_container_get_focus_child</link>       (<link linkend="GtkContainer">GtkContainer</link> *container);
 <link linkend="void">void</link>                <link linkend="gtk-container-set-focus-child">gtk_container_set_focus_child</link>       (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child);
 <link linkend="GtkAdjustment">GtkAdjustment</link>*      <link linkend="gtk-container-get-focus-vadjustment">gtk_container_get_focus_vadjustment</link> (<link linkend="GtkContainer">GtkContainer</link> *container);
@@ -556,12 +564,29 @@ redrawn if any of their children changed allocation.</para>
 <listitem><simpara> the new value for the container's <parameter>reallocate_redraws</parameter> flag
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-container-get-focus-child" role="function" condition="since:2.14">
+<title>gtk_container_get_focus_child ()</title>
+<indexterm zone="gtk-container-get-focus-child" role="2.14"><primary>gtk_container_get_focus_child</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_container_get_focus_child       (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<para>
+Returns the current focus child widget inside <parameter>container</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>container</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkContainer"><type>GtkContainer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The child widget which has the focus
+         inside <parameter>container</parameter>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if none is set.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-container-set-focus-child" role="function">
 <title>gtk_container_set_focus_child ()</title>
 <indexterm zone="gtk-container-set-focus-child"><primary>gtk_container_set_focus_child</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_child       (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child);</programlisting>
 <para>
-Sets, or unsets if <parameter>widget</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, the focused child of <parameter>container</parameter>.
+Sets, or unsets if <parameter>child</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, the focused child of <parameter>container</parameter>.
 </para>
 <para>
 This function emits the GtkContainer::set_focus_child signal of
@@ -574,9 +599,7 @@ default behaviour by overriding the class closure of this signal.</para>
 <listitem><simpara> a <link linkend="GtkContainer"><type>GtkContainer</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>child</parameter>&nbsp;:</term>
-<listitem><simpara>
-
-
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-get-focus-vadjustment" role="function">

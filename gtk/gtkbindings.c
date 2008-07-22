@@ -31,6 +31,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <gdkkeysyms.h>
+
 #include "gtkbindings.h"
 #include "gtkkeyhash.h"
 #include "gtkwidget.h"
@@ -958,7 +959,7 @@ gtk_binding_entry_add_signal (GtkBindingSet  *binding_set,
   if (i == n_args || i == 0)
     {
       slist = g_slist_reverse (slist);
-      gtk_binding_entry_add_signall (binding_set, keyval, modifiers, signal_name, slist);
+      _gtk_binding_entry_add_signall (binding_set, keyval, modifiers, signal_name, slist);
     }
 
   free_slist = slist;
@@ -1469,11 +1470,11 @@ gtk_binding_parse_signal (GScanner       *scanner,
 	  if (!(need_arg && seen_comma) && !negate)
 	    {
 	      args = g_slist_reverse (args);
-	      gtk_binding_entry_add_signall (binding_set,
-					     keyval,
-					     modifiers,
-					     signal,
-					     args);
+	      _gtk_binding_entry_add_signall (binding_set,
+                                              keyval,
+                                              modifiers,
+                                              signal,
+                                              args);
 	      expected_token = G_TOKEN_NONE;
 	    }
 	  done = TRUE;
@@ -1696,35 +1697,6 @@ _gtk_binding_reset_parsed (void)
 
       slist = next;
     }
-}
-
-guint
-_gtk_binding_signal_new (const gchar	    *signal_name,
-			 GType		     itype,
-			 GSignalFlags	     signal_flags,
-			 GCallback           handler,
-			 GSignalAccumulator  accumulator,
-			 gpointer	     accu_data,
-			 GSignalCMarshaller  c_marshaller,
-			 GType		     return_type,
-			 guint		     n_params,
-			 ...)
-{
-  va_list args;
-  guint signal_id;
-
-  g_return_val_if_fail (signal_name != NULL, 0);
-  
-  va_start (args, n_params);
-
-  signal_id = g_signal_new_valist (signal_name, itype, signal_flags,
-                                   g_cclosure_new (handler, NULL, NULL),
-				   accumulator, accu_data, c_marshaller,
-                                   return_type, n_params, args);
-
-  va_end (args);
- 
-  return signal_id;
 }
 
 #define __GTK_BINDINGS_C__

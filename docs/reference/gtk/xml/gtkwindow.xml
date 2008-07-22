@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkWindow">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkWindow.top_of_page">GtkWindow</refentrytitle>
@@ -79,6 +86,7 @@
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-window-get-focus">gtk_window_get_focus</link>                (<link linkend="GtkWindow">GtkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gtk-window-set-focus">gtk_window_set_focus</link>                (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                          <link linkend="GtkWidget">GtkWidget</link> *focus);
+<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-window-get-default">gtk_window_get_default</link>              (<link linkend="GtkWindow">GtkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gtk-window-set-default">gtk_window_set_default</link>              (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                          <link linkend="GtkWidget">GtkWidget</link> *default_widget);
 <link linkend="void">void</link>                <link linkend="gtk-window-present">gtk_window_present</link>                  (<link linkend="GtkWindow">GtkWindow</link> *window);
@@ -136,6 +144,8 @@
                                                          <link linkend="gboolean">gboolean</link> setting);
 <link linkend="void">void</link>                <link linkend="gtk-window-set-startup-id">gtk_window_set_startup_id</link>           (<link linkend="GtkWindow">GtkWindow</link> *window,
                                                          const <link linkend="gchar">gchar</link> *startup_id);
+<link linkend="void">void</link>                <link linkend="gtk-window-set-role">gtk_window_set_role</link>                 (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *role);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-window-get-decorated">gtk_window_get_decorated</link>            (<link linkend="GtkWindow">GtkWindow</link> *window);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-window-get-deletable">gtk_window_get_deletable</link>            (<link linkend="GtkWindow">GtkWindow</link> *window);
 <link linkend="GList">GList</link>*              <link linkend="gtk-window-get-default-icon-list">gtk_window_get_default_icon_list</link>    (void);
@@ -997,6 +1007,23 @@ widget in the toplevel, it is usually more convenient to use
   any focus widget for the toplevel window.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-window-get-default" role="function" condition="since:2.14">
+<title>gtk_window_get_default ()</title>
+<indexterm zone="gtk-window-get-default" role="2.14"><primary>gtk_window_get_default</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_window_get_default              (<link linkend="GtkWindow">GtkWindow</link> *window);</programlisting>
+<para>
+Returns the default widget for <parameter>window</parameter>. See <link linkend="gtk-window-set-default"><function>gtk_window_set_default()</function></link>
+for more details.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWindow"><type>GtkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the default widget, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if there is none.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-window-set-default" role="function">
 <title>gtk_window_set_default ()</title>
 <indexterm zone="gtk-window-set-default"><primary>gtk_window_set_default</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_window_set_default              (<link linkend="GtkWindow">GtkWindow</link> *window,
@@ -1716,6 +1743,35 @@ This function is only useful on X11, not with other GTK+ targets.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
 </para></refsect2>
+<refsect2 id="gtk-window-set-role" role="function">
+<title>gtk_window_set_role ()</title>
+<indexterm zone="gtk-window-set-role"><primary>gtk_window_set_role</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_window_set_role                 (<link linkend="GtkWindow">GtkWindow</link> *window,
+                                                         const <link linkend="gchar">gchar</link> *role);</programlisting>
+<para>
+This function is only useful on X11, not with other GTK+ targets.
+</para>
+<para>
+In combination with the window title, the window role allows a
+<link linkend="gtk-X11-arch">window manager</link> to identify "the
+same" window when an application is restarted. So for example you
+might set the "toolbox" role on your app's toolbox window, so that
+when the user restarts their session, the window manager can put
+the toolbox back in the same place.
+</para>
+<para>
+If a window already has a unique title, you don't need to set the
+role, since the WM can use the title to identify the window when
+restoring the session.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkWindow"><type>GtkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>role</parameter>&nbsp;:</term>
+<listitem><simpara> unique identifier for the window to be used when restoring a session
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="gtk-window-get-decorated" role="function">
 <title>gtk_window_get_decorated ()</title>
 <indexterm zone="gtk-window-get-decorated"><primary>gtk_window_get_decorated</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_window_get_decorated            (<link linkend="GtkWindow">GtkWindow</link> *window);</programlisting>

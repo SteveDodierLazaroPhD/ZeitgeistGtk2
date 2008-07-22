@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="gtk-Selections">
 <refmeta>
 <refentrytitle role="top_of_page" id="gtk-Selections.top_of_page">Selections</refentrytitle>
@@ -102,6 +109,12 @@
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-selection-data-targets-include-rich-text">gtk_selection_data_targets_include_rich_text</link>
                                                         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer);
+const <link linkend="guchar">guchar</link>*       <link linkend="gtk-selection-data-get-data">gtk_selection_data_get_data</link>         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+                                                         <link linkend="guint">guint</link> *length);
+<link linkend="GdkAtom">GdkAtom</link>             <link linkend="gtk-selection-data-get-data-type">gtk_selection_data_get_data_type</link>    (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
+<link linkend="GdkDisplay">GdkDisplay</link>*         <link linkend="gtk-selection-data-get-display">gtk_selection_data_get_display</link>      (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
+<link linkend="gint">gint</link>                <link linkend="gtk-selection-data-get-format">gtk_selection_data_get_format</link>       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
+<link linkend="GdkAtom">GdkAtom</link>             <link linkend="gtk-selection-data-get-target">gtk_selection_data_get_target</link>       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-targets-include-image">gtk_targets_include_image</link>           (<link linkend="GdkAtom">GdkAtom</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="gboolean">gboolean</link> writable);
@@ -861,6 +874,98 @@ provide rich text.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2 id="gtk-selection-data-get-data" role="function" condition="since:2.14">
+<title>gtk_selection_data_get_data ()</title>
+<indexterm zone="gtk-selection-data-get-data" role="2.14"><primary>gtk_selection_data_get_data</primary></indexterm><programlisting>const <link linkend="guchar">guchar</link>*       gtk_selection_data_get_data         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+                                                         <link linkend="guint">guint</link> *length);</programlisting>
+<para>
+Retrieves the raw data of the selection.
+</para>
+<para>
+If <parameter>length</parameter> is not <link linkend="NULL:CAPS"><literal>NULL</literal></link> it is filled with the length of data.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> an integer to be filled in, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-selection-data-get-data-type" role="function" condition="since:2.14">
+<title>gtk_selection_data_get_data_type ()</title>
+<indexterm zone="gtk-selection-data-get-data-type" role="2.14"><primary>gtk_selection_data_get_data_type</primary></indexterm><programlisting><link linkend="GdkAtom">GdkAtom</link>             gtk_selection_data_get_data_type    (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<para>
+Retrieves the data type of the selection.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-selection-data-get-display" role="function" condition="since:2.14">
+<title>gtk_selection_data_get_display ()</title>
+<indexterm zone="gtk-selection-data-get-display" role="2.14"><primary>gtk_selection_data_get_display</primary></indexterm><programlisting><link linkend="GdkDisplay">GdkDisplay</link>*         gtk_selection_data_get_display      (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<para>
+Retrieves the display of the selection.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-selection-data-get-format" role="function" condition="since:2.14">
+<title>gtk_selection_data_get_format ()</title>
+<indexterm zone="gtk-selection-data-get-format" role="2.14"><primary>gtk_selection_data_get_format</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_selection_data_get_format       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<para>
+Retrieves the format of the selection.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-selection-data-get-target" role="function" condition="since:2.14">
+<title>gtk_selection_data_get_target ()</title>
+<indexterm zone="gtk-selection-data-get-target" role="2.14"><primary>gtk_selection_data_get_target</primary></indexterm><programlisting><link linkend="GdkAtom">GdkAtom</link>             gtk_selection_data_get_target       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<para>
+Retrieves the target of the selection.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<listitem><simpara> a pointer to a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>
+
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-targets-include-image" role="function" condition="since:2.10">
 <title>gtk_targets_include_image ()</title>

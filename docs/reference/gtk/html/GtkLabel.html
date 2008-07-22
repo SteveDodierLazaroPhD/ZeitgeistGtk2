@@ -8,7 +8,7 @@
 <link rel="up" href="DisplayWidgets.html" title="Display Widgets">
 <link rel="prev" href="GtkImage.html" title="GtkImage">
 <link rel="next" href="GtkProgressBar.html" title="GtkProgressBar">
-<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -50,15 +50,15 @@
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
-<link rel="index" href="ix01.html" title="Index">
-<link rel="index" href="ix02.html" title="Index of deprecated symbols">
-<link rel="index" href="ix03.html" title="Index of new symbols in 2.2">
-<link rel="index" href="ix04.html" title="Index of new symbols in 2.4">
-<link rel="index" href="ix05.html" title="Index of new symbols in 2.6">
-<link rel="index" href="ix06.html" title="Index of new symbols in 2.8">
-<link rel="index" href="ix07.html" title="Index of new symbols in 2.10">
-<link rel="index" href="ix08.html" title="Index of new symbols in 2.12">
-<link rel="index" href="ix09.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-full.html" title="Index of all symbols">
+<link rel="index" href="api-index-deprecated.html" title="Index of deprecated symbols">
+<link rel="index" href="api-index-2-2.html" title="Index of new symbols in 2.2">
+<link rel="index" href="api-index-2-4.html" title="Index of new symbols in 2.4">
+<link rel="index" href="api-index-2-6.html" title="Index of new symbols in 2.6">
+<link rel="index" href="api-index-2-8.html" title="Index of new symbols in 2.8">
+<link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
+<link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
+<link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -69,19 +69,17 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkProgressBar.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts">
-<a href="#GtkLabel.synopsis" class="shortcut">Top</a>
-                 | 
-                <a href="#GtkLabel.description" class="shortcut">Description</a>
-                 | 
-                <a href="#GtkLabel.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                 | 
-                <a href="#GtkLabel.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-                 | 
-                <a href="#GtkLabel.properties" class="shortcut">Properties</a>
-                 | 
-                <a href="#GtkLabel.signals" class="shortcut">Signals</a>
-</td></tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkLabel.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#GtkLabel.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#GtkLabel.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#GtkLabel.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                   | 
+                  <a href="#GtkLabel.properties" class="shortcut">Properties</a>
+                   | 
+                  <a href="#GtkLabel.signals" class="shortcut">Signals</a></nobr></td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkLabel"></a><div class="titlepage"></div>
@@ -359,23 +357,32 @@ implies, most labels are used to label another widget such as a
 The GtkLabel implementation of the GtkBuildable interface supports a 
 custom &lt;attributes&gt; element, which supports any number of &lt;attribute&gt;
 elements. the &lt;attribute&gt; element has attributes named name, value,
-start and end and allows you to specify <span class="type">PangoAttributs</span> for this label.
+start and end and allows you to specify <a
+href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttribute"
+><span class="type">PangoAttribute</span></a> values for this label.
 </p>
 <div class="example">
-<a name="id3288380"></a><p class="title"><b>Example 11. A UI definition fragment specifying pango attributes</b></p>
+<a name="id2887569"></a><p class="title"><b>Example 11. A UI definition fragment specifying Pango attributes</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkLabel"&gt;
   &lt;attributes&gt;
-    &lt;attribute name=\"weight\" value=\"PANGO_WEIGHT_BOLD\"/&gt;
+    &lt;attribute name="weight" value="PANGO_WEIGHT_BOLD"/&gt;
+    &lt;attribute name="background" value="red" start="5" end="10"/&gt;"
   &lt;/attributes&gt;
 &lt;/object&gt;
 </pre></div>
 </div>
-<br class="example-break">
+<br class="example-break"><p>
+The start and end attributes specify the range of characters to which the
+Pango attribute applies. If start and end are not specified, the attribute is
+applied to the whole text. Note that specifying ranges does not make much
+sense with translatable attributes. Use markup embedded in the translatable
+content instead.
+</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3288396"></a><h3>Mnemonics</h3>
+<a name="id2887597"></a><h3>Mnemonics</h3>
 <p>
 Labels may contain <em class="firstterm">mnemonics</em>. Mnemonics are
 underlined characters in the label, used for keyboard navigation.
@@ -425,7 +432,7 @@ To create a mnemonic for a widget alongside the label, such as a
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3288531"></a><h3>Markup (styled text)</h3>
+<a name="id2887725"></a><h3>Markup (styled text)</h3>
 <p>
 To make it easy to format text in a label (changing colors, fonts,
 etc.), label text can be provided in a simple <a
@@ -473,7 +480,7 @@ being displayed, so translations will cause problems.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3288670"></a><h3>Selectable labels</h3>
+<a name="id2887846"></a><h3>Selectable labels</h3>
 <p>
 Labels can be made selectable with <a class="link" href="GtkLabel.html#gtk-label-set-selectable" title="gtk_label_set_selectable ()"><code class="function">gtk_label_set_selectable()</code></a>. 
 Selectable labels allow the user to copy the label contents to 
@@ -483,7 +490,7 @@ the clipboard. Only labels that contain useful-to-copy information
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3288690"></a><h3>Text layout</h3>
+<a name="id2887869"></a><h3>Text layout</h3>
 <p>
 A label can contain any number of paragraphs, but will have
 performance problems if it contains more than a small number.
@@ -631,7 +638,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Simple-XML-Subset-Parser.html#g-markup-p
 </p>
 <div class="informalexample"><pre class="programlisting">
 char *markup;
-
+  
 markup = g_markup_printf_escaped ("&lt;span style=\"italic\"&gt;%s&lt;/span&gt;", str);
 gtk_label_set_markup (GTK_LABEL (label), markup);
 g_free (markup);
@@ -2333,6 +2340,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.11</div>
+          Generated by GTK-Doc V1.10</div>
 </body>
 </html>

@@ -914,15 +914,15 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 		  G_TYPE_BOOLEAN, 1,
 		  GTK_TYPE_DIRECTION_TYPE);
   widget_signals[MOVE_FOCUS] =
-    _gtk_binding_signal_new (I_("move_focus"),
-                             G_TYPE_FROM_CLASS (object_class),
-                             G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-                             G_CALLBACK (gtk_widget_real_move_focus),
-                             NULL, NULL,
-                             _gtk_marshal_VOID__ENUM,
-                             G_TYPE_NONE,
-                             1,
-                             GTK_TYPE_DIRECTION_TYPE);
+    g_signal_new_class_handler (I_("move_focus"),
+                                G_TYPE_FROM_CLASS (object_class),
+                                G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                G_CALLBACK (gtk_widget_real_move_focus),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__ENUM,
+                                G_TYPE_NONE,
+                                1,
+                                GTK_TYPE_DIRECTION_TYPE);
   /**
    * GtkWidget::event:
    * @widget: the object which received the signal.
@@ -1106,14 +1106,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    * Since: 2.12
    **/
   widget_signals[KEYNAV_FAILED] =
-    _gtk_binding_signal_new (I_("keynav-failed"),
-                             G_TYPE_FROM_CLASS (gobject_class),
-                             G_SIGNAL_RUN_LAST,
-                             G_CALLBACK (gtk_widget_real_keynav_failed),
-                             _gtk_boolean_handled_accumulator, NULL,
-                             _gtk_marshal_BOOLEAN__ENUM,
-                             G_TYPE_BOOLEAN, 1,
-                             GTK_TYPE_DIRECTION_TYPE);
+    g_signal_new_class_handler (I_("keynav-failed"),
+                                G_TYPE_FROM_CLASS (gobject_class),
+                                G_SIGNAL_RUN_LAST,
+                                G_CALLBACK (gtk_widget_real_keynav_failed),
+                                _gtk_boolean_handled_accumulator, NULL,
+                                _gtk_marshal_BOOLEAN__ENUM,
+                                G_TYPE_BOOLEAN, 1,
+                                GTK_TYPE_DIRECTION_TYPE);
 
   /**
    * GtkWidget::delete-event:
@@ -2478,6 +2478,15 @@ gtk_widget_set_property (GObject         *object,
       tooltip_window = g_object_get_qdata (object, quark_tooltip_window);
       tooltip_markup = g_value_dup_string (value);
 
+      /* Treat an empty string as a NULL string, 
+       * because an empty string would be useless for a tooltip:
+       */
+      if (tooltip_markup && (strlen (tooltip_markup) == 0))
+      {
+	g_free (tooltip_markup);
+        tooltip_markup = NULL;
+      }
+
       g_object_set_qdata_full (object, quark_tooltip_markup,
 			       tooltip_markup, g_free);
 
@@ -2486,7 +2495,15 @@ gtk_widget_set_property (GObject         *object,
       break;
     case PROP_TOOLTIP_TEXT:
       tooltip_window = g_object_get_qdata (object, quark_tooltip_window);
+
       tooltip_text = g_value_get_string (value);
+
+      /* Treat an empty string as a NULL string, 
+       * because an empty string would be useless for a tooltip:
+       */
+      if (tooltip_text && (strlen (tooltip_text) == 0))
+        tooltip_text = NULL;
+
       tooltip_markup = tooltip_text ? g_markup_escape_text (tooltip_text, -1) : NULL;
 
       g_object_set_qdata_full (object, quark_tooltip_markup,
@@ -7564,11 +7581,12 @@ gtk_widget_set_composite_name (GtkWidget   *widget,
 /**
  * gtk_widget_get_composite_name:
  * @widget: a #GtkWidget
- * @returns: the composite name of @widget, or %NULL if @widget is not
- *   a composite child. The string should not be freed when it is no 
- *   longer needed.
  *
  * Obtains the composite name of a widget. 
+ *
+ * Returns: the composite name of @widget, or %NULL if @widget is not
+ *   a composite child. The string should be freed when it is no 
+ *   longer needed.
  **/
 gchar*
 gtk_widget_get_composite_name (GtkWidget *widget)

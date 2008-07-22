@@ -492,14 +492,12 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
   widget_class->expose_event = gtk_text_view_expose_event;
   widget_class->focus = gtk_text_view_focus;
 
-  /* need to override the base class function via override_class_closure,
+  /* need to override the base class function via override_class_handler,
    * because the signal slot is not available in GtkWidgetCLass
    */
-  g_signal_override_class_closure (g_signal_lookup ("move-focus",
-                                                    GTK_TYPE_WIDGET),
+  g_signal_override_class_handler ("move-focus",
                                    GTK_TYPE_TEXT_VIEW,
-                                   g_cclosure_new (G_CALLBACK (gtk_text_view_move_focus),
-                                                   NULL, NULL));
+                                   G_CALLBACK (gtk_text_view_move_focus));
 
   widget_class->drag_begin = gtk_text_view_drag_begin;
   widget_class->drag_end = gtk_text_view_drag_end;
@@ -756,15 +754,15 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
    * There are no default bindings for this signal.
    */
   signals[MOVE_VIEWPORT] =
-    _gtk_binding_signal_new (I_("move_viewport"),
-			     G_OBJECT_CLASS_TYPE (gobject_class),
-			     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			     G_CALLBACK (gtk_text_view_move_viewport),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__ENUM_INT,
-			     G_TYPE_NONE, 2,
-			     GTK_TYPE_SCROLL_STEP,
-			     G_TYPE_INT);
+    g_signal_new_class_handler (I_("move_viewport"),
+                                G_OBJECT_CLASS_TYPE (gobject_class),
+                                G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                G_CALLBACK (gtk_text_view_move_viewport),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__ENUM_INT,
+                                G_TYPE_NONE, 2,
+                                GTK_TYPE_SCROLL_STEP,
+                                G_TYPE_INT);
 
   signals[SET_ANCHOR] =
     g_signal_new (I_("set_anchor"),
@@ -951,13 +949,13 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
    * for selecting and Shift-Ctrl-a and Ctrl-\ for unselecting.
    */
   signals[SELECT_ALL] =
-    _gtk_binding_signal_new (I_("select_all"),
-			     G_OBJECT_CLASS_TYPE (object_class),
-			     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			     G_CALLBACK (gtk_text_view_select_all),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__BOOLEAN,
-			     G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
+    g_signal_new_class_handler (I_("select_all"),
+                                G_OBJECT_CLASS_TYPE (object_class),
+                                G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                G_CALLBACK (gtk_text_view_select_all),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__BOOLEAN,
+                                G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
   /**
    * GtkTextView::toggle-cursor-visible:
@@ -970,13 +968,13 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
    * The default binding for this signal is F7.
    */ 
   signals[TOGGLE_CURSOR_VISIBLE] =
-    _gtk_binding_signal_new (I_("toggle_cursor_visible"),
-			     G_OBJECT_CLASS_TYPE (object_class),
-			     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			     G_CALLBACK (gtk_text_view_toggle_cursor_visible),
-			     NULL, NULL,
-			     _gtk_marshal_VOID__VOID,
-			     G_TYPE_NONE, 0);
+    g_signal_new_class_handler (I_("toggle_cursor_visible"),
+                                G_OBJECT_CLASS_TYPE (object_class),
+                                G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                G_CALLBACK (gtk_text_view_toggle_cursor_visible),
+                                NULL, NULL,
+                                _gtk_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
 
   /*
    * Key bindings
@@ -5756,22 +5754,10 @@ gtk_text_view_compat_move_focus (GtkTextView     *text_view,
     {
       /*  if this is a signal emission, chain up  */
 
-      GValue instance_and_params[2] = { { 0, }, { 0, } };
-      GValue return_value = { 0, };
+      gboolean retval;
 
-      g_value_init (&instance_and_params[0], GTK_TYPE_WIDGET);
-      g_value_set_object (&instance_and_params[0], text_view);
-
-      g_value_init (&instance_and_params[1], GTK_TYPE_DIRECTION_TYPE);
-      g_value_set_enum (&instance_and_params[1], direction_type);
-
-      g_value_init (&return_value, G_TYPE_BOOLEAN);
-
-      g_signal_chain_from_overridden (instance_and_params, &return_value);
-
-      g_value_unset (&instance_and_params[0]);
-      g_value_unset (&instance_and_params[1]);
-      g_value_unset (&return_value);
+      g_signal_chain_from_overridden_handler (text_view,
+                                              direction_type, &retval);
     }
   else
     {

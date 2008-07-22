@@ -25,7 +25,7 @@
  * Modified by the GTK+ Team and others 2003.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 #include "config.h"
@@ -36,7 +36,6 @@
 #include "gtkmarshalers.h"
 #include "gtkmenu.h"
 #include "gtkmenubar.h"
-#include "gtkmenushell.h"
 #include "gtkmenutoolbutton.h"
 #include "gtkseparatormenuitem.h"
 #include "gtkseparatortoolitem.h"
@@ -49,7 +48,7 @@
 
 #undef DEBUG_UI_MANAGER
 
-typedef enum 
+typedef enum
 {
   NODE_TYPE_UNDECIDED,
   NODE_TYPE_ROOT,
@@ -2736,7 +2735,7 @@ update_node (GtkUIManager *self,
 	gtk_widget_destroy (info->proxy);
       if (info->extra)
 	gtk_widget_destroy (info->extra);
-      if (info->type == NODE_TYPE_ACCELERATOR)
+      if (info->type == NODE_TYPE_ACCELERATOR && info->action != NULL)
 	gtk_action_disconnect_accelerator (info->action);
       free_node (node);
       g_node_destroy (node);

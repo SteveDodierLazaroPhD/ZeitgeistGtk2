@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="gtk-Keyboard-Accelerators">
 <refmeta>
 <refentrytitle role="top_of_page" id="gtk-Keyboard-Accelerators.top_of_page">Accelerator Groups</refentrytitle>
@@ -53,7 +60,9 @@
                                                          <link linkend="GdkModifierType">GdkModifierType</link> accel_mods);
 <link linkend="void">void</link>                <link linkend="gtk-accel-group-lock">gtk_accel_group_lock</link>                (<link linkend="GtkAccelGroup">GtkAccelGroup</link> *accel_group);
 <link linkend="void">void</link>                <link linkend="gtk-accel-group-unlock">gtk_accel_group_unlock</link>              (<link linkend="GtkAccelGroup">GtkAccelGroup</link> *accel_group);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-accel-group-get-is-locked">gtk_accel_group_get_is_locked</link>       (<link linkend="GtkAccelGroup">GtkAccelGroup</link> *accel_group);
 <link linkend="GtkAccelGroup">GtkAccelGroup</link>*      <link linkend="gtk-accel-group-from-accel-closure">gtk_accel_group_from_accel_closure</link>  (<link linkend="GClosure">GClosure</link> *closure);
+<link linkend="GdkModifierType">GdkModifierType</link>     <link linkend="gtk-accel-group-get-modifier-mask">gtk_accel_group_get_modifier_mask</link>   (<link linkend="GtkAccelGroup">GtkAccelGroup</link> *accel_group);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-accel-groups-activate">gtk_accel_groups_activate</link>           (<link linkend="GObject">GObject</link> *object,
                                                          <link linkend="guint">guint</link> accel_key,
                                                          <link linkend="GdkModifierType">GdkModifierType</link> accel_mods);
@@ -428,6 +437,24 @@ Undoes the last call to <link linkend="gtk-accel-group-lock"><function>gtk_accel
 <listitem><simpara> a <link linkend="GtkAccelGroup"><type>GtkAccelGroup</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-accel-group-get-is-locked" role="function" condition="since:2.14">
+<title>gtk_accel_group_get_is_locked ()</title>
+<indexterm zone="gtk-accel-group-get-is-locked" role="2.14"><primary>gtk_accel_group_get_is_locked</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_accel_group_get_is_locked       (<link linkend="GtkAccelGroup">GtkAccelGroup</link> *accel_group);</programlisting>
+<para>
+Locks are added and removed using <link linkend="gtk-accel-group-lock"><function>gtk_accel_group_lock()</function></link> and
+<link linkend="gtk-accel-group-unlock"><function>gtk_accel_group_unlock()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>accel_group</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAccelGroup"><type>GtkAccelGroup</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if there are 1 or more locks on the <parameter>accel_group</parameter>,
+<link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-accel-group-from-accel-closure" role="function">
 <title>gtk_accel_group_from_accel_closure ()</title>
 <indexterm zone="gtk-accel-group-from-accel-closure"><primary>gtk_accel_group_from_accel_closure</primary></indexterm><programlisting><link linkend="GtkAccelGroup">GtkAccelGroup</link>*      gtk_accel_group_from_accel_closure  (<link linkend="GClosure">GClosure</link> *closure);</programlisting>
@@ -443,6 +470,23 @@ see <link linkend="gtk-accel-group-connect"><function>gtk_accel_group_connect()<
 <varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GtkAccelGroup"><type>GtkAccelGroup</type></link> to which <parameter>closure</parameter> is connected, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-accel-group-get-modifier-mask" role="function" condition="since:2.14">
+<title>gtk_accel_group_get_modifier_mask ()</title>
+<indexterm zone="gtk-accel-group-get-modifier-mask" role="2.14"><primary>gtk_accel_group_get_modifier_mask</primary></indexterm><programlisting><link linkend="GdkModifierType">GdkModifierType</link>     gtk_accel_group_get_modifier_mask   (<link linkend="GtkAccelGroup">GtkAccelGroup</link> *accel_group);</programlisting>
+<para>
+Gets a <link linkend="GdkModifierType"><type>GdkModifierType</type></link> representing the mask for this
+<parameter>accel_group</parameter>. For example, <link linkend="GDK-CONTROL-MASK:CAPS"><type>GDK_CONTROL_MASK</type></link>, <link linkend="GDK-SHIFT-MASK:CAPS"><type>GDK_SHIFT_MASK</type></link>, etc.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>accel_group</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAccelGroup"><type>GtkAccelGroup</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the modifier mask for this accel group.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-accel-groups-activate" role="function">
 <title>gtk_accel_groups_activate ()</title>
 <indexterm zone="gtk-accel-groups-activate"><primary>gtk_accel_groups_activate</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_accel_groups_activate           (<link linkend="GObject">GObject</link> *object,

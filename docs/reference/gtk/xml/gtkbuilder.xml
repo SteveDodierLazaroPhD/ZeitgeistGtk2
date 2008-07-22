@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkBuilder">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkBuilder.top_of_page">GtkBuilder</refentrytitle>
@@ -34,6 +41,15 @@ enum                <link linkend="GtkBuilderError">GtkBuilderError</link>;
 <link linkend="guint">guint</link>               <link linkend="gtk-builder-add-from-string">gtk_builder_add_from_string</link>         (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          const <link linkend="gchar">gchar</link> *buffer,
                                                          <link linkend="gsize">gsize</link> length,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="guint">guint</link>               <link linkend="gtk-builder-add-objects-from-file">gtk_builder_add_objects_from_file</link>   (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
+                                                         const <link linkend="gchar">gchar</link> *filename,
+                                                         <link linkend="gchar">gchar</link> **object_ids,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="guint">guint</link>               <link linkend="gtk-builder-add-objects-from-string">gtk_builder_add_objects_from_string</link> (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
+                                                         const <link linkend="gchar">gchar</link> *buffer,
+                                                         <link linkend="gsize">gsize</link> length,
+                                                         <link linkend="gchar">gchar</link> **object_ids,
                                                          <link linkend="GError">GError</link> **error);
 <link linkend="GObject">GObject</link>*            <link linkend="gtk-builder-get-object">gtk_builder_get_object</link>              (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
                                                          const <link linkend="gchar">gchar</link> *name);
@@ -445,6 +461,84 @@ UI definition</link> and merges it with the current contents of <parameter>build
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2 id="gtk-builder-add-objects-from-file" role="function" condition="since:2.14">
+<title>gtk_builder_add_objects_from_file ()</title>
+<indexterm zone="gtk-builder-add-objects-from-file" role="2.14"><primary>gtk_builder_add_objects_from_file</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_builder_add_objects_from_file   (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
+                                                         const <link linkend="gchar">gchar</link> *filename,
+                                                         <link linkend="gchar">gchar</link> **object_ids,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Parses a file containing a <link linkend="BUILDER-UI">GtkBuilder 
+UI definition</link> building only the requested objects and merges
+them with the current contents of <parameter>builder</parameter>. 
+</para>
+<para>
+<note><para>
+If you are adding an object that depends on an object that is not 
+its child (for instance a <link linkend="GtkTreeView"><type>GtkTreeView</type></link> that depends on its
+<link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>), you have to explicitely list all of them in <parameter>object_ids</parameter>. 
+</para></note></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>builder</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkBuilder"><type>GtkBuilder</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filename</parameter>&nbsp;:</term>
+<listitem><simpara> the name of the file to parse
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>object_ids</parameter>&nbsp;:</term>
+<listitem><simpara> nul-terminated array of objects to build
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for an error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A positive value on success, 0 if an error occurred
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-builder-add-objects-from-string" role="function" condition="since:2.14">
+<title>gtk_builder_add_objects_from_string ()</title>
+<indexterm zone="gtk-builder-add-objects-from-string" role="2.14"><primary>gtk_builder_add_objects_from_string</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_builder_add_objects_from_string (<link linkend="GtkBuilder">GtkBuilder</link> *builder,
+                                                         const <link linkend="gchar">gchar</link> *buffer,
+                                                         <link linkend="gsize">gsize</link> length,
+                                                         <link linkend="gchar">gchar</link> **object_ids,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Parses a string containing a <link linkend="BUILDER-UI">GtkBuilder 
+UI definition</link> building only the requested objects and merges
+them with the current contents of <parameter>builder</parameter>. 
+</para>
+<para>
+<note><para>
+If you are adding an object that depends on an object that is not 
+its child (for instance a <link linkend="GtkTreeView"><type>GtkTreeView</type></link> that depends on its
+<link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>), you have to explicitely list all of them in <parameter>object_ids</parameter>. 
+</para></note></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>builder</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkBuilder"><type>GtkBuilder</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>buffer</parameter>&nbsp;:</term>
+<listitem><simpara> the string to parse
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> the length of <parameter>buffer</parameter> (may be -1 if <parameter>buffer</parameter> is nul-terminated)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>object_ids</parameter>&nbsp;:</term>
+<listitem><simpara> nul-terminated array of objects to build
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> return location for an error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A positive value on success, 0 if an error occurred
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-builder-get-object" role="function" condition="since:2.12">
 <title>gtk_builder_get_object ()</title>

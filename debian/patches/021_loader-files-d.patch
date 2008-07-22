@@ -1,7 +1,7 @@
-Index: gtk+2.0-2.13.3/gdk-pixbuf/gdk-pixbuf-io.c
+Index: gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c
 ===================================================================
---- gtk+2.0-2.13.3.orig/gdk-pixbuf/gdk-pixbuf-io.c	2008-06-13 16:31:17.000000000 +0200
-+++ gtk+2.0-2.13.3/gdk-pixbuf/gdk-pixbuf-io.c	2008-06-18 18:33:12.000000000 +0200
+--- gtk+2.0-2.13.5.orig/gdk-pixbuf/gdk-pixbuf-io.c	2008-07-21 22:18:31.000000000 +0200
++++ gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c	2008-07-22 15:09:03.000000000 +0200
 @@ -51,6 +51,9 @@
  #define SNIFF_BUFFER_SIZE 4096
  #define LOAD_BUFFER_SIZE 65536
@@ -9,10 +9,10 @@ Index: gtk+2.0-2.13.3/gdk-pixbuf/gdk-pixbuf-io.c
 +#define LOADERFILEEXT ".loaders"
 +#define LOADERFILEEXT_LEN ((int) strlen (LOADERFILEEXT))
 +
+ #ifndef GDK_PIXBUF_USE_GIO_MIME 
  static gint 
  format_check (GdkPixbufModule *module, guchar *buffer, int size)
- {
-@@ -290,113 +293,93 @@
+@@ -292,113 +295,93 @@
  
  #endif	/* USE_GMODULE */
  
@@ -202,7 +202,7 @@ Index: gtk+2.0-2.13.3/gdk-pixbuf/gdk-pixbuf-io.c
  	
  	while (!have_error && g_io_channel_read_line (channel, &line_buf, NULL, &term, NULL) == G_IO_STATUS_NORMAL) {
  		const char *p;
-@@ -534,8 +517,156 @@
+@@ -536,8 +519,156 @@
  		g_free (line_buf);
  	}
  	g_string_free (tmp_buf, TRUE);
@@ -361,10 +361,10 @@ Index: gtk+2.0-2.13.3/gdk-pixbuf/gdk-pixbuf-io.c
  #endif
  }
  
-Index: gtk+2.0-2.13.3/gdk-pixbuf/Makefile.am
+Index: gtk+2.0-2.13.5/gdk-pixbuf/Makefile.am
 ===================================================================
---- gtk+2.0-2.13.3.orig/gdk-pixbuf/Makefile.am	2008-06-13 16:31:17.000000000 +0200
-+++ gtk+2.0-2.13.3/gdk-pixbuf/Makefile.am	2008-06-18 18:32:57.000000000 +0200
+--- gtk+2.0-2.13.5.orig/gdk-pixbuf/Makefile.am	2008-07-21 22:18:31.000000000 +0200
++++ gtk+2.0-2.13.5/gdk-pixbuf/Makefile.am	2008-07-22 15:08:19.000000000 +0200
 @@ -62,6 +62,7 @@
  	libgdk_pixbuf-2.0.la
  

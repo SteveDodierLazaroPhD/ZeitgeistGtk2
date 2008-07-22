@@ -991,15 +991,17 @@ extern __typeof (gtk_box_get_type) gtk_box_get_type __attribute((alias("IA__gtk_
 #undef gtk_box_pack_end 
 extern __typeof (gtk_box_pack_end) gtk_box_pack_end __attribute((alias("IA__gtk_box_pack_end"), visibility("default")));
 
-#undef gtk_box_pack_end_defaults 
-extern __typeof (gtk_box_pack_end_defaults) gtk_box_pack_end_defaults __attribute((alias("IA__gtk_box_pack_end_defaults"), visibility("default")));
-
 #undef gtk_box_pack_start 
 extern __typeof (gtk_box_pack_start) gtk_box_pack_start __attribute((alias("IA__gtk_box_pack_start"), visibility("default")));
+
+#ifndef GTK_DISABLE_DEPRECATED
+#undef gtk_box_pack_end_defaults 
+extern __typeof (gtk_box_pack_end_defaults) gtk_box_pack_end_defaults __attribute((alias("IA__gtk_box_pack_end_defaults"), visibility("default")));
 
 #undef gtk_box_pack_start_defaults 
 extern __typeof (gtk_box_pack_start_defaults) gtk_box_pack_start_defaults __attribute((alias("IA__gtk_box_pack_start_defaults"), visibility("default")));
 
+#endif
 #undef gtk_box_query_child_packing 
 extern __typeof (gtk_box_query_child_packing) gtk_box_query_child_packing __attribute((alias("IA__gtk_box_query_child_packing"), visibility("default")));
 
@@ -1061,6 +1063,12 @@ extern __typeof (gtk_builder_add_from_file) gtk_builder_add_from_file __attribut
 
 #undef gtk_builder_add_from_string 
 extern __typeof (gtk_builder_add_from_string) gtk_builder_add_from_string __attribute((alias("IA__gtk_builder_add_from_string"), visibility("default")));
+
+#undef gtk_builder_add_objects_from_file 
+extern __typeof (gtk_builder_add_objects_from_file) gtk_builder_add_objects_from_file __attribute((alias("IA__gtk_builder_add_objects_from_file"), visibility("default")));
+
+#undef gtk_builder_add_objects_from_string 
+extern __typeof (gtk_builder_add_objects_from_string) gtk_builder_add_objects_from_string __attribute((alias("IA__gtk_builder_add_objects_from_string"), visibility("default")));
 
 #undef gtk_builder_error_quark 
 extern __typeof (gtk_builder_error_quark) gtk_builder_error_quark __attribute((alias("IA__gtk_builder_error_quark"), visibility("default")));
@@ -6429,6 +6437,12 @@ extern __typeof (gtk_printer_set_icon_name) gtk_printer_set_icon_name __attribut
 #undef gtk_printer_set_is_active 
 extern __typeof (gtk_printer_set_is_active) gtk_printer_set_is_active __attribute((alias("IA__gtk_printer_set_is_active"), visibility("default")));
 
+#undef gtk_printer_set_is_paused 
+extern __typeof (gtk_printer_set_is_paused) gtk_printer_set_is_paused __attribute((alias("IA__gtk_printer_set_is_paused"), visibility("default")));
+
+#undef gtk_printer_set_is_accepting_jobs 
+extern __typeof (gtk_printer_set_is_accepting_jobs) gtk_printer_set_is_accepting_jobs __attribute((alias("IA__gtk_printer_set_is_accepting_jobs"), visibility("default")));
+
 #undef gtk_printer_set_is_default 
 extern __typeof (gtk_printer_set_is_default) gtk_printer_set_is_default __attribute((alias("IA__gtk_printer_set_is_default"), visibility("default")));
 
@@ -6446,6 +6460,12 @@ extern __typeof (gtk_printer_set_state_message) gtk_printer_set_state_message __
 
 #undef gtk_printer_is_active 
 extern __typeof (gtk_printer_is_active) gtk_printer_is_active __attribute((alias("IA__gtk_printer_is_active"), visibility("default")));
+
+#undef gtk_printer_is_paused 
+extern __typeof (gtk_printer_is_paused) gtk_printer_is_paused __attribute((alias("IA__gtk_printer_is_paused"), visibility("default")));
+
+#undef gtk_printer_is_accepting_jobs 
+extern __typeof (gtk_printer_is_accepting_jobs) gtk_printer_is_accepting_jobs __attribute((alias("IA__gtk_printer_is_accepting_jobs"), visibility("default")));
 
 #undef gtk_printer_is_new 
 extern __typeof (gtk_printer_is_new) gtk_printer_is_new __attribute((alias("IA__gtk_printer_is_new"), visibility("default")));

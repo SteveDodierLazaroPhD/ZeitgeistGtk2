@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkTreeSelection">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkTreeSelection.top_of_page">GtkTreeSelection</refentrytitle>
@@ -36,6 +43,8 @@
                                                          <link linkend="GtkTreeSelectionFunc">GtkTreeSelectionFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> data,
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);
+<link linkend="GtkTreeSelectionFunc">GtkTreeSelectionFunc</link> <link linkend="gtk-tree-selection-get-select-function">gtk_tree_selection_get_select_function</link>
+                                                        (<link linkend="GtkTreeSelection">GtkTreeSelection</link> *selection);
 <link linkend="gpointer">gpointer</link>            <link linkend="gtk-tree-selection-get-user-data">gtk_tree_selection_get_user_data</link>    (<link linkend="GtkTreeSelection">GtkTreeSelection</link> *selection);
 <link linkend="GtkTreeView">GtkTreeView</link>*        <link linkend="gtk-tree-selection-get-tree-view">gtk_tree_selection_get_tree_view</link>    (<link linkend="GtkTreeSelection">GtkTreeSelection</link> *selection);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-tree-selection-get-selected">gtk_tree_selection_get_selected</link>     (<link linkend="GtkTreeSelection">GtkTreeSelection</link> *selection,
@@ -158,12 +167,12 @@ that it is okay to change the selection.
 <listitem><simpara>The <link linkend="GtkTreePath"><type>GtkTreePath</type></link> of the row in question
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>path_currently_selected</parameter>&nbsp;:</term>
-<listitem><simpara>%TRUE, if the path is currently selected
+<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, if the path is currently selected
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>data</parameter>&nbsp;:</term>
 <listitem><simpara>user data
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>%TRUE, if the selection state of the row can be toggled
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, if the selection state of the row can be toggled
 
 
 </simpara></listitem></varlistentry>
@@ -254,6 +263,23 @@ and <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if the state of t
 <listitem><simpara> The destroy function for user data.  May be NULL.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-tree-selection-get-select-function" role="function" condition="since:2.14">
+<title>gtk_tree_selection_get_select_function ()</title>
+<indexterm zone="gtk-tree-selection-get-select-function" role="2.14"><primary>gtk_tree_selection_get_select_function</primary></indexterm><programlisting><link linkend="GtkTreeSelectionFunc">GtkTreeSelectionFunc</link> gtk_tree_selection_get_select_function
+                                                        (<link linkend="GtkTreeSelection">GtkTreeSelection</link> *selection);</programlisting>
+<para>
+Returns the current selection function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>selection</parameter>&nbsp;:</term>
+<listitem><simpara> A <link linkend="GtkTreeSelection"><type>GtkTreeSelection</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The function.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-tree-selection-get-user-data" role="function">
 <title>gtk_tree_selection_get_user_data ()</title>
 <indexterm zone="gtk-tree-selection-get-user-data"><primary>gtk_tree_selection_get_user_data</primary></indexterm><programlisting><link linkend="gpointer">gpointer</link>            gtk_tree_selection_get_user_data    (<link linkend="GtkTreeSelection">GtkTreeSelection</link> *selection);</programlisting>

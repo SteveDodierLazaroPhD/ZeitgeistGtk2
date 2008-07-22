@@ -102,11 +102,17 @@ allocate the image buffer, or the image file contained invalid data.
                                                          <link linkend="int">int</link> height,
                                                          <link linkend="GError">GError</link> **error);</programlisting>
 <para>
-Creates a new pixbuf by loading an image from a file.  The file format is
-detected automatically. If <link linkend="NULL:CAPS"><literal>NULL</literal></link> is returned, then <parameter>error</parameter> will be set.
-Possible errors are in the <link linkend="GDK-PIXBUF-ERROR:CAPS"><type>GDK_PIXBUF_ERROR</type></link> and <link linkend="G-FILE-ERROR:CAPS"><type>G_FILE_ERROR</type></link> domains.
+Creates a new pixbuf by loading an image from a file.  
+The file format is detected automatically. If <link linkend="NULL:CAPS"><literal>NULL</literal></link> is returned, then 
+<parameter>error</parameter> will be set. Possible errors are in the <link linkend="GDK-PIXBUF-ERROR:CAPS"><type>GDK_PIXBUF_ERROR</type></link> and 
+<link linkend="G-FILE-ERROR:CAPS"><type>G_FILE_ERROR</type></link> domains.
+</para>
+<para>
 The image will be scaled to fit in the requested size, preserving
-the image's aspect ratio.</para>
+the image's aspect ratio. Note that the returned pixbuf may be smaller
+than <parameter>width</parameter> x <parameter>height</parameter>, if the aspect ratio requires it. To load
+and image at the requested size, regardless of aspect ratio, use
+<link linkend="gdk-pixbuf-new-from-file-at-scale"><function>gdk_pixbuf_new_from_file_at_scale()</function></link>.</para>
 <para>
 
 </para><variablelist role="params">

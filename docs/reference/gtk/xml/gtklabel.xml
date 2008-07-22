@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkLabel">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkLabel.top_of_page">GtkLabel</refentrytitle>
@@ -167,18 +174,26 @@ implies, most labels are used to label another widget such as a
 The GtkLabel implementation of the GtkBuildable interface supports a 
 custom &lt;attributes&gt; element, which supports any number of &lt;attribute&gt;
 elements. the &lt;attribute&gt; element has attributes named name, value,
-start and end and allows you to specify <link linkend="PangoAttributs"><type>PangoAttributs</type></link> for this label.
+start and end and allows you to specify <link linkend="PangoAttribute"><type>PangoAttribute</type></link> values for this label.
 </para>
 <example>
-<title>A UI definition fragment specifying pango attributes</title>
+<title>A UI definition fragment specifying Pango attributes</title>
 <programlisting><![CDATA[
 <object class="GtkLabel">
   <attributes>
-    <attribute name=\"weight\" value=\"PANGO_WEIGHT_BOLD\"/>
+    <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
+    <attribute name="background" value="red" start="5" end="10"/>"
   </attributes>
 </object>
 ]]></programlisting>
 </example>
+<para>
+The start and end attributes specify the range of characters to which the
+Pango attribute applies. If start and end are not specified, the attribute is
+applied to the whole text. Note that specifying ranges does not make much
+sense with translatable attributes. Use markup embedded in the translatable
+content instead.
+</para>
 </refsect2>
 
 
@@ -380,7 +395,7 @@ external data, you may need to escape it with <link linkend="g-markup-escape-tex
 <link linkend="g-markup-printf-escaped"><function>g_markup_printf_escaped()</function></link><!-- -->:
 <informalexample><programlisting>
 char *markup;
-
+  
 markup = g_markup_printf_escaped ("&lt;span style=\"italic\"&gt;&percnt;s&lt;/span&gt;", str);
 gtk_label_set_markup (GTK_LABEL (label), markup);
 g_free (markup);

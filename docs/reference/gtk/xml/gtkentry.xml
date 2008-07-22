@@ -1,3 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
 <refentry id="GtkEntry">
 <refmeta>
 <refentrytitle role="top_of_page" id="GtkEntry.top_of_page">GtkEntry</refentrytitle>
@@ -30,6 +37,7 @@
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-position">gtk_entry_set_position</link>              (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="gint">gint</link> position);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-get-text">gtk_entry_get_text</link>                  (<link linkend="GtkEntry">GtkEntry</link> *entry);
+<link linkend="guint16">guint16</link>             <link linkend="gtk-entry-get-text-length">gtk_entry_get_text_length</link>           (<link linkend="GtkEntry">GtkEntry</link> *entry);
 <link linkend="void">void</link>                <link linkend="gtk-entry-select-region">gtk_entry_select_region</link>             (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="gint">gint</link> start,
                                                          <link linkend="gint">gint</link> end);
@@ -57,6 +65,9 @@ const <link linkend="GtkBorder">GtkBorder</link>*    <link linkend="gtk-entry-ge
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-alignment">gtk_entry_set_alignment</link>             (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="gfloat">gfloat</link> xalign);
 <link linkend="gfloat">gfloat</link>              <link linkend="gtk-entry-get-alignment">gtk_entry_get_alignment</link>             (<link linkend="GtkEntry">GtkEntry</link> *entry);
+<link linkend="void">void</link>                <link linkend="gtk-entry-set-overwrite-mode">gtk_entry_set_overwrite_mode</link>        (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="gboolean">gboolean</link> overwrite);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-entry-get-overwrite-mode">gtk_entry_get_overwrite_mode</link>        (<link linkend="GtkEntry">GtkEntry</link> *entry);
 <link linkend="PangoLayout">PangoLayout</link>*        <link linkend="gtk-entry-get-layout">gtk_entry_get_layout</link>                (<link linkend="GtkEntry">GtkEntry</link> *entry);
 <link linkend="void">void</link>                <link linkend="gtk-entry-get-layout-offsets">gtk_entry_get_layout_offsets</link>        (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="gint">gint</link> *x,
@@ -293,6 +304,24 @@ See also <link linkend="gtk-editable-get-chars"><function>gtk_editable_get_chars
      stored.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-entry-get-text-length" role="function" condition="since:2.14">
+<title>gtk_entry_get_text_length ()</title>
+<indexterm zone="gtk-entry-get-text-length" role="2.14"><primary>gtk_entry_get_text_length</primary></indexterm><programlisting><link linkend="guint16">guint16</link>             gtk_entry_get_text_length           (<link linkend="GtkEntry">GtkEntry</link> *entry);</programlisting>
+<para>
+Retrieves the current length of the text in
+<parameter>entry</parameter>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>entry</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkEntry"><type>GtkEntry</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the current number of characters
+              in <link linkend="GtkEntry"><type>GtkEntry</type></link>, or 0 if there are none.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-entry-select-region" role="function" condition="deprecated:2.0: Use gtk_editable_select_region() instead.">
 <title>gtk_entry_select_region ()</title>
 <indexterm zone="gtk-entry-select-region" role="deprecated"><primary>gtk_entry_select_region</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_select_region             (<link linkend="GtkEntry">GtkEntry</link> *entry,
@@ -597,6 +626,39 @@ Gets the value set by <link linkend="gtk-entry-set-alignment"><function>gtk_entr
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+</para></refsect2>
+<refsect2 id="gtk-entry-set-overwrite-mode" role="function" condition="since:2.14">
+<title>gtk_entry_set_overwrite_mode ()</title>
+<indexterm zone="gtk-entry-set-overwrite-mode" role="2.14"><primary>gtk_entry_set_overwrite_mode</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_set_overwrite_mode        (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="gboolean">gboolean</link> overwrite);</programlisting>
+<para>
+Sets whether the text is overwritten when typing in the <link linkend="GtkEntry"><type>GtkEntry</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>entry</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkEntry"><type>GtkEntry</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>overwrite</parameter>&nbsp;:</term>
+<listitem><simpara> new value
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-entry-get-overwrite-mode" role="function" condition="since:2.14">
+<title>gtk_entry_get_overwrite_mode ()</title>
+<indexterm zone="gtk-entry-get-overwrite-mode" role="2.14"><primary>gtk_entry_get_overwrite_mode</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_get_overwrite_mode        (<link linkend="GtkEntry">GtkEntry</link> *entry);</programlisting>
+<para>
+Gets the value set by <link linkend="gtk-entry-set-overwrite-mode"><function>gtk_entry_set_overwrite_mode()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>entry</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkEntry"><type>GtkEntry</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> whether the text is overwritten when typing.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-entry-get-layout" role="function">
 <title>gtk_entry_get_layout ()</title>
