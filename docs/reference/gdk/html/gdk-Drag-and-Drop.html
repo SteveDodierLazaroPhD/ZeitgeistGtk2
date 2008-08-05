@@ -105,10 +105,10 @@ void                <a class="link" href="gdk-Drag-and-Drop.html#gdk-drop-finish
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> success,
                                                          guint32 time_);
-guint32             <a class="link" href="gdk-Drag-and-Drop.html#gdk-drag-get-protocol" title="gdk_drag_get_protocol ()">gdk_drag_get_protocol</a>               (guint32 xid,
+<a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a>     <a class="link" href="gdk-Drag-and-Drop.html#gdk-drag-get-protocol" title="gdk_drag_get_protocol ()">gdk_drag_get_protocol</a>               (<a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a> xid,
                                                          <a class="link" href="gdk-Drag-and-Drop.html#GdkDragProtocol" title="enum GdkDragProtocol">GdkDragProtocol</a> *protocol);
-guint32             <a class="link" href="gdk-Drag-and-Drop.html#gdk-drag-get-protocol-for-display" title="gdk_drag_get_protocol_for_display ()">gdk_drag_get_protocol_for_display</a>   (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
-                                                         guint32 xid,
+<a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a>     <a class="link" href="gdk-Drag-and-Drop.html#gdk-drag-get-protocol-for-display" title="gdk_drag_get_protocol_for_display ()">gdk_drag_get_protocol_for_display</a>   (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
+                                                         <a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a> xid,
                                                          <a class="link" href="gdk-Drag-and-Drop.html#GdkDragProtocol" title="enum GdkDragProtocol">GdkDragProtocol</a> *protocol);
 enum                <a class="link" href="gdk-Drag-and-Drop.html#GdkDragProtocol" title="enum GdkDragProtocol">GdkDragProtocol</a>;
 void                <a class="link" href="gdk-Drag-and-Drop.html#gdk-drag-context-unref" title="gdk_drag_context_unref ()">gdk_drag_context_unref</a>              (<a class="link" href="gdk-Drag-and-Drop.html#GdkDragContext" title="GdkDragContext">GdkDragContext</a> *context);
@@ -578,7 +578,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 <hr>
 <div class="refsect2" lang="en">
 <a name="gdk-drag-get-protocol"></a><h3>gdk_drag_get_protocol ()</h3>
-<pre class="programlisting">guint32             gdk_drag_get_protocol               (guint32 xid,
+<pre class="programlisting"><a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a>     gdk_drag_get_protocol               (<a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a> xid,
                                                          <a class="link" href="gdk-Drag-and-Drop.html#GdkDragProtocol" title="enum GdkDragProtocol">GdkDragProtocol</a> *protocol);</pre>
 <p>
 Finds out the DND protocol supported by a window.</p>
@@ -589,7 +589,7 @@ Finds out the DND protocol supported by a window.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>xid</code></em> :</span></p></td>
-<td> the X id of the destination window.
+<td> the windowing system id of the destination window.
 </td>
 </tr>
 <tr>
@@ -599,9 +599,9 @@ Finds out the DND protocol supported by a window.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the X id of the window where the drop should happen. This 
-   may be <em class="parameter"><code>xid</code></em> or the X id of a proxy window, or None if <em class="parameter"><code>xid</code></em> doesn't
-   support Drag and Drop.
+<td> the windowing system specific id for the window where
+   the drop should happen. This may be <em class="parameter"><code>xid</code></em> or the id of a proxy
+   window, or zero if <em class="parameter"><code>xid</code></em> doesn't support Drag and Drop.
 </td>
 </tr>
 </tbody>
@@ -610,8 +610,8 @@ Finds out the DND protocol supported by a window.</p>
 <hr>
 <div class="refsect2" lang="en">
 <a name="gdk-drag-get-protocol-for-display"></a><h3>gdk_drag_get_protocol_for_display ()</h3>
-<pre class="programlisting">guint32             gdk_drag_get_protocol_for_display   (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
-                                                         guint32 xid,
+<pre class="programlisting"><a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a>     gdk_drag_get_protocol_for_display   (<a class="link" href="GdkDisplay.html" title="GdkDisplay">GdkDisplay</a> *display,
+                                                         <a class="link" href="gdk-Event-Structures.html#GdkNativeWindow" title="GdkNativeWindow">GdkNativeWindow</a> xid,
                                                          <a class="link" href="gdk-Drag-and-Drop.html#GdkDragProtocol" title="enum GdkDragProtocol">GdkDragProtocol</a> *protocol);</pre>
 <p>
 Finds out the DND protocol supported by a window.</p>
@@ -628,7 +628,7 @@ Finds out the DND protocol supported by a window.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>xid</code></em> :</span></p></td>
-<td> the X id of the destination window.
+<td> the windowing system id of the destination window.
 </td>
 </tr>
 <tr>
@@ -638,8 +638,8 @@ Finds out the DND protocol supported by a window.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the X id of the window where the drop should happen. This 
-    may be <em class="parameter"><code>xid</code></em> or the X id of a proxy window, or None if <em class="parameter"><code>xid</code></em> doesn't
+<td> the windowing system id of the window where the drop should happen. This 
+    may be <em class="parameter"><code>xid</code></em> or the id of a proxy window, or zero if <em class="parameter"><code>xid</code></em> doesn't
     support Drag and Drop.
 </td>
 </tr>

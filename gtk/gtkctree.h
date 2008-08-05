@@ -28,7 +28,7 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
-#ifndef GTK_DISABLE_DEPRECATED
+#if !defined (GTK_DISABLE_DEPRECATED) || defined (__GTK_CLIST_C__) || defined (__GTK_CTREE_C__)
 
 #ifndef __GTK_CTREE_H__
 #define __GTK_CTREE_H__
@@ -392,7 +392,7 @@ void gtk_ctree_node_set_row_data                 (GtkCTree     *ctree,
 void gtk_ctree_node_set_row_data_full            (GtkCTree     *ctree,
 						  GtkCTreeNode *node,
 						  gpointer      data,
-						  GtkDestroyNotify destroy);
+						  GDestroyNotify destroy);
 gpointer gtk_ctree_node_get_row_data             (GtkCTree     *ctree,
 						  GtkCTreeNode *node);
 void gtk_ctree_node_moveto                       (GtkCTree     *ctree,

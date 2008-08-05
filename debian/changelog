@@ -1,3 +1,62 @@
+gtk+2.0 (2.13.6-0ubuntu1) intrepid; urgency=low
+
+  * New upstream version:
+    - Fix problems on 64-bit Windows
+    - Fix a long-standing, well-known problem with the handling
+      of insensitive buttons, bug 56070 (lp: #22930)
+    - Fallback to Xinerama if the Xrandr implementation is just a stub
+    - gdk_threads_add_timeout_seconds[_full]: New functions with
+      second-granularity to complete the set of gdk_threads_ timeout
+      functions
+    - Support rendering icons with emblems specified as GEmblemedIcon
+    - GtkFileChooser has a GFile-oriented API now, functions
+      for creating filechoosers with specific backends have been
+      deprecated, since GIO is used directly.
+    - GtkAdjustment has been sealed, adding getters and setters
+      for all struct fields.
+    - Bugs fixed:
+    544265 GDK assumes XFIXES extension
+    543915 "Sole completion" translation issue
+    544510 SetTimer callback signatures has the wrong type
+    544390 evince crashes after clicking print
+    361561 StatusIcon signals not documented as definitely public API.
+    368234 Incorrect tabs rendering during reorder with rounded themes
+    545976 Deprecate gtk_file_chooser_*_with_backend
+    545978 Make filechooser GFile API public 
+    544863 gtkquartz.h not included in released 2.13.5 package
+    424207 printing hangs on unreachable cups server
+    56070 Can't click button after setting it sensitive
+    545931 small documentation typos
+    344383 use po/LINGUAS
+    65818 rename gtk_window_set_default() and add getter for it
+    539733 No way to control treeview separator height
+    523950 GtkTreeModelFilter's visible function may get an empty...
+    526575 Missing return type in gtk_ui_manager_get_toplevels...
+    429411 add style properties to set minimum progressbar w...
+    429427 Add "arrow-spacing" style property to GtkRange
+    544302 GtkStatusIcon should support GIcon
+    339699 implement gtk_print_operation_set_show_dialog for...
+    538686 gtkprintoperation-win32.c: devmode_from_settings
+    540379 gtk_tree_view_enable_model_drag_dest and ...
+    544684 Win64 issue, window handles are assumed to be 32-bit
+    540834 Insensitive widgets cannot be grabbed
+    515596 GtkUIManager's embedded UI definition example is invalid
+    534979 GtkImageMenuItem is a bin but has two children
+    382291 Automatically dim the combobox when the model is empty
+    545982 missing braces cause bogus warnings when using GtkBuilder
+    544858 Seal GtkAdjustment
+  * debian/control.in:
+    - updated libglib requirement
+  * debian/patches/080_dont_free_gettext_values.patch:
+    - dropped, the change is in the new version
+  * debian/patches/009_gtk-export-filechooser.patch,
+    debian/patches/070_mandatory-relibtoolize.patch:
+    - new version update
+  * debian/rules:
+    - updated shlibs version
+
+ -- Sebastien Bacher <seb128@canonical.com>  Tue, 05 Aug 2008 22:10:54 +0200
+
 gtk+2.0 (2.13.5-0ubuntu2) intrepid; urgency=low
 
   * debian/patches/080_dont_free_gettext_values.patch:

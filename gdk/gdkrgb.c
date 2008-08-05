@@ -36,7 +36,6 @@
 
 #define ENABLE_GRAYSCALE
 
-#include "gdkprivate.h"
 #include "gdkinternals.h"	/* _gdk_windowing_get_bits_for_depth() */
 
 #include "gdkrgb.h"
@@ -678,9 +677,6 @@ gdk_rgb_init (void)
 {
   static const gint byte_order[1] = { 1 };
 
-  if (_gdk_debug_flags & GDK_DEBUG_GDKRGB)
-    gdk_rgb_verbose = TRUE;
-
   /* check endian sanity */
 #if G_BYTE_ORDER == G_BIG_ENDIAN
   if (((char *)byte_order)[0] == 1)
@@ -866,7 +862,7 @@ gdk_rgb_convert_8 (GdkRgbInfo *image_info, GdkImage *image,
     {
       bp2 = bptr;
       obptr = obuf;
-      if (((unsigned long)obuf | (unsigned long) bp2) & 3)
+      if (((guintptr)obuf | (guintptr) bp2) & 3)
 	{
 	  for (x = 0; x < width; x++)
 	    {
@@ -1499,7 +1495,7 @@ gdk_rgb_convert_565 (GdkRgbInfo *image_info, GdkImage *image,
     {
       bp2 = bptr;
       obptr = obuf;
-      if (((unsigned long)obuf | (unsigned long) bp2) & 3)
+      if (((guintptr)obuf | (guintptr) bp2) & 3)
 	{
 	  for (x = 0; x < width; x++)
 	    {
@@ -1630,7 +1626,7 @@ gdk_rgb_convert_565_gray (GdkRgbInfo *image_info, GdkImage *image,
     {
       bp2 = bptr;
       obptr = obuf;
-      if (((unsigned long)obuf | (unsigned long) bp2) & 3)
+      if (((guintptr)obuf | (guintptr) bp2) & 3)
 	{
 	  for (x = 0; x < width; x++)
 	    {
@@ -1772,7 +1768,7 @@ gdk_rgb_convert_565_d (GdkRgbInfo *image_info, GdkImage *image,
       const guint32 *dmp = DM_565 + ((y & (DM_HEIGHT - 1)) << DM_WIDTH_SHIFT);
       bp2 = bptr;
       obptr = obuf;
-      if (((unsigned long)obuf | (unsigned long) bp2) & 3)
+      if (((guintptr)obuf | (guintptr) bp2) & 3)
 	{
 	  for (x = x_align; x < width; x++)
 	    {
@@ -2034,7 +2030,7 @@ gdk_rgb_convert_888_lsb (GdkRgbInfo *image_info, GdkImage *image,
     {
       bp2 = bptr;
       obptr = obuf;
-      if (((unsigned long)obuf | (unsigned long) bp2) & 3)
+      if (((guintptr)obuf | (guintptr) bp2) & 3)
 	{
 	  for (x = 0; x < width; x++)
 	    {

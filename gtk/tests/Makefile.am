@@ -51,6 +51,13 @@ TEST_PROGS			+= object
 object_SOURCES			 = object.c pixbuf-init.c
 object_LDADD			 = $(progs_ldadd)
 
+# this doesn't work in make distcheck, since running
+# on a naked X server creates slightly different event
+# sequences than running on a normal desktop
+# TEST_PROGS			+= crossingevents
+crossingevents_SOURCES		 = crossingevents.c
+crossingevents_LDADD		 = $(progs_ldadd)
+
 # this doesn't work in make distcheck, since it doesn't
 # find file-chooser-test-dir 
 # TEST_PROGS			+= filechooser

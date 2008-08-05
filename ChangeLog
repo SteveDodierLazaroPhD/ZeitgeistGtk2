@@ -1,4 +1,651 @@
+2008-08-05  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.13.6 ===
+
+	* gdk/tests/Makefile.am: Disable check-gdk-cairo test for now,
+	since it breaks make distcheck.
+
+2008-08-05  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkcombobox.c (gtk_combo_box_update_sensitivity): bail out
+	early if priv->button is NULL to avoid zillions of warnings when
+	destroying combo boxes that were working fine before the
+	button sensitivity patch.
+
+2008-08-05  Michael Natterer  <mitch@imendio.com>
+
+	Bug 544858 – Seal GtkAdjustment
+
+	* gtk/gtk.symbols
+	* gtk/gtkadjustment.[ch] (struct GtkAdjustment): seal all struct
+	members.
+
+	Add accessors for all properties and additionally a new function
+	gtk_adjustment_configure() which sets all properties at
+	once. Patch by Christian Dywan and myself.
+
+2008-08-05  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkadjustment.c (gtk_adjustment_set_value): clamp the value
+	to [lower...upper-page_size] instead of only [lower...upper].
+
+	* README: add note about this change.
+
+	While this fix is correct and should have been there forever, it
+	has the potential to break some corner cases, however these cases
+	would set page_size to a value != 0 which suggests they want it
+	honored.
+
+2008-08-05  Michael Natterer  <mitch@imendio.com>
+
+	* tests/testiconview.c: don't use the deprecated
+	gtk_box_pack_start_defaults().
+
+2008-08-04  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 545982 – missing braces cause bogus warnings when using GtkBuilder
+
+	* gtk/gtkcelllayout.c:
+	* gtk/gtkdialog.c:
+	* gtk/gtkcontainer.c: Add missing braces to some GtkBuildable
+	implementations. Patch by Antti Kaijanmäki
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtktext.c: Cast pointer to gintptr instead of gulong to
+	avoid warning on Win64.
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkgc.c: Cast tile, stipple and clip_mask pointers to
+	gintptr instead of long when calculating hash, so we get all of
+	the pointer bits on Win64 where long is 32 bits.
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkprintoperation-win32.c: Don't need to declare
+	IPrintDialogCallback with mingw64 either. It seems to be provided
+	with the newer versions of the headers included with mingw64.
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	Bug 544684 - Win64 issue, window handles are assumed to be 32-bit
+
+	* gtk/gtksocket-win32.c: Don't cast HWND to guint, pass it as such
+	as the GdkNativeWindow parameter to
+	gtk_window_remove_embedded_xid(). Debugging printout format fixes.
+
+	* gtk/gtkwin32embed.h
+	* gtk/gtkwin32embed.c: Change the types of wparam and lparam
+	parameters to actually be WPARAM and LPARAM.
+
+	* gtk/gtkplug-win32.c: Adapt accordingly.
+
+2008-08-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtksettings.c: Improve a setting nick: 'aureal' is not really
+	a word, use 'audible' instead.
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/updateiconcache.c (write_bucket): Enclose ?: expression
+	with parens so cast covers all of it.
+
+2008-08-04  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 382291 – Automatically dim the combobox when the model is empty
+
+	* gtk/gtk.symbols:
+	* gtkcombobox.[hc]: Add a GtkComboBox::button-sensitivity
+	property with getter and setter to control the sensitity of
+	empty combo boxes. Patch by Carlos Garnacho, Sven Herzberg,
+	Christian Dywan and others.
+
+	* README.in: Add a note about automatic combobox sensitivity.
+	
+2008-08-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/tests/Makefile.am: Skip crossingevents test when
+	running make check, since it doesn't work on a naked
+	X server.
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	Bug 544684 - Win64 issue, window handles are assumed to be 32-bit
+
+	* gdk/gdkdnd.h
+	* gdk/gdkdnd.c
+	* gdk/win32/gdkdnd-win32.c
+	* gdk/x11/gdkdnd-x11.c: Change return value and type of window id
+	from guint32 to GdkNativeWindow for
+	gdk_drag_get_protocol_for_display() and
+	gdk_drag_get_protocol(). This is not an API break on existing
+	platforms, as GdkNativeWindow has been guint32 for them
+	already.
+
+	* gdk/gdkselection.h
+	* gdk/gdkselection.c
+	* gdk/win32/gdkselection-win32.c
+	* gdk/x11/gdkselection-x11.c: Ditto for the requestor window id
+	parameter of gdk_selection_send_notify_for_display() and
+	gdk_selection_send_notify().
+
+	* gdk/win32/gdkcursor-win32.c
+	* gdk/win32/xcursors.h: Change some gchar* to guchar* and vice
+	versa to avoid gcc 4.4 signedness warnings.
+
+	* gdk/win32/gdkevents-win32.c
+	* gdk/win32/gdkproperty-win32.c
+	* gdk/win32/gdkselection-win32.c: Add some guchar and char pointer
+	casts to get rid of gcc 4.4 signedness warnings. Print GdkAtom
+	values in debugging output using the %p format.
+	
+	* gdk/win32/gdkkeys-win32.c
+	* gdk/win32/gdkfont-win32.c
+	* gdk/win32/gdkmain-win32.c: Add some casts to avoid gcc warnings.
+ 
+	* gdk/win32/gdkwindow-win32.c: Use SetWindowLongPtr() instead of
+	SetWindowLong().
+
+	* gdk/win32/gdkwin32id.c (gdk_handle_hash): Use all 64 bits of a
+	HANDLE on Win64.
+
+	* gtk/gtkwindow.h
+	* gtk/gtkwindow.c: Change the type of the xid parameter of the
+	internal gtk_window_remove_embedded_xid() and
+	gtk_window_add_embedded_xid() functions from guint to
+	GdkNativeWindow.
+
+	* gtk/gtkwindow.c (send_client_message_to_embedded_windows):
+	Instead of GPOINTER_TO_UINT(), just cast the gpointer to
+	GdkNativeWindow. GPOINTER_TO_UINT() drops the upper 32 bits on
+	Win64.
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/gdkrgb.c: Cast pointers to guintptr, not unsigned long,
+	before doing bit tests on them.
+
+2008-08-05  Tor Lillqvist  <tml@novell.com>
+
+	* configure.in: Define GDK_NATIVE_WINDOW_POINTER on 32-bit
+	Windows, too. It just makes more sense, as a HWND *is* a kind of
+	pointer.
+
+	* gdk/gdkconfig.h.win32: Ditto here.
+
+2008-08-04  Björn Lindqvist  <bjourne@gmail.com>
+
+	Bug 534979 – GtkImageMenuItem is a bin but has two children.
+
+	* gtk/gtkimagemenuitem.c (gtk_image_menu_item_forall): Do not
+	include the image widget when iterating over non-internal
+	children. Patch by rainwoodman.
+
+2008-08-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2008-08-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump glib dependency to 2.17.6
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkclist.c
+	* gtk/gtkctree.c
+	* gtk/gtkpixmap.c
+	* gtk/gtkpreview.c: get rid of using deprecated GDK APIs.
+
+	* gtk/gtktext.c: ditto, apart from the text cruft APIs.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gdk/gdk.c (gdk_parse_args): call gdk_rgb_set_verbose(TRUE) if
+	"gdkrgb" is in the debug flags.
+
+	* gdk/gdkrgb.c (gdk_rgb_init): remove setting the verbose flag
+	here, this function is deprecated and the debug flag didn't work
+	when using GDK properly.
+
+2008-08-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkicontheme.c: Update to handle GEmblem.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* tests/prop-editor.c: undeprecate (apart from still using
+	GtkOptionMenu).
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkseparatortoolitem.c
+	* tests/testactions.c: remove pointless #undef GTK_DISABLE_DEPRECATED.
+
+	* gtk/gtkcalendar.c (calendar_set_display_option): use
+	gtk_calendar_set_display_options() instead of the deprecated
+	gtk_calendar_display_options().
+
+2008-08-04  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtkfilechooserbutton.c: Fix "/* within comment" warning.
+
+2008-08-04  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtknotebook.c (gtk_notebook_expose): Set drag window background
+	to be the GtkNotebook background color. This is a workaround to
+	prevent black pixels in rounded tabs when reordering. Improves
+	#368234.
+
+2008-08-04  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtkfilechooserbutton.[ch]:
+	* gtk/gtkfilechooserdefault.[ch]:
+	* gtk/gtkfilechooserdialog.[ch]:
+	* gtk/gtkfilechooserwidget.[ch]: Deprecate
+	gtk_file_chooser_*_new_with_backend(), since GIO is already used
+	directly. Fixes #545976.
+
+2008-08-04  Carlos Garnacho  <carlos@imendio.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtkfilechooser.[ch]: Make GFile-oriented API public. Fixes
+	#545978.
+	* gtk/gtkfilechooserbutton.c:
+	* gtk/gtkfilechooserdefault.c:
+	* gtk/gtkfilechooserutils.c: Update to use public GFile API.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/Makefile.am: build with GTK_DISABLE_DEPRECATED again.
+
+	Fix pltcheck.sh by restricting the visibility of deprecated
+	symbols to the places where they are actually used:
+
+	* gtk/gtkclist.c
+	* gtk/gtkctree.c
+	* gtk/gtklistitem.c
+	* gtk/gtklist.c
+	* gtk/gtkprogressbar.c
+	* gtk/gtkpixmap.c
+	* gtk/gtkprogress.c: #undef GTK_DISABLE_DEPRECATED and #define
+	__GTK_FOO_C__ on top instead of before including gtkaliasdef.c.
+
+	* gtk/gtkclist.h
+	* gtk/gtkctree.h
+	* gtk/gtklistitem.h
+	* gtk/gtklist.h
+	* gtk/gtkpixmap.h
+	* gtk/gtkprogress.h: make the headers visible if the respective
+	__GTK_FOO_C__ are defined.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkclist.c
+	* gtk/gtklist.c
+	* gtk/gtkoldeditable.c
+	* gtk/gtkpixmap.c
+	* gtk/gtktipsquery.c
+	* gtk/gtktree.c
+	* gtk/gtktreeitem.c: avoid using deprecated GtkWidget API.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkclist.[ch]
+	* gtk/gtkctree.[ch]
+	* gtk/gtkitemfactory.[ch]
+	* gtk/gtkobject.[ch]
+	* gtk/gtksignal.[ch]: s/GtkDestroyNotify/GDestroyNotify/g
+
+2008-08-04  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtklinkbutton.c (gtk_link_button_set_uri): update the link
+	color when the "visited" state is changed.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwindow.c: move the code of the deprecated
+	gtk_window_set_policy() to a new private function
+	gtk_window_set_policy_internal() and call it from
+	gtk_window_set_policy().
+
+	(gtk_window_set_resizable): use the new internal function in order
+	to avoid our own deprecated public API.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkbindings.c: move the code of the deprecated
+	gtk_binding_entry_clear() to a new private function
+	gtk_binding_entry_clear_internal() and call it from
+	gtk_binding_entry_clear().
+
+	(_gtk_binding_entry_add_signall)
+	(gtk_binding_parse_bind): use the new internal function in order
+	to avoid our own deprecated public API.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfontsel.c (gtk_font_selection_dialog_get_font):
+	avoid our own deprecated public API and use
+	gtk_font_selection_get_font_internal() instead of
+	gtk_font_selection_get_font().
+
+	(gtk_font_selection_get_font)
+	(gtk_font_selection_dialog_get_font): Add missing
+	"Deprecated: 2.0" to the api doc comments.
+
+2008-08-04  Michael Natterer  <mitch@imendio.com>
+
+	* gdk/tests/Makefile.am: add the generated PNGs to CLEANFILES.
+
+2008-08-04  Tor Lillqvist  <tml@novell.com>
+
+	* configure.in: Set LIB_EXE_MACHINE_FLAG to either X86 or X64 on
+	Windows. AC_SUBST it.
+
+	* gdk/Makefile.am
+	* gtk/Makefile.am: Pass appropriate -machine flag to lib.exe.
+
+2008-08-04  Tor Lillqvist  <tml@novell.com>
+
+	Bug 544684 - Win64 issue, window handles are assumed to be 32-bit
+
+	* configure.in: On Win64, define GDK_NATIVE_WINDOW_POINTER.
+
+	* gdk/gdkconfig.h.win32: Ditto here.
+
+2008-08-04  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkstatusicon.c: Fix typo in Win32 and Quartz code:
+	s/gtk_icon_icon_info_load_icon/gtk_icon_info_load_icon/ .
+
+2008-08-04  Tor Lillqvist  <tml@novell.com>
+
+	* configure.in: Don't bother with the test "if gio can sniff png"
+	if $gio_can_sniff has been already set. Preset it to "no" for
+	Win32. This helps cross-compilation from 32-bit Windows to 64-bit,
+	or from Unix to Windows in general. No idea how this should be
+	handled for cross-compilation in general.
+
+2008-08-04  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/win32/gdkdisplay-win32.c: Don't bother looking up
+	EnumDisplayMonitors and GetMonitorInfoA dynamically, they are
+	present in NT-based Windows since Windows 2000.
+	(enum_monitor): For some reason the MONITORINFOEX struct in
+	mingw-win64 is different than the proper one as in MSDN and 32-bit
+	mingw, so just copy the proper definition here.
+
+2008-08-03  Björn Lindqvist  <bjourne@gmail.com>
+
+	Bug 540379 – gtk_tree_view_enable_model_drag_dest and
+	gtk_tree_view_enable_model_drag_source unsets reorderable property
+
+	* gtk/gtktreeview.c: Improve docstrings regarding reorderable
+	property.
+
+2008-08-03  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/x11/gdkapplaunchcontext-x11.c: Support GEmblemedIcon.
+
+2008-08-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 546128 – Weirz string
+
+	* gtk/gtksettings.c: Add a translator hint.
+	Requested by Ignacio Casal Quinteiro
+
+2008-08-02  Tor Lillqvist  <tml@novell.com>
+
+	Bug 538686 - gtkprintoperation-win32.c: devmode_from_settings
+
+	* gtk/gtkprintoperation-win32.c (devmode_from_settings): Plug
+	potential leak. Thanks to Morten Welinder.
+
+2008-08-02  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkprint-win32.c
+	* gtk/gtkprint-win32.h
+	* gtk/gtkprintoperation-win32.c: Cosmetic fixups after patch
+	below.
+
+2008-08-02  Tor Lillqvist  <tml@novell.com>
+
+	Bug 339699 - implement gtk_print_operation_set_show_dialog for
+	Windows
+	
+	* gtk/gtkprint-win32.c
+	* gtk/gtkprint-win32.h
+	* gtk/gtkprintoperation-win32.c: Patch by ecyrbe@gmail.com.
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+	
+	Bug 544302 – GtkStatusIcon should support GIcon
+
+	* gtk/gtk.symbols:
+	* gtk/gtkstatusicon.[hc]: Add GIcon support to GtkStatusIcon.
+	Patch by Christian Dywan
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+	
+	Bug 429427 – Add "arrow-spacing" style property to GtkRange
+
+	* gtk/gtkrange.c: Add an arrow-spacing style property.
+	Patch by Carlos Garnacho and Christian Dywan
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 429411 – add style properties to set minimum progressbar 
+	width/height
+
+	* gtk/gtkprogressbar.c: Add style properties for minimum size.
+	Patch by Carlos Garnacho and Christian Dywan
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 526575 – Missing return type in gtk_ui_manager_get_toplevels
+	documentation
+
+	* gtk/gtkuimanager.c (gtk_ui_manager_get_toplevels): Improve
+	the docs.
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 523950 – GtkTreeModelFilter's visible function may get an empty
+	row
+
+	* gtk/gtktreemodelfilter.c (gtk_tree_model_filter_set_visible_func):
+	Explain and show how iterators pointing to empty rows should be
+	handled in the visible function. Patch by Björn Lindqvist
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 539733 – No way to control treeview separator height
+
+	* gtk/gtktreeview.c: Respect the wide-separators and
+	separator-height style properties when drawing separators.
+	Patch by Christian Dywan
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 65818 – rename gtk_window_set_default() and add getter for it
+
+	* gtk/gtk.symbols:
+	* gtk/gtkwindow.[hc]: Rename gtk_window_get_default to
+	gtk_window_get_default_widget. Patch by Christian Dywan
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 344383 – use po/LINGUAS
+
+	* po/LINGUAS: New file, to make translators happy.
+	* configure.in: Use po/LINGUAS
+	* po/Makefile.in.in: Add po/LINGUAS to DISTFILES
+	Patch by Claude Paroz
+
+2008-08-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/gdkapplaunchcontext.c: Improve the docs
+
+2008-08-01  Claudio Saavedra  <csaavedra@igalia.com>
+
+	Bug 545931 – small documentation typos
+
+	* gtk/gtkcomboboxentry.c: Fix some typos in the documentation.
+
+2008-08-01  Hans Breuer  <hans@breuer.org>
+
+	* gdk/makefile.msc : build gdkwindowimpl
+
+	* gtk/gtkwidget.c : fix c99ism - declaration needs to be at the
+	start of a block
+
+	* tests/makefile.msc : update
+
+2008-07-31  Cody Russell  <bratsche@gnome.org>
+
+	Bug 56070 – Can't click button after setting it sensitive.
+
+	* gtk/gtkwidget.[ch]
+	* gtk/gtkwindow.c
+	* gtk/gtkmain.c
+	* gtk/gtkbutton.c
+	* gtk/gtkprivate.h
+	* gdk/gdkevents.h: Synthesize crossing events events where necessary.
+
+	* gtk/tests/crossingevents.c: Add unit tests for crossing events.
+
+	Big thanks to Ed Catmur, Matthias Clasen, and everyone else who
+	has worked on and helped out with this.
+
+2008-07-31  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 424207 – printing hangs on unreachable cups server
+
+	* modules/printbackends/cups/gtkcupsutils.[hc]: Implement a
+	non-blocking test for reachability of the cups server.
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Don't block
+	while trying to get the default printer. Patch by Marek Kasik.
+
+2008-07-31  Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/input/gtkimcontextmultipress.c: Use a second-granularity
+	timer for automatic commit.
+
+	* gtk/gtkclipboard.c (gtk_clipboard_store): Use a second-grandularity
+	timer for the store timeout.
+
+2008-07-31  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/gdk.[hc]:
+	* gdk/gdk.symbols: Complete the set of thread-safe timeout function
+	with second-granularity versions. Patch by Marek Kasik.
+
+2008-07-30  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkprintoperation-win32.c: Fix problems in handling custom
+	paper sizes. The DEVMODE::dmPaperWidth and dmPaperLength are in
+	tenths of a millimeter, and the RECT passed to CreateEnhMetaFile()
+	is in hundredths of a millimeter. Patch by Sven Neumann.
+
+2008-07-28  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktreemodel.c: Small doc improvements.
+
+2008-07-28  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump GLib requirement to 2.17.5 for GEmblemedIcon
+
+	* gtk/gtkicontheme.c: Support rendering GEmblemedIcons.
+
+2008-07-27  Sven Herzberg  <sven@imendio.com>
+
+	Bug 544863 – gtkquartz.h not included in released 2.13.5 package
+
+	* gtk/Makefile.am: explicitly include the moved header in EXTRA_DIST
+
+2008-07-25  Murray Cumming  <murrayc@murrayc.com>
+
+	* gtk/gtkstatusicon.c (gtk_status_icon_class_init):
+	Documented the activate and popup-menu signals as being for use 
+	by applications and language bindings, though they are G_SIGNAL_ACTION, 
+	as stated in bug #361561.
+
+2008-07-24  Sebastien Bacher  <seb128@ubuntu.com>
+
+	* modules/printbackends/cups/gtkprintbackendcups.c:
+	(cups_printer_get_options): don't try free gettext() values,
+	fix a printing dialog crasher (bug 544390)
+
+2008-07-24  Cody Russell  <bratsche@gnome.org>
+
+	Bug 544510 – SetTimer callback signatures has the wrong type
+
+	* gdk/win32/gdkevents-win32.c: Fix modal_timer_proc() and
+	sync_timer_proc() to use UINT_PTR for the 'id' parameter
+	instead of 'id'.  Patch by Richard Hult.
+
+2008-07-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 543915 – "Sole completion" translation issue
+
+	* gtk/gtkfilechooserentry.c: Add translator hints to a
+	bunch of strings. Requested by Andre Klapper
+
+2008-07-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 544265 – GDK assumes XFIXES extension
+
+	* gdk/x11/gdkcursor-x11.c (_gdk_x11_cursor_update_theme):
+	Only call XFixes functions if the server has the extension.
+	Reported by Ian Turner.
+
+2008-07-22  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Compare two content types, not content type
+	and mime type.
+
+2008-07-22  Sven Herzberg  <sven@imendio.com>
+
+	Fix svn:ignore and the include condition
+
+	* gdk/tests/check-gdk-cairo.c: ifndef => ifdef
+
+2008-07-22  Tor Lillqvist  <tml@novell.com>
+
+	* configure.in: Workaround for what apparently is a bug in MSYS:
+	returning -1 from main() is misinterpreted as exit status 0, so
+	make sure we return 0 or 1. (The net effect of the bug was that no
+	image loading worked on Windows.)
+
+2008-07-22  Sven Herzberg  <sven@imendio.com>
+
+	Add a test for my fixes from July 20th.
+
+	* configure.in: create gdk/tests/Makefile
+	* gdk/Makefile.am: include the tests subfolder
+	* gdk/tests/Makefile.am: create and run my test
+	* gdk/tests/check-gdk-cairo.c (test), (main): the test that I wrote
+	(passes at least for x11 and quartz backends)
+
+2008-07-22  Frederic Crozat  <fcrozat@mandriva.com>
+
+	* gdk/x11/gdkscreen-x11.c: Don't use RandR 1.2
+	if driver is detected as randr12_compat (ie X driver
+	is not RandR 1.2 compliant). Fixes multihead with 
+	such drivers. Bug #543317.
+
 2008-07-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Default to linking against Xinerama again,
+	so that we can fallback to Xinerama when broken X drivers
+	make Xrandr useless. Sigh.
+
+2008-07-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.13.5 ===
 

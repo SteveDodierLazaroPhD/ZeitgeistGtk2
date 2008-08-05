@@ -710,8 +710,11 @@ Generated when the pointer enters or leaves a window.
 </varlistentry>
 <varlistentry>
 <term><link linkend="GdkCrossingMode">GdkCrossingMode</link>&nbsp;<structfield>mode</structfield>;</term>
-<listitem><simpara>the crossing mode (<link linkend="GDK-CROSSING-NORMAL:CAPS"><literal>GDK_CROSSING_NORMAL</literal></link>, <link linkend="GDK-CROSSING-GRAB:CAPS"><literal>GDK_CROSSING_GRAB</literal></link> or
-  <link linkend="GDK-CROSSING-UNGRAB:CAPS"><literal>GDK_CROSSING_UNGRAB</literal></link>).
+<listitem><simpara>the crossing mode (<link linkend="GDK-CROSSING-NORMAL:CAPS"><literal>GDK_CROSSING_NORMAL</literal></link>, <link linkend="GDK-CROSSING-GRAB:CAPS"><literal>GDK_CROSSING_GRAB</literal></link>, 
+  <link linkend="GDK-CROSSING-UNGRAB:CAPS"><literal>GDK_CROSSING_UNGRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-GRAB:CAPS"><literal>GDK_CROSSING_GTK_GRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-UNGRAB:CAPS"><literal>GDK_CROSSING_GTK_UNGRAB</literal></link> or
+  <link linkend="GDK-CROSSING-STATE-CHANGED:CAPS"><literal>GDK_CROSSING_STATE_CHANGED</literal></link>).  <link linkend="GDK-CROSSING-GTK-GRAB:CAPS"><literal>GDK_CROSSING_GTK_GRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-UNGRAB:CAPS"><literal>GDK_CROSSING_GTK_UNGRAB</literal></link>,
+  and <link linkend="GDK-CROSSING-STATE-CHANGED:CAPS"><literal>GDK_CROSSING_STATE_CHANGED</literal></link> were added in 2.14 and are always synthesized,
+  never native.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
@@ -1379,7 +1382,10 @@ Specifies the visiblity status of a window for a <link linkend="GdkEventVisibili
 {
   GDK_CROSSING_NORMAL,
   GDK_CROSSING_GRAB,
-  GDK_CROSSING_UNGRAB
+  GDK_CROSSING_UNGRAB,
+  GDK_CROSSING_GTK_GRAB,
+  GDK_CROSSING_GTK_UNGRAB,
+  GDK_CROSSING_STATE_CHANGED
 } GdkCrossingMode;
 </programlisting>
 <para>
@@ -1398,6 +1404,22 @@ Specifies the crossing mode for <link linkend="GdkEventCrossing"><type>GdkEventC
 <varlistentry id="GDK-CROSSING-UNGRAB:CAPS" role="constant">
 <term><literal>GDK_CROSSING_UNGRAB</literal></term>
 <listitem><simpara>crossing because a grab is deactivated.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="GDK-CROSSING-GTK-GRAB:CAPS" role="constant">
+<term><literal>GDK_CROSSING_GTK_GRAB</literal></term>
+<listitem><simpara>crossing because a GTK+ grab is activated.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="GDK-CROSSING-GTK-UNGRAB:CAPS" role="constant">
+<term><literal>GDK_CROSSING_GTK_UNGRAB</literal></term>
+<listitem><simpara>crossing because a GTK+ grab is deactivated.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="GDK-CROSSING-STATE-CHANGED:CAPS" role="constant">
+<term><literal>GDK_CROSSING_STATE_CHANGED</literal></term>
+<listitem><simpara>crossing because a GTK+ widget changed state (e.g.
+   sensitivity).
 
 </simpara></listitem>
 </varlistentry>

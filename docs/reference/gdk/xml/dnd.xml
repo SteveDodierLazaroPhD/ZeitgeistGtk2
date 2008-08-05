@@ -54,10 +54,10 @@
 <link linkend="void">void</link>                <link linkend="gdk-drop-finish">gdk_drop_finish</link>                     (<link linkend="GdkDragContext">GdkDragContext</link> *context,
                                                          <link linkend="gboolean">gboolean</link> success,
                                                          <link linkend="guint32">guint32</link> time_);
-<link linkend="guint32">guint32</link>             <link linkend="gdk-drag-get-protocol">gdk_drag_get_protocol</link>               (<link linkend="guint32">guint32</link> xid,
+<link linkend="GdkNativeWindow">GdkNativeWindow</link>     <link linkend="gdk-drag-get-protocol">gdk_drag_get_protocol</link>               (<link linkend="GdkNativeWindow">GdkNativeWindow</link> xid,
                                                          <link linkend="GdkDragProtocol">GdkDragProtocol</link> *protocol);
-<link linkend="guint32">guint32</link>             <link linkend="gdk-drag-get-protocol-for-display">gdk_drag_get_protocol_for_display</link>   (<link linkend="GdkDisplay">GdkDisplay</link> *display,
-                                                         <link linkend="guint32">guint32</link> xid,
+<link linkend="GdkNativeWindow">GdkNativeWindow</link>     <link linkend="gdk-drag-get-protocol-for-display">gdk_drag_get_protocol_for_display</link>   (<link linkend="GdkDisplay">GdkDisplay</link> *display,
+                                                         <link linkend="GdkNativeWindow">GdkNativeWindow</link> xid,
                                                          <link linkend="GdkDragProtocol">GdkDragProtocol</link> *protocol);
 enum                <link linkend="GdkDragProtocol">GdkDragProtocol</link>;
 <link linkend="void">void</link>                <link linkend="gdk-drag-context-unref">gdk_drag_context_unref</link>              (<link linkend="GdkDragContext">GdkDragContext</link> *context);
@@ -359,27 +359,27 @@ This function is called by the drag destination.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-drag-get-protocol" role="function">
 <title>gdk_drag_get_protocol ()</title>
-<indexterm zone="gdk-drag-get-protocol"><primary>gdk_drag_get_protocol</primary></indexterm><programlisting><link linkend="guint32">guint32</link>             gdk_drag_get_protocol               (<link linkend="guint32">guint32</link> xid,
+<indexterm zone="gdk-drag-get-protocol"><primary>gdk_drag_get_protocol</primary></indexterm><programlisting><link linkend="GdkNativeWindow">GdkNativeWindow</link>     gdk_drag_get_protocol               (<link linkend="GdkNativeWindow">GdkNativeWindow</link> xid,
                                                          <link linkend="GdkDragProtocol">GdkDragProtocol</link> *protocol);</programlisting>
 <para>
 Finds out the DND protocol supported by a window.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>xid</parameter>&nbsp;:</term>
-<listitem><simpara> the X id of the destination window.
+<listitem><simpara> the windowing system id of the destination window.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>protocol</parameter>&nbsp;:</term>
 <listitem><simpara> location where the supported DND protocol is returned.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the X id of the window where the drop should happen. This 
-   may be <parameter>xid</parameter> or the X id of a proxy window, or None if <parameter>xid</parameter> doesn't
-   support Drag and Drop.
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the windowing system specific id for the window where
+   the drop should happen. This may be <parameter>xid</parameter> or the id of a proxy
+   window, or zero if <parameter>xid</parameter> doesn't support Drag and Drop.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-drag-get-protocol-for-display" role="function" condition="since:2.2">
 <title>gdk_drag_get_protocol_for_display ()</title>
-<indexterm zone="gdk-drag-get-protocol-for-display" role="2.2"><primary>gdk_drag_get_protocol_for_display</primary></indexterm><programlisting><link linkend="guint32">guint32</link>             gdk_drag_get_protocol_for_display   (<link linkend="GdkDisplay">GdkDisplay</link> *display,
-                                                         <link linkend="guint32">guint32</link> xid,
+<indexterm zone="gdk-drag-get-protocol-for-display" role="2.2"><primary>gdk_drag_get_protocol_for_display</primary></indexterm><programlisting><link linkend="GdkNativeWindow">GdkNativeWindow</link>     gdk_drag_get_protocol_for_display   (<link linkend="GdkDisplay">GdkDisplay</link> *display,
+                                                         <link linkend="GdkNativeWindow">GdkNativeWindow</link> xid,
                                                          <link linkend="GdkDragProtocol">GdkDragProtocol</link> *protocol);</programlisting>
 <para>
 Finds out the DND protocol supported by a window.</para>
@@ -390,13 +390,13 @@ Finds out the DND protocol supported by a window.</para>
 <listitem><simpara> the <link linkend="GdkDisplay"><type>GdkDisplay</type></link> where the destination window resides
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>xid</parameter>&nbsp;:</term>
-<listitem><simpara> the X id of the destination window.
+<listitem><simpara> the windowing system id of the destination window.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>protocol</parameter>&nbsp;:</term>
 <listitem><simpara> location where the supported DND protocol is returned.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the X id of the window where the drop should happen. This 
-    may be <parameter>xid</parameter> or the X id of a proxy window, or None if <parameter>xid</parameter> doesn't
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the windowing system id of the window where the drop should happen. This 
+    may be <parameter>xid</parameter> or the id of a proxy window, or zero if <parameter>xid</parameter> doesn't
     support Drag and Drop.
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.2

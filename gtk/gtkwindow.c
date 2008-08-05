@@ -1514,7 +1514,7 @@ gtk_window_set_default (GtkWindow *window,
 }
 
 /**
- * gtk_window_get_default:
+ * gtk_window_get_default_widget:
  * @window: a #GtkWindow
  *
  * Returns the default widget for @window. See gtk_window_set_default()
@@ -1525,11 +1525,29 @@ gtk_window_set_default (GtkWindow *window,
  * Since: 2.14
  **/
 GtkWidget *
-gtk_window_get_default (GtkWindow *window)
+gtk_window_get_default_widget (GtkWindow *window)
 {
   g_return_val_if_fail (GTK_IS_WINDOW (window), NULL);
 
   return window->default_widget;
+}
+
+static void
+gtk_window_set_policy_internal (GtkWindow *window,
+                                gboolean   allow_shrink,
+                                gboolean   allow_grow,
+                                gboolean   auto_shrink)
+{
+  window->allow_shrink = (allow_shrink != FALSE);
+  window->allow_grow = (allow_grow != FALSE);
+
+  g_object_freeze_notify (G_OBJECT (window));
+  g_object_notify (G_OBJECT (window), "allow-shrink");
+  g_object_notify (G_OBJECT (window), "allow-grow");
+  g_object_notify (G_OBJECT (window), "resizable");
+  g_object_thaw_notify (G_OBJECT (window));
+
+  gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
 }
 
 void
@@ -1540,16 +1558,7 @@ gtk_window_set_policy (GtkWindow *window,
 {
   g_return_if_fail (GTK_IS_WINDOW (window));
 
-  window->allow_shrink = (allow_shrink != FALSE);
-  window->allow_grow = (allow_grow != FALSE);
-
-  g_object_freeze_notify (G_OBJECT (window));
-  g_object_notify (G_OBJECT (window), "allow-shrink");
-  g_object_notify (G_OBJECT (window), "allow-grow");
-  g_object_notify (G_OBJECT (window), "resizable");
-  g_object_thaw_notify (G_OBJECT (window));
-  
-  gtk_widget_queue_resize_no_redraw (GTK_WIDGET (window));
+  gtk_window_set_policy_internal (window, allow_shrink, allow_grow, auto_shrink);
 }
 
 static gboolean
@@ -1927,7 +1936,7 @@ gtk_window_list_toplevels (void)
 }
 
 void
-gtk_window_add_embedded_xid (GtkWindow *window, guint xid)
+gtk_window_add_embedded_xid (GtkWindow *window, GdkNativeWindow xid)
 {
   GList *embedded_windows;
 
@@ -1946,7 +1955,7 @@ gtk_window_add_embedded_xid (GtkWindow *window, guint xid)
 }
 
 void
-gtk_window_remove_embedded_xid (GtkWindow *window, guint xid)
+gtk_window_remove_embedded_xid (GtkWindow *window, GdkNativeWindow xid)
 {
   GList *embedded_windows;
   GList *node;
@@ -2052,10 +2061,6 @@ gtk_window_unset_transient_for  (GtkWindow *window)
   
   if (window->transient_parent)
     {
-      if (priv->transient_parent_group)
-	gtk_window_group_remove_window (window->group,
-					window);
-
       g_signal_handlers_disconnect_by_func (window->transient_parent,
 					    gtk_window_transient_parent_realized,
 					    window);
@@ -2073,7 +2078,13 @@ gtk_window_unset_transient_for  (GtkWindow *window)
         disconnect_parent_destroyed (window);
       
       window->transient_parent = NULL;
-      priv->transient_parent_group = FALSE;
+
+      if (priv->transient_parent_group)
+	{
+	  priv->transient_parent_group = FALSE;
+	  gtk_window_group_remove_window (window->group,
+					  window);
+	}
     }
 }
 
@@ -5129,7 +5140,7 @@ send_client_message_to_embedded_windows (GtkWidget *widget,
       
       while (embedded_windows)
 	{
-	  guint xid = GPOINTER_TO_UINT (embedded_windows->data);
+	  GdkNativeWindow xid = (GdkNativeWindow) embedded_windows->data;
 	  gdk_event_send_client_message_for_display (gtk_widget_get_display (widget), send_event, xid);
 	  embedded_windows = embedded_windows->next;
 	}
@@ -7001,7 +7012,7 @@ gtk_window_set_resizable (GtkWindow *window,
 {
   g_return_if_fail (GTK_IS_WINDOW (window));
 
-  gtk_window_set_policy (window, FALSE, resizable, FALSE);
+  gtk_window_set_policy_internal (window, FALSE, resizable, FALSE);
 }
 
 /**

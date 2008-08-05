@@ -200,7 +200,7 @@ void       gtk_window_set_focus                (GtkWindow           *window,
 GtkWidget *gtk_window_get_focus                (GtkWindow           *window);
 void       gtk_window_set_default              (GtkWindow           *window,
 						GtkWidget           *default_widget);
-GtkWidget *gtk_window_get_default              (GtkWindow           *window);
+GtkWidget *gtk_window_get_default_widget       (GtkWindow           *window);
 gboolean   gtk_window_activate_default	       (GtkWindow           *window);
 
 void       gtk_window_set_transient_for        (GtkWindow           *window, 
@@ -398,10 +398,10 @@ GList *          gtk_window_group_list_windows  (GtkWindowGroup     *window_grou
 /* --- internal functions --- */
 void            _gtk_window_internal_set_focus (GtkWindow *window,
 						GtkWidget *focus);
-void            gtk_window_remove_embedded_xid (GtkWindow *window,
-						guint      xid);
-void            gtk_window_add_embedded_xid    (GtkWindow *window,
-						guint      xid);
+void            gtk_window_remove_embedded_xid (GtkWindow       *window,
+						GdkNativeWindow  xid);
+void            gtk_window_add_embedded_xid    (GtkWindow       *window,
+						GdkNativeWindow  xid);
 void            _gtk_window_reposition         (GtkWindow *window,
 						gint       x,
 						gint       y);

@@ -1485,7 +1485,8 @@ gtk_private_flags_get_type (void)
         static const GFlagsValue values[] = {
             { PRIVATE_GTK_USER_STYLE, "PRIVATE_GTK_USER_STYLE", "user-style" },
             { PRIVATE_GTK_RESIZE_PENDING, "PRIVATE_GTK_RESIZE_PENDING", "resize-pending" },
-            { PRIVATE_GTK_LEAVE_PENDING, "PRIVATE_GTK_LEAVE_PENDING", "leave-pending" },
+            { PRIVATE_GTK_HAS_POINTER, "PRIVATE_GTK_HAS_POINTER", "has-pointer" },
+            { PRIVATE_GTK_SHADOWED, "PRIVATE_GTK_SHADOWED", "shadowed" },
             { PRIVATE_GTK_HAS_SHAPE_MASK, "PRIVATE_GTK_HAS_SHAPE_MASK", "has-shape-mask" },
             { PRIVATE_GTK_IN_REPARENT, "PRIVATE_GTK_IN_REPARENT", "in-reparent" },
             { PRIVATE_GTK_DIRECTION_SET, "PRIVATE_GTK_DIRECTION_SET", "direction-set" },

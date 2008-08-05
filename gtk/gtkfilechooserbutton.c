@@ -137,7 +137,6 @@ struct _GtkFileChooserButtonPrivate
   GtkTreeModel *model;
   GtkTreeModel *filter_model;
 
-  gchar *backend;
   GtkFileSystem *fs;
   GFile *old_file;
 
@@ -646,23 +645,13 @@ gtk_file_chooser_button_constructor (GType                  type,
 
   if (!priv->dialog)
     {
-      if (priv->backend)
-	priv->dialog = gtk_file_chooser_dialog_new_with_backend (NULL, NULL,
-								 GTK_FILE_CHOOSER_ACTION_OPEN,
-								 priv->backend,
-								 GTK_STOCK_CANCEL,
-								 GTK_RESPONSE_CANCEL,
-								 GTK_STOCK_OPEN,
-								 GTK_RESPONSE_ACCEPT,
-								 NULL);
-      else
-	priv->dialog = gtk_file_chooser_dialog_new (NULL, NULL,
-						    GTK_FILE_CHOOSER_ACTION_OPEN,
-						    GTK_STOCK_CANCEL,
-						    GTK_RESPONSE_CANCEL,
-						    GTK_STOCK_OPEN,
-						    GTK_RESPONSE_ACCEPT,
-						    NULL);
+      priv->dialog = gtk_file_chooser_dialog_new (NULL, NULL,
+						  GTK_FILE_CHOOSER_ACTION_OPEN,
+						  GTK_STOCK_CANCEL,
+						  GTK_RESPONSE_CANCEL,
+						  GTK_STOCK_OPEN,
+						  GTK_RESPONSE_ACCEPT,
+						  NULL);
 
       gtk_dialog_set_default_response (GTK_DIALOG (priv->dialog),
 				       GTK_RESPONSE_ACCEPT);
@@ -684,9 +673,6 @@ gtk_file_chooser_button_constructor (GType                  type,
       priv->folder_has_been_set = TRUE;
       g_free (current_folder);
     }
-
-  g_free (priv->backend);
-  priv->backend = NULL;
 
   g_signal_connect (priv->dialog, "delete_event",
 		    G_CALLBACK (dialog_delete_event_cb), object);
@@ -834,8 +820,7 @@ gtk_file_chooser_button_set_property (GObject      *object,
       break;
 
     case GTK_FILE_CHOOSER_PROP_FILE_SYSTEM_BACKEND:
-      /* Construct-only */
-      priv->backend = g_value_dup_string (value);
+      /* Ignore property */
       break;
 
     case GTK_FILE_CHOOSER_PROP_SELECT_MULTIPLE:
@@ -1020,8 +1005,8 @@ dnd_select_folder_get_info_cb (GCancellable *cancellable,
       data->selected =
 	(((data->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER && is_folder) ||
 	  (data->action == GTK_FILE_CHOOSER_ACTION_OPEN && !is_folder)) &&
-	 _gtk_file_chooser_select_file (GTK_FILE_CHOOSER (data->button->priv->dialog),
-					data->file, NULL));
+	 gtk_file_chooser_select_file (GTK_FILE_CHOOSER (data->button->priv->dialog),
+				       data->file, NULL));
     }
   else
     data->selected = FALSE;
@@ -1109,8 +1094,8 @@ gtk_file_chooser_button_drag_data_received (GtkWidget	     *widget,
     case TEXT_PLAIN:
       text = (char*) gtk_selection_data_get_text (data);
       file = g_file_new_for_uri (text);
-      _gtk_file_chooser_select_file (GTK_FILE_CHOOSER (priv->dialog), file,
-				     NULL);
+      gtk_file_chooser_select_file (GTK_FILE_CHOOSER (priv->dialog), file,
+				    NULL);
       g_object_unref (file);
       g_free (text);
       break;
@@ -2185,7 +2170,7 @@ update_combo_box (GtkFileChooserButton *button)
 
   gtk_tree_model_get_iter_first (priv->filter_model, &iter);
 
-  files = _gtk_file_chooser_get_files (GTK_FILE_CHOOSER (priv->dialog));
+  files = gtk_file_chooser_get_files (GTK_FILE_CHOOSER (priv->dialog));
 
   row_found = FALSE;
 
@@ -2312,7 +2297,7 @@ update_label_and_image (GtkFileChooserButton *button)
   gchar *label_text;
   GSList *files;
 
-  files = _gtk_file_chooser_get_files (GTK_FILE_CHOOSER (priv->dialog));
+  files = gtk_file_chooser_get_files (GTK_FILE_CHOOSER (priv->dialog));
   label_text = NULL;
   pixbuf = NULL;
 
@@ -2395,7 +2380,7 @@ out:
 
 
 /* ************************ *
- /*  Child Object Callbacks  *
+ *  Child Object Callbacks  *
  * ************************ */
 
 /* File System */
@@ -2483,7 +2468,7 @@ open_dialog (GtkFileChooserButton *button)
 			      priv->dialog_file_activated_id);
       g_signal_handler_block (priv->dialog,
 			      priv->dialog_selection_changed_id);
-      files = _gtk_file_chooser_get_files (GTK_FILE_CHOOSER (priv->dialog));
+      files = gtk_file_chooser_get_files (GTK_FILE_CHOOSER (priv->dialog));
       if (files)
 	{
 	  if (files->data)
@@ -2530,8 +2515,8 @@ combo_box_changed_cb (GtkComboBox *combo_box,
 	case ROW_TYPE_CURRENT_FOLDER:
 	  gtk_file_chooser_unselect_all (GTK_FILE_CHOOSER (priv->dialog));
 	  if (data)
-	    _gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (priv->dialog),
-						       data, NULL);
+	    gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (priv->dialog),
+						      data, NULL);
 	  break;
 	case ROW_TYPE_VOLUME:
 	  {
@@ -2541,8 +2526,8 @@ combo_box_changed_cb (GtkComboBox *combo_box,
 	    base_file = _gtk_file_system_volume_get_root (data);
 	    if (base_file)
 	      {
-		_gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (priv->dialog),
-							   base_file, NULL);
+		gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (priv->dialog),
+							  base_file, NULL);
 		g_object_unref (base_file);
 	      }
 	  }
@@ -2674,12 +2659,12 @@ dialog_response_cb (GtkDialog *dialog,
       switch (gtk_file_chooser_get_action (GTK_FILE_CHOOSER (dialog)))
 	{
 	case GTK_FILE_CHOOSER_ACTION_OPEN:
-	  _gtk_file_chooser_select_file (GTK_FILE_CHOOSER (dialog), priv->old_file,
-					 NULL);
+	  gtk_file_chooser_select_file (GTK_FILE_CHOOSER (dialog), priv->old_file,
+					NULL);
 	  break;
 	case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
-	  _gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (dialog),
-						     priv->old_file, NULL);
+	  gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (dialog),
+						    priv->old_file, NULL);
 	  break;
 	default:
 	  g_assert_not_reached ();
@@ -2755,6 +2740,7 @@ gtk_file_chooser_button_new (const gchar          *title,
  * Returns: a new button widget.
  * 
  * Since: 2.6
+ * Deprecated: 2.14
  **/
 GtkWidget *
 gtk_file_chooser_button_new_with_backend (const gchar          *title,
@@ -2767,7 +2753,6 @@ gtk_file_chooser_button_new_with_backend (const gchar          *title,
   return g_object_new (GTK_TYPE_FILE_CHOOSER_BUTTON,
 		       "action", action,
 		       "title", (title ? title : _(DEFAULT_TITLE)),
-		       "file-system-backend", backend,
 		       NULL);
 }
 

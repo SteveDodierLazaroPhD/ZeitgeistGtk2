@@ -231,7 +231,32 @@ function should return <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> 
 If the condition calculated by the function changes over time (e.g. because
 it depends on some global parameters), you must call 
 <link linkend="gtk-tree-model-filter-refilter"><function>gtk_tree_model_filter_refilter()</function></link> to keep the visibility information of 
-the model uptodate.</para>
+the model uptodate.
+</para>
+<para>
+Note that <parameter>func</parameter> is called whenever a row is inserted, when it may still be
+empty. The visible function should therefore take special care of empty
+rows, like in the example below.
+</para>
+<para>
+<informalexample><programlisting>
+static gboolean
+visible_func (GtkTreeModel *model,
+              GtkTreeIter  *iter,
+              gpointer      data)
+{
+  /&ast; Visible if row is non-empty and first column is "HI" &ast;/
+  gchar *str;
+  gboolean visible = FALSE;
+
+  gtk_tree_model_get (model, iter, 0, &amp;str, -1);
+  if (str &amp;&amp; strcmp (str, "HI") == 0)
+    visible = TRUE;
+  g_free (str);
+
+  return visible;
+}
+</programlisting></informalexample></para>
 <para>
 
 </para><variablelist role="params">

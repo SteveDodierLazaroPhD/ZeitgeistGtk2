@@ -39,10 +39,10 @@ enum                <link linkend="GtkArgFlags">GtkArgFlags</link>;
 <link linkend="GtkObject">GtkObject</link>*          <link linkend="gtk-object-ref">gtk_object_ref</link>                      (<link linkend="GtkObject">GtkObject</link> *object);
 <link linkend="void">void</link>                <link linkend="gtk-object-unref">gtk_object_unref</link>                    (<link linkend="GtkObject">GtkObject</link> *object);
 <link linkend="void">void</link>                <link linkend="gtk-object-weakref">gtk_object_weakref</link>                  (<link linkend="GtkObject">GtkObject</link> *object,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> notify,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify,
                                                          <link linkend="gpointer">gpointer</link> data);
 <link linkend="void">void</link>                <link linkend="gtk-object-weakunref">gtk_object_weakunref</link>                (<link linkend="GtkObject">GtkObject</link> *object,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> notify,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify,
                                                          <link linkend="gpointer">gpointer</link> data);
 <link linkend="void">void</link>                <link linkend="gtk-object-destroy">gtk_object_destroy</link>                  (<link linkend="GtkObject">GtkObject</link> *object);
 <link linkend="void">void</link>                <link linkend="gtk-object-get">gtk_object_get</link>                      (<link linkend="GtkObject">GtkObject</link> *object,
@@ -57,7 +57,7 @@ enum                <link linkend="GtkArgFlags">GtkArgFlags</link>;
 <link linkend="void">void</link>                <link linkend="gtk-object-set-data-full">gtk_object_set_data_full</link>            (<link linkend="GtkObject">GtkObject</link> *object,
                                                          const <link linkend="gchar">gchar</link> *key,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);
 <link linkend="void">void</link>                <link linkend="gtk-object-remove-data">gtk_object_remove_data</link>              (<link linkend="GtkObject">GtkObject</link> *object,
                                                          const <link linkend="gchar">gchar</link> *key);
 <link linkend="gpointer">gpointer</link>            <link linkend="gtk-object-get-data">gtk_object_get_data</link>                 (<link linkend="GtkObject">GtkObject</link> *object,
@@ -77,7 +77,7 @@ enum                <link linkend="GtkArgFlags">GtkArgFlags</link>;
 <link linkend="void">void</link>                <link linkend="gtk-object-set-data-by-id-full">gtk_object_set_data_by_id_full</link>      (<link linkend="GtkObject">GtkObject</link> *object,
                                                          <link linkend="GQuark">GQuark</link> data_id,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);
 <link linkend="gpointer">gpointer</link>            <link linkend="gtk-object-get-data-by-id">gtk_object_get_data_by_id</link>           (<link linkend="GtkObject">GtkObject</link> *object,
                                                          <link linkend="GQuark">GQuark</link> data_id);
 <link linkend="void">void</link>                <link linkend="gtk-object-remove-data-by-id">gtk_object_remove_data_by_id</link>        (<link linkend="GtkObject">GtkObject</link> *object,
@@ -420,7 +420,7 @@ to 0, the object is finalized (i.e. its memory is freed).
 <refsect2 id="gtk-object-weakref" role="function" condition="deprecated:Use g_object_weak_ref() instead.">
 <title>gtk_object_weakref ()</title>
 <indexterm zone="gtk-object-weakref" role="deprecated"><primary>gtk_object_weakref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_object_weakref                  (<link linkend="GtkObject">GtkObject</link> *object,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> notify,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify,
                                                          <link linkend="gpointer">gpointer</link> data);</programlisting>
 <warning><para><literal>gtk_object_weakref</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-weak-ref"><function>g_object_weak_ref()</function></link> instead.</para></warning>
 <para>
@@ -442,7 +442,7 @@ a strong reference, that is, forces the object to stay alive).
 <refsect2 id="gtk-object-weakunref" role="function" condition="deprecated:Use g_object_weak_unref() instead.">
 <title>gtk_object_weakunref ()</title>
 <indexterm zone="gtk-object-weakunref" role="deprecated"><primary>gtk_object_weakunref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_object_weakunref                (<link linkend="GtkObject">GtkObject</link> *object,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> notify,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify,
                                                          <link linkend="gpointer">gpointer</link> data);</programlisting>
 <warning><para><literal>gtk_object_weakunref</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-weak-unref"><function>g_object_weak_unref()</function></link> instead.</para></warning>
 <para>
@@ -557,7 +557,7 @@ the old association will be destroyed.
 <indexterm zone="gtk-object-set-data-full" role="deprecated"><primary>gtk_object_set_data_full</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_object_set_data_full            (<link linkend="GtkObject">GtkObject</link> *object,
                                                          const <link linkend="gchar">gchar</link> *key,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);</programlisting>
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <warning><para><literal>gtk_object_set_data_full</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-set-data-full"><function>g_object_set_data_full()</function></link> instead.</para></warning>
 <para>
 Like <link linkend="gtk-object-set-data"><function>gtk_object_set_data()</function></link> except it adds notification
@@ -726,7 +726,7 @@ to get an id from a string.
 <indexterm zone="gtk-object-set-data-by-id-full" role="deprecated"><primary>gtk_object_set_data_by_id_full</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_object_set_data_by_id_full      (<link linkend="GtkObject">GtkObject</link> *object,
                                                          <link linkend="GQuark">GQuark</link> data_id,
                                                          <link linkend="gpointer">gpointer</link> data,
-                                                         <link linkend="GtkDestroyNotify">GtkDestroyNotify</link> destroy);</programlisting>
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <warning><para><literal>gtk_object_set_data_by_id_full</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-set-qdata-full"><function>g_object_set_qdata_full()</function></link> instead.</para></warning>
 <para>
 Just like <link linkend="gtk-object-set-data-full"><function>gtk_object_set_data_full()</function></link> except that it takes

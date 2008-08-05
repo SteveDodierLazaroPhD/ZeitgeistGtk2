@@ -31,6 +31,7 @@
 <link linkend="GtkStatusIcon">GtkStatusIcon</link>*      <link linkend="gtk-status-icon-new-from-file">gtk_status_icon_new_from_file</link>       (const <link linkend="gchar">gchar</link> *filename);
 <link linkend="GtkStatusIcon">GtkStatusIcon</link>*      <link linkend="gtk-status-icon-new-from-stock">gtk_status_icon_new_from_stock</link>      (const <link linkend="gchar">gchar</link> *stock_id);
 <link linkend="GtkStatusIcon">GtkStatusIcon</link>*      <link linkend="gtk-status-icon-new-from-icon-name">gtk_status_icon_new_from_icon_name</link>  (const <link linkend="gchar">gchar</link> *icon_name);
+<link linkend="GtkStatusIcon">GtkStatusIcon</link>*      <link linkend="gtk-status-icon-new-from-gicon">gtk_status_icon_new_from_gicon</link>      (<link linkend="GIcon">GIcon</link> *icon);
 <link linkend="void">void</link>                <link linkend="gtk-status-icon-set-from-pixbuf">gtk_status_icon_set_from_pixbuf</link>     (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
                                                          <link linkend="GdkPixbuf">GdkPixbuf</link> *pixbuf);
 <link linkend="void">void</link>                <link linkend="gtk-status-icon-set-from-file">gtk_status_icon_set_from_file</link>       (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
@@ -39,10 +40,14 @@
                                                          const <link linkend="gchar">gchar</link> *stock_id);
 <link linkend="void">void</link>                <link linkend="gtk-status-icon-set-from-icon-name">gtk_status_icon_set_from_icon_name</link>  (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
                                                          const <link linkend="gchar">gchar</link> *icon_name);
+<link linkend="void">void</link>                <link linkend="gtk-status-icon-set-from-gicon">gtk_status_icon_set_from_gicon</link>      (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
+                                                         <link linkend="GIcon">GIcon</link> *icon);
 <link linkend="GtkImageType">GtkImageType</link>        <link linkend="gtk-status-icon-get-storage-type">gtk_status_icon_get_storage_type</link>    (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
 <link linkend="GdkPixbuf">GdkPixbuf</link>*          <link linkend="gtk-status-icon-get-pixbuf">gtk_status_icon_get_pixbuf</link>          (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-status-icon-get-stock">gtk_status_icon_get_stock</link>           (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-status-icon-get-icon-name">gtk_status_icon_get_icon_name</link>       (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
+<link linkend="void">void</link>                <link linkend="gtk-status-icon-get-gicon">gtk_status_icon_get_gicon</link>           (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
+                                                         <link linkend="GIcon">GIcon</link> **icon);
 <link linkend="gint">gint</link>                <link linkend="gtk-status-icon-get-size">gtk_status_icon_get_size</link>            (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
 <link linkend="void">void</link>                <link linkend="gtk-status-icon-set-screen">gtk_status_icon_set_screen</link>          (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
                                                          <link linkend="GdkScreen">GdkScreen</link> *screen);
@@ -88,6 +93,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-status-icon-
   &quot;<link linkend="GtkStatusIcon--blinking">blinking</link>&quot;                 <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkStatusIcon--embedded">embedded</link>&quot;                 <link linkend="gboolean">gboolean</link>              : Read
   &quot;<link linkend="GtkStatusIcon--file">file</link>&quot;                     <link linkend="gchar">gchar</link>*                : Write
+  &quot;<link linkend="GtkStatusIcon--gicon">gicon</link>&quot;                    <link linkend="GIcon">GIcon</link>*                : Read / Write
   &quot;<link linkend="GtkStatusIcon--icon-name">icon-name</link>&quot;                <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkStatusIcon--orientation">orientation</link>&quot;              <link linkend="GtkOrientation">GtkOrientation</link>        : Read
   &quot;<link linkend="GtkStatusIcon--pixbuf">pixbuf</link>&quot;                   <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write
@@ -239,6 +245,23 @@ appropriately.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
 </para></refsect2>
+<refsect2 id="gtk-status-icon-new-from-gicon" role="function" condition="since:2.14">
+<title>gtk_status_icon_new_from_gicon ()</title>
+<indexterm zone="gtk-status-icon-new-from-gicon" role="2.14"><primary>gtk_status_icon_new_from_gicon</primary></indexterm><programlisting><link linkend="GtkStatusIcon">GtkStatusIcon</link>*      gtk_status_icon_new_from_gicon      (<link linkend="GIcon">GIcon</link> *icon);</programlisting>
+<para>
+Creates a status icon displaying a <link linkend="GIcon"><type>GIcon</type></link>. If the icon is a
+themed icon, it will be updated when the theme changes.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>icon</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GIcon"><type>GIcon</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 <refsect2 id="gtk-status-icon-set-from-pixbuf" role="function" condition="since:2.10">
 <title>gtk_status_icon_set_from_pixbuf ()</title>
 <indexterm zone="gtk-status-icon-set-from-pixbuf" role="2.10"><primary>gtk_status_icon_set_from_pixbuf</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_status_icon_set_from_pixbuf     (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
@@ -311,6 +334,24 @@ See <link linkend="gtk-status-icon-new-from-icon-name"><function>gtk_status_icon
 <listitem><simpara> an icon name
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10 
+</para></refsect2>
+<refsect2 id="gtk-status-icon-set-from-gicon" role="function" condition="since:2.14">
+<title>gtk_status_icon_set_from_gicon ()</title>
+<indexterm zone="gtk-status-icon-set-from-gicon" role="2.14"><primary>gtk_status_icon_set_from_gicon</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_status_icon_set_from_gicon      (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
+                                                         <link linkend="GIcon">GIcon</link> *icon);</programlisting>
+<para>
+Makes <parameter>status_icon</parameter> display the <link linkend="GIcon"><type>GIcon</type></link>.
+See <link linkend="gtk-status-icon-new-from-gicon"><function>gtk_status_icon_new_from_gicon()</function></link> for details.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>status_icon</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon</parameter>&nbsp;:</term>
+<listitem><simpara> a GIcon
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-status-icon-get-storage-type" role="function" condition="since:2.10">
 <title>gtk_status_icon_get_storage_type ()</title>
@@ -390,6 +431,30 @@ be freed or modified.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
+</para></refsect2>
+<refsect2 id="gtk-status-icon-get-gicon" role="function" condition="since:2.14">
+<title>gtk_status_icon_get_gicon ()</title>
+<indexterm zone="gtk-status-icon-get-gicon" role="2.14"><primary>gtk_status_icon_get_gicon</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_status_icon_get_gicon           (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
+                                                         <link linkend="GIcon">GIcon</link> **icon);</programlisting>
+<para>
+Retrieves the <link linkend="GIcon"><type>GIcon</type></link> being displayed by the <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>.
+The storage type of the status icon must be <link linkend="GTK-IMAGE-EMPTY:CAPS"><literal>GTK_IMAGE_EMPTY</literal></link> or
+<link linkend="GTK-IMAGE-GICON:CAPS"><literal>GTK_IMAGE_GICON</literal></link> (see <link linkend="gtk-status-icon-get-storage-type"><function>gtk_status_icon_get_storage_type()</function></link>).
+The caller of this function does not own a reference to the
+returned <link linkend="GIcon"><type>GIcon</type></link>.
+</para>
+<para>
+If this function fails, <parameter>icon</parameter> is left unchanged;</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>status_icon</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon</parameter>&nbsp;:</term>
+<listitem><simpara> a place to store a <link linkend="GIcon"><type>GIcon</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 <refsect2 id="gtk-status-icon-get-size" role="function" condition="since:2.10">
 <title>gtk_status_icon_get_size ()</title>
@@ -685,6 +750,16 @@ underlying X11 Window
 <indexterm zone="GtkStatusIcon--file"><primary>GtkStatusIcon:file</primary></indexterm><programlisting>  &quot;file&quot;                     <link linkend="gchar">gchar</link>*                : Write</programlisting>
 <para>Filename to load and display.</para><para>Default value: NULL</para>
 </refsect2>
+<refsect2 id="GtkStatusIcon--gicon"><title>The <literal>&quot;gicon&quot;</literal> property</title>
+<indexterm zone="GtkStatusIcon--gicon" role="2.14"><primary>GtkStatusIcon:gicon</primary></indexterm><programlisting>  &quot;gicon&quot;                    <link linkend="GIcon">GIcon</link>*                : Read / Write</programlisting>
+<para>
+The <link linkend="GIcon"><type>GIcon</type></link> displayed in the <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>. For themed icons,
+the image will be updated automatically if the theme changes.</para>
+<para>
+
+</para><para>Since  2.14
+</para>
+</refsect2>
 <refsect2 id="GtkStatusIcon--icon-name"><title>The <literal>&quot;icon-name&quot;</literal> property</title>
 <indexterm zone="GtkStatusIcon--icon-name"><primary>GtkStatusIcon:icon-name</primary></indexterm><programlisting>  &quot;icon-name&quot;                <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>The name of the icon from the icon theme.</para><para>Default value: NULL</para>
@@ -733,7 +808,11 @@ is embedded.</para>
                                                         <link linkend="gpointer">gpointer</link>       user_data)        : Run First / Action</programlisting>
 <para>
 Gets emitted when the user activates the status icon. 
-If and how status icons can activated is platform-dependent.</para>
+If and how status icons can activated is platform-dependent.
+</para>
+<para>
+Unlike most G_SIGNAL_ACTION signals, this signal is meant to 
+be used by applications and should be wrapped by language bindings.</para>
 <para>
 
 </para><variablelist role="params">
@@ -755,7 +834,11 @@ menus and how these are activated is platform-dependent.
 </para>
 <para>
 The <parameter>button</parameter> and <parameter>activate_time</parameter> parameters should be 
-passed as the last to arguments to <link linkend="gtk-menu-popup"><function>gtk_menu_popup()</function></link>.</para>
+passed as the last to arguments to <link linkend="gtk-menu-popup"><function>gtk_menu_popup()</function></link>.
+</para>
+<para>
+Unlike most G_SIGNAL_ACTION signals, this signal is meant to 
+be used by applications and should be wrapped by language bindings.</para>
 <para>
 
 </para><variablelist role="params">

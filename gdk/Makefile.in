@@ -250,6 +250,7 @@ LIBS = @LIBS@
 LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
+LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_CURRENT_MINUS_AGE = @LT_CURRENT_MINUS_AGE@
@@ -423,8 +424,8 @@ XVFB_START = \
 	&& DISPLAY=:$$XID && export DISPLAY
 
 
-SUBDIRS = $(gdktarget)
-DIST_SUBDIRS = win32 x11 quartz directfb
+SUBDIRS = $(gdktarget) . tests
+DIST_SUBDIRS = win32 x11 quartz directfb tests
 
 INCLUDES = \
 	-DG_LOG_DOMAIN=\"Gdk\"		\
@@ -1305,7 +1306,7 @@ check-local: test
 @OS_WIN32_FALSE@uninstall-def-file:
 
 @MS_LIB_AVAILABLE_TRUE@gdk-win32-$(GTK_API_VERSION).lib: libgdk-win32-$(GTK_API_VERSION).la gdk.def
-@MS_LIB_AVAILABLE_TRUE@	lib -name:libgdk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gdk.def -out:$@
+@MS_LIB_AVAILABLE_TRUE@	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgdk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gdk.def -out:$@
 
 @MS_LIB_AVAILABLE_TRUE@install-ms-lib:
 @MS_LIB_AVAILABLE_TRUE@	$(INSTALL) gdk-win32-$(GTK_API_VERSION).lib $(DESTDIR)$(libdir)

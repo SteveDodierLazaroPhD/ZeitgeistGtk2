@@ -359,7 +359,7 @@ When your callbacks are invoked, you would typically take some action
 to the main loop and await more user input.
 </p>
 <div class="example">
-<a name="id2706424"></a><p class="title"><b>Example 1. Typical <code class="function">main</code> function for a GTK+ application</b></p>
+<a name="id3166132"></a><p class="title"><b>Example 1. Typical <code class="function">main</code> function for a GTK+ application</b></p>
 <div class="example-contents"><pre class="programlisting">
 int 
 main (int argc, char **argv)
@@ -813,7 +813,7 @@ Checks if any events are pending. This can be used to update the GUI
 and invoke timeouts etc. while doing some time intensive computation.
 </p>
 <div class="example">
-<a name="id2708997"></a><p class="title"><b>Example 2. Updating the GUI during a long computation.</b></p>
+<a name="id3168704"></a><p class="title"><b>Example 2. Updating the GUI during a long computation.</b></p>
 <div class="example-contents"><pre class="programlisting">
 	/* computation going on */
 ...
@@ -1088,7 +1088,7 @@ not do this as the user expects a reaction from clicking the close
 icon of the window...
 </p>
 <div class="example">
-<a name="id2717367"></a><p class="title"><b>Example 3. A persistent window</b></p>
+<a name="id3177096"></a><p class="title"><b>Example 3. A persistent window</b></p>
 <div class="example-contents"><pre class="programlisting">
 ##include &lt;gtk/gtk.h&gt;
 
@@ -1165,6 +1165,10 @@ Makes <em class="parameter"><code>widget</code></em> the current grabbed widget.
 other widgets in the same application is blocked and mouse as well as 
 keyboard events are delivered to this widget.
 </p>
+<p>
+If <em class="parameter"><code>widget</code></em> is not sensitive, it is not set as the current grabbed
+widget and this function does nothing.
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
@@ -1203,6 +1207,9 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 <p>
 Removes the grab from the given widget. You have to pair calls to <a class="link" href="gtk-General.html#gtk-grab-add" title="gtk_grab_add ()"><code class="function">gtk_grab_add()</code></a>
 and <a class="link" href="gtk-General.html#gtk-grab-remove" title="gtk_grab_remove ()"><code class="function">gtk_grab_remove()</code></a>.
+</p>
+<p>
+If <em class="parameter"><code>widget</code></em> does not have the grab, this function does nothing.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

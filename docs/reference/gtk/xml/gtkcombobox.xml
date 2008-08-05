@@ -79,6 +79,11 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-combo-box-ge
 <link linkend="void">void</link>                <link linkend="gtk-combo-box-set-focus-on-click">gtk_combo_box_set_focus_on_click</link>    (<link linkend="GtkComboBox">GtkComboBox</link> *combo,
                                                          <link linkend="gboolean">gboolean</link> focus_on_click);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-combo-box-get-focus-on-click">gtk_combo_box_get_focus_on_click</link>    (<link linkend="GtkComboBox">GtkComboBox</link> *combo);
+<link linkend="void">void</link>                <link linkend="gtk-combo-box-set-button-sensitivity">gtk_combo_box_set_button_sensitivity</link>
+                                                        (<link linkend="GtkComboBox">GtkComboBox</link> *combo_box,
+                                                         <link linkend="GtkSensitivityType">GtkSensitivityType</link> sensitivity);
+<link linkend="GtkSensitivityType">GtkSensitivityType</link>  <link linkend="gtk-combo-box-get-button-sensitivity">gtk_combo_box_get_button_sensitivity</link>
+                                                        (<link linkend="GtkComboBox">GtkComboBox</link> *combo_box);
 </synopsis>
 </refsynopsisdiv>
 
@@ -113,6 +118,7 @@ GtkComboBox implements
 <synopsis>
   &quot;<link linkend="GtkComboBox--active">active</link>&quot;                   <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkComboBox--add-tearoffs">add-tearoffs</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkComboBox--button-sensitivity">button-sensitivity</link>&quot;       <link linkend="GtkSensitivityType">GtkSensitivityType</link>    : Read / Write
   &quot;<link linkend="GtkComboBox--column-span-column">column-span-column</link>&quot;       <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkComboBox--focus-on-click">focus-on-click</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkComboBox--has-frame">has-frame</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -758,6 +764,48 @@ with the mouse. See <link linkend="gtk-combo-box-set-focus-on-click"><function>g
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.6
 </para></refsect2>
+<refsect2 id="gtk-combo-box-set-button-sensitivity" role="function" condition="since:2.14">
+<title>gtk_combo_box_set_button_sensitivity ()</title>
+<indexterm zone="gtk-combo-box-set-button-sensitivity" role="2.14"><primary>gtk_combo_box_set_button_sensitivity</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_combo_box_set_button_sensitivity
+                                                        (<link linkend="GtkComboBox">GtkComboBox</link> *combo_box,
+                                                         <link linkend="GtkSensitivityType">GtkSensitivityType</link> sensitivity);</programlisting>
+<para>
+Sets whether the dropdown button of the combo box should be
+always sensitive (<link linkend="GTK-SENSITIVITY-ON:CAPS"><literal>GTK_SENSITIVITY_ON</literal></link>), never sensitive (<link linkend="GTK-SENSITIVITY-OFF:CAPS"><literal>GTK_SENSITIVITY_OFF</literal></link>)
+or only if there is at least one item to display (<link linkend="GTK-SENSITIVITY-AUTO:CAPS"><literal>GTK_SENSITIVITY_AUTO</literal></link>).</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>sensitivity</parameter>&nbsp;:</term>
+<listitem><simpara> specify the sensitivity of the dropdown button
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-combo-box-get-button-sensitivity" role="function" condition="since:2.14">
+<title>gtk_combo_box_get_button_sensitivity ()</title>
+<indexterm zone="gtk-combo-box-get-button-sensitivity" role="2.14"><primary>gtk_combo_box_get_button_sensitivity</primary></indexterm><programlisting><link linkend="GtkSensitivityType">GtkSensitivityType</link>  gtk_combo_box_get_button_sensitivity
+                                                        (<link linkend="GtkComboBox">GtkComboBox</link> *combo_box);</programlisting>
+<para>
+Returns whether the combo box sets the dropdown button
+sensitive or not when there are no items in the model.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>combo_box</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkComboBox"><type>GtkComboBox</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="GTK-SENSITIVITY-ON:CAPS"><literal>GTK_SENSITIVITY_ON</literal></link> if the dropdown button
+   is sensitive when the model is empty, <link linkend="GTK-SENSITIVITY-OFF:CAPS"><literal>GTK_SENSITIVITY_OFF</literal></link>
+   if the button is always insensitive or
+   <link linkend="GTK-SENSITIVITY-AUTO:CAPS"><literal>GTK_SENSITIVITY_AUTO</literal></link> if it is only sensitive as long as
+   the model has one item to be selected.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkComboBox.property-details" role="property_details">
@@ -789,6 +837,17 @@ Note that this only affects menu style combo boxes.</para>
 
 </para><para>Default value: FALSE</para>
 <para>Since  2.6
+</para>
+</refsect2>
+<refsect2 id="GtkComboBox--button-sensitivity"><title>The <literal>&quot;button-sensitivity&quot;</literal> property</title>
+<indexterm zone="GtkComboBox--button-sensitivity" role="2.14"><primary>GtkComboBox:button-sensitivity</primary></indexterm><programlisting>  &quot;button-sensitivity&quot;       <link linkend="GtkSensitivityType">GtkSensitivityType</link>    : Read / Write</programlisting>
+<para>
+Whether the dropdown button is sensitive when
+the model is empty.</para>
+<para>
+
+</para><para>Default value: GTK_SENSITIVITY_AUTO</para>
+<para>Since  2.14
 </para>
 </refsect2>
 <refsect2 id="GtkComboBox--column-span-column"><title>The <literal>&quot;column-span-column&quot;</literal> property</title>

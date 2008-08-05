@@ -839,15 +839,15 @@ The GtkTreeView implementation of the GtkBuildable interface accepts
 GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
 </p>
 <div class="example">
-<a name="id3062324"></a><p class="title"><b>Example 19. A UI definition fragment with GtkTreeView</b></p>
+<a name="id3523092"></a><p class="title"><b>Example 19. A UI definition fragment with GtkTreeView</b></p>
 <div class="example-contents"><pre class="programlisting">
-&lt;object class="GtkTreeView"&gt;
+&lt;object class="GtkTreeView" id="treeview"&gt;
   &lt;property name="model"&gt;liststore1&lt;/property&gt;
   &lt;child&gt;
-    &lt;object class="GtkTreeViewColumn"&gt;
+    &lt;object class="GtkTreeViewColumn" id="test-column"&gt;
       &lt;property name="title"&gt;Test&lt;/property&gt;
       &lt;child&gt;
-        &lt;object class="GtkCellRendererText"/&gt;
+        &lt;object class="GtkCellRendererText" id="test-renderer"/&gt;
         &lt;attributes&gt;
           &lt;attribute name="text"&gt;1&lt;/attribute&gt;
         &lt;/attributes&gt;
@@ -2717,14 +2717,17 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> reorderable);</pre>
 <p>
-This function is a convenience function to allow you to reorder models that
-support the <span class="type">GtkDragSourceIface</span> and the <span class="type">GtkDragDestIface</span>.  Both
-<a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> and <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> support these.  If <em class="parameter"><code>reorderable</code></em> is <a
+This function is a convenience function to allow you to reorder
+models that support the <span class="type">GtkDragSourceIface</span> and the
+<span class="type">GtkDragDestIface</span>.  Both <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> and <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> support
+these.  If <em class="parameter"><code>reorderable</code></em> is <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a>, then
-the user can reorder the model by dragging and dropping rows.  The
-developer can listen to these changes by connecting to the model's
-row_inserted and row_deleted signals.
+><code class="literal">TRUE</code></a>, then the user can reorder the
+model by dragging and dropping rows. The developer can listen to
+these changes by connecting to the model's row_inserted and
+row_deleted signals. The reordering is implemented by setting up
+the tree view as a drag source and destination. Therefore, drag and
+drop can not be used in a reorderable view for any other purpose.
 </p>
 <p>
 This function does not give you any degree of control over the order -- any
@@ -3580,7 +3583,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/gdk/gdk-Drag-and-Drop.html#GdkDragAction"
 >GdkDragAction</a> actions);</pre>
 <p>
-Turns <em class="parameter"><code>tree_view</code></em> into a drop destination for automatic DND.</p>
+Turns <em class="parameter"><code>tree_view</code></em> into a drop destination for automatic DND. Calling
+this method sets reorderable to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
 <p>
 
 </p>
@@ -3627,7 +3633,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/gdk/gdk-Drag-and-Drop.html#GdkDragAction"
 >GdkDragAction</a> actions);</pre>
 <p>
-Turns <em class="parameter"><code>tree_view</code></em> into a drag source for automatic DND.</p>
+Turns <em class="parameter"><code>tree_view</code></em> into a drag source for automatic DND. Calling this
+method sets reorderable to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
 <p>
 
 </p>
@@ -3669,7 +3678,11 @@ Turns <em class="parameter"><code>tree_view</code></em> into a drag source for a
 <pre class="programlisting">void                gtk_tree_view_unset_rows_drag_source
                                                         (<a class="link" href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
-Undoes the effect of <a class="link" href="GtkTreeView.html#gtk-tree-view-enable-model-drag-source" title="gtk_tree_view_enable_model_drag_source ()"><code class="function">gtk_tree_view_enable_model_drag_source()</code></a>.</p>
+Undoes the effect of
+<a class="link" href="GtkTreeView.html#gtk-tree-view-enable-model-drag-source" title="gtk_tree_view_enable_model_drag_source ()"><code class="function">gtk_tree_view_enable_model_drag_source()</code></a>. Calling this method sets
+reorderable to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
 <p>
 
 </p>
@@ -3687,7 +3700,11 @@ Undoes the effect of <a class="link" href="GtkTreeView.html#gtk-tree-view-enable
 <a name="gtk-tree-view-unset-rows-drag-dest"></a><h3>gtk_tree_view_unset_rows_drag_dest ()</h3>
 <pre class="programlisting">void                gtk_tree_view_unset_rows_drag_dest  (<a class="link" href="GtkTreeView.html" title="GtkTreeView">GtkTreeView</a> *tree_view);</pre>
 <p>
-Undoes the effect of <a class="link" href="GtkTreeView.html#gtk-tree-view-enable-model-drag-dest" title="gtk_tree_view_enable_model_drag_dest ()"><code class="function">gtk_tree_view_enable_model_drag_dest()</code></a>.</p>
+Undoes the effect of
+<a class="link" href="GtkTreeView.html#gtk-tree-view-enable-model-drag-dest" title="gtk_tree_view_enable_model_drag_dest ()"><code class="function">gtk_tree_view_enable_model_drag_dest()</code></a>. Calling this method sets
+reorderable to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
+><code class="literal">FALSE</code></a>.</p>
 <p>
 
 </p>

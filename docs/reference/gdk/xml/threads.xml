@@ -40,6 +40,15 @@ extern              GMutex *<link linkend="gdk-threads-mutex">gdk_threads_mutex<
                                                          <link linkend="GSourceFunc">GSourceFunc</link> function,
                                                          <link linkend="gpointer">gpointer</link> data,
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> notify);
+<link linkend="guint">guint</link>               <link linkend="gdk-threads-add-timeout-seconds">gdk_threads_add_timeout_seconds</link>     (<link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data);
+<link linkend="guint">guint</link>               <link linkend="gdk-threads-add-timeout-seconds-full">gdk_threads_add_timeout_seconds_full</link>
+                                                        (<link linkend="gint">gint</link> priority,
+                                                         <link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);
 </synopsis>
 </refsynopsisdiv>
 
@@ -593,6 +602,70 @@ static void some_widget_finalize (GObject *object)
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.12
+</para></refsect2>
+<refsect2 id="gdk-threads-add-timeout-seconds" role="function" condition="since:2.14">
+<title>gdk_threads_add_timeout_seconds ()</title>
+<indexterm zone="gdk-threads-add-timeout-seconds" role="2.14"><primary>gdk_threads_add_timeout_seconds</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout_seconds     (<link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data);</programlisting>
+<para>
+A wrapper for the common usage of <link linkend="gdk-threads-add-timeout-seconds-full"><function>gdk_threads_add_timeout_seconds_full()</function></link> 
+assigning the default priority, <link linkend="G-PRIORITY-DEFAULT:CAPS"><type>G_PRIORITY_DEFAULT</type></link>.
+</para>
+<para>
+For details, see <link linkend="gdk-threads-add-timeout-full"><function>gdk_threads_add_timeout_full()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>interval</parameter>&nbsp;:</term>
+<listitem><simpara> the time between calls to the function, in seconds
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<listitem><simpara> function to call
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara>     data to pass to <parameter>function</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the ID (greater than 0) of the event source.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gdk-threads-add-timeout-seconds-full" role="function" condition="since:2.14">
+<title>gdk_threads_add_timeout_seconds_full ()</title>
+<indexterm zone="gdk-threads-add-timeout-seconds-full" role="2.14"><primary>gdk_threads_add_timeout_seconds_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_threads_add_timeout_seconds_full
+                                                        (<link linkend="gint">gint</link> priority,
+                                                         <link linkend="guint">guint</link> interval,
+                                                         <link linkend="GSourceFunc">GSourceFunc</link> function,
+                                                         <link linkend="gpointer">gpointer</link> data,
+                                                         <link linkend="GDestroyNotify">GDestroyNotify</link> notify);</programlisting>
+<para>
+A variant of <link linkend="gdk-threads-add-timout-full"><function>gdk_threads_add_timout_full()</function></link> with second-granularity.
+See <link linkend="g-timeout-add-seconds-full"><function>g_timeout_add_seconds_full()</function></link> for a discussion of why it is
+a good idea to use this function if you don't need finer granularity.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>priority</parameter>&nbsp;:</term>
+<listitem><simpara> the priority of the timeout source. Typically this will be in the
+           range between <link linkend="G-PRIORITY-DEFAULT-IDLE:CAPS"><type>G_PRIORITY_DEFAULT_IDLE</type></link> and <link linkend="G-PRIORITY-HIGH-IDLE:CAPS"><type>G_PRIORITY_HIGH_IDLE</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>interval</parameter>&nbsp;:</term>
+<listitem><simpara> the time between calls to the function, in seconds
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<listitem><simpara> function to call
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<listitem><simpara>     data to pass to <parameter>function</parameter>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>notify</parameter>&nbsp;:</term>
+<listitem><simpara>   function to call when the timeout is removed, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the ID (greater than 0) of the event source.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 
 </refsect1>

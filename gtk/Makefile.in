@@ -61,6 +61,7 @@ host_triplet = @host@
 @USE_QUARTZ_TRUE@@USE_WIN32_FALSE@@USE_X11_FALSE@am__append_12 = gtksearchenginequartz.h
 @USE_QUARTZ_TRUE@@USE_WIN32_FALSE@@USE_X11_FALSE@am__append_13 = $(gtk_use_quartz_c_sources)
 @USE_QUARTZ_FALSE@@USE_WIN32_FALSE@@USE_X11_FALSE@am__append_14 = $(gtk_use_stub_c_sources)
+@USE_QUARTZ_TRUE@am__append_15 = gtkquartz.h
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
@@ -273,6 +274,7 @@ LIBS = @LIBS@
 LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
+LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_CURRENT_MINUS_AGE = @LT_CURRENT_MINUS_AGE@
@@ -402,7 +404,7 @@ GTESTER = gtester		# in $PATH for non-GLIB packages
 GTESTER_REPORT = gtester-report		# in $PATH for non-GLIB packages
 
 # initialize variables for unconditional += appending
-EXTRA_DIST = $(gtk_private_h_sources) $(gtk_extra_sources) $(gtk_built_sources) $(STOCK_ICONS) \
+EXTRA_DIST = $(am__append_15) $(gtk_private_h_sources) $(gtk_extra_sources) $(gtk_built_sources) $(STOCK_ICONS) \
 	$(STOCK_ICONS)		\
 	$(GENERATED_ICONS)	\
 	line-arrow.xbm 		\
@@ -489,6 +491,7 @@ INCLUDES = \
 	-I$(top_srcdir)/gdk-pixbuf -I../gdk-pixbuf	\
 	-DGDK_PIXBUF_DISABLE_DEPRECATED			\
 	-DGDK_DISABLE_DEPRECATED			\
+	-DGTK_DISABLE_DEPRECATED			\
 	-DGTK_FILE_SYSTEM_ENABLE_UNSUPPORTED		\
 	-DGTK_PRINT_BACKEND_ENABLE_UNSUPPORTED		\
 	$(GTK_DEBUG_FLAGS)				\
@@ -671,7 +674,7 @@ gtk_public_h_sources = \
 	gtkseparator.h		\
 	gtkseparatormenuitem.h	\
 	gtkseparatortoolitem.h	\
- 	gtkshow.h		\
+	gtkshow.h		\
 	gtksettings.h		\
 	gtksizegroup.h		\
 	gtksocket.h		\
@@ -3054,7 +3057,7 @@ check-local: test
 @OS_WIN32_FALSE@uninstall-def-file:
 
 @MS_LIB_AVAILABLE_TRUE@gtk-win32-$(GTK_API_VERSION).lib: libgtk-win32-$(GTK_API_VERSION).la gtk.def
-@MS_LIB_AVAILABLE_TRUE@	lib -name:libgtk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gtk.def -out:$@
+@MS_LIB_AVAILABLE_TRUE@	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgtk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gtk.def -out:$@
 
 @MS_LIB_AVAILABLE_TRUE@install-ms-lib:
 @MS_LIB_AVAILABLE_TRUE@	$(INSTALL) gtk-win32-$(GTK_API_VERSION).lib $(DESTDIR)$(libdir)

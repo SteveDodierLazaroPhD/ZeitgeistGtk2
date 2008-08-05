@@ -7,7 +7,7 @@
 
 <refnamediv>
 <refname>Application launching</refname>
-<refpurpose></refpurpose>
+<refpurpose>startup notification for applications</refpurpose>
 <!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
@@ -48,8 +48,27 @@ typedef             <link linkend="GdkAppLaunchContext">GdkAppLaunchContext</lin
 <refsect1 id="gdk-Application-launching.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
-
+GdkAppLaunchContext is an implementation of <link linkend="GAppLaunchContext"><type>GAppLaunchContext</type></link> that
+handles launching an application in a graphical context. It provides
+startup notification and allows to launch applications on a specific
+screen or workspace.
 </para>
+<example>
+<title>Launching an application</title>
+<programlisting>
+GdkAppLaunchContext *context;
+
+context = gdk_app_launch_context_new (<!-- -->);
+
+gdk_app_launch_context_set_screen (my_screen);
+gdk_app_launch_context_set_timestamp (event-&gt;time);
+
+if (!g_app_info_launch_default_for_uri ("http://www.gtk.org", context, &amp;error))
+  g_warning ("Launching failed: %s\n", error-&gt;message);
+
+g_object_unref (context);
+</programlisting>
+</example>
 </refsect1>
 
 <refsect1 id="gdk-Application-launching.details" role="details">
@@ -99,7 +118,11 @@ using this context. See also <link linkend="gdk-app-launch-context-set-screen"><
 <para>
 Sets the screen on which applications will be launched when
 using this context. See also <link linkend="gdk-app-launch-context-set-display"><function>gdk_app_launch_context_set_display()</function></link>.
-If both <parameter>screen</parameter> and <parameter>display</parameter> are set, the <parameter>screen</parameter> takes priority.</para>
+</para>
+<para>
+If both <parameter>screen</parameter> and <parameter>display</parameter> are set, the <parameter>screen</parameter> takes priority.
+If neither <parameter>screen</parameter> or <parameter>display</parameter> are set, the default screen and
+display are used.</para>
 <para>
 
 </para><variablelist role="params">
@@ -120,7 +143,12 @@ Sets the workspace on which applications will be launched when
 using this context when running under a window manager that 
 supports multiple workspaces, as described in the 
 <ulink url="http://www.freedesktop.org/Standards/wm-spec">Extended 
-Window Manager Hints</ulink>.</para>
+Window Manager Hints</ulink>. 
+</para>
+<para>
+When the workspace is not specified or <parameter>desktop</parameter> is set to -1, 
+it is up to the window manager to pick one, typically it will
+be the current workspace.</para>
 <para>
 
 </para><variablelist role="params">
@@ -139,7 +167,13 @@ Window Manager Hints</ulink>.</para>
                                                          <link linkend="guint32">guint32</link> timestamp);</programlisting>
 <para>
 Sets the timestamp of <parameter>context</parameter>. The timestamp should ideally
-be taken from the event that triggered the launch.</para>
+be taken from the event that triggered the launch. 
+</para>
+<para>
+Window managers can use this information to avoid moving the
+focus to the newly launched application when the user is busy
+typing in another window. This is also known as 'focus stealing
+prevention'.</para>
 <para>
 
 </para><variablelist role="params">
@@ -175,11 +209,15 @@ context. See also <link linkend="gdk-app-launch-context-set-icon-name"><function
                                                         (<link linkend="GdkAppLaunchContext">GdkAppLaunchContext</link> *context,
                                                          const <link linkend="char">char</link> *icon_name);</programlisting>
 <para>
-Sets the icon for applications that are launched with this
-context. The <parameter>icon_name</parameter> will be interpreted in the same way 
-as the Icon field in desktop files. 
-See also <link linkend="gdk-app-launch-context-set-icon"><function>gdk_app_launch_context_set_icon()</function></link>. If both <parameter>icon</parameter> 
-and <parameter>icon_name</parameter> are set, the <parameter>icon_name</parameter> takes priority.</para>
+Sets the icon for applications that are launched with this context. 
+The <parameter>icon_name</parameter> will be interpreted in the same way as the Icon field 
+in desktop files. See also <link linkend="gdk-app-launch-context-set-icon"><function>gdk_app_launch_context_set_icon()</function></link>. 
+</para>
+<para>
+If both <parameter>icon</parameter> and <parameter>icon_name</parameter> are set, the <parameter>icon_name</parameter> takes priority.
+If neither <parameter>icon</parameter> or <parameter>icon_name</parameter> is set, the icon is taken from either 
+the file that is passed to launched application or from the <link linkend="GAppInfo"><type>GAppInfo</type></link> 
+for the launched application itself.</para>
 <para>
 
 </para><variablelist role="params">

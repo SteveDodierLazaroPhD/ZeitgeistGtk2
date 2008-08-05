@@ -872,8 +872,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
 </tr>
 <tr>
 <td><p><span class="term"><a class="link" href="gdk-Event-Structures.html#GdkCrossingMode" title="enum GdkCrossingMode">GdkCrossingMode</a> <em class="structfield"><code>mode</code></em>;</span></p></td>
-<td>the crossing mode (<a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-NORMAL:CAPS"><code class="literal">GDK_CROSSING_NORMAL</code></a>, <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-GRAB:CAPS"><code class="literal">GDK_CROSSING_GRAB</code></a> or
-  <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-UNGRAB:CAPS"><code class="literal">GDK_CROSSING_UNGRAB</code></a>).
+<td>the crossing mode (<a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-NORMAL:CAPS"><code class="literal">GDK_CROSSING_NORMAL</code></a>, <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-GRAB:CAPS"><code class="literal">GDK_CROSSING_GRAB</code></a>, 
+  <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-UNGRAB:CAPS"><code class="literal">GDK_CROSSING_UNGRAB</code></a>, <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-GTK-GRAB:CAPS"><code class="literal">GDK_CROSSING_GTK_GRAB</code></a>, <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-GTK-UNGRAB:CAPS"><code class="literal">GDK_CROSSING_GTK_UNGRAB</code></a> or
+  <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-STATE-CHANGED:CAPS"><code class="literal">GDK_CROSSING_STATE_CHANGED</code></a>).  <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-GTK-GRAB:CAPS"><code class="literal">GDK_CROSSING_GTK_GRAB</code></a>, <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-GTK-UNGRAB:CAPS"><code class="literal">GDK_CROSSING_GTK_UNGRAB</code></a>,
+  and <a class="link" href="gdk-Event-Structures.html#GDK-CROSSING-STATE-CHANGED:CAPS"><code class="literal">GDK_CROSSING_STATE_CHANGED</code></a> were added in 2.14 and are always synthesized,
+  never native.
 </td>
 </tr>
 <tr>
@@ -1710,7 +1713,10 @@ Specifies the visiblity status of a window for a <a class="link" href="gdk-Event
 {
   GDK_CROSSING_NORMAL,
   GDK_CROSSING_GRAB,
-  GDK_CROSSING_UNGRAB
+  GDK_CROSSING_UNGRAB,
+  GDK_CROSSING_GTK_GRAB,
+  GDK_CROSSING_GTK_UNGRAB,
+  GDK_CROSSING_STATE_CHANGED
 } GdkCrossingMode;
 </pre>
 <p>
@@ -1732,6 +1738,22 @@ Specifies the crossing mode for <a class="link" href="gdk-Event-Structures.html#
 <tr>
 <td><p><a name="GDK-CROSSING-UNGRAB:CAPS"></a><span class="term"><code class="literal">GDK_CROSSING_UNGRAB</code></span></p></td>
 <td>crossing because a grab is deactivated.
+</td>
+</tr>
+<tr>
+<td><p><a name="GDK-CROSSING-GTK-GRAB:CAPS"></a><span class="term"><code class="literal">GDK_CROSSING_GTK_GRAB</code></span></p></td>
+<td>crossing because a GTK+ grab is activated.
+</td>
+</tr>
+<tr>
+<td><p><a name="GDK-CROSSING-GTK-UNGRAB:CAPS"></a><span class="term"><code class="literal">GDK_CROSSING_GTK_UNGRAB</code></span></p></td>
+<td>crossing because a GTK+ grab is deactivated.
+</td>
+</tr>
+<tr>
+<td><p><a name="GDK-CROSSING-STATE-CHANGED:CAPS"></a><span class="term"><code class="literal">GDK_CROSSING_STATE_CHANGED</code></span></p></td>
+<td>crossing because a GTK+ widget changed state (e.g.
+   sensitivity).
 
 </td>
 </tr>

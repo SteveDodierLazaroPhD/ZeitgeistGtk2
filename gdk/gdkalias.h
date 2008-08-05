@@ -264,6 +264,12 @@ extern __typeof (gdk_threads_add_timeout) IA__gdk_threads_add_timeout __attribut
 extern __typeof (gdk_threads_add_timeout_full) IA__gdk_threads_add_timeout_full __attribute((visibility("hidden")));
 #define gdk_threads_add_timeout_full IA__gdk_threads_add_timeout_full
 
+extern __typeof (gdk_threads_add_timeout_seconds) IA__gdk_threads_add_timeout_seconds __attribute((visibility("hidden")));
+#define gdk_threads_add_timeout_seconds IA__gdk_threads_add_timeout_seconds
+
+extern __typeof (gdk_threads_add_timeout_seconds_full) IA__gdk_threads_add_timeout_seconds_full __attribute((visibility("hidden")));
+#define gdk_threads_add_timeout_seconds_full IA__gdk_threads_add_timeout_seconds_full
+
 #endif
 #endif
 #if IN_HEADER(__GDK_H__)

@@ -200,6 +200,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="GtkComboBox.html#gtk-combo-box-get-focus-on-click" title="gtk_combo_box_get_focus_on_click ()">gtk_combo_box_get_focus_on_click</a>    (<a class="link" href="GtkComboBox.html" title="GtkComboBox">GtkComboBox</a> *combo);
+void                <a class="link" href="GtkComboBox.html#gtk-combo-box-set-button-sensitivity" title="gtk_combo_box_set_button_sensitivity ()">gtk_combo_box_set_button_sensitivity</a>
+                                                        (<a class="link" href="GtkComboBox.html" title="GtkComboBox">GtkComboBox</a> *combo_box,
+                                                         <a class="link" href="GtkRange.html#GtkSensitivityType" title="enum GtkSensitivityType">GtkSensitivityType</a> sensitivity);
+<a class="link" href="GtkRange.html#GtkSensitivityType" title="enum GtkSensitivityType">GtkSensitivityType</a>  <a class="link" href="GtkComboBox.html#gtk-combo-box-get-button-sensitivity" title="gtk_combo_box_get_button_sensitivity ()">gtk_combo_box_get_button_sensitivity</a>
+                                                        (<a class="link" href="GtkComboBox.html" title="GtkComboBox">GtkComboBox</a> *combo_box);
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -234,6 +239,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
   "<a class="link" href="GtkComboBox.html#GtkComboBox--add-tearoffs" title='The "add-tearoffs" property'>add-tearoffs</a>"             <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write
+  "<a class="link" href="GtkComboBox.html#GtkComboBox--button-sensitivity" title='The "button-sensitivity" property'>button-sensitivity</a>"       <a class="link" href="GtkRange.html#GtkSensitivityType" title="enum GtkSensitivityType">GtkSensitivityType</a>    : Read / Write
   "<a class="link" href="GtkComboBox.html#GtkComboBox--column-span-column" title='The "column-span-column" property'>column-span-column</a>"       <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write
@@ -1303,6 +1309,71 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 <p class="since">Since  2.6
 </p>
 </div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-combo-box-set-button-sensitivity"></a><h3>gtk_combo_box_set_button_sensitivity ()</h3>
+<pre class="programlisting">void                gtk_combo_box_set_button_sensitivity
+                                                        (<a class="link" href="GtkComboBox.html" title="GtkComboBox">GtkComboBox</a> *combo_box,
+                                                         <a class="link" href="GtkRange.html#GtkSensitivityType" title="enum GtkSensitivityType">GtkSensitivityType</a> sensitivity);</pre>
+<p>
+Sets whether the dropdown button of the combo box should be
+always sensitive (<a class="link" href="GtkRange.html#GTK-SENSITIVITY-ON:CAPS"><code class="literal">GTK_SENSITIVITY_ON</code></a>), never sensitive (<a class="link" href="GtkRange.html#GTK-SENSITIVITY-OFF:CAPS"><code class="literal">GTK_SENSITIVITY_OFF</code></a>)
+or only if there is at least one item to display (<a class="link" href="GtkRange.html#GTK-SENSITIVITY-AUTO:CAPS"><code class="literal">GTK_SENSITIVITY_AUTO</code></a>).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>combo_box</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>sensitivity</code></em> :</span></p></td>
+<td> specify the sensitivity of the dropdown button
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-combo-box-get-button-sensitivity"></a><h3>gtk_combo_box_get_button_sensitivity ()</h3>
+<pre class="programlisting"><a class="link" href="GtkRange.html#GtkSensitivityType" title="enum GtkSensitivityType">GtkSensitivityType</a>  gtk_combo_box_get_button_sensitivity
+                                                        (<a class="link" href="GtkComboBox.html" title="GtkComboBox">GtkComboBox</a> *combo_box);</pre>
+<p>
+Returns whether the combo box sets the dropdown button
+sensitive or not when there are no items in the model.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>combo_box</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a class="link" href="GtkRange.html#GTK-SENSITIVITY-ON:CAPS"><code class="literal">GTK_SENSITIVITY_ON</code></a> if the dropdown button
+   is sensitive when the model is empty, <a class="link" href="GtkRange.html#GTK-SENSITIVITY-OFF:CAPS"><code class="literal">GTK_SENSITIVITY_OFF</code></a>
+   if the button is always insensitive or
+   <a class="link" href="GtkRange.html#GTK-SENSITIVITY-AUTO:CAPS"><code class="literal">GTK_SENSITIVITY_AUTO</code></a> if it is only sensitive as long as
+   the model has one item to be selected.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.14
+</p>
+</div>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkComboBox.property-details"></a><h2>Property Details</h2>
@@ -1342,6 +1413,20 @@ Note that this only affects menu style combo boxes.</p>
 </p>
 <p>Default value: FALSE</p>
 <p>Since  2.6
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkComboBox--button-sensitivity"></a><h3>The <code class="literal">"button-sensitivity"</code> property</h3>
+<pre class="programlisting">  "button-sensitivity"       <a class="link" href="GtkRange.html#GtkSensitivityType" title="enum GtkSensitivityType">GtkSensitivityType</a>    : Read / Write</pre>
+<p>
+Whether the dropdown button is sensitive when
+the model is empty.</p>
+<p>
+
+</p>
+<p>Default value: GTK_SENSITIVITY_AUTO</p>
+<p>Since  2.14
 </p>
 </div>
 <hr>

@@ -444,17 +444,50 @@ extern __typeof (gtk_adjustment_changed) gtk_adjustment_changed __attribute((ali
 #undef gtk_adjustment_clamp_page 
 extern __typeof (gtk_adjustment_clamp_page) gtk_adjustment_clamp_page __attribute((alias("IA__gtk_adjustment_clamp_page"), visibility("default")));
 
+#undef gtk_adjustment_configure 
+extern __typeof (gtk_adjustment_configure) gtk_adjustment_configure __attribute((alias("IA__gtk_adjustment_configure"), visibility("default")));
+
 #undef gtk_adjustment_get_type 
 extern __typeof (gtk_adjustment_get_type) gtk_adjustment_get_type __attribute((alias("IA__gtk_adjustment_get_type"), visibility("default")));
 
 #undef gtk_adjustment_get_value 
 extern __typeof (gtk_adjustment_get_value) gtk_adjustment_get_value __attribute((alias("IA__gtk_adjustment_get_value"), visibility("default")));
 
+#undef gtk_adjustment_get_lower 
+extern __typeof (gtk_adjustment_get_lower) gtk_adjustment_get_lower __attribute((alias("IA__gtk_adjustment_get_lower"), visibility("default")));
+
+#undef gtk_adjustment_get_upper 
+extern __typeof (gtk_adjustment_get_upper) gtk_adjustment_get_upper __attribute((alias("IA__gtk_adjustment_get_upper"), visibility("default")));
+
+#undef gtk_adjustment_get_step_increment 
+extern __typeof (gtk_adjustment_get_step_increment) gtk_adjustment_get_step_increment __attribute((alias("IA__gtk_adjustment_get_step_increment"), visibility("default")));
+
+#undef gtk_adjustment_get_page_increment 
+extern __typeof (gtk_adjustment_get_page_increment) gtk_adjustment_get_page_increment __attribute((alias("IA__gtk_adjustment_get_page_increment"), visibility("default")));
+
+#undef gtk_adjustment_get_page_size 
+extern __typeof (gtk_adjustment_get_page_size) gtk_adjustment_get_page_size __attribute((alias("IA__gtk_adjustment_get_page_size"), visibility("default")));
+
 #undef gtk_adjustment_new 
 extern __typeof (gtk_adjustment_new) gtk_adjustment_new __attribute((alias("IA__gtk_adjustment_new"), visibility("default")));
 
 #undef gtk_adjustment_set_value 
 extern __typeof (gtk_adjustment_set_value) gtk_adjustment_set_value __attribute((alias("IA__gtk_adjustment_set_value"), visibility("default")));
+
+#undef gtk_adjustment_set_lower 
+extern __typeof (gtk_adjustment_set_lower) gtk_adjustment_set_lower __attribute((alias("IA__gtk_adjustment_set_lower"), visibility("default")));
+
+#undef gtk_adjustment_set_upper 
+extern __typeof (gtk_adjustment_set_upper) gtk_adjustment_set_upper __attribute((alias("IA__gtk_adjustment_set_upper"), visibility("default")));
+
+#undef gtk_adjustment_set_step_increment 
+extern __typeof (gtk_adjustment_set_step_increment) gtk_adjustment_set_step_increment __attribute((alias("IA__gtk_adjustment_set_step_increment"), visibility("default")));
+
+#undef gtk_adjustment_set_page_increment 
+extern __typeof (gtk_adjustment_set_page_increment) gtk_adjustment_set_page_increment __attribute((alias("IA__gtk_adjustment_set_page_increment"), visibility("default")));
+
+#undef gtk_adjustment_set_page_size 
+extern __typeof (gtk_adjustment_set_page_size) gtk_adjustment_set_page_size __attribute((alias("IA__gtk_adjustment_set_page_size"), visibility("default")));
 
 #undef gtk_adjustment_value_changed 
 extern __typeof (gtk_adjustment_value_changed) gtk_adjustment_value_changed __attribute((alias("IA__gtk_adjustment_value_changed"), visibility("default")));
@@ -2022,6 +2055,9 @@ extern __typeof (gtk_combo_box_get_row_separator_func) gtk_combo_box_get_row_sep
 #undef gtk_combo_box_get_row_span_column 
 extern __typeof (gtk_combo_box_get_row_span_column) gtk_combo_box_get_row_span_column __attribute((alias("IA__gtk_combo_box_get_row_span_column"), visibility("default")));
 
+#undef gtk_combo_box_get_button_sensitivity 
+extern __typeof (gtk_combo_box_get_button_sensitivity) gtk_combo_box_get_button_sensitivity __attribute((alias("IA__gtk_combo_box_get_button_sensitivity"), visibility("default")));
+
 #undef gtk_combo_box_get_title 
 extern __typeof (gtk_combo_box_get_title) gtk_combo_box_get_title __attribute((alias("IA__gtk_combo_box_get_title"), visibility("default")));
 
@@ -2078,6 +2114,9 @@ extern __typeof (gtk_combo_box_set_row_separator_func) gtk_combo_box_set_row_sep
 
 #undef gtk_combo_box_set_row_span_column 
 extern __typeof (gtk_combo_box_set_row_span_column) gtk_combo_box_set_row_span_column __attribute((alias("IA__gtk_combo_box_set_row_span_column"), visibility("default")));
+
+#undef gtk_combo_box_set_button_sensitivity 
+extern __typeof (gtk_combo_box_set_button_sensitivity) gtk_combo_box_set_button_sensitivity __attribute((alias("IA__gtk_combo_box_set_button_sensitivity"), visibility("default")));
 
 #undef gtk_combo_box_set_title 
 extern __typeof (gtk_combo_box_set_title) gtk_combo_box_set_title __attribute((alias("IA__gtk_combo_box_set_title"), visibility("default")));
@@ -2699,6 +2738,9 @@ extern __typeof (gtk_status_icon_new_from_stock) gtk_status_icon_new_from_stock 
 #undef gtk_status_icon_new_from_icon_name 
 extern __typeof (gtk_status_icon_new_from_icon_name) gtk_status_icon_new_from_icon_name __attribute((alias("IA__gtk_status_icon_new_from_icon_name"), visibility("default")));
 
+#undef gtk_status_icon_new_from_gicon 
+extern __typeof (gtk_status_icon_new_from_gicon) gtk_status_icon_new_from_gicon __attribute((alias("IA__gtk_status_icon_new_from_gicon"), visibility("default")));
+
 #undef gtk_status_icon_set_from_pixbuf 
 extern __typeof (gtk_status_icon_set_from_pixbuf) gtk_status_icon_set_from_pixbuf __attribute((alias("IA__gtk_status_icon_set_from_pixbuf"), visibility("default")));
 
@@ -2710,6 +2752,9 @@ extern __typeof (gtk_status_icon_set_from_stock) gtk_status_icon_set_from_stock 
 
 #undef gtk_status_icon_set_from_icon_name 
 extern __typeof (gtk_status_icon_set_from_icon_name) gtk_status_icon_set_from_icon_name __attribute((alias("IA__gtk_status_icon_set_from_icon_name"), visibility("default")));
+
+#undef gtk_status_icon_set_from_gicon 
+extern __typeof (gtk_status_icon_set_from_gicon) gtk_status_icon_set_from_gicon __attribute((alias("IA__gtk_status_icon_set_from_gicon"), visibility("default")));
 
 #undef gtk_status_icon_get_storage_type 
 extern __typeof (gtk_status_icon_get_storage_type) gtk_status_icon_get_storage_type __attribute((alias("IA__gtk_status_icon_get_storage_type"), visibility("default")));
@@ -2725,6 +2770,9 @@ extern __typeof (gtk_status_icon_get_stock) gtk_status_icon_get_stock __attribut
 
 #undef gtk_status_icon_get_icon_name 
 extern __typeof (gtk_status_icon_get_icon_name) gtk_status_icon_get_icon_name __attribute((alias("IA__gtk_status_icon_get_icon_name"), visibility("default")));
+
+#undef gtk_status_icon_get_gicon 
+extern __typeof (gtk_status_icon_get_gicon) gtk_status_icon_get_gicon __attribute((alias("IA__gtk_status_icon_get_gicon"), visibility("default")));
 
 #undef gtk_status_icon_get_size 
 extern __typeof (gtk_status_icon_get_size) gtk_status_icon_get_size __attribute((alias("IA__gtk_status_icon_get_size"), visibility("default")));
@@ -3306,6 +3354,9 @@ extern __typeof (gtk_file_chooser_get_action) gtk_file_chooser_get_action __attr
 #undef gtk_file_chooser_get_current_folder 
 extern __typeof (gtk_file_chooser_get_current_folder) gtk_file_chooser_get_current_folder __attribute((alias("IA__gtk_file_chooser_get_current_folder"), visibility("default")));
 
+#undef gtk_file_chooser_get_current_folder_file 
+extern __typeof (gtk_file_chooser_get_current_folder_file) gtk_file_chooser_get_current_folder_file __attribute((alias("IA__gtk_file_chooser_get_current_folder_file"), visibility("default")));
+
 #ifdef G_OS_WIN32
 #undef gtk_file_chooser_get_current_folder_utf8 
 extern __typeof (gtk_file_chooser_get_current_folder_utf8) gtk_file_chooser_get_current_folder_utf8 __attribute((alias("IA__gtk_file_chooser_get_current_folder_utf8"), visibility("default")));
@@ -3316,6 +3367,9 @@ extern __typeof (gtk_file_chooser_get_current_folder_uri) gtk_file_chooser_get_c
 
 #undef gtk_file_chooser_get_extra_widget 
 extern __typeof (gtk_file_chooser_get_extra_widget) gtk_file_chooser_get_extra_widget __attribute((alias("IA__gtk_file_chooser_get_extra_widget"), visibility("default")));
+
+#undef gtk_file_chooser_get_file 
+extern __typeof (gtk_file_chooser_get_file) gtk_file_chooser_get_file __attribute((alias("IA__gtk_file_chooser_get_file"), visibility("default")));
 
 #undef gtk_file_chooser_get_filename 
 extern __typeof (gtk_file_chooser_get_filename) gtk_file_chooser_get_filename __attribute((alias("IA__gtk_file_chooser_get_filename"), visibility("default")));
@@ -3333,11 +3387,17 @@ extern __typeof (gtk_file_chooser_get_filenames) gtk_file_chooser_get_filenames 
 extern __typeof (gtk_file_chooser_get_filenames_utf8) gtk_file_chooser_get_filenames_utf8 __attribute((alias("IA__gtk_file_chooser_get_filenames_utf8"), visibility("default")));
 
 #endif
+#undef gtk_file_chooser_get_files 
+extern __typeof (gtk_file_chooser_get_files) gtk_file_chooser_get_files __attribute((alias("IA__gtk_file_chooser_get_files"), visibility("default")));
+
 #undef gtk_file_chooser_get_filter 
 extern __typeof (gtk_file_chooser_get_filter) gtk_file_chooser_get_filter __attribute((alias("IA__gtk_file_chooser_get_filter"), visibility("default")));
 
 #undef gtk_file_chooser_get_local_only 
 extern __typeof (gtk_file_chooser_get_local_only) gtk_file_chooser_get_local_only __attribute((alias("IA__gtk_file_chooser_get_local_only"), visibility("default")));
+
+#undef gtk_file_chooser_get_preview_file 
+extern __typeof (gtk_file_chooser_get_preview_file) gtk_file_chooser_get_preview_file __attribute((alias("IA__gtk_file_chooser_get_preview_file"), visibility("default")));
 
 #undef gtk_file_chooser_get_preview_filename 
 extern __typeof (gtk_file_chooser_get_preview_filename) gtk_file_chooser_get_preview_filename __attribute((alias("IA__gtk_file_chooser_get_preview_filename"), visibility("default")));
@@ -3411,6 +3471,9 @@ extern __typeof (gtk_file_chooser_remove_shortcut_folder_uri) gtk_file_chooser_r
 #undef gtk_file_chooser_select_all 
 extern __typeof (gtk_file_chooser_select_all) gtk_file_chooser_select_all __attribute((alias("IA__gtk_file_chooser_select_all"), visibility("default")));
 
+#undef gtk_file_chooser_select_file 
+extern __typeof (gtk_file_chooser_select_file) gtk_file_chooser_select_file __attribute((alias("IA__gtk_file_chooser_select_file"), visibility("default")));
+
 #undef gtk_file_chooser_select_filename 
 extern __typeof (gtk_file_chooser_select_filename) gtk_file_chooser_select_filename __attribute((alias("IA__gtk_file_chooser_select_filename"), visibility("default")));
 
@@ -3428,6 +3491,9 @@ extern __typeof (gtk_file_chooser_set_action) gtk_file_chooser_set_action __attr
 #undef gtk_file_chooser_set_current_folder 
 extern __typeof (gtk_file_chooser_set_current_folder) gtk_file_chooser_set_current_folder __attribute((alias("IA__gtk_file_chooser_set_current_folder"), visibility("default")));
 
+#undef gtk_file_chooser_set_current_folder_file 
+extern __typeof (gtk_file_chooser_set_current_folder_file) gtk_file_chooser_set_current_folder_file __attribute((alias("IA__gtk_file_chooser_set_current_folder_file"), visibility("default")));
+
 #ifdef G_OS_WIN32
 #undef gtk_file_chooser_set_current_folder_utf8 
 extern __typeof (gtk_file_chooser_set_current_folder_utf8) gtk_file_chooser_set_current_folder_utf8 __attribute((alias("IA__gtk_file_chooser_set_current_folder_utf8"), visibility("default")));
@@ -3441,6 +3507,9 @@ extern __typeof (gtk_file_chooser_set_current_name) gtk_file_chooser_set_current
 
 #undef gtk_file_chooser_set_extra_widget 
 extern __typeof (gtk_file_chooser_set_extra_widget) gtk_file_chooser_set_extra_widget __attribute((alias("IA__gtk_file_chooser_set_extra_widget"), visibility("default")));
+
+#undef gtk_file_chooser_set_file 
+extern __typeof (gtk_file_chooser_set_file) gtk_file_chooser_set_file __attribute((alias("IA__gtk_file_chooser_set_file"), visibility("default")));
 
 #undef gtk_file_chooser_set_filename 
 extern __typeof (gtk_file_chooser_set_filename) gtk_file_chooser_set_filename __attribute((alias("IA__gtk_file_chooser_set_filename"), visibility("default")));
@@ -3477,6 +3546,9 @@ extern __typeof (gtk_file_chooser_set_use_preview_label) gtk_file_chooser_set_us
 #undef gtk_file_chooser_unselect_all 
 extern __typeof (gtk_file_chooser_unselect_all) gtk_file_chooser_unselect_all __attribute((alias("IA__gtk_file_chooser_unselect_all"), visibility("default")));
 
+#undef gtk_file_chooser_unselect_file 
+extern __typeof (gtk_file_chooser_unselect_file) gtk_file_chooser_unselect_file __attribute((alias("IA__gtk_file_chooser_unselect_file"), visibility("default")));
+
 #undef gtk_file_chooser_unselect_filename 
 extern __typeof (gtk_file_chooser_unselect_filename) gtk_file_chooser_unselect_filename __attribute((alias("IA__gtk_file_chooser_unselect_filename"), visibility("default")));
 
@@ -3498,9 +3570,11 @@ extern __typeof (gtk_file_chooser_dialog_get_type) gtk_file_chooser_dialog_get_t
 #undef gtk_file_chooser_dialog_new 
 extern __typeof (gtk_file_chooser_dialog_new) gtk_file_chooser_dialog_new __attribute((alias("IA__gtk_file_chooser_dialog_new"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_file_chooser_dialog_new_with_backend 
 extern __typeof (gtk_file_chooser_dialog_new_with_backend) gtk_file_chooser_dialog_new_with_backend __attribute((alias("IA__gtk_file_chooser_dialog_new_with_backend"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_FILE_CHOOSER_WIDGET_H__)
@@ -3511,9 +3585,11 @@ extern __typeof (gtk_file_chooser_widget_get_type) gtk_file_chooser_widget_get_t
 #undef gtk_file_chooser_widget_new 
 extern __typeof (gtk_file_chooser_widget_new) gtk_file_chooser_widget_new __attribute((alias("IA__gtk_file_chooser_widget_new"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_file_chooser_widget_new_with_backend 
 extern __typeof (gtk_file_chooser_widget_new_with_backend) gtk_file_chooser_widget_new_with_backend __attribute((alias("IA__gtk_file_chooser_widget_new_with_backend"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_FILE_CHOOSER_BUTTON_H__)
@@ -3530,9 +3606,11 @@ extern __typeof (gtk_file_chooser_button_get_width_chars) gtk_file_chooser_butto
 #undef gtk_file_chooser_button_new 
 extern __typeof (gtk_file_chooser_button_new) gtk_file_chooser_button_new __attribute((alias("IA__gtk_file_chooser_button_new"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_file_chooser_button_new_with_backend 
 extern __typeof (gtk_file_chooser_button_new_with_backend) gtk_file_chooser_button_new_with_backend __attribute((alias("IA__gtk_file_chooser_button_new_with_backend"), visibility("default")));
 
+#endif
 #undef gtk_file_chooser_button_new_with_dialog 
 extern __typeof (gtk_file_chooser_button_new_with_dialog) gtk_file_chooser_button_new_with_dialog __attribute((alias("IA__gtk_file_chooser_button_new_with_dialog"), visibility("default")));
 
@@ -11643,8 +11721,8 @@ extern __typeof (gtk_window_get_decorated) gtk_window_get_decorated __attribute(
 #undef gtk_window_get_deletable 
 extern __typeof (gtk_window_get_deletable) gtk_window_get_deletable __attribute((alias("IA__gtk_window_get_deletable"), visibility("default")));
 
-#undef gtk_window_get_default 
-extern __typeof (gtk_window_get_default) gtk_window_get_default __attribute((alias("IA__gtk_window_get_default"), visibility("default")));
+#undef gtk_window_get_default_widget 
+extern __typeof (gtk_window_get_default_widget) gtk_window_get_default_widget __attribute((alias("IA__gtk_window_get_default_widget"), visibility("default")));
 
 #undef gtk_window_get_default_icon_list 
 extern __typeof (gtk_window_get_default_icon_list) gtk_window_get_default_icon_list __attribute((alias("IA__gtk_window_get_default_icon_list"), visibility("default")));

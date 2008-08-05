@@ -251,6 +251,7 @@ LIBS = @LIBS@
 LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
+LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_CURRENT_MINUS_AGE = @LT_CURRENT_MINUS_AGE@
@@ -446,6 +447,13 @@ floating_SOURCES = floating.c
 floating_LDADD = $(progs_ldadd)
 object_SOURCES = object.c pixbuf-init.c
 object_LDADD = $(progs_ldadd)
+
+# this doesn't work in make distcheck, since running
+# on a naked X server creates slightly different event
+# sequences than running on a normal desktop
+# TEST_PROGS			+= crossingevents
+crossingevents_SOURCES = crossingevents.c
+crossingevents_LDADD = $(progs_ldadd)
 
 # this doesn't work in make distcheck, since it doesn't
 # find file-chooser-test-dir 

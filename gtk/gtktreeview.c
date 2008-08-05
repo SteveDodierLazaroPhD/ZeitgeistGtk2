@@ -777,7 +777,7 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
 #define _TREE_VIEW_EXPANDER_SIZE 12
 #define _TREE_VIEW_VERTICAL_SEPARATOR 2
 #define _TREE_VIEW_HORIZONTAL_SEPARATOR 2
-    
+
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("expander-size",
 							     P_("Expander Size"),
@@ -5577,6 +5577,8 @@ validate_row (GtkTreeView *tree_view,
   gboolean draw_vgrid_lines, draw_hgrid_lines;
   gint focus_pad;
   gint grid_line_width;
+  gboolean wide_separators;
+  gint separator_height;
 
   /* double check the row needs validating */
   if (! GTK_RBNODE_FLAG_SET (node, GTK_RBNODE_INVALID) &&
@@ -5591,6 +5593,8 @@ validate_row (GtkTreeView *tree_view,
 			"horizontal-separator", &horizontal_separator,
 			"vertical-separator", &vertical_separator,
 			"grid-line-width", &grid_line_width,
+                        "wide-separators",  &wide_separators,
+                        "separator-height", &separator_height,
 			NULL);
   
   draw_vgrid_lines =
@@ -5637,7 +5641,12 @@ validate_row (GtkTreeView *tree_view,
 	  height = MAX (height, tree_view->priv->expander_size);
 	}
       else
-	height = 2 + 2 * focus_pad;
+        {
+          if (wide_separators)
+            height = separator_height + 2 * focus_pad;
+          else
+            height = 2 + 2 * focus_pad;
+        }
 
       if (gtk_tree_view_is_expander_column (tree_view, column))
         {
@@ -12443,12 +12452,15 @@ gtk_tree_view_get_reorderable (GtkTreeView *tree_view)
  * @tree_view: A #GtkTreeView.
  * @reorderable: %TRUE, if the tree can be reordered.
  *
- * This function is a convenience function to allow you to reorder models that
- * support the #GtkDragSourceIface and the #GtkDragDestIface.  Both
- * #GtkTreeStore and #GtkListStore support these.  If @reorderable is %TRUE, then
- * the user can reorder the model by dragging and dropping rows.  The
- * developer can listen to these changes by connecting to the model's
- * row_inserted and row_deleted signals.
+ * This function is a convenience function to allow you to reorder
+ * models that support the #GtkDragSourceIface and the
+ * #GtkDragDestIface.  Both #GtkTreeStore and #GtkListStore support
+ * these.  If @reorderable is %TRUE, then the user can reorder the
+ * model by dragging and dropping rows. The developer can listen to
+ * these changes by connecting to the model's row_inserted and
+ * row_deleted signals. The reordering is implemented by setting up
+ * the tree view as a drag source and destination. Therefore, drag and
+ * drop can not be used in a reorderable view for any other purpose.
  *
  * This function does not give you any degree of control over the order -- any
  * reordering is allowed.  If more control is needed, you should probably
@@ -13331,8 +13343,9 @@ unset_reorderable (GtkTreeView *tree_view)
  * @n_targets: the number of items in @targets
  * @actions: the bitmask of possible actions for a drag from this
  *    widget
- * 
- * Turns @tree_view into a drag source for automatic DND.
+ *
+ * Turns @tree_view into a drag source for automatic DND. Calling this
+ * method sets reorderable to %FALSE.
  **/
 void
 gtk_tree_view_enable_model_drag_source (GtkTreeView              *tree_view,
@@ -13368,7 +13381,8 @@ gtk_tree_view_enable_model_drag_source (GtkTreeView              *tree_view,
  * @actions: the bitmask of possible actions for a drag from this
  *    widget
  * 
- * Turns @tree_view into a drop destination for automatic DND.
+ * Turns @tree_view into a drop destination for automatic DND. Calling
+ * this method sets reorderable to %FALSE.
  **/
 void
 gtk_tree_view_enable_model_drag_dest (GtkTreeView              *tree_view,
@@ -13395,8 +13409,10 @@ gtk_tree_view_enable_model_drag_dest (GtkTreeView              *tree_view,
 /**
  * gtk_tree_view_unset_rows_drag_source:
  * @tree_view: a #GtkTreeView
- * 
- * Undoes the effect of gtk_tree_view_enable_model_drag_source().
+ *
+ * Undoes the effect of
+ * gtk_tree_view_enable_model_drag_source(). Calling this method sets
+ * reorderable to %FALSE.
  **/
 void
 gtk_tree_view_unset_rows_drag_source (GtkTreeView *tree_view)
@@ -13425,8 +13441,10 @@ gtk_tree_view_unset_rows_drag_source (GtkTreeView *tree_view)
 /**
  * gtk_tree_view_unset_rows_drag_dest:
  * @tree_view: a #GtkTreeView
- * 
- * Undoes the effect of gtk_tree_view_enable_model_drag_dest().
+ *
+ * Undoes the effect of
+ * gtk_tree_view_enable_model_drag_dest(). Calling this method sets
+ * reorderable to %FALSE.
  **/
 void
 gtk_tree_view_unset_rows_drag_dest (GtkTreeView *tree_view)

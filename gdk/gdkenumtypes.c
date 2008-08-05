@@ -302,6 +302,9 @@ gdk_crossing_mode_get_type (void)
             { GDK_CROSSING_NORMAL, "GDK_CROSSING_NORMAL", "normal" },
             { GDK_CROSSING_GRAB, "GDK_CROSSING_GRAB", "grab" },
             { GDK_CROSSING_UNGRAB, "GDK_CROSSING_UNGRAB", "ungrab" },
+            { GDK_CROSSING_GTK_GRAB, "GDK_CROSSING_GTK_GRAB", "gtk-grab" },
+            { GDK_CROSSING_GTK_UNGRAB, "GDK_CROSSING_GTK_UNGRAB", "gtk-ungrab" },
+            { GDK_CROSSING_STATE_CHANGED, "GDK_CROSSING_STATE_CHANGED", "state-changed" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GdkCrossingMode"), values);

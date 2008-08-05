@@ -462,13 +462,13 @@ GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
 <example>
 <title>A UI definition fragment with GtkTreeView</title>
 <programlisting><![CDATA[
-<object class="GtkTreeView">
+<object class="GtkTreeView" id="treeview">
   <property name="model">liststore1</property>
   <child>
-    <object class="GtkTreeViewColumn">
+    <object class="GtkTreeViewColumn" id="test-column">
       <property name="title">Test</property>
       <child>
-        <object class="GtkCellRendererText"/>
+        <object class="GtkCellRendererText" id="test-renderer"/>
         <attributes>
           <attribute name="text">1</attribute>
         </attributes>
@@ -1539,12 +1539,15 @@ Returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the node poi
 <indexterm zone="gtk-tree-view-set-reorderable"><primary>gtk_tree_view_set_reorderable</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_set_reorderable       (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view,
                                                          <link linkend="gboolean">gboolean</link> reorderable);</programlisting>
 <para>
-This function is a convenience function to allow you to reorder models that
-support the <link linkend="GtkDragSourceIface"><type>GtkDragSourceIface</type></link> and the <link linkend="GtkDragDestIface"><type>GtkDragDestIface</type></link>.  Both
-<link linkend="GtkTreeStore"><type>GtkTreeStore</type></link> and <link linkend="GtkListStore"><type>GtkListStore</type></link> support these.  If <parameter>reorderable</parameter> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, then
-the user can reorder the model by dragging and dropping rows.  The
-developer can listen to these changes by connecting to the model's
-row_inserted and row_deleted signals.
+This function is a convenience function to allow you to reorder
+models that support the <link linkend="GtkDragSourceIface"><type>GtkDragSourceIface</type></link> and the
+<link linkend="GtkDragDestIface"><type>GtkDragDestIface</type></link>.  Both <link linkend="GtkTreeStore"><type>GtkTreeStore</type></link> and <link linkend="GtkListStore"><type>GtkListStore</type></link> support
+these.  If <parameter>reorderable</parameter> is <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>, then the user can reorder the
+model by dragging and dropping rows. The developer can listen to
+these changes by connecting to the model's row_inserted and
+row_deleted signals. The reordering is implemented by setting up
+the tree view as a drag source and destination. Therefore, drag and
+drop can not be used in a reorderable view for any other purpose.
 </para>
 <para>
 This function does not give you any degree of control over the order -- any
@@ -2017,7 +2020,8 @@ tree (the full scrollable area of the tree).</para>
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="GdkDragAction">GdkDragAction</link> actions);</programlisting>
 <para>
-Turns <parameter>tree_view</parameter> into a drop destination for automatic DND.</para>
+Turns <parameter>tree_view</parameter> into a drop destination for automatic DND. Calling
+this method sets reorderable to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2044,7 +2048,8 @@ Turns <parameter>tree_view</parameter> into a drop destination for automatic DND
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="GdkDragAction">GdkDragAction</link> actions);</programlisting>
 <para>
-Turns <parameter>tree_view</parameter> into a drag source for automatic DND.</para>
+Turns <parameter>tree_view</parameter> into a drag source for automatic DND. Calling this
+method sets reorderable to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2070,7 +2075,9 @@ Turns <parameter>tree_view</parameter> into a drag source for automatic DND.</pa
 <indexterm zone="gtk-tree-view-unset-rows-drag-source"><primary>gtk_tree_view_unset_rows_drag_source</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_unset_rows_drag_source
                                                         (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);</programlisting>
 <para>
-Undoes the effect of <link linkend="gtk-tree-view-enable-model-drag-source"><function>gtk_tree_view_enable_model_drag_source()</function></link>.</para>
+Undoes the effect of
+<link linkend="gtk-tree-view-enable-model-drag-source"><function>gtk_tree_view_enable_model_drag_source()</function></link>. Calling this method sets
+reorderable to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 
 </para><variablelist role="params">
@@ -2082,7 +2089,9 @@ Undoes the effect of <link linkend="gtk-tree-view-enable-model-drag-source"><fun
 <title>gtk_tree_view_unset_rows_drag_dest ()</title>
 <indexterm zone="gtk-tree-view-unset-rows-drag-dest"><primary>gtk_tree_view_unset_rows_drag_dest</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_view_unset_rows_drag_dest  (<link linkend="GtkTreeView">GtkTreeView</link> *tree_view);</programlisting>
 <para>
-Undoes the effect of <link linkend="gtk-tree-view-enable-model-drag-dest"><function>gtk_tree_view_enable_model_drag_dest()</function></link>.</para>
+Undoes the effect of
+<link linkend="gtk-tree-view-enable-model-drag-dest"><function>gtk_tree_view_enable_model_drag_dest()</function></link>. Calling this method sets
+reorderable to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 
 </para><variablelist role="params">

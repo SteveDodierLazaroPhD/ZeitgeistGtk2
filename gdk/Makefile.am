@@ -1,8 +1,8 @@
 ## Makefile.am for gtk+/gdk
 include $(top_srcdir)/Makefile.decl
 
-SUBDIRS = $(gdktarget)
-DIST_SUBDIRS = win32 x11 quartz directfb
+SUBDIRS = $(gdktarget) . tests
+DIST_SUBDIRS = win32 x11 quartz directfb tests
 
 EXTRA_DIST +=			\
 	keynames.txt		\
@@ -194,7 +194,7 @@ if MS_LIB_AVAILABLE
 noinst_DATA = gdk-win32-$(GTK_API_VERSION).lib
 
 gdk-win32-$(GTK_API_VERSION).lib: libgdk-win32-$(GTK_API_VERSION).la gdk.def
-	lib -name:libgdk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gdk.def -out:$@
+	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgdk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gdk.def -out:$@
 
 install-ms-lib:
 	$(INSTALL) gdk-win32-$(GTK_API_VERSION).lib $(DESTDIR)$(libdir)
