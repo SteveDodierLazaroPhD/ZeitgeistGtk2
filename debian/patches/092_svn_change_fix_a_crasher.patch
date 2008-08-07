@@ -1,0 +1,56 @@
+Index: gtk+2.0-2.13.6/gtk/gtkimagemenuitem.c
+===================================================================
+--- gtk+2.0-2.13.6.orig/gtk/gtkimagemenuitem.c	2008-08-05 16:52:00.000000000 +0200
++++ gtk+2.0-2.13.6/gtk/gtkimagemenuitem.c	2008-08-07 16:44:13.000000000 +0200
+@@ -37,6 +37,7 @@
+ #include "gtkprivate.h"
+ #include "gtkalias.h"
+ 
++static void gtk_image_menu_item_destroy              (GtkObject        *object);
+ static void gtk_image_menu_item_size_request         (GtkWidget        *widget,
+                                                       GtkRequisition   *requisition);
+ static void gtk_image_menu_item_size_allocate        (GtkWidget        *widget,
+@@ -73,16 +74,14 @@
+ static void
+ gtk_image_menu_item_class_init (GtkImageMenuItemClass *klass)
+ {
+-  GObjectClass *gobject_class;
+-  GtkWidgetClass *widget_class;
+-  GtkMenuItemClass *menu_item_class;
+-  GtkContainerClass *container_class;
+-
+-  gobject_class = (GObjectClass*) klass;
+-  widget_class = (GtkWidgetClass*) klass;
+-  menu_item_class = (GtkMenuItemClass*) klass;
+-  container_class = (GtkContainerClass*) klass;
+-  
++  GObjectClass *gobject_class = (GObjectClass*) klass;
++  GtkObjectClass *object_class = (GtkObjectClass*) klass;
++  GtkWidgetClass *widget_class = (GtkWidgetClass*) klass;
++  GtkMenuItemClass *menu_item_class = (GtkMenuItemClass*) klass;
++  GtkContainerClass *container_class = (GtkContainerClass*) klass;
++
++  object_class->destroy = gtk_image_menu_item_destroy;
++
+   widget_class->screen_changed = gtk_image_menu_item_screen_changed;
+   widget_class->size_request = gtk_image_menu_item_size_request;
+   widget_class->size_allocate = gtk_image_menu_item_size_allocate;
+@@ -173,6 +172,18 @@
+ }
+ 
+ static void
++gtk_image_menu_item_destroy (GtkObject *object)
++{
++  GtkImageMenuItem *image_menu_item = GTK_IMAGE_MENU_ITEM (object);
++
++  if (image_menu_item->image)
++    gtk_container_remove (GTK_CONTAINER (image_menu_item),
++                          image_menu_item->image);
++
++  GTK_OBJECT_CLASS (gtk_image_menu_item_parent_class)->destroy (object);
++}
++
++static void
+ gtk_image_menu_item_toggle_size_request (GtkMenuItem *menu_item,
+ 					 gint        *requisition)
+ {
