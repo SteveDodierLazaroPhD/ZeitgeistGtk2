@@ -349,7 +349,7 @@ gtk_status_icon_class_init (GtkStatusIconClass *class)
    * Since: 2.10
    */
   status_icon_signals [POPUP_MENU_SIGNAL] =
-    g_signal_new (I_("popup_menu"),
+    g_signal_new (I_("popup-menu"),
 		  G_TYPE_FROM_CLASS (gobject_class),
 		  G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkStatusIconClass, popup_menu),
@@ -375,7 +375,7 @@ gtk_status_icon_class_init (GtkStatusIconClass *class)
    * Since: 2.10
    */
   status_icon_signals [SIZE_CHANGED_SIGNAL] =
-    g_signal_new (I_("size_changed"),
+    g_signal_new (I_("size-changed"),
 		  G_TYPE_FROM_CLASS (gobject_class),
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GtkStatusIconClass, size_changed),
@@ -773,12 +773,7 @@ gtk_status_icon_get_property (GObject    *object,
       if (priv->storage_type != GTK_IMAGE_GICON)
         g_value_set_object (value, NULL);
       else
-        {
-          GIcon *icon;
-
-          gtk_status_icon_get_gicon (status_icon, &icon);
-          g_value_set_object (value, icon);
-        }
+        g_value_set_object (value, gtk_status_icon_get_gicon (status_icon));
       break;
     case PROP_STORAGE_TYPE:
       g_value_set_enum (value, gtk_status_icon_get_storage_type (status_icon));
@@ -1724,7 +1719,6 @@ gtk_status_icon_get_icon_name (GtkStatusIcon *status_icon)
 /**
  * gtk_status_icon_get_gicon:
  * @status_icon: a #GtkStatusIcon
- * @icon: a place to store a #GIcon
  *
  * Retrieves the #GIcon being displayed by the #GtkStatusIcon.
  * The storage type of the status icon must be %GTK_IMAGE_EMPTY or
@@ -1734,25 +1728,26 @@ gtk_status_icon_get_icon_name (GtkStatusIcon *status_icon)
  *
  * If this function fails, @icon is left unchanged;
  *
+ * Returns: the displayed icon, or %NULL if the image is empty
+ *
  * Since: 2.14
  **/
-void
-gtk_status_icon_get_gicon (GtkStatusIcon  *status_icon,
-                           GIcon         **icon)
+GIcon *
+gtk_status_icon_get_gicon (GtkStatusIcon *status_icon)
 {
   GtkStatusIconPrivate *priv;
 
-  g_return_if_fail (GTK_IS_STATUS_ICON (status_icon));
+  g_return_val_if_fail (GTK_IS_STATUS_ICON (status_icon), NULL);
 
   priv = status_icon->priv;
 
-  g_return_if_fail (priv->storage_type == GTK_IMAGE_GICON ||
-                    priv->storage_type == GTK_IMAGE_EMPTY);
+  g_return_val_if_fail (priv->storage_type == GTK_IMAGE_GICON ||
+                        priv->storage_type == GTK_IMAGE_EMPTY, NULL);
 
   if (priv->storage_type == GTK_IMAGE_EMPTY)
     priv->image_data.gicon = NULL;
 
-  *icon = priv->image_data.gicon;
+  return priv->image_data.gicon;
 }
 
 /**

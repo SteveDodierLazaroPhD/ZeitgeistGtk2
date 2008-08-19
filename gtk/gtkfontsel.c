@@ -321,7 +321,7 @@ gtk_font_selection_init (GtkFontSelection *fontsel)
   g_signal_connect (fontsel->size_entry, "activate",
 		    G_CALLBACK (gtk_font_selection_size_activate),
 		    fontsel);
-  g_signal_connect_after (fontsel->size_entry, "focus_out_event",
+  g_signal_connect_after (fontsel->size_entry, "focus-out-event",
 			  G_CALLBACK (gtk_font_selection_size_focus_out),
 			  fontsel);
   
@@ -354,7 +354,7 @@ gtk_font_selection_init (GtkFontSelection *fontsel)
   fontsel->family_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (model));
   g_object_unref (model);
 
-  g_signal_connect (fontsel->family_list, "row_activated",
+  g_signal_connect (fontsel->family_list, "row-activated",
 		    G_CALLBACK (list_row_activated), fontsel);
 
   column = gtk_tree_view_column_new_with_attributes ("Family",
@@ -559,8 +559,8 @@ gtk_font_selection_finalize (GObject *object)
 
   if (fontsel->font)
     gdk_font_unref (fontsel->font);
-  
-  (* G_OBJECT_CLASS (gtk_font_selection_parent_class)->finalize) (object);
+
+  G_OBJECT_CLASS (gtk_font_selection_parent_class)->finalize (object);
 }
 
 static void
@@ -1123,25 +1123,6 @@ gtk_font_selection_get_font_internal (GtkFontSelection *fontsel)
  *****************************************************************************/
 
 /**
- * gtk_font_selection_get_family_entry:
- * @fontsel: a #GtkFontSelection
- *
- * This returns the #GtkEntry that allows the user to manually enter
- * the font family they want to use.
- * 
- * Return value: A #GtkWidget.
- *
- * Since: 2.14
- **/
-GtkWidget *
-gtk_font_selection_get_family_entry (GtkFontSelection *fontsel)
-{
-  g_return_val_if_fail (GTK_IS_FONT_SELECTION (fontsel), NULL);
-  
-  return fontsel->font_entry;
-}
-
-/**
  * gtk_font_selection_get_family_list:
  * @fontsel: a #GtkFontSelection
  *
@@ -1158,25 +1139,6 @@ gtk_font_selection_get_family_list (GtkFontSelection *fontsel)
   g_return_val_if_fail (GTK_IS_FONT_SELECTION (fontsel), NULL);
   
   return fontsel->family_list;
-}
-
-/**
- * gtk_font_selection_get_face_entry:
- * @fontsel: a #GtkFontSelection
- *
- * This returns the #GtkEntry responsible for allowing manual
- * configuration of the font style.
- * 
- * Return value: A #GtkWidget. 
- *
- * Since: 2.14
- **/
-GtkWidget *
-gtk_font_selection_get_face_entry (GtkFontSelection *fontsel)
-{
-  g_return_val_if_fail (GTK_IS_FONT_SELECTION (fontsel), NULL);
-  
-  return fontsel->font_style_entry;
 }
 
 /**

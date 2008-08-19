@@ -342,10 +342,10 @@ add_tab_bindings (GtkBindingSet    *binding_set,
 		  GtkDirectionType  direction)
 {
   gtk_binding_entry_add_signal (binding_set, GDK_Tab, modifiers,
-                                "move_focus", 1,
+                                "move-focus", 1,
                                 GTK_TYPE_DIRECTION_TYPE, direction);
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Tab, modifiers,
-                                "move_focus", 1,
+                                "move-focus", 1,
                                 GTK_TYPE_DIRECTION_TYPE, direction);
 }
 
@@ -357,16 +357,16 @@ add_arrow_bindings (GtkBindingSet    *binding_set,
   guint keypad_keysym = keysym - GDK_Left + GDK_KP_Left;
   
   gtk_binding_entry_add_signal (binding_set, keysym, 0,
-                                "move_focus", 1,
+                                "move-focus", 1,
                                 GTK_TYPE_DIRECTION_TYPE, direction);
   gtk_binding_entry_add_signal (binding_set, keysym, GDK_CONTROL_MASK,
-                                "move_focus", 1,
+                                "move-focus", 1,
                                 GTK_TYPE_DIRECTION_TYPE, direction);
   gtk_binding_entry_add_signal (binding_set, keypad_keysym, 0,
-                                "move_focus", 1,
+                                "move-focus", 1,
                                 GTK_TYPE_DIRECTION_TYPE, direction);
   gtk_binding_entry_add_signal (binding_set, keypad_keysym, GDK_CONTROL_MASK,
-                                "move_focus", 1,
+                                "move-focus", 1,
                                 GTK_TYPE_DIRECTION_TYPE, direction);
 }
 
@@ -764,7 +764,7 @@ gtk_window_class_init (GtkWindowClass *klass)
 							GTK_PARAM_READWRITE));
 
   window_signals[SET_FOCUS] =
-    g_signal_new (I_("set_focus"),
+    g_signal_new (I_("set-focus"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GtkWindowClass, set_focus),
@@ -774,7 +774,7 @@ gtk_window_class_init (GtkWindowClass *klass)
                   GTK_TYPE_WIDGET);
   
   window_signals[FRAME_EVENT] =
-    g_signal_new (I_("frame_event"),
+    g_signal_new (I_("frame-event"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET(GtkWindowClass, frame_event),
@@ -784,7 +784,7 @@ gtk_window_class_init (GtkWindowClass *klass)
                   GDK_TYPE_EVENT);
 
   window_signals[ACTIVATE_FOCUS] =
-    g_signal_new (I_("activate_focus"),
+    g_signal_new (I_("activate-focus"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (GtkWindowClass, activate_focus),
@@ -794,7 +794,7 @@ gtk_window_class_init (GtkWindowClass *klass)
                   0);
 
   window_signals[ACTIVATE_DEFAULT] =
-    g_signal_new (I_("activate_default"),
+    g_signal_new (I_("activate-default"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (GtkWindowClass, activate_default),
@@ -804,7 +804,7 @@ gtk_window_class_init (GtkWindowClass *klass)
                   0);
 
   window_signals[KEYS_CHANGED] =
-    g_signal_new (I_("keys_changed"),
+    g_signal_new (I_("keys-changed"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_FIRST,
                   G_STRUCT_OFFSET (GtkWindowClass, keys_changed),
@@ -820,16 +820,16 @@ gtk_window_class_init (GtkWindowClass *klass)
   binding_set = gtk_binding_set_by_class (klass);
 
   gtk_binding_entry_add_signal (binding_set, GDK_space, 0,
-                                "activate_focus", 0);
+                                "activate-focus", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Space, 0,
-                                "activate_focus", 0);
+                                "activate-focus", 0);
   
   gtk_binding_entry_add_signal (binding_set, GDK_Return, 0,
-                                "activate_default", 0);
+                                "activate-default", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_ISO_Enter, 0,
-                                "activate_default", 0);
+                                "activate-default", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Enter, 0,
-                                "activate_default", 0);
+                                "activate-default", 0);
 
   add_arrow_bindings (binding_set, GDK_Up, GTK_DIR_UP);
   add_arrow_bindings (binding_set, GDK_Down, GTK_DIR_DOWN);
@@ -900,7 +900,7 @@ gtk_window_init (GtkWindow *window)
 
   gtk_decorated_window_init (window);
 
-  g_signal_connect (window->screen, "composited_changed",
+  g_signal_connect (window->screen, "composited-changed",
 		    G_CALLBACK (gtk_window_on_composited_changed), window);
 }
 
@@ -1603,7 +1603,7 @@ gtk_window_add_accel_group (GtkWindow     *window,
   g_return_if_fail (GTK_IS_ACCEL_GROUP (accel_group));
 
   _gtk_accel_group_attach (accel_group, G_OBJECT (window));
-  g_signal_connect_object (accel_group, "accel_changed",
+  g_signal_connect_object (accel_group, "accel-changed",
 			   G_CALLBACK (gtk_window_notify_keys_changed),
 			   window, G_CONNECT_SWAPPED);
   gtk_window_notify_keys_changed (window);
@@ -3842,7 +3842,7 @@ gtk_window_resize (GtkWindow *window,
  * because the size of the window may change between the time that you
  * get the size and the time that you perform some action assuming
  * that size is the current size. To avoid race conditions, connect to
- * "configure_event" on the window and adjust your size-dependent
+ * "configure-event" on the window and adjust your size-dependent
  * state to match the size delivered in the #GdkEventConfigure.
  *
  * Note 2: The returned size does <emphasis>not</emphasis> include the
@@ -4716,8 +4716,8 @@ gtk_window_unrealize (GtkWidget *widget)
 
   /* Icons */
   gtk_window_unrealize_icon (window);
-  
-  (* GTK_WIDGET_CLASS (gtk_window_parent_class)->unrealize) (widget);
+
+  GTK_WIDGET_CLASS (gtk_window_parent_class)->unrealize (widget);
 }
 
 static void
@@ -6599,7 +6599,7 @@ gtk_window_present_with_time (GtkWindow *window,
  * in which case the window will be iconified before it ever appears
  * onscreen.
  *
- * You can track iconification via the "window_state_event" signal
+ * You can track iconification via the "window-state-event" signal
  * on #GtkWidget.
  * 
  **/
@@ -6634,7 +6634,7 @@ gtk_window_iconify (GtkWindow *window)
  * linkend="gtk-X11-arch">window manager</link>) could iconify it
  * again before your code which assumes deiconification gets to run.
  *
- * You can track iconification via the "window_state_event" signal
+ * You can track iconification via the "window-state-event" signal
  * on #GtkWidget.
  **/
 void
@@ -6672,7 +6672,7 @@ gtk_window_deiconify (GtkWindow *window)
  *
  * It's permitted to call this function before showing a window.
  *
- * You can track stickiness via the "window_state_event" signal
+ * You can track stickiness via the "window-state-event" signal
  * on #GtkWidget.
  * 
  **/
@@ -6708,7 +6708,7 @@ gtk_window_stick (GtkWindow *window)
  * manager</link>) could stick it again. But normally the window will
  * end up stuck. Just don't write code that crashes if not.
  *
- * You can track stickiness via the "window_state_event" signal
+ * You can track stickiness via the "window-state-event" signal
  * on #GtkWidget.
  * 
  **/
@@ -6749,7 +6749,7 @@ gtk_window_unstick (GtkWindow *window)
  * in which case the window will be maximized when it appears onscreen
  * initially.
  *
- * You can track maximization via the "window_state_event" signal
+ * You can track maximization via the "window-state-event" signal
  * on #GtkWidget.
  * 
  **/
@@ -6785,7 +6785,7 @@ gtk_window_maximize (GtkWindow *window)
  * managers honor requests to unmaximize. But normally the window will
  * end up unmaximized. Just don't write code that crashes if not.
  *
- * You can track maximization via the "window_state_event" signal
+ * You can track maximization via the "window-state-event" signal
  * on #GtkWidget.
  * 
  **/
@@ -6822,7 +6822,7 @@ gtk_window_unmaximize (GtkWindow *window)
  * windows. But normally the window will end up fullscreen. Just
  * don't write code that crashes if not.
  *
- * You can track the fullscreen state via the "window_state_event" signal
+ * You can track the fullscreen state via the "window-state-event" signal
  * on #GtkWidget.
  * 
  * Since: 2.2
@@ -6862,7 +6862,7 @@ gtk_window_fullscreen (GtkWindow *window)
  * windows. But normally the window will end up restored to its normal
  * state. Just don't write code that crashes if not.
  *
- * You can track the fullscreen state via the "window_state_event" signal
+ * You can track the fullscreen state via the "window-state-event" signal
  * on #GtkWidget.
  * 
  * Since: 2.2
@@ -6907,7 +6907,7 @@ gtk_window_unfullscreen (GtkWindow *window)
  * in which case the window will be kept above when it appears onscreen
  * initially.
  *
- * You can track the above state via the "window_state_event" signal
+ * You can track the above state via the "window-state-event" signal
  * on #GtkWidget.
  *
  * Note that, according to the <ulink 
@@ -6961,7 +6961,7 @@ gtk_window_set_keep_above (GtkWindow *window,
  * in which case the window will be kept below when it appears onscreen
  * initially.
  *
- * You can track the below state via the "window_state_event" signal
+ * You can track the below state via the "window-state-event" signal
  * on #GtkWidget.
  *
  * Note that, according to the <ulink 
@@ -7248,7 +7248,7 @@ gtk_window_set_screen (GtkWindow *window,
     {
       g_signal_handlers_disconnect_by_func (previous_screen,
 					    gtk_window_on_composited_changed, window);
-      g_signal_connect (screen, "composited_changed", 
+      g_signal_connect (screen, "composited-changed", 
 			G_CALLBACK (gtk_window_on_composited_changed), window);
       
       _gtk_widget_propagate_screen_changed (widget, previous_screen);
@@ -8186,7 +8186,7 @@ gtk_window_set_auto_startup_notification (gboolean setting)
   disable_startup_notification = !setting;
 }
 
-#ifdef G_OS_WIN32
+#if defined (G_OS_WIN32) && !defined (_WIN64)
 
 #undef gtk_window_set_icon_from_file
 

@@ -155,7 +155,7 @@ gtk_tree_model_base_init (gpointer g_class)
        * This signal is emitted when a row in the model has changed.
        */
       tree_model_signals[ROW_CHANGED] =
-        g_signal_new (I_("row_changed"),
+        g_signal_new (I_("row-changed"),
                       GTK_TYPE_TREE_MODEL,
                       G_SIGNAL_RUN_LAST, 
                       G_STRUCT_OFFSET (GtkTreeModelIface, row_changed),
@@ -193,7 +193,7 @@ gtk_tree_model_base_init (gpointer g_class)
       closure = g_closure_new_simple (sizeof (GClosure), NULL);
       g_closure_set_marshal (closure, row_inserted_marshal);
       tree_model_signals[ROW_INSERTED] =
-        g_signal_newv (I_("row_inserted"),
+        g_signal_newv (I_("row-inserted"),
                        GTK_TYPE_TREE_MODEL,
                        G_SIGNAL_RUN_FIRST,
                        closure,
@@ -212,7 +212,7 @@ gtk_tree_model_base_init (gpointer g_class)
        * its last child row.
        */
       tree_model_signals[ROW_HAS_CHILD_TOGGLED] =
-        g_signal_new (I_("row_has_child_toggled"),
+        g_signal_new (I_("row-has-child-toggled"),
                       GTK_TYPE_TREE_MODEL,
                       G_SIGNAL_RUN_LAST,
                       G_STRUCT_OFFSET (GtkTreeModelIface, row_has_child_toggled),
@@ -242,7 +242,7 @@ gtk_tree_model_base_init (gpointer g_class)
       closure = g_closure_new_simple (sizeof (GClosure), NULL);
       g_closure_set_marshal (closure, row_deleted_marshal);
       tree_model_signals[ROW_DELETED] =
-        g_signal_newv (I_("row_deleted"),
+        g_signal_newv (I_("row-deleted"),
                        GTK_TYPE_TREE_MODEL,
                        G_SIGNAL_RUN_FIRST,
                        closure,
@@ -268,7 +268,7 @@ gtk_tree_model_base_init (gpointer g_class)
       closure = g_closure_new_simple (sizeof (GClosure), NULL);
       g_closure_set_marshal (closure, rows_reordered_marshal);
       tree_model_signals[ROWS_REORDERED] =
-        g_signal_newv (I_("rows_reordered"),
+        g_signal_newv (I_("rows-reordered"),
                        GTK_TYPE_TREE_MODEL,
                        G_SIGNAL_RUN_FIRST,
                        closure,
@@ -1463,7 +1463,7 @@ gtk_tree_model_get_valist (GtkTreeModel *tree_model,
  * @path: A #GtkTreePath pointing to the changed row
  * @iter: A valid #GtkTreeIter pointing to the changed row
  * 
- * Emits the "row_changed" signal on @tree_model.
+ * Emits the "row-changed" signal on @tree_model.
  **/
 void
 gtk_tree_model_row_changed (GtkTreeModel *tree_model,
@@ -1483,7 +1483,7 @@ gtk_tree_model_row_changed (GtkTreeModel *tree_model,
  * @path: A #GtkTreePath pointing to the inserted row
  * @iter: A valid #GtkTreeIter pointing to the inserted row
  * 
- * Emits the "row_inserted" signal on @tree_model
+ * Emits the "row-inserted" signal on @tree_model
  **/
 void
 gtk_tree_model_row_inserted (GtkTreeModel *tree_model,
@@ -1503,7 +1503,7 @@ gtk_tree_model_row_inserted (GtkTreeModel *tree_model,
  * @path: A #GtkTreePath pointing to the changed row
  * @iter: A valid #GtkTreeIter pointing to the changed row
  * 
- * Emits the "row_has_child_toggled" signal on @tree_model.  This should be
+ * Emits the "row-has-child-toggled" signal on @tree_model.  This should be
  * called by models after the child state of a node changes.
  **/
 void
@@ -1523,7 +1523,7 @@ gtk_tree_model_row_has_child_toggled (GtkTreeModel *tree_model,
  * @tree_model: A #GtkTreeModel
  * @path: A #GtkTreePath pointing to the previous location of the deleted row.
  * 
- * Emits the "row_deleted" signal on @tree_model.  This should be called by
+ * Emits the "row-deleted" signal on @tree_model.  This should be called by
  * models after a row has been removed.  The location pointed to by @path 
  * should be the location that the row previously was at.  It may not be a 
  * valid location anymore.
@@ -1549,7 +1549,7 @@ gtk_tree_model_row_deleted (GtkTreeModel *tree_model,
  *      to its old position before the re-ordering,
  *      i.e. @new_order<literal>[newpos] = oldpos</literal>.
  * 
- * Emits the "rows_reordered" signal on @tree_model.  This should be called by
+ * Emits the "rows-reordered" signal on @tree_model.  This should be called by
  * models when their rows have been reordered.  
  **/
 void

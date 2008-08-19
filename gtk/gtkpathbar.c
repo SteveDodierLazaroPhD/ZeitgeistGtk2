@@ -153,7 +153,8 @@ get_slider_button (GtkPathBar  *path_bar,
     atk_object_set_name (atk_obj, _("Down Path"));
 
   gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);
-  gtk_container_add (GTK_CONTAINER (button), gtk_arrow_new (arrow_type, GTK_SHADOW_OUT));
+  gtk_container_add (GTK_CONTAINER (button),
+                     gtk_arrow_new (arrow_type, GTK_SHADOW_OUT));
   gtk_container_add (GTK_CONTAINER (path_bar), button);
   gtk_widget_show_all (button);
 
@@ -178,16 +179,24 @@ gtk_path_bar_init (GtkPathBar *path_bar)
   path_bar->down_slider_button = get_slider_button (path_bar, GTK_ARROW_RIGHT);
   path_bar->icon_size = FALLBACK_ICON_SIZE;
   
-  g_signal_connect_swapped (path_bar->up_slider_button, "clicked", G_CALLBACK (gtk_path_bar_scroll_up), path_bar);
-  g_signal_connect_swapped (path_bar->down_slider_button, "clicked", G_CALLBACK (gtk_path_bar_scroll_down), path_bar);
+  g_signal_connect_swapped (path_bar->up_slider_button, "clicked",
+                            G_CALLBACK (gtk_path_bar_scroll_up), path_bar);
+  g_signal_connect_swapped (path_bar->down_slider_button, "clicked",
+                            G_CALLBACK (gtk_path_bar_scroll_down), path_bar);
 
-  g_signal_connect (path_bar->up_slider_button, "focus_out_event", G_CALLBACK (gtk_path_bar_slider_up_defocus), path_bar);
-  g_signal_connect (path_bar->down_slider_button, "focus_out_event", G_CALLBACK (gtk_path_bar_slider_down_defocus), path_bar);
+  g_signal_connect (path_bar->up_slider_button, "focus-out-event",
+                    G_CALLBACK (gtk_path_bar_slider_up_defocus), path_bar);
+  g_signal_connect (path_bar->down_slider_button, "focus-out-event",
+                    G_CALLBACK (gtk_path_bar_slider_down_defocus), path_bar);
 
-  g_signal_connect (path_bar->up_slider_button, "button_press_event", G_CALLBACK (gtk_path_bar_slider_button_press), path_bar);
-  g_signal_connect (path_bar->up_slider_button, "button_release_event", G_CALLBACK (gtk_path_bar_slider_button_release), path_bar);
-  g_signal_connect (path_bar->down_slider_button, "button_press_event", G_CALLBACK (gtk_path_bar_slider_button_press), path_bar);
-  g_signal_connect (path_bar->down_slider_button, "button_release_event", G_CALLBACK (gtk_path_bar_slider_button_release), path_bar);
+  g_signal_connect (path_bar->up_slider_button, "button-press-event",
+                    G_CALLBACK (gtk_path_bar_slider_button_press), path_bar);
+  g_signal_connect (path_bar->up_slider_button, "button-release-event",
+                    G_CALLBACK (gtk_path_bar_slider_button_release), path_bar);
+  g_signal_connect (path_bar->down_slider_button, "button-press-event",
+                    G_CALLBACK (gtk_path_bar_slider_button_press), path_bar);
+  g_signal_connect (path_bar->down_slider_button, "button-release-event",
+                    G_CALLBACK (gtk_path_bar_slider_button_release), path_bar);
 }
 
 static void
@@ -427,7 +436,7 @@ gtk_path_bar_unrealize (GtkWidget *widget)
   gdk_window_destroy (path_bar->event_window);
   path_bar->event_window = NULL;
 
-  (* GTK_WIDGET_CLASS (gtk_path_bar_parent_class)->unrealize) (widget);
+  GTK_WIDGET_CLASS (gtk_path_bar_parent_class)->unrealize (widget);
 }
 
 /* This is a tad complicated
@@ -639,8 +648,7 @@ static void
 gtk_path_bar_style_set (GtkWidget *widget,
 			GtkStyle  *previous_style)
 {
-  if (GTK_WIDGET_CLASS (gtk_path_bar_parent_class)->style_set)
-    GTK_WIDGET_CLASS (gtk_path_bar_parent_class)->style_set (widget, previous_style);
+  GTK_WIDGET_CLASS (gtk_path_bar_parent_class)->style_set (widget, previous_style);
 
   gtk_path_bar_check_icon_theme (GTK_PATH_BAR (widget));
 }
@@ -1510,7 +1518,7 @@ make_directory_button (GtkPathBar  *path_bar,
 		       NULL, 0,
 		       GDK_ACTION_COPY);
   gtk_drag_source_add_uri_targets (button_data->button);
-  g_signal_connect (button_data->button, "drag_data_get",
+  g_signal_connect (button_data->button, "drag-data-get",
 		    G_CALLBACK (button_drag_data_get_cb), button_data);
 
   return button_data;

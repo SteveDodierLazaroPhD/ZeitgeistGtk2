@@ -266,9 +266,8 @@ gtk_accel_label_size_request (GtkWidget	     *widget,
   GtkAccelLabel *accel_label = GTK_ACCEL_LABEL (widget);
   PangoLayout *layout;
   gint width;
-  
-  if (GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->size_request)
-    GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->size_request (widget, requisition);
+
+  GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->size_request (widget, requisition);
 
   layout = gtk_widget_create_pango_layout (widget, gtk_accel_label_get_string (accel_label));
   pango_layout_get_pixel_size (layout, &width, NULL);
@@ -417,7 +416,7 @@ gtk_accel_label_set_accel_widget (GtkAccelLabel *accel_label,
       if (accel_label->accel_widget)
 	{
 	  g_object_ref (accel_label->accel_widget);
-	  g_signal_connect_object (accel_label->accel_widget, "accel_closures_changed",
+	  g_signal_connect_object (accel_label->accel_widget, "accel-closures-changed",
 				   G_CALLBACK (refetch_widget_accel_closure),
 				   accel_label, G_CONNECT_SWAPPED);
 	  refetch_widget_accel_closure (accel_label);
@@ -480,7 +479,7 @@ gtk_accel_label_set_accel_closure (GtkAccelLabel *accel_label,
 	{
 	  g_closure_ref (accel_label->accel_closure);
 	  accel_label->accel_group = gtk_accel_group_from_accel_closure (accel_closure);
-	  g_signal_connect_object (accel_label->accel_group, "accel_changed",
+	  g_signal_connect_object (accel_label->accel_group, "accel-changed",
 				   G_CALLBACK (check_accel_changed),
 				   accel_label, 0);
 	}

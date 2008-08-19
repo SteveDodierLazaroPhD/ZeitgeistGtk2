@@ -148,9 +148,9 @@ add_tab_bindings (GtkBindingSet    *binding_set,
 		  GdkModifierType   modifiers)
 {
   gtk_binding_entry_add_signal (binding_set, GDK_Tab, modifiers,
-                                "toggle_handle_focus", 0);
+                                "toggle-handle-focus", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Tab, modifiers,
-				"toggle_handle_focus", 0);
+				"toggle-handle-focus", 0);
 }
 
 static void
@@ -160,7 +160,7 @@ add_move_binding (GtkBindingSet   *binding_set,
 		  GtkScrollType    scroll)
 {
   gtk_binding_entry_add_signal (binding_set, keyval, mask,
-				"move_handle", 1,
+				"move-handle", 1,
 				GTK_TYPE_SCROLL_TYPE, scroll);
 }
 
@@ -319,7 +319,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * Since: 2.0
    */
   signals [CYCLE_CHILD_FOCUS] =
-    g_signal_new (I_("cycle_child_focus"),
+    g_signal_new (I_("cycle-child-focus"),
 		  G_TYPE_FROM_CLASS (object_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkPanedClass, cycle_child_focus),
@@ -342,7 +342,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * Since: 2.0
    */
   signals [TOGGLE_HANDLE_FOCUS] =
-    g_signal_new (I_("toggle_handle_focus"),
+    g_signal_new (I_("toggle-handle-focus"),
 		  G_TYPE_FROM_CLASS (object_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkPanedClass, toggle_handle_focus),
@@ -363,7 +363,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * Since: 2.0
    */
   signals[MOVE_HANDLE] =
-    g_signal_new (I_("move_handle"),
+    g_signal_new (I_("move-handle"),
 		  G_TYPE_FROM_CLASS (object_class),
                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (GtkPanedClass, move_handle),
@@ -387,7 +387,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * Since: 2.0
    */
   signals [CYCLE_HANDLE_FOCUS] =
-    g_signal_new (I_("cycle_handle_focus"),
+    g_signal_new (I_("cycle-handle-focus"),
 		  G_TYPE_FROM_CLASS (object_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkPanedClass, cycle_handle_focus),
@@ -410,7 +410,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * Since: 2.0
    */
   signals [ACCEPT_POSITION] =
-    g_signal_new (I_("accept_position"),
+    g_signal_new (I_("accept-position"),
 		  G_TYPE_FROM_CLASS (object_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkPanedClass, accept_position),
@@ -433,7 +433,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * Since: 2.0
    */
   signals [CANCEL_POSITION] =
-    g_signal_new (I_("cancel_position"),
+    g_signal_new (I_("cancel-position"),
 		  G_TYPE_FROM_CLASS (object_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkPanedClass, cancel_position),
@@ -446,22 +446,22 @@ gtk_paned_class_init (GtkPanedClass *class)
   /* F6 and friends */
   gtk_binding_entry_add_signal (binding_set,				
                                 GDK_F6, 0,
-                                "cycle_child_focus", 1, 
+                                "cycle-child-focus", 1, 
                                 G_TYPE_BOOLEAN, FALSE);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_F6, GDK_SHIFT_MASK,
-				"cycle_child_focus", 1,
+				"cycle-child-focus", 1,
 				G_TYPE_BOOLEAN, TRUE);
 
   /* F8 and friends */
   gtk_binding_entry_add_signal (binding_set,
 				GDK_F8, 0,
-				"cycle_handle_focus", 1,
+				"cycle-handle-focus", 1,
 				G_TYPE_BOOLEAN, FALSE);
  
   gtk_binding_entry_add_signal (binding_set,
 				GDK_F8, GDK_SHIFT_MASK,
-				"cycle_handle_focus", 1,
+				"cycle-handle-focus", 1,
 				G_TYPE_BOOLEAN, TRUE);
  
   add_tab_bindings (binding_set, 0);
@@ -472,23 +472,23 @@ gtk_paned_class_init (GtkPanedClass *class)
   /* accept and cancel positions */
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Escape, 0,
-				"cancel_position", 0);
+				"cancel-position", 0);
 
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Return, 0,
-				"accept_position", 0);
+				"accept-position", 0);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_ISO_Enter, 0,
-				"accept_position", 0);
+				"accept-position", 0);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Enter, 0,
-				"accept_position", 0);
+				"accept-position", 0);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_space, 0,
-				"accept_position", 0);
+				"accept-position", 0);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Space, 0,
-				"accept_position", 0);
+				"accept-position", 0);
 
   /* move handle */
   add_move_binding (binding_set, GDK_Left, 0, GTK_SCROLL_STEP_LEFT);
@@ -772,9 +772,8 @@ gtk_paned_unrealize (GtkWidget *widget)
   gtk_paned_set_last_child2_focus (paned, NULL);
   gtk_paned_set_saved_focus (paned, NULL);
   gtk_paned_set_first_paned (paned, NULL);
-  
-  if (GTK_WIDGET_CLASS (gtk_paned_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_paned_parent_class)->unrealize) (widget);
+
+  GTK_WIDGET_CLASS (gtk_paned_parent_class)->unrealize (widget);
 }
 
 static void
@@ -931,7 +930,7 @@ gtk_paned_focus (GtkWidget        *widget,
    */
 
   GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
-  retval = (* GTK_WIDGET_CLASS (gtk_paned_parent_class)->focus) (widget, direction);
+  retval = GTK_WIDGET_CLASS (gtk_paned_parent_class)->focus (widget, direction);
   GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_FOCUS);
 
   return retval;
@@ -1452,7 +1451,7 @@ gtk_paned_set_focus_child (GtkContainer *container,
     }
 
   if (GTK_CONTAINER_CLASS (gtk_paned_parent_class)->set_focus_child)
-    (* GTK_CONTAINER_CLASS (gtk_paned_parent_class)->set_focus_child) (container, focus_child);
+    GTK_CONTAINER_CLASS (gtk_paned_parent_class)->set_focus_child (container, focus_child);
 }
 
 static void

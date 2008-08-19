@@ -334,7 +334,7 @@ _gtk_plug_add_to_socket (GtkPlug   *plug,
 
   gtk_widget_set_parent (widget, GTK_WIDGET (socket_));
 
-  g_signal_emit_by_name (socket_, "plug_added");
+  g_signal_emit_by_name (socket_, "plug-added");
 }
 
 /**
@@ -414,7 +414,7 @@ _gtk_plug_remove_from_socket (GtkPlug   *plug,
 
   gtk_plug_set_is_child (plug, FALSE);
 		    
-  g_signal_emit_by_name (socket_, "plug_removed", &result);
+  g_signal_emit_by_name (socket_, "plug-removed", &result);
   if (!result)
     gtk_widget_destroy (GTK_WIDGET (socket_));
 
@@ -566,9 +566,8 @@ gtk_plug_unrealize (GtkWidget *widget)
       gtk_window_group_remove_window (plug->modality_group, GTK_WINDOW (plug));
       g_object_unref (plug->modality_group);
     }
-  
-  if (GTK_WIDGET_CLASS (gtk_plug_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_plug_parent_class)->unrealize) (widget);
+
+  GTK_WIDGET_CLASS (gtk_plug_parent_class)->unrealize (widget);
 }
 
 static void

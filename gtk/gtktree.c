@@ -151,7 +151,7 @@ gtk_tree_class_init (GtkTreeClass *class)
 		    _gtk_marshal_VOID__VOID,
 		    GTK_TYPE_NONE, 0);
   tree_signals[SELECT_CHILD] =
-    gtk_signal_new (I_("select_child"),
+    gtk_signal_new (I_("select-child"),
 		    GTK_RUN_FIRST,
 		    GTK_CLASS_TYPE (object_class),
 		    GTK_SIGNAL_OFFSET (GtkTreeClass, select_child),
@@ -159,7 +159,7 @@ gtk_tree_class_init (GtkTreeClass *class)
 		    GTK_TYPE_NONE, 1,
 		    GTK_TYPE_WIDGET);
   tree_signals[UNSELECT_CHILD] =
-    gtk_signal_new (I_("unselect_child"),
+    gtk_signal_new (I_("unselect-child"),
 		    GTK_RUN_FIRST,
 		    GTK_CLASS_TYPE (object_class),
 		    GTK_SIGNAL_OFFSET (GtkTreeClass, unselect_child),
@@ -408,9 +408,8 @@ gtk_tree_destroy (GtkObject *object)
       g_list_free (tree->selection);
       tree->selection = NULL;
     }
-  
-  if (GTK_OBJECT_CLASS (parent_class)->destroy)
-    (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
+
+  GTK_OBJECT_CLASS (parent_class)->destroy (object);
 }
 
 static void

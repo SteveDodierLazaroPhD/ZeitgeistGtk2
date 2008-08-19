@@ -262,7 +262,7 @@ gtk_gamma_curve_init (GtkGammaCurve *curve)
   gtk_container_add (GTK_CONTAINER (curve), curve->table);
 
   curve->curve = gtk_curve_new ();
-  g_signal_connect (curve->curve, "curve_type_changed",
+  g_signal_connect (curve->curve, "curve-type-changed",
 		    G_CALLBACK (curve_type_changed_callback), curve);
   gtk_table_attach_defaults (GTK_TABLE (curve->table), curve->curve, 0, 1, 0, 1);
 
@@ -485,8 +485,7 @@ gtk_gamma_curve_destroy (GtkObject *object)
   if (c->gamma_dialog)
     gtk_widget_destroy (c->gamma_dialog);
 
-  if (GTK_OBJECT_CLASS (gtk_gamma_curve_parent_class)->destroy)
-    (* GTK_OBJECT_CLASS (gtk_gamma_curve_parent_class)->destroy) (object);
+  GTK_OBJECT_CLASS (gtk_gamma_curve_parent_class)->destroy (object);
 }
 
 #define __GTK_GAMMA_CURVE_C__

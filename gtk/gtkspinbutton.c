@@ -329,7 +329,7 @@ gtk_spin_button_class_init (GtkSpinButtonClass *class)
 		  G_TYPE_BOOLEAN, 0);
 
   spinbutton_signals[VALUE_CHANGED] =
-    g_signal_new (I_("value_changed"),
+    g_signal_new (I_("value-changed"),
 		  G_TYPE_FROM_CLASS (gobject_class),
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GtkSpinButtonClass, value_changed),
@@ -357,7 +357,7 @@ gtk_spin_button_class_init (GtkSpinButtonClass *class)
 
   /* Action signals */
   spinbutton_signals[CHANGE_VALUE] =
-    g_signal_new (I_("change_value"),
+    g_signal_new (I_("change-value"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (GtkSpinButtonClass, change_value),
@@ -976,7 +976,7 @@ gtk_spin_button_style_set (GtkWidget *widget,
   if (previous_style && GTK_WIDGET_REALIZED (widget))
     gtk_style_set_background (widget->style, spin->panel, GTK_STATE_NORMAL);
 
-  (* GTK_WIDGET_CLASS (gtk_spin_button_parent_class)->style_set) (widget, previous_style);
+  GTK_WIDGET_CLASS (gtk_spin_button_parent_class)->style_set (widget, previous_style);
 }
 
 
@@ -1727,7 +1727,7 @@ gtk_spin_button_set_adjustment (GtkSpinButton *spin_button,
       if (adjustment)
         {
 	  g_object_ref_sink (adjustment);
-	  g_signal_connect (adjustment, "value_changed",
+	  g_signal_connect (adjustment, "value-changed",
 			    G_CALLBACK (gtk_spin_button_value_changed),
 			    spin_button);
 	  g_signal_connect (adjustment, "changed",

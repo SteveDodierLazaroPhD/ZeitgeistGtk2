@@ -415,7 +415,7 @@ Get the <link linkend="GtkTextTagTable"><type>GtkTextTagTable</type></link> asso
 <para>
 Inserts <parameter>len</parameter> bytes of <parameter>text</parameter> at position <parameter>iter</parameter>.  If <parameter>len</parameter> is -1,
 <parameter>text</parameter> must be nul-terminated and will be inserted in its
-entirety. Emits the "insert_text" signal; insertion actually occurs
+entirety. Emits the "insert-text" signal; insertion actually occurs
 in the default handler for the signal. <parameter>iter</parameter> is invalidated when
 insertion occurs (because the buffer contents change), but the
 default signal handler revalidates it to point to the end of the
@@ -673,7 +673,7 @@ to pass in tag names instead of tag objects.</para>
 <para>
 Deletes text between <parameter>start</parameter> and <parameter>end</parameter>. The order of <parameter>start</parameter> and <parameter>end</parameter>
 is not actually relevant; <link linkend="gtk-text-buffer-delete"><function>gtk_text_buffer_delete()</function></link> will reorder
-them. This function actually emits the "delete_range" signal, and
+them. This function actually emits the "delete-range" signal, and
 the default handler of that signal deletes the text. Because the
 buffer is modified, all outstanding iterators become invalid after
 calling this function; however, the <parameter>start</parameter> and <parameter>end</parameter> will be
@@ -950,7 +950,7 @@ return value if you like. Marks are owned by the buffer and go
 away when the buffer does.
 </para>
 <para>
-Emits the "mark_set" signal as notification of the mark's initial
+Emits the "mark-set" signal as notification of the mark's initial
 placement.</para>
 <para>
 
@@ -976,7 +976,7 @@ placement.</para>
                                                          <link linkend="GtkTextMark">GtkTextMark</link> *mark,
                                                          const <link linkend="GtkTextIter">GtkTextIter</link> *where);</programlisting>
 <para>
-Moves <parameter>mark</parameter> to the new location <parameter>where</parameter>. Emits the "mark_set" signal
+Moves <parameter>mark</parameter> to the new location <parameter>where</parameter>. Emits the "mark-set" signal
 as notification of the move.</para>
 <para>
 
@@ -1023,7 +1023,7 @@ another buffer, and if its name is not <link linkend="NULL:CAPS"><literal>NULL</
 be another mark in the buffer with the same name.
 </para>
 <para>
-Emits the "mark_set" signal as notification of the mark's initial
+Emits the "mark-set" signal as notification of the mark's initial
 placement.</para>
 <para>
 
@@ -1051,7 +1051,7 @@ if the mark isn't freed, most operations on <parameter>mark</parameter> become
 invalid, until it gets added to a buffer again with 
 <link linkend="gtk-text-buffer-add-mark"><function>gtk_text_buffer_add_mark()</function></link>. Use <link linkend="gtk-text-mark-get-deleted"><function>gtk_text_mark_get_deleted()</function></link> to  
 find out if a mark has been removed from its buffer.
-The "mark_deleted" signal will be emitted as notification after 
+The "mark-deleted" signal will be emitted as notification after 
 the mark is deleted.</para>
 <para>
 
@@ -1213,7 +1213,7 @@ be optimized.</para>
                                                          const <link linkend="GtkTextIter">GtkTextIter</link> *start,
                                                          const <link linkend="GtkTextIter">GtkTextIter</link> *end);</programlisting>
 <para>
-Emits the "apply_tag" signal on <parameter>buffer</parameter>. The default
+Emits the "apply-tag" signal on <parameter>buffer</parameter>. The default
 handler for the signal applies <parameter>tag</parameter> to the given range.
 <parameter>start</parameter> and <parameter>end</parameter> do not have to be in order.</para>
 <para>
@@ -1239,7 +1239,7 @@ handler for the signal applies <parameter>tag</parameter> to the given range.
                                                          const <link linkend="GtkTextIter">GtkTextIter</link> *start,
                                                          const <link linkend="GtkTextIter">GtkTextIter</link> *end);</programlisting>
 <para>
-Emits the "remove_tag" signal. The default handler for the signal
+Emits the "remove-tag" signal. The default handler for the signal
 removes all occurrences of <parameter>tag</parameter> from the given range. <parameter>start</parameter> and
 <parameter>end</parameter> don't have to be in order.</para>
 <para>
@@ -1598,7 +1598,7 @@ Used to keep track of whether the buffer has been modified since the
 last time it was saved. Whenever the buffer is saved to disk, call
 gtk_text_buffer_set_modified (<parameter>buffer</parameter>, FALSE). When the buffer is modified,
 it will automatically toggled on the modified bit again. When the modified
-bit flips, the buffer emits a "modified_changed" signal.</para>
+bit flips, the buffer emits a "modified-changed" signal.</para>
 <para>
 
 </para><variablelist role="params">
@@ -1739,7 +1739,7 @@ user-visible operation. The operations between
 an undo stack. <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> maintains a count of calls to
 <link linkend="gtk-text-buffer-begin-user-action"><function>gtk_text_buffer_begin_user_action()</function></link> that have not been closed with
 a call to <link linkend="gtk-text-buffer-end-user-action"><function>gtk_text_buffer_end_user_action()</function></link>, and emits the 
-"begin_user_action" and "end_user_action" signals only for the 
+"begin-user-action" and "end-user-action" signals only for the 
 outermost pair of calls. This allows you to build user actions 
 from other user actions.
 </para>
@@ -2385,7 +2385,7 @@ see <link linkend="gtk-text-buffer-get-text"><function>gtk_text_buffer_get_text(
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *end,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The apply_tag signal is emitted to apply a tag to a
+The ::apply-tag signal is emitted to apply a tag to a
 range of text in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>. 
 Applying actually occurs in the default handler.
 </para>
@@ -2419,7 +2419,7 @@ See also:
 <indexterm zone="GtkTextBuffer-begin-user-action"><primary>GtkTextBuffer::begin-user-action</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The begin_user_action signal is emitted at the beginning of a single
+The ::begin-user-action signal is emitted at the beginning of a single
 user-visible operation on a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>.
 </para>
 <para>
@@ -2442,7 +2442,7 @@ See also:
 <indexterm zone="GtkTextBuffer-changed"><primary>GtkTextBuffer::changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The changed signal is emitted when the content of a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> 
+The ::changed signal is emitted when the content of a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> 
 has changed.</para>
 <para>
 
@@ -2458,7 +2458,7 @@ has changed.</para>
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *end,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The delete_range signal is emitted to delete a range 
+The ::delete-range signal is emitted to delete a range 
 from a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>. 
 </para>
 <para>
@@ -2489,7 +2489,7 @@ See also: <link linkend="gtk-text-buffer-delete"><function>gtk_text_buffer_delet
 <indexterm zone="GtkTextBuffer-end-user-action"><primary>GtkTextBuffer::end-user-action</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The end_user_action signal is emitted at the end of a single
+The ::end-user-action signal is emitted at the end of a single
 user-visible operation <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>.
 </para>
 <para>
@@ -2515,7 +2515,7 @@ See also:
                                                         <link linkend="GtkTextChildAnchor">GtkTextChildAnchor</link> *anchor,
                                                         <link linkend="gpointer">gpointer</link>            user_data)       : Run Last</programlisting>
 <para>
-The insert_child_anchor signal is emitted to insert a
+The ::insert-child-anchor signal is emitted to insert a
 <link linkend="GtkTextChildAnchor"><type>GtkTextChildAnchor</type></link> in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>.
 Insertion actually occurs in the default handler.
 </para>
@@ -2547,7 +2547,7 @@ See also: <link linkend="gtk-text-buffer-insert-child-anchor"><function>gtk_text
                                                         <link linkend="GdkPixbuf">GdkPixbuf</link>     *pixbuf,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The insert_pixbuf signal is emitted to insert a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link> 
+The ::insert-pixbuf signal is emitted to insert a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link> 
 in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>. Insertion actually occurs in the default handler.
 </para>
 <para>
@@ -2579,7 +2579,7 @@ See also: <link linkend="gtk-text-buffer-insert-pixbuf"><function>gtk_text_buffe
                                                         <link linkend="gint">gint</link>           len,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The insert_text signal is emitted to insert text in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>.
+The ::insert-text signal is emitted to insert text in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>.
 Insertion actually occurs in the default handler.  
 </para>
 <para>
@@ -2614,7 +2614,7 @@ See also:
                                                         <link linkend="GtkTextMark">GtkTextMark</link>   *mark,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The mark_deleted signal is emitted as notification
+The ::mark-deleted signal is emitted as notification
 after a <link linkend="GtkTextMark"><type>GtkTextMark</type></link> is deleted. 
 </para>
 <para>
@@ -2637,7 +2637,7 @@ See also:
                                                         <link linkend="GtkTextMark">GtkTextMark</link>   *mark,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The mark_set signal is emitted as notification
+The ::mark-set signal is emitted as notification
 after a <link linkend="GtkTextMark"><type>GtkTextMark</type></link> is set.
 </para>
 <para>
@@ -2662,7 +2662,7 @@ See also:
 <indexterm zone="GtkTextBuffer-modified-changed"><primary>GtkTextBuffer::modified-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTextBuffer">GtkTextBuffer</link> *textbuffer,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The modified_changed signal is emitted when the modified bit of a 
+The ::modified-changed signal is emitted when the modified bit of a 
 <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link> flips.
 </para>
 <para>
@@ -2683,8 +2683,8 @@ See also:
                                                         <link linkend="GtkTextIter">GtkTextIter</link>   *end,
                                                         <link linkend="gpointer">gpointer</link>       user_data)       : Run Last</programlisting>
 <para>
-The remove_tag signal is emitted to remove all occurrences of <parameter>tag</parameter> from a
-range of text in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>. 
+The ::remove-tag signal is emitted to remove all occurrences of <parameter>tag</parameter> from
+a range of text in a <link linkend="GtkTextBuffer"><type>GtkTextBuffer</type></link>. 
 Removal actually occurs in the default handler.
 </para>
 <para>

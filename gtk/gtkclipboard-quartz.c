@@ -194,7 +194,7 @@ gtk_clipboard_class_init (GtkClipboardClass *class)
   class->owner_change = gtk_clipboard_owner_change;
 
   clipboard_signals[OWNER_CHANGE] =
-    g_signal_new (I_("owner_change"),
+    g_signal_new (I_("owner-change"),
 		  G_TYPE_FROM_CLASS (gobject_class),
 		  G_SIGNAL_RUN_FIRST,
 		  G_STRUCT_OFFSET (GtkClipboardClass, owner_change),
@@ -817,6 +817,18 @@ gtk_clipboard_request_image (GtkClipboard                  *clipboard,
     g_object_unref (pixbuf);
 }
 
+void 
+gtk_clipboard_request_uris (GtkClipboard                *clipboard,
+			    GtkClipboardURIReceivedFunc  callback,
+			    gpointer                     user_data)
+{
+  gchar **uris = gtk_clipboard_wait_for_uris (clipboard);
+
+  callback (clipboard, uris, user_data);
+
+  g_strfreev (uris);
+}
+
 /**
  * gtk_clipboard_request_targets:
  * @clipboard: a #GtkClipboard
@@ -981,6 +993,25 @@ gtk_clipboard_wait_for_image (GtkClipboard *clipboard)
   return NULL;
 }
 
+gchar **
+gtk_clipboard_wait_for_uris (GtkClipboard *clipboard)
+{
+  GtkSelectionData *data;
+
+  data = gtk_clipboard_wait_for_contents (clipboard, gdk_atom_intern_static_string ("text/uri-list"));
+  if (data)
+    {
+      gchar **uris;
+
+      uris = gtk_selection_data_get_uris (data);
+      gtk_selection_data_free (data);
+
+      return uris;
+    }  
+
+  return NULL;
+}
+
 /**
  * gtk_clipboard_get_display:
  * @clipboard: a #GtkClipboard
@@ -1062,6 +1093,23 @@ gtk_clipboard_wait_is_image_available (GtkClipboard *clipboard)
   if (data)
     {
       result = gtk_selection_data_targets_include_image (data, FALSE);
+      gtk_selection_data_free (data);
+    }
+
+  return result;
+}
+
+gboolean
+gtk_clipboard_wait_is_uris_available (GtkClipboard *clipboard)
+{
+  GtkSelectionData *data;
+  gboolean result = FALSE;
+
+  data = gtk_clipboard_wait_for_contents (clipboard, 
+					  gdk_atom_intern_static_string ("TARGETS"));
+  if (data)
+    {
+      result = gtk_selection_data_targets_include_uri (data);
       gtk_selection_data_free (data);
     }
 
@@ -1261,7 +1309,7 @@ gtk_clipboard_wait_is_target_available (GtkClipboard *clipboard,
  * _gtk_clipboard_handle_event:
  * @event: a owner change event
  * 
- * Emits the ::owner_change signal on the appropriate @clipboard.
+ * Emits the ::owner-change signal on the appropriate @clipboard.
  *
  * Since: 2.6
  **/

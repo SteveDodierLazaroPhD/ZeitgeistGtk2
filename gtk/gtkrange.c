@@ -259,16 +259,16 @@ gtk_range_class_init (GtkRangeClass *class)
    * Emitted when the range value changes.
    */
   signals[VALUE_CHANGED] =
-    g_signal_new (I_("value_changed"),
+    g_signal_new (I_("value-changed"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GtkRangeClass, value_changed),
                   NULL, NULL,
-                  _gtk_marshal_NONE__NONE,
+                  _gtk_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
   
   signals[ADJUST_BOUNDS] =
-    g_signal_new (I_("adjust_bounds"),
+    g_signal_new (I_("adjust-bounds"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GtkRangeClass, adjust_bounds),
@@ -285,7 +285,7 @@ gtk_range_class_init (GtkRangeClass *class)
    * Virtual function that moves the slider. Used for keybindings.
    */
   signals[MOVE_SLIDER] =
-    g_signal_new (I_("move_slider"),
+    g_signal_new (I_("move-slider"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (GtkRangeClass, move_slider),
@@ -321,7 +321,7 @@ gtk_range_class_init (GtkRangeClass *class)
    * Since: 2.6
    */
   signals[CHANGE_VALUE] =
-    g_signal_new (I_("change_value"),
+    g_signal_new (I_("change-value"),
                   G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GtkRangeClass, change_value),
@@ -763,7 +763,7 @@ gtk_range_set_adjustment (GtkRange      *range,
       g_signal_connect (adjustment, "changed",
 			G_CALLBACK (gtk_range_adjustment_changed),
 			range);
-      g_signal_connect (adjustment, "value_changed",
+      g_signal_connect (adjustment, "value-changed",
 			G_CALLBACK (gtk_range_adjustment_value_changed),
 			range);
       
@@ -961,9 +961,6 @@ gtk_range_set_range (GtkRange *range,
     value = MIN (value, MAX (range->adjustment->lower,
                              range->layout->fill_level));
 
-  value = CLAMP (value, range->adjustment->lower,
-                 (range->adjustment->upper - range->adjustment->page_size));
-
   gtk_adjustment_set_value (range->adjustment, value);
   gtk_adjustment_changed (range->adjustment);
 }
@@ -987,9 +984,6 @@ gtk_range_set_value (GtkRange *range,
   if (range->layout->restrict_to_fill_level)
     value = MIN (value, MAX (range->adjustment->lower,
                              range->layout->fill_level));
-
-  value = CLAMP (value, range->adjustment->lower,
-                 (range->adjustment->upper - range->adjustment->page_size));
 
   gtk_adjustment_set_value (range->adjustment, value);
 }
@@ -1199,7 +1193,7 @@ gtk_range_destroy (GtkObject *object)
       range->adjustment = NULL;
     }
 
-  (* GTK_OBJECT_CLASS (gtk_range_parent_class)->destroy) (object);
+  GTK_OBJECT_CLASS (gtk_range_parent_class)->destroy (object);
 }
 
 static void
@@ -1299,9 +1293,8 @@ gtk_range_unrealize (GtkWidget *widget)
   gdk_window_set_user_data (range->event_window, NULL);
   gdk_window_destroy (range->event_window);
   range->event_window = NULL;
-  
-  if (GTK_WIDGET_CLASS (gtk_range_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_range_parent_class)->unrealize) (widget);
+
+  GTK_WIDGET_CLASS (gtk_range_parent_class)->unrealize (widget);
 }
 
 static void
@@ -2337,7 +2330,7 @@ gtk_range_style_set (GtkWidget *widget,
 
   range->need_recalc = TRUE;
 
-  (* GTK_WIDGET_CLASS (gtk_range_parent_class)->style_set) (widget, previous_style);
+  GTK_WIDGET_CLASS (gtk_range_parent_class)->style_set (widget, previous_style);
 }
 
 static void
@@ -2789,7 +2782,7 @@ gtk_range_calc_request (GtkRange      *range,
   border->bottom = 0;
 
   if (GTK_RANGE_GET_CLASS (range)->get_range_border)
-    (* GTK_RANGE_GET_CLASS (range)->get_range_border) (range, border);
+    GTK_RANGE_GET_CLASS (range)->get_range_border (range, border);
 
   n_steppers_ab = 0;
   n_steppers_cd = 0;

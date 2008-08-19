@@ -175,6 +175,7 @@
 *tp++ = gtk_hscale_get_type();
 *tp++ = gtk_hscrollbar_get_type();
 *tp++ = gtk_hseparator_get_type();
+*tp++ = gtk_hsv_get_type();
 *tp++ = gtk_icon_factory_get_type();
 *tp++ = gtk_icon_info_get_type();
 *tp++ = gtk_icon_lookup_flags_get_type();

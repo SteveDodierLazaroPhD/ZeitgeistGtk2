@@ -40,6 +40,28 @@
                                                          <link linkend="gdouble">gdouble</link> upper);
 <link linkend="void">void</link>                <link linkend="gtk-adjustment-changed">gtk_adjustment_changed</link>              (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);
 <link linkend="void">void</link>                <link linkend="gtk-adjustment-value-changed">gtk_adjustment_value_changed</link>        (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);
+<link linkend="void">void</link>                <link linkend="gtk-adjustment-configure">gtk_adjustment_configure</link>            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> value,
+                                                         <link linkend="gdouble">gdouble</link> lower,
+                                                         <link linkend="gdouble">gdouble</link> upper,
+                                                         <link linkend="gdouble">gdouble</link> step_increment,
+                                                         <link linkend="gdouble">gdouble</link> page_increment,
+                                                         <link linkend="gdouble">gdouble</link> page_size);
+<link linkend="gdouble">gdouble</link>             <link linkend="gtk-adjustment-get-lower">gtk_adjustment_get_lower</link>            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);
+<link linkend="gdouble">gdouble</link>             <link linkend="gtk-adjustment-get-page-increment">gtk_adjustment_get_page_increment</link>   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);
+<link linkend="gdouble">gdouble</link>             <link linkend="gtk-adjustment-get-page-size">gtk_adjustment_get_page_size</link>        (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);
+<link linkend="gdouble">gdouble</link>             <link linkend="gtk-adjustment-get-step-increment">gtk_adjustment_get_step_increment</link>   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);
+<link linkend="gdouble">gdouble</link>             <link linkend="gtk-adjustment-get-upper">gtk_adjustment_get_upper</link>            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);
+<link linkend="void">void</link>                <link linkend="gtk-adjustment-set-lower">gtk_adjustment_set_lower</link>            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> lower);
+<link linkend="void">void</link>                <link linkend="gtk-adjustment-set-page-increment">gtk_adjustment_set_page_increment</link>   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> page_increment);
+<link linkend="void">void</link>                <link linkend="gtk-adjustment-set-page-size">gtk_adjustment_set_page_size</link>        (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> page_size);
+<link linkend="void">void</link>                <link linkend="gtk-adjustment-set-step-increment">gtk_adjustment_set_step_increment</link>   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> step_increment);
+<link linkend="void">void</link>                <link linkend="gtk-adjustment-set-upper">gtk_adjustment_set_upper</link>            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> upper);
 </synopsis>
 </refsynopsisdiv>
 
@@ -278,6 +300,252 @@ changed the <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link> valu
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-adjustment-configure" role="function" condition="since:2.14">
+<title>gtk_adjustment_configure ()</title>
+<indexterm zone="gtk-adjustment-configure" role="2.14"><primary>gtk_adjustment_configure</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_adjustment_configure            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> value,
+                                                         <link linkend="gdouble">gdouble</link> lower,
+                                                         <link linkend="gdouble">gdouble</link> upper,
+                                                         <link linkend="gdouble">gdouble</link> step_increment,
+                                                         <link linkend="gdouble">gdouble</link> page_increment,
+                                                         <link linkend="gdouble">gdouble</link> page_size);</programlisting>
+<para>
+Sets all properties of the adjustment at once.
+</para>
+<para>
+Use this function to avoid multiple emissions of the "changed"
+signal. See <link linkend="gtk-adjustment-set-lower"><function>gtk_adjustment_set_lower()</function></link> for an alternative way
+of compressing multiple emissions of "changed" into one.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> the new value
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>lower</parameter>&nbsp;:</term>
+<listitem><simpara> the new minimum value
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>upper</parameter>&nbsp;:</term>
+<listitem><simpara> the new maximum value
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>step_increment</parameter>&nbsp;:</term>
+<listitem><simpara> the new step increment
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>page_increment</parameter>&nbsp;:</term>
+<listitem><simpara> the new page increment
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>page_size</parameter>&nbsp;:</term>
+<listitem><simpara> the new page size
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-get-lower" role="function" condition="since:2.14">
+<title>gtk_adjustment_get_lower ()</title>
+<indexterm zone="gtk-adjustment-get-lower" role="2.14"><primary>gtk_adjustment_get_lower</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_adjustment_get_lower            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);</programlisting>
+<para>
+Retrieves the minimum value of the adjustment.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The current minimum value of the adjustment.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-get-page-increment" role="function" condition="since:2.14">
+<title>gtk_adjustment_get_page_increment ()</title>
+<indexterm zone="gtk-adjustment-get-page-increment" role="2.14"><primary>gtk_adjustment_get_page_increment</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_adjustment_get_page_increment   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);</programlisting>
+<para>
+Retrieves the page increment of the adjustment.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The current page increment of the adjustment.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-get-page-size" role="function" condition="since:2.14">
+<title>gtk_adjustment_get_page_size ()</title>
+<indexterm zone="gtk-adjustment-get-page-size" role="2.14"><primary>gtk_adjustment_get_page_size</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_adjustment_get_page_size        (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);</programlisting>
+<para>
+Retrieves the page size of the adjustment.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The current page size of the adjustment.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-get-step-increment" role="function" condition="since:2.14">
+<title>gtk_adjustment_get_step_increment ()</title>
+<indexterm zone="gtk-adjustment-get-step-increment" role="2.14"><primary>gtk_adjustment_get_step_increment</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_adjustment_get_step_increment   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);</programlisting>
+<para>
+Retrieves the step increment of the adjustment.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The current step increment of the adjustment.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-get-upper" role="function" condition="since:2.14">
+<title>gtk_adjustment_get_upper ()</title>
+<indexterm zone="gtk-adjustment-get-upper" role="2.14"><primary>gtk_adjustment_get_upper</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_adjustment_get_upper            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);</programlisting>
+<para>
+Retrieves the maximum value of the adjustment.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The current maximum value of the adjustment.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-set-lower" role="function" condition="since:2.14">
+<title>gtk_adjustment_set_lower ()</title>
+<indexterm zone="gtk-adjustment-set-lower" role="2.14"><primary>gtk_adjustment_set_lower</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_adjustment_set_lower            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> lower);</programlisting>
+<para>
+Sets the minimum value of the adjustment.
+</para>
+<para>
+When setting multiple adjustment properties via their individual
+setters, multiple "changed" signals will be emitted. However, since
+the emission of the "changed" signal is tied to the emission of the
+"GObject::notify" signals of the changed properties, it's possible
+to compress the "changed" signals into one by calling
+<link linkend="g-object-freeze-notify"><function>g_object_freeze_notify()</function></link> and <link linkend="g-object-thaw-notify"><function>g_object_thaw_notify()</function></link> around the
+calls to the individual setters.
+</para>
+<para>
+Alternatively, using a single <link linkend="g-object-set"><function>g_object_set()</function></link> for all the properties
+to change, or using <link linkend="gtk-adjustment-configure"><function>gtk_adjustment_configure()</function></link> has the same effect
+of compressing "changed" emissions.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>lower</parameter>&nbsp;:</term>
+<listitem><simpara> the new minimum value
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-set-page-increment" role="function" condition="since:2.14">
+<title>gtk_adjustment_set_page_increment ()</title>
+<indexterm zone="gtk-adjustment-set-page-increment" role="2.14"><primary>gtk_adjustment_set_page_increment</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_adjustment_set_page_increment   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> page_increment);</programlisting>
+<para>
+Sets the page increment of the adjustment.
+</para>
+<para>
+See <link linkend="gtk-adjustment-set-lower"><function>gtk_adjustment_set_lower()</function></link> about how to compress multiple
+emissions of the "changed" signal when setting multiple adjustment
+properties.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>page_increment</parameter>&nbsp;:</term>
+<listitem><simpara> the new page increment
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-set-page-size" role="function" condition="since:2.14">
+<title>gtk_adjustment_set_page_size ()</title>
+<indexterm zone="gtk-adjustment-set-page-size" role="2.14"><primary>gtk_adjustment_set_page_size</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_adjustment_set_page_size        (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> page_size);</programlisting>
+<para>
+Sets the page size of the adjustment.
+</para>
+<para>
+See <link linkend="gtk-adjustment-set-lower"><function>gtk_adjustment_set_lower()</function></link> about how to compress multiple
+emissions of the "changed" signal when setting multiple adjustment
+properties.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>page_size</parameter>&nbsp;:</term>
+<listitem><simpara> the new page size
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-set-step-increment" role="function" condition="since:2.14">
+<title>gtk_adjustment_set_step_increment ()</title>
+<indexterm zone="gtk-adjustment-set-step-increment" role="2.14"><primary>gtk_adjustment_set_step_increment</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_adjustment_set_step_increment   (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> step_increment);</programlisting>
+<para>
+Sets the step increment of the adjustment.
+</para>
+<para>
+See <link linkend="gtk-adjustment-set-lower"><function>gtk_adjustment_set_lower()</function></link> about how to compress multiple
+emissions of the "changed" signal when setting multiple adjustment
+properties.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>step_increment</parameter>&nbsp;:</term>
+<listitem><simpara> the new step increment
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-adjustment-set-upper" role="function" condition="since:2.14">
+<title>gtk_adjustment_set_upper ()</title>
+<indexterm zone="gtk-adjustment-set-upper" role="2.14"><primary>gtk_adjustment_set_upper</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_adjustment_set_upper            (<link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment,
+                                                         <link linkend="gdouble">gdouble</link> upper);</programlisting>
+<para>
+Sets the maximum value of the adjustment.
+</para>
+<para>
+Note that values will be restricted by
+<literal>upper - page-size</literal> if the page-size
+property is nonzero.
+</para>
+<para>
+See <link linkend="gtk-adjustment-set-lower"><function>gtk_adjustment_set_lower()</function></link> about how to compress multiple
+emissions of the "changed" signal when setting multiple adjustment
+properties.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>adjustment</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>upper</parameter>&nbsp;:</term>
+<listitem><simpara> the new maximum value
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkAdjustment.property-details" role="property_details">

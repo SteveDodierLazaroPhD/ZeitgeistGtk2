@@ -113,7 +113,6 @@ static void gtk_handle_box_get_property   (GObject     *object,
 					   guint        param_id,
 					   GValue      *value,
 					   GParamSpec  *pspec);
-static void gtk_handle_box_destroy        (GtkObject         *object);
 static void gtk_handle_box_map            (GtkWidget         *widget);
 static void gtk_handle_box_unmap          (GtkWidget         *widget);
 static void gtk_handle_box_realize        (GtkWidget         *widget);
@@ -152,12 +151,10 @@ static void
 gtk_handle_box_class_init (GtkHandleBoxClass *class)
 {
   GObjectClass *gobject_class;
-  GtkObjectClass *object_class;
   GtkWidgetClass *widget_class;
   GtkContainerClass *container_class;
 
   gobject_class = (GObjectClass *) class;
-  object_class = (GtkObjectClass *) class;
   widget_class = (GtkWidgetClass *) class;
   container_class = (GtkContainerClass *) class;
 
@@ -214,8 +211,6 @@ gtk_handle_box_class_init (GtkHandleBoxClass *class)
 							 FALSE,
 							 GTK_PARAM_READABLE));
 
-  object_class->destroy = gtk_handle_box_destroy;
-
   widget_class->map = gtk_handle_box_map;
   widget_class->unmap = gtk_handle_box_unmap;
   widget_class->realize = gtk_handle_box_realize;
@@ -234,7 +229,7 @@ gtk_handle_box_class_init (GtkHandleBoxClass *class)
   class->child_detached = NULL;
 
   handle_box_signals[SIGNAL_CHILD_ATTACHED] =
-    g_signal_new (I_("child_attached"),
+    g_signal_new (I_("child-attached"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_FIRST,
 		  G_STRUCT_OFFSET (GtkHandleBoxClass, child_attached),
@@ -243,7 +238,7 @@ gtk_handle_box_class_init (GtkHandleBoxClass *class)
 		  G_TYPE_NONE, 1,
 		  GTK_TYPE_WIDGET);
   handle_box_signals[SIGNAL_CHILD_DETACHED] =
-    g_signal_new (I_("child_detached"),
+    g_signal_new (I_("child-detached"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_FIRST,
 		  G_STRUCT_OFFSET (GtkHandleBoxClass, child_detached),
@@ -345,13 +340,6 @@ GtkWidget*
 gtk_handle_box_new (void)
 {
   return g_object_new (GTK_TYPE_HANDLE_BOX, NULL);
-}
-
-static void
-gtk_handle_box_destroy (GtkObject *object)
-{
-  if (GTK_OBJECT_CLASS (gtk_handle_box_parent_class)->destroy)
-    (* GTK_OBJECT_CLASS (gtk_handle_box_parent_class)->destroy) (object);
 }
 
 static void
@@ -480,8 +468,7 @@ gtk_handle_box_unrealize (GtkWidget *widget)
   gdk_window_destroy (hb->float_window);
   hb->float_window = NULL;
 
-  if (GTK_WIDGET_CLASS (gtk_handle_box_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_handle_box_parent_class)->unrealize) (widget);
+  GTK_WIDGET_CLASS (gtk_handle_box_parent_class)->unrealize (widget);
 }
 
 static void
@@ -966,7 +953,7 @@ gtk_handle_box_paint (GtkWidget      *widget,
 			 handle_orientation);
 
   if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
-    (* GTK_WIDGET_CLASS (gtk_handle_box_parent_class)->expose_event) (widget, event);
+    GTK_WIDGET_CLASS (gtk_handle_box_parent_class)->expose_event (widget, event);
 }
 
 static gint

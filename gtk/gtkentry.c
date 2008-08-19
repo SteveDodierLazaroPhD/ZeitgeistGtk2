@@ -407,14 +407,14 @@ add_move_binding (GtkBindingSet  *binding_set,
   g_return_if_fail ((modmask & GDK_SHIFT_MASK) == 0);
   
   gtk_binding_entry_add_signal (binding_set, keyval, modmask,
-				"move_cursor", 3,
+				"move-cursor", 3,
 				G_TYPE_ENUM, step,
 				G_TYPE_INT, count,
 				G_TYPE_BOOLEAN, FALSE);
 
   /* Selection-extending version */
   gtk_binding_entry_add_signal (binding_set, keyval, modmask | GDK_SHIFT_MASK,
-				"move_cursor", 3,
+				"move-cursor", 3,
 				G_TYPE_ENUM, step,
 				G_TYPE_INT, count,
 				G_TYPE_BOOLEAN, TRUE);
@@ -666,7 +666,7 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                       GTK_PARAM_READABLE));
 
   signals[POPULATE_POPUP] =
-    g_signal_new (I_("populate_popup"),
+    g_signal_new (I_("populate-popup"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GtkEntryClass, populate_popup),
@@ -688,7 +688,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   widget_class->activate_signal = signals[ACTIVATE];
 
   signals[MOVE_CURSOR] = 
-    g_signal_new (I_("move_cursor"),
+    g_signal_new (I_("move-cursor"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkEntryClass, move_cursor),
@@ -700,7 +700,7 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_BOOLEAN);
 
   signals[INSERT_AT_CURSOR] = 
-    g_signal_new (I_("insert_at_cursor"),
+    g_signal_new (I_("insert-at-cursor"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkEntryClass, insert_at_cursor),
@@ -710,7 +710,7 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_STRING);
 
   signals[DELETE_FROM_CURSOR] = 
-    g_signal_new (I_("delete_from_cursor"),
+    g_signal_new (I_("delete-from-cursor"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkEntryClass, delete_from_cursor),
@@ -730,7 +730,7 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_NONE, 0);
 
   signals[CUT_CLIPBOARD] =
-    g_signal_new (I_("cut_clipboard"),
+    g_signal_new (I_("cut-clipboard"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkEntryClass, cut_clipboard),
@@ -739,7 +739,7 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_NONE, 0);
 
   signals[COPY_CLIPBOARD] =
-    g_signal_new (I_("copy_clipboard"),
+    g_signal_new (I_("copy-clipboard"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkEntryClass, copy_clipboard),
@@ -748,7 +748,7 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_NONE, 0);
 
   signals[PASTE_CLIPBOARD] =
-    g_signal_new (I_("paste_clipboard"),
+    g_signal_new (I_("paste-clipboard"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkEntryClass, paste_clipboard),
@@ -757,7 +757,7 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_NONE, 0);
 
   signals[TOGGLE_OVERWRITE] =
-    g_signal_new (I_("toggle_overwrite"),
+    g_signal_new (I_("toggle-overwrite"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkEntryClass, toggle_overwrite),
@@ -823,35 +823,35 @@ gtk_entry_class_init (GtkEntryClass *class)
   /* Select all
    */
   gtk_binding_entry_add_signal (binding_set, GDK_a, GDK_CONTROL_MASK,
-                                "move_cursor", 3,
+                                "move-cursor", 3,
                                 GTK_TYPE_MOVEMENT_STEP, GTK_MOVEMENT_BUFFER_ENDS,
                                 G_TYPE_INT, -1,
 				G_TYPE_BOOLEAN, FALSE);
   gtk_binding_entry_add_signal (binding_set, GDK_a, GDK_CONTROL_MASK,
-                                "move_cursor", 3,
+                                "move-cursor", 3,
                                 GTK_TYPE_MOVEMENT_STEP, GTK_MOVEMENT_BUFFER_ENDS,
                                 G_TYPE_INT, 1,
 				G_TYPE_BOOLEAN, TRUE);  
 
   gtk_binding_entry_add_signal (binding_set, GDK_slash, GDK_CONTROL_MASK,
-                                "move_cursor", 3,
+                                "move-cursor", 3,
                                 GTK_TYPE_MOVEMENT_STEP, GTK_MOVEMENT_BUFFER_ENDS,
                                 G_TYPE_INT, -1,
 				G_TYPE_BOOLEAN, FALSE);
   gtk_binding_entry_add_signal (binding_set, GDK_slash, GDK_CONTROL_MASK,
-                                "move_cursor", 3,
+                                "move-cursor", 3,
                                 GTK_TYPE_MOVEMENT_STEP, GTK_MOVEMENT_BUFFER_ENDS,
                                 G_TYPE_INT, 1,
 				G_TYPE_BOOLEAN, TRUE);  
   /* Unselect all 
    */
   gtk_binding_entry_add_signal (binding_set, GDK_backslash, GDK_CONTROL_MASK,
-                                "move_cursor", 3,
+                                "move-cursor", 3,
                                 GTK_TYPE_MOVEMENT_STEP, GTK_MOVEMENT_VISUAL_POSITIONS,
                                 G_TYPE_INT, 0,
 				G_TYPE_BOOLEAN, FALSE);
   gtk_binding_entry_add_signal (binding_set, GDK_a, GDK_SHIFT_MASK | GDK_CONTROL_MASK,
-                                "move_cursor", 3,
+                                "move-cursor", 3,
                                 GTK_TYPE_MOVEMENT_STEP, GTK_MOVEMENT_VISUAL_POSITIONS,
                                 G_TYPE_INT, 0,
 				G_TYPE_BOOLEAN, FALSE);
@@ -867,12 +867,12 @@ gtk_entry_class_init (GtkEntryClass *class)
   
   /* Deleting text */
   gtk_binding_entry_add_signal (binding_set, GDK_Delete, 0,
-				"delete_from_cursor", 2,
+				"delete-from-cursor", 2,
 				G_TYPE_ENUM, GTK_DELETE_CHARS,
 				G_TYPE_INT, 1);
 
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Delete, 0,
-				"delete_from_cursor", 2,
+				"delete-from-cursor", 2,
 				G_TYPE_ENUM, GTK_DELETE_CHARS,
 				G_TYPE_INT, 1);
   
@@ -884,41 +884,41 @@ gtk_entry_class_init (GtkEntryClass *class)
 				"backspace", 0);
 
   gtk_binding_entry_add_signal (binding_set, GDK_Delete, GDK_CONTROL_MASK,
-				"delete_from_cursor", 2,
+				"delete-from-cursor", 2,
 				G_TYPE_ENUM, GTK_DELETE_WORD_ENDS,
 				G_TYPE_INT, 1);
 
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Delete, GDK_CONTROL_MASK,
-				"delete_from_cursor", 2,
+				"delete-from-cursor", 2,
 				G_TYPE_ENUM, GTK_DELETE_WORD_ENDS,
 				G_TYPE_INT, 1);
   
   gtk_binding_entry_add_signal (binding_set, GDK_BackSpace, GDK_CONTROL_MASK,
-				"delete_from_cursor", 2,
+				"delete-from-cursor", 2,
 				G_TYPE_ENUM, GTK_DELETE_WORD_ENDS,
 				G_TYPE_INT, -1);
 
   /* Cut/copy/paste */
 
   gtk_binding_entry_add_signal (binding_set, GDK_x, GDK_CONTROL_MASK,
-				"cut_clipboard", 0);
+				"cut-clipboard", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_c, GDK_CONTROL_MASK,
-				"copy_clipboard", 0);
+				"copy-clipboard", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_v, GDK_CONTROL_MASK,
-				"paste_clipboard", 0);
+				"paste-clipboard", 0);
 
   gtk_binding_entry_add_signal (binding_set, GDK_Delete, GDK_SHIFT_MASK,
-				"cut_clipboard", 0);
+				"cut-clipboard", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_Insert, GDK_CONTROL_MASK,
-				"copy_clipboard", 0);
+				"copy-clipboard", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_Insert, GDK_SHIFT_MASK,
-				"paste_clipboard", 0);
+				"paste-clipboard", 0);
 
   /* Overwrite */
   gtk_binding_entry_add_signal (binding_set, GDK_Insert, 0,
-				"toggle_overwrite", 0);
+				"toggle-overwrite", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_KP_Insert, 0,
-				"toggle_overwrite", 0);
+				"toggle-overwrite", 0);
 
   /**
    * GtkEntry:inner-border:
@@ -1176,11 +1176,11 @@ gtk_entry_init (GtkEntry *entry)
   
   g_signal_connect (entry->im_context, "commit",
 		    G_CALLBACK (gtk_entry_commit_cb), entry);
-  g_signal_connect (entry->im_context, "preedit_changed",
+  g_signal_connect (entry->im_context, "preedit-changed",
 		    G_CALLBACK (gtk_entry_preedit_changed_cb), entry);
-  g_signal_connect (entry->im_context, "retrieve_surrounding",
+  g_signal_connect (entry->im_context, "retrieve-surrounding",
 		    G_CALLBACK (gtk_entry_retrieve_surrounding_cb), entry);
-  g_signal_connect (entry->im_context, "delete_surrounding",
+  g_signal_connect (entry->im_context, "delete-surrounding",
 		    G_CALLBACK (gtk_entry_delete_surrounding_cb), entry);
 }
 
@@ -1384,8 +1384,7 @@ gtk_entry_unrealize (GtkWidget *widget)
       entry->popup_menu = NULL;
     }
 
-  if (GTK_WIDGET_CLASS (gtk_entry_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_entry_parent_class)->unrealize) (widget);
+  GTK_WIDGET_CLASS (gtk_entry_parent_class)->unrealize (widget);
 }
 
 void
@@ -2178,7 +2177,7 @@ gtk_entry_focus_in (GtkWidget     *widget,
     }
 
   g_signal_connect (gdk_keymap_get_for_display (gtk_widget_get_display (widget)),
-		    "direction_changed",
+		    "direction-changed",
 		    G_CALLBACK (gtk_entry_keymap_direction_changed), entry);
 
   gtk_entry_reset_blink_time (entry);
@@ -2312,7 +2311,7 @@ gtk_entry_insert_text (GtkEditable *editable,
   text[new_text_length] = '\0';
   strncpy (text, new_text, new_text_length);
 
-  g_signal_emit_by_name (editable, "insert_text", text, new_text_length, position);
+  g_signal_emit_by_name (editable, "insert-text", text, new_text_length, position);
 
   if (!entry->visible)
     trash_area (text, new_text_length);
@@ -2339,7 +2338,7 @@ gtk_entry_delete_text (GtkEditable *editable,
   
   g_object_ref (editable);
 
-  g_signal_emit_by_name (editable, "delete_text", start_pos, end_pos);
+  g_signal_emit_by_name (editable, "delete-text", start_pos, end_pos);
 
   g_object_unref (editable);
 }
@@ -2490,7 +2489,7 @@ gtk_entry_start_editing (GtkCellEditable *cell_editable,
 
   g_signal_connect (cell_editable, "activate",
 		    G_CALLBACK (gtk_cell_editable_entry_activated), NULL);
-  g_signal_connect (cell_editable, "key_press_event",
+  g_signal_connect (cell_editable, "key-press-event",
 		    G_CALLBACK (gtk_cell_editable_key_press_event), NULL);
 }
 
@@ -4569,11 +4568,11 @@ gtk_entry_set_visibility (GtkEntry *entry,
       
       g_signal_connect (entry->im_context, "commit",
 			G_CALLBACK (gtk_entry_commit_cb), entry);
-      g_signal_connect (entry->im_context, "preedit_changed",
+      g_signal_connect (entry->im_context, "preedit-changed",
 			G_CALLBACK (gtk_entry_preedit_changed_cb), entry);
-      g_signal_connect (entry->im_context, "retrieve_surrounding",
+      g_signal_connect (entry->im_context, "retrieve-surrounding",
 			G_CALLBACK (gtk_entry_retrieve_surrounding_cb), entry);
-      g_signal_connect (entry->im_context, "delete_surrounding",
+      g_signal_connect (entry->im_context, "delete-surrounding",
 			G_CALLBACK (gtk_entry_delete_surrounding_cb), entry);
 
       if (GTK_WIDGET_HAS_FOCUS (entry) && visible)
@@ -5332,11 +5331,11 @@ popup_targets_received (GtkClipboard     *clipboard,
 				 GTK_WIDGET (entry),
 				 popup_menu_detach);
       
-      append_action_signal (entry, entry->popup_menu, GTK_STOCK_CUT, "cut_clipboard",
+      append_action_signal (entry, entry->popup_menu, GTK_STOCK_CUT, "cut-clipboard",
 			    entry->editable && entry->current_pos != entry->selection_bound);
-      append_action_signal (entry, entry->popup_menu, GTK_STOCK_COPY, "copy_clipboard",
+      append_action_signal (entry, entry->popup_menu, GTK_STOCK_COPY, "copy-clipboard",
 			    entry->current_pos != entry->selection_bound);
-      append_action_signal (entry, entry->popup_menu, GTK_STOCK_PASTE, "paste_clipboard",
+      append_action_signal (entry, entry->popup_menu, GTK_STOCK_PASTE, "paste-clipboard",
 			    entry->editable && clipboard_contains_text);
       
       menuitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_DELETE, NULL);
@@ -6004,7 +6003,7 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
               if (completion->priv->completion_prefix == NULL)
                 completion->priv->completion_prefix = g_strdup (gtk_entry_get_text (GTK_ENTRY (completion->priv->entry)));
 
-              g_signal_emit_by_name (completion, "cursor_on_match", model,
+              g_signal_emit_by_name (completion, "cursor-on-match", model,
                                      &iter, &entry_set);
             }
         }
@@ -6113,7 +6112,7 @@ keypress_completion_out:
           if (gtk_tree_selection_get_selected (sel, &model, &iter))
             {
               g_signal_handler_block (widget, completion->priv->changed_id);
-              g_signal_emit_by_name (completion, "match_selected",
+              g_signal_emit_by_name (completion, "match-selected",
                                      model, &iter, &entry_set);
               g_signal_handler_unblock (widget, completion->priv->changed_id);
 
@@ -6144,7 +6143,7 @@ keypress_completion_out:
 
           path = gtk_tree_path_new_from_indices (completion->priv->current_selected - matches, -1);
 
-          g_signal_emit_by_name (completion, "action_activated",
+          g_signal_emit_by_name (completion, "action-activated",
                                  gtk_tree_path_get_indices (path)[0]);
           gtk_tree_path_free (path);
         }
@@ -6293,20 +6292,20 @@ connect_completion_signals (GtkEntry           *entry,
       completion->priv->changed_id =
 	g_signal_connect (entry, "changed",
 			  G_CALLBACK (gtk_entry_completion_changed), completion);
-      g_signal_connect (entry, "key_press_event",
+      g_signal_connect (entry, "key-press-event",
 			G_CALLBACK (gtk_entry_completion_key_press), completion);
     }
  
   if (completion->priv->inline_completion)
     {
       completion->priv->insert_text_id =
-	g_signal_connect (entry, "insert_text",
+	g_signal_connect (entry, "insert-text",
 			  G_CALLBACK (completion_insert_text_callback), completion);
       g_signal_connect (entry, "notify",
 			G_CALLBACK (clear_completion_callback), completion);
       g_signal_connect (entry, "activate",
 			G_CALLBACK (accept_completion_callback), completion);
-      g_signal_connect (entry, "focus_out_event",
+      g_signal_connect (entry, "focus-out-event",
 			G_CALLBACK (accept_completion_callback), completion);
     }
 

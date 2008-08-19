@@ -33,7 +33,6 @@ INCLUDES =						\
 	-I$(top_srcdir) -I../gdk			\
 	-I$(top_srcdir)/gdk				\
 	-I$(top_srcdir)/gdk-pixbuf -I../gdk-pixbuf	\
-	-DGDK_PIXBUF_DISABLE_DEPRECATED			\
 	-DGDK_DISABLE_DEPRECATED			\
 	-DGTK_DISABLE_DEPRECATED			\
 	-DGTK_FILE_SYSTEM_ENABLE_UNSUPPORTED		\
@@ -212,6 +211,7 @@ gtk_public_h_sources =          \
 	gtkhscale.h		\
 	gtkhscrollbar.h		\
 	gtkhseparator.h		\
+	gtkhsv.h		\
 	gtkiconfactory.h	\
 	gtkicontheme.h		\
 	gtkiconview.h		\
@@ -354,7 +354,6 @@ gtk_private_h_sources =		\
 	gtkfilechooserutils.h	\
 	gtkfilesystem.h		\
 	gtkfilesystemmodel.h	\
-	gtkhsv.h		\
 	gtkiconcache.h		\
 	gtkintl.h		\
 	gtkkeyhash.h		\
@@ -719,12 +718,12 @@ endif
 if USE_QUARTZ
 gtk_clipboard_dnd_c_sources = gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c
 gtk_clipboard_dnd_h_sources = gtkquartz.h
-EXTRA_DIST += gtkquartz.h
 gtk_clipboard_dnd_c_sources_CFLAGS = "-xobjective-c"
 else
 gtk_clipboard_dnd_c_sources = gtkclipboard.c gtkdnd.c
 gtk_clipboard_dnd_c_sources_CFLAGS =
 endif
+EXTRA_DIST += gtkquartz.h
 
 # we use our own built_sources variable rules to avoid automake's
 # BUILT_SOURCES oddities

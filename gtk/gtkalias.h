@@ -238,9 +238,11 @@ extern __typeof (gtk_accel_map_get) IA__gtk_accel_map_get __attribute((visibilit
 extern __typeof (gtk_accel_map_get_type) IA__gtk_accel_map_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_accel_map_get_type IA__gtk_accel_map_get_type
 
+#ifndef _WIN64
 extern __typeof (gtk_accel_map_load) IA__gtk_accel_map_load __attribute((visibility("hidden")));
 #define gtk_accel_map_load IA__gtk_accel_map_load
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_accel_map_load_utf8) IA__gtk_accel_map_load_utf8 __attribute((visibility("hidden")));
 #define gtk_accel_map_load_utf8 IA__gtk_accel_map_load_utf8
@@ -258,9 +260,11 @@ extern __typeof (gtk_accel_map_lock_path) IA__gtk_accel_map_lock_path __attribut
 extern __typeof (gtk_accel_map_lookup_entry) IA__gtk_accel_map_lookup_entry __attribute((visibility("hidden")));
 #define gtk_accel_map_lookup_entry IA__gtk_accel_map_lookup_entry
 
+#ifndef _WIN64
 extern __typeof (gtk_accel_map_save) IA__gtk_accel_map_save __attribute((visibility("hidden")));
 #define gtk_accel_map_save IA__gtk_accel_map_save
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_accel_map_save_utf8) IA__gtk_accel_map_save_utf8 __attribute((visibility("hidden")));
 #define gtk_accel_map_save_utf8 IA__gtk_accel_map_save_utf8
@@ -3331,9 +3335,11 @@ extern __typeof (gtk_expander_set_use_underline) IA__gtk_expander_set_use_underl
 extern __typeof (gtk_file_chooser_add_filter) IA__gtk_file_chooser_add_filter __attribute((visibility("hidden")));
 #define gtk_file_chooser_add_filter IA__gtk_file_chooser_add_filter
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_add_shortcut_folder) IA__gtk_file_chooser_add_shortcut_folder __attribute((visibility("hidden")));
 #define gtk_file_chooser_add_shortcut_folder IA__gtk_file_chooser_add_shortcut_folder
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_add_shortcut_folder_utf8) IA__gtk_file_chooser_add_shortcut_folder_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_add_shortcut_folder_utf8 IA__gtk_file_chooser_add_shortcut_folder_utf8
@@ -3348,9 +3354,11 @@ extern __typeof (gtk_file_chooser_error_quark) IA__gtk_file_chooser_error_quark 
 extern __typeof (gtk_file_chooser_get_action) IA__gtk_file_chooser_get_action __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_action IA__gtk_file_chooser_get_action
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_get_current_folder) IA__gtk_file_chooser_get_current_folder __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_current_folder IA__gtk_file_chooser_get_current_folder
 
+#endif
 extern __typeof (gtk_file_chooser_get_current_folder_file) IA__gtk_file_chooser_get_current_folder_file __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_current_folder_file IA__gtk_file_chooser_get_current_folder_file
 
@@ -3368,17 +3376,21 @@ extern __typeof (gtk_file_chooser_get_extra_widget) IA__gtk_file_chooser_get_ext
 extern __typeof (gtk_file_chooser_get_file) IA__gtk_file_chooser_get_file __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_file IA__gtk_file_chooser_get_file
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_get_filename) IA__gtk_file_chooser_get_filename __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_filename IA__gtk_file_chooser_get_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_get_filename_utf8) IA__gtk_file_chooser_get_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_filename_utf8 IA__gtk_file_chooser_get_filename_utf8
 
 #endif
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_get_filenames) IA__gtk_file_chooser_get_filenames __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_filenames IA__gtk_file_chooser_get_filenames
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_get_filenames_utf8) IA__gtk_file_chooser_get_filenames_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_filenames_utf8 IA__gtk_file_chooser_get_filenames_utf8
@@ -3396,9 +3408,11 @@ extern __typeof (gtk_file_chooser_get_local_only) IA__gtk_file_chooser_get_local
 extern __typeof (gtk_file_chooser_get_preview_file) IA__gtk_file_chooser_get_preview_file __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_preview_file IA__gtk_file_chooser_get_preview_file
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_get_preview_filename) IA__gtk_file_chooser_get_preview_filename __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_preview_filename IA__gtk_file_chooser_get_preview_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_get_preview_filename_utf8) IA__gtk_file_chooser_get_preview_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_get_preview_filename_utf8 IA__gtk_file_chooser_get_preview_filename_utf8
@@ -3440,9 +3454,11 @@ extern __typeof (gtk_file_chooser_get_use_preview_label) IA__gtk_file_chooser_ge
 extern __typeof (gtk_file_chooser_list_filters) IA__gtk_file_chooser_list_filters __attribute((visibility("hidden")));
 #define gtk_file_chooser_list_filters IA__gtk_file_chooser_list_filters
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_list_shortcut_folders) IA__gtk_file_chooser_list_shortcut_folders __attribute((visibility("hidden")));
 #define gtk_file_chooser_list_shortcut_folders IA__gtk_file_chooser_list_shortcut_folders
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_list_shortcut_folders_utf8) IA__gtk_file_chooser_list_shortcut_folders_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_list_shortcut_folders_utf8 IA__gtk_file_chooser_list_shortcut_folders_utf8
@@ -3454,9 +3470,11 @@ extern __typeof (gtk_file_chooser_list_shortcut_folder_uris) IA__gtk_file_choose
 extern __typeof (gtk_file_chooser_remove_filter) IA__gtk_file_chooser_remove_filter __attribute((visibility("hidden")));
 #define gtk_file_chooser_remove_filter IA__gtk_file_chooser_remove_filter
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_remove_shortcut_folder) IA__gtk_file_chooser_remove_shortcut_folder __attribute((visibility("hidden")));
 #define gtk_file_chooser_remove_shortcut_folder IA__gtk_file_chooser_remove_shortcut_folder
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_remove_shortcut_folder_utf8) IA__gtk_file_chooser_remove_shortcut_folder_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_remove_shortcut_folder_utf8 IA__gtk_file_chooser_remove_shortcut_folder_utf8
@@ -3471,9 +3489,11 @@ extern __typeof (gtk_file_chooser_select_all) IA__gtk_file_chooser_select_all __
 extern __typeof (gtk_file_chooser_select_file) IA__gtk_file_chooser_select_file __attribute((visibility("hidden")));
 #define gtk_file_chooser_select_file IA__gtk_file_chooser_select_file
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_select_filename) IA__gtk_file_chooser_select_filename __attribute((visibility("hidden")));
 #define gtk_file_chooser_select_filename IA__gtk_file_chooser_select_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_select_filename_utf8) IA__gtk_file_chooser_select_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_select_filename_utf8 IA__gtk_file_chooser_select_filename_utf8
@@ -3485,9 +3505,11 @@ extern __typeof (gtk_file_chooser_select_uri) IA__gtk_file_chooser_select_uri __
 extern __typeof (gtk_file_chooser_set_action) IA__gtk_file_chooser_set_action __attribute((visibility("hidden")));
 #define gtk_file_chooser_set_action IA__gtk_file_chooser_set_action
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_set_current_folder) IA__gtk_file_chooser_set_current_folder __attribute((visibility("hidden")));
 #define gtk_file_chooser_set_current_folder IA__gtk_file_chooser_set_current_folder
 
+#endif
 extern __typeof (gtk_file_chooser_set_current_folder_file) IA__gtk_file_chooser_set_current_folder_file __attribute((visibility("hidden")));
 #define gtk_file_chooser_set_current_folder_file IA__gtk_file_chooser_set_current_folder_file
 
@@ -3508,9 +3530,11 @@ extern __typeof (gtk_file_chooser_set_extra_widget) IA__gtk_file_chooser_set_ext
 extern __typeof (gtk_file_chooser_set_file) IA__gtk_file_chooser_set_file __attribute((visibility("hidden")));
 #define gtk_file_chooser_set_file IA__gtk_file_chooser_set_file
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_set_filename) IA__gtk_file_chooser_set_filename __attribute((visibility("hidden")));
 #define gtk_file_chooser_set_filename IA__gtk_file_chooser_set_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_set_filename_utf8) IA__gtk_file_chooser_set_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_set_filename_utf8 IA__gtk_file_chooser_set_filename_utf8
@@ -3546,9 +3570,11 @@ extern __typeof (gtk_file_chooser_unselect_all) IA__gtk_file_chooser_unselect_al
 extern __typeof (gtk_file_chooser_unselect_file) IA__gtk_file_chooser_unselect_file __attribute((visibility("hidden")));
 #define gtk_file_chooser_unselect_file IA__gtk_file_chooser_unselect_file
 
+#ifndef _WIN64
 extern __typeof (gtk_file_chooser_unselect_filename) IA__gtk_file_chooser_unselect_filename __attribute((visibility("hidden")));
 #define gtk_file_chooser_unselect_filename IA__gtk_file_chooser_unselect_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_chooser_unselect_filename_utf8) IA__gtk_file_chooser_unselect_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_file_chooser_unselect_filename_utf8 IA__gtk_file_chooser_unselect_filename_utf8
@@ -3665,17 +3691,21 @@ extern __typeof (gtk_file_filter_set_name) IA__gtk_file_filter_set_name __attrib
 extern __typeof (gtk_file_selection_complete) IA__gtk_file_selection_complete __attribute((visibility("hidden")));
 #define gtk_file_selection_complete IA__gtk_file_selection_complete
 
+#ifndef _WIN64
 extern __typeof (gtk_file_selection_get_filename) IA__gtk_file_selection_get_filename __attribute((visibility("hidden")));
 #define gtk_file_selection_get_filename IA__gtk_file_selection_get_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_selection_get_filename_utf8) IA__gtk_file_selection_get_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_file_selection_get_filename_utf8 IA__gtk_file_selection_get_filename_utf8
 
 #endif
+#ifndef _WIN64
 extern __typeof (gtk_file_selection_get_selections) IA__gtk_file_selection_get_selections __attribute((visibility("hidden")));
 #define gtk_file_selection_get_selections IA__gtk_file_selection_get_selections
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_selection_get_selections_utf8) IA__gtk_file_selection_get_selections_utf8 __attribute((visibility("hidden")));
 #define gtk_file_selection_get_selections_utf8 IA__gtk_file_selection_get_selections_utf8
@@ -3693,9 +3723,11 @@ extern __typeof (gtk_file_selection_hide_fileop_buttons) IA__gtk_file_selection_
 extern __typeof (gtk_file_selection_new) IA__gtk_file_selection_new __attribute((visibility("hidden")));
 #define gtk_file_selection_new IA__gtk_file_selection_new
 
+#ifndef _WIN64
 extern __typeof (gtk_file_selection_set_filename) IA__gtk_file_selection_set_filename __attribute((visibility("hidden")));
 #define gtk_file_selection_set_filename IA__gtk_file_selection_set_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_file_selection_set_filename_utf8) IA__gtk_file_selection_set_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_file_selection_set_filename_utf8 IA__gtk_file_selection_set_filename_utf8
@@ -3821,17 +3853,11 @@ extern __typeof (gtk_font_selection_dialog_get_font) IA__gtk_font_selection_dial
 extern __typeof (gtk_font_selection_get_face) IA__gtk_font_selection_get_face __attribute((visibility("hidden")));
 #define gtk_font_selection_get_face IA__gtk_font_selection_get_face
 
-extern __typeof (gtk_font_selection_get_face_entry) IA__gtk_font_selection_get_face_entry __attribute((visibility("hidden")));
-#define gtk_font_selection_get_face_entry IA__gtk_font_selection_get_face_entry
-
 extern __typeof (gtk_font_selection_get_face_list) IA__gtk_font_selection_get_face_list __attribute((visibility("hidden")));
 #define gtk_font_selection_get_face_list IA__gtk_font_selection_get_face_list
 
 extern __typeof (gtk_font_selection_get_family) IA__gtk_font_selection_get_family __attribute((visibility("hidden")));
 #define gtk_font_selection_get_family IA__gtk_font_selection_get_family
-
-extern __typeof (gtk_font_selection_get_family_entry) IA__gtk_font_selection_get_family_entry __attribute((visibility("hidden")));
-#define gtk_font_selection_get_family_entry IA__gtk_font_selection_get_family_entry
 
 extern __typeof (gtk_font_selection_get_family_list) IA__gtk_font_selection_get_family_list __attribute((visibility("hidden")));
 #define gtk_font_selection_get_family_list IA__gtk_font_selection_get_family_list
@@ -4151,9 +4177,11 @@ extern __typeof (gtk_icon_source_get_direction) IA__gtk_icon_source_get_directio
 extern __typeof (gtk_icon_source_get_direction_wildcarded) IA__gtk_icon_source_get_direction_wildcarded __attribute((visibility("hidden")));
 #define gtk_icon_source_get_direction_wildcarded IA__gtk_icon_source_get_direction_wildcarded
 
+#ifndef _WIN64
 extern __typeof (gtk_icon_source_get_filename) IA__gtk_icon_source_get_filename __attribute((visibility("hidden")));
 #define gtk_icon_source_get_filename IA__gtk_icon_source_get_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_icon_source_get_filename_utf8) IA__gtk_icon_source_get_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_icon_source_get_filename_utf8 IA__gtk_icon_source_get_filename_utf8
@@ -4189,9 +4217,11 @@ extern __typeof (gtk_icon_source_set_direction) IA__gtk_icon_source_set_directio
 extern __typeof (gtk_icon_source_set_direction_wildcarded) IA__gtk_icon_source_set_direction_wildcarded __attribute((visibility("hidden")));
 #define gtk_icon_source_set_direction_wildcarded IA__gtk_icon_source_set_direction_wildcarded
 
+#ifndef _WIN64
 extern __typeof (gtk_icon_source_set_filename) IA__gtk_icon_source_set_filename __attribute((visibility("hidden")));
 #define gtk_icon_source_set_filename IA__gtk_icon_source_set_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_icon_source_set_filename_utf8) IA__gtk_icon_source_set_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_icon_source_set_filename_utf8 IA__gtk_icon_source_set_filename_utf8
@@ -4243,9 +4273,11 @@ extern __typeof (gtk_icon_info_get_display_name) IA__gtk_icon_info_get_display_n
 extern __typeof (gtk_icon_info_get_embedded_rect) IA__gtk_icon_info_get_embedded_rect __attribute((visibility("hidden")));
 #define gtk_icon_info_get_embedded_rect IA__gtk_icon_info_get_embedded_rect
 
+#ifndef _WIN64
 extern __typeof (gtk_icon_info_get_filename) IA__gtk_icon_info_get_filename __attribute((visibility("hidden")));
 #define gtk_icon_info_get_filename IA__gtk_icon_info_get_filename
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_icon_info_get_filename_utf8) IA__gtk_icon_info_get_filename_utf8 __attribute((visibility("hidden")));
 #define gtk_icon_info_get_filename_utf8 IA__gtk_icon_info_get_filename_utf8
@@ -4263,9 +4295,11 @@ extern __typeof (gtk_icon_info_set_raw_coordinates) IA__gtk_icon_info_set_raw_co
 extern __typeof (gtk_icon_theme_add_builtin_icon) IA__gtk_icon_theme_add_builtin_icon __attribute((visibility("hidden")));
 #define gtk_icon_theme_add_builtin_icon IA__gtk_icon_theme_add_builtin_icon
 
+#ifndef _WIN64
 extern __typeof (gtk_icon_theme_append_search_path) IA__gtk_icon_theme_append_search_path __attribute((visibility("hidden")));
 #define gtk_icon_theme_append_search_path IA__gtk_icon_theme_append_search_path
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_icon_theme_append_search_path_utf8) IA__gtk_icon_theme_append_search_path_utf8 __attribute((visibility("hidden")));
 #define gtk_icon_theme_append_search_path_utf8 IA__gtk_icon_theme_append_search_path_utf8
@@ -4286,9 +4320,11 @@ extern __typeof (gtk_icon_theme_get_for_screen) IA__gtk_icon_theme_get_for_scree
 extern __typeof (gtk_icon_theme_get_icon_sizes) IA__gtk_icon_theme_get_icon_sizes __attribute((visibility("hidden")));
 #define gtk_icon_theme_get_icon_sizes IA__gtk_icon_theme_get_icon_sizes
 
+#ifndef _WIN64
 extern __typeof (gtk_icon_theme_get_search_path) IA__gtk_icon_theme_get_search_path __attribute((visibility("hidden")));
 #define gtk_icon_theme_get_search_path IA__gtk_icon_theme_get_search_path
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_icon_theme_get_search_path_utf8) IA__gtk_icon_theme_get_search_path_utf8 __attribute((visibility("hidden")));
 #define gtk_icon_theme_get_search_path_utf8 IA__gtk_icon_theme_get_search_path_utf8
@@ -4321,9 +4357,11 @@ extern __typeof (gtk_icon_theme_choose_icon) IA__gtk_icon_theme_choose_icon __at
 extern __typeof (gtk_icon_theme_new) IA__gtk_icon_theme_new __attribute((visibility("hidden")));
 #define gtk_icon_theme_new IA__gtk_icon_theme_new
 
+#ifndef _WIN64
 extern __typeof (gtk_icon_theme_prepend_search_path) IA__gtk_icon_theme_prepend_search_path __attribute((visibility("hidden")));
 #define gtk_icon_theme_prepend_search_path IA__gtk_icon_theme_prepend_search_path
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_icon_theme_prepend_search_path_utf8) IA__gtk_icon_theme_prepend_search_path_utf8 __attribute((visibility("hidden")));
 #define gtk_icon_theme_prepend_search_path_utf8 IA__gtk_icon_theme_prepend_search_path_utf8
@@ -4338,9 +4376,11 @@ extern __typeof (gtk_icon_theme_set_custom_theme) IA__gtk_icon_theme_set_custom_
 extern __typeof (gtk_icon_theme_set_screen) IA__gtk_icon_theme_set_screen __attribute((visibility("hidden")));
 #define gtk_icon_theme_set_screen IA__gtk_icon_theme_set_screen
 
+#ifndef _WIN64
 extern __typeof (gtk_icon_theme_set_search_path) IA__gtk_icon_theme_set_search_path __attribute((visibility("hidden")));
 #define gtk_icon_theme_set_search_path IA__gtk_icon_theme_set_search_path
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_icon_theme_set_search_path_utf8) IA__gtk_icon_theme_set_search_path_utf8 __attribute((visibility("hidden")));
 #define gtk_icon_theme_set_search_path_utf8 IA__gtk_icon_theme_set_search_path_utf8
@@ -4575,9 +4615,11 @@ extern __typeof (gtk_image_new) IA__gtk_image_new __attribute((visibility("hidde
 extern __typeof (gtk_image_new_from_animation) IA__gtk_image_new_from_animation __attribute((visibility("hidden")));
 #define gtk_image_new_from_animation IA__gtk_image_new_from_animation
 
+#ifndef _WIN64
 extern __typeof (gtk_image_new_from_file) IA__gtk_image_new_from_file __attribute((visibility("hidden")));
 #define gtk_image_new_from_file IA__gtk_image_new_from_file
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_image_new_from_file_utf8) IA__gtk_image_new_from_file_utf8 __attribute((visibility("hidden")));
 #define gtk_image_new_from_file_utf8 IA__gtk_image_new_from_file_utf8
@@ -4607,9 +4649,11 @@ extern __typeof (gtk_image_new_from_gicon) IA__gtk_image_new_from_gicon __attrib
 extern __typeof (gtk_image_set_from_animation) IA__gtk_image_set_from_animation __attribute((visibility("hidden")));
 #define gtk_image_set_from_animation IA__gtk_image_set_from_animation
 
+#ifndef _WIN64
 extern __typeof (gtk_image_set_from_file) IA__gtk_image_set_from_file __attribute((visibility("hidden")));
 #define gtk_image_set_from_file IA__gtk_image_set_from_file
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_image_set_from_file_utf8) IA__gtk_image_set_from_file_utf8 __attribute((visibility("hidden")));
 #define gtk_image_set_from_file_utf8 IA__gtk_image_set_from_file_utf8
@@ -5047,6 +5091,12 @@ extern __typeof (gtk_link_button_set_uri) IA__gtk_link_button_set_uri __attribut
 
 extern __typeof (gtk_link_button_set_uri_hook) IA__gtk_link_button_set_uri_hook __attribute((visibility("hidden")));
 #define gtk_link_button_set_uri_hook IA__gtk_link_button_set_uri_hook
+
+extern __typeof (gtk_link_button_get_visited) IA__gtk_link_button_get_visited __attribute((visibility("hidden")));
+#define gtk_link_button_get_visited IA__gtk_link_button_get_visited
+
+extern __typeof (gtk_link_button_set_visited) IA__gtk_link_button_set_visited __attribute((visibility("hidden")));
+#define gtk_link_button_set_visited IA__gtk_link_button_set_visited
 
 #endif
 #endif
@@ -7361,9 +7411,11 @@ extern __typeof (gtk_rc_add_widget_name_style) IA__gtk_rc_add_widget_name_style 
 #define gtk_rc_add_widget_name_style IA__gtk_rc_add_widget_name_style
 
 #endif
+#ifndef _WIN64
 extern __typeof (gtk_rc_add_default_file) IA__gtk_rc_add_default_file __attribute((visibility("hidden")));
 #define gtk_rc_add_default_file IA__gtk_rc_add_default_file
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_rc_add_default_file_utf8) IA__gtk_rc_add_default_file_utf8 __attribute((visibility("hidden")));
 #define gtk_rc_add_default_file_utf8 IA__gtk_rc_add_default_file_utf8
@@ -7396,9 +7448,11 @@ extern __typeof (gtk_rc_get_style_by_paths) IA__gtk_rc_get_style_by_paths __attr
 extern __typeof (gtk_rc_get_theme_dir) IA__gtk_rc_get_theme_dir __attribute((visibility("hidden")));
 #define gtk_rc_get_theme_dir IA__gtk_rc_get_theme_dir
 
+#ifndef _WIN64
 extern __typeof (gtk_rc_parse) IA__gtk_rc_parse __attribute((visibility("hidden")));
 #define gtk_rc_parse IA__gtk_rc_parse
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_rc_parse_utf8) IA__gtk_rc_parse_utf8 __attribute((visibility("hidden")));
 #define gtk_rc_parse_utf8 IA__gtk_rc_parse_utf8
@@ -7431,9 +7485,11 @@ extern __typeof (gtk_rc_reset_styles) IA__gtk_rc_reset_styles __attribute((visib
 extern __typeof (gtk_rc_scanner_new) IA__gtk_rc_scanner_new __attribute((visibility("hidden")));
 #define gtk_rc_scanner_new IA__gtk_rc_scanner_new
 
+#ifndef _WIN64
 extern __typeof (gtk_rc_set_default_files) IA__gtk_rc_set_default_files __attribute((visibility("hidden")));
 #define gtk_rc_set_default_files IA__gtk_rc_set_default_files
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_rc_set_default_files_utf8) IA__gtk_rc_set_default_files_utf8 __attribute((visibility("hidden")));
 #define gtk_rc_set_default_files_utf8 IA__gtk_rc_set_default_files_utf8
@@ -11038,9 +11094,11 @@ extern __typeof (gtk_type_class) IA__gtk_type_class __attribute((visibility("hid
 extern __typeof (gtk_ui_manager_add_ui) IA__gtk_ui_manager_add_ui __attribute((visibility("hidden")));
 #define gtk_ui_manager_add_ui IA__gtk_ui_manager_add_ui
 
+#ifndef _WIN64
 extern __typeof (gtk_ui_manager_add_ui_from_file) IA__gtk_ui_manager_add_ui_from_file __attribute((visibility("hidden")));
 #define gtk_ui_manager_add_ui_from_file IA__gtk_ui_manager_add_ui_from_file
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_ui_manager_add_ui_from_file_utf8) IA__gtk_ui_manager_add_ui_from_file_utf8 __attribute((visibility("hidden")));
 #define gtk_ui_manager_add_ui_from_file_utf8 IA__gtk_ui_manager_add_ui_from_file_utf8
@@ -11883,9 +11941,11 @@ extern __typeof (gtk_window_set_default) IA__gtk_window_set_default __attribute(
 extern __typeof (gtk_window_set_default_icon) IA__gtk_window_set_default_icon __attribute((visibility("hidden")));
 #define gtk_window_set_default_icon IA__gtk_window_set_default_icon
 
+#ifndef _WIN64
 extern __typeof (gtk_window_set_default_icon_from_file) IA__gtk_window_set_default_icon_from_file __attribute((visibility("hidden")));
 #define gtk_window_set_default_icon_from_file IA__gtk_window_set_default_icon_from_file
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_window_set_default_icon_from_file_utf8) IA__gtk_window_set_default_icon_from_file_utf8 __attribute((visibility("hidden")));
 #define gtk_window_set_default_icon_from_file_utf8 IA__gtk_window_set_default_icon_from_file_utf8
@@ -11927,9 +11987,11 @@ extern __typeof (gtk_window_set_has_frame) IA__gtk_window_set_has_frame __attrib
 extern __typeof (gtk_window_set_icon) IA__gtk_window_set_icon __attribute((visibility("hidden")));
 #define gtk_window_set_icon IA__gtk_window_set_icon
 
+#ifndef _WIN64
 extern __typeof (gtk_window_set_icon_from_file) IA__gtk_window_set_icon_from_file __attribute((visibility("hidden")));
 #define gtk_window_set_icon_from_file IA__gtk_window_set_icon_from_file
 
+#endif
 #ifdef G_OS_WIN32
 extern __typeof (gtk_window_set_icon_from_file_utf8) IA__gtk_window_set_icon_from_file_utf8 __attribute((visibility("hidden")));
 #define gtk_window_set_icon_from_file_utf8 IA__gtk_window_set_icon_from_file_utf8

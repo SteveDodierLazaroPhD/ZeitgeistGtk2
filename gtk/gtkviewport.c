@@ -126,7 +126,7 @@ gtk_viewport_class_init (GtkViewportClass *class)
 						      GTK_PARAM_READWRITE));
 
   widget_class->set_scroll_adjustments_signal =
-    g_signal_new (I_("set_scroll_adjustments"),
+    g_signal_new (I_("set-scroll-adjustments"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkViewportClass, set_scroll_adjustments),
@@ -442,7 +442,7 @@ viewport_set_adjustment (GtkViewport    *viewport,
   else
     viewport_set_vadjustment_values (viewport, &value_changed);
 
-  g_signal_connect (adjustment, "value_changed",
+  g_signal_connect (adjustment, "value-changed",
 		    G_CALLBACK (gtk_viewport_adjustment_value_changed),
 		    viewport);
 
@@ -637,8 +637,7 @@ gtk_viewport_unrealize (GtkWidget *widget)
   gdk_window_destroy (viewport->bin_window);
   viewport->bin_window = NULL;
 
-  if (GTK_WIDGET_CLASS (gtk_viewport_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_viewport_parent_class)->unrealize) (widget);
+  GTK_WIDGET_CLASS (gtk_viewport_parent_class)->unrealize (widget);
 }
 
 static void
@@ -674,8 +673,8 @@ gtk_viewport_expose (GtkWidget      *widget,
 			     GTK_STATE_NORMAL, GTK_SHADOW_NONE,
 			     &event->area, widget, "viewportbin",
 			     0, 0, -1, -1);
-	  
-	  (* GTK_WIDGET_CLASS (gtk_viewport_parent_class)->expose_event) (widget, event);
+
+	  GTK_WIDGET_CLASS (gtk_viewport_parent_class)->expose_event (widget, event);
 	}
     }
 

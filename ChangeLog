@@ -1,4 +1,676 @@
+2008-08-18  Matthias Clasen  <mclasen@redhat.com>
+
+	* ==== Released 2.13.7 ===
+
+2008-08-19  Mathias Hasselmann  <mathias@openismus.com>
+
+	Bug 541600 – GtkCalendar segfault for certain values of detail-with-chars
+
+	* gtk/gtkcalendar.c (gtk_calendar_class_init()): Limit the "year"
+	  property to G_MAXINT >> 9, instead of G_MAXINT >> 8: year_to_days()
+	  multiplies the year property with 365 and returns the result as
+	  glong. Therefore ceil(log(365, 2)) = 9 bits must be available,
+	  not just 8 bits.
+
+2008-08-18  Björn Lindqvist  <bjourne@gmail.com>
+
+	Bug 541315 – Segfault when selecting a GtkMenuItem with submenu
+	and no parent
+
+	* gtk/gtkmenuitem.c (gtk_menu_item_real_popup_submenu): Ensure
+	that the menu item has a parent before popping it up.
+
+2008-08-18  Johan Dahlin  <johan@gnome.org>
+
+	Bug 548196 – gtk-builder-convert doesn't properly convert GtkTextView
+
+	* gtk/gtk-builder-convert: Rename the text property to buffer.
+
+2008-08-16  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtksizegroup.c: Use g_quark_from_static_string() where possible.
+
+2008-08-16  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2008-08-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* gdk/gdkwindow.c: Fix small issues in the documentation of
+	gdk_window_remove_redirection and gdk_window_redirect_to_drawable.
+
+2008-08-15  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkdrawable-quartz.c (gdk_quartz_draw_drawable): Some
+	aftermath of the fix of bug #543868. Clip and flip to the source,
+	not the destination. Don't save/restore the gstate, it's already
+	done when getting/releasing the context.
+
+2008-08-15  Richard Hult  <richard@imendio.com>
+
+	* gtk/gtkclipboard-quartz.c (gtk_clipboard_wait_is_uris_available):
+	Add another missing symbol.
+
+2008-08-15  Behdad Esfahbod  <behdad@gnome.org>
+
+	Bug 547680 – fontconfig monitoring can crash apps
+
+	* gtk/gtksettings.c (settings_update_fontconfig): Clear pango cache
+	before recreating fontconfig config.
+
+2008-08-15  Sven Herzberg  <sven@imendio.com>
+
+	Use the g_test_*() API for this test
+	reviewed by: Richard Hult
+
+	* gdk/tests/check-gdk-cairo.c: use the g_test_*() API to permit adding
+	new tests
+
+2008-08-15  Sven Herzberg  <sven@imendio.com>
+
+	Prepare for using the g_test_*() API
+	reviewed by: Richard Hult
+
+	* gdk/tests/check-gdk-cairo.c: use assertions instead of returning an
+	error code
+
+2008-08-15  Claudio Saavedra  <csaavedra@igalia.com>
+
+	Bug 547944 – Self-reference in gtk_page_setup_load_file's docs
+
+	* gtk/gtkpagesetup.c: Fix the reference in gtk_page_setup_load_file()
+	documentation. Pointed out by Torsten Schoenfeld.
+
+2008-08-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 547655 – gio_can_sniff configure test can fail if not installed
+	with prefix {/usr,/usr/local} and XDG_DATA_DIRS env not set
+
+	* README.in: Add a note about shared-mime-info and XDG_DATA_DIRS.
+
+2008-08-15  Christian Dywan  <christian@imendio.com>
+
+	Bug 547846 – gtktestutils functions lack Since: tags
+
+	* gtk/gtktestutils.c: Add missing Since tags
+
+2008-08-15  Christian Dywan  <christian@imendio.com>
+
+        Bug 547775 – Documentation of gtk-button-images is not correct
+
+	* gtk/gtkbutton.c (gtk_button_class_init): Improve documentation
+        of "gtk-button-images" setting
+
+2008-08-13  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 547673 – Accessors for GtkFileSelection.font_entry and
+	font_style_entry
+
+	* gtk/gtk.symbols:
+	* gtk/gtkfontsel.[hc]: Don't add getters for widgets that are not
+	actually part of the font selection dialog in standard builds.
+	Pointed out by Torsten Schoenfeld
+
+2008-08-13  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 547516 – Add comments for translators in gtkprintbackendcups.c
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Add translator
+	hints. Patch by Leonardo Ferreira Fontenelle
+
+2008-08-13  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmarshalers.list: get rid of the deprecated aliases NONE
+	and BOOL.
+
+	* gtk/gtkdialog.c
+	* gtk/gtkentrycompletion.c
+	* gtk/gtkmenuitem.c
+	* gtk/gtkoldeditable.c
+	* gtk/gtkrange.c
+	* gtk/gtktreeview.c
+	* gtk/gtkwidget.c: changed accordingly.
+
+2008-08-13 Erwann Chenede - <erwann.chenede@sun.com>
+
+	Bug 547456 - gdk/x11/gdkscreen-x11.c : init_solaris_xinerama 
+	doesn't compile on Solaris
+
+	* gdk/x11/gdkscreen-x11.c: make init_solaris_xinerama () compile 
+	when HAVE_SOLARIS_XINERAMA is defined.
+
+2008-08-13  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkstock.c (gtk_stock_lookup): cast the return value of
+	g_dgettext() to fix warning about discarded qualifier.
+
+2008-08-12  Paolo Borelli  <pborelli@katamail.com>
+
+	* gtk/gtkclipboard.c (gtk_clipboard_store):
+	use canonical signal name.
+
+2008-08-12  Paolo Borelli  <pborelli@katamail.com>
+
+	Bug 526234 - make shift+ctrl+del delete till the end of line
+
+	* gtk/gtktextview.c: add shift+ctrl+del and shift+ctrl+backspace
+	keyboard shortcuts to delete to the end/start of the current line.
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtklinkbutton.c (set_link_color): bail out if there is no
+	label to set the color on.
+
+	(gtk_link_button_add): call set_link_color() so the label gets
+	the right color no matter how the link button is created.
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkassistant.c: remove unused variable and fix formatting of
+	some function headers.
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* configure.in: define -DGDK_PIXBUF_DISABLE_DEPRECATED in the
+	global CFLAGS.
+
+	* gdk-pixbuf/Makefile.am: make the contents gdk-pixbuf-marshal.h
+	visible for GDK_PIXBUF_COMPILATION.
+
+	* contrib/gdk-pixbuf-xlib/Makefile.am
+	* demos/Makefile.am
+	* demos/gtk-demo/Makefile.am
+	* gdk-pixbuf/pixops/Makefile.am
+	* gdk/Makefile.am
+	* gdk/x11/Makefile.am
+	* gtk/Makefile.am
+	* gtk/tests/Makefile.am
+	* gtk/theme-bits/Makefile.am
+	* modules/engines/ms-windows/Makefile.am
+	* modules/engines/pixbuf/Makefile.am
+	* modules/input/Makefile.am
+	* perf/Makefile.am
+	* tests/Makefile.am: remove -DDGDK_PIXBUF_DISABLE_DEPRECATED here.
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkstatusicon.c (gtk_status_icon_get_gicon): use
+	g_return_val_if_fail() now that the function has a return value.
+
+2008-08-12  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkaccellabel.c
+	* gtk/gtkaction.c
+	* gtk/gtkclist.c
+	* gtk/gtkcolorbutton.c
+	* gtk/gtkctree.c
+	* gtk/gtkdialog.c
+	* gtk/gtkdnd-quartz.c
+	* gtk/gtkdnd.c
+	* gtk/gtkentry.c
+	* gtk/gtkfilechooserdefault.c
+	* gtk/gtkfilesel.c
+	* gtk/gtkgamma.c
+	* gtk/gtkiconview.c
+	* gtk/gtkkeyhash.c
+	* gtk/gtklabel.c
+	* gtk/gtkmenu.c
+	* gtk/gtkmenubar.c
+	* gtk/gtkpaned.c
+	* gtk/gtkrecentchooserdialog.c
+	* gtk/gtkrecentchooserutils.c
+	* gtk/gtkselection.c
+	* gtk/gtksizegroup.c
+	* gtk/gtktextbtree.c
+	* gtk/gtktextbuffer.c
+	* gtk/gtktextview.c
+	* gtk/gtktoolbar.c
+	* gtk/gtktreemodel.c
+	* gtk/gtkuimanager.c
+	* gtk/gtkwindow-decorate.c
+	* gtk/gtkwindow.c: use canonical signal names in some more places
+	that I missed earlier. Also changed this in the documentation and
+	comments.
+
+2008-08-12  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtknotebook.c
+	* gtk/gtkradiotoolbutton.c: property nick and blurb should be
+	marked with P_(), not _().
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* examples/gtkdial/gtkdial.c
+	* gdk/gdkapplaunchcontext.c
+	* gdk/gdkpango.c
+	* gtk/gtkcellrendererpixbuf.c
+	* gtk/gtkcellrenderertext.c
+	* gtk/gtkcellview.c
+	* gtk/gtkcombobox.c
+	* gtk/gtkfontsel.c
+	* gtk/gtkinvisible.c
+	* gtk/gtkliststore.c
+	* gtk/gtktexttag.c
+	* gtk/gtktexttagtable.c: remove dereferencing from some function
+	pointers i missed before.
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkaccellabel.c
+	* gtk/gtkcalendar.c
+	* gtk/gtkclist.c
+	* gtk/gtkentry.c
+	* gtk/gtkeventbox.c
+	* gtk/gtkfilechooserbutton.c
+	* gtk/gtkfilechooserdefault.c
+	* gtk/gtkhandlebox.c
+	* gtk/gtkhsv.c
+	* gtk/gtkiconview.c
+	* gtk/gtkimage.c
+	* gtk/gtklayout.c
+	* gtk/gtklistitem.c
+	* gtk/gtkmenuitem.c
+	* gtk/gtkmessagedialog.c
+	* gtk/gtknotebook.c
+	* gtk/gtkpaned.c
+	* gtk/gtkpathbar.c
+	* gtk/gtkplug.c
+	* gtk/gtkprintunixdialog.c
+	* gtk/gtkrange.c
+	* gtk/gtkrecentchooserdefault.c
+	* gtk/gtkruler.c
+	* gtk/gtksocket.c
+	* gtk/gtktext.c
+	* gtk/gtktextview.c
+	* gtk/gtktoolbar.c
+	* gtk/gtktreeitem.c
+	* gtk/gtktreeview.c
+	* gtk/gtkviewport.c
+	* gtk/gtkwin32embedwidget.c: chain up unconditionally in
+	realize(), unrealize(), map(), unmap(), style_set(),
+	key_press_event() and size_request()
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwidget.c: change names of default implementations of
+	our own signals to consistently contain "real":
+
+	gtk_widget_style_set -> gtk_widget_real_style_set
+	gtk_widget_direction_changed -> gtk_widget_real_direction_changed
+
+2008-08-12  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/*.c: consistently chain up using
+	GTK_FOO_CLASS(parent_class)->bar(instance) instead of
+	(*GTK_FOO_CLASS(parent_class))->bar(instance).
+
+2008-08-12  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 546730 – gtk_status_icon_get_gicon() should use a return instead
+	of an ouput parameter
+
+	* gtk/gtkstatusicon.[hc]: Change gtk_status_icon_get_gicon to
+	return the GIcon directly.
+	Complaint by Murray Cumming
+
+2008-08-11  Michael Natterer  <mitch@imendio.com>
+
+	Bug 546754 – 2.13.6 update create rendering issue in the evolution
+	composer
+
+	* gtk/gtkadjustment.c: instead of CLAMP(), use
+
+	value = MIN (value, upper - page_size);
+	value = MAX (value, lower);
+
+	so we don't end up below lower if upper - page_size is smaller
+	than lower.
+
+2008-08-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 546616 – CUPS print backend uses 1.2 API without guards
+
+	* modules/printbackends/cups/gtkcupsutils.[hc]: Make use
+	of cups 1.2 api dependent on the HAVE_CUPS_1_2 define.
+	Patch by Sven Herzberg and Richard Hult
+
+2008-08-11  Michael Natterer  <mitch@imendio.com>
+
+	Bug 547270 – Make GtkHSV public
+
+	* gtk/Makefile.am
+	* gtk/gtk.h: install gtkhsv.h as public header (its symbols were
+	always public anyway).
+
+	* gtk/gtkhsv.h: add single-include guards, add class struct padding,
+	seal the instance member, cleanup.
+
+	* gtk/gtkhsv.c: center the widget in its allocation,
+	add "Since: 2.14", cleanup.
+
+2008-08-11  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* gtk/gtkcalendar.h: Fix the Since: tag of GtkCalendarDetailFunc
+	to correctly state 2.14, not 2.16.
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* demos/gtk-demo/changedisplay.c
+	* demos/gtk-demo/clipboard.c
+	* demos/gtk-demo/drawingarea.c
+	* demos/gtk-demo/iconview.c
+	* demos/gtk-demo/images.c
+	* demos/gtk-demo/pixbufs.c: use canonical signal names in the demos.
+
+2008-08-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 547211 – Duplicated mnemonic
+
+	* gtk/gtkmountoperation.c: Change mnemonics around in 
+	the password dialog to avoid a conflict.
+	Reported by Gil Forcada
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gdk-pixbuf/gdk-pixbuf-loader.c: use canonical signal names.
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* examples/*: updated the (quite outdated) examples to use
+	canonical signal names as well. Removed some unneeded casts and
+	trailing whitespace while I was on it...
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* modules/input/gtkimcontextime.c
+	* modules/input/gtkimcontextmultipress.c
+	* modules/input/gtkimcontextxim.c: use canonical signal names.
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkdnd-quartz.c
+	* gtk/gtkdnd.c
+	* gtk/gtkentry.c
+	* gtk/gtkfilesel.c
+	* gtk/gtkimcontextsimple.c
+	* gtk/gtkimmulticontext.c
+	* gtk/gtkoptionmenu.c
+	* gtk/gtkplug.c
+	* gtk/gtkrecentchooserdefault.c
+	* gtk/gtkscrolledwindow.c
+	* gtk/gtksocket-x11.c: use canonical signal names in some more
+	places that I missed earlier.
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkaccelgroup.c
+	* gtk/gtkactiongroup.c
+	* gtk/gtkcalendar.c
+	* gtk/gtkcelleditable.c
+	* gtk/gtkclipboard-quartz.c
+	* gtk/gtkclipboard.c
+	* gtk/gtkcolorbutton.c
+	* gtk/gtkcolorsel.c
+	* gtk/gtkcontainer.c
+	* gtk/gtkcurve.c: use canonical signal names.
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkentry.c
+	* gtk/gtkentrycompletion.c
+	* gtk/gtkhandlebox.c
+	* gtk/gtkiconview.c
+	* gtk/gtkimcontext.c
+	* gtk/gtkinputdialog.c
+	* gtk/gtktreeview.c: use canonical signal names.
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtklabel.c
+	* gtk/gtklayout.c
+	* gtk/gtklist.c
+	* gtk/gtklistitem.c: use canonical signal names.
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkmenu.c
+	* gtk/gtkmenuitem.c
+	* gtk/gtkmenushell.c
+	* gtk/gtknotebook.c
+	* gtk/gtkoldeditable.c
+	* gtk/gtkpaned.c: use canonical signal names.
+
+2008-08-11  Michael Natterer  <mitch@imendio.com>
+
+	* demos/gtk-demo/textscroll.c (create_text_view): don't use the
+	deprecated gtk_box_pack_start_defaults().
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkaboutdialog.c
+	* gtk/gtkcellrendereraccel.c
+	* gtk/gtkcellrenderercombo.c
+	* gtk/gtkcellrendererspin.c
+	* gtk/gtkcellrenderertext.c
+	* gtk/gtkclipboard.c
+	* gtk/gtkcolorsel.c
+	* gtk/gtkcombo.c
+	* gtk/gtkcombobox.c
+	* gtk/gtkdnd-quartz.c
+	* gtk/gtkdnd.c
+	* gtk/gtkentry.c
+	* gtk/gtkentrycompletion.c
+	* gtk/gtkfilechooserbutton.c
+	* gtk/gtkfilechooserdefault.c
+	* gtk/gtkfilechooserentry.c
+	* gtk/gtkfontsel.c
+	* gtk/gtkinputdialog.c
+	* gtk/gtkmenutoolbutton.c
+	* gtk/gtkpathbar.c
+	* gtk/gtktooltip.c: use canonical signal names in g_signal_connect().
+
+2008-08-11  Sven Neumann  <sven@gimp.org>
+
+	* gdk/gdkkeys.c
+	* gdk/gdkscreen.c
+	* gdk/gdkdisplaymanager.c: use canonical signal names.
+
+2008-08-10  Richard Hult  <richard@imendio.com>
+
+	* gtk/gtkclipboard-quartz.c: (gtk_clipboard_wait_for_uris),
+	(gtk_clipboard_request_uris): Implement missing functions.
+
+2008-08-09  Sven Herzberg  <sven@imendio.com>
+
+	Bug 544863 – gtkquartz.h not included in released 2.13.5 package
+
+	* gtk/Makefile.am: always add gtkquartz.h to EXTRA_DIST
+
+2008-08-08  Cody Russell  <bratsche@gnome.org>
+
+	Bug 547027 – menus are broken
+
+	* gtk/gtkmenushell.c
+	* gtk/gtkmenu.c: In enter/leave notify events, check that the crossing
+	mode is not GTK_GRAB, GTK_UNGRAB, or STATE_CHANGED.  Fixes regressions
+	in menus caused by bug #56070.
+
+2008-08-09  Sven Herzberg  <sven@imendio.com>
+
+	Get the gdk+cairo test to pass distcheck, too
+
+	* gdk/tests/Makefile.am: set GDK_PIXBUF_MODULE_FILE so the test can
+	pick up the one created at build time
+	* gdk/tests/check-gdk-cairo.c (main): delete the output files after a
+	successful test run
+
+2008-08-08  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkscale.c
+	* gtk/gtkscrolledwindow.c
+	* gtk/gtksocket.c
+	* gtk/gtkspinbutton.c
+	* gtk/gtkstatusbar.c
+	* gtk/gtkstatusicon.c: use canonical signal names.
+
+2008-08-08  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtktext.c
+	* gtk/gtktextbuffer.c
+	* gtk/gtktextlayout.c
+	* gtk/gtktexttagtable.c
+	* gtk/gtktextview.c
+	* gtk/gtktipsquery.c
+	* gtk/gtktoolbar.c
+	* gtk/gtktoolitem.c
+	* gtk/gtktreeitem.c
+	* gtk/gtktreemodelfilter.c
+	* gtk/gtktreemodelsort.c
+	* gtk/gtktreeviewcolumn.c: use canonical signal names.
+
+2008-08-08  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtktree.c
+	* gtk/gtktreemodel.c
+	* gtk/gtktreesortable.c
+	* gtk/gtktreeview.c
+	* gtk/gtkuimanager.c
+	* gtk/gtkviewport.c: use canonical signal names.
+
+2008-08-08  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkwidget.c:
+	* gtk/gtkwindow.c: use canonical signal names.
+
+2008-08-08  Sven Neumann  <sven@gimp.org>
+
+	* gtk/gtkadjustment.c
+	* gtk/gtkclist.c
+	* gtk/gtkcolorsel.c
+	* gtk/gtkiconview.c
+	* gtk/gtklayout.c
+	* gtk/gtkprogress.c
+	* gtk/gtkrange.c
+	* gtk/gtkspinbutton.c
+	* gtk/gtktext.c
+	* gtk/gtktextview.c
+	* gtk/gtktreeview.c
+	* gtk/gtkviewport.c: use the canonical signal name "value-changed"
+	instead of "value_changed".
+
+2008-08-08  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtk.symbols
+	* gtk/makegtkalias.pl
+	* gtk/gtkaccelmap.c
+	* gtk/gtkfilechooser.c
+	* gtk/gtkfilesel.c
+	* gtk/gtkiconfactory.c
+	* gtk/gtkicontheme.c
+	* gtk/gtkimage.c
+	* gtk/gtkrc.c
+	* gtk/gtkuimanager.c
+	* gtk/gtkwindow.c: No need for the DLL ABI backward compatibility
+	functions on Win64.
+
+2008-08-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Its g_content_type_from_mime_type, not 
+	g_content_type_for_mime_type. Noticed by Roger Brown
+
+2008-08-07 16:19:16  Tim Janik  <timj@imendio.com>
+
+	* gdk/gdkrgb.c (gdk_rgb_select_conv): use g_error() instead of a
+	combination of g_warning+exit to avoid misleading the user.
+
+2008-08-07  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkactiongroup.c
+	* gtk/gtkcellrendererspin.c
+	* gtk/gtkfilechooserbutton.c
+	* gtk/gtktoolitem.c: chain up unconditionally in finalize().
+
+2008-08-07  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkclist.c
+	* gtk/gtkcontainer.c
+	* gtk/gtkfilechooserbutton.c
+	* gtk/gtkgamma.c
+	* gtk/gtkmenutoolbutton.c
+	* gtk/gtkoptionmenu.c
+	* gtk/gtkradiobutton.c
+	* gtk/gtkradiomenuitem.c
+	* gtk/gtktipsquery.c
+	* gtk/gtktree.c
+	* gtk/gtktreeview.c: chain up unconditionally in destroy().
+
+	* gtk/gtkhandlebox.c: remove empty destroy() implementation.
+
+2008-08-07  Michael Natterer  <mitch@imendio.com>
+
+	Bug 546756 – gnome-panel crashed with SIGSEGV in
+	g_type_check_instance_cast()
+
+	* gtk/gtkimagemenuitem.c: add GtkObject::destroy() implementation
+	and remove the image now that it's an internal child and isn't
+	destroyed by gtk_container_destroy() any longer. Thanks to tml for
+	helping bisecting this down.
+
+2008-08-07  Sven Neumann  <sven@gimp.org>
+
+	Bug 546771 - Add writable property "visited" to GtkLinkButton
+
+	* gtk/gtk.symbols
+	* gtk/gtklinkbutton.[ch]: expose the 'visited' state as a
+	read-write property with getters and setters. Also move the nick
+	and blurb of the "uri" property to the proper translation domain.
+
+2008-08-07  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkicontheme.c (apply_emblems): move variables to local
+	scopes, fix indentation and silence bogus warning about using
+	uninitialized variables.
+
+2008-08-07  Richard Hult  <richard@imendio.com>
+
+	Bug 535573 – Deadlock in gdkeventloop-quartz.c:poll_func()
+
+	* gdk/quartz/gdkeventloop-quartz.c: (gdk_event_prepare),
+	(select_thread_func), (poll_func): Patch by Yevgen Muntyan, fixes
+	deadlock and missing events.
+
+2008-08-07  Richard Hult  <richard@imendio.com>
+
+	* gdk/quartz/gdkscreen-quartz.c: (gdk_screen_get_monitor_plug_name)
+	(gdk_screen_get_monitor_height_mm, gdk_screen_get_monitor_width_mm):
+	Implement those, fixes loading python bindings.
+
+2008-08-07  Emmanuele Bassi  <ebassi@gnome.org>
+
+	Bug 545031 – list of recently used files is created world-readable
+
+	* gtk/gtkrecentmanager.c:
+	(gtk_recent_manager_real_changed): Set the recently-used.xbel
+	file to 0600. (Guido Berhoerster)
+
+2008-08-06  Michael Natterer  <mitch@imendio.com>
+
+	* modules/printbackends/cups/gtkcupsutils.c
+	(gtk_cups_connection_test_free): remove return value, this
+	function returns void.
+
+2008-08-06  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkcombobox.c
+	* gtk/gtkiconview.c
+	* gtk/gtkrange.c
+	* gtk/gtkscrolledwindow.c
+	* gtk/gtktreeview.c: remove CLAMPing from values passed to
+	gtk_adjustment_set_value() since it does it right now.
+
 2008-08-05  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.13.6 ===
 

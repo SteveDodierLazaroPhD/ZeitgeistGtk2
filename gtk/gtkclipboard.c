@@ -186,7 +186,7 @@ gtk_clipboard_class_init (GtkClipboardClass *class)
    * Since: 2.6
    */ 
   clipboard_signals[OWNER_CHANGE] =
-    g_signal_new (I_("owner_change"),
+    g_signal_new (I_("owner-change"),
 		  G_TYPE_FROM_CLASS (gobject_class),
 		  G_SIGNAL_RUN_FIRST,
 		  G_STRUCT_OFFSET (GtkClipboardClass, owner_change),
@@ -361,7 +361,7 @@ make_clipboard_widget (GdkDisplay *display,
 {
   GtkWidget *widget = gtk_invisible_new_for_screen (gdk_display_get_default_screen (display));
 
-  g_signal_connect (widget, "selection_received",
+  g_signal_connect (widget, "selection-received",
 		    G_CALLBACK (selection_received), NULL);
 
   if (provider)
@@ -369,9 +369,9 @@ make_clipboard_widget (GdkDisplay *display,
       /* We need this for gdk_x11_get_server_time() */
       gtk_widget_add_events (widget, GDK_PROPERTY_CHANGE_MASK);
       
-      g_signal_connect (widget, "selection_get",
+      g_signal_connect (widget, "selection-get",
 			G_CALLBACK (selection_get_cb), NULL);
-      g_signal_connect (widget, "selection_clear_event",
+      g_signal_connect (widget, "selection-clear-event",
 			G_CALLBACK (selection_clear_event_cb), NULL);
     }
 
@@ -2011,9 +2011,11 @@ gtk_clipboard_store (GtkClipboard *clipboard)
   g_object_ref (clipboard);
 
   clipboard_widget = get_clipboard_widget (clipboard->display);
-  clipboard->notify_signal_id = g_signal_connect (clipboard_widget, "selection_notify_event",
-						  G_CALLBACK (gtk_clipboard_selection_notify), clipboard);
-  
+  clipboard->notify_signal_id = g_signal_connect (clipboard_widget,
+						  "selection-notify-event",
+						  G_CALLBACK (gtk_clipboard_selection_notify),
+						  clipboard);
+
   gdk_display_store_clipboard (clipboard->display,
 			       clipboard_widget->window,
 			       clipboard_get_timestamp (clipboard),

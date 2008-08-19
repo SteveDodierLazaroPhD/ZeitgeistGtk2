@@ -163,7 +163,7 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
   widget_class->activate_signal = menu_item_signals[ACTIVATE];
 
   menu_item_signals[ACTIVATE_ITEM] =
-    g_signal_new (I_("activate_item"),
+    g_signal_new (I_("activate-item"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_FIRST,
 		  G_STRUCT_OFFSET (GtkMenuItemClass, activate_item),
@@ -172,7 +172,7 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
 		  G_TYPE_NONE, 0);
 
   menu_item_signals[TOGGLE_SIZE_REQUEST] =
-    g_signal_new (I_("toggle_size_request"),
+    g_signal_new (I_("toggle-size-request"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_FIRST,
 		  G_STRUCT_OFFSET (GtkMenuItemClass, toggle_size_request),
@@ -182,12 +182,12 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
 		  G_TYPE_POINTER);
 
   menu_item_signals[TOGGLE_SIZE_ALLOCATE] =
-    g_signal_new (I_("toggle_size_allocate"),
+    g_signal_new (I_("toggle-size-allocate"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_FIRST,
  		  G_STRUCT_OFFSET (GtkMenuItemClass, toggle_size_allocate),
 		  NULL, NULL,
-		  _gtk_marshal_NONE__INT,
+		  _gtk_marshal_VOID__INT,
 		  G_TYPE_NONE, 1,
 		  G_TYPE_INT);
 
@@ -852,9 +852,8 @@ gtk_menu_item_unrealize (GtkWidget *widget)
   gdk_window_set_user_data (menu_item->event_window, NULL);
   gdk_window_destroy (menu_item->event_window);
   menu_item->event_window = NULL;
-  
-  if (GTK_WIDGET_CLASS (gtk_menu_item_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_menu_item_parent_class)->unrealize) (widget);
+
+  GTK_WIDGET_CLASS (gtk_menu_item_parent_class)->unrealize (widget);
 }
 
 static void
@@ -1013,7 +1012,7 @@ gtk_menu_item_expose (GtkWidget      *widget,
     {
       gtk_menu_item_paint (widget, &event->area);
 
-      (* GTK_WIDGET_CLASS (gtk_menu_item_parent_class)->expose_event) (widget, event);
+      GTK_WIDGET_CLASS (gtk_menu_item_parent_class)->expose_event (widget, event);
     }
 
   return FALSE;
@@ -1138,7 +1137,7 @@ gtk_menu_item_real_popup_submenu (GtkWidget *widget,
 {
   GtkMenuItem *menu_item = GTK_MENU_ITEM (widget);
 
-  if (GTK_WIDGET_IS_SENSITIVE (menu_item->submenu))
+  if (GTK_WIDGET_IS_SENSITIVE (menu_item->submenu) && widget->parent)
     {
       gboolean take_focus;
       GtkMenuPositionFunc menu_position_func;

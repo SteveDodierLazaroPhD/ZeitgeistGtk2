@@ -479,7 +479,7 @@ gtk_menu_class_init (GtkMenuClass *class)
   menu_shell_class->move_current = gtk_menu_move_current;
 
   menu_signals[MOVE_SCROLL] =
-    g_signal_new_class_handler (I_("move_scroll"),
+    g_signal_new_class_handler (I_("move-scroll"),
                                 G_OBJECT_CLASS_TYPE (object_class),
                                 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                                 G_CALLBACK (gtk_menu_real_move_scroll),
@@ -668,82 +668,82 @@ gtk_menu_class_init (GtkMenuClass *class)
   binding_set = gtk_binding_set_by_class (class);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Up, 0,
-				I_("move_current"), 1,
+				I_("move-current"), 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_PREV);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Up, 0,
-				"move_current", 1,
+				"move-current", 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_PREV);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Down, 0,
-				"move_current", 1,
+				"move-current", 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_NEXT);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Down, 0,
-				"move_current", 1,
+				"move-current", 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_NEXT);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Left, 0,
-				"move_current", 1,
+				"move-current", 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_PARENT);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Left, 0,
-				"move_current", 1,
+				"move-current", 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_PARENT);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Right, 0,
-				"move_current", 1,
+				"move-current", 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_CHILD);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Right, 0,
-				"move_current", 1,
+				"move-current", 1,
 				GTK_TYPE_MENU_DIRECTION_TYPE,
 				GTK_MENU_DIR_CHILD);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Home, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_START);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Home, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_START);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_End, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_END);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_End, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_END);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Page_Up, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_PAGE_UP);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Page_Up, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_PAGE_UP);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_Page_Down, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_PAGE_DOWN);
   gtk_binding_entry_add_signal (binding_set,
 				GDK_KP_Page_Down, 0,
-				"move_scroll", 1,
+				"move-scroll", 1,
 				GTK_TYPE_SCROLL_TYPE,
 				GTK_SCROLL_PAGE_DOWN);
 
@@ -989,7 +989,7 @@ gtk_menu_init (GtkMenu *menu)
 						   "child", menu,
 						   NULL),
 				     "signal::event", gtk_menu_window_event, menu,
-				     "signal::size_request", gtk_menu_window_size_request, menu,
+				     "signal::size-request", gtk_menu_window_size_request, menu,
 				     "signal::destroy", gtk_widget_destroyed, &menu->toplevel,
 				     NULL);
   gtk_window_set_resizable (GTK_WINDOW (menu->toplevel), FALSE);
@@ -1146,7 +1146,7 @@ gtk_menu_attach_to_widget (GtkMenu	       *menu,
   data = g_slice_new (GtkMenuAttachData);
   data->attach_widget = attach_widget;
   
-  g_signal_connect (attach_widget, "screen_changed",
+  g_signal_connect (attach_widget, "screen-changed",
 		    G_CALLBACK (attach_widget_screen_changed), menu);
   attach_widget_screen_changed (attach_widget, NULL, menu);
   
@@ -1990,7 +1990,7 @@ gtk_menu_set_tearoff_state (GtkMenu  *menu,
 						    height/2,
 						    height));
 	      g_object_connect (menu->tearoff_adjustment,
-				"signal::value_changed", gtk_menu_scrollbar_changed, menu,
+				"signal::value-changed", gtk_menu_scrollbar_changed, menu,
 				NULL);
 	      menu->tearoff_scrollbar = gtk_vscrollbar_new (menu->tearoff_adjustment);
 
@@ -2317,7 +2317,7 @@ gtk_menu_unrealize (GtkWidget *widget)
   gdk_window_destroy (menu->bin_window);
   menu->bin_window = NULL;
 
-  (* GTK_WIDGET_CLASS (gtk_menu_parent_class)->unrealize) (widget);
+  GTK_WIDGET_CLASS (gtk_menu_parent_class)->unrealize (widget);
 }
 
 static void
@@ -2722,8 +2722,8 @@ gtk_menu_expose (GtkWidget	*widget,
   if (GTK_WIDGET_DRAWABLE (widget))
     {
       gtk_menu_paint (widget, event);
-      
-      (* GTK_WIDGET_CLASS (gtk_menu_parent_class)->expose_event) (widget, event);
+
+      GTK_WIDGET_CLASS (gtk_menu_parent_class)->expose_event (widget, event);
     }
   
   return FALSE;
@@ -3623,6 +3623,11 @@ gtk_menu_enter_notify (GtkWidget        *widget,
   GtkWidget *menu_item;
   gboolean   touchscreen_mode;
 
+  if (event->mode == GDK_CROSSING_GTK_GRAB ||
+      event->mode == GDK_CROSSING_GTK_UNGRAB ||
+      event->mode == GDK_CROSSING_STATE_CHANGED)
+    return TRUE;
+
   g_object_get (gtk_widget_get_settings (widget),
                 "gtk-touchscreen-mode", &touchscreen_mode,
                 NULL);
@@ -3693,6 +3698,11 @@ gtk_menu_leave_notify (GtkWidget        *widget,
   GtkMenu *menu;
   GtkMenuItem *menu_item;
   GtkWidget *event_widget;
+
+  if (event->mode == GDK_CROSSING_GTK_GRAB ||
+      event->mode == GDK_CROSSING_GTK_UNGRAB ||
+      event->mode == GDK_CROSSING_STATE_CHANGED)
+    return TRUE;
 
   menu = GTK_MENU (widget);
   menu_shell = GTK_MENU_SHELL (widget); 

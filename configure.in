@@ -12,7 +12,7 @@ AC_PREREQ(2.54)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [13])
-m4_define([gtk_micro_version], [6])
+m4_define([gtk_micro_version], [7])
 m4_define([gtk_interface_age], [0])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
@@ -583,6 +583,8 @@ if test "x$GLIB_VERSION_MAJOR_MINOR" = "x$GLIB_REQUIRED_VERSION_MAJOR_MINOR"; th
   CFLAGS="-DG_DISABLE_DEPRECATED $CFLAGS"
 fi
 
+CFLAGS="-DGDK_PIXBUF_DISABLE_DEPRECATED $CFLAGS"
+
 
 dnl
 dnl Check for bind_textdomain_codeset, including -lintl if GLib brings it in.
@@ -1052,7 +1054,7 @@ if test x$gio_can_sniff = x; then
     char *content_type;
     char *image_png;
     content_type = g_content_type_guess (NULL, data, data_size, NULL);  
-    image_png = g_content_type_for_mime_type ("image/png");
+    image_png = g_content_type_from_mime_type ("image/png");
     return !!strcmp (content_type, image_png);
   }]])],
     [gio_can_sniff=yes

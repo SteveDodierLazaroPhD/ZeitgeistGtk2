@@ -247,7 +247,7 @@ gtk_layout_set_adjustments (GtkLayout     *layout,
       g_object_ref_sink (layout->hadjustment);
       gtk_layout_set_adjustment_upper (layout->hadjustment, layout->width, FALSE);
       
-      g_signal_connect (layout->hadjustment, "value_changed",
+      g_signal_connect (layout->hadjustment, "value-changed",
 			G_CALLBACK (gtk_layout_adjustment_changed),
 			layout);
       need_adjust = TRUE;
@@ -259,7 +259,7 @@ gtk_layout_set_adjustments (GtkLayout     *layout,
       g_object_ref_sink (layout->vadjustment);
       gtk_layout_set_adjustment_upper (layout->vadjustment, layout->height, FALSE);
       
-      g_signal_connect (layout->vadjustment, "value_changed",
+      g_signal_connect (layout->vadjustment, "value-changed",
 			G_CALLBACK (gtk_layout_adjustment_changed),
 			layout);
       need_adjust = TRUE;
@@ -659,7 +659,7 @@ gtk_layout_class_init (GtkLayoutClass *class)
   class->set_scroll_adjustments = gtk_layout_set_adjustments;
 
   widget_class->set_scroll_adjustments_signal =
-    g_signal_new (I_("set_scroll_adjustments"),
+    g_signal_new (I_("set-scroll-adjustments"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
 		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		  G_STRUCT_OFFSET (GtkLayoutClass, set_scroll_adjustments),
@@ -881,10 +881,10 @@ gtk_layout_realize (GtkWidget *widget)
 }
 
 static void
-gtk_layout_style_set (GtkWidget *widget, GtkStyle *old_style)
+gtk_layout_style_set (GtkWidget *widget,
+                      GtkStyle  *old_style)
 {
-  if (GTK_WIDGET_CLASS (gtk_layout_parent_class)->style_set)
-    (* GTK_WIDGET_CLASS (gtk_layout_parent_class)->style_set) (widget, old_style);
+  GTK_WIDGET_CLASS (gtk_layout_parent_class)->style_set (widget, old_style);
 
   if (GTK_WIDGET_REALIZED (widget))
     {
@@ -926,8 +926,7 @@ gtk_layout_unrealize (GtkWidget *widget)
   gdk_window_destroy (layout->bin_window);
   layout->bin_window = NULL;
 
-  if (GTK_WIDGET_CLASS (gtk_layout_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_layout_parent_class)->unrealize) (widget);
+  GTK_WIDGET_CLASS (gtk_layout_parent_class)->unrealize (widget);
 }
 
 static void     
@@ -1004,8 +1003,8 @@ gtk_layout_expose (GtkWidget      *widget,
 
   if (event->window != layout->bin_window)
     return FALSE;
-  
-  (* GTK_WIDGET_CLASS (gtk_layout_parent_class)->expose_event) (widget, event);
+
+  GTK_WIDGET_CLASS (gtk_layout_parent_class)->expose_event (widget, event);
 
   return FALSE;
 }

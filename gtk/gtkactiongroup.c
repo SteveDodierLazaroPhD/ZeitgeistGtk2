@@ -192,7 +192,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * @action: the action
    * @proxy: the proxy
    *
-   * The connect_proxy signal is emitted after connecting a proxy to 
+   * The ::connect-proxy signal is emitted after connecting a proxy to 
    * an action in the group. Note that the proxy may have been connected 
    * to a different action before.
    *
@@ -207,7 +207,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * Since: 2.4
    */
   action_group_signals[CONNECT_PROXY] =
-    g_signal_new (I_("connect_proxy"),
+    g_signal_new (I_("connect-proxy"),
 		  G_OBJECT_CLASS_TYPE (klass),
 		  0, 0, NULL, NULL,
 		  _gtk_marshal_VOID__OBJECT_OBJECT,
@@ -220,7 +220,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * @action: the action
    * @proxy: the proxy
    *
-   * The disconnect_proxy signal is emitted after disconnecting a proxy 
+   * The ::disconnect-proxy signal is emitted after disconnecting a proxy 
    * from an action in the group. 
    *
    * #GtkUIManager proxies the signal and provides global notification 
@@ -230,7 +230,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * Since: 2.4
    */
   action_group_signals[DISCONNECT_PROXY] =
-    g_signal_new (I_("disconnect_proxy"),
+    g_signal_new (I_("disconnect-proxy"),
 		  G_OBJECT_CLASS_TYPE (klass),
 		  0, 0, NULL, NULL,
 		  _gtk_marshal_VOID__OBJECT_OBJECT,
@@ -242,7 +242,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * @action_group: the group
    * @action: the action
    *
-   * The pre_activate signal is emitted just before the @action in the
+   * The ::pre-activate signal is emitted just before the @action in the
    * @action_group is activated
    *
    * This is intended for #GtkUIManager to proxy the signal and provide global
@@ -251,7 +251,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * Since: 2.4
    */
   action_group_signals[PRE_ACTIVATE] =
-    g_signal_new (I_("pre_activate"),
+    g_signal_new (I_("pre-activate"),
 		  G_OBJECT_CLASS_TYPE (klass),
 		  0, 0, NULL, NULL,
 		  _gtk_marshal_VOID__OBJECT,
@@ -263,7 +263,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * @action_group: the group
    * @action: the action
    *
-   * The post_activate signal is emitted just after the @action in the
+   * The ::post-activate signal is emitted just after the @action in the
    * @action_group is activated
    *
    * This is intended for #GtkUIManager to proxy the signal and provide global
@@ -272,7 +272,7 @@ gtk_action_group_class_init (GtkActionGroupClass *klass)
    * Since: 2.4
    */
   action_group_signals[POST_ACTIVATE] =
-    g_signal_new (I_("post_activate"),
+    g_signal_new (I_("post-activate"),
 		  G_OBJECT_CLASS_TYPE (klass),
 		  0, 0, NULL, NULL,
 		  _gtk_marshal_VOID__OBJECT,
@@ -498,8 +498,7 @@ gtk_action_group_finalize (GObject *object)
   if (private->translate_notify)
     private->translate_notify (private->translate_data);
 
-  if (parent_class->finalize)
-    (* parent_class->finalize) (object);
+  parent_class->finalize (object);
 }
 
 static void
@@ -744,8 +743,8 @@ gtk_action_group_get_action (GtkActionGroup *action_group,
   g_return_val_if_fail (GTK_IS_ACTION_GROUP (action_group), NULL);
   g_return_val_if_fail (GTK_ACTION_GROUP_GET_CLASS (action_group)->get_action != NULL, NULL);
 
-  return (* GTK_ACTION_GROUP_GET_CLASS (action_group)->get_action)
-    (action_group, action_name);
+  return GTK_ACTION_GROUP_GET_CLASS (action_group)->get_action (action_group,
+                                                                action_name);
 }
 
 static gboolean
@@ -985,9 +984,9 @@ shared_data_unref (gpointer data)
   shared_data->ref_count--;
   if (shared_data->ref_count == 0)
     {
-      if (shared_data->destroy) 
-	(*shared_data->destroy) (shared_data->data);
-      
+      if (shared_data->destroy)
+	shared_data->destroy (shared_data->data);
+
       g_slice_free (SharedData, shared_data);
     }
 }

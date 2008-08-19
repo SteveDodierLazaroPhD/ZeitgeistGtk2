@@ -124,6 +124,23 @@ enum                <link linkend="GtkFileChooserError">GtkFileChooserError</lin
                                                          <link linkend="GError">GError</link> **error);
 <link linkend="GSList">GSList</link>*             <link linkend="gtk-file-chooser-list-shortcut-folder-uris">gtk_file_chooser_list_shortcut_folder_uris</link>
                                                         (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
+<link linkend="GFile">GFile</link>*              <link linkend="gtk-file-chooser-get-current-folder-file">gtk_file_chooser_get_current_folder_file</link>
+                                                        (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
+<link linkend="GFile">GFile</link>*              <link linkend="gtk-file-chooser-get-file">gtk_file_chooser_get_file</link>           (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
+<link linkend="GSList">GSList</link>*             <link linkend="gtk-file-chooser-get-files">gtk_file_chooser_get_files</link>          (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
+<link linkend="GFile">GFile</link>*              <link linkend="gtk-file-chooser-get-preview-file">gtk_file_chooser_get_preview_file</link>   (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-file-chooser-select-file">gtk_file_chooser_select_file</link>        (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-file-chooser-set-current-folder-file">gtk_file_chooser_set_current_folder_file</link>
+                                                        (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-file-chooser-set-file">gtk_file_chooser_set_file</link>           (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file,
+                                                         <link linkend="GError">GError</link> **error);
+<link linkend="void">void</link>                <link linkend="gtk-file-chooser-unselect-file">gtk_file_chooser_unselect_file</link>      (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file);
 </synopsis>
 </refsynopsisdiv>
 
@@ -1957,6 +1974,212 @@ folders.  Free the returned list with <link linkend="g-slist-free"><function>g_s
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.4
+</para></refsect2>
+<refsect2 id="gtk-file-chooser-get-current-folder-file" role="function" condition="since:2.14">
+<title>gtk_file_chooser_get_current_folder_file ()</title>
+<indexterm zone="gtk-file-chooser-get-current-folder-file" role="2.14"><primary>gtk_file_chooser_get_current_folder_file</primary></indexterm><programlisting><link linkend="GFile">GFile</link>*              gtk_file_chooser_get_current_folder_file
+                                                        (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);</programlisting>
+<para>
+Gets the current folder of <parameter>chooser</parameter> as <link linkend="GFile"><type>GFile</type></link>.
+See <link linkend="gtk-file-chooser-get-current-folder-uri"><function>gtk_file_chooser_get_current_folder_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GFile"><type>GFile</type></link> for the current folder.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-file-chooser-get-file" role="function">
+<title>gtk_file_chooser_get_file ()</title>
+<indexterm zone="gtk-file-chooser-get-file"><primary>gtk_file_chooser_get_file</primary></indexterm><programlisting><link linkend="GFile">GFile</link>*              gtk_file_chooser_get_file           (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);</programlisting>
+<para>
+Gets the <link linkend="GFile"><type>GFile</type></link> for the currently selected file in
+the file selector. If multiple files are selected,
+one of the files will be returned at random.
+</para>
+<para>
+If the file chooser is in folder mode, this function returns the selected
+folder.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a selected <link linkend="GFile"><type>GFile</type></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="gtk-file-chooser-get-files" role="function" condition="since:2.14">
+<title>gtk_file_chooser_get_files ()</title>
+<indexterm zone="gtk-file-chooser-get-files" role="2.14"><primary>gtk_file_chooser_get_files</primary></indexterm><programlisting><link linkend="GSList">GSList</link>*             gtk_file_chooser_get_files          (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);</programlisting>
+<para>
+Lists all the selected files and subfolders in the current folder of <parameter>chooser</parameter>
+as <link linkend="GFile"><type>GFile</type></link>. An internal function, see <link linkend="gtk-file-chooser-get-uris"><function>gtk_file_chooser_get_uris()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="GSList"><type>GSList</type></link> containing a <link linkend="GFile"><type>GFile</type></link> for each selected
+  file and subfolder in the current folder.  Free the returned list
+  with <link linkend="g-slist-free"><function>g_slist_free()</function></link>, and the files with <link linkend="g-object-unref"><function>g_object_unref()</function></link>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-file-chooser-get-preview-file" role="function" condition="since:2.14">
+<title>gtk_file_chooser_get_preview_file ()</title>
+<indexterm zone="gtk-file-chooser-get-preview-file" role="2.14"><primary>gtk_file_chooser_get_preview_file</primary></indexterm><programlisting><link linkend="GFile">GFile</link>*              gtk_file_chooser_get_preview_file   (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);</programlisting>
+<para>
+Gets the <link linkend="GFile"><type>GFile</type></link> that should be previewed in a custom preview
+Internal function, see <link linkend="gtk-file-chooser-get-preview-uri"><function>gtk_file_chooser_get_preview_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GFile"><type>GFile</type></link> for the file to preview, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if no file
+ is selected. Free with <link linkend="g-object-unref"><function>g_object_unref()</function></link>.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-file-chooser-select-file" role="function" condition="since:2.14">
+<title>gtk_file_chooser_select_file ()</title>
+<indexterm zone="gtk-file-chooser-select-file" role="2.14"><primary>gtk_file_chooser_select_file</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_file_chooser_select_file        (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Selects the file referred to by <parameter>file</parameter>. An internal function. See
+<link linkend="gtk-file-chooser-select-uri"><function>_gtk_file_chooser_select_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>file</parameter>&nbsp;:</term>
+<listitem><simpara> the file to select
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> location to store error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if both the folder could be changed and the path was
+selected successfully, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-file-chooser-set-current-folder-file" role="function" condition="since:2.14">
+<title>gtk_file_chooser_set_current_folder_file ()</title>
+<indexterm zone="gtk-file-chooser-set-current-folder-file" role="2.14"><primary>gtk_file_chooser_set_current_folder_file</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_file_chooser_set_current_folder_file
+                                                        (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Sets the current folder for <parameter>chooser</parameter> from a <link linkend="GFile"><type>GFile</type></link>.
+Internal function, see <link linkend="gtk-file-chooser-set-current-folder-uri"><function>gtk_file_chooser_set_current_folder_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>file</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GFile"><type>GFile</type></link> for the new folder
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> location to store error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the folder could be changed successfully, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>
+otherwise.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-file-chooser-set-file" role="function" condition="since:2.14">
+<title>gtk_file_chooser_set_file ()</title>
+<indexterm zone="gtk-file-chooser-set-file" role="2.14"><primary>gtk_file_chooser_set_file</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_file_chooser_set_file           (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file,
+                                                         <link linkend="GError">GError</link> **error);</programlisting>
+<para>
+Sets <parameter>file</parameter> as the current filename for the file chooser, by changing
+to the file's parent folder and actually selecting the file in list.  If
+the <parameter>chooser</parameter> is in <link linkend="GTK-FILE-CHOOSER-ACTION-SAVE:CAPS"><type>GTK_FILE_CHOOSER_ACTION_SAVE</type></link> mode, the file's base name
+will also appear in the dialog's file name entry.
+</para>
+<para>
+If the file name isn't in the current folder of <parameter>chooser</parameter>, then the current
+folder of <parameter>chooser</parameter> will be changed to the folder containing <parameter>filename</parameter>. This
+is equivalent to a sequence of <link linkend="gtk-file-chooser-unselect-all"><function>gtk_file_chooser_unselect_all()</function></link> followed by
+<link linkend="gtk-file-chooser-select-filename"><function>gtk_file_chooser_select_filename()</function></link>.
+</para>
+<para>
+Note that the file must exist, or nothing will be done except
+for the directory change.
+</para>
+<para>
+If you are implementing a <guimenuitem>File/Save As...</guimenuitem> dialog,
+you should use this function if you already have a file name to which the
+user may save; for example, when the user opens an existing file and then
+does <guimenuitem>File/Save As...</guimenuitem> on it.  If you don't have
+a file name already &mdash; for example, if the user just created a new
+file and is saving it for the first time, do not call this function.
+Instead, use something similar to this:
+<informalexample><programlisting>
+if (document_is_new)
+  {
+    /&ast; the user just created a new document &ast;/
+    gtk_file_chooser_set_current_folder_file (chooser, default_file_for_saving);
+    gtk_file_chooser_set_current_name (chooser, "Untitled document");
+  }
+else
+  {
+    /&ast; the user edited an existing document &ast;/
+    gtk_file_chooser_set_file (chooser, existing_file);
+  }
+</programlisting></informalexample></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>file</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="GFile"><type>GFile</type></link> to set as current
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&nbsp;:</term>
+<listitem><simpara> location to store the error, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to ignore errors.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if both the folder could be changed and the file was
+selected successfully, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
+</para></refsect2>
+<refsect2 id="gtk-file-chooser-unselect-file" role="function" condition="since:2.14">
+<title>gtk_file_chooser_unselect_file ()</title>
+<indexterm zone="gtk-file-chooser-unselect-file" role="2.14"><primary>gtk_file_chooser_unselect_file</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_chooser_unselect_file      (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="GFile">GFile</link> *file);</programlisting>
+<para>
+Unselects the file referred to by <parameter>file</parameter>. If the file is not in the current
+directory, does not exist, or is otherwise not currently selected, does nothing.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>file</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GFile"><type>GFile</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.14
 </para></refsect2>
 
 </refsect1>

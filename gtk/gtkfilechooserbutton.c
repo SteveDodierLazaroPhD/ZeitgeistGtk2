@@ -637,9 +637,9 @@ gtk_file_chooser_button_constructor (GType                  type,
   GSList *list;
   char *current_folder;
 
-  object = (*G_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->constructor) (type,
-										  n_params,
-										  params);
+  object = G_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->constructor (type,
+									       n_params,
+									       params);
   button = GTK_FILE_CHOOSER_BUTTON (object);
   priv = button->priv;
 
@@ -674,7 +674,7 @@ gtk_file_chooser_button_constructor (GType                  type,
       g_free (current_folder);
     }
 
-  g_signal_connect (priv->dialog, "delete_event",
+  g_signal_connect (priv->dialog, "delete-event",
 		    G_CALLBACK (dialog_delete_event_cb), object);
   g_signal_connect (priv->dialog, "response",
 		    G_CALLBACK (dialog_response_cb), object);
@@ -883,8 +883,7 @@ gtk_file_chooser_button_finalize (GObject *object)
   if (priv->old_file)
     g_object_unref (priv->old_file);
 
-  if (G_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->finalize != NULL)
-    (*G_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->finalize) (object);
+  G_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->finalize (object);
 }
 
 /* ********************* *
@@ -954,8 +953,7 @@ gtk_file_chooser_button_destroy (GtkObject *object)
       priv->fs = NULL;
     }
 
-  if (GTK_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->destroy != NULL)
-    (*GTK_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->destroy) (object);
+  GTK_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->destroy (object);
 }
 
 
@@ -1050,11 +1048,11 @@ gtk_file_chooser_button_drag_data_received (GtkWidget	     *widget,
   gchar *text;
 
   if (GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->drag_data_received != NULL)
-    (*GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->drag_data_received) (widget,
-										    context,
-										    x, y,
-										    data, type,
-										    drag_time);
+    GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->drag_data_received (widget,
+										 context,
+										 x, y,
+										 data, type,
+										 drag_time);
 
   if (widget == NULL || context == NULL || data == NULL || data->length < 0)
     return;
@@ -1126,7 +1124,7 @@ gtk_file_chooser_button_show (GtkWidget *widget)
   GtkFileChooserButtonPrivate *priv = button->priv;
 
   if (GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->show)
-    (*GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->show) (widget);
+    GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->show (widget);
 
   if (priv->active)
     open_dialog (GTK_FILE_CHOOSER_BUTTON (widget));
@@ -1141,7 +1139,7 @@ gtk_file_chooser_button_hide (GtkWidget *widget)
   gtk_widget_hide (priv->dialog);
 
   if (GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->hide)
-    (*GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->hide) (widget);
+    GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->hide (widget);
 }
 
 static void
@@ -1161,8 +1159,7 @@ gtk_file_chooser_button_map (GtkWidget *widget)
       priv->folder_has_been_set = TRUE;
     }
 
-  if (GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->map)
-    (*GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->map) (widget);
+  GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->map (widget);
 }
 
 static gboolean
@@ -1371,9 +1368,8 @@ static void
 gtk_file_chooser_button_style_set (GtkWidget *widget,
 				   GtkStyle  *old_style)
 {
-  if (GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->style_set)
-    (*GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->style_set) (widget,
-									   old_style);
+  GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->style_set (widget,
+								      old_style);
 
   if (gtk_widget_has_screen (widget))
     change_icon_theme (GTK_FILE_CHOOSER_BUTTON (widget));
@@ -1384,10 +1380,10 @@ gtk_file_chooser_button_screen_changed (GtkWidget *widget,
 					GdkScreen *old_screen)
 {
   if (GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->screen_changed)
-    (*GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->screen_changed) (widget,
-										old_screen);
+    GTK_WIDGET_CLASS (gtk_file_chooser_button_parent_class)->screen_changed (widget,
+									     old_screen);
 
-  change_icon_theme (GTK_FILE_CHOOSER_BUTTON (widget)); 
+  change_icon_theme (GTK_FILE_CHOOSER_BUTTON (widget));
 }
 
 

@@ -152,7 +152,7 @@ gtk_socket_class_init (GtkSocketClass *class)
    * added to the socket. 
    */
   socket_signals[PLUG_ADDED] =
-    g_signal_new (I_("plug_added"),
+    g_signal_new (I_("plug-added"),
 		  G_OBJECT_CLASS_TYPE (class),
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GtkSocketClass, plug_added),
@@ -171,7 +171,7 @@ gtk_socket_class_init (GtkSocketClass *class)
    * Return value: %TRUE to stop other handlers from being invoked.
    */
   socket_signals[PLUG_REMOVED] =
-    g_signal_new (I_("plug_removed"),
+    g_signal_new (I_("plug-removed"),
 		  G_OBJECT_CLASS_TYPE (class),
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GtkSocketClass, plug_removed),
@@ -407,11 +407,10 @@ gtk_socket_unrealize (GtkWidget *widget)
       _gtk_socket_end_embedding (socket);
     }
 
-  if (GTK_WIDGET_CLASS (gtk_socket_parent_class)->unrealize)
-    (* GTK_WIDGET_CLASS (gtk_socket_parent_class)->unrealize) (widget);
+  GTK_WIDGET_CLASS (gtk_socket_parent_class)->unrealize (widget);
 }
-  
-static void 
+
+static void
 gtk_socket_size_request (GtkWidget      *widget,
 			 GtkRequisition *requisition)
 {

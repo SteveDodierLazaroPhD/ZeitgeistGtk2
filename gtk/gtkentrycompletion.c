@@ -193,7 +193,7 @@ gtk_entry_completion_class_init (GtkEntryCompletionClass *klass)
    * Since: 2.6
    */ 
   entry_completion_signals[INSERT_PREFIX] =
-    g_signal_new (I_("insert_prefix"),
+    g_signal_new (I_("insert-prefix"),
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GtkEntryCompletionClass, insert_prefix),
@@ -218,7 +218,7 @@ gtk_entry_completion_class_init (GtkEntryCompletionClass *klass)
    * Since: 2.4
    */ 
   entry_completion_signals[MATCH_SELECTED] =
-    g_signal_new (I_("match_selected"),
+    g_signal_new (I_("match-selected"),
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GtkEntryCompletionClass, match_selected),
@@ -244,7 +244,7 @@ gtk_entry_completion_class_init (GtkEntryCompletionClass *klass)
    */ 
 
   entry_completion_signals[CURSOR_ON_MATCH] =
-    g_signal_new (I_("cursor_on_match"),
+    g_signal_new (I_("cursor-on-match"),
 		  G_TYPE_FROM_CLASS (klass),
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GtkEntryCompletionClass, cursor_on_match),
@@ -264,12 +264,12 @@ gtk_entry_completion_class_init (GtkEntryCompletionClass *klass)
    * Since: 2.4
    */
   entry_completion_signals[ACTION_ACTIVATED] =
-    g_signal_new (I_("action_activated"),
+    g_signal_new (I_("action-activated"),
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GtkEntryCompletionClass, action_activated),
                   NULL, NULL,
-                  _gtk_marshal_NONE__INT,
+                  _gtk_marshal_VOID__INT,
                   G_TYPE_NONE, 1,
                   G_TYPE_INT);
 
@@ -438,13 +438,13 @@ gtk_entry_completion_init (GtkEntryCompletion *completion)
   priv->filter_model = NULL;
 
   priv->tree_view = gtk_tree_view_new ();
-  g_signal_connect (priv->tree_view, "button_press_event",
+  g_signal_connect (priv->tree_view, "button-press-event",
                     G_CALLBACK (gtk_entry_completion_list_button_press),
                     completion);
-  g_signal_connect (priv->tree_view, "enter_notify_event",
+  g_signal_connect (priv->tree_view, "enter-notify-event",
 		    G_CALLBACK (gtk_entry_completion_list_enter_notify),
 		    completion);
-  g_signal_connect (priv->tree_view, "motion_notify_event",
+  g_signal_connect (priv->tree_view, "motion-notify-event",
 		    G_CALLBACK (gtk_entry_completion_list_motion_notify),
 		    completion);
 
@@ -478,13 +478,13 @@ gtk_entry_completion_init (GtkEntryCompletion *completion)
   priv->action_view =
     gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->actions));
   g_object_ref_sink (priv->action_view);
-  g_signal_connect (priv->action_view, "button_press_event",
+  g_signal_connect (priv->action_view, "button-press-event",
                     G_CALLBACK (gtk_entry_completion_action_button_press),
                     completion);
-  g_signal_connect (priv->action_view, "enter_notify_event",
+  g_signal_connect (priv->action_view, "enter-notify-event",
 		    G_CALLBACK (gtk_entry_completion_list_enter_notify),
 		    completion);
-  g_signal_connect (priv->action_view, "motion_notify_event",
+  g_signal_connect (priv->action_view, "motion-notify-event",
 		    G_CALLBACK (gtk_entry_completion_list_motion_notify),
 		    completion);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->action_view), FALSE);
@@ -505,14 +505,15 @@ gtk_entry_completion_init (GtkEntryCompletion *completion)
   /* pack it all */
   priv->popup_window = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_window_set_resizable (GTK_WINDOW (priv->popup_window), FALSE);
-  gtk_window_set_type_hint(GTK_WINDOW(priv->popup_window), GDK_WINDOW_TYPE_HINT_COMBO);
-  g_signal_connect (priv->popup_window, "key_press_event",
+  gtk_window_set_type_hint (GTK_WINDOW(priv->popup_window),
+                            GDK_WINDOW_TYPE_HINT_COMBO);
+  g_signal_connect (priv->popup_window, "key-press-event",
                     G_CALLBACK (gtk_entry_completion_popup_key_event),
                     completion);
-  g_signal_connect (priv->popup_window, "key_release_event",
+  g_signal_connect (priv->popup_window, "key-release-event",
                     G_CALLBACK (gtk_entry_completion_popup_key_event),
                     completion);
-  g_signal_connect (priv->popup_window, "button_press_event",
+  g_signal_connect (priv->popup_window, "button-press-event",
                     G_CALLBACK (gtk_entry_completion_popup_button_press),
                     completion);
 

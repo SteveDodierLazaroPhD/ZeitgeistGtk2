@@ -230,13 +230,13 @@ gtk_tree_item_init (GtkTreeItem *tree_item)
   /* create an event box containing one pixmaps */
   eventbox = gtk_event_box_new();
   gtk_widget_set_events (eventbox, GDK_BUTTON_PRESS_MASK);
-  gtk_signal_connect(GTK_OBJECT(eventbox), "state_changed",
+  gtk_signal_connect(GTK_OBJECT(eventbox), "state-changed",
 		     (GtkSignalFunc)gtk_tree_item_subtree_button_changed_state, 
 		     (gpointer)NULL);
   gtk_signal_connect(GTK_OBJECT(eventbox), "realize",
 		     (GtkSignalFunc)gtk_tree_item_subtree_button_changed_state, 
 		     (gpointer)NULL);
-  gtk_signal_connect(GTK_OBJECT(eventbox), "button_press_event",
+  gtk_signal_connect(GTK_OBJECT(eventbox), "button-press-event",
 		     (GtkSignalFunc)gtk_tree_item_subtree_button_click,
 		     (gpointer)NULL);
   gtk_object_set_user_data(GTK_OBJECT(eventbox), tree_item);
@@ -442,9 +442,8 @@ gtk_tree_item_remove_pixmaps (GtkTreeItem *tree_item)
 static void
 gtk_tree_item_realize (GtkWidget *widget)
 {
-  if (GTK_WIDGET_CLASS (parent_class)->realize)
-    (* GTK_WIDGET_CLASS (parent_class)->realize) (widget);
-  
+  GTK_WIDGET_CLASS (parent_class)->realize (widget);
+
   gdk_window_set_background (widget->window, 
 			     &widget->style->base[GTK_STATE_NORMAL]);
 

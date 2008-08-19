@@ -1720,8 +1720,8 @@ tree_column_row_is_sensitive (GtkComboBox *combo_box,
 
   if (priv->row_separator_func)
     {
-      if ((*priv->row_separator_func) (priv->model, iter,
-				       priv->row_separator_data))
+      if (priv->row_separator_func (priv->model, iter,
+                                    priv->row_separator_data))
 	return FALSE;
     }
 
@@ -2801,10 +2801,10 @@ gtk_combo_box_menu_setup (GtkComboBox *combo_box,
       gtk_widget_show_all (priv->button);
     }
 
-  g_signal_connect (priv->button, "button_press_event",
+  g_signal_connect (priv->button, "button-press-event",
                     G_CALLBACK (gtk_combo_box_menu_button_press),
                     combo_box);
-  g_signal_connect (priv->button, "state_changed",
+  g_signal_connect (priv->button, "state-changed",
 		    G_CALLBACK (gtk_combo_box_button_state_changed), 
 		    combo_box);
 
@@ -2812,7 +2812,7 @@ gtk_combo_box_menu_setup (GtkComboBox *combo_box,
   menu = gtk_menu_new ();
   gtk_widget_set_name (menu, "gtk-combobox-popup-menu");
   
-  g_signal_connect (menu, "key_press_event",
+  g_signal_connect (menu, "key-press-event",
 		    G_CALLBACK (gtk_combo_box_menu_key_press), combo_box);
   gtk_combo_box_set_popup_widget (combo_box, menu);
 
@@ -2902,8 +2902,8 @@ gtk_combo_box_menu_fill_level (GtkComboBox *combo_box,
       gtk_tree_model_iter_nth_child (model, &iter, parent, i);
 
       if (priv->row_separator_func)
-	is_separator = (*priv->row_separator_func) (priv->model, &iter,
-						    priv->row_separator_data);
+	is_separator = priv->row_separator_func (priv->model, &iter,
+                                                 priv->row_separator_data);
       else
 	is_separator = FALSE;
       
@@ -3463,8 +3463,8 @@ gtk_combo_box_menu_row_inserted (GtkTreeModel *model,
     }
   
   if (priv->row_separator_func)
-    is_separator = (*priv->row_separator_func) (model, iter,
-					        priv->row_separator_data);
+    is_separator = priv->row_separator_func (model, iter,
+                                             priv->row_separator_data);
   else
     is_separator = FALSE;
 
@@ -3555,8 +3555,8 @@ gtk_combo_box_menu_row_changed (GtkTreeModel *model,
   item = find_menu_by_path (priv->popup_widget, path, FALSE);
 
   if (priv->row_separator_func)
-    is_separator = (*priv->row_separator_func) (model, iter,
-						priv->row_separator_data);
+    is_separator = priv->row_separator_func (model, iter,
+                                             priv->row_separator_data);
   else
     is_separator = FALSE;
 
@@ -3617,7 +3617,7 @@ gtk_combo_box_list_setup (GtkComboBox *combo_box)
   priv->button = gtk_toggle_button_new ();
   gtk_widget_set_parent (priv->button,
                          GTK_BIN (combo_box)->child->parent);
-  g_signal_connect (priv->button, "button_press_event",
+  g_signal_connect (priv->button, "button-press-event",
                     G_CALLBACK (gtk_combo_box_list_button_pressed), combo_box);
   g_signal_connect (priv->button, "toggled",
                     G_CALLBACK (gtk_combo_box_button_toggled), combo_box);
@@ -3654,7 +3654,7 @@ gtk_combo_box_list_setup (GtkComboBox *combo_box)
       gtk_container_add (GTK_CONTAINER (priv->cell_view_frame), priv->box);
       gtk_widget_show_all (priv->cell_view_frame);
 
-      g_signal_connect (priv->box, "button_press_event",
+      g_signal_connect (priv->box, "button-press-event",
 			G_CALLBACK (gtk_combo_box_list_button_pressed), 
 			combo_box);
     }
@@ -3697,22 +3697,22 @@ gtk_combo_box_list_setup (GtkComboBox *combo_box)
   /* set sample/popup widgets */
   gtk_combo_box_set_popup_widget (combo_box, priv->tree_view);
 
-  g_signal_connect (priv->tree_view, "key_press_event",
+  g_signal_connect (priv->tree_view, "key-press-event",
                     G_CALLBACK (gtk_combo_box_list_key_press),
                     combo_box);
-  g_signal_connect (priv->tree_view, "enter_notify_event",
+  g_signal_connect (priv->tree_view, "enter-notify-event",
                     G_CALLBACK (gtk_combo_box_list_enter_notify),
                     combo_box);
-  g_signal_connect (priv->tree_view, "row_expanded",
+  g_signal_connect (priv->tree_view, "row-expanded",
 		    G_CALLBACK (gtk_combo_box_model_row_expanded),
 		    combo_box);
-  g_signal_connect (priv->tree_view, "row_collapsed",
+  g_signal_connect (priv->tree_view, "row-collapsed",
 		    G_CALLBACK (gtk_combo_box_model_row_expanded),
 		    combo_box);
-  g_signal_connect (priv->popup_window, "button_press_event",
+  g_signal_connect (priv->popup_window, "button-press-event",
                     G_CALLBACK (gtk_combo_box_list_button_pressed),
                     combo_box);
-  g_signal_connect (priv->popup_window, "button_release_event",
+  g_signal_connect (priv->popup_window, "button-release-event",
                     G_CALLBACK (gtk_combo_box_list_button_released),
                     combo_box);
 
@@ -3989,13 +3989,13 @@ gtk_combo_box_list_auto_scroll (GtkComboBox *combo_box,
 	  adj->lower < adj->value)
 	{
 	  value = adj->value - (tree_view->allocation.x - x + 1);
-	  gtk_adjustment_set_value (adj, CLAMP (value, adj->lower, adj->upper - adj->page_size));
+	  gtk_adjustment_set_value (adj, value);
 	}
       else if (x >= tree_view->allocation.x + tree_view->allocation.width &&
 	       adj->upper - adj->page_size > adj->value)
 	{
 	  value = adj->value + (x - tree_view->allocation.x - tree_view->allocation.width + 1);
-	  gtk_adjustment_set_value (adj, CLAMP (value, 0.0, adj->upper - adj->page_size));
+	  gtk_adjustment_set_value (adj, MAX (value, 0.0));
 	}
     }
 
@@ -4006,13 +4006,13 @@ gtk_combo_box_list_auto_scroll (GtkComboBox *combo_box,
 	  adj->lower < adj->value)
 	{
 	  value = adj->value - (tree_view->allocation.y - y + 1);
-	  gtk_adjustment_set_value (adj, CLAMP (value, adj->lower, adj->upper - adj->page_size));
+	  gtk_adjustment_set_value (adj, value);
 	}
       else if (y >= tree_view->allocation.height &&
 	       adj->upper - adj->page_size > adj->value)
 	{
 	  value = adj->value + (y - tree_view->allocation.height + 1);
-	  gtk_adjustment_set_value (adj, CLAMP (value, 0.0, adj->upper - adj->page_size));
+	  gtk_adjustment_set_value (adj, MAX (value, 0.0));
 	}
     }
 }
@@ -4357,8 +4357,8 @@ combo_cell_data_func (GtkCellLayout   *cell_layout,
   if (!info->func)
     return;
 
-  (*info->func) (cell_layout, cell, tree_model, iter, info->func_data);
-  
+  info->func (cell_layout, cell, tree_model, iter, info->func_data);
+
   if (GTK_IS_WIDGET (cell_layout))
     parent = gtk_widget_get_parent (GTK_WIDGET (cell_layout));
   
@@ -4972,19 +4972,19 @@ gtk_combo_box_set_model (GtkComboBox  *combo_box,
   g_object_ref (combo_box->priv->model);
 
   combo_box->priv->inserted_id =
-    g_signal_connect (combo_box->priv->model, "row_inserted",
+    g_signal_connect (combo_box->priv->model, "row-inserted",
 		      G_CALLBACK (gtk_combo_box_model_row_inserted),
 		      combo_box);
   combo_box->priv->deleted_id =
-    g_signal_connect (combo_box->priv->model, "row_deleted",
+    g_signal_connect (combo_box->priv->model, "row-deleted",
 		      G_CALLBACK (gtk_combo_box_model_row_deleted),
 		      combo_box);
   combo_box->priv->reordered_id =
-    g_signal_connect (combo_box->priv->model, "rows_reordered",
+    g_signal_connect (combo_box->priv->model, "rows-reordered",
 		      G_CALLBACK (gtk_combo_box_model_rows_reordered),
 		      combo_box);
   combo_box->priv->changed_id =
-    g_signal_connect (combo_box->priv->model, "row_changed",
+    g_signal_connect (combo_box->priv->model, "row-changed",
 		      G_CALLBACK (gtk_combo_box_model_row_changed),
 		      combo_box);
       
@@ -5214,7 +5214,7 @@ gtk_combo_box_get_active_text (GtkComboBox *combo_box)
   class = GTK_COMBO_BOX_GET_CLASS (combo_box);
 
   if (class->get_active_text)
-    return (* class->get_active_text) (combo_box);
+    return class->get_active_text (combo_box);
 
   return NULL;
 }
@@ -5353,7 +5353,7 @@ gtk_combo_box_destroy (GtkObject *object)
   gtk_combo_box_popdown (combo_box);
 
   if (combo_box->priv->row_separator_destroy)
-    (* combo_box->priv->row_separator_destroy) (combo_box->priv->row_separator_data);
+    combo_box->priv->row_separator_destroy (combo_box->priv->row_separator_data);
 
   combo_box->priv->row_separator_func = NULL;
   combo_box->priv->row_separator_data = NULL;
@@ -5502,7 +5502,7 @@ gtk_combo_box_start_editing (GtkCellEditable *cell_editable,
 
   if (combo_box->priv->cell_view)
     {
-      g_signal_connect_object (combo_box->priv->button, "key_press_event",
+      g_signal_connect_object (combo_box->priv->button, "key-press-event",
 			       G_CALLBACK (gtk_cell_editable_key_press), 
 			       cell_editable, 0);  
 
@@ -5510,7 +5510,7 @@ gtk_combo_box_start_editing (GtkCellEditable *cell_editable,
     }
   else
     {
-      g_signal_connect_object (GTK_BIN (combo_box)->child, "key_press_event",
+      g_signal_connect_object (GTK_BIN (combo_box)->child, "key-press-event",
 			       G_CALLBACK (gtk_cell_editable_key_press), 
 			       cell_editable, 0);  
 
@@ -5720,7 +5720,7 @@ gtk_combo_box_set_row_separator_func (GtkComboBox                 *combo_box,
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 
   if (combo_box->priv->row_separator_destroy)
-    (* combo_box->priv->row_separator_destroy) (combo_box->priv->row_separator_data);
+    combo_box->priv->row_separator_destroy (combo_box->priv->row_separator_data);
 
   combo_box->priv->row_separator_func = func;
   combo_box->priv->row_separator_data = data;
