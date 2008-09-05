@@ -153,15 +153,19 @@ void                <a class="link" href="GtkMenu.html#gtk-menu-set-title" title
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title);
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>            <a class="link" href="GtkMenu.html#gtk-menu-get-tearoff-state" title="gtk_menu_get_tearoff_state ()">gtk_menu_get_tearoff_state</a>          (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);
 const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*        <a class="link" href="GtkMenu.html#gtk-menu-get-title" title="gtk_menu_get_title ()">gtk_menu_get_title</a>                  (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);
+void                <a class="link" href="GtkMenu.html#gtk-menu-set-monitor" title="gtk_menu_set_monitor ()">gtk_menu_set_monitor</a>                (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> monitor_num);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                <a class="link" href="GtkMenu.html#gtk-menu-get-monitor" title="gtk_menu_get_monitor ()">gtk_menu_get_monitor</a>                (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="GtkMenu.html#gtk-menu-get-tearoff-state" title="gtk_menu_get_tearoff_state ()">gtk_menu_get_tearoff_state</a>          (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);
 
 void                <a class="link" href="GtkMenu.html#gtk-menu-popdown" title="gtk_menu_popdown ()">gtk_menu_popdown</a>                    (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);
 void                <a class="link" href="GtkMenu.html#gtk-menu-reposition" title="gtk_menu_reposition ()">gtk_menu_reposition</a>                 (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);
@@ -197,10 +201,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);
 void                (<a class="link" href="GtkMenu.html#GtkMenuDetachFunc" title="GtkMenuDetachFunc ()">*GtkMenuDetachFunc</a>)                (<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *attach_widget,
                                                          <a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);
-void                <a class="link" href="GtkMenu.html#gtk-menu-set-monitor" title="gtk_menu_set_monitor ()">gtk_menu_set_monitor</a>                (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu,
-                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> monitor_num);
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -313,7 +313,7 @@ Applications can display a <a class="link" href="GtkMenu.html" title="GtkMenu"><
 can pop up a menu when the 3rd mouse button is pressed.  
 </p>
 <div class="example">
-<a name="id3569302"></a><p class="title"><b>Example 26. Connecting the popup signal handler.</b></p>
+<a name="id3164958"></a><p class="title"><b>Example 26. Connecting the popup signal handler.</b></p>
 <div class="example-contents"><pre class="programlisting">
     /* connect our handler which will popup the menu */
     g_signal_connect_swapped (window, "button_press_event",
@@ -321,7 +321,7 @@ can pop up a menu when the 3rd mouse button is pressed.
 </pre></div>
 </div>
 <br class="example-break"><div class="example">
-<a name="id3569318"></a><p class="title"><b>Example 27. Signal handler which displays a popup menu.</b></p>
+<a name="id3164974"></a><p class="title"><b>Example 27. Signal handler which displays a popup menu.</b></p>
 <div class="example-contents"><pre class="programlisting">
 static gint
 my_popup_handler (GtkWidget *widget, GdkEvent *event)
@@ -866,36 +866,6 @@ that menu item's label.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="gtk-menu-get-tearoff-state"></a><h3>gtk_menu_get_tearoff_state ()</h3>
-<pre class="programlisting"><a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>            gtk_menu_get_tearoff_state          (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);</pre>
-<p>
-Returns whether the menu is torn off. See
-<a class="link" href="GtkMenu.html#gtk-menu-set-tearoff-state" title="gtk_menu_set_tearoff_state ()"><code class="function">gtk_menu_set_tearoff_state()</code></a>.</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>menu</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkMenu.html" title="GtkMenu"><span class="type">GtkMenu</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the menu is currently torn off.
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
 <a name="gtk-menu-get-title"></a><h3>gtk_menu_get_title ()</h3>
 <pre class="programlisting">const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -927,6 +897,47 @@ not be modified or freed.
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="gtk-menu-set-monitor"></a><h3>gtk_menu_set_monitor ()</h3>
+<pre class="programlisting">void                gtk_menu_set_monitor                (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> monitor_num);</pre>
+<p>
+Informs GTK+ on which monitor a menu should be popped up. 
+See <a
+href="/usr/share/gtk-doc/html/gdk/GdkScreen.html#gdk-screen-get-monitor-geometry"
+><code class="function">gdk_screen_get_monitor_geometry()</code></a>.
+</p>
+<p>
+This function should be called from a <a class="link" href="GtkMenu.html#GtkMenuPositionFunc" title="GtkMenuPositionFunc ()"><span class="type">GtkMenuPositionFunc</span></a> if the
+menu should not appear on the same monitor as the pointer. This 
+information can't be reliably inferred from the coordinates returned
+by a <a class="link" href="GtkMenu.html#GtkMenuPositionFunc" title="GtkMenuPositionFunc ()"><span class="type">GtkMenuPositionFunc</span></a>, since, for very long menus, these coordinates 
+may extend beyond the monitor boundaries or even the screen boundaries.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>menu</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkMenu.html" title="GtkMenu"><span class="type">GtkMenu</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>monitor_num</code></em> :</span></p></td>
+<td> the number of the monitor on which the menu should
+   be popped up
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since  2.4
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="gtk-menu-get-monitor"></a><h3>gtk_menu_get_monitor ()</h3>
 <pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -955,6 +966,36 @@ Retrieves the number of the monitor on which to show the menu.</p>
 </table></div>
 <p class="since">Since  2.14
 </p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-menu-get-tearoff-state"></a><h3>gtk_menu_get_tearoff_state ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            gtk_menu_get_tearoff_state          (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu);</pre>
+<p>
+Returns whether the menu is torn off. See
+<a class="link" href="GtkMenu.html#gtk-menu-set-tearoff-state" title="gtk_menu_set_tearoff_state ()"><code class="function">gtk_menu_set_tearoff_state()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>menu</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkMenu.html" title="GtkMenu"><span class="type">GtkMenu</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a> if the menu is currently torn off.
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1291,47 +1332,6 @@ will be called when the menu is later detached from the widget.
 </tr>
 </tbody>
 </table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="gtk-menu-set-monitor"></a><h3>gtk_menu_set_monitor ()</h3>
-<pre class="programlisting">void                gtk_menu_set_monitor                (<a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a> *menu,
-                                                         <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> monitor_num);</pre>
-<p>
-Informs GTK+ on which monitor a menu should be popped up. 
-See <a
-href="/usr/share/gtk-doc/html/gdk/GdkScreen.html#gdk-screen-get-monitor-geometry"
-><code class="function">gdk_screen_get_monitor_geometry()</code></a>.
-</p>
-<p>
-This function should be called from a <a class="link" href="GtkMenu.html#GtkMenuPositionFunc" title="GtkMenuPositionFunc ()"><span class="type">GtkMenuPositionFunc</span></a> if the
-menu should not appear on the same monitor as the pointer. This 
-information can't be reliably inferred from the coordinates returned
-by a <a class="link" href="GtkMenu.html#GtkMenuPositionFunc" title="GtkMenuPositionFunc ()"><span class="type">GtkMenuPositionFunc</span></a>, since, for very long menus, these coordinates 
-may extend beyond the monitor boundaries or even the screen boundaries.</p>
-<p>
-
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>menu</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkMenu.html" title="GtkMenu"><span class="type">GtkMenu</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>monitor_num</code></em> :</span></p></td>
-<td> the number of the monitor on which the menu should
-   be popped up
-</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since  2.4
-</p>
 </div>
 </div>
 <div class="refsect1" lang="en">

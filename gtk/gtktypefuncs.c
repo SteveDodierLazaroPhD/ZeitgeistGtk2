@@ -218,6 +218,7 @@
 *tp++ = gtk_movement_step_get_type();
 *tp++ = gtk_notebook_get_type();
 *tp++ = gtk_notebook_tab_get_type();
+*tp++ = gtk_number_up_layout_get_type();
 *tp++ = gtk_object_flags_get_type();
 *tp++ = gtk_object_get_type();
 *tp++ = gtk_orientation_get_type();

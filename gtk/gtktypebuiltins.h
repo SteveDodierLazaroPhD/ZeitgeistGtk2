@@ -149,6 +149,8 @@ GType gtk_print_pages_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_PRINT_PAGES (gtk_print_pages_get_type ())
 GType gtk_page_set_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_PAGE_SET (gtk_page_set_get_type ())
+GType gtk_number_up_layout_get_type (void) G_GNUC_CONST;
+#define GTK_TYPE_NUMBER_UP_LAYOUT (gtk_number_up_layout_get_type ())
 GType gtk_page_orientation_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_PAGE_ORIENTATION (gtk_page_orientation_get_type ())
 GType gtk_print_quality_get_type (void) G_GNUC_CONST;

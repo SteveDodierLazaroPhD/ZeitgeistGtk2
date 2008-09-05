@@ -327,7 +327,7 @@ When the user finished the dialog various signals will be emitted on the
 to catch and render the page on the provided <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> using Cairo.
 </p>
 <div class="example">
-<a name="id3712531"></a><p class="title"><b>Example 41. The high-level printing API</b></p>
+<a name="id3301735"></a><p class="title"><b>Example 41. The high-level printing API</b></p>
 <div class="example-contents"><pre class="programlisting">
 static GtkPrintSettings *settings = NULL;
 
@@ -536,7 +536,7 @@ A value of this type is returned by <a class="link" href="gtk-High-level-Printin
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-OPERATION-RESULT-IN-PROGRESS:CAPS"></a><span class="term"><code class="literal">GTK_PRINT_OPERATION_RESULT_IN_PROGRESS</code></span></p></td>
-<td>The print operation is complete
+<td>The print operation is not complete
   yet. This value will only be returned when running asynchronously.
 
 </td>
@@ -1151,11 +1151,12 @@ information about the progress of the print operation.
 Furthermore, it may use a recursive mainloop to show the print dialog.
 </p>
 <p>
-If you call <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-set-allow-async" title="gtk_print_operation_set_allow_async ()"><code class="function">gtk_print_operation_set_allow_async()</code></a> or set the allow-async
-property the operation will run asyncronously if this is supported on the
-platform. The <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-done" title='The "done" signal'><span class="type">"done"</span></a> signal will be emitted with the 
-operation results when the operation is done (i.e. when the dialog is 
-canceled, or when the print succeeds or fails).
+If you call <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-set-allow-async" title="gtk_print_operation_set_allow_async ()"><code class="function">gtk_print_operation_set_allow_async()</code></a> or set the 
+<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--allow-async" title='The "allow-async" property'><span class="type">"allow-async"</span></a> property the operation will run 
+asynchronously if this is supported on the platform. The 
+<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-done" title='The "done" signal'><span class="type">"done"</span></a> signal will be emitted with the result of the 
+operation when the it is done (i.e. when the dialog is canceled, or when 
+the print succeeds or fails).
 </p>
 <div class="informalexample"><pre class="programlisting">
 if (settings != NULL)
@@ -1237,7 +1238,8 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
   the used print settings with <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-get-print-settings" title="gtk_print_operation_get_print_settings ()"><code class="function">gtk_print_operation_get_print_settings()</code></a> 
   and store them for reuse with the next print operation. A value of
   <a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-OPERATION-RESULT-IN-PROGRESS:CAPS"><code class="literal">GTK_PRINT_OPERATION_RESULT_IN_PROGRESS</code></a> means the operation is running
-  asynchronously, and will emit the ::done signal when done.
+  asynchronously, and will emit the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-done" title='The "done" signal'><span class="type">"done"</span></a> signal when 
+  done.
 
 </td>
 </tr>
@@ -1642,13 +1644,13 @@ Determines whether the print operation may run asynchronously or not.
 <p>
 Some systems don't support asynchronous printing, but those that do
 will return <a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-OPERATION-RESULT-IN-PROGRESS:CAPS"><code class="literal">GTK_PRINT_OPERATION_RESULT_IN_PROGRESS</code></a> as the status, and
-emit the done signal when the operation is actually done.
+emit the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-done" title='The "done" signal'><span class="type">"done"</span></a> signal when the operation is actually 
+done.
 </p>
 <p>
-The Windows port does not support asynchronous operation
-at all (this is unlikely to change). On other platforms, all actions
-except for <a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-OPERATION-ACTION-EXPORT:CAPS"><code class="literal">GTK_PRINT_OPERATION_ACTION_EXPORT</code></a> support asynchronous
-operation.</p>
+The Windows port does not support asynchronous operation at all (this 
+is unlikely to change). On other platforms, all actions except for 
+<a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-OPERATION-ACTION-EXPORT:CAPS"><code class="literal">GTK_PRINT_OPERATION_ACTION_EXPORT</code></a> support asynchronous operation.</p>
 <p>
 
 </p>
@@ -1724,9 +1726,8 @@ to the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write</pre>
 <p>
-The name of a file file to generate instead of showing 
-the print dialog. Currently, PDF is the only supported
-format.
+The name of a file to generate instead of showing the print dialog. 
+Currently, PDF is the only supported format.
 </p>
 <p>
 The intended use of this property is for implementing 
@@ -1849,8 +1850,8 @@ The string is translated and suitable for displaying the print
 status e.g. in a <a class="link" href="GtkStatusbar.html" title="GtkStatusbar"><span class="type">GtkStatusbar</span></a>.
 </p>
 <p>
-See the ::status property for a status value that is suitable 
-for programmatic use.</p>
+See the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--status" title='The "status" property'><span class="type">"status"</span></a> property for a status value that 
+is suitable for programmatic use.</p>
 <p>
 
 </p>
@@ -1976,8 +1977,8 @@ tab in the print dialog. You typically return a container widget
 with multiple widgets in it.
 </p>
 <p>
-The print dialog owns the returned widget, and its lifetime
-isn't controlled by the app. However, the widget is guaranteed
+The print dialog owns the returned widget, and its lifetime is not 
+controlled by the application. However, the widget is guaranteed 
 to stay around until the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-custom-widget-apply" title='The "custom-widget-apply" signal'><span class="type">"custom-widget-apply"</span></a> 
 signal is emitted on the operation. Then you can read out any 
 information you need from the widgets.</p>
@@ -2059,9 +2060,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>                user_data)      : Run Last</pre>
 <p>
 Emitted when the print operation run has finished doing
-everything required for printing. <em class="parameter"><code>result</code></em> gives you information
-about what happened during the run. If <em class="parameter"><code>result</code></em> is
-<a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-OPERATION-RESULT-ERROR:CAPS"><code class="literal">GTK_PRINT_OPERATION_RESULT_ERROR</code></a> then you can call
+everything required for printing. 
+</p>
+<p>
+<em class="parameter"><code>result</code></em> gives you information about what happened during the run. 
+If <em class="parameter"><code>result</code></em> is <a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-OPERATION-RESULT-ERROR:CAPS"><code class="literal">GTK_PRINT_OPERATION_RESULT_ERROR</code></a> then you can call
 <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-get-error" title="gtk_print_operation_get_error ()"><code class="function">gtk_print_operation_get_error()</code></a> for more information.
 </p>
 <p>
@@ -2237,13 +2240,13 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>           user_data)      : Run Last</pre>
 <p>
 Emitted after the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-begin-print" title='The "begin-print" signal'><span class="type">"begin-print"</span></a> signal, but before 
-the actual rendering starts. It keeps getting emitted until it 
-returns <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
-><code class="literal">FALSE</code></a>. 
+the actual rendering starts. It keeps getting emitted until a connected 
+signal handler returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
+><code class="literal">TRUE</code></a>.
 </p>
 <p>
-The ::paginate signal is intended to be used for paginating the document
+The ::paginate signal is intended to be used for paginating a document
 in small chunks, to avoid blocking the user interface for a long
 time. The signal handler should update the number of pages using
 <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-set-n-pages" title="gtk_print_operation_set_n_pages ()"><code class="function">gtk_print_operation_set_n_pages()</code></a>, and return <a

@@ -1,7 +1,7 @@
-Index: gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c
+Index: gtk+2.0-2.14.1/gdk-pixbuf/gdk-pixbuf-io.c
 ===================================================================
---- gtk+2.0-2.13.5.orig/gdk-pixbuf/gdk-pixbuf-io.c	2008-07-21 22:18:31.000000000 +0200
-+++ gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c	2008-07-22 15:09:03.000000000 +0200
+--- gtk+2.0-2.14.1.orig/gdk-pixbuf/gdk-pixbuf-io.c	2008-09-05 03:31:52.000000000 +0200
++++ gtk+2.0-2.14.1/gdk-pixbuf/gdk-pixbuf-io.c	2008-09-05 10:30:53.000000000 +0200
 @@ -51,6 +51,9 @@
  #define SNIFF_BUFFER_SIZE 4096
  #define LOAD_BUFFER_SIZE 65536
@@ -12,9 +12,9 @@ Index: gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c
  #ifndef GDK_PIXBUF_USE_GIO_MIME 
  static gint 
  format_check (GdkPixbufModule *module, guchar *buffer, int size)
-@@ -292,113 +295,93 @@
- 
- #endif	/* USE_GMODULE */
+@@ -297,113 +300,93 @@
+ gdk_pixbuf_load_module_unlocked (GdkPixbufModule *image_module,
+ 				 GError         **error);
  
 +/* FIXME this is a static copy of a public pango function which should really
 + * livein glib */
@@ -118,7 +118,7 @@ Index: gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c
 -#define load_one_builtin_module(format)					\
 -	builtin_module = g_new0 (GdkPixbufModule, 1);			\
 -	builtin_module->module_name = #format;				\
--	if (_gdk_pixbuf_load_module (builtin_module, NULL))		\
+-	if (gdk_pixbuf_load_module_unlocked (builtin_module, NULL))		\
 -		file_formats = g_slist_prepend (file_formats, builtin_module);\
 -	else								\
 -		g_free (builtin_module)
@@ -202,7 +202,7 @@ Index: gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c
  	
  	while (!have_error && g_io_channel_read_line (channel, &line_buf, NULL, &term, NULL) == G_IO_STATUS_NORMAL) {
  		const char *p;
-@@ -536,8 +519,156 @@
+@@ -541,8 +524,156 @@
  		g_free (line_buf);
  	}
  	g_string_free (tmp_buf, TRUE);
@@ -228,7 +228,7 @@ Index: gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c
 +#define load_one_builtin_module(format)					\
 +	builtin_module = g_new0 (GdkPixbufModule, 1);			\
 +	builtin_module->module_name = #format;				\
-+	if (_gdk_pixbuf_load_module (builtin_module, NULL))		\
++	if (gdk_pixbuf_load_module_unlocked (builtin_module, NULL))		\
 +		file_formats = g_slist_prepend (file_formats, builtin_module);\
 +	else								\
 +		g_free (builtin_module)
@@ -361,10 +361,10 @@ Index: gtk+2.0-2.13.5/gdk-pixbuf/gdk-pixbuf-io.c
  #endif
  }
  
-Index: gtk+2.0-2.13.5/gdk-pixbuf/Makefile.am
+Index: gtk+2.0-2.14.1/gdk-pixbuf/Makefile.am
 ===================================================================
---- gtk+2.0-2.13.5.orig/gdk-pixbuf/Makefile.am	2008-07-21 22:18:31.000000000 +0200
-+++ gtk+2.0-2.13.5/gdk-pixbuf/Makefile.am	2008-07-22 15:08:19.000000000 +0200
+--- gtk+2.0-2.14.1.orig/gdk-pixbuf/Makefile.am	2008-09-05 03:31:52.000000000 +0200
++++ gtk+2.0-2.14.1/gdk-pixbuf/Makefile.am	2008-09-05 10:30:48.000000000 +0200
 @@ -62,6 +62,7 @@
  	libgdk_pixbuf-2.0.la
  

@@ -990,7 +990,7 @@ error_message_with_parent (GtkWindow  *parent,
   gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
 					    "%s", detail);
 
-  if (parent->group)
+  if (parent && parent->group)
     gtk_window_group_add_window (parent->group, GTK_WINDOW (dialog));
 
   gtk_dialog_run (GTK_DIALOG (dialog));
@@ -1151,6 +1151,17 @@ change_folder_and_display_error (GtkFileChooserDefault *impl,
 }
 
 static void
+emit_default_size_changed (GtkFileChooserDefault *impl)
+{
+  if (!GTK_WIDGET_MAPPED (impl))
+    return;
+
+  profile_msg ("    emit default-size-changed start", NULL);
+  g_signal_emit_by_name (impl, "default-size-changed");
+  profile_msg ("    emit default-size-changed end", NULL);
+}
+
+static void
 update_preview_widget_visibility (GtkFileChooserDefault *impl)
 {
   if (impl->use_preview_label)
@@ -1178,7 +1189,7 @@ update_preview_widget_visibility (GtkFileChooserDefault *impl)
   else
     gtk_widget_hide (impl->preview_box);
 
-  g_signal_emit_by_name (impl, "default-size-changed");
+  emit_default_size_changed (impl);
 }
 
 static void
@@ -5422,7 +5433,7 @@ update_appearance (GtkFileChooserDefault *impl)
    */
   gtk_widget_queue_draw (impl->browse_files_tree_view);
 
-  g_signal_emit_by_name (impl, "default-size-changed");
+  emit_default_size_changed (impl);
 }
 
 static void
@@ -5841,9 +5852,7 @@ gtk_file_chooser_default_style_set (GtkWidget *widget,
   if (gtk_widget_has_screen (GTK_WIDGET (impl)))
     change_icon_theme (impl);
 
-  profile_msg ("    emit default-size-changed start", NULL);
-  g_signal_emit_by_name (widget, "default-size-changed");
-  profile_msg ("    emit default-size-changed end", NULL);
+  emit_default_size_changed (impl);
 
   profile_end ("end", NULL);
 }
@@ -5864,7 +5873,7 @@ gtk_file_chooser_default_screen_changed (GtkWidget *widget,
   remove_settings_signal (impl, previous_screen);
   check_icon_theme (impl);
 
-  g_signal_emit_by_name (widget, "default-size-changed");
+  emit_default_size_changed (impl);
 
   profile_end ("end", NULL);
 }
@@ -5878,18 +5887,6 @@ gtk_file_chooser_default_size_allocate (GtkWidget     *widget,
   impl = GTK_FILE_CHOOSER_DEFAULT (widget);
 
   GTK_WIDGET_CLASS (_gtk_file_chooser_default_parent_class)->size_allocate (widget, allocation);
-
-  impl->default_width = allocation->width;
-  impl->default_height = allocation->height;
-
-  if (impl->preview_widget_active &&
-      impl->preview_widget &&
-      GTK_WIDGET_DRAWABLE (impl->preview_widget))
-    impl->default_width -= impl->preview_widget->allocation.width + PREVIEW_HBOX_SPACING;
-
-  if (impl->extra_widget &&
-      GTK_WIDGET_DRAWABLE (impl->extra_widget))
-    impl->default_height -= GTK_BOX (widget)->spacing + impl->extra_widget->allocation.height;
 }
 
 static gboolean
@@ -6031,6 +6028,8 @@ gtk_file_chooser_default_map (GtkWidget *widget)
   volumes_bookmarks_changed_cb (impl->file_system, impl);
 
   settings_load (impl);
+
+  emit_default_size_changed (impl);
 
   profile_end ("end", NULL);
 }
@@ -7769,28 +7768,21 @@ find_good_size_from_style (GtkWidget *widget,
   g_assert (widget->style != NULL);
   impl = GTK_FILE_CHOOSER_DEFAULT (widget);
 
-  if (impl->default_width == 0 &&
-      impl->default_height == 0)
+  screen = gtk_widget_get_screen (widget);
+  if (screen)
     {
-      screen = gtk_widget_get_screen (widget);
-      if (screen)
-	{
-	  resolution = gdk_screen_get_resolution (screen);
-	  if (resolution < 0.0) /* will be -1 if the resolution is not defined in the GdkScreen */
-	    resolution = 96.0;
-	}
-      else
-	resolution = 96.0; /* wheeee */
-
-      font_size = pango_font_description_get_size (widget->style->font_desc);
-      font_size = PANGO_PIXELS (font_size) * resolution / 72.0;
-
-      impl->default_width = font_size * NUM_CHARS;
-      impl->default_height = font_size * NUM_LINES;
+      resolution = gdk_screen_get_resolution (screen);
+      if (resolution < 0.0) /* will be -1 if the resolution is not defined in the GdkScreen */
+	resolution = 96.0;
     }
+  else
+    resolution = 96.0; /* wheeee */
 
-  *width = impl->default_width;
-  *height = impl->default_height;
+  font_size = pango_font_description_get_size (widget->style->font_desc);
+  font_size = PANGO_PIXELS (font_size) * resolution / 72.0;
+
+  *width = font_size * NUM_CHARS;
+  *height = font_size * NUM_LINES;
 }
 
 static void
@@ -7802,21 +7794,33 @@ gtk_file_chooser_default_get_default_size (GtkFileChooserEmbed *chooser_embed,
   GtkRequisition req;
 
   impl = GTK_FILE_CHOOSER_DEFAULT (chooser_embed);
-  find_good_size_from_style (GTK_WIDGET (chooser_embed), default_width, default_height);
 
-  if (impl->preview_widget_active &&
-      impl->preview_widget &&
-      GTK_WIDGET_VISIBLE (impl->preview_widget))
+  if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN
+      || impl->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+      || impl->expand_folders)
     {
-      gtk_widget_size_request (impl->preview_box, &req);
-      *default_width += PREVIEW_HBOX_SPACING + req.width;
+      find_good_size_from_style (GTK_WIDGET (chooser_embed), default_width, default_height);
+
+      if (impl->preview_widget_active &&
+	  impl->preview_widget &&
+	  GTK_WIDGET_VISIBLE (impl->preview_widget))
+	{
+	  gtk_widget_size_request (impl->preview_box, &req);
+	  *default_width += PREVIEW_HBOX_SPACING + req.width;
+	}
+
+      if (impl->extra_widget &&
+	  GTK_WIDGET_VISIBLE (impl->extra_widget))
+	{
+	  gtk_widget_size_request (impl->extra_align, &req);
+	  *default_height += GTK_BOX (chooser_embed)->spacing + req.height;
+	}
     }
-
-  if (impl->extra_widget &&
-      GTK_WIDGET_VISIBLE (impl->extra_widget))
+  else
     {
-      gtk_widget_size_request (impl->extra_align, &req);
-      *default_height += GTK_BOX (chooser_embed)->spacing + req.height;
+      gtk_widget_size_request (GTK_WIDGET (impl), &req);
+      *default_width = req.width;
+      *default_height = req.height;
     }
 }
 

@@ -1,4 +1,358 @@
+2008-09-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.14.1 ===
+
+2008-09-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
+	* === Released 2.14.0 ===
+
+2008-09-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkenums.h: Add nicks for the GtkNumberUpLayout values.
+
+	* gtk/gtkprintunixdialog.c:
+	* gtk/gtkprintsettings.c: Simplify the handling of GtkNumberUpLayout
+	values. Followup on #535158, proposed by Christian Persch.
+
+2008-09-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* INSTALL.in: Update required versions
+
+2008-09-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkhandlebox.c: events return gboolean not gint.
+	Change misnamed gtk_handle_box_button_changed() to
+	gtk_handle_box_button_press(). Reindent static prototypes.
+
+2008-09-04  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwidget.c (gtk_widget_get_draw_rectangle): when extending
+	the draw rectangle by the "draw-border" style property, subtract
+	"left" from "x" and "top" from "y", not the other way around.
+
+2008-09-03  Matthias Clasen  <mclasen@redhat.com>
+	
+	* gdk/gdkwindow.c:
+	* gtk/gtkbindings.c:
+	* gtk/gtkcolorseldialog.c: More doc fixes
+
+	* gtk/gtktestutils.c: Fix a typo in the docs.
+
+2008-09-03  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+	* configure.in: Bump version to 2.14.0
+
+2008-09-03  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkcolorsel.c: Set page_size to 0 for the spinbuttons
+	in the color selector.
+
+	* README.in: Add a note about the GtkAdjustment clamping change
+
+2008-09-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 550528 - IconView DND interface does not work if only used as
+	source
+
+	* gtk/gtkiconview.c: Make source-only DND work. 
+	Found by Alex Simon
+
+2008-09-03  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtk.symbols: Add some missing symbols
+
+2008-09-03  Matthias Clasen  <mclasen@redhat.com>
+	
+	* gtk/gtkprintsettings.c: Fix order of includes to avoid unwanted
+	PLT entries.
+
+2008-09-03  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmenu.c
+	* gtk/gtkmenuitem.c: remove unused macro cruft. Also remove some
+	unneeded includes.
+
+2008-09-03  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkarrow.c: expose-event returns gboolean not gint,
+	reindented static prototypes and did some minor cleanups.
+
+2008-09-03  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmenu.c: some more trivial cosmetic fixes.
+
+2008-09-03  Christian Dywan  <christian@imendio.com>
+
+	Bug 547449 – Entry/ Combo popup misplaced after resize
+
+	* gtk/gtkcombobox.c (gtk_combo_box_menu_position),
+	(gtk_combo_box_size_allocate): reposition the combo popup when the
+        allocation changes
+	* gtk/gtkentry.c (gtk_entry_size_allocate): reposition the
+        completion popup when the allocation changes
+
+2008-09-03  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmenu.c (get_arrows_visible_area): proper function header
+	formatting.
+
+2008-09-02  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkdialog.c (gtk_dialog_delete_event_handler): return
+	gboolean instead of gint. Reindent static prototypes.
+
+2008-09-02  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwidget.c (gtk_widget_get_allocation): removed this
+	function because there is massive disagreement about how to
+	implement it. Needs some general discussion in the next
+	development cycle about how our C api should evolve.
+
+	* gtk/gtk.symbols: changed accordingly.
+
+2008-09-01  Wouter Bolsterlee  <wbolster@svn.gnome.org>
+
+	* gtk/gtkselection.c:
+	Update documentation for gtk_selection_data_get_data to
+	match the changes introduced in -r21232 (the length
+	parameter was removed).
+
+2008-08-30  Matthew Barnes  <mbarnes@redhat.com>
+
+	Bug 549943 – gtk_tool_shell_get_relief_style() always returns
+	GTK_RELIEF_NONE
+
+	* gtk/gtktoolshell.c (gtk_tool_shell_get_relief_style): Return
+	the correct relief style.
+
+2008-08-29  Björn Lindqvist  <bjourne@gmail.com>
+
+	Bug 437791 – Animation is played at the wrong speed
+
+	* gdk-pixbuf/io-gif.c (gif_get_lzw): Better 100 ms timeout for
+	broken GIFs with 0 frame timeout.
+
+2008-08-29  Christian Dywan  <christian@imendio.com>
+
+	Bug 549810 – Memory leaks in printing code
+
+	* gtk/gtkprintjob.c (gtk_print_job_set_property):
+	* modules/printbackends/file/gtkprintbackendfile.c
+	(output_file_from_settings):
+	* modules/printbackends/test/gtkprintbackendtest.c
+	(output_test_from_settings): free some temporary strings.
+	Patch by Yevgen Muntyan.
+
+2008-08-29  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwidget.h: move the gtk_widget_get_parent() and
+	gtk_widget_get_parent_window() prototypes together with their
+	respective setters.
+
+	* gtk/gtkwidget.c: move gtk_widget_get_parent_window() together
+	with its setter.
+
+2008-08-29  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkscrolledwindow.c: events return gboolean not gint,
+	reindent prototypes.
+
+2008-08-29  Michael Natterer  <mitch@imendio.com>
+
+	* configure.in: remove -DPANGO_DISABLE_SINGLE_INCLUDES from
+	CPPFLAGS, I committed that accidentially.
+
+2008-08-29  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkpaned.c: minor indentation / coding style fixes.
+
+2008-08-29  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 549262 – GtkScrolledWindow should not accept focus unless
+	GTK_CAN_FOCUS is set
+
+	* gtk/gtkscrolledwindow.c (gtk_scrolled_window_focus): only grab the
+	focus, if GTK_WIDGET_CAN_FOCUS() returns TRUE. Patch by Sven 
+	Herzberg
+
+2008-08-29  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtkselection.[hc]: Split gtk_selection_data_get_data into
+	gtk_selection_data_get_data and gtk_selection_data_get_length.
+	Proposed by Owen Taylor.
+
+2008-08-28  Christian Dywan  <christian@imendio.com>
+
+	Bug 549734 – gtk_selection_data_get_data prototype is wrong
+
+	* gtk/gtkselection.[ch] (gtk_selection_data_get_data): make the
+	'length' argument of gtk_selection_data_get_data a 'gint', that's
+	what it should be.
+
+2008-08-27  Cody Russell  <bratsche@gnome.org>
+
+	* gdk/win32/gdkevents-win32.c:
+	* gdk/win32/gdkwindow-win32.c (show_window_recurse): Check if 
+	the window's state has GDK_WINDOW_STATE_MAXIMIZED set before
+	calling ShowWindow (), and show using SW_SHOWMAXIMIZED or
+	SW_RESTORE accordingly.  This fixes an issue where maximized
+	windows that are iconified do not restore back to maximized
+	when you click the taskbar. (#528975)
+
+2008-08-27  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkprintoperation.c: Documentation fixes.
+
+2008-08-27  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/x11/gdkwindow-x11.c:
+	* gdk/win32/gdkwindow-win32.c: Return FALSE from reparent
+	implementations to avoid #548993. Patch by Ed Catmur.
+
+2008-08-27  Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Don't capitalize
+	"per" in "Pages per Sheet".
+
+2008-08-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 549354 – Crash trying to open a file on a remote folder
+
+	* gtk/gtkfilechooserdefault.c (error_message_with_parent): Handle
+	the fact that parent may be NULL without crashing. 
+
+2008-08-25  Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Replace 
+	a long timeout with a second-granularity timeout.
+
+2008-08-25  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkprintunixdialog.c:
+	* modules/printbackends/cups/gtkprintbackendcups.c: Add translator
+	hints to many strings.
+
+2008-08-25  Gian Mario Tagliaretti  <gianmt@gnome.org>
+
+	Bug 549236 – missing Since 2.14 in gtk_file_chooser_get_file
+	
+	* gtk/gtkmountoperation.c:
+        * gtk/gtkfontsel.c:
+        * gtk/gtkfilechooser.c: Fix the docs, missing Since 2.14.
+
+2008-08-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtksettings.c: When reconstructing the color hash, try
+	harder to avoid unnecessary notification, since this can lead
+	to infinite reloading of rc files in some situations.
+
+2008-08-21  Cody Russell  <bratsche@gnome.org>
+
+	* gdk/win32/gdkevents-win32.c (doesnt_want_key): Remove the checks
+	to see if the window is modally blocked.  This doesn't get us anything,
+	and it confuses the search window in GtkTreeView (and potentially other
+	utility windows in other apps).  (#520165)
+
+2008-08-21  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtktreeview.c (gtk_tree_view_realize): small formatting fix.
+
+2008-08-21  Marek Kasik  <mkasik@redhat.com>
+
+	Bug 545875 – evo crashed when trying to print pages 6-7 of a 1 page
+	email
+
+	* gtk/gtkprintoperation.c: Clamp page ranges to correct ranges
+
+2008-08-21  Marek Kasik  <mkasik@redhat.com>
+
+	* ChangeLog: changelog update for previous commit
+
+2008-08-21  Marek Kasik  <mkasik@redhat.com>
+
+	Bug 535158 – can't rearrange the order of multi pages per side
+
+	* gtk/gtkprinter.c
+	* gtk/gtkprinter.h
+	* gtk/gtkprintunixdialog.c
+	* gtk/gtkprintsettings.c
+	* gtk/gtkprintsettings.h
+	* gtk/gtkenums.h
+	* modules/printbackends/cups/gtkprintbackendcups.c: Allow user to
+	specify layout of pages per sheet in number-up mode
+
+Wed Aug 20 18:16:29 2008  Søren Sandmann  <sandmann@redhat.com>
+
+	* gdk/x11/gdkscreen-x11.c (_gdk_x11_screen_size_changed): Emit the
+	monitors changed signal when the screen size changes.
+
+2008-08-20  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	Bug 548346 – gtk_color_selection_dialog_get_color_selection always
+	returns NULL
+
+	* gtk/gtkcolorseldialog.c
+	(gtk_color_selection_dialog_get_color_selection): Use the correct
+	macro to test the validity of the passed-in dialog.
+
+2008-08-05  Milan Crha  <mcrha@redhat.com>
+
+	* gtk/gtknotebook.c: (gtk_notebook_do_arrow): Allow changing page with
+	arrows even on non-focusable notebook. (#528091)
+
+2008-08-19  Federico Mena Quintero  <federico@novell.com>
+
+	http://bugzilla.gnome.org/show_bug.cgi?id=543308 - The file
+	chooser in "compact" mode uses the same size as in "open" mode.
+
+	* gtk/gtkfilechooserdialog.c (gtk_file_chooser_dialog_map): Don't
+	force the default size here.  Let GtkFileChooserDefault be solely
+	in charge of default sizing.
+	(set_default_size): Removed obsolete code.
+
+	* gtk/gtkfilechooserdefault.c (emit_default_size_changed): New
+	helper function, to avoid dupliated code.  Only emits the signal
+	if the widget is mapped, because that is when we actually know the
+	size we'll want.
+	(update_preview_widget_visibility): Use emit_default_size_changed()
+	(update_appearance): Likewise.
+	(gtk_file_chooser_default_style_set): Likewise.
+	(gtk_file_chooser_default_screen_changed): Likewise.
+	(gtk_file_chooser_default_map): Likewise.
+	(find_good_size_from_style): Unconditionally compute a good
+	default size for the "OPEN" modes; don't store it in internal fields.
+	(gtk_file_chooser_default_get_default_size): Only compute the
+	font-based size if we are in one of the "OPEN" modes or in
+	expanded mode.
+
+	* gtk/gtkfilechooserprivate.h (struct _GtkFileChooserDefault):
+	Removed default_width/default_height; we don't store these
+	anymore.  This will make recycled file choosers (like in the GIMP)
+	not "remember" their size across invocations.  However, this
+	prepares the way for actually remembering the user's size globally
+	in the settings file.
+
+2008-08-19  Björn Lindqvist  <bjourne@gmail.com>
+
+	Bug 548354 – Remove repeated code in gtk_cell_view_size_allocate
+
+	* gtk/gtkcellview.c (gtk_cell_view_size_allocate): Remove some
+	code duplication, no need for separate loops for GTK_PACK_START
+	and GTK_PACK_END.
+
+2008-08-19  Johan Dahlin  <johan@gnome.org>
+
+	* gtk/gtk-builder-convert (GtkBuilderConverter._parse): 
+	Remove the requres-version tag as well
+
 2008-08-18  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* ==== Released 2.13.7 ===
 

@@ -402,7 +402,7 @@ A value of this type is returned by <link linkend="gtk-print-operation-run"><fun
 </varlistentry>
 <varlistentry id="GTK-PRINT-OPERATION-RESULT-IN-PROGRESS:CAPS" role="constant">
 <term><literal>GTK_PRINT_OPERATION_RESULT_IN_PROGRESS</literal></term>
-<listitem><simpara>The print operation is complete
+<listitem><simpara>The print operation is not complete
   yet. This value will only be returned when running asynchronously.
 
 </simpara></listitem>
@@ -787,11 +787,12 @@ information about the progress of the print operation.
 Furthermore, it may use a recursive mainloop to show the print dialog.
 </para>
 <para>
-If you call <link linkend="gtk-print-operation-set-allow-async"><function>gtk_print_operation_set_allow_async()</function></link> or set the allow-async
-property the operation will run asyncronously if this is supported on the
-platform. The <link linkend="GtkPrintOperation-done"><type>"done"</type></link> signal will be emitted with the 
-operation results when the operation is done (i.e. when the dialog is 
-canceled, or when the print succeeds or fails).
+If you call <link linkend="gtk-print-operation-set-allow-async"><function>gtk_print_operation_set_allow_async()</function></link> or set the 
+<link linkend="GtkPrintOperation--allow-async"><type>"allow-async"</type></link> property the operation will run 
+asynchronously if this is supported on the platform. The 
+<link linkend="GtkPrintOperation-done"><type>"done"</type></link> signal will be emitted with the result of the 
+operation when the it is done (i.e. when the dialog is canceled, or when 
+the print succeeds or fails).
 <informalexample><programlisting>
 if (settings != NULL)
   gtk_print_operation_set_print_settings (print, settings);
@@ -854,7 +855,8 @@ given <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>.</
   the used print settings with <link linkend="gtk-print-operation-get-print-settings"><function>gtk_print_operation_get_print_settings()</function></link> 
   and store them for reuse with the next print operation. A value of
   <link linkend="GTK-PRINT-OPERATION-RESULT-IN-PROGRESS:CAPS"><literal>GTK_PRINT_OPERATION_RESULT_IN_PROGRESS</literal></link> means the operation is running
-  asynchronously, and will emit the ::done signal when done.
+  asynchronously, and will emit the <link linkend="GtkPrintOperation-done"><type>"done"</type></link> signal when 
+  done.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.10
@@ -1107,13 +1109,13 @@ Determines whether the print operation may run asynchronously or not.
 <para>
 Some systems don't support asynchronous printing, but those that do
 will return <link linkend="GTK-PRINT-OPERATION-RESULT-IN-PROGRESS:CAPS"><literal>GTK_PRINT_OPERATION_RESULT_IN_PROGRESS</literal></link> as the status, and
-emit the done signal when the operation is actually done.
+emit the <link linkend="GtkPrintOperation-done"><type>"done"</type></link> signal when the operation is actually 
+done.
 </para>
 <para>
-The Windows port does not support asynchronous operation
-at all (this is unlikely to change). On other platforms, all actions
-except for <link linkend="GTK-PRINT-OPERATION-ACTION-EXPORT:CAPS"><literal>GTK_PRINT_OPERATION_ACTION_EXPORT</literal></link> support asynchronous
-operation.</para>
+The Windows port does not support asynchronous operation at all (this 
+is unlikely to change). On other platforms, all actions except for 
+<link linkend="GTK-PRINT-OPERATION-ACTION-EXPORT:CAPS"><literal>GTK_PRINT_OPERATION_ACTION_EXPORT</literal></link> support asynchronous operation.</para>
 <para>
 
 </para><para>Default value: FALSE</para>
@@ -1169,9 +1171,8 @@ to the <link linkend="GtkPrintOperation-request-page-setup"><type>"request-page-
 <refsect2 id="GtkPrintOperation--export-filename"><title>The <literal>&quot;export-filename&quot;</literal> property</title>
 <indexterm zone="GtkPrintOperation--export-filename" role="2.10"><primary>GtkPrintOperation:export-filename</primary></indexterm><programlisting>  &quot;export-filename&quot;          <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>
-The name of a file file to generate instead of showing 
-the print dialog. Currently, PDF is the only supported
-format.
+The name of a file to generate instead of showing the print dialog. 
+Currently, PDF is the only supported format.
 </para>
 <para>
 The intended use of this property is for implementing 
@@ -1268,8 +1269,8 @@ The string is translated and suitable for displaying the print
 status e.g. in a <link linkend="GtkStatusbar"><type>GtkStatusbar</type></link>.
 </para>
 <para>
-See the ::status property for a status value that is suitable 
-for programmatic use.</para>
+See the <link linkend="GtkPrintOperation--status"><type>"status"</type></link> property for a status value that 
+is suitable for programmatic use.</para>
 <para>
 
 </para><para>Default value: ""</para>
@@ -1357,8 +1358,8 @@ tab in the print dialog. You typically return a container widget
 with multiple widgets in it.
 </para>
 <para>
-The print dialog owns the returned widget, and its lifetime
-isn't controlled by the app. However, the widget is guaranteed
+The print dialog owns the returned widget, and its lifetime is not 
+controlled by the application. However, the widget is guaranteed 
 to stay around until the <link linkend="GtkPrintOperation-custom-widget-apply"><type>"custom-widget-apply"</type></link> 
 signal is emitted on the operation. Then you can read out any 
 information you need from the widgets.</para>
@@ -1403,9 +1404,11 @@ later time.</para>
                                                         <link linkend="gpointer">gpointer</link>                user_data)      : Run Last</programlisting>
 <para>
 Emitted when the print operation run has finished doing
-everything required for printing. <parameter>result</parameter> gives you information
-about what happened during the run. If <parameter>result</parameter> is
-<link linkend="GTK-PRINT-OPERATION-RESULT-ERROR:CAPS"><literal>GTK_PRINT_OPERATION_RESULT_ERROR</literal></link> then you can call
+everything required for printing. 
+</para>
+<para>
+<parameter>result</parameter> gives you information about what happened during the run. 
+If <parameter>result</parameter> is <link linkend="GTK-PRINT-OPERATION-RESULT-ERROR:CAPS"><literal>GTK_PRINT_OPERATION_RESULT_ERROR</literal></link> then you can call
 <link linkend="gtk-print-operation-get-error"><function>gtk_print_operation_get_error()</function></link> for more information.
 </para>
 <para>
@@ -1520,11 +1523,11 @@ been allocated in the <link linkend="GtkPrintOperation-begin-print"><type>"begin
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
 Emitted after the <link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link> signal, but before 
-the actual rendering starts. It keeps getting emitted until it 
-returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>. 
+the actual rendering starts. It keeps getting emitted until a connected 
+signal handler returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link>.
 </para>
 <para>
-The ::paginate signal is intended to be used for paginating the document
+The ::paginate signal is intended to be used for paginating a document
 in small chunks, to avoid blocking the user interface for a long
 time. The signal handler should update the number of pages using
 <link linkend="gtk-print-operation-set-n-pages"><function>gtk_print_operation_set_n_pages()</function></link>, and return <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the document

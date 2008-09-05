@@ -3493,13 +3493,13 @@ gtk_widget_get_draw_rectangle (GtkWidget    *widget,
 
       *rect = widget->allocation;
 
-      gtk_widget_style_get (widget, 
+      gtk_widget_style_get (widget,
 			    "draw-border", &draw_border,
 			    NULL);
       if (draw_border)
 	{
-	  rect->x -= draw_border->top;
-	  rect->y -= draw_border->left;
+	  rect->x -= draw_border->left;
+	  rect->y -= draw_border->top;
 	  rect->width += draw_border->left + draw_border->right;
 	  rect->height += draw_border->top + draw_border->bottom;
 
@@ -6564,6 +6564,26 @@ gtk_widget_set_parent_window   (GtkWidget           *widget,
     }
 }
 
+/**
+ * gtk_widget_get_parent_window:
+ * @widget: a #GtkWidget.
+ * @returns: the parent window of @widget.
+ *
+ * Gets @widget's parent window.
+ **/
+GdkWindow *
+gtk_widget_get_parent_window (GtkWidget *widget)
+{
+  GdkWindow *parent_window;
+
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+
+  parent_window = g_object_get_qdata (G_OBJECT (widget), quark_parent_window);
+
+  return (parent_window != NULL) ? parent_window :
+	 (widget->parent != NULL) ? widget->parent->window : NULL;
+}
+
 
 /**
  * gtk_widget_set_child_visible:
@@ -6772,26 +6792,6 @@ gtk_widget_get_root_window (GtkWidget *widget)
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
 
   return gdk_screen_get_root_window (gtk_widget_get_screen (widget));
-}
-
-/**
- * gtk_widget_get_parent_window:
- * @widget: a #GtkWidget.
- * @returns: the parent window of @widget.
- * 
- * Gets @widget's parent window.
- **/
-GdkWindow *
-gtk_widget_get_parent_window   (GtkWidget           *widget)
-{
-  GdkWindow *parent_window;
-
-  g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
-  
-  parent_window = g_object_get_qdata (G_OBJECT (widget), quark_parent_window);
-
-  return (parent_window != NULL) ? parent_window : 
-	 (widget->parent != NULL) ? widget->parent->window : NULL;
 }
 
 /**
@@ -10195,25 +10195,6 @@ gtk_widget_get_has_tooltip (GtkWidget *widget)
   g_object_get (G_OBJECT (widget), "has-tooltip", &has_tooltip, NULL);
 
   return has_tooltip;
-}
-
-/**
- * gtk_widget_get_allocation:
- * @widget: a #GtkWidget
- *
- * Retrieves the widget's allocation.
- *
- * Return value: widget's allocation
- *
- * Since: 2.14
- */
-GtkAllocation
-gtk_widget_get_allocation (GtkWidget *widget)
-{
-  static GtkAllocation allocation = { 0 };
-  g_return_val_if_fail (GTK_IS_WIDGET (widget), allocation);
-
-  return widget->allocation;
 }
 
 /**

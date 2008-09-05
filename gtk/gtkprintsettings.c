@@ -22,6 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <glib/gprintf.h>
+#include <gtk/gtk.h>
 #include "gtkprintsettings.h"
 #include "gtkprintutils.h"
 #include "gtkalias.h"
@@ -1036,6 +1037,73 @@ gtk_print_settings_set_page_set (GtkPrintSettings *settings,
     }
   
   gtk_print_settings_set (settings, GTK_PRINT_SETTINGS_PAGE_SET, str);
+}
+
+/**
+ * gtk_print_settings_get_number_up_layout:
+ * @settings: a #GtkPrintSettings
+ * 
+ * Gets the value of %GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT.
+ * 
+ * Return value: layout of page in number-up mode
+ *
+ * Since: 2.14
+ */
+GtkNumberUpLayout
+gtk_print_settings_get_number_up_layout (GtkPrintSettings *settings)
+{
+  GtkNumberUpLayout layout;
+  GtkTextDirection  text_direction;
+  GEnumClass       *enum_class;
+  GEnumValue       *enum_value;
+  const gchar      *val;
+
+  g_return_val_if_fail (GTK_IS_PRINT_SETTINGS (settings), GTK_NUMBER_UP_LAYOUT_LEFT_TO_RIGHT_TOP_TO_BOTTOM);
+
+  val = gtk_print_settings_get (settings, GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT);
+  text_direction = gtk_widget_get_default_direction ();
+
+  if (text_direction == GTK_TEXT_DIR_LTR)
+    layout = GTK_NUMBER_UP_LAYOUT_LEFT_TO_RIGHT_TOP_TO_BOTTOM;
+  else
+    layout = GTK_NUMBER_UP_LAYOUT_RIGHT_TO_LEFT_TOP_TO_BOTTOM;
+
+  if (val == NULL)
+    return layout;
+
+  enum_class = g_type_class_ref (GTK_TYPE_NUMBER_UP_LAYOUT);
+  enum_value = g_enum_get_value_by_nick (enum_class, val);
+  if (enum_value)
+    layout = enum_value->value;
+  g_type_class_unref (enum_class);
+
+  return layout;
+}
+
+/**
+ * gtk_print_settings_set_number_up_layout:
+ * @settings: a #GtkPrintSettings
+ * @number_up_layout: a #GtkNumberUpLayout value
+ * 
+ * Sets the value of %GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT.
+ * 
+ * Since: 2.14
+ */
+void
+gtk_print_settings_set_number_up_layout (GtkPrintSettings  *settings,
+					 GtkNumberUpLayout  number_up_layout)
+{
+  GEnumClass *enum_class;
+  GEnumValue *enum_value;
+
+  g_return_if_fail (GTK_IS_PRINT_SETTINGS (settings));
+
+  enum_class = g_type_class_ref (GTK_TYPE_NUMBER_UP_LAYOUT);
+  enum_value = g_enum_get_value (enum_class, number_up_layout);
+  g_return_if_fail (enum_value != NULL);
+
+  gtk_print_settings_set (settings, GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT, enum_value->value_nick);
+  g_type_class_unref (enum_class);
 }
 
 /**

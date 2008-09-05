@@ -601,6 +601,9 @@ extern __typeof (gtk_spin_button_update_policy_get_type) IA__gtk_spin_button_upd
 extern __typeof (gtk_notebook_tab_get_type) IA__gtk_notebook_tab_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_notebook_tab_get_type IA__gtk_notebook_tab_get_type
 
+extern __typeof (gtk_number_up_layout_get_type) IA__gtk_number_up_layout_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gtk_number_up_layout_get_type IA__gtk_number_up_layout_get_type
+
 extern __typeof (gtk_anchor_type_get_type) IA__gtk_anchor_type_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_anchor_type_get_type IA__gtk_anchor_type_get_type
 
@@ -6992,6 +6995,12 @@ extern __typeof (gtk_print_settings_get_number_up) IA__gtk_print_settings_get_nu
 extern __typeof (gtk_print_settings_set_number_up) IA__gtk_print_settings_set_number_up __attribute((visibility("hidden")));
 #define gtk_print_settings_set_number_up IA__gtk_print_settings_set_number_up
 
+extern __typeof (gtk_print_settings_get_number_up_layout) IA__gtk_print_settings_get_number_up_layout __attribute((visibility("hidden")));
+#define gtk_print_settings_get_number_up_layout IA__gtk_print_settings_get_number_up_layout
+
+extern __typeof (gtk_print_settings_set_number_up_layout) IA__gtk_print_settings_set_number_up_layout __attribute((visibility("hidden")));
+#define gtk_print_settings_set_number_up_layout IA__gtk_print_settings_set_number_up_layout
+
 extern __typeof (gtk_print_settings_get_resolution) IA__gtk_print_settings_get_resolution __attribute((visibility("hidden")));
 #define gtk_print_settings_get_resolution IA__gtk_print_settings_get_resolution
 
@@ -8142,6 +8151,9 @@ extern __typeof (gtk_selection_data_get_format) IA__gtk_selection_data_get_forma
 
 extern __typeof (gtk_selection_data_get_data) IA__gtk_selection_data_get_data __attribute((visibility("hidden")));
 #define gtk_selection_data_get_data IA__gtk_selection_data_get_data
+
+extern __typeof (gtk_selection_data_get_length) IA__gtk_selection_data_get_length __attribute((visibility("hidden")));
+#define gtk_selection_data_get_length IA__gtk_selection_data_get_length
 
 extern __typeof (gtk_selection_data_get_pixbuf) IA__gtk_selection_data_get_pixbuf __attribute((visibility("hidden")));
 #define gtk_selection_data_get_pixbuf IA__gtk_selection_data_get_pixbuf
@@ -11726,9 +11738,6 @@ extern __typeof (gtk_widget_unparent) IA__gtk_widget_unparent __attribute((visib
 
 extern __typeof (gtk_widget_unrealize) IA__gtk_widget_unrealize __attribute((visibility("hidden")));
 #define gtk_widget_unrealize IA__gtk_widget_unrealize
-
-extern __typeof (gtk_widget_get_allocation) IA__gtk_widget_get_allocation __attribute((visibility("hidden")));
-#define gtk_widget_get_allocation IA__gtk_widget_get_allocation
 
 extern __typeof (gtk_widget_get_window) IA__gtk_widget_get_window __attribute((visibility("hidden")));
 #define gtk_widget_get_window IA__gtk_widget_get_window

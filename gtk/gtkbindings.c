@@ -708,9 +708,9 @@ gtk_binding_entry_clear_internal (GtkBindingSet  *binding_set,
 
 /**
  * gtk_binding_entry_clear:
- * @binding_set:
- * @keyval:
- * @modifiers:
+ * @binding_set: @binding_set to clear an entry of
+ * @keyval:      key value of binding to clear
+ * @modifiers:   key modifier of binding to clear
  *
  * Use of this function is deprecated.
  **/
@@ -730,11 +730,11 @@ gtk_binding_entry_clear (GtkBindingSet	*binding_set,
  * @keyval:      key value of binding to skip
  * @modifiers:   key modifier of binding to skip
  *
- * Since: 2.12
- *
  * Install a binding on @binding_set which causes key lookups
  * to be aborted, to prevent bindings from lower priority sets
  * to be activated.
+ *
+ * Since: 2.12
  **/
 void
 gtk_binding_entry_skip (GtkBindingSet  *binding_set,
@@ -889,7 +889,7 @@ _gtk_binding_entry_add_signall (GtkBindingSet  *binding_set,
  * @modifiers:   key modifier of binding to install
  * @signal_name: signal to execute upon activation
  * @n_args:      number of arguments to @signal_name
- * @:            arguments to @signal_name
+ * @Varargs:     arguments to @signal_name
  *
  * Override or install a new key binding for @keyval with @modifiers on
  * @binding_set.  When the binding is activated, @signal_name will be

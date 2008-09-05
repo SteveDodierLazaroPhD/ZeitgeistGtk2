@@ -604,6 +604,9 @@ extern __typeof (gtk_spin_button_update_policy_get_type) gtk_spin_button_update_
 #undef gtk_notebook_tab_get_type 
 extern __typeof (gtk_notebook_tab_get_type) gtk_notebook_tab_get_type __attribute((alias("IA__gtk_notebook_tab_get_type"), visibility("default")));
 
+#undef gtk_number_up_layout_get_type 
+extern __typeof (gtk_number_up_layout_get_type) gtk_number_up_layout_get_type __attribute((alias("IA__gtk_number_up_layout_get_type"), visibility("default")));
+
 #undef gtk_anchor_type_get_type 
 extern __typeof (gtk_anchor_type_get_type) gtk_anchor_type_get_type __attribute((alias("IA__gtk_anchor_type_get_type"), visibility("default")));
 
@@ -6995,6 +6998,12 @@ extern __typeof (gtk_print_settings_get_number_up) gtk_print_settings_get_number
 #undef gtk_print_settings_set_number_up 
 extern __typeof (gtk_print_settings_set_number_up) gtk_print_settings_set_number_up __attribute((alias("IA__gtk_print_settings_set_number_up"), visibility("default")));
 
+#undef gtk_print_settings_get_number_up_layout 
+extern __typeof (gtk_print_settings_get_number_up_layout) gtk_print_settings_get_number_up_layout __attribute((alias("IA__gtk_print_settings_get_number_up_layout"), visibility("default")));
+
+#undef gtk_print_settings_set_number_up_layout 
+extern __typeof (gtk_print_settings_set_number_up_layout) gtk_print_settings_set_number_up_layout __attribute((alias("IA__gtk_print_settings_set_number_up_layout"), visibility("default")));
+
 #undef gtk_print_settings_get_resolution 
 extern __typeof (gtk_print_settings_get_resolution) gtk_print_settings_get_resolution __attribute((alias("IA__gtk_print_settings_get_resolution"), visibility("default")));
 
@@ -8145,6 +8154,9 @@ extern __typeof (gtk_selection_data_get_format) gtk_selection_data_get_format __
 
 #undef gtk_selection_data_get_data 
 extern __typeof (gtk_selection_data_get_data) gtk_selection_data_get_data __attribute((alias("IA__gtk_selection_data_get_data"), visibility("default")));
+
+#undef gtk_selection_data_get_length 
+extern __typeof (gtk_selection_data_get_length) gtk_selection_data_get_length __attribute((alias("IA__gtk_selection_data_get_length"), visibility("default")));
 
 #undef gtk_selection_data_get_pixbuf 
 extern __typeof (gtk_selection_data_get_pixbuf) gtk_selection_data_get_pixbuf __attribute((alias("IA__gtk_selection_data_get_pixbuf"), visibility("default")));
@@ -11729,9 +11741,6 @@ extern __typeof (gtk_widget_unparent) gtk_widget_unparent __attribute((alias("IA
 
 #undef gtk_widget_unrealize 
 extern __typeof (gtk_widget_unrealize) gtk_widget_unrealize __attribute((alias("IA__gtk_widget_unrealize"), visibility("default")));
-
-#undef gtk_widget_get_allocation 
-extern __typeof (gtk_widget_get_allocation) gtk_widget_get_allocation __attribute((alias("IA__gtk_widget_get_allocation"), visibility("default")));
 
 #undef gtk_widget_get_window 
 extern __typeof (gtk_widget_get_window) gtk_widget_get_window __attribute((alias("IA__gtk_widget_get_window"), visibility("default")));

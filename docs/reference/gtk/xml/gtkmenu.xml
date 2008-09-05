@@ -56,9 +56,11 @@
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-menu-get-accel-path">gtk_menu_get_accel_path</link>             (<link linkend="GtkMenu">GtkMenu</link> *menu);
 <link linkend="void">void</link>                <link linkend="gtk-menu-set-title">gtk_menu_set_title</link>                  (<link linkend="GtkMenu">GtkMenu</link> *menu,
                                                          const <link linkend="gchar">gchar</link> *title);
-<link linkend="gboolean">gboolean</link>            <link linkend="gtk-menu-get-tearoff-state">gtk_menu_get_tearoff_state</link>          (<link linkend="GtkMenu">GtkMenu</link> *menu);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-menu-get-title">gtk_menu_get_title</link>                  (<link linkend="GtkMenu">GtkMenu</link> *menu);
+<link linkend="void">void</link>                <link linkend="gtk-menu-set-monitor">gtk_menu_set_monitor</link>                (<link linkend="GtkMenu">GtkMenu</link> *menu,
+                                                         <link linkend="gint">gint</link> monitor_num);
 <link linkend="gint">gint</link>                <link linkend="gtk-menu-get-monitor">gtk_menu_get_monitor</link>                (<link linkend="GtkMenu">GtkMenu</link> *menu);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-menu-get-tearoff-state">gtk_menu_get_tearoff_state</link>          (<link linkend="GtkMenu">GtkMenu</link> *menu);
 
 <link linkend="void">void</link>                <link linkend="gtk-menu-popdown">gtk_menu_popdown</link>                    (<link linkend="GtkMenu">GtkMenu</link> *menu);
 <link linkend="void">void</link>                <link linkend="gtk-menu-reposition">gtk_menu_reposition</link>                 (<link linkend="GtkMenu">GtkMenu</link> *menu);
@@ -80,8 +82,6 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-menu-get-tit
                                                          <link linkend="gpointer">gpointer</link> user_data);
 <link linkend="void">void</link>                (<link linkend="GtkMenuDetachFunc">*GtkMenuDetachFunc</link>)                (<link linkend="GtkWidget">GtkWidget</link> *attach_widget,
                                                          <link linkend="GtkMenu">GtkMenu</link> *menu);
-<link linkend="void">void</link>                <link linkend="gtk-menu-set-monitor">gtk_menu_set_monitor</link>                (<link linkend="GtkMenu">GtkMenu</link> *menu,
-                                                         <link linkend="gint">gint</link> monitor_num);
 </synopsis>
 </refsynopsisdiv>
 
@@ -524,21 +524,6 @@ that menu item's label.</para>
 <listitem><simpara> a string containing the title for the menu.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-menu-get-tearoff-state" role="function">
-<title>gtk_menu_get_tearoff_state ()</title>
-<indexterm zone="gtk-menu-get-tearoff-state"><primary>gtk_menu_get_tearoff_state</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_menu_get_tearoff_state          (<link linkend="GtkMenu">GtkMenu</link> *menu);</programlisting>
-<para>
-Returns whether the menu is torn off. See
-<link linkend="gtk-menu-set-tearoff-state"><function>gtk_menu_set_tearoff_state()</function></link>.</para>
-<para>
-
-</para><variablelist role="params">
-<varlistentry><term><parameter>menu</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GtkMenu"><type>GtkMenu</type></link>
-</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the menu is currently torn off.
-</simpara></listitem></varlistentry>
-</variablelist></refsect2>
 <refsect2 id="gtk-menu-get-title" role="function">
 <title>gtk_menu_get_title ()</title>
 <indexterm zone="gtk-menu-get-title"><primary>gtk_menu_get_title</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_menu_get_title                  (<link linkend="GtkMenu">GtkMenu</link> *menu);</programlisting>
@@ -555,6 +540,32 @@ title set on it. This string is owned by the widget and should
 not be modified or freed.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-menu-set-monitor" role="function" condition="since:2.4">
+<title>gtk_menu_set_monitor ()</title>
+<indexterm zone="gtk-menu-set-monitor" role="2.4"><primary>gtk_menu_set_monitor</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_set_monitor                (<link linkend="GtkMenu">GtkMenu</link> *menu,
+                                                         <link linkend="gint">gint</link> monitor_num);</programlisting>
+<para>
+Informs GTK+ on which monitor a menu should be popped up. 
+See <link linkend="gdk-screen-get-monitor-geometry"><function>gdk_screen_get_monitor_geometry()</function></link>.
+</para>
+<para>
+This function should be called from a <link linkend="GtkMenuPositionFunc"><type>GtkMenuPositionFunc</type></link> if the
+menu should not appear on the same monitor as the pointer. This 
+information can't be reliably inferred from the coordinates returned
+by a <link linkend="GtkMenuPositionFunc"><type>GtkMenuPositionFunc</type></link>, since, for very long menus, these coordinates 
+may extend beyond the monitor boundaries or even the screen boundaries.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>menu</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkMenu"><type>GtkMenu</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>monitor_num</parameter>&nbsp;:</term>
+<listitem><simpara> the number of the monitor on which the menu should
+   be popped up
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since  2.4
+</para></refsect2>
 <refsect2 id="gtk-menu-get-monitor" role="function" condition="since:2.14">
 <title>gtk_menu_get_monitor ()</title>
 <indexterm zone="gtk-menu-get-monitor" role="2.14"><primary>gtk_menu_get_monitor</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_menu_get_monitor                (<link linkend="GtkMenu">GtkMenu</link> *menu);</programlisting>
@@ -572,6 +583,21 @@ Retrieves the number of the monitor on which to show the menu.</para>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since  2.14
 </para></refsect2>
+<refsect2 id="gtk-menu-get-tearoff-state" role="function">
+<title>gtk_menu_get_tearoff_state ()</title>
+<indexterm zone="gtk-menu-get-tearoff-state"><primary>gtk_menu_get_tearoff_state</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_menu_get_tearoff_state          (<link linkend="GtkMenu">GtkMenu</link> *menu);</programlisting>
+<para>
+Returns whether the menu is torn off. See
+<link linkend="gtk-menu-set-tearoff-state"><function>gtk_menu_set_tearoff_state()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>menu</parameter>&nbsp;:</term>
+<listitem><simpara> a <link linkend="GtkMenu"><type>GtkMenu</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the menu is currently torn off.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="gtk-menu-popdown" role="function">
 <title>gtk_menu_popdown ()</title>
 <indexterm zone="gtk-menu-popdown"><primary>gtk_menu_popdown</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_popdown                    (<link linkend="GtkMenu">GtkMenu</link> *menu);</programlisting>
@@ -778,32 +804,6 @@ will be called when the menu is later detached from the widget.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-menu-set-monitor" role="function" condition="since:2.4">
-<title>gtk_menu_set_monitor ()</title>
-<indexterm zone="gtk-menu-set-monitor" role="2.4"><primary>gtk_menu_set_monitor</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_set_monitor                (<link linkend="GtkMenu">GtkMenu</link> *menu,
-                                                         <link linkend="gint">gint</link> monitor_num);</programlisting>
-<para>
-Informs GTK+ on which monitor a menu should be popped up. 
-See <link linkend="gdk-screen-get-monitor-geometry"><function>gdk_screen_get_monitor_geometry()</function></link>.
-</para>
-<para>
-This function should be called from a <link linkend="GtkMenuPositionFunc"><type>GtkMenuPositionFunc</type></link> if the
-menu should not appear on the same monitor as the pointer. This 
-information can't be reliably inferred from the coordinates returned
-by a <link linkend="GtkMenuPositionFunc"><type>GtkMenuPositionFunc</type></link>, since, for very long menus, these coordinates 
-may extend beyond the monitor boundaries or even the screen boundaries.</para>
-<para>
-
-</para><variablelist role="params">
-<varlistentry><term><parameter>menu</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GtkMenu"><type>GtkMenu</type></link>
-</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>monitor_num</parameter>&nbsp;:</term>
-<listitem><simpara> the number of the monitor on which the menu should
-   be popped up
-</simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkMenu.property-details" role="property_details">
