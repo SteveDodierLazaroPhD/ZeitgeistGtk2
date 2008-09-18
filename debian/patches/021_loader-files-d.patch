@@ -1,7 +1,28 @@
-Index: gtk+2.0-2.14.1/gdk-pixbuf/gdk-pixbuf-io.c
+Index: gtk+2.0-2.14.2/gdk-pixbuf/Makefile.am
 ===================================================================
---- gtk+2.0-2.14.1.orig/gdk-pixbuf/gdk-pixbuf-io.c	2008-09-05 03:31:52.000000000 +0200
-+++ gtk+2.0-2.14.1/gdk-pixbuf/gdk-pixbuf-io.c	2008-09-05 10:30:53.000000000 +0200
+--- gtk+2.0-2.14.2.orig/gdk-pixbuf/Makefile.am	2008-09-18 03:49:27.000000000 +0200
++++ gtk+2.0-2.14.2/gdk-pixbuf/Makefile.am	2008-09-18 11:14:51.000000000 +0200
+@@ -62,6 +62,7 @@
+ 	libgdk_pixbuf-2.0.la
+ 
+ loaderdir = $(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/loaders
++loaderfilesdir = $(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/loader-files.d
+ 
+ module_libs = libgdk_pixbuf-$(GTK_API_VERSION).la $(GDK_PIXBUF_DEP_LIBS)
+ 
+@@ -513,7 +514,7 @@
+ 	$(GDK_PIXBUF_DEP_CFLAGS)		\
+ 	-DGDK_PIXBUF_ENABLE_BACKEND
+ 
+-AM_CPPFLAGS = "-DPIXBUF_LIBDIR=\"$(loaderdir)\"" "-DBUILT_MODULES_DIR=\"$(srcdir)/.libs\""
++AM_CPPFLAGS = "-DPIXBUF_LIBDIR=\"$(loaderdir)\"" "-DPIXBUF_FILES_LIBDIR=\"$(loaderfilesdir)\"" "-DBUILT_MODULES_DIR=\"$(srcdir)/.libs\""
+ LDADDS = libgdk_pixbuf-$(GTK_API_VERSION).la $(GDK_PIXBUF_DEP_LIBS)
+ 
+ noinst_PROGRAMS = test-gdk-pixbuf
+Index: gtk+2.0-2.14.2/gdk-pixbuf/gdk-pixbuf-io.c
+===================================================================
+--- gtk+2.0-2.14.2.orig/gdk-pixbuf/gdk-pixbuf-io.c	2008-09-18 11:14:59.000000000 +0200
++++ gtk+2.0-2.14.2/gdk-pixbuf/gdk-pixbuf-io.c	2008-09-18 11:15:06.000000000 +0200
 @@ -51,6 +51,9 @@
  #define SNIFF_BUFFER_SIZE 4096
  #define LOAD_BUFFER_SIZE 65536
@@ -12,7 +33,7 @@ Index: gtk+2.0-2.14.1/gdk-pixbuf/gdk-pixbuf-io.c
  #ifndef GDK_PIXBUF_USE_GIO_MIME 
  static gint 
  format_check (GdkPixbufModule *module, guchar *buffer, int size)
-@@ -297,113 +300,93 @@
+@@ -310,115 +313,93 @@
  gdk_pixbuf_load_module_unlocked (GdkPixbufModule *image_module,
  				 GError         **error);
  
@@ -197,12 +218,14 @@ Index: gtk+2.0-2.14.1/gdk-pixbuf/gdk-pixbuf-io.c
 -		if (file_formats == NULL)
 -			g_warning ("Cannot open pixbuf loader module file '%s': %s",
 -				   filename, error->message);
+-		g_string_free (tmp_buf, TRUE);
+-		g_free (filename);
 -		return;
 -	}
  	
  	while (!have_error && g_io_channel_read_line (channel, &line_buf, NULL, &term, NULL) == G_IO_STATUS_NORMAL) {
  		const char *p;
-@@ -541,8 +524,156 @@
+@@ -556,8 +537,156 @@
  		g_free (line_buf);
  	}
  	g_string_free (tmp_buf, TRUE);
@@ -361,24 +384,3 @@ Index: gtk+2.0-2.14.1/gdk-pixbuf/gdk-pixbuf-io.c
  #endif
  }
  
-Index: gtk+2.0-2.14.1/gdk-pixbuf/Makefile.am
-===================================================================
---- gtk+2.0-2.14.1.orig/gdk-pixbuf/Makefile.am	2008-09-05 03:31:52.000000000 +0200
-+++ gtk+2.0-2.14.1/gdk-pixbuf/Makefile.am	2008-09-05 10:30:48.000000000 +0200
-@@ -62,6 +62,7 @@
- 	libgdk_pixbuf-2.0.la
- 
- loaderdir = $(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/loaders
-+loaderfilesdir = $(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/loader-files.d
- 
- module_libs = libgdk_pixbuf-$(GTK_API_VERSION).la $(GDK_PIXBUF_DEP_LIBS)
- 
-@@ -513,7 +514,7 @@
- 	$(GDK_PIXBUF_DEP_CFLAGS)		\
- 	-DGDK_PIXBUF_ENABLE_BACKEND
- 
--AM_CPPFLAGS = "-DPIXBUF_LIBDIR=\"$(loaderdir)\"" "-DBUILT_MODULES_DIR=\"$(srcdir)/.libs\""
-+AM_CPPFLAGS = "-DPIXBUF_LIBDIR=\"$(loaderdir)\"" "-DPIXBUF_FILES_LIBDIR=\"$(loaderfilesdir)\"" "-DBUILT_MODULES_DIR=\"$(srcdir)/.libs\""
- LDADDS = libgdk_pixbuf-$(GTK_API_VERSION).la $(GDK_PIXBUF_DEP_LIBS)
- 
- noinst_PROGRAMS = test-gdk-pixbuf

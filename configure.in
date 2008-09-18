@@ -12,8 +12,8 @@ AC_PREREQ(2.54)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [14])
-m4_define([gtk_micro_version], [1])
-m4_define([gtk_interface_age], [1])
+m4_define([gtk_micro_version], [2])
+m4_define([gtk_interface_age], [2])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -184,6 +184,9 @@ fi
 
 AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
+dnl when using libtool 2.x create libtool early, because it's used in configure
+m4_ifdef([LT_OUTPUT], [LT_OUTPUT])
+
 
 # Make sure we use 64-bit versions of various file stuff.
 AC_SYS_LARGEFILE
@@ -398,7 +401,7 @@ AC_MSG_CHECKING([Whether to write dependencies into .pc files])
 case $enable_explicit_deps in
   auto)
     export SED
-    deplibs_check_method=`(./libtool --config; echo 'eval echo $deplibs_check_method') | sh`
+    deplibs_check_method=`(./libtool --config; echo 'eval echo \"$deplibs_check_method\"') | sh`
     if test "x$deplibs_check_method" '!=' xpass_all || test "x$enable_static" = xyes ; then
       enable_explicit_deps=yes  
     else
@@ -793,7 +796,7 @@ AC_ARG_WITH(libjasper,
                             [disable JPEG2000 loader for gdk-pixbuf])])
 
 AC_ARG_ENABLE(gdiplus,
-            [AC_HELP_STRING([--disable-gdiplus-loaders],
+            [AC_HELP_STRING([--disable-gdiplus],
                             [disable GDI+ loaders for gdk-pixbuf])])
 
 AM_CONDITIONAL(BUILD_GDIPLUS_LOADERS, [ test x$os_win32 = xyes && test x$enable_gdiplus != xno ])

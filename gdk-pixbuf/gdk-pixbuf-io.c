@@ -228,8 +228,23 @@ skip_space (const char **pos)
   
 #ifdef G_OS_WIN32
 
-/* DllMain function needed to tuck away the gdk-pixbuf DLL name */
-G_WIN32_DLLMAIN_FOR_DLL_NAME (static, dll_name)
+/* DllMain function needed to tuck away the gdk-pixbuf DLL handle */
+
+static HMODULE gdk_pixbuf_dll;
+
+BOOL WINAPI
+DllMain (HINSTANCE hinstDLL,
+	 DWORD     fdwReason,
+	 LPVOID    lpvReserved)
+{
+	switch (fdwReason) {
+	case DLL_PROCESS_ATTACH:
+		gdk_pixbuf_dll = (HMODULE) hinstDLL;
+		break;
+	}
+
+  return TRUE;
+}
 
 static char *
 get_toplevel (void)
@@ -237,8 +252,7 @@ get_toplevel (void)
   static char *toplevel = NULL;
 
   if (toplevel == NULL)
-    toplevel = g_win32_get_package_installation_subdirectory
-      (GETTEXT_PACKAGE, dll_name, "");
+	  toplevel = g_win32_get_package_installation_directory_of_module (gdk_pixbuf_dll);
 
   return toplevel;
 }
@@ -249,8 +263,7 @@ get_sysconfdir (void)
   static char *sysconfdir = NULL;
 
   if (sysconfdir == NULL)
-    sysconfdir = g_win32_get_package_installation_subdirectory
-      (GETTEXT_PACKAGE, dll_name, "etc");
+	  sysconfdir = g_build_filename (get_toplevel (), "etc", NULL);
 
   return sysconfdir;
 }
@@ -402,6 +415,8 @@ gdk_pixbuf_io_init (void)
 		if (file_formats == NULL)
 			g_warning ("Cannot open pixbuf loader module file '%s': %s",
 				   filename, error->message);
+		g_string_free (tmp_buf, TRUE);
+		g_free (filename);
 		return;
 	}
 	
@@ -706,7 +721,7 @@ gdk_pixbuf_load_module_unlocked (GdkPixbufModule *image_module,
 	g_set_error (error,
 		     GDK_PIXBUF_ERROR,
 		     GDK_PIXBUF_ERROR_UNKNOWN_TYPE,
-		     _("Image type '%s' is not supported",
+		     _("Image type '%s' is not supported"),
 		     image_module->module_name);
 	return FALSE;
 #endif  /* !USE_GMODULE */

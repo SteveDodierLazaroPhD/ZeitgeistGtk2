@@ -432,6 +432,8 @@ static void location_switch_to_path_bar (GtkFileChooserDefault *impl);
 
 static void     search_stop_searching        (GtkFileChooserDefault *impl,
                                               gboolean               remove_query);
+static void     search_clear_model_row       (GtkTreeModel          *model,
+                                              GtkTreeIter           *iter);
 static void     search_clear_model           (GtkFileChooserDefault *impl, 
 					      gboolean               remove_from_treeview);
 static gboolean search_should_respond        (GtkFileChooserDefault *impl);
@@ -1936,7 +1938,7 @@ shortcuts_append_bookmarks (GtkFileChooserDefault *impl,
 {
   int start_row;
   int num_inserted;
-  const gchar *label;
+  gchar *label;
 
   profile_start ("start", NULL);
 
@@ -1958,6 +1960,8 @@ shortcuts_append_bookmarks (GtkFileChooserDefault *impl,
       label = _gtk_file_system_get_bookmark_label (impl->file_system, file);
 
       shortcuts_insert_file (impl, start_row + num_inserted, SHORTCUT_TYPE_FILE, NULL, file, label, TRUE, SHORTCUTS_BOOKMARKS);
+      g_free (label);
+
       num_inserted++;
     }
 
@@ -4197,10 +4201,13 @@ file_list_drag_data_received_cb (GtkWidget          *widget,
 
   impl = GTK_FILE_CHOOSER_DEFAULT (data);
   chooser = GTK_FILE_CHOOSER (data);
-  
+
   /* Allow only drags from other widgets; see bug #533891. */
   if (gtk_drag_get_source_widget (context) == widget)
-    return;
+    {
+      g_signal_stop_emission_by_name (widget, "drag-data-received");
+      return;
+    }
 
   /* Parse the text/uri-list string, navigate to the first one */
   uris = gtk_selection_data_get_uris (selection_data);
@@ -5906,7 +5913,7 @@ get_is_file_filtered (GtkFileChooserDefault *impl,
   needed = gtk_file_filter_get_needed (impl->current_filter);
 
   filter_info.display_name = g_file_info_get_display_name (file_info);
-  filter_info.mime_type = g_file_info_get_content_type (file_info);
+  filter_info.mime_type = g_content_type_get_mime_type (g_file_info_get_content_type (file_info));
 
   if (needed & GTK_FILE_FILTER_FILENAME)
     {
@@ -5928,10 +5935,9 @@ get_is_file_filtered (GtkFileChooserDefault *impl,
 
   result = gtk_file_filter_filter (impl->current_filter, &filter_info);
 
-  if (filter_info.filename)
-    g_free ((gchar *)filter_info.filename);
-  if (filter_info.uri)
-    g_free ((gchar *)filter_info.uri);
+  g_free ((gchar *)filter_info.filename);
+  g_free ((gchar *)filter_info.uri);
+  g_free ((gchar *)filter_info.mime_type);
 
   return !result;
 }
@@ -8497,7 +8503,7 @@ search_selected_foreach_get_file_cb (GtkTreeModel *model,
   list = data;
 
   gtk_tree_model_get (model, iter, SEARCH_MODEL_COL_FILE, &file, -1);
-  *list = g_slist_prepend (*list, file);
+  *list = g_slist_prepend (*list, g_object_ref (file));
 }
 
 /* Constructs a list of the selected paths in search mode */
@@ -8580,12 +8586,13 @@ search_hit_get_info_cb (GCancellable *cancellable,
 
   if (!info)
     {
+      search_clear_model_row (request->impl->search_model, &iter);
       gtk_list_store_remove (request->impl->search_model, &iter);
       goto out;
     }
 
   display_name = g_strdup (g_file_info_get_display_name (info));
-  mime_type = g_strdup (g_file_info_get_content_type (info));
+  mime_type = g_content_type_get_mime_type (g_file_info_get_content_type (info));
   is_folder = (g_file_info_get_file_type (info) == G_FILE_TYPE_DIRECTORY);
   pixbuf = _gtk_file_info_render_icon (info, GTK_WIDGET (request->impl),
 				       request->impl->icon_size);
@@ -8672,7 +8679,6 @@ search_add_hit (GtkFileChooserDefault *impl,
                       SEARCH_MODEL_COL_CANCELLABLE, cancellable,
                       -1);
 
-  g_object_unref (file);
   g_free (filename);
 }
 
@@ -8740,6 +8746,38 @@ search_engine_error_cb (GtkSearchEngine *engine,
   set_busy_cursor (impl, FALSE);
 }
 
+static void
+search_clear_model_row (GtkTreeModel *model,
+                        GtkTreeIter  *iter)
+{
+  GFile *file;
+  gchar *display_name;
+  gchar *collation_key;
+  struct stat *statbuf;
+  GCancellable *cancellable;
+  gchar *mime_type;
+
+  gtk_tree_model_get (model, iter,
+                      SEARCH_MODEL_COL_FILE, &file,
+                      SEARCH_MODEL_COL_DISPLAY_NAME, &display_name,
+                      SEARCH_MODEL_COL_COLLATION_KEY, &collation_key,
+                      SEARCH_MODEL_COL_STAT, &statbuf,
+                      SEARCH_MODEL_COL_CANCELLABLE, &cancellable,
+                      SEARCH_MODEL_COL_MIME_TYPE, &mime_type,
+                      -1);
+
+  if (file)
+    g_object_unref (file);
+
+  g_free (display_name);
+  g_free (collation_key);
+  g_free (statbuf);
+  g_free (mime_type);
+           
+  if (cancellable)
+    g_cancellable_cancel (cancellable);
+}
+
 /* Frees the data in the search_model */
 static void
 search_clear_model (GtkFileChooserDefault *impl, 
@@ -8756,14 +8794,7 @@ search_clear_model (GtkFileChooserDefault *impl,
   if (gtk_tree_model_get_iter_first (model, &iter))
     do
       {
-	GCancellable *cancellable;
-
-	gtk_tree_model_get (model, &iter,
-                            SEARCH_MODEL_COL_CANCELLABLE, &cancellable,
-			    -1);
-
-        if (cancellable)
-	  g_cancellable_cancel (cancellable);
+        search_clear_model_row (model, &iter);
       }
     while (gtk_tree_model_iter_next (model, &iter));
 

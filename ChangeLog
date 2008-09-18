@@ -1,4 +1,297 @@
+2008-09-17  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.14.2 ===
+
+	* NEWS: Updates
+
+2008-09-17  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 346903 – gtk_enumerate_printers needs events to complete
+
+	* gtk/gtkprintbackend.h:
+	* gtk/gtkprintbackend.c: Add a GtkPrintBackend::status property.
+
+	* modules/printbackends/cups/gtkcupsutils.h:
+	* modules/printbackends/cups/gtkcupsutils.c: Turn the connection
+	test into a tristate available/unavailable/in progress.
+	
+	* modules/printbackends/cups/gtkprintbackendcups.c: Use a single
+	connection test instance for getting the default printer and for
+	getting the printer list. Set the GtkPrintBackend::status property
+	according to the result of the connection test. Use the printer-type
+	attribute to find the default printer, if cups supports it.
+
+	* gtk/gtkprinter.c: When enumerating printers, give up when
+	the backend status is 'unavailable'.
+
+	* gtk/gtkprintunixdialog.c (printer_status_cb): Select the printer
+	when it is the default and nothing else has been selected yet.
+
+	Patch by Marek Kasik.
+
+2008-09-17  Christian Persch  <chpe@gnome.org>
+
+	Bug 552668 – format not a string literal and no format arguments in
+	gtkimmodule
+
+	* gtk/gtkimmodule.c: (gtk_im_module_load): Use %s with g_warning here.
+
+2008-09-17  Christian Persch  <chpe@gnome.org>
+
+	Bug 552667 – gtkimage containing gicon leaks memory
+
+	* gtk/gtkimage.c: (ensure_pixbuf_for_gicon): Fix critical warnings
+	when looking up the icon fails. Plug a mem leak.
+
+2008-09-17  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 329593 – Entering characters on a line very cpu intensive and 
+	slow
+
+	* gtk/gtknotebook.c (gtk_notebook_page_allocate): Return a boolean
+	that indicates whether the tab allocation has changed.
+	(gtk_notebook_pages_allocate): Only redraw the tabs if their
+	allocation has changed.
+	(gtk_notebook_calculate_tabs_allocations): Remove unused return value.
+	Patch by Owen Taylor
+
+2008-09-17  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 408154 – [PATCH] Change GtkEntryCompletion max-items to style
+	property
+
+	* gtk/gtkentrycompletion.c (_gtk_entry_completion_resize_popup): 
+	Take actions into account when finding the available space for
+	matches. Patch by Ross Burton
+
+2008-09-17  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 552500 – GtkPrintSettings API doc not precise enough
+
+	* gtk/gtkprintsettings.c: Documentation improvements. Suggested
+	by Guillaume Cottenceau
+
+2008-09-17  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 552107 – Small libtool fixes
+
+	* configure.in: Regenerate libtool early, quote $deplibs_check_method.
+	Patch by Patryk Zawadzki
+
+2008-09-17  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 551722 – gtk_widget_set_scroll_adjustments() should check the
+	signal signature
+
+	* gtk/gtkwidget.c (gtk_widget_set_scroll_adjustments): Check the
+	signature of the signal. Patch by Christian Persch
+
+2008-09-16  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkwidget.c (_gtk_widget_set,get_pointer_window): don't
+	access widget->window if the widget is not realized.
+
+2008-09-16  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 551987 – GtkPaned redrawing problem
+
+	* gtk/gtkpaned.c: Remove excess invalidations. Patch by Owen Taylor
+
+2008-09-16  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 551987 – GtkPaned redrawing problem
+
+	* gtk/gtkhpaned.c:
+	* gtk/gtkvpaned.c: Queue invalidations when the handle is moved 
+	due to child changes. Patch by Owen Taylor
+
+2008-09-16  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 552001 – gtkimcontextsimple.c: variable is declared at middle of
+	block
+
+	* gtk/gtkimcontextsimple.c: Fix a C99ism, pointed out by Kazuki
+	Iwamoto.
+
+2008-09-13  Tor Lillqvist  <tml@novell.com>
+
+	* gtk/gtkmain.c: Don't use the deprectated
+	g_win32_get_package_installation_directory() and
+	g_win32_get_package_installation_subdirectory() functions. Use
+	g_win32_get_package_installation_directory_of_module()
+	instead. Also, don't use the deprecated silly
+	G_WIN32_DLLMAIN_FOR_DLL_NAME() macro, but an explicit minimal
+	DllMain() that just saves the DLL handle.
+
+2008-09-13  Cosimo Cecchi  <cosimoc@gnome.org>
+
+	Bug 552153 – GtkModules loading with XSettings doesn't work if the
+	GTK_MODULES env var isn't set.
+
+	* gtk/gtkmain.c: (do_post_parse_initialization):
+	* gtk/gtkmodules.c: (_gtk_modules_init):
+	Call _gtk_modules_init () even if gtk_modules_string is NULL, so
+	that GtkModules specified with XSettings could be loaded.
+
+2008-09-11  Cosimo Cecchi  <cosimoc@gnome.org>
+
+	Bug 536542 – gtk_list_store_set() documentation doesn't say whether
+	values are copied.
+
+	* gtk/gtkliststore.c:
+	* gtk/gtktreestore.c:
+	Explicitly mention in the docs that gtk_[list,tree]_store_set copies
+	or keep	a reference of the values.
+
+2008-09-11  Marek Kasik  <mkasik@redhat.com>
+
+	Bug 551378 - Print dialog: should try UDS when fetching PPD for
+	localhost
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Add ability
+	to get PPD file from CUPS through Unix domain socket
+
+2008-09-11  Christian Dywan  <christian@imendio.com>
+
+	Bug 551567 – DND mark broken
+
+	* gtk/gtktextbtree.c (redisplay_mark): invalidate mark properly
+        Patch by Yevgen Muntyan.
+
+2008-09-10  Björn Lindqvist  <bjourne@gmail.com>
+
+	Bug 551699 – gtk_scrolled_window_destroy() is broken
+
+	* gtk/gtkscrolledwindow.c (gtk_scrolled_window_destroy,
+	gtk_scrolled_window_finalize): Check that the [hv]scrollbar
+	attributes are not-NULL before destroying and unparenting them.
+
+2008-09-10  Simos Xenitellis  <simos@gnome.org>
+
+	Bug 550676 – Memory leak, update keyboard layout data structure 
+
+	* gtk/gtkimcontextsimple.c (check_normalize_nfc): Added 
+	function that checks if unicode sequence can be normalised (NFC)
+	to single character. Fixed memory leaks.
+	(check_algorithmically): Moved code to check_normalize_nfc, 
+	updated switch statement for dead keys.
+	(gtk_im_context_simple_filter_keypress): Changed order; first
+	check_algorithmically() is attempted, then check_compact_table().
+
+	* gtk/gtkimcontextsimpleseqs.c: Updated compose sequence table
+	gtk_compose_seqs_compac[].
+
+	* gtk/compose-parse.py: Updated compose table generation script,
+	matches output to gtk/gtkimcontextsimpleseqs.c.
+
+Wed Sep 10 06:18:25 2008  Søren Sandmann  <sandmann@redhat.com>
+
+	* gdk/x11/gdkscreen-x11.c (init_multihead): Don't use
+	XRRGetScreenResources() as there are performance issues with
+	it. Instead rely on the fact that the RandR information is
+	propagated through Xinerama as well.
+
+2008-09-09  Marek Kasik  <mkasik@redhat.com>
+
+	Bug 551386 – gtk_printer_set_is_default() always sets TRUE
+
+	* gtk/gtkprinter.c: sets the is_default parameter to the value
+	given by caller
+
+2008-09-08  Cosimo Cecchi  <cosimoc@gnome.org>
+
+	Bug 551325 - Reference to wrong parameter in gtk_editable_insert_text
+
+	* gtk/gtkeditable.c: Fix a reference to an invalid parameter in the
+	docs.
+
+2008-09-08  Paolo Borelli  <pborelli@katamail.com>
+
+	* gtk/gtkfilechooserentry.c (install_start_autocompletion_idle):
+	use gdk_threads_add_idle so that the handler acquires the lock
+	since it calls gtk functions.
+
+2008-09-08  Tor Lillqvist  <tml@novell.com>
+
+	* configure.in (debug_default): Correct help string for
+	--disable-gdiplus.
+
+2008-09-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkfilechooserdefault.c: Actually use mime types, not content
+	types, for mimetype-based filtering, so it may work on win32.
+
+2008-09-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkfilechooserdefault.c (search_selected_foreach_get_file_cb): 
+	Ref the files, to make gtk_file_chooser_get_files() behave as
+	documented.
+
+	* gtk/gtkfilechooserdefault.c (search_clear_model): Don't leak
+	the content of the search model.
+	
+	* gtk/gtkfilechooserdefault.c (search_hit_get_info_cb): Don't leak
+	the content here, either.
+
+2008-09-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkfilechooserdefault.c (search_add_hit): Don't unref the
+	GFile we just put into the search_model. This adds a new memory
+	leak...
+
+2008-09-07  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkfilechooserdefault.c (shortcuts_append_bookmarks): Plug
+	a memory leak.
+
+2008-09-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 550062 – Small update in gdk/gdkkeysyms.h
+
+	* gdk/gdkkeysyms.h: Add dead_perspomeni and fix dead_dasia.
+	Patch by Simos Xenitellis
+
+2008-09-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 550989 – gdk_display_put_event() should call
+	g_main_context_wakeup()
+
+	* gdk/gdkdisplay.c (gdk_display_put_event): Wake up the main loop
+	after queueing the event. Patch by Owen Taylor
+
+2008-09-07  Yair Hershkovitz  <yairhr@gmail.com>
+
+	Bug 319849 - gtkcalendar look in RTL locales
+
+	* gtk/gtkcalendar.c (calendar_realize_week_numbers),
+	(gtk_calendar_realize): added missing RTL code to handle week numbers
+	from gtk_calendar_size_alloc.
+
+2008-09-06  Sven Herzberg  <sven@imendio.com>
+
+	Bug 551063 – deprecated marking without a link to what new code should
+	use
+
+	* gdk/gdkevents.c: added inline documentation for gdk_input_add() and
+	gdk_input_add_full(); added replacement hints into the deprecation
+	message
+
+2008-09-05  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkfilechooserdefault.c (file_list_drag_data_received_cb):
+	stop the emission of the signal also when we bail out early
+	because we don't accept drops from ourselves. Keeps the code from
+	running into a warning in gtktreeview.c.
+
+2008-09-05  Tor Lillqvist  <tml@novell.com>
+
+	* gtk-zip.sh.in: Fetch manpages from share/man where they get
+	installed. Don't include pointless entries for directories in the
+	zip files. Add etc/gtk-2.0/im-multipress.conf.
+
 2008-09-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.14.1 ===
 
