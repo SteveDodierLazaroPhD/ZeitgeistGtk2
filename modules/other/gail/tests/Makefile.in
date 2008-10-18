@@ -458,11 +458,13 @@ AM_CFLAGS = \
 
 @OS_WIN32_FALSE@libferret_la_LDFLAGS = \
 @OS_WIN32_FALSE@	-rpath $(moduledir) -module -avoid-version \
-@OS_WIN32_FALSE@	$(GTK_DEP_LIBS)	\
+@OS_WIN32_FALSE@	$(no_undefined)	\
 @OS_WIN32_FALSE@	$(LDFLAGS)
 
 
 @OS_WIN32_FALSE@libferret_la_LIBADD = \
+@OS_WIN32_FALSE@	$(top_builddir)/gtk/$(gtktargetlib) \
+@OS_WIN32_FALSE@        $(GTK_DEP_LIBS)  		    \
 @OS_WIN32_FALSE@	$(GAIL_INET_LIBS)
 
 
@@ -717,7 +719,8 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(module_LTLIBRARIES) $(noinst_LTLIBRARIES)
 
 @OS_WIN32_TRUE@libferret_la_DEPENDENCIES =
-@OS_WIN32_FALSE@libferret_la_DEPENDENCIES =
+@OS_WIN32_FALSE@libferret_la_DEPENDENCIES = \
+@OS_WIN32_FALSE@	$(top_builddir)/gtk/$(gtktargetlib)
 am__libferret_la_SOURCES_DIST = testlib.c testlib.h ferret.c
 @OS_WIN32_FALSE@am_libferret_la_OBJECTS = testlib.lo ferret.lo
 libferret_la_OBJECTS = $(am_libferret_la_OBJECTS)

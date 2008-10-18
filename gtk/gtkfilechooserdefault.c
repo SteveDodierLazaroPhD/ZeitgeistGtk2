@@ -934,8 +934,6 @@ gtk_file_chooser_default_finalize (GObject *object)
 
   shortcuts_free (impl);
 
-  g_object_unref (impl->file_system);
-
   g_free (impl->browse_files_last_selected_name);
 
   for (l = impl->filters; l; l = l->next)
@@ -2076,10 +2074,17 @@ shortcuts_add_volumes (GtkFileChooserDefault *impl)
 	  if (_gtk_file_system_volume_is_mounted (volume))
 	    {
 	      GFile *base_file;
+              gboolean base_is_native = TRUE;
 
 	      base_file = _gtk_file_system_volume_get_root (volume);
-	      if (base_file != NULL && !g_file_is_native (base_file))
-		continue;
+              if (base_file != NULL)
+                {
+                  base_is_native = g_file_is_native (base_file);
+                  g_object_unref (base_file);
+                }
+
+              if (!base_is_native)
+                continue;
 	    }
 	}
 
@@ -2181,6 +2186,7 @@ shortcuts_add_bookmarks (GtkFileChooserDefault *impl)
 
   bookmarks = _gtk_file_system_list_bookmarks (impl->file_system);
   shortcuts_append_bookmarks (impl, bookmarks);
+  g_slist_foreach (bookmarks, (GFunc) g_object_unref, NULL);
   g_slist_free (bookmarks);
 
   if (impl->num_bookmarks == 0)
@@ -6504,7 +6510,7 @@ show_and_select_files (GtkFileChooserDefault *impl,
 
   impl->show_and_select_files_cancellable =
     _gtk_file_system_get_folder (impl->file_system, parent_file,
- 				 "standard::is-hidden,standard::type,standard::name",
+ 				 "standard::is-hidden,standard::type,standard::name,standard::content-type",
 			         show_and_select_files_get_folder_cb, info);
 
   profile_end ("end", NULL);
@@ -6906,9 +6912,9 @@ update_current_folder_get_info_cb (GCancellable *cancellable,
 	g_object_unref (impl->current_folder);
 
       impl->current_folder = g_object_ref (data->file);
-
-      impl->reload_state = RELOAD_HAS_FOLDER;
     }
+
+  impl->reload_state = RELOAD_HAS_FOLDER;
 
   /* Update the widgets that may trigger a folder change themselves.  */
 
@@ -10194,12 +10200,16 @@ shortcuts_activate_volume (GtkFileChooserDefault *impl,
 
   if (!_gtk_file_system_volume_is_mounted (volume))
     {
+      GtkMountOperation *mount_op;
+
       set_busy_cursor (impl, TRUE);
 
+      mount_op = gtk_mount_operation_new (get_toplevel (GTK_WIDGET (impl)));
       impl->shortcuts_activate_iter_cancellable =
-        _gtk_file_system_mount_volume (impl->file_system, volume, NULL,
+        _gtk_file_system_mount_volume (impl->file_system, volume, mount_op,
 				       shortcuts_activate_volume_mount_cb,
 				       g_object_ref (impl));
+      g_object_unref (mount_op);
     }
   else
     {

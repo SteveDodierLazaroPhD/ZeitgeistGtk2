@@ -407,11 +407,15 @@ check_normalize_nfc (gunichar* combination_buffer, gint n_compose)
   return FALSE;
 }
 
-/* When updating the table of the compose sequences, also update here.
+/* Checks if a keysym is a dead key. Dead key keysym values are defined in
+ * ../gdk/gdkkeysyms.h and the first is GDK_dead_grave. As X.Org is updated,
+ * more dead keys are added and we need to update the upper limit.
+ * Currently, the upper limit is GDK_dead_dasia+1. The +1 has to do with 
+ * a temporary issue in the X.Org header files. 
+ * In future versions it will be just the keysym (no +1).
  */
 #define IS_DEAD_KEY(k) \
-    (((k) >= GDK_dead_grave && (k) <= (GDK_dead_dasia+1)) || \
-     g_unichar_type (gdk_keyval_to_unicode (k)) == G_UNICODE_NON_SPACING_MARK)
+    ((k) >= GDK_dead_grave && (k) <= (GDK_dead_dasia+1))
 
 static gboolean
 check_algorithmically (GtkIMContextSimple    *context_simple,
@@ -925,12 +929,12 @@ gtk_im_context_simple_filter_keypress (GtkIMContext *context,
             return TRUE;
           tmp_list = tmp_list->next;
         }
-  
-      if (check_algorithmically (context_simple, n_compose))
-	return TRUE;
 
       if (check_compact_table (context_simple, &gtk_compose_table_compact, n_compose))
         return TRUE;
+  
+      if (check_algorithmically (context_simple, n_compose))
+	return TRUE;
     }
   
   /* The current compose_buffer doesn't match anything */
