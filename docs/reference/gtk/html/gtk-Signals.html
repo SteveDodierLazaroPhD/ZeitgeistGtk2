@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Feature-Test-Macros.html" title="Version Information">
 <link rel="next" href="gtk-Types.html" title="Types">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,9 +69,11 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-Types.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#gtk-Signals.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#gtk-Signals.description" class="shortcut">Description</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#gtk-Signals.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#gtk-Signals.description" class="shortcut">Description</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="gtk-Signals"></a><div class="titlepage"></div>
@@ -88,7 +90,7 @@
 
 #include &lt;gtk/gtk.h&gt;
 
-#define             <a class="link" href="gtk-Signals.html#GTK-SIGNAL-OFFSET:CAPS" title="GTK_SIGNAL_OFFSET">GTK_SIGNAL_OFFSET</a>
+#define             <a class="link" href="gtk-Signals.html#GTK-SIGNAL-OFFSET--CAPS" title="GTK_SIGNAL_OFFSET">GTK_SIGNAL_OFFSET</a>
 enum                <a class="link" href="gtk-Signals.html#GtkSignalRunType" title="enum GtkSignalRunType">GtkSignalRunType</a>;
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
@@ -206,16 +208,16 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 <div class="refsect1" lang="en">
 <a name="gtk-Signals.description"></a><h2>Description</h2>
 <p>
-The GTK+ signal system merely proxies the GLib signal system now. For future 
+The GTK+ signal system merely proxies the GLib signal system now. For future
 usage, direct use of the <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html"
->GSignal</a> API is recommended, this avoids significant 
+>GSignal</a> API is recommended, this avoids significant
 performance hits where <a class="link" href="gtk-Types.html#GtkArg" title="GtkArg"><span class="type">GtkArg</span></a> structures have to be converted into <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 ><span class="type">GValue</span></a>s.
 </p>
 <div class="refsect2" lang="en">
-<a name="id2746195"></a><h3>What are signals?</h3>
+<a name="id3029522"></a><h3>What are signals?</h3>
 <p>
 Signals are a way to get notification when something happens
 and to customize object behavior according to the
@@ -250,7 +252,7 @@ methods.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2645033"></a><h3>How are signals used?</h3>
+<a name="id3144522"></a><h3>How are signals used?</h3>
 <p>
 There are two basic actions in the signal handling game.
 If you want notification of an event, you must <span class="emphasis"><em>connect</em></span>
@@ -267,7 +269,7 @@ Functions that want to notify the user of certain actions,
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2656882"></a><h3>Basic Terminology</h3>
+<a name="id3049877"></a><h3>Basic Terminology</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -292,7 +294,7 @@ when the signal is emitted.</p></td>
 <p>A function pointer and data connected
 to a signal (for a particular object).</p>
 <p>There are really two types: those which are connected
-normally, and those which are connected by one 
+normally, and those which are connected by one
 of the connect_after functions.  The connect_after handlers
 are always run after the default handler.</p>
 <p>Many toolkits refer to these as <em class="wordasword">callbacks</em>.</p>
@@ -307,7 +309,7 @@ the different handler types mentioned above.</p></td>
 <tr>
 <td><p><span class="term">signal id</span></p></td>
 <td><p>The unique positive (nonzero) integer
-used to identify a signal.  It can be used instead of 
+used to identify a signal.  It can be used instead of
 a name to many functions for a slight performance
 improvement.</p></td>
 </tr>
@@ -326,7 +328,7 @@ maps to a unique connection id.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id2772581"></a><h3>A brief note on how they work.</h3>
+<a name="id3173737"></a><h3>A brief note on how they work.</h3>
 <p>
 The functions responsible for translating an array of <span class="type">GtkArgs</span>
 to your C compiler's normal semantics are called Marshallers.
@@ -343,7 +345,7 @@ you might have to write a marshaller.
 <div class="refsect1" lang="en">
 <a name="gtk-Signals.details"></a><h2>Details</h2>
 <div class="refsect2" lang="en">
-<a name="GTK-SIGNAL-OFFSET:CAPS"></a><h3>GTK_SIGNAL_OFFSET</h3>
+<a name="GTK-SIGNAL-OFFSET--CAPS"></a><h3>GTK_SIGNAL_OFFSET</h3>
 <pre class="programlisting">#define GTK_SIGNAL_OFFSET	                      GTK_STRUCT_OFFSET
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
@@ -419,7 +421,7 @@ careful to avoid having two handlers endlessly reemitting signals,
 </tr>
 <tr>
 <td><p><span class="term">GTK_RUN_ACTION</span></p></td>
-<td><p>The signal is an action you can 
+<td><p>The signal is an action you can
 invoke without any particular setup or cleanup.
 The signal is treated no differently, but some
 other code can determine if the signal is appropriate to
@@ -679,9 +681,7 @@ Two different signals may have the same name, if they have differing types.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the signal name, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a> if the signal number was invalid.
+<td>the signal name, or <code class="literal">NULL</code> if the signal number was invalid.
 </td>
 </tr>
 </tbody>
@@ -959,7 +959,7 @@ the hook to.  The <em class="parameter"><code>func_data</code></em> will be pass
 to the hook.
 </p>
 <p>
-All else being equal, signal handlers are invoked in the order 
+All else being equal, signal handlers are invoked in the order
 connected (see <a class="link" href="gtk-Signals.html#gtk-signal-emit" title="gtk_signal_emit ()"><code class="function">gtk_signal_emit()</code></a> for the other details of
 which order things are called in).
 </p>
@@ -973,7 +973,6 @@ static void button_clicked_int (GtkButton* button, gpointer func_data)
 {
 	g_print ("button pressed: %d\n", GPOINTER_TO_INT (func_data));
 }
-
 /* By calling this function, you will make the g_print above
  * execute, printing the number passed as `to_print'. */
 static void attach_print_signal (GtkButton* button, gint to_print)
@@ -1128,12 +1127,12 @@ really pass any gpointer as the <span class="type">slot_object</span> .)
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_signal_connect_object_after</code> is deprecated and should not be used in newly-written code. Use <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-data"
-><code class="function">g_signal_connect_data()</code></a> instead, passing 
+><code class="function">g_signal_connect_data()</code></a> instead, passing
 <code class="literal">G_CONNECT_AFTER|G_CONNECT_SWAPPED</code> as <em class="parameter"><code>connect_flags</code></em>.</p>
 </div>
 <p>
 Attaches a signal hook to a signal, passing in an alternate
-object as the first parameter, and guaranteeing 
+object as the first parameter, and guaranteeing
 that the default handler and all normal
 handlers are called first.
 </p>
@@ -1339,7 +1338,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_signal_connect_object_while_alive</code> is deprecated and should not be used in newly-written code. Use <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-object"
-><code class="function">g_signal_connect_object()</code></a> instead, passing 
+><code class="function">g_signal_connect_object()</code></a> instead, passing
 <code class="literal">G_CONNECT_SWAPPED</code> as <em class="parameter"><code>connect_flags</code></em>.</p>
 </div>
 <p>
@@ -1762,8 +1761,6 @@ handler.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the connection id, if a handler was found.  0 otherwise.
-
-
 </td>
 </tr>
 </tbody>
@@ -1808,6 +1805,6 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

@@ -15,7 +15,6 @@
 <refnamediv>
 <refname>GtkFileChooserDialog</refname>
 <refpurpose>A file chooser dialog, suitable for "File/Open" or "File/Save" commands</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="GtkFileChooserDialog.synopsis" role="synopsis">
@@ -26,12 +25,12 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <link linkend="GtkFileChooserDialog-struct">GtkFileChooserDialog</link>;
-<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-file-chooser-dialog-new">gtk_file_chooser_dialog_new</link>         (const <link linkend="gchar">gchar</link> *title,
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-file-chooser-dialog-new">gtk_file_chooser_dialog_new</link>         (const <link linkend="gchar">gchar</link> *title,
                                                          <link linkend="GtkWindow">GtkWindow</link> *parent,
                                                          <link linkend="GtkFileChooserAction">GtkFileChooserAction</link> action,
                                                          const <link linkend="gchar">gchar</link> *first_button_text,
                                                          ...);
-<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-file-chooser-dialog-new-with-backend">gtk_file_chooser_dialog_new_with_backend</link>
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-file-chooser-dialog-new-with-backend">gtk_file_chooser_dialog_new_with_backend</link>
                                                         (const <link linkend="gchar">gchar</link> *title,
                                                          <link linkend="GtkWindow">GtkWindow</link> *parent,
                                                          <link linkend="GtkFileChooserAction">GtkFileChooserAction</link> action,
@@ -54,7 +53,6 @@
                                        +----<link linkend="GtkDialog">GtkDialog</link>
                                              +----GtkFileChooserDialog
 </synopsis>
-
 </refsect1>
 
 
@@ -64,7 +62,6 @@
 <para>
 GtkFileChooserDialog implements
  <link linkend="AtkImplementorIface">AtkImplementorIface</link>,  <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="GtkFileChooser">GtkFileChooser</link>.</para>
-
 </refsect1>
 
 
@@ -81,50 +78,39 @@ GtkFileChooserDialog implements
       <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link> functions on the file chooser dialog as well as
       those for <link linkend="GtkDialog"><type>GtkDialog</type></link>.
     </para>
-
     <para>
       Note that <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link> does not have any methods of its
       own.  Instead, you should use the functions that work on a
       <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>.
     </para>
-
     <example id="gtkfilechooser-typical-usage">
       <title>Typical usage</title>
-
       <para>
 	In the simplest of cases, you can the following code to use
 	<link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link> to select a file for opening:
       </para>
-
       <programlisting>
 GtkWidget *dialog;
-
 dialog = gtk_file_chooser_dialog_new ("Open File",
 				      parent_window,
 				      GTK_FILE_CHOOSER_ACTION_OPEN,
 				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 				      NULL);
-
 if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
   {
     char *filename;
-
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
     open_file (filename);
     g_free (filename);
   }
-
 gtk_widget_destroy (dialog);
       </programlisting>
-
       <para>
         To use a dialog for saving, you can use this:
       </para>
-
       <programlisting>
 GtkWidget *dialog;
-
 dialog = gtk_file_chooser_dialog_new ("Save File",
 				      parent_window,
 				      GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -132,7 +118,6 @@ dialog = gtk_file_chooser_dialog_new ("Save File",
 				      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 				      NULL);
 gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
-
 if (user_edited_a_new_document)
   {
     gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), default_folder_for_saving);
@@ -140,34 +125,26 @@ if (user_edited_a_new_document)
   }
 else
   gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), filename_for_existing_document);
-
-
 if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
   {
     char *filename;
-
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
     save_to_file (filename);
     g_free (filename);
   }
-
 gtk_widget_destroy (dialog);
       </programlisting>
     </example>
-
   <section id="gtkfilechooserdialog-response-codes">
     <title>Response Codes</title>
-
     <para>
       <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link> inherits from <link linkend="GtkDialog"><type>GtkDialog</type></link>, so buttons that
       go in its action area have response codes such as
-      <link linkend="GTK-RESPONSE-ACCEPT:CAPS"><type>GTK_RESPONSE_ACCEPT</type></link> and <link linkend="GTK-RESPONSE-CANCEL:CAPS"><type>GTK_RESPONSE_CANCEL</type></link>.  For example, you
+      <link linkend="GTK-RESPONSE-ACCEPT--CAPS"><type>GTK_RESPONSE_ACCEPT</type></link> and <link linkend="GTK-RESPONSE-CANCEL--CAPS"><type>GTK_RESPONSE_CANCEL</type></link>.  For example, you
       could call <link linkend="gtk-file-chooser-dialog-new"><function>gtk_file_chooser_dialog_new()</function></link> as follows:
     </para>
-
     <programlisting>
 GtkWidget *dialog;
-
 dialog = gtk_file_chooser_dialog_new ("Open File",
 				      parent_window,
 				      GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -175,7 +152,6 @@ dialog = gtk_file_chooser_dialog_new ("Open File",
 				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 				      NULL);
     </programlisting>
-
     <para>
       This will create buttons for "Cancel" and "Open" that use stock
       response identifiers from <link linkend="GtkResponseType"><type>GtkResponseType</type></link>.  For most dialog
@@ -185,13 +161,12 @@ dialog = gtk_file_chooser_dialog_new ("Open File",
       <emphasis>will</emphasis> have one of the following response
       codes:
       <simplelist id="gtkfilechooserdialog-responses">
-	<member><link linkend="GTK-RESPONSE-ACCEPT:CAPS"><type>GTK_RESPONSE_ACCEPT</type></link></member>
-	<member><link linkend="GTK-RESPONSE-OK:CAPS"><type>GTK_RESPONSE_OK</type></link></member>
-	<member><link linkend="GTK-RESPONSE-YES:CAPS"><type>GTK_RESPONSE_YES</type></link></member>
-	<member><link linkend="GTK-RESPONSE-APPLY:CAPS"><type>GTK_RESPONSE_APPLY</type></link></member>
+	<member><link linkend="GTK-RESPONSE-ACCEPT--CAPS"><type>GTK_RESPONSE_ACCEPT</type></link></member>
+	<member><link linkend="GTK-RESPONSE-OK--CAPS"><type>GTK_RESPONSE_OK</type></link></member>
+	<member><link linkend="GTK-RESPONSE-YES--CAPS"><type>GTK_RESPONSE_YES</type></link></member>
+	<member><link linkend="GTK-RESPONSE-APPLY--CAPS"><type>GTK_RESPONSE_APPLY</type></link></member>
       </simplelist>
     </para>
-
     <para>
       This is because <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link> must intercept responses
       and switch to folders if appropriate, rather than letting the
@@ -199,7 +174,6 @@ dialog = gtk_file_chooser_dialog_new ("Open File",
       response codes to know which responses can be blocked if
       appropriate.
     </para>
-
     <note>
       <para>
 	To summarize, make sure you use a <link
@@ -215,13 +189,12 @@ dialog = gtk_file_chooser_dialog_new ("Open File",
 <title role="details.title">Details</title>
 <refsect2 id="GtkFileChooserDialog-struct" role="struct">
 <title>GtkFileChooserDialog</title>
-<indexterm zone="GtkFileChooserDialog-struct"><primary>GtkFileChooserDialog</primary></indexterm><programlisting>typedef struct _GtkFileChooserDialog GtkFileChooserDialog;</programlisting>
+<indexterm zone="GtkFileChooserDialog-struct"><primary sortas="GtkFileChooserDialog">GtkFileChooserDialog</primary></indexterm><programlisting>typedef struct _GtkFileChooserDialog GtkFileChooserDialog;</programlisting>
 <para>
-
 </para></refsect2>
 <refsect2 id="gtk-file-chooser-dialog-new" role="function" condition="since:2.4">
 <title>gtk_file_chooser_dialog_new ()</title>
-<indexterm zone="gtk-file-chooser-dialog-new" role="2.4"><primary>gtk_file_chooser_dialog_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_file_chooser_dialog_new         (const <link linkend="gchar">gchar</link> *title,
+<indexterm zone="gtk-file-chooser-dialog-new" role="2.4"><primary sortas="gtk_file_chooser_dialog_new">gtk_file_chooser_dialog_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_file_chooser_dialog_new         (const <link linkend="gchar">gchar</link> *title,
                                                          <link linkend="GtkWindow">GtkWindow</link> *parent,
                                                          <link linkend="GtkFileChooserAction">GtkFileChooserAction</link> action,
                                                          const <link linkend="gchar">gchar</link> *first_button_text,
@@ -230,31 +203,29 @@ dialog = gtk_file_chooser_dialog_new ("Open File",
 Creates a new <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link>.  This function is analogous to
 <link linkend="gtk-dialog-new-with-buttons"><function>gtk_dialog_new_with_buttons()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>title</parameter>&nbsp;:</term>
-<listitem><simpara> Title of the dialog, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
+<listitem><simpara> Title of the dialog, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>parent</parameter>&nbsp;:</term>
-<listitem><simpara> Transient parent of the dialog, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>parent</parameter>&#160;:</term>
+<listitem><simpara> Transient parent of the dialog, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>action</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
 <listitem><simpara> Open or save mode for the dialog
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>first_button_text</parameter>&nbsp;:</term>
-<listitem><simpara> stock ID or text to go in the first button, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>first_button_text</parameter>&#160;:</term>
+<listitem><simpara> stock ID or text to go in the first button, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>...</parameter>&nbsp;:</term>
-<listitem><simpara> response ID for the first button, then additional (button, id) pairs, ending with <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara> response ID for the first button, then additional (button, id) pairs, ending with <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link>
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-file-chooser-dialog-new-with-backend" role="function" condition="deprecated:2.14|since:2.4">
 <title>gtk_file_chooser_dialog_new_with_backend ()</title>
-<indexterm zone="gtk-file-chooser-dialog-new-with-backend" role="deprecated"><primary>gtk_file_chooser_dialog_new_with_backend</primary></indexterm><indexterm zone="gtk-file-chooser-dialog-new-with-backend" role="2.4"><primary>gtk_file_chooser_dialog_new_with_backend</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_file_chooser_dialog_new_with_backend
+<indexterm zone="gtk-file-chooser-dialog-new-with-backend" role="deprecated"><primary sortas="gtk_file_chooser_dialog_new_with_backend">gtk_file_chooser_dialog_new_with_backend</primary></indexterm><indexterm zone="gtk-file-chooser-dialog-new-with-backend" role="2.4"><primary sortas="gtk_file_chooser_dialog_new_with_backend">gtk_file_chooser_dialog_new_with_backend</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_file_chooser_dialog_new_with_backend
                                                         (const <link linkend="gchar">gchar</link> *title,
                                                          <link linkend="GtkWindow">GtkWindow</link> *parent,
                                                          <link linkend="GtkFileChooserAction">GtkFileChooserAction</link> action,
@@ -268,31 +239,29 @@ especially useful if you use <link linkend="gtk-file-chooser-set-local-only"><fu
 non-local files and you use a more expressive vfs, such as gnome-vfs,
 to load files.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>title</parameter>&nbsp;:</term>
-<listitem><simpara> Title of the dialog, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
+<listitem><simpara> Title of the dialog, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>parent</parameter>&nbsp;:</term>
-<listitem><simpara> Transient parent of the dialog, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>parent</parameter>&#160;:</term>
+<listitem><simpara> Transient parent of the dialog, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>action</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
 <listitem><simpara> Open or save mode for the dialog
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>backend</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>backend</parameter>&#160;:</term>
 <listitem><simpara> The name of the specific filesystem backend to use.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>first_button_text</parameter>&nbsp;:</term>
-<listitem><simpara> stock ID or text to go in the first button, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>first_button_text</parameter>&#160;:</term>
+<listitem><simpara> stock ID or text to go in the first button, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>...</parameter>&nbsp;:</term>
-<listitem><simpara> response ID for the first button, then additional (button, id) pairs, ending with <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara> response ID for the first button, then additional (button, id) pairs, ending with <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkFileChooserDialog"><type>GtkFileChooserDialog</type></link>
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 
 </refsect1>
 

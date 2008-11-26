@@ -14,7 +14,6 @@
 <refnamediv>
 <refname>Event Structures</refname>
 <refpurpose>Data structures specific to each type of event</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="gdk-Event-Structures.synopsis" role="synopsis">
@@ -84,7 +83,7 @@ required events are received. See <link linkend="gtk-widget-set-events"><functio
 <title role="details.title">Details</title>
 <refsect2 id="GdkEvent" role="union">
 <title>union GdkEvent</title>
-<indexterm zone="GdkEvent"><primary>GdkEvent</primary></indexterm><programlisting>union GdkEvent
+<indexterm zone="GdkEvent"><primary sortas="GdkEvent">GdkEvent</primary></indexterm><programlisting>union GdkEvent
 {
   GdkEventType		    type;
   GdkEventAny		    any;
@@ -119,40 +118,36 @@ can always be accessed with the following code, no matter what type of event
 it is:
 <informalexample>
 <programlisting>
-  GdkEvent *event;  
+  GdkEvent *event;
   GdkEventType type;
-
   type = event->type;
 </programlisting>
 </informalexample>
 </para>
-
 <para>
 To access other fields of the event structs, the pointer to the event can be
 cast to the appropriate event struct pointer, or the union member name can be
-used. For example if the event type is <link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link> then the x coordinate
+used. For example if the event type is <link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link> then the x coordinate
 of the button press can be accessed with:
 <informalexample>
 <programlisting>
-  GdkEvent *event;  
+  GdkEvent *event;
   gdouble x;
-
   x = ((GdkEventButton*)event)->x;
 </programlisting>
 </informalexample>
 or:
 <informalexample>
 <programlisting>
-  GdkEvent *event;  
+  GdkEvent *event;
   gdouble x;
-
   x = event->button.x;
 </programlisting>
 </informalexample>
 </para></refsect2>
 <refsect2 id="GdkEventAny" role="struct">
 <title>GdkEventAny</title>
-<indexterm zone="GdkEventAny"><primary>GdkEventAny</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventAny"><primary sortas="GdkEventAny">GdkEventAny</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -164,26 +159,25 @@ Any event pointer can safely be cast to a pointer to a <link linkend="GdkEventAn
 these fields.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
 <listitem><simpara>the type of the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventKey" role="struct">
 <title>GdkEventKey</title>
-<indexterm zone="GdkEventKey"><primary>GdkEventKey</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventKey"><primary sortas="GdkEventKey">GdkEventKey</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -201,46 +195,46 @@ these fields.
 Describes a key press or key release event.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-KEY-PRESS:CAPS"><literal>GDK_KEY_PRESS</literal></link> or <link linkend="GDK-KEY-RELEASE:CAPS"><literal>GDK_KEY_RELEASE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-KEY-PRESS--CAPS"><literal>GDK_KEY_PRESS</literal></link> or <link linkend="GDK-KEY-RELEASE--CAPS"><literal>GDK_KEY_RELEASE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>state</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>state</structfield>;</term>
 <listitem><simpara>a bit-mask representing the state of the modifier keys (e.g. Control,
 Shift and Alt) and the pointer buttons. See <link linkend="GdkModifierType"><type>GdkModifierType</type></link>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>keyval</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>keyval</structfield>;</term>
 <listitem><simpara>the key that was pressed or released. See the 
 <filename>&lt;gdk/gdkkeysyms.h&gt;</filename>
 header file for a complete list of GDK key codes.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>length</structfield>;</term>
+<term><link linkend="gint">gint</link>&#160;<structfield>length</structfield>;</term>
 <listitem><simpara>the length of <parameter>string</parameter>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gchar">gchar</link>&nbsp;*<structfield>string</structfield>;</term>
+<term><link linkend="gchar">gchar</link>&#160;*<structfield>string</structfield>;</term>
 <listitem><simpara>a string containing the an approximation of the text that
 would result from this keypress. The only correct way to handle text
 input of text is using input methods (see <link linkend="GtkIMContext"><type>GtkIMContext</type></link>), so this
@@ -255,26 +249,25 @@ it from the an empty translation.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint16">guint16</link>&nbsp;<structfield>hardware_keycode</structfield>;</term>
+<term><link linkend="guint16">guint16</link>&#160;<structfield>hardware_keycode</structfield>;</term>
 <listitem><simpara>the raw code of the key that was pressed or released.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint8">guint8</link>&nbsp;<structfield>group</structfield>;</term>
+<term><link linkend="guint8">guint8</link>&#160;<structfield>group</structfield>;</term>
 <listitem><simpara>the keyboard group.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>is_modifier</structfield>&nbsp;:&nbsp;1;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>is_modifier</structfield>&#160;:&#160;1;</term>
 <listitem><simpara>a flag that indicates if <parameter>hardware_keycode</parameter> is mapped to a
   modifier. Since 2.10
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventButton" role="struct">
 <title>GdkEventButton</title>
-<indexterm zone="GdkEventButton"><primary>GdkEventButton</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventButton"><primary sortas="GdkEventButton">GdkEventButton</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -290,35 +283,35 @@ it from the an empty translation.
 </programlisting>
 <para>
 Used for button press and button release events. The
-<structfield>type</structfield> field will be one of <link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link>,
-<link linkend="GDK-2BUTTON-PRESS:CAPS"><literal>GDK_2BUTTON_PRESS</literal></link>, <link linkend="GDK-3BUTTON-PRESS:CAPS"><literal>GDK_3BUTTON_PRESS</literal></link>, and <link linkend="GDK-BUTTON-RELEASE:CAPS"><literal>GDK_BUTTON_RELEASE</literal></link>.
+<structfield>type</structfield> field will be one of <link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link>,
+<link linkend="GDK-2BUTTON-PRESS--CAPS"><literal>GDK_2BUTTON_PRESS</literal></link>, <link linkend="GDK-3BUTTON-PRESS--CAPS"><literal>GDK_3BUTTON_PRESS</literal></link>, and <link linkend="GDK-BUTTON-RELEASE--CAPS"><literal>GDK_BUTTON_RELEASE</literal></link>.
 </para>
 <para>
 Double and triple-clicks result in a sequence of events being received.
 For double-clicks the order of events will be:
 <orderedlist>
-<listitem><para><link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-RELEASE:CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-2BUTTON-PRESS:CAPS"><literal>GDK_2BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-RELEASE:CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-RELEASE--CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-2BUTTON-PRESS--CAPS"><literal>GDK_2BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-RELEASE--CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
 </orderedlist>
 Note that the first click is received just like a normal
-button press, while the second click results in a <link linkend="GDK-2BUTTON-PRESS:CAPS"><literal>GDK_2BUTTON_PRESS</literal></link> being
-received just after the <link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link>.
+button press, while the second click results in a <link linkend="GDK-2BUTTON-PRESS--CAPS"><literal>GDK_2BUTTON_PRESS</literal></link> being
+received just after the <link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link>.
 </para>
 <para>
-Triple-clicks are very similar to double-clicks, except that <link linkend="GDK-3BUTTON-PRESS:CAPS"><literal>GDK_3BUTTON_PRESS</literal></link>
+Triple-clicks are very similar to double-clicks, except that <link linkend="GDK-3BUTTON-PRESS--CAPS"><literal>GDK_3BUTTON_PRESS</literal></link>
 is inserted after the third click. The order of the events is:
 <orderedlist>
-<listitem><para><link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-RELEASE:CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-2BUTTON-PRESS:CAPS"><literal>GDK_2BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-RELEASE:CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-3BUTTON-PRESS:CAPS"><literal>GDK_3BUTTON_PRESS</literal></link></para></listitem>
-<listitem><para><link linkend="GDK-BUTTON-RELEASE:CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-RELEASE--CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-2BUTTON-PRESS--CAPS"><literal>GDK_2BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-RELEASE--CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-3BUTTON-PRESS--CAPS"><literal>GDK_3BUTTON_PRESS</literal></link></para></listitem>
+<listitem><para><link linkend="GDK-BUTTON-RELEASE--CAPS"><literal>GDK_BUTTON_RELEASE</literal></link></para></listitem>
 </orderedlist>
 </para>
 <para>
@@ -327,51 +320,51 @@ a second of the first. For a triple click to occur, the third button press
 must also occur within 1/2 second of the first button press.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-BUTTON-PRESS:CAPS"><literal>GDK_BUTTON_PRESS</literal></link>, <link linkend="GDK-2BUTTON-PRESS:CAPS"><literal>GDK_2BUTTON_PRESS</literal></link>,
-<link linkend="GDK-3BUTTON-PRESS:CAPS"><literal>GDK_3BUTTON_PRESS</literal></link> or <link linkend="GDK-BUTTON-RELEASE:CAPS"><literal>GDK_BUTTON_RELEASE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-BUTTON-PRESS--CAPS"><literal>GDK_BUTTON_PRESS</literal></link>, <link linkend="GDK-2BUTTON-PRESS--CAPS"><literal>GDK_2BUTTON_PRESS</literal></link>,
+<link linkend="GDK-3BUTTON-PRESS--CAPS"><literal>GDK_3BUTTON_PRESS</literal></link> or <link linkend="GDK-BUTTON-RELEASE--CAPS"><literal>GDK_BUTTON_RELEASE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;*<structfield>axes</structfield>;</term>
-<listitem><simpara><parameter>x</parameter>, <parameter>y</parameter> translated to the axes of <parameter>device</parameter>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if <parameter>device</parameter> is 
+<term><link linkend="gdouble">gdouble</link>&#160;*<structfield>axes</structfield>;</term>
+<listitem><simpara>@x, <parameter>y</parameter> translated to the axes of <parameter>device</parameter>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if <parameter>device</parameter> is 
   the mouse.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>state</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>state</structfield>;</term>
 <listitem><simpara>a bit-mask representing the state of the modifier keys (e.g. Control,
 Shift and Alt) and the pointer buttons. See <link linkend="GdkModifierType"><type>GdkModifierType</type></link>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>button</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>button</structfield>;</term>
 <listitem><simpara>the button which was pressed or released, numbered from 1 to 5.
 Normally button 1 is the left mouse button, 2 is the middle button,
 and 3 is the right button. On 2-button mice, the middle button can often
@@ -379,25 +372,24 @@ be simulated by pressing both mouse buttons together.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkDevice">GdkDevice</link>&nbsp;*<structfield>device</structfield>;</term>
+<term><link linkend="GdkDevice">GdkDevice</link>&#160;*<structfield>device</structfield>;</term>
 <listitem><simpara>the device where the event originated.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x_root</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the root of the screen.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y_root</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the root of the screen.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventScroll" role="struct">
 <title>GdkEventScroll</title>
-<indexterm zone="GdkEventScroll"><primary>GdkEventScroll</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventScroll"><primary sortas="GdkEventScroll">GdkEventScroll</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -411,73 +403,72 @@ be simulated by pressing both mouse buttons together.
 } GdkEventScroll;
 </programlisting>
 <para>
-Generated from button presses for the buttons 4 to 7. Wheel mice are 
+Generated from button presses for the buttons 4 to 7. Wheel mice are
 usually configured to generate button press events for buttons 4 and 5
 when the wheel is turned.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-SCROLL:CAPS"><literal>GDK_SCROLL</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-SCROLL--CAPS"><literal>GDK_SCROLL</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>state</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>state</structfield>;</term>
 <listitem><simpara>a bit-mask representing the state of the modifier keys (e.g. Control,
 Shift and Alt) and the pointer buttons. See <link linkend="GdkModifierType"><type>GdkModifierType</type></link>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkScrollDirection">GdkScrollDirection</link>&nbsp;<structfield>direction</structfield>;</term>
-<listitem><simpara>the direction to scroll to (one of <link linkend="GDK-SCROLL-UP:CAPS"><literal>GDK_SCROLL_UP</literal></link>, 
-  <link linkend="GDK-SCROLL-DOWN:CAPS"><literal>GDK_SCROLL_DOWN</literal></link>, <link linkend="GDK-SCROLL-LEFT:CAPS"><literal>GDK_SCROLL_LEFT</literal></link> and <link linkend="GDK-SCROLL-RIGHT:CAPS"><literal>GDK_SCROLL_RIGHT</literal></link>).
+<term><link linkend="GdkScrollDirection">GdkScrollDirection</link>&#160;<structfield>direction</structfield>;</term>
+<listitem><simpara>the direction to scroll to (one of <link linkend="GDK-SCROLL-UP--CAPS"><literal>GDK_SCROLL_UP</literal></link>, 
+  <link linkend="GDK-SCROLL-DOWN--CAPS"><literal>GDK_SCROLL_DOWN</literal></link>, <link linkend="GDK-SCROLL-LEFT--CAPS"><literal>GDK_SCROLL_LEFT</literal></link> and <link linkend="GDK-SCROLL-RIGHT--CAPS"><literal>GDK_SCROLL_RIGHT</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkDevice">GdkDevice</link>&nbsp;*<structfield>device</structfield>;</term>
+<term><link linkend="GdkDevice">GdkDevice</link>&#160;*<structfield>device</structfield>;</term>
 <listitem><simpara>the device where the event originated.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x_root</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the root of the screen.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y_root</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the root of the screen.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventMotion" role="struct">
 <title>GdkEventMotion</title>
-<indexterm zone="GdkEventMotion"><primary>GdkEventMotion</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventMotion"><primary sortas="GdkEventMotion">GdkEventMotion</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -495,74 +486,73 @@ Shift and Alt) and the pointer buttons. See <link linkend="GdkModifierType"><typ
 Generated when the pointer moves.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
 <listitem><simpara>the type of the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;*<structfield>axes</structfield>;</term>
-<listitem><simpara><parameter>x</parameter>, <parameter>y</parameter> translated to the axes of <parameter>device</parameter>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if <parameter>device</parameter> is 
+<term><link linkend="gdouble">gdouble</link>&#160;*<structfield>axes</structfield>;</term>
+<listitem><simpara>@x, <parameter>y</parameter> translated to the axes of <parameter>device</parameter>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if <parameter>device</parameter> is 
   the mouse.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>state</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>state</structfield>;</term>
 <listitem><simpara>a bit-mask representing the state of the modifier keys (e.g. Control,
   Shift and Alt) and the pointer buttons. See <link linkend="GdkModifierType"><type>GdkModifierType</type></link>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint16">gint16</link>&nbsp;<structfield>is_hint</structfield>;</term>
-<listitem><simpara>set to 1 if this event is just a hint, see the <link linkend="GDK-POINTER-MOTION-HINT-MASK:CAPS"><literal>GDK_POINTER_MOTION_HINT_MASK</literal></link>
+<term><link linkend="gint16">gint16</link>&#160;<structfield>is_hint</structfield>;</term>
+<listitem><simpara>set to 1 if this event is just a hint, see the <link linkend="GDK-POINTER-MOTION-HINT-MASK--CAPS"><literal>GDK_POINTER_MOTION_HINT_MASK</literal></link>
   value of <link linkend="GdkEventMask"><type>GdkEventMask</type></link>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkDevice">GdkDevice</link>&nbsp;*<structfield>device</structfield>;</term>
+<term><link linkend="GdkDevice">GdkDevice</link>&#160;*<structfield>device</structfield>;</term>
 <listitem><simpara>the device where the event originated.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x_root</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the root of the screen.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y_root</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the root of the screen.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventExpose" role="struct">
 <title>GdkEventExpose</title>
-<indexterm zone="GdkEventExpose"><primary>GdkEventExpose</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventExpose"><primary sortas="GdkEventExpose">GdkEventExpose</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -576,44 +566,43 @@ Generated when all or part of a window becomes visible and needs to be
 redrawn.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-EXPOSE:CAPS"><literal>GDK_EXPOSE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-EXPOSE--CAPS"><literal>GDK_EXPOSE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkRectangle">GdkRectangle</link>&nbsp;<structfield>area</structfield>;</term>
+<term><link linkend="GdkRectangle">GdkRectangle</link>&#160;<structfield>area</structfield>;</term>
 <listitem><simpara>bounding box of <parameter>region</parameter>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkRegion">GdkRegion</link>&nbsp;*<structfield>region</structfield>;</term>
+<term><link linkend="GdkRegion">GdkRegion</link>&#160;*<structfield>region</structfield>;</term>
 <listitem><simpara>the region that needs to be redrawn.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>count</structfield>;</term>
-<listitem><simpara>the number of contiguous <link linkend="GDK-EXPOSE:CAPS"><literal>GDK_EXPOSE</literal></link> events following this one.
+<term><link linkend="gint">gint</link>&#160;<structfield>count</structfield>;</term>
+<listitem><simpara>the number of contiguous <link linkend="GDK-EXPOSE--CAPS"><literal>GDK_EXPOSE</literal></link> events following this one.
 The only use for this is "exposure compression", i.e. handling all contiguous
-<link linkend="GDK-EXPOSE:CAPS"><literal>GDK_EXPOSE</literal></link> events in one go, though GDK performs some exposure compression
+<link linkend="GDK-EXPOSE--CAPS"><literal>GDK_EXPOSE</literal></link> events in one go, though GDK performs some exposure compression
 so this is not normally needed.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventVisibility" role="struct">
 <title>GdkEventVisibility</title>
-<indexterm zone="GdkEventVisibility"><primary>GdkEventVisibility</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventVisibility"><primary sortas="GdkEventVisibility">GdkEventVisibility</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -624,32 +613,31 @@ so this is not normally needed.
 Generated when the window visibility status has changed.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-VISIBILITY-NOTIFY:CAPS"><literal>GDK_VISIBILITY_NOTIFY</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-VISIBILITY-NOTIFY--CAPS"><literal>GDK_VISIBILITY_NOTIFY</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkVisibilityState">GdkVisibilityState</link>&nbsp;<structfield>state</structfield>;</term>
-<listitem><simpara>the new visibility state (<link linkend="GDK-VISIBILITY-FULLY-OBSCURED:CAPS"><literal>GDK_VISIBILITY_FULLY_OBSCURED</literal></link>,
-<link linkend="GDK-VISIBILITY-PARTIAL:CAPS"><literal>GDK_VISIBILITY_PARTIAL</literal></link> or <link linkend="GDK-VISIBILITY-UNOBSCURED:CAPS"><literal>GDK_VISIBILITY_UNOBSCURED</literal></link>).
-
+<term><link linkend="GdkVisibilityState">GdkVisibilityState</link>&#160;<structfield>state</structfield>;</term>
+<listitem><simpara>the new visibility state (<link linkend="GDK-VISIBILITY-FULLY-OBSCURED--CAPS"><literal>GDK_VISIBILITY_FULLY_OBSCURED</literal></link>,
+<link linkend="GDK-VISIBILITY-PARTIAL--CAPS"><literal>GDK_VISIBILITY_PARTIAL</literal></link> or <link linkend="GDK-VISIBILITY-UNOBSCURED--CAPS"><literal>GDK_VISIBILITY_UNOBSCURED</literal></link>).
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventCrossing" role="struct">
 <title>GdkEventCrossing</title>
-<indexterm zone="GdkEventCrossing"><primary>GdkEventCrossing</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventCrossing"><primary sortas="GdkEventCrossing">GdkEventCrossing</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -669,83 +657,82 @@ Generated when the window visibility status has changed.
 Generated when the pointer enters or leaves a window.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-ENTER-NOTIFY:CAPS"><literal>GDK_ENTER_NOTIFY</literal></link> or <link linkend="GDK-LEAVE-NOTIFY:CAPS"><literal>GDK_LEAVE_NOTIFY</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-ENTER-NOTIFY--CAPS"><literal>GDK_ENTER_NOTIFY</literal></link> or <link linkend="GDK-LEAVE-NOTIFY--CAPS"><literal>GDK_LEAVE_NOTIFY</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using 
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using 
 <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>subwindow</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>subwindow</structfield>;</term>
 <listitem><simpara>the window that was entered or left.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>x_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>x_root</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the root of the screen.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gdouble">gdouble</link>&nbsp;<structfield>y_root</structfield>;</term>
+<term><link linkend="gdouble">gdouble</link>&#160;<structfield>y_root</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the root of the screen.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkCrossingMode">GdkCrossingMode</link>&nbsp;<structfield>mode</structfield>;</term>
-<listitem><simpara>the crossing mode (<link linkend="GDK-CROSSING-NORMAL:CAPS"><literal>GDK_CROSSING_NORMAL</literal></link>, <link linkend="GDK-CROSSING-GRAB:CAPS"><literal>GDK_CROSSING_GRAB</literal></link>, 
-  <link linkend="GDK-CROSSING-UNGRAB:CAPS"><literal>GDK_CROSSING_UNGRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-GRAB:CAPS"><literal>GDK_CROSSING_GTK_GRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-UNGRAB:CAPS"><literal>GDK_CROSSING_GTK_UNGRAB</literal></link> or
-  <link linkend="GDK-CROSSING-STATE-CHANGED:CAPS"><literal>GDK_CROSSING_STATE_CHANGED</literal></link>).  <link linkend="GDK-CROSSING-GTK-GRAB:CAPS"><literal>GDK_CROSSING_GTK_GRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-UNGRAB:CAPS"><literal>GDK_CROSSING_GTK_UNGRAB</literal></link>,
-  and <link linkend="GDK-CROSSING-STATE-CHANGED:CAPS"><literal>GDK_CROSSING_STATE_CHANGED</literal></link> were added in 2.14 and are always synthesized,
+<term><link linkend="GdkCrossingMode">GdkCrossingMode</link>&#160;<structfield>mode</structfield>;</term>
+<listitem><simpara>the crossing mode (<link linkend="GDK-CROSSING-NORMAL--CAPS"><literal>GDK_CROSSING_NORMAL</literal></link>, <link linkend="GDK-CROSSING-GRAB--CAPS"><literal>GDK_CROSSING_GRAB</literal></link>, 
+  <link linkend="GDK-CROSSING-UNGRAB--CAPS"><literal>GDK_CROSSING_UNGRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-GRAB--CAPS"><literal>GDK_CROSSING_GTK_GRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-UNGRAB--CAPS"><literal>GDK_CROSSING_GTK_UNGRAB</literal></link> or
+  <link linkend="GDK-CROSSING-STATE-CHANGED--CAPS"><literal>GDK_CROSSING_STATE_CHANGED</literal></link>).  <link linkend="GDK-CROSSING-GTK-GRAB--CAPS"><literal>GDK_CROSSING_GTK_GRAB</literal></link>, <link linkend="GDK-CROSSING-GTK-UNGRAB--CAPS"><literal>GDK_CROSSING_GTK_UNGRAB</literal></link>,
+  and <link linkend="GDK-CROSSING-STATE-CHANGED--CAPS"><literal>GDK_CROSSING_STATE_CHANGED</literal></link> were added in 2.14 and are always synthesized,
   never native.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkNotifyType">GdkNotifyType</link>&nbsp;<structfield>detail</structfield>;</term>
-<listitem><simpara>the kind of crossing that happened (<link linkend="GDK-NOTIFY-INFERIOR:CAPS"><literal>GDK_NOTIFY_INFERIOR</literal></link>,
-  <link linkend="GDK-NOTIFY-ANCESTOR:CAPS"><literal>GDK_NOTIFY_ANCESTOR</literal></link>, <link linkend="GDK-NOTIFY-VIRTUAL:CAPS"><literal>GDK_NOTIFY_VIRTUAL</literal></link>, <link linkend="GDK-NOTIFY-NONLINEAR:CAPS"><literal>GDK_NOTIFY_NONLINEAR</literal></link> or
-  <link linkend="GDK-NOTIFY-NONLINEAR-VIRTUAL:CAPS"><literal>GDK_NOTIFY_NONLINEAR_VIRTUAL</literal></link>).
+<term><link linkend="GdkNotifyType">GdkNotifyType</link>&#160;<structfield>detail</structfield>;</term>
+<listitem><simpara>the kind of crossing that happened (<link linkend="GDK-NOTIFY-INFERIOR--CAPS"><literal>GDK_NOTIFY_INFERIOR</literal></link>,
+  <link linkend="GDK-NOTIFY-ANCESTOR--CAPS"><literal>GDK_NOTIFY_ANCESTOR</literal></link>, <link linkend="GDK-NOTIFY-VIRTUAL--CAPS"><literal>GDK_NOTIFY_VIRTUAL</literal></link>, <link linkend="GDK-NOTIFY-NONLINEAR--CAPS"><literal>GDK_NOTIFY_NONLINEAR</literal></link> or
+  <link linkend="GDK-NOTIFY-NONLINEAR-VIRTUAL--CAPS"><literal>GDK_NOTIFY_NONLINEAR_VIRTUAL</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gboolean">gboolean</link>&nbsp;<structfield>focus</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>window</parameter> is the focus window or an inferior.
+<term><link linkend="gboolean">gboolean</link>&#160;<structfield>focus</structfield>;</term>
+<listitem><simpara>%TRUE if <parameter>window</parameter> is the focus window or an inferior.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>state</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>state</structfield>;</term>
 <listitem><simpara>a bit-mask representing the state of the modifier keys (e.g. Control,
   Shift and Alt) and the pointer buttons. See <link linkend="GdkModifierType"><type>GdkModifierType</type></link>.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventFocus" role="struct">
 <title>GdkEventFocus</title>
-<indexterm zone="GdkEventFocus"><primary>GdkEventFocus</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventFocus"><primary sortas="GdkEventFocus">GdkEventFocus</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -756,31 +743,30 @@ Generated when the pointer enters or leaves a window.
 Describes a change of keyboard focus.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-FOCUS-CHANGE:CAPS"><literal>GDK_FOCUS_CHANGE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-FOCUS-CHANGE--CAPS"><literal>GDK_FOCUS_CHANGE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint16">gint16</link>&nbsp;<structfield>in</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the window has gained the keyboard focus, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if it has lost
+<term><link linkend="gint16">gint16</link>&#160;<structfield>in</structfield>;</term>
+<listitem><simpara>%TRUE if the window has gained the keyboard focus, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> if it has lost
 the focus.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventConfigure" role="struct">
 <title>GdkEventConfigure</title>
-<indexterm zone="GdkEventConfigure"><primary>GdkEventConfigure</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventConfigure"><primary sortas="GdkEventConfigure">GdkEventConfigure</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -793,45 +779,44 @@ the focus.
 Generated when a window size or position has changed.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-CONFIGURE:CAPS"><literal>GDK_CONFIGURE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-CONFIGURE--CAPS"><literal>GDK_CONFIGURE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>x</structfield>;</term>
+<term><link linkend="gint">gint</link>&#160;<structfield>x</structfield>;</term>
 <listitem><simpara>the new x coordinate of the window, relative to its parent.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>y</structfield>;</term>
+<term><link linkend="gint">gint</link>&#160;<structfield>y</structfield>;</term>
 <listitem><simpara>the new y coordinate of the window, relative to its parent.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>width</structfield>;</term>
+<term><link linkend="gint">gint</link>&#160;<structfield>width</structfield>;</term>
 <listitem><simpara>the new width of the window.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>height</structfield>;</term>
+<term><link linkend="gint">gint</link>&#160;<structfield>height</structfield>;</term>
 <listitem><simpara>the new height of the window.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventProperty" role="struct">
 <title>GdkEventProperty</title>
-<indexterm zone="GdkEventProperty"><primary>GdkEventProperty</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventProperty"><primary sortas="GdkEventProperty">GdkEventProperty</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -844,41 +829,40 @@ Generated when a window size or position has changed.
 Describes a property change on a window.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-PROPERTY-NOTIFY:CAPS"><literal>GDK_PROPERTY_NOTIFY</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-PROPERTY-NOTIFY--CAPS"><literal>GDK_PROPERTY_NOTIFY</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkAtom">GdkAtom</link>&nbsp;<structfield>atom</structfield>;</term>
+<term><link linkend="GdkAtom">GdkAtom</link>&#160;<structfield>atom</structfield>;</term>
 <listitem><simpara>the property that was changed.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>state</structfield>;</term>
-<listitem><simpara>whether the property was changed (<link linkend="GDK-PROPERTY-NEW-VALUE:CAPS"><literal>GDK_PROPERTY_NEW_VALUE</literal></link>) or
-deleted (<link linkend="GDK-PROPERTY-DELETE:CAPS"><literal>GDK_PROPERTY_DELETE</literal></link>).
-
+<term><link linkend="guint">guint</link>&#160;<structfield>state</structfield>;</term>
+<listitem><simpara>whether the property was changed (<link linkend="GDK-PROPERTY-NEW-VALUE--CAPS"><literal>GDK_PROPERTY_NEW_VALUE</literal></link>) or
+deleted (<link linkend="GDK-PROPERTY-DELETE--CAPS"><literal>GDK_PROPERTY_DELETE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventSelection" role="struct">
 <title>GdkEventSelection</title>
-<indexterm zone="GdkEventSelection"><primary>GdkEventSelection</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventSelection"><primary sortas="GdkEventSelection">GdkEventSelection</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -890,61 +874,60 @@ deleted (<link linkend="GDK-PROPERTY-DELETE:CAPS"><literal>GDK_PROPERTY_DELETE</
 } GdkEventSelection;
 </programlisting>
 <para>
-Generated when a selection is requested or ownership of a selection 
-is taken over by another client application. 
+Generated when a selection is requested or ownership of a selection
+is taken over by another client application.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-SELECTION-CLEAR:CAPS"><literal>GDK_SELECTION_CLEAR</literal></link>, <link linkend="GDK-SELECTION-NOTIFY:CAPS"><literal>GDK_SELECTION_NOTIFY</literal></link> or 
-<link linkend="GDK-SELECTION-REQUEST:CAPS"><literal>GDK_SELECTION_REQUEST</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-SELECTION-CLEAR--CAPS"><literal>GDK_SELECTION_CLEAR</literal></link>, <link linkend="GDK-SELECTION-NOTIFY--CAPS"><literal>GDK_SELECTION_NOTIFY</literal></link> or 
+<link linkend="GDK-SELECTION-REQUEST--CAPS"><literal>GDK_SELECTION_REQUEST</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkAtom">GdkAtom</link>&nbsp;<structfield>selection</structfield>;</term>
+<term><link linkend="GdkAtom">GdkAtom</link>&#160;<structfield>selection</structfield>;</term>
 <listitem><simpara>the selection.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkAtom">GdkAtom</link>&nbsp;<structfield>target</structfield>;</term>
+<term><link linkend="GdkAtom">GdkAtom</link>&#160;<structfield>target</structfield>;</term>
 <listitem><simpara>the target to which the selection should be converted.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkAtom">GdkAtom</link>&nbsp;<structfield>property</structfield>;</term>
+<term><link linkend="GdkAtom">GdkAtom</link>&#160;<structfield>property</structfield>;</term>
 <listitem><simpara>the property in which to place the result of the conversion.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkNativeWindow">GdkNativeWindow</link>&nbsp;<structfield>requestor</structfield>;</term>
+<term><link linkend="GdkNativeWindow">GdkNativeWindow</link>&#160;<structfield>requestor</structfield>;</term>
 <listitem><simpara>the native window on which to place <parameter>property</parameter>.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkNativeWindow" role="typedef">
 <title>GdkNativeWindow</title>
-<indexterm zone="GdkNativeWindow"><primary>GdkNativeWindow</primary></indexterm><para>
-Used to represent native windows (<type>Window</type>s for the X11 backend, 
+<indexterm zone="GdkNativeWindow"><primary sortas="GdkNativeWindow">GdkNativeWindow</primary></indexterm><para>
+Used to represent native windows (<type>Window</type>s for the X11 backend,
 <type>HWND</type>s for Win32).
 </para></refsect2>
 <refsect2 id="GdkEventDND" role="struct">
 <title>GdkEventDND</title>
-<indexterm zone="GdkEventDND"><primary>GdkEventDND</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventDND"><primary sortas="GdkEventDND">GdkEventDND</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -955,51 +938,50 @@ Used to represent native windows (<type>Window</type>s for the X11 backend,
 } GdkEventDND;
 </programlisting>
 <para>
-Generated during DND operations. 
+Generated during DND operations.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-DRAG-ENTER:CAPS"><literal>GDK_DRAG_ENTER</literal></link>, <link linkend="GDK-DRAG-LEAVE:CAPS"><literal>GDK_DRAG_LEAVE</literal></link>,
-  <link linkend="GDK-DRAG-MOTION:CAPS"><literal>GDK_DRAG_MOTION</literal></link>, <link linkend="GDK-DRAG-STATUS:CAPS"><literal>GDK_DRAG_STATUS</literal></link>, <link linkend="GDK-DROP-START:CAPS"><literal>GDK_DROP_START</literal></link> or <link linkend="GDK-DROP-FINISHED:CAPS"><literal>GDK_DROP_FINISHED</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-DRAG-ENTER--CAPS"><literal>GDK_DRAG_ENTER</literal></link>, <link linkend="GDK-DRAG-LEAVE--CAPS"><literal>GDK_DRAG_LEAVE</literal></link>,
+  <link linkend="GDK-DRAG-MOTION--CAPS"><literal>GDK_DRAG_MOTION</literal></link>, <link linkend="GDK-DRAG-STATUS--CAPS"><literal>GDK_DRAG_STATUS</literal></link>, <link linkend="GDK-DROP-START--CAPS"><literal>GDK_DROP_START</literal></link> or <link linkend="GDK-DROP-FINISHED--CAPS"><literal>GDK_DROP_FINISHED</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkDragContext">GdkDragContext</link>&nbsp;*<structfield>context</structfield>;</term>
+<term><link linkend="GdkDragContext">GdkDragContext</link>&#160;*<structfield>context</structfield>;</term>
 <listitem><simpara>the <link linkend="GdkDragContext"><type>GdkDragContext</type></link> for the current DND operation.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gshort">gshort</link>&nbsp;<structfield>x_root</structfield>;</term>
+<term><link linkend="gshort">gshort</link>&#160;<structfield>x_root</structfield>;</term>
 <listitem><simpara>the x coordinate of the pointer relative to the root of the screen,
-  only set for <link linkend="GDK-DRAG-MOTION:CAPS"><literal>GDK_DRAG_MOTION</literal></link> and <link linkend="GDK-DROP-START:CAPS"><literal>GDK_DROP_START</literal></link>.
+  only set for <link linkend="GDK-DRAG-MOTION--CAPS"><literal>GDK_DRAG_MOTION</literal></link> and <link linkend="GDK-DROP-START--CAPS"><literal>GDK_DROP_START</literal></link>.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gshort">gshort</link>&nbsp;<structfield>y_root</structfield>;</term>
+<term><link linkend="gshort">gshort</link>&#160;<structfield>y_root</structfield>;</term>
 <listitem><simpara>the y coordinate of the pointer relative to the root of the screen,
-  only set for <link linkend="GDK-DRAG-MOTION:CAPS"><literal>GDK_DRAG_MOTION</literal></link> and <link linkend="GDK-DROP-START:CAPS"><literal>GDK_DROP_START</literal></link>.
-
+  only set for <link linkend="GDK-DRAG-MOTION--CAPS"><literal>GDK_DRAG_MOTION</literal></link> and <link linkend="GDK-DROP-START--CAPS"><literal>GDK_DROP_START</literal></link>.
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventProximity" role="struct">
 <title>GdkEventProximity</title>
-<indexterm zone="GdkEventProximity"><primary>GdkEventProximity</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventProximity"><primary sortas="GdkEventProximity">GdkEventProximity</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -1016,35 +998,34 @@ contact with the tablet, or perhaps that the user's finger has moved
 in or out of contact with a touch screen.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-PROXIMITY-IN:CAPS"><literal>GDK_PROXIMITY_IN</literal></link> or <link linkend="GDK-PROXIMITY-OUT:CAPS"><literal>GDK_PROXIMITY_OUT</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-PROXIMITY-IN--CAPS"><literal>GDK_PROXIMITY_IN</literal></link> or <link linkend="GDK-PROXIMITY-OUT--CAPS"><literal>GDK_PROXIMITY_OUT</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the time of the event in milliseconds.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkDevice">GdkDevice</link>&nbsp;*<structfield>device</structfield>;</term>
+<term><link linkend="GdkDevice">GdkDevice</link>&#160;*<structfield>device</structfield>;</term>
 <listitem><simpara>the device where the event originated.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventClient" role="struct">
 <title>GdkEventClient</title>
-<indexterm zone="GdkEventClient"><primary>GdkEventClient</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventClient"><primary sortas="GdkEventClient">GdkEventClient</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -1061,38 +1042,37 @@ in or out of contact with a touch screen.
 An event sent by another client application.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-CLIENT-EVENT:CAPS"><literal>GDK_CLIENT_EVENT</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-CLIENT-EVENT--CAPS"><literal>GDK_CLIENT_EVENT</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkAtom">GdkAtom</link>&nbsp;<structfield>message_type</structfield>;</term>
+<term><link linkend="GdkAtom">GdkAtom</link>&#160;<structfield>message_type</structfield>;</term>
 <listitem><simpara>the type of the message, which can be defined by the
 application.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gushort">gushort</link>&nbsp;<structfield>data_format</structfield>;</term>
+<term><link linkend="gushort">gushort</link>&#160;<structfield>data_format</structfield>;</term>
 <listitem><simpara>the format of the data, given as the number of bits in each
 data element, i.e. 8, 16, or 32. 8-bit data uses the b array of the data
 union, 16-bit data uses the s array, and 32-bit data uses the l array.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventNoExpose" role="struct">
 <title>GdkEventNoExpose</title>
-<indexterm zone="GdkEventNoExpose"><primary>GdkEventNoExpose</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventNoExpose"><primary sortas="GdkEventNoExpose">GdkEventNoExpose</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -1106,25 +1086,24 @@ or <link linkend="gdk-window-copy-area"><function>gdk_window_copy_area()</functi
 FIXME: add more here.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-NO-EXPOSE:CAPS"><literal>GDK_NO_EXPOSE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-NO-EXPOSE--CAPS"><literal>GDK_NO_EXPOSE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
-
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventWindowState" role="struct">
 <title>GdkEventWindowState</title>
-<indexterm zone="GdkEventWindowState"><primary>GdkEventWindowState</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventWindowState"><primary sortas="GdkEventWindowState">GdkEventWindowState</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -1136,35 +1115,34 @@ FIXME: add more here.
 Generated when the state of a toplevel window changes.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-WINDOW-STATE:CAPS"><literal>GDK_WINDOW_STATE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-WINDOW-STATE--CAPS"><literal>GDK_WINDOW_STATE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindowState">GdkWindowState</link>&nbsp;<structfield>changed_mask</structfield>;</term>
+<term><link linkend="GdkWindowState">GdkWindowState</link>&#160;<structfield>changed_mask</structfield>;</term>
 <listitem><simpara>mask specifying what flags have changed.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindowState">GdkWindowState</link>&nbsp;<structfield>new_window_state</structfield>;</term>
+<term><link linkend="GdkWindowState">GdkWindowState</link>&#160;<structfield>new_window_state</structfield>;</term>
 <listitem><simpara>the new window state, a combination of <link linkend="GdkWindowState"><type>GdkWindowState</type></link> bits.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventSetting" role="struct">
 <title>GdkEventSetting</title>
-<indexterm zone="GdkEventSetting"><primary>GdkEventSetting</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventSetting"><primary sortas="GdkEventSetting">GdkEventSetting</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -1176,36 +1154,35 @@ Generated when the state of a toplevel window changes.
 Generated when a setting is modified.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-SETTING:CAPS"><literal>GDK_SETTING</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-SETTING--CAPS"><literal>GDK_SETTING</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkSettingAction">GdkSettingAction</link>&nbsp;<structfield>action</structfield>;</term>
-<listitem><simpara>what happened to the setting (<link linkend="GDK-SETTING-ACTION-NEW:CAPS"><literal>GDK_SETTING_ACTION_NEW</literal></link>,
-  <link linkend="GDK-SETTING-ACTION-CHANGED:CAPS"><literal>GDK_SETTING_ACTION_CHANGED</literal></link> or <link linkend="GDK-SETTING-ACTION-DELETED:CAPS"><literal>GDK_SETTING_ACTION_DELETED</literal></link>).
+<term><link linkend="GdkSettingAction">GdkSettingAction</link>&#160;<structfield>action</structfield>;</term>
+<listitem><simpara>what happened to the setting (<link linkend="GDK-SETTING-ACTION-NEW--CAPS"><literal>GDK_SETTING_ACTION_NEW</literal></link>,
+  <link linkend="GDK-SETTING-ACTION-CHANGED--CAPS"><literal>GDK_SETTING_ACTION_CHANGED</literal></link> or <link linkend="GDK-SETTING-ACTION-DELETED--CAPS"><literal>GDK_SETTING_ACTION_DELETED</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="char">char</link>&nbsp;*<structfield>name</structfield>;</term>
+<term><link linkend="char">char</link>&#160;*<structfield>name</structfield>;</term>
 <listitem><simpara>the name of the setting.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkEventOwnerChange" role="struct" condition="since:2.6">
 <title>GdkEventOwnerChange</title>
-<indexterm zone="GdkEventOwnerChange" role="2.6"><primary>GdkEventOwnerChange</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventOwnerChange" role="2.6"><primary sortas="GdkEventOwnerChange">GdkEventOwnerChange</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -1221,51 +1198,49 @@ Generated when the owner of a selection changes. On X11, this information is
 only available if the X server supports the XFIXES extension.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-OWNER-CHANGE:CAPS"><literal>GDK_OWNER_CHANGE</literal></link>).
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-OWNER-CHANGE--CAPS"><literal>GDK_OWNER_CHANGE</literal></link>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkNativeWindow">GdkNativeWindow</link>&nbsp;<structfield>owner</structfield>;</term>
+<term><link linkend="GdkNativeWindow">GdkNativeWindow</link>&#160;<structfield>owner</structfield>;</term>
 <listitem><simpara>the new owner of the selection
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkOwnerChange">GdkOwnerChange</link>&nbsp;<structfield>reason</structfield>;</term>
+<term><link linkend="GdkOwnerChange">GdkOwnerChange</link>&#160;<structfield>reason</structfield>;</term>
 <listitem><simpara>the reason for the ownership change as a <link linkend="GdkOwnerChange"><type>GdkOwnerChange</type></link> value
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkAtom">GdkAtom</link>&nbsp;<structfield>selection</structfield>;</term>
+<term><link linkend="GdkAtom">GdkAtom</link>&#160;<structfield>selection</structfield>;</term>
 <listitem><simpara>the atom identifying the selection
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>time</structfield>;</term>
 <listitem><simpara>the timestamp of the event
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="guint32">guint32</link>&nbsp;<structfield>selection_time</structfield>;</term>
+<term><link linkend="guint32">guint32</link>&#160;<structfield>selection_time</structfield>;</term>
 <listitem><simpara>the time at which the selection ownership was taken over
 </simpara></listitem>
 </varlistentry>
-</variablelist><para role="since">Since 2.6
-
-</para></refsect2>
+</variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="GdkEventGrabBroken" role="struct" condition="since:2.8">
 <title>GdkEventGrabBroken</title>
-<indexterm zone="GdkEventGrabBroken" role="2.8"><primary>GdkEventGrabBroken</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkEventGrabBroken" role="2.8"><primary sortas="GdkEventGrabBroken">GdkEventGrabBroken</primary></indexterm><programlisting>typedef struct {
   GdkEventType type;
   GdkWindow *window;
   gint8 send_event;
@@ -1276,51 +1251,49 @@ only available if the X server supports the XFIXES extension.
 </programlisting>
 <para>
 Generated when a pointer or keyboard grab is broken. On X11, this happens
-when the grab window becomes unviewable (i.e. it or one of its ancestors 
+when the grab window becomes unviewable (i.e. it or one of its ancestors
 is unmapped), or if the same application grabs the pointer or keyboard
 again. Note that implicit grabs (which are initiated by button presses)
 can also cause <link linkend="GdkEventGrabBroken"><type>GdkEventGrabBroken</type></link> events.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GdkEventType">GdkEventType</link>&nbsp;<structfield>type</structfield>;</term>
-<listitem><simpara>the type of the event (<link linkend="GDK-GRAB-BROKEN:CAPS"><literal>GDK_GRAB_BROKEN</literal></link>)
+<term><link linkend="GdkEventType">GdkEventType</link>&#160;<structfield>type</structfield>;</term>
+<listitem><simpara>the type of the event (<link linkend="GDK-GRAB-BROKEN--CAPS"><literal>GDK_GRAB_BROKEN</literal></link>)
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>window</structfield>;</term>
 <listitem><simpara>the window which received the event, i.e. the window
  that previously owned the grab
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint8">gint8</link>&nbsp;<structfield>send_event</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
+<term><link linkend="gint8">gint8</link>&#160;<structfield>send_event</structfield>;</term>
+<listitem><simpara>%TRUE if the event was sent explicitly (e.g. using <function>XSendEvent</function>).
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gboolean">gboolean</link>&nbsp;<structfield>keyboard</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if a keyboard grab was broken, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if a pointer 
+<term><link linkend="gboolean">gboolean</link>&#160;<structfield>keyboard</structfield>;</term>
+<listitem><simpara>%TRUE if a keyboard grab was broken, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> if a pointer 
   grab was broken
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gboolean">gboolean</link>&nbsp;<structfield>implicit</structfield>;</term>
-<listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the broken grab was implicit
+<term><link linkend="gboolean">gboolean</link>&#160;<structfield>implicit</structfield>;</term>
+<listitem><simpara>%TRUE if the broken grab was implicit
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GdkWindow">GdkWindow</link>&nbsp;*<structfield>grab_window</structfield>;</term>
+<term><link linkend="GdkWindow">GdkWindow</link>&#160;*<structfield>grab_window</structfield>;</term>
 <listitem><simpara>If this event is caused by another grab in the same 
   application, <parameter>grab_window</parameter> contains the new grab window. Otherwise
-  <parameter>grab_window</parameter> is <link linkend="NULL:CAPS"><literal>NULL</literal></link>.
+  <parameter>grab_window</parameter> is <link linkend="NULL--CAPS"><literal>NULL</literal></link>.
 </simpara></listitem>
 </varlistentry>
-</variablelist><para role="since">Since 2.8
-
-</para></refsect2>
+</variablelist><para role="since">Since 2.8</para></refsect2>
 <refsect2 id="GdkScrollDirection" role="enum">
 <title>enum GdkScrollDirection</title>
-<indexterm zone="GdkScrollDirection"><primary>GdkScrollDirection</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkScrollDirection"><primary sortas="GdkScrollDirection">GdkScrollDirection</primary></indexterm><programlisting>typedef enum
 {
   GDK_SCROLL_UP,
   GDK_SCROLL_DOWN,
@@ -1329,33 +1302,32 @@ can also cause <link linkend="GdkEventGrabBroken"><type>GdkEventGrabBroken</type
 } GdkScrollDirection;
 </programlisting>
 <para>
-Specifies the direction for <link linkend="GdkEventScroll"><type>GdkEventScroll</type></link>. 
+Specifies the direction for <link linkend="GdkEventScroll"><type>GdkEventScroll</type></link>.
 </para><variablelist role="enum">
-<varlistentry id="GDK-SCROLL-UP:CAPS" role="constant">
+<varlistentry id="GDK-SCROLL-UP--CAPS" role="constant">
 <term><literal>GDK_SCROLL_UP</literal></term>
 <listitem><simpara>the window is scrolled up.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-SCROLL-DOWN:CAPS" role="constant">
+<varlistentry id="GDK-SCROLL-DOWN--CAPS" role="constant">
 <term><literal>GDK_SCROLL_DOWN</literal></term>
 <listitem><simpara>the window is scrolled down.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-SCROLL-LEFT:CAPS" role="constant">
+<varlistentry id="GDK-SCROLL-LEFT--CAPS" role="constant">
 <term><literal>GDK_SCROLL_LEFT</literal></term>
 <listitem><simpara>the window is scrolled to the left.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-SCROLL-RIGHT:CAPS" role="constant">
+<varlistentry id="GDK-SCROLL-RIGHT--CAPS" role="constant">
 <term><literal>GDK_SCROLL_RIGHT</literal></term>
 <listitem><simpara>the window is scrolled to the right.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkVisibilityState" role="enum">
 <title>enum GdkVisibilityState</title>
-<indexterm zone="GdkVisibilityState"><primary>GdkVisibilityState</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkVisibilityState"><primary sortas="GdkVisibilityState">GdkVisibilityState</primary></indexterm><programlisting>typedef enum
 {
   GDK_VISIBILITY_UNOBSCURED,
   GDK_VISIBILITY_PARTIAL,
@@ -1365,26 +1337,25 @@ Specifies the direction for <link linkend="GdkEventScroll"><type>GdkEventScroll<
 <para>
 Specifies the visiblity status of a window for a <link linkend="GdkEventVisibility"><type>GdkEventVisibility</type></link>.
 </para><variablelist role="enum">
-<varlistentry id="GDK-VISIBILITY-UNOBSCURED:CAPS" role="constant">
+<varlistentry id="GDK-VISIBILITY-UNOBSCURED--CAPS" role="constant">
 <term><literal>GDK_VISIBILITY_UNOBSCURED</literal></term>
 <listitem><simpara>the window is completely visible.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-VISIBILITY-PARTIAL:CAPS" role="constant">
+<varlistentry id="GDK-VISIBILITY-PARTIAL--CAPS" role="constant">
 <term><literal>GDK_VISIBILITY_PARTIAL</literal></term>
 <listitem><simpara>the window is partially visible.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-VISIBILITY-FULLY-OBSCURED:CAPS" role="constant">
+<varlistentry id="GDK-VISIBILITY-FULLY-OBSCURED--CAPS" role="constant">
 <term><literal>GDK_VISIBILITY_FULLY_OBSCURED</literal></term>
 <listitem><simpara>the window is not visible at all.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkCrossingMode" role="enum">
 <title>enum GdkCrossingMode</title>
-<indexterm zone="GdkCrossingMode"><primary>GdkCrossingMode</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkCrossingMode"><primary sortas="GdkCrossingMode">GdkCrossingMode</primary></indexterm><programlisting>typedef enum
 {
   GDK_CROSSING_NORMAL,
   GDK_CROSSING_GRAB,
@@ -1397,42 +1368,41 @@ Specifies the visiblity status of a window for a <link linkend="GdkEventVisibili
 <para>
 Specifies the crossing mode for <link linkend="GdkEventCrossing"><type>GdkEventCrossing</type></link>.
 </para><variablelist role="enum">
-<varlistentry id="GDK-CROSSING-NORMAL:CAPS" role="constant">
+<varlistentry id="GDK-CROSSING-NORMAL--CAPS" role="constant">
 <term><literal>GDK_CROSSING_NORMAL</literal></term>
 <listitem><simpara>crossing because of pointer motion.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-CROSSING-GRAB:CAPS" role="constant">
+<varlistentry id="GDK-CROSSING-GRAB--CAPS" role="constant">
 <term><literal>GDK_CROSSING_GRAB</literal></term>
 <listitem><simpara>crossing because a grab is activated.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-CROSSING-UNGRAB:CAPS" role="constant">
+<varlistentry id="GDK-CROSSING-UNGRAB--CAPS" role="constant">
 <term><literal>GDK_CROSSING_UNGRAB</literal></term>
 <listitem><simpara>crossing because a grab is deactivated.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-CROSSING-GTK-GRAB:CAPS" role="constant">
+<varlistentry id="GDK-CROSSING-GTK-GRAB--CAPS" role="constant">
 <term><literal>GDK_CROSSING_GTK_GRAB</literal></term>
 <listitem><simpara>crossing because a GTK+ grab is activated.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-CROSSING-GTK-UNGRAB:CAPS" role="constant">
+<varlistentry id="GDK-CROSSING-GTK-UNGRAB--CAPS" role="constant">
 <term><literal>GDK_CROSSING_GTK_UNGRAB</literal></term>
 <listitem><simpara>crossing because a GTK+ grab is deactivated.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-CROSSING-STATE-CHANGED:CAPS" role="constant">
+<varlistentry id="GDK-CROSSING-STATE-CHANGED--CAPS" role="constant">
 <term><literal>GDK_CROSSING_STATE_CHANGED</literal></term>
 <listitem><simpara>crossing because a GTK+ widget changed state (e.g.
    sensitivity).
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkNotifyType" role="enum">
 <title>enum GdkNotifyType</title>
-<indexterm zone="GdkNotifyType"><primary>GdkNotifyType</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkNotifyType"><primary sortas="GdkNotifyType">GdkNotifyType</primary></indexterm><programlisting>typedef enum
 {
   GDK_NOTIFY_ANCESTOR		= 0,
   GDK_NOTIFY_VIRTUAL		= 1,
@@ -1449,31 +1419,31 @@ Specifies the kind of crossing for <link linkend="GdkEventCrossing"><type>GdkEve
 See the X11 protocol specification of <type>LeaveNotify</type> for
 full details of crossing event generation.
 </para><variablelist role="enum">
-<varlistentry id="GDK-NOTIFY-ANCESTOR:CAPS" role="constant">
+<varlistentry id="GDK-NOTIFY-ANCESTOR--CAPS" role="constant">
 <term><literal>GDK_NOTIFY_ANCESTOR</literal></term>
 <listitem><simpara>the window is entered from an ancestor or 
    left towards an ancestor.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-NOTIFY-VIRTUAL:CAPS" role="constant">
+<varlistentry id="GDK-NOTIFY-VIRTUAL--CAPS" role="constant">
 <term><literal>GDK_NOTIFY_VIRTUAL</literal></term>
 <listitem><simpara>the pointer moves between an ancestor and an 
     inferior of the window.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-NOTIFY-INFERIOR:CAPS" role="constant">
+<varlistentry id="GDK-NOTIFY-INFERIOR--CAPS" role="constant">
 <term><literal>GDK_NOTIFY_INFERIOR</literal></term>
 <listitem><simpara>the window is entered from an inferior or 
    left towards an inferior.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-NOTIFY-NONLINEAR:CAPS" role="constant">
+<varlistentry id="GDK-NOTIFY-NONLINEAR--CAPS" role="constant">
 <term><literal>GDK_NOTIFY_NONLINEAR</literal></term>
 <listitem><simpara> the window is entered from or left towards 
    a window which is neither an ancestor nor an inferior.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-NOTIFY-NONLINEAR-VIRTUAL:CAPS" role="constant">
+<varlistentry id="GDK-NOTIFY-NONLINEAR-VIRTUAL--CAPS" role="constant">
 <term><literal>GDK_NOTIFY_NONLINEAR_VIRTUAL</literal></term>
 <listitem><simpara>the pointer moves between two windows 
    which are not ancestors of each other and the window is part of
@@ -1481,16 +1451,15 @@ full details of crossing event generation.
    common ancestor.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-NOTIFY-UNKNOWN:CAPS" role="constant">
+<varlistentry id="GDK-NOTIFY-UNKNOWN--CAPS" role="constant">
 <term><literal>GDK_NOTIFY_UNKNOWN</literal></term>
 <listitem><simpara>an unknown type of enter/leave event occurred.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkPropertyState" role="enum">
 <title>enum GdkPropertyState</title>
-<indexterm zone="GdkPropertyState"><primary>GdkPropertyState</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkPropertyState"><primary sortas="GdkPropertyState">GdkPropertyState</primary></indexterm><programlisting>typedef enum
 {
   GDK_PROPERTY_NEW_VALUE,
   GDK_PROPERTY_DELETE
@@ -1499,21 +1468,20 @@ full details of crossing event generation.
 <para>
 Specifies the type of a property change for a <link linkend="GdkEventProperty"><type>GdkEventProperty</type></link>.
 </para><variablelist role="enum">
-<varlistentry id="GDK-PROPERTY-NEW-VALUE:CAPS" role="constant">
+<varlistentry id="GDK-PROPERTY-NEW-VALUE--CAPS" role="constant">
 <term><literal>GDK_PROPERTY_NEW_VALUE</literal></term>
 <listitem><simpara>the property value was changed.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-PROPERTY-DELETE:CAPS" role="constant">
+<varlistentry id="GDK-PROPERTY-DELETE--CAPS" role="constant">
 <term><literal>GDK_PROPERTY_DELETE</literal></term>
 <listitem><simpara>the property was deleted.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkWindowState" role="enum">
 <title>enum GdkWindowState</title>
-<indexterm zone="GdkWindowState"><primary>GdkWindowState</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkWindowState"><primary sortas="GdkWindowState">GdkWindowState</primary></indexterm><programlisting>typedef enum
 {
   GDK_WINDOW_STATE_WITHDRAWN  = 1 &lt;&lt; 0,
   GDK_WINDOW_STATE_ICONIFIED  = 1 &lt;&lt; 1,
@@ -1527,46 +1495,45 @@ Specifies the type of a property change for a <link linkend="GdkEventProperty"><
 <para>
 Specifies the state of a toplevel window.
 </para><variablelist role="enum">
-<varlistentry id="GDK-WINDOW-STATE-WITHDRAWN:CAPS" role="constant">
+<varlistentry id="GDK-WINDOW-STATE-WITHDRAWN--CAPS" role="constant">
 <term><literal>GDK_WINDOW_STATE_WITHDRAWN</literal></term>
 <listitem><simpara>the window is not shown.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-WINDOW-STATE-ICONIFIED:CAPS" role="constant">
+<varlistentry id="GDK-WINDOW-STATE-ICONIFIED--CAPS" role="constant">
 <term><literal>GDK_WINDOW_STATE_ICONIFIED</literal></term>
 <listitem><simpara>the window is minimized.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-WINDOW-STATE-MAXIMIZED:CAPS" role="constant">
+<varlistentry id="GDK-WINDOW-STATE-MAXIMIZED--CAPS" role="constant">
 <term><literal>GDK_WINDOW_STATE_MAXIMIZED</literal></term>
 <listitem><simpara>the window is maximized.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-WINDOW-STATE-STICKY:CAPS" role="constant">
+<varlistentry id="GDK-WINDOW-STATE-STICKY--CAPS" role="constant">
 <term><literal>GDK_WINDOW_STATE_STICKY</literal></term>
 <listitem><simpara>the window is sticky.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-WINDOW-STATE-FULLSCREEN:CAPS" role="constant">
+<varlistentry id="GDK-WINDOW-STATE-FULLSCREEN--CAPS" role="constant">
 <term><literal>GDK_WINDOW_STATE_FULLSCREEN</literal></term>
 <listitem><simpara>the window is maximized without decorations.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-WINDOW-STATE-ABOVE:CAPS" role="constant">
+<varlistentry id="GDK-WINDOW-STATE-ABOVE--CAPS" role="constant">
 <term><literal>GDK_WINDOW_STATE_ABOVE</literal></term>
 <listitem><simpara>the window is kept above other windows.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-WINDOW-STATE-BELOW:CAPS" role="constant">
+<varlistentry id="GDK-WINDOW-STATE-BELOW--CAPS" role="constant">
 <term><literal>GDK_WINDOW_STATE_BELOW</literal></term>
 <listitem><simpara>the window is kept below other windows.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkSettingAction" role="enum">
 <title>enum GdkSettingAction</title>
-<indexterm zone="GdkSettingAction"><primary>GdkSettingAction</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkSettingAction"><primary sortas="GdkSettingAction">GdkSettingAction</primary></indexterm><programlisting>typedef enum
 {
   GDK_SETTING_ACTION_NEW,
   GDK_SETTING_ACTION_CHANGED,
@@ -1576,26 +1543,25 @@ Specifies the state of a toplevel window.
 <para>
 Specifies the kind of modification applied to a setting in a <link linkend="GdkEventSetting"><type>GdkEventSetting</type></link>.
 </para><variablelist role="enum">
-<varlistentry id="GDK-SETTING-ACTION-NEW:CAPS" role="constant">
+<varlistentry id="GDK-SETTING-ACTION-NEW--CAPS" role="constant">
 <term><literal>GDK_SETTING_ACTION_NEW</literal></term>
 <listitem><simpara>a setting was added.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-SETTING-ACTION-CHANGED:CAPS" role="constant">
+<varlistentry id="GDK-SETTING-ACTION-CHANGED--CAPS" role="constant">
 <term><literal>GDK_SETTING_ACTION_CHANGED</literal></term>
 <listitem><simpara>a setting was changed.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-SETTING-ACTION-DELETED:CAPS" role="constant">
+<varlistentry id="GDK-SETTING-ACTION-DELETED--CAPS" role="constant">
 <term><literal>GDK_SETTING_ACTION_DELETED</literal></term>
 <listitem><simpara>a setting was deleted.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkOwnerChange" role="enum">
 <title>enum GdkOwnerChange</title>
-<indexterm zone="GdkOwnerChange"><primary>GdkOwnerChange</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkOwnerChange"><primary sortas="GdkOwnerChange">GdkOwnerChange</primary></indexterm><programlisting>typedef enum
 {
   GDK_OWNER_CHANGE_NEW_OWNER,
   GDK_OWNER_CHANGE_DESTROY,
@@ -1605,20 +1571,19 @@ Specifies the kind of modification applied to a setting in a <link linkend="GdkE
 <para>
 Specifies why a selection ownership was changed.
 </para><variablelist role="enum">
-<varlistentry id="GDK-OWNER-CHANGE-NEW-OWNER:CAPS" role="constant">
+<varlistentry id="GDK-OWNER-CHANGE-NEW-OWNER--CAPS" role="constant">
 <term><literal>GDK_OWNER_CHANGE_NEW_OWNER</literal></term>
 <listitem><simpara>some other app claimed the ownership
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-OWNER-CHANGE-DESTROY:CAPS" role="constant">
+<varlistentry id="GDK-OWNER-CHANGE-DESTROY--CAPS" role="constant">
 <term><literal>GDK_OWNER_CHANGE_DESTROY</literal></term>
 <listitem><simpara>the window was destroyed
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-OWNER-CHANGE-CLOSE:CAPS" role="constant">
+<varlistentry id="GDK-OWNER-CHANGE-CLOSE--CAPS" role="constant">
 <term><literal>GDK_OWNER_CHANGE_CLOSE</literal></term>
 <listitem><simpara>the client was closed
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>

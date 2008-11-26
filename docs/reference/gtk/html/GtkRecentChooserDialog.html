@@ -8,7 +8,7 @@
 <link rel="up" href="RecentDocuments.html" title="Recently Used Documents">
 <link rel="prev" href="GtkRecentChooser.html" title="GtkRecentChooser">
 <link rel="next" href="GtkRecentChooserMenu.html" title="GtkRecentChooserMenu">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,13 +69,15 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkRecentChooserMenu.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkRecentChooserDialog.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkRecentChooserDialog.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkRecentChooserDialog.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkRecentChooserDialog.implemented-interfaces" class="shortcut">Implemented Interfaces</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkRecentChooserDialog.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkRecentChooserDialog.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkRecentChooserDialog.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkRecentChooserDialog.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkRecentChooserDialog"></a><div class="titlepage"></div>
@@ -93,7 +95,7 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <a class="link" href="GtkRecentChooserDialog.html#GtkRecentChooserDialog-struct" title="GtkRecentChooserDialog">GtkRecentChooserDialog</a>;
-<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkRecentChooserDialog.html#gtk-recent-chooser-dialog-new" title="gtk_recent_chooser_dialog_new ()">gtk_recent_chooser_dialog_new</a>       (const <a
+<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         <a class="link" href="GtkRecentChooserDialog.html#gtk-recent-chooser-dialog-new" title="gtk_recent_chooser_dialog_new ()">gtk_recent_chooser_dialog_new</a>       (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
                                                          <a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *parent,
@@ -101,7 +103,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_button_text,
                                                          ...);
-<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkRecentChooserDialog.html#gtk-recent-chooser-dialog-new-for-manager" title="gtk_recent_chooser_dialog_new_for_manager ()">gtk_recent_chooser_dialog_new_for_manager</a>
+<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         <a class="link" href="GtkRecentChooserDialog.html#gtk-recent-chooser-dialog-new-for-manager" title="gtk_recent_chooser_dialog_new_for_manager ()">gtk_recent_chooser_dialog_new_for_manager</a>
                                                         (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
@@ -159,22 +161,18 @@ Instead, you should use the functions that work on a <a class="link" href="GtkRe
   </p>
 <pre class="programlisting">
 GtkWidget *dialog;
-
 dialog = gtk_recent_chooser_dialog_new ("Recent Documents",
 					parent_window,
 					GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 					NULL);
-					
 if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
   {
     GtkRecentInfo *info;
-
     info = gtk_recent_chooser_get_current_item (GTK_RECENT_CHOOSER (dialog));
     open_file (gtk_recent_info_get_uri (info));
     gtk_recent_info_unref (info);
   }
-
 gtk_widget_destroy (dialog);
   </pre>
 </div>
@@ -189,13 +187,12 @@ Recently used files are supported since GTK+ 2.10.
 <a name="GtkRecentChooserDialog-struct"></a><h3>GtkRecentChooserDialog</h3>
 <pre class="programlisting">typedef struct _GtkRecentChooserDialog GtkRecentChooserDialog;</pre>
 <p>
-
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-recent-chooser-dialog-new"></a><h3>gtk_recent_chooser_dialog_new ()</h3>
-<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_recent_chooser_dialog_new       (const <a
+<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         gtk_recent_chooser_dialog_new       (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
                                                          <a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *parent,
@@ -207,38 +204,29 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 Creates a new <a class="link" href="GtkRecentChooserDialog.html" title="GtkRecentChooserDialog"><span class="type">GtkRecentChooserDialog</span></a>.  This function is analogous to
 <a class="link" href="GtkDialog.html#gtk-dialog-new-with-buttons" title="gtk_dialog_new_with_buttons ()"><code class="function">gtk_dialog_new_with_buttons()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
-<td> Title of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> Title of the dialog, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> Transient parent of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>,
+<td> Transient parent of the dialog, or <code class="literal">NULL</code>,
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>first_button_text</code></em> :</span></p></td>
-<td> stock ID or text to go in the first button, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> stock ID or text to go in the first button, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td> response ID for the first button, then additional (button, id)
-  pairs, ending with <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+  pairs, ending with <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
@@ -249,13 +237,12 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.10
-</p>
+<p class="since">Since 2.10</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-recent-chooser-dialog-new-for-manager"></a><h3>gtk_recent_chooser_dialog_new_for_manager ()</h3>
-<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_recent_chooser_dialog_new_for_manager
+<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         gtk_recent_chooser_dialog_new_for_manager
                                                         (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
@@ -272,23 +259,18 @@ Creates a new <a class="link" href="GtkRecentChooserDialog.html" title="GtkRecen
 This is useful if you have implemented your own recent manager, or if you
 have a customized instance of a <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> object.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
-<td> Title of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> Title of the dialog, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> Transient parent of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>,
+<td> Transient parent of the dialog, or <code class="literal">NULL</code>,
 </td>
 </tr>
 <tr>
@@ -298,17 +280,13 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>first_button_text</code></em> :</span></p></td>
-<td> stock ID or text to go in the first button, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> stock ID or text to go in the first button, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td> response ID for the first button, then additional (button, id)
-  pairs, ending with <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+  pairs, ending with <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
@@ -319,8 +297,7 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.10
-</p>
+<p class="since">Since 2.10</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
@@ -332,6 +309,6 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

@@ -15,7 +15,6 @@
 <refnamediv>
 <refname>GtkEntryCompletion</refname>
 <refpurpose>Completion functionality for GtkEntry</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="GtkEntryCompletion.synopsis" role="synopsis">
@@ -30,11 +29,11 @@
                                                          const <link linkend="gchar">gchar</link> *key,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                          <link linkend="gpointer">gpointer</link> user_data);
-<link linkend="GtkEntryCompletion">GtkEntryCompletion</link>* <link linkend="gtk-entry-completion-new">gtk_entry_completion_new</link>            (void);
-<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-entry-completion-get-entry">gtk_entry_completion_get_entry</link>      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
+<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> * <link linkend="gtk-entry-completion-new">gtk_entry_completion_new</link>           (void);
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-entry-completion-get-entry">gtk_entry_completion_get_entry</link>      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
 <link linkend="void">void</link>                <link linkend="gtk-entry-completion-set-model">gtk_entry_completion_set_model</link>      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="GtkTreeModel">GtkTreeModel</link> *model);
-<link linkend="GtkTreeModel">GtkTreeModel</link>*       <link linkend="gtk-entry-completion-get-model">gtk_entry_completion_get_model</link>      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
+<link linkend="GtkTreeModel">GtkTreeModel</link> *      <link linkend="gtk-entry-completion-get-model">gtk_entry_completion_get_model</link>      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
 <link linkend="void">void</link>                <link linkend="gtk-entry-completion-set-match-func">gtk_entry_completion_set_match_func</link> (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="GtkEntryCompletionMatchFunc">GtkEntryCompletionMatchFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> func_data,
@@ -45,7 +44,7 @@
 <link linkend="gint">gint</link>                <link linkend="gtk-entry-completion-get-minimum-key-length">gtk_entry_completion_get_minimum_key_length</link>
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
 <link linkend="void">void</link>                <link linkend="gtk-entry-completion-complete">gtk_entry_completion_complete</link>       (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
-const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-completion-get-completion-prefix">gtk_entry_completion_get_completion_prefix</link>
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-entry-completion-get-completion-prefix">gtk_entry_completion_get_completion_prefix</link>
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
 <link linkend="void">void</link>                <link linkend="gtk-entry-completion-insert-prefix">gtk_entry_completion_insert_prefix</link>  (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);
 <link linkend="void">void</link>                <link linkend="gtk-entry-completion-insert-action-text">gtk_entry_completion_insert_action_text</link>
@@ -97,7 +96,6 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-comple
   <link linkend="GObject">GObject</link>
    +----GtkEntryCompletion
 </synopsis>
-
 </refsect1>
 
 
@@ -107,7 +105,6 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-comple
 <para>
 GtkEntryCompletion implements
  <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="GtkCellLayout">GtkCellLayout</link>.</para>
-
 </refsect1>
 
 
@@ -141,33 +138,33 @@ GtkEntryCompletion implements
 <para>
 <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> is an auxiliary object to be used in conjunction with
 <link linkend="GtkEntry"><type>GtkEntry</type></link> to provide the completion functionality. It implements the
-<link linkend="GtkCellLayout"><type>GtkCellLayout</type></link> interface, to allow the user to add extra cells to the 
-<link linkend="GtkTreeView"><type>GtkTreeView</type></link> with completion matches. 
+<link linkend="GtkCellLayout"><type>GtkCellLayout</type></link> interface, to allow the user to add extra cells to the
+<link linkend="GtkTreeView"><type>GtkTreeView</type></link> with completion matches.
 </para>
 <para>
-"Completion functionality" means that when the user modifies the text 
-in the entry, <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> checks which rows in the model match 
+"Completion functionality" means that when the user modifies the text
+in the entry, <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> checks which rows in the model match
 the current content of the entry, and displays a list of matches.
-By default, the matching is done by comparing the entry text 
-case-insensitively against the text column of the model (see 
-<link linkend="gtk-entry-completion-set-text-column"><function>gtk_entry_completion_set_text_column()</function></link>), but this can be overridden with 
+By default, the matching is done by comparing the entry text
+case-insensitively against the text column of the model (see
+<link linkend="gtk-entry-completion-set-text-column"><function>gtk_entry_completion_set_text_column()</function></link>), but this can be overridden with
 a custom match function (see <link linkend="gtk-entry-completion-set-match-func"><function>gtk_entry_completion_set_match_func()</function></link>).
 </para>
 <para>
-When the user selects a completion, the content of the entry is updated. 
-By default, the content of the entry is replaced by the text column of the 
+When the user selects a completion, the content of the entry is updated.
+By default, the content of the entry is replaced by the text column of the
 model, but this can be overridden by connecting to the ::match-selected signal
-and updating the entry in the signal handler. Note that you should return 
-<link linkend="TRUE:CAPS"><literal>TRUE</literal></link> from the signal handler to suppress the default behaviour.
+and updating the entry in the signal handler. Note that you should return
+<link linkend="TRUE--CAPS"><literal>TRUE</literal></link> from the signal handler to suppress the default behaviour.
 </para>
 <para>
 To add completion functionality to an entry, use <link linkend="gtk-entry-set-completion"><function>gtk_entry_set_completion()</function></link>.
 </para>
 <para>
 In addition to regular completion matches, which will be inserted into the
-entry when they are selected, <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> also allows to display 
-"actions" in the popup window. Their appearance is similar to menuitems, 
-to differentiate them clearly from completion strings. When an action is 
+entry when they are selected, <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> also allows to display
+"actions" in the popup window. Their appearance is similar to menuitems,
+to differentiate them clearly from completion strings. When an action is
 selected, the ::action-activated signal is emitted.
 </para>
 </refsect1>
@@ -176,108 +173,98 @@ selected, the ::action-activated signal is emitted.
 <title role="details.title">Details</title>
 <refsect2 id="GtkEntryCompletion-struct" role="struct">
 <title>GtkEntryCompletion</title>
-<indexterm zone="GtkEntryCompletion-struct"><primary>GtkEntryCompletion</primary></indexterm><programlisting>typedef struct _GtkEntryCompletion GtkEntryCompletion;</programlisting>
+<indexterm zone="GtkEntryCompletion-struct"><primary sortas="GtkEntryCompletion">GtkEntryCompletion</primary></indexterm><programlisting>typedef struct _GtkEntryCompletion GtkEntryCompletion;</programlisting>
 <para>
 The GtkEntryCompletion struct contains only private data.
 </para></refsect2>
 <refsect2 id="GtkEntryCompletionMatchFunc" role="function">
 <title>GtkEntryCompletionMatchFunc ()</title>
-<indexterm zone="GtkEntryCompletionMatchFunc"><primary>GtkEntryCompletionMatchFunc</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            (*GtkEntryCompletionMatchFunc)      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
+<indexterm zone="GtkEntryCompletionMatchFunc"><primary sortas="GtkEntryCompletionMatchFunc">GtkEntryCompletionMatchFunc</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            (*GtkEntryCompletionMatchFunc)      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          const <link linkend="gchar">gchar</link> *key,
                                                          <link linkend="GtkTreeIter">GtkTreeIter</link> *iter,
                                                          <link linkend="gpointer">gpointer</link> user_data);</programlisting>
 <para>
-A function which decides whether the row indicated by <parameter>iter</parameter> matches a given 
+A function which decides whether the row indicated by <parameter>iter</parameter> matches a given
 <parameter>key</parameter>, and should be displayed as a possible completion for <parameter>key</parameter>. Note that
-<parameter>key</parameter> is normalized and case-folded (see <link linkend="g-utf8-normalize"><function>g_utf8_normalize()</function></link> and 
+<parameter>key</parameter> is normalized and case-folded (see <link linkend="g-utf8-normalize"><function>g_utf8_normalize()</function></link> and
 <link linkend="g-utf8-casefold"><function>g_utf8_casefold()</function></link>). If this is not appropriate, match functions have access
 to the unmodified key via <literal>gtk_entry_get_text (GTK_ENTRY (gtk_entry_completion_get_entry (<!-- -->)))</literal>.
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara>the <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>key</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>key</parameter>&#160;:</term>
 <listitem><simpara>the string to match, normalized and case-folded
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> indicating the row to match
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data given to <link linkend="gtk-entry-completion-set-match-func"><function>gtk_entry_completion_set_match_func()</function></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>iter</parameter> should be displayed as a possible completion for <parameter>key</parameter>
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>%TRUE if <parameter>iter</parameter> should be displayed as a possible completion for <parameter>key</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-entry-completion-new" role="function" condition="since:2.4">
 <title>gtk_entry_completion_new ()</title>
-<indexterm zone="gtk-entry-completion-new" role="2.4"><primary>gtk_entry_completion_new</primary></indexterm><programlisting><link linkend="GtkEntryCompletion">GtkEntryCompletion</link>* gtk_entry_completion_new            (void);</programlisting>
+<indexterm zone="gtk-entry-completion-new" role="2.4"><primary sortas="gtk_entry_completion_new">gtk_entry_completion_new</primary></indexterm><programlisting><link linkend="GtkEntryCompletion">GtkEntryCompletion</link> * gtk_entry_completion_new           (void);</programlisting>
 <para>
 Creates a new <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> object.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A newly created <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> object.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A newly created <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> object.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-entry" role="function" condition="since:2.4">
 <title>gtk_entry_completion_get_entry ()</title>
-<indexterm zone="gtk-entry-completion-get-entry" role="2.4"><primary>gtk_entry_completion_get_entry</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_entry_completion_get_entry      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
+<indexterm zone="gtk-entry-completion-get-entry" role="2.4"><primary sortas="gtk_entry_completion_get_entry">gtk_entry_completion_get_entry</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_entry_completion_get_entry      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Gets the entry <parameter>completion</parameter> has been attached to.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The entry <parameter>completion</parameter> has been attached to.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The entry <parameter>completion</parameter> has been attached to.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-model" role="function" condition="since:2.4">
 <title>gtk_entry_completion_set_model ()</title>
-<indexterm zone="gtk-entry-completion-set-model" role="2.4"><primary>gtk_entry_completion_set_model</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_model      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
+<indexterm zone="gtk-entry-completion-set-model" role="2.4"><primary sortas="gtk_entry_completion_set_model">gtk_entry_completion_set_model</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_model      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="GtkTreeModel">GtkTreeModel</link> *model);</programlisting>
 <para>
 Sets the model for a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>. If <parameter>completion</parameter> already has
 a model set, it will remove it before setting the new model.
-If model is <link linkend="NULL:CAPS"><literal>NULL</literal></link>, then it will unset the model.</para>
+If model is <link linkend="NULL--CAPS"><literal>NULL</literal></link>, then it will unset the model.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>model</parameter>&#160;:</term>
 <listitem><simpara> The <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-model" role="function" condition="since:2.4">
 <title>gtk_entry_completion_get_model ()</title>
-<indexterm zone="gtk-entry-completion-get-model" role="2.4"><primary>gtk_entry_completion_get_model</primary></indexterm><programlisting><link linkend="GtkTreeModel">GtkTreeModel</link>*       gtk_entry_completion_get_model      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
+<indexterm zone="gtk-entry-completion-get-model" role="2.4"><primary sortas="gtk_entry_completion_get_model">gtk_entry_completion_get_model</primary></indexterm><programlisting><link linkend="GtkTreeModel">GtkTreeModel</link> *      gtk_entry_completion_get_model      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Returns the model the <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link> is using as data source.
-Returns <link linkend="NULL:CAPS"><literal>NULL</literal></link> if the model is unset.</para>
+Returns <link linkend="NULL--CAPS"><literal>NULL</literal></link> if the model is unset.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if none is currently being used.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if none is currently being used.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-match-func" role="function" condition="since:2.4">
 <title>gtk_entry_completion_set_match_func ()</title>
-<indexterm zone="gtk-entry-completion-set-match-func" role="2.4"><primary>gtk_entry_completion_set_match_func</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_match_func (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
+<indexterm zone="gtk-entry-completion-set-match-func" role="2.4"><primary sortas="gtk_entry_completion_set_match_func">gtk_entry_completion_set_match_func</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_match_func (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="GtkEntryCompletionMatchFunc">GtkEntryCompletionMatchFunc</link> func,
                                                          <link linkend="gpointer">gpointer</link> func_data,
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> func_notify);</programlisting>
@@ -286,25 +273,23 @@ Sets the match function for <parameter>completion</parameter> to be <parameter>f
 is used to determine if a row should or should not be in the completion
 list.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>func</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>func</parameter>&#160;:</term>
 <listitem><simpara> The <link linkend="GtkEntryCompletionMatchFunc"><type>GtkEntryCompletionMatchFunc</type></link> to use.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>func_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>func_data</parameter>&#160;:</term>
 <listitem><simpara> The user data for <parameter>func</parameter>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>func_notify</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>func_notify</parameter>&#160;:</term>
 <listitem><simpara> Destroy notifier for <parameter>func_data</parameter>.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-minimum-key-length" role="function" condition="since:2.4">
 <title>gtk_entry_completion_set_minimum_key_length ()</title>
-<indexterm zone="gtk-entry-completion-set-minimum-key-length" role="2.4"><primary>gtk_entry_completion_set_minimum_key_length</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_minimum_key_length
+<indexterm zone="gtk-entry-completion-set-minimum-key-length" role="2.4"><primary sortas="gtk_entry_completion_set_minimum_key_length">gtk_entry_completion_set_minimum_key_length</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_minimum_key_length
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gint">gint</link> length);</programlisting>
 <para>
@@ -313,82 +298,72 @@ Requires the length of the search key for <parameter>completion</parameter> to b
 key takes a lot of time and will come up with meaningless results anyway
 (ie, a too large dataset).</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>length</parameter>&#160;:</term>
 <listitem><simpara> The minimum length of the key in order to start completing.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-minimum-key-length" role="function" condition="since:2.4">
 <title>gtk_entry_completion_get_minimum_key_length ()</title>
-<indexterm zone="gtk-entry-completion-get-minimum-key-length" role="2.4"><primary>gtk_entry_completion_get_minimum_key_length</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_entry_completion_get_minimum_key_length
+<indexterm zone="gtk-entry-completion-get-minimum-key-length" role="2.4"><primary sortas="gtk_entry_completion_get_minimum_key_length">gtk_entry_completion_get_minimum_key_length</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_entry_completion_get_minimum_key_length
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Returns the minimum key length as set for <parameter>completion</parameter>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The currently used minimum key length.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The currently used minimum key length.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-complete" role="function" condition="since:2.4">
 <title>gtk_entry_completion_complete ()</title>
-<indexterm zone="gtk-entry-completion-complete" role="2.4"><primary>gtk_entry_completion_complete</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_complete       (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
+<indexterm zone="gtk-entry-completion-complete" role="2.4"><primary sortas="gtk_entry_completion_complete">gtk_entry_completion_complete</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_complete       (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Requests a completion operation, or in other words a refiltering of the
 current list with completions, using the current key. The completion list
 view will be updated accordingly.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-completion-prefix" role="function" condition="since:2.12">
 <title>gtk_entry_completion_get_completion_prefix ()</title>
-<indexterm zone="gtk-entry-completion-get-completion-prefix" role="2.12"><primary>gtk_entry_completion_get_completion_prefix</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_entry_completion_get_completion_prefix
+<indexterm zone="gtk-entry-completion-get-completion-prefix" role="2.12"><primary sortas="gtk_entry_completion_get_completion_prefix">gtk_entry_completion_get_completion_prefix</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_entry_completion_get_completion_prefix
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Get the original text entered by the user that triggered
-the completion or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if there's no completion ongoing.</para>
+the completion or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if there's no completion ongoing.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the prefix for the current completion
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the prefix for the current completion
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.12
-</para></refsect2>
+</variablelist><para role="since">Since 2.12</para></refsect2>
 <refsect2 id="gtk-entry-completion-insert-prefix" role="function" condition="since:2.6">
 <title>gtk_entry_completion_insert_prefix ()</title>
-<indexterm zone="gtk-entry-completion-insert-prefix" role="2.6"><primary>gtk_entry_completion_insert_prefix</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_insert_prefix  (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
+<indexterm zone="gtk-entry-completion-insert-prefix" role="2.6"><primary sortas="gtk_entry_completion_insert_prefix">gtk_entry_completion_insert_prefix</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_insert_prefix  (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Requests a prefix insertion.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.6
-</para></refsect2>
+</variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-entry-completion-insert-action-text" role="function" condition="since:2.4">
 <title>gtk_entry_completion_insert_action_text ()</title>
-<indexterm zone="gtk-entry-completion-insert-action-text" role="2.4"><primary>gtk_entry_completion_insert_action_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_insert_action_text
+<indexterm zone="gtk-entry-completion-insert-action-text" role="2.4"><primary sortas="gtk_entry_completion_insert_action_text">gtk_entry_completion_insert_action_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_insert_action_text
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gint">gint</link> index_,
                                                          const <link linkend="gchar">gchar</link> *text);</programlisting>
@@ -397,22 +372,20 @@ Inserts an action in <parameter>completion</parameter>'s action item list at pos
 with text <parameter>text</parameter>. If you want the action item to have markup, use
 <link linkend="gtk-entry-completion-insert-action-markup"><function>gtk_entry_completion_insert_action_markup()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>index_</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>index_</parameter>&#160;:</term>
 <listitem><simpara> The index of the item to insert.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>text</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>text</parameter>&#160;:</term>
 <listitem><simpara> Text of the item to insert.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-insert-action-markup" role="function" condition="since:2.4">
 <title>gtk_entry_completion_insert_action_markup ()</title>
-<indexterm zone="gtk-entry-completion-insert-action-markup" role="2.4"><primary>gtk_entry_completion_insert_action_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_insert_action_markup
+<indexterm zone="gtk-entry-completion-insert-action-markup" role="2.4"><primary sortas="gtk_entry_completion_insert_action_markup">gtk_entry_completion_insert_action_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_insert_action_markup
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gint">gint</link> index_,
                                                          const <link linkend="gchar">gchar</link> *markup);</programlisting>
@@ -420,39 +393,35 @@ with text <parameter>text</parameter>. If you want the action item to have marku
 Inserts an action in <parameter>completion</parameter>'s action item list at position <parameter>index_</parameter>
 with markup <parameter>markup</parameter>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>index_</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>index_</parameter>&#160;:</term>
 <listitem><simpara> The index of the item to insert.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>markup</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>markup</parameter>&#160;:</term>
 <listitem><simpara> Markup of the item to insert.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-delete-action" role="function" condition="since:2.4">
 <title>gtk_entry_completion_delete_action ()</title>
-<indexterm zone="gtk-entry-completion-delete-action" role="2.4"><primary>gtk_entry_completion_delete_action</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_delete_action  (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
+<indexterm zone="gtk-entry-completion-delete-action" role="2.4"><primary sortas="gtk_entry_completion_delete_action">gtk_entry_completion_delete_action</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_delete_action  (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gint">gint</link> index_);</programlisting>
 <para>
 Deletes the action at <parameter>index_</parameter> from <parameter>completion</parameter>'s action list.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>index_</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>index_</parameter>&#160;:</term>
 <listitem><simpara> The index of the item to Delete.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-text-column" role="function" condition="since:2.4">
 <title>gtk_entry_completion_set_text_column ()</title>
-<indexterm zone="gtk-entry-completion-set-text-column" role="2.4"><primary>gtk_entry_completion_set_text_column</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_text_column
+<indexterm zone="gtk-entry-completion-set-text-column" role="2.4"><primary sortas="gtk_entry_completion_set_text_column">gtk_entry_completion_set_text_column</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_text_column
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gint">gint</link> column);</programlisting>
 <para>
@@ -466,357 +435,317 @@ This functions creates and adds a <link linkend="GtkCellRendererText"><type>GtkC
 column. If you need to set the text column, but don't want the cell 
 renderer, use <link linkend="g-object-set"><function>g_object_set()</function></link> to set the ::text_column property directly.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>column</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>column</parameter>&#160;:</term>
 <listitem><simpara> The column in the model of <parameter>completion</parameter> to get strings from.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-text-column" role="function" condition="since:2.6">
 <title>gtk_entry_completion_get_text_column ()</title>
-<indexterm zone="gtk-entry-completion-get-text-column" role="2.6"><primary>gtk_entry_completion_get_text_column</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_entry_completion_get_text_column
+<indexterm zone="gtk-entry-completion-get-text-column" role="2.6"><primary sortas="gtk_entry_completion_get_text_column">gtk_entry_completion_get_text_column</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_entry_completion_get_text_column
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Returns the column in the model of <parameter>completion</parameter> to get strings from.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the column containing the strings
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the column containing the strings
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.6
-</para></refsect2>
+</variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-inline-completion" role="function" condition="since:2.6">
 <title>gtk_entry_completion_set_inline_completion ()</title>
-<indexterm zone="gtk-entry-completion-set-inline-completion" role="2.6"><primary>gtk_entry_completion_set_inline_completion</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_inline_completion
+<indexterm zone="gtk-entry-completion-set-inline-completion" role="2.6"><primary sortas="gtk_entry_completion_set_inline_completion">gtk_entry_completion_set_inline_completion</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_inline_completion
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gboolean">gboolean</link> inline_completion);</programlisting>
 <para>
 Sets whether the common prefix of the possible completions should
 be automatically inserted in the entry.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>inline_completion</parameter>&nbsp;:</term>
-<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to do inline completion
+<varlistentry><term><parameter>inline_completion</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to do inline completion
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.6
-</para></refsect2>
+</variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-inline-completion" role="function" condition="since:2.6">
 <title>gtk_entry_completion_get_inline_completion ()</title>
-<indexterm zone="gtk-entry-completion-get-inline-completion" role="2.6"><primary>gtk_entry_completion_get_inline_completion</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_inline_completion
+<indexterm zone="gtk-entry-completion-get-inline-completion" role="2.6"><primary sortas="gtk_entry_completion_get_inline_completion">gtk_entry_completion_get_inline_completion</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_inline_completion
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Returns whether the common prefix of the possible completions should
 be automatically inserted in the entry.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if inline completion is turned on
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if inline completion is turned on
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.6
-</para></refsect2>
+</variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-inline-selection" role="function" condition="since:2.12">
 <title>gtk_entry_completion_set_inline_selection ()</title>
-<indexterm zone="gtk-entry-completion-set-inline-selection" role="2.12"><primary>gtk_entry_completion_set_inline_selection</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_inline_selection
+<indexterm zone="gtk-entry-completion-set-inline-selection" role="2.12"><primary sortas="gtk_entry_completion_set_inline_selection">gtk_entry_completion_set_inline_selection</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_inline_selection
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gboolean">gboolean</link> inline_selection);</programlisting>
 <para>
 Sets whether it is possible to cycle through the possible completions
 inside the entry.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>inline_selection</parameter>&nbsp;:</term>
-<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to do inline selection
+<varlistentry><term><parameter>inline_selection</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to do inline selection
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.12
-</para></refsect2>
+</variablelist><para role="since">Since 2.12</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-inline-selection" role="function" condition="since:2.12">
 <title>gtk_entry_completion_get_inline_selection ()</title>
-<indexterm zone="gtk-entry-completion-get-inline-selection" role="2.12"><primary>gtk_entry_completion_get_inline_selection</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_inline_selection
+<indexterm zone="gtk-entry-completion-get-inline-selection" role="2.12"><primary sortas="gtk_entry_completion_get_inline_selection">gtk_entry_completion_get_inline_selection</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_inline_selection
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
-Returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if inline-selection mode is turned on.</para>
+Returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if inline-selection mode is turned on.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if inline-selection mode is on
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if inline-selection mode is on
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.12
-</para></refsect2>
+</variablelist><para role="since">Since 2.12</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-popup-completion" role="function" condition="since:2.6">
 <title>gtk_entry_completion_set_popup_completion ()</title>
-<indexterm zone="gtk-entry-completion-set-popup-completion" role="2.6"><primary>gtk_entry_completion_set_popup_completion</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_popup_completion
+<indexterm zone="gtk-entry-completion-set-popup-completion" role="2.6"><primary sortas="gtk_entry_completion_set_popup_completion">gtk_entry_completion_set_popup_completion</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_popup_completion
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gboolean">gboolean</link> popup_completion);</programlisting>
 <para>
 Sets whether the completions should be presented in a popup window.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>popup_completion</parameter>&nbsp;:</term>
-<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to do popup completion
+<varlistentry><term><parameter>popup_completion</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to do popup completion
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.6
-</para></refsect2>
+</variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-popup-completion" role="function" condition="since:2.6">
 <title>gtk_entry_completion_get_popup_completion ()</title>
-<indexterm zone="gtk-entry-completion-get-popup-completion" role="2.6"><primary>gtk_entry_completion_get_popup_completion</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_popup_completion
+<indexterm zone="gtk-entry-completion-get-popup-completion" role="2.6"><primary sortas="gtk_entry_completion_get_popup_completion">gtk_entry_completion_get_popup_completion</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_popup_completion
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Returns whether the completions should be presented in a popup window.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if popup completion is turned on
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if popup completion is turned on
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.6
-</para></refsect2>
+</variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-popup-set-width" role="function" condition="since:2.8">
 <title>gtk_entry_completion_set_popup_set_width ()</title>
-<indexterm zone="gtk-entry-completion-set-popup-set-width" role="2.8"><primary>gtk_entry_completion_set_popup_set_width</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_popup_set_width
+<indexterm zone="gtk-entry-completion-set-popup-set-width" role="2.8"><primary sortas="gtk_entry_completion_set_popup_set_width">gtk_entry_completion_set_popup_set_width</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_popup_set_width
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gboolean">gboolean</link> popup_set_width);</programlisting>
 <para>
 Sets whether the completion popup window will be resized to be the same
 width as the entry.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>popup_set_width</parameter>&nbsp;:</term>
-<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> to make the width of the popup the same as the entry
+<varlistentry><term><parameter>popup_set_width</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to make the width of the popup the same as the entry
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.8
-</para></refsect2>
+</variablelist><para role="since">Since 2.8</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-popup-set-width" role="function" condition="since:2.8">
 <title>gtk_entry_completion_get_popup_set_width ()</title>
-<indexterm zone="gtk-entry-completion-get-popup-set-width" role="2.8"><primary>gtk_entry_completion_get_popup_set_width</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_popup_set_width
+<indexterm zone="gtk-entry-completion-get-popup-set-width" role="2.8"><primary sortas="gtk_entry_completion_get_popup_set_width">gtk_entry_completion_get_popup_set_width</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_popup_set_width
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Returns whether the  completion popup window will be resized to the 
 width of the entry.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the popup window will be resized to the width of 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the popup window will be resized to the width of 
   the entry
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.8
-</para></refsect2>
+</variablelist><para role="since">Since 2.8</para></refsect2>
 <refsect2 id="gtk-entry-completion-set-popup-single-match" role="function" condition="since:2.8">
 <title>gtk_entry_completion_set_popup_single_match ()</title>
-<indexterm zone="gtk-entry-completion-set-popup-single-match" role="2.8"><primary>gtk_entry_completion_set_popup_single_match</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_popup_single_match
+<indexterm zone="gtk-entry-completion-set-popup-single-match" role="2.8"><primary sortas="gtk_entry_completion_set_popup_single_match">gtk_entry_completion_set_popup_single_match</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_completion_set_popup_single_match
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion,
                                                          <link linkend="gboolean">gboolean</link> popup_single_match);</programlisting>
 <para>
 Sets whether the completion popup window will appear even if there is
-only a single match. You may want to set this to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if you
+only a single match. You may want to set this to <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> if you
 are using <link linkend="GtkEntryCompletion--inline-completion">inline
 completion</link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>popup_single_match</parameter>&nbsp;:</term>
-<listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the popup should appear even for a single
+<varlistentry><term><parameter>popup_single_match</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the popup should appear even for a single
   match
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.8
-</para></refsect2>
+</variablelist><para role="since">Since 2.8</para></refsect2>
 <refsect2 id="gtk-entry-completion-get-popup-single-match" role="function" condition="since:2.8">
 <title>gtk_entry_completion_get_popup_single_match ()</title>
-<indexterm zone="gtk-entry-completion-get-popup-single-match" role="2.8"><primary>gtk_entry_completion_get_popup_single_match</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_popup_single_match
+<indexterm zone="gtk-entry-completion-get-popup-single-match" role="2.8"><primary sortas="gtk_entry_completion_get_popup_single_match">gtk_entry_completion_get_popup_single_match</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_entry_completion_get_popup_single_match
                                                         (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *completion);</programlisting>
 <para>
 Returns whether the completion popup window will appear even if there is
 only a single match.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>completion</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>completion</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkEntryCompletion"><type>GtkEntryCompletion</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the popup window will appear regardless of the
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the popup window will appear regardless of the
    number of matches.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.8
-</para></refsect2>
+</variablelist><para role="since">Since 2.8</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkEntryCompletion.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2 id="GtkEntryCompletion--inline-completion"><title>The <literal>&quot;inline-completion&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--inline-completion" role="2.6"><primary>GtkEntryCompletion:inline-completion</primary></indexterm><programlisting>  &quot;inline-completion&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--inline-completion" role="property"><title>The <literal>&quot;inline-completion&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--inline-completion" role="2.6"><primary sortas="GtkEntryCompletion:inline-completion">GtkEntryCompletion:inline-completion</primary></indexterm><programlisting>  &quot;inline-completion&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
-Determines whether the common prefix of the possible completions 
+Determines whether the common prefix of the possible completions
 should be inserted automatically in the entry. Note that this
 requires text-column to be set, even if you are using a custom
 match function.</para>
 <para>
-
 </para><para>Default value: FALSE</para>
-<para>Since  2.6
-</para>
+<para>Since 2.6</para>
 </refsect2>
-<refsect2 id="GtkEntryCompletion--inline-selection"><title>The <literal>&quot;inline-selection&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--inline-selection" role="2.12"><primary>GtkEntryCompletion:inline-selection</primary></indexterm><programlisting>  &quot;inline-selection&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--inline-selection" role="property"><title>The <literal>&quot;inline-selection&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--inline-selection" role="2.12"><primary sortas="GtkEntryCompletion:inline-selection">GtkEntryCompletion:inline-selection</primary></indexterm><programlisting>  &quot;inline-selection&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Determines whether the possible completions on the popup
 will appear in the entry as you navigate through them.</para>
 <para>
-
 </para><para>Default value: FALSE</para>
-<para>Since  2.12
-</para>
+<para>Since 2.12</para>
 </refsect2>
-<refsect2 id="GtkEntryCompletion--minimum-key-length"><title>The <literal>&quot;minimum-key-length&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--minimum-key-length"><primary>GtkEntryCompletion:minimum-key-length</primary></indexterm><programlisting>  &quot;minimum-key-length&quot;       <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--minimum-key-length" role="property"><title>The <literal>&quot;minimum-key-length&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--minimum-key-length"><primary sortas="GtkEntryCompletion:minimum-key-length">GtkEntryCompletion:minimum-key-length</primary></indexterm><programlisting>  &quot;minimum-key-length&quot;       <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>Minimum length of the search key in order to look up matches.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 1</para>
 </refsect2>
-<refsect2 id="GtkEntryCompletion--model"><title>The <literal>&quot;model&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--model"><primary>GtkEntryCompletion:model</primary></indexterm><programlisting>  &quot;model&quot;                    <link linkend="GtkTreeModel">GtkTreeModel</link>*         : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--model" role="property"><title>The <literal>&quot;model&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--model"><primary sortas="GtkEntryCompletion:model">GtkEntryCompletion:model</primary></indexterm><programlisting>  &quot;model&quot;                    <link linkend="GtkTreeModel">GtkTreeModel</link>*         : Read / Write</programlisting>
 <para>The model to find matches in.</para></refsect2>
-<refsect2 id="GtkEntryCompletion--popup-completion"><title>The <literal>&quot;popup-completion&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--popup-completion" role="2.6"><primary>GtkEntryCompletion:popup-completion</primary></indexterm><programlisting>  &quot;popup-completion&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--popup-completion" role="property"><title>The <literal>&quot;popup-completion&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--popup-completion" role="2.6"><primary sortas="GtkEntryCompletion:popup-completion">GtkEntryCompletion:popup-completion</primary></indexterm><programlisting>  &quot;popup-completion&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Determines whether the possible completions should be 
 shown in a popup window.</para>
 <para>
-
 </para><para>Default value: TRUE</para>
-<para>Since  2.6
-</para>
+<para>Since 2.6</para>
 </refsect2>
-<refsect2 id="GtkEntryCompletion--popup-set-width"><title>The <literal>&quot;popup-set-width&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--popup-set-width" role="2.8"><primary>GtkEntryCompletion:popup-set-width</primary></indexterm><programlisting>  &quot;popup-set-width&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--popup-set-width" role="property"><title>The <literal>&quot;popup-set-width&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--popup-set-width" role="2.8"><primary sortas="GtkEntryCompletion:popup-set-width">GtkEntryCompletion:popup-set-width</primary></indexterm><programlisting>  &quot;popup-set-width&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Determines whether the completions popup window will be
 resized to the width of the entry.</para>
 <para>
-
 </para><para>Default value: TRUE</para>
-<para>Since  2.8
-</para>
+<para>Since 2.8</para>
 </refsect2>
-<refsect2 id="GtkEntryCompletion--popup-single-match"><title>The <literal>&quot;popup-single-match&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--popup-single-match" role="2.8"><primary>GtkEntryCompletion:popup-single-match</primary></indexterm><programlisting>  &quot;popup-single-match&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--popup-single-match" role="property"><title>The <literal>&quot;popup-single-match&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--popup-single-match" role="2.8"><primary sortas="GtkEntryCompletion:popup-single-match">GtkEntryCompletion:popup-single-match</primary></indexterm><programlisting>  &quot;popup-single-match&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Determines whether the completions popup window will shown
 for a single possible completion. You probably want to set
-this to <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if you are using 
+this to <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> if you are using 
 <link linkend="GtkEntryCompletion--inline-completion">inline 
 completion</link>.</para>
 <para>
-
 </para><para>Default value: TRUE</para>
-<para>Since  2.8
-</para>
+<para>Since 2.8</para>
 </refsect2>
-<refsect2 id="GtkEntryCompletion--text-column"><title>The <literal>&quot;text-column&quot;</literal> property</title>
-<indexterm zone="GtkEntryCompletion--text-column" role="2.6"><primary>GtkEntryCompletion:text-column</primary></indexterm><programlisting>  &quot;text-column&quot;              <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2 id="GtkEntryCompletion--text-column" role="property"><title>The <literal>&quot;text-column&quot;</literal> property</title>
+<indexterm zone="GtkEntryCompletion--text-column" role="2.6"><primary sortas="GtkEntryCompletion:text-column">GtkEntryCompletion:text-column</primary></indexterm><programlisting>  &quot;text-column&quot;              <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 The column of the model containing the strings.
 Note that the strings must be UTF-8.</para>
 <para>
-
 </para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
-<para>Since  2.6
-</para>
+<para>Since 2.6</para>
 </refsect2>
 
 </refsect1>
 
 <refsect1 id="GtkEntryCompletion.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2 id="GtkEntryCompletion-action-activated"><title>The <literal>&quot;action-activated&quot;</literal> signal</title>
-<indexterm zone="GtkEntryCompletion-action-activated" role="2.4"><primary>GtkEntryCompletion::action-activated</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
+<refsect2 id="GtkEntryCompletion-action-activated" role="signal"><title>The <literal>&quot;action-activated&quot;</literal> signal</title>
+<indexterm zone="GtkEntryCompletion-action-activated" role="2.4"><primary sortas="GtkEntryCompletion::action-activated">GtkEntryCompletion::action-activated</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
                                                         <link linkend="gint">gint</link>                index,
                                                         <link linkend="gpointer">gpointer</link>            user_data)      : Run Last</programlisting>
 <para>
 Gets emitted when an action is activated.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>index</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>index</parameter>&#160;:</term>
 <listitem><simpara> the index of the activated action
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist><para>Since  2.4
-</para></refsect2><refsect2 id="GtkEntryCompletion-cursor-on-match"><title>The <literal>&quot;cursor-on-match&quot;</literal> signal</title>
-<indexterm zone="GtkEntryCompletion-cursor-on-match" role="2.12"><primary>GtkEntryCompletion::cursor-on-match</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
+</variablelist><para>Since 2.4</para></refsect2><refsect2 id="GtkEntryCompletion-cursor-on-match" role="signal"><title>The <literal>&quot;cursor-on-match&quot;</literal> signal</title>
+<indexterm zone="GtkEntryCompletion-cursor-on-match" role="2.12"><primary sortas="GtkEntryCompletion::cursor-on-match">GtkEntryCompletion::cursor-on-match</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
                                                         <link linkend="GtkTreeModel">GtkTreeModel</link>       *model,
                                                         <link linkend="GtkTreeIter">GtkTreeIter</link>        *iter,
                                                         <link linkend="gpointer">gpointer</link>            user_data)      : Run Last</programlisting>
 <para>
 Gets emitted when a match from the cursor is on a match
 of the list.The default behaviour is to replace the contents
-of the entry with the contents of the text column in the row 
+of the entry with the contents of the text column in the row
 pointed to by <parameter>iter</parameter>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>model</parameter>&#160;:</term>
 <listitem><simpara> the <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> containing the matches
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> positioned at the selected match
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the signal has been handled
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the signal has been handled
 
 </simpara></listitem></varlistentry>
-</variablelist><para>Since  2.12
-</para></refsect2><refsect2 id="GtkEntryCompletion-insert-prefix"><title>The <literal>&quot;insert-prefix&quot;</literal> signal</title>
-<indexterm zone="GtkEntryCompletion-insert-prefix" role="2.6"><primary>GtkEntryCompletion::insert-prefix</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
+</variablelist><para>Since 2.12</para></refsect2><refsect2 id="GtkEntryCompletion-insert-prefix" role="signal"><title>The <literal>&quot;insert-prefix&quot;</literal> signal</title>
+<indexterm zone="GtkEntryCompletion-insert-prefix" role="2.6"><primary sortas="GtkEntryCompletion::insert-prefix">GtkEntryCompletion::insert-prefix</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
                                                         <link linkend="gchar">gchar</link>              *prefix,
                                                         <link linkend="gpointer">gpointer</link>            user_data)      : Run Last</programlisting>
 <para>
@@ -830,22 +759,20 @@ smaller part of the <parameter>prefix</parameter> into the entry - e.g. the entr
 the <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link> inserts only the part of the prefix up to the 
 next '/'.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>prefix</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>prefix</parameter>&#160;:</term>
 <listitem><simpara> the common prefix of all possible completions
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the signal has been handled
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the signal has been handled
 
 </simpara></listitem></varlistentry>
-</variablelist><para>Since  2.6
-</para></refsect2><refsect2 id="GtkEntryCompletion-match-selected"><title>The <literal>&quot;match-selected&quot;</literal> signal</title>
-<indexterm zone="GtkEntryCompletion-match-selected" role="2.4"><primary>GtkEntryCompletion::match-selected</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
+</variablelist><para>Since 2.6</para></refsect2><refsect2 id="GtkEntryCompletion-match-selected" role="signal"><title>The <literal>&quot;match-selected&quot;</literal> signal</title>
+<indexterm zone="GtkEntryCompletion-match-selected" role="2.4"><primary sortas="GtkEntryCompletion::match-selected">GtkEntryCompletion::match-selected</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkEntryCompletion">GtkEntryCompletion</link> *widget,
                                                         <link linkend="GtkTreeModel">GtkTreeModel</link>       *model,
                                                         <link linkend="GtkTreeIter">GtkTreeIter</link>        *iter,
                                                         <link linkend="gpointer">gpointer</link>            user_data)      : Run Last</programlisting>
@@ -855,24 +782,22 @@ The default behaviour is to replace the contents of the
 entry with the contents of the text column in the row 
 pointed to by <parameter>iter</parameter>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>widget</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>model</parameter>&#160;:</term>
 <listitem><simpara> the <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> containing the matches
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>iter</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> positioned at the selected match
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the signal has been handled
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the signal has been handled
 
 </simpara></listitem></varlistentry>
-</variablelist><para>Since  2.4
-</para></refsect2>
+</variablelist><para>Since 2.4</para></refsect2>
 </refsect1>
 
 

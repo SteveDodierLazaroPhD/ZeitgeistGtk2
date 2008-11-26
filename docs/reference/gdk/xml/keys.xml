@@ -14,7 +14,6 @@
 <refnamediv>
 <refname>Key Values</refname>
 <refpurpose>Functions for manipulating keyboard codes</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="gdk-Keyboard-Handling.synopsis" role="synopsis">
@@ -72,7 +71,6 @@
   <link linkend="GObject">GObject</link>
    +----GdkKeymap
 </synopsis>
-
 </refsect1>
 
 
@@ -97,7 +95,7 @@ They appear in the <structfield>keyval</structfield> field of the
 <link linkend="GdkEventKey"><type>GdkEventKey</type></link> structure, which is passed to signal handlers for the
 "key-press-event" and "key-release-event" signals.
 The complete list of key values can be found in the <filename>&lt;gdk/gdkkeysyms.h&gt;</filename>
-header file. <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> is not included in <filename>&lt;gtk/gtk.h&gt;</filename>, 
+header file. <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> is not included in <filename>&lt;gtk/gtk.h&gt;</filename>,
 it must be included independently, because the file is quite large.
 </para>
 <para>
@@ -111,13 +109,12 @@ The case of key values can be determined using <link linkend="gdk-keyval-is-uppe
 using <link linkend="gdk-keyval-to-upper"><function>gdk_keyval_to_upper()</function></link> and <link linkend="gdk-keyval-to-lower"><function>gdk_keyval_to_lower()</function></link>.
 </para>
 <para>
-When it makes sense, key values can be converted to and from 
+When it makes sense, key values can be converted to and from
 Unicode characters with <link linkend="gdk-keyval-to-unicode"><function>gdk_keyval_to_unicode()</function></link> and <link linkend="gdk-unicode-to-keyval"><function>gdk_unicode_to_keyval()</function></link>.
 </para>
-
 <para>
-One <link linkend="GdkKeymap"><type>GdkKeymap</type></link> object exists for each user display. <link linkend="gdk-keymap-get-default"><function>gdk_keymap_get_default()</function></link> 
-returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> for the default display; to obtain keymaps for other 
+One <link linkend="GdkKeymap"><type>GdkKeymap</type></link> object exists for each user display. <link linkend="gdk-keymap-get-default"><function>gdk_keymap_get_default()</function></link>
+returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> for the default display; to obtain keymaps for other
 displays, use <link linkend="gdk-keymap-get-for-display"><function>gdk_keymap_get_for_display()</function></link>. A keymap
 is a mapping from <link linkend="GdkKeymapKey"><type>GdkKeymapKey</type></link> to key values. You can think of a <link linkend="GdkKeymapKey"><type>GdkKeymapKey</type></link>
 as a representation of a symbol printed on a physical keyboard key. That is, it
@@ -137,7 +134,6 @@ group 0, a key might have two English characters, and in group 1 it might have
 two Hebrew characters. The Hebrew characters will be printed on the key next to
 the English characters.
 </para>
-
 <para>
 In order to use a keymap to interpret a key event, it's necessary to first
 convert the keyboard state into an effective group and level. This is done via a
@@ -151,14 +147,12 @@ differ from the effective group used for keymap lookups because some keys don't
 have multiple groups - e.g. the Enter key is always in group 0 regardless of
 keyboard state.
 </para>
-
 <para>
 Note that <link linkend="gdk-keymap-translate-keyboard-state"><function>gdk_keymap_translate_keyboard_state()</function></link> also returns the keyval, i.e. it
 goes ahead and performs the keymap lookup in addition to telling you which
 effective group/level values were used for the lookup.  <link linkend="GdkEventKey"><type>GdkEventKey</type></link> already
 contains this keyval, however, so you don't normally need to call
 <link linkend="gdk-keymap-translate-keyboard-state"><function>gdk_keymap_translate_keyboard_state()</function></link> just to get the keyval.
-
 </para>
 </refsect1>
 
@@ -166,7 +160,7 @@ contains this keyval, however, so you don't normally need to call
 <title role="details.title">Details</title>
 <refsect2 id="GdkKeymap-struct" role="struct">
 <title>GdkKeymap</title>
-<indexterm zone="GdkKeymap-struct"><primary>GdkKeymap</primary></indexterm><programlisting>typedef struct _GdkKeymap GdkKeymap;</programlisting>
+<indexterm zone="GdkKeymap-struct"><primary sortas="GdkKeymap">GdkKeymap</primary></indexterm><programlisting>typedef struct _GdkKeymap GdkKeymap;</programlisting>
 <para>
 A <structname>GdkKeymap</structname> defines the translation from keyboard state
 (including a hardware key, a modifier mask, and active keyboard group)
@@ -177,70 +171,66 @@ in the keymap and see what keyval it corresponds to.
 </para></refsect2>
 <refsect2 id="GdkKeymapKey" role="struct">
 <title>GdkKeymapKey</title>
-<indexterm zone="GdkKeymapKey"><primary>GdkKeymapKey</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkKeymapKey"><primary sortas="GdkKeymapKey">GdkKeymapKey</primary></indexterm><programlisting>typedef struct {
   guint keycode;
   gint  group;
   gint  level;
 } GdkKeymapKey;
 </programlisting>
 <para>
-A <structname>GdkKeymapKey</structname> is a hardware key that can 
+A <structname>GdkKeymapKey</structname> is a hardware key that can
 be mapped to a keyval.
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="guint">guint</link>&nbsp;<structfield>keycode</structfield>;</term>
+<term><link linkend="guint">guint</link>&#160;<structfield>keycode</structfield>;</term>
 <listitem><simpara>the hardware keycode. This is an identifying number for a 
   physical key.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>group</structfield>;</term>
+<term><link linkend="gint">gint</link>&#160;<structfield>group</structfield>;</term>
 <listitem><simpara>indicates movement in a horizontal direction. Usually groups are used 
-  for two different languages. In group 0, a key might have two English 
-  characters, and in group 1 it might have two Hebrew characters. The Hebrew 
+  for two different languages. In group 0, a key might have two English
+  characters, and in group 1 it might have two Hebrew characters. The Hebrew
   characters will be printed on the key next to the English characters.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gint">gint</link>&nbsp;<structfield>level</structfield>;</term>
+<term><link linkend="gint">gint</link>&#160;<structfield>level</structfield>;</term>
 <listitem><simpara>indicates which symbol on the key will be used, in a vertical direction.  So on a standard US keyboard, the key with the number "1" on it also has the 
-  exclamation point ("!") character on it. The level indicates whether to use 
+  exclamation point ("!") character on it. The level indicates whether to use
   the "1" or the "!" symbol. The letter keys are considered to have a lowercase
-  letter at level 0, and an uppercase letter at level 1, though only the 
+  letter at level 0, and an uppercase letter at level 1, though only the
   uppercase letter is printed.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-default" role="function">
 <title>gdk_keymap_get_default ()</title>
-<indexterm zone="gdk-keymap-get-default"><primary>gdk_keymap_get_default</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_default              (void);</programlisting>
+<indexterm zone="gdk-keymap-get-default"><primary sortas="gdk_keymap_get_default">gdk_keymap_get_default</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_default              (void);</programlisting>
 <para>
 Returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to the default display.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to the default display.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to the default display.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-for-display" role="function" condition="since:2.2">
 <title>gdk_keymap_get_for_display ()</title>
-<indexterm zone="gdk-keymap-get-for-display" role="2.2"><primary>gdk_keymap_get_for_display</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_for_display          (<link linkend="GdkDisplay">GdkDisplay</link> *display);</programlisting>
+<indexterm zone="gdk-keymap-get-for-display" role="2.2"><primary sortas="gdk_keymap_get_for_display">gdk_keymap_get_for_display</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_for_display          (<link linkend="GdkDisplay">GdkDisplay</link> *display);</programlisting>
 <para>
 Returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to <parameter>display</parameter>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>display</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>display</parameter>&#160;:</term>
 <listitem><simpara> the <link linkend="GdkDisplay"><type>GdkDisplay</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to <parameter>display</parameter>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to <parameter>display</parameter>.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.2
-</para></refsect2>
+</variablelist><para role="since">Since 2.2</para></refsect2>
 <refsect2 id="gdk-keymap-lookup-key" role="function">
 <title>gdk_keymap_lookup_key ()</title>
-<indexterm zone="gdk-keymap-lookup-key"><primary>gdk_keymap_lookup_key</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keymap_lookup_key               (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-lookup-key"><primary sortas="gdk_keymap_lookup_key">gdk_keymap_lookup_key</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keymap_lookup_key               (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          const <link linkend="GdkKeymapKey">GdkKeymapKey</link> *key);</programlisting>
 <para>
 Looks up the keyval mapped to a keycode/group/level triplet.
@@ -249,20 +239,19 @@ you want to use <link linkend="gdk-keymap-translate-keyboard-state"><function>gd
 this function, since the effective group/level may not be
 the same as the current keyboard state.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL--CAPS"><literal>NULL</literal></link> to use the default keymap
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>key</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>key</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GdkKeymapKey"><type>GdkKeymapKey</type></link> with keycode, group, and level initialized
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a keyval, or 0 if none was mapped to the given <parameter>key</parameter>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a keyval, or 0 if none was mapped to the given <parameter>key</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-translate-keyboard-state" role="function">
 <title>gdk_keymap_translate_keyboard_state ()</title>
-<indexterm zone="gdk-keymap-translate-keyboard-state"><primary>gdk_keymap_translate_keyboard_state</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_translate_keyboard_state (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-translate-keyboard-state"><primary sortas="gdk_keymap_translate_keyboard_state">gdk_keymap_translate_keyboard_state</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_translate_keyboard_state (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          <link linkend="guint">guint</link> hardware_keycode,
                                                          <link linkend="GdkModifierType">GdkModifierType</link> state,
                                                          <link linkend="gint">gint</link> group,
@@ -325,39 +314,38 @@ removed. Store <literal>&lt;Control&gt;plus</literal>,
 not <literal>&lt;Control&gt;&lt;Shift&gt;plus</literal>,
 </para></note></para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> to use the default
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>hardware_keycode</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>hardware_keycode</parameter>&#160;:</term>
 <listitem><simpara> a keycode
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>state</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>state</parameter>&#160;:</term>
 <listitem><simpara> a modifier state 
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>group</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>group</parameter>&#160;:</term>
 <listitem><simpara> active keyboard group
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
-<listitem><simpara> return location for keyval, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
+<listitem><simpara> return location for keyval, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>effective_group</parameter>&nbsp;:</term>
-<listitem><simpara> return location for effective group, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>effective_group</parameter>&#160;:</term>
+<listitem><simpara> return location for effective group, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>level</parameter>&nbsp;:</term>
-<listitem><simpara> return location for level, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>level</parameter>&#160;:</term>
+<listitem><simpara> return location for level, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>consumed_modifiers</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>consumed_modifiers</parameter>&#160;:</term>
 <listitem><simpara> return location for modifiers that were used to
-    determine the group or level, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+    determine the group or level, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if there was a keyval bound to the keycode/state/group
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if there was a keyval bound to the keycode/state/group
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-entries-for-keyval" role="function">
 <title>gdk_keymap_get_entries_for_keyval ()</title>
-<indexterm zone="gdk-keymap-get-entries-for-keyval"><primary>gdk_keymap_get_entries_for_keyval</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keyval   (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-get-entries-for-keyval"><primary sortas="gdk_keymap_get_entries_for_keyval">gdk_keymap_get_entries_for_keyval</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keyval   (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          <link linkend="guint">guint</link> keyval,
                                                          <link linkend="GdkKeymapKey">GdkKeymapKey</link> **keys,
                                                          <link linkend="gint">gint</link> *n_keys);</programlisting>
@@ -374,26 +362,25 @@ keyboard group. The level is computed from the modifier mask.
 The returned array should be freed
 with <link linkend="g-free"><function>g_free()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link>, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> to use the default keymap
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
 <listitem><simpara> a keyval, such as <link linkend="GDK-a"><literal>GDK_a</literal></link>, <link linkend="GDK-Up"><literal>GDK_Up</literal></link>, <link linkend="GDK-Return"><literal>GDK_Return</literal></link>, etc.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>keys</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keys</parameter>&#160;:</term>
 <listitem><simpara> return location for an array of <link linkend="GdkKeymapKey"><type>GdkKeymapKey</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>n_keys</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>n_keys</parameter>&#160;:</term>
 <listitem><simpara> return location for number of elements in returned array
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if keys were found and returned
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if keys were found and returned
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-entries-for-keycode" role="function">
 <title>gdk_keymap_get_entries_for_keycode ()</title>
-<indexterm zone="gdk-keymap-get-entries-for-keycode"><primary>gdk_keymap_get_entries_for_keycode</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keycode  (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-get-entries-for-keycode"><primary sortas="gdk_keymap_get_entries_for_keycode">gdk_keymap_get_entries_for_keycode</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keycode  (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          <link linkend="guint">guint</link> hardware_keycode,
                                                          <link linkend="GdkKeymapKey">GdkKeymapKey</link> **keys,
                                                          <link linkend="guint">guint</link> **keyvals,
@@ -406,200 +393,182 @@ When a keycode is pressed by the user, the keyval from
 this list of entries is selected by considering the effective
 keyboard group and level. See <link linkend="gdk-keymap-translate-keyboard-state"><function>gdk_keymap_translate_keyboard_state()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL--CAPS"><literal>NULL</literal></link> to use the default keymap
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>hardware_keycode</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>hardware_keycode</parameter>&#160;:</term>
 <listitem><simpara> a keycode
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>keys</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keys</parameter>&#160;:</term>
 <listitem><simpara> return location for array of <link linkend="GdkKeymapKey"><type>GdkKeymapKey</type></link>, or NULL
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>keyvals</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyvals</parameter>&#160;:</term>
 <listitem><simpara> return location for array of keyvals, or NULL
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>n_entries</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>n_entries</parameter>&#160;:</term>
 <listitem><simpara> length of <parameter>keys</parameter> and <parameter>keyvals</parameter>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if there were any entries
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if there were any entries
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-direction" role="function">
 <title>gdk_keymap_get_direction ()</title>
-<indexterm zone="gdk-keymap-get-direction"><primary>gdk_keymap_get_direction</primary></indexterm><programlisting><link linkend="PangoDirection">PangoDirection</link>      gdk_keymap_get_direction            (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
+<indexterm zone="gdk-keymap-get-direction"><primary sortas="gdk_keymap_get_direction">gdk_keymap_get_direction</primary></indexterm><programlisting><link linkend="PangoDirection">PangoDirection</link>      gdk_keymap_get_direction            (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
 <para>
 Returns the direction of effective layout of the keymap.</para>
 <para>
-Returns the direction of the keymap. 
+Returns the direction of the keymap.
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL--CAPS"><literal>NULL</literal></link> to use the default keymap
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="PANGO-DIRECTION-LTR:CAPS"><literal>PANGO_DIRECTION_LTR</literal></link> or <link linkend="PANGO-DIRECTION-RTL:CAPS"><literal>PANGO_DIRECTION_RTL</literal></link> 
-  if it can determine the direction. <link linkend="PANGO-DIRECTION-NEUTRAL:CAPS"><literal>PANGO_DIRECTION_NEUTRAL</literal></link> 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="PANGO-DIRECTION-LTR--CAPS"><literal>PANGO_DIRECTION_LTR</literal></link> or <link linkend="PANGO-DIRECTION-RTL--CAPS"><literal>PANGO_DIRECTION_RTL</literal></link> 
+  if it can determine the direction. <link linkend="PANGO-DIRECTION-NEUTRAL--CAPS"><literal>PANGO_DIRECTION_NEUTRAL</literal></link> 
   otherwise.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-have-bidi-layouts" role="function" condition="since:2.12">
 <title>gdk_keymap_have_bidi_layouts ()</title>
-<indexterm zone="gdk-keymap-have-bidi-layouts" role="2.12"><primary>gdk_keymap_have_bidi_layouts</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_have_bidi_layouts        (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
+<indexterm zone="gdk-keymap-have-bidi-layouts" role="2.12"><primary sortas="gdk_keymap_have_bidi_layouts">gdk_keymap_have_bidi_layouts</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_have_bidi_layouts        (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
 <para>
 Determines if keyboard layouts for both right-to-left and left-to-right
 languages are in use.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
-<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL:CAPS"><literal>NULL</literal></link> to use the default keymap
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link> or <link linkend="NULL--CAPS"><literal>NULL</literal></link> to use the default keymap
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if there are layouts in both directions, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> otherwise
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if there are layouts in both directions, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> otherwise
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.12
-</para></refsect2>
+</variablelist><para role="since">Since 2.12</para></refsect2>
 <refsect2 id="gdk-keyval-name" role="function">
 <title>gdk_keyval_name ()</title>
-<indexterm zone="gdk-keyval-name"><primary>gdk_keyval_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gdk_keyval_name                     (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-name"><primary sortas="gdk_keyval_name">gdk_keyval_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gdk_keyval_name                     (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Converts a key value into a symbolic name.
 The names are the same as those in the <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> header file
 but without the leading "GDK_".
 </para><variablelist role="params">
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
 <listitem><simpara>a key value.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a string containing the name of the key, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if <parameter>keyval</parameter> is not
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>a string containing the name of the key, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if <parameter>keyval</parameter> is not
 a valid key. The string should not be modified.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-from-name" role="function">
 <title>gdk_keyval_from_name ()</title>
-<indexterm zone="gdk-keyval-from-name"><primary>gdk_keyval_from_name</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_from_name                (const <link linkend="gchar">gchar</link> *keyval_name);</programlisting>
+<indexterm zone="gdk-keyval-from-name"><primary sortas="gdk_keyval_from_name">gdk_keyval_from_name</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_from_name                (const <link linkend="gchar">gchar</link> *keyval_name);</programlisting>
 <para>
 Converts a key name to a key value.
 </para><variablelist role="params">
-<varlistentry><term><parameter>keyval_name</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval_name</parameter>&#160;:</term>
 <listitem><simpara>a key name.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the corresponding key value, or <link linkend="GDK-VoidSymbol"><literal>GDK_VoidSymbol</literal></link> if the key name is
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the corresponding key value, or <link linkend="GDK-VoidSymbol"><literal>GDK_VoidSymbol</literal></link> if the key name is
 not a valid key.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-convert-case" role="function">
 <title>gdk_keyval_convert_case ()</title>
-<indexterm zone="gdk-keyval-convert-case"><primary>gdk_keyval_convert_case</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_keyval_convert_case             (<link linkend="guint">guint</link> symbol,
+<indexterm zone="gdk-keyval-convert-case"><primary sortas="gdk_keyval_convert_case">gdk_keyval_convert_case</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_keyval_convert_case             (<link linkend="guint">guint</link> symbol,
                                                          <link linkend="guint">guint</link> *lower,
                                                          <link linkend="guint">guint</link> *upper);</programlisting>
 <para>
 Obtains the upper- and lower-case versions of the keyval <parameter>symbol</parameter>.
-Examples of keyvals are <link linkend="GDK-a"><type>GDK_a</type></link>, <link linkend="GDK-Enter"><type>GDK_Enter</type></link>, <link linkend="GDK-F1:CAPS"><type>GDK_F1</type></link>, etc.</para>
+Examples of keyvals are <link linkend="GDK-a"><type>GDK_a</type></link>, <link linkend="GDK-Enter"><type>GDK_Enter</type></link>, <link linkend="GDK-F1--CAPS"><type>GDK_F1</type></link>, etc.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>symbol</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>symbol</parameter>&#160;:</term>
 <listitem><simpara> a keyval
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>lower</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>lower</parameter>&#160;:</term>
 <listitem><simpara> return location for lowercase version of <parameter>symbol</parameter>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>upper</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>upper</parameter>&#160;:</term>
 <listitem><simpara> return location for uppercase version of <parameter>symbol</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-to-upper" role="function">
 <title>gdk_keyval_to_upper ()</title>
-<indexterm zone="gdk-keyval-to-upper"><primary>gdk_keyval_to_upper</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-to-upper"><primary sortas="gdk_keyval_to_upper">gdk_keyval_to_upper</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Converts a key value to upper case, if applicable.
 </para><variablelist role="params">
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
 <listitem><simpara>a key value.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the upper case form of <parameter>keyval</parameter>, or <parameter>keyval</parameter> itself if it is already
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the upper case form of <parameter>keyval</parameter>, or <parameter>keyval</parameter> itself if it is already
 in upper case or it is not subject to case conversion.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-to-lower" role="function">
 <title>gdk_keyval_to_lower ()</title>
-<indexterm zone="gdk-keyval-to-lower"><primary>gdk_keyval_to_lower</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-to-lower"><primary sortas="gdk_keyval_to_lower">gdk_keyval_to_lower</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Converts a key value to lower case, if applicable.
 </para><variablelist role="params">
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
 <listitem><simpara>a key value.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the lower case form of <parameter>keyval</parameter>, or <parameter>keyval</parameter> itself if it is already
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the lower case form of <parameter>keyval</parameter>, or <parameter>keyval</parameter> itself if it is already
 in lower case or it is not subject to case conversion.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-is-upper" role="function">
 <title>gdk_keyval_is_upper ()</title>
-<indexterm zone="gdk-keyval-is-upper"><primary>gdk_keyval_is_upper</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-is-upper"><primary sortas="gdk_keyval_is_upper">gdk_keyval_is_upper</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
-Returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the given key value is in upper case.
+Returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the given key value is in upper case.
 </para><variablelist role="params">
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
 <listitem><simpara>a key value.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>keyval</parameter> is in upper case, or if <parameter>keyval</parameter> is not subject to
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>%TRUE if <parameter>keyval</parameter> is in upper case, or if <parameter>keyval</parameter> is not subject to
 case conversion.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-is-lower" role="function">
 <title>gdk_keyval_is_lower ()</title>
-<indexterm zone="gdk-keyval-is-lower"><primary>gdk_keyval_is_lower</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-is-lower"><primary sortas="gdk_keyval_is_lower">gdk_keyval_is_lower</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
-Returns <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the given key value is in lower case.
+Returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the given key value is in lower case.
 </para><variablelist role="params">
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
 <listitem><simpara>a key value.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara><link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>keyval</parameter> is in lower case, or if <parameter>keyval</parameter> is not subject to
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>%TRUE if <parameter>keyval</parameter> is in lower case, or if <parameter>keyval</parameter> is not subject to
 case conversion.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-to-unicode" role="function">
 <title>gdk_keyval_to_unicode ()</title>
-<indexterm zone="gdk-keyval-to-unicode"><primary>gdk_keyval_to_unicode</primary></indexterm><programlisting><link linkend="guint32">guint32</link>             gdk_keyval_to_unicode               (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-to-unicode"><primary sortas="gdk_keyval_to_unicode">gdk_keyval_to_unicode</primary></indexterm><programlisting><link linkend="guint32">guint32</link>             gdk_keyval_to_unicode               (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Convert from a GDK key symbol to the corresponding ISO10646 (Unicode)
 character.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keyval</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keyval</parameter>&#160;:</term>
 <listitem><simpara> a GDK key symbol 
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the corresponding unicode character, or 0 if there
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the corresponding unicode character, or 0 if there
               is no corresponding character.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-unicode-to-keyval" role="function">
 <title>gdk_unicode_to_keyval ()</title>
-<indexterm zone="gdk-unicode-to-keyval"><primary>gdk_unicode_to_keyval</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_unicode_to_keyval               (<link linkend="guint32">guint32</link> wc);</programlisting>
+<indexterm zone="gdk-unicode-to-keyval"><primary sortas="gdk_unicode_to_keyval">gdk_unicode_to_keyval</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_unicode_to_keyval               (<link linkend="guint32">guint32</link> wc);</programlisting>
 <para>
 Convert from a ISO10646 character to a key symbol.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>wc</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>wc</parameter>&#160;:</term>
 <listitem><simpara> a ISO10646 encoded character
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the corresponding GDK key symbol, if one exists.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the corresponding GDK key symbol, if one exists.
               or, if there is no corresponding symbol, 
               wc | 0x01000000
 </simpara></listitem></varlistentry>
@@ -609,37 +578,33 @@ Convert from a ISO10646 character to a key symbol.</para>
 
 <refsect1 id="gdk-Keyboard-Handling.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2 id="GdkKeymap-direction-changed"><title>The <literal>&quot;direction-changed&quot;</literal> signal</title>
-<indexterm zone="GdkKeymap-direction-changed" role="2.0"><primary>GdkKeymap::direction-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<refsect2 id="GdkKeymap-direction-changed" role="signal"><title>The <literal>&quot;direction-changed&quot;</literal> signal</title>
+<indexterm zone="GdkKeymap-direction-changed" role="2.0"><primary sortas="GdkKeymap::direction-changed">GdkKeymap::direction-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
 The ::direction-changed signal gets emitted when the direction of
 the keymap changes.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
 <listitem><simpara> the object on which the signal is emitted
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist><para>Since  2.0
-</para></refsect2><refsect2 id="GdkKeymap-keys-changed"><title>The <literal>&quot;keys-changed&quot;</literal> signal</title>
-<indexterm zone="GdkKeymap-keys-changed" role="2.2"><primary>GdkKeymap::keys-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+</variablelist><para>Since 2.0</para></refsect2><refsect2 id="GdkKeymap-keys-changed" role="signal"><title>The <literal>&quot;keys-changed&quot;</literal> signal</title>
+<indexterm zone="GdkKeymap-keys-changed" role="2.2"><primary sortas="GdkKeymap::keys-changed">GdkKeymap::keys-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
 The ::keys-changed signal is emitted when the mapping represented by
 <parameter>keymap</parameter> changes.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>keymap</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
 <listitem><simpara> the object on which the signal is emitted
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist><para>Since  2.2
-</para></refsect2>
+</variablelist><para>Since 2.2</para></refsect2>
 </refsect1>
 
 

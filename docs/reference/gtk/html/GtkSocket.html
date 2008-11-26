@@ -8,7 +8,7 @@
 <link rel="up" href="PlugSocket.html" title="Cross-process Embedding">
 <link rel="prev" href="GtkPlug.html" title="GtkPlug">
 <link rel="next" href="SpecialObjects.html" title="Special-purpose features">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,15 +69,17 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="SpecialObjects.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkSocket.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkSocket.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkSocket.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkSocket.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-                   | 
-                  <a href="#GtkSocket.signals" class="shortcut">Signals</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkSocket.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkSocket.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkSocket.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkSocket.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                 | 
+                <a href="#GtkSocket.signals" class="shortcut">Signals</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkSocket"></a><div class="titlepage"></div>
@@ -147,7 +149,7 @@ Together with <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="t
 to embed widgets from one process into another process
 in a fashion that is transparent to the user. One
 process creates a <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> widget and, passes the
-that widget's window ID to the other process, 
+that widget's window ID to the other process,
 which then creates a <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> with that window ID.
 Any widgets contained in the <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> then will appear
 inside the first applications window.
@@ -157,15 +159,13 @@ The socket's window ID is obtained by using
 <a class="link" href="GtkSocket.html#gtk-socket-get-id" title="gtk_socket_get_id ()"><code class="function">gtk_socket_get_id()</code></a>. Before using this function,
 the socket must have been realized, and for hence,
 have been added to its parent.
-
 </p>
 <div class="example">
-<a name="id3340030"></a><p class="title"><b>Example 51. Obtaining the window ID of a socket.</b></p>
+<a name="id3681936"></a><p class="title"><b>Example 51. Obtaining the window ID of a socket.</b></p>
 <div class="example-contents"><pre class="programlisting">
 GtkWidget *socket = gtk_socket_new ();
 gtk_widget_show (socket);
 gtk_container_add (GTK_CONTAINER (parent), socket);
-
 /* The following call is only necessary if one of
  * the ancestors of the socket is not yet visible.
  */
@@ -178,17 +178,15 @@ g_print ("The ID of the sockets window is %x\n",
 </p>
 <p>
 Note that if you pass the window ID of the socket to another
-process that will create a plug in the socket, you 
+process that will create a plug in the socket, you
 must make sure that the socket widget is not destroyed
 until that plug is created. Violating this rule will
 cause unpredictable consequences, the most likely
-consequence being that the plug will appear as a 
+consequence being that the plug will appear as a
 separate toplevel window. You can check if the plug
 has been created by examining the
 <em class="structfield"><code>plug_window</code></em> field of the
-<a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> structure. If this field is non-<a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>, 
+<a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> structure. If this field is non-<code class="literal">NULL</code>,
 then the plug has been successfully created inside
 of the socket.
 </p>
@@ -201,20 +199,20 @@ is running. To prevent this from happening, you can
 connect to the <a class="link" href="GtkSocket.html#GtkSocket-plug-removed" title='The "plug-removed" signal'><span class="type">"plug-removed"</span></a> signal.
 </p>
 <p>
-The communication between a <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> and a <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> follows the 
+The communication between a <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> and a <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> follows the
 <a class="ulink" href="http://www.freedesktop.org/standards/xembed-spec" target="_top">XEmbed</a>
-protocol. This protocol has also been implemented in other toolkits, e.g.  
+protocol. This protocol has also been implemented in other toolkits, e.g.
 <span class="application">Qt</span>, allowing the same level of integration
 when embedding a <span class="application">Qt</span> widget in GTK or vice versa.</p>
 <p>
-A socket can also be used to swallow arbitrary 
+A socket can also be used to swallow arbitrary
 pre-existing top-level windows using <a class="link" href="GtkSocket.html#gtk-socket-steal" title="gtk_socket_steal ()"><code class="function">gtk_socket_steal()</code></a>,
 though the integration when this is done will not be as close
 as between a <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> and a <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a>.</p>
 <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Note</h3>
 <p>
-The <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> and <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> widgets are currently not available 
+The <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> and <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> widgets are currently not available
 on all platforms supported by GTK+.
 </p>
 </div>
@@ -308,7 +306,6 @@ ID.
 The <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> must have already be added into a toplevel window
  before you can make this call.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -341,7 +338,6 @@ instance with <a class="link" href="GtkPlug.html#gtk-plug-new" title="gtk_plug_n
 The <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> must have already be added into a toplevel window 
 before you can make this call.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -369,7 +365,6 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 Retrieves the window of the plug. Use this to check if the plug has
 been created inside of the socket.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -381,16 +376,13 @@ been created inside of the socket.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the window of the plug if available, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> the window of the plug if available, or <code class="literal">NULL</code>
 
 </td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since   2.14
-</p>
+<p class="since">Since 2.14</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
@@ -405,7 +397,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 This signal is emitted when a client is successfully
 added to the socket.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -432,13 +423,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>   user_data)      : Run Last</pre>
 <p>
-This signal is emitted when a client is removed from the socket. 
+This signal is emitted when a client is removed from the socket.
 The default action is to destroy the <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> widget, so if you 
-want to reuse it you must add a signal handler that returns <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a>.</p>
+want to reuse it you must add a signal handler that returns <code class="literal">TRUE</code>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -454,9 +442,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> to stop other handlers from being invoked.
+<td> <code class="literal">TRUE</code> to stop other handlers from being invoked.
 </td>
 </tr>
 </tbody>
@@ -486,6 +472,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

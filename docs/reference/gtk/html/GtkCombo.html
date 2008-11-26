@@ -8,7 +8,7 @@
 <link rel="up" href="DeprecatedObjects.html" title="Deprecated">
 <link rel="prev" href="GtkCTree.html" title="GtkCTree">
 <link rel="next" href="GtkFileSelection.html" title="GtkFileSelection">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,15 +69,17 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkFileSelection.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkCombo.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkCombo.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkCombo.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkCombo.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-                   | 
-                  <a href="#GtkCombo.properties" class="shortcut">Properties</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkCombo.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkCombo.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkCombo.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkCombo.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                 | 
+                <a href="#GtkCombo.properties" class="shortcut">Properties</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkCombo"></a><div class="titlepage"></div>
@@ -194,50 +196,41 @@ arrow (cursor) keys, though this behaviour can be turned off with
 As of GTK+ 2.4, <a class="link" href="GtkCombo.html" title="GtkCombo"><span class="type">GtkCombo</span></a> has been deprecated in favor of <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a>.
 </p>
 <div class="example">
-<a name="gtkcombo-simple-example"></a><p class="title"><b>Example 54. Creating a <span class="structname">GtkCombo</span> widget with simple text 
+<a name="gtkcombo-simple-example"></a><p class="title"><b>Example 54. Creating a <span class="structname">GtkCombo</span> widget with simple text
 items.</b></p>
 <div class="example-contents"><pre class="programlisting">
   GtkWidget *combo;
   GList *items = NULL;
-
   items = g_list_append (items, "First Item");
   items = g_list_append (items, "Second Item");
   items = g_list_append (items, "Third Item");
   items = g_list_append (items, "Fourth Item");
   items = g_list_append (items, "Fifth Item");
-
   combo = gtk_combo_new ();
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), items);
 </pre></div>
 </div>
 <br class="example-break"><div class="example">
-<a name="id3234715"></a><p class="title"><b>Example 55. Creating a <span class="structname">GtkCombo</span> widget with a complex item.</b></p>
+<a name="id3740084"></a><p class="title"><b>Example 55. Creating a <span class="structname">GtkCombo</span> widget with a complex item.</b></p>
 <div class="example-contents"><pre class="programlisting">
   GtkWidget *combo, *item, *hbox, *arrow, *label;
-
   combo = gtk_combo_new ();
-
   item = gtk_list_item_new ();
   gtk_widget_show (item);
-
   /* You can put almost anything into the GtkListItem widget. Here we will use
      a horizontal box with an arrow and a label in it. */
   hbox = gtk_hbox_new (FALSE, 3);
   gtk_container_add (GTK_CONTAINER (item), hbox);
   gtk_widget_show (hbox);
-
   arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
   gtk_widget_show (arrow);
   gtk_box_pack_start (GTK_BOX (hbox), arrow, FALSE, FALSE, 0);
-
   label = gtk_label_new ("First Item");
   gtk_widget_show (label);
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
   /* You must set the string to display in the entry field when the item is
      selected. */
   gtk_combo_set_item_string (GTK_COMBO (combo), GTK_ITEM (item), "1st Item");
-
   /* Now we simply add the item to the combo's list. */
   gtk_container_add (GTK_CONTAINER (GTK_COMBO (combo)-&gt;list), item);
 </pre></div>
@@ -324,9 +317,7 @@ Convenience function to set all of the items in the popup list.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>strings</code></em> :</span></p></td>
-<td>a list of strings, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a> to clear the popup list
+<td>a list of strings, or <code class="literal">NULL</code> to clear the popup list
 </td>
 </tr>
 </tbody>
@@ -352,9 +343,7 @@ the values in the list. If this is set then the user will not be able to
 perform any other action until a valid value has been entered.
 </p>
 <p>
-If an empty field is acceptable, the <em class="parameter"><code>ok_if_empty</code></em> parameter should be <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a>.
+If an empty field is acceptable, the <em class="parameter"><code>ok_if_empty</code></em> parameter should be <code class="literal">TRUE</code>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -366,18 +355,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>val</code></em> :</span></p></td>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the value entered must match one of the values in the list.
+<td>%TRUE if the value entered must match one of the values in the list.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ok_if_empty</code></em> :</span></p></td>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if an empty value is considered valid.
+<td>%TRUE if an empty value is considered valid.
 </td>
 </tr>
 </tbody>
@@ -408,10 +391,7 @@ the list. This is on by default.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>val</code></em> :</span></p></td>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the arrow keys can be used to step through the items in 
+<td>%TRUE if the arrow keys can be used to step through the items in 
      the list.
 </td>
 </tr>
@@ -478,10 +458,7 @@ worried about differences in case.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>val</code></em> :</span></p></td>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the text in the list items is case sensitive.
+<td>%TRUE if the text in the list items is case sensitive.
 </td>
 </tr>
 </tbody>
@@ -598,6 +575,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

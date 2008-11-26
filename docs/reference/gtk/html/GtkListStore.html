@@ -8,7 +8,7 @@
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkCellRendererToggle.html" title="GtkCellRendererToggle">
 <link rel="next" href="GtkTreeStore.html" title="GtkTreeStore">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,13 +69,15 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkTreeStore.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkListStore.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkListStore.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkListStore.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkListStore.implemented-interfaces" class="shortcut">Implemented Interfaces</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkListStore.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkListStore.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkListStore.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkListStore.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkListStore"></a><div class="titlepage"></div>
@@ -93,11 +95,11 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <a class="link" href="GtkListStore.html#GtkListStore-struct" title="GtkListStore">GtkListStore</a>;
-<a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a>*       <a class="link" href="GtkListStore.html#gtk-list-store-new" title="gtk_list_store_new ()">gtk_list_store_new</a>                  (<a
+<a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a> *      <a class="link" href="GtkListStore.html#gtk-list-store-new" title="gtk_list_store_new ()">gtk_list_store_new</a>                  (<a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_columns,
                                                          ...);
-<a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a>*       <a class="link" href="GtkListStore.html#gtk-list-store-newv" title="gtk_list_store_newv ()">gtk_list_store_newv</a>                 (<a
+<a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a> *      <a class="link" href="GtkListStore.html#gtk-list-store-newv" title="gtk_list_store_newv ()">gtk_list_store_newv</a>                 (<a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_columns,
                                                          <a
@@ -235,7 +237,7 @@ href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 ><span class="type">GdkPixbuf</span></a>s stored.
 </p>
 <div class="example">
-<a name="id2956382"></a><p class="title"><b>Example 23. Creating a simple list store.</b></p>
+<a name="id3401305"></a><p class="title"><b>Example 23. Creating a simple list store.</b></p>
 <div class="example-contents"><pre class="programlisting">
 enum {
   COLUMN_STRING,
@@ -243,24 +245,19 @@ enum {
   COLUMN_BOOLEAN,
   N_COLUMNS
 };
-
 {
   GtkListStore *list_store;
   GtkTreePath *path;
   GtkTreeIter iter;
   gint i;
-
   list_store = gtk_list_store_new (N_COLUMNS,
                                    G_TYPE_STRING,
                                    G_TYPE_INT,
                                    G_TYPE_BOOLEAN);
-
   for (i = 0; i &lt; 10; i++)
     {
       gchar *some_data;
-
       some_data = get_some_data (i);
-
       /* Add a new row to the model */
       gtk_list_store_append (list_store, &amp;iter);
       gtk_list_store_set (list_store, &amp;iter,
@@ -268,13 +265,11 @@ enum {
                           COLUMN_INT, i,
                           COLUMN_BOOLEAN,  FALSE,
                           -1);
-
       /* As the store will keep a copy of the string internally, we
        * free some_data.
        */
       g_free (some_data);
     }
-
   /* Modify a particular row */
   path = gtk_tree_path_new_from_string ("4");
   gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store),
@@ -288,30 +283,30 @@ enum {
 </pre></div>
 </div>
 <br class="example-break"><div class="refsect2" lang="en">
-<a name="id3089466"></a><h3>Performance Considerations</h3>
+<a name="id3418550"></a><h3>Performance Considerations</h3>
 <p>
 Internally, the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> was implemented with a linked list with a
 tail pointer prior to GTK+ 2.6.  As a result, it was fast at data
 insertion and deletion, and not fast at random data access.  The
-<a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> sets the <a class="link" href="GtkTreeModel.html#GTK-TREE-MODEL-ITERS-PERSIST:CAPS"><span class="type">GTK_TREE_MODEL_ITERS_PERSIST</span></a> flag, which means
+<a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> sets the <a class="link" href="GtkTreeModel.html#GTK-TREE-MODEL-ITERS-PERSIST--CAPS"><span class="type">GTK_TREE_MODEL_ITERS_PERSIST</span></a> flag, which means
 that <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>s can be cached while the row exists.  Thus, if
 access to a particular row is needed often and your code is expected to
 run on older versions of GTK+, it is worth keeping the iter around.
 </p>
 <p>
-It is important to note that only the methods 
-<a class="link" href="GtkListStore.html#gtk-list-store-insert-with-values" title="gtk_list_store_insert_with_values ()"><code class="function">gtk_list_store_insert_with_values()</code></a> and <a class="link" href="GtkListStore.html#gtk-list-store-insert-with-valuesv" title="gtk_list_store_insert_with_valuesv ()"><code class="function">gtk_list_store_insert_with_valuesv()</code></a> 
-are atomic, in the sense that the row is being appended to the store and the 
+It is important to note that only the methods
+<a class="link" href="GtkListStore.html#gtk-list-store-insert-with-values" title="gtk_list_store_insert_with_values ()"><code class="function">gtk_list_store_insert_with_values()</code></a> and <a class="link" href="GtkListStore.html#gtk-list-store-insert-with-valuesv" title="gtk_list_store_insert_with_valuesv ()"><code class="function">gtk_list_store_insert_with_valuesv()</code></a>
+are atomic, in the sense that the row is being appended to the store and the
 values filled in in a single operation with regard to <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> signaling.
-In contrast, using e.g. <a class="link" href="GtkListStore.html#gtk-list-store-append" title="gtk_list_store_append ()"><code class="function">gtk_list_store_append()</code></a> and then <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a> 
-will first create a row, which triggers the <a class="link" href="GtkTreeModel.html#GtkTreeModel-row-inserted" title='The "row-inserted" signal'><span class="type">"row-inserted"</span></a> signal 
-on <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>. The row, however, is still empty, and any signal handler 
+In contrast, using e.g. <a class="link" href="GtkListStore.html#gtk-list-store-append" title="gtk_list_store_append ()"><code class="function">gtk_list_store_append()</code></a> and then <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a>
+will first create a row, which triggers the <a class="link" href="GtkTreeModel.html#GtkTreeModel-row-inserted" title='The "row-inserted" signal'><span class="type">"row-inserted"</span></a> signal
+on <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>. The row, however, is still empty, and any signal handler
 connecting to "row-inserted" on this particular store should be prepared
-for the situation that the row might be empty. This is especially important 
+for the situation that the row might be empty. This is especially important
 if you are wrapping the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> inside a <a class="link" href="GtkTreeModelFilter.html" title="GtkTreeModelFilter"><span class="type">GtkTreeModelFilter</span></a> and are
-using a <a class="link" href="GtkTreeModelFilter.html#GtkTreeModelFilterVisibleFunc" title="GtkTreeModelFilterVisibleFunc ()"><span class="type">GtkTreeModelFilterVisibleFunc</span></a>. Using any of the non-atomic operations 
-to append rows to the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> will cause the 
-<a class="link" href="GtkTreeModelFilter.html#GtkTreeModelFilterVisibleFunc" title="GtkTreeModelFilterVisibleFunc ()"><span class="type">GtkTreeModelFilterVisibleFunc</span></a> to be visited with an empty row first; the 
+using a <a class="link" href="GtkTreeModelFilter.html#GtkTreeModelFilterVisibleFunc" title="GtkTreeModelFilterVisibleFunc ()"><span class="type">GtkTreeModelFilterVisibleFunc</span></a>. Using any of the non-atomic operations
+to append rows to the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> will cause the
+<a class="link" href="GtkTreeModelFilter.html#GtkTreeModelFilterVisibleFunc" title="GtkTreeModelFilterVisibleFunc ()"><span class="type">GtkTreeModelFilterVisibleFunc</span></a> to be visited with an empty row first; the
 function must be prepared for that.
 </p>
 </div>
@@ -332,15 +327,15 @@ row of the list model. Inside a &lt;row&gt;, the &lt;col&gt; elements
 specify the content for individual cells.
 </p>
 <p>
-Note that it is probably more common to define your models 
-in the code, and one might consider it a layering violation 
+Note that it is probably more common to define your models
+in the code, and one might consider it a layering violation
 to specify the content of a list store in a UI definition,
-<span class="emphasis"><em>data</em></span>, not <span class="emphasis"><em>presentation</em></span>, 
-and common wisdom is to separate the two, as far as possible. 
+<span class="emphasis"><em>data</em></span>, not <span class="emphasis"><em>presentation</em></span>,
+and common wisdom is to separate the two, as far as possible.
 
 </p>
 <div class="example">
-<a name="id3093535"></a><p class="title"><b>Example 24. A UI Definition fragment for a list store</b></p>
+<a name="id3474576"></a><p class="title"><b>Example 24. A UI Definition fragment for a list store</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkListStore"&gt;
   &lt;columns&gt;
@@ -372,13 +367,12 @@ and common wisdom is to separate the two, as far as possible.
 <a name="GtkListStore-struct"></a><h3>GtkListStore</h3>
 <pre class="programlisting">typedef struct _GtkListStore GtkListStore;</pre>
 <p>
-
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-list-store-new"></a><h3>gtk_list_store_new ()</h3>
-<pre class="programlisting"><a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a>*       gtk_list_store_new                  (<a
+<pre class="programlisting"><a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a> *      gtk_list_store_new                  (<a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_columns,
                                                          ...);</pre>
@@ -394,7 +388,6 @@ int, string and <a
 href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 ><span class="type">GdkPixbuf</span></a> respectively.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -422,7 +415,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-list-store-newv"></a><h3>gtk_list_store_newv ()</h3>
-<pre class="programlisting"><a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a>*       gtk_list_store_newv                 (<a
+<pre class="programlisting"><a class="link" href="GtkListStore.html" title="GtkListStore">GtkListStore</a> *      gtk_list_store_newv                 (<a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> n_columns,
                                                          <a
@@ -431,7 +424,6 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 <p>
 Non-vararg creation function.  Used primarily by language bindings.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -472,7 +464,6 @@ and should only be used when constructing a new <a class="link" href="GtkListSto
 function after a row has been added, or a method on the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a>
 interface is called.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -506,13 +497,10 @@ Sets the value of one or more cells in the row referenced by <em class="paramete
 The variable argument list should contain integer column numbers,
 each column number followed by the value to be set.
 The list is terminated by a -1. For example, to set column 0 with type
-<a
-href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-STRING:CAPS"
-><code class="literal">G_TYPE_STRING</code></a> to "Foo", you would write <code class="literal">gtk_list_store_set (store, iter,
+<code class="literal">G_TYPE_STRING</code> to "Foo", you would write <code class="literal">gtk_list_store_set (store, iter,
 0, "Foo", -1)</code>.
 The value will be copied or referenced by the store if appropriate.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -545,7 +533,6 @@ The value will be copied or referenced by the store if appropriate.</p>
 See <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a>; this version takes a va_list for use by language
 bindings.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -584,7 +571,6 @@ Sets the data in the cell specified by <em class="parameter"><code>iter</code></
 The type of <em class="parameter"><code>value</code></em> must be convertible to the type of the
 column.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -633,7 +619,6 @@ varargs. This function is mainly intended for
 language-bindings and in case the number of columns to
 change is not known until run-time.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -665,8 +650,7 @@ change is not known until run-time.</p>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.12
-</p>
+<p class="since">Since 2.12</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -680,7 +664,6 @@ Removes the given row from the list store.  After being removed,
 <em class="parameter"><code>iter</code></em> is set to be the next valid row, or invalidated if it pointed 
 to the last row in <em class="parameter"><code>list_store</code></em>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -697,11 +680,7 @@ to the last row in <em class="parameter"><code>list_store</code></em>.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em> is valid, <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
-><code class="literal">FALSE</code></a> if not.
+<td> <code class="literal">TRUE</code> if <em class="parameter"><code>iter</code></em> is valid, <code class="literal">FALSE</code> if not.
 </td>
 </tr>
 </tbody>
@@ -722,7 +701,6 @@ new row will be appended to the list. The row will be empty after this
 function is called.  To fill in values, you need to call 
 <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a> or <a class="link" href="GtkListStore.html#gtk-list-store-set-value" title="gtk_list_store_set_value ()"><code class="function">gtk_list_store_set_value()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -752,14 +730,11 @@ function is called.  To fill in values, you need to call
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *sibling);</pre>
 <p>
-Inserts a new row before <em class="parameter"><code>sibling</code></em>. If <em class="parameter"><code>sibling</code></em> is <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>, then the row will 
+Inserts a new row before <em class="parameter"><code>sibling</code></em>. If <em class="parameter"><code>sibling</code></em> is <code class="literal">NULL</code>, then the row will 
 be appended to the end of the list. <em class="parameter"><code>iter</code></em> will be changed to point to this 
 new row. The row will be empty after this function is called. To fill in 
 values, you need to call <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a> or <a class="link" href="GtkListStore.html#gtk-list-store-set-value" title="gtk_list_store_set_value ()"><code class="function">gtk_list_store_set_value()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -776,9 +751,7 @@ values, you need to call <a class="link" href="GtkListStore.html#gtk-list-store-
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>sibling</code></em> :</span></p></td>
-<td> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -791,14 +764,11 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *iter,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *sibling);</pre>
 <p>
-Inserts a new row after <em class="parameter"><code>sibling</code></em>. If <em class="parameter"><code>sibling</code></em> is <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>, then the row will be
+Inserts a new row after <em class="parameter"><code>sibling</code></em>. If <em class="parameter"><code>sibling</code></em> is <code class="literal">NULL</code>, then the row will be
 prepended to the beginning of the list. <em class="parameter"><code>iter</code></em> will be changed to point to
 this new row. The row will be empty after this function is called. To fill
 in values, you need to call <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a> or <a class="link" href="GtkListStore.html#gtk-list-store-set-value" title="gtk_list_store_set_value ()"><code class="function">gtk_list_store_set_value()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -815,9 +785,7 @@ in values, you need to call <a class="link" href="GtkListStore.html#gtk-list-sto
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>sibling</code></em> :</span></p></td>
-<td> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -855,7 +823,6 @@ repeatedly can affect the performance of the program,
 <a class="link" href="GtkListStore.html#gtk-list-store-insert-with-values" title="gtk_list_store_insert_with_values ()"><code class="function">gtk_list_store_insert_with_values()</code></a> should generally be preferred when
 inserting rows in a sorted list store.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -867,9 +834,7 @@ inserting rows in a sorted list store.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set to the new row, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>.
+<td> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set to the new row, or <code class="literal">NULL</code>.
 </td>
 </tr>
 <tr>
@@ -884,8 +849,7 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.6
-</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -910,7 +874,6 @@ takes the columns and values as two arrays, instead of
 varargs. This function is mainly intended for 
 language-bindings.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -922,9 +885,7 @@ language-bindings.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set to the new row, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>.
+<td> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set to the new row, or <code class="literal">NULL</code>.
 </td>
 </tr>
 <tr>
@@ -949,8 +910,7 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.6
-</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -962,7 +922,6 @@ Prepends a new row to <em class="parameter"><code>list_store</code></em>. <em cl
 row. The row will be empty after this function is called. To fill in
 values, you need to call <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a> or <a class="link" href="GtkListStore.html#gtk-list-store-set-value" title="gtk_list_store_set_value ()"><code class="function">gtk_list_store_set_value()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -990,7 +949,6 @@ Appends a new row to <em class="parameter"><code>list_store</code></em>.  <em cl
 row.  The row will be empty after this function is called.  To fill in
 values, you need to call <a class="link" href="GtkListStore.html#gtk-list-store-set" title="gtk_list_store_set ()"><code class="function">gtk_list_store_set()</code></a> or <a class="link" href="GtkListStore.html#gtk-list-store-set-value" title="gtk_list_store_set_value ()"><code class="function">gtk_list_store_set_value()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1015,7 +973,6 @@ values, you need to call <a class="link" href="GtkListStore.html#gtk-list-store-
 <p>
 Removes all rows from the list store.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1043,7 +1000,6 @@ purposes.</div>
 <p>
 Checks if the given iter is a valid iter for this <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1060,18 +1016,13 @@ Checks if the given iter is a valid iter for this <a class="link" href="GtkListS
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the iter is valid, <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
-><code class="literal">FALSE</code></a> if the iter is invalid.
+<td> <code class="literal">TRUE</code> if the iter is valid, <code class="literal">FALSE</code> if the iter is invalid.
 
 </td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.2
-</p>
+<p class="since">Since 2.2</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1084,7 +1035,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 Reorders <em class="parameter"><code>store</code></em> to follow the order indicated by <em class="parameter"><code>new_order</code></em>. Note that
 this function only works with unsorted stores.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1103,8 +1053,7 @@ this function only works with unsorted stores.</p>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.2
-</p>
+<p class="since">Since 2.2</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1116,7 +1065,6 @@ this function only works with unsorted stores.</p>
 Swaps <em class="parameter"><code>a</code></em> and <em class="parameter"><code>b</code></em> in <em class="parameter"><code>store</code></em>. Note that this function only works with
 unsorted stores.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1138,8 +1086,7 @@ unsorted stores.</p>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.2
-</p>
+<p class="since">Since 2.2</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1149,12 +1096,9 @@ unsorted stores.</p>
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *position);</pre>
 <p>
 Moves <em class="parameter"><code>iter</code></em> in <em class="parameter"><code>store</code></em> to the position before <em class="parameter"><code>position</code></em>. Note that this
-function only works with unsorted stores. If <em class="parameter"><code>position</code></em> is <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>, <em class="parameter"><code>iter</code></em>
+function only works with unsorted stores. If <em class="parameter"><code>position</code></em> is <code class="literal">NULL</code>, <em class="parameter"><code>iter</code></em>
 will be moved to the end of the list.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1171,15 +1115,12 @@ will be moved to the end of the list.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>position</code></em> :</span></p></td>
-<td> A <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>.
+<td> A <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <code class="literal">NULL</code>.
 </td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.2
-</p>
+<p class="since">Since 2.2</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1189,12 +1130,9 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *position);</pre>
 <p>
 Moves <em class="parameter"><code>iter</code></em> in <em class="parameter"><code>store</code></em> to the position after <em class="parameter"><code>position</code></em>. Note that this
-function only works with unsorted stores. If <em class="parameter"><code>position</code></em> is <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>, <em class="parameter"><code>iter</code></em>
+function only works with unsorted stores. If <em class="parameter"><code>position</code></em> is <code class="literal">NULL</code>, <em class="parameter"><code>iter</code></em>
 will be moved to the start of the list.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1211,15 +1149,12 @@ will be moved to the start of the list.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>position</code></em> :</span></p></td>
-<td> A <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>.
+<td> A <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> or <code class="literal">NULL</code>.
 </td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.2
-</p>
+<p class="since">Since 2.2</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
@@ -1231,6 +1166,6 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

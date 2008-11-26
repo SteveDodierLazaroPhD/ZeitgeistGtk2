@@ -8,7 +8,7 @@
 <link rel="up" href="TextWidgetObjects.html" title="Multiline Text Editor">
 <link rel="prev" href="gtk-GtkTextIter.html" title="GtkTextIter">
 <link rel="next" href="GtkTextBuffer.html" title="GtkTextBuffer">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,21 +69,22 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkTextBuffer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkTextMark.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkTextMark.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkTextMark.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkTextMark.properties" class="shortcut">Properties</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkTextMark.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkTextMark.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkTextMark.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkTextMark.properties" class="shortcut">Properties</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkTextMark"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="GtkTextMark.top_of_page"></a>GtkTextMark</span></h2>
-<p>GtkTextMark — 
-A position in the buffer preserved across buffer modifications</p>
+<p>GtkTextMark — A position in the buffer preserved across buffer modifications</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
@@ -94,7 +95,7 @@ A position in the buffer preserved across buffer modifications</p>
 #include &lt;gtk/gtk.h&gt;
 
                     <a class="link" href="GtkTextMark.html#GtkTextMark-struct" title="GtkTextMark">GtkTextMark</a>;
-<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a>*        <a class="link" href="GtkTextMark.html#gtk-text-mark-new" title="gtk_text_mark_new ()">gtk_text_mark_new</a>                   (const <a
+<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *       <a class="link" href="GtkTextMark.html#gtk-text-mark-new" title="gtk_text_mark_new ()">gtk_text_mark_new</a>                   (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *name,
                                                          <a
@@ -155,9 +156,8 @@ deleted. When text containing a mark is deleted, the mark remains in the
 position originally occupied by the deleted text. When text is inserted at a
 mark, a mark with <em class="firstterm">left gravity</em> will be moved to the
 beginning of the newly-inserted text, and a mark with <em class="firstterm">right
-gravity</em> will be moved to the end. 
-
-<sup>[<a name="id2923496" href="#ftn.id2923496" class="footnote">3</a>]</sup>
+gravity</em> will be moved to the end.
+<sup>[<a name="id3302192" href="#ftn.id3302192" class="footnote">3</a>]</sup>
 </p>
 <p>
 Marks are reference counted, but the reference count only controls the validity
@@ -166,7 +166,7 @@ of the memory; marks can be deleted from the buffer at any time with
 essentially useless.
 </p>
 <p>
-Marks optionally have names; these can be convenient to avoid passing the 
+Marks optionally have names; these can be convenient to avoid passing the
 <a class="link" href="GtkTextMark.html" title="GtkTextMark"><span class="type">GtkTextMark</span></a> object around.
 </p>
 <p>
@@ -179,13 +179,12 @@ Marks are typically created using the <a class="link" href="GtkTextBuffer.html#g
 <a name="GtkTextMark-struct"></a><h3>GtkTextMark</h3>
 <pre class="programlisting">typedef struct _GtkTextMark GtkTextMark;</pre>
 <p>
-
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-text-mark-new"></a><h3>gtk_text_mark_new ()</h3>
-<pre class="programlisting"><a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a>*        gtk_text_mark_new                   (const <a
+<pre class="programlisting"><a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *       gtk_text_mark_new                   (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *name,
                                                          <a
@@ -193,29 +192,22 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> left_gravity);</pre>
 <p>
 Creates a text mark. Add it to a buffer using <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-add-mark" title="gtk_text_buffer_add_mark ()"><code class="function">gtk_text_buffer_add_mark()</code></a>.
-If <em class="parameter"><code>name</code></em> is <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>, the mark is anonymous; otherwise, the mark can be 
+If <em class="parameter"><code>name</code></em> is <code class="literal">NULL</code>, the mark is anonymous; otherwise, the mark can be 
 retrieved by name using <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-get-mark" title="gtk_text_buffer_get_mark ()"><code class="function">gtk_text_buffer_get_mark()</code></a>. If a mark has left 
 gravity, and text is inserted at the mark's current location, the mark 
 will be moved to the left of the newly-inserted text. If the mark has 
-right gravity (<em class="parameter"><code>left_gravity</code></em> = <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
-><code class="literal">FALSE</code></a>), the mark will end up on the 
+right gravity (<em class="parameter"><code>left_gravity</code></em> = <code class="literal">FALSE</code>), the mark will end up on the 
 right of newly-inserted text. The standard left-to-right cursor is a 
 mark with right gravity (when you type, the cursor stays on the right
 side of the text you're typing).</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
-<td> mark name or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> mark name or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
@@ -231,8 +223,7 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.12
-</p>
+<p class="since">Since 2.12</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -248,7 +239,6 @@ widget uses a visible mark to indicate where a drop will occur when
 dragging-and-dropping text. Most other marks are not visible.
 Marks are not visible by default.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -273,12 +263,9 @@ Marks are not visible by default.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_text_mark_get_visible           (<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
-Returns <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the mark is visible (i.e. a cursor is displayed
+Returns <code class="literal">TRUE</code> if the mark is visible (i.e. a cursor is displayed
 for it).</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -290,9 +277,7 @@ for it).</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if visible
+<td> <code class="literal">TRUE</code> if visible
 </td>
 </tr>
 </tbody>
@@ -305,13 +290,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_text_mark_get_deleted           (<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
-Returns <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the mark has been removed from its buffer
+Returns <code class="literal">TRUE</code> if the mark has been removed from its buffer
 with <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-delete-mark" title="gtk_text_buffer_delete_mark ()"><code class="function">gtk_text_buffer_delete_mark()</code></a>. See <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-add-mark" title="gtk_text_buffer_add_mark ()"><code class="function">gtk_text_buffer_add_mark()</code></a>
 for a way to add it to a buffer again.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -338,7 +320,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 <p>
 Returns the mark name; returns NULL for anonymous marks.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -362,11 +343,8 @@ Returns the mark name; returns NULL for anonymous marks.</p>
 <pre class="programlisting"><a class="link" href="GtkTextBuffer.html" title="GtkTextBuffer">GtkTextBuffer</a>*      gtk_text_mark_get_buffer            (<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
 Gets the buffer this mark is located inside,
-or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a> if the mark is deleted.</p>
+or <code class="literal">NULL</code> if the mark is deleted.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -393,7 +371,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 Determines whether the mark has left gravity.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -405,11 +382,7 @@ Determines whether the mark has left gravity.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the mark has left gravity, <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
-><code class="literal">FALSE</code></a> otherwise
+<td> <code class="literal">TRUE</code> if the mark has left gravity, <code class="literal">FALSE</code> otherwise
 </td>
 </tr>
 </tbody>
@@ -438,7 +411,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id2923496" href="#id2923496" class="para">3</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3302192" href="#id3302192" class="para">3</a>] </sup>
 "left" and "right" here refer to logical direction (left is the toward the start
 of the buffer); in some languages such as Hebrew the logically-leftmost text is
 not actually on the left when displayed.
@@ -447,6 +420,6 @@ not actually on the left when displayed.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <link rel="up" href="DeprecatedObjects.html" title="Deprecated">
 <link rel="prev" href="GtkCombo.html" title="GtkCombo">
 <link rel="next" href="GtkItemFactory.html" title="GtkItemFactory">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,15 +69,17 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkItemFactory.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkFileSelection.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkFileSelection.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkFileSelection.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkFileSelection.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
-                   | 
-                  <a href="#GtkFileSelection.properties" class="shortcut">Properties</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkFileSelection.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkFileSelection.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkFileSelection.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkFileSelection.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                 | 
+                <a href="#GtkFileSelection.properties" class="shortcut">Properties</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkFileSelection"></a><div class="titlepage"></div>
@@ -172,11 +174,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 of widgets.
 </p>
 <p>
-<a class="link" href="GtkFileSelection.html" title="GtkFileSelection"><span class="type">GtkFileSelection</span></a> should be used to retrieve file or directory names from 
-the user. It will create a new dialog window containing a directory list, 
-and a file list corresponding to the current working directory. The filesystem 
-can be navigated using the directory list or the drop-down history menu. 
-Alternatively, the TAB key can be used to navigate using filename 
+<a class="link" href="GtkFileSelection.html" title="GtkFileSelection"><span class="type">GtkFileSelection</span></a> should be used to retrieve file or directory names from
+the user. It will create a new dialog window containing a directory list,
+and a file list corresponding to the current working directory. The filesystem
+can be navigated using the directory list or the drop-down history menu.
+Alternatively, the TAB key can be used to navigate using filename
 completion - common in text based editors such as emacs and jed.
 </p>
 <p>
@@ -196,49 +198,35 @@ Simple file operations; create directory, delete file, and rename file, are avai
 <p>
 </p>
 <div class="example">
-<a name="id3368361"></a><p class="title"><b>Example 56. Getting a filename from the user.</b></p>
+<a name="id3739976"></a><p class="title"><b>Example 56. Getting a filename from the user.</b></p>
 <div class="example-contents"><pre class="programlisting">
-
 /* The file selection widget and the string to store the chosen filename */
-
 void store_filename (GtkWidget *widget, gpointer user_data) {
    GtkWidget *file_selector = GTK_WIDGET (user_data);
    const gchar *selected_filename;
-
    selected_filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
    g_print ("Selected filename: %s\n", selected_filename);
 }
-
 void create_file_selection (void) {
-
    GtkWidget *file_selector;
-
    /* Create the selector */
-   
    file_selector = gtk_file_selection_new ("Please select a file for editing.");
-   
    g_signal_connect (GTK_FILE_SELECTION (file_selector)-&gt;ok_button,
                      "clicked",
                      G_CALLBACK (store_filename),
                      file_selector);
-   			   
    /* Ensure that the dialog box is destroyed when the user clicks a button. */
-   
    g_signal_connect_swapped (GTK_FILE_SELECTION (file_selector)-&gt;ok_button,
                              "clicked",
-                             G_CALLBACK (gtk_widget_destroy), 
+                             G_CALLBACK (gtk_widget_destroy),
                              file_selector);
-
    g_signal_connect_swapped (GTK_FILE_SELECTION (file_selector)-&gt;cancel_button,
                              "clicked",
                              G_CALLBACK (gtk_widget_destroy),
-                             file_selector); 
-   
+                             file_selector);
    /* Display that dialog */
-   
    gtk_widget_show (file_selector);
 }
-
 </pre></div>
 </div>
 <p><br class="example-break">
@@ -316,7 +304,7 @@ The <a class="link" href="GtkFileSelection.html" title="GtkFileSelection"><span 
 <tr>
 <td><p><span class="term"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *<em class="structfield"><code>cancel_button</code></em>;</span></p></td>
 <td>the two main buttons that signals should be connected 
-    to in order to perform an action when the user hits either OK or 
+    to in order to perform an action when the user hits either OK or
     Cancel.
 </td>
 </tr>
@@ -346,7 +334,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 <tr>
 <td><p><span class="term"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *<em class="structfield"><code>fileop_dialog</code></em>;</span></p></td>
 <td>the dialog box used to display the <a class="link" href="GtkFileSelection.html" title="GtkFileSelection"><span class="type">GtkFileSelection</span></a>. 
-   It can be customized by adding/removing widgets from it using the 
+   It can be customized by adding/removing widgets from it using the
    standard <a class="link" href="GtkDialog.html" title="GtkDialog"><span class="type">GtkDialog</span></a> functions.
 </td>
 </tr>
@@ -382,8 +370,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <tr>
 <td><p><span class="term"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *<em class="structfield"><code>fileop_ren_file</code></em>;</span></p></td>
 <td>the buttons that appear at the top of the file 
-    selection dialog. These "operation buttons" can be hidden and 
-    redisplayed with <a class="link" href="GtkFileSelection.html#gtk-file-selection-hide-fileop-buttons" title="gtk_file_selection_hide_fileop_buttons ()"><code class="function">gtk_file_selection_hide_fileop_buttons()</code></a> and  
+    selection dialog. These "operation buttons" can be hidden and
+    redisplayed with <a class="link" href="GtkFileSelection.html#gtk-file-selection-hide-fileop-buttons" title="gtk_file_selection_hide_fileop_buttons ()"><code class="function">gtk_file_selection_hide_fileop_buttons()</code></a> and
     <a class="link" href="GtkFileSelection.html#gtk-file-selection-show-fileop-buttons" title="gtk_file_selection_show_fileop_buttons ()"><code class="function">gtk_file_selection_show_fileop_buttons()</code></a> respectively.
 </td>
 </tr>
@@ -395,7 +383,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <tr>
 <td><p><span class="term"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *<em class="structfield"><code>action_area</code></em>;</span></p></td>
 <td>
-
 </td>
 </tr>
 </tbody>
@@ -540,8 +527,6 @@ list those directories which have been partially matched.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pattern</code></em> :</span></p></td>
 <td>a string of characters which may or may not match any filenames in the current directory.
-
-
 </td>
 </tr>
 </tbody>
@@ -564,8 +549,6 @@ Shows the file operation buttons, if they have previously been hidden. The rest 
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>filesel</code></em> :</span></p></td>
 <td>a <a class="link" href="GtkFileSelection.html" title="GtkFileSelection"><span class="type">GtkFileSelection</span></a>.
-
-
 </td>
 </tr></tbody>
 </table></div>
@@ -587,8 +570,6 @@ Hides the file operation buttons that normally appear at the top of the dialog. 
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>filesel</code></em> :</span></p></td>
 <td>a <a class="link" href="GtkFileSelection.html" title="GtkFileSelection"><span class="type">GtkFileSelection</span></a>.
-
-
 </td>
 </tr></tbody>
 </table></div>
@@ -614,7 +595,6 @@ UTF-8, call <a
 href="/usr/share/gtk-doc/html/glib/glib-Character-Set-Conversion.html#g-filename-to-utf8"
 ><code class="function">g_filename_to_utf8()</code></a> on each string.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -626,9 +606,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Character-Set-Conversion.html#g-filename
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a newly-allocated <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>-terminated array of strings. Use
+<td> a newly-allocated <code class="literal">NULL</code>-terminated array of strings. Use
 <a
 href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"
 ><code class="function">g_strfreev()</code></a> to free it.
@@ -653,7 +631,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 Sets whether the user is allowed to select multiple files in the file list.
 Use <a class="link" href="GtkFileSelection.html#gtk-file-selection-get-selections" title="gtk_file_selection_get_selections ()"><code class="function">gtk_file_selection_get_selections()</code></a> to get the list of selected files.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -687,7 +664,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 Determines whether or not the user is allowed to select multiple files in
 the file list. See <a class="link" href="GtkFileSelection.html#gtk-file-selection-set-select-multiple" title="gtk_file_selection_set_select_multiple ()"><code class="function">gtk_file_selection_set_select_multiple()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -699,9 +675,7 @@ the file list. See <a class="link" href="GtkFileSelection.html#gtk-file-selectio
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the user is allowed to select multiple files in the
+<td> <code class="literal">TRUE</code> if the user is allowed to select multiple files in the
 file list
 </td>
 </tr>
@@ -755,6 +729,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

@@ -15,7 +15,6 @@
 <refnamediv>
 <refname>GtkTreeView drag-and-drop</refname>
 <refpurpose>Interfaces for drag-and-drop support in GtkTreeView</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="gtk-GtkTreeView-drag-and-drop.synopsis" role="synopsis">
@@ -64,7 +63,6 @@
   <link linkend="GInterface">GInterface</link>
    +----GtkTreeDragDest
 </synopsis>
-
 </refsect1>
 
 
@@ -78,7 +76,6 @@ GtkTreeDragSource is implemented by
 <para>
 GtkTreeDragDest is implemented by
  <link linkend="GtkTreeStore">GtkTreeStore</link> and  <link linkend="GtkListStore">GtkListStore</link>.</para>
-
 </refsect1>
 
 
@@ -87,22 +84,22 @@ GtkTreeDragDest is implemented by
 <refsect1 id="gtk-GtkTreeView-drag-and-drop.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
-GTK+ supports Drag-and-Drop in tree views with a high-level and a low-level 
+GTK+ supports Drag-and-Drop in tree views with a high-level and a low-level
 API.
 </para>
 <para>
-The low-level API consists of the GTK+ DND API, augmented by some treeview 
+The low-level API consists of the GTK+ DND API, augmented by some treeview
 utility functions: <link linkend="gtk-tree-view-set-drag-dest-row"><function>gtk_tree_view_set_drag_dest_row()</function></link>,
-<link linkend="gtk-tree-view-get-drag-dest-row"><function>gtk_tree_view_get_drag_dest_row()</function></link>, <link linkend="gtk-tree-view-get-dest-row-at-pos"><function>gtk_tree_view_get_dest_row_at_pos()</function></link>, 
+<link linkend="gtk-tree-view-get-drag-dest-row"><function>gtk_tree_view_get_drag_dest_row()</function></link>, <link linkend="gtk-tree-view-get-dest-row-at-pos"><function>gtk_tree_view_get_dest_row_at_pos()</function></link>,
 <link linkend="gtk-tree-view-create-row-drag-icon"><function>gtk_tree_view_create_row_drag_icon()</function></link>, <link linkend="gtk-tree-set-row-drag-data"><function>gtk_tree_set_row_drag_data()</function></link> and
 <link linkend="gtk-tree-get-row-drag-data"><function>gtk_tree_get_row_drag_data()</function></link>. This API leaves a lot of flexibility, but
 nothing is done automatically, and implementing advanced features like
 hover-to-open-rows or autoscrolling on top of this API is a lot of work.
 </para>
 <para>
-On the other hand, if you write to the high-level API, then all the 
-bookkeeping of rows is done for you, as well as things like hover-to-open 
-and auto-scroll, but your models have to implement the 
+On the other hand, if you write to the high-level API, then all the
+bookkeeping of rows is done for you, as well as things like hover-to-open
+and auto-scroll, but your models have to implement the
 <link linkend="GtkTreeDragSource"><type>GtkTreeDragSource</type></link> and <link linkend="GtkTreeDragDest"><type>GtkTreeDragDest</type></link> interfaces.
 </para>
 </refsect1>
@@ -111,13 +108,12 @@ and auto-scroll, but your models have to implement the
 <title role="details.title">Details</title>
 <refsect2 id="GtkTreeDragSource-struct" role="struct">
 <title>GtkTreeDragSource</title>
-<indexterm zone="GtkTreeDragSource-struct"><primary>GtkTreeDragSource</primary></indexterm><programlisting>typedef struct _GtkTreeDragSource GtkTreeDragSource;</programlisting>
+<indexterm zone="GtkTreeDragSource-struct"><primary sortas="GtkTreeDragSource">GtkTreeDragSource</primary></indexterm><programlisting>typedef struct _GtkTreeDragSource GtkTreeDragSource;</programlisting>
 <para>
-
 </para></refsect2>
 <refsect2 id="GtkTreeDragSourceIface" role="struct">
 <title>GtkTreeDragSourceIface</title>
-<indexterm zone="GtkTreeDragSourceIface"><primary>GtkTreeDragSourceIface</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GtkTreeDragSourceIface"><primary sortas="GtkTreeDragSourceIface">GtkTreeDragSourceIface</primary></indexterm><programlisting>typedef struct {
   GTypeInterface g_iface;
 
   /* VTable - not signals */
@@ -134,34 +130,32 @@ and auto-scroll, but your models have to implement the
 } GtkTreeDragSourceIface;
 </programlisting>
 <para>
-
 </para></refsect2>
 <refsect2 id="gtk-tree-drag-source-drag-data-delete" role="function">
 <title>gtk_tree_drag_source_drag_data_delete ()</title>
-<indexterm zone="gtk-tree-drag-source-drag-data-delete"><primary>gtk_tree_drag_source_drag_data_delete</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_source_drag_data_delete
+<indexterm zone="gtk-tree-drag-source-drag-data-delete"><primary sortas="gtk_tree_drag_source_drag_data_delete">gtk_tree_drag_source_drag_data_delete</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_source_drag_data_delete
                                                         (<link linkend="GtkTreeDragSource">GtkTreeDragSource</link> *drag_source,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *path);</programlisting>
 <para>
 Asks the <link linkend="GtkTreeDragSource"><type>GtkTreeDragSource</type></link> to delete the row at <parameter>path</parameter>, because
-it was moved somewhere else via drag-and-drop. Returns <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>
+it was moved somewhere else via drag-and-drop. Returns <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>
 if the deletion fails because <parameter>path</parameter> no longer exists, or for
 some model-specific reason. Should robustly handle a <parameter>path</parameter> no
 longer found in the model!</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>drag_source</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>drag_source</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeDragSource"><type>GtkTreeDragSource</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>path</parameter>&#160;:</term>
 <listitem><simpara> row that was being dragged
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the row was successfully deleted
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the row was successfully deleted
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-drag-source-drag-data-get" role="function">
 <title>gtk_tree_drag_source_drag_data_get ()</title>
-<indexterm zone="gtk-tree-drag-source-drag-data-get"><primary>gtk_tree_drag_source_drag_data_get</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_source_drag_data_get  (<link linkend="GtkTreeDragSource">GtkTreeDragSource</link> *drag_source,
+<indexterm zone="gtk-tree-drag-source-drag-data-get"><primary sortas="gtk_tree_drag_source_drag_data_get">gtk_tree_drag_source_drag_data_get</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_source_drag_data_get  (<link linkend="GtkTreeDragSource">GtkTreeDragSource</link> *drag_source,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *path,
                                                          <link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
@@ -170,49 +164,46 @@ representation of the row at <parameter>path</parameter>. <parameter>selection_d
 the required type of the data.  Should robustly handle a <parameter>path</parameter> no
 longer found in the model!</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>drag_source</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>drag_source</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeDragSource"><type>GtkTreeDragSource</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>path</parameter>&#160;:</term>
 <listitem><simpara> row that was dragged
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>selection_data</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> to fill with data from the dragged row
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if data of the required type was provided 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if data of the required type was provided 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-drag-source-row-draggable" role="function">
 <title>gtk_tree_drag_source_row_draggable ()</title>
-<indexterm zone="gtk-tree-drag-source-row-draggable"><primary>gtk_tree_drag_source_row_draggable</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_source_row_draggable  (<link linkend="GtkTreeDragSource">GtkTreeDragSource</link> *drag_source,
+<indexterm zone="gtk-tree-drag-source-row-draggable"><primary sortas="gtk_tree_drag_source_row_draggable">gtk_tree_drag_source_row_draggable</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_source_row_draggable  (<link linkend="GtkTreeDragSource">GtkTreeDragSource</link> *drag_source,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *path);</programlisting>
 <para>
 Asks the <link linkend="GtkTreeDragSource"><type>GtkTreeDragSource</type></link> whether a particular row can be used as
 the source of a DND operation. If the source doesn't implement
 this interface, the row is assumed draggable.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>drag_source</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>drag_source</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeDragSource"><type>GtkTreeDragSource</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>path</parameter>&#160;:</term>
 <listitem><simpara> row on which user is initiating a drag
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the row can be dragged
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the row can be dragged
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GtkTreeDragDest-struct" role="struct">
 <title>GtkTreeDragDest</title>
-<indexterm zone="GtkTreeDragDest-struct"><primary>GtkTreeDragDest</primary></indexterm><programlisting>typedef struct _GtkTreeDragDest GtkTreeDragDest;</programlisting>
+<indexterm zone="GtkTreeDragDest-struct"><primary sortas="GtkTreeDragDest">GtkTreeDragDest</primary></indexterm><programlisting>typedef struct _GtkTreeDragDest GtkTreeDragDest;</programlisting>
 <para>
-
 </para></refsect2>
 <refsect2 id="GtkTreeDragDestIface" role="struct">
 <title>GtkTreeDragDestIface</title>
-<indexterm zone="GtkTreeDragDestIface"><primary>GtkTreeDragDestIface</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GtkTreeDragDestIface"><primary sortas="GtkTreeDragDestIface">GtkTreeDragDestIface</primary></indexterm><programlisting>typedef struct {
   GTypeInterface g_iface;
 
   /* VTable - not signals */
@@ -227,39 +218,37 @@ this interface, the row is assumed draggable.</para>
 } GtkTreeDragDestIface;
 </programlisting>
 <para>
-
 </para></refsect2>
 <refsect2 id="gtk-tree-drag-dest-drag-data-received" role="function">
 <title>gtk_tree_drag_dest_drag_data_received ()</title>
-<indexterm zone="gtk-tree-drag-dest-drag-data-received"><primary>gtk_tree_drag_dest_drag_data_received</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_dest_drag_data_received
+<indexterm zone="gtk-tree-drag-dest-drag-data-received"><primary sortas="gtk_tree_drag_dest_drag_data_received">gtk_tree_drag_dest_drag_data_received</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_dest_drag_data_received
                                                         (<link linkend="GtkTreeDragDest">GtkTreeDragDest</link> *drag_dest,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *dest,
                                                          <link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Asks the <link linkend="GtkTreeDragDest"><type>GtkTreeDragDest</type></link> to insert a row before the path <parameter>dest</parameter>,
 deriving the contents of the row from <parameter>selection_data</parameter>. If <parameter>dest</parameter> is
-outside the tree so that inserting before it is impossible, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>
-will be returned. Also, <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> may be returned if the new row is
+outside the tree so that inserting before it is impossible, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>
+will be returned. Also, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> may be returned if the new row is
 not created for some model-specific reason.  Should robustly handle
 a <parameter>dest</parameter> no longer found in the model!</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>drag_dest</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>drag_dest</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeDragDest"><type>GtkTreeDragDest</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>dest</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>dest</parameter>&#160;:</term>
 <listitem><simpara> row to drop in front of
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>selection_data</parameter>&#160;:</term>
 <listitem><simpara> data to drop
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> whether a new row was created before position <parameter>dest</parameter>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether a new row was created before position <parameter>dest</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-drag-dest-row-drop-possible" role="function">
 <title>gtk_tree_drag_dest_row_drop_possible ()</title>
-<indexterm zone="gtk-tree-drag-dest-row-drop-possible"><primary>gtk_tree_drag_dest_row_drop_possible</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_dest_row_drop_possible
+<indexterm zone="gtk-tree-drag-dest-row-drop-possible"><primary sortas="gtk_tree_drag_dest_row_drop_possible">gtk_tree_drag_dest_row_drop_possible</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_drag_dest_row_drop_possible
                                                         (<link linkend="GtkTreeDragDest">GtkTreeDragDest</link> *drag_dest,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *dest_path,
                                                          <link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
@@ -267,74 +256,71 @@ a <parameter>dest</parameter> no longer found in the model!</para>
 Determines whether a drop is possible before the given <parameter>dest_path</parameter>,
 at the same depth as <parameter>dest_path</parameter>. i.e., can we drop the data in
 <parameter>selection_data</parameter> at that location. <parameter>dest_path</parameter> does not have to
-exist; the return value will almost certainly be <link linkend="FALSE:CAPS"><literal>FALSE</literal></link> if the
+exist; the return value will almost certainly be <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> if the
 parent of <parameter>dest_path</parameter> doesn't exist, though.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>drag_dest</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>drag_dest</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeDragDest"><type>GtkTreeDragDest</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>dest_path</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>dest_path</parameter>&#160;:</term>
 <listitem><simpara> destination row
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>selection_data</parameter>&#160;:</term>
 <listitem><simpara> the data being dragged
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if a drop is possible before <parameter>dest_path</parameter>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if a drop is possible before <parameter>dest_path</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-set-row-drag-data" role="function">
 <title>gtk_tree_set_row_drag_data ()</title>
-<indexterm zone="gtk-tree-set-row-drag-data"><primary>gtk_tree_set_row_drag_data</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_set_row_drag_data          (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+<indexterm zone="gtk-tree-set-row-drag-data"><primary sortas="gtk_tree_set_row_drag_data">gtk_tree_set_row_drag_data</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_set_row_drag_data          (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GtkTreeModel">GtkTreeModel</link> *tree_model,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> *path);</programlisting>
 <para>
-Sets selection data of target type <link linkend="GTK-TREE-MODEL-ROW:CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link>. Normally used
+Sets selection data of target type <link linkend="GTK-TREE-MODEL-ROW--CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link>. Normally used
 in a drag_data_get handler.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>selection_data</parameter>&#160;:</term>
 <listitem><simpara> some <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>tree_model</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_model</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>path</parameter>&#160;:</term>
 <listitem><simpara> a row in <parameter>tree_model</parameter>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> had the proper target type to allow us to set a tree row
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> had the proper target type to allow us to set a tree row
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-get-row-drag-data" role="function">
 <title>gtk_tree_get_row_drag_data ()</title>
-<indexterm zone="gtk-tree-get-row-drag-data"><primary>gtk_tree_get_row_drag_data</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_get_row_drag_data          (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+<indexterm zone="gtk-tree-get-row-drag-data"><primary sortas="gtk_tree_get_row_drag_data">gtk_tree_get_row_drag_data</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_get_row_drag_data          (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GtkTreeModel">GtkTreeModel</link> **tree_model,
                                                          <link linkend="GtkTreePath">GtkTreePath</link> **path);</programlisting>
 <para>
 Obtains a <parameter>tree_model</parameter> and <parameter>path</parameter> from selection data of target type
-<link linkend="GTK-TREE-MODEL-ROW:CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link>. Normally called from a drag_data_received handler.
+<link linkend="GTK-TREE-MODEL-ROW--CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link>. Normally called from a drag_data_received handler.
 This function can only be used if <parameter>selection_data</parameter> originates from the same
 process that's calling this function, because a pointer to the tree model
 is being passed around. If you aren't in the same process, then you'll
 get memory corruption. In the <link linkend="GtkTreeDragDest"><type>GtkTreeDragDest</type></link> drag_data_received handler,
-you can assume that selection data of type <link linkend="GTK-TREE-MODEL-ROW:CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link> is
+you can assume that selection data of type <link linkend="GTK-TREE-MODEL-ROW--CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link> is
 in from the current process. The returned path must be freed with
 <link linkend="gtk-tree-path-free"><function>gtk_tree_path_free()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>selection_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>selection_data</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>tree_model</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tree_model</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>path</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>path</parameter>&#160;:</term>
 <listitem><simpara> row in <parameter>tree_model</parameter>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if <parameter>selection_data</parameter> had target type <link linkend="GTK-TREE-MODEL-ROW:CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link> and
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if <parameter>selection_data</parameter> had target type <link linkend="GTK-TREE-MODEL-ROW--CAPS"><literal>GTK_TREE_MODEL_ROW</literal></link> and
  is otherwise valid
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>

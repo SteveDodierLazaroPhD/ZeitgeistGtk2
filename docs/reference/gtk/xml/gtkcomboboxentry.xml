@@ -15,7 +15,6 @@
 <refnamediv>
 <refname>GtkComboBoxEntry</refname>
 <refpurpose>A text entry field with a dropdown list</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="GtkComboBoxEntry.synopsis" role="synopsis">
@@ -26,10 +25,10 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <link linkend="GtkComboBoxEntry-struct">GtkComboBoxEntry</link>;
-<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-combo-box-entry-new">gtk_combo_box_entry_new</link>             (void);
-<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-combo-box-entry-new-with-model">gtk_combo_box_entry_new_with_model</link>  (<link linkend="GtkTreeModel">GtkTreeModel</link> *model,
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-combo-box-entry-new">gtk_combo_box_entry_new</link>             (void);
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-combo-box-entry-new-with-model">gtk_combo_box_entry_new_with_model</link>  (<link linkend="GtkTreeModel">GtkTreeModel</link> *model,
                                                          <link linkend="gint">gint</link> text_column);
-<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-combo-box-entry-new-text">gtk_combo_box_entry_new_text</link>        (void);
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-combo-box-entry-new-text">gtk_combo_box_entry_new_text</link>        (void);
 <link linkend="void">void</link>                <link linkend="gtk-combo-box-entry-set-text-column">gtk_combo_box_entry_set_text_column</link> (<link linkend="GtkComboBoxEntry">GtkComboBoxEntry</link> *entry_box,
                                                          <link linkend="gint">gint</link> text_column);
 <link linkend="gint">gint</link>                <link linkend="gtk-combo-box-entry-get-text-column">gtk_combo_box_entry_get_text_column</link> (<link linkend="GtkComboBoxEntry">GtkComboBoxEntry</link> *entry_box);
@@ -48,7 +47,6 @@
                                  +----<link linkend="GtkComboBox">GtkComboBox</link>
                                        +----GtkComboBoxEntry
 </synopsis>
-
 </refsect1>
 
 
@@ -58,7 +56,6 @@
 <para>
 GtkComboBoxEntry implements
  <link linkend="AtkImplementorIface">AtkImplementorIface</link>,  <link linkend="GtkBuildable">GtkBuildable</link>,  <link linkend="GtkCellEditable">GtkCellEditable</link> and  <link linkend="GtkCellLayout">GtkCellLayout</link>.</para>
-
 </refsect1>
 
 
@@ -79,45 +76,39 @@ list of valid choices or enter a different value. It is very similar
 to a <link linkend="GtkComboBox"><type>GtkComboBox</type></link>, but it displays the selected value in an entry to
 allow modifying it.
 </para>
-
 <para>
-In contrast to a <link linkend="GtkComboBox"><type>GtkComboBox</type></link>, the underlying model of a <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link> 
+In contrast to a <link linkend="GtkComboBox"><type>GtkComboBox</type></link>, the underlying model of a <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>
 must always have a text column (see <link linkend="gtk-combo-box-entry-set-text-column"><function>gtk_combo_box_entry_set_text_column()</function></link>),
-and the entry will show the content of the text column in the selected row.  
+and the entry will show the content of the text column in the selected row.
 To get the text from the entry, use <link linkend="gtk-combo-box-get-active-text"><function>gtk_combo_box_get_active_text()</function></link>.
 </para>
-
 <para>
-The changed signal will be emitted while typing into a GtkComboBoxEntry, 
-as well as when selecting an item from the GtkComboBoxEntry's list. Use 
-<link linkend="gtk-combo-box-get-active"><function>gtk_combo_box_get_active()</function></link> or <link linkend="gtk-combo-box-get-active-iter"><function>gtk_combo_box_get_active_iter()</function></link> to discover 
+The changed signal will be emitted while typing into a GtkComboBoxEntry,
+as well as when selecting an item from the GtkComboBoxEntry's list. Use
+<link linkend="gtk-combo-box-get-active"><function>gtk_combo_box_get_active()</function></link> or <link linkend="gtk-combo-box-get-active-iter"><function>gtk_combo_box_get_active_iter()</function></link> to discover
 whether an item was actually selected from the list.
 </para>
-
 <para>
-Connect to the activate signal of the GtkEntry (use <link linkend="gtk-bin-get-child"><function>gtk_bin_get_child()</function></link>) 
+Connect to the activate signal of the GtkEntry (use <link linkend="gtk-bin-get-child"><function>gtk_bin_get_child()</function></link>)
 to detect when the user actually finishes entering text.
 </para>
-
 <para>
-The convenience API to construct simple text-only <link linkend="GtkComboBox"><type>GtkComboBox</type></link><!-- -->es 
+The convenience API to construct simple text-only <link linkend="GtkComboBox"><type>GtkComboBox</type></link><!-- -->es
 can also be used with <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link><!-- -->s which have been constructed
 with <link linkend="gtk-combo-box-entry-new-text"><function>gtk_combo_box_entry_new_text()</function></link>.
 </para>
-
 <para>
 If you have special needs that go beyond a simple entry (e.g. input validation),
 it is possible to replace the child entry by a different widget using
 <link linkend="gtk-container-remove"><function>gtk_container_remove()</function></link> and <link linkend="gtk-container-add"><function>gtk_container_add()</function></link>.
 </para>
-
 <refsect2 id="GtkComboBoxEntry-BUILDER-UI">
 <title>GtkComboBoxEntry as GtkBuildable</title>
 <para>
 Beyond the &lt;attributes&gt; support that is shared by all
 <link linkend="GtkCellLayout-BUILDER-UI">GtkCellLayout</link> implementation,
-GtkComboBoxEntry makes the entry available in UI definitions as an internal 
-child with name "entry". 
+GtkComboBoxEntry makes the entry available in UI definitions as an internal
+child with name "entry".
 </para>
 </refsect2>
 </refsect1>
@@ -126,28 +117,25 @@ child with name "entry".
 <title role="details.title">Details</title>
 <refsect2 id="GtkComboBoxEntry-struct" role="struct">
 <title>GtkComboBoxEntry</title>
-<indexterm zone="GtkComboBoxEntry-struct"><primary>GtkComboBoxEntry</primary></indexterm><programlisting>typedef struct _GtkComboBoxEntry GtkComboBoxEntry;</programlisting>
+<indexterm zone="GtkComboBoxEntry-struct"><primary sortas="GtkComboBoxEntry">GtkComboBoxEntry</primary></indexterm><programlisting>typedef struct _GtkComboBoxEntry GtkComboBoxEntry;</programlisting>
 <para>
-
 </para></refsect2>
 <refsect2 id="gtk-combo-box-entry-new" role="function" condition="since:2.4">
 <title>gtk_combo_box_entry_new ()</title>
-<indexterm zone="gtk-combo-box-entry-new" role="2.4"><primary>gtk_combo_box_entry_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_combo_box_entry_new             (void);</programlisting>
+<indexterm zone="gtk-combo-box-entry-new" role="2.4"><primary sortas="gtk_combo_box_entry_new">gtk_combo_box_entry_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_combo_box_entry_new             (void);</programlisting>
 <para>
 Creates a new <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link> which has a <link linkend="GtkEntry"><type>GtkEntry</type></link> as child. After
 construction, you should set a model using <link linkend="gtk-combo-box-set-model"><function>gtk_combo_box_set_model()</function></link> and a
 text column using <link linkend="gtk-combo-box-entry-set-text-column"><function>gtk_combo_box_entry_set_text_column()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A new <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A new <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-combo-box-entry-new-with-model" role="function" condition="since:2.4">
 <title>gtk_combo_box_entry_new_with_model ()</title>
-<indexterm zone="gtk-combo-box-entry-new-with-model" role="2.4"><primary>gtk_combo_box_entry_new_with_model</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_combo_box_entry_new_with_model  (<link linkend="GtkTreeModel">GtkTreeModel</link> *model,
+<indexterm zone="gtk-combo-box-entry-new-with-model" role="2.4"><primary sortas="gtk_combo_box_entry_new_with_model">gtk_combo_box_entry_new_with_model</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_combo_box_entry_new_with_model  (<link linkend="GtkTreeModel">GtkTreeModel</link> *model,
                                                          <link linkend="gint">gint</link> text_column);</programlisting>
 <para>
 Creates a new <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link> which has a <link linkend="GtkEntry"><type>GtkEntry</type></link> as child and a list
@@ -156,22 +144,20 @@ using GTK_ENTRY (GTK_BIN (combo_box_entry)->child). To add and remove
 strings from the list, just modify <parameter>model</parameter> using its data manipulation
 API.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>model</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>text_column</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>text_column</parameter>&#160;:</term>
 <listitem><simpara> A column in <parameter>model</parameter> to get the strings from.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A new <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A new <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-combo-box-entry-new-text" role="function" condition="since:2.4">
 <title>gtk_combo_box_entry_new_text ()</title>
-<indexterm zone="gtk-combo-box-entry-new-text" role="2.4"><primary>gtk_combo_box_entry_new_text</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_combo_box_entry_new_text        (void);</programlisting>
+<indexterm zone="gtk-combo-box-entry-new-text" role="2.4"><primary sortas="gtk_combo_box_entry_new_text">gtk_combo_box_entry_new_text</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_combo_box_entry_new_text        (void);</programlisting>
 <para>
 Convenience function which constructs a new editable text combo box, which 
 is a <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link> just displaying strings. If you use this function to
@@ -180,57 +166,50 @@ the following convenience functions: <link linkend="gtk-combo-box-append-text"><
 <link linkend="gtk-combo-box-insert-text"><function>gtk_combo_box_insert_text()</function></link>, <link linkend="gtk-combo-box-prepend-text"><function>gtk_combo_box_prepend_text()</function></link> and
 <link linkend="gtk-combo-box-remove-text"><function>gtk_combo_box_remove_text()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A new text <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A new text <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-combo-box-entry-set-text-column" role="function" condition="since:2.4">
 <title>gtk_combo_box_entry_set_text_column ()</title>
-<indexterm zone="gtk-combo-box-entry-set-text-column" role="2.4"><primary>gtk_combo_box_entry_set_text_column</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_combo_box_entry_set_text_column (<link linkend="GtkComboBoxEntry">GtkComboBoxEntry</link> *entry_box,
+<indexterm zone="gtk-combo-box-entry-set-text-column" role="2.4"><primary sortas="gtk_combo_box_entry_set_text_column">gtk_combo_box_entry_set_text_column</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_combo_box_entry_set_text_column (<link linkend="GtkComboBoxEntry">GtkComboBoxEntry</link> *entry_box,
                                                          <link linkend="gint">gint</link> text_column);</programlisting>
 <para>
 Sets the model column which <parameter>entry_box</parameter> should use to get strings from
 to be <parameter>text_column</parameter>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>entry_box</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>entry_box</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>text_column</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>text_column</parameter>&#160;:</term>
 <listitem><simpara> A column in <parameter>model</parameter> to get the strings from.
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-combo-box-entry-get-text-column" role="function" condition="since:2.4">
 <title>gtk_combo_box_entry_get_text_column ()</title>
-<indexterm zone="gtk-combo-box-entry-get-text-column" role="2.4"><primary>gtk_combo_box_entry_get_text_column</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_combo_box_entry_get_text_column (<link linkend="GtkComboBoxEntry">GtkComboBoxEntry</link> *entry_box);</programlisting>
+<indexterm zone="gtk-combo-box-entry-get-text-column" role="2.4"><primary sortas="gtk_combo_box_entry_get_text_column">gtk_combo_box_entry_get_text_column</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_combo_box_entry_get_text_column (<link linkend="GtkComboBoxEntry">GtkComboBoxEntry</link> *entry_box);</programlisting>
 <para>
 Returns the column which <parameter>entry_box</parameter> is using to get the strings from.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>entry_box</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>entry_box</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkComboBoxEntry"><type>GtkComboBoxEntry</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> A column in the data source model of <parameter>entry_box</parameter>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A column in the data source model of <parameter>entry_box</parameter>.
 
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkComboBoxEntry.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2 id="GtkComboBoxEntry--text-column"><title>The <literal>&quot;text-column&quot;</literal> property</title>
-<indexterm zone="GtkComboBoxEntry--text-column"><primary>GtkComboBoxEntry:text-column</primary></indexterm><programlisting>  &quot;text-column&quot;              <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2 id="GtkComboBoxEntry--text-column" role="property"><title>The <literal>&quot;text-column&quot;</literal> property</title>
+<indexterm zone="GtkComboBoxEntry--text-column"><primary sortas="GtkComboBoxEntry:text-column">GtkComboBoxEntry:text-column</primary></indexterm><programlisting>  &quot;text-column&quot;              <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>A column in the data source model to get the strings from.</para><para>Allowed values: &gt;= -1</para>
 <para>Default value: -1</para>
 </refsect2>
-
 </refsect1>
 
 

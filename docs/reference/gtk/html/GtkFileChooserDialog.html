@@ -8,7 +8,7 @@
 <link rel="up" href="SelectorWidgets.html" title="Selectors (File/Font/Color/Input Devices)">
 <link rel="prev" href="GtkFileChooserButton.html" title="GtkFileChooserButton">
 <link rel="next" href="GtkFileChooserWidget.html" title="GtkFileChooserWidget">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,13 +69,15 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkFileChooserWidget.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkFileChooserDialog.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkFileChooserDialog.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkFileChooserDialog.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkFileChooserDialog.implemented-interfaces" class="shortcut">Implemented Interfaces</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkFileChooserDialog.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkFileChooserDialog.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkFileChooserDialog.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkFileChooserDialog.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkFileChooserDialog"></a><div class="titlepage"></div>
@@ -93,7 +95,7 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <a class="link" href="GtkFileChooserDialog.html#GtkFileChooserDialog-struct" title="GtkFileChooserDialog">GtkFileChooserDialog</a>;
-<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkFileChooserDialog.html#gtk-file-chooser-dialog-new" title="gtk_file_chooser_dialog_new ()">gtk_file_chooser_dialog_new</a>         (const <a
+<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         <a class="link" href="GtkFileChooserDialog.html#gtk-file-chooser-dialog-new" title="gtk_file_chooser_dialog_new ()">gtk_file_chooser_dialog_new</a>         (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
                                                          <a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *parent,
@@ -102,7 +104,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *first_button_text,
                                                          ...);
-<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkFileChooserDialog.html#gtk-file-chooser-dialog-new-with-backend" title="gtk_file_chooser_dialog_new_with_backend ()">gtk_file_chooser_dialog_new_with_backend</a>
+<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         <a class="link" href="GtkFileChooserDialog.html#gtk-file-chooser-dialog-new-with-backend" title="gtk_file_chooser_dialog_new_with_backend ()">gtk_file_chooser_dialog_new_with_backend</a>
                                                         (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
@@ -165,23 +167,19 @@ GtkFileChooserDialog implements
       </p>
 <pre class="programlisting">
 GtkWidget *dialog;
-
 dialog = gtk_file_chooser_dialog_new ("Open File",
 				      parent_window,
 				      GTK_FILE_CHOOSER_ACTION_OPEN,
 				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 				      NULL);
-
 if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
   {
     char *filename;
-
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
     open_file (filename);
     g_free (filename);
   }
-
 gtk_widget_destroy (dialog);
       </pre>
 <p>
@@ -189,7 +187,6 @@ gtk_widget_destroy (dialog);
       </p>
 <pre class="programlisting">
 GtkWidget *dialog;
-
 dialog = gtk_file_chooser_dialog_new ("Save File",
 				      parent_window,
 				      GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -197,7 +194,6 @@ dialog = gtk_file_chooser_dialog_new ("Save File",
 				      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 				      NULL);
 gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
-
 if (user_edited_a_new_document)
   {
     gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), default_folder_for_saving);
@@ -205,17 +201,13 @@ if (user_edited_a_new_document)
   }
 else
   gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), filename_for_existing_document);
-
-
 if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
   {
     char *filename;
-
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
     save_to_file (filename);
     g_free (filename);
   }
-
 gtk_widget_destroy (dialog);
       </pre>
 </div>
@@ -226,12 +218,11 @@ gtk_widget_destroy (dialog);
 <p>
       <a class="link" href="GtkFileChooserDialog.html" title="GtkFileChooserDialog"><span class="type">GtkFileChooserDialog</span></a> inherits from <a class="link" href="GtkDialog.html" title="GtkDialog"><span class="type">GtkDialog</span></a>, so buttons that
       go in its action area have response codes such as
-      <a class="link" href="GtkDialog.html#GTK-RESPONSE-ACCEPT:CAPS"><span class="type">GTK_RESPONSE_ACCEPT</span></a> and <a class="link" href="GtkDialog.html#GTK-RESPONSE-CANCEL:CAPS"><span class="type">GTK_RESPONSE_CANCEL</span></a>.  For example, you
+      <a class="link" href="GtkDialog.html#GTK-RESPONSE-ACCEPT--CAPS"><span class="type">GTK_RESPONSE_ACCEPT</span></a> and <a class="link" href="GtkDialog.html#GTK-RESPONSE-CANCEL--CAPS"><span class="type">GTK_RESPONSE_CANCEL</span></a>.  For example, you
       could call <a class="link" href="GtkFileChooserDialog.html#gtk-file-chooser-dialog-new" title="gtk_file_chooser_dialog_new ()"><code class="function">gtk_file_chooser_dialog_new()</code></a> as follows:
     </p>
 <pre class="programlisting">
 GtkWidget *dialog;
-
 dialog = gtk_file_chooser_dialog_new ("Open File",
 				      parent_window,
 				      GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -249,10 +240,10 @@ dialog = gtk_file_chooser_dialog_new ("Open File",
       codes:
       <a name="gtkfilechooserdialog-responses"></a></p>
 <table class="simplelist" border="0" summary="Simple list">
-<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-ACCEPT:CAPS"><span class="type">GTK_RESPONSE_ACCEPT</span></a></td></tr>
-<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-OK:CAPS"><span class="type">GTK_RESPONSE_OK</span></a></td></tr>
-<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-YES:CAPS"><span class="type">GTK_RESPONSE_YES</span></a></td></tr>
-<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-APPLY:CAPS"><span class="type">GTK_RESPONSE_APPLY</span></a></td></tr>
+<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-ACCEPT--CAPS"><span class="type">GTK_RESPONSE_ACCEPT</span></a></td></tr>
+<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-OK--CAPS"><span class="type">GTK_RESPONSE_OK</span></a></td></tr>
+<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-YES--CAPS"><span class="type">GTK_RESPONSE_YES</span></a></td></tr>
+<tr><td><a class="link" href="GtkDialog.html#GTK-RESPONSE-APPLY--CAPS"><span class="type">GTK_RESPONSE_APPLY</span></a></td></tr>
 </table>
 <p>
     </p>
@@ -279,13 +270,12 @@ dialog = gtk_file_chooser_dialog_new ("Open File",
 <a name="GtkFileChooserDialog-struct"></a><h3>GtkFileChooserDialog</h3>
 <pre class="programlisting">typedef struct _GtkFileChooserDialog GtkFileChooserDialog;</pre>
 <p>
-
 </p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-file-chooser-dialog-new"></a><h3>gtk_file_chooser_dialog_new ()</h3>
-<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_file_chooser_dialog_new         (const <a
+<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         gtk_file_chooser_dialog_new         (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
                                                          <a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *parent,
@@ -298,23 +288,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 Creates a new <a class="link" href="GtkFileChooserDialog.html" title="GtkFileChooserDialog"><span class="type">GtkFileChooserDialog</span></a>.  This function is analogous to
 <a class="link" href="GtkDialog.html#gtk-dialog-new-with-buttons" title="gtk_dialog_new_with_buttons ()"><code class="function">gtk_dialog_new_with_buttons()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
-<td> Title of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> Title of the dialog, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> Transient parent of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> Transient parent of the dialog, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
@@ -324,16 +309,12 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>first_button_text</code></em> :</span></p></td>
-<td> stock ID or text to go in the first button, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> stock ID or text to go in the first button, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
-<td> response ID for the first button, then additional (button, id) pairs, ending with <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> response ID for the first button, then additional (button, id) pairs, ending with <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
@@ -344,13 +325,12 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.4
-</p>
+<p class="since">Since 2.4</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-file-chooser-dialog-new-with-backend"></a><h3>gtk_file_chooser_dialog_new_with_backend ()</h3>
-<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_file_chooser_dialog_new_with_backend
+<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         gtk_file_chooser_dialog_new_with_backend
                                                         (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title,
@@ -373,23 +353,18 @@ especially useful if you use <a class="link" href="GtkFileChooser.html#gtk-file-
 non-local files and you use a more expressive vfs, such as gnome-vfs,
 to load files.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
-<td> Title of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> Title of the dialog, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> Transient parent of the dialog, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> Transient parent of the dialog, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
@@ -404,16 +379,12 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>first_button_text</code></em> :</span></p></td>
-<td> stock ID or text to go in the first button, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> stock ID or text to go in the first button, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
-<td> response ID for the first button, then additional (button, id) pairs, ending with <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>
+<td> response ID for the first button, then additional (button, id) pairs, ending with <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
@@ -424,8 +395,7 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since  2.4
-</p>
+<p class="since">Since 2.4</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
@@ -437,6 +407,6 @@ href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

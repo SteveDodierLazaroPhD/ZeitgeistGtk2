@@ -15,7 +15,6 @@
 <refnamediv>
 <refname>GtkRadioButton</refname>
 <refpurpose>A choice from multiple check buttons</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="GtkRadioButton.synopsis" role="synopsis">
@@ -59,7 +58,6 @@
                                              +----<link linkend="GtkCheckButton">GtkCheckButton</link>
                                                    +----GtkRadioButton
 </synopsis>
-
 </refsect1>
 
 
@@ -69,7 +67,6 @@
 <para>
 GtkRadioButton implements
  <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
-
 </refsect1>
 
 
@@ -128,23 +125,17 @@ itself and its list item when it is destroyed.
 <example>
 <title>How to create a group of two radio buttons.</title>
 <programlisting>
-
 void create_radio_buttons (void) {
-
    GtkWidget *window, *radio1, *radio2, *box, *entry;
    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    box = gtk_vbox_new (TRUE, 2);
-   
    /* Create a radio button with a GtkEntry widget */
    radio1 = gtk_radio_button_new (NULL);
    entry = gtk_entry_new (<!-- -->);
    gtk_container_add (GTK_CONTAINER (radio1), entry);
-   
-   
    /* Create a radio button with a label */
    radio2 = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radio1),
 							"I'm the second radio button.");
-   
    /* Pack them into a box, then show all the widgets */
    gtk_box_pack_start (GTK_BOX (box), radio1, TRUE, TRUE, 2);
    gtk_box_pack_start (GTK_BOX (box), radio2, TRUE, TRUE, 2);
@@ -152,14 +143,13 @@ void create_radio_buttons (void) {
    gtk_widget_show_all (window);
    return;
 }
-
 </programlisting>
 </example>
 </para>
 <para>
 When an unselected button in the group is clicked the clicked button
 receives the "toggled" signal, as does the previously selected button.
-Inside the "toggled" handler, <link linkend="gtk-toggle-button-get-active"><function>gtk_toggle_button_get_active()</function></link> can be used 
+Inside the "toggled" handler, <link linkend="gtk-toggle-button-get-active"><function>gtk_toggle_button_get_active()</function></link> can be used
 to determine if the button has been selected or deselected.
 </para>
 </refsect1>
@@ -168,81 +158,75 @@ to determine if the button has been selected or deselected.
 <title role="details.title">Details</title>
 <refsect2 id="GtkRadioButton-struct" role="struct">
 <title>GtkRadioButton</title>
-<indexterm zone="GtkRadioButton-struct"><primary>GtkRadioButton</primary></indexterm><programlisting>typedef struct _GtkRadioButton GtkRadioButton;</programlisting>
+<indexterm zone="GtkRadioButton-struct"><primary sortas="GtkRadioButton">GtkRadioButton</primary></indexterm><programlisting>typedef struct _GtkRadioButton GtkRadioButton;</programlisting>
 <para>
 Contains only private data that should be read and manipulated using the
 functions below.
 </para></refsect2>
 <refsect2 id="gtk-radio-button-new" role="function">
 <title>gtk_radio_button_new ()</title>
-<indexterm zone="gtk-radio-button-new"><primary>gtk_radio_button_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new                (<link linkend="GSList">GSList</link> *group);</programlisting>
+<indexterm zone="gtk-radio-button-new"><primary sortas="gtk_radio_button_new">gtk_radio_button_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new                (<link linkend="GSList">GSList</link> *group);</programlisting>
 <para>
 Creates a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>. To be of any practical value, a widget should
 then be packed into the radio button.
 </para><variablelist role="params">
-<varlistentry><term><parameter>group</parameter>&nbsp;:</term>
-<listitem><simpara>an existing radio button group, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if you are creating a new group.
+<varlistentry><term><parameter>group</parameter>&#160;:</term>
+<listitem><simpara>an existing radio button group, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if you are creating a new group.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a new radio button.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>a new radio button.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-radio-button-new-from-widget" role="function">
 <title>gtk_radio_button_new_from_widget ()</title>
-<indexterm zone="gtk-radio-button-new-from-widget"><primary>gtk_radio_button_new_from_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_from_widget    (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_group_member);</programlisting>
+<indexterm zone="gtk-radio-button-new-from-widget"><primary sortas="gtk_radio_button_new_from_widget">gtk_radio_button_new_from_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_from_widget    (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_group_member);</programlisting>
 <para>
 Creates a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>, adding it to the same group as <parameter>radio_group_member</parameter>.
 As with <link linkend="gtk-radio-button-new"><function>gtk_radio_button_new()</function></link>, a widget should be packed into the radio button.
 </para><variablelist role="params">
-<varlistentry><term><parameter>radio_group_member</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>radio_group_member</parameter>&#160;:</term>
 <listitem><simpara>an existing <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a new radio button.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>a new radio button.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-radio-button-new-with-label" role="function">
 <title>gtk_radio_button_new_with_label ()</title>
-<indexterm zone="gtk-radio-button-new-with-label"><primary>gtk_radio_button_new_with_label</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_label     (<link linkend="GSList">GSList</link> *group,
+<indexterm zone="gtk-radio-button-new-with-label"><primary sortas="gtk_radio_button_new_with_label">gtk_radio_button_new_with_label</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_label     (<link linkend="GSList">GSList</link> *group,
                                                          const <link linkend="gchar">gchar</link> *label);</programlisting>
 <para>
 Creates a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link> with a text label.
 </para><variablelist role="params">
-<varlistentry><term><parameter>group</parameter>&nbsp;:</term>
-<listitem><simpara>an existing radio button group, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> if you are creating a new
+<varlistentry><term><parameter>group</parameter>&#160;:</term>
+<listitem><simpara>an existing radio button group, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if you are creating a new
 group.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
 <listitem><simpara>the text label to display next to the radio button.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a new radio button.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>a new radio button.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-radio-button-new-with-label-from-widget" role="function">
 <title>gtk_radio_button_new_with_label_from_widget ()</title>
-<indexterm zone="gtk-radio-button-new-with-label-from-widget"><primary>gtk_radio_button_new_with_label_from_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_label_from_widget
+<indexterm zone="gtk-radio-button-new-with-label-from-widget"><primary sortas="gtk_radio_button_new_with_label_from_widget">gtk_radio_button_new_with_label_from_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_label_from_widget
                                                         (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_group_member,
                                                          const <link linkend="gchar">gchar</link> *label);</programlisting>
 <para>
 Creates a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link> with a text label, adding it to the same group
 as <parameter>radio_group_member</parameter>.
 </para><variablelist role="params">
-<varlistentry><term><parameter>radio_group_member</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>radio_group_member</parameter>&#160;:</term>
 <listitem><simpara>widget to get radio group from or NULL
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
 <listitem><simpara>a text string to display next to the radio button.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a new radio button.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>a new radio button.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-radio-button-new-with-mnemonic" role="function">
 <title>gtk_radio_button_new_with_mnemonic ()</title>
-<indexterm zone="gtk-radio-button-new-with-mnemonic"><primary>gtk_radio_button_new_with_mnemonic</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_mnemonic  (<link linkend="GSList">GSList</link> *group,
+<indexterm zone="gtk-radio-button-new-with-mnemonic"><primary sortas="gtk_radio_button_new_with_mnemonic">gtk_radio_button_new_with_mnemonic</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_mnemonic  (<link linkend="GSList">GSList</link> *group,
                                                          const <link linkend="gchar">gchar</link> *label);</programlisting>
 <para>
 Creates a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link> containing a label, adding it to the same 
@@ -250,21 +234,20 @@ group as <parameter>group</parameter>. The label will be created using
 <link linkend="gtk-label-new-with-mnemonic"><function>gtk_label_new_with_mnemonic()</function></link>, so underscores in <parameter>label</parameter> indicate the 
 mnemonic for the button.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>group</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>group</parameter>&#160;:</term>
 <listitem><simpara> the radio button group
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
 <listitem><simpara> the text of the button, with an underscore in front of the
         mnemonic character
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-radio-button-new-with-mnemonic-from-widget" role="function">
 <title>gtk_radio_button_new_with_mnemonic_from_widget ()</title>
-<indexterm zone="gtk-radio-button-new-with-mnemonic-from-widget"><primary>gtk_radio_button_new_with_mnemonic_from_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_mnemonic_from_widget
+<indexterm zone="gtk-radio-button-new-with-mnemonic-from-widget"><primary sortas="gtk_radio_button_new_with_mnemonic_from_widget">gtk_radio_button_new_with_mnemonic_from_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_radio_button_new_with_mnemonic_from_widget
                                                         (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_group_member,
                                                          const <link linkend="gchar">gchar</link> *label);</programlisting>
 <para>
@@ -272,21 +255,20 @@ Creates a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link> 
 will be created using <link linkend="gtk-label-new-with-mnemonic"><function>gtk_label_new_with_mnemonic()</function></link>, so underscores
 in <parameter>label</parameter> indicate the mnemonic for the button.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>radio_group_member</parameter>&nbsp;:</term>
-<listitem><simpara> widget to get radio group from or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>radio_group_member</parameter>&#160;:</term>
+<listitem><simpara> widget to get radio group from or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
 <listitem><simpara> the text of the button, with an underscore in front of the
         mnemonic character
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-radio-button-group" role="macro" condition="deprecated:">
 <title>gtk_radio_button_group</title>
-<indexterm zone="gtk-radio-button-group" role="deprecated"><primary>gtk_radio_button_group</primary></indexterm><programlisting>#define gtk_radio_button_group gtk_radio_button_get_group
+<indexterm zone="gtk-radio-button-group" role="deprecated"><primary sortas="gtk_radio_button_group">gtk_radio_button_group</primary></indexterm><programlisting>#define gtk_radio_button_group gtk_radio_button_get_group
 </programlisting>
 <warning><para><literal>gtk_radio_button_group</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
@@ -294,7 +276,7 @@ Deprecated compatibility macro. Use <link linkend="gtk-radio-button-get-group"><
 </para></refsect2>
 <refsect2 id="gtk-radio-button-set-group" role="function">
 <title>gtk_radio_button_set_group ()</title>
-<indexterm zone="gtk-radio-button-set-group"><primary>gtk_radio_button_set_group</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_radio_button_set_group          (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_button,
+<indexterm zone="gtk-radio-button-set-group"><primary sortas="gtk_radio_button_set_group">gtk_radio_button_set_group</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_radio_button_set_group          (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_button,
                                                          <link linkend="GSList">GSList</link> *group);</programlisting>
 <para>
 Sets a <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>'s group. It should be noted that this does not change
@@ -302,47 +284,42 @@ the layout of your interface in any way, so if you are changing the group,
 it is likely you will need to re-arrange the user interface to reflect these
 changes.
 </para><variablelist role="params">
-<varlistentry><term><parameter>radio_button</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>radio_button</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>group</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>group</parameter>&#160;:</term>
 <listitem><simpara>an existing radio button group, such as one returned from
 <link linkend="gtk-radio-button-get-group"><function>gtk_radio_button_get_group()</function></link>.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-radio-button-get-group" role="function">
 <title>gtk_radio_button_get_group ()</title>
-<indexterm zone="gtk-radio-button-get-group"><primary>gtk_radio_button_get_group</primary></indexterm><programlisting><link linkend="GSList">GSList</link>*             gtk_radio_button_get_group          (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_button);</programlisting>
+<indexterm zone="gtk-radio-button-get-group"><primary sortas="gtk_radio_button_get_group">gtk_radio_button_get_group</primary></indexterm><programlisting><link linkend="GSList">GSList</link>*             gtk_radio_button_get_group          (<link linkend="GtkRadioButton">GtkRadioButton</link> *radio_button);</programlisting>
 <para>
 Retrieves the group assigned to a radio button.
 </para><variablelist role="params">
-<varlistentry><term><parameter>radio_button</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>radio_button</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkRadioButton"><type>GtkRadioButton</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>a linked list containing all the radio buttons in the same group
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>a linked list containing all the radio buttons in the same group
 as <parameter>radio_button</parameter>.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
 </refsect1>
 <refsect1 id="GtkRadioButton.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2 id="GtkRadioButton--group"><title>The <literal>&quot;group&quot;</literal> property</title>
-<indexterm zone="GtkRadioButton--group"><primary>GtkRadioButton:group</primary></indexterm><programlisting>  &quot;group&quot;                    <link linkend="GtkRadioButton">GtkRadioButton</link>*       : Write</programlisting>
+<refsect2 id="GtkRadioButton--group" role="property"><title>The <literal>&quot;group&quot;</literal> property</title>
+<indexterm zone="GtkRadioButton--group"><primary sortas="GtkRadioButton:group">GtkRadioButton:group</primary></indexterm><programlisting>  &quot;group&quot;                    <link linkend="GtkRadioButton">GtkRadioButton</link>*       : Write</programlisting>
 <para>
 Sets a new group for a radio button.
 </para></refsect2>
-
 </refsect1>
 
 <refsect1 id="GtkRadioButton.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2 id="GtkRadioButton-group-changed"><title>The <literal>&quot;group-changed&quot;</literal> signal</title>
-<indexterm zone="GtkRadioButton-group-changed" role="2.4"><primary>GtkRadioButton::group-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkRadioButton">GtkRadioButton</link> *style,
+<refsect2 id="GtkRadioButton-group-changed" role="signal"><title>The <literal>&quot;group-changed&quot;</literal> signal</title>
+<indexterm zone="GtkRadioButton-group-changed" role="2.4"><primary sortas="GtkRadioButton::group-changed">GtkRadioButton::group-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkRadioButton">GtkRadioButton</link> *style,
                                                         <link linkend="gpointer">gpointer</link>        user_data)      : Run First</programlisting>
 <para>
 Emitted when the group of radio buttons that a radio button belongs
@@ -352,15 +329,13 @@ vice-versa, and when a button is moved from one group of 2 or
 more buttons to a different one, but not when the composition
 of the group that a button belongs to changes.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>style</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>style</parameter>&#160;:</term>
 <listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist><para>Since  2.4
-</para></refsect2>
+</variablelist><para>Since 2.4</para></refsect2>
 </refsect1>
 
 
@@ -374,7 +349,6 @@ of the group that a button belongs to changes.</para>
 many.</para></listitem>
 </varlistentry>
 </variablelist>
-
 </para>
 </refsect1>
 

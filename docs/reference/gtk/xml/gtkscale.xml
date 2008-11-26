@@ -15,7 +15,6 @@
 <refnamediv>
 <refname>GtkScale</refname>
 <refpurpose>Base class for GtkHScale and GtkVScale</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="GtkScale.synopsis" role="synopsis">
@@ -35,7 +34,7 @@
 <link linkend="gint">gint</link>                <link linkend="gtk-scale-get-digits">gtk_scale_get_digits</link>                (<link linkend="GtkScale">GtkScale</link> *scale);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-scale-get-draw-value">gtk_scale_get_draw_value</link>            (<link linkend="GtkScale">GtkScale</link> *scale);
 <link linkend="GtkPositionType">GtkPositionType</link>     <link linkend="gtk-scale-get-value-pos">gtk_scale_get_value_pos</link>             (<link linkend="GtkScale">GtkScale</link> *scale);
-<link linkend="PangoLayout">PangoLayout</link>*        <link linkend="gtk-scale-get-layout">gtk_scale_get_layout</link>                (<link linkend="GtkScale">GtkScale</link> *scale);
+<link linkend="PangoLayout">PangoLayout</link> *       <link linkend="gtk-scale-get-layout">gtk_scale_get_layout</link>                (<link linkend="GtkScale">GtkScale</link> *scale);
 <link linkend="void">void</link>                <link linkend="gtk-scale-get-layout-offsets">gtk_scale_get_layout_offsets</link>        (<link linkend="GtkScale">GtkScale</link> *scale,
                                                          <link linkend="gint">gint</link> *x,
                                                          <link linkend="gint">gint</link> *y);
@@ -54,7 +53,6 @@
                                  +----<link linkend="GtkHScale">GtkHScale</link>
                                  +----<link linkend="GtkVScale">GtkVScale</link>
 </synopsis>
-
 </refsect1>
 
 
@@ -64,7 +62,6 @@
 <para>
 GtkScale implements
  <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
-
 </refsect1>
 
 
@@ -79,8 +76,8 @@ GtkScale implements
 <refsect1 id="GtkScale.style-properties" role="style_properties">
 <title role="style_properties.title">Style Properties</title>
 <synopsis>
-  &quot;<link linkend="GtkScale--slider-length">slider-length</link>&quot;            <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkScale--value-spacing">value-spacing</link>&quot;            <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkScale--s-slider-length">slider-length</link>&quot;            <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkScale--s-value-spacing">value-spacing</link>&quot;            <link linkend="gint">gint</link>                  : Read
 </synopsis>
 </refsect1>
 
@@ -96,15 +93,15 @@ GtkScale implements
 <title role="desc.title">Description</title>
 <para>
 A <link linkend="GtkScale"><type>GtkScale</type></link> is a slider control used to select a numeric value.
-To use it, you'll probably want to investigate the methods on 
+To use it, you'll probably want to investigate the methods on
 its base class, <link linkend="GtkRange"><type>GtkRange</type></link>, in addition to the methods for <link linkend="GtkScale"><type>GtkScale</type></link> itself.
-To set the value of a scale, you would normally use <link linkend="gtk-range-set-value"><function>gtk_range_set_value()</function></link>. 
-To detect changes to the value, you would normally use the "value_changed" 
+To set the value of a scale, you would normally use <link linkend="gtk-range-set-value"><function>gtk_range_set_value()</function></link>.
+To detect changes to the value, you would normally use the "value_changed"
 signal.
 </para>
 <para>
 The <link linkend="GtkScale"><type>GtkScale</type></link> widget is an abstract class, used only for deriving the
-subclasses <link linkend="GtkHScale"><type>GtkHScale</type></link> and <link linkend="GtkVScale"><type>GtkVScale</type></link>. To create a scale widget, 
+subclasses <link linkend="GtkHScale"><type>GtkHScale</type></link> and <link linkend="GtkVScale"><type>GtkVScale</type></link>. To create a scale widget,
 call <link linkend="gtk-hscale-new-with-range"><function>gtk_hscale_new_with_range()</function></link> or <link linkend="gtk-vscale-new-with-range"><function>gtk_vscale_new_with_range()</function></link>.
 </para>
 </refsect1>
@@ -113,210 +110,188 @@ call <link linkend="gtk-hscale-new-with-range"><function>gtk_hscale_new_with_ran
 <title role="details.title">Details</title>
 <refsect2 id="GtkScale-struct" role="struct">
 <title>GtkScale</title>
-<indexterm zone="GtkScale-struct"><primary>GtkScale</primary></indexterm><programlisting>typedef struct _GtkScale GtkScale;</programlisting>
+<indexterm zone="GtkScale-struct"><primary sortas="GtkScale">GtkScale</primary></indexterm><programlisting>typedef struct _GtkScale GtkScale;</programlisting>
 <para>
 The <link linkend="GtkScale-struct"><type>GtkScale</type></link> struct contains the following fields.
 (These fields should be considered read-only. They should never be set by
 an application.)
-
 <informaltable pgwide="1" frame="none" role="struct">
 <tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
 <tbody>
-
 <row>
 <entry><link linkend="guint"><type>guint</type></link> <structfield>draw_value</structfield>;</entry>
 <entry>non-zero if the scale's current value is displayed next to the
 slider.</entry>
 </row>
-
 <row>
 <entry><link linkend="guint"><type>guint</type></link> <structfield>value_pos</structfield>;</entry>
 <entry>the position in which the textual value is displayed, selected from
 <link linkend="GtkPositionType"><type>GtkPositionType</type></link>.</entry>
 </row>
-
 </tbody></tgroup></informaltable>
 </para></refsect2>
 <refsect2 id="gtk-scale-set-digits" role="function">
 <title>gtk_scale_set_digits ()</title>
-<indexterm zone="gtk-scale-set-digits"><primary>gtk_scale_set_digits</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_set_digits                (<link linkend="GtkScale">GtkScale</link> *scale,
+<indexterm zone="gtk-scale-set-digits"><primary sortas="gtk_scale_set_digits">gtk_scale_set_digits</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_set_digits                (<link linkend="GtkScale">GtkScale</link> *scale,
                                                          <link linkend="gint">gint</link> digits);</programlisting>
 <para>
 Sets the number of decimal places that are displayed in the value.  Also causes
 the value of the adjustment to be rounded off to this number of digits, so the
 retrieved value matches the value the user saw.
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkScale"><type>GtkScale</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>digits</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>digits</parameter>&#160;:</term>
 <listitem><simpara>the number of decimal places to display, e.g. use 1 to display 1.0,
 2 to display 1.00 etc.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-scale-set-draw-value" role="function">
 <title>gtk_scale_set_draw_value ()</title>
-<indexterm zone="gtk-scale-set-draw-value"><primary>gtk_scale_set_draw_value</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_set_draw_value            (<link linkend="GtkScale">GtkScale</link> *scale,
+<indexterm zone="gtk-scale-set-draw-value"><primary sortas="gtk_scale_set_draw_value">gtk_scale_set_draw_value</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_set_draw_value            (<link linkend="GtkScale">GtkScale</link> *scale,
                                                          <link linkend="gboolean">gboolean</link> draw_value);</programlisting>
 <para>
 Specifies whether the current value is displayed as a string next to the
 slider.
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkScale"><type>GtkScale</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>draw_value</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>draw_value</parameter>&#160;:</term>
 <listitem><simpara>a boolean.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-scale-set-value-pos" role="function">
 <title>gtk_scale_set_value_pos ()</title>
-<indexterm zone="gtk-scale-set-value-pos"><primary>gtk_scale_set_value_pos</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_set_value_pos             (<link linkend="GtkScale">GtkScale</link> *scale,
+<indexterm zone="gtk-scale-set-value-pos"><primary sortas="gtk_scale_set_value_pos">gtk_scale_set_value_pos</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_set_value_pos             (<link linkend="GtkScale">GtkScale</link> *scale,
                                                          <link linkend="GtkPositionType">GtkPositionType</link> pos);</programlisting>
 <para>
 Sets the position in which the current value is displayed.
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkScale"><type>GtkScale</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>pos</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>pos</parameter>&#160;:</term>
 <listitem><simpara>the position in which the current value is displayed.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-scale-get-digits" role="function">
 <title>gtk_scale_get_digits ()</title>
-<indexterm zone="gtk-scale-get-digits"><primary>gtk_scale_get_digits</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_scale_get_digits                (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
+<indexterm zone="gtk-scale-get-digits"><primary sortas="gtk_scale_get_digits">gtk_scale_get_digits</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_scale_get_digits                (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
 <para>
 Gets the number of decimal places that are displayed in the value.
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkScale"><type>GtkScale</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the number of decimal places that are displayed.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the number of decimal places that are displayed.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-scale-get-draw-value" role="function">
 <title>gtk_scale_get_draw_value ()</title>
-<indexterm zone="gtk-scale-get-draw-value"><primary>gtk_scale_get_draw_value</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_scale_get_draw_value            (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
+<indexterm zone="gtk-scale-get-draw-value"><primary sortas="gtk_scale_get_draw_value">gtk_scale_get_draw_value</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_scale_get_draw_value            (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
 <para>
 Returns whether the current value is displayed as a string next to the
 slider.
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkScale"><type>GtkScale</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>whether the current value is displayed as a string.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>whether the current value is displayed as a string.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-scale-get-value-pos" role="function">
 <title>gtk_scale_get_value_pos ()</title>
-<indexterm zone="gtk-scale-get-value-pos"><primary>gtk_scale_get_value_pos</primary></indexterm><programlisting><link linkend="GtkPositionType">GtkPositionType</link>     gtk_scale_get_value_pos             (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
+<indexterm zone="gtk-scale-get-value-pos"><primary sortas="gtk_scale_get_value_pos">gtk_scale_get_value_pos</primary></indexterm><programlisting><link linkend="GtkPositionType">GtkPositionType</link>     gtk_scale_get_value_pos             (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
 <para>
 Gets the position in which the current value is displayed.
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkScale"><type>GtkScale</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the position in which the current value is displayed.
-
-
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the position in which the current value is displayed.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-scale-get-layout" role="function" condition="since:2.4">
 <title>gtk_scale_get_layout ()</title>
-<indexterm zone="gtk-scale-get-layout" role="2.4"><primary>gtk_scale_get_layout</primary></indexterm><programlisting><link linkend="PangoLayout">PangoLayout</link>*        gtk_scale_get_layout                (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
+<indexterm zone="gtk-scale-get-layout" role="2.4"><primary sortas="gtk_scale_get_layout">gtk_scale_get_layout</primary></indexterm><programlisting><link linkend="PangoLayout">PangoLayout</link> *       gtk_scale_get_layout                (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
 <para>
 Gets the <link linkend="PangoLayout"><type>PangoLayout</type></link> used to display the scale. 
 The returned object is owned by the scale so does 
 not need to be freed by the caller.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara> A <link linkend="GtkScale"><type>GtkScale</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the <link linkend="PangoLayout"><type>PangoLayout</type></link> for this scale, or <link linkend="NULL:CAPS"><literal>NULL</literal></link> 
-   if the <link linkend="GtkScale--draw-value"><type>"draw-value"</type></link> property is <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the <link linkend="PangoLayout"><type>PangoLayout</type></link> for this scale, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> 
+   if the <link linkend="GtkScale--draw-value"><type>"draw-value"</type></link> property is <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>.
   
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-scale-get-layout-offsets" role="function" condition="since:2.4">
 <title>gtk_scale_get_layout_offsets ()</title>
-<indexterm zone="gtk-scale-get-layout-offsets" role="2.4"><primary>gtk_scale_get_layout_offsets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_get_layout_offsets        (<link linkend="GtkScale">GtkScale</link> *scale,
+<indexterm zone="gtk-scale-get-layout-offsets" role="2.4"><primary sortas="gtk_scale_get_layout_offsets">gtk_scale_get_layout_offsets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_get_layout_offsets        (<link linkend="GtkScale">GtkScale</link> *scale,
                                                          <link linkend="gint">gint</link> *x,
                                                          <link linkend="gint">gint</link> *y);</programlisting>
 <para>
 Obtains the coordinates where the scale will draw the 
 <link linkend="PangoLayout"><type>PangoLayout</type></link> representing the text in the scale. Remember
 when using the <link linkend="PangoLayout"><type>PangoLayout</type></link> function you need to convert to
-and from pixels using <link linkend="PANGO-PIXELS:CAPS"><function>PANGO_PIXELS()</function></link> or <link linkend="PANGO-SCALE:CAPS"><type>PANGO_SCALE</type></link>. 
+and from pixels using <link linkend="PANGO-PIXELS--CAPS"><function>PANGO_PIXELS()</function></link> or <link linkend="PANGO-SCALE--CAPS"><type>PANGO_SCALE</type></link>. 
 </para>
 <para>
-If the <link linkend="GtkScale--draw-value"><type>"draw-value"</type></link> property is <link linkend="FALSE:CAPS"><literal>FALSE</literal></link>, the return 
+If the <link linkend="GtkScale--draw-value"><type>"draw-value"</type></link> property is <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>, the return 
 values are undefined.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkScale"><type>GtkScale</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>x</parameter>&nbsp;:</term>
-<listitem><simpara> location to store X offset of layout, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>x</parameter>&#160;:</term>
+<listitem><simpara> location to store X offset of layout, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>y</parameter>&nbsp;:</term>
-<listitem><simpara> location to store Y offset of layout, or <link linkend="NULL:CAPS"><literal>NULL</literal></link>
+<varlistentry><term><parameter>y</parameter>&#160;:</term>
+<listitem><simpara> location to store Y offset of layout, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-</variablelist><para role="since">Since  2.4
-</para></refsect2>
+</variablelist><para role="since">Since 2.4</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkScale.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2 id="GtkScale--digits"><title>The <literal>&quot;digits&quot;</literal> property</title>
-<indexterm zone="GtkScale--digits"><primary>GtkScale:digits</primary></indexterm><programlisting>  &quot;digits&quot;                   <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<refsect2 id="GtkScale--digits" role="property"><title>The <literal>&quot;digits&quot;</literal> property</title>
+<indexterm zone="GtkScale--digits"><primary sortas="GtkScale:digits">GtkScale:digits</primary></indexterm><programlisting>  &quot;digits&quot;                   <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>The number of decimal places that are displayed in the value.</para><para>Allowed values: [-1,64]</para>
 <para>Default value: 1</para>
 </refsect2>
-<refsect2 id="GtkScale--draw-value"><title>The <literal>&quot;draw-value&quot;</literal> property</title>
-<indexterm zone="GtkScale--draw-value"><primary>GtkScale:draw-value</primary></indexterm><programlisting>  &quot;draw-value&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkScale--draw-value" role="property"><title>The <literal>&quot;draw-value&quot;</literal> property</title>
+<indexterm zone="GtkScale--draw-value"><primary sortas="GtkScale:draw-value">GtkScale:draw-value</primary></indexterm><programlisting>  &quot;draw-value&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the current value is displayed as a string next to the slider.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2 id="GtkScale--value-pos"><title>The <literal>&quot;value-pos&quot;</literal> property</title>
-<indexterm zone="GtkScale--value-pos"><primary>GtkScale:value-pos</primary></indexterm><programlisting>  &quot;value-pos&quot;                <link linkend="GtkPositionType">GtkPositionType</link>       : Read / Write</programlisting>
+<refsect2 id="GtkScale--value-pos" role="property"><title>The <literal>&quot;value-pos&quot;</literal> property</title>
+<indexterm zone="GtkScale--value-pos"><primary sortas="GtkScale:value-pos">GtkScale:value-pos</primary></indexterm><programlisting>  &quot;value-pos&quot;                <link linkend="GtkPositionType">GtkPositionType</link>       : Read / Write</programlisting>
 <para>The position in which the current value is displayed.</para><para>Default value: GTK_POS_TOP</para>
 </refsect2>
-
 </refsect1>
 <refsect1 id="GtkScale.style-property-details" role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
-<refsect2 id="GtkScale--slider-length"><title>The <literal>&quot;slider-length&quot;</literal> style property</title>
-<indexterm zone="GtkScale--slider-length"><primary>GtkScale:slider-length</primary></indexterm><programlisting>  &quot;slider-length&quot;            <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2 id="GtkScale--s-slider-length" role="property"><title>The <literal>&quot;slider-length&quot;</literal> style property</title>
+<indexterm zone="GtkScale--s-slider-length"><primary sortas="GtkScale:slider-length">GtkScale:slider-length</primary></indexterm><programlisting>  &quot;slider-length&quot;            <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Length of scale's slider.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 31</para>
 </refsect2>
-<refsect2 id="GtkScale--value-spacing"><title>The <literal>&quot;value-spacing&quot;</literal> style property</title>
-<indexterm zone="GtkScale--value-spacing"><primary>GtkScale:value-spacing</primary></indexterm><programlisting>  &quot;value-spacing&quot;            <link linkend="gint">gint</link>                  : Read</programlisting>
+<refsect2 id="GtkScale--s-value-spacing" role="property"><title>The <literal>&quot;value-spacing&quot;</literal> style property</title>
+<indexterm zone="GtkScale--s-value-spacing"><primary sortas="GtkScale:value-spacing">GtkScale:value-spacing</primary></indexterm><programlisting>  &quot;value-spacing&quot;            <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Space between value text and the slider/trough area.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 2</para>
 </refsect2>
-
 </refsect1>
 
 <refsect1 id="GtkScale.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2 id="GtkScale-format-value"><title>The <literal>&quot;format-value&quot;</literal> signal</title>
-<indexterm zone="GtkScale-format-value"><primary>GtkScale::format-value</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              user_function                      (<link linkend="GtkScale">GtkScale</link> *scale,
+<refsect2 id="GtkScale-format-value" role="signal"><title>The <literal>&quot;format-value&quot;</literal> signal</title>
+<indexterm zone="GtkScale-format-value"><primary sortas="GtkScale::format-value">GtkScale::format-value</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              user_function                      (<link linkend="GtkScale">GtkScale</link> *scale,
                                                         <link linkend="gdouble">gdouble</link>   arg1,
                                                         <link linkend="gpointer">gpointer</link>  user_data)      : Run Last</programlisting>
 <para>
@@ -335,15 +310,15 @@ format_value_callback (GtkScale *scale,
 }
 </programlisting></informalexample>
 </para><variablelist role="params">
-<varlistentry><term><parameter>scale</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
 <listitem><simpara>the object which received the signal.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>arg1</parameter>&#160;:</term>
 <listitem><simpara>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>allocated string representing <parameter>value</parameter>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>allocated string representing <parameter>value</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 </refsect1>

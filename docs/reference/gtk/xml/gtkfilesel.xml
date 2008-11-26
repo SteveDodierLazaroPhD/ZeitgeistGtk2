@@ -15,7 +15,6 @@
 <refnamediv>
 <refname>GtkFileSelection</refname>
 <refpurpose>Prompt the user for a file or directory name</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="GtkFileSelection.synopsis" role="synopsis">
@@ -58,7 +57,6 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-file-selecti
                                        +----<link linkend="GtkDialog">GtkDialog</link>
                                              +----GtkFileSelection
 </synopsis>
-
 </refsect1>
 
 
@@ -68,7 +66,6 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-file-selecti
 <para>
 GtkFileSelection implements
  <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
-
 </refsect1>
 
 
@@ -90,11 +87,11 @@ GtkFileSelection implements
 of widgets.
 </para>
 <para>
-<link linkend="GtkFileSelection"><type>GtkFileSelection</type></link> should be used to retrieve file or directory names from 
-the user. It will create a new dialog window containing a directory list, 
-and a file list corresponding to the current working directory. The filesystem 
-can be navigated using the directory list or the drop-down history menu. 
-Alternatively, the TAB key can be used to navigate using filename 
+<link linkend="GtkFileSelection"><type>GtkFileSelection</type></link> should be used to retrieve file or directory names from
+the user. It will create a new dialog window containing a directory list,
+and a file list corresponding to the current working directory. The filesystem
+can be navigated using the directory list or the drop-down history menu.
+Alternatively, the TAB key can be used to navigate using filename
 completion - common in text based editors such as emacs and jed.
 </para>
 <para>
@@ -115,47 +112,33 @@ Simple file operations; create directory, delete file, and rename file, are avai
 <example>
 <title>Getting a filename from the user.</title>
 <programlisting>
-
 /* The file selection widget and the string to store the chosen filename */
-
 void store_filename (GtkWidget *widget, gpointer user_data) {
    GtkWidget *file_selector = GTK_WIDGET (user_data);
    const gchar *selected_filename;
-
    selected_filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
    g_print ("Selected filename: &percnt;s\n", selected_filename);
 }
-
 void create_file_selection (void) {
-
    GtkWidget *file_selector;
-
    /* Create the selector */
-   
    file_selector = gtk_file_selection_new ("Please select a file for editing.");
-   
    g_signal_connect (GTK_FILE_SELECTION (file_selector)->ok_button,
                      "clicked",
                      G_CALLBACK (store_filename),
                      file_selector);
-   			   
    /* Ensure that the dialog box is destroyed when the user clicks a button. */
-   
    g_signal_connect_swapped (GTK_FILE_SELECTION (file_selector)->ok_button,
                              "clicked",
-                             G_CALLBACK (gtk_widget_destroy), 
+                             G_CALLBACK (gtk_widget_destroy),
                              file_selector);
-
    g_signal_connect_swapped (GTK_FILE_SELECTION (file_selector)->cancel_button,
                              "clicked",
                              G_CALLBACK (gtk_widget_destroy),
-                             file_selector); 
-   
+                             file_selector);
    /* Display that dialog */
-   
    gtk_widget_show (file_selector);
 }
-
 </programlisting>
 </example>
 </para>
@@ -165,7 +148,7 @@ void create_file_selection (void) {
 <title role="details.title">Details</title>
 <refsect2 id="GtkFileSelection-struct" role="struct">
 <title>GtkFileSelection</title>
-<indexterm zone="GtkFileSelection-struct" role="deprecated"><primary>GtkFileSelection</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GtkFileSelection-struct" role="deprecated"><primary sortas="GtkFileSelection">GtkFileSelection</primary></indexterm><programlisting>typedef struct {
   GtkWidget *dir_list;
   GtkWidget *file_list;
   GtkWidget *selection_entry;
@@ -195,131 +178,130 @@ void create_file_selection (void) {
 The <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link> struct contains the following <link linkend="GtkWidget"><type>GtkWidget</type></link> fields:
 </para><variablelist role="struct">
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>dir_list</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>dir_list</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>file_list</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>file_list</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>selection_entry</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>selection_entry</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>selection_text</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>selection_text</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>main_vbox</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>main_vbox</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>ok_button</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>ok_button</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>cancel_button</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>cancel_button</structfield>;</term>
 <listitem><simpara>the two main buttons that signals should be connected 
-    to in order to perform an action when the user hits either OK or 
+    to in order to perform an action when the user hits either OK or
     Cancel.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>help_button</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>help_button</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>history_pulldown</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>history_pulldown</structfield>;</term>
 <listitem><simpara>the <link linkend="GtkOptionMenu"><type>GtkOptionMenu</type></link> used to create the drop-down 
     directory history.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>history_menu</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>history_menu</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GList">GList</link>&nbsp;*<structfield>history_list</structfield>;</term>
+<term><link linkend="GList">GList</link>&#160;*<structfield>history_list</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>fileop_dialog</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>fileop_dialog</structfield>;</term>
 <listitem><simpara>the dialog box used to display the <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>. 
-   It can be customized by adding/removing widgets from it using the 
+   It can be customized by adding/removing widgets from it using the
    standard <link linkend="GtkDialog"><type>GtkDialog</type></link> functions.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>fileop_entry</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>fileop_entry</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gchar">gchar</link>&nbsp;*<structfield>fileop_file</structfield>;</term>
+<term><link linkend="gchar">gchar</link>&#160;*<structfield>fileop_file</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="gpointer">gpointer</link>&nbsp;<structfield>cmpl_state</structfield>;</term>
+<term><link linkend="gpointer">gpointer</link>&#160;<structfield>cmpl_state</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>fileop_c_dir</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>fileop_c_dir</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>fileop_del_file</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>fileop_del_file</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>fileop_ren_file</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>fileop_ren_file</structfield>;</term>
 <listitem><simpara>the buttons that appear at the top of the file 
-    selection dialog. These "operation buttons" can be hidden and 
-    redisplayed with <link linkend="gtk-file-selection-hide-fileop-buttons"><function>gtk_file_selection_hide_fileop_buttons()</function></link> and  
+    selection dialog. These "operation buttons" can be hidden and
+    redisplayed with <link linkend="gtk-file-selection-hide-fileop-buttons"><function>gtk_file_selection_hide_fileop_buttons()</function></link> and
     <link linkend="gtk-file-selection-show-fileop-buttons"><function>gtk_file_selection_show_fileop_buttons()</function></link> respectively.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>button_area</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>button_area</structfield>;</term>
 <listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><link linkend="GtkWidget">GtkWidget</link>&nbsp;*<structfield>action_area</structfield>;</term>
+<term><link linkend="GtkWidget">GtkWidget</link>&#160;*<structfield>action_area</structfield>;</term>
 <listitem><simpara>
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-new" role="function" condition="deprecated:Use gtk_file_chooser_dialog_new() instead">
 <title>gtk_file_selection_new ()</title>
-<indexterm zone="gtk-file-selection-new" role="deprecated"><primary>gtk_file_selection_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_file_selection_new              (const <link linkend="gchar">gchar</link> *title);</programlisting>
+<indexterm zone="gtk-file-selection-new" role="deprecated"><primary sortas="gtk_file_selection_new">gtk_file_selection_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_file_selection_new              (const <link linkend="gchar">gchar</link> *title);</programlisting>
 <warning><para><literal>gtk_file_selection_new</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-file-chooser-dialog-new"><function>gtk_file_chooser_dialog_new()</function></link> instead</para></warning>
 <para>
 Creates a new file selection dialog box. By default it will contain a <link linkend="GtkTreeView"><type>GtkTreeView</type></link> of the application's current working directory, and a file listing. Operation buttons that allow the user to create a directory, delete files and rename files, are also present.
 </para><variablelist role="params">
-<varlistentry><term><parameter>title</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
 <listitem><simpara>a message that will be placed in the file requestor's titlebar.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>the new file selection.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the new file selection.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-set-filename" role="function" condition="deprecated:">
 <title>gtk_file_selection_set_filename ()</title>
-<indexterm zone="gtk-file-selection-set-filename" role="deprecated"><primary>gtk_file_selection_set_filename</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_set_filename     (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel,
+<indexterm zone="gtk-file-selection-set-filename" role="deprecated"><primary sortas="gtk_file_selection_set_filename">gtk_file_selection_set_filename</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_set_filename     (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel,
                                                          const <link linkend="gchar">gchar</link> *filename);</programlisting>
 <warning><para><literal>gtk_file_selection_set_filename</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
@@ -337,16 +319,16 @@ The encoding of <parameter>filename</parameter> is preferred GLib file name enco
 may not be UTF-8. See <link linkend="g-filename-from-utf8"><function>g_filename_from_utf8()</function></link>.</para>
 <para>
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>filename</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
 <listitem><simpara>  a string to set as the default file name.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-get-filename" role="function" condition="deprecated:">
 <title>gtk_file_selection_get_filename ()</title>
-<indexterm zone="gtk-file-selection-get-filename" role="deprecated"><primary>gtk_file_selection_get_filename</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_file_selection_get_filename     (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel);</programlisting>
+<indexterm zone="gtk-file-selection-get-filename" role="deprecated"><primary sortas="gtk_file_selection_get_filename">gtk_file_selection_get_filename</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_file_selection_get_filename     (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel);</programlisting>
 <warning><para><literal>gtk_file_selection_get_filename</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 This function returns the selected filename in the GLib file name
@@ -358,15 +340,15 @@ be copied if you plan to keep it around.
 If no file is selected then the selected directory path is returned.</para>
 <para>
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> currently-selected filename in the on-disk encoding.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> currently-selected filename in the on-disk encoding.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-complete" role="function" condition="deprecated:">
 <title>gtk_file_selection_complete ()</title>
-<indexterm zone="gtk-file-selection-complete" role="deprecated"><primary>gtk_file_selection_complete</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_complete         (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel,
+<indexterm zone="gtk-file-selection-complete" role="deprecated"><primary sortas="gtk_file_selection_complete">gtk_file_selection_complete</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_complete         (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel,
                                                          const <link linkend="gchar">gchar</link> *pattern);</programlisting>
 <warning><para><literal>gtk_file_selection_complete</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
@@ -375,46 +357,40 @@ If a partial match can be made, the "Files" list will contain those
 file names which have been partially matched, and the "Folders"
 list those directories which have been partially matched.
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>pattern</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>pattern</parameter>&#160;:</term>
 <listitem><simpara>a string of characters which may or may not match any filenames in the current directory.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-show-fileop-buttons" role="function" condition="deprecated:">
 <title>gtk_file_selection_show_fileop_buttons ()</title>
-<indexterm zone="gtk-file-selection-show-fileop-buttons" role="deprecated"><primary>gtk_file_selection_show_fileop_buttons</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_show_fileop_buttons
+<indexterm zone="gtk-file-selection-show-fileop-buttons" role="deprecated"><primary sortas="gtk_file_selection_show_fileop_buttons">gtk_file_selection_show_fileop_buttons</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_show_fileop_buttons
                                                         (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel);</programlisting>
 <warning><para><literal>gtk_file_selection_show_fileop_buttons</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Shows the file operation buttons, if they have previously been hidden. The rest of the widgets in the dialog will be resized accordingly.
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-hide-fileop-buttons" role="function" condition="deprecated:">
 <title>gtk_file_selection_hide_fileop_buttons ()</title>
-<indexterm zone="gtk-file-selection-hide-fileop-buttons" role="deprecated"><primary>gtk_file_selection_hide_fileop_buttons</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_hide_fileop_buttons
+<indexterm zone="gtk-file-selection-hide-fileop-buttons" role="deprecated"><primary sortas="gtk_file_selection_hide_fileop_buttons">gtk_file_selection_hide_fileop_buttons</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_hide_fileop_buttons
                                                         (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel);</programlisting>
 <warning><para><literal>gtk_file_selection_hide_fileop_buttons</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Hides the file operation buttons that normally appear at the top of the dialog. Useful if you wish to create a custom file selector, based on <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>.
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-get-selections" role="function" condition="deprecated:">
 <title>gtk_file_selection_get_selections ()</title>
-<indexterm zone="gtk-file-selection-get-selections" role="deprecated"><primary>gtk_file_selection_get_selections</primary></indexterm><programlisting><link linkend="gchar">gchar</link>**             gtk_file_selection_get_selections   (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel);</programlisting>
+<indexterm zone="gtk-file-selection-get-selections" role="deprecated"><primary sortas="gtk_file_selection_get_selections">gtk_file_selection_get_selections</primary></indexterm><programlisting><link linkend="gchar">gchar</link>**             gtk_file_selection_get_selections   (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel);</programlisting>
 <warning><para><literal>gtk_file_selection_get_selections</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Retrieves the list of file selections the user has made in the dialog box.
@@ -425,18 +401,17 @@ in the file list.
 The filenames are in the GLib file name encoding. To convert to
 UTF-8, call <link linkend="g-filename-to-utf8"><function>g_filename_to_utf8()</function></link> on each string.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly-allocated <link linkend="NULL:CAPS"><literal>NULL</literal></link>-terminated array of strings. Use
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a newly-allocated <link linkend="NULL--CAPS"><literal>NULL</literal></link>-terminated array of strings. Use
 <link linkend="g-strfreev"><function>g_strfreev()</function></link> to free it.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-set-select-multiple" role="function" condition="deprecated:">
 <title>gtk_file_selection_set_select_multiple ()</title>
-<indexterm zone="gtk-file-selection-set-select-multiple" role="deprecated"><primary>gtk_file_selection_set_select_multiple</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_set_select_multiple
+<indexterm zone="gtk-file-selection-set-select-multiple" role="deprecated"><primary sortas="gtk_file_selection_set_select_multiple">gtk_file_selection_set_select_multiple</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_selection_set_select_multiple
                                                         (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel,
                                                          <link linkend="gboolean">gboolean</link> select_multiple);</programlisting>
 <warning><para><literal>gtk_file_selection_set_select_multiple</literal> is deprecated and should not be used in newly-written code.</para></warning>
@@ -444,31 +419,29 @@ UTF-8, call <link linkend="g-filename-to-utf8"><function>g_filename_to_utf8()</f
 Sets whether the user is allowed to select multiple files in the file list.
 Use <link linkend="gtk-file-selection-get-selections"><function>gtk_file_selection_get_selections()</function></link> to get the list of selected files.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>select_multiple</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>select_multiple</parameter>&#160;:</term>
 <listitem><simpara> whether or not the user is allowed to select multiple
 files in the file list.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-file-selection-get-select-multiple" role="function" condition="deprecated:">
 <title>gtk_file_selection_get_select_multiple ()</title>
-<indexterm zone="gtk-file-selection-get-select-multiple" role="deprecated"><primary>gtk_file_selection_get_select_multiple</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_file_selection_get_select_multiple
+<indexterm zone="gtk-file-selection-get-select-multiple" role="deprecated"><primary sortas="gtk_file_selection_get_select_multiple">gtk_file_selection_get_select_multiple</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_file_selection_get_select_multiple
                                                         (<link linkend="GtkFileSelection">GtkFileSelection</link> *filesel);</programlisting>
 <warning><para><literal>gtk_file_selection_get_select_multiple</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Determines whether or not the user is allowed to select multiple files in
 the file list. See <link linkend="gtk-file-selection-set-select-multiple"><function>gtk_file_selection_set_select_multiple()</function></link>.</para>
 <para>
-
 </para><variablelist role="params">
-<varlistentry><term><parameter>filesel</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>filesel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFileSelection"><type>GtkFileSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="TRUE:CAPS"><literal>TRUE</literal></link> if the user is allowed to select multiple files in the
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the user is allowed to select multiple files in the
 file list
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
@@ -476,26 +449,24 @@ file list
 </refsect1>
 <refsect1 id="GtkFileSelection.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2 id="GtkFileSelection--filename"><title>The <literal>&quot;filename&quot;</literal> property</title>
-<indexterm zone="GtkFileSelection--filename"><primary>GtkFileSelection:filename</primary></indexterm><programlisting>  &quot;filename&quot;                 <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<refsect2 id="GtkFileSelection--filename" role="property"><title>The <literal>&quot;filename&quot;</literal> property</title>
+<indexterm zone="GtkFileSelection--filename"><primary sortas="GtkFileSelection:filename">GtkFileSelection:filename</primary></indexterm><programlisting>  &quot;filename&quot;                 <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>The currently selected filename.</para><para>Default value: NULL</para>
 </refsect2>
-<refsect2 id="GtkFileSelection--select-multiple"><title>The <literal>&quot;select-multiple&quot;</literal> property</title>
-<indexterm zone="GtkFileSelection--select-multiple"><primary>GtkFileSelection:select-multiple</primary></indexterm><programlisting>  &quot;select-multiple&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkFileSelection--select-multiple" role="property"><title>The <literal>&quot;select-multiple&quot;</literal> property</title>
+<indexterm zone="GtkFileSelection--select-multiple"><primary sortas="GtkFileSelection:select-multiple">GtkFileSelection:select-multiple</primary></indexterm><programlisting>  &quot;select-multiple&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether to allow multiple files to be selected.</para><para>Default value: FALSE</para>
 </refsect2>
-<refsect2 id="GtkFileSelection--show-fileops"><title>The <literal>&quot;show-fileops&quot;</literal> property</title>
-<indexterm zone="GtkFileSelection--show-fileops"><primary>GtkFileSelection:show-fileops</primary></indexterm><programlisting>  &quot;show-fileops&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkFileSelection--show-fileops" role="property"><title>The <literal>&quot;show-fileops&quot;</literal> property</title>
+<indexterm zone="GtkFileSelection--show-fileops"><primary sortas="GtkFileSelection:show-fileops">GtkFileSelection:show-fileops</primary></indexterm><programlisting>  &quot;show-fileops&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether buttons for creating/manipulating files should be displayed.</para><para>Default value: TRUE</para>
 </refsect2>
-
 </refsect1>
 
 
 
 <refsect1 id="GtkFileSelection.see-also">
 <title>See Also</title>
-
 <para>
 <variablelist>
 <varlistentry>

@@ -8,7 +8,7 @@
 <link rel="up" href="NumericEntry.html" title="Numeric/Text Data Entry">
 <link rel="prev" href="GtkSpinButton.html" title="GtkSpinButton">
 <link rel="next" href="TextWidgetObjects.html" title="Multiline Text Editor">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,15 +69,17 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="TextWidgetObjects.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkEditable.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkEditable.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkEditable.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkEditable.implementations" class="shortcut">Known Implementations</a>
-                   | 
-                  <a href="#GtkEditable.signals" class="shortcut">Signals</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkEditable.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkEditable.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkEditable.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkEditable.implementations" class="shortcut">Known Implementations</a>
+                 | 
+                <a href="#GtkEditable.signals" class="shortcut">Signals</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkEditable"></a><div class="titlepage"></div>
@@ -182,22 +184,20 @@ GtkEditable is implemented by
 <a name="GtkEditable.description"></a><h2>Description</h2>
 <p>
 The <a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> interface is an interface which should be implemented by
-text editing widgets, such as <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a> and <a class="link" href="GtkText.html" title="GtkText"><span class="type">GtkText</span></a>. It contains functions 
-for generically manipulating an editable widget, a large number of action 
-signals used for key bindings, and several signals that an application can 
-connect to to modify the behavior of a widget. 
+text editing widgets, such as <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a> and <a class="link" href="GtkText.html" title="GtkText"><span class="type">GtkText</span></a>. It contains functions
+for generically manipulating an editable widget, a large number of action
+signals used for key bindings, and several signals that an application can
+connect to to modify the behavior of a widget.
 </p>
 <p>
 As an example of the latter usage, by connecting
 the following handler to "insert_text", an application
 can convert all entry into a widget into uppercase.
-
 </p>
 <div class="example">
-<a name="id2684986"></a><p class="title"><b>Example 16. Forcing entry to uppercase.</b></p>
+<a name="id3096538"></a><p class="title"><b>Example 16. Forcing entry to uppercase.</b></p>
 <div class="example-contents"><pre class="programlisting">
 #include &lt;ctype.h&gt;
-
 void
 insert_text_handler (GtkEditable *editable,
                      const gchar *text,
@@ -207,15 +207,12 @@ insert_text_handler (GtkEditable *editable,
 {
   int i;
   gchar *result = g_utf8_strup (text, length);
-
   g_signal_handlers_block_by_func (editable,
 				   (gpointer) insert_text_handler, data);
   gtk_editable_insert_text (editable, result, length, position);
   g_signal_handlers_unblock_by_func (editable,
                                      (gpointer) insert_text_handler, data);
-
-  g_signal_stop_emission_by_name (editable, "insert_text"); 
-
+  g_signal_stop_emission_by_name (editable, "insert_text");
   g_free (result);
 }
 </pre></div>
@@ -232,7 +229,6 @@ insert_text_handler (GtkEditable *editable,
 The <a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> structure contains the following fields.
 (These fields should be considered read-only. They should
 never be set by an application.)
-
 </p>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
@@ -245,7 +241,7 @@ never be set by an application.)
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 ><span class="type">guint</span></a> selection_start;</td>
-<td>the starting position of the selected characters 
+<td>the starting position of the selected characters
  in the widget.</td>
 </tr>
 <tr>
@@ -253,7 +249,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 ><span class="type">guint</span></a> selection_end;</td>
-<td>the end position of the selected characters 
+<td>the end position of the selected characters
  in the widget.</td>
 </tr>
 <tr>
@@ -286,7 +282,7 @@ in characters, not bytes.</p>
 <p>
 Selects a region of text. The characters that
 are selected are those characters at positions from
-<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If 
+<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If
 <em class="parameter"><code>end_pos</code></em> is negative, then the the characters selected
 will be those characters from <em class="parameter"><code>start_pos</code></em> to the end
 of the text.
@@ -327,9 +323,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <p>
 Retrieves the selection bound of the editable. <em class="parameter"><code>start_pos</code></em> will be filled
 with the start of the selection and <em class="parameter"><code>end_pos</code></em> with end. If no text was selected
-both will be identical and <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
-><code class="literal">FALSE</code></a> will be returned. Note that positions are
+both will be identical and <code class="literal">FALSE</code> will be returned. Note that positions are
 specified in characters, not bytes.</p>
 <p>
 Gets the current selection bounds, if there is a selection.
@@ -344,25 +338,17 @@ Gets the current selection bounds, if there is a selection.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>start</code></em> :</span></p></td>
-<td>location to store the starting position, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>.
+<td>location to store the starting position, or <code class="literal">NULL</code>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>end</code></em> :</span></p></td>
-<td>location to store the end position, or <a
-href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"
-><code class="literal">NULL</code></a>.
+<td>location to store the end position, or <code class="literal">NULL</code>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if an area is selected, <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"
-><code class="literal">FALSE</code></a> otherwise
+<td> <code class="literal">TRUE</code> if an area is selected, <code class="literal">FALSE</code> otherwise
 
 </td>
 </tr>
@@ -430,7 +416,7 @@ Note that positions are specified in characters, not bytes.</p>
 <p>
 Deletes a sequence of characters. The characters that
 are deleted are those characters at positions from
-<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If 
+<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If
 <em class="parameter"><code>end_pos</code></em> is negative, then the the characters deleted
 will be those characters from <em class="parameter"><code>start_pos</code></em> to the end
 of the text.
@@ -474,7 +460,7 @@ Note that positions are specified in characters, not bytes.</p>
 <p>
 Retrieves a sequence of characters. The characters that
 are retrieved are those characters at positions from
-<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If 
+<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If
 <em class="parameter"><code>end_pos</code></em> is negative, then the the characters retrieved
 will be those characters from <em class="parameter"><code>start_pos</code></em> to the end
 of the text.
@@ -674,9 +660,7 @@ widget or not.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>is_editable</code></em> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if the user is allowed to edit the text
+<td> <code class="literal">TRUE</code> if the user is allowed to edit the text
   in the widget
 </td>
 </tr>
@@ -693,7 +677,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 Retrieves whether <em class="parameter"><code>editable</code></em> is editable. See
 <a class="link" href="GtkEditable.html#gtk-editable-set-editable" title="gtk_editable_set_editable ()"><code class="function">gtk_editable_set_editable()</code></a>.</p>
 <p>
-
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -705,9 +688,7 @@ Retrieves whether <em class="parameter"><code>editable</code></em> is editable. 
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a
-href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"
-><code class="literal">TRUE</code></a> if <em class="parameter"><code>editable</code></em> is editable.
+<td> <code class="literal">TRUE</code> if <em class="parameter"><code>editable</code></em> is editable.
 </td>
 </tr>
 </tbody>
@@ -732,7 +713,6 @@ of the widget.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>editable</code></em> :</span></p></td>
 <td>the object which received the signal.
-
 </td>
 </tr>
 <tr>
@@ -782,7 +762,6 @@ and <em class="parameter"><code>end_pos</code></em> parameters are interpreted a
 <tr>
 <td><p><span class="term"><em class="parameter"><code>end_pos</code></em> :</span></p></td>
 <td>the end position.
-
 </td>
 </tr>
 <tr>
@@ -832,17 +811,16 @@ it from being inserted entirely.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>new_text_length</code></em> :</span></p></td>
-<td>the length of the new text, in bytes, 
+<td>the length of the new text, in bytes,
   or -1 if new_text is nul-terminated
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>position</code></em> :</span></p></td>
 <td>the position, in characters, at which to insert 
-           the new text. this is an in-out parameter. 
-           After the signal emission is finished, it should 
+           the new text. this is an in-out parameter.
+           After the signal emission is finished, it should
            point after the newly inserted text.
-
 </td>
 </tr>
 <tr>
@@ -856,6 +834,6 @@ it from being inserted entirely.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

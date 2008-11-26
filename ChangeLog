@@ -1,3 +1,177 @@
+2008-11-24  Matthias Clasen <mclasen@redhat.com>
+
+	* === Released 2.14.5 ===
+
+	* NEWS: Updates
+
+2008-11-23  Hans Breuer  <hans@breuer.org>
+
+	* config.h.win32.in : don't define USE_MMX for msvc
+	* gdk-pixbuf/makefile.msc gtk/makefile.msc.in : updated
+
+2008-11-21  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* gtk/gtkbuilder.c: (_gtk_builder_flags_from_string):
+	* gtk/gtkfilechooserdefault.c:
+	(file_list_drag_data_received_get_info_cb):
+	* gtk/gtkiconfactory.c: (icon_source_start_element):
+	* gtk/gtkprintbackend.c: (gtk_print_backend_module_load):
+	* gtk/gtkprintoperation.c: (run_pdf):
+	* gtk/gtkthemes.c: (gtk_theme_engine_load):
+	* gtk/tests/builder.c: (test_file):
+	* tests/testmerge.c: (dump_tree):
+	Missing format specifiers and some other small bits.
+	Bugzilla bug #554567.
+
+2008-11-14  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	Bug 552956 – Should check composite extension version
+
+	* gdk/x11/gdkdisplay-x11.c: Check that the version of the
+	composite extension is at least 0.4.
+	Patch by Owen Taylor
+
+2008-11-14  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	Bug 541391 – Unfocussable Treeview swallows focus
+
+	* gtk/gtktreeview.c (grab_focus_and_unset_draw_keyfocus),
+	(gtk_tree_view_focus): Honor GTK_WIDGET_CAN_FOCUS properly.
+	Patch by Christian Dywan.
+
+2008-11-05  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	* gdk/quartz/gdkevents-quartz.c:
+	(get_keyboard_modifiers_from_ns_event), (create_key_event): Revert
+	(at least for now) the alt/cmd switching since it breaks the
+	"alt-gr" functionality of alt which makes it impossible to input
+	lots of characters.
+
+2008-11-04  Tor Lillqvist  <tml@novell.com>
+
+	Bug 557212 - Problem with which window gains focus and is visible
+
+	* gdk/win32/gdkevents-win32.c (ensure_stacking_on_activate_app):
+	Only do the restacking for the active window of the
+	application. Seems to fix the problem.
+
+	(gdk_event_translate): Only call ensure_stacking_on_activate_app()
+	when the application is being activated, not deactivated.
+
+2008-11-01  Tor Lillqvist  <tml@novell.com>
+
+	Bug 558278 - Crash when calling a callback set by
+	gdk_add_client_message_filter()
+
+	* gdk/win32/gdkevents-win32.c (apply_event_filters): Rename from
+	apply_filters() so that it is clear that this function is for
+	GdkEventFilters only.
+
+	(print_event): Print more information for GDK_CLIENT_EVENT events.
+
+	(gdk_event_translate): When handling client filters, don't use
+	apply_event_filters(). Use similar code as in the X11 backend,
+	although not exactly, as the parameter list and return value
+	semantics of gdk_event_translate() is different.
+
+2008-10-31  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 558323 – glitches when popping up combos in treeviews
+
+	gtk/gtkcellrenderercombo.c (gtk_cell_renderer_combo_set_property):
+	Don't set the model property on the combo box, since that leads
+	to loops. Reported by Tristan Van Berkom
+
+2008-10-30  Christian Dywan  <christian@imendio.com>
+
+	Bug 557316 – GtkLinkButton should consider user-defined tooltip
+
+	* gtk/gtklinkbutton.c (gtk_link_button_query_tooltip_cb):
+	Only override the tooltip if not previously set
+
+2008-10-27  Richard Hult  <richard@imendio.com>
+
+	Merged from trunk:
+
+	Bug 557894 – Wrong return value for
+	gdk_pointer_grab_info_libgtk_only()
+
+	* gdk/quartz/gdkevents-quartz.c:
+	(gdk_pointer_grab_info_libgtk_only): Return TRUE when there is a
+	pointer grab. Patch by Owen Taylor.
+
+2008-10-23  Alexander Larsson  <alexl@redhat.com>
+
+	Merged from trunk:
+
+	Bug 528320 - Incorrect icons displayed for files with custom mimetype icons
+	
+        * gtk/gtkfilesystem.c:
+        (_gtk_file_info_render_icon):
+	Fall back on default file icon if there was no icon or it
+	was not found in the theme. This goes with the corresponding
+	change in glib to not add the fallback icon, but is useful
+	in other cases too.
+
+2008-10-22  Matthias Clasen  <mclasen@redhat.com>
+
+	Merged from trunk:
+
+	* gdk/x11/gdkscreen-x11.c: Only emit size-changed if the screen
+	size actually changed.
+
+2008-10-21  Tor Lillqvist  <tml@novell.com>
+
+	Bug 557266 - Window Management Problem
+
+	Also reported in mail to gtk-list, and of course it has been well
+	known in general that window state management is messy and buggy
+	in various ways in gdk/win32.
+
+	* gdk/win32/gdkwindow-win32.c (show_window_internal): Correct
+	handling of GDK_WINDOW_STATE_ABOVE windows. It doesn't work to set
+	the WS_EX_TOPMOST extended style bit using SetWindowLong(). We
+	must call SetWindowPos() on the window using HWND_TOPMOST
+	instead. The description for WS_EX_TOPMOST in the documentation
+	for CreateWindowEx() even implies that if you read it carefully.
+
+2008-10-20  Christian Persch  <chpe@gnome.org>
+
+	Bug 557059 – crash when compositing emblems with icon
+
+	* gtk/gtkicontheme.c: (apply_emblems): Copy the pixbuf before using it
+	with gtk_pixbuf_composite, in case its pixdata is read-only (mmaped
+	from icon cache or builtins).
+
+2008-10-18  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/win32/gdkevents-win32.c (gdk_event_translate): On
+	WM_WINDOWPOSCHANGING, don't dereference windowpos in the debugging
+	output without setting it first.
+
+2008-10-18  Tor Lillqvist  <tml@novell.com>
+
+	Bug 556578 - GIMP windows stay on top of other windows
+
+	* gdk/win32/gdkevents-win32.c (ensure_stacking_on_unminimize)
+	(ensure_stacking_on_window_pos_changing)
+	(ensure_stacking_on_activate_app): Ignore unmapped windows in the
+	loops where we look for the lowest "transient-type" window.
+
+	(gdk_event_translate): Don't call
+	ensure_stacking_on_window_pos_changing() or
+	ensure_stacking_on_activate_app() for unmapped windows.
+
+2008-10-17  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2008-10-16  Matthias Clasen  <mclasen@redhat.com>
 
 	* === Released 2.14.4 ====

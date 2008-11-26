@@ -8,7 +8,7 @@
 <link rel="up" href="MiscObjects.html" title="Miscellaneous">
 <link rel="prev" href="GtkCalendar.html" title="GtkCalendar">
 <link rel="next" href="GtkEventBox.html" title="GtkEventBox">
-<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -69,13 +69,15 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkEventBox.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
-<tr><td colspan="5" class="shortcuts"><nobr><a href="#GtkDrawingArea.synopsis" class="shortcut">Top</a>
-                   | 
-                  <a href="#GtkDrawingArea.description" class="shortcut">Description</a>
-                   | 
-                  <a href="#GtkDrawingArea.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#GtkDrawingArea.implemented-interfaces" class="shortcut">Implemented Interfaces</a></nobr></td></tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#GtkDrawingArea.synopsis" class="shortcut">Top</a>
+                 | 
+                <a href="#GtkDrawingArea.description" class="shortcut">Description</a>
+                 | 
+                <a href="#GtkDrawingArea.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                 | 
+                <a href="#GtkDrawingArea.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+</td></tr>
 </table>
 <div class="refentry" lang="en">
 <a name="GtkDrawingArea"></a><div class="titlepage"></div>
@@ -127,17 +129,15 @@ GtkDrawingArea implements
 <div class="refsect1" lang="en">
 <a name="GtkDrawingArea.description"></a><h2>Description</h2>
 <p>
-
 The <a class="link" href="GtkDrawingArea.html" title="GtkDrawingArea"><span class="type">GtkDrawingArea</span></a> widget is used for creating custom user interface
 elements. It's essentially a blank widget; you can draw on
 <code class="literal">widget-&gt;window</code>. After creating a drawing area,
 the application may want to connect to:
-
 </p>
 <div class="itemizedlist"><ul type="disc">
 <li><p>
     Mouse and button press signals to respond to input from
-    the user. (Use <a class="link" href="GtkWidget.html#gtk-widget-add-events" title="gtk_widget_add_events ()"><code class="function">gtk_widget_add_events()</code></a> to enable events 
+    the user. (Use <a class="link" href="GtkWidget.html#gtk-widget-add-events" title="gtk_widget_add_events ()"><code class="function">gtk_widget_add_events()</code></a> to enable events
     you wish to receive.)
     </p></li>
 <li><p>
@@ -158,14 +158,14 @@ the application may want to connect to:
 </p>
 <p>
 The following code portion demonstrates using a drawing
-area to display a circle in the normal widget foreground 
+area to display a circle in the normal widget foreground
 color.
 Note that GDK automatically clears the exposed area
-to the background color before sending the expose event, and 
+to the background color before sending the expose event, and
 that drawing is implicitly clipped to the exposed area.
 </p>
 <div class="example">
-<a name="id3275332"></a><p class="title"><b>Example 45. Simple <span class="structname">GtkDrawingArea</span> usage.</b></p>
+<a name="id3658752"></a><p class="title"><b>Example 45. Simple <span class="structname">GtkDrawingArea</span> usage.</b></p>
 <div class="example-contents"><pre class="programlisting">
 gboolean
 expose_event_callback (GtkWidget *widget, GdkEventExpose *event, gpointer data)
@@ -175,13 +175,12 @@ expose_event_callback (GtkWidget *widget, GdkEventExpose *event, gpointer data)
                 TRUE,
                 0, 0, widget-&gt;allocation.width, widget-&gt;allocation.height,
                 0, 64 * 360);
- 
   return TRUE;
 }
 [...]
   GtkWidget *drawing_area = gtk_drawing_area_new ();
   gtk_widget_set_size_request (drawing_area, 100, 100);
-  g_signal_connect (G_OBJECT (drawing_area), "expose_event",  
+  g_signal_connect (G_OBJECT (drawing_area), "expose_event",
                     G_CALLBACK (expose_event_callback), NULL);
 </pre></div>
 </div>
@@ -208,9 +207,9 @@ href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 <p>
 To receive mouse events on a drawing area, you will need to enable
 them with <a class="link" href="GtkWidget.html#gtk-widget-add-events" title="gtk_widget_add_events ()"><code class="function">gtk_widget_add_events()</code></a>. To receive keyboard events, you
-will need to set the <a class="link" href="GtkWidget.html#GTK-CAN-FOCUS:CAPS"><span class="type">GTK_CAN_FOCUS</span></a> flag on the drawing area, and
+will need to set the <a class="link" href="GtkWidget.html#GTK-CAN-FOCUS--CAPS"><span class="type">GTK_CAN_FOCUS</span></a> flag on the drawing area, and
 should probably draw some user-visible indication that the drawing
-area is focused. Use the <a class="link" href="GtkWidget.html#GTK-HAS-FOCUS:CAPS"><code class="function">GTK_HAS_FOCUS()</code></a> macro in your expose event
+area is focused. Use the <a class="link" href="GtkWidget.html#GTK-HAS-FOCUS--CAPS"><code class="function">GTK_HAS_FOCUS()</code></a> macro in your expose event
 handler to decide whether to draw the focus indicator. See
 <a class="link" href="GtkStyle.html#gtk-paint-focus" title="gtk_paint_focus ()"><code class="function">gtk_paint_focus()</code></a> for one way to draw focus.
 </p>
@@ -237,8 +236,6 @@ Creates a new drawing area.
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="GtkDrawingArea.html" title="GtkDrawingArea"><span class="type">GtkDrawingArea</span></a>
-
-
 </td>
 </tr></tbody>
 </table></div>
@@ -260,7 +257,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <p>
 (Use <a class="link" href="GtkWidget.html#gtk-widget-set-size-request" title="gtk_widget_set_size_request ()"><code class="function">gtk_widget_set_size_request()</code></a> instead.)
 Sets the size that the drawing area will request
-in response to a "size_request" signal. The 
+in response to a "size_request" signal. The
 drawing area may actually be allocated a size
 larger than this depending on how it is packed
 within the enclosing containers.
@@ -281,8 +278,6 @@ within the enclosing containers.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
 <td>the height to request.
-
-
 </td>
 </tr>
 </tbody>
@@ -292,19 +287,19 @@ within the enclosing containers.
 <div class="refsect1" lang="en">
 <a name="GtkDrawingArea.see-also"></a><h2>See Also</h2>
 <p>
-Sometimes <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> is a useful alternative to a drawing area. 
+Sometimes <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> is a useful alternative to a drawing area.
 You can put a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"
 ><span class="type">GdkPixmap</span></a> in the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> and draw to the <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"
-><span class="type">GdkPixmap</span></a>, 
-calling <a class="link" href="GtkWidget.html#gtk-widget-queue-draw" title="gtk_widget_queue_draw ()"><code class="function">gtk_widget_queue_draw()</code></a> on the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> when you want to 
+><span class="type">GdkPixmap</span></a>,
+calling <a class="link" href="GtkWidget.html#gtk-widget-queue-draw" title="gtk_widget_queue_draw ()"><code class="function">gtk_widget_queue_draw()</code></a> on the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> when you want to
 refresh to the screen.
 </p>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.10</div>
+          Generated by GTK-Doc V1.11</div>
 </body>
 </html>

@@ -14,7 +14,6 @@
 <refnamediv>
 <refname>Input</refname>
 <refpurpose>Callbacks on file descriptors</refpurpose>
-<!--[<xref linkend="desc" endterm="desc.title"/>]-->
 </refnamediv>
 
 <refsynopsisdiv id="gdk-Input.synopsis" role="synopsis">
@@ -65,7 +64,7 @@ facility.
 <title role="details.title">Details</title>
 <refsect2 id="gdk-input-add-full" role="function" condition="deprecated:Use g_io_add_watch_full() on a #GIOChannel">
 <title>gdk_input_add_full ()</title>
-<indexterm zone="gdk-input-add-full" role="deprecated"><primary>gdk_input_add_full</primary></indexterm><programlisting><link linkend="gint">gint</link>                gdk_input_add_full                  (<link linkend="gint">gint</link> source,
+<indexterm zone="gdk-input-add-full" role="deprecated"><primary sortas="gdk_input_add_full">gdk_input_add_full</primary></indexterm><programlisting><link linkend="gint">gint</link>                gdk_input_add_full                  (<link linkend="gint">gint</link> source,
                                                          <link linkend="GdkInputCondition">GdkInputCondition</link> condition,
                                                          <link linkend="GdkInputFunction">GdkInputFunction</link> function,
                                                          <link linkend="gpointer">gpointer</link> data,
@@ -75,30 +74,30 @@ facility.
 Establish a callback when a condition becomes true on
 a file descriptor.</para>
 <variablelist role="params">
-<varlistentry><term><parameter>source</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>source</parameter>&#160;:</term>
 <listitem><simpara> a file descriptor.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>condition</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>condition</parameter>&#160;:</term>
 <listitem><simpara> the condition.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>function</parameter>&#160;:</term>
 <listitem><simpara> the callback function.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
 <listitem><simpara> callback data passed to <parameter>function</parameter>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>destroy</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>destroy</parameter>&#160;:</term>
 <listitem><simpara> callback function to call with <parameter>data</parameter> when the input
 handler is removed.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a tag that can later be used as an argument to
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a tag that can later be used as an argument to
 <link linkend="gdk-input-remove"><function>gdk_input_remove()</function></link>.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkInputCondition" role="enum">
 <title>enum GdkInputCondition</title>
-<indexterm zone="GdkInputCondition"><primary>GdkInputCondition</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkInputCondition"><primary sortas="GdkInputCondition">GdkInputCondition</primary></indexterm><programlisting>typedef enum
 {
   GDK_INPUT_READ       = 1 &lt;&lt; 0,
   GDK_INPUT_WRITE      = 1 &lt;&lt; 1,
@@ -108,11 +107,11 @@ handler is removed.
 <para>
 A set of bit flags used to specify conditions for which
 an input callback will be triggered. The three members
-of this enumeration correspond to the <parameter>readfds</parameter>, 
-<parameter>writefds</parameter>, and <parameter>exceptfds</parameter> arguments to the 
+of this enumeration correspond to the <parameter>readfds</parameter>,
+<parameter>writefds</parameter>, and <parameter>exceptfds</parameter> arguments to the
 <function>select</function> system call.
 </para><variablelist role="enum">
-<varlistentry id="GDK-INPUT-READ:CAPS" role="constant">
+<varlistentry id="GDK-INPUT-READ--CAPS" role="constant">
 <term><literal>GDK_INPUT_READ</literal></term>
 <listitem><simpara>the file descriptor has become available for reading.
 (Or, as is standard in Unix, a socket or pipe was closed
@@ -120,57 +119,52 @@ at the other end; this is the case if a subsequent read
 on the file descriptor returns a count of zero.)
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-INPUT-WRITE:CAPS" role="constant">
+<varlistentry id="GDK-INPUT-WRITE--CAPS" role="constant">
 <term><literal>GDK_INPUT_WRITE</literal></term>
 <listitem><simpara>the file descriptor has become available for writing.
 </simpara></listitem>
 </varlistentry>
-<varlistentry id="GDK-INPUT-EXCEPTION:CAPS" role="constant">
+<varlistentry id="GDK-INPUT-EXCEPTION--CAPS" role="constant">
 <term><literal>GDK_INPUT_EXCEPTION</literal></term>
 <listitem><simpara>an exception was raised on the file descriptor.
-
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkInputFunction" role="function">
 <title>GdkInputFunction ()</title>
-<indexterm zone="GdkInputFunction"><primary>GdkInputFunction</primary></indexterm><programlisting><link linkend="void">void</link>                (*GdkInputFunction)                 (<link linkend="gpointer">gpointer</link> data,
+<indexterm zone="GdkInputFunction"><primary sortas="GdkInputFunction">GdkInputFunction</primary></indexterm><programlisting><link linkend="void">void</link>                (*GdkInputFunction)                 (<link linkend="gpointer">gpointer</link> data,
                                                          <link linkend="gint">gint</link> source,
                                                          <link linkend="GdkInputCondition">GdkInputCondition</link> condition);</programlisting>
 <para>
 A callback function that will be called when some condition
 occurs.
 </para><variablelist role="params">
-<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
 <listitem><simpara>the user data passed to <link linkend="gdk-input-add"><function>gdk_input_add()</function></link> or <link linkend="gdk-input-add-full"><function>gdk_input_add_full()</function></link>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>source</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>source</parameter>&#160;:</term>
 <listitem><simpara>the source where the condition occurred.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>condition</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>condition</parameter>&#160;:</term>
 <listitem><simpara>the triggering condition.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="GdkDestroyNotify" role="function" condition="deprecated:">
 <title>GdkDestroyNotify ()</title>
-<indexterm zone="GdkDestroyNotify" role="deprecated"><primary>GdkDestroyNotify</primary></indexterm><programlisting><link linkend="void">void</link>                (*GdkDestroyNotify)                 (<link linkend="gpointer">gpointer</link> data);</programlisting>
+<indexterm zone="GdkDestroyNotify" role="deprecated"><primary sortas="GdkDestroyNotify">GdkDestroyNotify</primary></indexterm><programlisting><link linkend="void">void</link>                (*GdkDestroyNotify)                 (<link linkend="gpointer">gpointer</link> data);</programlisting>
 <warning><para><literal>GdkDestroyNotify</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
-A callback function called when a piece of user data is 
+A callback function called when a piece of user data is
 no longer being stored by GDK. Will typically free the
 structure or object that <parameter>data</parameter> points to.
 </para><variablelist role="params">
-<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
 <listitem><simpara>the user data.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-input-add" role="function" condition="deprecated:Use g_io_add_watch() on a #GIOChannel">
 <title>gdk_input_add ()</title>
-<indexterm zone="gdk-input-add" role="deprecated"><primary>gdk_input_add</primary></indexterm><programlisting><link linkend="gint">gint</link>                gdk_input_add                       (<link linkend="gint">gint</link> source,
+<indexterm zone="gdk-input-add" role="deprecated"><primary sortas="gdk_input_add">gdk_input_add</primary></indexterm><programlisting><link linkend="gint">gint</link>                gdk_input_add                       (<link linkend="gint">gint</link> source,
                                                          <link linkend="GdkInputCondition">GdkInputCondition</link> condition,
                                                          <link linkend="GdkInputFunction">GdkInputFunction</link> function,
                                                          <link linkend="gpointer">gpointer</link> data);</programlisting>
@@ -179,35 +173,33 @@ structure or object that <parameter>data</parameter> points to.
 Establish a callback when a condition becomes true on
 a file descriptor.</para>
 <variablelist role="params">
-<varlistentry><term><parameter>source</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>source</parameter>&#160;:</term>
 <listitem><simpara> a file descriptor.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>condition</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>condition</parameter>&#160;:</term>
 <listitem><simpara> the condition.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>function</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>function</parameter>&#160;:</term>
 <listitem><simpara> the callback function.
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>data</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
 <listitem><simpara> callback data passed to <parameter>function</parameter>.
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a tag that can later be used as an argument to
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a tag that can later be used as an argument to
 <link linkend="gdk-input-remove"><function>gdk_input_remove()</function></link>.
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-input-remove" role="function" condition="deprecated:">
 <title>gdk_input_remove ()</title>
-<indexterm zone="gdk-input-remove" role="deprecated"><primary>gdk_input_remove</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_input_remove                    (<link linkend="gint">gint</link> tag);</programlisting>
+<indexterm zone="gdk-input-remove" role="deprecated"><primary sortas="gdk_input_remove">gdk_input_remove</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_input_remove                    (<link linkend="gint">gint</link> tag);</programlisting>
 <warning><para><literal>gdk_input_remove</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
-Remove a callback added with <link linkend="gdk-input-add"><function>gdk_input_add()</function></link> or 
+Remove a callback added with <link linkend="gdk-input-add"><function>gdk_input_add()</function></link> or
 <link linkend="gdk-input-add-full"><function>gdk_input_add_full()</function></link>.
 </para><variablelist role="params">
-<varlistentry><term><parameter>tag</parameter>&nbsp;:</term>
+<varlistentry><term><parameter>tag</parameter>&#160;:</term>
 <listitem><simpara>the tag returned when the callback was set up.
-
-
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
@@ -219,18 +211,15 @@ Remove a callback added with <link linkend="gdk-input-add"><function>gdk_input_a
 <title>See Also</title>
 <para>
 <variablelist>
-
 <varlistentry>
 <term><link linkend="glib-The-Main-Event-Loop">GLib Main Loop</link></term>
 <listitem><para>The main loop in which input callbacks run.</para></listitem>
 </varlistentry>
-
 <varlistentry>
 <term><link linkend="glib-IO-Channels">IO Channels</link></term>
 <listitem><para>A newer and more flexible way of doing IO
 callbacks.</para></listitem>
 </varlistentry>
-
 </variablelist>
 </para>
 </refsect1>
