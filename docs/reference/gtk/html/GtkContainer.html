@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -418,7 +420,7 @@ contain multiple &lt;property&gt; elements that specify
 child properties for the child.
 </p>
 <div class="example">
-<a name="id3709106"></a><p class="title"><b>Example 47. Child properties in UI definitions</b></p>
+<a name="id3727626"></a><p class="title"><b>Example 50. Child properties in UI definitions</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkVBox"&gt;
   &lt;child&gt;
@@ -430,7 +432,11 @@ child properties for the child.
 &lt;/object&gt;
 </pre></div>
 </div>
-<br class="example-break">
+<br class="example-break"><p>
+Since 2.16, child properties can also be marked as translatable using
+the same "translatable", "comments" and "context" attributes that are used
+for regular properties.
+</p>
 </div>
 </div>
 <div class="refsect1" lang="en">
@@ -605,7 +611,9 @@ See <a class="link" href="GtkContainer.html#gtk-container-add" title="gtk_contai
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
-<td> a <code class="literal">NULL</code>-terminated list of property names and values, starting
+<td> a <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>-terminated list of property names and values, starting
           with <em class="parameter"><code>first_prop_name</code></em>
 </td>
 </tr>
@@ -858,7 +866,9 @@ Returns the current focus child widget inside <em class="parameter"><code>contai
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> The child widget which has the focus
-         inside <em class="parameter"><code>container</code></em>, or <code class="literal">NULL</code> if none is set.
+         inside <em class="parameter"><code>container</code></em>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if none is set.
 
 </td>
 </tr>
@@ -872,7 +882,9 @@ Returns the current focus child widget inside <em class="parameter"><code>contai
 <pre class="programlisting">void                gtk_container_set_focus_child       (<a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a> *container,
                                                          <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child);</pre>
 <p>
-Sets, or unsets if <em class="parameter"><code>child</code></em> is <code class="literal">NULL</code>, the focused child of <em class="parameter"><code>container</code></em>.
+Sets, or unsets if <em class="parameter"><code>child</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, the focused child of <em class="parameter"><code>container</code></em>.
 </p>
 <p>
 This function emits the GtkContainer::set_focus_child signal of
@@ -890,7 +902,9 @@ default behaviour by overriding the class closure of this signal.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>child</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>, or <code class="literal">NULL</code>
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -915,7 +929,9 @@ Retrieves the vertical focus adjustment for the container. See
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the vertical focus adjustment, or <code class="literal">NULL</code> if
+<td> the vertical focus adjustment, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if
   none has been set.
 </td>
 </tr>
@@ -976,7 +992,9 @@ Retrieves the horizontal focus adjustment for the container. See
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the horizontal focus adjustment, or <code class="literal">NULL</code> if
+<td> the horizontal focus adjustment, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if
   none has been set.
 </td>
 </tr>
@@ -1043,7 +1061,9 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 Returns the type of the children supported by the container.
 </p>
 <p>
-Note that this may return <code class="literal">G_TYPE_NONE</code> to indicate that no more
+Note that this may return <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-NONE--CAPS"
+><code class="literal">G_TYPE_NONE</code></a> to indicate that no more
 children can be added, e.g. for a <a class="link" href="GtkPaned.html" title="GtkPaned"><span class="type">GtkPaned</span></a> which already has two 
 children.</p>
 <p>
@@ -1100,7 +1120,9 @@ Gets the values of one or more child properties for <em class="parameter"><code>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td> return location for the first property, followed 
-    optionally by more name/return location pairs, followed by <code class="literal">NULL</code>
+    optionally by more name/return location pairs, followed by <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1139,7 +1161,9 @@ Sets one or more child properties for <em class="parameter"><code>child</code></
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
-<td> a <code class="literal">NULL</code>-terminated list of property names and values, starting
+<td> a <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>-terminated list of property names and values, starting
           with <em class="parameter"><code>first_prop_name</code></em>
 </td>
 </tr>
@@ -1262,7 +1286,9 @@ Gets the values of one or more child properties for <em class="parameter"><code>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>var_args</code></em> :</span></p></td>
 <td> return location for the first property, followed 
-    optionally by more name/return location pairs, followed by <code class="literal">NULL</code>
+    optionally by more name/return location pairs, followed by <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1301,7 +1327,9 @@ Sets one or more child properties for <em class="parameter"><code>child</code></
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>var_args</code></em> :</span></p></td>
-<td> a <code class="literal">NULL</code>-terminated list of property names and values, starting
+<td> a <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>-terminated list of property names and values, starting
           with <em class="parameter"><code>first_prop_name</code></em>
 </td>
 </tr>
@@ -1471,8 +1499,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
 Retrieves the focus chain of the container, if one has been
 set explicitly. If no focus chain has been explicitly
 set, GTK+ computes the focus chain based on the positions
-of the children. In that case, GTK+ stores <code class="literal">NULL</code> in
-<em class="parameter"><code>focusable_widgets</code></em> and returns <code class="literal">FALSE</code>.</p>
+of the children. In that case, GTK+ stores <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> in
+<em class="parameter"><code>focusable_widgets</code></em> and returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1486,7 +1518,9 @@ of the children. In that case, GTK+ stores <code class="literal">NULL</code> in
 <tr>
 <td><p><span class="term"><em class="parameter"><code>focusable_widgets</code></em> :</span></p></td>
 <td> location to store the focus chain of the
-                    container, or <code class="literal">NULL</code>. You should free this list
+                    container, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>. You should free this list
                     using <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#g-list-free"
 ><code class="function">g_list_free()</code></a> when you are done with it, however
@@ -1496,7 +1530,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#g-list-free"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the focus chain of the container 
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the focus chain of the container 
 has been set explicitly.
 </td>
 </tr>
@@ -1587,7 +1623,9 @@ Finds a child property of a container class by name.</p>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the <a
 href="/usr/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
-><span class="type">GParamSpec</span></a> of the child property or <code class="literal">NULL</code> if <em class="parameter"><code>class</code></em> has no
+><span class="type">GParamSpec</span></a> of the child property or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if <em class="parameter"><code>class</code></em> has no
   child property with that name.
 </td>
 </tr>
@@ -1663,7 +1701,9 @@ Returns all child properties of a container class.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a newly allocated <code class="literal">NULL</code>-terminated array of <a
+<td> a newly allocated <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>-terminated array of <a
 href="/usr/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec"
 ><span class="type">GParamSpec</span></a>*. 
           The array must be freed with <a

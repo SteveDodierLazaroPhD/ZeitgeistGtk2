@@ -28,6 +28,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gobject/gvaluecollector.h>
 #include "gtkgc.h"
 #include "gtkmarshalers.h"
 #undef GTK_DISABLE_DEPRECATED
@@ -820,8 +821,10 @@ gtk_style_detach (GtkStyle *style)
  * @style: a #GtkStyle.
  * @returns: @style.
  *
+ * Increase the reference count of @style.
+ * 
  * Deprecated: 2.0: use g_object_ref() instead.
- **/
+ */
 GtkStyle*
 gtk_style_ref (GtkStyle *style)
 {
@@ -832,8 +835,10 @@ gtk_style_ref (GtkStyle *style)
  * gtk_style_unref:
  * @style: a #GtkStyle.
  *
+ * Decrease the reference count of @style.
+ * 
  * Deprecated: 2.0: use g_object_unref() instead.
- **/
+ */
 void
 gtk_style_unref (GtkStyle *style)
 {
@@ -850,6 +855,17 @@ gtk_style_realize (GtkStyle    *style,
   g_signal_emit (style, realize_signal, 0);
 }
 
+/**
+ * gtk_style_lookup_icon_set:
+ * @style: a #GtkStyle
+ * @stock_id: an icon name
+ *
+ * Looks up @stock_id in the icon factories associated with @style
+ * and the default icon factory, returning an icon set if found,
+ * otherwise %NULL.
+ *
+ * Return value: icon set of @stock_id
+ */
 GtkIconSet*
 gtk_style_lookup_icon_set (GtkStyle   *style,
                            const char *stock_id)
@@ -1429,6 +1445,21 @@ gtk_draw_focus (GtkStyle      *style,
   GTK_STYLE_GET_CLASS (style)->draw_focus (style, window, GTK_STATE_NORMAL, NULL, NULL, NULL, x, y, width, height);
 }
 
+/**
+ * gtk_draw_slider:
+ * @style: a #GtkStyle
+  @window: a #GdkWindow
+ * @state_type: a state
+ * @shadow_type: a shadow
+ * @x: the x origin of the rectangle in which to draw a slider
+ * @y: the y origin of the rectangle in which to draw a slider
+ * @width: the width of the rectangle in which to draw a slider
+ * @height: the height of the rectangle in which to draw a slider
+ * @orientation: the orientation to be used
+ *
+ * Draws a slider in the given rectangle on @window using the
+ * given style and orientation.
+ */
 void 
 gtk_draw_slider (GtkStyle      *style,
 		 GdkWindow     *window,
@@ -1508,6 +1539,19 @@ gtk_draw_expander (GtkStyle        *style,
                                               x, y, expander_style);
 }
 
+/**
+ * gtk_draw_layout:
+ * @style: a #GtkStyle
+ * @window: a #GdkWindow
+ * @state_type: a state
+ * @use_text: whether to use the text or foreground
+ *            graphics context of @style
+ * @x: x origin
+ * @y: y origin
+ * @layout: the layout to draw
+ * 
+ * Draws a layout on @window using the given parameters.
+ */
 void
 gtk_draw_layout (GtkStyle        *style,
                  GdkWindow       *window,
@@ -1694,6 +1738,147 @@ style_property_values_cmp (gconstpointer bsearch_node1,
     return val1->pspec < val2->pspec ? -1 : val1->pspec == val2->pspec ? 0 : 1;
   else
     return val1->widget_type < val2->widget_type ? -1 : 1;
+}
+
+/**
+ * gtk_style_get_property:
+ * @style: a #GtkStyle
+ * @widget_type: the #GType of a descendant of #GtkWidget
+ * @property_name: the name of the style property to get
+ * @value: a #GValue where the value of the property being
+ *     queried will be stored
+ *
+ * Queries the value of a style property corresponding to a
+ * widget class is in the given style.
+ *
+ * Since: 2.16
+ */
+void 
+gtk_style_get_property (GtkStyle     *style,
+                        GType        widget_type,
+                        const gchar *property_name,
+                        GValue      *value)
+{
+  GtkWidgetClass *klass;
+  GParamSpec *pspec;
+  GtkRcPropertyParser parser;
+  const GValue *peek_value;
+
+  klass = g_type_class_peek (widget_type);
+  pspec = gtk_widget_class_find_style_property (klass, property_name);
+
+  if (!pspec)
+    {
+      g_warning ("%s: widget class `%s' has no property named `%s'",
+                 G_STRLOC,
+                 g_type_name (widget_type),
+                 property_name);
+      return;
+    }
+
+  parser = g_param_spec_get_qdata (pspec,
+                                   g_quark_from_static_string ("gtk-rc-property-parser"));
+
+  peek_value = _gtk_style_peek_property_value (style, widget_type, pspec, parser);
+
+  if (G_VALUE_TYPE (value) == G_PARAM_SPEC_VALUE_TYPE (pspec))
+    g_value_copy (peek_value, value);
+  else if (g_value_type_transformable (G_PARAM_SPEC_VALUE_TYPE (pspec), G_VALUE_TYPE (value)))
+    g_value_transform (peek_value, value);
+  else
+    g_warning ("can't retrieve style property `%s' of type `%s' as value of type `%s'",
+               pspec->name,
+               g_type_name (G_PARAM_SPEC_VALUE_TYPE (pspec)),
+               G_VALUE_TYPE_NAME (value));
+}
+
+/**
+ * gtk_style_get_valist:
+ * @style: a #GtkStyle
+ * @widget_type: the #GType of a descendant of #GtkWidget
+ * @first_property_name: the name of the first style property to get
+ * @var_args: a <type>va_list</type> of pairs of property names and
+ *     locations to return the property values, starting with the
+ *     location for @first_property_name.
+ *
+ * Non-vararg variant of gtk_style_get().
+ * Used primarily by language bindings.
+ *
+ * Since: 2.16
+ */
+void 
+gtk_style_get_valist (GtkStyle    *style,
+                      GType        widget_type,
+                      const gchar *first_property_name,
+                      va_list      var_args)
+{
+  const char *property_name;
+  GtkWidgetClass *klass;
+
+  g_return_if_fail (GTK_IS_STYLE (style));
+
+  klass = g_type_class_ref (widget_type);
+
+  property_name = first_property_name;
+  while (property_name)
+    {
+      GParamSpec *pspec;
+      GtkRcPropertyParser parser;
+      const GValue *peek_value;
+      gchar *error;
+
+      pspec = gtk_widget_class_find_style_property (klass, property_name);
+
+      if (!pspec)
+        {
+          g_warning ("%s: widget class `%s' has no property named `%s'",
+                     G_STRLOC,
+                     g_type_name (widget_type),
+                     property_name);
+          break;
+        }
+
+      parser = g_param_spec_get_qdata (pspec,
+                                       g_quark_from_static_string ("gtk-rc-property-parser"));
+
+      peek_value = _gtk_style_peek_property_value (style, widget_type, pspec, parser);
+      G_VALUE_LCOPY (peek_value, var_args, 0, &error);
+      if (error)
+        {
+          g_warning ("%s: %s", G_STRLOC, error);
+          g_free (error);
+          break;
+        }
+
+      property_name = va_arg (var_args, gchar*);
+    }
+
+  g_type_class_unref (klass);
+}
+
+/**
+ * gtk_style_get:
+ * @style: a #GtkStyle
+ * @widget_type: the #GType of a descendant of #GtkWidget
+ * @first_property_name: the name of the first style property to get
+ * @Varargs: pairs of property names and locations to
+ *   return the property values, starting with the location for
+ *   @first_property_name, terminated by %NULL.
+ *
+ * Gets the values of a multiple style properties for @widget_type
+ * from @style.
+ */
+void
+gtk_style_get (GtkStyle    *style,
+               GType        widget_type,
+               const gchar *first_property_name,
+               ...)
+{
+  va_list var_args;
+
+  va_start (var_args, first_property_name);
+  gtk_style_get_valist (style, widget_type, first_property_name, var_args);
+  va_end (var_args);
 }
 
 const GValue*

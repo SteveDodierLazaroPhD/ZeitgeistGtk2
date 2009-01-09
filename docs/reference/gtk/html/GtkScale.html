@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -151,7 +153,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitial
 <a name="GtkScale.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkScale implements
- AtkImplementorIface and  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
+ AtkImplementorIface,  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a> and  <a class="link" href="gtk-Orientable.html#GtkOrientable">GtkOrientable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkScale.properties"></a><h2>Properties</h2>
@@ -204,35 +206,8 @@ call <a class="link" href="GtkHScale.html#gtk-hscale-new-with-range" title="gtk_
 <a name="GtkScale-struct"></a><h3>GtkScale</h3>
 <pre class="programlisting">typedef struct _GtkScale GtkScale;</pre>
 <p>
-The <a class="link" href="GtkScale.html#GtkScale-struct" title="GtkScale"><span class="type">GtkScale</span></a> struct contains the following fields.
-(These fields should be considered read-only. They should never be set by
-an application.)
-</p>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
-><span class="type">guint</span></a> <em class="structfield"><code>draw_value</code></em>;</td>
-<td>non-zero if the scale's current value is displayed next to the
-slider.</td>
-</tr>
-<tr>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
-><span class="type">guint</span></a> <em class="structfield"><code>value_pos</code></em>;</td>
-<td>the position in which the textual value is displayed, selected from
-<a class="link" href="gtk-Standard-Enumerations.html#GtkPositionType" title="enum GtkPositionType"><span class="type">GtkPositionType</span></a>.</td>
-</tr>
-</tbody>
-</table></div>
-<p>
+The fields of the <a class="link" href="GtkScale.html#GtkScale-struct" title="GtkScale"><span class="type">GtkScale</span></a> struct should only be accessed via
+the accessor functions.
 </p>
 </div>
 <hr>
@@ -243,22 +218,23 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> digits);</pre>
 <p>
-Sets the number of decimal places that are displayed in the value.  Also causes
-the value of the adjustment to be rounded off to this number of digits, so the
-retrieved value matches the value the user saw.
+Sets the number of decimal places that are displayed in the value.
+Also causes the value of the adjustment to be rounded off to this
+number of digits, so the retrieved value matches the value the user saw.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scale</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>.
+<td> a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>digits</code></em> :</span></p></td>
-<td>the number of decimal places to display, e.g. use 1 to display 1.0,
-2 to display 1.00 etc.
+<td> the number of decimal places to display, 
+    e.g. use 1 to display 1.0, 2 to display 1.00, etc
 </td>
 </tr>
 </tbody>
@@ -272,20 +248,23 @@ retrieved value matches the value the user saw.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> draw_value);</pre>
 <p>
-Specifies whether the current value is displayed as a string next to the
-slider.
+Specifies whether the current value is displayed as a string next 
+to the slider.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scale</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>.
+<td> a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>draw_value</code></em> :</span></p></td>
-<td>a boolean.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to draw the value
 </td>
 </tr>
 </tbody>
@@ -297,19 +276,20 @@ slider.
 <pre class="programlisting">void                gtk_scale_set_value_pos             (<a class="link" href="GtkScale.html" title="GtkScale">GtkScale</a> *scale,
                                                          <a class="link" href="gtk-Standard-Enumerations.html#GtkPositionType" title="enum GtkPositionType">GtkPositionType</a> pos);</pre>
 <p>
-Sets the position in which the current value is displayed.
+Sets the position in which the current value is displayed.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scale</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>.
+<td> a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
-<td>the position in which the current value is displayed.
+<td> the position in which the current value is displayed
 </td>
 </tr>
 </tbody>
@@ -322,19 +302,20 @@ Sets the position in which the current value is displayed.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_scale_get_digits                (<a class="link" href="GtkScale.html" title="GtkScale">GtkScale</a> *scale);</pre>
 <p>
-Gets the number of decimal places that are displayed in the value.
+Gets the number of decimal places that are displayed in the value.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scale</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>.
+<td> a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the number of decimal places that are displayed.
+<td> the number of decimal places that are displayed
 </td>
 </tr>
 </tbody>
@@ -347,20 +328,21 @@ Gets the number of decimal places that are displayed in the value.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_scale_get_draw_value            (<a class="link" href="GtkScale.html" title="GtkScale">GtkScale</a> *scale);</pre>
 <p>
-Returns whether the current value is displayed as a string next to the
-slider.
+Returns whether the current value is displayed as a string 
+next to the slider.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scale</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>.
+<td> a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>whether the current value is displayed as a string.
+<td> whether the current value is displayed as a string
 </td>
 </tr>
 </tbody>
@@ -371,19 +353,20 @@ slider.
 <a name="gtk-scale-get-value-pos"></a><h3>gtk_scale_get_value_pos ()</h3>
 <pre class="programlisting"><a class="link" href="gtk-Standard-Enumerations.html#GtkPositionType" title="enum GtkPositionType">GtkPositionType</a>     gtk_scale_get_value_pos             (<a class="link" href="GtkScale.html" title="GtkScale">GtkScale</a> *scale);</pre>
 <p>
-Gets the position in which the current value is displayed.
+Gets the position in which the current value is displayed.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scale</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>.
+<td> a <a class="link" href="GtkScale.html" title="GtkScale"><span class="type">GtkScale</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the position in which the current value is displayed.
+<td> the position in which the current value is displayed
 </td>
 </tr>
 </tbody>
@@ -415,8 +398,12 @@ not need to be freed by the caller.</p>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the <a
 href="/usr/share/gtk-doc/html/pango/pango-Layout-Objects.html#PangoLayout"
-><span class="type">PangoLayout</span></a> for this scale, or <code class="literal">NULL</code> 
-   if the <a class="link" href="GtkScale.html#GtkScale--draw-value" title='The "draw-value" property'><span class="type">"draw-value"</span></a> property is <code class="literal">FALSE</code>.
+><span class="type">PangoLayout</span></a> for this scale, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> 
+   if the <a class="link" href="GtkScale.html#GtkScale--draw-value" title='The "draw-value" property'><span class="type">"draw-value"</span></a> property is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.
   
 </td>
 </tr>
@@ -445,7 +432,9 @@ href="/usr/share/gtk-doc/html/pango/pango-Layout-Objects.html#PangoLayout"
 and from pixels using <code class="function">PANGO_PIXELS()</code> or <span class="type">PANGO_SCALE</span>. 
 </p>
 <p>
-If the <a class="link" href="GtkScale.html#GtkScale--draw-value" title='The "draw-value" property'><span class="type">"draw-value"</span></a> property is <code class="literal">FALSE</code>, the return 
+If the <a class="link" href="GtkScale.html#GtkScale--draw-value" title='The "draw-value" property'><span class="type">"draw-value"</span></a> property is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>, the return 
 values are undefined.</p>
 <p>
 </p>
@@ -459,12 +448,16 @@ values are undefined.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>x</code></em> :</span></p></td>
-<td> location to store X offset of layout, or <code class="literal">NULL</code>
+<td> location to store X offset of layout, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>y</code></em> :</span></p></td>
-<td> location to store Y offset of layout, or <code class="literal">NULL</code>
+<td> location to store Y offset of layout, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -531,14 +524,16 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*              user_function                      (<a class="link" href="GtkScale.html" title="GtkScale">GtkScale</a> *scale,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
->gdouble</a>   arg1,
+>gdouble</a>   value,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>  user_data)      : Run Last</pre>
 <p>
-Signal which allows you to change how the scale value is displayed.  Connect a
-signal handler which returns an allocated string representing <em class="parameter"><code>value</code></em>.
-That string will then be used to display the scale's value.
+Signal which allows you to change how the scale value is displayed.
+Connect a signal handler which returns an allocated string representing
+<em class="parameter"><code>value</code></em>. That string will then be used to display the scale's value.
+</p>
+<p>
 Here's an example signal handler which displays a value 1.0 as
 with "--&gt;1.0&lt;--".
 </p>
@@ -549,7 +544,7 @@ format_value_callback (GtkScale *scale,
 {
   return g_strdup_printf ("--&gt;%0.*g&lt;--",
                           gtk_scale_get_digits (scale), value);
-}
+ }
 </pre></div>
 <p>
 </p>
@@ -558,12 +553,12 @@ format_value_callback (GtkScale *scale,
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scale</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the object which received the signal
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> the value to format
 </td>
 </tr>
 <tr>
@@ -572,7 +567,7 @@ format_value_callback (GtkScale *scale,
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>allocated string representing <em class="parameter"><code>value</code></em>
+<td> allocated string representing <em class="parameter"><code>value</code></em>
 </td>
 </tr>
 </tbody>

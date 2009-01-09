@@ -35,9 +35,11 @@ noinst_PROGRAMS =  $(TEST_PROGS)	\
 	testcombo			\
 	testcombochange			\
 	testcellrenderertext		\
+	testclientmessage		\
 	testdnd				\
 	testellipsise			\
 	testentrycompletion 		\
+	testentryicons			\
 	testfilechooser			\
 	testfilechooserbutton		\
 	testframe			\
@@ -113,9 +115,11 @@ testcalendar_DEPENDENCIES = $(TEST_DEPS)
 testcombo_DEPENDENCIES = $(TEST_DEPS)
 testcombochange_DEPENDENCIES = $(TEST_DEPS)
 testcellrenderertext_DEPENDENCIES = $(TEST_DEPS)
+testclientmessage_DEPENDENCIES = $(TEST_DEPS)
 testdnd_DEPENDENCIES = $(TEST_DEPS)
 testellipsise_DEPENDENCIES = $(TEST_DEPS)
 testentrycompletion_DEPENDENCIES = $(TEST_DEPS)
+testentryicons_DEPENDENCIES = $(TEST_DEPS)
 testfilechooser_DEPENDENCIES = $(TEST_DEPS)
 testfilechooserbutton_DEPENDENCIES = $(TEST_DEPS)
 testgtk_DEPENDENCIES = $(TEST_DEPS)
@@ -166,9 +170,11 @@ testcalendar_LDADD = $(LDADDS)
 testcombo_LDADD = $(LDADDS)
 testcombochange_LDADD = $(LDADDS)
 testcellrenderertext_LDADD = $(LDADDS)
+testclientmessage_LDADD = $(LDADDS)
 testdnd_LDADD = $(LDADDS)
 testellipsise_LDADD = $(LDADDS)
 testentrycompletion_LDADD = $(LDADDS)
+testentryicons_LDADD = $(LDADDS)
 testfilechooser_LDADD = $(LDADDS)
 testfilechooserbutton_LDADD = $(LDADDS)
 testgtk_LDADD = $(LDADDS)
@@ -221,6 +227,10 @@ testvolumebutton_LDADD = $(LDADDS)
 testentrycompletion_SOURCES = 	\
 	prop-editor.c		\
 	testentrycompletion.c
+
+testentryicons_SOURCES =	\
+	prop-editor.c		\
+	testentryicons.c
 
 testfilechooser_SOURCES = 	\
 	prop-editor.c		\

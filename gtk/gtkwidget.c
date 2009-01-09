@@ -2071,8 +2071,8 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    * @keyboard_mode: %TRUE if the tooltip was trigged using the keyboard
    * @tooltip: a #GtkTooltip
    *
-   * Emitted when the #GtkSettings:gtk-tooltip-timeout has expired with 
-   * the cursor hovering "above" @widget; or emitted when @widget got 
+   * Emitted when #GtkWidget:has-tooltip is %TRUE and the #GtkSettings:gtk-tooltip-timeout 
+   * has expired with the cursor hovering "above" @widget; or emitted when @widget got 
    * focus in keyboard mode.
    *
    * Using the given coordinates, the signal handler should determine
@@ -2494,6 +2494,7 @@ gtk_widget_set_property (GObject         *object,
 
       tmp = (tooltip_window != NULL || tooltip_markup != NULL);
       gtk_widget_real_set_has_tooltip (widget, tmp, FALSE);
+      gtk_widget_trigger_tooltip_query (widget);
       break;
     case PROP_TOOLTIP_TEXT:
       tooltip_window = g_object_get_qdata (object, quark_tooltip_window);
@@ -2513,6 +2514,7 @@ gtk_widget_set_property (GObject         *object,
 
       tmp = (tooltip_window != NULL || tooltip_markup != NULL);
       gtk_widget_real_set_has_tooltip (widget, tmp, FALSE);
+      gtk_widget_trigger_tooltip_query (widget);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -2540,10 +2542,7 @@ gtk_widget_get_property (GObject         *object,
 	g_value_set_static_string (value, "");
       break;
     case PROP_PARENT:
-      if (widget->parent)
-	g_value_set_object (value, widget->parent);
-      else
-	g_value_set_object (value, NULL);
+      g_value_set_object (value, widget->parent);
       break;
     case PROP_WIDTH_REQUEST:
       {
@@ -4435,6 +4434,19 @@ _gtk_widget_get_accel_path (GtkWidget *widget,
   return apath ? g_quark_to_string (apath->path_quark) : NULL;
 }
 
+/**
+ * gtk_widget_mnemonic_activate:
+ * @widget: a #GtkWidget
+ * @group_cycling:  %TRUE if there are other widgets with the same mnemonic
+ *
+ * Emits the #GtkWidget::mnemonic-activate signal.
+ * 
+ * The default handler for this signal activates the @widget if
+ * @group_cycling is %FALSE, and just grabs the focus if @group_cycling
+ * is %TRUE.
+ *
+ * Returns: %TRUE if the signal has been handled
+ */
 gboolean
 gtk_widget_mnemonic_activate (GtkWidget *widget,
                               gboolean   group_cycling)
@@ -5094,7 +5106,7 @@ gtk_widget_real_grab_focus (GtkWidget *focus_widget)
        * be set by the next loop.
        */
       toplevel = gtk_widget_get_toplevel (focus_widget);
-      if (GTK_WIDGET_TOPLEVEL (toplevel))
+      if (GTK_WIDGET_TOPLEVEL (toplevel) && GTK_IS_WINDOW (toplevel))
 	{
 	  widget = GTK_WINDOW (toplevel)->focus_widget;
 	  
@@ -6242,8 +6254,7 @@ gtk_widget_propagate_screen_changed_recurse (GtkWidget *widget,
  *
  * Please note that the semantics of this call will change
  * in the future if used on a widget that has a composited
- * window in its heirarchy (as set by
- * gdk_window_set_composited()).
+ * window in its hierarchy (as set by gdk_window_set_composited()).
  * 
  * Return value: %TRUE if the widget can rely on its alpha
  * channel being drawn correctly.
@@ -6742,7 +6753,7 @@ gtk_widget_get_screen (GtkWidget *widget)
  * 
  * Checks whether there is a #GdkScreen is associated with
  * this widget. All toplevel widgets have an associated
- * screen, and all widgets added into a heirarchy with a toplevel
+ * screen, and all widgets added into a hierarchy with a toplevel
  * window at the top.
  * 
  * Return value: %TRUE if there is a #GdkScreen associcated
@@ -6788,7 +6799,7 @@ gtk_widget_get_display (GtkWidget *widget)
  * 
  * Get the root window where this widget is located. This function can
  * only be called after the widget has been added to a widget
- * heirarchy with #GtkWindow at the top.
+ * hierarchy with #GtkWindow at the top.
  *
  * The root window is useful for such purposes as creating a popup
  * #GdkWindow associated with the window. In general, you should only
@@ -6941,11 +6952,16 @@ gtk_widget_keynav_failed (GtkWidget        *widget,
 void
 gtk_widget_error_bell (GtkWidget *widget)
 {
+  GtkSettings* settings;
   gboolean beep;
 
   g_return_if_fail (GTK_IS_WIDGET (widget));
 
-  g_object_get (gtk_widget_get_settings (widget),
+  settings = gtk_widget_get_settings (widget);
+  if (!settings)
+    return;
+
+  g_object_get (settings,
                 "gtk-error-bell", &beep,
                 NULL);
 
@@ -8068,14 +8084,14 @@ _gtk_widget_peek_colormap (void)
   return NULL;
 }
 
-/**
+/*
  * _gtk_widget_set_pointer_window:
  * @widget: a #GtkWidget.
  * @pointer_window: the new pointer window.
  *
  * Sets pointer window for @widget.  Does not ref @pointer_window.
  * Actually stores it on the #GdkScreen, but you don't need to know that.
- **/
+ */
 void
 _gtk_widget_set_pointer_window (GtkWidget *widget,
                                 GdkWindow *pointer_window)
@@ -8091,13 +8107,13 @@ _gtk_widget_set_pointer_window (GtkWidget *widget,
     }
 }
 
-/**
+/*
  * _gtk_widget_get_pointer_window:
  * @widget: a #GtkWidget.
  *
  * Return value: the pointer window set on the #GdkScreen @widget is attached
  * to, or %NULL.
- **/
+ */
 GdkWindow *
 _gtk_widget_get_pointer_window (GtkWidget *widget)
 {
@@ -8144,12 +8160,11 @@ synth_crossing (GtkWidget      *widget,
   gdk_event_free (event);
 }
 
-/**
+/*
  * _gtk_widget_is_pointer_widget:
  * @widget: a #GtkWidget
  *
  * Returns %TRUE if the pointer window belongs to @widget.
- *
  */
 gboolean
 _gtk_widget_is_pointer_widget (GtkWidget *widget)
@@ -8171,7 +8186,7 @@ _gtk_widget_is_pointer_widget (GtkWidget *widget)
   return FALSE;
 }
 
-/**
+/*
  * _gtk_widget_synthesize_crossing:
  * @from: the #GtkWidget the virtual pointer is leaving.
  * @to: the #GtkWidget the virtual pointer is moving to.
@@ -8436,7 +8451,7 @@ gtk_widget_propagate_state (GtkWidget           *widget,
     }
 }
 
-/**
+/*
  * _gtk_widget_get_aux_info:
  * @widget: a #GtkWidget
  * @create: if %TRUE, create the structure if it doesn't exist
@@ -8445,7 +8460,7 @@ gtk_widget_propagate_state (GtkWidget           *widget,
  * 
  * Return value: the #GtkAuxInfo structure for the widget, or
  *    %NULL if @create is %FALSE and one doesn't already exist.
- **/
+ */
 GtkWidgetAuxInfo*
 _gtk_widget_get_aux_info (GtkWidget *widget,
 			  gboolean   create)

@@ -34,6 +34,7 @@ GtkWidget *do_pickers (GtkWidget *do_widget);
 GtkWidget *do_pixbufs (GtkWidget *do_widget);
 GtkWidget *do_printing (GtkWidget *do_widget);
 GtkWidget *do_rotated_text (GtkWidget *do_widget);
+GtkWidget *do_search_entry (GtkWidget *do_widget);
 GtkWidget *do_sizegroup (GtkWidget *do_widget);
 GtkWidget *do_stock_browser (GtkWidget *do_widget);
 GtkWidget *do_textview (GtkWidget *do_widget);
@@ -82,6 +83,7 @@ Demo testgtk_demos[] = {
   { "Pixbufs", "pixbufs.c", do_pixbufs, NULL }, 
   { "Printing", "printing.c", do_printing, NULL }, 
   { "Rotated Text", "rotated_text.c", do_rotated_text, NULL }, 
+  { "Search Entry", "search_entry.c", do_search_entry, NULL }, 
   { "Size Groups", "sizegroup.c", do_sizegroup, NULL }, 
   { "Stock Item and Icon Browser", "stock_browser.c", do_stock_browser, NULL }, 
   { "Text Widget", NULL, NULL, child1 }, 

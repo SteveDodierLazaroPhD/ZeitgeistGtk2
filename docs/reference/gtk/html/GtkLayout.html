@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -232,7 +234,9 @@ area.
                                                          <a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *vadjustment);</pre>
 <p>
 Creates a new <a class="link" href="GtkLayout.html" title="GtkLayout"><span class="type">GtkLayout</span></a>. Unless you have a specific adjustment
-you'd like the layout to use for scrolling, pass <code class="literal">NULL</code> for
+you'd like the layout to use for scrolling, pass <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for
 <em class="parameter"><code>hadjustment</code></em> and <em class="parameter"><code>vadjustment</code></em>.</p>
 <p>
 </p>
@@ -241,12 +245,16 @@ you'd like the layout to use for scrolling, pass <code class="literal">NULL</cod
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>hadjustment</code></em> :</span></p></td>
-<td> horizontal scroll adjustment, or <code class="literal">NULL</code>
+<td> horizontal scroll adjustment, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>vadjustment</code></em> :</span></p></td>
-<td> vertical scroll adjustment, or <code class="literal">NULL</code>
+<td> vertical scroll adjustment, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -401,12 +409,16 @@ the total extents of the layout's scrollbar area. See
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
-<td> location to store the width set on <em class="parameter"><code>layout</code></em>, or <code class="literal">NULL</code>
+<td> location to store the width set on <em class="parameter"><code>layout</code></em>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
-<td> location to store the height set on <em class="parameter"><code>layout</code></em>, or <code class="literal">NULL</code>
+<td> location to store the height set on <em class="parameter"><code>layout</code></em>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -659,30 +671,29 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <a name="GtkLayout.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
 <a name="GtkLayout-set-scroll-adjustments"></a><h3>The <code class="literal">"set-scroll-adjustments"</code> signal</h3>
-<pre class="programlisting">void                user_function                      (<a class="link" href="GtkLayout.html" title="GtkLayout">GtkLayout</a>     *layout,
-                                                        <a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *arg1,
+<pre class="programlisting">void                user_function                      (<a class="link" href="GtkLayout.html" title="GtkLayout">GtkLayout</a>     *horizontal,
+                                                        <a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *vertical,
                                                         <a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *arg2,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
->gpointer</a>       user_data)      : Run Last / Action</pre>
+>gpointer</a>       user_data)       : Run Last / Action</pre>
+<p>
+Set the scroll adjustments for the layout. Usually scrolled containers
+like <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a> will emit this signal to connect two instances
+of <a class="link" href="GtkScrollbar.html" title="GtkScrollbar"><span class="type">GtkScrollbar</span></a> to the scroll directions of the <a class="link" href="GtkLayout.html" title="GtkLayout"><span class="type">GtkLayout</span></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>layout</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td><p><span class="term"><em class="parameter"><code>horizontal</code></em> :</span></p></td>
+<td> the horizontal <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>arg2</code></em> :</span></p></td>
-<td>
+<td><p><span class="term"><em class="parameter"><code>vertical</code></em> :</span></p></td>
+<td> the vertical <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>
 </td>
 </tr>
 <tr>

@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -89,35 +91,16 @@ href="/usr/share/gtk-doc/html/libglade/GladeXML.html#glade-xml-new"
 ><code class="function">glade_xml_new()</code></a>, you 
     may want to split your glade file into multiple GtkBuilder files
     by using the <code class="option">--root</code> option of 
-    <span class="application">gtk-builder-convert</span>.
+    <span class="application">gtk-builder-convert</span>. Alternatively, you
+    can use <a class="link" href="GtkBuilder.html#gtk-builder-add-objects-from-file" title="gtk_builder_add_objects_from_file ()"><code class="function">gtk_builder_add_objects_from_file()</code></a> to construct only certain
+    objects from a GtkBuilder file.
   </p>
 <p>
     While GtkBuilder strives to be a complete replacement for
     libglade, there are a number of areas where it is currently
     still behind libglade:
     </p>
-<div class="itemizedlist"><ul type="disc">
-<li><p>
-        GtkBuilder can not construct partial trees, it lacks
-        the equivalent of the <em class="parameter"><code>root</code></em> parameter of <a
-href="/usr/share/gtk-doc/html/libglade/GladeXML.html#glade-xml-new"
-><code class="function">glade_xml_new()</code></a>.
-        Due to the way GtkBuilder parses its input, this is difficult 
-        to implement, see 
-        <a class="ulink" href="http://bugzilla.gnome.org/show_bug.cgi?id=447998" target="_top">bug 
-        447998</a>. As a workaround, you can split your glade file 
-        into multiple GtkBuilder input files using the <code class="option">--root</code>
-        that was mentioned above.
-      </p></li>
-<li><p>
-        GtkBuilder does not yet implement support for accessibility 
-        properties. It parses the same &lt;accessibility&gt; elements 
-        as libglade, but ignores them. See 
-        <a class="ulink" href="http://bugzilla.gnome.org/show_bug.cgi?id=454653" target="_top">bug 
-        454983</a> for the current status of accessibility support 
-        in GtkBuilder.
-      </p></li>
-<li><p>
+<div class="itemizedlist"><ul type="disc"><li><p>
         GtkBuilder supports context information in translatable
         properties in a slightly different way than libglade. 
         Intltool does not yet support this; see 
@@ -126,8 +109,7 @@ href="/usr/share/gtk-doc/html/libglade/GladeXML.html#glade-xml-new"
         GtkBuilder files. Thankfully, context in translations is a 
         rarely used feature, and if you are not using it, intltools 
         glade format support works just fine for GtkBuilder files.
-      </p></li>
-</ul></div>
+      </p></li></ul></div>
 <p>
   </p>
 <p>

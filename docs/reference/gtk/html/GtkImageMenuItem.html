@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -112,6 +114,15 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
                                                         (const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *label);
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="GtkImageMenuItem.html#gtk-image-menu-item-get-use-stock" title="gtk_image_menu_item_get_use_stock ()">gtk_image_menu_item_get_use_stock</a>   (<a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem">GtkImageMenuItem</a> *image_menu_item);
+void                <a class="link" href="GtkImageMenuItem.html#gtk-image-menu-item-set-use-stock" title="gtk_image_menu_item_set_use_stock ()">gtk_image_menu_item_set_use_stock</a>   (<a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem">GtkImageMenuItem</a> *image_menu_item,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> use_stock);
+void                <a class="link" href="GtkImageMenuItem.html#gtk-image-menu-item-set-accel-group" title="gtk_image_menu_item_set_accel_group ()">gtk_image_menu_item_set_accel_group</a> (<a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem">GtkImageMenuItem</a> *image_menu_item,
+                                                         <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup">GtkAccelGroup</a> *accel_group);
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -141,7 +152,11 @@ GtkImageMenuItem implements
 <div class="refsect1" lang="en">
 <a name="GtkImageMenuItem.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
+  "<a class="link" href="GtkImageMenuItem.html#GtkImageMenuItem--accel-group" title='The "accel-group" property'>accel-group</a>"              <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup">GtkAccelGroup</a>*        : Write
   "<a class="link" href="GtkImageMenuItem.html#GtkImageMenuItem--image" title='The "image" property'>image</a>"                    <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*            : Read / Write
+  "<a class="link" href="GtkImageMenuItem.html#GtkImageMenuItem--use-stock" title='The "use-stock" property'>use-stock</a>"                <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write / Construct
 </pre>
 </div>
 <div class="refsect1" lang="en">
@@ -245,7 +260,9 @@ and <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-APPLY--CAPS" title="GTK
 </p>
 <p>
 If you want this menu item to have changeable accelerators, then pass in
-<code class="literal">NULL</code> for accel_group. Next call <a class="link" href="GtkMenuItem.html#gtk-menu-item-set-accel-path" title="gtk_menu_item_set_accel_path ()"><code class="function">gtk_menu_item_set_accel_path()</code></a> with an
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for accel_group. Next call <a class="link" href="GtkMenuItem.html#gtk-menu-item-set-accel-path" title="gtk_menu_item_set_accel_path ()"><code class="function">gtk_menu_item_set_accel_path()</code></a> with an
 appropriate path for the menu item, use <a class="link" href="gtk-Stock-Items.html#gtk-stock-lookup" title="gtk_stock_lookup ()"><code class="function">gtk_stock_lookup()</code></a> to look up the
 standard accelerator for the stock item, and if one is found, call
 <a class="link" href="gtk-Accelerator-Maps.html#gtk-accel-map-add-entry" title="gtk_accel_map_add_entry ()"><code class="function">gtk_accel_map_add_entry()</code></a> to register it.</p>
@@ -262,7 +279,9 @@ standard accelerator for the stock item, and if one is found, call
 <tr>
 <td><p><span class="term"><em class="parameter"><code>accel_group</code></em> :</span></p></td>
 <td> the <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="type">GtkAccelGroup</span></a> to add the menu items accelerator to,
-  or <code class="literal">NULL</code>.
+  or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
@@ -329,13 +348,137 @@ in <em class="parameter"><code>label</code></em> indicate the mnemonic for the m
 </tbody>
 </table></div>
 </div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-image-menu-item-get-use-stock"></a><h3>gtk_image_menu_item_get_use_stock ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>            gtk_image_menu_item_get_use_stock   (<a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem">GtkImageMenuItem</a> *image_menu_item);</pre>
+<p>
+Checks whether the label set in the menuitem is used as a
+stock id to select the stock item for the item.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>image_menu_item</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem"><span class="type">GtkImageMenuItem</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the label set in the menuitem is used as a
+    stock id to select the stock item for the item
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-image-menu-item-set-use-stock"></a><h3>gtk_image_menu_item_set_use_stock ()</h3>
+<pre class="programlisting">void                gtk_image_menu_item_set_use_stock   (<a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem">GtkImageMenuItem</a> *image_menu_item,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a> use_stock);</pre>
+<p>
+If <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, the label set in the menuitem is used as a
+stock id to select the stock item for the item.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>image_menu_item</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem"><span class="type">GtkImageMenuItem</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>use_stock</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the menuitem should use a stock item
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-image-menu-item-set-accel-group"></a><h3>gtk_image_menu_item_set_accel_group ()</h3>
+<pre class="programlisting">void                gtk_image_menu_item_set_accel_group (<a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem">GtkImageMenuItem</a> *image_menu_item,
+                                                         <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup">GtkAccelGroup</a> *accel_group);</pre>
+<p>
+Specifies an <em class="parameter"><code>accel_group</code></em> to add the menu items accelerator to
+(this only applies to stock items so a stock item must already
+be set, make sure to call <a class="link" href="GtkImageMenuItem.html#gtk-image-menu-item-set-use-stock" title="gtk_image_menu_item_set_use_stock ()"><code class="function">gtk_image_menu_item_set_use_stock()</code></a>
+and <a class="link" href="GtkMenuItem.html#gtk-menu-item-set-label" title="gtk_menu_item_set_label ()"><code class="function">gtk_menu_item_set_label()</code></a> with a valid stock item first).
+</p>
+<p>
+If you want this menu item to have changeable accelerators then
+you shouldnt need this (see <a class="link" href="GtkImageMenuItem.html#gtk-image-menu-item-new-from-stock" title="gtk_image_menu_item_new_from_stock ()"><code class="function">gtk_image_menu_item_new_from_stock()</code></a>).</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>image_menu_item</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkImageMenuItem.html" title="GtkImageMenuItem"><span class="type">GtkImageMenuItem</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>accel_group</code></em> :</span></p></td>
+<td> the <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="type">GtkAccelGroup</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkImageMenuItem.property-details"></a><h2>Property Details</h2>
 <div class="refsect2" lang="en">
+<a name="GtkImageMenuItem--accel-group"></a><h3>The <code class="literal">"accel-group"</code> property</h3>
+<pre class="programlisting">  "accel-group"              <a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup">GtkAccelGroup</a>*        : Write</pre>
+<p>
+The Accel Group to use for stock accelerator keys</p>
+<p>
+</p>
+<p>Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="GtkImageMenuItem--image"></a><h3>The <code class="literal">"image"</code> property</h3>
 <pre class="programlisting">  "image"                    <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*            : Read / Write</pre>
 <p>Child widget to appear next to the menu text.</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkImageMenuItem--use-stock"></a><h3>The <code class="literal">"use-stock"</code> property</h3>
+<pre class="programlisting">  "use-stock"                <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write / Construct</pre>
+<p>
+If <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, the label set in the menuitem is used as a
+stock id to select the stock item for the item.</p>
+<p>
+</p>
+<p>Default value: FALSE</p>
+<p>Since 2.16</p>
 </div>
 </div>
 </div>

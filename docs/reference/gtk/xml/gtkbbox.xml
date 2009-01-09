@@ -72,7 +72,7 @@
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkButtonBox implements
- <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
+ <link linkend="AtkImplementorIface">AtkImplementorIface</link>,  <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="GtkOrientable">GtkOrientable</link>.</para>
 </refsect1>
 
 
@@ -135,34 +135,34 @@ behaves as if homogeneous was <link linkend="TRUE--CAPS"><literal>TRUE</literal>
 <title role="details.title">Details</title>
 <refsect2 id="GtkButtonBox-struct" role="struct">
 <title>GtkButtonBox</title>
-<indexterm zone="GtkButtonBox-struct"><primary sortas="GtkButtonBox">GtkButtonBox</primary></indexterm><programlisting>typedef struct _GtkButtonBox GtkButtonBox;</programlisting>
+<indexterm zone="GtkButtonBox-struct"><primary sortas="ButtonBox">GtkButtonBox</primary></indexterm><programlisting>typedef struct _GtkButtonBox GtkButtonBox;</programlisting>
 <para>
 This is a read-only struct; no members should be modified directly.
 </para></refsect2>
 <refsect2 id="GTK-BUTTONBOX-DEFAULT--CAPS" role="macro">
 <title>GTK_BUTTONBOX_DEFAULT</title>
-<indexterm zone="GTK-BUTTONBOX-DEFAULT--CAPS"><primary sortas="GTK_BUTTONBOX_DEFAULT">GTK_BUTTONBOX_DEFAULT</primary></indexterm><programlisting>#define GTK_BUTTONBOX_DEFAULT -1
+<indexterm zone="GTK-BUTTONBOX-DEFAULT--CAPS"><primary sortas="BUTTONBOX_DEFAULT">GTK_BUTTONBOX_DEFAULT</primary></indexterm><programlisting>#define GTK_BUTTONBOX_DEFAULT -1
 </programlisting>
 <para>
 Used internally only.
 </para></refsect2>
-<refsect2 id="gtk-button-box-get-spacing" role="macro" condition="deprecated:">
+<refsect2 id="gtk-button-box-get-spacing" role="macro" condition="deprecated:Use gtk_box_get_spacing() instead.">
 <title>gtk_button_box_get_spacing()</title>
-<indexterm zone="gtk-button-box-get-spacing" role="deprecated"><primary sortas="gtk_button_box_get_spacing">gtk_button_box_get_spacing</primary></indexterm><programlisting>#define gtk_button_box_get_spacing(b)   gtk_box_get_spacing (GTK_BOX (b))
+<indexterm zone="gtk-button-box-get-spacing" role="deprecated"><primary sortas="button_box_get_spacing">gtk_button_box_get_spacing</primary></indexterm><programlisting>#define gtk_button_box_get_spacing(b)   gtk_box_get_spacing (GTK_BOX (b))
 </programlisting>
-<warning><para><literal>gtk_button_box_get_spacing</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_button_box_get_spacing</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-box-get-spacing"><function>gtk_box_get_spacing()</function></link> instead.</para></warning>
 <para>
 Retrieves how much space a button box is placing between each child button.
 </para><variablelist role="params">
 <varlistentry><term><parameter>b</parameter>&#160;:</term>
 <listitem><simpara>a <link linkend="GtkButtonBox"><type>GtkButtonBox</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the current spacing applied to the buttons in <parameter>widget</parameter>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the current spacing applied to the buttons in <parameter>widget</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-get-layout" role="function">
 <title>gtk_button_box_get_layout ()</title>
-<indexterm zone="gtk-button-box-get-layout"><primary sortas="gtk_button_box_get_layout">gtk_button_box_get_layout</primary></indexterm><programlisting><link linkend="GtkButtonBoxStyle">GtkButtonBoxStyle</link>   gtk_button_box_get_layout           (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget);</programlisting>
+<indexterm zone="gtk-button-box-get-layout"><primary sortas="button_box_get_layout">gtk_button_box_get_layout</primary></indexterm><programlisting><link linkend="GtkButtonBoxStyle">GtkButtonBoxStyle</link>   gtk_button_box_get_layout           (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget);</programlisting>
 <para>
 Retrieves the method being used to arrange the buttons in a button box.
 </para><variablelist role="params">
@@ -174,7 +174,7 @@ Retrieves the method being used to arrange the buttons in a button box.
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-get-child-size" role="function" condition="deprecated">
 <title>gtk_button_box_get_child_size ()</title>
-<indexterm zone="gtk-button-box-get-child-size" role="deprecated"><primary sortas="gtk_button_box_get_child_size">gtk_button_box_get_child_size</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_get_child_size       (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
+<indexterm zone="gtk-button-box-get-child-size" role="deprecated"><primary sortas="button_box_get_child_size">gtk_button_box_get_child_size</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_get_child_size       (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
                                                          <link linkend="gint">gint</link> *min_width,
                                                          <link linkend="gint">gint</link> *min_height);</programlisting>
 <warning><para><literal>gtk_button_box_get_child_size</literal> is deprecated and should not be used in newly-written code. Use the style properties
@@ -195,11 +195,14 @@ Retrieves the current width and height of all child widgets in a button box.
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-get-child-ipadding" role="function" condition="deprecated">
 <title>gtk_button_box_get_child_ipadding ()</title>
-<indexterm zone="gtk-button-box-get-child-ipadding" role="deprecated"><primary sortas="gtk_button_box_get_child_ipadding">gtk_button_box_get_child_ipadding</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_get_child_ipadding   (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
+<indexterm zone="gtk-button-box-get-child-ipadding" role="deprecated"><primary sortas="button_box_get_child_ipadding">gtk_button_box_get_child_ipadding</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_get_child_ipadding   (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
                                                          <link linkend="gint">gint</link> *ipad_x,
                                                          <link linkend="gint">gint</link> *ipad_y);</programlisting>
 <warning><para><literal>gtk_button_box_get_child_ipadding</literal> is deprecated and should not be used in newly-written code. Use the style properties
-<literal>"child-internal-pad-x/-y"</literal> instead.</para></warning>
+  "<link linkend="GtkButtonBox--s-child-internal-pad-x">child-internal-pad-x</link>"
+  and
+  "<link linkend="GtkButtonBox--s-child-internal-pad-y">child-internal-pad-y</link>"
+  instead.</para></warning>
 <para>
 Gets the default number of pixels that pad the buttons in a given button box.
 </para><variablelist role="params">
@@ -215,7 +218,7 @@ Gets the default number of pixels that pad the buttons in a given button box.
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-get-child-secondary" role="function" condition="since:2.4">
 <title>gtk_button_box_get_child_secondary ()</title>
-<indexterm zone="gtk-button-box-get-child-secondary" role="2.4"><primary sortas="gtk_button_box_get_child_secondary">gtk_button_box_get_child_secondary</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_button_box_get_child_secondary  (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
+<indexterm zone="gtk-button-box-get-child-secondary" role="2.4"><primary sortas="button_box_get_child_secondary">gtk_button_box_get_child_secondary</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_button_box_get_child_secondary  (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child);</programlisting>
 <para>
 Returns whether <parameter>child</parameter> should appear in a secondary group of children.</para>
@@ -231,24 +234,24 @@ Returns whether <parameter>child</parameter> should appear in a secondary group 
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.4</para></refsect2>
-<refsect2 id="gtk-button-box-set-spacing" role="macro" condition="deprecated:">
+<refsect2 id="gtk-button-box-set-spacing" role="macro" condition="deprecated:Use gtk_box_set_spacing() instead.">
 <title>gtk_button_box_set_spacing()</title>
-<indexterm zone="gtk-button-box-set-spacing" role="deprecated"><primary sortas="gtk_button_box_set_spacing">gtk_button_box_set_spacing</primary></indexterm><programlisting>#define gtk_button_box_set_spacing(b,s) gtk_box_set_spacing (GTK_BOX (b), s)
+<indexterm zone="gtk-button-box-set-spacing" role="deprecated"><primary sortas="button_box_set_spacing">gtk_button_box_set_spacing</primary></indexterm><programlisting>#define gtk_button_box_set_spacing(b,s) gtk_box_set_spacing (GTK_BOX (b), s)
 </programlisting>
-<warning><para><literal>gtk_button_box_set_spacing</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_button_box_set_spacing</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-box-set-spacing"><function>gtk_box_set_spacing()</function></link> instead.</para></warning>
 <para>
 Sets the amount of spacing between buttons in a given button box.
 </para><variablelist role="params">
 <varlistentry><term><parameter>b</parameter>&#160;:</term>
-<listitem><simpara>a <link linkend="GtkButtonBox"><type>GtkButtonBox</type></link>.
+<listitem><simpara>a <link linkend="GtkButtonBox"><type>GtkButtonBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>s</parameter>&#160;:</term>
-<listitem><simpara>the number of pixels of spacing.
+<listitem><simpara>the number of pixels of spacing
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-set-layout" role="function">
 <title>gtk_button_box_set_layout ()</title>
-<indexterm zone="gtk-button-box-set-layout"><primary sortas="gtk_button_box_set_layout">gtk_button_box_set_layout</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_layout           (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
+<indexterm zone="gtk-button-box-set-layout"><primary sortas="button_box_set_layout">gtk_button_box_set_layout</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_layout           (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
                                                          <link linkend="GtkButtonBoxStyle">GtkButtonBoxStyle</link> layout_style);</programlisting>
 <para>
 Changes the way buttons are arranged in their container.
@@ -262,27 +265,30 @@ Changes the way buttons are arranged in their container.
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-set-child-size" role="function" condition="deprecated">
 <title>gtk_button_box_set_child_size ()</title>
-<indexterm zone="gtk-button-box-set-child-size" role="deprecated"><primary sortas="gtk_button_box_set_child_size">gtk_button_box_set_child_size</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_child_size       (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
+<indexterm zone="gtk-button-box-set-child-size" role="deprecated"><primary sortas="button_box_set_child_size">gtk_button_box_set_child_size</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_child_size       (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
                                                          <link linkend="gint">gint</link> min_width,
                                                          <link linkend="gint">gint</link> min_height);</programlisting>
 <warning><para><literal>gtk_button_box_set_child_size</literal> is deprecated and should not be used in newly-written code. Use the style properties
-<literal>"child-min-width/-height"</literal> instead.</para></warning>
+  "<link linkend="GtkButtonBox--s-child-min-width">child-min-width</link>"
+  and
+  "<link linkend="GtkButtonBox--s-child-min-height">child-min-height</link>"
+  instead.</para></warning>
 <para>
 Sets a new default size for the children of a given button box.
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&#160;:</term>
-<listitem><simpara>a <link linkend="GtkButtonBox"><type>GtkButtonBox</type></link>.
+<listitem><simpara>a <link linkend="GtkButtonBox"><type>GtkButtonBox</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>min_width</parameter>&#160;:</term>
-<listitem><simpara>a default width for buttons in <parameter>widget</parameter>.
+<listitem><simpara>a default width for buttons in <parameter>widget</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>min_height</parameter>&#160;:</term>
-<listitem><simpara>a default height for buttons in <parameter>widget</parameter>.
+<listitem><simpara>a default height for buttons in <parameter>widget</parameter>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-set-child-ipadding" role="function" condition="deprecated">
 <title>gtk_button_box_set_child_ipadding ()</title>
-<indexterm zone="gtk-button-box-set-child-ipadding" role="deprecated"><primary sortas="gtk_button_box_set_child_ipadding">gtk_button_box_set_child_ipadding</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_child_ipadding   (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
+<indexterm zone="gtk-button-box-set-child-ipadding" role="deprecated"><primary sortas="button_box_set_child_ipadding">gtk_button_box_set_child_ipadding</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_child_ipadding   (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
                                                          <link linkend="gint">gint</link> ipad_x,
                                                          <link linkend="gint">gint</link> ipad_y);</programlisting>
 <warning><para><literal>gtk_button_box_set_child_ipadding</literal> is deprecated and should not be used in newly-written code. Use the style properties
@@ -303,7 +309,7 @@ box.
 </variablelist></refsect2>
 <refsect2 id="gtk-button-box-set-child-secondary" role="function">
 <title>gtk_button_box_set_child_secondary ()</title>
-<indexterm zone="gtk-button-box-set-child-secondary"><primary sortas="gtk_button_box_set_child_secondary">gtk_button_box_set_child_secondary</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_child_secondary  (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
+<indexterm zone="gtk-button-box-set-child-secondary"><primary sortas="button_box_set_child_secondary">gtk_button_box_set_child_secondary</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_button_box_set_child_secondary  (<link linkend="GtkButtonBox">GtkButtonBox</link> *widget,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          <link linkend="gboolean">gboolean</link> is_secondary);</programlisting>
 <para>
@@ -338,36 +344,36 @@ other styles, they appear immediately next to the main children.</para>
 <refsect1 id="GtkButtonBox.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
 <refsect2 id="GtkButtonBox--layout-style" role="property"><title>The <literal>&quot;layout-style&quot;</literal> property</title>
-<indexterm zone="GtkButtonBox--layout-style"><primary sortas="GtkButtonBox:layout-style">GtkButtonBox:layout-style</primary></indexterm><programlisting>  &quot;layout-style&quot;             <link linkend="GtkButtonBoxStyle">GtkButtonBoxStyle</link>     : Read / Write</programlisting>
+<indexterm zone="GtkButtonBox--layout-style"><primary sortas="ButtonBox:layout-style">GtkButtonBox:layout-style</primary></indexterm><programlisting>  &quot;layout-style&quot;             <link linkend="GtkButtonBoxStyle">GtkButtonBoxStyle</link>     : Read / Write</programlisting>
 <para>How to layout the buttons in the box. Possible values are default, spread, edge, start and end.</para><para>Default value: GTK_BUTTONBOX_DEFAULT_STYLE</para>
 </refsect2>
 </refsect1>
 <refsect1 id="GtkButtonBox.child-property-details" role="child_property_details">
 <title role="child_property_details.title">Child Property Details</title>
 <refsect2 id="GtkButtonBox--c-secondary" role="property"><title>The <literal>&quot;secondary&quot;</literal> child property</title>
-<indexterm zone="GtkButtonBox--c-secondary"><primary sortas="GtkButtonBox:secondary">GtkButtonBox:secondary</primary></indexterm><programlisting>  &quot;secondary&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<indexterm zone="GtkButtonBox--c-secondary"><primary sortas="ButtonBox:secondary">GtkButtonBox:secondary</primary></indexterm><programlisting>  &quot;secondary&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If TRUE, the child appears in a secondary group of children, suitable for, e.g., help buttons.</para><para>Default value: FALSE</para>
 </refsect2>
 </refsect1>
 <refsect1 id="GtkButtonBox.style-property-details" role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
 <refsect2 id="GtkButtonBox--s-child-internal-pad-x" role="property"><title>The <literal>&quot;child-internal-pad-x&quot;</literal> style property</title>
-<indexterm zone="GtkButtonBox--s-child-internal-pad-x"><primary sortas="GtkButtonBox:child-internal-pad-x">GtkButtonBox:child-internal-pad-x</primary></indexterm><programlisting>  &quot;child-internal-pad-x&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
+<indexterm zone="GtkButtonBox--s-child-internal-pad-x"><primary sortas="ButtonBox:child-internal-pad-x">GtkButtonBox:child-internal-pad-x</primary></indexterm><programlisting>  &quot;child-internal-pad-x&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Amount to increase child's size on either side.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 4</para>
 </refsect2>
 <refsect2 id="GtkButtonBox--s-child-internal-pad-y" role="property"><title>The <literal>&quot;child-internal-pad-y&quot;</literal> style property</title>
-<indexterm zone="GtkButtonBox--s-child-internal-pad-y"><primary sortas="GtkButtonBox:child-internal-pad-y">GtkButtonBox:child-internal-pad-y</primary></indexterm><programlisting>  &quot;child-internal-pad-y&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
+<indexterm zone="GtkButtonBox--s-child-internal-pad-y"><primary sortas="ButtonBox:child-internal-pad-y">GtkButtonBox:child-internal-pad-y</primary></indexterm><programlisting>  &quot;child-internal-pad-y&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Amount to increase child's size on the top and bottom.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
 </refsect2>
 <refsect2 id="GtkButtonBox--s-child-min-height" role="property"><title>The <literal>&quot;child-min-height&quot;</literal> style property</title>
-<indexterm zone="GtkButtonBox--s-child-min-height"><primary sortas="GtkButtonBox:child-min-height">GtkButtonBox:child-min-height</primary></indexterm><programlisting>  &quot;child-min-height&quot;         <link linkend="gint">gint</link>                  : Read</programlisting>
+<indexterm zone="GtkButtonBox--s-child-min-height"><primary sortas="ButtonBox:child-min-height">GtkButtonBox:child-min-height</primary></indexterm><programlisting>  &quot;child-min-height&quot;         <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Minimum height of buttons inside the box.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 27</para>
 </refsect2>
 <refsect2 id="GtkButtonBox--s-child-min-width" role="property"><title>The <literal>&quot;child-min-width&quot;</literal> style property</title>
-<indexterm zone="GtkButtonBox--s-child-min-width"><primary sortas="GtkButtonBox:child-min-width">GtkButtonBox:child-min-width</primary></indexterm><programlisting>  &quot;child-min-width&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
+<indexterm zone="GtkButtonBox--s-child-min-width"><primary sortas="ButtonBox:child-min-width">GtkButtonBox:child-min-width</primary></indexterm><programlisting>  &quot;child-min-width&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>Minimum width of buttons inside the box.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 85</para>
 </refsect2>

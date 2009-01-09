@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -211,7 +213,7 @@ The GtkPrintUnixDialog implementation of the GtkBuildable interface exposes its
 <em class="parameter"><code>notebook</code></em> internal children with the name "notebook".
 </p>
 <div class="example">
-<a name="id3593523"></a><p class="title"><b>Example 44. A <span class="structname">GtkPrintUnixDialog</span> UI definition fragment.</b></p>
+<a name="id3593069"></a><p class="title"><b>Example 47. A <span class="structname">GtkPrintUnixDialog</span> UI definition fragment.</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkPrintUnixDialog" id="dialog1"&gt;
   &lt;child internal-child="notebook"&gt;
@@ -262,12 +264,16 @@ Creates a new <a class="link" href="GtkPrintUnixDialog.html" title="GtkPrintUnix
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
-<td> Title of the dialog, or <code class="literal">NULL</code>
+<td> Title of the dialog, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> Transient parent of the dialog, or <code class="literal">NULL</code>
+<td> Transient parent of the dialog, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -414,7 +420,9 @@ operation before the print dialog is shown.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>settings</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>, or <code class="literal">NULL</code>
+<td> a <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -529,60 +537,65 @@ Adds a custom tab to the print dialog.</p>
 </pre>
 <p>
 An enum for specifying which features the print dialog should offer.
-If neither <a class="link" href="GtkPrintUnixDialog.html#GTK-PRINT-CAPABILITY-GENERATE-PDF--CAPS"><code class="literal">GTK_PRINT_CAPABILITY_GENERATE_PDF</code></a> nor <a class="link" href="GtkPrintUnixDialog.html#GTK-PRINT-CAPABILITY-GENERATE-PS--CAPS"><code class="literal">GTK_PRINT_CAPABILITY_GENERATE_PS</code></a> is
-specified, GTK+ assumes that all formats are supported.
+If neither <a class="link" href="GtkPrintUnixDialog.html#GTK-PRINT-CAPABILITY-GENERATE-PDF--CAPS"><code class="literal">GTK_PRINT_CAPABILITY_GENERATE_PDF</code></a> nor
+<a class="link" href="GtkPrintUnixDialog.html#GTK-PRINT-CAPABILITY-GENERATE-PS--CAPS"><code class="literal">GTK_PRINT_CAPABILITY_GENERATE_PS</code></a> is specified, GTK+ assumes that all
+formats are supported.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-PAGE-SET--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_PAGE_SET</code></span></p></td>
-<td>
+<td>Print dialog will offer printing even/odd pages.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-COPIES--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_COPIES</code></span></p></td>
-<td>
+<td>Print dialog will allow to print multiple copies.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-COLLATE--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_COLLATE</code></span></p></td>
-<td>
+<td>Print dialog will allow to collate multiple copies.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-REVERSE--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_REVERSE</code></span></p></td>
-<td>
+<td>Print dialog will allow to print pages in reverse order.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-SCALE--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_SCALE</code></span></p></td>
-<td>
+<td>Print dialog will allow to scale the output.
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-GENERATE-PDF--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_GENERATE_PDF</code></span></p></td>
-<td>The program will send the document to the printer in PDF format
+<td>The program will send the document to 
+    the printer in PDF format
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-GENERATE-PS--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_GENERATE_PS</code></span></p></td>
-<td>The program will send the document to the printer in Postscript format
+<td>The program will send the document to 
+    the printer in Postscript format
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-PREVIEW--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_PREVIEW</code></span></p></td>
-<td>
+<td>Print dialog will offer a previe
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-NUMBER-UP--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_NUMBER_UP</code></span></p></td>
-<td>Print dialog will offer printing multiple pages per sheet. Since 2.12
+<td>Print dialog will offer printing multiple 
+    pages per sheet. Since 2.12
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-PRINT-CAPABILITY-NUMBER-UP-LAYOUT--CAPS"></a><span class="term"><code class="literal">GTK_PRINT_CAPABILITY_NUMBER_UP_LAYOUT</code></span></p></td>
-<td>Print dialog will allow to rearrange pages when printing multiple pages per sheet. Since 2.14
+<td>Print dialog will allow to rearrange 
+    pages when printing multiple pages per sheet. Since 2.14
 </td>
 </tr>
 </tbody>

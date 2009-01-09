@@ -304,14 +304,14 @@ aligns in its available space, see <link linkend="gtk-misc-set-alignment"><funct
 <title role="details.title">Details</title>
 <refsect2 id="GtkLabel-struct" role="struct">
 <title>GtkLabel</title>
-<indexterm zone="GtkLabel-struct"><primary sortas="GtkLabel">GtkLabel</primary></indexterm><programlisting>typedef struct _GtkLabel GtkLabel;</programlisting>
+<indexterm zone="GtkLabel-struct"><primary sortas="Label">GtkLabel</primary></indexterm><programlisting>typedef struct _GtkLabel GtkLabel;</programlisting>
 <para>
 This should not be accessed directly.  Use the accessor functions as
 described below.
 </para></refsect2>
 <refsect2 id="gtk-label-new" role="function">
 <title>gtk_label_new ()</title>
-<indexterm zone="gtk-label-new"><primary sortas="gtk_label_new">gtk_label_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_label_new                       (const <link linkend="gchar">gchar</link> *str);</programlisting>
+<indexterm zone="gtk-label-new"><primary sortas="label_new">gtk_label_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_label_new                       (const <link linkend="gchar">gchar</link> *str);</programlisting>
 <para>
 Creates a new label with the given text inside it. You can
 pass <link linkend="NULL--CAPS"><literal>NULL</literal></link> to get an empty label widget.</para>
@@ -325,7 +325,7 @@ pass <link linkend="NULL--CAPS"><literal>NULL</literal></link> to get an empty l
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-text" role="function">
 <title>gtk_label_set_text ()</title>
-<indexterm zone="gtk-label-set-text"><primary sortas="gtk_label_set_text">gtk_label_set_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_text                  (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-text"><primary sortas="label_set_text">gtk_label_set_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_text                  (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          const <link linkend="gchar">gchar</link> *str);</programlisting>
 <para>
 Sets the text within the <link linkend="GtkLabel"><type>GtkLabel</type></link> widget. It overwrites any text that
@@ -344,13 +344,19 @@ This will also clear any previously set mnemonic accelerators.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-attributes" role="function">
 <title>gtk_label_set_attributes ()</title>
-<indexterm zone="gtk-label-set-attributes"><primary sortas="gtk_label_set_attributes">gtk_label_set_attributes</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_attributes            (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-attributes"><primary sortas="label_set_attributes">gtk_label_set_attributes</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_attributes            (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="PangoAttrList">PangoAttrList</link> *attrs);</programlisting>
 <para>
 Sets a <link linkend="PangoAttrList"><type>PangoAttrList</type></link>; the attributes in the list are applied to the
-label text. The attributes set with this function will be ignored
-if the <link linkend="GtkLabel--use-underline"><type>"use-underline"</type></link>" or <link linkend="GtkLabel--use-markup"><type>"use-markup"</type></link> properties
-are set to <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>.</para>
+label text. 
+</para>
+<para>
+<note><para>The attributes set with this function will be applied
+and merged with any other attributes previously effected by way
+of the <link linkend="GtkLabel--use-underline"><type>"use-underline"</type></link> or <link linkend="GtkLabel--use-markup"><type>"use-markup"</type></link> properties.
+While it is not recommended to mix markup strings with manually set
+attributes, if you must; know that the attributes will be applied
+to the label after the markup string is parsed.</para></note></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>label</parameter>&#160;:</term>
@@ -362,7 +368,7 @@ are set to <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-markup" role="function">
 <title>gtk_label_set_markup ()</title>
-<indexterm zone="gtk-label-set-markup"><primary sortas="gtk_label_set_markup">gtk_label_set_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_markup                (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-markup"><primary sortas="label_set_markup">gtk_label_set_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_markup                (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          const <link linkend="gchar">gchar</link> *str);</programlisting>
 <para>
 Parses <parameter>str</parameter> which is marked up with the <link
@@ -388,7 +394,7 @@ g_free (markup);
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-markup-with-mnemonic" role="function">
 <title>gtk_label_set_markup_with_mnemonic ()</title>
-<indexterm zone="gtk-label-set-markup-with-mnemonic"><primary sortas="gtk_label_set_markup_with_mnemonic">gtk_label_set_markup_with_mnemonic</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_markup_with_mnemonic  (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-markup-with-mnemonic"><primary sortas="label_set_markup_with_mnemonic">gtk_label_set_markup_with_mnemonic</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_markup_with_mnemonic  (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          const <link linkend="gchar">gchar</link> *str);</programlisting>
 <para>
 Parses <parameter>str</parameter> which is marked up with the <link linkend="PangoMarkupFormat">Pango text markup language</link>,
@@ -410,7 +416,7 @@ automatically, or explicitly using <link linkend="gtk-label-set-mnemonic-widget"
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-pattern" role="function">
 <title>gtk_label_set_pattern ()</title>
-<indexterm zone="gtk-label-set-pattern"><primary sortas="gtk_label_set_pattern">gtk_label_set_pattern</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_pattern               (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-pattern"><primary sortas="label_set_pattern">gtk_label_set_pattern</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_pattern               (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          const <link linkend="gchar">gchar</link> *pattern);</programlisting>
 <para>
 The pattern of underlines you want under the existing text within the
@@ -427,7 +433,7 @@ The pattern of underlines you want under the existing text within the
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-justify" role="function">
 <title>gtk_label_set_justify ()</title>
-<indexterm zone="gtk-label-set-justify"><primary sortas="gtk_label_set_justify">gtk_label_set_justify</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_justify               (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-justify"><primary sortas="label_set_justify">gtk_label_set_justify</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_justify               (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="GtkJustification">GtkJustification</link> jtype);</programlisting>
 <para>
 Sets the alignment of the lines in the text of the label relative to
@@ -447,7 +453,7 @@ effect on labels containing only a single line.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-ellipsize" role="function" condition="since:2.6">
 <title>gtk_label_set_ellipsize ()</title>
-<indexterm zone="gtk-label-set-ellipsize" role="2.6"><primary sortas="gtk_label_set_ellipsize">gtk_label_set_ellipsize</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_ellipsize             (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-ellipsize" role="2.6"><primary sortas="label_set_ellipsize">gtk_label_set_ellipsize</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_ellipsize             (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="PangoEllipsizeMode">PangoEllipsizeMode</link> mode);</programlisting>
 <para>
 Sets the mode used to ellipsize (add an ellipsis: "...") to the text 
@@ -463,7 +469,7 @@ if there is not enough space to render the entire string.</para>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-set-width-chars" role="function" condition="since:2.6">
 <title>gtk_label_set_width_chars ()</title>
-<indexterm zone="gtk-label-set-width-chars" role="2.6"><primary sortas="gtk_label_set_width_chars">gtk_label_set_width_chars</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_width_chars           (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-width-chars" role="2.6"><primary sortas="label_set_width_chars">gtk_label_set_width_chars</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_width_chars           (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gint">gint</link> n_chars);</programlisting>
 <para>
 Sets the desired width in characters of <parameter>label</parameter> to <parameter>n_chars</parameter>.</para>
@@ -478,7 +484,7 @@ Sets the desired width in characters of <parameter>label</parameter> to <paramet
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-set-max-width-chars" role="function" condition="since:2.6">
 <title>gtk_label_set_max_width_chars ()</title>
-<indexterm zone="gtk-label-set-max-width-chars" role="2.6"><primary sortas="gtk_label_set_max_width_chars">gtk_label_set_max_width_chars</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_max_width_chars       (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-max-width-chars" role="2.6"><primary sortas="label_set_max_width_chars">gtk_label_set_max_width_chars</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_max_width_chars       (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gint">gint</link> n_chars);</programlisting>
 <para>
 Sets the desired maximum width in characters of <parameter>label</parameter> to <parameter>n_chars</parameter>.</para>
@@ -491,11 +497,11 @@ Sets the desired maximum width in characters of <parameter>label</parameter> to 
 <listitem><simpara> the new desired maximum width, in characters.
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.6</para></refsect2>
-<refsect2 id="gtk-label-get" role="function" condition="deprecated:">
+<refsect2 id="gtk-label-get" role="function" condition="deprecated:Use gtk_label_get_text() instead.">
 <title>gtk_label_get ()</title>
-<indexterm zone="gtk-label-get" role="deprecated"><primary sortas="gtk_label_get">gtk_label_get</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_get                       (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-get" role="deprecated"><primary sortas="label_get">gtk_label_get</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_get                       (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gchar">gchar</link> **str);</programlisting>
-<warning><para><literal>gtk_label_get</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_label_get</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-label-get-text"><function>gtk_label_get_text()</function></link> instead.</para></warning>
 <para>
 Gets the current string of text within the <link linkend="GtkLabel"><type>GtkLabel</type></link> and writes it to
 the given <parameter>str</parameter> argument.  It does not make a copy of this string so you
@@ -508,11 +514,11 @@ must not write to it.
 <listitem><simpara>The reference to the pointer you want to point to the text.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-label-parse-uline" role="function" condition="deprecated:">
+<refsect2 id="gtk-label-parse-uline" role="function" condition="deprecated:Use gtk_label_set_use_underline() instead.">
 <title>gtk_label_parse_uline ()</title>
-<indexterm zone="gtk-label-parse-uline" role="deprecated"><primary sortas="gtk_label_parse_uline">gtk_label_parse_uline</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_label_parse_uline               (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-parse-uline" role="deprecated"><primary sortas="label_parse_uline">gtk_label_parse_uline</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_label_parse_uline               (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          const <link linkend="gchar">gchar</link> *string);</programlisting>
-<warning><para><literal>gtk_label_parse_uline</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_label_parse_uline</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-label-set-use-underline"><function>gtk_label_set_use_underline()</function></link> instead.</para></warning>
 <para>
 Parses the given string for underscores and converts the next
 character to an underlined character.  The last character that
@@ -531,7 +537,7 @@ probably only used within the GTK+ library itself for menu items and such.
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-line-wrap" role="function">
 <title>gtk_label_set_line_wrap ()</title>
-<indexterm zone="gtk-label-set-line-wrap"><primary sortas="gtk_label_set_line_wrap">gtk_label_set_line_wrap</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_line_wrap             (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-line-wrap"><primary sortas="label_set_line_wrap">gtk_label_set_line_wrap</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_line_wrap             (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gboolean">gboolean</link> wrap);</programlisting>
 <para>
 Toggles line wrapping within the <link linkend="GtkLabel"><type>GtkLabel</type></link> widget. <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> makes it break
@@ -555,7 +561,7 @@ set the label's width using <link linkend="gtk-widget-set-size-request"><functio
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-line-wrap-mode" role="function" condition="since:2.10">
 <title>gtk_label_set_line_wrap_mode ()</title>
-<indexterm zone="gtk-label-set-line-wrap-mode" role="2.10"><primary sortas="gtk_label_set_line_wrap_mode">gtk_label_set_line_wrap_mode</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_line_wrap_mode        (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-line-wrap-mode" role="2.10"><primary sortas="label_set_line_wrap_mode">gtk_label_set_line_wrap_mode</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_line_wrap_mode        (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="PangoWrapMode">PangoWrapMode</link> wrap_mode);</programlisting>
 <para>
 If line wrapping is on (see <link linkend="gtk-label-set-line-wrap"><function>gtk_label_set_line_wrap()</function></link>) this controls how
@@ -570,18 +576,17 @@ wrap on word boundaries.</para>
 <listitem><simpara> the line wrapping mode
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.10</para></refsect2>
-<refsect2 id="gtk-label-set" role="macro" condition="deprecated:">
+<refsect2 id="gtk-label-set" role="macro" condition="deprecated:Use gtk_label_set_text() instead.">
 <title>gtk_label_set</title>
-<indexterm zone="gtk-label-set" role="deprecated"><primary sortas="gtk_label_set">gtk_label_set</primary></indexterm><programlisting>#define  gtk_label_set           gtk_label_set_text
+<indexterm zone="gtk-label-set" role="deprecated"><primary sortas="label_set">gtk_label_set</primary></indexterm><programlisting>#define  gtk_label_set           gtk_label_set_text
 </programlisting>
-<warning><para><literal>gtk_label_set</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_label_set</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-label-set-text"><function>gtk_label_set_text()</function></link> instead.</para></warning>
 <para>
-Aliases <link linkend="gtk-label-set-text"><function>gtk_label_set_text()</function></link>.  Probably used for backward compatibility with
-GTK+ 1.0.x.
+Sets the text within the GtkLabel widget.
 </para></refsect2>
 <refsect2 id="gtk-label-get-layout-offsets" role="function">
 <title>gtk_label_get_layout_offsets ()</title>
-<indexterm zone="gtk-label-get-layout-offsets"><primary sortas="gtk_label_get_layout_offsets">gtk_label_get_layout_offsets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_get_layout_offsets        (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-get-layout-offsets"><primary sortas="label_get_layout_offsets">gtk_label_get_layout_offsets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_get_layout_offsets        (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gint">gint</link> *x,
                                                          <link linkend="gint">gint</link> *y);</programlisting>
 <para>
@@ -607,7 +612,7 @@ and from pixels using <link linkend="PANGO-PIXELS--CAPS"><function>PANGO_PIXELS(
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-mnemonic-keyval" role="function">
 <title>gtk_label_get_mnemonic_keyval ()</title>
-<indexterm zone="gtk-label-get-mnemonic-keyval"><primary sortas="gtk_label_get_mnemonic_keyval">gtk_label_get_mnemonic_keyval</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_label_get_mnemonic_keyval       (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-mnemonic-keyval"><primary sortas="label_get_mnemonic_keyval">gtk_label_get_mnemonic_keyval</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_label_get_mnemonic_keyval       (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 If the label has been set so that it has an mnemonic key this function
 returns the keyval used for the mnemonic accelerator. If there is no
@@ -622,7 +627,7 @@ mnemonic set up it returns <link linkend="GDK-VoidSymbol"><type>GDK_VoidSymbol</
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-selectable" role="function">
 <title>gtk_label_get_selectable ()</title>
-<indexterm zone="gtk-label-get-selectable"><primary sortas="gtk_label_get_selectable">gtk_label_get_selectable</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_selectable            (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-selectable"><primary sortas="label_get_selectable">gtk_label_get_selectable</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_selectable            (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Gets the value set by <link linkend="gtk-label-set-selectable"><function>gtk_label_set_selectable()</function></link>.</para>
 <para>
@@ -635,7 +640,7 @@ Gets the value set by <link linkend="gtk-label-set-selectable"><function>gtk_lab
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-text" role="function">
 <title>gtk_label_get_text ()</title>
-<indexterm zone="gtk-label-get-text"><primary sortas="gtk_label_get_text">gtk_label_get_text</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_label_get_text                  (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-text"><primary sortas="label_get_text">gtk_label_get_text</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_label_get_text                  (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Fetches the text from a label widget, as displayed on the
 screen. This does not include any embedded underlines
@@ -651,7 +656,7 @@ indicating mnemonics or Pango markup. (See <link linkend="gtk-label-get-label"><
 </variablelist></refsect2>
 <refsect2 id="gtk-label-new-with-mnemonic" role="function">
 <title>gtk_label_new_with_mnemonic ()</title>
-<indexterm zone="gtk-label-new-with-mnemonic"><primary sortas="gtk_label_new_with_mnemonic">gtk_label_new_with_mnemonic</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_label_new_with_mnemonic         (const <link linkend="gchar">gchar</link> *str);</programlisting>
+<indexterm zone="gtk-label-new-with-mnemonic"><primary sortas="label_new_with_mnemonic">gtk_label_new_with_mnemonic</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_label_new_with_mnemonic         (const <link linkend="gchar">gchar</link> *str);</programlisting>
 <para>
 Creates a new <link linkend="GtkLabel"><type>GtkLabel</type></link>, containing the text in <parameter>str</parameter>.
 </para>
@@ -680,7 +685,7 @@ and be activated by the mnemonic.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-select-region" role="function">
 <title>gtk_label_select_region ()</title>
-<indexterm zone="gtk-label-select-region"><primary sortas="gtk_label_select_region">gtk_label_select_region</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_select_region             (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-select-region"><primary sortas="label_select_region">gtk_label_select_region</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_select_region             (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gint">gint</link> start_offset,
                                                          <link linkend="gint">gint</link> end_offset);</programlisting>
 <para>
@@ -702,7 +707,7 @@ this function has no effect. If <parameter>start_offset</parameter> or
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-mnemonic-widget" role="function">
 <title>gtk_label_set_mnemonic_widget ()</title>
-<indexterm zone="gtk-label-set-mnemonic-widget"><primary sortas="gtk_label_set_mnemonic_widget">gtk_label_set_mnemonic_widget</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_mnemonic_widget       (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-mnemonic-widget"><primary sortas="label_set_mnemonic_widget">gtk_label_set_mnemonic_widget</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_mnemonic_widget       (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 If the label has been set so that it has an mnemonic key (using
@@ -731,7 +736,7 @@ and toggle focus between the colliding widgets otherwise.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-selectable" role="function">
 <title>gtk_label_set_selectable ()</title>
-<indexterm zone="gtk-label-set-selectable"><primary sortas="gtk_label_set_selectable">gtk_label_set_selectable</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_selectable            (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-selectable"><primary sortas="label_set_selectable">gtk_label_set_selectable</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_selectable            (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gboolean">gboolean</link> setting);</programlisting>
 <para>
 Selectable labels allow the user to select text from the label, for
@@ -747,7 +752,7 @@ copy-and-paste.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-text-with-mnemonic" role="function">
 <title>gtk_label_set_text_with_mnemonic ()</title>
-<indexterm zone="gtk-label-set-text-with-mnemonic"><primary sortas="gtk_label_set_text_with_mnemonic">gtk_label_set_text_with_mnemonic</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_text_with_mnemonic    (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-text-with-mnemonic"><primary sortas="label_set_text_with_mnemonic">gtk_label_set_text_with_mnemonic</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_text_with_mnemonic    (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          const <link linkend="gchar">gchar</link> *str);</programlisting>
 <para>
 Sets the label's text from the string <parameter>str</parameter>.
@@ -766,7 +771,7 @@ automatically, or explicitly using <link linkend="gtk-label-set-mnemonic-widget"
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-attributes" role="function">
 <title>gtk_label_get_attributes ()</title>
-<indexterm zone="gtk-label-get-attributes"><primary sortas="gtk_label_get_attributes">gtk_label_get_attributes</primary></indexterm><programlisting><link linkend="PangoAttrList">PangoAttrList</link> *     gtk_label_get_attributes            (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-attributes"><primary sortas="label_get_attributes">gtk_label_get_attributes</primary></indexterm><programlisting><link linkend="PangoAttrList">PangoAttrList</link> *     gtk_label_get_attributes            (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Gets the attribute list that was set on the label using
 <link linkend="gtk-label-set-attributes"><function>gtk_label_set_attributes()</function></link>, if any. This function does
@@ -784,7 +789,7 @@ pango_layout_get_attribute (gtk_label_get_layout (label)).</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-justify" role="function">
 <title>gtk_label_get_justify ()</title>
-<indexterm zone="gtk-label-get-justify"><primary sortas="gtk_label_get_justify">gtk_label_get_justify</primary></indexterm><programlisting><link linkend="GtkJustification">GtkJustification</link>    gtk_label_get_justify               (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-justify"><primary sortas="label_get_justify">gtk_label_get_justify</primary></indexterm><programlisting><link linkend="GtkJustification">GtkJustification</link>    gtk_label_get_justify               (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Returns the justification of the label. See <link linkend="gtk-label-set-justify"><function>gtk_label_set_justify()</function></link>.</para>
 <para>
@@ -797,7 +802,7 @@ Returns the justification of the label. See <link linkend="gtk-label-set-justify
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-ellipsize" role="function" condition="since:2.6">
 <title>gtk_label_get_ellipsize ()</title>
-<indexterm zone="gtk-label-get-ellipsize" role="2.6"><primary sortas="gtk_label_get_ellipsize">gtk_label_get_ellipsize</primary></indexterm><programlisting><link linkend="PangoEllipsizeMode">PangoEllipsizeMode</link>  gtk_label_get_ellipsize             (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-ellipsize" role="2.6"><primary sortas="label_get_ellipsize">gtk_label_get_ellipsize</primary></indexterm><programlisting><link linkend="PangoEllipsizeMode">PangoEllipsizeMode</link>  gtk_label_get_ellipsize             (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Returns the ellipsizing position of the label. See <link linkend="gtk-label-set-ellipsize"><function>gtk_label_set_ellipsize()</function></link>.</para>
 <para>
@@ -811,7 +816,7 @@ Returns the ellipsizing position of the label. See <link linkend="gtk-label-set-
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-get-width-chars" role="function" condition="since:2.6">
 <title>gtk_label_get_width_chars ()</title>
-<indexterm zone="gtk-label-get-width-chars" role="2.6"><primary sortas="gtk_label_get_width_chars">gtk_label_get_width_chars</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_label_get_width_chars           (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-width-chars" role="2.6"><primary sortas="label_get_width_chars">gtk_label_get_width_chars</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_label_get_width_chars           (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Retrieves the desired width of <parameter>label</parameter>, in characters. See
 <link linkend="gtk-label-set-width-chars"><function>gtk_label_set_width_chars()</function></link>.</para>
@@ -826,7 +831,7 @@ Retrieves the desired width of <parameter>label</parameter>, in characters. See
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-get-max-width-chars" role="function" condition="since:2.6">
 <title>gtk_label_get_max_width_chars ()</title>
-<indexterm zone="gtk-label-get-max-width-chars" role="2.6"><primary sortas="gtk_label_get_max_width_chars">gtk_label_get_max_width_chars</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_label_get_max_width_chars       (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-max-width-chars" role="2.6"><primary sortas="label_get_max_width_chars">gtk_label_get_max_width_chars</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_label_get_max_width_chars       (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Retrieves the desired maximum width of <parameter>label</parameter>, in characters. See
 <link linkend="gtk-label-set-width-chars"><function>gtk_label_set_width_chars()</function></link>.</para>
@@ -841,7 +846,7 @@ Retrieves the desired maximum width of <parameter>label</parameter>, in characte
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-get-label" role="function">
 <title>gtk_label_get_label ()</title>
-<indexterm zone="gtk-label-get-label"><primary sortas="gtk_label_get_label">gtk_label_get_label</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_label_get_label                 (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-label"><primary sortas="label_get_label">gtk_label_get_label</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_label_get_label                 (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Fetches the text from a label widget including any embedded
 underlines indicating mnemonics and Pango markup. (See
@@ -857,7 +862,7 @@ underlines indicating mnemonics and Pango markup. (See
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-layout" role="function">
 <title>gtk_label_get_layout ()</title>
-<indexterm zone="gtk-label-get-layout"><primary sortas="gtk_label_get_layout">gtk_label_get_layout</primary></indexterm><programlisting><link linkend="PangoLayout">PangoLayout</link> *       gtk_label_get_layout                (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-layout"><primary sortas="label_get_layout">gtk_label_get_layout</primary></indexterm><programlisting><link linkend="PangoLayout">PangoLayout</link> *       gtk_label_get_layout                (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Gets the <link linkend="PangoLayout"><type>PangoLayout</type></link> used to display the label.
 The layout is useful to e.g. convert text positions to
@@ -874,7 +879,7 @@ freed by the caller.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-line-wrap" role="function">
 <title>gtk_label_get_line_wrap ()</title>
-<indexterm zone="gtk-label-get-line-wrap"><primary sortas="gtk_label_get_line_wrap">gtk_label_get_line_wrap</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_line_wrap             (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-line-wrap"><primary sortas="label_get_line_wrap">gtk_label_get_line_wrap</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_line_wrap             (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Returns whether lines in the label are automatically wrapped. 
 See <link linkend="gtk-label-set-line-wrap"><function>gtk_label_set_line_wrap()</function></link>.</para>
@@ -888,7 +893,7 @@ See <link linkend="gtk-label-set-line-wrap"><function>gtk_label_set_line_wrap()<
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-line-wrap-mode" role="function" condition="since:2.10">
 <title>gtk_label_get_line_wrap_mode ()</title>
-<indexterm zone="gtk-label-get-line-wrap-mode" role="2.10"><primary sortas="gtk_label_get_line_wrap_mode">gtk_label_get_line_wrap_mode</primary></indexterm><programlisting><link linkend="PangoWrapMode">PangoWrapMode</link>       gtk_label_get_line_wrap_mode        (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-line-wrap-mode" role="2.10"><primary sortas="label_get_line_wrap_mode">gtk_label_get_line_wrap_mode</primary></indexterm><programlisting><link linkend="PangoWrapMode">PangoWrapMode</link>       gtk_label_get_line_wrap_mode        (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Returns line wrap mode used by the label. See <link linkend="gtk-label-set-line-wrap-mode"><function>gtk_label_set_line_wrap_mode()</function></link>.</para>
 <para>
@@ -902,7 +907,7 @@ Returns line wrap mode used by the label. See <link linkend="gtk-label-set-line-
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-label-get-mnemonic-widget" role="function">
 <title>gtk_label_get_mnemonic_widget ()</title>
-<indexterm zone="gtk-label-get-mnemonic-widget"><primary sortas="gtk_label_get_mnemonic_widget">gtk_label_get_mnemonic_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_label_get_mnemonic_widget       (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-mnemonic-widget"><primary sortas="label_get_mnemonic_widget">gtk_label_get_mnemonic_widget</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_label_get_mnemonic_widget       (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Retrieves the target of the mnemonic (keyboard shortcut) of this
 label. See <link linkend="gtk-label-set-mnemonic-widget"><function>gtk_label_set_mnemonic_widget()</function></link>.</para>
@@ -917,7 +922,7 @@ label. See <link linkend="gtk-label-set-mnemonic-widget"><function>gtk_label_set
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-selection-bounds" role="function">
 <title>gtk_label_get_selection_bounds ()</title>
-<indexterm zone="gtk-label-get-selection-bounds"><primary sortas="gtk_label_get_selection_bounds">gtk_label_get_selection_bounds</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_selection_bounds      (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-get-selection-bounds"><primary sortas="label_get_selection_bounds">gtk_label_get_selection_bounds</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_selection_bounds      (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gint">gint</link> *start,
                                                          <link linkend="gint">gint</link> *end);</programlisting>
 <para>
@@ -939,7 +944,7 @@ if there's a selection.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-use-markup" role="function">
 <title>gtk_label_get_use_markup ()</title>
-<indexterm zone="gtk-label-get-use-markup"><primary sortas="gtk_label_get_use_markup">gtk_label_get_use_markup</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_use_markup            (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-use-markup"><primary sortas="label_get_use_markup">gtk_label_get_use_markup</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_use_markup            (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Returns whether the label's text is interpreted as marked up with
 the <link linkend="PangoMarkupFormat">Pango text markup
@@ -954,7 +959,7 @@ language</link>. See <link linkend="gtk-label-set-use-markup"><function>gtk_labe
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-use-underline" role="function">
 <title>gtk_label_get_use_underline ()</title>
-<indexterm zone="gtk-label-get-use-underline"><primary sortas="gtk_label_get_use_underline">gtk_label_get_use_underline</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_use_underline         (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-use-underline"><primary sortas="label_get_use_underline">gtk_label_get_use_underline</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_use_underline         (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Returns whether an embedded underline in the label indicates a
 mnemonic. See <link linkend="gtk-label-set-use-underline"><function>gtk_label_set_use_underline()</function></link>.</para>
@@ -969,7 +974,7 @@ mnemonic. See <link linkend="gtk-label-set-use-underline"><function>gtk_label_se
 </variablelist></refsect2>
 <refsect2 id="gtk-label-get-single-line-mode" role="function" condition="since:2.6">
 <title>gtk_label_get_single_line_mode ()</title>
-<indexterm zone="gtk-label-get-single-line-mode" role="2.6"><primary sortas="gtk_label_get_single_line_mode">gtk_label_get_single_line_mode</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_single_line_mode      (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-single-line-mode" role="2.6"><primary sortas="label_get_single_line_mode">gtk_label_get_single_line_mode</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_single_line_mode      (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Returns whether the label is in single line mode.</para>
 <para>
@@ -983,7 +988,7 @@ Returns whether the label is in single line mode.</para>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-get-angle" role="function" condition="since:2.6">
 <title>gtk_label_get_angle ()</title>
-<indexterm zone="gtk-label-get-angle" role="2.6"><primary sortas="gtk_label_get_angle">gtk_label_get_angle</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_label_get_angle                 (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<indexterm zone="gtk-label-get-angle" role="2.6"><primary sortas="label_get_angle">gtk_label_get_angle</primary></indexterm><programlisting><link linkend="gdouble">gdouble</link>             gtk_label_get_angle                 (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
 <para>
 Gets the angle of rotation for the label. See
 <link linkend="gtk-label-set-angle"><function>gtk_label_set_angle()</function></link>.</para>
@@ -998,7 +1003,7 @@ Gets the angle of rotation for the label. See
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-set-label" role="function">
 <title>gtk_label_set_label ()</title>
-<indexterm zone="gtk-label-set-label"><primary sortas="gtk_label_set_label">gtk_label_set_label</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_label                 (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-label"><primary sortas="label_set_label">gtk_label_set_label</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_label                 (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          const <link linkend="gchar">gchar</link> *str);</programlisting>
 <para>
 Sets the text of the label. The label is interpreted as
@@ -1016,7 +1021,7 @@ on the values of the <link linkend="GtkLabel--use-underline"><type>"use-underlin
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-use-markup" role="function">
 <title>gtk_label_set_use_markup ()</title>
-<indexterm zone="gtk-label-set-use-markup"><primary sortas="gtk_label_set_use_markup">gtk_label_set_use_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_use_markup            (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-use-markup"><primary sortas="label_set_use_markup">gtk_label_set_use_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_use_markup            (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gboolean">gboolean</link> setting);</programlisting>
 <para>
 Sets whether the text of the label contains markup in <link
@@ -1033,7 +1038,7 @@ language</link>. See <link linkend="gtk-label-set-markup"><function>gtk_label_se
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-use-underline" role="function">
 <title>gtk_label_set_use_underline ()</title>
-<indexterm zone="gtk-label-set-use-underline"><primary sortas="gtk_label_set_use_underline">gtk_label_set_use_underline</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_use_underline         (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-use-underline"><primary sortas="label_set_use_underline">gtk_label_set_use_underline</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_use_underline         (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gboolean">gboolean</link> setting);</programlisting>
 <para>
 If true, an underline in the text indicates the next character should be
@@ -1049,7 +1054,7 @@ used for the mnemonic accelerator key.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-label-set-single-line-mode" role="function" condition="since:2.6">
 <title>gtk_label_set_single_line_mode ()</title>
-<indexterm zone="gtk-label-set-single-line-mode" role="2.6"><primary sortas="gtk_label_set_single_line_mode">gtk_label_set_single_line_mode</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_single_line_mode      (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-single-line-mode" role="2.6"><primary sortas="label_set_single_line_mode">gtk_label_set_single_line_mode</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_single_line_mode      (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gboolean">gboolean</link> single_line_mode);</programlisting>
 <para>
 Sets whether the label is in single line mode.</para>
@@ -1064,7 +1069,7 @@ Sets whether the label is in single line mode.</para>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-label-set-angle" role="function" condition="since:2.6">
 <title>gtk_label_set_angle ()</title>
-<indexterm zone="gtk-label-set-angle" role="2.6"><primary sortas="gtk_label_set_angle">gtk_label_set_angle</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_angle                 (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="gtk-label-set-angle" role="2.6"><primary sortas="label_set_angle">gtk_label_set_angle</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_angle                 (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gdouble">gdouble</link> angle);</programlisting>
 <para>
 Sets the angle of rotation for the label. An angle of 90 reads from
@@ -1086,7 +1091,7 @@ wrapped, or ellipsized.</para>
 <refsect1 id="GtkLabel.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
 <refsect2 id="GtkLabel--angle" role="property"><title>The <literal>&quot;angle&quot;</literal> property</title>
-<indexterm zone="GtkLabel--angle" role="2.6"><primary sortas="GtkLabel:angle">GtkLabel:angle</primary></indexterm><programlisting>  &quot;angle&quot;                    <link linkend="gdouble">gdouble</link>               : Read / Write</programlisting>
+<indexterm zone="GtkLabel--angle" role="2.6"><primary sortas="Label:angle">GtkLabel:angle</primary></indexterm><programlisting>  &quot;angle&quot;                    <link linkend="gdouble">gdouble</link>               : Read / Write</programlisting>
 <para>
 The angle that the baseline of the label makes with the horizontal,
 in degrees, measured counterclockwise. An angle of 90 reads from
@@ -1098,15 +1103,15 @@ if the label is selectable, wrapped, or ellipsized.</para>
 <para>Since 2.6</para>
 </refsect2>
 <refsect2 id="GtkLabel--attributes" role="property"><title>The <literal>&quot;attributes&quot;</literal> property</title>
-<indexterm zone="GtkLabel--attributes"><primary sortas="GtkLabel:attributes">GtkLabel:attributes</primary></indexterm><programlisting>  &quot;attributes&quot;               <link linkend="PangoAttrList">PangoAttrList</link>*        : Read / Write</programlisting>
+<indexterm zone="GtkLabel--attributes"><primary sortas="Label:attributes">GtkLabel:attributes</primary></indexterm><programlisting>  &quot;attributes&quot;               <link linkend="PangoAttrList">PangoAttrList</link>*        : Read / Write</programlisting>
 <para>A list of style attributes to apply to the text of the label.</para></refsect2>
 <refsect2 id="GtkLabel--cursor-position" role="property"><title>The <literal>&quot;cursor-position&quot;</literal> property</title>
-<indexterm zone="GtkLabel--cursor-position"><primary sortas="GtkLabel:cursor-position">GtkLabel:cursor-position</primary></indexterm><programlisting>  &quot;cursor-position&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
+<indexterm zone="GtkLabel--cursor-position"><primary sortas="Label:cursor-position">GtkLabel:cursor-position</primary></indexterm><programlisting>  &quot;cursor-position&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>The current position of the insertion cursor in chars.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
 </refsect2>
 <refsect2 id="GtkLabel--ellipsize" role="property"><title>The <literal>&quot;ellipsize&quot;</literal> property</title>
-<indexterm zone="GtkLabel--ellipsize" role="2.6"><primary sortas="GtkLabel:ellipsize">GtkLabel:ellipsize</primary></indexterm><programlisting>  &quot;ellipsize&quot;                <link linkend="PangoEllipsizeMode">PangoEllipsizeMode</link>    : Read / Write</programlisting>
+<indexterm zone="GtkLabel--ellipsize" role="2.6"><primary sortas="Label:ellipsize">GtkLabel:ellipsize</primary></indexterm><programlisting>  &quot;ellipsize&quot;                <link linkend="PangoEllipsizeMode">PangoEllipsizeMode</link>    : Read / Write</programlisting>
 <para>
 The preferred place to ellipsize the string, if the label does
 not have enough room to display the entire string, specified as a 
@@ -1125,15 +1130,15 @@ to set a label's width are <link linkend="gtk-widget-set-size-request"><function
 <para>Since 2.6</para>
 </refsect2>
 <refsect2 id="GtkLabel--justify" role="property"><title>The <literal>&quot;justify&quot;</literal> property</title>
-<indexterm zone="GtkLabel--justify"><primary sortas="GtkLabel:justify">GtkLabel:justify</primary></indexterm><programlisting>  &quot;justify&quot;                  <link linkend="GtkJustification">GtkJustification</link>      : Read / Write</programlisting>
+<indexterm zone="GtkLabel--justify"><primary sortas="Label:justify">GtkLabel:justify</primary></indexterm><programlisting>  &quot;justify&quot;                  <link linkend="GtkJustification">GtkJustification</link>      : Read / Write</programlisting>
 <para>The alignment of the lines in the text of the label relative to each other. This does NOT affect the alignment of the label within its allocation. See GtkMisc::xalign for that.</para><para>Default value: GTK_JUSTIFY_LEFT</para>
 </refsect2>
 <refsect2 id="GtkLabel--label" role="property"><title>The <literal>&quot;label&quot;</literal> property</title>
-<indexterm zone="GtkLabel--label"><primary sortas="GtkLabel:label">GtkLabel:label</primary></indexterm><programlisting>  &quot;label&quot;                    <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<indexterm zone="GtkLabel--label"><primary sortas="Label:label">GtkLabel:label</primary></indexterm><programlisting>  &quot;label&quot;                    <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>The text of the label.</para><para>Default value: ""</para>
 </refsect2>
 <refsect2 id="GtkLabel--max-width-chars" role="property"><title>The <literal>&quot;max-width-chars&quot;</literal> property</title>
-<indexterm zone="GtkLabel--max-width-chars" role="2.6"><primary sortas="GtkLabel:max-width-chars">GtkLabel:max-width-chars</primary></indexterm><programlisting>  &quot;max-width-chars&quot;          <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<indexterm zone="GtkLabel--max-width-chars" role="2.6"><primary sortas="Label:max-width-chars">GtkLabel:max-width-chars</primary></indexterm><programlisting>  &quot;max-width-chars&quot;          <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 The desired maximum width of the label, in characters. If this property 
 is set to -1, the width will be calculated automatically, otherwise the 
@@ -1146,27 +1151,27 @@ value, then the "max-width-chars" property is ignored.</para>
 <para>Since 2.6</para>
 </refsect2>
 <refsect2 id="GtkLabel--mnemonic-keyval" role="property"><title>The <literal>&quot;mnemonic-keyval&quot;</literal> property</title>
-<indexterm zone="GtkLabel--mnemonic-keyval"><primary sortas="GtkLabel:mnemonic-keyval">GtkLabel:mnemonic-keyval</primary></indexterm><programlisting>  &quot;mnemonic-keyval&quot;          <link linkend="guint">guint</link>                 : Read</programlisting>
+<indexterm zone="GtkLabel--mnemonic-keyval"><primary sortas="Label:mnemonic-keyval">GtkLabel:mnemonic-keyval</primary></indexterm><programlisting>  &quot;mnemonic-keyval&quot;          <link linkend="guint">guint</link>                 : Read</programlisting>
 <para>The mnemonic accelerator key for this label.</para><para>Default value: 16777215</para>
 </refsect2>
 <refsect2 id="GtkLabel--mnemonic-widget" role="property"><title>The <literal>&quot;mnemonic-widget&quot;</literal> property</title>
-<indexterm zone="GtkLabel--mnemonic-widget"><primary sortas="GtkLabel:mnemonic-widget">GtkLabel:mnemonic-widget</primary></indexterm><programlisting>  &quot;mnemonic-widget&quot;          <link linkend="GtkWidget">GtkWidget</link>*            : Read / Write</programlisting>
+<indexterm zone="GtkLabel--mnemonic-widget"><primary sortas="Label:mnemonic-widget">GtkLabel:mnemonic-widget</primary></indexterm><programlisting>  &quot;mnemonic-widget&quot;          <link linkend="GtkWidget">GtkWidget</link>*            : Read / Write</programlisting>
 <para>The widget to be activated when the label's mnemonic key is pressed.</para></refsect2>
 <refsect2 id="GtkLabel--pattern" role="property"><title>The <literal>&quot;pattern&quot;</literal> property</title>
-<indexterm zone="GtkLabel--pattern"><primary sortas="GtkLabel:pattern">GtkLabel:pattern</primary></indexterm><programlisting>  &quot;pattern&quot;                  <link linkend="gchar">gchar</link>*                : Write</programlisting>
+<indexterm zone="GtkLabel--pattern"><primary sortas="Label:pattern">GtkLabel:pattern</primary></indexterm><programlisting>  &quot;pattern&quot;                  <link linkend="gchar">gchar</link>*                : Write</programlisting>
 <para>A string with _ characters in positions correspond to characters in the text to underline.</para><para>Default value: NULL</para>
 </refsect2>
 <refsect2 id="GtkLabel--selectable" role="property"><title>The <literal>&quot;selectable&quot;</literal> property</title>
-<indexterm zone="GtkLabel--selectable"><primary sortas="GtkLabel:selectable">GtkLabel:selectable</primary></indexterm><programlisting>  &quot;selectable&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<indexterm zone="GtkLabel--selectable"><primary sortas="Label:selectable">GtkLabel:selectable</primary></indexterm><programlisting>  &quot;selectable&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the label text can be selected with the mouse.</para><para>Default value: FALSE</para>
 </refsect2>
 <refsect2 id="GtkLabel--selection-bound" role="property"><title>The <literal>&quot;selection-bound&quot;</literal> property</title>
-<indexterm zone="GtkLabel--selection-bound"><primary sortas="GtkLabel:selection-bound">GtkLabel:selection-bound</primary></indexterm><programlisting>  &quot;selection-bound&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
+<indexterm zone="GtkLabel--selection-bound"><primary sortas="Label:selection-bound">GtkLabel:selection-bound</primary></indexterm><programlisting>  &quot;selection-bound&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
 <para>The position of the opposite end of the selection from the cursor in chars.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
 </refsect2>
 <refsect2 id="GtkLabel--single-line-mode" role="property"><title>The <literal>&quot;single-line-mode&quot;</literal> property</title>
-<indexterm zone="GtkLabel--single-line-mode" role="2.6"><primary sortas="GtkLabel:single-line-mode">GtkLabel:single-line-mode</primary></indexterm><programlisting>  &quot;single-line-mode&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<indexterm zone="GtkLabel--single-line-mode" role="2.6"><primary sortas="Label:single-line-mode">GtkLabel:single-line-mode</primary></indexterm><programlisting>  &quot;single-line-mode&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Whether the label is in single line mode. In single line mode,
 the height of the label does not depend on the actual text, it
@@ -1178,15 +1183,15 @@ changes would be distracting, e.g. in a statusbar.</para>
 <para>Since 2.6</para>
 </refsect2>
 <refsect2 id="GtkLabel--use-markup" role="property"><title>The <literal>&quot;use-markup&quot;</literal> property</title>
-<indexterm zone="GtkLabel--use-markup"><primary sortas="GtkLabel:use-markup">GtkLabel:use-markup</primary></indexterm><programlisting>  &quot;use-markup&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<indexterm zone="GtkLabel--use-markup"><primary sortas="Label:use-markup">GtkLabel:use-markup</primary></indexterm><programlisting>  &quot;use-markup&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>The text of the label includes XML markup. See pango_parse_markup().</para><para>Default value: FALSE</para>
 </refsect2>
 <refsect2 id="GtkLabel--use-underline" role="property"><title>The <literal>&quot;use-underline&quot;</literal> property</title>
-<indexterm zone="GtkLabel--use-underline"><primary sortas="GtkLabel:use-underline">GtkLabel:use-underline</primary></indexterm><programlisting>  &quot;use-underline&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<indexterm zone="GtkLabel--use-underline"><primary sortas="Label:use-underline">GtkLabel:use-underline</primary></indexterm><programlisting>  &quot;use-underline&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If set, an underline in the text indicates the next character should be used for the mnemonic accelerator key.</para><para>Default value: FALSE</para>
 </refsect2>
 <refsect2 id="GtkLabel--width-chars" role="property"><title>The <literal>&quot;width-chars&quot;</literal> property</title>
-<indexterm zone="GtkLabel--width-chars" role="2.6"><primary sortas="GtkLabel:width-chars">GtkLabel:width-chars</primary></indexterm><programlisting>  &quot;width-chars&quot;              <link linkend="gint">gint</link>                  : Read / Write</programlisting>
+<indexterm zone="GtkLabel--width-chars" role="2.6"><primary sortas="Label:width-chars">GtkLabel:width-chars</primary></indexterm><programlisting>  &quot;width-chars&quot;              <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>
 The desired width of the label, in characters. If this property is set to
 -1, the width will be calculated automatically, otherwise the label will
@@ -1199,11 +1204,11 @@ If the "width-chars" property is set to a positive value, then the
 <para>Since 2.6</para>
 </refsect2>
 <refsect2 id="GtkLabel--wrap" role="property"><title>The <literal>&quot;wrap&quot;</literal> property</title>
-<indexterm zone="GtkLabel--wrap"><primary sortas="GtkLabel:wrap">GtkLabel:wrap</primary></indexterm><programlisting>  &quot;wrap&quot;                     <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<indexterm zone="GtkLabel--wrap"><primary sortas="Label:wrap">GtkLabel:wrap</primary></indexterm><programlisting>  &quot;wrap&quot;                     <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>If set, wrap lines if the text becomes too wide.</para><para>Default value: FALSE</para>
 </refsect2>
 <refsect2 id="GtkLabel--wrap-mode" role="property"><title>The <literal>&quot;wrap-mode&quot;</literal> property</title>
-<indexterm zone="GtkLabel--wrap-mode" role="2.10"><primary sortas="GtkLabel:wrap-mode">GtkLabel:wrap-mode</primary></indexterm><programlisting>  &quot;wrap-mode&quot;                <link linkend="PangoWrapMode">PangoWrapMode</link>         : Read / Write</programlisting>
+<indexterm zone="GtkLabel--wrap-mode" role="2.10"><primary sortas="Label:wrap-mode">GtkLabel:wrap-mode</primary></indexterm><programlisting>  &quot;wrap-mode&quot;                <link linkend="PangoWrapMode">PangoWrapMode</link>         : Read / Write</programlisting>
 <para>
 If line wrapping is on (see the <link linkend="GtkLabel--wrap"><type>"wrap"</type></link> property) this controls 
 how the line wrapping is done. The default is <link linkend="PANGO-WRAP-WORD--CAPS"><literal>PANGO_WRAP_WORD</literal></link>, which 
@@ -1218,48 +1223,85 @@ means wrap on word boundaries.</para>
 <refsect1 id="GtkLabel.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2 id="GtkLabel-copy-clipboard" role="signal"><title>The <literal>&quot;copy-clipboard&quot;</literal> signal</title>
-<indexterm zone="GtkLabel-copy-clipboard"><primary sortas="GtkLabel::copy-clipboard">GtkLabel::copy-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link> *label,
+<indexterm zone="GtkLabel-copy-clipboard"><primary sortas="Label::copy-clipboard">GtkLabel::copy-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                         <link linkend="gpointer">gpointer</link>  user_data)      : Run Last / Action</programlisting>
+<para>
+The ::copy-clipboard signal is a
+<link linkend="keybinding-signals">keybinding signal</link>
+which gets emitted to copy the selection to the clipboard.
+</para>
+<para>
+The default binding for this signal is Ctrl-c.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>label</parameter>&#160;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkLabel-move-cursor" role="signal"><title>The <literal>&quot;move-cursor&quot;</literal> signal</title>
-<indexterm zone="GtkLabel-move-cursor"><primary sortas="GtkLabel::move-cursor">GtkLabel::move-cursor</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link>       *label,
-                                                        <link linkend="GtkMovementStep">GtkMovementStep</link> arg1,
-                                                        <link linkend="gint">gint</link>            arg2,
-                                                        <link linkend="gboolean">gboolean</link>        arg3,
-                                                        <link linkend="gpointer">gpointer</link>        user_data)      : Run Last / Action</programlisting>
+<indexterm zone="GtkLabel-move-cursor"><primary sortas="Label::move-cursor">GtkLabel::move-cursor</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link>       *entry,
+                                                        <link linkend="GtkMovementStep">GtkMovementStep</link> step,
+                                                        <link linkend="gint">gint</link>            count,
+                                                        <link linkend="gboolean">gboolean</link>        extend_selection,
+                                                        <link linkend="gpointer">gpointer</link>        user_data)             : Run Last / Action</programlisting>
+<para>
+The ::move-cursor signal is a
+<link linkend="keybinding-signals">keybinding signal</link>
+which gets emitted when the user initiates a cursor movement.
+If the cursor is not visible in <parameter>entry</parameter>, this signal causes
+the viewport to be moved instead.
+</para>
+<para>
+Applications should not connect to it, but may emit it with
+<link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control scrolling
+programmatically.
+</para>
+<para>
+The default bindings for this signal come in two variants,
+the variant with the Shift modifier extends the selection,
+the variant without the Shift modifer does not.
+There are too many key combinations to list them all here.
+<itemizedlist>
+<listitem>Arrow keys move by individual characters/lines</listitem>
+<listitem>Ctrl-arrow key combinations move by words/paragraphs</listitem>
+<listitem>Home/End keys move to the ends of the buffer</listitem>
+</itemizedlist></para>
 <para>
 </para><variablelist role="params">
-<varlistentry><term><parameter>label</parameter>&#160;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>entry</parameter>&#160;:</term>
+<listitem><simpara> the object which received the signal
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&#160;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>step</parameter>&#160;:</term>
+<listitem><simpara> the granularity of the move, as a <link linkend="GtkMovementStep"><type>GtkMovementStep</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg2</parameter>&#160;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>count</parameter>&#160;:</term>
+<listitem><simpara> the number of <parameter>step</parameter> units to move
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg3</parameter>&#160;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>extend_selection</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the move should extend the selection
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkLabel-populate-popup" role="signal"><title>The <literal>&quot;populate-popup&quot;</literal> signal</title>
-<indexterm zone="GtkLabel-populate-popup"><primary sortas="GtkLabel::populate-popup">GtkLabel::populate-popup</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link> *label,
-                                                        <link linkend="GtkMenu">GtkMenu</link>  *arg1,
+<indexterm zone="GtkLabel-populate-popup"><primary sortas="Label::populate-popup">GtkLabel::populate-popup</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link> *label,
+                                                        <link linkend="GtkMenu">GtkMenu</link>  *menu,
                                                         <link linkend="gpointer">gpointer</link>  user_data)      : Run Last</programlisting>
+<para>
+The ::populate-popup signal gets emitted before showing the
+context menu of the label. Note that only selectable labels
+have context menus.
+</para>
+<para>
+If you need to add items to the context menu, connect
+to this signal and append your menuitems to the <parameter>menu</parameter>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>label</parameter>&#160;:</term>
-<listitem><simpara>the object which received the signal.
+<listitem><simpara> The label on which the signal is emitted
 </simpara></listitem></varlistentry>
-<varlistentry><term><parameter>arg1</parameter>&#160;:</term>
-<listitem><simpara>
+<varlistentry><term><parameter>menu</parameter>&#160;:</term>
+<listitem><simpara> the menu that is being populated
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>

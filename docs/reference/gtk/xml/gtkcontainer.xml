@@ -293,6 +293,11 @@ child properties for the child.
 </object>
 ]]></programlisting>
 </example>
+<para>
+Since 2.16, child properties can also be marked as translatable using
+the same "translatable", "comments" and "context" attributes that are used
+for regular properties.
+</para>
 </refsect2>
 </refsect1>
 
@@ -300,12 +305,12 @@ child properties for the child.
 <title role="details.title">Details</title>
 <refsect2 id="GtkContainer-struct" role="struct">
 <title>GtkContainer</title>
-<indexterm zone="GtkContainer-struct"><primary sortas="GtkContainer">GtkContainer</primary></indexterm><programlisting>typedef struct _GtkContainer GtkContainer;</programlisting>
+<indexterm zone="GtkContainer-struct"><primary sortas="Container">GtkContainer</primary></indexterm><programlisting>typedef struct _GtkContainer GtkContainer;</programlisting>
 <para>
 </para></refsect2>
 <refsect2 id="GTK-IS-RESIZE-CONTAINER--CAPS" role="macro">
 <title>GTK_IS_RESIZE_CONTAINER()</title>
-<indexterm zone="GTK-IS-RESIZE-CONTAINER--CAPS"><primary sortas="GTK_IS_RESIZE_CONTAINER">GTK_IS_RESIZE_CONTAINER</primary></indexterm><programlisting>#define GTK_IS_RESIZE_CONTAINER(widget) (GTK_IS_CONTAINER (widget) &amp;&amp; ((GtkContainer*) (widget))-&gt;resize_mode != GTK_RESIZE_PARENT)
+<indexterm zone="GTK-IS-RESIZE-CONTAINER--CAPS"><primary sortas="IS_RESIZE_CONTAINER">GTK_IS_RESIZE_CONTAINER</primary></indexterm><programlisting>#define GTK_IS_RESIZE_CONTAINER(widget) (GTK_IS_CONTAINER (widget) &amp;&amp; ((GtkContainer*) (widget))-&gt;resize_mode != GTK_RESIZE_PARENT)
 </programlisting>
 <para>
 </para><variablelist role="params">
@@ -315,7 +320,7 @@ child properties for the child.
 </variablelist></refsect2>
 <refsect2 id="GTK-CONTAINER-WARN-INVALID-CHILD-PROPERTY-ID--CAPS" role="macro">
 <title>GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID()</title>
-<indexterm zone="GTK-CONTAINER-WARN-INVALID-CHILD-PROPERTY-ID--CAPS"><primary sortas="GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID">GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID</primary></indexterm><programlisting>#define             GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID(object, property_id, pspec)</programlisting>
+<indexterm zone="GTK-CONTAINER-WARN-INVALID-CHILD-PROPERTY-ID--CAPS"><primary sortas="CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID">GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID</primary></indexterm><programlisting>#define             GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID(object, property_id, pspec)</programlisting>
 <para>
 This macro should be used to emit a standard warning about unexpected
 properties in <link linkend="set-child-property"><function>set_child_property()</function></link> and <link linkend="get-child-property"><function>get_child_property()</function></link> implementations.
@@ -333,7 +338,7 @@ properties in <link linkend="set-child-property"><function>set_child_property()<
 </variablelist></refsect2>
 <refsect2 id="gtk-container-border-width" role="macro" condition="deprecated:Use gtk_container_set_border_width() instead.">
 <title>gtk_container_border_width</title>
-<indexterm zone="gtk-container-border-width" role="deprecated"><primary sortas="gtk_container_border_width">gtk_container_border_width</primary></indexterm><programlisting>#define	gtk_container_border_width		gtk_container_set_border_width
+<indexterm zone="gtk-container-border-width" role="deprecated"><primary sortas="container_border_width">gtk_container_border_width</primary></indexterm><programlisting>#define	gtk_container_border_width		gtk_container_set_border_width
 </programlisting>
 <warning><para><literal>gtk_container_border_width</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-container-set-border-width"><function>gtk_container_set_border_width()</function></link> instead.</para></warning>
 <para>
@@ -341,7 +346,7 @@ Does the same as <link linkend="gtk-container-set-border-width"><function>gtk_co
 </para></refsect2>
 <refsect2 id="gtk-container-add" role="function">
 <title>gtk_container_add ()</title>
-<indexterm zone="gtk-container-add"><primary sortas="gtk_container_add">gtk_container_add</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_add                   (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-add"><primary sortas="container_add">gtk_container_add</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_add                   (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 Adds <parameter>widget</parameter> to <parameter>container</parameter>. Typically used for simple containers
@@ -363,7 +368,7 @@ you can't place the same widget inside two different containers.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-remove" role="function">
 <title>gtk_container_remove ()</title>
-<indexterm zone="gtk-container-remove"><primary sortas="gtk_container_remove">gtk_container_remove</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_remove                (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-remove"><primary sortas="container_remove">gtk_container_remove</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_remove                (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 Removes <parameter>widget</parameter> from <parameter>container</parameter>. <parameter>widget</parameter> must be inside <parameter>container</parameter>.
@@ -386,7 +391,7 @@ container and help break any circular reference count cycles.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-add-with-properties" role="function">
 <title>gtk_container_add_with_properties ()</title>
-<indexterm zone="gtk-container-add-with-properties"><primary sortas="gtk_container_add_with_properties">gtk_container_add_with_properties</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_add_with_properties   (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-add-with-properties"><primary sortas="container_add_with_properties">gtk_container_add_with_properties</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_add_with_properties   (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          const <link linkend="gchar">gchar</link> *first_prop_name,
                                                          ...);</programlisting>
@@ -411,7 +416,7 @@ See <link linkend="gtk-container-add"><function>gtk_container_add()</function></
 </variablelist></refsect2>
 <refsect2 id="gtk-container-get-resize-mode" role="function">
 <title>gtk_container_get_resize_mode ()</title>
-<indexterm zone="gtk-container-get-resize-mode"><primary sortas="gtk_container_get_resize_mode">gtk_container_get_resize_mode</primary></indexterm><programlisting><link linkend="GtkResizeMode">GtkResizeMode</link>       gtk_container_get_resize_mode       (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-get-resize-mode"><primary sortas="container_get_resize_mode">gtk_container_get_resize_mode</primary></indexterm><programlisting><link linkend="GtkResizeMode">GtkResizeMode</link>       gtk_container_get_resize_mode       (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Returns the resize mode for the container. See
 <link linkend="gtk-container-set-resize-mode"><function>gtk_container_set_resize_mode()</function></link>.</para>
@@ -425,7 +430,7 @@ Returns the resize mode for the container. See
 </variablelist></refsect2>
 <refsect2 id="gtk-container-set-resize-mode" role="function">
 <title>gtk_container_set_resize_mode ()</title>
-<indexterm zone="gtk-container-set-resize-mode"><primary sortas="gtk_container_set_resize_mode">gtk_container_set_resize_mode</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_resize_mode       (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-set-resize-mode"><primary sortas="container_set_resize_mode">gtk_container_set_resize_mode</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_resize_mode       (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkResizeMode">GtkResizeMode</link> resize_mode);</programlisting>
 <para>
 Sets the resize mode for the container.
@@ -445,7 +450,7 @@ or executed immediately.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-check-resize" role="function">
 <title>gtk_container_check_resize ()</title>
-<indexterm zone="gtk-container-check-resize"><primary sortas="gtk_container_check_resize">gtk_container_check_resize</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_check_resize          (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-check-resize"><primary sortas="container_check_resize">gtk_container_check_resize</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_check_resize          (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>container</parameter>&#160;:</term>
@@ -454,7 +459,7 @@ or executed immediately.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-foreach" role="function">
 <title>gtk_container_foreach ()</title>
-<indexterm zone="gtk-container-foreach"><primary sortas="gtk_container_foreach">gtk_container_foreach</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_foreach               (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-foreach"><primary sortas="container_foreach">gtk_container_foreach</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_foreach               (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkCallback">GtkCallback</link> callback,
                                                          <link linkend="gpointer">gpointer</link> callback_data);</programlisting>
 <para>
@@ -476,7 +481,7 @@ Invokes <parameter>callback</parameter> on each non-internal child of <parameter
 </variablelist></refsect2>
 <refsect2 id="gtk-container-foreach-full" role="function" condition="deprecated:Use gtk_container_foreach() instead.">
 <title>gtk_container_foreach_full ()</title>
-<indexterm zone="gtk-container-foreach-full" role="deprecated"><primary sortas="gtk_container_foreach_full">gtk_container_foreach_full</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_foreach_full          (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-foreach-full" role="deprecated"><primary sortas="container_foreach_full">gtk_container_foreach_full</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_foreach_full          (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkCallback">GtkCallback</link> callback,
                                                          <link linkend="GtkCallbackMarshal">GtkCallbackMarshal</link> marshal,
                                                          <link linkend="gpointer">gpointer</link> callback_data,
@@ -502,7 +507,7 @@ Invokes <parameter>callback</parameter> on each non-internal child of <parameter
 </variablelist></refsect2>
 <refsect2 id="gtk-container-children" role="macro" condition="deprecated:Use gtk_container_get_children() instead.">
 <title>gtk_container_children</title>
-<indexterm zone="gtk-container-children" role="deprecated"><primary sortas="gtk_container_children">gtk_container_children</primary></indexterm><programlisting>#define gtk_container_children gtk_container_get_children
+<indexterm zone="gtk-container-children" role="deprecated"><primary sortas="container_children">gtk_container_children</primary></indexterm><programlisting>#define gtk_container_children gtk_container_get_children
 </programlisting>
 <warning><para><literal>gtk_container_children</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-container-get-children"><function>gtk_container_get_children()</function></link> instead.</para></warning>
 <para>
@@ -510,7 +515,7 @@ Does the same as <link linkend="gtk-container-get-children"><function>gtk_contai
 </para></refsect2>
 <refsect2 id="gtk-container-get-children" role="function">
 <title>gtk_container_get_children ()</title>
-<indexterm zone="gtk-container-get-children"><primary sortas="gtk_container_get_children">gtk_container_get_children</primary></indexterm><programlisting><link linkend="GList">GList</link>*              gtk_container_get_children          (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-get-children"><primary sortas="container_get_children">gtk_container_get_children</primary></indexterm><programlisting><link linkend="GList">GList</link>*              gtk_container_get_children          (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Returns the container's non-internal children. See
 <link linkend="gtk-container-forall"><function>gtk_container_forall()</function></link> for details on what constitutes an "internal" child.</para>
@@ -524,7 +529,7 @@ Returns the container's non-internal children. See
 </variablelist></refsect2>
 <refsect2 id="gtk-container-set-reallocate-redraws" role="function">
 <title>gtk_container_set_reallocate_redraws ()</title>
-<indexterm zone="gtk-container-set-reallocate-redraws"><primary sortas="gtk_container_set_reallocate_redraws">gtk_container_set_reallocate_redraws</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_reallocate_redraws
+<indexterm zone="gtk-container-set-reallocate-redraws"><primary sortas="container_set_reallocate_redraws">gtk_container_set_reallocate_redraws</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_reallocate_redraws
                                                         (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="gboolean">gboolean</link> needs_redraws);</programlisting>
 <para>
@@ -544,7 +549,7 @@ redrawn if any of their children changed allocation.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-get-focus-child" role="function" condition="since:2.14">
 <title>gtk_container_get_focus_child ()</title>
-<indexterm zone="gtk-container-get-focus-child" role="2.14"><primary sortas="gtk_container_get_focus_child">gtk_container_get_focus_child</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_container_get_focus_child       (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-get-focus-child" role="2.14"><primary sortas="container_get_focus_child">gtk_container_get_focus_child</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_container_get_focus_child       (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Returns the current focus child widget inside <parameter>container</parameter>.</para>
 <para>
@@ -559,7 +564,7 @@ Returns the current focus child widget inside <parameter>container</parameter>.<
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-container-set-focus-child" role="function">
 <title>gtk_container_set_focus_child ()</title>
-<indexterm zone="gtk-container-set-focus-child"><primary sortas="gtk_container_set_focus_child">gtk_container_set_focus_child</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_child       (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-set-focus-child"><primary sortas="container_set_focus_child">gtk_container_set_focus_child</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_child       (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child);</programlisting>
 <para>
 Sets, or unsets if <parameter>child</parameter> is <link linkend="NULL--CAPS"><literal>NULL</literal></link>, the focused child of <parameter>container</parameter>.
@@ -579,7 +584,7 @@ default behaviour by overriding the class closure of this signal.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-get-focus-vadjustment" role="function">
 <title>gtk_container_get_focus_vadjustment ()</title>
-<indexterm zone="gtk-container-get-focus-vadjustment"><primary sortas="gtk_container_get_focus_vadjustment">gtk_container_get_focus_vadjustment</primary></indexterm><programlisting><link linkend="GtkAdjustment">GtkAdjustment</link> *     gtk_container_get_focus_vadjustment (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-get-focus-vadjustment"><primary sortas="container_get_focus_vadjustment">gtk_container_get_focus_vadjustment</primary></indexterm><programlisting><link linkend="GtkAdjustment">GtkAdjustment</link> *     gtk_container_get_focus_vadjustment (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Retrieves the vertical focus adjustment for the container. See
 <link linkend="gtk-container-set-focus-vadjustment"><function>gtk_container_set_focus_vadjustment()</function></link>.</para>
@@ -594,7 +599,7 @@ Retrieves the vertical focus adjustment for the container. See
 </variablelist></refsect2>
 <refsect2 id="gtk-container-set-focus-vadjustment" role="function">
 <title>gtk_container_set_focus_vadjustment ()</title>
-<indexterm zone="gtk-container-set-focus-vadjustment"><primary sortas="gtk_container_set_focus_vadjustment">gtk_container_set_focus_vadjustment</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_vadjustment (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-set-focus-vadjustment"><primary sortas="container_set_focus_vadjustment">gtk_container_set_focus_vadjustment</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_vadjustment (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);</programlisting>
 <para>
 Hooks up an adjustment to focus handling in a container, so when a 
@@ -619,7 +624,7 @@ system as the allocation for immediate children of the container.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-get-focus-hadjustment" role="function">
 <title>gtk_container_get_focus_hadjustment ()</title>
-<indexterm zone="gtk-container-get-focus-hadjustment"><primary sortas="gtk_container_get_focus_hadjustment">gtk_container_get_focus_hadjustment</primary></indexterm><programlisting><link linkend="GtkAdjustment">GtkAdjustment</link> *     gtk_container_get_focus_hadjustment (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-get-focus-hadjustment"><primary sortas="container_get_focus_hadjustment">gtk_container_get_focus_hadjustment</primary></indexterm><programlisting><link linkend="GtkAdjustment">GtkAdjustment</link> *     gtk_container_get_focus_hadjustment (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Retrieves the horizontal focus adjustment for the container. See
 <link linkend="gtk-container-set-focus-hadjustment"><function>gtk_container_set_focus_hadjustment()</function></link>.</para>
@@ -634,7 +639,7 @@ Retrieves the horizontal focus adjustment for the container. See
 </variablelist></refsect2>
 <refsect2 id="gtk-container-set-focus-hadjustment" role="function">
 <title>gtk_container_set_focus_hadjustment ()</title>
-<indexterm zone="gtk-container-set-focus-hadjustment"><primary sortas="gtk_container_set_focus_hadjustment">gtk_container_set_focus_hadjustment</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_hadjustment (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-set-focus-hadjustment"><primary sortas="container_set_focus_hadjustment">gtk_container_set_focus_hadjustment</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_hadjustment (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkAdjustment">GtkAdjustment</link> *adjustment);</programlisting>
 <para>
 Hooks up an adjustment to focus handling in a container, so when a child 
@@ -659,7 +664,7 @@ system as the allocation for immediate children of the container.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-resize-children" role="function">
 <title>gtk_container_resize_children ()</title>
-<indexterm zone="gtk-container-resize-children"><primary sortas="gtk_container_resize_children">gtk_container_resize_children</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_resize_children       (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-resize-children"><primary sortas="container_resize_children">gtk_container_resize_children</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_resize_children       (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>container</parameter>&#160;:</term>
@@ -668,7 +673,7 @@ system as the allocation for immediate children of the container.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-type" role="function">
 <title>gtk_container_child_type ()</title>
-<indexterm zone="gtk-container-child-type"><primary sortas="gtk_container_child_type">gtk_container_child_type</primary></indexterm><programlisting><link linkend="GType">GType</link>               gtk_container_child_type            (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-child-type"><primary sortas="container_child_type">gtk_container_child_type</primary></indexterm><programlisting><link linkend="GType">GType</link>               gtk_container_child_type            (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Returns the type of the children supported by the container.
 </para>
@@ -686,7 +691,7 @@ children.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-get" role="function">
 <title>gtk_container_child_get ()</title>
-<indexterm zone="gtk-container-child-get"><primary sortas="gtk_container_child_get">gtk_container_child_get</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_get             (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-child-get"><primary sortas="container_child_get">gtk_container_child_get</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_get             (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          const <link linkend="gchar">gchar</link> *first_prop_name,
                                                          ...);</programlisting>
@@ -710,7 +715,7 @@ Gets the values of one or more child properties for <parameter>child</parameter>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-set" role="function">
 <title>gtk_container_child_set ()</title>
-<indexterm zone="gtk-container-child-set"><primary sortas="gtk_container_child_set">gtk_container_child_set</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_set             (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-child-set"><primary sortas="container_child_set">gtk_container_child_set</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_set             (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          const <link linkend="gchar">gchar</link> *first_prop_name,
                                                          ...);</programlisting>
@@ -734,7 +739,7 @@ Sets one or more child properties for <parameter>child</parameter> and <paramete
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-get-property" role="function">
 <title>gtk_container_child_get_property ()</title>
-<indexterm zone="gtk-container-child-get-property"><primary sortas="gtk_container_child_get_property">gtk_container_child_get_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_get_property    (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-child-get-property"><primary sortas="container_child_get_property">gtk_container_child_get_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_get_property    (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          const <link linkend="gchar">gchar</link> *property_name,
                                                          <link linkend="GValue">GValue</link> *value);</programlisting>
@@ -757,7 +762,7 @@ Gets the value of a child property for <parameter>child</parameter> and <paramet
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-set-property" role="function">
 <title>gtk_container_child_set_property ()</title>
-<indexterm zone="gtk-container-child-set-property"><primary sortas="gtk_container_child_set_property">gtk_container_child_set_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_set_property    (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-child-set-property"><primary sortas="container_child_set_property">gtk_container_child_set_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_set_property    (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          const <link linkend="gchar">gchar</link> *property_name,
                                                          const <link linkend="GValue">GValue</link> *value);</programlisting>
@@ -780,7 +785,7 @@ Sets a child property for <parameter>child</parameter> and <parameter>container<
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-get-valist" role="function">
 <title>gtk_container_child_get_valist ()</title>
-<indexterm zone="gtk-container-child-get-valist"><primary sortas="gtk_container_child_get_valist">gtk_container_child_get_valist</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_get_valist      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-child-get-valist"><primary sortas="container_child_get_valist">gtk_container_child_get_valist</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_get_valist      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          const <link linkend="gchar">gchar</link> *first_property_name,
                                                          <link linkend="va-list">va_list</link> var_args);</programlisting>
@@ -804,7 +809,7 @@ Gets the values of one or more child properties for <parameter>child</parameter>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-child-set-valist" role="function">
 <title>gtk_container_child_set_valist ()</title>
-<indexterm zone="gtk-container-child-set-valist"><primary sortas="gtk_container_child_set_valist">gtk_container_child_set_valist</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_set_valist      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-child-set-valist"><primary sortas="container_child_set_valist">gtk_container_child_set_valist</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_child_set_valist      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          const <link linkend="gchar">gchar</link> *first_property_name,
                                                          <link linkend="va-list">va_list</link> var_args);</programlisting>
@@ -828,7 +833,7 @@ Sets one or more child properties for <parameter>child</parameter> and <paramete
 </variablelist></refsect2>
 <refsect2 id="gtk-container-forall" role="function">
 <title>gtk_container_forall ()</title>
-<indexterm zone="gtk-container-forall"><primary sortas="gtk_container_forall">gtk_container_forall</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_forall                (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-forall"><primary sortas="container_forall">gtk_container_forall</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_forall                (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkCallback">GtkCallback</link> callback,
                                                          <link linkend="gpointer">gpointer</link> callback_data);</programlisting>
 <para>
@@ -852,7 +857,7 @@ rather than <link linkend="gtk-container-forall"><function>gtk_container_forall(
 </variablelist></refsect2>
 <refsect2 id="gtk-container-get-border-width" role="function">
 <title>gtk_container_get_border_width ()</title>
-<indexterm zone="gtk-container-get-border-width"><primary sortas="gtk_container_get_border_width">gtk_container_get_border_width</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_container_get_border_width      (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-get-border-width"><primary sortas="container_get_border_width">gtk_container_get_border_width</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_container_get_border_width      (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Retrieves the border width of the container. See
 <link linkend="gtk-container-set-border-width"><function>gtk_container_set_border_width()</function></link>.</para>
@@ -866,7 +871,7 @@ Retrieves the border width of the container. See
 </variablelist></refsect2>
 <refsect2 id="gtk-container-set-border-width" role="function">
 <title>gtk_container_set_border_width ()</title>
-<indexterm zone="gtk-container-set-border-width"><primary sortas="gtk_container_set_border_width">gtk_container_set_border_width</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_border_width      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-set-border-width"><primary sortas="container_set_border_width">gtk_container_set_border_width</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_border_width      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="guint">guint</link> border_width);</programlisting>
 <para>
 Sets the border width of the container.
@@ -892,7 +897,7 @@ a spacer.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-propagate-expose" role="function">
 <title>gtk_container_propagate_expose ()</title>
-<indexterm zone="gtk-container-propagate-expose"><primary sortas="gtk_container_propagate_expose">gtk_container_propagate_expose</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_propagate_expose      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-propagate-expose"><primary sortas="container_propagate_expose">gtk_container_propagate_expose</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_propagate_expose      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          <link linkend="GdkEventExpose">GdkEventExpose</link> *event);</programlisting>
 <para>
@@ -925,7 +930,7 @@ and then chain to the ::expose implementation from <link linkend="GtkContainer">
 </variablelist></refsect2>
 <refsect2 id="gtk-container-get-focus-chain" role="function">
 <title>gtk_container_get_focus_chain ()</title>
-<indexterm zone="gtk-container-get-focus-chain"><primary sortas="gtk_container_get_focus_chain">gtk_container_get_focus_chain</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_container_get_focus_chain       (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-get-focus-chain"><primary sortas="container_get_focus_chain">gtk_container_get_focus_chain</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_container_get_focus_chain       (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GList">GList</link> **focusable_widgets);</programlisting>
 <para>
 Retrieves the focus chain of the container, if one has been
@@ -951,7 +956,7 @@ has been set explicitly.
 </variablelist></refsect2>
 <refsect2 id="gtk-container-set-focus-chain" role="function">
 <title>gtk_container_set_focus_chain ()</title>
-<indexterm zone="gtk-container-set-focus-chain"><primary sortas="gtk_container_set_focus_chain">gtk_container_set_focus_chain</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_chain       (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="gtk-container-set-focus-chain"><primary sortas="container_set_focus_chain">gtk_container_set_focus_chain</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_set_focus_chain       (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                          <link linkend="GList">GList</link> *focusable_widgets);</programlisting>
 <para>
 Sets a focus chain, overriding the one computed automatically by GTK+.
@@ -973,7 +978,7 @@ when the focus chain is actually traversed.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-unset-focus-chain" role="function">
 <title>gtk_container_unset_focus_chain ()</title>
-<indexterm zone="gtk-container-unset-focus-chain"><primary sortas="gtk_container_unset_focus_chain">gtk_container_unset_focus_chain</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_unset_focus_chain     (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
+<indexterm zone="gtk-container-unset-focus-chain"><primary sortas="container_unset_focus_chain">gtk_container_unset_focus_chain</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_unset_focus_chain     (<link linkend="GtkContainer">GtkContainer</link> *container);</programlisting>
 <para>
 Removes a focus chain explicitly set with <link linkend="gtk-container-set-focus-chain"><function>gtk_container_set_focus_chain()</function></link>.</para>
 <para>
@@ -984,7 +989,7 @@ Removes a focus chain explicitly set with <link linkend="gtk-container-set-focus
 </variablelist></refsect2>
 <refsect2 id="gtk-container-class-find-child-property" role="function">
 <title>gtk_container_class_find_child_property ()</title>
-<indexterm zone="gtk-container-class-find-child-property"><primary sortas="gtk_container_class_find_child_property">gtk_container_class_find_child_property</primary></indexterm><programlisting><link linkend="GParamSpec">GParamSpec</link>*         gtk_container_class_find_child_property
+<indexterm zone="gtk-container-class-find-child-property"><primary sortas="container_class_find_child_property">gtk_container_class_find_child_property</primary></indexterm><programlisting><link linkend="GParamSpec">GParamSpec</link>*         gtk_container_class_find_child_property
                                                         (<link linkend="GObjectClass">GObjectClass</link> *cclass,
                                                          const <link linkend="gchar">gchar</link> *property_name);</programlisting>
 <para>
@@ -1003,7 +1008,7 @@ Finds a child property of a container class by name.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-class-install-child-property" role="function">
 <title>gtk_container_class_install_child_property ()</title>
-<indexterm zone="gtk-container-class-install-child-property"><primary sortas="gtk_container_class_install_child_property">gtk_container_class_install_child_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_class_install_child_property
+<indexterm zone="gtk-container-class-install-child-property"><primary sortas="container_class_install_child_property">gtk_container_class_install_child_property</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_container_class_install_child_property
                                                         (<link linkend="GtkContainerClass">GtkContainerClass</link> *cclass,
                                                          <link linkend="guint">guint</link> property_id,
                                                          <link linkend="GParamSpec">GParamSpec</link> *pspec);</programlisting>
@@ -1023,7 +1028,7 @@ Installs a child property on a container class.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-container-class-list-child-properties" role="function">
 <title>gtk_container_class_list_child_properties ()</title>
-<indexterm zone="gtk-container-class-list-child-properties"><primary sortas="gtk_container_class_list_child_properties">gtk_container_class_list_child_properties</primary></indexterm><programlisting><link linkend="GParamSpec">GParamSpec</link>**        gtk_container_class_list_child_properties
+<indexterm zone="gtk-container-class-list-child-properties"><primary sortas="container_class_list_child_properties">gtk_container_class_list_child_properties</primary></indexterm><programlisting><link linkend="GParamSpec">GParamSpec</link>**        gtk_container_class_list_child_properties
                                                         (<link linkend="GObjectClass">GObjectClass</link> *cclass,
                                                          <link linkend="guint">guint</link> *n_properties);</programlisting>
 <para>
@@ -1045,15 +1050,15 @@ Returns all child properties of a container class.</para>
 <refsect1 id="GtkContainer.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
 <refsect2 id="GtkContainer--border-width" role="property"><title>The <literal>&quot;border-width&quot;</literal> property</title>
-<indexterm zone="GtkContainer--border-width"><primary sortas="GtkContainer:border-width">GtkContainer:border-width</primary></indexterm><programlisting>  &quot;border-width&quot;             <link linkend="guint">guint</link>                 : Read / Write</programlisting>
+<indexterm zone="GtkContainer--border-width"><primary sortas="Container:border-width">GtkContainer:border-width</primary></indexterm><programlisting>  &quot;border-width&quot;             <link linkend="guint">guint</link>                 : Read / Write</programlisting>
 <para>The width of the empty border outside the containers children.</para><para>Allowed values: &lt;= G_MAXINT</para>
 <para>Default value: 0</para>
 </refsect2>
 <refsect2 id="GtkContainer--child" role="property"><title>The <literal>&quot;child&quot;</literal> property</title>
-<indexterm zone="GtkContainer--child"><primary sortas="GtkContainer:child">GtkContainer:child</primary></indexterm><programlisting>  &quot;child&quot;                    <link linkend="GtkWidget">GtkWidget</link>*            : Write</programlisting>
+<indexterm zone="GtkContainer--child"><primary sortas="Container:child">GtkContainer:child</primary></indexterm><programlisting>  &quot;child&quot;                    <link linkend="GtkWidget">GtkWidget</link>*            : Write</programlisting>
 <para>Can be used to add a new child to the container.</para></refsect2>
 <refsect2 id="GtkContainer--resize-mode" role="property"><title>The <literal>&quot;resize-mode&quot;</literal> property</title>
-<indexterm zone="GtkContainer--resize-mode"><primary sortas="GtkContainer:resize-mode">GtkContainer:resize-mode</primary></indexterm><programlisting>  &quot;resize-mode&quot;              <link linkend="GtkResizeMode">GtkResizeMode</link>         : Read / Write</programlisting>
+<indexterm zone="GtkContainer--resize-mode"><primary sortas="Container:resize-mode">GtkContainer:resize-mode</primary></indexterm><programlisting>  &quot;resize-mode&quot;              <link linkend="GtkResizeMode">GtkResizeMode</link>         : Read / Write</programlisting>
 <para>Specify how resize events are handled.</para><para>Default value: GTK_RESIZE_PARENT</para>
 </refsect2>
 </refsect1>
@@ -1061,7 +1066,7 @@ Returns all child properties of a container class.</para>
 <refsect1 id="GtkContainer.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2 id="GtkContainer-add" role="signal"><title>The <literal>&quot;add&quot;</literal> signal</title>
-<indexterm zone="GtkContainer-add"><primary sortas="GtkContainer::add">GtkContainer::add</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="GtkContainer-add"><primary sortas="Container::add">GtkContainer::add</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                         <link linkend="GtkWidget">GtkWidget</link>    *widget,
                                                         <link linkend="gpointer">gpointer</link>      user_data)      : Run First</programlisting>
 <para>
@@ -1075,7 +1080,7 @@ Returns all child properties of a container class.</para>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkContainer-check-resize" role="signal"><title>The <literal>&quot;check-resize&quot;</literal> signal</title>
-<indexterm zone="GtkContainer-check-resize"><primary sortas="GtkContainer::check-resize">GtkContainer::check-resize</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="GtkContainer-check-resize"><primary sortas="Container::check-resize">GtkContainer::check-resize</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                         <link linkend="gpointer">gpointer</link>      user_data)      : Run Last</programlisting>
 <para>
 </para><variablelist role="params">
@@ -1085,7 +1090,7 @@ Returns all child properties of a container class.</para>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkContainer-remove" role="signal"><title>The <literal>&quot;remove&quot;</literal> signal</title>
-<indexterm zone="GtkContainer-remove"><primary sortas="GtkContainer::remove">GtkContainer::remove</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="GtkContainer-remove"><primary sortas="Container::remove">GtkContainer::remove</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                         <link linkend="GtkWidget">GtkWidget</link>    *widget,
                                                         <link linkend="gpointer">gpointer</link>      user_data)      : Run First</programlisting>
 <para>
@@ -1099,7 +1104,7 @@ Returns all child properties of a container class.</para>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist></refsect2><refsect2 id="GtkContainer-set-focus-child" role="signal"><title>The <literal>&quot;set-focus-child&quot;</literal> signal</title>
-<indexterm zone="GtkContainer-set-focus-child"><primary sortas="GtkContainer::set-focus-child">GtkContainer::set-focus-child</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
+<indexterm zone="GtkContainer-set-focus-child"><primary sortas="Container::set-focus-child">GtkContainer::set-focus-child</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkContainer">GtkContainer</link> *container,
                                                         <link linkend="GtkWidget">GtkWidget</link>    *widget,
                                                         <link linkend="gpointer">gpointer</link>      user_data)      : Run First</programlisting>
 <para>

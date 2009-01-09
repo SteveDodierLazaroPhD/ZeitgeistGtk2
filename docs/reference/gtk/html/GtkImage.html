@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -347,7 +349,7 @@ on the image, such as button clicks, place the image inside a
 <a class="link" href="GtkEventBox.html" title="GtkEventBox"><span class="type">GtkEventBox</span></a>, then connect to the event signals on the event box.
 </p>
 <div class="example">
-<a name="id3226584"></a><p class="title"><b>Example 10. Handling button press events on a
+<a name="id3223283"></a><p class="title"><b>Example 12. Handling button press events on a
 <span class="structname">GtkImage</span>.</b></p>
 <div class="example-contents"><pre class="programlisting">
   static gboolean
@@ -436,7 +438,9 @@ currently-stored representation. e.g.  if the
 <a class="link" href="GtkImage.html#gtk-image-get-storage-type" title="gtk_image_get_storage_type ()"><code class="function">gtk_image_get_storage_type()</code></a> returns <a class="link" href="GtkImage.html#GTK-IMAGE-PIXBUF--CAPS"><span class="type">GTK_IMAGE_PIXBUF</span></a>, then you can
 call <a class="link" href="GtkImage.html#gtk-image-get-pixbuf" title="gtk_image_get_pixbuf ()"><code class="function">gtk_image_get_pixbuf()</code></a> but not <a class="link" href="GtkImage.html#gtk-image-get-stock" title="gtk_image_get_stock ()"><code class="function">gtk_image_get_stock()</code></a>.  For empty
 images, you can request any storage type (call any of the "get"
-functions), but they will all return <code class="literal">NULL</code> values.
+functions), but they will all return <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> values.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -492,7 +496,10 @@ href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-animation.html#GdkPixbufAnim
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-GICON--CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_GICON</code></span></p></td>
-<td>
+<td>the widgte contains a <a
+href="/usr/share/gtk-doc/html/gio/GIcon.html"
+><span class="type">GIcon</span></a>.
+  This image type was added in GTK+ 2.14
 </td>
 </tr>
 </tbody>
@@ -600,7 +607,9 @@ returned pixbuf.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the displayed pixbuf, or <code class="literal">NULL</code> if the image is empty
+<td> the displayed pixbuf, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the image is empty
 </td>
 </tr>
 </tbody>
@@ -634,12 +643,16 @@ returned pixmap and mask.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixmap</code></em> :</span></p></td>
-<td> location to store the pixmap, or <code class="literal">NULL</code>
+<td> location to store the pixmap, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td> location to store the mask, or <code class="literal">NULL</code>
+<td> location to store the mask, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -708,7 +721,9 @@ returned animation.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the displayed animation, or <code class="literal">NULL</code> if the image is empty
+<td> the displayed animation, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the image is empty
 </td>
 </tr>
 </tbody>
@@ -831,7 +846,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 <p>
 Creates a new <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> displaying the file <em class="parameter"><code>filename</code></em>. If the file
 isn't found or can't be loaded, the resulting <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> will
-display a "broken image" icon. This function never returns <code class="literal">NULL</code>,
+display a "broken image" icon. This function never returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>,
 it always returns a valid <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> widget.
 </p>
 <p>
@@ -937,14 +954,18 @@ image or mask; you still need to unref them if you own references.
 <td><p><span class="term"><em class="parameter"><code>image</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Images.html#GdkImage"
-><span class="type">GdkImage</span></a>, or <code class="literal">NULL</code>
+><span class="type">GdkImage</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"
-><span class="type">GdkBitmap</span></a>, or <code class="literal">NULL</code> 
+><span class="type">GdkBitmap</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> 
 </td>
 </tr>
 <tr>
@@ -980,7 +1001,9 @@ you should use <a class="link" href="GtkImage.html#gtk-image-new-from-icon-set" 
 <td><p><span class="term"><em class="parameter"><code>pixbuf</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
-><span class="type">GdkPixbuf</span></a>, or <code class="literal">NULL</code>
+><span class="type">GdkPixbuf</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -1017,14 +1040,18 @@ pixmap or mask; you still need to unref them if you own references.
 <td><p><span class="term"><em class="parameter"><code>pixmap</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"
-><span class="type">GdkPixmap</span></a>, or <code class="literal">NULL</code>
+><span class="type">GdkPixmap</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"
-><span class="type">GdkBitmap</span></a>, or <code class="literal">NULL</code>
+><span class="type">GdkBitmap</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -1086,7 +1113,9 @@ animation; you still need to unref it if you own references.
 </p>
 <p>
 Note that the animation frames are shown using a timeout with
-<span class="type">G_PRIORITY_DEFAULT</span>. When using animations to indicate busyness,
+<a
+href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#G-PRIORITY-DEFAULT--CAPS"
+><span class="type">G_PRIORITY_DEFAULT</span></a>. When using animations to indicate busyness,
 keep in mind that the animation will only be shown if the main loop
 is not busy with something that has a higher priority.</p>
 <p>
@@ -1202,7 +1231,9 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-file" title="gtk_imag
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
-<td> a filename or <code class="literal">NULL</code>
+<td> a filename or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1265,14 +1296,18 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-image" title="gtk_ima
 <td><p><span class="term"><em class="parameter"><code>gdk_image</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Images.html#GdkImage"
-><span class="type">GdkImage</span></a> or <code class="literal">NULL</code>
+><span class="type">GdkImage</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"
-><span class="type">GdkBitmap</span></a> or <code class="literal">NULL</code>
+><span class="type">GdkBitmap</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1301,7 +1336,9 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-pixbuf" title="gtk_im
 <td><p><span class="term"><em class="parameter"><code>pixbuf</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
-><span class="type">GdkPixbuf</span></a> or <code class="literal">NULL</code>
+><span class="type">GdkPixbuf</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1333,14 +1370,18 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-pixmap" title="gtk_im
 <td><p><span class="term"><em class="parameter"><code>pixmap</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"
-><span class="type">GdkPixmap</span></a> or <code class="literal">NULL</code>
+><span class="type">GdkPixmap</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"
-><span class="type">GdkBitmap</span></a> or <code class="literal">NULL</code>
+><span class="type">GdkBitmap</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1388,7 +1429,9 @@ href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-animation.html#GdkPixbufAnim
 >GdkPixbufAnimation</a> *animation);</pre>
 <p>
 Causes the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> to display the given animation (or display
-nothing, if you set the animation to <code class="literal">NULL</code>).</p>
+nothing, if you set the animation to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>).</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">

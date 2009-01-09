@@ -20,12 +20,14 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 #include "config.h"
+
 #include <math.h>
 #include <string.h>
+
 #include "gtklabel.h"
 #include "gtkaccellabel.h"
 #include "gtkdnd.h"
@@ -34,7 +36,6 @@
 #include "gtkwindow.h"
 #include "gdk/gdkkeysyms.h"
 #include "gtkclipboard.h"
-#include <pango/pango.h>
 #include "gtkimagemenuitem.h"
 #include "gtkintl.h"
 #include "gtkseparatormenuitem.h"
@@ -279,6 +280,33 @@ gtk_label_class_init (GtkLabelClass *class)
   class->move_cursor = gtk_label_move_cursor;
   class->copy_clipboard = gtk_label_copy_clipboard;
   
+  /**
+   * GtkLabel::move-cursor:
+   * @entry: the object which received the signal
+   * @step: the granularity of the move, as a #GtkMovementStep
+   * @count: the number of @step units to move
+   * @extend_selection: %TRUE if the move should extend the selection
+   *
+   * The ::move-cursor signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted when the user initiates a cursor movement.
+   * If the cursor is not visible in @entry, this signal causes
+   * the viewport to be moved instead.
+   *
+   * Applications should not connect to it, but may emit it with
+   * g_signal_emit_by_name() if they need to control scrolling
+   * programmatically.
+   *
+   * The default bindings for this signal come in two variants,
+   * the variant with the Shift modifier extends the selection,
+   * the variant without the Shift modifer does not.
+   * There are too many key combinations to list them all here.
+   * <itemizedlist>
+   * <listitem>Arrow keys move by individual characters/lines</listitem>
+   * <listitem>Ctrl-arrow key combinations move by words/paragraphs</listitem>
+   * <listitem>Home/End keys move to the ends of the buffer</listitem>
+   * </itemizedlist>
+   */
   signals[MOVE_CURSOR] = 
     g_signal_new (I_("move-cursor"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -290,7 +318,17 @@ gtk_label_class_init (GtkLabelClass *class)
 		  GTK_TYPE_MOVEMENT_STEP,
 		  G_TYPE_INT,
 		  G_TYPE_BOOLEAN);
-  
+
+   /**
+   * GtkLabel::copy-clipboard:
+   * @label: the object which received the signal
+   *
+   * The ::copy-clipboard signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted to copy the selection to the clipboard.
+   *
+   * The default binding for this signal is Ctrl-c.
+   */ 
   signals[COPY_CLIPBOARD] =
     g_signal_new (I_("copy-clipboard"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -300,6 +338,18 @@ gtk_label_class_init (GtkLabelClass *class)
 		  _gtk_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
   
+  /**
+   * GtkLabel::populate-popup:
+   * @label: The label on which the signal is emitted
+   * @menu: the menu that is being populated
+   *
+   * The ::populate-popup signal gets emitted before showing the
+   * context menu of the label. Note that only selectable labels
+   * have context menus.
+   *
+   * If you need to add items to the context menu, connect
+   * to this signal and append your menuitems to the @menu.
+   */
   signals[POPULATE_POPUP] =
     g_signal_new (I_("populate-popup"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -1529,6 +1579,36 @@ gtk_label_set_use_underline_internal (GtkLabel *label,
 }
 
 static void
+gtk_label_compose_effective_attrs (GtkLabel *label)
+{
+  PangoAttrIterator *iter;
+  PangoAttribute    *attr;
+  GSList            *iter_attrs, *l;
+
+  if (label->attrs)
+    {
+      if (label->effective_attrs)
+	{
+	  if ((iter = pango_attr_list_get_iterator (label->attrs)))
+	    do 
+	      {
+		iter_attrs = pango_attr_iterator_get_attrs (iter);
+		for (l = iter_attrs; l; l = l->next)
+		  {
+		    attr = l->data;
+		    pango_attr_list_insert (label->effective_attrs, attr);
+		  }
+		g_slist_free (iter_attrs);
+	      }
+	    while (pango_attr_iterator_next (iter));
+	}
+      else
+	label->effective_attrs = 
+	  pango_attr_list_ref (label->attrs);
+    }
+}
+
+static void
 gtk_label_set_attributes_internal (GtkLabel      *label,
 				   PangoAttrList *attrs)
 {
@@ -1537,17 +1617,8 @@ gtk_label_set_attributes_internal (GtkLabel      *label,
   
   if (label->attrs)
     pango_attr_list_unref (label->attrs);
-
-  if (!label->use_markup && !label->use_underline)
-    {
-      if (attrs)
-	pango_attr_list_ref (attrs);
-      if (label->effective_attrs)
-	pango_attr_list_unref (label->effective_attrs);
-      label->effective_attrs = attrs;
-    }
-
   label->attrs = attrs;
+
   g_object_notify (G_OBJECT (label), "attributes");
 }
 
@@ -1561,11 +1632,17 @@ gtk_label_recalculate (GtkLabel *label)
   guint keyval = label->mnemonic_keyval;
 
   if (label->use_markup)
-    set_markup (label, label->label, label->use_underline);
+    {
+      set_markup (label, label->label, label->use_underline);
+      gtk_label_compose_effective_attrs (label);
+    }
   else
     {
       if (label->use_underline)
-	gtk_label_set_uline_text_internal (label, label->label);
+	{
+	  gtk_label_set_uline_text_internal (label, label->label);
+	  gtk_label_compose_effective_attrs (label);
+	}
       else
 	{
 	  gtk_label_set_text_internal (label, g_strdup (label->label));
@@ -1623,9 +1700,14 @@ gtk_label_set_text (GtkLabel    *label,
  * @attrs: a #PangoAttrList
  * 
  * Sets a #PangoAttrList; the attributes in the list are applied to the
- * label text. The attributes set with this function will be ignored
- * if the #GtkLabel:use-underline" or #GtkLabel:use-markup properties
- * are set to %TRUE.
+ * label text. 
+ *
+ * <note><para>The attributes set with this function will be applied
+ * and merged with any other attributes previously effected by way
+ * of the #GtkLabel:use-underline or #GtkLabel:use-markup properties.
+ * While it is not recommended to mix markup strings with manually set
+ * attributes, if you must; know that the attributes will be applied
+ * to the label after the markup string is parsed.</para></note>
  **/
 void
 gtk_label_set_attributes (GtkLabel         *label,
@@ -1634,7 +1716,9 @@ gtk_label_set_attributes (GtkLabel         *label,
   g_return_if_fail (GTK_IS_LABEL (label));
 
   gtk_label_set_attributes_internal (label, attrs);
-  
+
+  gtk_label_recalculate (label);
+
   gtk_label_clear_layout (label);  
   gtk_widget_queue_resize (GTK_WIDGET (label));
 }

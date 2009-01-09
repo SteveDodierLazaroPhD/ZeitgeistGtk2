@@ -108,7 +108,7 @@ DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
-DUMPBIN = @DUMPBIN@
+ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -118,7 +118,8 @@ ENABLE_GTK_DOC_TRUE = @ENABLE_GTK_DOC_TRUE@
 ENABLE_MAN_FALSE = @ENABLE_MAN_FALSE@
 ENABLE_MAN_TRUE = @ENABLE_MAN_TRUE@
 EXEEXT = @EXEEXT@
-FGREP = @FGREP@
+F77 = @F77@
+FFLAGS = @FFLAGS@
 GAIL_INET_LIBS = @GAIL_INET_LIBS@
 GAIL_LT_CURRENT_MINUS_AGE = @GAIL_LT_CURRENT_MINUS_AGE@
 GAIL_LT_VERSION_INFO = @GAIL_LT_VERSION_INFO@
@@ -263,7 +264,6 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
 INTLLIBS = @INTLLIBS@
-LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBJASPER = @LIBJASPER@
 LIBJPEG = @LIBJPEG@
@@ -274,7 +274,6 @@ LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
 LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
-LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_CURRENT_MINUS_AGE = @LT_CURRENT_MINUS_AGE@
@@ -298,8 +297,6 @@ OS_UNIX_FALSE = @OS_UNIX_FALSE@
 OS_UNIX_TRUE = @OS_UNIX_TRUE@
 OS_WIN32_FALSE = @OS_WIN32_FALSE@
 OS_WIN32_TRUE = @OS_WIN32_TRUE@
-OTOOL = @OTOOL@
-OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -355,7 +352,7 @@ X_LIBS = @X_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
-ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_F77 = @ac_ct_F77@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -390,7 +387,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 ms_librarian = @ms_librarian@
 oldincludedir = @oldincludedir@
@@ -443,7 +439,7 @@ TEST_PROGS =
 ### testing rules
 
 # Xvfb based test rules
-XVFB = Xvfb -screen 0 800x600x16
+XVFB = Xvfb -ac -noreset -screen 0 800x600x16
 XIDS = 101 102 103 104 105 106 107 197 199 211 223 227 293 307 308 309 310 311 \
    491 492 493 494 495 496 497 498 499 500 501 502 503 504 505 506 507 508 509 \
    991 992 993 994 995 996 997 998 999 1000 1001 1002 1003 1004 1005 1006 1007 \
@@ -645,6 +641,7 @@ gtk_public_h_sources = \
 	gtkmountoperation.h     \
 	gtknotebook.h		\
 	gtkobject.h		\
+	gtkorientable.h		\
 	gtkpagesetup.h		\
 	gtkpaned.h		\
 	gtkpapersize.h		\
@@ -925,6 +922,7 @@ gtk_base_c_sources = \
 	gtkmountoperation.c     \
 	gtknotebook.c		\
 	gtkobject.c		\
+	gtkorientable.c		\
 	gtkpagesetup.c		\
 	gtkpaned.c		\
 	gtkpapersize.c		\
@@ -1515,8 +1513,8 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkmarshal.c gtkmarshalers.c gtkmenu.c gtkmenubar.c \
 	gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
 	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
-	gtkmountoperation.c gtknotebook.c gtkobject.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -1596,22 +1594,22 @@ am__objects_2 = gtkquery.lo gtksearchengine.lo gtksearchenginesimple.lo \
 	gtkmenubar.lo gtkmenuitem.lo gtkmenushell.lo \
 	gtkmenutoolbutton.lo gtkmessagedialog.lo gtkmisc.lo \
 	gtkmnemonichash.lo gtkmodules.lo gtkmountoperation.lo \
-	gtknotebook.lo gtkobject.lo gtkpagesetup.lo gtkpaned.lo \
-	gtkpapersize.lo gtkpathbar.lo gtkplug.lo gtkprintcontext.lo \
-	gtkprintoperation.lo gtkprintoperationpreview.lo \
-	gtkprintsettings.lo gtkprintutils.lo gtkprogressbar.lo \
-	gtkradioaction.lo gtkradiobutton.lo gtkradiomenuitem.lo \
-	gtkradiotoolbutton.lo gtkrange.lo gtkrbtree.lo gtkrc.lo \
-	gtkrecentaction.lo gtkrecentchooserdefault.lo \
-	gtkrecentchooserdialog.lo gtkrecentchoosermenu.lo \
-	gtkrecentchooserwidget.lo gtkrecentchooserutils.lo \
-	gtkrecentchooser.lo gtkrecentfilter.lo gtkrecentmanager.lo \
-	gtkruler.lo gtkscale.lo gtkscalebutton.lo gtkscrollbar.lo \
-	gtkscrolledwindow.lo gtkselection.lo gtkseparator.lo \
-	gtkseparatormenuitem.lo gtkseparatortoolitem.lo gtksettings.lo \
-	gtksizegroup.lo gtkshow.lo gtksocket.lo gtkspinbutton.lo \
-	gtkstatusbar.lo gtkstatusicon.lo gtkstock.lo gtkstyle.lo \
-	gtktable.lo gtktearoffmenuitem.lo gtktestutils.lo \
+	gtknotebook.lo gtkobject.lo gtkorientable.lo gtkpagesetup.lo \
+	gtkpaned.lo gtkpapersize.lo gtkpathbar.lo gtkplug.lo \
+	gtkprintcontext.lo gtkprintoperation.lo \
+	gtkprintoperationpreview.lo gtkprintsettings.lo \
+	gtkprintutils.lo gtkprogressbar.lo gtkradioaction.lo \
+	gtkradiobutton.lo gtkradiomenuitem.lo gtkradiotoolbutton.lo \
+	gtkrange.lo gtkrbtree.lo gtkrc.lo gtkrecentaction.lo \
+	gtkrecentchooserdefault.lo gtkrecentchooserdialog.lo \
+	gtkrecentchoosermenu.lo gtkrecentchooserwidget.lo \
+	gtkrecentchooserutils.lo gtkrecentchooser.lo gtkrecentfilter.lo \
+	gtkrecentmanager.lo gtkruler.lo gtkscale.lo gtkscalebutton.lo \
+	gtkscrollbar.lo gtkscrolledwindow.lo gtkselection.lo \
+	gtkseparator.lo gtkseparatormenuitem.lo gtkseparatortoolitem.lo \
+	gtksettings.lo gtksizegroup.lo gtkshow.lo gtksocket.lo \
+	gtkspinbutton.lo gtkstatusbar.lo gtkstatusicon.lo gtkstock.lo \
+	gtkstyle.lo gtktable.lo gtktearoffmenuitem.lo gtktestutils.lo \
 	gtktextbtree.lo gtktextbuffer.lo gtktextbufferrichtext.lo \
 	gtktextbufferserialize.lo gtktextchild.lo gtktextdisplay.lo \
 	gtktextiter.lo gtktextlayout.lo gtktextmark.lo \
@@ -1690,8 +1688,8 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkmarshal.c gtkmarshalers.c gtkmenu.c gtkmenubar.c \
 	gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
 	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
-	gtkmountoperation.c gtknotebook.c gtkobject.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -1768,8 +1766,8 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkmarshal.c gtkmarshalers.c gtkmenu.c gtkmenubar.c \
 	gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
 	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
-	gtkmountoperation.c gtknotebook.c gtkobject.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -1846,8 +1844,8 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkmarshal.c gtkmarshalers.c gtkmenu.c gtkmenubar.c \
 	gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
 	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
-	gtkmountoperation.c gtknotebook.c gtkobject.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -2021,6 +2019,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/gtkobject.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkoldeditable.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkoptionmenu.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkorientable.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkpagesetup.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkpagesetupunixdialog.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkpaned.Plo \
@@ -2413,6 +2412,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkobject.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkoldeditable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkoptionmenu.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkorientable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkpagesetup.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkpagesetupunixdialog.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkpaned.Plo@am__quote@

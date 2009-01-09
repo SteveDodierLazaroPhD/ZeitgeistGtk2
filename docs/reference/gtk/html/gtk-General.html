@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -367,7 +369,7 @@ When your callbacks are invoked, you would typically take some action
 to the main loop and await more user input.
 </p>
 <div class="example">
-<a name="id3064961"></a><p class="title"><b>Example 1. Typical <code class="function">main</code> function for a GTK+ application</b></p>
+<a name="id3072675"></a><p class="title"><b>Example 2. Typical <code class="function">main</code> function for a GTK+ application</b></p>
 <div class="example-contents"><pre class="programlisting">
 int
 main (int argc, char **argv)
@@ -530,7 +532,11 @@ You shouldn't call this function explicitely if you are using
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if initialization succeeded, otherwise <code class="literal">FALSE</code>.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if initialization succeeded, otherwise <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.
 </td>
 </tr>
 </tbody>
@@ -602,7 +608,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 This function does the same work as <a class="link" href="gtk-General.html#gtk-init" title="gtk_init ()"><code class="function">gtk_init()</code></a> with only 
 a single change: It does not terminate the program if the GUI can't be 
-initialized. Instead it returns <code class="literal">FALSE</code> on failure.
+initialized. Instead it returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> on failure.
 </p>
 <p>
 This way the application can fall back to some other means of communication 
@@ -626,8 +634,12 @@ with the user - for example a curses or command line interface.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the GUI has been successfully initialized, 
-              <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the GUI has been successfully initialized, 
+              <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 </td>
 </tr>
 </tbody>
@@ -678,7 +690,9 @@ be terminated after writing out the help output.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entries</code></em> :</span></p></td>
-<td> a <code class="literal">NULL</code>-terminated array of <a
+<td> a <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>-terminated array of <a
 href="/usr/share/gtk-doc/html/glib/glib-Commandline-option-parser.html#GOptionEntry"
 ><span class="type">GOptionEntry</span></a>s
    describing the options of your program
@@ -690,7 +704,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Commandline-option-parser.html#GOptionEn
    the <code class="option">--help</code> output for the options in <em class="parameter"><code>entries</code></em>
    with <a
 href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#gettext"
-><code class="function">gettext()</code></a>, or <code class="literal">NULL</code>
+><code class="function">gettext()</code></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -700,8 +716,12 @@ href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#gettext"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the GUI has been successfully initialized, 
-              <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the GUI has been successfully initialized, 
+              <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -790,7 +810,7 @@ Checks if any events are pending. This can be used to update the GUI
 and invoke timeouts etc. while doing some time intensive computation.
 </p>
 <div class="example">
-<a name="id3075210"></a><p class="title"><b>Example 2. Updating the GUI during a long computation.</b></p>
+<a name="id3076170"></a><p class="title"><b>Example 3. Updating the GUI during a long computation.</b></p>
 <div class="example-contents"><pre class="programlisting">
 	/* computation going on */
 ...
@@ -804,7 +824,9 @@ and invoke timeouts etc. while doing some time intensive computation.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>%TRUE if any events are pending, <code class="literal">FALSE</code> otherwise.
+<td>%TRUE if any events are pending, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 </td>
 </tr></tbody>
 </table></div>
@@ -1025,13 +1047,15 @@ href="/usr/share/gtk-doc/html/gdk/GdkDisplay.html"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_true                            (void);</pre>
 <p>
-All this function does it to return <code class="literal">TRUE</code>. This can be useful for example
+All this function does it to return <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>. This can be useful for example
 if you want to inhibit the deletion of a window. Of course you should
 not do this as the user expects a reaction from clicking the close
 icon of the window...
 </p>
 <div class="example">
-<a name="id3084524"></a><p class="title"><b>Example 3. A persistent window</b></p>
+<a name="id3084960"></a><p class="title"><b>Example 4. A persistent window</b></p>
 <div class="example-contents"><pre class="programlisting">
 ##include &lt;gtk/gtk.h&gt;
 int
@@ -1071,7 +1095,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_false                           (void);</pre>
 <p>
 Analogical to <a class="link" href="gtk-General.html#gtk-true" title="gtk_true ()"><code class="function">gtk_true()</code></a> this function does nothing
-but always returns <code class="literal">FALSE</code>.
+but always returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1115,7 +1141,9 @@ Queries the current grab of the default window group.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The widget which currently has the grab or <code class="literal">NULL</code> if no grab is active.
+<td>The widget which currently has the grab or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no grab is active.
 </td>
 </tr></tbody>
 </table></div>
@@ -1232,7 +1260,9 @@ Registers a function to be called when an instance of the mainloop is left.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>A handle for this quit handler (you need this for <a class="link" href="gtk-General.html#gtk-quit-remove" title="gtk_quit_remove ()"><code class="function">gtk_quit_remove()</code></a>)
-  or 0 if you passed a <code class="literal">NULL</code> pointer in <em class="parameter"><code>function</code></em>.
+  or 0 if you passed a <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> pointer in <em class="parameter"><code>function</code></em>.
 </td>
 </tr>
 </tbody>
@@ -1283,7 +1313,9 @@ used by GTK+ wrappers for languages other than C.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>marshal</code></em> :</span></p></td>
-<td>The marshaller to be used. If this is non-<code class="literal">NULL</code>, <em class="parameter"><code>function</code></em> is 
+<td>The marshaller to be used. If this is non-<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, <em class="parameter"><code>function</code></em> is 
  ignored.
 </td>
 </tr>
@@ -1300,7 +1332,9 @@ used by GTK+ wrappers for languages other than C.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>A handle for this quit handler (you need this for <a class="link" href="gtk-General.html#gtk-quit-remove" title="gtk_quit_remove ()"><code class="function">gtk_quit_remove()</code></a>)
-  or 0 if you passed a <code class="literal">NULL</code> pointer in <em class="parameter"><code>function</code></em>.
+  or 0 if you passed a <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> pointer in <em class="parameter"><code>function</code></em>.
 </td>
 </tr>
 </tbody>
@@ -1366,7 +1400,9 @@ href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#g-timeout-add-f
 </div>
 <p>
 Registers a function to be called periodically. The function will be called
-repeatedly after <em class="parameter"><code>interval</code></em> milliseconds until it returns <code class="literal">FALSE</code> at which
+repeatedly after <em class="parameter"><code>interval</code></em> milliseconds until it returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> at which
 point the timeout is destroyed and will not be called again.
 </p>
 <div class="variablelist"><table border="0">
@@ -1385,7 +1421,9 @@ point the timeout is destroyed and will not be called again.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>marshal</code></em> :</span></p></td>
-<td>The marshaller to use instead of the function (if non-<code class="literal">NULL</code>).
+<td>The marshaller to use instead of the function (if non-<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>).
 </td>
 </tr>
 <tr>
@@ -1395,7 +1433,9 @@ point the timeout is destroyed and will not be called again.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>destroy</code></em> :</span></p></td>
-<td>Function to call when the timeout is destroyed or <code class="literal">NULL</code>.
+<td>Function to call when the timeout is destroyed or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
@@ -1426,7 +1466,9 @@ href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#g-timeout-add"
 </div>
 <p>
 Registers a function to be called periodically. The function will be called
-repeatedly after <em class="parameter"><code>interval</code></em> milliseconds until it returns <code class="literal">FALSE</code> at which
+repeatedly after <em class="parameter"><code>interval</code></em> milliseconds until it returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> at which
 point the timeout is destroyed and will not be called again.
 </p>
 <div class="variablelist"><table border="0">
@@ -1549,7 +1591,9 @@ priority different from <a class="link" href="gtk-General.html#GTK-PRIORITY-DEFA
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>priority</code></em> :</span></p></td>
-<td>The priority which should not be above <code class="literal">G_PRIORITY_HIGH_IDLE</code>.
+<td>The priority which should not be above <a
+href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#G-PRIORITY-HIGH-IDLE--CAPS"
+><code class="literal">G_PRIORITY_HIGH_IDLE</code></a>.
 Note that you will interfere with GTK+ if you use a priority above
 <a class="link" href="gtk-General.html#GTK-PRIORITY-RESIZE--CAPS" title="GTK_PRIORITY_RESIZE"><code class="literal">GTK_PRIORITY_RESIZE</code></a>.
 </td>
@@ -1604,7 +1648,9 @@ priority different from <a class="link" href="gtk-General.html#GTK-PRIORITY-DEFA
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>priority</code></em> :</span></p></td>
-<td>The priority which should not be above <code class="literal">G_PRIORITY_HIGH_IDLE</code>.
+<td>The priority which should not be above <a
+href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#G-PRIORITY-HIGH-IDLE--CAPS"
+><code class="literal">G_PRIORITY_HIGH_IDLE</code></a>.
 Note that you will interfere with GTK+ if you use a priority above
 <a class="link" href="gtk-General.html#GTK-PRIORITY-RESIZE--CAPS" title="GTK_PRIORITY_RESIZE"><code class="literal">GTK_PRIORITY_RESIZE</code></a>.
 </td>
@@ -1616,7 +1662,9 @@ Note that you will interfere with GTK+ if you use a priority above
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>marshal</code></em> :</span></p></td>
-<td>The marshaller to use instead of the function (if non-<code class="literal">NULL</code>).
+<td>The marshaller to use instead of the function (if non-<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>).
 </td>
 </tr>
 <tr>
@@ -1626,7 +1674,9 @@ Note that you will interfere with GTK+ if you use a priority above
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>destroy</code></em> :</span></p></td>
-<td>Function to call when the timeout is destroyed or <code class="literal">NULL</code>.
+<td>Function to call when the timeout is destroyed or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
@@ -1736,7 +1786,9 @@ on a file descriptor.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>marshal</code></em> :</span></p></td>
-<td>The marshaller to use instead of the function (if non-<code class="literal">NULL</code>).
+<td>The marshaller to use instead of the function (if non-<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>).
 </td>
 </tr>
 <tr>
@@ -1747,7 +1799,9 @@ on a file descriptor.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>destroy</code></em> :</span></p></td>
 <td>callback function to call with <em class="parameter"><code>data</code></em> when the input
-  handler is removed, or <code class="literal">NULL</code>.
+  handler is removed, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
@@ -1818,7 +1872,9 @@ GTK+ to compute the sizes of widgets. This priority is higher than
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">GTK_PRIORITY_HIGH</code> has been deprecated since version 2.4 and should not be used in newly-written code. This macro is deprecated. You should use <code class="literal">G_PRIORITY_HIGH</code> instead.</p>
+<p><code class="literal">GTK_PRIORITY_HIGH</code> has been deprecated since version 2.4 and should not be used in newly-written code. This macro is deprecated. You should use <a
+href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#G-PRIORITY-HIGH--CAPS"
+><code class="literal">G_PRIORITY_HIGH</code></a> instead.</p>
 </div>
 <p>
 Use this for high priority timeouts. This priority is never used inside
@@ -1846,7 +1902,9 @@ This priority is for GTK+ internal stuff. Don't use it in your applications.
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">GTK_PRIORITY_DEFAULT</code> has been deprecated since version 2.4 and should not be used in newly-written code. This macro is deprecated. You should use <code class="literal">G_PRIORITY_DEFAULT_IDLE</code> instead.</p>
+<p><code class="literal">GTK_PRIORITY_DEFAULT</code> has been deprecated since version 2.4 and should not be used in newly-written code. This macro is deprecated. You should use <a
+href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#G-PRIORITY-DEFAULT-IDLE--CAPS"
+><code class="literal">G_PRIORITY_DEFAULT_IDLE</code></a> instead.</p>
 </div>
 <p>
 Default priority for idle functions.
@@ -1859,7 +1917,9 @@ Default priority for idle functions.
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">GTK_PRIORITY_LOW</code> has been deprecated since version 2.4 and should not be used in newly-written code. This macro is deprecated. You should use <code class="literal">G_PRIORITY_LOW</code> instead.</p>
+<p><code class="literal">GTK_PRIORITY_LOW</code> has been deprecated since version 2.4 and should not be used in newly-written code. This macro is deprecated. You should use <a
+href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#G-PRIORITY-LOW--CAPS"
+><code class="literal">G_PRIORITY_LOW</code></a> instead.</p>
 </div>
 <p>
 Priority for very unimportant background tasks.
@@ -1935,7 +1995,9 @@ They can be used to implement custom key event handling.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>%TRUE to stop further processing of <em class="parameter"><code>event</code></em>, <code class="literal">FALSE</code> to continue.
+<td>%TRUE to stop further processing of <em class="parameter"><code>event</code></em>, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> to continue.
 </td>
 </tr>
 </tbody>
@@ -1974,14 +2036,18 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEventButton"
 signal. The returned event must be freed with <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Events.html#gdk-event-free"
 ><code class="function">gdk_event_free()</code></a>.
-If there is no current event, the function returns <code class="literal">NULL</code>.</p>
+If there is no current event, the function returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a copy of the current event, or <code class="literal">NULL</code> if no current event.
+<td> a copy of the current event, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no current event.
 </td>
 </tr></tbody>
 </table></div>
@@ -2020,8 +2086,12 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> *state);</pre>
 <p>
 If there is a current event and it has a state field, place
-that state field in <em class="parameter"><code>state</code></em> and return <code class="literal">TRUE</code>, otherwise return
-<code class="literal">FALSE</code>.</p>
+that state field in <em class="parameter"><code>state</code></em> and return <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, otherwise return
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2034,7 +2104,9 @@ that state field in <em class="parameter"><code>state</code></em> and return <co
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if there was a current event and it had a state field
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if there was a current event and it had a state field
 </td>
 </tr>
 </tbody>
@@ -2047,8 +2119,12 @@ that state field in <em class="parameter"><code>state</code></em> and return <co
 href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEvent"
 >GdkEvent</a> *event);</pre>
 <p>
-If <em class="parameter"><code>event</code></em> is <code class="literal">NULL</code> or the event was not associated with any widget,
-returns <code class="literal">NULL</code>, otherwise returns the widget that received the event
+If <em class="parameter"><code>event</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> or the event was not associated with any widget,
+returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, otherwise returns the widget that received the event
 originally.</p>
 <p>
 </p>
@@ -2064,7 +2140,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEvent"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the widget that originally received <em class="parameter"><code>event</code></em>, or <code class="literal">NULL</code>
+<td> the widget that originally received <em class="parameter"><code>event</code></em>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>

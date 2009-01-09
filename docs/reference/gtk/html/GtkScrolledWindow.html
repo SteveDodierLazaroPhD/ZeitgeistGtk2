@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -195,7 +197,7 @@ child widget.
 The scrolled window can work in two ways. Some widgets have native
 scrolling support; these widgets have "slots" for <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>
 objects.
-<sup>[<a name="id3600474" href="#ftn.id3600474" class="footnote">5</a>]</sup>
+<sup>[<a name="id3585760" href="#ftn.id3585760" class="footnote">5</a>]</sup>
 Widgets with native scroll support include <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a>, <a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a>,
 and <a class="link" href="GtkLayout.html" title="GtkLayout"><span class="type">GtkLayout</span></a>.
 </p>
@@ -250,28 +252,33 @@ only be accessed using the functions below.
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_scrolled_window_new             (<a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *hadjustment,
                                                          <a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *vadjustment);</pre>
 <p>
-Creates a new scrolled window. The two arguments are the scrolled
-window's adjustments; these will be shared with the scrollbars and the
-child widget to keep the bars in sync with the child. Usually you want
-to pass <code class="literal">NULL</code> for the adjustments, which will cause the scrolled window
-to create them for you.
+Creates a new scrolled window. 
+</p>
+<p>
+The two arguments are the scrolled window's adjustments; these will be 
+shared with the scrollbars and the child widget to keep the bars in sync 
+with the child. Usually you want to pass <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for the adjustments, which 
+will cause the scrolled window to create them for you.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>hadjustment</code></em> :</span></p></td>
-<td>Horizontal adjustment.
+<td> horizontal adjustment
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>vadjustment</code></em> :</span></p></td>
-<td>Vertical adjustment.
+<td> vertical adjustment
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>New scrolled window.
+<td> a new scrolled window
 </td>
 </tr>
 </tbody>
@@ -284,19 +291,20 @@ to create them for you.
 <p>
 Returns the horizontal scrollbar's adjustment, used to connect the
 horizontal scrollbar to the child widget's horizontal scroll
-functionality.
+functionality.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolled_window</code></em> :</span></p></td>
-<td>A <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>.
+<td> a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The horizontal <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>.
+<td> the horizontal <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>
 </td>
 </tr>
 </tbody>
@@ -309,19 +317,20 @@ functionality.
 <p>
 Returns the vertical scrollbar's adjustment, used to connect the
 vertical scrollbar to the child widget's vertical scroll
-functionality.
+functionality.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolled_window</code></em> :</span></p></td>
-<td>A <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>.
+<td> a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The vertical <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>.
+<td> the vertical <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>
 </td>
 </tr>
 </tbody>
@@ -346,7 +355,9 @@ Returns the horizontal scrollbar of <em class="parameter"><code>scrolled_window<
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the horizontal scrollbar of the scrolled window, or 
- <code class="literal">NULL</code> if it does not have one.
+ <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if it does not have one.
 
 </td>
 </tr>
@@ -373,7 +384,9 @@ Returns the vertical scrollbar of <em class="parameter"><code>scrolled_window</c
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the vertical scrollbar of the scrolled window, or
- <code class="literal">NULL</code> if it does not have one.
+ <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if it does not have one.
 
 </td>
 </tr>
@@ -389,29 +402,32 @@ Returns the vertical scrollbar of <em class="parameter"><code>scrolled_window</c
                                                          <a class="link" href="gtk-Standard-Enumerations.html#GtkPolicyType" title="enum GtkPolicyType">GtkPolicyType</a> vscrollbar_policy);</pre>
 <p>
 Sets the scrollbar policy for the horizontal and vertical scrollbars.
+</p>
+<p>
 The policy determines when the scrollbar should appear; it is a value
 from the <a class="link" href="gtk-Standard-Enumerations.html#GtkPolicyType" title="enum GtkPolicyType"><span class="type">GtkPolicyType</span></a> enumeration. If <a class="link" href="gtk-Standard-Enumerations.html#GTK-POLICY-ALWAYS--CAPS"><code class="literal">GTK_POLICY_ALWAYS</code></a>, the
 scrollbar is always present; if <a class="link" href="gtk-Standard-Enumerations.html#GTK-POLICY-NEVER--CAPS"><code class="literal">GTK_POLICY_NEVER</code></a>, the scrollbar is
 never present; if <a class="link" href="gtk-Standard-Enumerations.html#GTK-POLICY-AUTOMATIC--CAPS"><code class="literal">GTK_POLICY_AUTOMATIC</code></a>, the scrollbar is present only
 if needed (that is, if the slider part of the bar would be smaller
-than the trough - the display is larger than the page size).
+than the trough - the display is larger than the page size).</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolled_window</code></em> :</span></p></td>
-<td>A <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>.
+<td> a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>hscrollbar_policy</code></em> :</span></p></td>
-<td>Policy for horizontal bar.
+<td> policy for horizontal bar
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>vscrollbar_policy</code></em> :</span></p></td>
-<td>Policy for vertical bar.
+<td> policy for vertical bar
 </td>
 </tr>
 </tbody>
@@ -424,8 +440,8 @@ than the trough - the display is larger than the page size).
                                                         (<a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow">GtkScrolledWindow</a> *scrolled_window,
                                                          <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *child);</pre>
 <p>
-Used to add children without native scrolling capabilities. This is
-simply a convenience function; it is equivalent to adding the
+Used to add children without native scrolling capabilities. This
+is simply a convenience function; it is equivalent to adding the
 unscrollable child to a viewport, then adding the viewport to the
 scrolled window. If a child has native scrolling, use
 <a class="link" href="GtkContainer.html#gtk-container-add" title="gtk_container_add ()"><code class="function">gtk_container_add()</code></a> instead of this function.
@@ -433,31 +449,33 @@ scrolled window. If a child has native scrolling, use
 <p>
 The viewport scrolls the child by moving its <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
-><span class="type">GdkWindow</span></a>, and takes the
-size of the child to be the size of its toplevel <a
+><span class="type">GdkWindow</span></a>, and takes
+the size of the child to be the size of its toplevel <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
-><span class="type">GdkWindow</span></a>. This will
-be very wrong for most widgets that support native scrolling; for
-example, if you add a widget such as <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> with a viewport, the
-whole widget will scroll, including the column headings. Thus, widgets
-with native scrolling support should not be used with the <a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a> proxy.
+><span class="type">GdkWindow</span></a>. 
+This will be very wrong for most widgets that support native scrolling;
+for example, if you add a widget such as <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> with a viewport,
+the whole widget will scroll, including the column headings. Thus, 
+widgets with native scrolling support should not be used with the 
+<a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a> proxy.
 </p>
 <p>
-A widget supports scrolling natively if the
+A widget supports scrolling natively if the 
 set_scroll_adjustments_signal field in <a class="link" href="GtkWidget.html#GtkWidgetClass" title="GtkWidgetClass"><span class="type">GtkWidgetClass</span></a> is non-zero,
-i.e. has been filled in with a valid signal identifier.
+i.e. has been filled in with a valid signal identifier.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolled_window</code></em> :</span></p></td>
-<td>A <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>.
+<td> a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>child</code></em> :</span></p></td>
-<td>Widget you want to scroll.
+<td> the widget you want to scroll
 </td>
 </tr>
 </tbody>
@@ -471,6 +489,8 @@ i.e. has been filled in with a valid signal identifier.
 <p>
 Sets the placement of the contents with respect to the scrollbars
 for the scrolled window.
+</p>
+<p>
 The default is <a class="link" href="gtk-Standard-Enumerations.html#GTK-CORNER-TOP-LEFT--CAPS"><code class="literal">GTK_CORNER_TOP_LEFT</code></a>, meaning the child is
 in the top left, with the scrollbars underneath and to the right.
 Other values in <a class="link" href="gtk-Standard-Enumerations.html#GtkCornerType" title="enum GtkCornerType"><span class="type">GtkCornerType</span></a> are <a class="link" href="gtk-Standard-Enumerations.html#GTK-CORNER-TOP-RIGHT--CAPS"><code class="literal">GTK_CORNER_TOP_RIGHT</code></a>,
@@ -480,11 +500,6 @@ Other values in <a class="link" href="gtk-Standard-Enumerations.html#GtkCornerTy
 See also <a class="link" href="GtkScrolledWindow.html#gtk-scrolled-window-get-placement" title="gtk_scrolled_window_get_placement ()"><code class="function">gtk_scrolled_window_get_placement()</code></a> and
 <a class="link" href="GtkScrolledWindow.html#gtk-scrolled-window-unset-placement" title="gtk_scrolled_window_unset_placement ()"><code class="function">gtk_scrolled_window_unset_placement()</code></a>.</p>
 <p>
-Determines the location of the child widget with respect to the
-scrollbars. The default is <a class="link" href="gtk-Standard-Enumerations.html#GTK-CORNER-TOP-LEFT--CAPS"><code class="literal">GTK_CORNER_TOP_LEFT</code></a>, meaning the child is
-in the top left, with the scrollbars underneath and to the right.
-Other values in <a class="link" href="gtk-Standard-Enumerations.html#GtkCornerType" title="enum GtkCornerType"><span class="type">GtkCornerType</span></a> are <a class="link" href="gtk-Standard-Enumerations.html#GTK-CORNER-TOP-RIGHT--CAPS"><code class="literal">GTK_CORNER_TOP_RIGHT</code></a>,
-<a class="link" href="gtk-Standard-Enumerations.html#GTK-CORNER-BOTTOM-LEFT--CAPS"><code class="literal">GTK_CORNER_BOTTOM_LEFT</code></a>, and <a class="link" href="gtk-Standard-Enumerations.html#GTK-CORNER-BOTTOM-RIGHT--CAPS"><code class="literal">GTK_CORNER_BOTTOM_RIGHT</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -558,19 +573,20 @@ Changes the type of shadow drawn around the contents of
 <pre class="programlisting">void                gtk_scrolled_window_set_hadjustment (<a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow">GtkScrolledWindow</a> *scrolled_window,
                                                          <a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *hadjustment);</pre>
 <p>
-Sets the <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> for the horizontal scrollbar.
+Sets the <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> for the horizontal scrollbar.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolled_window</code></em> :</span></p></td>
-<td>A <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>.
+<td> a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>hadjustment</code></em> :</span></p></td>
-<td>Horizontal scroll adjustment.
+<td> horizontal scroll adjustment
 </td>
 </tr>
 </tbody>
@@ -582,19 +598,20 @@ Sets the <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span c
 <pre class="programlisting">void                gtk_scrolled_window_set_vadjustment (<a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow">GtkScrolledWindow</a> *scrolled_window,
                                                          <a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a> *vadjustment);</pre>
 <p>
-Sets the <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> for the vertical scrollbar.
+Sets the <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> for the vertical scrollbar.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolled_window</code></em> :</span></p></td>
-<td>A <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>.
+<td> a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>vadjustment</code></em> :</span></p></td>
-<td>Vertical scroll adjustment.
+<td> vertical scroll adjustment
 </td>
 </tr>
 </tbody>
@@ -649,12 +666,18 @@ scrollbars. See <a class="link" href="GtkScrolledWindow.html#gtk-scrolled-window
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>hscrollbar_policy</code></em> :</span></p></td>
-<td> location to store the policy for the horizontal scrollbar, or <code class="literal">NULL</code>.
+<td> location to store the policy for the horizontal 
+    scrollbar, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>vscrollbar_policy</code></em> :</span></p></td>
-<td> location to store the policy for the horizontal scrollbar, or <code class="literal">NULL</code>.
+<td> location to store the policy for the vertical
+    scrollbar, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 </tbody>
@@ -784,7 +807,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolledwindow</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td>
 </td>
 </tr>
 <tr>
@@ -819,7 +842,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scrolledwindow</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td>
 </td>
 </tr>
 <tr>
@@ -853,7 +876,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id3600474" href="#id3600474" class="para">5</a>] </sup>The scrolled window installs <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> objects in
+<div class="footnote"><p><sup>[<a name="ftn.id3585760" href="#id3585760" class="para">5</a>] </sup>The scrolled window installs <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> objects in
 the child window's slots using the set_scroll_adjustments_signal,
 found in <a class="link" href="GtkWidget.html#GtkWidgetClass" title="GtkWidgetClass"><span class="type">GtkWidgetClass</span></a>. (Conceptually, these widgets implement a
 "Scrollable" interface; because GTK+ 1.2 lacked interface support in

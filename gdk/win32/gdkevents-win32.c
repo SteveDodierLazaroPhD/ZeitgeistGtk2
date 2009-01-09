@@ -3679,6 +3679,7 @@ gdk_event_translate (MSG  *msg,
       GDK_NOTE (EVENTS, g_print (" %s thread: %I64d",
 				 msg->wParam ? "YES" : "NO",
 				 (gint64) msg->lParam));
+
       if (msg->wParam && GDK_WINDOW_IS_MAPPED (window))
 	ensure_stacking_on_activate_app (msg, window);
       break;

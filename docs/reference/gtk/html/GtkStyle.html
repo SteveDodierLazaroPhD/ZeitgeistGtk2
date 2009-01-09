@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -165,6 +167,32 @@ void                <a class="link" href="GtkStyle.html#gtk-style-set-font" titl
                                                          <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Fonts.html#GdkFont"
 >GdkFont</a> *font);
+void                <a class="link" href="GtkStyle.html#gtk-style-get-property" title="gtk_style_get_property ()">gtk_style_get_property</a>              (<a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *style,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+>GType</a> widget_type,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *property_name,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+>GValue</a> *value);
+void                <a class="link" href="GtkStyle.html#gtk-style-get-valist" title="gtk_style_get_valist ()">gtk_style_get_valist</a>                (<a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *style,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+>GType</a> widget_type,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *first_property_name,
+                                                         va_list var_args);
+void                <a class="link" href="GtkStyle.html#gtk-style-get" title="gtk_style_get ()">gtk_style_get</a>                       (<a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *style,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+>GType</a> widget_type,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *first_property_name,
+                                                         ...);
 void                <a class="link" href="GtkStyle.html#gtk-draw-hline" title="gtk_draw_hline ()">gtk_draw_hline</a>                      (<a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *style,
                                                          <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
@@ -1296,7 +1324,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object
 ><code class="function">g_object_ref()</code></a> instead.</p>
 </div>
 <p>
-</p>
+Increase the reference count of <em class="parameter"><code>style</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1326,7 +1354,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object
 ><code class="function">g_object_unref()</code></a> instead.</p>
 </div>
 <p>
-</p>
+Decrease the reference count of <em class="parameter"><code>style</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1460,10 +1488,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_style_apply_default_pixmap</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_style_apply_default_pixmap</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkStyle.html#gtk-style-apply-default-background" title="gtk_style_apply_default_background ()"><code class="function">gtk_style_apply_default_background()</code></a> instead.</p>
 </div>
 <p>
-Deprecated alias for <a class="link" href="GtkStyle.html#gtk-style-apply-default-background" title="gtk_style_apply_default_background ()"><code class="function">gtk_style_apply_default_background()</code></a>.
+Does the same as <a class="link" href="GtkStyle.html#gtk-style-apply-default-background" title="gtk_style_apply_default_background ()"><code class="function">gtk_style_apply_default_background()</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1525,8 +1553,12 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Colormaps-and-Colors.html#GdkColor"
 >GdkColor</a> *color);</pre>
 <p>
 Looks up <em class="parameter"><code>color_name</code></em> in the style's logical color mappings,
-filling in <em class="parameter"><code>color</code></em> and returning <code class="literal">TRUE</code> if found, otherwise
-returning <code class="literal">FALSE</code>. Do not cache the found mapping, because
+filling in <em class="parameter"><code>color</code></em> and returning <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if found, otherwise
+returning <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>. Do not cache the found mapping, because
 it depends on the <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a> and might change when a theme
 switch occurs.</p>
 <p>
@@ -1553,7 +1585,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Colormaps-and-Colors.html#GdkColor"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the mapping was found.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the mapping was found.
 
 </td>
 </tr>
@@ -1569,23 +1603,29 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Colormaps-and-Colors.html#GdkColor"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *stock_id);</pre>
 <p>
+Looks up <em class="parameter"><code>stock_id</code></em> in the icon factories associated with <em class="parameter"><code>style</code></em>
+and the default icon factory, returning an icon set if found,
+otherwise <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
-<td>
+<td> a <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stock_id</code></em> :</span></p></td>
-<td>
+<td> an icon name
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
+<td> icon set of <em class="parameter"><code>stock_id</code></em>
 </td>
 </tr>
 </tbody>
@@ -1733,10 +1773,157 @@ use style-&gt;font_desc instead.</p>
 <td><p><span class="term"><em class="parameter"><code>font</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Fonts.html#GdkFont"
-><span class="type">GdkFont</span></a>, or <code class="literal">NULL</code> to use the <a
+><span class="type">GdkFont</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to use the <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Fonts.html#GdkFont"
 ><span class="type">GdkFont</span></a> corresponding
   to style-&gt;font_desc.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-style-get-property"></a><h3>gtk_style_get_property ()</h3>
+<pre class="programlisting">void                gtk_style_get_property              (<a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *style,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+>GType</a> widget_type,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *property_name,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+>GValue</a> *value);</pre>
+<p>
+Queries the value of a style property corresponding to a
+widget class is in the given style.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget_type</code></em> :</span></p></td>
+<td> the <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+><span class="type">GType</span></a> of a descendant of <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>property_name</code></em> :</span></p></td>
+<td> the name of the style property to get
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> a <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
+><span class="type">GValue</span></a> where the value of the property being
+    queried will be stored
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-style-get-valist"></a><h3>gtk_style_get_valist ()</h3>
+<pre class="programlisting">void                gtk_style_get_valist                (<a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *style,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+>GType</a> widget_type,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *first_property_name,
+                                                         va_list var_args);</pre>
+<p>
+Non-vararg variant of <a class="link" href="GtkStyle.html#gtk-style-get" title="gtk_style_get ()"><code class="function">gtk_style_get()</code></a>.
+Used primarily by language bindings.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget_type</code></em> :</span></p></td>
+<td> the <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+><span class="type">GType</span></a> of a descendant of <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>first_property_name</code></em> :</span></p></td>
+<td> the name of the first style property to get
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>var_args</code></em> :</span></p></td>
+<td> a <span class="type">va_list</span> of pairs of property names and
+    locations to return the property values, starting with the
+    location for <em class="parameter"><code>first_property_name</code></em>.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-style-get"></a><h3>gtk_style_get ()</h3>
+<pre class="programlisting">void                gtk_style_get                       (<a class="link" href="GtkStyle.html" title="Styles">GtkStyle</a> *style,
+                                                         <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+>GType</a> widget_type,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *first_property_name,
+                                                         ...);</pre>
+<p>
+Gets the values of a multiple style properties for <em class="parameter"><code>widget_type</code></em>
+from <em class="parameter"><code>style</code></em>.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget_type</code></em> :</span></p></td>
+<td> the <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+><span class="type">GType</span></a> of a descendant of <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>first_property_name</code></em> :</span></p></td>
+<td> the name of the first style property to get
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td> pairs of property names and locations to
+  return the property values, starting with the location for
+  <em class="parameter"><code>first_property_name</code></em>, terminated by <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 </tbody>
@@ -2013,7 +2200,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Points-Rectangles-and-Regions.html#GdkPoin
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the polygon should be filled
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the polygon should be filled
 </td>
 </tr>
 </tbody>
@@ -2085,7 +2274,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the arrow tip should be filled
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the arrow tip should be filled
 </td>
 </tr>
 <tr>
@@ -3022,53 +3213,58 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <p><code class="literal">gtk_draw_slider</code> is deprecated and should not be used in newly-written code.</p>
 </div>
 <p>
+Draws a slider in the given rectangle on <em class="parameter"><code>window</code></em> using the
+given style and orientation.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
-<td>
+<td> a <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td>
+<td> a <a
+href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
+><span class="type">GdkWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>state_type</code></em> :</span></p></td>
-<td>
+<td> a state
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>shadow_type</code></em> :</span></p></td>
-<td>
+<td> a shadow
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>x</code></em> :</span></p></td>
-<td>
+<td> the x origin of the rectangle in which to draw a slider
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>y</code></em> :</span></p></td>
-<td>
+<td> the y origin of the rectangle in which to draw a slider
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
-<td>
+<td> the width of the rectangle in which to draw a slider
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
-<td>
+<td> the height of the rectangle in which to draw a slider
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>orientation</code></em> :</span></p></td>
-<td>
+<td> the orientation to be used
 </td>
 </tr>
 </tbody>
@@ -3238,43 +3434,48 @@ href="/usr/share/gtk-doc/html/pango/pango-Layout-Objects.html#PangoLayout"
 <p><code class="literal">gtk_draw_layout</code> is deprecated and should not be used in newly-written code.</p>
 </div>
 <p>
+Draws a layout on <em class="parameter"><code>window</code></em> using the given parameters.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
-<td>
+<td> a <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td>
+<td> a <a
+href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
+><span class="type">GdkWindow</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>state_type</code></em> :</span></p></td>
-<td>
+<td> a state
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>use_text</code></em> :</span></p></td>
-<td>
+<td> whether to use the text or foreground
+           graphics context of <em class="parameter"><code>style</code></em>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>x</code></em> :</span></p></td>
-<td>
+<td> x origin
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>y</code></em> :</span></p></td>
-<td>
+<td> y origin
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>layout</code></em> :</span></p></td>
-<td>
+<td> the layout to draw
 </td>
 </tr>
 </tbody>
@@ -3424,18 +3625,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -3445,7 +3652,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the arrow tip should be filled
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the arrow tip should be filled
 </td>
 </tr>
 <tr>
@@ -3530,18 +3739,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -3634,18 +3849,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -3746,18 +3967,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -3843,18 +4070,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -3940,18 +4173,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4041,18 +4280,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4132,18 +4377,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4229,18 +4480,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4322,18 +4579,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> rectangle to which the output is clipped, or <code class="literal">NULL</code> if the
+<td> rectangle to which the output is clipped, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4414,18 +4677,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4507,18 +4776,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4535,7 +4810,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Points-Rectangles-and-Regions.html#GdkPoin
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the polygon should be filled
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the polygon should be filled
 </td>
 </tr>
 </tbody>
@@ -4601,18 +4878,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle or <code class="literal">NULL</code> if the
+<td> clip rectangle or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4706,18 +4989,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4819,18 +5108,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -4915,18 +5210,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -5007,18 +5308,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -5095,18 +5402,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> rectangle to which the output is clipped, or <code class="literal">NULL</code> if the
+<td> rectangle to which the output is clipped, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -5183,18 +5496,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -5276,18 +5595,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -5365,18 +5690,24 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindow"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> clip rectangle, or <code class="literal">NULL</code> if the
+<td> clip rectangle, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td> the widget (may be <code class="literal">NULL</code>)
+<td> the widget (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>detail</code></em> :</span></p></td>
-<td> a style detail (may be <code class="literal">NULL</code>)
+<td> a style detail (may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>)
 </td>
 </tr>
 <tr>
@@ -5449,7 +5780,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Drawing-Primitives.html#GdkDrawable"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>area</code></em> :</span></p></td>
-<td> rectangle to which the output is clipped, or <code class="literal">NULL</code> if the
+<td> rectangle to which the output is clipped, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
        output should not be clipped
 </td>
 </tr>
@@ -5471,8 +5804,12 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Drawing-Primitives.html#GdkDrawable"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>draw_arrow</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to draw a directional arrow on the
-       cursor. Should be <code class="literal">FALSE</code> unless the cursor is split.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to draw a directional arrow on the
+       cursor. Should be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> unless the cursor is split.
 </td>
 </tr>
 </tbody>
@@ -5490,7 +5827,42 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Drawing-Primitives.html#GdkDrawable"
 } GtkBorder;
 </pre>
 <p>
+A struct that specifies a border around a rectangular area that can
+be of different width on each side.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> <em class="structfield"><code>left</code></em>;</span></p></td>
+<td>The width of the left border.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> <em class="structfield"><code>right</code></em>;</span></p></td>
+<td>The width of the right border.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> <em class="structfield"><code>top</code></em>;</span></p></td>
+<td>The width of the top border.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> <em class="structfield"><code>bottom</code></em>;</span></p></td>
+<td>The width of the bottom border.
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">

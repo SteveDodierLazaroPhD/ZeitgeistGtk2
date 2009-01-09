@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -272,6 +274,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <div class="refsect1" lang="en">
 <a name="GtkMenu.style-properties"></a><h2>Style Properties</h2>
 <pre class="synopsis">
+  "<a class="link" href="GtkMenu.html#GtkMenu--s-arrow-placement" title='The "arrow-placement" style property'>arrow-placement</a>"          <a class="link" href="gtk-Standard-Enumerations.html#GtkArrowPlacement" title="enum GtkArrowPlacement">GtkArrowPlacement</a>     : Read
+  "<a class="link" href="GtkMenu.html#GtkMenu--s-arrow-scaling" title='The "arrow-scaling" style property'>arrow-scaling</a>"            <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"
+>gfloat</a>                : Read
   "<a class="link" href="GtkMenu.html#GtkMenu--s-double-arrows" title='The "double-arrows" style property'>double-arrows</a>"            <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read
@@ -317,7 +323,7 @@ Applications can display a <a class="link" href="GtkMenu.html" title="GtkMenu"><
 can pop up a menu when the 3rd mouse button is pressed.
 </p>
 <div class="example">
-<a name="id3468852"></a><p class="title"><b>Example 26. Connecting the popup signal handler.</b></p>
+<a name="id3508711"></a><p class="title"><b>Example 28. Connecting the popup signal handler.</b></p>
 <div class="example-contents"><pre class="programlisting">
     /* connect our handler which will popup the menu */
     g_signal_connect_swapped (window, "button_press_event",
@@ -325,7 +331,7 @@ can pop up a menu when the 3rd mouse button is pressed.
 </pre></div>
 </div>
 <br class="example-break"><div class="example">
-<a name="id3468868"></a><p class="title"><b>Example 27. Signal handler which displays a popup menu.</b></p>
+<a name="id3508727"></a><p class="title"><b>Example 29. Signal handler which displays a popup menu.</b></p>
 <div class="example-contents"><pre class="programlisting">
 static gint
 my_popup_handler (GtkWidget *widget, GdkEvent *event)
@@ -406,7 +412,9 @@ href="/usr/share/gtk-doc/html/gdk/GdkScreen.html"
 <td><p><span class="term"><em class="parameter"><code>screen</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gdk/GdkScreen.html"
-><span class="type">GdkScreen</span></a>, or <code class="literal">NULL</code> if the screen should be
+><span class="type">GdkScreen</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the screen should be
          determined by the widget the menu is attached to.
 </td>
 </tr>
@@ -622,7 +630,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"
 <p>
 Displays a menu and makes it available for selection.  Applications can use
 this function to display context-sensitive menus, and will typically supply
-<code class="literal">NULL</code> for the <em class="parameter"><code>parent_menu_shell</code></em>, <em class="parameter"><code>parent_menu_item</code></em>, <em class="parameter"><code>func</code></em> and <em class="parameter"><code>data</code></em> 
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for the <em class="parameter"><code>parent_menu_shell</code></em>, <em class="parameter"><code>parent_menu_item</code></em>, <em class="parameter"><code>func</code></em> and <em class="parameter"><code>data</code></em> 
 parameters. The default menu positioning function will position the menu
 at the current mouse cursor position.
 </p>
@@ -649,17 +659,23 @@ be used instead.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent_menu_shell</code></em> :</span></p></td>
-<td> the menu shell containing the triggering menu item, or <code class="literal">NULL</code>
+<td> the menu shell containing the triggering menu item, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent_menu_item</code></em> :</span></p></td>
-<td> the menu item whose activation triggered the popup, or <code class="literal">NULL</code>
+<td> the menu item whose activation triggered the popup, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
-<td> a user supplied function used to position the menu, or <code class="literal">NULL</code>
+<td> a user supplied function used to position the menu, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -818,7 +834,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title);</pre>
 <p>
 Sets the title string for the menu.  The title is displayed when the menu
-is shown as a tearoff menu.  If <em class="parameter"><code>title</code></em> is <code class="literal">NULL</code>, the menu will see if it is
+is shown as a tearoff menu.  If <em class="parameter"><code>title</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, the menu will see if it is
 attached to a parent menu item, and if so it will try to use the same text as
 that menu item's label.</p>
 <p>
@@ -859,7 +877,9 @@ Returns the title of the menu. See <a class="link" href="GtkMenu.html#gtk-menu-s
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the title of the menu, or <code class="literal">NULL</code> if the menu has no
+<td> the title of the menu, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the menu has no
 title set on it. This string is owned by the widget and should
 not be modified or freed.
 </td>
@@ -956,7 +976,9 @@ Returns whether the menu is torn off. See
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the menu is currently torn off.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the menu is currently torn off.
 </td>
 </tr>
 </tbody>
@@ -1070,7 +1092,9 @@ or reattached.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>torn_off</code></em> :</span></p></td>
-<td>If <code class="literal">TRUE</code>, menu is displayed as a tearoff menu.
+<td>If <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, menu is displayed as a tearoff menu.
 </td>
 </tr>
 </tbody>
@@ -1407,6 +1431,27 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkMenu.style-property-details"></a><h2>Style Property Details</h2>
+<div class="refsect2" lang="en">
+<a name="GtkMenu--s-arrow-placement"></a><h3>The <code class="literal">"arrow-placement"</code> style property</h3>
+<pre class="programlisting">  "arrow-placement"          <a class="link" href="gtk-Standard-Enumerations.html#GtkArrowPlacement" title="enum GtkArrowPlacement">GtkArrowPlacement</a>     : Read</pre>
+<p>
+Indicates where scroll arrows should be placed.</p>
+<p>
+</p>
+<p>Default value: GTK_ARROWS_BOTH</p>
+<p>Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkMenu--s-arrow-scaling"></a><h3>The <code class="literal">"arrow-scaling"</code> style property</h3>
+<pre class="programlisting">  "arrow-scaling"            <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"
+>gfloat</a>                : Read</pre>
+<p>Arbitrary constant to scale down the size of the scroll arrow.</p>
+<p>Allowed values: [0,1]</p>
+<p>Default value: 0.7</p>
+</div>
+<hr>
 <div class="refsect2" lang="en">
 <a name="GtkMenu--s-double-arrows"></a><h3>The <code class="literal">"double-arrows"</code> style property</h3>
 <pre class="programlisting">  "double-arrows"            <a

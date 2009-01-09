@@ -333,7 +333,7 @@ error_dialogs (GtkPrintUnixDialog *print_dialog,
   GtkPrinter                *printer = NULL;
   GtkWindow                 *toplevel = NULL;
   GtkWidget                 *dialog = NULL;
-  gchar                     *filename = NULL;
+  GFile                     *file = NULL;
   gchar                     *basename = NULL;
   gchar                     *dirname = NULL;
   int                        response;
@@ -352,15 +352,15 @@ error_dialogs (GtkPrintUnixDialog *print_dialog,
           if (option != NULL &&
               option->type == GTK_PRINTER_OPTION_TYPE_FILESAVE)
             {
-              filename = g_filename_from_uri (option->value, NULL, NULL);
+              file = g_file_new_for_uri (option->value);
 
-              if (filename != NULL &&
-                  g_file_test (filename, G_FILE_TEST_EXISTS))
+              if (file != NULL &&
+                  g_file_query_exists (file, NULL))
                 {
                   toplevel = get_toplevel (GTK_WIDGET (print_dialog));
 
-                  basename = g_path_get_basename (filename);
-                  dirname = g_path_get_dirname (filename);
+                  basename = g_file_get_basename (file);
+                  dirname = g_file_get_parse_name (g_file_get_parent (file));
 
                   dialog = gtk_message_dialog_new (toplevel,
                                                    GTK_DIALOG_MODAL |
@@ -396,17 +396,18 @@ error_dialogs (GtkPrintUnixDialog *print_dialog,
 
                   gtk_widget_destroy (dialog);
 
+                  g_free (dirname);
+                  g_free (basename);
+
                   if (response != GTK_RESPONSE_ACCEPT)
                     {
                       g_signal_stop_emission_by_name (print_dialog, "response");
+                      g_object_unref (file);
                       return TRUE;
                     }
-
-                  g_free (dirname);
-                  g_free (basename);
                 }
 
-              g_free (filename);
+              g_object_unref (file);
             }
         }
     }
@@ -1697,6 +1698,19 @@ update_range_sensitivity (GtkWidget *button,
 }
 
 static void
+emit_ok_response (GtkTreeView       *tree_view,
+                  GtkTreePath       *path,
+                  GtkTreeViewColumn *column,
+                  gpointer          *user_data)
+{
+  GtkPrintUnixDialog *print_dialog;
+
+  print_dialog = (GtkPrintUnixDialog *) user_data;
+
+  gtk_dialog_response (GTK_DIALOG (print_dialog), GTK_RESPONSE_OK);
+}
+
+static void
 create_main_page (GtkPrintUnixDialog *dialog)
 {
   GtkPrintUnixDialogPrivate *priv = dialog->priv;
@@ -1774,6 +1788,8 @@ create_main_page (GtkPrintUnixDialog *dialog)
 						     NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer, set_cell_sensitivity_func, NULL, NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+  g_signal_connect (GTK_TREE_VIEW (treeview), "row-activated", G_CALLBACK (emit_ok_response), dialog);
   
   gtk_widget_show (treeview);
   gtk_container_add (GTK_CONTAINER (scrolled), treeview);

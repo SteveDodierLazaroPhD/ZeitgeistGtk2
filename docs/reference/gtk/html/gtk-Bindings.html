@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -199,7 +201,7 @@ well as users and provides GTK+ users or administrators with high key
 binding configurability which requires no application or toolkit side changes.
 </p>
 <div class="refsect2" lang="en">
-<a name="id3090030"></a><h3>Installing a key binding</h3>
+<a name="id3030128"></a><h3>Installing a key binding</h3>
 <a name="gtk-bindings-install"></a><p>
 A resource file binding consists of a 'binding' definition and a match
 statement to apply the binding to specific widget types. Details on the
@@ -525,11 +527,32 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_binding_entry_add</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_binding_entry_add</code> has been deprecated since version 2.12 and should not be used in newly-written code. Use <a class="link" href="gtk-Bindings.html#gtk-binding-entry-add-signal" title="gtk_binding_entry_add_signal ()"><code class="function">gtk_binding_entry_add_signal()</code></a> instead.</p>
 </div>
 <p>
-Deprecated.
+Adds a binding entry.</p>
+<p>
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
+<td> <span class="type">a</span> GtkBindingSet to clear an entry of
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>keyval</code></em> :</span></p></td>
+<td>      key value of binding to clear
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>modifiers</code></em> :</span></p></td>
+<td>   key modifier of binding to clear
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -549,10 +572,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"
 >GSList</a> *binding_args);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_binding_entry_add_signall</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_binding_entry_add_signall</code> has been deprecated since version 2.12 and should not be used in newly-written code. Use <a class="link" href="gtk-Bindings.html#gtk-binding-entry-add-signal" title="gtk_binding_entry_add_signal ()"><code class="function">gtk_binding_entry_add_signal()</code></a> instead.</p>
 </div>
 <p>
-Deprecated.</p>
+Override or install a new key binding for <em class="parameter"><code>keyval</code></em> with <em class="parameter"><code>modifiers</code></em> on
+<em class="parameter"><code>binding_set</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -560,7 +584,7 @@ Deprecated.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
-<td>  binding set to add a signal to
+<td>  a <a class="link" href="gtk-Bindings.html#GtkBindingSet" title="GtkBindingSet"><span class="type">GtkBindingSet</span></a> to add a signal to
 </td>
 </tr>
 <tr>
@@ -598,10 +622,10 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> modifiers);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_binding_entry_clear</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_binding_entry_clear</code> has been deprecated since version 2.12 and should not be used in newly-written code. Use <a class="link" href="gtk-Bindings.html#gtk-binding-entry-remove" title="gtk_binding_entry_remove ()"><code class="function">gtk_binding_entry_remove()</code></a> instead.</p>
 </div>
 <p>
-Use of this function is deprecated.</p>
+Clears a binding entry.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -609,7 +633,7 @@ Use of this function is deprecated.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
-<td> <em class="parameter"><code>binding_set</code></em> to clear an entry of
+<td> binding set to clear an entry of
 </td>
 </tr>
 <tr>
@@ -635,10 +659,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Lexical-Scanner.html#GScanner"
 >GScanner</a> *scanner);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_binding_parse_binding</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_binding_parse_binding</code> has been deprecated since version 2.12 and should not be used in newly-written code. There should be no need to call this function outside GTK+.</p>
 </div>
 <p>
-Deprecated as public API, used only internally.</p>
+Parse a binding entry from a gtkrc file.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -652,6 +676,7 @@ Deprecated as public API, used only internally.</p>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> expected token upon errors, <code class="literal">G_TOKEN_NONE</code> on success.
+
 </td>
 </tr>
 </tbody>
@@ -734,7 +759,9 @@ a class used in <a class="link" href="gtk-Bindings.html#gtk-binding-set-by-class
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">NULL</code> or the specified binding set
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> or the specified binding set
 </td>
 </tr>
 </tbody>
@@ -777,7 +804,9 @@ binding on <em class="parameter"><code>object</code></em>.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a binding was found and activated
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a binding was found and activated
 </td>
 </tr>
 </tbody>
@@ -814,7 +843,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEventKey"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a matching key binding was found
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a matching key binding was found
 </td>
 </tr>
 </tbody>
@@ -843,7 +874,7 @@ Find a key binding matching <em class="parameter"><code>keyval</code></em> and <
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
-<td> <em class="parameter"><code>binding_set</code></em> to activate
+<td> a <a class="link" href="gtk-Bindings.html#GtkBindingSet" title="GtkBindingSet"><span class="type">GtkBindingSet</span></a> set to activate
 </td>
 </tr>
 <tr>
@@ -863,7 +894,9 @@ Find a key binding matching <em class="parameter"><code>keyval</code></em> and <
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a binding was found and activated
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a binding was found and activated
 </td>
 </tr>
 </tbody>
@@ -888,7 +921,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
                                                          ...);</pre>
 <p>
 Override or install a new key binding for <em class="parameter"><code>keyval</code></em> with <em class="parameter"><code>modifiers</code></em> on
-<em class="parameter"><code>binding_set</code></em>.  When the binding is activated, <em class="parameter"><code>signal_name</code></em> will be
+<em class="parameter"><code>binding_set</code></em>. When the binding is activated, <em class="parameter"><code>signal_name</code></em> will be
 emitted on the target widget, with <em class="parameter"><code>n_args</code></em> <em class="parameter"><code>Varargs</code></em> used as
 arguments.</p>
 <p>
@@ -898,7 +931,7 @@ arguments.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
-<td> <em class="parameter"><code>binding_set</code></em> to install an entry for
+<td> a <a class="link" href="gtk-Bindings.html#GtkBindingSet" title="GtkBindingSet"><span class="type">GtkBindingSet</span></a> to install an entry for
 </td>
 </tr>
 <tr>
@@ -950,7 +983,7 @@ to be activated.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
-<td> <em class="parameter"><code>binding_set</code></em> to skip an entry of
+<td> a <a class="link" href="gtk-Bindings.html#GtkBindingSet" title="GtkBindingSet"><span class="type">GtkBindingSet</span></a> to skip an entry of
 </td>
 </tr>
 <tr>
@@ -987,7 +1020,7 @@ Remove a binding previously installed via
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
-<td> <em class="parameter"><code>binding_set</code></em> to remove an entry of
+<td> a <a class="link" href="gtk-Bindings.html#GtkBindingSet" title="GtkBindingSet"><span class="type">GtkBindingSet</span></a> to remove an entry of
 </td>
 </tr>
 <tr>
@@ -1022,7 +1055,7 @@ assign match patterns to <a class="link" href="gtk-Bindings.html#GtkBindingSet" 
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding_set</code></em> :</span></p></td>
-<td>  binding set to add a path to
+<td>  a <a class="link" href="gtk-Bindings.html#GtkBindingSet" title="GtkBindingSet"><span class="type">GtkBindingSet</span></a> to add a path to
 </td>
 </tr>
 <tr>

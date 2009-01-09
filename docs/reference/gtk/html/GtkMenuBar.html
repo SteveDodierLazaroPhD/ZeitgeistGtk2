@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -284,7 +286,34 @@ Adds a new <a class="link" href="GtkMenuItem.html" title="GtkMenuItem"><span cla
 } GtkPackDirection;
 </pre>
 <p>
+Determines how widgets should be packed insided menubars and
+menuitems contained in menubars.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="GTK-PACK-DIRECTION-LTR--CAPS"></a><span class="term"><code class="literal">GTK_PACK_DIRECTION_LTR</code></span></p></td>
+<td>Widgets are packed left-to-right.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-PACK-DIRECTION-RTL--CAPS"></a><span class="term"><code class="literal">GTK_PACK_DIRECTION_RTL</code></span></p></td>
+<td>Widgets are packed right-to-left.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-PACK-DIRECTION-TTB--CAPS"></a><span class="term"><code class="literal">GTK_PACK_DIRECTION_TTB</code></span></p></td>
+<td>Widgets are packed top-to-bottom.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-PACK-DIRECTION-BTT--CAPS"></a><span class="term"><code class="literal">GTK_PACK_DIRECTION_BTT</code></span></p></td>
+<td>Widgets are packed bottom-to-top.
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -300,12 +329,12 @@ Sets how items should be packed inside a menubar.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>menubar</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkMenuBar.html" title="GtkMenuBar"><span class="type">GtkMenuBar</span></a>.
+<td> a <a class="link" href="GtkMenuBar.html" title="GtkMenuBar"><span class="type">GtkMenuBar</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pack_dir</code></em> :</span></p></td>
-<td> a new <a class="link" href="GtkMenuBar.html#GtkPackDirection" title="enum GtkPackDirection"><span class="type">GtkPackDirection</span></a>.
+<td> a new <a class="link" href="GtkMenuBar.html#GtkPackDirection" title="enum GtkPackDirection"><span class="type">GtkPackDirection</span></a>
 </td>
 </tr>
 </tbody>
@@ -317,8 +346,8 @@ Sets how items should be packed inside a menubar.</p>
 <a name="gtk-menu-bar-get-pack-direction"></a><h3>gtk_menu_bar_get_pack_direction ()</h3>
 <pre class="programlisting"><a class="link" href="GtkMenuBar.html#GtkPackDirection" title="enum GtkPackDirection">GtkPackDirection</a>    gtk_menu_bar_get_pack_direction     (<a class="link" href="GtkMenuBar.html" title="GtkMenuBar">GtkMenuBar</a> *menubar);</pre>
 <p>
-Retrieves the current pack direction of the menubar. See
-<a class="link" href="GtkMenuBar.html#gtk-menu-bar-set-pack-direction" title="gtk_menu_bar_set_pack_direction ()"><code class="function">gtk_menu_bar_set_pack_direction()</code></a>.</p>
+Retrieves the current pack direction of the menubar. 
+See <a class="link" href="GtkMenuBar.html#gtk-menu-bar-set-pack-direction" title="gtk_menu_bar_set_pack_direction ()"><code class="function">gtk_menu_bar_set_pack_direction()</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -354,12 +383,12 @@ Sets how widgets should be packed inside the children of a menubar.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>menubar</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkMenuBar.html" title="GtkMenuBar"><span class="type">GtkMenuBar</span></a>.
+<td> a <a class="link" href="GtkMenuBar.html" title="GtkMenuBar"><span class="type">GtkMenuBar</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>child_pack_dir</code></em> :</span></p></td>
-<td> a new <a class="link" href="GtkMenuBar.html#GtkPackDirection" title="enum GtkPackDirection"><span class="type">GtkPackDirection</span></a>.
+<td> a new <a class="link" href="GtkMenuBar.html#GtkPackDirection" title="enum GtkPackDirection"><span class="type">GtkPackDirection</span></a>
 </td>
 </tr>
 </tbody>
@@ -372,8 +401,8 @@ Sets how widgets should be packed inside the children of a menubar.</p>
 <pre class="programlisting"><a class="link" href="GtkMenuBar.html#GtkPackDirection" title="enum GtkPackDirection">GtkPackDirection</a>    gtk_menu_bar_get_child_pack_direction
                                                         (<a class="link" href="GtkMenuBar.html" title="GtkMenuBar">GtkMenuBar</a> *menubar);</pre>
 <p>
-Retrieves the current child pack direction of the menubar. See
-<a class="link" href="GtkMenuBar.html#gtk-menu-bar-set-child-pack-direction" title="gtk_menu_bar_set_child_pack_direction ()"><code class="function">gtk_menu_bar_set_child_pack_direction()</code></a>.</p>
+Retrieves the current child pack direction of the menubar.
+See <a class="link" href="GtkMenuBar.html#gtk-menu-bar-set-child-pack-direction" title="gtk_menu_bar_set_child_pack_direction ()"><code class="function">gtk_menu_bar_set_child_pack_direction()</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -401,7 +430,7 @@ Retrieves the current child pack direction of the menubar. See
 <a name="GtkMenuBar--child-pack-direction"></a><h3>The <code class="literal">"child-pack-direction"</code> property</h3>
 <pre class="programlisting">  "child-pack-direction"     <a class="link" href="GtkMenuBar.html#GtkPackDirection" title="enum GtkPackDirection">GtkPackDirection</a>      : Read / Write</pre>
 <p>
-The pack direction of the menubar. It determines how
+The child pack direction of the menubar. It determines how
 the widgets contained in child menuitems are arranged.</p>
 <p>
 </p>

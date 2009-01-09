@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -220,7 +222,7 @@ various aspects of the operation of a GTK+ program
 at runtime.
 </p>
 <div class="refsect2" lang="en">
-<a name="id3033586"></a><h3>Default files</h3>
+<a name="id3053108"></a><h3>Default files</h3>
 <p>
 An application can cause GTK+ to parse a specific RC
 file by calling <a class="link" href="gtk-Resource-Files.html#gtk-rc-parse" title="gtk_rc_parse ()"><code class="function">gtk_rc_parse()</code></a>. In addition to this,
@@ -254,7 +256,7 @@ and parses the first of those that exists.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3081789"></a><h3>Pathnames and patterns</h3>
+<a name="id3026474"></a><h3>Pathnames and patterns</h3>
 <a name="gtkrc-pathnames-and-patterns"></a><p>
 A resource file defines a number of styles and key bindings and
 attaches them to particular widgets. The attachment is done
@@ -340,7 +342,7 @@ that GTK+ creates internally.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3117949"></a><h3>Optimizing RC Style Matches</h3>
+<a name="id3096815"></a><h3>Optimizing RC Style Matches</h3>
 <a name="optimizing-rc-style-matches"></a><p>
 Everytime a widget is created and added to the layout hierarchy of a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>
 ("anchored" to be exact), a list of matching RC styles out of all RC styles read
@@ -415,7 +417,7 @@ matches:
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3121699"></a><h3>Toplevel declarations</h3>
+<a name="id3112821"></a><h3>Toplevel declarations</h3>
 <p>
 An RC file is a text file which is composed of a sequence
 of declarations. <code class="literal">'#'</code> characters delimit comments and
@@ -503,7 +505,7 @@ The possible toplevel declarations are:
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3126583"></a><h3>Styles</h3>
+<a name="id3126991"></a><h3>Styles</h3>
 <p>
 A RC style is specified by a <code class="literal">style</code>
 declaration in a RC file, and then bound to widgets
@@ -829,7 +831,7 @@ match the state and size the user requested.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3127711"></a><h3>Key bindings</h3>
+<a name="id3128119"></a><h3>Key bindings</h3>
 <p>
 Key bindings allow the user to specify actions to be
 taken on particular key presses. The form of a binding
@@ -1102,26 +1104,34 @@ The action of <a class="link" href="gtk-Resource-Files.html#gtk-rc-get-style" ti
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget_path</code></em> :</span></p></td>
-<td> the widget path to use when looking up the style, or <code class="literal">NULL</code>
+<td> the widget path to use when looking up the style, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
               if no matching against the widget path should be done
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>class_path</code></em> :</span></p></td>
-<td> the class path to use when looking up the style, or <code class="literal">NULL</code>
+<td> the class path to use when looking up the style, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
               if no matching against the class path should be done.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
 <td> a type that will be used along with parent types of this type
-       when matching against class styles, or <span class="type">G_TYPE_NONE</span>
+       when matching against class styles, or <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-NONE--CAPS"
+><span class="type">G_TYPE_NONE</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> A style created by matching with the supplied paths,
-  or <code class="literal">NULL</code> if nothing matching was specified and the default style should
+  or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if nothing matching was specified and the default style should
   be used. The returned value is owned by GTK+ as part of an internal cache,
   so you must call <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-ref"
@@ -1141,14 +1151,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *pattern);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_rc_add_widget_name_style</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_rc_add_widget_name_style</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="gtk-Resource-Files.html#gtk-rc-parse-string" title="gtk_rc_parse_string ()"><code class="function">gtk_rc_parse_string()</code></a> with a suitable string instead.</p>
 </div>
 <p>
 Adds a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a> that will be looked up by a match against
 the widget's pathname. This is equivalent to a:
-<code class="literal">
-widget PATTERN style STYLE
-</code>
+ <code class="literal">widget PATTERN style STYLE</code>
 statement in a RC file.
 </p>
 <div class="variablelist"><table border="0">
@@ -1176,14 +1184,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *pattern);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_rc_add_widget_class_style</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_rc_add_widget_class_style</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="gtk-Resource-Files.html#gtk-rc-parse-string" title="gtk_rc_parse_string ()"><code class="function">gtk_rc_parse_string()</code></a> with a suitable string instead.</p>
 </div>
 <p>
 Adds a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a> that will be looked up by a match against
 the widget's class pathname. This is equivalent to a:
-<code class="literal">
-widget_class PATTERN style STYLE
-</code>
+<code class="literal">widget_class PATTERN style STYLE</code>
 statement in a RC file.
 </p>
 <div class="variablelist"><table border="0">
@@ -1211,14 +1217,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *pattern);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_rc_add_class_style</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_rc_add_class_style</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="gtk-Resource-Files.html#gtk-rc-parse-string" title="gtk_rc_parse_string ()"><code class="function">gtk_rc_parse_string()</code></a> with a suitable string instead.</p>
 </div>
 <p>
 Adds a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a> that will be looked up by a matching against
 the class hierarchy of the widget. This is equivalent to a:
-<code class="literal">
-class PATTERN style STYLE
-</code>
+<code class="literal">class PATTERN style STYLE</code>
 statement in a RC file.
 </p>
 <div class="variablelist"><table border="0">
@@ -1290,7 +1294,9 @@ and then reread all previously read RC files.</p>
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>  <code class="literal">TRUE</code> if the files were reread.
+<td>  <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the files were reread.
 </td>
 </tr></tbody>
 </table></div>
@@ -1325,7 +1331,9 @@ and then reread all previously read RC files.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the files were reread.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the files were reread.
 </td>
 </tr>
 </tbody>
@@ -1396,7 +1404,9 @@ at the end of <a class="link" href="gtk-General.html#gtk-init" title="gtk_init (
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A <code class="literal">NULL</code>-terminated array of filenames. This memory
+<td> A <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>-terminated array of filenames. This memory
 is owned by GTK+ and must not be freed by the application.
 If you want to store this information, you should make a copy.
 </td>
@@ -1418,7 +1428,9 @@ end of <a class="link" href="gtk-General.html#gtk-init" title="gtk_init ()"><cod
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>filenames</code></em> :</span></p></td>
-<td> A <code class="literal">NULL</code>-terminated list of filenames.
+<td> A <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>-terminated list of filenames.
 </td>
 </tr></tbody>
 </table></div>
@@ -1483,7 +1495,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Colormaps-and-Colors.html#GdkColor"
 >GdkColor</a> *color);</pre>
 <p>
 Parses a color in the format expected
-in a RC file. If <em class="parameter"><code>style</code></em> is not <code class="literal">NULL</code>, it will be consulted to resolve
+in a RC file. If <em class="parameter"><code>style</code></em> is not <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, it will be consulted to resolve
 references to symbolic colors.</p>
 <p>
 </p>
@@ -1499,7 +1513,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Lexical-Scanner.html#GScanner"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
-<td> a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a>, or <code class="literal">NULL</code>
+<td> a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -1618,7 +1634,9 @@ is not useful for applications and should not be used.</p>
 <td> The filename, if found (must be freed with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
 ><code class="function">g_free()</code></a>),
-  otherwise <code class="literal">NULL</code>.
+  otherwise <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 </tbody>
@@ -1641,7 +1659,9 @@ Looks up a file in pixmap path for the specified <a class="link" href="GtkSettin
 If the file is not found, it outputs a warning message using
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Message-Logging.html#g-warning"
-><code class="function">g_warning()</code></a> and returns <code class="literal">NULL</code>.</p>
+><code class="function">g_warning()</code></a> and returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1655,7 +1675,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Message-Logging.html#g-warning"
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scanner</code></em> :</span></p></td>
 <td> Scanner used to get line number information for the
-  warning message, or <code class="literal">NULL</code>
+  warning message, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>

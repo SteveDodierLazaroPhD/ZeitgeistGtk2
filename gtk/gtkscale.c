@@ -22,17 +22,20 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 #include "config.h"
+
 #include <math.h>
-#include "gtkintl.h"
+#include <stdlib.h>
+
+#include "gdk/gdkkeysyms.h"
 #include "gtkscale.h"
 #include "gtkmarshalers.h"
-#include "gdk/gdkkeysyms.h"
 #include "gtkbindings.h"
 #include "gtkprivate.h"
+#include "gtkintl.h"
 #include "gtkalias.h"
 
 
@@ -65,21 +68,26 @@ enum {
 
 static guint signals[LAST_SIGNAL];
 
-static void gtk_scale_set_property     (GObject       *object,
-                                        guint          prop_id,
-                                        const GValue  *value,
-                                        GParamSpec    *pspec);
-static void gtk_scale_get_property     (GObject       *object,
-                                        guint          prop_id,
-                                        GValue        *value,
-                                        GParamSpec    *pspec);
-static void gtk_scale_style_set        (GtkWidget     *widget,
-                                        GtkStyle      *previous);
-static void gtk_scale_get_range_border (GtkRange      *range,
-                                        GtkBorder     *border);
-static void gtk_scale_finalize         (GObject       *object);
-static void gtk_scale_screen_changed   (GtkWidget     *widget,
-                                        GdkScreen     *old_screen);
+static void     gtk_scale_set_property            (GObject        *object,
+                                                   guint           prop_id,
+                                                   const GValue   *value,
+                                                   GParamSpec     *pspec);
+static void     gtk_scale_get_property            (GObject        *object,
+                                                   guint           prop_id,
+                                                   GValue         *value,
+                                                   GParamSpec     *pspec);
+static void     gtk_scale_style_set               (GtkWidget      *widget,
+                                                   GtkStyle       *previous);
+static void     gtk_scale_get_range_border        (GtkRange       *range,
+                                                   GtkBorder      *border);
+static void     gtk_scale_finalize                (GObject        *object);
+static void     gtk_scale_screen_changed          (GtkWidget      *widget,
+                                                   GdkScreen      *old_screen);
+static gboolean gtk_scale_expose                  (GtkWidget      *widget,
+                                                   GdkEventExpose *event);
+static void     gtk_scale_real_get_layout_offsets (GtkScale       *scale,
+                                                   gint           *x,
+                                                   gint           *y);
 
 G_DEFINE_ABSTRACT_TYPE (GtkScale, gtk_scale, GTK_TYPE_RANGE)
 
@@ -123,9 +131,36 @@ gtk_scale_class_init (GtkScaleClass *class)
 
   widget_class->style_set = gtk_scale_style_set;
   widget_class->screen_changed = gtk_scale_screen_changed;
+  widget_class->expose_event = gtk_scale_expose;
 
+  range_class->slider_detail = "Xscale";
   range_class->get_range_border = gtk_scale_get_range_border;
-  
+
+  class->get_layout_offsets = gtk_scale_real_get_layout_offsets;
+
+  /**
+   * GtkScale::format-value:
+   * @scale: the object which received the signal
+   * @value: the value to format
+   *
+   * Signal which allows you to change how the scale value is displayed.
+   * Connect a signal handler which returns an allocated string representing 
+   * @value. That string will then be used to display the scale's value.
+   *
+   * Here's an example signal handler which displays a value 1.0 as
+   * with "--&gt;1.0&lt;--".
+   * |[
+   * static gchar*
+   * format_value_callback (GtkScale *scale,
+   *                        gdouble   value)
+   * {
+   *   return g_strdup_printf ("--&gt;&percnt;0.*g&lt;--",
+   *                           gtk_scale_get_digits (scale), value);
+   *  }
+   * ]|
+   *
+   * Return value: allocated string representing @value
+   */
   signals[FORMAT_VALUE] =
     g_signal_new (I_("format-value"),
                   G_TYPE_FROM_CLASS (gobject_class),
@@ -303,6 +338,37 @@ gtk_scale_class_init (GtkScaleClass *class)
 }
 
 static void
+gtk_scale_orientation_notify (GtkRange         *range,
+                              const GParamSpec *pspec)
+{
+  range->flippable = (range->orientation == GTK_ORIENTATION_HORIZONTAL);
+}
+
+static void
+gtk_scale_init (GtkScale *scale)
+{
+  GtkRange *range = GTK_RANGE (scale);
+
+  GTK_WIDGET_SET_FLAGS (scale, GTK_CAN_FOCUS);
+
+  range->slider_size_fixed = TRUE;
+  range->has_stepper_a = FALSE;
+  range->has_stepper_b = FALSE;
+  range->has_stepper_c = FALSE;
+  range->has_stepper_d = FALSE;
+
+  scale->draw_value = TRUE;
+  scale->value_pos = GTK_POS_TOP;
+  scale->digits = 1;
+  range->round_digits = scale->digits;
+
+  gtk_scale_orientation_notify (range, NULL);
+  g_signal_connect (scale, "notify::orientation",
+                    G_CALLBACK (gtk_scale_orientation_notify),
+                    NULL);
+}
+
+static void
 gtk_scale_set_property (GObject      *object,
 			guint         prop_id,
 			const GValue *value,
@@ -356,27 +422,96 @@ gtk_scale_get_property (GObject      *object,
     }
 }
 
-static void
-gtk_scale_init (GtkScale *scale)
+#if 0
+/**
+ * gtk_scale_new:
+ * @orientation: the scale's orientation.
+ * @adjustment: the #GtkAdjustment which sets the range of the scale, or
+ *              %NULL to create a new adjustment.
+ *
+ * Creates a new #GtkScale.
+ *
+ * Return value: a new #GtkScale
+ *
+ * Since: 2.16
+ **/
+GtkWidget *
+gtk_scale_new (GtkOrientation  orientation,
+               GtkAdjustment  *adjustment)
 {
-  GtkRange *range;
+  g_return_val_if_fail (adjustment == NULL || GTK_IS_ADJUSTMENT (adjustment),
+                        NULL);
 
-  range = GTK_RANGE (scale);
-  
-  GTK_WIDGET_SET_FLAGS (scale, GTK_CAN_FOCUS);
-
-  range->slider_size_fixed = TRUE;
-  range->has_stepper_a = FALSE;
-  range->has_stepper_b = FALSE;
-  range->has_stepper_c = FALSE;
-  range->has_stepper_d = FALSE;
-  
-  scale->draw_value = TRUE;
-  scale->value_pos = GTK_POS_TOP;
-  scale->digits = 1;
-  range->round_digits = scale->digits;
+  return g_object_new (GTK_TYPE_SCALE,
+                       "orientation", orientation,
+                       "adjustment",  adjustment,
+                       NULL);
 }
 
+/**
+ * gtk_scale_new_with_range:
+ * @orientation: the scale's orientation.
+ * @min: minimum value
+ * @max: maximum value
+ * @step: step increment (tick size) used with keyboard shortcuts
+ *
+ * Creates a new scale widget with the given orientation that lets the
+ * user input a number between @min and @max (including @min and @max)
+ * with the increment @step.  @step must be nonzero; it's the distance
+ * the slider moves when using the arrow keys to adjust the scale
+ * value.
+ *
+ * Note that the way in which the precision is derived works best if @step
+ * is a power of ten. If the resulting precision is not suitable for your
+ * needs, use gtk_scale_set_digits() to correct it.
+ *
+ * Return value: a new #GtkScale
+ *
+ * Since: 2.16
+ **/
+GtkWidget *
+gtk_scale_new_with_range (GtkOrientation orientation,
+                          gdouble        min,
+                          gdouble        max,
+                          gdouble        step)
+{
+  GtkObject *adj;
+  gint digits;
+
+  g_return_val_if_fail (min < max, NULL);
+  g_return_val_if_fail (step != 0.0, NULL);
+
+  adj = gtk_adjustment_new (min, min, max, step, 10 * step, 0);
+
+  if (fabs (step) >= 1.0 || step == 0.0)
+    {
+      digits = 0;
+    }
+  else
+    {
+      digits = abs ((gint) floor (log10 (fabs (step))));
+      if (digits > 5)
+        digits = 5;
+    }
+
+  return g_object_new (GTK_TYPE_SCALE,
+                       "orientation", orientation,
+                       "adjustment",  adj,
+                       "digits",      digits,
+                       NULL);
+}
+#endif
+
+/**
+ * gtk_scale_set_digits:
+ * @scale: a #GtkScale
+ * @digits: the number of decimal places to display, 
+ *     e.g. use 1 to display 1.0, 2 to display 1.00, etc
+ * 
+ * Sets the number of decimal places that are displayed in the value.
+ * Also causes the value of the adjustment to be rounded off to this
+ * number of digits, so the retrieved value matches the value the user saw.
+ */
 void
 gtk_scale_set_digits (GtkScale *scale,
 		      gint      digits)
@@ -402,6 +537,14 @@ gtk_scale_set_digits (GtkScale *scale,
     }
 }
 
+/**
+ * gtk_scale_get_digits:
+ * @scale: a #GtkScale
+ *
+ * Gets the number of decimal places that are displayed in the value.
+ *
+ * Returns: the number of decimal places that are displayed
+ */
 gint
 gtk_scale_get_digits (GtkScale *scale)
 {
@@ -410,6 +553,14 @@ gtk_scale_get_digits (GtkScale *scale)
   return scale->digits;
 }
 
+/**
+ * gtk_scale_set_draw_value:
+ * @scale: a #GtkScale
+ * @draw_value: %TRUE to draw the value
+ * 
+ * Specifies whether the current value is displayed as a string next 
+ * to the slider.
+ */
 void
 gtk_scale_set_draw_value (GtkScale *scale,
 			  gboolean  draw_value)
@@ -434,6 +585,15 @@ gtk_scale_set_draw_value (GtkScale *scale,
     }
 }
 
+/**
+ * gtk_scale_get_draw_value:
+ * @scale: a #GtkScale
+ *
+ * Returns whether the current value is displayed as a string 
+ * next to the slider.
+ *
+ * Returns: whether the current value is displayed as a string
+ */
 gboolean
 gtk_scale_get_draw_value (GtkScale *scale)
 {
@@ -442,6 +602,13 @@ gtk_scale_get_draw_value (GtkScale *scale)
   return scale->draw_value;
 }
 
+/**
+ * gtk_scale_set_value_pos:
+ * @scale: a #GtkScale
+ * @pos: the position in which the current value is displayed
+ * 
+ * Sets the position in which the current value is displayed.
+ */
 void
 gtk_scale_set_value_pos (GtkScale        *scale,
 			 GtkPositionType  pos)
@@ -460,6 +627,14 @@ gtk_scale_set_value_pos (GtkScale        *scale,
     }
 }
 
+/**
+ * gtk_scale_get_value_pos:
+ * @scale: a #GtkScale
+ *
+ * Gets the position in which the current value is displayed.
+ *
+ * Returns: the position in which the current value is displayed
+ */
 GtkPositionType
 gtk_scale_get_value_pos (GtkScale *scale)
 {
@@ -590,6 +765,138 @@ gtk_scale_screen_changed (GtkWidget *widget,
   _gtk_scale_clear_layout (GTK_SCALE (widget));
 }
 
+static gboolean
+gtk_scale_expose (GtkWidget      *widget,
+                  GdkEventExpose *event)
+{
+  GtkScale *scale = GTK_SCALE (widget);
+
+  /* We need to chain up _first_ so the various geometry members of
+   * GtkRange struct are updated.
+   */
+  GTK_WIDGET_CLASS (gtk_scale_parent_class)->expose_event (widget, event);
+
+  if (scale->draw_value)
+    {
+      GtkRange *range = GTK_RANGE (scale);
+      PangoLayout *layout;
+      gint x, y;
+      GtkStateType state_type;
+
+      layout = gtk_scale_get_layout (scale);
+      gtk_scale_get_layout_offsets (scale, &x, &y);
+
+      state_type = GTK_STATE_NORMAL;
+      if (!GTK_WIDGET_IS_SENSITIVE (scale))
+        state_type = GTK_STATE_INSENSITIVE;
+
+      gtk_paint_layout (widget->style,
+                        widget->window,
+                        state_type,
+			FALSE,
+                        NULL,
+                        widget,
+                        range->orientation == GTK_ORIENTATION_HORIZONTAL ?
+                        "hscale" : "vscale",
+                        x, y,
+                        layout);
+
+    }
+
+  return FALSE;
+}
+
+static void
+gtk_scale_real_get_layout_offsets (GtkScale *scale,
+                                   gint     *x,
+                                   gint     *y)
+{
+  GtkWidget *widget = GTK_WIDGET (scale);
+  GtkRange *range = GTK_RANGE (widget);
+  PangoLayout *layout = gtk_scale_get_layout (scale);
+  PangoRectangle logical_rect;
+  gint value_spacing;
+
+  if (!layout)
+    {
+      *x = 0;
+      *y = 0;
+
+      return;
+    }
+
+  gtk_widget_style_get (widget, "value-spacing", &value_spacing, NULL);
+
+  pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+
+  if (range->orientation == GTK_ORIENTATION_HORIZONTAL)
+    {
+      switch (scale->value_pos)
+        {
+        case GTK_POS_LEFT:
+          *x = range->range_rect.x - value_spacing - logical_rect.width;
+          *y = range->range_rect.y + (range->range_rect.height - logical_rect.height) / 2;
+          break;
+
+        case GTK_POS_RIGHT:
+          *x = range->range_rect.x + range->range_rect.width + value_spacing;
+          *y = range->range_rect.y + (range->range_rect.height - logical_rect.height) / 2;
+          break;
+
+        case GTK_POS_TOP:
+          *x = range->slider_start +
+            (range->slider_end - range->slider_start - logical_rect.width) / 2;
+          *x = CLAMP (*x, 0, widget->allocation.width - logical_rect.width);
+          *y = range->range_rect.y - logical_rect.height - value_spacing;
+          break;
+
+        case GTK_POS_BOTTOM:
+          *x = range->slider_start +
+            (range->slider_end - range->slider_start - logical_rect.width) / 2;
+          *x = CLAMP (*x, 0, widget->allocation.width - logical_rect.width);
+          *y = range->range_rect.y + range->range_rect.height + value_spacing;
+          break;
+
+        default:
+          g_return_if_reached ();
+          break;
+        }
+    }
+  else
+    {
+      switch (scale->value_pos)
+        {
+        case GTK_POS_LEFT:
+          *x = range->range_rect.x - logical_rect.width - value_spacing;
+          *y = range->slider_start + (range->slider_end - range->slider_start - logical_rect.height) / 2;
+          *y = CLAMP (*y, 0, widget->allocation.height - logical_rect.height);
+          break;
+
+        case GTK_POS_RIGHT:
+          *x = range->range_rect.x + range->range_rect.width + value_spacing;
+          *y = range->slider_start + (range->slider_end - range->slider_start - logical_rect.height) / 2;
+          *y = CLAMP (*y, 0, widget->allocation.height - logical_rect.height);
+          break;
+
+        case GTK_POS_TOP:
+          *x = range->range_rect.x + (range->range_rect.width - logical_rect.width) / 2;
+          *y = range->range_rect.y - logical_rect.height - value_spacing;
+          break;
+
+        case GTK_POS_BOTTOM:
+          *x = range->range_rect.x + (range->range_rect.width - logical_rect.width) / 2;
+          *y = range->range_rect.y + range->range_rect.height + value_spacing;
+          break;
+
+        default:
+          g_return_if_reached ();
+        }
+    }
+
+  *x += widget->allocation.x;
+  *y += widget->allocation.y;
+}
+
 /**
  * _gtk_scale_format_value:
  * @scale: a #GtkScale
@@ -599,7 +906,7 @@ gtk_scale_screen_changed (GtkWidget *widget,
  * if no user signal handlers, falls back to a default format.
  * 
  * Return value: formatted value
- **/
+ */
 gchar*
 _gtk_scale_format_value (GtkScale *scale,
                          gdouble   value)
@@ -641,7 +948,7 @@ gtk_scale_finalize (GObject *object)
  *    if the #GtkScale:draw-value property is %FALSE.
  *   
  * Since: 2.4
- **/
+ */
 PangoLayout *
 gtk_scale_get_layout (GtkScale *scale)
 {
@@ -682,7 +989,7 @@ gtk_scale_get_layout (GtkScale *scale)
  * values are undefined.
  *
  * Since: 2.4
- **/
+ */
 void 
 gtk_scale_get_layout_offsets (GtkScale *scale,
                               gint     *x,

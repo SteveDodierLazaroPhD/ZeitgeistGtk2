@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="SelectorWidgets.html" title="Selectors (File/Font/Color/Input Devices)">
-<link rel="prev" href="GtkColorSelectionDialog.html" title="GtkColorSelectionDialog">
+<link rel="prev" href="gtk-GtkHSV.html" title="GtkHSV">
 <link rel="next" href="GtkFileChooserButton.html" title="GtkFileChooserButton">
 <meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,11 +60,12 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="GtkColorSelectionDialog.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gtk-GtkHSV.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="SelectorWidgets.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">GTK+ Reference Manual</th>
@@ -479,7 +481,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Character-Set-Conversion.html#g-filename
 	generate a preview.
       </p>
 <div class="example">
-<a name="example-gtkfilechooser-preview"></a><p class="title"><b>Example 32. Sample Usage</b></p>
+<a name="example-gtkfilechooser-preview"></a><p class="title"><b>Example 35. Sample Usage</b></p>
 <div class="example-contents"><pre class="programlisting">
 {
   GtkImage *preview;
@@ -522,7 +524,7 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 	widgets in a file chooser.
       </p>
 <div class="example">
-<a name="example-gtkfilechooser-extra"></a><p class="title"><b>Example 33. Sample Usage</b></p>
+<a name="example-gtkfilechooser-extra"></a><p class="title"><b>Example 36. Sample Usage</b></p>
 <div class="example-contents"><pre class="programlisting">
 {
   GtkWidget *toggle;
@@ -555,7 +557,7 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 	describes the available key binding signals.
       </p>
 <div class="example">
-<a name="gtkfilechooser-key-binding-example"></a><p class="title"><b>Example 34. GtkFileChooser key binding example</b></p>
+<a name="gtkfilechooser-key-binding-example"></a><p class="title"><b>Example 37. GtkFileChooser key binding example</b></p>
 <div class="example-contents">
 <p>
 	  The default keys that activate the key-binding signals in
@@ -576,14 +578,14 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 <td>location-popup</td>
 <td>
 		  <span class="keycap"><strong>Control</strong></span>+<span class="keycap"><strong>L</strong></span> (empty path);
-		  <span class="keycap"><strong>/</strong></span> (path of "/")<sup>[<a name="id3568276" href="#ftn.id3568276" class="footnote">a</a>]</sup>;
+		  <span class="keycap"><strong>/</strong></span> (path of "/")<sup>[<a name="id3584084" href="#ftn.id3584084" class="footnote">a</a>]</sup>;
 		  <span class="keycap"><strong>~</strong></span> (path of "~")
 		</td>
 </tr>
 <tr>
 <td>up-folder</td>
 <td>
-		  <span class="keycap"><strong>Alt</strong></span>+<span class="keycap"><strong>Up</strong></span><sup>[<a name="id3568326" href="#ftn.id3568326" class="footnote">b</a>]</sup>
+		  <span class="keycap"><strong>Alt</strong></span>+<span class="keycap"><strong>Up</strong></span><sup>[<a name="id3584134" href="#ftn.id3584134" class="footnote">b</a>]</sup>
 		  ;
 		  <span class="keycap"><strong>Backspace</strong></span>
 		</td>
@@ -614,11 +616,11 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 </tr>
 </tbody>
 <tbody class="footnotes"><tr><td colspan="2">
-<div class="footnote"><p><sup>[<a name="ftn.id3568276" href="#id3568276" class="para">a</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3584084" href="#id3584084" class="para">a</a>] </sup>
 		      Both the individual <span class="keycap"><strong>/</strong></span> key and the
 		      numeric keypad's "divide" key are supported.
 		    </p></div>
-<div class="footnote"><p><sup>[<a name="ftn.id3568326" href="#id3568326" class="para">b</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3584134" href="#id3584134" class="para">b</a>] </sup>
 		      Both the individual Up key and the numeric
 		      keypad's Up key are supported.
 		    </p></div>
@@ -1111,7 +1113,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> local_only);</pre>
 <p>
 Sets whether only local files can be selected in the
-file selector. If <em class="parameter"><code>local_only</code></em> is <code class="literal">TRUE</code> (the default),
+file selector. If <em class="parameter"><code>local_only</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> (the default),
 then the selected file are files are guaranteed to be
 accessible through the operating systems native file
 file system and therefore the application only
@@ -1131,7 +1135,9 @@ rather than the URI functions like
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>local_only</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if only local files can be selected
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if only local files can be selected
 </td>
 </tr>
 </tbody>
@@ -1159,7 +1165,9 @@ file selector. See <a class="link" href="GtkFileChooser.html#gtk-file-chooser-se
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if only local files can be selected.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if only local files can be selected.
 
 </td>
 </tr>
@@ -1191,7 +1199,9 @@ GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>select_multiple</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if multiple files can be selected.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if multiple files can be selected.
 </td>
 </tr>
 </tbody>
@@ -1220,7 +1230,9 @@ selector. See <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-sel
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if multiple files can be selected.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if multiple files can be selected.
 
 </td>
 </tr>
@@ -1249,7 +1261,9 @@ Sets whether hidden files and folders are displayed in the file selector.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>show_hidden</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if hidden files and folders should be displayed.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if hidden files and folders should be displayed.
 </td>
 </tr>
 </tbody>
@@ -1277,7 +1291,9 @@ See <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-show-hidden" 
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if hidden files and folders are displayed.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if hidden files and folders are displayed.
 
 </td>
 </tr>
@@ -1296,14 +1312,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 Sets whether a file chooser in GTK_FILE_CHOOSER_ACTION_SAVE mode will present
 a confirmation dialog if the user types a file name that already exists.  This
-is <code class="literal">FALSE</code> by default.
+is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> by default.
 </p>
 <p>
 Regardless of this setting, the <em class="parameter"><code>chooser</code></em> will emit the "confirm-overwrite"
 signal when appropriate.
 </p>
 <p>
-If all you need is the stock confirmation dialog, set this property to <code class="literal">TRUE</code>.
+If all you need is the stock confirmation dialog, set this property to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>.
 You can override the way confirmation is done by actually handling the
 "confirm-overwrite" signal; please refer to its documentation for the
 details.</p>
@@ -1348,8 +1368,12 @@ types a file name that already exists.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the file chooser will present a confirmation dialog;
-<code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the file chooser will present a confirmation dialog;
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -1420,7 +1444,9 @@ folder.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The currently selected filename, or <code class="literal">NULL</code>
+<td> The currently selected filename, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
  if no file is selected, or the selected file can't
  be represented with a local filename. Free with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
@@ -1494,8 +1520,12 @@ else
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if both the folder could be changed and the file was
-selected successfully, <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if both the folder could be changed and the file was
+selected successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -1531,8 +1561,12 @@ be changed to the folder containing <em class="parameter"><code>filename</code><
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if both the folder could be changed and the file was
-selected successfully, <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if both the folder could be changed and the file was
+selected successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -1673,7 +1707,11 @@ plus user interface elements for navigating to other folders.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the folder could be changed successfully, <code class="literal">FALSE</code>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the folder could be changed successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 otherwise.
 
 </td>
@@ -1712,11 +1750,15 @@ usual way to get the selection.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the full path of the current folder, or <code class="literal">NULL</code> if the current
+<td> the full path of the current folder, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the current
 path cannot be represented as a local filename.  Free with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
 ><code class="function">g_free()</code></a>.  This
-function will also return <code class="literal">NULL</code> if the file chooser was unable to load the
+function will also return <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the file chooser was unable to load the
 last folder that was requested from it; for example, as would be for calling
 <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-current-folder" title="gtk_file_chooser_set_current_folder ()"><code class="function">gtk_file_chooser_set_current_folder()</code></a> on a nonexistent folder.
 
@@ -1752,7 +1794,9 @@ folder.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The currently selected URI, or <code class="literal">NULL</code>
+<td> The currently selected URI, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
  if no file is selected. Free with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
 ><code class="function">g_free()</code></a>
@@ -1823,8 +1867,12 @@ else
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if both the folder could be changed and the URI was
-selected successfully, <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if both the folder could be changed and the URI was
+selected successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -1860,8 +1908,12 @@ file in the current folder of <em class="parameter"><code>chooser</code></em>, t
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if both the folder could be changed and the URI was
-selected successfully, <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if both the folder could be changed and the URI was
+selected successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -1965,7 +2017,11 @@ plus user interface elements for navigating to other folders.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the folder could be changed successfully, <code class="literal">FALSE</code>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the folder could be changed successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 otherwise.
 
 </td>
@@ -2008,7 +2064,9 @@ usual way to get the selection.</p>
 <td> the URI for the current folder.  Free with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
 ><code class="function">g_free()</code></a>.  This
-function will also return <code class="literal">NULL</code> if the file chooser was unable to load the
+function will also return <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the file chooser was unable to load the
 last folder that was requested from it; for example, as would be for calling
 <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-current-folder-uri" title="gtk_file_chooser_set_current_folder_uri ()"><code class="function">gtk_file_chooser_set_current_folder_uri()</code></a> on a nonexistent folder.
 
@@ -2076,7 +2134,9 @@ Gets the current preview widget; see
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the current preview widget, or <code class="literal">NULL</code>
+<td> the current preview widget, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 
 </td>
 </tr>
@@ -2141,7 +2201,9 @@ should be shown for the current filename. See
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the preview widget is active for the current filename.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the preview widget is active for the current filename.
 
 </td>
 </tr>
@@ -2159,8 +2221,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> use_label);</pre>
 <p>
 Sets whether the file chooser should display a stock label with the name of
-the file that is being previewed; the default is <code class="literal">TRUE</code>.  Applications that
-want to draw the whole preview area themselves should set this to <code class="literal">FALSE</code> and
+the file that is being previewed; the default is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>.  Applications that
+want to draw the whole preview area themselves should set this to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> and
 display the name themselves in their preview widget.
 </p>
 <p>
@@ -2206,8 +2272,12 @@ file.  See <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-use-pr
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the file chooser is set to display a label with the
-name of the previewed file, <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the file chooser is set to display a label with the
+name of the previewed file, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 </td>
 </tr>
 </tbody>
@@ -2233,7 +2303,9 @@ widget. See <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-previ
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the filename to preview, or <code class="literal">NULL</code> if no file
+<td> the filename to preview, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no file
  is selected, or if the selected file cannot be represented
  as a local filename. Free with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
@@ -2264,7 +2336,9 @@ widget. See <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-previ
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the URI for the file to preview, or <code class="literal">NULL</code> if no file is
+<td> the URI for the file to preview, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no file is
 selected. Free with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
 ><code class="function">g_free()</code></a>.
@@ -2320,7 +2394,9 @@ Gets the current preview widget; see
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the current extra widget, or <code class="literal">NULL</code>
+<td> the current extra widget, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 
 </td>
 </tr>
@@ -2471,7 +2547,9 @@ Gets the current filter; see <a class="link" href="GtkFileChooser.html#gtk-file-
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the current filter, or <code class="literal">NULL</code>
+<td> the current filter, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 
 </td>
 </tr>
@@ -2512,12 +2590,18 @@ application.  For example, you can use this to add a
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the folder could be added successfully, <code class="literal">FALSE</code>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the folder could be added successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 otherwise.  In the latter case, the <em class="parameter"><code>error</code></em> will be set as appropriate.
 
 </td>
@@ -2556,12 +2640,18 @@ Removes a folder from a file chooser's list of shortcut folders.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the operation succeeds, <code class="literal">FALSE</code> otherwise.  
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the operation succeeds, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.  
 In the latter case, the <em class="parameter"><code>error</code></em> will be set as appropriate.
 
 See also: <a class="link" href="GtkFileChooser.html#gtk-file-chooser-add-shortcut-folder" title="gtk_file_chooser_add_shortcut_folder ()"><code class="function">gtk_file_chooser_add_shortcut_folder()</code></a>
@@ -2594,7 +2684,9 @@ Queries the list of shortcut folders in the file chooser, as set by
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A list of folder filenames, or <code class="literal">NULL</code> if there are no shortcut
+<td> A list of folder filenames, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if there are no shortcut
 folders.  Free the returned list with <a
 href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#g-slist-free"
 ><code class="function">g_slist_free()</code></a>, and the filenames with
@@ -2641,12 +2733,18 @@ by the application.  For example, you can use this to add a
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the folder could be added successfully, <code class="literal">FALSE</code>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the folder could be added successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 otherwise.  In the latter case, the <em class="parameter"><code>error</code></em> will be set as appropriate.
 
 </td>
@@ -2685,12 +2783,18 @@ Removes a folder URI from a file chooser's list of shortcut folders.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the operation succeeds, <code class="literal">FALSE</code> otherwise.  
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the operation succeeds, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.  
 In the latter case, the <em class="parameter"><code>error</code></em> will be set as appropriate.
 
 See also: <a class="link" href="GtkFileChooser.html#gtk-file-chooser-add-shortcut-folder-uri" title="gtk_file_chooser_add_shortcut_folder_uri ()"><code class="function">gtk_file_chooser_add_shortcut_folder_uri()</code></a>
@@ -2723,7 +2827,9 @@ Queries the list of shortcut folders in the file chooser, as set by
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A list of folder URIs, or <code class="literal">NULL</code> if there are no shortcut
+<td> A list of folder URIs, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if there are no shortcut
 folders.  Free the returned list with <a
 href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#g-slist-free"
 ><code class="function">g_slist_free()</code></a>, and the URIs with
@@ -2875,7 +2981,9 @@ Internal function, see <a class="link" href="GtkFileChooser.html#gtk-file-choose
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the <a
 href="/usr/share/gtk-doc/html/gio/GFile.html"
-><span class="type">GFile</span></a> for the file to preview, or <code class="literal">NULL</code> if no file
+><span class="type">GFile</span></a> for the file to preview, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no file
  is selected. Free with <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"
 ><code class="function">g_object_unref()</code></a>.
@@ -2918,13 +3026,19 @@ Selects the file referred to by <em class="parameter"><code>file</code></em>. An
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if both the folder could be changed and the path was
-selected successfully, <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if both the folder could be changed and the path was
+selected successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -2969,12 +3083,18 @@ href="/usr/share/gtk-doc/html/gio/GFile.html"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>.
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the folder could be changed successfully, <code class="literal">FALSE</code>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the folder could be changed successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 otherwise.
 
 </td>
@@ -3052,13 +3172,19 @@ href="/usr/share/gtk-doc/html/gio/GFile.html"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store the error, or <code class="literal">NULL</code> to ignore errors.
+<td> location to store the error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to ignore errors.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if both the folder could be changed and the file was
-selected successfully, <code class="literal">FALSE</code> otherwise.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if both the folder could be changed and the file was
+selected successfully, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.
 
 </td>
 </tr>
@@ -3231,7 +3357,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
       illustrates this.
     </p>
 <div class="example">
-<a name="gtkfilechooser-confirmation"></a><p class="title"><b>Example 35. Custom confirmation</b></p>
+<a name="gtkfilechooser-confirmation"></a><p class="title"><b>Example 38. Custom confirmation</b></p>
 <div class="example-contents"><pre class="programlisting">
 static GtkFileChooserConfirmation
 confirm_overwrite_callback (GtkFileChooser *chooser, gpointer data)

@@ -63,6 +63,11 @@ _gdk_init_input_core (GdkDisplay *display)
   private->display = display;
 }
 
+static void gdk_device_class_init (GdkDeviceClass *klass);
+static void gdk_device_dispose    (GObject        *object);
+
+static gpointer gdk_device_parent_class = NULL;
+
 GType
 gdk_device_get_type (void)
 {
@@ -75,7 +80,7 @@ gdk_device_get_type (void)
 	  sizeof (GdkDeviceClass),
 	  (GBaseInitFunc) NULL,
 	  (GBaseFinalizeFunc) NULL,
-	  (GClassInitFunc) NULL,
+	  (GClassInitFunc) gdk_device_class_init,
 	  NULL,           /* class_finalize */
 	  NULL,           /* class_data */
 	  sizeof (GdkDevicePrivate),
@@ -89,6 +94,45 @@ gdk_device_get_type (void)
     }
   
   return object_type;
+}
+
+static void
+gdk_device_class_init (GdkDeviceClass *klass)
+{
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  gdk_device_parent_class = g_type_class_peek_parent (klass);
+
+  object_class->dispose  = gdk_device_dispose;
+}
+
+static void
+gdk_device_dispose (GObject *object)
+{
+  GdkDevicePrivate *gdkdev = (GdkDevicePrivate *) object;
+
+  if (gdkdev->display && !GDK_IS_CORE (gdkdev))
+    {
+#ifndef XINPUT_NONE
+      if (gdkdev->xdevice)
+        {
+          XCloseDevice (GDK_DISPLAY_XDISPLAY (gdkdev->display), gdkdev->xdevice);
+          gdkdev->xdevice = NULL;
+        }
+      g_free (gdkdev->axes);
+      gdkdev->axes = NULL;
+#endif /* !XINPUT_NONE */
+
+      g_free (gdkdev->info.name);
+      g_free (gdkdev->info.keys);
+      g_free (gdkdev->info.axes);
+
+      gdkdev->info.name = NULL;
+      gdkdev->info.keys = NULL;
+      gdkdev->info.axes = NULL;
+    }
+
+  G_OBJECT_CLASS (gdk_device_parent_class)->dispose (object);
 }
 
 /**
@@ -403,14 +447,7 @@ _gdk_input_exit (void)
 	  if (!GDK_IS_CORE (gdkdev))
 	    {
 	      gdk_device_set_mode (&gdkdev->info, GDK_MODE_DISABLED);
-	      
-	      g_free(gdkdev->info.name);
-#ifndef XINPUT_NONE	  
-	      g_free(gdkdev->axes);
-#endif	  
-	      g_free(gdkdev->info.axes);
-	      g_free(gdkdev->info.keys);
-	      g_free(gdkdev);
+	      g_object_unref(gdkdev);
 	    }
 	}
       

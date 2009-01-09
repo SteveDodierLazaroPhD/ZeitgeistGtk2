@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -155,7 +157,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitial
 <a name="GtkFontSelection.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkFontSelection implements
- AtkImplementorIface and  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
+ AtkImplementorIface,  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a> and  <a class="link" href="gtk-Orientable.html#GtkOrientable">GtkOrientable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkFontSelection.properties"></a><h2>Properties</h2>
@@ -206,13 +208,14 @@ only be accessed using the functions below.
 <a name="gtk-font-selection-new"></a><h3>gtk_font_selection_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         gtk_font_selection_new              (void);</pre>
 <p>
-Creates a new <a class="link" href="GtkFontSelection.html" title="GtkFontSelection"><span class="type">GtkFontSelection</span></a>.
+Creates a new <a class="link" href="GtkFontSelection.html" title="GtkFontSelection"><span class="type">GtkFontSelection</span></a>.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="GtkFontSelection.html" title="GtkFontSelection"><span class="type">GtkFontSelection</span></a>.
+<td> a n ew <a class="link" href="GtkFontSelection.html" title="GtkFontSelection"><span class="type">GtkFontSelection</span></a>
 </td>
 </tr></tbody>
 </table></div>
@@ -228,9 +231,8 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Fonts.html#GdkFont"
 <p><code class="literal">gtk_font_selection_get_font</code> has been deprecated since version 2.0 and should not be used in newly-written code. Use <a class="link" href="GtkFontSelection.html#gtk-font-selection-get-font-name" title="gtk_font_selection_get_font_name ()"><code class="function">gtk_font_selection_get_font_name()</code></a> instead.</p>
 </div>
 <p>
-</p>
+Gets the currently-selected font.</p>
 <p>
-Gets the currently-selected font.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -258,11 +260,14 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Fonts.html#GdkFont"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*              gtk_font_selection_get_font_name    (<a class="link" href="GtkFontSelection.html" title="GtkFontSelection">GtkFontSelection</a> *fontsel);</pre>
 <p>
-Gets the currently-selected font name.  Note that this can be a different
-string than what you set with <a class="link" href="GtkFontSelection.html#gtk-font-selection-set-font-name" title="gtk_font_selection_set_font_name ()"><code class="function">gtk_font_selection_set_font_name()</code></a>, as
-the font selection widget may normalize font names and thus return a string
-with a different structure.  For example, "Helvetica Italic Bold 12" could be
-normalized to "Helvetica Bold Italic 12".  Use <a
+Gets the currently-selected font name. 
+</p>
+<p>
+Note that this can be a different string than what you set with 
+<a class="link" href="GtkFontSelection.html#gtk-font-selection-set-font-name" title="gtk_font_selection_set_font_name ()"><code class="function">gtk_font_selection_set_font_name()</code></a>, as the font selection widget may 
+normalize font names and thus return a string with a different structure. 
+For example, "Helvetica Italic Bold 12" could be normalized to 
+"Helvetica Bold Italic 12". Use <a
 href="/usr/share/gtk-doc/html/pango/pango-Fonts.html#pango-font-description-equal"
 ><code class="function">pango_font_description_equal()</code></a>
 if you want to compare two font descriptions.</p>
@@ -278,8 +283,10 @@ if you want to compare two font descriptions.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A string with the name of the current font, or <span class="type">NULL</span> if no font
-is selected.  You must free this string with <a
+<td> A string with the name of the current font, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if 
+    no font is selected. You must free this string with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
 ><code class="function">g_free()</code></a>.
 </td>
@@ -297,10 +304,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *fontname);</pre>
 <p>
-Sets the currently-selected font.  Note that the <em class="parameter"><code>fontsel</code></em> needs to know the
-screen in which it will appear for this to work; this can be guaranteed by
-simply making sure that the <em class="parameter"><code>fontsel</code></em> is inserted in a toplevel window before
-you call this function.</p>
+Sets the currently-selected font. 
+</p>
+<p>
+Note that the <em class="parameter"><code>fontsel</code></em> needs to know the screen in which it will appear 
+for this to work; this can be guaranteed by simply making sure that the 
+<em class="parameter"><code>fontsel</code></em> is inserted in a toplevel window before you call this function.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -318,8 +327,13 @@ you call this function.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <span class="type">TRUE</span> if the font could be set successfully; <span class="type">FALSE</span> if no such
-font exists or if the <em class="parameter"><code>fontsel</code></em> doesn't belong to a particular screen yet.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the font could be set successfully; <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if no 
+    such font exists or if the <em class="parameter"><code>fontsel</code></em> doesn't belong to a particular 
+    screen yet.
 </td>
 </tr>
 </tbody>
@@ -332,10 +346,8 @@ font exists or if the <em class="parameter"><code>fontsel</code></em> doesn't be
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*        gtk_font_selection_get_preview_text (<a class="link" href="GtkFontSelection.html" title="GtkFontSelection">GtkFontSelection</a> *fontsel);</pre>
 <p>
-The text returned is the preview text used to show how the selected
-font looks.</p>
+Gets the text displayed in the preview area.</p>
 <p>
-Gets the text displayed in the preview area.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -347,9 +359,9 @@ Gets the text displayed in the preview area.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> pointer to the preview text string. This string
-points to internally allocated storage in the widget and must not
-be freed, modified or stored. 
+<td> the text displayed in the preview area. 
+    This string is owned by the widget and should not be 
+    modified or freed 
 </td>
 </tr>
 </tbody>
@@ -363,9 +375,9 @@ be freed, modified or stored.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *text);</pre>
 <p>
+Sets the text displayed in the preview area.
 The <em class="parameter"><code>text</code></em> is used to show how the selected font looks.</p>
 <p>
-Sets the text displayed in the preview area.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -377,7 +389,7 @@ Sets the text displayed in the preview area.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
-<td> a pointer to a string
+<td> the text to display in the preview area 
 </td>
 </tr>
 </tbody>
@@ -408,8 +420,9 @@ details (i.e. family, slant, weight, width, etc).</p>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> A <a
 href="/usr/share/gtk-doc/html/pango/pango-Fonts.html#PangoFontFace"
-><span class="type">PangoFontFace</span></a> representing the selected font group
-    details 
+><span class="type">PangoFontFace</span></a> representing the selected font 
+    group details. The returned object is owned by <em class="parameter"><code>fontsel</code></em> and
+    must not be modified or freed. 
 
 </td>
 </tr>
@@ -436,7 +449,7 @@ the selected font. For example, 'Regular', 'Bold', etc.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>. 
+<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that is part of <em class="parameter"><code>fontsel</code></em>
 
 </td>
 </tr>
@@ -469,7 +482,9 @@ href="/usr/share/gtk-doc/html/pango/pango-Fonts.html#PangoFontFamily"
 <td> A <a
 href="/usr/share/gtk-doc/html/pango/pango-Fonts.html#PangoFontFamily"
 ><span class="type">PangoFontFamily</span></a> representing the selected font
-family. Font families are a collection of font faces.
+    family. Font families are a collection of font faces. The 
+    returned object is owned by <em class="parameter"><code>fontsel</code></em> and must not be modified 
+    or freed.
 
 </td>
 </tr>
@@ -497,10 +512,8 @@ The selected font size.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
-><span class="type">gint</span></a> representing the font size selected, or -1
-if not.
+<td> A n integer representing the selected font size, 
+    or -1 if no font size is selected.
 
 </td>
 </tr>
@@ -527,7 +540,7 @@ example, 'Sans', 'Serif', etc.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>. 
+<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that is part of <em class="parameter"><code>fontsel</code></em>
 
 </td>
 </tr>
@@ -554,7 +567,7 @@ This returns the <a class="link" href="GtkEntry.html" title="GtkEntry"><span cla
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>. 
+<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that is part of <em class="parameter"><code>fontsel</code></em>
 
 </td>
 </tr>
@@ -581,7 +594,7 @@ number manually instead of selecting it from the list of font sizes.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>. 
+<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that is part of <em class="parameter"><code>fontsel</code></em>
 
 </td>
 </tr>
@@ -607,7 +620,7 @@ This returns the <span class="type">GtkTreeeView</span> used to list font sizes.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>. 
+<td> A <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that is part of <em class="parameter"><code>fontsel</code></em>
 
 </td>
 </tr>

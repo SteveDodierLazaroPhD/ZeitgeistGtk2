@@ -306,8 +306,12 @@ file_printer_create_cairo_surface (GtkPrinter       *printer,
   else
     surface = cairo_pdf_surface_create_for_stream (_cairo_write, cache_io, width, height);
 
-  /* TODO: DPI from settings object? */
-  cairo_surface_set_fallback_resolution (surface, 300, 300);
+  if (gtk_print_settings_get_printer_lpi (settings) == 0.0)
+    gtk_print_settings_set_printer_lpi (settings, 150.0);
+
+  cairo_surface_set_fallback_resolution (surface,
+                                         2.0 * gtk_print_settings_get_printer_lpi (settings),
+                                         2.0 * gtk_print_settings_get_printer_lpi (settings));
 
   return surface;
 }
@@ -316,7 +320,7 @@ typedef struct {
   GtkPrintBackend *backend;
   GtkPrintJobCompleteFunc callback;
   GtkPrintJob *job;
-  GIOChannel *target_io;
+  GFileOutputStream *target_io_stream;
   gpointer user_data;
   GDestroyNotify dnotify;
 } _PrintStreamData;
@@ -330,8 +334,8 @@ file_print_cb (GtkPrintBackendFile *print_backend,
 
   GDK_THREADS_ENTER ();
 
-  if (ps->target_io != NULL)
-    g_io_channel_unref (ps->target_io);
+  if (ps->target_io_stream != NULL)
+    g_output_stream_close (G_OUTPUT_STREAM (ps->target_io_stream), NULL, NULL);
 
   if (ps->callback)
     ps->callback (ps->job, ps->user_data, error);
@@ -374,11 +378,12 @@ file_write (GIOChannel   *source,
     {
       gsize bytes_written;
 
-      g_io_channel_write_chars (ps->target_io, 
-                                buf, 
-				bytes_read, 
-				&bytes_written, 
-				&error);
+      g_output_stream_write_all (G_OUTPUT_STREAM (ps->target_io_stream),
+                                 buf,
+                                 bytes_read,
+                                 &bytes_written,
+                                 NULL,
+                                 &error);
     }
 
   if (error != NULL || read_status == G_IO_STATUS_EOF)
@@ -414,7 +419,8 @@ gtk_print_backend_file_print_stream (GtkPrintBackend        *print_backend,
   GtkPrinter *printer;
   _PrintStreamData *ps;
   GtkPrintSettings *settings;
-  gchar *uri, *filename;
+  gchar *uri;
+  GFile *file = NULL;
 
   printer = gtk_print_job_get_printer (job);
   settings = gtk_print_job_get_settings (job);
@@ -428,18 +434,15 @@ gtk_print_backend_file_print_stream (GtkPrintBackend        *print_backend,
 
   internal_error = NULL;
   uri = output_file_from_settings (settings, NULL);
-  filename = g_filename_from_uri (uri, NULL, &internal_error);
-  g_free (uri);
 
-  if (filename == NULL)
+  if (uri == NULL)
     goto error;
 
-  ps->target_io = g_io_channel_new_file (filename, "w", &internal_error);
+  file = g_file_new_for_uri (uri);
+  ps->target_io_stream = g_file_replace (file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &internal_error);
 
-  g_free (filename);
-
-  if (internal_error == NULL)
-    g_io_channel_set_encoding (ps->target_io, NULL, &internal_error);
+  g_object_unref (file);
+  g_free (uri);
 
 error:
   if (internal_error != NULL)

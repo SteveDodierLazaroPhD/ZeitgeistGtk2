@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -208,7 +210,7 @@ makes the dialog modal and waits for the user to respond to it. <a class="link" 
 returns when any dialog button is clicked.
 </p>
 <div class="example">
-<a name="id3150512"></a><p class="title"><b>Example 7. A modal dialog.</b></p>
+<a name="id3160649"></a><p class="title"><b>Example 8. A modal dialog.</b></p>
 <div class="example-contents"><pre class="programlisting">
  dialog = gtk_message_dialog_new (main_application_window,
                                   GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -226,7 +228,7 @@ returns when any dialog button is clicked.
 You might do a non-modal <a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> as follows:
 </p>
 <div class="example">
-<a name="id3158862"></a><p class="title"><b>Example 8. A non-modal dialog.</b></p>
+<a name="id3160611"></a><p class="title"><b>Example 9. A non-modal dialog.</b></p>
 <div class="example-contents"><pre class="programlisting">
  dialog = gtk_message_dialog_new (main_application_window,
                                   GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -291,7 +293,7 @@ The type of message being displayed in the dialog.
 </tr>
 <tr>
 <td><p><a name="GTK-MESSAGE-OTHER--CAPS"></a><span class="term"><code class="literal">GTK_MESSAGE_OTHER</code></span></p></td>
-<td>
+<td>None of the above, doesn't get an icon
 </td>
 </tr>
 </tbody>
@@ -375,7 +377,9 @@ signal is emitted with response IDs from <a class="link" href="GtkDialog.html#Gt
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> transient parent, or <code class="literal">NULL</code> for none 
+<td> transient parent, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for none 
 </td>
 </tr>
 <tr>
@@ -395,7 +399,9 @@ signal is emitted with response IDs from <a class="link" href="GtkDialog.html#Gt
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message_format</code></em> :</span></p></td>
-<td> <code class="function">printf()</code>-style format string, or <code class="literal">NULL</code>
+<td> <code class="function">printf()</code>-style format string, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -461,7 +467,9 @@ argument.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> transient parent, or <code class="literal">NULL</code> for none 
+<td> transient parent, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for none 
 </td>
 </tr>
 <tr>
@@ -481,7 +489,9 @@ argument.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message_format</code></em> :</span></p></td>
-<td> <code class="function">printf()</code>-style format string, or <code class="literal">NULL</code>
+<td> <code class="function">printf()</code>-style format string, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -613,7 +623,9 @@ bold, unless you have provided explicit markup.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message_format</code></em> :</span></p></td>
-<td> <code class="function">printf()</code>-style format string, or <code class="literal">NULL</code>
+<td> <code class="function">printf()</code>-style format string, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -677,7 +689,9 @@ g_free (msg);
 <td> <code class="function">printf()</code>-style markup string (see 
      <a
 href="/usr/share/gtk-doc/html/pango/PangoMarkupFormat.html"
->Pango markup format</a>), or <code class="literal">NULL</code>
+>Pango markup format</a>), or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -740,7 +754,9 @@ The secondary text of the message dialog.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
-<code class="literal">TRUE</code> if the secondary text of the dialog includes Pango markup. 
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the secondary text of the dialog includes Pango markup. 
 See <a
 href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#pango-parse-markup"
 ><code class="function">pango_parse_markup()</code></a>.</p>
@@ -770,7 +786,9 @@ a secondary text, this will appear as the title.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write</pre>
 <p>
-<code class="literal">TRUE</code> if the primary text of the dialog includes Pango markup. 
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the primary text of the dialog includes Pango markup. 
 See <a
 href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#pango-parse-markup"
 ><code class="function">pango_parse_markup()</code></a>.</p>

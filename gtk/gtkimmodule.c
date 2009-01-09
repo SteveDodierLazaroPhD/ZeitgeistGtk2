@@ -51,6 +51,18 @@
 
 #define SIMPLE_ID "gtk-im-context-simple"
 
+/**
+ * GtkIMContextInfo:
+ * @context_id: The unique identification string of the input method.
+ * @context_name: The human-readable name of the input method.
+ * @domain: Translation domain to be used with dgettext()
+ * @domain_dirname: Name of locale directory for use with bindtextdomain()
+ * @default_locales: A colon-separated list of locales where this input method
+ *   should be the default. The asterisk "*" sets the default for all locales.
+ *
+ * Bookkeeping information about a loadable input method.
+ */
+
 typedef struct _GtkIMModule      GtkIMModule;
 typedef struct _GtkIMModuleClass GtkIMModuleClass;
 
@@ -499,7 +511,7 @@ compare_gtkimcontextinfo_name(const GtkIMContextInfo **a,
  * @n_contexts: the length of the array stored in @contexts
  * 
  * List all available types of input method context
- **/
+ */
 void
 _gtk_im_module_list (const GtkIMContextInfo ***contexts,
 		     guint                    *n_contexts)
@@ -577,8 +589,8 @@ _gtk_im_module_list (const GtkIMContextInfo ***contexts,
  * ID @context_id.
  * 
  * Return value: a newly created input context of or @context_id, or
- * if that could not be created, a newly created GtkIMContextSimple.
- **/
+ *     if that could not be created, a newly created GtkIMContextSimple.
+ */
 GtkIMContext *
 _gtk_im_module_create (const gchar *context_id)
 {
@@ -646,7 +658,7 @@ match_locale (const gchar *locale,
  * for the given window.
  * 
  * Return value: the context ID (will never be %NULL)
- **/
+ */
 const gchar *
 _gtk_im_module_get_default_context_id (GdkWindow *client_window)
 {

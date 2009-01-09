@@ -108,6 +108,7 @@
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-selection-data-targets-include-rich-text">gtk_selection_data_targets_include_rich_text</link>
                                                         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer);
+<link linkend="GdkAtom">GdkAtom</link>             <link linkend="gtk-selection-data-get-selection">gtk_selection_data_get_selection</link>    (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
 const <link linkend="guchar">guchar</link> *      <link linkend="gtk-selection-data-get-data">gtk_selection_data_get_data</link>         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
 <link linkend="gint">gint</link>                <link linkend="gtk-selection-data-get-length">gtk_selection_data_get_length</link>       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
 <link linkend="GdkAtom">GdkAtom</link>             <link linkend="gtk-selection-data-get-data-type">gtk_selection_data_get_data_type</link>    (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);
@@ -164,7 +165,7 @@ associated information.
 <title role="details.title">Details</title>
 <refsect2 id="GtkTargetEntry" role="struct">
 <title>GtkTargetEntry</title>
-<indexterm zone="GtkTargetEntry"><primary sortas="GtkTargetEntry">GtkTargetEntry</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GtkTargetEntry"><primary sortas="TargetEntry">GtkTargetEntry</primary></indexterm><programlisting>typedef struct {
   gchar *target;
   guint  flags;
   guint  info;
@@ -183,7 +184,7 @@ the target type without extensive string compares.
 </para></refsect2>
 <refsect2 id="GtkTargetList" role="struct">
 <title>GtkTargetList</title>
-<indexterm zone="GtkTargetList"><primary sortas="GtkTargetList">GtkTargetList</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GtkTargetList"><primary sortas="TargetList">GtkTargetList</primary></indexterm><programlisting>typedef struct {
   GList *list;
   guint ref_count;
 } GtkTargetList;
@@ -197,7 +198,7 @@ opaque.
 </para></refsect2>
 <refsect2 id="GtkTargetPair" role="struct">
 <title>GtkTargetPair</title>
-<indexterm zone="GtkTargetPair"><primary sortas="GtkTargetPair">GtkTargetPair</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GtkTargetPair"><primary sortas="TargetPair">GtkTargetPair</primary></indexterm><programlisting>typedef struct {
   GdkAtom   target;
   guint     flags;
   guint     info;
@@ -209,7 +210,7 @@ selection handling code.
 </para></refsect2>
 <refsect2 id="gtk-target-list-new" role="function">
 <title>gtk_target_list_new ()</title>
-<indexterm zone="gtk-target-list-new"><primary sortas="gtk_target_list_new">gtk_target_list_new</primary></indexterm><programlisting><link linkend="GtkTargetList">GtkTargetList</link> *     gtk_target_list_new                 (const <link linkend="GtkTargetEntry">GtkTargetEntry</link> *targets,
+<indexterm zone="gtk-target-list-new"><primary sortas="target_list_new">gtk_target_list_new</primary></indexterm><programlisting><link linkend="GtkTargetList">GtkTargetList</link> *     gtk_target_list_new                 (const <link linkend="GtkTargetEntry">GtkTargetEntry</link> *targets,
                                                          <link linkend="guint">guint</link> ntargets);</programlisting>
 <para>
 Creates a new <link linkend="GtkTargetList"><type>GtkTargetList</type></link> from an array of <link linkend="GtkTargetEntry"><type>GtkTargetEntry</type></link>.</para>
@@ -226,7 +227,7 @@ Creates a new <link linkend="GtkTargetList"><type>GtkTargetList</type></link> fr
 </variablelist></refsect2>
 <refsect2 id="gtk-target-list-ref" role="function">
 <title>gtk_target_list_ref ()</title>
-<indexterm zone="gtk-target-list-ref"><primary sortas="gtk_target_list_ref">gtk_target_list_ref</primary></indexterm><programlisting><link linkend="GtkTargetList">GtkTargetList</link> *     gtk_target_list_ref                 (<link linkend="GtkTargetList">GtkTargetList</link> *list);</programlisting>
+<indexterm zone="gtk-target-list-ref"><primary sortas="target_list_ref">gtk_target_list_ref</primary></indexterm><programlisting><link linkend="GtkTargetList">GtkTargetList</link> *     gtk_target_list_ref                 (<link linkend="GtkTargetList">GtkTargetList</link> *list);</programlisting>
 <para>
 Increases the reference count of a <link linkend="GtkTargetList"><type>GtkTargetList</type></link> by one.</para>
 <para>
@@ -239,7 +240,7 @@ Increases the reference count of a <link linkend="GtkTargetList"><type>GtkTarget
 </variablelist></refsect2>
 <refsect2 id="gtk-target-list-unref" role="function">
 <title>gtk_target_list_unref ()</title>
-<indexterm zone="gtk-target-list-unref"><primary sortas="gtk_target_list_unref">gtk_target_list_unref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_unref               (<link linkend="GtkTargetList">GtkTargetList</link> *list);</programlisting>
+<indexterm zone="gtk-target-list-unref"><primary sortas="target_list_unref">gtk_target_list_unref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_unref               (<link linkend="GtkTargetList">GtkTargetList</link> *list);</programlisting>
 <para>
 Decreases the reference count of a <link linkend="GtkTargetList"><type>GtkTargetList</type></link> by one.
 If the resulting reference count is zero, frees the list.</para>
@@ -251,7 +252,7 @@ If the resulting reference count is zero, frees the list.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-target-list-add" role="function">
 <title>gtk_target_list_add ()</title>
-<indexterm zone="gtk-target-list-add"><primary sortas="gtk_target_list_add">gtk_target_list_add</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add                 (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-list-add"><primary sortas="target_list_add">gtk_target_list_add</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add                 (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="GdkAtom">GdkAtom</link> target,
                                                          <link linkend="guint">guint</link> flags,
                                                          <link linkend="guint">guint</link> info);</programlisting>
@@ -274,7 +275,7 @@ Appends another target to a <link linkend="GtkTargetList"><type>GtkTargetList</t
 </variablelist></refsect2>
 <refsect2 id="gtk-target-list-add-table" role="function">
 <title>gtk_target_list_add_table ()</title>
-<indexterm zone="gtk-target-list-add-table"><primary sortas="gtk_target_list_add_table">gtk_target_list_add_table</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_table           (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-list-add-table"><primary sortas="target_list_add_table">gtk_target_list_add_table</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_table           (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          const <link linkend="GtkTargetEntry">GtkTargetEntry</link> *targets,
                                                          <link linkend="guint">guint</link> ntargets);</programlisting>
 <para>
@@ -293,7 +294,7 @@ Prepends a table of <link linkend="GtkTargetEntry"><type>GtkTargetEntry</type></
 </variablelist></refsect2>
 <refsect2 id="gtk-target-list-add-text-targets" role="function" condition="since:2.6">
 <title>gtk_target_list_add_text_targets ()</title>
-<indexterm zone="gtk-target-list-add-text-targets" role="2.6"><primary sortas="gtk_target_list_add_text_targets">gtk_target_list_add_text_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_text_targets    (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-list-add-text-targets" role="2.6"><primary sortas="target_list_add_text_targets">gtk_target_list_add_text_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_text_targets    (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="guint">guint</link> info);</programlisting>
 <para>
 Appends the text targets supported by <link linkend="GtkSelection"><type>GtkSelection</type></link> to
@@ -309,7 +310,7 @@ the target list. All targets are added with the same <parameter>info</parameter>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-target-list-add-image-targets" role="function" condition="since:2.6">
 <title>gtk_target_list_add_image_targets ()</title>
-<indexterm zone="gtk-target-list-add-image-targets" role="2.6"><primary sortas="gtk_target_list_add_image_targets">gtk_target_list_add_image_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_image_targets   (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-list-add-image-targets" role="2.6"><primary sortas="target_list_add_image_targets">gtk_target_list_add_image_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_image_targets   (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="guint">guint</link> info,
                                                          <link linkend="gboolean">gboolean</link> writable);</programlisting>
 <para>
@@ -330,7 +331,7 @@ the target list. All targets are added with the same <parameter>info</parameter>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-target-list-add-uri-targets" role="function" condition="since:2.6">
 <title>gtk_target_list_add_uri_targets ()</title>
-<indexterm zone="gtk-target-list-add-uri-targets" role="2.6"><primary sortas="gtk_target_list_add_uri_targets">gtk_target_list_add_uri_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_uri_targets     (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-list-add-uri-targets" role="2.6"><primary sortas="target_list_add_uri_targets">gtk_target_list_add_uri_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_uri_targets     (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="guint">guint</link> info);</programlisting>
 <para>
 Appends the URI targets supported by <link linkend="GtkSelection"><type>GtkSelection</type></link> to
@@ -346,7 +347,7 @@ the target list. All targets are added with the same <parameter>info</parameter>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-target-list-add-rich-text-targets" role="function" condition="since:2.10">
 <title>gtk_target_list_add_rich_text_targets ()</title>
-<indexterm zone="gtk-target-list-add-rich-text-targets" role="2.10"><primary sortas="gtk_target_list_add_rich_text_targets">gtk_target_list_add_rich_text_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_rich_text_targets
+<indexterm zone="gtk-target-list-add-rich-text-targets" role="2.10"><primary sortas="target_list_add_rich_text_targets">gtk_target_list_add_rich_text_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_add_rich_text_targets
                                                         (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="guint">guint</link> info,
                                                          <link linkend="gboolean">gboolean</link> deserializable,
@@ -374,7 +375,7 @@ targets are added with the same <parameter>info</parameter>.</para>
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-target-list-remove" role="function">
 <title>gtk_target_list_remove ()</title>
-<indexterm zone="gtk-target-list-remove"><primary sortas="gtk_target_list_remove">gtk_target_list_remove</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_remove              (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-list-remove"><primary sortas="target_list_remove">gtk_target_list_remove</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_list_remove              (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="GdkAtom">GdkAtom</link> target);</programlisting>
 <para>
 Removes a target from a target list.</para>
@@ -389,7 +390,7 @@ Removes a target from a target list.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-target-list-find" role="function">
 <title>gtk_target_list_find ()</title>
-<indexterm zone="gtk-target-list-find"><primary sortas="gtk_target_list_find">gtk_target_list_find</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_target_list_find                (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-list-find"><primary sortas="target_list_find">gtk_target_list_find</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_target_list_find                (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="GdkAtom">GdkAtom</link> target,
                                                          <link linkend="guint">guint</link> *info);</programlisting>
 <para>
@@ -411,7 +412,7 @@ Looks up a given target in a <link linkend="GtkTargetList"><type>GtkTargetList</
 </variablelist></refsect2>
 <refsect2 id="gtk-target-table-free" role="function" condition="since:2.10">
 <title>gtk_target_table_free ()</title>
-<indexterm zone="gtk-target-table-free" role="2.10"><primary sortas="gtk_target_table_free">gtk_target_table_free</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_table_free               (<link linkend="GtkTargetEntry">GtkTargetEntry</link> *targets,
+<indexterm zone="gtk-target-table-free" role="2.10"><primary sortas="target_table_free">gtk_target_table_free</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_target_table_free               (<link linkend="GtkTargetEntry">GtkTargetEntry</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets);</programlisting>
 <para>
 This function frees a target table as returned by
@@ -427,7 +428,7 @@ This function frees a target table as returned by
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-target-table-new-from-list" role="function" condition="since:2.10">
 <title>gtk_target_table_new_from_list ()</title>
-<indexterm zone="gtk-target-table-new-from-list" role="2.10"><primary sortas="gtk_target_table_new_from_list">gtk_target_table_new_from_list</primary></indexterm><programlisting><link linkend="GtkTargetEntry">GtkTargetEntry</link> *    gtk_target_table_new_from_list      (<link linkend="GtkTargetList">GtkTargetList</link> *list,
+<indexterm zone="gtk-target-table-new-from-list" role="2.10"><primary sortas="target_table_new_from_list">gtk_target_table_new_from_list</primary></indexterm><programlisting><link linkend="GtkTargetEntry">GtkTargetEntry</link> *    gtk_target_table_new_from_list      (<link linkend="GtkTargetList">GtkTargetList</link> *list,
                                                          <link linkend="gint">gint</link> *n_targets);</programlisting>
 <para>
 This function creates an <link linkend="GtkTargetEntry"><type>GtkTargetEntry</type></link> array that contains the
@@ -448,7 +449,7 @@ longer needed.</para>
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-selection-owner-set" role="function">
 <title>gtk_selection_owner_set ()</title>
-<indexterm zone="gtk-selection-owner-set"><primary sortas="gtk_selection_owner_set">gtk_selection_owner_set</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_owner_set             (<link linkend="GtkWidget">GtkWidget</link> *widget,
+<indexterm zone="gtk-selection-owner-set"><primary sortas="selection_owner_set">gtk_selection_owner_set</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_owner_set             (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkAtom">GdkAtom</link> selection,
                                                          <link linkend="guint32">guint32</link> time_);</programlisting>
 <para>
@@ -470,7 +471,7 @@ or, if <parameter>widget</parameter> is <link linkend="NULL--CAPS"><literal>NULL
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-owner-set-for-display" role="function" condition="since:2.2">
 <title>gtk_selection_owner_set_for_display ()</title>
-<indexterm zone="gtk-selection-owner-set-for-display" role="2.2"><primary sortas="gtk_selection_owner_set_for_display">gtk_selection_owner_set_for_display</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_owner_set_for_display (<link linkend="GdkDisplay">GdkDisplay</link> *display,
+<indexterm zone="gtk-selection-owner-set-for-display" role="2.2"><primary sortas="selection_owner_set_for_display">gtk_selection_owner_set_for_display</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_owner_set_for_display (<link linkend="GdkDisplay">GdkDisplay</link> *display,
                                                          <link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkAtom">GdkAtom</link> selection,
                                                          <link linkend="guint32">guint32</link> time_);</programlisting>
@@ -497,7 +498,7 @@ if <parameter>widget</parameter> is <link linkend="NULL--CAPS"><literal>NULL</li
 </variablelist><para role="since">Since 2.2</para></refsect2>
 <refsect2 id="gtk-selection-add-target" role="function">
 <title>gtk_selection_add_target ()</title>
-<indexterm zone="gtk-selection-add-target"><primary sortas="gtk_selection_add_target">gtk_selection_add_target</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_add_target            (<link linkend="GtkWidget">GtkWidget</link> *widget,
+<indexterm zone="gtk-selection-add-target"><primary sortas="selection_add_target">gtk_selection_add_target</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_add_target            (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkAtom">GdkAtom</link> selection,
                                                          <link linkend="GdkAtom">GdkAtom</link> target,
                                                          <link linkend="guint">guint</link> info);</programlisting>
@@ -521,7 +522,7 @@ given widget and selection.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-add-targets" role="function">
 <title>gtk_selection_add_targets ()</title>
-<indexterm zone="gtk-selection-add-targets"><primary sortas="gtk_selection_add_targets">gtk_selection_add_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_add_targets           (<link linkend="GtkWidget">GtkWidget</link> *widget,
+<indexterm zone="gtk-selection-add-targets"><primary sortas="selection_add_targets">gtk_selection_add_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_add_targets           (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkAtom">GdkAtom</link> selection,
                                                          const <link linkend="GtkTargetEntry">GtkTargetEntry</link> *targets,
                                                          <link linkend="guint">guint</link> ntargets);</programlisting>
@@ -545,7 +546,7 @@ for a given widget and selection.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-clear-targets" role="function">
 <title>gtk_selection_clear_targets ()</title>
-<indexterm zone="gtk-selection-clear-targets"><primary sortas="gtk_selection_clear_targets">gtk_selection_clear_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_clear_targets         (<link linkend="GtkWidget">GtkWidget</link> *widget,
+<indexterm zone="gtk-selection-clear-targets"><primary sortas="selection_clear_targets">gtk_selection_clear_targets</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_clear_targets         (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkAtom">GdkAtom</link> selection);</programlisting>
 <para>
 Remove all targets registered for the given selection for the
@@ -561,7 +562,7 @@ widget.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-convert" role="function">
 <title>gtk_selection_convert ()</title>
-<indexterm zone="gtk-selection-convert"><primary sortas="gtk_selection_convert">gtk_selection_convert</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_convert               (<link linkend="GtkWidget">GtkWidget</link> *widget,
+<indexterm zone="gtk-selection-convert"><primary sortas="selection_convert">gtk_selection_convert</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_convert               (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkAtom">GdkAtom</link> selection,
                                                          <link linkend="GdkAtom">GdkAtom</link> target,
                                                          <link linkend="guint32">guint32</link> time_);</programlisting>
@@ -590,7 +591,7 @@ a "selection-received" signal will be generated.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-data-set" role="function">
 <title>gtk_selection_data_set ()</title>
-<indexterm zone="gtk-selection-data-set"><primary sortas="gtk_selection_data_set">gtk_selection_data_set</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_data_set              (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+<indexterm zone="gtk-selection-data-set"><primary sortas="selection_data_set">gtk_selection_data_set</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_data_set              (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GdkAtom">GdkAtom</link> type,
                                                          <link linkend="gint">gint</link> format,
                                                          const <link linkend="guchar">guchar</link> *data,
@@ -619,7 +620,7 @@ Zero-terminates the stored data.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-data-set-text" role="function">
 <title>gtk_selection_data_set_text ()</title>
-<indexterm zone="gtk-selection-data-set-text"><primary sortas="gtk_selection_data_set_text">gtk_selection_data_set_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_set_text         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+<indexterm zone="gtk-selection-data-set-text"><primary sortas="selection_data_set_text">gtk_selection_data_set_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_set_text         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          const <link linkend="gchar">gchar</link> *str,
                                                          <link linkend="gint">gint</link> len);</programlisting>
 <para>
@@ -643,7 +644,7 @@ The string is converted to the form determined by
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-data-get-text" role="function">
 <title>gtk_selection_data_get_text ()</title>
-<indexterm zone="gtk-selection-data-get-text"><primary sortas="gtk_selection_data_get_text">gtk_selection_data_get_text</primary></indexterm><programlisting><link linkend="guchar">guchar</link> *            gtk_selection_data_get_text         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-text"><primary sortas="selection_data_get_text">gtk_selection_data_get_text</primary></indexterm><programlisting><link linkend="guchar">guchar</link> *            gtk_selection_data_get_text         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Gets the contents of the selection data as a UTF-8 string.</para>
 <para>
@@ -659,7 +660,7 @@ Gets the contents of the selection data as a UTF-8 string.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-data-set-pixbuf" role="function" condition="since:2.6">
 <title>gtk_selection_data_set_pixbuf ()</title>
-<indexterm zone="gtk-selection-data-set-pixbuf" role="2.6"><primary sortas="gtk_selection_data_set_pixbuf">gtk_selection_data_set_pixbuf</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_set_pixbuf       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+<indexterm zone="gtk-selection-data-set-pixbuf" role="2.6"><primary sortas="selection_data_set_pixbuf">gtk_selection_data_set_pixbuf</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_set_pixbuf       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GdkPixbuf">GdkPixbuf</link> *pixbuf);</programlisting>
 <para>
 Sets the contents of the selection from a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>
@@ -680,7 +681,7 @@ The pixbuf is converted to the form determined by
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-selection-data-get-pixbuf" role="function" condition="since:2.6">
 <title>gtk_selection_data_get_pixbuf ()</title>
-<indexterm zone="gtk-selection-data-get-pixbuf" role="2.6"><primary sortas="gtk_selection_data_get_pixbuf">gtk_selection_data_get_pixbuf</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link> *         gtk_selection_data_get_pixbuf       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-pixbuf" role="2.6"><primary sortas="selection_data_get_pixbuf">gtk_selection_data_get_pixbuf</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link> *         gtk_selection_data_get_pixbuf       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Gets the contents of the selection data as a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>.</para>
 <para>
@@ -697,7 +698,7 @@ Gets the contents of the selection data as a <link linkend="GdkPixbuf"><type>Gdk
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-selection-data-set-uris" role="function" condition="since:2.6">
 <title>gtk_selection_data_set_uris ()</title>
-<indexterm zone="gtk-selection-data-set-uris" role="2.6"><primary sortas="gtk_selection_data_set_uris">gtk_selection_data_set_uris</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_set_uris         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+<indexterm zone="gtk-selection-data-set-uris" role="2.6"><primary sortas="selection_data_set_uris">gtk_selection_data_set_uris</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_set_uris         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="gchar">gchar</link> **uris);</programlisting>
 <para>
 Sets the contents of the selection from a list of URIs.
@@ -718,7 +719,7 @@ The string is converted to the form determined by
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-selection-data-get-uris" role="function" condition="since:2.6">
 <title>gtk_selection_data_get_uris ()</title>
-<indexterm zone="gtk-selection-data-get-uris" role="2.6"><primary sortas="gtk_selection_data_get_uris">gtk_selection_data_get_uris</primary></indexterm><programlisting><link linkend="gchar">gchar</link> **            gtk_selection_data_get_uris         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-uris" role="2.6"><primary sortas="selection_data_get_uris">gtk_selection_data_get_uris</primary></indexterm><programlisting><link linkend="gchar">gchar</link> **            gtk_selection_data_get_uris         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Gets the contents of the selection data as array of URIs.</para>
 <para>
@@ -735,7 +736,7 @@ Gets the contents of the selection data as array of URIs.</para>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-selection-data-get-targets" role="function">
 <title>gtk_selection_data_get_targets ()</title>
-<indexterm zone="gtk-selection-data-get-targets"><primary sortas="gtk_selection_data_get_targets">gtk_selection_data_get_targets</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_get_targets      (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
+<indexterm zone="gtk-selection-data-get-targets"><primary sortas="selection_data_get_targets">gtk_selection_data_get_targets</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_get_targets      (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GdkAtom">GdkAtom</link> **targets,
                                                          <link linkend="gint">gint</link> *n_atoms);</programlisting>
 <para>
@@ -761,7 +762,7 @@ any selection.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-data-targets-include-image" role="function" condition="since:2.6">
 <title>gtk_selection_data_targets_include_image ()</title>
-<indexterm zone="gtk-selection-data-targets-include-image" role="2.6"><primary sortas="gtk_selection_data_targets_include_image">gtk_selection_data_targets_include_image</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_image
+<indexterm zone="gtk-selection-data-targets-include-image" role="2.6"><primary sortas="selection_data_targets_include_image">gtk_selection_data_targets_include_image</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_image
                                                         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="gboolean">gboolean</link> writable);</programlisting>
 <para>
@@ -784,7 +785,7 @@ provide a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>.</para>
 </variablelist><para role="since">Since 2.6</para></refsect2>
 <refsect2 id="gtk-selection-data-targets-include-text" role="function">
 <title>gtk_selection_data_targets_include_text ()</title>
-<indexterm zone="gtk-selection-data-targets-include-text"><primary sortas="gtk_selection_data_targets_include_text">gtk_selection_data_targets_include_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_text
+<indexterm zone="gtk-selection-data-targets-include-text"><primary sortas="selection_data_targets_include_text">gtk_selection_data_targets_include_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_text
                                                         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Given a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> object holding a list of targets,
@@ -801,7 +802,7 @@ provide text.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-data-targets-include-uri" role="function" condition="since:2.10">
 <title>gtk_selection_data_targets_include_uri ()</title>
-<indexterm zone="gtk-selection-data-targets-include-uri" role="2.10"><primary sortas="gtk_selection_data_targets_include_uri">gtk_selection_data_targets_include_uri</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_uri
+<indexterm zone="gtk-selection-data-targets-include-uri" role="2.10"><primary sortas="selection_data_targets_include_uri">gtk_selection_data_targets_include_uri</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_uri
                                                         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Given a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> object holding a list of targets,
@@ -819,7 +820,7 @@ provide a list or URIs.</para>
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-selection-data-targets-include-rich-text" role="function" condition="since:2.10">
 <title>gtk_selection_data_targets_include_rich_text ()</title>
-<indexterm zone="gtk-selection-data-targets-include-rich-text" role="2.10"><primary sortas="gtk_selection_data_targets_include_rich_text">gtk_selection_data_targets_include_rich_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_rich_text
+<indexterm zone="gtk-selection-data-targets-include-rich-text" role="2.10"><primary sortas="selection_data_targets_include_rich_text">gtk_selection_data_targets_include_rich_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_data_targets_include_rich_text
                                                         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data,
                                                          <link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer);</programlisting>
 <para>
@@ -840,9 +841,23 @@ provide rich text.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.10</para></refsect2>
+<refsect2 id="gtk-selection-data-get-selection" role="function" condition="since:2.16">
+<title>gtk_selection_data_get_selection ()</title>
+<indexterm zone="gtk-selection-data-get-selection" role="2.16"><primary sortas="selection_data_get_selection">gtk_selection_data_get_selection</primary></indexterm><programlisting><link linkend="GdkAtom">GdkAtom</link>             gtk_selection_data_get_selection    (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<para>
+Retrieves the selection <link linkend="GdkAtom"><type>GdkAtom</type></link> of the selection data.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>selection_data</parameter>&#160;:</term>
+<listitem><simpara> a pointer to a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the selection <link linkend="GdkAtom"><type>GdkAtom</type></link> of the selection data.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
 <refsect2 id="gtk-selection-data-get-data" role="function" condition="since:2.14">
 <title>gtk_selection_data_get_data ()</title>
-<indexterm zone="gtk-selection-data-get-data" role="2.14"><primary sortas="gtk_selection_data_get_data">gtk_selection_data_get_data</primary></indexterm><programlisting>const <link linkend="guchar">guchar</link> *      gtk_selection_data_get_data         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-data" role="2.14"><primary sortas="selection_data_get_data">gtk_selection_data_get_data</primary></indexterm><programlisting>const <link linkend="guchar">guchar</link> *      gtk_selection_data_get_data         (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Retrieves the raw data of the selection.</para>
 <para>
@@ -856,7 +871,7 @@ Retrieves the raw data of the selection.</para>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-selection-data-get-length" role="function" condition="since:2.14">
 <title>gtk_selection_data_get_length ()</title>
-<indexterm zone="gtk-selection-data-get-length" role="2.14"><primary sortas="gtk_selection_data_get_length">gtk_selection_data_get_length</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_selection_data_get_length       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-length" role="2.14"><primary sortas="selection_data_get_length">gtk_selection_data_get_length</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_selection_data_get_length       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Retrieves the length of the raw data of the selection.</para>
 <para>
@@ -870,7 +885,7 @@ Retrieves the length of the raw data of the selection.</para>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-selection-data-get-data-type" role="function" condition="since:2.14">
 <title>gtk_selection_data_get_data_type ()</title>
-<indexterm zone="gtk-selection-data-get-data-type" role="2.14"><primary sortas="gtk_selection_data_get_data_type">gtk_selection_data_get_data_type</primary></indexterm><programlisting><link linkend="GdkAtom">GdkAtom</link>             gtk_selection_data_get_data_type    (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-data-type" role="2.14"><primary sortas="selection_data_get_data_type">gtk_selection_data_get_data_type</primary></indexterm><programlisting><link linkend="GdkAtom">GdkAtom</link>             gtk_selection_data_get_data_type    (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Retrieves the data type of the selection.</para>
 <para>
@@ -884,7 +899,7 @@ Retrieves the data type of the selection.</para>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-selection-data-get-display" role="function" condition="since:2.14">
 <title>gtk_selection_data_get_display ()</title>
-<indexterm zone="gtk-selection-data-get-display" role="2.14"><primary sortas="gtk_selection_data_get_display">gtk_selection_data_get_display</primary></indexterm><programlisting><link linkend="GdkDisplay">GdkDisplay</link> *        gtk_selection_data_get_display      (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-display" role="2.14"><primary sortas="selection_data_get_display">gtk_selection_data_get_display</primary></indexterm><programlisting><link linkend="GdkDisplay">GdkDisplay</link> *        gtk_selection_data_get_display      (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Retrieves the display of the selection.</para>
 <para>
@@ -898,7 +913,7 @@ Retrieves the display of the selection.</para>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-selection-data-get-format" role="function" condition="since:2.14">
 <title>gtk_selection_data_get_format ()</title>
-<indexterm zone="gtk-selection-data-get-format" role="2.14"><primary sortas="gtk_selection_data_get_format">gtk_selection_data_get_format</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_selection_data_get_format       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-format" role="2.14"><primary sortas="selection_data_get_format">gtk_selection_data_get_format</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_selection_data_get_format       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Retrieves the format of the selection.</para>
 <para>
@@ -912,7 +927,7 @@ Retrieves the format of the selection.</para>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-selection-data-get-target" role="function" condition="since:2.14">
 <title>gtk_selection_data_get_target ()</title>
-<indexterm zone="gtk-selection-data-get-target" role="2.14"><primary sortas="gtk_selection_data_get_target">gtk_selection_data_get_target</primary></indexterm><programlisting><link linkend="GdkAtom">GdkAtom</link>             gtk_selection_data_get_target       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
+<indexterm zone="gtk-selection-data-get-target" role="2.14"><primary sortas="selection_data_get_target">gtk_selection_data_get_target</primary></indexterm><programlisting><link linkend="GdkAtom">GdkAtom</link>             gtk_selection_data_get_target       (<link linkend="GtkSelectionData">GtkSelectionData</link> *selection_data);</programlisting>
 <para>
 Retrieves the target of the selection.</para>
 <para>
@@ -926,7 +941,7 @@ Retrieves the target of the selection.</para>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-targets-include-image" role="function" condition="since:2.10">
 <title>gtk_targets_include_image ()</title>
-<indexterm zone="gtk-targets-include-image" role="2.10"><primary sortas="gtk_targets_include_image">gtk_targets_include_image</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_image           (<link linkend="GdkAtom">GdkAtom</link> *targets,
+<indexterm zone="gtk-targets-include-image" role="2.10"><primary sortas="targets_include_image">gtk_targets_include_image</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_image           (<link linkend="GdkAtom">GdkAtom</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="gboolean">gboolean</link> writable);</programlisting>
 <para>
@@ -951,7 +966,7 @@ provide a <link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>.</para>
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-targets-include-text" role="function" condition="since:2.10">
 <title>gtk_targets_include_text ()</title>
-<indexterm zone="gtk-targets-include-text" role="2.10"><primary sortas="gtk_targets_include_text">gtk_targets_include_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_text            (<link linkend="GdkAtom">GdkAtom</link> *targets,
+<indexterm zone="gtk-targets-include-text" role="2.10"><primary sortas="targets_include_text">gtk_targets_include_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_text            (<link linkend="GdkAtom">GdkAtom</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets);</programlisting>
 <para>
 Determines if any of the targets in <parameter>targets</parameter> can be used to
@@ -971,7 +986,7 @@ provide text.</para>
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-targets-include-uri" role="function" condition="since:2.10">
 <title>gtk_targets_include_uri ()</title>
-<indexterm zone="gtk-targets-include-uri" role="2.10"><primary sortas="gtk_targets_include_uri">gtk_targets_include_uri</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_uri             (<link linkend="GdkAtom">GdkAtom</link> *targets,
+<indexterm zone="gtk-targets-include-uri" role="2.10"><primary sortas="targets_include_uri">gtk_targets_include_uri</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_uri             (<link linkend="GdkAtom">GdkAtom</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets);</programlisting>
 <para>
 Determines if any of the targets in <parameter>targets</parameter> can be used to
@@ -991,7 +1006,7 @@ provide an uri list.</para>
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-targets-include-rich-text" role="function" condition="since:2.10">
 <title>gtk_targets_include_rich_text ()</title>
-<indexterm zone="gtk-targets-include-rich-text" role="2.10"><primary sortas="gtk_targets_include_rich_text">gtk_targets_include_rich_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_rich_text       (<link linkend="GdkAtom">GdkAtom</link> *targets,
+<indexterm zone="gtk-targets-include-rich-text" role="2.10"><primary sortas="targets_include_rich_text">gtk_targets_include_rich_text</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_targets_include_rich_text       (<link linkend="GdkAtom">GdkAtom</link> *targets,
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="GtkTextBuffer">GtkTextBuffer</link> *buffer);</programlisting>
 <para>
@@ -1015,7 +1030,7 @@ provide rich text.</para>
 </variablelist><para role="since">Since 2.10</para></refsect2>
 <refsect2 id="gtk-selection-remove-all" role="function">
 <title>gtk_selection_remove_all ()</title>
-<indexterm zone="gtk-selection-remove-all"><primary sortas="gtk_selection_remove_all">gtk_selection_remove_all</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_remove_all            (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<indexterm zone="gtk-selection-remove-all"><primary sortas="selection_remove_all">gtk_selection_remove_all</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_remove_all            (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 Removes all handlers and unsets ownership of all 
 selections for a widget. Called when widget is being
@@ -1029,13 +1044,13 @@ called by applications.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-clear" role="function" condition="deprecated|since:2.2">
 <title>gtk_selection_clear ()</title>
-<indexterm zone="gtk-selection-clear" role="deprecated"><primary sortas="gtk_selection_clear">gtk_selection_clear</primary></indexterm><indexterm zone="gtk-selection-clear" role="2.2"><primary sortas="gtk_selection_clear">gtk_selection_clear</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_clear                 (<link linkend="GtkWidget">GtkWidget</link> *widget,
+<indexterm zone="gtk-selection-clear" role="deprecated"><primary sortas="selection_clear">gtk_selection_clear</primary></indexterm><indexterm zone="gtk-selection-clear" role="2.2"><primary sortas="selection_clear">gtk_selection_clear</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_selection_clear                 (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkEventSelection">GdkEventSelection</link> *event);</programlisting>
 <warning><para><literal>gtk_selection_clear</literal> has been deprecated since version 2.4 and should not be used in newly-written code. Instead of calling this function, chain up from
-your selection_clear_event handler. Calling this function
+your selection-clear-event handler. Calling this function
 from any other context is illegal.</para></warning>
 <para>
-The default handler for the GtkWidget::selection_clear_event
+The default handler for the <link linkend="GtkWidget-selection-clear-event"><type>"selection-clear-event"</type></link>
 signal.</para>
 <para>
 </para><variablelist role="params">
@@ -1051,7 +1066,7 @@ signal.</para>
 </variablelist><para role="since">Since 2.2</para></refsect2>
 <refsect2 id="gtk-selection-data-copy" role="function">
 <title>gtk_selection_data_copy ()</title>
-<indexterm zone="gtk-selection-data-copy"><primary sortas="gtk_selection_data_copy">gtk_selection_data_copy</primary></indexterm><programlisting><link linkend="GtkSelectionData">GtkSelectionData</link> *  gtk_selection_data_copy             (<link linkend="GtkSelectionData">GtkSelectionData</link> *data);</programlisting>
+<indexterm zone="gtk-selection-data-copy"><primary sortas="selection_data_copy">gtk_selection_data_copy</primary></indexterm><programlisting><link linkend="GtkSelectionData">GtkSelectionData</link> *  gtk_selection_data_copy             (<link linkend="GtkSelectionData">GtkSelectionData</link> *data);</programlisting>
 <para>
 Makes a copy of a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure and its data.</para>
 <para>
@@ -1064,7 +1079,7 @@ Makes a copy of a <link linkend="GtkSelectionData"><type>GtkSelectionData</type>
 </variablelist></refsect2>
 <refsect2 id="gtk-selection-data-free" role="function">
 <title>gtk_selection_data_free ()</title>
-<indexterm zone="gtk-selection-data-free"><primary sortas="gtk_selection_data_free">gtk_selection_data_free</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_data_free             (<link linkend="GtkSelectionData">GtkSelectionData</link> *data);</programlisting>
+<indexterm zone="gtk-selection-data-free"><primary sortas="selection_data_free">gtk_selection_data_free</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_selection_data_free             (<link linkend="GtkSelectionData">GtkSelectionData</link> *data);</programlisting>
 <para>
 Frees a <link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> structure returned from
 <link linkend="gtk-selection-data-copy"><function>gtk_selection_data_copy()</function></link>.</para>

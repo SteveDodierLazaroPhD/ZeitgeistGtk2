@@ -125,7 +125,7 @@ It can be intersected to regions by using <link linkend="gdk-region-spans-inters
 <title role="details.title">Details</title>
 <refsect2 id="GdkPoint" role="struct">
 <title>GdkPoint</title>
-<indexterm zone="GdkPoint"><primary sortas="GdkPoint">GdkPoint</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkPoint"><primary sortas="Point">GdkPoint</primary></indexterm><programlisting>typedef struct {
   gint x;
   gint y;
 } GdkPoint;
@@ -146,7 +146,7 @@ Defines the x and y coordinates of a point.
 </variablelist></refsect2>
 <refsect2 id="GdkRectangle" role="struct">
 <title>GdkRectangle</title>
-<indexterm zone="GdkRectangle"><primary sortas="GdkRectangle">GdkRectangle</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkRectangle"><primary sortas="Rectangle">GdkRectangle</primary></indexterm><programlisting>typedef struct {
   gint x;
   gint y;
   gint width;
@@ -179,7 +179,7 @@ Defines the position and size of a rectangle.
 </variablelist></refsect2>
 <refsect2 id="gdk-rectangle-intersect" role="function">
 <title>gdk_rectangle_intersect ()</title>
-<indexterm zone="gdk-rectangle-intersect"><primary sortas="gdk_rectangle_intersect">gdk_rectangle_intersect</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_rectangle_intersect             (const <link linkend="GdkRectangle">GdkRectangle</link> *src1,
+<indexterm zone="gdk-rectangle-intersect"><primary sortas="rectangle_intersect">gdk_rectangle_intersect</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_rectangle_intersect             (const <link linkend="GdkRectangle">GdkRectangle</link> *src1,
                                                          const <link linkend="GdkRectangle">GdkRectangle</link> *src2,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *dest);</programlisting>
 <para>
@@ -205,7 +205,7 @@ pass <link linkend="NULL--CAPS"><literal>NULL</literal></link> for <parameter>de
 </variablelist></refsect2>
 <refsect2 id="gdk-rectangle-union" role="function">
 <title>gdk_rectangle_union ()</title>
-<indexterm zone="gdk-rectangle-union"><primary sortas="gdk_rectangle_union">gdk_rectangle_union</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_rectangle_union                 (const <link linkend="GdkRectangle">GdkRectangle</link> *src1,
+<indexterm zone="gdk-rectangle-union"><primary sortas="rectangle_union">gdk_rectangle_union</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_rectangle_union                 (const <link linkend="GdkRectangle">GdkRectangle</link> *src1,
                                                          const <link linkend="GdkRectangle">GdkRectangle</link> *src2,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *dest);</programlisting>
 <para>
@@ -227,13 +227,13 @@ It is allowed for <parameter>dest</parameter> to be the same as either <paramete
 </variablelist></refsect2>
 <refsect2 id="GdkRegion" role="struct">
 <title>GdkRegion</title>
-<indexterm zone="GdkRegion"><primary sortas="GdkRegion">GdkRegion</primary></indexterm><programlisting>typedef struct _GdkRegion GdkRegion;</programlisting>
+<indexterm zone="GdkRegion"><primary sortas="Region">GdkRegion</primary></indexterm><programlisting>typedef struct _GdkRegion GdkRegion;</programlisting>
 <para>
 A GdkRegion represents a set of pixels on the screen.
 </para></refsect2>
 <refsect2 id="gdk-region-new" role="function">
 <title>gdk_region_new ()</title>
-<indexterm zone="gdk-region-new"><primary sortas="gdk_region_new">gdk_region_new</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_new                      (void);</programlisting>
+<indexterm zone="gdk-region-new"><primary sortas="region_new">gdk_region_new</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_new                      (void);</programlisting>
 <para>
 Creates a new empty <link linkend="GdkRegion"><type>GdkRegion</type></link>.</para>
 <para>
@@ -243,7 +243,7 @@ Creates a new empty <link linkend="GdkRegion"><type>GdkRegion</type></link>.</pa
 </variablelist></refsect2>
 <refsect2 id="gdk-region-polygon" role="function">
 <title>gdk_region_polygon ()</title>
-<indexterm zone="gdk-region-polygon"><primary sortas="gdk_region_polygon">gdk_region_polygon</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_polygon                  (const <link linkend="GdkPoint">GdkPoint</link> *points,
+<indexterm zone="gdk-region-polygon"><primary sortas="region_polygon">gdk_region_polygon</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_polygon                  (const <link linkend="GdkPoint">GdkPoint</link> *points,
                                                          <link linkend="gint">gint</link> n_points,
                                                          <link linkend="GdkFillRule">GdkFillRule</link> fill_rule);</programlisting>
 <para>
@@ -266,7 +266,7 @@ number of points.</para>
 </variablelist></refsect2>
 <refsect2 id="GdkFillRule" role="enum">
 <title>enum GdkFillRule</title>
-<indexterm zone="GdkFillRule"><primary sortas="GdkFillRule">GdkFillRule</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkFillRule"><primary sortas="FillRule">GdkFillRule</primary></indexterm><programlisting>typedef enum
 {
   GDK_EVEN_ODD_RULE,
   GDK_WINDING_RULE
@@ -291,7 +291,7 @@ included in the region, while areas overlapped an even number of times are not.
 </variablelist></refsect2>
 <refsect2 id="gdk-region-copy" role="function">
 <title>gdk_region_copy ()</title>
-<indexterm zone="gdk-region-copy"><primary sortas="gdk_region_copy">gdk_region_copy</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_copy                     (const <link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
+<indexterm zone="gdk-region-copy"><primary sortas="region_copy">gdk_region_copy</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_copy                     (const <link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
 <para>
 Copies <parameter>region</parameter>, creating an identical new region.</para>
 <para>
@@ -304,7 +304,7 @@ Copies <parameter>region</parameter>, creating an identical new region.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-rectangle" role="function">
 <title>gdk_region_rectangle ()</title>
-<indexterm zone="gdk-region-rectangle"><primary sortas="gdk_region_rectangle">gdk_region_rectangle</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_rectangle                (const <link linkend="GdkRectangle">GdkRectangle</link> *rectangle);</programlisting>
+<indexterm zone="gdk-region-rectangle"><primary sortas="region_rectangle">gdk_region_rectangle</primary></indexterm><programlisting><link linkend="GdkRegion">GdkRegion</link> *         gdk_region_rectangle                (const <link linkend="GdkRectangle">GdkRectangle</link> *rectangle);</programlisting>
 <para>
 Creates a new region containing the area <parameter>rectangle</parameter>.</para>
 <para>
@@ -317,7 +317,7 @@ Creates a new region containing the area <parameter>rectangle</parameter>.</para
 </variablelist></refsect2>
 <refsect2 id="gdk-region-destroy" role="function">
 <title>gdk_region_destroy ()</title>
-<indexterm zone="gdk-region-destroy"><primary sortas="gdk_region_destroy">gdk_region_destroy</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_destroy                  (<link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
+<indexterm zone="gdk-region-destroy"><primary sortas="region_destroy">gdk_region_destroy</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_destroy                  (<link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
 <para>
 Destroys a <link linkend="GdkRegion"><type>GdkRegion</type></link>.</para>
 <para>
@@ -328,7 +328,7 @@ Destroys a <link linkend="GdkRegion"><type>GdkRegion</type></link>.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-get-clipbox" role="function">
 <title>gdk_region_get_clipbox ()</title>
-<indexterm zone="gdk-region-get-clipbox"><primary sortas="gdk_region_get_clipbox">gdk_region_get_clipbox</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_get_clipbox              (const <link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-get-clipbox"><primary sortas="region_get_clipbox">gdk_region_get_clipbox</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_get_clipbox              (const <link linkend="GdkRegion">GdkRegion</link> *region,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *rectangle);</programlisting>
 <para>
 Obtains the smallest rectangle which includes the entire <link linkend="GdkRegion"><type>GdkRegion</type></link>.</para>
@@ -343,7 +343,7 @@ Obtains the smallest rectangle which includes the entire <link linkend="GdkRegio
 </variablelist></refsect2>
 <refsect2 id="gdk-region-get-rectangles" role="function">
 <title>gdk_region_get_rectangles ()</title>
-<indexterm zone="gdk-region-get-rectangles"><primary sortas="gdk_region_get_rectangles">gdk_region_get_rectangles</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_get_rectangles           (const <link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-get-rectangles"><primary sortas="region_get_rectangles">gdk_region_get_rectangles</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_get_rectangles           (const <link linkend="GdkRegion">GdkRegion</link> *region,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> **rectangles,
                                                          <link linkend="gint">gint</link> *n_rectangles);</programlisting>
 <para>
@@ -363,7 +363,7 @@ The array returned in <parameter>rectangles</parameter> must be freed with <link
 </variablelist></refsect2>
 <refsect2 id="gdk-region-empty" role="function">
 <title>gdk_region_empty ()</title>
-<indexterm zone="gdk-region-empty"><primary sortas="gdk_region_empty">gdk_region_empty</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_region_empty                    (const <link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
+<indexterm zone="gdk-region-empty"><primary sortas="region_empty">gdk_region_empty</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_region_empty                    (const <link linkend="GdkRegion">GdkRegion</link> *region);</programlisting>
 <para>
 Finds out if the <link linkend="GdkRegion"><type>GdkRegion</type></link> is empty.</para>
 <para>
@@ -376,7 +376,7 @@ Finds out if the <link linkend="GdkRegion"><type>GdkRegion</type></link> is empt
 </variablelist></refsect2>
 <refsect2 id="gdk-region-equal" role="function">
 <title>gdk_region_equal ()</title>
-<indexterm zone="gdk-region-equal"><primary sortas="gdk_region_equal">gdk_region_equal</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_region_equal                    (const <link linkend="GdkRegion">GdkRegion</link> *region1,
+<indexterm zone="gdk-region-equal"><primary sortas="region_equal">gdk_region_equal</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_region_equal                    (const <link linkend="GdkRegion">GdkRegion</link> *region1,
                                                          const <link linkend="GdkRegion">GdkRegion</link> *region2);</programlisting>
 <para>
 Finds out if the two regions are the same.</para>
@@ -393,7 +393,7 @@ Finds out if the two regions are the same.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-point-in" role="function">
 <title>gdk_region_point_in ()</title>
-<indexterm zone="gdk-region-point-in"><primary sortas="gdk_region_point_in">gdk_region_point_in</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_region_point_in                 (const <link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-point-in"><primary sortas="region_point_in">gdk_region_point_in</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_region_point_in                 (const <link linkend="GdkRegion">GdkRegion</link> *region,
                                                          <link linkend="int">int</link> x,
                                                          <link linkend="int">int</link> y);</programlisting>
 <para>
@@ -414,7 +414,7 @@ Finds out if a point is in a region.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-rect-in" role="function">
 <title>gdk_region_rect_in ()</title>
-<indexterm zone="gdk-region-rect-in"><primary sortas="gdk_region_rect_in">gdk_region_rect_in</primary></indexterm><programlisting><link linkend="GdkOverlapType">GdkOverlapType</link>      gdk_region_rect_in                  (const <link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-rect-in"><primary sortas="region_rect_in">gdk_region_rect_in</primary></indexterm><programlisting><link linkend="GdkOverlapType">GdkOverlapType</link>      gdk_region_rect_in                  (const <link linkend="GdkRegion">GdkRegion</link> *region,
                                                          const <link linkend="GdkRectangle">GdkRectangle</link> *rectangle);</programlisting>
 <para>
 Tests whether a rectangle is within a region.</para>
@@ -433,7 +433,7 @@ Tests whether a rectangle is within a region.</para>
 </variablelist></refsect2>
 <refsect2 id="GdkOverlapType" role="enum">
 <title>enum GdkOverlapType</title>
-<indexterm zone="GdkOverlapType"><primary sortas="GdkOverlapType">GdkOverlapType</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GdkOverlapType"><primary sortas="OverlapType">GdkOverlapType</primary></indexterm><programlisting>typedef enum
 {
   GDK_OVERLAP_RECTANGLE_IN,
   GDK_OVERLAP_RECTANGLE_OUT,
@@ -461,7 +461,7 @@ Specifies the possible values returned by <link linkend="gdk-region-rect-in"><fu
 </variablelist></refsect2>
 <refsect2 id="gdk-region-offset" role="function">
 <title>gdk_region_offset ()</title>
-<indexterm zone="gdk-region-offset"><primary sortas="gdk_region_offset">gdk_region_offset</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_offset                   (<link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-offset"><primary sortas="region_offset">gdk_region_offset</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_offset                   (<link linkend="GdkRegion">GdkRegion</link> *region,
                                                          <link linkend="gint">gint</link> dx,
                                                          <link linkend="gint">gint</link> dy);</programlisting>
 <para>
@@ -480,7 +480,7 @@ Moves a region the specified distance.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-shrink" role="function">
 <title>gdk_region_shrink ()</title>
-<indexterm zone="gdk-region-shrink"><primary sortas="gdk_region_shrink">gdk_region_shrink</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_shrink                   (<link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-shrink"><primary sortas="region_shrink">gdk_region_shrink</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_shrink                   (<link linkend="GdkRegion">GdkRegion</link> *region,
                                                          <link linkend="gint">gint</link> dx,
                                                          <link linkend="gint">gint</link> dy);</programlisting>
 <para>
@@ -500,7 +500,7 @@ Positive values shrink the region. Negative values expand it.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-union-with-rect" role="function">
 <title>gdk_region_union_with_rect ()</title>
-<indexterm zone="gdk-region-union-with-rect"><primary sortas="gdk_region_union_with_rect">gdk_region_union_with_rect</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_union_with_rect          (<link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-union-with-rect"><primary sortas="region_union_with_rect">gdk_region_union_with_rect</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_union_with_rect          (<link linkend="GdkRegion">GdkRegion</link> *region,
                                                          const <link linkend="GdkRectangle">GdkRectangle</link> *rect);</programlisting>
 <para>
 Sets the area of <parameter>region</parameter> to the union of the areas of <parameter>region</parameter> and
@@ -517,7 +517,7 @@ either <parameter>region</parameter> or <parameter>rect</parameter>.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-intersect" role="function">
 <title>gdk_region_intersect ()</title>
-<indexterm zone="gdk-region-intersect"><primary sortas="gdk_region_intersect">gdk_region_intersect</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_intersect                (<link linkend="GdkRegion">GdkRegion</link> *source1,
+<indexterm zone="gdk-region-intersect"><primary sortas="region_intersect">gdk_region_intersect</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_intersect                (<link linkend="GdkRegion">GdkRegion</link> *source1,
                                                          const <link linkend="GdkRegion">GdkRegion</link> *source2);</programlisting>
 <para>
 Sets the area of <parameter>source1</parameter> to the intersection of the areas of <parameter>source1</parameter>
@@ -534,7 +534,7 @@ both <parameter>source1</parameter> and <parameter>source2</parameter>.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-union" role="function">
 <title>gdk_region_union ()</title>
-<indexterm zone="gdk-region-union"><primary sortas="gdk_region_union">gdk_region_union</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_union                    (<link linkend="GdkRegion">GdkRegion</link> *source1,
+<indexterm zone="gdk-region-union"><primary sortas="region_union">gdk_region_union</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_union                    (<link linkend="GdkRegion">GdkRegion</link> *source1,
                                                          const <link linkend="GdkRegion">GdkRegion</link> *source2);</programlisting>
 <para>
 Sets the area of <parameter>source1</parameter> to the union of the areas of <parameter>source1</parameter> and
@@ -551,7 +551,7 @@ either <parameter>source1</parameter> or <parameter>source2</parameter>.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-region-subtract" role="function">
 <title>gdk_region_subtract ()</title>
-<indexterm zone="gdk-region-subtract"><primary sortas="gdk_region_subtract">gdk_region_subtract</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_subtract                 (<link linkend="GdkRegion">GdkRegion</link> *source1,
+<indexterm zone="gdk-region-subtract"><primary sortas="region_subtract">gdk_region_subtract</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_subtract                 (<link linkend="GdkRegion">GdkRegion</link> *source1,
                                                          const <link linkend="GdkRegion">GdkRegion</link> *source2);</programlisting>
 <para>
 Subtracts the area of <parameter>source2</parameter> from the area <parameter>source1</parameter>. The resulting
@@ -567,7 +567,7 @@ area is the set of pixels contained in <parameter>source1</parameter> but not in
 </variablelist></refsect2>
 <refsect2 id="gdk-region-xor" role="function">
 <title>gdk_region_xor ()</title>
-<indexterm zone="gdk-region-xor"><primary sortas="gdk_region_xor">gdk_region_xor</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_xor                      (<link linkend="GdkRegion">GdkRegion</link> *source1,
+<indexterm zone="gdk-region-xor"><primary sortas="region_xor">gdk_region_xor</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_xor                      (<link linkend="GdkRegion">GdkRegion</link> *source1,
                                                          const <link linkend="GdkRegion">GdkRegion</link> *source2);</programlisting>
 <para>
 Sets the area of <parameter>source1</parameter> to the exclusive-OR of the areas of <parameter>source1</parameter>
@@ -584,7 +584,7 @@ or the other of the two sources but not in both.</para>
 </variablelist></refsect2>
 <refsect2 id="GdkSpan" role="struct">
 <title>GdkSpan</title>
-<indexterm zone="GdkSpan"><primary sortas="GdkSpan">GdkSpan</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkSpan"><primary sortas="Span">GdkSpan</primary></indexterm><programlisting>typedef struct {
   gint x;
   gint y;
   gint width;
@@ -612,7 +612,7 @@ at the pixel with coordinates <parameter>x</parameter>, <parameter>y</parameter>
 </variablelist></refsect2>
 <refsect2 id="GdkSpanFunc" role="function">
 <title>GdkSpanFunc ()</title>
-<indexterm zone="GdkSpanFunc"><primary sortas="GdkSpanFunc">GdkSpanFunc</primary></indexterm><programlisting><link linkend="void">void</link>                (*GdkSpanFunc)                      (<link linkend="GdkSpan">GdkSpan</link> *span,
+<indexterm zone="GdkSpanFunc"><primary sortas="SpanFunc">GdkSpanFunc</primary></indexterm><programlisting><link linkend="void">void</link>                (*GdkSpanFunc)                      (<link linkend="GdkSpan">GdkSpan</link> *span,
                                                          <link linkend="gpointer">gpointer</link> data);</programlisting>
 <para>
 This defines the type of the function passed to
@@ -627,7 +627,7 @@ This defines the type of the function passed to
 </variablelist></refsect2>
 <refsect2 id="gdk-region-spans-intersect-foreach" role="function">
 <title>gdk_region_spans_intersect_foreach ()</title>
-<indexterm zone="gdk-region-spans-intersect-foreach"><primary sortas="gdk_region_spans_intersect_foreach">gdk_region_spans_intersect_foreach</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_spans_intersect_foreach  (<link linkend="GdkRegion">GdkRegion</link> *region,
+<indexterm zone="gdk-region-spans-intersect-foreach"><primary sortas="region_spans_intersect_foreach">gdk_region_spans_intersect_foreach</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_region_spans_intersect_foreach  (<link linkend="GdkRegion">GdkRegion</link> *region,
                                                          const <link linkend="GdkSpan">GdkSpan</link> *spans,
                                                          <link linkend="int">int</link> n_spans,
                                                          <link linkend="gboolean">gboolean</link> sorted,

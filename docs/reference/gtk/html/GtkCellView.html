@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -109,6 +111,7 @@ href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"
 >GdkPixbuf</a> *pixbuf);
 void                <a class="link" href="GtkCellView.html#gtk-cell-view-set-model" title="gtk_cell_view_set_model ()">gtk_cell_view_set_model</a>             (<a class="link" href="GtkCellView.html" title="GtkCellView">GtkCellView</a> *cell_view,
                                                          <a class="link" href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *model);
+<a class="link" href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *      <a class="link" href="GtkCellView.html#gtk-cell-view-get-model" title="gtk_cell_view_get_model ()">gtk_cell_view_get_model</a>             (<a class="link" href="GtkCellView.html" title="GtkCellView">GtkCellView</a> *cell_view);
 void                <a class="link" href="GtkCellView.html#gtk-cell-view-set-displayed-row" title="gtk_cell_view_set_displayed_row ()">gtk_cell_view_set_displayed_row</a>     (<a class="link" href="GtkCellView.html" title="GtkCellView">GtkCellView</a> *cell_view,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *path);
 <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *       <a class="link" href="GtkCellView.html#gtk-cell-view-get-displayed-row" title="gtk_cell_view_get_displayed_row ()">gtk_cell_view_get_displayed_row</a>     (<a class="link" href="GtkCellView.html" title="GtkCellView">GtkCellView</a> *cell_view);
@@ -296,7 +299,9 @@ to it, and makes its show <em class="parameter"><code>pixbuf</code></em>.</p>
 <p>
 Sets the model for <em class="parameter"><code>cell_view</code></em>.  If <em class="parameter"><code>cell_view</code></em> already has a model
 set, it will remove it before setting the new model.  If <em class="parameter"><code>model</code></em> is 
-<code class="literal">NULL</code>, then it will unset the old model.</p>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, then it will unset the old model.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -315,6 +320,37 @@ set, it will remove it before setting the new model.  If <em class="parameter"><
 </tbody>
 </table></div>
 <p class="since">Since 2.6</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-cell-view-get-model"></a><h3>gtk_cell_view_get_model ()</h3>
+<pre class="programlisting"><a class="link" href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *      gtk_cell_view_get_model             (<a class="link" href="GtkCellView.html" title="GtkCellView">GtkCellView</a> *cell_view);</pre>
+<p>
+Returns the model for <em class="parameter"><code>cell_view</code></em>. If no model is used <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> is
+returned.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cell_view</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkCellView.html" title="GtkCellView"><span class="type">GtkCellView</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> used or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -340,7 +376,9 @@ the <a class="link" href="GtkCellView.html" title="GtkCellView"><span class="typ
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> or <code class="literal">NULL</code> to unset.
+<td> a <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to unset.
 </td>
 </tr>
 </tbody>
@@ -354,7 +392,9 @@ the <a class="link" href="GtkCellView.html" title="GtkCellView"><span class="typ
 <p>
 Returns a <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> referring to the currently 
 displayed row. If no row is currently displayed, 
-<code class="literal">NULL</code> is returned.</p>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> is returned.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -367,7 +407,9 @@ displayed row. If no row is currently displayed,
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the currently displayed row or <code class="literal">NULL</code>
+<td> the currently displayed row or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 
 </td>
 </tr>
@@ -408,7 +450,9 @@ the model row pointed to by <em class="parameter"><code>path</code></em>.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>
 
 </td>
 </tr>

@@ -525,7 +525,7 @@ gtk_paper_size_get_display_name (GtkPaperSize *size)
   g_assert (size->info != NULL);
 
   display_name = paper_names + size->info->display_name;
-  return g_strip_context (display_name, _(display_name));
+  return g_dpgettext2 (GETTEXT_PACKAGE, "paper size", display_name);
 }
 
 /**
@@ -852,8 +852,10 @@ gtk_paper_size_new_from_key_file (GKeyFile    *key_file,
     display_name = g_strdup (name);
 
   if (ppd_name != NULL)
-    paper_size = gtk_paper_size_new_from_ppd (ppd_name, display_name,
-			                      width, height);
+    paper_size = gtk_paper_size_new_from_ppd (ppd_name,
+                                              display_name,
+                                              _gtk_print_convert_from_mm (width, GTK_UNIT_POINTS),
+                                              _gtk_print_convert_from_mm (height, GTK_UNIT_POINTS));
   else if (name != NULL)
     paper_size = gtk_paper_size_new_custom (name, display_name,
 					    width, height, GTK_UNIT_MM);

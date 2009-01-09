@@ -1112,6 +1112,24 @@ gtk_selection_convert (GtkWidget *widget,
 }
 
 /**
+ * gtk_selection_data_get_selection:
+ * @selection_data: a pointer to a #GtkSelectionData structure.
+ *
+ * Retrieves the selection #GdkAtom of the selection data.
+ *
+ * Returns: the selection #GdkAtom of the selection data.
+ *
+ * Since: 2.16
+ **/
+GdkAtom
+gtk_selection_data_get_selection (GtkSelectionData *selection_data)
+{
+  g_return_val_if_fail (selection_data != NULL, 0);
+
+  return selection_data->selection;
+}
+
+/**
  * gtk_selection_data_get_target:
  * @selection_data: a pointer to a #GtkSelectionData structure.
  *
@@ -2160,7 +2178,7 @@ gtk_selection_init (void)
  * @widget: a #GtkWidget
  * @event: the event
  * 
- * The default handler for the GtkWidget::selection_clear_event
+ * The default handler for the #GtkWidget::selection-clear-event
  * signal. 
  * 
  * Return value: %TRUE if the event was handled, otherwise false
@@ -2168,7 +2186,7 @@ gtk_selection_init (void)
  * Since: 2.2
  *
  * Deprecated: 2.4: Instead of calling this function, chain up from
- * your selection_clear_event handler. Calling this function
+ * your selection-clear-event handler. Calling this function
  * from any other context is illegal. 
  **/
 gboolean

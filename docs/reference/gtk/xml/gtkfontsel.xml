@@ -65,7 +65,7 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-font-selecti
 <title role="impl_interfaces.title">Implemented Interfaces</title>
 <para>
 GtkFontSelection implements
- <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
+ <link linkend="AtkImplementorIface">AtkImplementorIface</link>,  <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="GtkOrientable">GtkOrientable</link>.</para>
 </refsect1>
 
 
@@ -105,28 +105,28 @@ To change the text which is shown in the preview area, use
 <title role="details.title">Details</title>
 <refsect2 id="GtkFontSelection-struct" role="struct">
 <title>GtkFontSelection</title>
-<indexterm zone="GtkFontSelection-struct"><primary sortas="GtkFontSelection">GtkFontSelection</primary></indexterm><programlisting>typedef struct _GtkFontSelection GtkFontSelection;</programlisting>
+<indexterm zone="GtkFontSelection-struct"><primary sortas="FontSelection">GtkFontSelection</primary></indexterm><programlisting>typedef struct _GtkFontSelection GtkFontSelection;</programlisting>
 <para>
 The <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link> struct contains private data only, and should
 only be accessed using the functions below.
 </para></refsect2>
 <refsect2 id="gtk-font-selection-new" role="function">
 <title>gtk_font_selection_new ()</title>
-<indexterm zone="gtk-font-selection-new"><primary sortas="gtk_font_selection_new">gtk_font_selection_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_new              (void);</programlisting>
+<indexterm zone="gtk-font-selection-new"><primary sortas="font_selection_new">gtk_font_selection_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_new              (void);</programlisting>
 <para>
-Creates a new <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>.
+Creates a new <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>.</para>
+<para>
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>a new <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a n ew <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-get-font" role="function" condition="deprecated:2.0: Use gtk_font_selection_get_font_name() instead.">
 <title>gtk_font_selection_get_font ()</title>
-<indexterm zone="gtk-font-selection-get-font" role="deprecated"><primary sortas="gtk_font_selection_get_font">gtk_font_selection_get_font</primary></indexterm><programlisting><link linkend="GdkFont">GdkFont</link>*            gtk_font_selection_get_font         (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-font" role="deprecated"><primary sortas="font_selection_get_font">gtk_font_selection_get_font</primary></indexterm><programlisting><link linkend="GdkFont">GdkFont</link>*            gtk_font_selection_get_font         (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <warning><para><literal>gtk_font_selection_get_font</literal> has been deprecated since version 2.0 and should not be used in newly-written code. Use <link linkend="gtk-font-selection-get-font-name"><function>gtk_font_selection_get_font_name()</function></link> instead.</para></warning>
 <para>
-</para>
+Gets the currently-selected font.</para>
 <para>
-Gets the currently-selected font.
 </para><variablelist role="params">
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
@@ -137,32 +137,37 @@ Gets the currently-selected font.
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-get-font-name" role="function">
 <title>gtk_font_selection_get_font_name ()</title>
-<indexterm zone="gtk-font-selection-get-font-name"><primary sortas="gtk_font_selection_get_font_name">gtk_font_selection_get_font_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_font_selection_get_font_name    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-font-name"><primary sortas="font_selection_get_font_name">gtk_font_selection_get_font_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_font_selection_get_font_name    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
-Gets the currently-selected font name.  Note that this can be a different
-string than what you set with <link linkend="gtk-font-selection-set-font-name"><function>gtk_font_selection_set_font_name()</function></link>, as
-the font selection widget may normalize font names and thus return a string
-with a different structure.  For example, "Helvetica Italic Bold 12" could be
-normalized to "Helvetica Bold Italic 12".  Use <link linkend="pango-font-description-equal"><function>pango_font_description_equal()</function></link>
+Gets the currently-selected font name. 
+</para>
+<para>
+Note that this can be a different string than what you set with 
+<link linkend="gtk-font-selection-set-font-name"><function>gtk_font_selection_set_font_name()</function></link>, as the font selection widget may 
+normalize font names and thus return a string with a different structure. 
+For example, "Helvetica Italic Bold 12" could be normalized to 
+"Helvetica Bold Italic 12". Use <link linkend="pango-font-description-equal"><function>pango_font_description_equal()</function></link>
 if you want to compare two font descriptions.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A string with the name of the current font, or <link linkend="NULL--CAPS"><type>NULL</type></link> if no font
-is selected.  You must free this string with <link linkend="g-free"><function>g_free()</function></link>.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A string with the name of the current font, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if 
+    no font is selected. You must free this string with <link linkend="g-free"><function>g_free()</function></link>.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-set-font-name" role="function">
 <title>gtk_font_selection_set_font_name ()</title>
-<indexterm zone="gtk-font-selection-set-font-name"><primary sortas="gtk_font_selection_set_font_name">gtk_font_selection_set_font_name</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_font_selection_set_font_name    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel,
+<indexterm zone="gtk-font-selection-set-font-name"><primary sortas="font_selection_set_font_name">gtk_font_selection_set_font_name</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_font_selection_set_font_name    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel,
                                                          const <link linkend="gchar">gchar</link> *fontname);</programlisting>
 <para>
-Sets the currently-selected font.  Note that the <parameter>fontsel</parameter> needs to know the
-screen in which it will appear for this to work; this can be guaranteed by
-simply making sure that the <parameter>fontsel</parameter> is inserted in a toplevel window before
-you call this function.</para>
+Sets the currently-selected font. 
+</para>
+<para>
+Note that the <parameter>fontsel</parameter> needs to know the screen in which it will appear 
+for this to work; this can be guaranteed by simply making sure that the 
+<parameter>fontsel</parameter> is inserted in a toplevel window before you call this function.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
@@ -171,46 +176,45 @@ you call this function.</para>
 <varlistentry><term><parameter>fontname</parameter>&#160;:</term>
 <listitem><simpara> a font name like "Helvetica 12" or "Times Bold 18"
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><type>TRUE</type></link> if the font could be set successfully; <link linkend="FALSE--CAPS"><type>FALSE</type></link> if no such
-font exists or if the <parameter>fontsel</parameter> doesn't belong to a particular screen yet.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the font could be set successfully; <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> if no 
+    such font exists or if the <parameter>fontsel</parameter> doesn't belong to a particular 
+    screen yet.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-get-preview-text" role="function">
 <title>gtk_font_selection_get_preview_text ()</title>
-<indexterm zone="gtk-font-selection-get-preview-text"><primary sortas="gtk_font_selection_get_preview_text">gtk_font_selection_get_preview_text</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_font_selection_get_preview_text (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-preview-text"><primary sortas="font_selection_get_preview_text">gtk_font_selection_get_preview_text</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_font_selection_get_preview_text (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
-The text returned is the preview text used to show how the selected
-font looks.</para>
+Gets the text displayed in the preview area.</para>
 <para>
-Gets the text displayed in the preview area.
 </para><variablelist role="params">
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> pointer to the preview text string. This string
-points to internally allocated storage in the widget and must not
-be freed, modified or stored. 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the text displayed in the preview area. 
+    This string is owned by the widget and should not be 
+    modified or freed 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-set-preview-text" role="function">
 <title>gtk_font_selection_set_preview_text ()</title>
-<indexterm zone="gtk-font-selection-set-preview-text"><primary sortas="gtk_font_selection_set_preview_text">gtk_font_selection_set_preview_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_font_selection_set_preview_text (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel,
+<indexterm zone="gtk-font-selection-set-preview-text"><primary sortas="font_selection_set_preview_text">gtk_font_selection_set_preview_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_font_selection_set_preview_text (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel,
                                                          const <link linkend="gchar">gchar</link> *text);</programlisting>
 <para>
+Sets the text displayed in the preview area.
 The <parameter>text</parameter> is used to show how the selected font looks.</para>
 <para>
-Sets the text displayed in the preview area.
 </para><variablelist role="params">
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>text</parameter>&#160;:</term>
-<listitem><simpara> a pointer to a string
+<listitem><simpara> the text to display in the preview area 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-font-selection-get-face" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_face ()</title>
-<indexterm zone="gtk-font-selection-get-face" role="2.14"><primary sortas="gtk_font_selection_get_face">gtk_font_selection_get_face</primary></indexterm><programlisting><link linkend="PangoFontFace">PangoFontFace</link> *     gtk_font_selection_get_face         (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-face" role="2.14"><primary sortas="font_selection_get_face">gtk_font_selection_get_face</primary></indexterm><programlisting><link linkend="PangoFontFace">PangoFontFace</link> *     gtk_font_selection_get_face         (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 Gets the <link linkend="PangoFontFace"><type>PangoFontFace</type></link> representing the selected font group
 details (i.e. family, slant, weight, width, etc).</para>
@@ -219,14 +223,15 @@ details (i.e. family, slant, weight, width, etc).</para>
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="PangoFontFace"><type>PangoFontFace</type></link> representing the selected font group
-    details 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="PangoFontFace"><type>PangoFontFace</type></link> representing the selected font 
+    group details. The returned object is owned by <parameter>fontsel</parameter> and
+    must not be modified or freed. 
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-font-selection-get-face-list" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_face_list ()</title>
-<indexterm zone="gtk-font-selection-get-face-list" role="2.14"><primary sortas="gtk_font_selection_get_face_list">gtk_font_selection_get_face_list</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_face_list    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-face-list" role="2.14"><primary sortas="font_selection_get_face_list">gtk_font_selection_get_face_list</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_face_list    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 This returns the <link linkend="GtkTreeView"><type>GtkTreeView</type></link> which lists all styles available for
 the selected font. For example, 'Regular', 'Bold', etc.</para>
@@ -235,13 +240,13 @@ the selected font. For example, 'Regular', 'Bold', etc.</para>
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link>. 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link> that is part of <parameter>fontsel</parameter>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-font-selection-get-family" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_family ()</title>
-<indexterm zone="gtk-font-selection-get-family" role="2.14"><primary sortas="gtk_font_selection_get_family">gtk_font_selection_get_family</primary></indexterm><programlisting><link linkend="PangoFontFamily">PangoFontFamily</link> *   gtk_font_selection_get_family       (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-family" role="2.14"><primary sortas="font_selection_get_family">gtk_font_selection_get_family</primary></indexterm><programlisting><link linkend="PangoFontFamily">PangoFontFamily</link> *   gtk_font_selection_get_family       (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 Gets the <link linkend="PangoFontFamily"><type>PangoFontFamily</type></link> representing the selected font family.</para>
 <para>
@@ -250,13 +255,15 @@ Gets the <link linkend="PangoFontFamily"><type>PangoFontFamily</type></link> rep
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="PangoFontFamily"><type>PangoFontFamily</type></link> representing the selected font
-family. Font families are a collection of font faces.
+    family. Font families are a collection of font faces. The 
+    returned object is owned by <parameter>fontsel</parameter> and must not be modified 
+    or freed.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-font-selection-get-size" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_size ()</title>
-<indexterm zone="gtk-font-selection-get-size" role="2.14"><primary sortas="gtk_font_selection_get_size">gtk_font_selection_get_size</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_font_selection_get_size         (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-size" role="2.14"><primary sortas="font_selection_get_size">gtk_font_selection_get_size</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_font_selection_get_size         (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 The selected font size.</para>
 <para>
@@ -264,14 +271,14 @@ The selected font size.</para>
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="gint"><type>gint</type></link> representing the font size selected, or -1
-if not.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A n integer representing the selected font size, 
+    or -1 if no font size is selected.
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-font-selection-get-family-list" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_family_list ()</title>
-<indexterm zone="gtk-font-selection-get-family-list" role="2.14"><primary sortas="gtk_font_selection_get_family_list">gtk_font_selection_get_family_list</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_family_list  (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-family-list" role="2.14"><primary sortas="font_selection_get_family_list">gtk_font_selection_get_family_list</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_family_list  (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 This returns the <link linkend="GtkTreeView"><type>GtkTreeView</type></link> that lists font families, for
 example, 'Sans', 'Serif', etc.</para>
@@ -280,13 +287,13 @@ example, 'Sans', 'Serif', etc.</para>
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link>. 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link> that is part of <parameter>fontsel</parameter>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-font-selection-get-preview-entry" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_preview_entry ()</title>
-<indexterm zone="gtk-font-selection-get-preview-entry" role="2.14"><primary sortas="gtk_font_selection_get_preview_entry">gtk_font_selection_get_preview_entry</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_preview_entry
+<indexterm zone="gtk-font-selection-get-preview-entry" role="2.14"><primary sortas="font_selection_get_preview_entry">gtk_font_selection_get_preview_entry</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_preview_entry
                                                         (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 This returns the <link linkend="GtkEntry"><type>GtkEntry</type></link> used to display the font as a preview.</para>
@@ -295,13 +302,13 @@ This returns the <link linkend="GtkEntry"><type>GtkEntry</type></link> used to d
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link>. 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link> that is part of <parameter>fontsel</parameter>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-font-selection-get-size-entry" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_size_entry ()</title>
-<indexterm zone="gtk-font-selection-get-size-entry" role="2.14"><primary sortas="gtk_font_selection_get_size_entry">gtk_font_selection_get_size_entry</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_size_entry   (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-size-entry" role="2.14"><primary sortas="font_selection_get_size_entry">gtk_font_selection_get_size_entry</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_size_entry   (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 This returns the <link linkend="GtkEntry"><type>GtkEntry</type></link> used to allow the user to edit the font
 number manually instead of selecting it from the list of font sizes.</para>
@@ -310,13 +317,13 @@ number manually instead of selecting it from the list of font sizes.</para>
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link>. 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link> that is part of <parameter>fontsel</parameter>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-font-selection-get-size-list" role="function" condition="since:2.14">
 <title>gtk_font_selection_get_size_list ()</title>
-<indexterm zone="gtk-font-selection-get-size-list" role="2.14"><primary sortas="gtk_font_selection_get_size_list">gtk_font_selection_get_size_list</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_size_list    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
+<indexterm zone="gtk-font-selection-get-size-list" role="2.14"><primary sortas="font_selection_get_size_list">gtk_font_selection_get_size_list</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_font_selection_get_size_list    (<link linkend="GtkFontSelection">GtkFontSelection</link> *fontsel);</programlisting>
 <para>
 This returns the <link linkend="GtkTreeeView"><type>GtkTreeeView</type></link> used to list font sizes.</para>
 <para>
@@ -324,7 +331,7 @@ This returns the <link linkend="GtkTreeeView"><type>GtkTreeeView</type></link> u
 <varlistentry><term><parameter>fontsel</parameter>&#160;:</term>
 <listitem><simpara> a <link linkend="GtkFontSelection"><type>GtkFontSelection</type></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link>. 
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkWidget"><type>GtkWidget</type></link> that is part of <parameter>fontsel</parameter>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
@@ -333,14 +340,14 @@ This returns the <link linkend="GtkTreeeView"><type>GtkTreeeView</type></link> u
 <refsect1 id="GtkFontSelection.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
 <refsect2 id="GtkFontSelection--font" role="property"><title>The <literal>&quot;font&quot;</literal> property</title>
-<indexterm zone="GtkFontSelection--font"><primary sortas="GtkFontSelection:font">GtkFontSelection:font</primary></indexterm><programlisting>  &quot;font&quot;                     <link linkend="GdkFont">GdkFont</link>*              : Read</programlisting>
+<indexterm zone="GtkFontSelection--font"><primary sortas="FontSelection:font">GtkFontSelection:font</primary></indexterm><programlisting>  &quot;font&quot;                     <link linkend="GdkFont">GdkFont</link>*              : Read</programlisting>
 <para>The GdkFont that is currently selected.</para></refsect2>
 <refsect2 id="GtkFontSelection--font-name" role="property"><title>The <literal>&quot;font-name&quot;</literal> property</title>
-<indexterm zone="GtkFontSelection--font-name"><primary sortas="GtkFontSelection:font-name">GtkFontSelection:font-name</primary></indexterm><programlisting>  &quot;font-name&quot;                <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<indexterm zone="GtkFontSelection--font-name"><primary sortas="FontSelection:font-name">GtkFontSelection:font-name</primary></indexterm><programlisting>  &quot;font-name&quot;                <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>The string that represents this font.</para><para>Default value: "Sans 10"</para>
 </refsect2>
 <refsect2 id="GtkFontSelection--preview-text" role="property"><title>The <literal>&quot;preview-text&quot;</literal> property</title>
-<indexterm zone="GtkFontSelection--preview-text"><primary sortas="GtkFontSelection:preview-text">GtkFontSelection:preview-text</primary></indexterm><programlisting>  &quot;preview-text&quot;             <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<indexterm zone="GtkFontSelection--preview-text"><primary sortas="FontSelection:preview-text">GtkFontSelection:preview-text</primary></indexterm><programlisting>  &quot;preview-text&quot;             <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>The text to display in order to demonstrate the selected font.</para><para>Default value: "abcdefghijk ABCDEFGHIJK"</para>
 </refsect2>
 </refsect1>

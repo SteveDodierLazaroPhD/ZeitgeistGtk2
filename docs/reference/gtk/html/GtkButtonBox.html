@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -168,7 +170,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitial
 <a name="GtkButtonBox.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkButtonBox implements
- AtkImplementorIface and  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
+ AtkImplementorIface,  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a> and  <a class="link" href="gtk-Orientable.html#GtkOrientable">GtkOrientable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkButtonBox.properties"></a><h2>Properties</h2>
@@ -228,7 +230,9 @@ used to spread the buttons in a button box across the container, respectively.
 <p>
 The main purpose of GtkButtonBox is to make sure the children have all the same size.
 Therefore it ignores the homogeneous property which it inherited from GtkBox, and always
-behaves as if homogeneous was <code class="literal">TRUE</code>.
+behaves as if homogeneous was <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>.
 </p>
 </div>
 <div class="refsect1" lang="en">
@@ -256,7 +260,7 @@ Used internally only.
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_button_box_get_spacing</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_button_box_get_spacing</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkBox.html#gtk-box-get-spacing" title="gtk_box_get_spacing ()"><code class="function">gtk_box_get_spacing()</code></a> instead.</p>
 </div>
 <p>
 Retrieves how much space a button box is placing between each child button.
@@ -271,7 +275,7 @@ Retrieves how much space a button box is placing between each child button.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the current spacing applied to the buttons in <em class="parameter"><code>widget</code></em>.
+<td>the current spacing applied to the buttons in <em class="parameter"><code>widget</code></em>
 </td>
 </tr>
 </tbody>
@@ -353,7 +357,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_button_box_get_child_ipadding</code> is deprecated and should not be used in newly-written code. Use the style properties
-<code class="literal">"child-internal-pad-x/-y"</code> instead.</p>
+  "<a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-internal-pad-x" title='The "child-internal-pad-x" style property'>child-internal-pad-x</a>"
+  and
+  "<a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-internal-pad-y" title='The "child-internal-pad-y" style property'>child-internal-pad-y</a>"
+  instead.</p>
 </div>
 <p>
 Gets the default number of pixels that pad the buttons in a given button box.
@@ -420,7 +427,7 @@ Returns whether <em class="parameter"><code>child</code></em> should appear in a
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_button_box_set_spacing</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_button_box_set_spacing</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkBox.html#gtk-box-set-spacing" title="gtk_box_set_spacing ()"><code class="function">gtk_box_set_spacing()</code></a> instead.</p>
 </div>
 <p>
 Sets the amount of spacing between buttons in a given button box.
@@ -430,12 +437,12 @@ Sets the amount of spacing between buttons in a given button box.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>b</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a>.
+<td>a <a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
-<td>the number of pixels of spacing.
+<td>the number of pixels of spacing
 </td>
 </tr>
 </tbody>
@@ -478,7 +485,10 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gtk_button_box_set_child_size</code> is deprecated and should not be used in newly-written code. Use the style properties
-<code class="literal">"child-min-width/-height"</code> instead.</p>
+  "<a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-min-width" title='The "child-min-width" style property'>child-min-width</a>"
+  and
+  "<a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-min-height" title='The "child-min-height" style property'>child-min-height</a>"
+  instead.</p>
 </div>
 <p>
 Sets a new default size for the children of a given button box.
@@ -488,17 +498,17 @@ Sets a new default size for the children of a given button box.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a>.
+<td>a <a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>min_width</code></em> :</span></p></td>
-<td>a default width for buttons in <em class="parameter"><code>widget</code></em>.
+<td>a default width for buttons in <em class="parameter"><code>widget</code></em>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>min_height</code></em> :</span></p></td>
-<td>a default height for buttons in <em class="parameter"><code>widget</code></em>.
+<td>a default height for buttons in <em class="parameter"><code>widget</code></em>
 </td>
 </tr>
 </tbody>
@@ -583,7 +593,9 @@ other styles, they appear immediately next to the main children.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>is_secondary</code></em> :</span></p></td>
-<td> if <code class="literal">TRUE</code>, the <em class="parameter"><code>child</code></em> appears in a secondary group of the
+<td> if <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, the <em class="parameter"><code>child</code></em> appears in a secondary group of the
                button box.
 </td>
 </tr>

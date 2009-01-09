@@ -1436,9 +1436,11 @@ extern __typeof (gdk_window_get_state) IA__gdk_window_get_state __attribute((vis
 extern __typeof (gdk_window_get_toplevel) IA__gdk_window_get_toplevel __attribute((visibility("hidden")));
 #define gdk_window_get_toplevel IA__gdk_window_get_toplevel
 
+#ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_window_get_toplevels) IA__gdk_window_get_toplevels __attribute((visibility("hidden")));
 #define gdk_window_get_toplevels IA__gdk_window_get_toplevels
 
+#endif
 extern __typeof (gdk_window_get_update_area) IA__gdk_window_get_update_area __attribute((visibility("hidden")));
 #define gdk_window_get_update_area IA__gdk_window_get_update_area
 
@@ -1754,6 +1756,9 @@ extern __typeof (gdk_keymap_get_for_display) IA__gdk_keymap_get_for_display __at
 
 extern __typeof (gdk_keymap_have_bidi_layouts) IA__gdk_keymap_have_bidi_layouts __attribute((visibility("hidden")));
 #define gdk_keymap_have_bidi_layouts IA__gdk_keymap_have_bidi_layouts
+
+extern __typeof (gdk_keymap_get_caps_lock_state) IA__gdk_keymap_get_caps_lock_state __attribute((visibility("hidden")));
+#define gdk_keymap_get_caps_lock_state IA__gdk_keymap_get_caps_lock_state
 
 extern __typeof (gdk_keymap_lookup_key) IA__gdk_keymap_lookup_key __attribute((visibility("hidden")));
 #define gdk_keymap_lookup_key IA__gdk_keymap_lookup_key

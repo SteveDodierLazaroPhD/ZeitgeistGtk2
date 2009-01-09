@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -197,7 +199,7 @@ The state of a <a class="link" href="GtkToggleButton.html" title="GtkToggleButto
 To simply switch the state of a toggle button, use gtk_toggle_button_toggled.
 </p>
 <div class="example">
-<a name="id3071672"></a><p class="title"><b>Example 13. Creating two <span class="structname">GtkToggleButton</span> widgets.</b></p>
+<a name="id3118368"></a><p class="title"><b>Example 15. Creating two <span class="structname">GtkToggleButton</span> widgets.</b></p>
 <div class="example-contents"><pre class="programlisting">
 void make_toggles (void) {
    GtkWidget *dialog, *toggle1, *toggle2;
@@ -310,7 +312,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 Sets whether the button is displayed as a separate indicator and label.
 You can call this function on a checkbutton or a radiobutton with
-<em class="parameter"><code>draw_indicator</code></em> = <code class="literal">FALSE</code> to make the button look like a normal button
+<em class="parameter"><code>draw_indicator</code></em> = <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> to make the button look like a normal button
 </p>
 <p>
 This function only affects instances of classes like <a class="link" href="GtkCheckButton.html" title="GtkCheckButton"><span class="type">GtkCheckButton</span></a>
@@ -328,8 +332,12 @@ not instances of <a class="link" href="GtkToggleButton.html" title="GtkToggleBut
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>draw_indicator</code></em> :</span></p></td>
-<td> if <code class="literal">TRUE</code>, draw the button as a separate indicator
-and label; if <code class="literal">FALSE</code>, draw the button like a normal button
+<td> if <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, draw the button as a separate indicator
+and label; if <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>, draw the button like a normal button
 </td>
 </tr>
 </tbody>
@@ -356,7 +364,9 @@ and label. See <a class="link" href="GtkToggleButton.html#gtk-toggle-button-set-
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the togglebutton is drawn as a separate indicator
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the togglebutton is drawn as a separate indicator
   and label.
 </td>
 </tr>
@@ -370,7 +380,7 @@ and label. See <a class="link" href="GtkToggleButton.html#gtk-toggle-button-set-
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_toggle_button_set_state</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_toggle_button_set_state</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkToggleButton.html#gtk-toggle-button-set-active" title="gtk_toggle_button_set_active ()"><code class="function">gtk_toggle_button_set_active()</code></a> instead.</p>
 </div>
 <p>
 This is a deprecated macro, and is only maintained for compatibility reasons.
@@ -401,8 +411,12 @@ application ever to call this function.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_toggle_button_get_active        (<a class="link" href="GtkToggleButton.html" title="GtkToggleButton">GtkToggleButton</a> *toggle_button);</pre>
 <p>
-Queries a <a class="link" href="GtkToggleButton.html" title="GtkToggleButton"><span class="type">GtkToggleButton</span></a> and returns its current state. Returns <code class="literal">TRUE</code> if
-the toggle button is pressed in and <code class="literal">FALSE</code> if it is raised.
+Queries a <a class="link" href="GtkToggleButton.html" title="GtkToggleButton"><span class="type">GtkToggleButton</span></a> and returns its current state. Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if
+the toggle button is pressed in and <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if it is raised.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -430,8 +444,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> is_active);</pre>
 <p>
-Sets the status of the toggle button. Set to <code class="literal">TRUE</code> if you want the
-GtkToggleButton to be 'pressed in', and <code class="literal">FALSE</code> to raise it.
+Sets the status of the toggle button. Set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if you want the
+GtkToggleButton to be 'pressed in', and <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> to raise it.
 This action causes the toggled signal to be emitted.
 </p>
 <div class="variablelist"><table border="0">
@@ -444,7 +462,9 @@ This action causes the toggled signal to be emitted.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>is_active</code></em> :</span></p></td>
-<td>%TRUE or <code class="literal">FALSE</code>.
+<td>%TRUE or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.
 </td>
 </tr>
 </tbody>
@@ -470,7 +490,11 @@ Gets the value set by <a class="link" href="GtkToggleButton.html#gtk-toggle-butt
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the button is displayed as inconsistent, <code class="literal">FALSE</code> otherwise
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the button is displayed as inconsistent, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise
 </td>
 </tr>
 </tbody>
@@ -504,7 +528,9 @@ visual appearance, it doesn't affect the semantics of the button.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if state is inconsistent
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if state is inconsistent
 </td>
 </tr>
 </tbody>

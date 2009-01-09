@@ -149,8 +149,7 @@ DISTCLEANFILES =				\
 	gail.pc					\
 	gtk+-$(GDKTARGET)-2.0-uninstalled.pc	\
 	gdk-$(GDKTARGET)-2.0-uninstalled.pc	\
-	gail-uninstalled.pc			\
-	config.lt
+	gail-uninstalled.pc
 
 ## copy the default target for this platform to gdk-2.0.pc and gtk+-2.0.pc
 DEFAULT_GDKTARGET=x11

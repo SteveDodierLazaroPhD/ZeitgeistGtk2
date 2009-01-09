@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -193,7 +195,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitial
 <a name="GtkBox.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkBox implements
- AtkImplementorIface and  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
+ AtkImplementorIface,  <a class="link" href="gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a> and  <a class="link" href="gtk-Orientable.html#GtkOrientable">GtkOrientable</a>.</p>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkBox.properties"></a><h2>Properties</h2>
@@ -257,13 +259,7 @@ both ends of the same GtkBox.
 <p>
 Use <a class="link" href="GtkBox.html#gtk-box-pack-start-defaults" title="gtk_box_pack_start_defaults ()"><code class="function">gtk_box_pack_start_defaults()</code></a> or <a class="link" href="GtkBox.html#gtk-box-pack-end-defaults" title="gtk_box_pack_end_defaults ()"><code class="function">gtk_box_pack_end_defaults()</code></a>
 to pack widgets into a GtkBox if you do not need to specify the
-<a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--expand"
-><span class="type">"expand"</span></a>, <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--fill"
-><span class="type">"fill"</span></a>, or <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--padding"
-><span class="type">"padding"</span></a> child properties
+<span class="type">"expand"</span>, <span class="type">"fill"</span>, or <span class="type">"padding"</span> child properties
 for the child to be added.
 </p>
 <p>
@@ -285,14 +281,8 @@ Use <a class="link" href="GtkBox.html#gtk-box-reorder-child" title="gtk_box_reor
 place in the box.
 </p>
 <p>
-Use <a class="link" href="GtkBox.html#gtk-box-set-child-packing" title="gtk_box_set_child_packing ()"><code class="function">gtk_box_set_child_packing()</code></a> to reset the <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--expand"
-><span class="type">"expand"</span></a>,
-<a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--fill"
-><span class="type">"fill"</span></a> and <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--padding"
-><span class="type">"padding"</span></a> child properties.
+Use <a class="link" href="GtkBox.html#gtk-box-set-child-packing" title="gtk_box_set_child_packing ()"><code class="function">gtk_box_set_child_packing()</code></a> to reset the <span class="type">"expand"</span>,
+<span class="type">"fill"</span> and <span class="type">"padding"</span> child properties.
 Use <a class="link" href="GtkBox.html#gtk-box-query-child-packing" title="gtk_box_query_child_packing ()"><code class="function">gtk_box_query_child_packing()</code></a> to query these fields.
 </p>
 </div>
@@ -359,8 +349,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> <em class="structfield"><code>expand</code></em> : 1;</span></p></td>
 <td>flag indicates whether extra space should be given to this
   child. Any extra space given to the parent GtkBox is divided up
-  among all children with this attribute set to <code class="literal">TRUE</code>; set when packed,
-  <code class="literal">TRUE</code> by default.
+  among all children with this attribute set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>; set when packed,
+  <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> by default.
 </td>
 </tr>
 <tr>
@@ -370,7 +364,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 <td>flag indicates whether any extra space given to this child due 
   to its <em class="parameter"><code>expand</code></em> attribute being set is actually allocated to the child,
   rather than being used as padding around the widget; set when packed,
-  <code class="literal">TRUE</code> by default.
+  <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> by default.
 </td>
 </tr>
 <tr>
@@ -426,16 +422,22 @@ to the start of <em class="parameter"><code>box</code></em>.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>expand</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the new child is to be given extra space allocated to
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the new child is to be given extra space allocated to
 <em class="parameter"><code>box</code></em>.  The extra space will be divided evenly between all children of
 <em class="parameter"><code>box</code></em> that use this option
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if space given to <em class="parameter"><code>child</code></em> by the <em class="parameter"><code>expand</code></em> option is
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if space given to <em class="parameter"><code>child</code></em> by the <em class="parameter"><code>expand</code></em> option is
   actually allocated to <em class="parameter"><code>child</code></em>, rather than just padding it.  This
-  parameter has no effect if <em class="parameter"><code>expand</code></em> is set to <code class="literal">FALSE</code>.  A child is
+  parameter has no effect if <em class="parameter"><code>expand</code></em> is set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.  A child is
   always allocated the full height of a <a class="link" href="GtkHBox.html" title="GtkHBox"><span class="type">GtkHBox</span></a> and the full width 
   of a <a class="link" href="GtkVBox.html" title="GtkVBox"><span class="type">GtkVBox</span></a>. This option affects the other dimension
 </td>
@@ -487,16 +489,22 @@ packed with reference to the end of <em class="parameter"><code>box</code></em>.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>expand</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the new child is to be given extra space allocated 
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the new child is to be given extra space allocated 
   to <em class="parameter"><code>box</code></em>. The extra space will be divided evenly between all children 
   of <em class="parameter"><code>box</code></em> that use this option
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if space given to <em class="parameter"><code>child</code></em> by the <em class="parameter"><code>expand</code></em> option is
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if space given to <em class="parameter"><code>child</code></em> by the <em class="parameter"><code>expand</code></em> option is
   actually allocated to <em class="parameter"><code>child</code></em>, rather than just padding it.  This
-  parameter has no effect if <em class="parameter"><code>expand</code></em> is set to <code class="literal">FALSE</code>.  A child is
+  parameter has no effect if <em class="parameter"><code>expand</code></em> is set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.  A child is
   always allocated the full height of a <a class="link" href="GtkHBox.html" title="GtkHBox"><span class="type">GtkHBox</span></a> and the full width 
   of a <a class="link" href="GtkVBox.html" title="GtkVBox"><span class="type">GtkVBox</span></a>.  This option affects the other dimension
 </td>
@@ -528,15 +536,13 @@ The child is packed after any other child packed with reference
 to the start of <em class="parameter"><code>box</code></em>. 
 </p>
 <p>
-Parameters for how to pack the child <em class="parameter"><code>widget</code></em>, <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--expand"
-><span class="type">"expand"</span></a>, 
-<a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--fill"
-><span class="type">"fill"</span></a> and <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--padding"
-><span class="type">"padding"</span></a>, are given their default
-values, <code class="literal">TRUE</code>, <code class="literal">TRUE</code>, and 0, respectively.</p>
+Parameters for how to pack the child <em class="parameter"><code>widget</code></em>, <span class="type">"expand"</span>, 
+<span class="type">"fill"</span> and <span class="type">"padding"</span>, are given their default
+values, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, and 0, respectively.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -570,15 +576,13 @@ The child is packed after any other child packed with reference
 to the start of <em class="parameter"><code>box</code></em>. 
 </p>
 <p>
-Parameters for how to pack the child <em class="parameter"><code>widget</code></em>, <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--expand"
-><span class="type">"expand"</span></a>, 
-<a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--fill"
-><span class="type">"fill"</span></a> and <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--padding"
-><span class="type">"padding"</span></a>, are given their default
-values, <code class="literal">TRUE</code>, <code class="literal">TRUE</code>, and 0, respectively.</p>
+Parameters for how to pack the child <em class="parameter"><code>widget</code></em>, <span class="type">"expand"</span>, 
+<span class="type">"fill"</span> and <span class="type">"padding"</span>, are given their default
+values, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, and 0, respectively.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -618,7 +622,9 @@ same size). See <a class="link" href="GtkBox.html#gtk-box-set-homogeneous" title
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the box is homogeneous.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the box is homogeneous.
 </td>
 </tr>
 </tbody>
@@ -647,8 +653,12 @@ in the box.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>homogeneous</code></em> :</span></p></td>
-<td> a boolean value, <code class="literal">TRUE</code> to create equal allotments,
-  <code class="literal">FALSE</code> for variable allotments
+<td> a boolean value, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to create equal allotments,
+  <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> for variable allotments
 </td>
 </tr>
 </tbody>
@@ -787,30 +797,22 @@ Obtains information about how <em class="parameter"><code>child</code></em> is p
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>expand</code></em> :</span></p></td>
-<td> pointer to return location for <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--expand"
-><span class="type">"expand"</span></a> child property 
+<td> pointer to return location for <span class="type">"expand"</span> child property 
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> pointer to return location for <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--fill"
-><span class="type">"fill"</span></a> child property 
+<td> pointer to return location for <span class="type">"fill"</span> child property 
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>padding</code></em> :</span></p></td>
-<td> pointer to return location for <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--padding"
-><span class="type">"padding"</span></a> child property 
+<td> pointer to return location for <span class="type">"padding"</span> child property 
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pack_type</code></em> :</span></p></td>
-<td> pointer to return location for <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--pack-type"
-><span class="type">"pack-type"</span></a> child property 
+<td> pointer to return location for <span class="type">"pack-type"</span> child property 
 </td>
 </tr>
 </tbody>
@@ -850,30 +852,22 @@ Sets the way <em class="parameter"><code>child</code></em> is packed into <em cl
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>expand</code></em> :</span></p></td>
-<td> the new value of the <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--expand"
-><span class="type">"expand"</span></a> child property 
+<td> the new value of the <span class="type">"expand"</span> child property 
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fill</code></em> :</span></p></td>
-<td> the new value of the <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--fill"
-><span class="type">"fill"</span></a> child property
+<td> the new value of the <span class="type">"fill"</span> child property
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>padding</code></em> :</span></p></td>
-<td> the new value of the <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--padding"
-><span class="type">"padding"</span></a> child property
+<td> the new value of the <span class="type">"padding"</span> child property
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pack_type</code></em> :</span></p></td>
-<td> the new value of the <a
-href="/usr/share/gtk-doc/html/gtk/GtkBox.html#GtkBox--pack-type"
-><span class="type">"pack-type"</span></a> child property
+<td> the new value of the <span class="type">"pack-type"</span> child property
 </td>
 </tr>
 </tbody>

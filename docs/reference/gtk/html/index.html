@@ -46,6 +46,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -57,13 +58,14 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <div class="book" lang="en">
 <div class="titlepage">
 <div>
 <div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">GTK+ Reference Manual</p></th></tr></table></div>
-<div><p class="releaseinfo">for GTK+ 2.14.5
+<div><p class="releaseinfo">for GTK+ 2.15.0
 </p></div>
 </div>
 <hr>
@@ -114,6 +116,11 @@ Getting help with GTK+
 <dt>
 <span class="refentrytitle"><a href="gtk-question-index.html">Common Questions</a></span><span class="refpurpose"> — 
 Find answers to common questions in the GTK+ manual
+</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="chap-drawing-model.html">The GTK+ Drawing Model</a></span><span class="refpurpose"> — 
+    The GTK+ drawing model in detail
 </span>
 </dt>
 </dl></dd>
@@ -174,7 +181,7 @@ Find answers to common questions in the GTK+ manual
 <span class="refentrytitle"><a href="gtk-Types.html">Types</a></span><span class="refpurpose"> — Handle run-time type creation</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gtk-Testing.html">Testing</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="gtk-Testing.html">Testing</a></span><span class="refpurpose"> — Utilities for testing GTK+ applications</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gtk-Filesystem-utilities.html">Filesystem utilities</a></span><span class="refpurpose"> — Functions for working with GIO</span>
@@ -403,13 +410,13 @@ Find answers to common questions in the GTK+ manual
 <span class="refentrytitle"><a href="GtkTearoffMenuItem.html">GtkTearoffMenuItem</a></span><span class="refpurpose"> — A menu item used to tear off and reattach its menu</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkToolShell.html">GtkToolShell</a></span><span class="refpurpose"> — Interface for containers containing <a class="link" href="GtkToolItem.html" title="GtkToolItem"><span class="type">GtkToolItem</span></a> widgets.</span>
+<span class="refentrytitle"><a href="GtkToolShell.html">GtkToolShell</a></span><span class="refpurpose"> — Interface for containers containing GtkToolItem widgets.</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkToolbar.html">GtkToolbar</a></span><span class="refpurpose"> — Create bars of buttons and other widgets</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkToolItem.html">GtkToolItem</a></span><span class="refpurpose"> — The base class of widgets that can be added to <a class="link" href="GtkToolShell.html" title="GtkToolShell"><span class="type">GtkToolShell</span></a></span>
+<span class="refentrytitle"><a href="GtkToolItem.html">GtkToolItem</a></span><span class="refpurpose"> — The base class of widgets that can be added to GtkToolShell</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkSeparatorToolItem.html">GtkSeparatorToolItem</a></span><span class="refpurpose"> — A toolbar item that separates groups of other toolbar items</span>
@@ -454,10 +461,13 @@ Find answers to common questions in the GTK+ manual
 <span class="refentrytitle"><a href="GtkColorButton.html">GtkColorButton</a></span><span class="refpurpose"> — A button to launch a color selection dialog</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="GtkColorSelectionDialog.html">GtkColorSelectionDialog</a></span><span class="refpurpose"> — A standard dialog box for selecting a color</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="GtkColorSelection.html">GtkColorSelection</a></span><span class="refpurpose"> — A widget used to select a color</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkColorSelectionDialog.html">GtkColorSelectionDialog</a></span><span class="refpurpose"> — A standard dialog box for selecting a color</span>
+<span class="refentrytitle"><a href="gtk-GtkHSV.html">GtkHSV</a></span><span class="refpurpose"> — A 'color wheel' widget</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkFileChooser.html">GtkFileChooser</a></span><span class="refpurpose"> — File chooser interface used by GtkFileChooserWidget and GtkFileChooserDialog</span>
@@ -528,6 +538,9 @@ Find answers to common questions in the GTK+ manual
 <dt>
 <span class="refentrytitle"><a href="GtkExpander.html">GtkExpander</a></span><span class="refpurpose"> — A container which can hide its child</span>
 </dt>
+<dt>
+<span class="refentrytitle"><a href="gtk-Orientable.html">GtkOrientable</a></span><span class="refpurpose"> — An interface for flippable widgets</span>
+</dt>
 </dl></dd>
 <dt><span class="chapter"><a href="Ornaments.html">Ornaments</a></span></dt>
 <dd><dl>
@@ -547,7 +560,7 @@ Find answers to common questions in the GTK+ manual
 <span class="refentrytitle"><a href="GtkHScrollbar.html">GtkHScrollbar</a></span><span class="refpurpose"> — A horizontal scrollbar</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkVScrollbar.html">GtkVScrollbar</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="GtkVScrollbar.html">GtkVScrollbar</a></span><span class="refpurpose"> — A vertical scrollbar</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkScrolledWindow.html">GtkScrolledWindow</a></span><span class="refpurpose"> — Adds scrollbars to its child widget</span>
@@ -840,6 +853,7 @@ Incompatible changes made between version 1.2 and version 2.0
 <dt><span class="chapter"><a href="gtk-migrating-GtkLinkButton.html">Migrating from GnomeHRef to GtkLinkButton</a></span></dt>
 <dt><span class="chapter"><a href="gtk-migrating-GtkBuilder.html">Migrating from libglade to GtkBuilder</a></span></dt>
 <dt><span class="chapter"><a href="gtk-migrating-tooltips.html">Migrating from GtkTooltips to GtkTooltip</a></span></dt>
+<dt><span class="chapter"><a href="gtk-migrating-entry-icons.html">Migrating from SexyIconEntry to GtkEntry</a></span></dt>
 </dl></dd>
 <dt><span class="part"><a href="pt05.html">V. GTK+ Tools</a></span></dt>
 <dd><dl>
@@ -863,6 +877,7 @@ Incompatible changes made between version 1.2 and version 2.0
 <dt><span class="index"><a href="api-index-2-10.html">Index of new symbols in 2.10</a></span></dt>
 <dt><span class="index"><a href="api-index-2-12.html">Index of new symbols in 2.12</a></span></dt>
 <dt><span class="index"><a href="api-index-2-14.html">Index of new symbols in 2.14</a></span></dt>
+<dt><span class="index"><a href="api-index-2-16.html">Index of new symbols in 2.16</a></span></dt>
 </dl></div>
 </div>
 <div class="footer">

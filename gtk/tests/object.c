@@ -55,6 +55,7 @@ list_ignore_properties (gboolean buglist)
 {
   /* currently untestable properties */
   static const IgnoreProperty ignore_properties[] = {
+    { "GtkCurve",               "",                     NULL, },                        /* Just ignore it, not worth fixing */
     { "GtkContainer",           "child",                NULL, },                        /* needs working child widget */
     { "GtkRadioMenuItem",       "group",                NULL, },                        /* needs working sibling */
     { "GtkWidget",              "parent",               NULL, },                        /* needs working parent widget */
@@ -87,31 +88,12 @@ list_ignore_properties (gboolean buglist)
   };
   /* properties suspected to be Gdk/Gtk+ bugs */
   static const IgnoreProperty bug_properties[] = {
-    { "GtkMessageDialog",       "image",                NULL, },                        /* FIXME: should accept NULL images */
-    { "GtkOptionMenu",          "menu",                 NULL, },                        /* FIXME: should accept NULL menus */
     { "GtkComboBox",            "active",               (void*) MATCH_ANY_VALUE },      /* FIXME: triggers NULL model bug */
-    { "GtkComboBoxEntry",       "text-column",          (void*) 0xffffffff },           /* FIXME: triggers signedness bug */
-    { "GtkCTree",               "indent",               (void*) MATCH_ANY_VALUE },      /* FIXME: triggers signedness bug */
     { "GtkCTree",               "spacing",              (void*) MATCH_ANY_VALUE },      /* FIXME: triggers signedness bug */
-    { "GtkCurve",               "curve-type",           (void*) MATCH_ANY_VALUE },      /* FIXME: triggers OOM */
-    { "GtkCurve",               "min-x",                (void*) 0x80000000 },           /* FIXME: triggers coordinate OOB */
-    { "GtkCurve",               "min-y",                (void*) 0x80000000 },           /* FIXME: triggers coordinate OOB */
-    { "GtkCurve",               "max-x",                (void*) 0x80000000 },           /* FIXME: triggers coordinate OOB */
-    { "GtkCurve",               "max-y",                (void*) 0x80000000 },           /* FIXME: triggers coordinate OOB */
     { "GtkFileChooserButton",   "local-only",           (void*) MATCH_ANY_VALUE },      /* FIXME: triggers NULL path assertion */
     { "GtkFileChooserDialog",   "local-only",           (void*) MATCH_ANY_VALUE },      /* FIXME: triggers NULL path assertion */
-    { "GtkFileChooserDialog",   "action",               (void*) MATCH_ANY_VALUE },      /* FIXME: triggers closure->ref_count assertion */
-    { "GtkFileChooserDialog",   "visible",              (void*) TRUE },                 /* FIXME: triggers gtk_window_resize assertion */
     { "GtkFileChooserWidget",   "local-only",           (void*) MATCH_ANY_VALUE },      /* FIXME: triggers NULL path assertion */
-    { "GtkFontSelection",       "font-name",            (void*) MATCH_ANY_VALUE },      /* FIXME: requires non-NULL GdkScreen */
-    { "GtkInvisible",           "has-focus",            (void*) TRUE },                 /* FIXME: triggers invalid window cast */
-    { "GtkInvisible",           "is-focus",             (void*) TRUE },                 /* FIXME: triggers invalid window cast */
     { "GtkMenu",                "tearoff-state",        (void*) MATCH_ANY_VALUE },      /* FIXME: triggers NULL widget cast */
-    { "GtkProgress",            "activity-mode",        (void*) TRUE },                 /* FIXME: segfaults */
-    { "GtkScaleButton",         "adjustment",           NULL, },                        /* FIXME: should accept NULL adjustments */
-    { "GtkStatusbar",           "sensitive",            (void*) FALSE },                /* FIXME: check if widget is realize */
-    { "GtkTable",               "n-rows",               (void*) MATCH_ANY_VALUE },      /* FIXME: fix property minimum/maximum */
-    { "GtkTable",               "n-columns",            (void*) MATCH_ANY_VALUE },      /* FIXME: fix property minimum/maximum */
     { "GtkText",                "text-position",        (void*) MATCH_ANY_VALUE },      /* FIXME: segfaults, fix property minimum/maximum */
     { NULL, NULL, NULL }
   };
@@ -241,7 +223,8 @@ object_test_property (GObject           *object,
       /* ignore untestable properties */
       ignore_properties = list_ignore_properties (FALSE);
       for (i = 0; ignore_properties[i].name; i++)
-        if (g_type_is_a (G_OBJECT_TYPE (object), g_type_from_name (ignore_properties[i].type_name)) &&
+        if (g_strcmp0 ("", ignore_properties[i].name) ||
+            g_type_is_a (G_OBJECT_TYPE (object), g_type_from_name (ignore_properties[i].type_name)) &&
             strcmp (pspec->name, ignore_properties[i].name) == 0 &&
             (MATCH_ANY_VALUE == ignore_properties[i].value ||
              value_as_pointer (&value) == ignore_properties[i].value ||
@@ -249,7 +232,7 @@ object_test_property (GObject           *object,
               strcmp (g_value_get_string (&value), ignore_properties[i].value) == 0)))
           break;
       /* ignore known property bugs if not testing thoroughly */
-      if (ignore_properties[i].name == NULL && !g_test_thorough())
+      if (ignore_properties[i].name == NULL && !g_test_thorough ())
         {
           ignore_properties = list_ignore_properties (TRUE);
           for (i = 0; ignore_properties[i].name; i++)
@@ -264,7 +247,7 @@ object_test_property (GObject           *object,
       /* assign unignored properties */
       if (ignore_properties[i].name == NULL)
         {
-          if (g_test_verbose())
+          if (g_test_verbose ())
             g_print ("PropertyTest: %s::%s := (%s value (%s): %p)\n",
                      g_type_name (G_OBJECT_TYPE (object)), pspec->name,
                      SELECT_NAME (dvalue), g_type_name (G_VALUE_TYPE (&value)),
@@ -344,7 +327,7 @@ main (int   argc,
   /* initialize test program */
   pixbuf_init ();
   gtk_test_init (&argc, &argv);
-  gtk_test_register_all_types();
+  gtk_test_register_all_types ();
   /* install a property test for each widget type */
   otypes = gtk_test_list_all_types (NULL);
   for (i = 0; otypes[i]; i++)
@@ -356,5 +339,5 @@ main (int   argc,
         g_test_add_data_func (testpath, (void*) otypes[i], widget_property_tests);
         g_free (testpath);
       }
-  return g_test_run();
+  return g_test_run ();
 }

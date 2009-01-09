@@ -238,6 +238,22 @@ gtk_target_flags_get_type (void)
     return etype;
 }
 
+/* enumerations from "gtkentry.h" */
+GType
+gtk_entry_icon_position_get_type (void)
+{
+    static GType etype = 0;
+    if (G_UNLIKELY(etype == 0)) {
+        static const GEnumValue values[] = {
+            { GTK_ENTRY_ICON_PRIMARY, "GTK_ENTRY_ICON_PRIMARY", "primary" },
+            { GTK_ENTRY_ICON_SECONDARY, "GTK_ENTRY_ICON_SECONDARY", "secondary" },
+            { 0, NULL, NULL }
+        };
+        etype = g_enum_register_static (g_intern_static_string ("GtkEntryIconPosition"), values);
+    }
+    return etype;
+}
+
 /* enumerations from "gtkenums.h" */
 GType
 gtk_anchor_type_get_type (void)
@@ -265,6 +281,22 @@ gtk_anchor_type_get_type (void)
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GtkAnchorType"), values);
+    }
+    return etype;
+}
+
+GType
+gtk_arrow_placement_get_type (void)
+{
+    static GType etype = 0;
+    if (G_UNLIKELY(etype == 0)) {
+        static const GEnumValue values[] = {
+            { GTK_ARROWS_BOTH, "GTK_ARROWS_BOTH", "both" },
+            { GTK_ARROWS_START, "GTK_ARROWS_START", "start" },
+            { GTK_ARROWS_END, "GTK_ARROWS_END", "end" },
+            { 0, NULL, NULL }
+        };
+        etype = g_enum_register_static (g_intern_static_string ("GtkArrowPlacement"), values);
     }
     return etype;
 }
@@ -1912,6 +1944,7 @@ gtk_ui_manager_item_type_get_type (void)
             { GTK_UI_MANAGER_TOOLITEM, "GTK_UI_MANAGER_TOOLITEM", "toolitem" },
             { GTK_UI_MANAGER_SEPARATOR, "GTK_UI_MANAGER_SEPARATOR", "separator" },
             { GTK_UI_MANAGER_ACCELERATOR, "GTK_UI_MANAGER_ACCELERATOR", "accelerator" },
+            { GTK_UI_MANAGER_POPUP_WITH_ACCELS, "GTK_UI_MANAGER_POPUP_WITH_ACCELS", "popup-with-accels" },
             { 0, NULL, NULL }
         };
         etype = g_flags_register_static (g_intern_static_string ("GtkUIManagerItemType"), values);

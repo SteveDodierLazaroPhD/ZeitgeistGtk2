@@ -61,7 +61,16 @@
 
 static GdkKeymap *default_keymap = NULL;
 
+/* Note: we could check only if building against the 10.5 SDK instead, but
+ * that would make non-xml layouts not work in 32-bit which would be a quite
+ * bad regression. This way, old unsupported layouts will just not work in
+ * 64-bit.
+ */
+#ifdef __LP64__
+static TISInputSourceRef current_layout = NULL;
+#else
 static KeyboardLayoutRef current_layout = NULL;
+#endif
 
 /* This is a table of all keyvals. Each keycode gets KEYVALS_PER_KEYCODE entries.
  * TThere is 1 keyval per modifier (Nothing, Shift, Alt, Shift+Alt);
@@ -179,28 +188,46 @@ const static struct {
 static void
 maybe_update_keymap (void)
 {
+  const void *chr_data = NULL;
+
+#ifdef __LP64__
+  TISInputSourceRef new_layout = TISCopyCurrentKeyboardLayoutInputSource ();
+  CFDataRef layout_data_ref;
+
+#else
   KeyboardLayoutRef new_layout;
+  KeyboardLayoutKind layout_kind;
 
   KLGetCurrentKeyboardLayout (&new_layout);
+#endif
 
   if (new_layout != current_layout)
     {
       guint *p;
       int i;
 
-      KeyboardLayoutKind layout_kind;
-      
       g_free (keyval_array);
       keyval_array = g_new0 (guint, NUM_KEYCODES * KEYVALS_PER_KEYCODE);
 
+#ifdef __LP64__
+      layout_data_ref = (CFDataRef) TISGetInputSourceProperty
+	(new_layout, kTISPropertyUnicodeKeyLayoutData);
+
+      if (layout_data_ref)
+	chr_data = CFDataGetBytePtr (layout_data_ref);
+
+      if (chr_data == NULL)
+	{
+	  g_error ("cannot get keyboard layout data");
+	  return;
+	}
+#else
       /* Get the layout kind */
       KLGetKeyboardLayoutProperty (new_layout, kKLKind, (const void **)&layout_kind);
 
       /* 8-bit-only keyabord layout */
       if (layout_kind == kKLKCHRKind)
 	{ 
-	  const void *chr_data;
-	  
 	  /* Get chr data */
 	  KLGetKeyboardLayoutProperty (new_layout, kKLKCHRData, (const void **)&chr_data);
 	  
@@ -282,10 +309,9 @@ maybe_update_keymap (void)
       /* unicode keyboard layout */
       else if (layout_kind == kKLKCHRuchrKind || layout_kind == kKLuchrKind)
 	{ 
-	  const void *chr_data;
-	  
 	  /* Get chr data */
 	  KLGetKeyboardLayoutProperty (new_layout, kKLuchrData, (const void **)&chr_data);
+#endif
 	  
 	  for (i = 0; i < NUM_KEYCODES; i++) 
 	    {
@@ -361,12 +387,14 @@ maybe_update_keymap (void)
 		  p[1] == p[3])
 		p[2] = p[3] = 0;
 	    }
+#ifndef __LP64__
 	}
       else
 	{
 	  g_error ("unknown type of keyboard layout (neither KCHR nor uchr)"
 	           " - not supported right now");
 	}
+#endif
 
       for (i = 0; i < G_N_ELEMENTS (known_keys); i++)
 	{
@@ -413,6 +441,13 @@ gboolean
 gdk_keymap_have_bidi_layouts (GdkKeymap *keymap)
 {
   /* FIXME: Can we implement this? */
+  return FALSE;
+}
+
+gboolean
+gdk_keymap_get_caps_lock_state (GdkKeymap *keymap)
+{
+  /* FIXME: Implement this. */
   return FALSE;
 }
 

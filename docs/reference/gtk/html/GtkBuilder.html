@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -383,8 +385,12 @@ which may help the translators.
 GtkBuilder can parse textual representations for the most
 common property types: characters, strings, integers, floating-point
 numbers, booleans (strings like "TRUE", "t", "yes", "y", "1" are
-interpreted as <code class="literal">TRUE</code>, strings like "FALSE, "f", "no", "n", "0" are
-interpreted as <code class="literal">FALSE</code>), enumerations (can be specified by their
+interpreted as <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, strings like "FALSE, "f", "no", "n", "0" are
+interpreted as <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>), enumerations (can be specified by their
 name, nick or integer value), flags (can be specified by their name,
 nick, integer value, optionally combined with "|", e.g.
 "GTK_VISIBLE|GTK_REALIZED")  and colors (in a format understood by
@@ -432,7 +438,7 @@ The possible values for the "type" attribute are described in
 the sections describing the widget-specific portions of UI definitions.
 </p>
 <div class="example">
-<a name="id3766551"></a><p class="title"><b>Example 53. A GtkBuilder UI Definition</b></p>
+<a name="id3783462"></a><p class="title"><b>Example 56. A GtkBuilder UI Definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;interface&gt;
   &lt;object class="GtkDialog" id="dialog1"&gt;
@@ -470,6 +476,7 @@ These XML fragments are explained in the documentation of the
 respective objects, see
 <a class="link" href="GtkWidget.html#GtkWidget-BUILDER-UI" title="GtkWidget as GtkBuildable">GtkWidget</a>,
 <a class="link" href="GtkLabel.html#GtkLabel-BUILDER-UI" title="GtkLabel as GtkBuildable">GtkLabel</a>,
+<a class="link" href="GtkWindow.html#GtkWindow-BUILDER-UI" title="GtkWindow as GtkBuildable">GtkWindow</a>,
 <a class="link" href="GtkContainer.html#GtkContainer-BUILDER-UI" title="GtkContainer as GtkBuildable">GtkContainer</a>,
 <a class="link" href="GtkDialog.html#GtkDialog-BUILDER-UI" title="GtkDialog as GtkBuildable">GtkDialog</a>,
 <a class="link" href="GtkCellLayout.html#GtkCellLayout-BUILDER-UI" title="GtkCellLayouts as GtkBuildable">GtkCellLayout</a>,
@@ -485,6 +492,7 @@ respective objects, see
 <a class="link" href="GtkTreeView.html#GtkTreeView-BUILDER-UI" title="GtkTreeView as GtkBuildable">GtkTreeView</a>,
 <a class="link" href="GtkUIManager.html#GtkUIManager-BUILDER-UI" title="GtkUIManager as GtkBuildable">GtkUIManager</a>,
 <a class="link" href="GtkActionGroup.html#GtkActionGroup-BUILDER-UI" title="GtkActionGroup as GtkBuildable">GtkActionGroup</a>.
+<a class="link" href="GtkMenuItem.html#GtkMenuItem-BUILDER-UI" title="GtkMenuItem as GtkBuildable">GtkMenuItem</a>.
 </p>
 </div>
 </div>
@@ -553,7 +561,9 @@ connection process.</p>
 <td><p><span class="term"><em class="parameter"><code>connect_object</code></em> :</span></p></td>
 <td> a <a
 href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
-><span class="type">GObject</span></a>, if non-<code class="literal">NULL</code>, use <a
+><span class="type">GObject</span></a>, if non-<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, use <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-object"
 ><code class="function">g_signal_connect_object()</code></a>
 </td>
@@ -590,7 +600,64 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#GConnectFlags"
 } GtkBuilderError;
 </pre>
 <p>
+Error codes that identify various errors that can occur while
+using <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-INVALID-TYPE-FUNCTION--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION</code></span></p></td>
+<td>A type-func attribute didn't name
+    a function that returns a <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
+><span class="type">GType</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-UNHANDLED-TAG--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_UNHANDLED_TAG</code></span></p></td>
+<td>The input contained a tag that <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
+    can't handle.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-MISSING-ATTRIBUTE--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_MISSING_ATTRIBUTE</code></span></p></td>
+<td>An attribute that is required by
+    <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> was missing.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-INVALID-ATTRIBUTE--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_INVALID_ATTRIBUTE</code></span></p></td>
+<td>#GtkBuilder found an attribute that 
+    it doesn't understand.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-INVALID-TAG--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_INVALID_TAG</code></span></p></td>
+<td>#GtkBuilder found a tag that
+    it doesn't understand.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-MISSING-PROPERTY-VALUE--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE</code></span></p></td>
+<td>A required property value was 
+    missing.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-INVALID-VALUE--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_INVALID_VALUE</code></span></p></td>
+<td>#GtkBuilder couldn't parse
+    some attribute value.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-BUILDER-ERROR-VERSION-MISMATCH--CAPS"></a><span class="term"><code class="literal">GTK_BUILDER_ERROR_VERSION_MISMATCH</code></span></p></td>
+<td>The input file requires a newer version
+    of GTK+.
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -643,7 +710,9 @@ UI definition</a> and merges it with the current contents of <em class="paramete
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <code class="literal">NULL</code>
+<td> return location for an error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -696,7 +765,9 @@ UI definition</a> and merges it with the current contents of <em class="paramete
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <code class="literal">NULL</code>
+<td> return location for an error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -761,7 +832,9 @@ its child (for instance a <a class="link" href="GtkTreeView.html" title="GtkTree
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <code class="literal">NULL</code>
+<td> return location for an error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -834,7 +907,9 @@ its child (for instance a <a class="link" href="GtkTreeView.html" title="GtkTree
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <code class="literal">NULL</code>
+<td> return location for an error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -876,7 +951,9 @@ increment the reference count of the returned object.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the object named <em class="parameter"><code>name</code></em> or <code class="literal">NULL</code> if it could not be 
+<td> the object named <em class="parameter"><code>name</code></em> or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if it could not be 
    found in the object tree. 
 
 </td>
@@ -932,7 +1009,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 This method is a simpler variation of <a class="link" href="GtkBuilder.html#gtk-builder-connect-signals-full" title="gtk_builder_connect_signals_full ()"><code class="function">gtk_builder_connect_signals_full()</code></a>.
 It uses <a
 href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"
-><span class="type">GModule</span></a>'s introspective features (by opening the module <code class="literal">NULL</code>) 
+><span class="type">GModule</span></a>'s introspective features (by opening the module <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>) 
 to look at the application's symbol table. From here it tries to match
 the signal handler names given in the interface description with
 symbols in the application and connects the signals.
@@ -945,7 +1024,9 @@ supported on the platform.
 </p>
 <p>
 When compiling applications for Windows, you must declare signal callbacks
-with <span class="type">G_MODULE_EXPORT</span>, or they will not be put in the symbol table.
+with <a
+href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#G-MODULE-EXPORT--CAPS"
+><span class="type">G_MODULE_EXPORT</span></a>, or they will not be put in the symbol table.
 On Linux and Unices, this is not necessary; applications should instead
 be compiled with the -Wl,--export-dynamic CFLAGS, and linked against
 gmodule-export-2.0.</p>
@@ -1026,7 +1107,9 @@ See <a class="link" href="GtkBuilder.html#GtkBuilder--translation-domain" title=
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>domain</code></em> :</span></p></td>
-<td> the translation domain or <code class="literal">NULL</code>
+<td> the translation domain or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1092,7 +1175,9 @@ implementing the <a class="link" href="gtk-gtkbuildable.html#GtkBuildable"><span
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the <a
 href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"
-><span class="type">GType</span></a> found for <em class="parameter"><code>type_name</code></em> or <span class="type">G_TYPE_INVALID</span> 
+><span class="type">GType</span></a> found for <em class="parameter"><code>type_name</code></em> or <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-INVALID--CAPS"
+><span class="type">G_TYPE_INVALID</span></a> 
   if no type was found
 
 </td>
@@ -1164,12 +1249,16 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <code class="literal">NULL</code>
+<td> return location for an error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> on success
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> on success
 
 </td>
 </tr>
@@ -1237,12 +1326,16 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <code class="literal">NULL</code>
+<td> return location for an error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> on success
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> on success
 
 </td>
 </tr>
@@ -1255,18 +1348,20 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 <a name="GTK-BUILDER-WARN-INVALID-CHILD-TYPE--CAPS"></a><h3>GTK_BUILDER_WARN_INVALID_CHILD_TYPE()</h3>
 <pre class="programlisting">#define             GTK_BUILDER_WARN_INVALID_CHILD_TYPE(object, type)</pre>
 <p>
+This macro should be used to emit a warning about and unexpected
+<em class="parameter"><code>type</code></em> value in a <a class="link" href="gtk-gtkbuildable.html#GtkBuildable"><span class="type">GtkBuildable</span></a> add_child implementation.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td>
+<td>the <a class="link" href="gtk-gtkbuildable.html#GtkBuildable"><span class="type">GtkBuildable</span></a> on which the warning ocurred
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
-<td>
+<td>the unexpected type value
 </td>
 </tr>
 </tbody>
@@ -1278,6 +1373,9 @@ href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"
 <pre class="programlisting">#define GTK_BUILDER_ERROR                (gtk_builder_error_quark ())
 </pre>
 <p>
+The <a
+href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
+><span class="type">GError</span></a> quark for <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> errors
 </p>
 </div>
 </div>
@@ -1291,7 +1389,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 <p>
 The translation domain used when translating property values that
 have been marked as translatable in interface descriptions.
-If the translation domain is <code class="literal">NULL</code>, <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> uses <a
+If the translation domain is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> uses <a
 href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#gettext"
 ><code class="function">gettext()</code></a>,
 otherwise <a

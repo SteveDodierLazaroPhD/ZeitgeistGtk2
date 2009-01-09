@@ -771,7 +771,7 @@ same as for styles.
 <title role="details.title">Details</title>
 <refsect2 id="GtkRcStyle-struct" role="struct">
 <title>GtkRcStyle</title>
-<indexterm zone="GtkRcStyle-struct"><primary sortas="GtkRcStyle">GtkRcStyle</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GtkRcStyle-struct"><primary sortas="RcStyle">GtkRcStyle</primary></indexterm><programlisting>typedef struct {
   gchar *name;
   gchar *bg_pixmap_name[5];
   PangoFontDescription *font_desc;
@@ -794,7 +794,7 @@ This can later be composited together with other
 </para></refsect2>
 <refsect2 id="GtkRcFlags" role="enum">
 <title>enum GtkRcFlags</title>
-<indexterm zone="GtkRcFlags"><primary sortas="GtkRcFlags">GtkRcFlags</primary></indexterm><programlisting>typedef enum
+<indexterm zone="GtkRcFlags"><primary sortas="RcFlags">GtkRcFlags</primary></indexterm><programlisting>typedef enum
 {
   GTK_RC_FG		= 1 &lt;&lt; 0,
   GTK_RC_BG		= 1 &lt;&lt; 1,
@@ -830,7 +830,7 @@ set for each state.
 </variablelist></refsect2>
 <refsect2 id="GtkRcTokenType" role="enum">
 <title>enum GtkRcTokenType</title>
-<indexterm zone="GtkRcTokenType"><primary sortas="GtkRcTokenType">GtkRcTokenType</primary></indexterm><programlisting>typedef enum {
+<indexterm zone="GtkRcTokenType"><primary sortas="RcTokenType">GtkRcTokenType</primary></indexterm><programlisting>typedef enum {
   GTK_RC_TOKEN_INVALID = G_TOKEN_LAST,
   GTK_RC_TOKEN_INCLUDE,
   GTK_RC_TOKEN_NORMAL,
@@ -881,7 +881,7 @@ specific portions of a RC file.
 </para></refsect2>
 <refsect2 id="gtk-rc-scanner-new" role="function">
 <title>gtk_rc_scanner_new ()</title>
-<indexterm zone="gtk-rc-scanner-new"><primary sortas="gtk_rc_scanner_new">gtk_rc_scanner_new</primary></indexterm><programlisting><link linkend="GScanner">GScanner</link>*           gtk_rc_scanner_new                  (void);</programlisting>
+<indexterm zone="gtk-rc-scanner-new"><primary sortas="rc_scanner_new">gtk_rc_scanner_new</primary></indexterm><programlisting><link linkend="GScanner">GScanner</link>*           gtk_rc_scanner_new                  (void);</programlisting>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>
@@ -889,7 +889,7 @@ specific portions of a RC file.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-get-style" role="function">
 <title>gtk_rc_get_style ()</title>
-<indexterm zone="gtk-rc-get-style"><primary sortas="gtk_rc_get_style">gtk_rc_get_style</primary></indexterm><programlisting><link linkend="GtkStyle">GtkStyle</link>*           gtk_rc_get_style                    (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<indexterm zone="gtk-rc-get-style"><primary sortas="rc_get_style">gtk_rc_get_style</primary></indexterm><programlisting><link linkend="GtkStyle">GtkStyle</link>*           gtk_rc_get_style                    (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 Finds all matching RC styles for a given widget,
 composites them together, and then creates a 
@@ -909,7 +909,7 @@ created.)</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-get-style-by-paths" role="function">
 <title>gtk_rc_get_style_by_paths ()</title>
-<indexterm zone="gtk-rc-get-style-by-paths"><primary sortas="gtk_rc_get_style_by_paths">gtk_rc_get_style_by_paths</primary></indexterm><programlisting><link linkend="GtkStyle">GtkStyle</link>*           gtk_rc_get_style_by_paths           (<link linkend="GtkSettings">GtkSettings</link> *settings,
+<indexterm zone="gtk-rc-get-style-by-paths"><primary sortas="rc_get_style_by_paths">gtk_rc_get_style_by_paths</primary></indexterm><programlisting><link linkend="GtkStyle">GtkStyle</link>*           gtk_rc_get_style_by_paths           (<link linkend="GtkSettings">GtkSettings</link> *settings,
                                                          const <link linkend="char">char</link> *widget_path,
                                                          const <link linkend="char">char</link> *class_path,
                                                          <link linkend="GType">GType</link> type);</programlisting>
@@ -953,17 +953,15 @@ The action of <link linkend="gtk-rc-get-style"><function>gtk_rc_get_style()</fun
   keep a reference to it.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-rc-add-widget-name-style" role="function" condition="deprecated:">
+<refsect2 id="gtk-rc-add-widget-name-style" role="function" condition="deprecated:Use gtk_rc_parse_string() with a suitable string instead.">
 <title>gtk_rc_add_widget_name_style ()</title>
-<indexterm zone="gtk-rc-add-widget-name-style" role="deprecated"><primary sortas="gtk_rc_add_widget_name_style">gtk_rc_add_widget_name_style</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_widget_name_style        (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style,
+<indexterm zone="gtk-rc-add-widget-name-style" role="deprecated"><primary sortas="rc_add_widget_name_style">gtk_rc_add_widget_name_style</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_widget_name_style        (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style,
                                                          const <link linkend="gchar">gchar</link> *pattern);</programlisting>
-<warning><para><literal>gtk_rc_add_widget_name_style</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_rc_add_widget_name_style</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-rc-parse-string"><function>gtk_rc_parse_string()</function></link> with a suitable string instead.</para></warning>
 <para>
 Adds a <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link> that will be looked up by a match against
 the widget's pathname. This is equivalent to a:
-<literal>
-widget PATTERN style STYLE
-</literal>
+ <literal>widget PATTERN style STYLE</literal>
 statement in a RC file.
 </para><variablelist role="params">
 <varlistentry><term><parameter>rc_style</parameter>&#160;:</term>
@@ -973,17 +971,15 @@ statement in a RC file.
 <listitem><simpara>the pattern
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-rc-add-widget-class-style" role="function" condition="deprecated:">
+<refsect2 id="gtk-rc-add-widget-class-style" role="function" condition="deprecated:Use gtk_rc_parse_string() with a suitable string instead.">
 <title>gtk_rc_add_widget_class_style ()</title>
-<indexterm zone="gtk-rc-add-widget-class-style" role="deprecated"><primary sortas="gtk_rc_add_widget_class_style">gtk_rc_add_widget_class_style</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_widget_class_style       (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style,
+<indexterm zone="gtk-rc-add-widget-class-style" role="deprecated"><primary sortas="rc_add_widget_class_style">gtk_rc_add_widget_class_style</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_widget_class_style       (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style,
                                                          const <link linkend="gchar">gchar</link> *pattern);</programlisting>
-<warning><para><literal>gtk_rc_add_widget_class_style</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_rc_add_widget_class_style</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-rc-parse-string"><function>gtk_rc_parse_string()</function></link> with a suitable string instead.</para></warning>
 <para>
 Adds a <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link> that will be looked up by a match against
 the widget's class pathname. This is equivalent to a:
-<literal>
-widget_class PATTERN style STYLE
-</literal>
+<literal>widget_class PATTERN style STYLE</literal>
 statement in a RC file.
 </para><variablelist role="params">
 <varlistentry><term><parameter>rc_style</parameter>&#160;:</term>
@@ -993,17 +989,15 @@ statement in a RC file.
 <listitem><simpara>the pattern
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gtk-rc-add-class-style" role="function" condition="deprecated:">
+<refsect2 id="gtk-rc-add-class-style" role="function" condition="deprecated:Use gtk_rc_parse_string() with a suitable string instead.">
 <title>gtk_rc_add_class_style ()</title>
-<indexterm zone="gtk-rc-add-class-style" role="deprecated"><primary sortas="gtk_rc_add_class_style">gtk_rc_add_class_style</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_class_style              (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style,
+<indexterm zone="gtk-rc-add-class-style" role="deprecated"><primary sortas="rc_add_class_style">gtk_rc_add_class_style</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_class_style              (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style,
                                                          const <link linkend="gchar">gchar</link> *pattern);</programlisting>
-<warning><para><literal>gtk_rc_add_class_style</literal> is deprecated and should not be used in newly-written code.</para></warning>
+<warning><para><literal>gtk_rc_add_class_style</literal> is deprecated and should not be used in newly-written code. Use <link linkend="gtk-rc-parse-string"><function>gtk_rc_parse_string()</function></link> with a suitable string instead.</para></warning>
 <para>
 Adds a <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link> that will be looked up by a matching against
 the class hierarchy of the widget. This is equivalent to a:
-<literal>
-class PATTERN style STYLE
-</literal>
+<literal>class PATTERN style STYLE</literal>
 statement in a RC file.
 </para><variablelist role="params">
 <varlistentry><term><parameter>rc_style</parameter>&#160;:</term>
@@ -1015,7 +1009,7 @@ statement in a RC file.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-parse" role="function">
 <title>gtk_rc_parse ()</title>
-<indexterm zone="gtk-rc-parse"><primary sortas="gtk_rc_parse">gtk_rc_parse</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_parse                        (const <link linkend="gchar">gchar</link> *filename);</programlisting>
+<indexterm zone="gtk-rc-parse"><primary sortas="rc_parse">gtk_rc_parse</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_parse                        (const <link linkend="gchar">gchar</link> *filename);</programlisting>
 <para>
 Parses a given resource file.
 </para><variablelist role="params">
@@ -1026,7 +1020,7 @@ Parses a given resource file.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-parse-string" role="function">
 <title>gtk_rc_parse_string ()</title>
-<indexterm zone="gtk-rc-parse-string"><primary sortas="gtk_rc_parse_string">gtk_rc_parse_string</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_parse_string                 (const <link linkend="gchar">gchar</link> *rc_string);</programlisting>
+<indexterm zone="gtk-rc-parse-string"><primary sortas="rc_parse_string">gtk_rc_parse_string</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_parse_string                 (const <link linkend="gchar">gchar</link> *rc_string);</programlisting>
 <para>
 Parses resource information directly from a string.
 </para><variablelist role="params">
@@ -1036,7 +1030,7 @@ Parses resource information directly from a string.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-reparse-all" role="function">
 <title>gtk_rc_reparse_all ()</title>
-<indexterm zone="gtk-rc-reparse-all"><primary sortas="gtk_rc_reparse_all">gtk_rc_reparse_all</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_rc_reparse_all                  (void);</programlisting>
+<indexterm zone="gtk-rc-reparse-all"><primary sortas="rc_reparse_all">gtk_rc_reparse_all</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_rc_reparse_all                  (void);</programlisting>
 <para>
 If the modification time on any previously read file for the
 default <link linkend="GtkSettings"><type>GtkSettings</type></link> has changed, discard all style information
@@ -1048,7 +1042,7 @@ and then reread all previously read RC files.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-reparse-all-for-settings" role="function">
 <title>gtk_rc_reparse_all_for_settings ()</title>
-<indexterm zone="gtk-rc-reparse-all-for-settings"><primary sortas="gtk_rc_reparse_all_for_settings">gtk_rc_reparse_all_for_settings</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_rc_reparse_all_for_settings     (<link linkend="GtkSettings">GtkSettings</link> *settings,
+<indexterm zone="gtk-rc-reparse-all-for-settings"><primary sortas="rc_reparse_all_for_settings">gtk_rc_reparse_all_for_settings</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_rc_reparse_all_for_settings     (<link linkend="GtkSettings">GtkSettings</link> *settings,
                                                          <link linkend="gboolean">gboolean</link> force_load);</programlisting>
 <para>
 If the modification time on any previously read file
@@ -1067,7 +1061,7 @@ and then reread all previously read RC files.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-reset-styles" role="function" condition="since:2.4">
 <title>gtk_rc_reset_styles ()</title>
-<indexterm zone="gtk-rc-reset-styles" role="2.4"><primary sortas="gtk_rc_reset_styles">gtk_rc_reset_styles</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_reset_styles                 (<link linkend="GtkSettings">GtkSettings</link> *settings);</programlisting>
+<indexterm zone="gtk-rc-reset-styles" role="2.4"><primary sortas="rc_reset_styles">gtk_rc_reset_styles</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_reset_styles                 (<link linkend="GtkSettings">GtkSettings</link> *settings);</programlisting>
 <para>
 This function recomputes the styles for all widgets that use a
 particular <link linkend="GtkSettings"><type>GtkSettings</type></link> object. (There is one <link linkend="GtkSettings"><type>GtkSettings</type></link> object
@@ -1087,7 +1081,7 @@ with <link linkend="gtk-widget-set-style"><function>gtk_widget_set_style()</func
 </variablelist><para role="since">Since 2.4</para></refsect2>
 <refsect2 id="gtk-rc-add-default-file" role="function">
 <title>gtk_rc_add_default_file ()</title>
-<indexterm zone="gtk-rc-add-default-file"><primary sortas="gtk_rc_add_default_file">gtk_rc_add_default_file</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_default_file             (const <link linkend="gchar">gchar</link> *filename);</programlisting>
+<indexterm zone="gtk-rc-add-default-file"><primary sortas="rc_add_default_file">gtk_rc_add_default_file</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_add_default_file             (const <link linkend="gchar">gchar</link> *filename);</programlisting>
 <para>
 Adds a file to the list of files to be parsed at the
 end of <link linkend="gtk-init"><function>gtk_init()</function></link>.</para>
@@ -1100,7 +1094,7 @@ end of <link linkend="gtk-init"><function>gtk_init()</function></link>.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-get-default-files" role="function">
 <title>gtk_rc_get_default_files ()</title>
-<indexterm zone="gtk-rc-get-default-files"><primary sortas="gtk_rc_get_default_files">gtk_rc_get_default_files</primary></indexterm><programlisting><link linkend="gchar">gchar</link>**             gtk_rc_get_default_files            (void);</programlisting>
+<indexterm zone="gtk-rc-get-default-files"><primary sortas="rc_get_default_files">gtk_rc_get_default_files</primary></indexterm><programlisting><link linkend="gchar">gchar</link>**             gtk_rc_get_default_files            (void);</programlisting>
 <para>
 Retrieves the current list of RC files that will be parsed
 at the end of <link linkend="gtk-init"><function>gtk_init()</function></link>.</para>
@@ -1113,7 +1107,7 @@ If you want to store this information, you should make a copy.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-set-default-files" role="function">
 <title>gtk_rc_set_default_files ()</title>
-<indexterm zone="gtk-rc-set-default-files"><primary sortas="gtk_rc_set_default_files">gtk_rc_set_default_files</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_set_default_files            (<link linkend="gchar">gchar</link> **filenames);</programlisting>
+<indexterm zone="gtk-rc-set-default-files"><primary sortas="rc_set_default_files">gtk_rc_set_default_files</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_set_default_files            (<link linkend="gchar">gchar</link> **filenames);</programlisting>
 <para>
 Sets the list of files that GTK+ will read at the
 end of <link linkend="gtk-init"><function>gtk_init()</function></link>.</para>
@@ -1125,7 +1119,7 @@ end of <link linkend="gtk-init"><function>gtk_init()</function></link>.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-parse-color" role="function">
 <title>gtk_rc_parse_color ()</title>
-<indexterm zone="gtk-rc-parse-color"><primary sortas="gtk_rc_parse_color">gtk_rc_parse_color</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_color                  (<link linkend="GScanner">GScanner</link> *scanner,
+<indexterm zone="gtk-rc-parse-color"><primary sortas="rc_parse_color">gtk_rc_parse_color</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_color                  (<link linkend="GScanner">GScanner</link> *scanner,
                                                          <link linkend="GdkColor">GdkColor</link> *color);</programlisting>
 <para>
 Parses a color in the <link linkend="color=format">format</link> expected
@@ -1148,7 +1142,7 @@ order to support symbolic colors.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-parse-color-full" role="function" condition="since:2.12">
 <title>gtk_rc_parse_color_full ()</title>
-<indexterm zone="gtk-rc-parse-color-full" role="2.12"><primary sortas="gtk_rc_parse_color_full">gtk_rc_parse_color_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_color_full             (<link linkend="GScanner">GScanner</link> *scanner,
+<indexterm zone="gtk-rc-parse-color-full" role="2.12"><primary sortas="rc_parse_color_full">gtk_rc_parse_color_full</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_color_full             (<link linkend="GScanner">GScanner</link> *scanner,
                                                          <link linkend="GtkRcStyle">GtkRcStyle</link> *style,
                                                          <link linkend="GdkColor">GdkColor</link> *color);</programlisting>
 <para>
@@ -1173,7 +1167,7 @@ references to symbolic colors.</para>
 </variablelist><para role="since">Since 2.12</para></refsect2>
 <refsect2 id="gtk-rc-parse-state" role="function">
 <title>gtk_rc_parse_state ()</title>
-<indexterm zone="gtk-rc-parse-state"><primary sortas="gtk_rc_parse_state">gtk_rc_parse_state</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_state                  (<link linkend="GScanner">GScanner</link> *scanner,
+<indexterm zone="gtk-rc-parse-state"><primary sortas="rc_parse_state">gtk_rc_parse_state</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_state                  (<link linkend="GScanner">GScanner</link> *scanner,
                                                          <link linkend="GtkStateType">GtkStateType</link> *state);</programlisting>
 <para>
 Parses a <link linkend="GtkStateType"><type>GtkStateType</type></link> variable from the format expected
@@ -1192,7 +1186,7 @@ that was expected but not found.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-parse-priority" role="function">
 <title>gtk_rc_parse_priority ()</title>
-<indexterm zone="gtk-rc-parse-priority"><primary sortas="gtk_rc_parse_priority">gtk_rc_parse_priority</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_priority               (<link linkend="GScanner">GScanner</link> *scanner,
+<indexterm zone="gtk-rc-parse-priority"><primary sortas="rc_parse_priority">gtk_rc_parse_priority</primary></indexterm><programlisting><link linkend="guint">guint</link>               gtk_rc_parse_priority               (<link linkend="GScanner">GScanner</link> *scanner,
                                                          <link linkend="GtkPathPriorityType">GtkPathPriorityType</link> *priority);</programlisting>
 <para>
 Parses a <link linkend="GtkPathPriorityType"><type>GtkPathPriorityType</type></link> variable from the format expected
@@ -1211,7 +1205,7 @@ that was expected but not found.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-find-module-in-path" role="function">
 <title>gtk_rc_find_module_in_path ()</title>
-<indexterm zone="gtk-rc-find-module-in-path"><primary sortas="gtk_rc_find_module_in_path">gtk_rc_find_module_in_path</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_find_module_in_path          (const <link linkend="gchar">gchar</link> *module_file);</programlisting>
+<indexterm zone="gtk-rc-find-module-in-path"><primary sortas="rc_find_module_in_path">gtk_rc_find_module_in_path</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_find_module_in_path          (const <link linkend="gchar">gchar</link> *module_file);</programlisting>
 <para>
 Searches for a theme engine in the GTK+ search path. This function
 is not useful for applications and should not be used.</para>
@@ -1226,7 +1220,7 @@ is not useful for applications and should not be used.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-find-pixmap-in-path" role="function">
 <title>gtk_rc_find_pixmap_in_path ()</title>
-<indexterm zone="gtk-rc-find-pixmap-in-path"><primary sortas="gtk_rc_find_pixmap_in_path">gtk_rc_find_pixmap_in_path</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_find_pixmap_in_path          (<link linkend="GtkSettings">GtkSettings</link> *settings,
+<indexterm zone="gtk-rc-find-pixmap-in-path"><primary sortas="rc_find_pixmap_in_path">gtk_rc_find_pixmap_in_path</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_find_pixmap_in_path          (<link linkend="GtkSettings">GtkSettings</link> *settings,
                                                          <link linkend="GScanner">GScanner</link> *scanner,
                                                          const <link linkend="gchar">gchar</link> *pixmap_file);</programlisting>
 <para>
@@ -1250,7 +1244,7 @@ If the file is not found, it outputs a warning message using
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-get-module-dir" role="function">
 <title>gtk_rc_get_module_dir ()</title>
-<indexterm zone="gtk-rc-get-module-dir"><primary sortas="gtk_rc_get_module_dir">gtk_rc_get_module_dir</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_module_dir               (void);</programlisting>
+<indexterm zone="gtk-rc-get-module-dir"><primary sortas="rc_get_module_dir">gtk_rc_get_module_dir</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_module_dir               (void);</programlisting>
 <para>
 Returns a directory in which GTK+ looks for theme engines.
 For full information about the search for theme engines,
@@ -1263,7 +1257,7 @@ see the docs for <envar>GTK_PATH</envar> in
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-get-im-module-path" role="function">
 <title>gtk_rc_get_im_module_path ()</title>
-<indexterm zone="gtk-rc-get-im-module-path"><primary sortas="gtk_rc_get_im_module_path">gtk_rc_get_im_module_path</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_im_module_path           (void);</programlisting>
+<indexterm zone="gtk-rc-get-im-module-path"><primary sortas="rc_get_im_module_path">gtk_rc_get_im_module_path</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_im_module_path           (void);</programlisting>
 <para>
 Obtains the path in which to look for IM modules. See the documentation
 of the <link linkend="im-module-path"><envar>GTK_PATH</envar></link>
@@ -1278,7 +1272,7 @@ not be used by applications under normal circumstances.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-get-im-module-file" role="function">
 <title>gtk_rc_get_im_module_file ()</title>
-<indexterm zone="gtk-rc-get-im-module-file"><primary sortas="gtk_rc_get_im_module_file">gtk_rc_get_im_module_file</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_im_module_file           (void);</programlisting>
+<indexterm zone="gtk-rc-get-im-module-file"><primary sortas="rc_get_im_module_file">gtk_rc_get_im_module_file</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_im_module_file           (void);</programlisting>
 <para>
 Obtains the path to the IM modules file. See the documentation
 of the <link linkend="im-module-file"><envar>GTK_IM_MODULE_FILE</envar></link>
@@ -1291,7 +1285,7 @@ listing the IM modules available for loading
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-get-theme-dir" role="function">
 <title>gtk_rc_get_theme_dir ()</title>
-<indexterm zone="gtk-rc-get-theme-dir"><primary sortas="gtk_rc_get_theme_dir">gtk_rc_get_theme_dir</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_theme_dir                (void);</programlisting>
+<indexterm zone="gtk-rc-get-theme-dir"><primary sortas="rc_get_theme_dir">gtk_rc_get_theme_dir</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gtk_rc_get_theme_dir                (void);</programlisting>
 <para>
 Returns the standard directory in which themes should
 be installed. (GTK+ does not actually use this directory
@@ -1302,7 +1296,7 @@ itself.)
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-style-new" role="function">
 <title>gtk_rc_style_new ()</title>
-<indexterm zone="gtk-rc-style-new"><primary sortas="gtk_rc_style_new">gtk_rc_style_new</primary></indexterm><programlisting><link linkend="GtkRcStyle">GtkRcStyle</link>*         gtk_rc_style_new                    (void);</programlisting>
+<indexterm zone="gtk-rc-style-new"><primary sortas="rc_style_new">gtk_rc_style_new</primary></indexterm><programlisting><link linkend="GtkRcStyle">GtkRcStyle</link>*         gtk_rc_style_new                    (void);</programlisting>
 <para>
 Creates a new <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link> with no fields set and
 a reference count of 1.
@@ -1312,7 +1306,7 @@ a reference count of 1.
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-style-copy" role="function">
 <title>gtk_rc_style_copy ()</title>
-<indexterm zone="gtk-rc-style-copy"><primary sortas="gtk_rc_style_copy">gtk_rc_style_copy</primary></indexterm><programlisting><link linkend="GtkRcStyle">GtkRcStyle</link>*         gtk_rc_style_copy                   (<link linkend="GtkRcStyle">GtkRcStyle</link> *orig);</programlisting>
+<indexterm zone="gtk-rc-style-copy"><primary sortas="rc_style_copy">gtk_rc_style_copy</primary></indexterm><programlisting><link linkend="GtkRcStyle">GtkRcStyle</link>*         gtk_rc_style_copy                   (<link linkend="GtkRcStyle">GtkRcStyle</link> *orig);</programlisting>
 <para>
 Makes a copy of the specified <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link>. This function
 will correctly copy an RC style that is a member of a class
@@ -1327,7 +1321,7 @@ derived from <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link>.</para>
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-style-ref" role="function" condition="deprecated:Use g_object_ref() instead">
 <title>gtk_rc_style_ref ()</title>
-<indexterm zone="gtk-rc-style-ref" role="deprecated"><primary sortas="gtk_rc_style_ref">gtk_rc_style_ref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_style_ref                    (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style);</programlisting>
+<indexterm zone="gtk-rc-style-ref" role="deprecated"><primary sortas="rc_style_ref">gtk_rc_style_ref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_style_ref                    (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style);</programlisting>
 <warning><para><literal>gtk_rc_style_ref</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-ref"><function>g_object_ref()</function></link> instead</para></warning>
 <para>
 Increments the reference count of a <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link>.
@@ -1338,7 +1332,7 @@ Increments the reference count of a <link linkend="GtkRcStyle"><type>GtkRcStyle<
 </variablelist></refsect2>
 <refsect2 id="gtk-rc-style-unref" role="function" condition="deprecated:Use g_object_unref() instead">
 <title>gtk_rc_style_unref ()</title>
-<indexterm zone="gtk-rc-style-unref" role="deprecated"><primary sortas="gtk_rc_style_unref">gtk_rc_style_unref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_style_unref                  (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style);</programlisting>
+<indexterm zone="gtk-rc-style-unref" role="deprecated"><primary sortas="rc_style_unref">gtk_rc_style_unref</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_rc_style_unref                  (<link linkend="GtkRcStyle">GtkRcStyle</link> *rc_style);</programlisting>
 <warning><para><literal>gtk_rc_style_unref</literal> is deprecated and should not be used in newly-written code. Use <link linkend="g-object-unref"><function>g_object_unref()</function></link> instead</para></warning>
 <para>
 Decrements the reference count of a <link linkend="GtkRcStyle"><type>GtkRcStyle</type></link> and

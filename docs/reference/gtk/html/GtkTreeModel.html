@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -352,7 +354,11 @@ The model is represented as a hierarchical tree of strongly-typed,
 columned data.  In other words, the model can be seen as a tree where
 every node has different values depending on which column is being
 queried.  The type of data found in a column is determined by using the
-GType system (ie. <span class="type">G_TYPE_INT</span>, <span class="type">GTK_TYPE_BUTTON</span>, <span class="type">G_TYPE_POINTER</span>, etc.).
+GType system (ie. <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-INT--CAPS"
+><span class="type">G_TYPE_INT</span></a>, <span class="type">GTK_TYPE_BUTTON</span>, <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-POINTER--CAPS"
+><span class="type">G_TYPE_POINTER</span></a>, etc.).
 The types are homogeneous per column across all nodes.  It is important
 to note that this interface only provides a way of examining a model and
 observing changes.  The implementation of each individual model decides
@@ -372,7 +378,7 @@ Models are accessed on a node/column level of granularity.  One can
 query for the value of a model at a certain node and a certain column
 on that node.  There are two structures used to reference a particular
 node in a model.  They are the <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> and the <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>
-<sup>[<a name="id3349255" href="#ftn.id3349255" class="footnote">4</a>]</sup>
+<sup>[<a name="id3360824" href="#ftn.id3360824" class="footnote">4</a>]</sup>
 Most of the interface consists of operations on a <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>.
 </p>
 <p>
@@ -426,7 +432,7 @@ the second is much more common, as you often get paths from callbacks.
 <p>
 </p>
 <div class="example">
-<a name="id3349415"></a><p class="title"><b>Example 17. Acquiring a <span class="structname">GtkTreeIter</span></b></p>
+<a name="id3360984"></a><p class="title"><b>Example 19. Acquiring a <span class="structname">GtkTreeIter</span></b></p>
 <div class="example-contents"><pre class="programlisting">
 /* Three ways of getting the iter pointing to the location
  */
@@ -459,7 +465,7 @@ it is specific to the <a class="link" href="GtkListStore.html" title="GtkListSto
 such a function, see the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> documentation.
 </p>
 <div class="example">
-<a name="id3349472"></a><p class="title"><b>Example 18. Reading data from a <span class="structname">GtkTreeModel</span></b></p>
+<a name="id3361042"></a><p class="title"><b>Example 20. Reading data from a <span class="structname">GtkTreeModel</span></b></p>
 <div class="example-contents"><pre class="programlisting">
 enum
 {
@@ -675,7 +681,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>%TRUE to stop iterating, <code class="literal">FALSE</code> to continue.
+<td>%TRUE to stop iterating, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> to continue.
 </td>
 </tr>
 </tbody>
@@ -741,7 +749,9 @@ Creates a new <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTre
 colon separated list of numbers.  For example, the string "10:4:0" would
 create a path of depth 3 pointing to the 11th child of the root node, the 5th
 child of that 11th child, and the 1st child of that 5th child.  If an invalid
-path string is passed in, <code class="literal">NULL</code> is returned.</p>
+path string is passed in, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> is returned.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -754,7 +764,9 @@ path string is passed in, <code class="literal">NULL</code> is returned.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A newly-created <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a>, or <code class="literal">NULL</code>
+<td> A newly-created <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -965,7 +977,9 @@ representing a node in a tree.  This value should not be freed.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The current indices, or <code class="literal">NULL</code>.
+<td> The current indices, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 </tbody>
@@ -1084,7 +1098,9 @@ if it exists.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>path</code></em> has a previous node, and the move was made.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>path</code></em> has a previous node, and the move was made.
 </td>
 </tr>
 </tbody>
@@ -1110,7 +1126,9 @@ Moves the <em class="parameter"><code>path</code></em> to point to its parent no
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>path</code></em> has a parent, and the move was made.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>path</code></em> has a parent, and the move was made.
 </td>
 </tr>
 </tbody>
@@ -1141,7 +1159,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_path_is_ancestor           (<a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *path,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *descendant);</pre>
 <p>
-Returns <code class="literal">TRUE</code> if <em class="parameter"><code>descendant</code></em> is a descendant of <em class="parameter"><code>path</code></em>.</p>
+Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>descendant</code></em> is a descendant of <em class="parameter"><code>path</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1159,7 +1179,9 @@ Returns <code class="literal">TRUE</code> if <em class="parameter"><code>descend
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>descendant</code></em> is contained inside <em class="parameter"><code>path</code></em>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>descendant</code></em> is contained inside <em class="parameter"><code>path</code></em>
 </td>
 </tr>
 </tbody>
@@ -1173,7 +1195,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_path_is_descendant         (<a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *path,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *ancestor);</pre>
 <p>
-Returns <code class="literal">TRUE</code> if <em class="parameter"><code>path</code></em> is a descendant of <em class="parameter"><code>ancestor</code></em>.</p>
+Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>path</code></em> is a descendant of <em class="parameter"><code>ancestor</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1191,7 +1215,9 @@ Returns <code class="literal">TRUE</code> if <em class="parameter"><code>path</c
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>ancestor</code></em> contains <em class="parameter"><code>path</code></em> somewhere below it
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>ancestor</code></em> contains <em class="parameter"><code>path</code></em> somewhere below it
 </td>
 </tr>
 </tbody>
@@ -1206,7 +1232,9 @@ Returns <code class="literal">TRUE</code> if <em class="parameter"><code>path</c
 Creates a row reference based on <em class="parameter"><code>path</code></em>.  This reference will keep pointing 
 to the node pointed to by <em class="parameter"><code>path</code></em>, so long as it exists.  It listens to all
 signals emitted by <em class="parameter"><code>model</code></em>, and updates its path appropriately.  If <em class="parameter"><code>path</code></em>
-isn't a valid path in <em class="parameter"><code>model</code></em>, then <code class="literal">NULL</code> is returned.</p>
+isn't a valid path in <em class="parameter"><code>model</code></em>, then <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> is returned.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1224,7 +1252,9 @@ isn't a valid path in <em class="parameter"><code>model</code></em>, then <code 
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <code class="literal">NULL</code>
+<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1241,7 +1271,9 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 <p>
 You do not need to use this function.  Creates a row reference based on
 <em class="parameter"><code>path</code></em>.  This reference will keep pointing to the node pointed to by <em class="parameter"><code>path</code></em>, 
-so long as it exists.  If <em class="parameter"><code>path</code></em> isn't a valid path in <em class="parameter"><code>model</code></em>, then <code class="literal">NULL</code> is
+so long as it exists.  If <em class="parameter"><code>path</code></em> isn't a valid path in <em class="parameter"><code>model</code></em>, then <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> is
 returned.  However, unlike references created with
 <a class="link" href="GtkTreeModel.html#gtk-tree-row-reference-new" title="gtk_tree_row_reference_new ()"><code class="function">gtk_tree_row_reference_new()</code></a>, it does not listen to the model for changes.
 The creator of the row reference must do this explicitly using
@@ -1285,7 +1317,9 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <code class="literal">NULL</code>
+<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1322,7 +1356,9 @@ Returns the model that the row reference is monitoring.</p>
 <a name="gtk-tree-row-reference-get-path"></a><h3>gtk_tree_row_reference_get_path ()</h3>
 <pre class="programlisting"><a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath">GtkTreePath</a> *       gtk_tree_row_reference_get_path     (<a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference">GtkTreeRowReference</a> *reference);</pre>
 <p>
-Returns a path that the row reference currently points to, or <code class="literal">NULL</code> if the
+Returns a path that the row reference currently points to, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the
 path pointed to is no longer valid.</p>
 <p>
 </p>
@@ -1336,7 +1372,9 @@ path pointed to is no longer valid.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A current path, or <code class="literal">NULL</code>.
+<td> A current path, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 </tbody>
@@ -1349,7 +1387,11 @@ path pointed to is no longer valid.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_row_reference_valid        (<a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference">GtkTreeRowReference</a> *reference);</pre>
 <p>
-Returns <code class="literal">TRUE</code> if the <em class="parameter"><code>reference</code></em> is non-<code class="literal">NULL</code> and refers to a current valid
+Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the <em class="parameter"><code>reference</code></em> is non-<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> and refers to a current valid
 path.</p>
 <p>
 </p>
@@ -1358,12 +1400,16 @@ path.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>reference</code></em> :</span></p></td>
-<td> A <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <code class="literal">NULL</code>
+<td> A <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>reference</code></em> points to a valid path.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>reference</code></em> points to a valid path.
 </td>
 </tr>
 </tbody>
@@ -1374,14 +1420,18 @@ path.</p>
 <a name="gtk-tree-row-reference-free"></a><h3>gtk_tree_row_reference_free ()</h3>
 <pre class="programlisting">void                gtk_tree_row_reference_free         (<a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference">GtkTreeRowReference</a> *reference);</pre>
 <p>
-Free's <em class="parameter"><code>reference</code></em>. <em class="parameter"><code>reference</code></em> may be <code class="literal">NULL</code>.</p>
+Free's <em class="parameter"><code>reference</code></em>. <em class="parameter"><code>reference</code></em> may be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>reference</code></em> :</span></p></td>
-<td> A <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <code class="literal">NULL</code>
+<td> A <a class="link" href="GtkTreeModel.html#GtkTreeRowReference" title="GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr></tbody>
 </table></div>
@@ -1680,7 +1730,9 @@ Sets <em class="parameter"><code>iter</code></em> to a valid iterator pointing t
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>iter</code></em> was set.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>iter</code></em> was set.
 </td>
 </tr>
 </tbody>
@@ -1698,7 +1750,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *path_string);</pre>
 <p>
 Sets <em class="parameter"><code>iter</code></em> to a valid iterator pointing to <em class="parameter"><code>path_string</code></em>, if it
-exists. Otherwise, <em class="parameter"><code>iter</code></em> is left invalid and <code class="literal">FALSE</code> is returned.</p>
+exists. Otherwise, <em class="parameter"><code>iter</code></em> is left invalid and <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> is returned.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1721,7 +1775,9 @@ exists. Otherwise, <em class="parameter"><code>iter</code></em> is left invalid 
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>iter</code></em> was set.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>iter</code></em> was set.
 </td>
 </tr>
 </tbody>
@@ -1736,7 +1792,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *iter);</pre>
 <p>
 Initializes <em class="parameter"><code>iter</code></em> with the first iterator in the tree (the one at the path
-"0") and returns <code class="literal">TRUE</code>.  Returns <code class="literal">FALSE</code> if the tree is empty.</p>
+"0") and returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>.  Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if the tree is empty.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1754,7 +1814,9 @@ Initializes <em class="parameter"><code>iter</code></em> with the first iterator
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>iter</code></em> was set.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>iter</code></em> was set.
 </td>
 </tr>
 </tbody>
@@ -1789,7 +1851,9 @@ versions of GTK+.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>iter</code></em> was set.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>iter</code></em> was set.
 </td>
 </tr>
 </tbody>
@@ -1881,7 +1945,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *iter);</pre>
 <p>
 Sets <em class="parameter"><code>iter</code></em> to point to the node following it at the current level.  If there
-is no next <em class="parameter"><code>iter</code></em>, <code class="literal">FALSE</code> is returned and <em class="parameter"><code>iter</code></em> is set to be invalid.</p>
+is no next <em class="parameter"><code>iter</code></em>, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> is returned and <em class="parameter"><code>iter</code></em> is set to be invalid.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1899,7 +1965,9 @@ is no next <em class="parameter"><code>iter</code></em>, <code class="literal">F
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>iter</code></em> has been changed to the next node.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em> has been changed to the next node.
 </td>
 </tr>
 </tbody>
@@ -1915,11 +1983,15 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *parent);</pre>
 <p>
 Sets <em class="parameter"><code>iter</code></em> to point to the first child of <em class="parameter"><code>parent</code></em>.  If <em class="parameter"><code>parent</code></em> has no 
-children, <code class="literal">FALSE</code> is returned and <em class="parameter"><code>iter</code></em> is set to be invalid.  <em class="parameter"><code>parent</code></em> 
+children, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> is returned and <em class="parameter"><code>iter</code></em> is set to be invalid.  <em class="parameter"><code>parent</code></em> 
 will remain a valid node after this function has been called.
 </p>
 <p>
-If <em class="parameter"><code>parent</code></em> is <code class="literal">NULL</code> returns the first node, equivalent to
+If <em class="parameter"><code>parent</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> returns the first node, equivalent to
 <code class="literal">gtk_tree_model_get_iter_first (tree_model, iter);</code></p>
 <p>
 </p>
@@ -1938,12 +2010,16 @@ If <em class="parameter"><code>parent</code></em> is <code class="literal">NULL<
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <code class="literal">NULL</code>
+<td> The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>child</code></em> has been set to the first child.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>child</code></em> has been set to the first child.
 </td>
 </tr>
 </tbody>
@@ -1957,7 +2033,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_tree_model_iter_has_child       (<a class="link" href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> *tree_model,
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *iter);</pre>
 <p>
-Returns <code class="literal">TRUE</code> if <em class="parameter"><code>iter</code></em> has children, <code class="literal">FALSE</code> otherwise.</p>
+Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em> has children, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1975,7 +2055,9 @@ Returns <code class="literal">TRUE</code> if <em class="parameter"><code>iter</c
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>iter</code></em> has children.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em> has children.
 </td>
 </tr>
 </tbody>
@@ -1990,7 +2072,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *iter);</pre>
 <p>
 Returns the number of children that <em class="parameter"><code>iter</code></em> has.  As a special case, if <em class="parameter"><code>iter</code></em>
-is <code class="literal">NULL</code>, then the number of toplevel nodes is returned.</p>
+is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, then the number of toplevel nodes is returned.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2003,7 +2087,9 @@ is <code class="literal">NULL</code>, then the number of toplevel nodes is retur
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td> The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <code class="literal">NULL</code>.
+<td> The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
@@ -2028,9 +2114,13 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 <p>
 Sets <em class="parameter"><code>iter</code></em> to be the child of <em class="parameter"><code>parent</code></em>, using the given index.  The first
 index is 0.  If <em class="parameter"><code>n</code></em> is too big, or <em class="parameter"><code>parent</code></em> has no children, <em class="parameter"><code>iter</code></em> is set
-to an invalid iterator and <code class="literal">FALSE</code> is returned.  <em class="parameter"><code>parent</code></em> will remain a valid
+to an invalid iterator and <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> is returned.  <em class="parameter"><code>parent</code></em> will remain a valid
 node after this function has been called.  As a special case, if <em class="parameter"><code>parent</code></em> is
-<code class="literal">NULL</code>, then the <em class="parameter"><code>n</code></em>th root node is set.</p>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, then the <em class="parameter"><code>n</code></em>th root node is set.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2048,7 +2138,9 @@ node after this function has been called.  As a special case, if <em class="para
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> to get the child from, or <code class="literal">NULL</code>.
+<td> The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> to get the child from, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
@@ -2058,7 +2150,9 @@ node after this function has been called.  As a special case, if <em class="para
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>parent</code></em> has an <em class="parameter"><code>n</code></em>th child.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>parent</code></em> has an <em class="parameter"><code>n</code></em>th child.
 </td>
 </tr>
 </tbody>
@@ -2074,7 +2168,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *child);</pre>
 <p>
 Sets <em class="parameter"><code>iter</code></em> to be the parent of <em class="parameter"><code>child</code></em>.  If <em class="parameter"><code>child</code></em> is at the toplevel, and
-doesn't have a parent, then <em class="parameter"><code>iter</code></em> is set to an invalid iterator and <code class="literal">FALSE</code>
+doesn't have a parent, then <em class="parameter"><code>iter</code></em> is set to an invalid iterator and <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 is returned.  <em class="parameter"><code>child</code></em> will remain a valid node after this function has been
 called.</p>
 <p>
@@ -2099,7 +2195,9 @@ called.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>iter</code></em> is set to the parent of <em class="parameter"><code>child</code></em>.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>iter</code></em> is set to the parent of <em class="parameter"><code>child</code></em>.
 </td>
 </tr>
 </tbody>
@@ -2223,7 +2321,9 @@ Gets the value of one or more cells in the row referenced by <em class="paramete
 The variable argument list should contain integer column numbers,
 each column number followed by a place to store the value being
 retrieved.  The list is terminated by a -1. For example, to get a
-value from column 0 with type <code class="literal">G_TYPE_STRING</code>, you would
+value from column 0 with type <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-STRING--CAPS"
+><code class="literal">G_TYPE_STRING</code></a>, you would
 write: <code class="literal">gtk_tree_model_get (model, iter, 0, &amp;place_string_here, -1)</code>,
 where <code class="literal">place_string_here</code> is a <span class="type">gchar*</span> to be 
 filled with the string.
@@ -2293,7 +2393,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a> user_data);</pre>
 <p>
 Calls func on each node in model in a depth-first fashion.  
-If <em class="parameter"><code>func</code></em> returns <code class="literal">TRUE</code>, then the tree ceases to be walked, and 
+If <em class="parameter"><code>func</code></em> returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, then the tree ceases to be walked, and 
 <a class="link" href="GtkTreeModel.html#gtk-tree-model-foreach" title="gtk_tree_model_foreach ()"><code class="function">gtk_tree_model_foreach()</code></a> returns.</p>
 <p>
 </p>
@@ -2472,7 +2574,9 @@ models when their rows have been reordered.</p>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
 <td> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> pointing to the node whose children have been 
-     reordered, or <code class="literal">NULL</code> if the depth of <em class="parameter"><code>path</code></em> is 0.
+     reordered, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the depth of <em class="parameter"><code>path</code></em> is 0.
 </td>
 </tr>
 <tr>
@@ -2708,7 +2812,7 @@ by removing and then reinserting the row.</p>
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id3349255" href="#id3349255" class="para">4</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3360824" href="#id3360824" class="para">4</a>] </sup>
 Here, <abbr class="abbrev">iter</abbr> is short for “<span class="quote">iterator</span>”
 </p></div>
 </div>

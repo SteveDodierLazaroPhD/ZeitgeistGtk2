@@ -41,7 +41,7 @@ struct _GtkIconSet
 static GtkBuilder *
 builder_new_from_string (const gchar *buffer,
                          gsize length,
-                         gchar *domain)
+                         const gchar *domain)
 {
   GtkBuilder *builder;
   builder = gtk_builder_new ();
@@ -61,51 +61,51 @@ test_parser (void)
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<xxx/>", -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_UNHANDLED_TAG);
+  g_assert (g_error_matches (error, 
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_UNHANDLED_TAG));
   g_error_free (error);
   
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface invalid=\"X\"/>", -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_ATTRIBUTE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_ATTRIBUTE));
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface><child/></interface>", -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_TAG);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR, 
+                             GTK_BUILDER_ERROR_INVALID_TAG));
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface><object class=\"GtkVBox\" id=\"a\"><object class=\"GtkHBox\" id=\"b\"/></object></interface>", -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_TAG);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_TAG));
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface><object class=\"Unknown\" id=\"a\"></object></interface>", -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface><object class=\"GtkWidget\" id=\"a\" constructor=\"none\"></object></interface>", -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, "<interface><object class=\"GtkButton\" id=\"a\"><child internal-child=\"foobar\"><object class=\"GtkButton\" id=\"int\"/></child></object></interface>", -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
 
   g_object_unref (builder);
@@ -116,7 +116,7 @@ static int after = 0;
 static int object = 0;
 static int object_after = 0;
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_normal (GtkWindow *window, GParamSpec spec)
 {
   g_assert (GTK_IS_WINDOW (window));
@@ -126,7 +126,7 @@ signal_normal (GtkWindow *window, GParamSpec spec)
   normal++;
 }
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_after (GtkWindow *window, GParamSpec spec)
 {
   g_assert (GTK_IS_WINDOW (window));
@@ -136,7 +136,7 @@ signal_after (GtkWindow *window, GParamSpec spec)
   after++;
 }
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_object (GtkButton *button, GParamSpec spec)
 {
   g_assert (GTK_IS_BUTTON (button));
@@ -146,7 +146,7 @@ signal_object (GtkButton *button, GParamSpec spec)
   object++;
 }
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_object_after (GtkButton *button, GParamSpec spec)
 {
   g_assert (GTK_IS_BUTTON (button));
@@ -156,28 +156,28 @@ signal_object_after (GtkButton *button, GParamSpec spec)
   object_after++;
 }
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_first (GtkButton *button, GParamSpec spec)
 {
   g_assert (normal == 0);
   normal = 10;
 }
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_second (GtkButton *button, GParamSpec spec)
 {
   g_assert (normal == 10);
   normal = 20;
 }
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_extra (GtkButton *button, GParamSpec spec)
 {
   g_assert (normal == 20);
   normal = 30;
 }
 
-void // exported for GtkBuilder
+void /* exported for GtkBuilder */
 signal_extra2 (GtkButton *button, GParamSpec spec)
 {
   g_assert (normal == 30);
@@ -326,25 +326,21 @@ test_uimanager_simple (void)
   builder = builder_new_from_string (buffer, -1, NULL);
 
   uimgr = gtk_builder_get_object (builder, "uimgr1");
-  g_assert (uimgr != NULL);
   g_assert (GTK_IS_UI_MANAGER (uimgr));
   g_object_unref (builder);
   
   builder = builder_new_from_string (buffer2, -1, NULL);
 
   menubar = gtk_builder_get_object (builder, "menubar1");
-  g_assert (menubar != NULL);
   g_assert (GTK_IS_MENU_BAR (menubar));
 
   children = gtk_container_get_children (GTK_CONTAINER (menubar));
   menu = children->data;
-  g_assert (menu != NULL);
   g_assert (GTK_IS_MENU_ITEM (menu));
   g_assert (strcmp (GTK_WIDGET (menu)->name, "file") == 0);
   g_list_free (children);
   
   label = G_OBJECT (GTK_BIN (menu)->child);
-  g_assert (label != NULL);
   g_assert (GTK_IS_LABEL (label));
   g_assert (strcmp (gtk_label_get_text (GTK_LABEL (label)), "File") == 0);
 
@@ -371,16 +367,10 @@ test_domain (void)
   g_assert (domain);
   g_assert (strcmp (domain, "domain-1") == 0);
   g_object_unref (builder);
-  
+
   builder = builder_new_from_string (buffer2, -1, NULL);
   domain = gtk_builder_get_translation_domain (builder);
   g_assert (domain == NULL);
-  g_object_unref (builder);
-  
-  builder = builder_new_from_string (buffer2, -1, "domain-1");
-  domain = gtk_builder_get_translation_domain (builder);
-  g_assert (domain);
-  g_assert (strcmp (domain, "domain-1") == 0);
   g_object_unref (builder);
 }
 
@@ -769,7 +759,6 @@ test_types (void)
 
   builder = builder_new_from_string (buffer2, -1, NULL);
   window = gtk_builder_get_object (builder, "window");
-  g_assert (window != NULL);
   g_assert (GTK_IS_WINDOW (window));
   gtk_widget_destroy (GTK_WIDGET (window));
   g_object_unref (builder);
@@ -777,9 +766,9 @@ test_types (void)
   error = NULL;
   builder = gtk_builder_new ();
   gtk_builder_add_from_string (builder, buffer3, -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION));
   g_error_free (error);
   g_object_unref (builder);
 }
@@ -795,7 +784,7 @@ test_spin_button (void)
     "<property name=\"upper\">10</property>"
     "<property name=\"step-increment\">2</property>"
     "<property name=\"page-increment\">3</property>"
-    "<property name=\"page-size\">0</property>"
+    "<property name=\"page-size\">5</property>"
     "<property name=\"value\">1</property>"
     "</object>"
     "<object class=\"GtkSpinButton\" id=\"spinbutton1\">"
@@ -803,14 +792,14 @@ test_spin_button (void)
     "<property name=\"adjustment\">adjustment1</property>"
     "</object>"
     "</interface>";
-  GObject *object;
+  GObject *obj;
   GtkAdjustment *adjustment;
   gdouble value;
   
   builder = builder_new_from_string (buffer, -1, NULL);
-  object = gtk_builder_get_object (builder, "spinbutton1");
-  g_assert (GTK_IS_SPIN_BUTTON (object));
-  adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (object));
+  obj = gtk_builder_get_object (builder, "spinbutton1");
+  g_assert (GTK_IS_SPIN_BUTTON (obj));
+  adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (obj));
   g_assert (GTK_IS_ADJUSTMENT (adjustment));
   g_object_get (adjustment, "value", &value, NULL);
   g_assert (value == 1);
@@ -823,7 +812,7 @@ test_spin_button (void)
   g_object_get (adjustment, "page-increment", &value, NULL);
   g_assert (value == 3);
   g_object_get (adjustment, "page-size", &value, NULL);
-  g_assert (value == 0);
+  g_assert (value == 5);
   
   g_object_unref (builder);
 }
@@ -1379,7 +1368,7 @@ static void
 test_cell_view (void)
 {
   GtkBuilder *builder;
-  gchar *buffer =
+  const gchar *buffer =
     "<interface>"
     "  <object class=\"GtkListStore\" id=\"liststore1\">"
     "    <columns>"
@@ -1493,7 +1482,7 @@ static void
 test_accelerators (void)
 {
   GtkBuilder *builder;
-  gchar *buffer =
+  const gchar *buffer =
     "<interface>"
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "    <child>"
@@ -1503,7 +1492,7 @@ test_accelerators (void)
     "    </child>"
     "  </object>"
     "</interface>";
-  gchar *buffer2 =
+  const gchar *buffer2 =
     "<interface>"
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "    <child>"
@@ -1548,7 +1537,7 @@ test_accelerators (void)
 static void
 test_widget (void)
 {
-  gchar *buffer =
+  const gchar *buffer =
     "<interface>"
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "    <child>"
@@ -1559,7 +1548,7 @@ test_widget (void)
     "    </child>"
     "  </object>"
    "</interface>";
-  gchar *buffer2 =
+  const gchar *buffer2 =
     "<interface>"
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "    <child>"
@@ -1570,7 +1559,7 @@ test_widget (void)
     "    </child>"
     "  </object>"
    "</interface>";
-  gchar *buffer3 =
+  const gchar *buffer3 =
     "<interface>"
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "    <child>"
@@ -1648,13 +1637,13 @@ test_widget (void)
 static void
 test_window (void)
 {
-  gchar *buffer1 =
+  const gchar *buffer1 =
     "<interface>"
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "     <property name=\"title\"></property>"
     "  </object>"
    "</interface>";
-  gchar *buffer2 =
+  const gchar *buffer2 =
     "<interface>"
     "  <object class=\"GtkWindow\" id=\"window1\">"
     "  </object>"
@@ -1727,31 +1716,34 @@ test_value_from_string (void)
   g_value_unset (&value);
   
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "blaurgh", &value, &error) == FALSE);
-  g_assert (error != NULL);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
 
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "yess", &value, &error) == FALSE);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
   
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "trueee", &value, &error) == FALSE);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
   
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_BOOLEAN, "", &value, &error) == FALSE);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
   
@@ -1777,15 +1769,17 @@ test_value_from_string (void)
 
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_FLOAT, "abc", &value, &error) == FALSE);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
 
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_INT, "/-+,abc", &value, &error) == FALSE);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
 
@@ -1796,8 +1790,9 @@ test_value_from_string (void)
 
   g_assert (gtk_builder_value_from_string_type (builder, GTK_TYPE_WINDOW_TYPE, "sliff", &value, &error) == FALSE);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
   
@@ -1813,8 +1808,9 @@ test_value_from_string (void)
   
   g_assert (gtk_builder_value_from_string_type (builder, GTK_TYPE_WINDOW_TYPE, "foobar", &value, &error) == FALSE);
   g_value_unset (&value);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_VALUE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_VALUE));
   g_error_free (error);
   error = NULL;
   
@@ -1967,23 +1963,23 @@ test_icon_factory (void)
 #if 0
   error = NULL;
   gtk_builder_add_from_string (builder, buffer3, -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_TAG);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_TAG));
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, buffer4, -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_TAG);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_TAG));
   g_error_free (error);
 
   error = NULL;
   gtk_builder_add_from_string (builder, buffer5, -1, &error);
-  g_assert (error != NULL);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_ATTRIBUTE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_ATTRIBUTE));
   g_error_free (error);
 #endif
 
@@ -2087,9 +2083,9 @@ test_pango_attributes (void)
   builder = gtk_builder_new ();
   gtk_builder_add_from_string (builder, err_buffer1, -1, &error);
   label = gtk_builder_get_object (builder, "label1");
-  g_assert (error);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_MISSING_ATTRIBUTE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_MISSING_ATTRIBUTE));
   g_object_unref (builder);
   g_error_free (error);
   error = NULL;
@@ -2098,9 +2094,9 @@ test_pango_attributes (void)
   gtk_builder_add_from_string (builder, err_buffer2, -1, &error);
   label = gtk_builder_get_object (builder, "label1");
 
-  g_assert (error);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_INVALID_ATTRIBUTE);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_ATTRIBUTE));
   g_object_unref (builder);
   g_error_free (error);
 }
@@ -2119,9 +2115,9 @@ test_requires (void)
   buffer = g_strdup_printf (buffer_fmt, GTK_MAJOR_VERSION, GTK_MINOR_VERSION + 1);
   builder = gtk_builder_new ();
   gtk_builder_add_from_string (builder, buffer, -1, &error);
-  g_assert (error);
-  g_assert (error->domain == GTK_BUILDER_ERROR);
-  g_assert (error->code == GTK_BUILDER_ERROR_VERSION_MISMATCH);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_VERSION_MISMATCH));
   g_object_unref (builder);
   g_error_free (error);
 }
@@ -2282,6 +2278,158 @@ test_add_objects (void)
   g_object_unref (builder);
 }
 
+static GtkWidget *
+get_parent_menubar (GtkWidget *menuitem)
+{
+  GtkMenuShell *menu_shell = (GtkMenuShell *)menuitem->parent;
+  GtkWidget *attach = NULL;
+
+  g_assert (GTK_IS_MENU_SHELL (menu_shell));
+
+  while (menu_shell && !GTK_IS_MENU_BAR (menu_shell))
+    {
+      if (GTK_IS_MENU (menu_shell) && 
+	  (attach = gtk_menu_get_attach_widget (GTK_MENU (menu_shell))) != NULL)
+	menu_shell = (GtkMenuShell *)attach->parent;
+      else
+	menu_shell = NULL;
+    }
+
+  return menu_shell ? GTK_WIDGET (menu_shell) : NULL;
+}
+
+static void
+test_menus (void)
+{
+  const gchar *buffer =
+    "<interface>"
+    "  <object class=\"GtkWindow\" id=\"window1\">"
+    "    <accel-groups>"
+    "      <group name=\"accelgroup1\"/>"
+    "    </accel-groups>"
+    "    <child>"
+    "      <object class=\"GtkVBox\" id=\"vbox1\">"
+    "        <property name=\"visible\">True</property>"
+    "        <property name=\"orientation\">vertical</property>"
+    "        <child>"
+    "          <object class=\"GtkMenuBar\" id=\"menubar1\">"
+    "            <property name=\"visible\">True</property>"
+    "            <child>"
+    "              <object class=\"GtkMenuItem\" id=\"menuitem1\">"
+    "                <property name=\"visible\">True</property>"
+    "                <property name=\"label\" translatable=\"yes\">_File</property>"
+    "                <property name=\"use_underline\">True</property>"
+    "                <child type=\"submenu\">"
+    "                  <object class=\"GtkMenu\" id=\"menu1\">"
+    "                    <property name=\"visible\">True</property>"
+    "                    <child>"
+    "                      <object class=\"GtkImageMenuItem\" id=\"imagemenuitem1\">"
+    "                        <property name=\"label\">gtk-new</property>"
+    "                        <property name=\"visible\">True</property>"
+    "                        <property name=\"use_stock\">True</property>"
+    "                        <property name=\"accel_group\">accelgroup1</property>"
+    "                      </object>"
+    "                    </child>"
+    "                  </object>"
+    "                </child>"
+    "              </object>"
+    "            </child>"
+    "          </object>"
+    "        </child>"
+    "      </object>"
+    "    </child>"
+    "  </object>"
+    "<object class=\"GtkAccelGroup\" id=\"accelgroup1\"/>"
+    "</interface>";
+
+  const gchar *buffer1 =
+    "<interface>"
+    "  <object class=\"GtkWindow\" id=\"window1\">"
+    "    <accel-groups>"
+    "      <group name=\"accelgroup1\"/>"
+    "    </accel-groups>"
+    "    <child>"
+    "      <object class=\"GtkVBox\" id=\"vbox1\">"
+    "        <property name=\"visible\">True</property>"
+    "        <property name=\"orientation\">vertical</property>"
+    "        <child>"
+    "          <object class=\"GtkMenuBar\" id=\"menubar1\">"
+    "            <property name=\"visible\">True</property>"
+    "            <child>"
+    "              <object class=\"GtkImageMenuItem\" id=\"imagemenuitem1\">"
+    "                <property name=\"visible\">True</property>"
+    "                <child>"
+    "                  <object class=\"GtkLabel\" id=\"custom1\">"
+    "                    <property name=\"visible\">True</property>"
+    "                    <property name=\"label\">a label</property>"
+    "                  </object>"
+    "                </child>"
+    "              </object>"
+    "            </child>"
+    "          </object>"
+    "        </child>"
+    "      </object>"
+    "    </child>"
+    "  </object>"
+    "<object class=\"GtkAccelGroup\" id=\"accelgroup1\"/>"
+    "</interface>";
+  GtkBuilder *builder;
+  GtkWidget *window, *item;
+  GtkAccelGroup *accel_group;
+  GtkWidget *item_accel_label, *sample_accel_label, *sample_menu_item, *custom;
+
+  /* Check that the item has the correct accel label string set
+   */
+  builder = builder_new_from_string (buffer, -1, NULL);
+  window = (GtkWidget *)gtk_builder_get_object (builder, "window1");
+  item = (GtkWidget *)gtk_builder_get_object (builder, "imagemenuitem1");
+  accel_group = (GtkAccelGroup *)gtk_builder_get_object (builder, "accelgroup1");
+
+  gtk_widget_show_all (window);
+
+  sample_menu_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, accel_group);
+
+  g_assert (GTK_BIN (sample_menu_item)->child);
+  g_assert (GTK_IS_ACCEL_LABEL (GTK_BIN (sample_menu_item)->child));
+  sample_accel_label = GTK_WIDGET (GTK_BIN (sample_menu_item)->child);
+  gtk_widget_show (sample_accel_label);
+
+  g_assert (GTK_BIN (item)->child);
+  g_assert (GTK_IS_ACCEL_LABEL (GTK_BIN (item)->child));
+  item_accel_label = GTK_WIDGET (GTK_BIN (item)->child);
+
+  gtk_accel_label_refetch (GTK_ACCEL_LABEL (sample_accel_label));
+  gtk_accel_label_refetch (GTK_ACCEL_LABEL (item_accel_label));
+
+  g_assert (GTK_ACCEL_LABEL (sample_accel_label)->accel_string != NULL);
+  g_assert (GTK_ACCEL_LABEL (item_accel_label)->accel_string != NULL);
+  g_assert (strcmp (GTK_ACCEL_LABEL (item_accel_label)->accel_string, 
+		    GTK_ACCEL_LABEL (sample_accel_label)->accel_string) == 0);
+
+  /* Check the menu hierarchy worked here  */
+  g_assert (get_parent_menubar (item));
+
+  gtk_widget_destroy (GTK_WIDGET (window));
+  gtk_widget_destroy (sample_menu_item);
+  g_object_unref (builder);
+
+
+  /* Check that we can add alien children to menu items via normal
+   * GtkContainer apis.
+   */
+  builder = builder_new_from_string (buffer1, -1, NULL);
+  window = (GtkWidget *)gtk_builder_get_object (builder, "window1");
+  item = (GtkWidget *)gtk_builder_get_object (builder, "imagemenuitem1");
+  custom = (GtkWidget *)gtk_builder_get_object (builder, "custom1");
+
+  g_assert (custom->parent == item);
+
+  gtk_widget_destroy (GTK_WIDGET (window));
+  g_object_unref (builder);
+
+}
+
+
 static void 
 test_file (const gchar *filename)
 {
@@ -2367,6 +2515,7 @@ main (int argc, char **argv)
   g_test_add_func ("/Builder/PangoAttributes", test_pango_attributes);
   g_test_add_func ("/Builder/Requires", test_requires);
   g_test_add_func ("/Builder/AddObjects", test_add_objects);
+  g_test_add_func ("/Builder/Menus", test_menus);
 
   return g_test_run();
 }

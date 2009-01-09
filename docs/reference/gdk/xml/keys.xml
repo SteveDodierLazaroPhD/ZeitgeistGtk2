@@ -48,6 +48,7 @@
                                                          <link linkend="gint">gint</link> *n_entries);
 <link linkend="PangoDirection">PangoDirection</link>      <link linkend="gdk-keymap-get-direction">gdk_keymap_get_direction</link>            (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-keymap-have-bidi-layouts">gdk_keymap_have_bidi_layouts</link>        (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);
+<link linkend="gboolean">gboolean</link>            <link linkend="gdk-keymap-get-caps-lock-state">gdk_keymap_get_caps_lock_state</link>      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);
 
 <link linkend="gchar">gchar</link>*              <link linkend="gdk-keyval-name">gdk_keyval_name</link>                     (<link linkend="guint">guint</link> keyval);
 <link linkend="guint">guint</link>               <link linkend="gdk-keyval-from-name">gdk_keyval_from_name</link>                (const <link linkend="gchar">gchar</link> *keyval_name);
@@ -83,6 +84,7 @@
 <synopsis>
   &quot;<link linkend="GdkKeymap-direction-changed">direction-changed</link>&quot;                              : Run Last
   &quot;<link linkend="GdkKeymap-keys-changed">keys-changed</link>&quot;                                   : Run Last
+  &quot;<link linkend="GdkKeymap-state-changed">state-changed</link>&quot;                                  : Run Last
 </synopsis>
 </refsect1>
 
@@ -95,7 +97,7 @@ They appear in the <structfield>keyval</structfield> field of the
 <link linkend="GdkEventKey"><type>GdkEventKey</type></link> structure, which is passed to signal handlers for the
 "key-press-event" and "key-release-event" signals.
 The complete list of key values can be found in the <filename>&lt;gdk/gdkkeysyms.h&gt;</filename>
-header file. <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> is not included in <filename>&lt;gtk/gtk.h&gt;</filename>,
+header file. <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> is not included in <filename>&lt;gdk/gdk.h&gt;</filename>,
 it must be included independently, because the file is quite large.
 </para>
 <para>
@@ -160,7 +162,7 @@ contains this keyval, however, so you don't normally need to call
 <title role="details.title">Details</title>
 <refsect2 id="GdkKeymap-struct" role="struct">
 <title>GdkKeymap</title>
-<indexterm zone="GdkKeymap-struct"><primary sortas="GdkKeymap">GdkKeymap</primary></indexterm><programlisting>typedef struct _GdkKeymap GdkKeymap;</programlisting>
+<indexterm zone="GdkKeymap-struct"><primary sortas="Keymap">GdkKeymap</primary></indexterm><programlisting>typedef struct _GdkKeymap GdkKeymap;</programlisting>
 <para>
 A <structname>GdkKeymap</structname> defines the translation from keyboard state
 (including a hardware key, a modifier mask, and active keyboard group)
@@ -171,7 +173,7 @@ in the keymap and see what keyval it corresponds to.
 </para></refsect2>
 <refsect2 id="GdkKeymapKey" role="struct">
 <title>GdkKeymapKey</title>
-<indexterm zone="GdkKeymapKey"><primary sortas="GdkKeymapKey">GdkKeymapKey</primary></indexterm><programlisting>typedef struct {
+<indexterm zone="GdkKeymapKey"><primary sortas="KeymapKey">GdkKeymapKey</primary></indexterm><programlisting>typedef struct {
   guint keycode;
   gint  group;
   gint  level;
@@ -207,7 +209,7 @@ be mapped to a keyval.
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-default" role="function">
 <title>gdk_keymap_get_default ()</title>
-<indexterm zone="gdk-keymap-get-default"><primary sortas="gdk_keymap_get_default">gdk_keymap_get_default</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_default              (void);</programlisting>
+<indexterm zone="gdk-keymap-get-default"><primary sortas="keymap_get_default">gdk_keymap_get_default</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_default              (void);</programlisting>
 <para>
 Returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to the default display.</para>
 <para>
@@ -217,7 +219,7 @@ Returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to 
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-for-display" role="function" condition="since:2.2">
 <title>gdk_keymap_get_for_display ()</title>
-<indexterm zone="gdk-keymap-get-for-display" role="2.2"><primary sortas="gdk_keymap_get_for_display">gdk_keymap_get_for_display</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_for_display          (<link linkend="GdkDisplay">GdkDisplay</link> *display);</programlisting>
+<indexterm zone="gdk-keymap-get-for-display" role="2.2"><primary sortas="keymap_get_for_display">gdk_keymap_get_for_display</primary></indexterm><programlisting><link linkend="GdkKeymap">GdkKeymap</link>*          gdk_keymap_get_for_display          (<link linkend="GdkDisplay">GdkDisplay</link> *display);</programlisting>
 <para>
 Returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to <parameter>display</parameter>.</para>
 <para>
@@ -230,7 +232,7 @@ Returns the <link linkend="GdkKeymap"><type>GdkKeymap</type></link> attached to 
 </variablelist><para role="since">Since 2.2</para></refsect2>
 <refsect2 id="gdk-keymap-lookup-key" role="function">
 <title>gdk_keymap_lookup_key ()</title>
-<indexterm zone="gdk-keymap-lookup-key"><primary sortas="gdk_keymap_lookup_key">gdk_keymap_lookup_key</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keymap_lookup_key               (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-lookup-key"><primary sortas="keymap_lookup_key">gdk_keymap_lookup_key</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keymap_lookup_key               (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          const <link linkend="GdkKeymapKey">GdkKeymapKey</link> *key);</programlisting>
 <para>
 Looks up the keyval mapped to a keycode/group/level triplet.
@@ -251,7 +253,7 @@ the same as the current keyboard state.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-translate-keyboard-state" role="function">
 <title>gdk_keymap_translate_keyboard_state ()</title>
-<indexterm zone="gdk-keymap-translate-keyboard-state"><primary sortas="gdk_keymap_translate_keyboard_state">gdk_keymap_translate_keyboard_state</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_translate_keyboard_state (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-translate-keyboard-state"><primary sortas="keymap_translate_keyboard_state">gdk_keymap_translate_keyboard_state</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_translate_keyboard_state (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          <link linkend="guint">guint</link> hardware_keycode,
                                                          <link linkend="GdkModifierType">GdkModifierType</link> state,
                                                          <link linkend="gint">gint</link> group,
@@ -345,7 +347,7 @@ not <literal>&lt;Control&gt;&lt;Shift&gt;plus</literal>,
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-entries-for-keyval" role="function">
 <title>gdk_keymap_get_entries_for_keyval ()</title>
-<indexterm zone="gdk-keymap-get-entries-for-keyval"><primary sortas="gdk_keymap_get_entries_for_keyval">gdk_keymap_get_entries_for_keyval</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keyval   (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-get-entries-for-keyval"><primary sortas="keymap_get_entries_for_keyval">gdk_keymap_get_entries_for_keyval</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keyval   (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          <link linkend="guint">guint</link> keyval,
                                                          <link linkend="GdkKeymapKey">GdkKeymapKey</link> **keys,
                                                          <link linkend="gint">gint</link> *n_keys);</programlisting>
@@ -380,7 +382,7 @@ with <link linkend="g-free"><function>g_free()</function></link>.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-entries-for-keycode" role="function">
 <title>gdk_keymap_get_entries_for_keycode ()</title>
-<indexterm zone="gdk-keymap-get-entries-for-keycode"><primary sortas="gdk_keymap_get_entries_for_keycode">gdk_keymap_get_entries_for_keycode</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keycode  (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="gdk-keymap-get-entries-for-keycode"><primary sortas="keymap_get_entries_for_keycode">gdk_keymap_get_entries_for_keycode</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_entries_for_keycode  (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                          <link linkend="guint">guint</link> hardware_keycode,
                                                          <link linkend="GdkKeymapKey">GdkKeymapKey</link> **keys,
                                                          <link linkend="guint">guint</link> **keyvals,
@@ -414,7 +416,7 @@ keyboard group and level. See <link linkend="gdk-keymap-translate-keyboard-state
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-get-direction" role="function">
 <title>gdk_keymap_get_direction ()</title>
-<indexterm zone="gdk-keymap-get-direction"><primary sortas="gdk_keymap_get_direction">gdk_keymap_get_direction</primary></indexterm><programlisting><link linkend="PangoDirection">PangoDirection</link>      gdk_keymap_get_direction            (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
+<indexterm zone="gdk-keymap-get-direction"><primary sortas="keymap_get_direction">gdk_keymap_get_direction</primary></indexterm><programlisting><link linkend="PangoDirection">PangoDirection</link>      gdk_keymap_get_direction            (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
 <para>
 Returns the direction of effective layout of the keymap.</para>
 <para>
@@ -430,7 +432,7 @@ Returns the direction of the keymap.
 </variablelist></refsect2>
 <refsect2 id="gdk-keymap-have-bidi-layouts" role="function" condition="since:2.12">
 <title>gdk_keymap_have_bidi_layouts ()</title>
-<indexterm zone="gdk-keymap-have-bidi-layouts" role="2.12"><primary sortas="gdk_keymap_have_bidi_layouts">gdk_keymap_have_bidi_layouts</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_have_bidi_layouts        (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
+<indexterm zone="gdk-keymap-have-bidi-layouts" role="2.12"><primary sortas="keymap_have_bidi_layouts">gdk_keymap_have_bidi_layouts</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_have_bidi_layouts        (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
 <para>
 Determines if keyboard layouts for both right-to-left and left-to-right
 languages are in use.</para>
@@ -443,9 +445,23 @@ languages are in use.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.12</para></refsect2>
+<refsect2 id="gdk-keymap-get-caps-lock-state" role="function" condition="since:2.16">
+<title>gdk_keymap_get_caps_lock_state ()</title>
+<indexterm zone="gdk-keymap-get-caps-lock-state" role="2.16"><primary sortas="keymap_get_caps_lock_state">gdk_keymap_get_caps_lock_state</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keymap_get_caps_lock_state      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap);</programlisting>
+<para>
+Returns whether the Caps Lock modifer is locked.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkKeymap"><type>GdkKeymap</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if Caps Lock is on
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
 <refsect2 id="gdk-keyval-name" role="function">
 <title>gdk_keyval_name ()</title>
-<indexterm zone="gdk-keyval-name"><primary sortas="gdk_keyval_name">gdk_keyval_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gdk_keyval_name                     (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-name"><primary sortas="keyval_name">gdk_keyval_name</primary></indexterm><programlisting><link linkend="gchar">gchar</link>*              gdk_keyval_name                     (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Converts a key value into a symbolic name.
 The names are the same as those in the <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> header file
@@ -460,7 +476,7 @@ a valid key. The string should not be modified.
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-from-name" role="function">
 <title>gdk_keyval_from_name ()</title>
-<indexterm zone="gdk-keyval-from-name"><primary sortas="gdk_keyval_from_name">gdk_keyval_from_name</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_from_name                (const <link linkend="gchar">gchar</link> *keyval_name);</programlisting>
+<indexterm zone="gdk-keyval-from-name"><primary sortas="keyval_from_name">gdk_keyval_from_name</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_from_name                (const <link linkend="gchar">gchar</link> *keyval_name);</programlisting>
 <para>
 Converts a key name to a key value.
 </para><variablelist role="params">
@@ -473,7 +489,7 @@ not a valid key.
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-convert-case" role="function">
 <title>gdk_keyval_convert_case ()</title>
-<indexterm zone="gdk-keyval-convert-case"><primary sortas="gdk_keyval_convert_case">gdk_keyval_convert_case</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_keyval_convert_case             (<link linkend="guint">guint</link> symbol,
+<indexterm zone="gdk-keyval-convert-case"><primary sortas="keyval_convert_case">gdk_keyval_convert_case</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_keyval_convert_case             (<link linkend="guint">guint</link> symbol,
                                                          <link linkend="guint">guint</link> *lower,
                                                          <link linkend="guint">guint</link> *upper);</programlisting>
 <para>
@@ -493,7 +509,7 @@ Examples of keyvals are <link linkend="GDK-a"><type>GDK_a</type></link>, <link l
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-to-upper" role="function">
 <title>gdk_keyval_to_upper ()</title>
-<indexterm zone="gdk-keyval-to-upper"><primary sortas="gdk_keyval_to_upper">gdk_keyval_to_upper</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-to-upper"><primary sortas="keyval_to_upper">gdk_keyval_to_upper</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Converts a key value to upper case, if applicable.
 </para><variablelist role="params">
@@ -506,7 +522,7 @@ in upper case or it is not subject to case conversion.
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-to-lower" role="function">
 <title>gdk_keyval_to_lower ()</title>
-<indexterm zone="gdk-keyval-to-lower"><primary sortas="gdk_keyval_to_lower">gdk_keyval_to_lower</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-to-lower"><primary sortas="keyval_to_lower">gdk_keyval_to_lower</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_keyval_to_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Converts a key value to lower case, if applicable.
 </para><variablelist role="params">
@@ -519,7 +535,7 @@ in lower case or it is not subject to case conversion.
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-is-upper" role="function">
 <title>gdk_keyval_is_upper ()</title>
-<indexterm zone="gdk-keyval-is-upper"><primary sortas="gdk_keyval_is_upper">gdk_keyval_is_upper</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-is-upper"><primary sortas="keyval_is_upper">gdk_keyval_is_upper</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_upper                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the given key value is in upper case.
 </para><variablelist role="params">
@@ -532,7 +548,7 @@ case conversion.
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-is-lower" role="function">
 <title>gdk_keyval_is_lower ()</title>
-<indexterm zone="gdk-keyval-is-lower"><primary sortas="gdk_keyval_is_lower">gdk_keyval_is_lower</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-is-lower"><primary sortas="keyval_is_lower">gdk_keyval_is_lower</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_keyval_is_lower                 (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the given key value is in lower case.
 </para><variablelist role="params">
@@ -545,7 +561,7 @@ case conversion.
 </variablelist></refsect2>
 <refsect2 id="gdk-keyval-to-unicode" role="function">
 <title>gdk_keyval_to_unicode ()</title>
-<indexterm zone="gdk-keyval-to-unicode"><primary sortas="gdk_keyval_to_unicode">gdk_keyval_to_unicode</primary></indexterm><programlisting><link linkend="guint32">guint32</link>             gdk_keyval_to_unicode               (<link linkend="guint">guint</link> keyval);</programlisting>
+<indexterm zone="gdk-keyval-to-unicode"><primary sortas="keyval_to_unicode">gdk_keyval_to_unicode</primary></indexterm><programlisting><link linkend="guint32">guint32</link>             gdk_keyval_to_unicode               (<link linkend="guint">guint</link> keyval);</programlisting>
 <para>
 Convert from a GDK key symbol to the corresponding ISO10646 (Unicode)
 character.</para>
@@ -560,7 +576,7 @@ character.</para>
 </variablelist></refsect2>
 <refsect2 id="gdk-unicode-to-keyval" role="function">
 <title>gdk_unicode_to_keyval ()</title>
-<indexterm zone="gdk-unicode-to-keyval"><primary sortas="gdk_unicode_to_keyval">gdk_unicode_to_keyval</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_unicode_to_keyval               (<link linkend="guint32">guint32</link> wc);</programlisting>
+<indexterm zone="gdk-unicode-to-keyval"><primary sortas="unicode_to_keyval">gdk_unicode_to_keyval</primary></indexterm><programlisting><link linkend="guint">guint</link>               gdk_unicode_to_keyval               (<link linkend="guint32">guint32</link> wc);</programlisting>
 <para>
 Convert from a ISO10646 character to a key symbol.</para>
 <para>
@@ -579,7 +595,7 @@ Convert from a ISO10646 character to a key symbol.</para>
 <refsect1 id="gdk-Keyboard-Handling.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2 id="GdkKeymap-direction-changed" role="signal"><title>The <literal>&quot;direction-changed&quot;</literal> signal</title>
-<indexterm zone="GdkKeymap-direction-changed" role="2.0"><primary sortas="GdkKeymap::direction-changed">GdkKeymap::direction-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="GdkKeymap-direction-changed" role="2.0"><primary sortas="Keymap::direction-changed">GdkKeymap::direction-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
 The ::direction-changed signal gets emitted when the direction of
@@ -592,7 +608,7 @@ the keymap changes.</para>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
 </variablelist><para>Since 2.0</para></refsect2><refsect2 id="GdkKeymap-keys-changed" role="signal"><title>The <literal>&quot;keys-changed&quot;</literal> signal</title>
-<indexterm zone="GdkKeymap-keys-changed" role="2.2"><primary sortas="GdkKeymap::keys-changed">GdkKeymap::keys-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+<indexterm zone="GdkKeymap-keys-changed" role="2.2"><primary sortas="Keymap::keys-changed">GdkKeymap::keys-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
                                                         <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
 <para>
 The ::keys-changed signal is emitted when the mapping represented by
@@ -604,7 +620,21 @@ The ::keys-changed signal is emitted when the mapping represented by
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist><para>Since 2.2</para></refsect2>
+</variablelist><para>Since 2.2</para></refsect2><refsect2 id="GdkKeymap-state-changed" role="signal"><title>The <literal>&quot;state-changed&quot;</literal> signal</title>
+<indexterm zone="GdkKeymap-state-changed" role="2.16"><primary sortas="Keymap::state-changed">GdkKeymap::state-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkKeymap">GdkKeymap</link> *keymap,
+                                                        <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
+<para>
+The ::state-changed signal is emitted when the state of the
+keyboard changes, e.g when Caps Lock is turned on or off.
+See <link linkend="gdk-keymap-get-caps-lock-state"><function>gdk_keymap_get_caps_lock_state()</function></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>keymap</parameter>&#160;:</term>
+<listitem><simpara> the object on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.16</para></refsect2>
 </refsect1>
 
 

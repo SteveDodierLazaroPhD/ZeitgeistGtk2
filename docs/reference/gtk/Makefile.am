@@ -41,11 +41,9 @@ IGNORE_HFILES=				\
 	gtkfilesystemmodel.h		\
 	gtkfilesystemunix.h		\
 	gtkfilesystemwin32.h		\
-	gtkhsv.h			\
 	gtkiconcache.h			\
         gtkiconcachevalidator.h         \
 	gtkiconthemeparser.h		\
-	gtkimmodule.h			\
 	gtkintl.h			\
 	gtkkeyhash.h			\
 	gtkmarshal.h			\
@@ -117,7 +115,7 @@ GTKDOC_LIBS = \
 
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml
+MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gtk
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files =					\
@@ -128,10 +126,12 @@ content_files =					\
 	changes-2.0.sgml			\
 	compiling.sgml				\
 	directfb.sgml				\
+	drawing-model.xml			\
 	glossary.xml				\
 	migrating-checklist.sgml		\
 	migrating-GtkAction.sgml		\
 	migrating-GtkComboBox.sgml		\
+	migrating-GtkEntry-icons.sgml		\
 	migrating-GtkFileChooser.sgml		\
 	migrating-GtkIconView.sgml		\
 	migrating-GtkAboutDialog.sgml		\
@@ -155,10 +155,12 @@ content_files =					\
 	visual_index.xml
 
 expand_content_files = 				\
+	drawing-model.xml			\
 	glossary.xml				\
 	migrating-checklist.sgml		\
 	migrating-GtkAction.sgml		\
 	migrating-GtkComboBox.sgml		\
+	migrating-GtkEntry-icons.sgml		\
 	migrating-GtkFileChooser.sgml		\
 	migrating-GtkIconView.sgml		\
 	migrating-GtkAboutDialog.sgml		\
@@ -301,6 +303,8 @@ HTML_IMAGES = \
 	$(srcdir)/images/combo-box.png					\
 	$(srcdir)/images/combo-box-entry.png				\
 	$(srcdir)/images/entry.png					\
+	$(srcdir)/images/figure-hierarchical-drawing.png		\
+	$(srcdir)/images/figure-windowed-label.png			\
 	$(srcdir)/images/file-button.png				\
 	$(srcdir)/images/filechooser.png				\
 	$(srcdir)/images/font-button.png				\
@@ -330,7 +334,15 @@ HTML_IMAGES = \
 	$(srcdir)/images/toolbar.png					\
 	$(srcdir)/images/tree-view-coordinates.png			\
 	$(srcdir)/images/volumebutton.png				\
-	$(srcdir)/images/window.png
+	$(srcdir)/images/window.png					\
+	$(srcdir)/images/layout-btlr.png				\
+	$(srcdir)/images/layout-btrl.png				\
+	$(srcdir)/images/layout-lrbt.png				\
+	$(srcdir)/images/layout-lrtb.png				\
+	$(srcdir)/images/layout-rlbt.png				\
+	$(srcdir)/images/layout-rltb.png				\
+	$(srcdir)/images/layout-tblr.png				\
+	$(srcdir)/images/layout-tbrl.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html \

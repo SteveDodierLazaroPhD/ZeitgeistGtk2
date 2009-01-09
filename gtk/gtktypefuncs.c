@@ -88,6 +88,7 @@
 *tp++ = gtk_anchor_type_get_type();
 *tp++ = gtk_arg_flags_get_type();
 *tp++ = gtk_arrow_get_type();
+*tp++ = gtk_arrow_placement_get_type();
 *tp++ = gtk_arrow_type_get_type();
 *tp++ = gtk_aspect_frame_get_type();
 *tp++ = gtk_assistant_get_type();
@@ -149,6 +150,7 @@
 *tp++ = gtk_editable_get_type();
 *tp++ = gtk_entry_completion_get_type();
 *tp++ = gtk_entry_get_type();
+*tp++ = gtk_entry_icon_position_get_type();
 *tp++ = gtk_event_box_get_type();
 *tp++ = gtk_expander_get_type();
 *tp++ = gtk_expander_style_get_type();
@@ -221,6 +223,7 @@
 *tp++ = gtk_number_up_layout_get_type();
 *tp++ = gtk_object_flags_get_type();
 *tp++ = gtk_object_get_type();
+*tp++ = gtk_orientable_get_type();
 *tp++ = gtk_orientation_get_type();
 *tp++ = gtk_pack_direction_get_type();
 *tp++ = gtk_pack_type_get_type();

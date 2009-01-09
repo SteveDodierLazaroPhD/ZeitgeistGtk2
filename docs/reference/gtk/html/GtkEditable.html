@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -100,19 +102,19 @@
 void                <a class="link" href="GtkEditable.html#gtk-editable-select-region" title="gtk_editable_select_region ()">gtk_editable_select_region</a>          (<a class="link" href="GtkEditable.html" title="GtkEditable">GtkEditable</a> *editable,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> start,
+>gint</a> start_pos,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> end);
+>gint</a> end_pos);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="GtkEditable.html#gtk-editable-get-selection-bounds" title="gtk_editable_get_selection_bounds ()">gtk_editable_get_selection_bounds</a>   (<a class="link" href="GtkEditable.html" title="GtkEditable">GtkEditable</a> *editable,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> *start,
+>gint</a> *start_pos,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> *end);
+>gint</a> *end_pos);
 void                <a class="link" href="GtkEditable.html#gtk-editable-insert-text" title="gtk_editable_insert_text ()">gtk_editable_insert_text</a>            (<a class="link" href="GtkEditable.html" title="GtkEditable">GtkEditable</a> *editable,
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
@@ -195,7 +197,7 @@ the following handler to "insert_text", an application
 can convert all entry into a widget into uppercase.
 </p>
 <div class="example">
-<a name="id3096538"></a><p class="title"><b>Example 16. Forcing entry to uppercase.</b></p>
+<a name="id3227989"></a><p class="title"><b>Example 18. Forcing entry to uppercase.</b></p>
 <div class="example-contents"><pre class="programlisting">
 #include &lt;ctype.h&gt;
 void
@@ -226,43 +228,8 @@ insert_text_handler (GtkEditable *editable,
 <a name="GtkEditable-struct"></a><h3>GtkEditable</h3>
 <pre class="programlisting">typedef struct _GtkEditable GtkEditable;</pre>
 <p>
-The <a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> structure contains the following fields.
-(These fields should be considered read-only. They should
-never be set by an application.)
-</p>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
-><span class="type">guint</span></a> selection_start;</td>
-<td>the starting position of the selected characters
- in the widget.</td>
-</tr>
-<tr>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
-><span class="type">guint</span></a> selection_end;</td>
-<td>the end position of the selected characters
- in the widget.</td>
-</tr>
-<tr>
-<td>
-<a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
-><span class="type">guint</span></a> editable;</td>
-<td>a flag indicating whether or not the widget is
-editable by the user.</td>
-</tr>
-</tbody>
-</table></div>
-<p>
+The <a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> structure is an opaque structure whose members
+cannot be directly accessed.
 </p>
 </div>
 <hr>
@@ -271,21 +238,20 @@ editable by the user.</td>
 <pre class="programlisting">void                gtk_editable_select_region          (<a class="link" href="GtkEditable.html" title="GtkEditable">GtkEditable</a> *editable,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> start,
+>gint</a> start_pos,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> end);</pre>
+>gint</a> end_pos);</pre>
 <p>
-Selects the text between <em class="parameter"><code>start</code></em> and <em class="parameter"><code>end</code></em>. Both <em class="parameter"><code>start</code></em> and <em class="parameter"><code>end</code></em> are
-relative to the start of the content. Note that positions are specified
-in characters, not bytes.</p>
+Selects a region of text. The characters that are selected are 
+those characters at positions from <em class="parameter"><code>start_pos</code></em> up to, but not 
+including <em class="parameter"><code>end_pos</code></em>. If <em class="parameter"><code>end_pos</code></em> is negative, then the the 
+characters selected are those characters from <em class="parameter"><code>start_pos</code></em> to 
+the end of the text.
+</p>
 <p>
-Selects a region of text. The characters that
-are selected are those characters at positions from
-<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If
-<em class="parameter"><code>end_pos</code></em> is negative, then the the characters selected
-will be those characters from <em class="parameter"><code>start_pos</code></em> to the end
-of the text.
+Note that positions are specified in characters, not bytes.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -296,12 +262,12 @@ of the text.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>start</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>start_pos</code></em> :</span></p></td>
 <td> start of region
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>end</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>end_pos</code></em> :</span></p></td>
 <td> end of region
 </td>
 </tr>
@@ -316,17 +282,20 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_editable_get_selection_bounds   (<a class="link" href="GtkEditable.html" title="GtkEditable">GtkEditable</a> *editable,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> *start,
+>gint</a> *start_pos,
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a> *end);</pre>
+>gint</a> *end_pos);</pre>
 <p>
-Retrieves the selection bound of the editable. <em class="parameter"><code>start_pos</code></em> will be filled
-with the start of the selection and <em class="parameter"><code>end_pos</code></em> with end. If no text was selected
-both will be identical and <code class="literal">FALSE</code> will be returned. Note that positions are
-specified in characters, not bytes.</p>
+Retrieves the selection bound of the editable. start_pos will be filled
+with the start of the selection and <em class="parameter"><code>end_pos</code></em> with end. If no text was 
+selected both will be identical and <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> will be returned. 
+</p>
 <p>
-Gets the current selection bounds, if there is a selection.
+Note that positions are specified in characters, not bytes.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -337,19 +306,26 @@ Gets the current selection bounds, if there is a selection.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>start</code></em> :</span></p></td>
-<td>location to store the starting position, or <code class="literal">NULL</code>.
+<td><p><span class="term"><em class="parameter"><code>start_pos</code></em> :</span></p></td>
+<td> location to store the starting position, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> 
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>end</code></em> :</span></p></td>
-<td>location to store the end position, or <code class="literal">NULL</code>.
+<td><p><span class="term"><em class="parameter"><code>end_pos</code></em> :</span></p></td>
+<td> location to store the end position, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> 
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if an area is selected, <code class="literal">FALSE</code> otherwise
-
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if an area is selected, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise
 </td>
 </tr>
 </tbody>
@@ -369,10 +345,13 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> *position);</pre>
 <p>
-Appends <em class="parameter"><code>new_text_length</code></em> characters of <em class="parameter"><code>new_text</code></em> to the contents of the widget,
-at position <em class="parameter"><code>position</code></em>. Note that this position is in characters, not in bytes.</p>
+Inserts <em class="parameter"><code>new_text_length</code></em> bytes of <em class="parameter"><code>new_text</code></em> into the contents of the 
+widget, at position <em class="parameter"><code>position</code></em>. 
+</p>
 <p>
-Inserts text at a given position.
+Note that the position is in characters, not in bytes. 
+The function updates <em class="parameter"><code>position</code></em> to point after the newly inserted text.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -389,12 +368,12 @@ Inserts text at a given position.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>new_text_length</code></em> :</span></p></td>
-<td> the text to append
+<td> the length of the text in bytes, or -1
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>position</code></em> :</span></p></td>
-<td> position text will be inserted at
+<td> location of the position text will be inserted at
 </td>
 </tr>
 </tbody>
@@ -411,15 +390,14 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> end_pos);</pre>
 <p>
-Deletes the content of the editable between <em class="parameter"><code>start_pos</code></em> and <em class="parameter"><code>end_pos</code></em>.
-Note that positions are specified in characters, not bytes.</p>
+Deletes a sequence of characters. The characters that are deleted are 
+those characters at positions from <em class="parameter"><code>start_pos</code></em> up to, but not including 
+<em class="parameter"><code>end_pos</code></em>. If <em class="parameter"><code>end_pos</code></em> is negative, then the the characters deleted
+are those from <em class="parameter"><code>start_pos</code></em> to the end of the text.
+</p>
 <p>
-Deletes a sequence of characters. The characters that
-are deleted are those characters at positions from
-<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If
-<em class="parameter"><code>end_pos</code></em> is negative, then the the characters deleted
-will be those characters from <em class="parameter"><code>start_pos</code></em> to the end
-of the text.
+Note that the positions are specified in characters, not bytes.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -455,15 +433,14 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> end_pos);</pre>
 <p>
-Retreives the content of the editable between <em class="parameter"><code>start</code></em> and <em class="parameter"><code>end</code></em>.
+Retrieves a sequence of characters. The characters that are retrieved 
+are those characters at positions from <em class="parameter"><code>start_pos</code></em> up to, but not 
+including <em class="parameter"><code>end_pos</code></em>. If <em class="parameter"><code>end_pos</code></em> is negative, then the the characters 
+retrieved are those characters from <em class="parameter"><code>start_pos</code></em> to the end of the text.
+</p>
+<p>
 Note that positions are specified in characters, not bytes.</p>
 <p>
-Retrieves a sequence of characters. The characters that
-are retrieved are those characters at positions from
-<em class="parameter"><code>start_pos</code></em> up to, but not including <em class="parameter"><code>end_pos</code></em>. If
-<em class="parameter"><code>end_pos</code></em> is negative, then the the characters retrieved
-will be those characters from <em class="parameter"><code>start_pos</code></em> to the end
-of the text.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -475,12 +452,12 @@ of the text.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>start_pos</code></em> :</span></p></td>
-<td>the starting position.
+<td> start of text
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>end_pos</code></em> :</span></p></td>
-<td>the end position.
+<td> end of text
 </td>
 </tr>
 <tr>
@@ -501,9 +478,6 @@ of the text.
 Removes the contents of the currently selected content in the editable and
 puts it on the clipboard.</p>
 <p>
-Causes the characters in the current selection to
-be copied to the clipboard and then deleted from
-the widget.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -522,8 +496,6 @@ the widget.
 Copies the contents of the currently selected content in the editable and
 puts it on the clipboard.</p>
 <p>
-Causes the characters in the current selection to
-be copied to the clipboard.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -542,8 +514,6 @@ be copied to the clipboard.
 Pastes the content of the clipboard to the current position of the
 cursor in the editable.</p>
 <p>
-Causes the contents of the clipboard to be pasted into
-the given widget at the current cursor position.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -560,10 +530,8 @@ the given widget at the current cursor position.
 <pre class="programlisting">void                gtk_editable_delete_selection       (<a class="link" href="GtkEditable.html" title="GtkEditable">GtkEditable</a> *editable);</pre>
 <p>
 Deletes the currently selected text of the editable.
-This call will not do anything if there is no selected text.</p>
+This call doesn't do anything if there is no selected text.</p>
 <p>
-Deletes the current contents of the widgets selection and
-disclaims the selection.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -582,9 +550,15 @@ disclaims the selection.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> position);</pre>
 <p>
-Sets the cursor position in the editable to the given value.</p>
+Sets the cursor position in the editable to the given value.
+</p>
 <p>
-Sets the cursor position.
+The cursor is displayed before the character with the given (base 0) 
+index in the contents of the editable. The value must be less than or 
+equal to the number of characters in the editable. A value of -1 
+indicates that the position should be set after the last character 
+of the editable. Note that <em class="parameter"><code>position</code></em> is in characters, not in bytes.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -596,12 +570,7 @@ Sets the cursor position.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>position</code></em> :</span></p></td>
-<td>  the position of the cursor. The cursor is displayed
-   before the character with the given (base 0) index in the editable. 
-   The value must be less than or equal to the number of characters 
-   in the editable. A value of -1 indicates that the position should
-   be set after the last character of the editable. Note that this 
-   position is in characters, not in bytes.
+<td> the position of the cursor 
 </td>
 </tr>
 </tbody>
@@ -615,10 +584,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a>                gtk_editable_get_position           (<a class="link" href="GtkEditable.html" title="GtkEditable">GtkEditable</a> *editable);</pre>
 <p>
 Retrieves the current position of the cursor relative to the start
-of the content of the editable. Note that this position is in characters,
-not in bytes.</p>
+of the content of the editable. 
+</p>
 <p>
-Retrieves the current cursor position.
+Note that this position is in characters, not in bytes.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -647,8 +617,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 Determines if the user can edit the text in the editable
 widget or not.</p>
 <p>
-Determines if the user can edit the text in the editable
-widget or not.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -660,7 +628,9 @@ widget or not.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>is_editable</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the user is allowed to edit the text
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the user is allowed to edit the text
   in the widget
 </td>
 </tr>
@@ -688,7 +658,9 @@ Retrieves whether <em class="parameter"><code>editable</code></em> is editable. 
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if <em class="parameter"><code>editable</code></em> is editable.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if <em class="parameter"><code>editable</code></em> is editable.
 </td>
 </tr>
 </tbody>
@@ -704,15 +676,23 @@ Retrieves whether <em class="parameter"><code>editable</code></em> is editable. 
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>     user_data)      : Run Last</pre>
 <p>
-Indicates that the user has changed the contents
-of the widget.
+The ::changed signal is emitted at the end of a single
+user-visible operation on the contents of the <a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a>.
+</p>
+<p>
+E.g., a paste operation that replaces the contents of the
+selection will cause only one signal emission (even though it
+is implemented by first deleting the selection, then inserting
+the new content, and may cause multiple ::notify::text signals
+to be emitted).</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>editable</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the object which received the signal
 </td>
 </tr>
 <tr>
@@ -740,28 +720,31 @@ This signal is emitted when text is deleted from
 the widget by the user. The default handler for
 this signal will normally be responsible for deleting
 the text, so by connecting to this signal and then
-stopping the signal with <a class="link" href="gtk-Signals.html#gtk-signal-emit-stop" title="gtk_signal_emit_stop()"><code class="function">gtk_signal_emit_stop()</code></a>, it
+stopping the signal with <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-stop-emission"
+><code class="function">g_signal_stop_emission()</code></a>, it
 is possible to modify the range of deleted text, or
 prevent it from being deleted entirely. The <em class="parameter"><code>start_pos</code></em>
 and <em class="parameter"><code>end_pos</code></em> parameters are interpreted as for
-<a class="link" href="GtkEditable.html#gtk-editable-delete-text" title="gtk_editable_delete_text ()"><code class="function">gtk_editable_delete_text()</code></a>
+<a class="link" href="GtkEditable.html#gtk-editable-delete-text" title="gtk_editable_delete_text ()"><code class="function">gtk_editable_delete_text()</code></a>.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>editable</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the object which received the signal
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>start_pos</code></em> :</span></p></td>
-<td>the starting position.
+<td> the starting position
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>end_pos</code></em> :</span></p></td>
-<td>the end position.
+<td> the end position
 </td>
 </tr>
 <tr>
@@ -792,35 +775,38 @@ This signal is emitted when text is inserted into
 the widget by the user. The default handler for
 this signal will normally be responsible for inserting
 the text, so by connecting to this signal and then
-stopping the signal with <a class="link" href="gtk-Signals.html#gtk-signal-emit-stop" title="gtk_signal_emit_stop()"><code class="function">gtk_signal_emit_stop()</code></a>, it
+stopping the signal with <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-stop-emission"
+><code class="function">g_signal_stop_emission()</code></a>, it
 is possible to modify the inserted text, or prevent
-it from being inserted entirely.
+it from being inserted entirely.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>editable</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the object which received the signal
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>new_text</code></em> :</span></p></td>
-<td>the new text to insert.
+<td> the new text to insert
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>new_text_length</code></em> :</span></p></td>
-<td>the length of the new text, in bytes,
-  or -1 if new_text is nul-terminated
+<td> the length of the new text, in bytes,
+    or -1 if new_text is nul-terminated
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>position</code></em> :</span></p></td>
-<td>the position, in characters, at which to insert 
-           the new text. this is an in-out parameter.
-           After the signal emission is finished, it should
-           point after the newly inserted text.
+<td> the position, in characters, at which to insert
+    the new text. this is an in-out parameter.
+    After the signal emission is finished, it should
+    point after the newly inserted text.
 </td>
 </tr>
 <tr>

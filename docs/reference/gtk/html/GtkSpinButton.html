@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -288,7 +290,7 @@ The main properties of a <a class="link" href="GtkSpinButton.html" title="GtkSpi
 <p>
 </p>
 <div class="example">
-<a name="id3292075"></a><p class="title"><b>Example 14. Using a <span class="structname">GtkSpinButton</span> to get an integer.</b></p>
+<a name="id3308584"></a><p class="title"><b>Example 16. Using a <span class="structname">GtkSpinButton</span> to get an integer.</b></p>
 <div class="example-contents"><pre class="programlisting">
 /* Provides a function to retrieve an integer value from a GtkSpinButton
  * and creates a spin button to model percentage values.
@@ -315,7 +317,7 @@ void create_integer_spin_button (void) {
 <p>
 </p>
 <div class="example">
-<a name="id3292110"></a><p class="title"><b>Example 15. Using a <span class="structname">GtkSpinButton</span> to get a floating point value.</b></p>
+<a name="id3308619"></a><p class="title"><b>Example 17. Using a <span class="structname">GtkSpinButton</span> to get a floating point value.</b></p>
 <div class="example-contents"><pre class="programlisting">
 /* Provides a function to retrieve a floating point value from a
  * GtkSpinButton, and creates a high precision spin button.
@@ -709,17 +711,16 @@ Sets the minimum and maximum allowable values for <em class="parameter"><code>sp
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_spin_button_get_value_as_float</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_spin_button_get_value_as_float</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkSpinButton.html#gtk-spin-button-get-value" title="gtk_spin_button_get_value ()"><code class="function">gtk_spin_button_get_value()</code></a> instead.</p>
 </div>
 <p>
-Gets the value in the <em class="parameter"><code>spin_button</code></em>. This function is deprecated,
-use <a class="link" href="GtkSpinButton.html#gtk-spin-button-get-value" title="gtk_spin_button_get_value ()"><code class="function">gtk_spin_button_get_value()</code></a> instead.
+Gets the value in the <em class="parameter"><code>spin_button</code></em>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the value of <em class="parameter"><code>spin_button</code></em>.
+<td>the value of <em class="parameter"><code>spin_button</code></em>
 </td>
 </tr></tbody>
 </table></div>
@@ -989,12 +990,16 @@ Gets the current step and page the increments used by <em class="parameter"><cod
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>step</code></em> :</span></p></td>
-<td> location to store step increment, or <code class="literal">NULL</code>
+<td> location to store step increment, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>page</code></em> :</span></p></td>
-<td> location to store page increment, or <code class="literal">NULL</code>
+<td> location to store page increment, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1021,7 +1026,9 @@ See <a class="link" href="GtkSpinButton.html#gtk-spin-button-set-numeric" title=
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if only numeric text can be entered
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if only numeric text can be entered
 </td>
 </tr>
 </tbody>
@@ -1052,12 +1059,16 @@ Gets the range allowed for <em class="parameter"><code>spin_button</code></em>. 
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>min</code></em> :</span></p></td>
-<td> location to store minimum allowed value, or <code class="literal">NULL</code>
+<td> location to store minimum allowed value, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>max</code></em> :</span></p></td>
-<td> location to store maximum allowed value, or <code class="literal">NULL</code>
+<td> location to store maximum allowed value, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1084,7 +1095,9 @@ Returns whether the values are corrected to the nearest step. See
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if values are snapped to the nearest step.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if values are snapped to the nearest step.
 </td>
 </tr>
 </tbody>
@@ -1164,7 +1177,9 @@ exceeded. See <a class="link" href="GtkSpinButton.html#gtk-spin-button-set-wrap"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the spin button wraps around
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the spin button wraps around
 </td>
 </tr>
 </tbody>
@@ -1378,7 +1393,9 @@ on_output (GtkSpinButton *spin,
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the value has been displayed.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the value has been displayed.
 </td>
 </tr>
 </tbody>

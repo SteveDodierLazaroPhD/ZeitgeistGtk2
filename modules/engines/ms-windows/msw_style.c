@@ -40,9 +40,12 @@
 
 #include "gtk/gtk.h"
 #include "gtk/gtk.h"
-/* #include <gdk/gdkwin32.h> */
 
+#ifdef BUILDING_STANDALONE
+#include "gdk/gdkwin32.h"
+#else
 #include "gdk/win32/gdkwin32.h"
+#endif
 
 static HDC get_window_dc (GtkStyle *style, GdkWindow *window,
 			  GtkStateType state_type, gint x, gint y, gint width,
@@ -778,7 +781,8 @@ setup_msw_rc_style (void)
   g_snprintf (buf, sizeof (buf),
 	      "style \"msw-tooltips-caption\" = \"msw-default\"\n"
 	      "{fg[NORMAL] = { %d, %d, %d }\n" "%s = \"%s\"\n"
-	      "}widget \"gtk-tooltips.GtkLabel\" style \"msw-tooltips-caption\"\n",
+	      "}widget \"gtk-tooltips.GtkLabel\" style \"msw-tooltips-caption\"\n"
+	      "widget \"gtk-tooltip.GtkLabel\" style \"msw-tooltips-caption\"\n",
 	      tooltip_fore.red, tooltip_fore.green, tooltip_fore.blue,
 	      (font_ptr ? "font_name" : "#"),
 	      (font_ptr ? font_ptr : " font name should go here"));
@@ -787,7 +791,8 @@ setup_msw_rc_style (void)
   g_snprintf (buf, sizeof (buf),
 	      "style \"msw-tooltips\" = \"msw-default\"\n"
 	      "{bg[NORMAL] = { %d, %d, %d }\n"
-	      "}widget \"gtk-tooltips*\" style \"msw-tooltips\"\n",
+	      "}widget \"gtk-tooltips*\" style \"msw-tooltips\"\n"
+	      "widget \"gtk-tooltip*\" style \"msw-tooltips\"\n",
 	      tooltip_back.red, tooltip_back.green, tooltip_back.blue);
   gtk_rc_parse_string (buf);
 
@@ -3494,8 +3499,9 @@ draw_layout (GtkStyle *style,
 	{
 	  if (GTK_IS_NOTEBOOK (widget->parent))
 	    {
+	      int side;
 	      notebook = GTK_NOTEBOOK (widget->parent);
-	      int side = gtk_notebook_get_tab_pos (notebook);
+	      side = gtk_notebook_get_tab_pos (notebook);
 
 	      if (side == GTK_POS_TOP || side == GTK_POS_BOTTOM)
 		{

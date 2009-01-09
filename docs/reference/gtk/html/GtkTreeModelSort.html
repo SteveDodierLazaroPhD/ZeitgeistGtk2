@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -137,7 +139,7 @@ href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"
 <a name="GtkTreeModelSort.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkTreeModelSort implements
- <a class="link" href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a>,  <a class="link" href="gtk-GtkTreeView-drag-and-drop.html#GtkTreeDragSource">GtkTreeDragSource</a> and  <a class="link" href="GtkTreeSortable.html" title="GtkTreeSortable">GtkTreeSortable</a>.</p>
+ <a class="link" href="GtkTreeSortable.html" title="GtkTreeSortable">GtkTreeSortable</a>,  <a class="link" href="GtkTreeModel.html" title="GtkTreeModel">GtkTreeModel</a> and  <a class="link" href="gtk-GtkTreeView-drag-and-drop.html#GtkTreeDragSource">GtkTreeDragSource</a>.</p>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkTreeModelSort.properties"></a><h2>Properties</h2>
@@ -168,7 +170,7 @@ sort the second.
 <p>
 </p>
 <div class="example">
-<a name="id3255001"></a><p class="title"><b>Example 20. Using a <span class="structname">GtkTreeModelSort</span></b></p>
+<a name="id3344138"></a><p class="title"><b>Example 22. Using a <span class="structname">GtkTreeModelSort</span></b></p>
 <div class="example-contents"><pre class="programlisting">
 {
   GtkTreeView *tree_view1;
@@ -204,7 +206,7 @@ child model, and change the row there.
 <p>
 </p>
 <div class="example">
-<a name="id3322670"></a><p class="title"><b>Example 21. Accessing the child model of in a selection changed callback</b></p>
+<a name="id3332848"></a><p class="title"><b>Example 23. Accessing the child model of in a selection changed callback</b></p>
 <div class="example-contents"><pre class="programlisting">
 void
 selection_changed (GtkTreeSelection *selection, gpointer data)
@@ -314,7 +316,9 @@ Returns the model the <a class="link" href="GtkTreeModelSort.html" title="GtkTre
 Converts <em class="parameter"><code>child_path</code></em> to a path relative to <em class="parameter"><code>tree_model_sort</code></em>.  That is,
 <em class="parameter"><code>child_path</code></em> points to a path in the child model.  The returned path will
 point to the same row in the sorted model.  If <em class="parameter"><code>child_path</code></em> isn't a valid 
-path on the child model, then <code class="literal">NULL</code> is returned.</p>
+path on the child model, then <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> is returned.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -332,7 +336,9 @@ path on the child model, then <code class="literal">NULL</code> is returned.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a>, or <code class="literal">NULL</code>
+<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -349,7 +355,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
                                                          <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter">GtkTreeIter</a> *child_iter);</pre>
 <p>
 Sets <em class="parameter"><code>sort_iter</code></em> to point to the row in <em class="parameter"><code>tree_model_sort</code></em> that corresponds to
-the row pointed at by <em class="parameter"><code>child_iter</code></em>.  If <em class="parameter"><code>sort_iter</code></em> was not set, <code class="literal">FALSE</code>
+the row pointed at by <em class="parameter"><code>child_iter</code></em>.  If <em class="parameter"><code>sort_iter</code></em> was not set, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 is returned.  Note: a boolean is only returned since 2.14.</p>
 <p>
 </p>
@@ -373,7 +381,9 @@ is returned.  Note: a boolean is only returned since 2.14.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>sort_iter</code></em> was set, i.e. if <em class="parameter"><code>sort_iter</code></em> is a
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>sort_iter</code></em> was set, i.e. if <em class="parameter"><code>sort_iter</code></em> is a
 valid iterator pointer to a visible row in the child model.
 </td>
 </tr>
@@ -391,7 +401,9 @@ Converts <em class="parameter"><code>sorted_path</code></em> to a path on the ch
 That is, <em class="parameter"><code>sorted_path</code></em> points to a location in <em class="parameter"><code>tree_model_sort</code></em>.  The 
 returned path will point to the same location in the model not being 
 sorted.  If <em class="parameter"><code>sorted_path</code></em> does not point to a location in the child model, 
-<code class="literal">NULL</code> is returned.</p>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> is returned.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -409,7 +421,9 @@ sorted.  If <em class="parameter"><code>sorted_path</code></em> does not point t
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a>, or <code class="literal">NULL</code>
+<td> A newly allocated <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -526,7 +540,11 @@ Checks if the given iter is a valid iter for this <a class="link" href="GtkTreeM
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the iter is valid, <code class="literal">FALSE</code> if the iter is invalid.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the iter is valid, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if the iter is invalid.
 
 </td>
 </tr>

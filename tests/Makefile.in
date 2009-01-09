@@ -87,7 +87,7 @@ DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
-DUMPBIN = @DUMPBIN@
+ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -97,7 +97,8 @@ ENABLE_GTK_DOC_TRUE = @ENABLE_GTK_DOC_TRUE@
 ENABLE_MAN_FALSE = @ENABLE_MAN_FALSE@
 ENABLE_MAN_TRUE = @ENABLE_MAN_TRUE@
 EXEEXT = @EXEEXT@
-FGREP = @FGREP@
+F77 = @F77@
+FFLAGS = @FFLAGS@
 GAIL_INET_LIBS = @GAIL_INET_LIBS@
 GAIL_LT_CURRENT_MINUS_AGE = @GAIL_LT_CURRENT_MINUS_AGE@
 GAIL_LT_VERSION_INFO = @GAIL_LT_VERSION_INFO@
@@ -242,7 +243,6 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
 INTLLIBS = @INTLLIBS@
-LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBJASPER = @LIBJASPER@
 LIBJPEG = @LIBJPEG@
@@ -253,7 +253,6 @@ LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
 LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
-LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_CURRENT_MINUS_AGE = @LT_CURRENT_MINUS_AGE@
@@ -277,8 +276,6 @@ OS_UNIX_FALSE = @OS_UNIX_FALSE@
 OS_UNIX_TRUE = @OS_UNIX_TRUE@
 OS_WIN32_FALSE = @OS_WIN32_FALSE@
 OS_WIN32_TRUE = @OS_WIN32_TRUE@
-OTOOL = @OTOOL@
-OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -334,7 +331,7 @@ X_LIBS = @X_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
-ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_F77 = @ac_ct_F77@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -369,7 +366,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 ms_librarian = @ms_librarian@
 oldincludedir = @oldincludedir@
@@ -415,7 +411,7 @@ TEST_PROGS =
 ### testing rules
 
 # Xvfb based test rules
-XVFB = Xvfb -screen 0 800x600x16
+XVFB = Xvfb -ac -noreset -screen 0 800x600x16
 XIDS = 101 102 103 104 105 106 107 197 199 211 223 227 293 307 308 309 310 311 \
    491 492 493 494 495 496 497 498 499 500 501 502 503 504 505 506 507 508 509 \
    991 992 993 994 995 996 997 998 999 1000 1001 1002 1003 1004 1005 1006 1007 \
@@ -471,9 +467,11 @@ noinst_PROGRAMS = $(TEST_PROGS)	\
 	testcombo			\
 	testcombochange			\
 	testcellrenderertext		\
+	testclientmessage		\
 	testdnd				\
 	testellipsise			\
 	testentrycompletion 		\
+	testentryicons			\
 	testfilechooser			\
 	testfilechooserbutton		\
 	testframe			\
@@ -541,9 +539,11 @@ testcalendar_DEPENDENCIES = $(TEST_DEPS)
 testcombo_DEPENDENCIES = $(TEST_DEPS)
 testcombochange_DEPENDENCIES = $(TEST_DEPS)
 testcellrenderertext_DEPENDENCIES = $(TEST_DEPS)
+testclientmessage_DEPENDENCIES = $(TEST_DEPS)
 testdnd_DEPENDENCIES = $(TEST_DEPS)
 testellipsise_DEPENDENCIES = $(TEST_DEPS)
 testentrycompletion_DEPENDENCIES = $(TEST_DEPS)
+testentryicons_DEPENDENCIES = $(TEST_DEPS)
 testfilechooser_DEPENDENCIES = $(TEST_DEPS)
 testfilechooserbutton_DEPENDENCIES = $(TEST_DEPS)
 testgtk_DEPENDENCIES = $(TEST_DEPS)
@@ -594,9 +594,11 @@ testcalendar_LDADD = $(LDADDS)
 testcombo_LDADD = $(LDADDS)
 testcombochange_LDADD = $(LDADDS)
 testcellrenderertext_LDADD = $(LDADDS)
+testclientmessage_LDADD = $(LDADDS)
 testdnd_LDADD = $(LDADDS)
 testellipsise_LDADD = $(LDADDS)
 testentrycompletion_LDADD = $(LDADDS)
+testentryicons_LDADD = $(LDADDS)
 testfilechooser_LDADD = $(LDADDS)
 testfilechooserbutton_LDADD = $(LDADDS)
 testgtk_LDADD = $(LDADDS)
@@ -648,6 +650,11 @@ testvolumebutton_LDADD = $(LDADDS)
 testentrycompletion_SOURCES = \
 	prop-editor.c		\
 	testentrycompletion.c
+
+
+testentryicons_SOURCES = \
+	prop-editor.c		\
+	testentryicons.c
 
 
 testfilechooser_SOURCES = \
@@ -769,9 +776,11 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testcombo$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testcombochange$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testclientmessage$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testdnd$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testellipsise$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testentryicons$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testfilechooser$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testfilechooserbutton$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testframe$(EXEEXT) \
@@ -830,9 +839,11 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testcombo$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testcombochange$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testclientmessage$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testdnd$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testellipsise$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testentryicons$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testfilechooser$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testfilechooserbutton$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testframe$(EXEEXT) \
@@ -889,9 +900,11 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testcombo$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testcombochange$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testclientmessage$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testdnd$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testellipsise$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testentryicons$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testfilechooser$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testfilechooserbutton$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testframe$(EXEEXT) \
@@ -951,9 +964,11 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testcombo$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testcombochange$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testcellrenderertext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testclientmessage$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testdnd$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testellipsise$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testentrycompletion$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testentryicons$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testfilechooser$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testfilechooserbutton$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testframe$(EXEEXT) \
@@ -1079,6 +1094,9 @@ testcalendar_LDFLAGS =
 testcellrenderertext_SOURCES = testcellrenderertext.c
 testcellrenderertext_OBJECTS = testcellrenderertext.$(OBJEXT)
 testcellrenderertext_LDFLAGS =
+testclientmessage_SOURCES = testclientmessage.c
+testclientmessage_OBJECTS = testclientmessage.$(OBJEXT)
+testclientmessage_LDFLAGS =
 testcombo_SOURCES = testcombo.c
 testcombo_OBJECTS = testcombo.$(OBJEXT)
 testcombo_LDFLAGS =
@@ -1095,6 +1113,10 @@ am_testentrycompletion_OBJECTS = prop-editor.$(OBJEXT) \
 	testentrycompletion.$(OBJEXT)
 testentrycompletion_OBJECTS = $(am_testentrycompletion_OBJECTS)
 testentrycompletion_LDFLAGS =
+am_testentryicons_OBJECTS = prop-editor.$(OBJEXT) \
+	testentryicons.$(OBJEXT)
+testentryicons_OBJECTS = $(am_testentryicons_OBJECTS)
+testentryicons_LDFLAGS =
 am_testfilechooser_OBJECTS = prop-editor.$(OBJEXT) \
 	testfilechooser.$(OBJEXT)
 testfilechooser_OBJECTS = $(am_testfilechooser_OBJECTS)
@@ -1246,10 +1268,12 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/testbbox.Po ./$(DEPDIR)/testcairo.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testcalendar.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testcellrenderertext.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testclientmessage.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testcombo.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testcombochange.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testdnd.Po ./$(DEPDIR)/testellipsise.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testentrycompletion.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testentryicons.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testfilechooser.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testfilechooserbutton.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testframe.Po \
@@ -1308,8 +1332,9 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) pixbuf-lowmem.c \
 	pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c \
 	testaccel.c $(testactions_SOURCES) testassistant.c \
 	$(testbbox_SOURCES) testcairo.c testcalendar.c \
-	testcellrenderertext.c testcombo.c testcombochange.c testdnd.c \
-	testellipsise.c $(testentrycompletion_SOURCES) \
+	testcellrenderertext.c testclientmessage.c testcombo.c \
+	testcombochange.c testdnd.c testellipsise.c \
+	$(testentrycompletion_SOURCES) $(testentryicons_SOURCES) \
 	$(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) \
 	$(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) \
 	testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c \
@@ -1327,7 +1352,7 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) pixbuf-lowmem.c \
 	$(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl \
 	Makefile.am
-SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testclientmessage.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testentryicons_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 
 all: all-am
 
@@ -1393,6 +1418,9 @@ testcalendar$(EXEEXT): $(testcalendar_OBJECTS) $(testcalendar_DEPENDENCIES)
 testcellrenderertext$(EXEEXT): $(testcellrenderertext_OBJECTS) $(testcellrenderertext_DEPENDENCIES) 
 	@rm -f testcellrenderertext$(EXEEXT)
 	$(LINK) $(testcellrenderertext_LDFLAGS) $(testcellrenderertext_OBJECTS) $(testcellrenderertext_LDADD) $(LIBS)
+testclientmessage$(EXEEXT): $(testclientmessage_OBJECTS) $(testclientmessage_DEPENDENCIES) 
+	@rm -f testclientmessage$(EXEEXT)
+	$(LINK) $(testclientmessage_LDFLAGS) $(testclientmessage_OBJECTS) $(testclientmessage_LDADD) $(LIBS)
 testcombo$(EXEEXT): $(testcombo_OBJECTS) $(testcombo_DEPENDENCIES) 
 	@rm -f testcombo$(EXEEXT)
 	$(LINK) $(testcombo_LDFLAGS) $(testcombo_OBJECTS) $(testcombo_LDADD) $(LIBS)
@@ -1408,6 +1436,9 @@ testellipsise$(EXEEXT): $(testellipsise_OBJECTS) $(testellipsise_DEPENDENCIES)
 testentrycompletion$(EXEEXT): $(testentrycompletion_OBJECTS) $(testentrycompletion_DEPENDENCIES) 
 	@rm -f testentrycompletion$(EXEEXT)
 	$(LINK) $(testentrycompletion_LDFLAGS) $(testentrycompletion_OBJECTS) $(testentrycompletion_LDADD) $(LIBS)
+testentryicons$(EXEEXT): $(testentryicons_OBJECTS) $(testentryicons_DEPENDENCIES) 
+	@rm -f testentryicons$(EXEEXT)
+	$(LINK) $(testentryicons_LDFLAGS) $(testentryicons_OBJECTS) $(testentryicons_LDADD) $(LIBS)
 testfilechooser$(EXEEXT): $(testfilechooser_OBJECTS) $(testfilechooser_DEPENDENCIES) 
 	@rm -f testfilechooser$(EXEEXT)
 	$(LINK) $(testfilechooser_LDFLAGS) $(testfilechooser_OBJECTS) $(testfilechooser_LDADD) $(LIBS)
@@ -1555,11 +1586,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcairo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcalendar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcellrenderertext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testclientmessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcombo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcombochange.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testdnd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testellipsise.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testentrycompletion.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testentryicons.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testfilechooser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testfilechooserbutton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testframe.Po@am__quote@

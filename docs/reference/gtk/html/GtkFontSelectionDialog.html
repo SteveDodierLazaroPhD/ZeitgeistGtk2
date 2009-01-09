@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -197,23 +199,20 @@ name "font_selection". It also exposes the buttons with the names
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *title);</pre>
 <p>
-The <em class="parameter"><code>title</code></em> is used to set the title of the <a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog"><span class="type">GtkFontSelectionDialog</span></a>
-returned. This <a class="link" href="GtkDialog.html" title="GtkDialog"><span class="type">GtkDialog</span></a> is specifically catered with widgets for
-selecting a font from those installed.</p>
+Creates a new <a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog"><span class="type">GtkFontSelectionDialog</span></a>.</p>
 <p>
-Creates a new <a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog"><span class="type">GtkFontSelectionDialog</span></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
-<td> a pointer to a string
+<td> the title of the dialog window 
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a new <a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog"><span class="type">GtkFontSelectionDialog</span></a>.
+<td> a new <a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog"><span class="type">GtkFontSelectionDialog</span></a>
 </td>
 </tr>
 </tbody>
@@ -230,9 +229,8 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Fonts.html#GdkFont"
 <p><code class="literal">gtk_font_selection_dialog_get_font</code> has been deprecated since version 2.0 and should not be used in newly-written code. Use <a class="link" href="GtkFontSelectionDialog.html#gtk-font-selection-dialog-get-font-name" title="gtk_font_selection_dialog_get_font_name ()"><code class="function">gtk_font_selection_dialog_get_font_name()</code></a> instead.</p>
 </div>
 <p>
-</p>
+Gets the currently-selected font.</p>
 <p>
-Gets the currently-selected font.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -247,7 +245,9 @@ Gets the currently-selected font.
 <td> the <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Fonts.html#GdkFont"
 ><span class="type">GdkFont</span></a> from the <a class="link" href="GtkFontSelection.html" title="GtkFontSelection"><span class="type">GtkFontSelection</span></a> for the
-currently selected font in the dialog.
+    currently selected font in the dialog, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no font is selected
 
 </td>
 </tr>
@@ -262,11 +262,14 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a>*              gtk_font_selection_dialog_get_font_name
                                                         (<a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog">GtkFontSelectionDialog</a> *fsd);</pre>
 <p>
-Gets the currently-selected font name.  Note that this can be a different
-string than what you set with <a class="link" href="GtkFontSelectionDialog.html#gtk-font-selection-dialog-set-font-name" title="gtk_font_selection_dialog_set_font_name ()"><code class="function">gtk_font_selection_dialog_set_font_name()</code></a>, as
-the font selection widget may normalize font names and thus return a string
-with a different structure.  For example, "Helvetica Italic Bold 12" could be
-normalized to "Helvetica Bold Italic 12".  Use <a
+Gets the currently-selected font name.
+</p>
+<p>
+Note that this can be a different string than what you set with 
+<a class="link" href="GtkFontSelectionDialog.html#gtk-font-selection-dialog-set-font-name" title="gtk_font_selection_dialog_set_font_name ()"><code class="function">gtk_font_selection_dialog_set_font_name()</code></a>, as the font selection widget
+may normalize font names and thus return a string with a different 
+structure. For example, "Helvetica Italic Bold 12" could be normalized 
+to "Helvetica Bold Italic 12".  Use <a
 href="/usr/share/gtk-doc/html/pango/pango-Fonts.html#pango-font-description-equal"
 ><code class="function">pango_font_description_equal()</code></a>
 if you want to compare two font descriptions.</p>
@@ -282,8 +285,10 @@ if you want to compare two font descriptions.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A string with the name of the current font, or <span class="type">NULL</span> if no font
-is selected.  You must free this string with <a
+<td> A string with the name of the current font, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no 
+    font is selected. You must free this string with <a
 href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"
 ><code class="function">g_free()</code></a>.
 </td>
@@ -304,7 +309,6 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 <p>
 Sets the currently selected font.</p>
 <p>
-Sets the currently-selected font.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -316,13 +320,17 @@ Sets the currently-selected font.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fontname</code></em> :</span></p></td>
-<td> a pointer to a string
+<td> a font name like "Helvetica 12" or "Times Bold 18"
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the font selected in <em class="parameter"><code>fsd</code></em> is now the
-<em class="parameter"><code>fontname</code></em> specified. <code class="literal">FALSE</code> otherwise. 
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the font selected in <em class="parameter"><code>fsd</code></em> is now the
+    <em class="parameter"><code>fontname</code></em> specified, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise. 
 </td>
 </tr>
 </tbody>
@@ -336,10 +344,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *       gtk_font_selection_dialog_get_preview_text
                                                         (<a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog">GtkFontSelectionDialog</a> *fsd);</pre>
 <p>
-The text returned is the preview text used to show how the selected
-font looks.</p>
+Gets the text displayed in the preview area.</p>
 <p>
-Gets the text displayed in the preview area.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -351,9 +357,9 @@ Gets the text displayed in the preview area.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> pointer to the preview text string. This string
-points to internally allocated storage in the widget and must not
-be freed, modified or stored. 
+<td> the text displayed in the preview area. 
+    This string is owned by the widget and should not be 
+    modified or freed 
 </td>
 </tr>
 </tbody>
@@ -368,9 +374,8 @@ be freed, modified or stored.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *text);</pre>
 <p>
-The <em class="parameter"><code>text</code></em> is used to show how the selected font looks.</p>
+Sets the text displayed in the preview area.</p>
 <p>
-Sets the text displayed in the preview area.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -382,7 +387,7 @@ Sets the text displayed in the preview area.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
-<td> a pointer to a string
+<td> the text to display in the preview area
 </td>
 </tr>
 </tbody>
@@ -393,8 +398,12 @@ Sets the text displayed in the preview area.
 <a name="gtk-font-selection-dialog-get-apply-button"></a><h3>gtk_font_selection_dialog_get_apply_button ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *         gtk_font_selection_dialog_get_apply_button
                                                         (<a class="link" href="GtkFontSelectionDialog.html" title="GtkFontSelectionDialog">GtkFontSelectionDialog</a> *fsd);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_font_selection_dialog_get_apply_button</code> has been deprecated since version 2.16 and should not be used in newly-written code. Don't use this function.</p>
+</div>
 <p>
-Gets the 'Apply' button.</p>
+Obtains a button. The button doesn't have any function.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -407,7 +416,7 @@ Gets the 'Apply' button.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> used in the dialog for the 'Apply' button.
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
 
 </td>
 </tr>

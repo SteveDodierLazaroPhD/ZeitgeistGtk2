@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -293,12 +295,13 @@ void                <a class="link" href="GtkPrintSettings.html#gtk-print-settin
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> number_up);
+enum                <a class="link" href="GtkPrintSettings.html#GtkNumberUpLayout" title="enum GtkNumberUpLayout">GtkNumberUpLayout</a>;
 #define             <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-NUMBER-UP-LAYOUT--CAPS" title="GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT">GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT</a>
-GtkNumberUpLayout   <a class="link" href="GtkPrintSettings.html#gtk-print-settings-get-number-up-layout" title="gtk_print_settings_get_number_up_layout ()">gtk_print_settings_get_number_up_layout</a>
+<a class="link" href="GtkPrintSettings.html#GtkNumberUpLayout" title="enum GtkNumberUpLayout">GtkNumberUpLayout</a>   <a class="link" href="GtkPrintSettings.html#gtk-print-settings-get-number-up-layout" title="gtk_print_settings_get_number_up_layout ()">gtk_print_settings_get_number_up_layout</a>
                                                         (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);
 void                <a class="link" href="GtkPrintSettings.html#gtk-print-settings-set-number-up-layout" title="gtk_print_settings_set_number_up_layout ()">gtk_print_settings_set_number_up_layout</a>
                                                         (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings,
-                                                         GtkNumberUpLayout number_up_layout);
+                                                         <a class="link" href="GtkPrintSettings.html#GtkNumberUpLayout" title="enum GtkNumberUpLayout">GtkNumberUpLayout</a> number_up_layout);
 #define             <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION">GTK_PRINT_SETTINGS_RESOLUTION</a>
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
@@ -307,6 +310,30 @@ void                <a class="link" href="GtkPrintSettings.html#gtk-print-settin
                                                          <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> resolution);
+void                <a class="link" href="GtkPrintSettings.html#gtk-print-settings-set-resolution-xy" title="gtk_print_settings_set_resolution_xy ()">gtk_print_settings_set_resolution_xy</a>
+                                                        (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> resolution_x,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> resolution_y);
+#define             <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-X--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_X">GTK_PRINT_SETTINGS_RESOLUTION_X</a>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                <a class="link" href="GtkPrintSettings.html#gtk-print-settings-get-resolution-x" title="gtk_print_settings_get_resolution_x ()">gtk_print_settings_get_resolution_x</a> (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);
+#define             <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-Y--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_Y">GTK_PRINT_SETTINGS_RESOLUTION_Y</a>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                <a class="link" href="GtkPrintSettings.html#gtk-print-settings-get-resolution-y" title="gtk_print_settings_get_resolution_y ()">gtk_print_settings_get_resolution_y</a> (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);
+#define             <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-PRINTER-LPI--CAPS" title="GTK_PRINT_SETTINGS_PRINTER_LPI">GTK_PRINT_SETTINGS_PRINTER_LPI</a>
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
+>gdouble</a>             <a class="link" href="GtkPrintSettings.html#gtk-print-settings-get-printer-lpi" title="gtk_print_settings_get_printer_lpi ()">gtk_print_settings_get_printer_lpi</a>  (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);
+void                <a class="link" href="GtkPrintSettings.html#gtk-print-settings-set-printer-lpi" title="gtk_print_settings_set_printer_lpi ()">gtk_print_settings_set_printer_lpi</a>  (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
+>gdouble</a> lpi);
 #define             <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-SCALE--CAPS" title="GTK_PRINT_SETTINGS_SCALE">GTK_PRINT_SETTINGS_SCALE</a>
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
@@ -564,7 +591,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);</pre>
 <p>
-Returns <code class="literal">TRUE</code>, if a value is associated with <em class="parameter"><code>key</code></em>.</p>
+Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if a value is associated with <em class="parameter"><code>key</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -582,7 +611,9 @@ Returns <code class="literal">TRUE</code>, if a value is associated with <em cla
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>key</code></em> has a value
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>key</code></em> has a value
 
 </td>
 </tr>
@@ -655,7 +686,9 @@ Associates <em class="parameter"><code>value</code></em> with <em class="paramet
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td> a string value, or <code class="literal">NULL</code>
+<td> a string value, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -671,7 +704,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *key);</pre>
 <p>
 Removes any value associated with <em class="parameter"><code>key</code></em>. 
-This has the same effect as setting the value to <code class="literal">NULL</code>.</p>
+This has the same effect as setting the value to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -739,8 +774,12 @@ Returns the boolean represented by the value
 that is associated with <em class="parameter"><code>key</code></em>. 
 </p>
 <p>
-The string "true" represents <code class="literal">TRUE</code>, any other 
-string <code class="literal">FALSE</code>.</p>
+The string "true" represents <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, any other 
+string <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -758,7 +797,9 @@ string <code class="literal">FALSE</code>.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code>, if <em class="parameter"><code>key</code></em> maps to a true value.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, if <em class="parameter"><code>key</code></em> maps to a true value.
 
 </td>
 </tr>
@@ -1956,6 +1997,79 @@ Sets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="GtkNumberUpLayout"></a><h3>enum GtkNumberUpLayout</h3>
+<pre class="programlisting">typedef enum
+{
+  GTK_NUMBER_UP_LAYOUT_LEFT_TO_RIGHT_TOP_TO_BOTTOM, /*&lt; nick=lrtb &gt;*/
+  GTK_NUMBER_UP_LAYOUT_LEFT_TO_RIGHT_BOTTOM_TO_TOP, /*&lt; nick=lrbt &gt;*/
+  GTK_NUMBER_UP_LAYOUT_RIGHT_TO_LEFT_TOP_TO_BOTTOM, /*&lt; nick=rltb &gt;*/
+  GTK_NUMBER_UP_LAYOUT_RIGHT_TO_LEFT_BOTTOM_TO_TOP, /*&lt; nick=rlbt &gt;*/
+  GTK_NUMBER_UP_LAYOUT_TOP_TO_BOTTOM_LEFT_TO_RIGHT, /*&lt; nick=tblr &gt;*/
+  GTK_NUMBER_UP_LAYOUT_TOP_TO_BOTTOM_RIGHT_TO_LEFT, /*&lt; nick=tbrl &gt;*/
+  GTK_NUMBER_UP_LAYOUT_BOTTOM_TO_TOP_LEFT_TO_RIGHT, /*&lt; nick=btlr &gt;*/
+  GTK_NUMBER_UP_LAYOUT_BOTTOM_TO_TOP_RIGHT_TO_LEFT  /*&lt; nick=btrl &gt;*/
+} GtkNumberUpLayout;
+</pre>
+<p>
+Used to determine the layout of pages on a sheet when printing
+multiple pages per sheet.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-LEFT-TO-RIGHT-TOP-TO-BOTTOM--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_LEFT_TO_RIGHT_TOP_TO_BOTTOM</code></span></p></td>
+<td>
+<img src="layout-lrtb.png">
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-LEFT-TO-RIGHT-BOTTOM-TO-TOP--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_LEFT_TO_RIGHT_BOTTOM_TO_TOP</code></span></p></td>
+<td>
+<img src="layout-lrbt.png">
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-RIGHT-TO-LEFT-TOP-TO-BOTTOM--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_RIGHT_TO_LEFT_TOP_TO_BOTTOM</code></span></p></td>
+<td>
+<img src="layout-rltb.png">
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-RIGHT-TO-LEFT-BOTTOM-TO-TOP--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_RIGHT_TO_LEFT_BOTTOM_TO_TOP</code></span></p></td>
+<td>
+<img src="layout-rlbt.png">
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-TOP-TO-BOTTOM-LEFT-TO-RIGHT--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_TOP_TO_BOTTOM_LEFT_TO_RIGHT</code></span></p></td>
+<td>
+<img src="layout-tblr.png">
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-TOP-TO-BOTTOM-RIGHT-TO-LEFT--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_TOP_TO_BOTTOM_RIGHT_TO_LEFT</code></span></p></td>
+<td>
+<img src="layout-tbrl.png">
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-BOTTOM-TO-TOP-LEFT-TO-RIGHT--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_BOTTOM_TO_TOP_LEFT_TO_RIGHT</code></span></p></td>
+<td>
+<img src="layout-btlr.png">
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-NUMBER-UP-LAYOUT-BOTTOM-TO-TOP-RIGHT-TO-LEFT--CAPS"></a><span class="term"><code class="literal">GTK_NUMBER_UP_LAYOUT_BOTTOM_TO_TOP_RIGHT_TO_LEFT</code></span></p></td>
+<td>
+<img src="layout-btrl.png">
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="GTK-PRINT-SETTINGS-NUMBER-UP-LAYOUT--CAPS"></a><h3>GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT</h3>
 <pre class="programlisting">#define GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT "number-up-layout"
 </pre>
@@ -1965,7 +2079,7 @@ Sets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS
 <hr>
 <div class="refsect2" lang="en">
 <a name="gtk-print-settings-get-number-up-layout"></a><h3>gtk_print_settings_get_number_up_layout ()</h3>
-<pre class="programlisting">GtkNumberUpLayout   gtk_print_settings_get_number_up_layout
+<pre class="programlisting"><a class="link" href="GtkPrintSettings.html#GtkNumberUpLayout" title="enum GtkNumberUpLayout">GtkNumberUpLayout</a>   gtk_print_settings_get_number_up_layout
                                                         (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);</pre>
 <p>
 Gets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-NUMBER-UP-LAYOUT--CAPS" title="GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT"><code class="literal">GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT</code></a>.</p>
@@ -1994,7 +2108,7 @@ Gets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS
 <a name="gtk-print-settings-set-number-up-layout"></a><h3>gtk_print_settings_set_number_up_layout ()</h3>
 <pre class="programlisting">void                gtk_print_settings_set_number_up_layout
                                                         (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings,
-                                                         GtkNumberUpLayout number_up_layout);</pre>
+                                                         <a class="link" href="GtkPrintSettings.html#GtkNumberUpLayout" title="enum GtkNumberUpLayout">GtkNumberUpLayout</a> number_up_layout);</pre>
 <p>
 Sets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-NUMBER-UP-LAYOUT--CAPS" title="GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT"><code class="literal">GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT</code></a>.</p>
 <p>
@@ -2009,7 +2123,7 @@ Sets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>number_up_layout</code></em> :</span></p></td>
-<td> a <span class="type">GtkNumberUpLayout</span> value
+<td> a <a class="link" href="GtkPrintSettings.html#GtkNumberUpLayout" title="enum GtkNumberUpLayout"><span class="type">GtkNumberUpLayout</span></a> value
 </td>
 </tr>
 </tbody>
@@ -2060,7 +2174,9 @@ Gets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> resolution);</pre>
 <p>
-Sets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION</code></a>.</p>
+Sets the values of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION</code></a>,
+<a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-X--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_X"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION_X</code></a> and 
+<a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-Y--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_Y"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION_Y</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2079,6 +2195,181 @@ Sets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS
 </tbody>
 </table></div>
 <p class="since">Since 2.10</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-print-settings-set-resolution-xy"></a><h3>gtk_print_settings_set_resolution_xy ()</h3>
+<pre class="programlisting">void                gtk_print_settings_set_resolution_xy
+                                                        (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> resolution_x,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a> resolution_y);</pre>
+<p>
+Sets the values of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION</code></a>,
+<a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-X--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_X"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION_X</code></a> and
+<a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-Y--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_Y"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION_Y</code></a>.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>settings</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>resolution_x</code></em> :</span></p></td>
+<td> the horizontal resolution in dpi
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>resolution_y</code></em> :</span></p></td>
+<td> the vertical resolution in dpi
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GTK-PRINT-SETTINGS-RESOLUTION-X--CAPS"></a><h3>GTK_PRINT_SETTINGS_RESOLUTION_X</h3>
+<pre class="programlisting">#define GTK_PRINT_SETTINGS_RESOLUTION_X     "resolution-x"
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-print-settings-get-resolution-x"></a><h3>gtk_print_settings_get_resolution_x ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                gtk_print_settings_get_resolution_x (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);</pre>
+<p>
+Gets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-X--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_X"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION_X</code></a>.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>settings</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the horizontal resolution in dpi
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GTK-PRINT-SETTINGS-RESOLUTION-Y--CAPS"></a><h3>GTK_PRINT_SETTINGS_RESOLUTION_Y</h3>
+<pre class="programlisting">#define GTK_PRINT_SETTINGS_RESOLUTION_Y     "resolution-y"
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-print-settings-get-resolution-y"></a><h3>gtk_print_settings_get_resolution_y ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
+>gint</a>                gtk_print_settings_get_resolution_y (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);</pre>
+<p>
+Gets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-RESOLUTION-Y--CAPS" title="GTK_PRINT_SETTINGS_RESOLUTION_Y"><code class="literal">GTK_PRINT_SETTINGS_RESOLUTION_Y</code></a>.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>settings</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the vertical resolution in dpi
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GTK-PRINT-SETTINGS-PRINTER-LPI--CAPS"></a><h3>GTK_PRINT_SETTINGS_PRINTER_LPI</h3>
+<pre class="programlisting">#define GTK_PRINT_SETTINGS_PRINTER_LPI      "printer-lpi"
+</pre>
+<p>
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-print-settings-get-printer-lpi"></a><h3>gtk_print_settings_get_printer_lpi ()</h3>
+<pre class="programlisting"><a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
+>gdouble</a>             gtk_print_settings_get_printer_lpi  (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);</pre>
+<p>
+Gets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-PRINTER-LPI--CAPS" title="GTK_PRINT_SETTINGS_PRINTER_LPI"><code class="literal">GTK_PRINT_SETTINGS_PRINTER_LPI</code></a>.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>settings</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the resolution in lpi (lines per inch)
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtk-print-settings-set-printer-lpi"></a><h3>gtk_print_settings_set_printer_lpi ()</h3>
+<pre class="programlisting">void                gtk_print_settings_set_printer_lpi  (<a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings,
+                                                         <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"
+>gdouble</a> lpi);</pre>
+<p>
+Sets the value of <a class="link" href="GtkPrintSettings.html#GTK-PRINT-SETTINGS-PRINTER-LPI--CAPS" title="GTK_PRINT_SETTINGS_PRINTER_LPI"><code class="literal">GTK_PRINT_SETTINGS_PRINTER_LPI</code></a>.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>settings</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>lpi</code></em> :</span></p></td>
+<td> the resolution in lpi (lines per inch)
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.16</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -2758,7 +3049,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **error);</pre>
 <p>
 Reads the print settings from <em class="parameter"><code>file_name</code></em>. Returns a new <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a>
-object with the restored settings, or <code class="literal">NULL</code> if an error occurred.
+object with the restored settings, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if an error occurred.
 See <a class="link" href="GtkPrintSettings.html#gtk-print-settings-to-file" title="gtk_print_settings_to_file ()"><code class="function">gtk_print_settings_to_file()</code></a>.</p>
 <p>
 </p>
@@ -2772,7 +3065,9 @@ See <a class="link" href="GtkPrintSettings.html#gtk-print-settings-to-file" titl
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for errors, or <code class="literal">NULL</code>
+<td> return location for errors, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -2801,7 +3096,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <p>
 Reads the print settings from the group <em class="parameter"><code>group_name</code></em> in <em class="parameter"><code>key_file</code></em>.
 Returns a new <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings"><span class="type">GtkPrintSettings</span></a> object with the restored settings,
-or <code class="literal">NULL</code> if an error occurred.</p>
+or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if an error occurred.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2816,13 +3113,17 @@ href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#GKeyFile"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>group_name</code></em> :</span></p></td>
-<td> the name of the group to use, or <code class="literal">NULL</code> to use
+<td> the name of the group to use, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to use
     the default "Print Settings"
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for errors, or <code class="literal">NULL</code>
+<td> return location for errors, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -2867,12 +3168,16 @@ See <a class="link" href="GtkPrintSettings.html#gtk-print-settings-to-file" titl
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for errors, or <code class="literal">NULL</code>
+<td> return location for errors, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> on success
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> on success
 
 </td>
 </tr>
@@ -2916,18 +3221,24 @@ href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#GKeyFile"
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>group_name</code></em> :</span></p></td>
-<td> the name of the group to use, or <code class="literal">NULL</code> to use the default
+<td> the name of the group to use, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to use the default
     "Print Settings"
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for errors, or <code class="literal">NULL</code>
+<td> return location for errors, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> on success
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> on success
 
 </td>
 </tr>
@@ -2966,12 +3277,16 @@ This function saves the print settings from <em class="parameter"><code>settings
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for errors, or <code class="literal">NULL</code>
+<td> return location for errors, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> on success
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> on success
 
 </td>
 </tr>
@@ -3011,7 +3326,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#GKeyFile"
 <tr>
 <td><p><span class="term"><em class="parameter"><code>group_name</code></em> :</span></p></td>
 <td> the group to add the settings to in <em class="parameter"><code>key_file</code></em>, or 
-    <code class="literal">NULL</code> to use the default "Print Settings"
+    <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to use the default "Print Settings"
 </td>
 </tr>
 </tbody>

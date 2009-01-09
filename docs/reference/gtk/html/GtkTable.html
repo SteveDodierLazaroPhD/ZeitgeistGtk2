@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -99,8 +101,6 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <a class="link" href="GtkTable.html#GtkTable-struct" title="GtkTable">GtkTable</a>;
-                    <a class="link" href="GtkTable.html#GtkTableChild" title="GtkTableChild">GtkTableChild</a>;
-                    <a class="link" href="GtkTable.html#GtkTableRowCol" title="GtkTableRowCol">GtkTableRowCol</a>;
 <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkTable.html#gtk-table-new" title="gtk_table_new ()">gtk_table_new</a>                       (<a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a> rows,
@@ -304,61 +304,12 @@ table will resize themselves to the size of the largest widget in the table.
 The <span class="structname">GtkTable</span> structure holds the data for the actual table itself.
 <em class="structfield"><code>children</code></em> is a <a
 href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"
-><span class="type">GList</span></a> of all the widgets the table contains. <em class="structfield"><code>rows</code></em> and <em class="structfield"><code>columns</code></em> are pointers to <a class="link" href="GtkTable.html#GtkTableRowCol" title="GtkTableRowCol"><span class="type">GtkTableRowCol</span></a> structures, which contain the default spacing and expansion details for the <a class="link" href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a>'s rows and columns, respectively.
+><span class="type">GList</span></a> of all the widgets the table contains. <em class="structfield"><code>rows</code></em> and <em class="structfield"><code>columns</code></em> are pointers to <a
+href="/usr/share/gtk-doc/html/gtk/GtkTable.html#GtkTableRowCol"
+><span class="type">GtkTableRowCol</span></a> structures, which contain the default spacing and expansion details for the <a class="link" href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a>'s rows and columns, respectively.
 </p>
 <p>
 <em class="structfield"><code>nrows</code></em> and <em class="structfield"><code>ncols</code></em> are 16bit integers storing the number of rows and columns the table has.
-</p>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="GtkTableChild"></a><h3>GtkTableChild</h3>
-<pre class="programlisting">typedef struct {
-  GtkWidget *widget;
-  guint16 left_attach;
-  guint16 right_attach;
-  guint16 top_attach;
-  guint16 bottom_attach;
-  guint16 xpadding;
-  guint16 ypadding;
-  guint xexpand : 1;
-  guint yexpand : 1;
-  guint xshrink : 1;
-  guint yshrink : 1;
-  guint xfill : 1;
-  guint yfill : 1;
-} GtkTableChild;
-</pre>
-<p>
-The <em class="structfield"><code>widget</code></em> field is a pointer to the widget that
-this <a class="link" href="GtkTable.html#GtkTableChild" title="GtkTableChild"><code class="literal">GtkTableChild</code></a> structure is keeping track of.
-The <em class="structfield"><code>left_attach</code></em>,
-<em class="structfield"><code>right_attach</code></em>,
-<em class="structfield"><code>top_attach</code></em>, and
-<em class="structfield"><code>bottom_attach</code></em> fields specify the row and column
-numbers which make up the invisible rectangle that the child widget is packed into.
-</p>
-<p>
-<em class="structfield"><code>xpadding</code></em> and <em class="structfield"><code>ypadding</code></em>
-specify the space between this widget and the surrounding table cells.
-</p>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="GtkTableRowCol"></a><h3>GtkTableRowCol</h3>
-<pre class="programlisting">typedef struct {
-  guint16 requisition;
-  guint16 allocation;
-  guint16 spacing;
-  guint need_expand : 1;
-  guint need_shrink : 1;
-  guint expand : 1;
-  guint shrink : 1;
-  guint empty : 1;
-} GtkTableRowCol;
-</pre>
-<p>
-These fields should be considered read-only and not be modified directly.
 </p>
 </div>
 <hr>
@@ -394,7 +345,9 @@ must both be in the range 0 .. 65535.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>homogeneous</code></em> :</span></p></td>
-<td>If set to <code class="literal">TRUE</code>, all table cells are resized to the size of the cell
+<td>If set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, all table cells are resized to the size of the cell
 containing the largest widget.
 </td>
 </tr>
@@ -724,8 +677,12 @@ Changes the homogenous property of table cells, ie. whether all cells are an equ
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>homogeneous</code></em> :</span></p></td>
-<td>Set to <code class="literal">TRUE</code> to ensure all table cells are the same size. Set
-to <code class="literal">FALSE</code> if this is not your desired behaviour.
+<td>Set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to ensure all table cells are the same size. Set
+to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if this is not your desired behaviour.
 </td>
 </tr>
 </tbody>
@@ -780,7 +737,9 @@ width and height. (See <code class="function">gtk_table_set_homogenous()</code>)
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the cells are all constrained to the same size
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the cells are all constrained to the same size
 </td>
 </tr>
 </tbody>
@@ -893,6 +852,7 @@ the spacing that will be used for newly added columns.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write</pre>
 <p>The amount of space between two consecutive columns.</p>
+<p>Allowed values: &lt;= 65535</p>
 <p>Default value: 0</p>
 </div>
 <hr>
@@ -911,7 +871,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write</pre>
 <p>The number of columns in the table.</p>
-<p>Allowed values: &gt;= 1</p>
+<p>Allowed values: [1,65535]</p>
 <p>Default value: 1</p>
 </div>
 <hr>
@@ -921,7 +881,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write</pre>
 <p>The number of rows in the table.</p>
-<p>Allowed values: &gt;= 1</p>
+<p>Allowed values: [1,65535]</p>
 <p>Default value: 1</p>
 </div>
 <hr>
@@ -931,6 +891,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"
 >guint</a>                 : Read / Write</pre>
 <p>The amount of space between two consecutive rows.</p>
+<p>Allowed values: &lt;= 65535</p>
 <p>Default value: 0</p>
 </div>
 </div>

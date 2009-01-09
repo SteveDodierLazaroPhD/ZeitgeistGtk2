@@ -94,7 +94,7 @@ DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
-DUMPBIN = @DUMPBIN@
+ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -104,7 +104,8 @@ ENABLE_GTK_DOC_TRUE = @ENABLE_GTK_DOC_TRUE@
 ENABLE_MAN_FALSE = @ENABLE_MAN_FALSE@
 ENABLE_MAN_TRUE = @ENABLE_MAN_TRUE@
 EXEEXT = @EXEEXT@
-FGREP = @FGREP@
+F77 = @F77@
+FFLAGS = @FFLAGS@
 GAIL_INET_LIBS = @GAIL_INET_LIBS@
 GAIL_LT_CURRENT_MINUS_AGE = @GAIL_LT_CURRENT_MINUS_AGE@
 GAIL_LT_VERSION_INFO = @GAIL_LT_VERSION_INFO@
@@ -249,7 +250,6 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
 INTLLIBS = @INTLLIBS@
-LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBJASPER = @LIBJASPER@
 LIBJPEG = @LIBJPEG@
@@ -260,7 +260,6 @@ LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
 LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
-LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_CURRENT_MINUS_AGE = @LT_CURRENT_MINUS_AGE@
@@ -284,8 +283,6 @@ OS_UNIX_FALSE = @OS_UNIX_FALSE@
 OS_UNIX_TRUE = @OS_UNIX_TRUE@
 OS_WIN32_FALSE = @OS_WIN32_FALSE@
 OS_WIN32_TRUE = @OS_WIN32_TRUE@
-OTOOL = @OTOOL@
-OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -341,7 +338,7 @@ X_LIBS = @X_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
-ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_F77 = @ac_ct_F77@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -376,7 +373,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 ms_librarian = @ms_librarian@
 oldincludedir = @oldincludedir@
@@ -407,7 +403,7 @@ TEST_PROGS =
 ### testing rules
 
 # Xvfb based test rules
-XVFB = Xvfb -screen 0 800x600x16
+XVFB = Xvfb -ac -noreset -screen 0 800x600x16
 XIDS = 101 102 103 104 105 106 107 197 199 211 223 227 293 307 308 309 310 311 \
    491 492 493 494 495 496 497 498 499 500 501 502 503 504 505 506 507 508 509 \
    991 992 993 994 995 996 997 998 999 1000 1001 1002 1003 1004 1005 1006 1007 \
@@ -468,11 +464,9 @@ IGNORE_HFILES = \
 	gtkfilesystemmodel.h		\
 	gtkfilesystemunix.h		\
 	gtkfilesystemwin32.h		\
-	gtkhsv.h			\
 	gtkiconcache.h			\
         gtkiconcachevalidator.h         \
 	gtkiconthemeparser.h		\
-	gtkimmodule.h			\
 	gtkintl.h			\
 	gtkkeyhash.h			\
 	gtkmarshal.h			\
@@ -543,7 +537,7 @@ GTKDOC_LIBS = \
 
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS = --sgml-mode --output-format=xml
+MKDB_OPTIONS = --sgml-mode --output-format=xml --name-space=gtk
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files = \
@@ -554,10 +548,12 @@ content_files = \
 	changes-2.0.sgml			\
 	compiling.sgml				\
 	directfb.sgml				\
+	drawing-model.xml			\
 	glossary.xml				\
 	migrating-checklist.sgml		\
 	migrating-GtkAction.sgml		\
 	migrating-GtkComboBox.sgml		\
+	migrating-GtkEntry-icons.sgml		\
 	migrating-GtkFileChooser.sgml		\
 	migrating-GtkIconView.sgml		\
 	migrating-GtkAboutDialog.sgml		\
@@ -582,10 +578,12 @@ content_files = \
 
 
 expand_content_files = \
+	drawing-model.xml			\
 	glossary.xml				\
 	migrating-checklist.sgml		\
 	migrating-GtkAction.sgml		\
 	migrating-GtkComboBox.sgml		\
+	migrating-GtkEntry-icons.sgml		\
 	migrating-GtkFileChooser.sgml		\
 	migrating-GtkIconView.sgml		\
 	migrating-GtkAboutDialog.sgml		\
@@ -729,6 +727,8 @@ HTML_IMAGES = \
 	$(srcdir)/images/combo-box.png					\
 	$(srcdir)/images/combo-box-entry.png				\
 	$(srcdir)/images/entry.png					\
+	$(srcdir)/images/figure-hierarchical-drawing.png		\
+	$(srcdir)/images/figure-windowed-label.png			\
 	$(srcdir)/images/file-button.png				\
 	$(srcdir)/images/filechooser.png				\
 	$(srcdir)/images/font-button.png				\
@@ -758,7 +758,15 @@ HTML_IMAGES = \
 	$(srcdir)/images/toolbar.png					\
 	$(srcdir)/images/tree-view-coordinates.png			\
 	$(srcdir)/images/volumebutton.png				\
-	$(srcdir)/images/window.png
+	$(srcdir)/images/window.png					\
+	$(srcdir)/images/layout-btlr.png				\
+	$(srcdir)/images/layout-btrl.png				\
+	$(srcdir)/images/layout-lrbt.png				\
+	$(srcdir)/images/layout-lrtb.png				\
+	$(srcdir)/images/layout-rlbt.png				\
+	$(srcdir)/images/layout-rltb.png				\
+	$(srcdir)/images/layout-tblr.png				\
+	$(srcdir)/images/layout-tbrl.png
 
 
 # Extra options to supply to gtkdoc-fixref

@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -157,7 +159,7 @@ position originally occupied by the deleted text. When text is inserted at a
 mark, a mark with <em class="firstterm">left gravity</em> will be moved to the
 beginning of the newly-inserted text, and a mark with <em class="firstterm">right
 gravity</em> will be moved to the end.
-<sup>[<a name="id3302192" href="#ftn.id3302192" class="footnote">3</a>]</sup>
+<sup>[<a name="id3261730" href="#ftn.id3261730" class="footnote">3</a>]</sup>
 </p>
 <p>
 Marks are reference counted, but the reference count only controls the validity
@@ -192,11 +194,15 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> left_gravity);</pre>
 <p>
 Creates a text mark. Add it to a buffer using <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-add-mark" title="gtk_text_buffer_add_mark ()"><code class="function">gtk_text_buffer_add_mark()</code></a>.
-If <em class="parameter"><code>name</code></em> is <code class="literal">NULL</code>, the mark is anonymous; otherwise, the mark can be 
+If <em class="parameter"><code>name</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, the mark is anonymous; otherwise, the mark can be 
 retrieved by name using <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-get-mark" title="gtk_text_buffer_get_mark ()"><code class="function">gtk_text_buffer_get_mark()</code></a>. If a mark has left 
 gravity, and text is inserted at the mark's current location, the mark 
 will be moved to the left of the newly-inserted text. If the mark has 
-right gravity (<em class="parameter"><code>left_gravity</code></em> = <code class="literal">FALSE</code>), the mark will end up on the 
+right gravity (<em class="parameter"><code>left_gravity</code></em> = <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>), the mark will end up on the 
 right of newly-inserted text. The standard left-to-right cursor is a 
 mark with right gravity (when you type, the cursor stays on the right
 side of the text you're typing).</p>
@@ -207,7 +213,9 @@ side of the text you're typing).</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
-<td> mark name or <code class="literal">NULL</code>
+<td> mark name or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -263,7 +271,9 @@ Marks are not visible by default.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_text_mark_get_visible           (<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
-Returns <code class="literal">TRUE</code> if the mark is visible (i.e. a cursor is displayed
+Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the mark is visible (i.e. a cursor is displayed
 for it).</p>
 <p>
 </p>
@@ -277,7 +287,9 @@ for it).</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if visible
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if visible
 </td>
 </tr>
 </tbody>
@@ -290,7 +302,9 @@ for it).</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            gtk_text_mark_get_deleted           (<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
-Returns <code class="literal">TRUE</code> if the mark has been removed from its buffer
+Returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the mark has been removed from its buffer
 with <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-delete-mark" title="gtk_text_buffer_delete_mark ()"><code class="function">gtk_text_buffer_delete_mark()</code></a>. See <a class="link" href="GtkTextBuffer.html#gtk-text-buffer-add-mark" title="gtk_text_buffer_add_mark ()"><code class="function">gtk_text_buffer_add_mark()</code></a>
 for a way to add it to a buffer again.</p>
 <p>
@@ -343,7 +357,9 @@ Returns the mark name; returns NULL for anonymous marks.</p>
 <pre class="programlisting"><a class="link" href="GtkTextBuffer.html" title="GtkTextBuffer">GtkTextBuffer</a>*      gtk_text_mark_get_buffer            (<a class="link" href="GtkTextMark.html" title="GtkTextMark">GtkTextMark</a> *mark);</pre>
 <p>
 Gets the buffer this mark is located inside,
-or <code class="literal">NULL</code> if the mark is deleted.</p>
+or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the mark is deleted.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -382,7 +398,11 @@ Determines whether the mark has left gravity.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the mark has left gravity, <code class="literal">FALSE</code> otherwise
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the mark has left gravity, <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> otherwise
 </td>
 </tr>
 </tbody>
@@ -411,7 +431,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id3302192" href="#id3302192" class="para">3</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3261730" href="#id3261730" class="para">3</a>] </sup>
 "left" and "right" here refer to logical direction (left is the toward the start
 of the buffer); in some languages such as Hebrew the logically-leftmost text is
 not actually on the left when displayed.

@@ -1,6 +1,9 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* GTK - The GIMP Toolkit
  * Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh MacDonald
+ * Copyright (C) 2004-2006 Christian Hammond
+ * Copyright (C) 2008 Cody Russell
+ * Copyright (C) 2008 Red Hat, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,15 +25,16 @@
  * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
+ * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 #include "config.h"
+
+#include <math.h>
 #include <string.h>
 
-#include <pango/pango.h>
-
 #include "gdk/gdkkeysyms.h"
+#include "gtkalignment.h"
 #include "gtkbindings.h"
 #include "gtkcelleditable.h"
 #include "gtkclipboard.h"
@@ -40,6 +44,7 @@
 #include "gtkimcontextsimple.h"
 #include "gtkimmulticontext.h"
 #include "gtkintl.h"
+#include "gtklabel.h"
 #include "gtkmain.h"
 #include "gtkmarshalers.h"
 #include "gtkmenu.h"
@@ -56,6 +61,9 @@
 #include "gtkprivate.h"
 #include "gtkentryprivate.h"
 #include "gtkcelllayout.h"
+#include "gtktooltip.h"
+#include "gtkiconfactory.h"
+#include "gtkicontheme.h"
 #include "gtkalias.h"
 
 #define GTK_ENTRY_COMPLETION_KEY "gtk-entry-completion-key"
@@ -71,26 +79,67 @@
 /* Maximum size of text buffer, in bytes */
 #define MAX_SIZE G_MAXUSHORT
 
+#define MAX_ICONS 2
+
+#define IS_VALID_ICON_POSITION(pos)               \
+  ((pos) == GTK_ENTRY_ICON_PRIMARY ||                   \
+   (pos) == GTK_ENTRY_ICON_SECONDARY)
+
 static const GtkBorder default_inner_border = { 2, 2, 2, 2 };
 static GQuark          quark_inner_border   = 0;
 static GQuark          quark_password_hint  = 0;
 static GQuark          quark_cursor_hadjustment = 0;
+static GQuark          quark_capslock_feedback = 0;
 
 typedef struct _GtkEntryPrivate GtkEntryPrivate;
 
 #define GTK_ENTRY_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_ENTRY, GtkEntryPrivate))
+
+typedef struct
+{
+  GdkWindow *window;
+  gchar *tooltip;
+  guint insensitive    : 1;
+  guint nonactivatable : 1;
+  guint prelight       : 1;
+  guint in_drag        : 1;
+  guint pressed        : 1;
+
+  GtkImageType  storage_type;
+  GdkPixbuf    *pixbuf;
+  gchar        *stock_id;
+  gchar        *icon_name;
+  GIcon        *gicon;
+
+  GtkTargetList *target_list;
+  GdkDragAction actions;
+} EntryIconInfo;
 
 struct _GtkEntryPrivate 
 {
   gfloat xalign;
   gint insert_pos;
   guint blink_time;  /* time in msec the cursor has blinked since last user event */
-  guint interior_focus : 1;
-  guint real_changed   : 1;
-  guint change_count   : 8;
+  guint interior_focus          : 1;
+  guint real_changed            : 1;
+  guint invisible_char_set      : 1;
+  guint caps_lock_warning       : 1;
+  guint caps_lock_warning_shown : 1;
+  guint change_count            : 8;
+  guint progress_pulse_mode     : 1;
+  guint progress_pulse_way_back : 1;
 
   gint focus_width;
   GtkShadowType shadow_type;
+
+  gdouble progress_fraction;
+  gdouble progress_pulse_fraction;
+  gdouble progress_pulse_current;
+
+  EntryIconInfo *icons[MAX_ICONS];
+  gint icon_margin;
+  gint start_x;
+  gint start_y;
 };
 
 typedef struct _GtkEntryPasswordHint GtkEntryPasswordHint;
@@ -101,6 +150,15 @@ struct _GtkEntryPasswordHint
   guint password_hint_timeout_id;
   gint  password_hint_length;
   gint  password_hint_position;
+};
+
+typedef struct _GtkEntryCapslockFeedback GtkEntryCapslockFeedback;
+
+struct _GtkEntryCapslockFeedback
+{
+  GtkWidget *entry;
+  GtkWidget *window;
+  GtkWidget *label;
 };
 
 enum {
@@ -114,6 +172,8 @@ enum {
   COPY_CLIPBOARD,
   PASTE_CLIPBOARD,
   TOGGLE_OVERWRITE,
+  ICON_PRESS,
+  ICON_RELEASE,
   LAST_SIGNAL
 };
 
@@ -135,7 +195,25 @@ enum {
   PROP_TRUNCATE_MULTILINE,
   PROP_SHADOW_TYPE,
   PROP_OVERWRITE_MODE,
-  PROP_TEXT_LENGTH
+  PROP_TEXT_LENGTH,
+  PROP_INVISIBLE_CHAR_SET,
+  PROP_CAPS_LOCK_WARNING,
+  PROP_PROGRESS_FRACTION,
+  PROP_PROGRESS_PULSE_STEP,
+  PROP_PIXBUF_PRIMARY,
+  PROP_PIXBUF_SECONDARY,
+  PROP_STOCK_PRIMARY,
+  PROP_STOCK_SECONDARY,
+  PROP_ICON_NAME_PRIMARY,
+  PROP_ICON_NAME_SECONDARY,
+  PROP_GICON_PRIMARY,
+  PROP_GICON_SECONDARY,
+  PROP_STORAGE_TYPE_PRIMARY,
+  PROP_STORAGE_TYPE_SECONDARY,
+  PROP_ACTIVATABLE_PRIMARY,
+  PROP_ACTIVATABLE_SECONDARY,
+  PROP_SENSITIVE_PRIMARY,
+  PROP_SENSITIVE_SECONDARY
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
@@ -159,23 +237,32 @@ static void   gtk_entry_get_property         (GObject          *object,
                                               GParamSpec       *pspec);
 static void   gtk_entry_finalize             (GObject          *object);
 static void   gtk_entry_destroy              (GtkObject        *object);
+static void   gtk_entry_dispose              (GObject          *object);
 
 /* GtkWidget methods
  */
 static void   gtk_entry_realize              (GtkWidget        *widget);
 static void   gtk_entry_unrealize            (GtkWidget        *widget);
+static void   gtk_entry_map                  (GtkWidget        *widget);
+static void   gtk_entry_unmap                (GtkWidget        *widget);
 static void   gtk_entry_size_request         (GtkWidget        *widget,
 					      GtkRequisition   *requisition);
 static void   gtk_entry_size_allocate        (GtkWidget        *widget,
 					      GtkAllocation    *allocation);
 static void   gtk_entry_draw_frame           (GtkWidget        *widget,
                                               GdkRectangle     *area);
+static void   gtk_entry_draw_progress        (GtkWidget        *widget,
+                                              GdkEventExpose   *event);
 static gint   gtk_entry_expose               (GtkWidget        *widget,
 					      GdkEventExpose   *event);
 static gint   gtk_entry_button_press         (GtkWidget        *widget,
 					      GdkEventButton   *event);
 static gint   gtk_entry_button_release       (GtkWidget        *widget,
 					      GdkEventButton   *event);
+static gint   gtk_entry_enter_notify         (GtkWidget        *widget,
+                                              GdkEventCrossing *event);
+static gint   gtk_entry_leave_notify         (GtkWidget        *widget,
+                                              GdkEventCrossing *event);
 static gint   gtk_entry_motion_notify        (GtkWidget        *widget,
 					      GdkEventMotion   *event);
 static gint   gtk_entry_key_press            (GtkWidget        *widget,
@@ -189,6 +276,11 @@ static gint   gtk_entry_focus_out            (GtkWidget        *widget,
 static void   gtk_entry_grab_focus           (GtkWidget        *widget);
 static void   gtk_entry_style_set            (GtkWidget        *widget,
 					      GtkStyle         *previous_style);
+static gboolean gtk_entry_query_tooltip      (GtkWidget        *widget,
+                                              gint              x,
+                                              gint              y,
+                                              gboolean          keyboard_tip,
+                                              GtkTooltip       *tooltip);
 static void   gtk_entry_direction_changed    (GtkWidget        *widget,
 					      GtkTextDirection  previous_dir);
 static void   gtk_entry_state_changed        (GtkWidget        *widget,
@@ -223,6 +315,11 @@ static void     gtk_entry_drag_data_get      (GtkWidget        *widget,
 					      guint             time);
 static void     gtk_entry_drag_data_delete   (GtkWidget        *widget,
 					      GdkDragContext   *context);
+static void     gtk_entry_drag_begin         (GtkWidget        *widget,
+                                              GdkDragContext   *context);
+static void     gtk_entry_drag_end           (GtkWidget        *widget,
+                                              GdkDragContext   *context);
+
 
 /* GtkEditable method implementations
  */
@@ -276,10 +373,14 @@ static void gtk_entry_paste_clipboard    (GtkEntry        *entry);
 static void gtk_entry_toggle_overwrite   (GtkEntry        *entry);
 static void gtk_entry_select_all         (GtkEntry        *entry);
 static void gtk_entry_real_activate      (GtkEntry        *entry);
-static gboolean gtk_entry_popup_menu     (GtkWidget      *widget);
+static gboolean gtk_entry_popup_menu     (GtkWidget       *widget);
 
-static void gtk_entry_keymap_direction_changed (GdkKeymap *keymap,
-						GtkEntry  *entry);
+static void keymap_direction_changed     (GdkKeymap       *keymap,
+					  GtkEntry        *entry);
+static void keymap_state_changed         (GdkKeymap       *keymap,
+					  GtkEntry        *entry);
+static void remove_capslock_feedback     (GtkEntry        *entry);
+
 /* IM Context Callbacks
  */
 static void     gtk_entry_commit_cb               (GtkIMContext *context,
@@ -346,11 +447,6 @@ static void         gtk_entry_state_changed            (GtkWidget      *widget,
 static void         gtk_entry_check_cursor_blink       (GtkEntry       *entry);
 static void         gtk_entry_pend_cursor_blink        (GtkEntry       *entry);
 static void         gtk_entry_reset_blink_time         (GtkEntry       *entry);
-static void         get_text_area_size                 (GtkEntry       *entry,
-							gint           *x,
-							gint           *y,
-							gint           *width,
-							gint           *height);
 static void         gtk_entry_get_text_area_size       (GtkEntry       *entry,
 							gint           *x,
 							gint           *y,
@@ -361,7 +457,10 @@ static void         get_widget_window_size             (GtkEntry       *entry,
 							gint           *y,
 							gint           *width,
 							gint           *height);
-static void         gtk_entry_move_adjustments         (GtkEntry       *entry);
+static void         gtk_entry_move_adjustments         (GtkEntry             *entry);
+static void         gtk_entry_ensure_pixbuf            (GtkEntry             *entry,
+                                                        GtkEntryIconPosition  icon_pos);
+
 
 /* Completion */
 static gint         gtk_entry_completion_timeout       (gpointer            data);
@@ -390,6 +489,7 @@ static void         connect_completion_signals         (GtkEntry           *entr
 static void         begin_change                       (GtkEntry *entry);
 static void         end_change                         (GtkEntry *entry);
 static void         emit_changed                       (GtkEntry *entry);
+
 
 G_DEFINE_TYPE_WITH_CODE (GtkEntry, gtk_entry, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_EDITABLE,
@@ -431,15 +531,20 @@ gtk_entry_class_init (GtkEntryClass *class)
   widget_class = (GtkWidgetClass*) class;
   gtk_object_class = (GtkObjectClass *)class;
 
+  gobject_class->dispose = gtk_entry_dispose;
   gobject_class->finalize = gtk_entry_finalize;
   gobject_class->set_property = gtk_entry_set_property;
   gobject_class->get_property = gtk_entry_get_property;
 
+  widget_class->map = gtk_entry_map;
+  widget_class->unmap = gtk_entry_unmap;
   widget_class->realize = gtk_entry_realize;
   widget_class->unrealize = gtk_entry_unrealize;
   widget_class->size_request = gtk_entry_size_request;
   widget_class->size_allocate = gtk_entry_size_allocate;
   widget_class->expose_event = gtk_entry_expose;
+  widget_class->enter_notify_event = gtk_entry_enter_notify;
+  widget_class->leave_notify_event = gtk_entry_leave_notify;
   widget_class->button_press_event = gtk_entry_button_press;
   widget_class->button_release_event = gtk_entry_button_release;
   widget_class->motion_notify_event = gtk_entry_motion_notify;
@@ -449,6 +554,9 @@ gtk_entry_class_init (GtkEntryClass *class)
   widget_class->focus_out_event = gtk_entry_focus_out;
   widget_class->grab_focus = gtk_entry_grab_focus;
   widget_class->style_set = gtk_entry_style_set;
+  widget_class->query_tooltip = gtk_entry_query_tooltip;
+  widget_class->drag_begin = gtk_entry_drag_begin;
+  widget_class->drag_end = gtk_entry_drag_end;
   widget_class->direction_changed = gtk_entry_direction_changed;
   widget_class->state_changed = gtk_entry_state_changed;
   widget_class->screen_changed = gtk_entry_screen_changed;
@@ -479,6 +587,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   quark_inner_border = g_quark_from_static_string ("gtk-entry-inner-border");
   quark_password_hint = g_quark_from_static_string ("gtk-entry-password-hint");
   quark_cursor_hadjustment = g_quark_from_static_string ("gtk-hadjustment");
+  quark_capslock_feedback = g_quark_from_static_string ("gtk-entry-capslock-feedback");
 
   g_object_class_install_property (gobject_class,
                                    PROP_CURSOR_POSITION,
@@ -648,6 +757,7 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                          P_("Whether new text overwrites existing text"),
                                                          FALSE,
                                                          GTK_PARAM_READWRITE));
+
   /**
    * GtkEntry:text-length:
    *
@@ -664,7 +774,341 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                       G_MAXUINT16,
                                                       0,
                                                       GTK_PARAM_READABLE));
+  /**
+   * GtkEntry:invisible-char-set:
+   *
+   * Whether the invisible char has been set for the #GtkEntry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_INVISIBLE_CHAR_SET,
+                                   g_param_spec_boolean ("invisible-char-set",
+                                                         P_("Invisible char set"),
+                                                         P_("Whether the invisible char has been set"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE));
 
+  /**
+   * GtkEntry:caps-lock-warning
+   *
+   * Whether password entries will show a warning when Caps Lock is on
+   * or an input method is active. 
+   *
+   * Note that the warning is shown using a secondary icon, and thus
+   * does not work if you are using the secondary icon position for some 
+   * other purpose.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_CAPS_LOCK_WARNING,
+                                   g_param_spec_boolean ("caps-lock-warning",
+                                                         P_("Caps Lock warning"),
+                                                         P_("Whether password entries will show a warning when Caps Lock is on or an input method is active"),
+                                                         TRUE,
+                                                         GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:progress-fraction:
+   *
+   * The current fraction of the task that's been completed.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_PROGRESS_FRACTION,
+                                   g_param_spec_double ("progress-fraction",
+                                                        P_("Progress Fraction"),
+                                                        P_("The current fraction of the task that's been completed"),
+                                                        0.0,
+                                                        1.0,
+                                                        0.0,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:progress-pulse-step:
+   *
+   * The fraction of total entry width to move the progress
+   * bouncing block for each call to gtk_entry_progress_pulse().
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_PROGRESS_PULSE_STEP,
+                                   g_param_spec_double ("progress-pulse-step",
+                                                        P_("Progress Pulse Step"),
+                                                        P_("The fraction of total entry width to move the progress bouncing block for each call to gtk_entry_progress_pulse()"),
+                                                        0.0,
+                                                        1.0,
+                                                        0.1,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:pixbuf-primary:
+   *
+   * A pixbuf to use as the primary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_PIXBUF_PRIMARY,
+                                   g_param_spec_object ("pixbuf-primary",
+                                                        P_("Primary pixbuf"),
+                                                        P_("Primary pixbuf for the entry"),
+                                                        GDK_TYPE_PIXBUF,
+                                                        GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:pixbuf-secondary:
+   *
+   * An pixbuf to use as the secondary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_PIXBUF_SECONDARY,
+                                   g_param_spec_object ("pixbuf-secondary",
+                                                        P_("Secondary pixbuf"),
+                                                        P_("Secondary pixbuf for the entry"),
+                                                        GDK_TYPE_PIXBUF,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:stock-primary:
+   *
+   * The stock id to use for the primary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_STOCK_PRIMARY,
+                                   g_param_spec_string ("stock-primary",
+                                                        P_("Primary stock ID"),
+                                                        P_("Stock ID for primary icon"),
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:stock-secondary:
+   *
+   * The stock id to use for the secondary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_STOCK_SECONDARY,
+                                   g_param_spec_string ("stock-secondary",
+                                                        P_("Secondary stock ID"),
+                                                        P_("Stock ID for secondary icon"),
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:icon-name-primary:
+   *
+   * The icon name to use for the primary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_ICON_NAME_PRIMARY,
+                                   g_param_spec_string ("icon-name-primary",
+                                                        P_("Primary icon name"),
+                                                        P_("Icon name for primary icon"),
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:icon-name-secondary:
+   *
+   * The icon name to use for the secondary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_ICON_NAME_SECONDARY,
+                                   g_param_spec_string ("icon-name-secondary",
+                                                        P_("Secondary icon name"),
+                                                        P_("Icon name for secondary icon"),
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:gicon-primary:
+   *
+   * The #GIcon to use for the primary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_GICON_PRIMARY,
+                                   g_param_spec_object ("gicon-primary",
+                                                        P_("Primary GIcon"),
+                                                        P_("GIcon for primary icon"),
+                                                        G_TYPE_ICON,
+                                                        GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:gicon-secondary:
+   *
+   * The #GIcon to use for the secondary icon for the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_GICON_SECONDARY,
+                                   g_param_spec_object ("gicon-secondary",
+                                                        P_("Secondary GIcon"),
+                                                        P_("GIcon for secondary icon"),
+                                                        G_TYPE_ICON,
+                                                        GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:storage-type-primary:
+   *
+   * The representation which is used for the primary icon of the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_STORAGE_TYPE_PRIMARY,
+                                   g_param_spec_enum ("storage-type-primary",
+                                                      P_("Primary storage type"),
+                                                      P_("The representation being used for primary icon"),
+                                                      GTK_TYPE_IMAGE_TYPE,
+                                                      GTK_IMAGE_EMPTY,
+                                                      GTK_PARAM_READABLE));
+  
+  /**
+   * GtkEntry:storage-type-secondary:
+   *
+   * The representation which is used for the secondary icon of the entry.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_STORAGE_TYPE_SECONDARY,
+                                   g_param_spec_enum ("storage-type-secondary",
+                                                      P_("Secondary storage type"),
+                                                      P_("The representation being used for secondary icon"),
+                                                      GTK_TYPE_IMAGE_TYPE,
+                                                      GTK_IMAGE_EMPTY,
+                                                      GTK_PARAM_READABLE));
+  
+  /**
+   * GtkEntry:activatable-primary:
+   *
+   * Whether the primary icon is activatable.
+   *
+   * GTK+ emits the #GtkEntry::icon-press and #GtkEntry::icon-release 
+   * signals only on sensitive, activatable icons. 
+   *
+   * Sensitive, but non-activatable icons can be used for purely 
+   * informational purposes.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_ACTIVATABLE_PRIMARY,
+                                   g_param_spec_boolean ("activatable-primary",
+                                                         P_("Primary icon activatable"),
+                                                         P_("Whether the primary icon is activatable"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:activatable-secondary:
+   *
+   * Whether the secondary icon is activatable.
+   *
+   * GTK+ emits the #GtkEntry::icon-press and #GtkEntry::icon-release 
+   * signals only on sensitive, activatable icons.
+   *
+   * Sensitive, but non-activatable icons can be used for purely 
+   * informational purposes.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_ACTIVATABLE_SECONDARY,
+                                   g_param_spec_boolean ("activatable-secondary",
+                                                         P_("Secondary icon activatable"),
+                                                         P_("Whether the secondary icon is activatable"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE));
+  
+  
+  /**
+   * GtkEntry:sensitive-primary:
+   *
+   * Whether the primary icon is sensitive.
+   *
+   * An insensitive icon appears grayed out. GTK+ does not emit the 
+   * #GtkEntry::icon-press and #GtkEntry::icon-release signals and 
+   * does not allow DND from insensitive icons.
+   *
+   * An icon should be set insensitive if the action that would trigger
+   * when clicked is currently not available.
+   * 
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_SENSITIVE_PRIMARY,
+                                   g_param_spec_boolean ("sensitive-primary",
+                                                         P_("Primary icon sensitive"),
+                                                         P_("Whether the primary icon is sensitive"),
+                                                         TRUE,
+                                                         GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:sensitive-secondary:
+   *
+   * Whether the secondary icon is sensitive.
+   *
+   * An insensitive icon appears grayed out. GTK+ does not emit the 
+   * #GtkEntry::icon-press and #GtkEntry::icon-release signals and 
+   * does not allow DND from insensitive icons.
+   *
+   * An icon should be set insensitive if the action that would trigger
+   * when clicked is currently not available.
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_SENSITIVE_SECONDARY,
+                                   g_param_spec_boolean ("sensitive-secondary",
+                                                         P_("Secondary icon sensitive"),
+                                                         P_("Whether the secondary icon is sensitive"),
+                                                         TRUE,
+                                                         GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:prelight:
+   *
+   * The prelight style property determines whether activatable
+   * icons prelight on mouseover.
+   *
+   * Since: 2.16
+   */
+  gtk_widget_class_install_style_property (widget_class,
+                                           g_param_spec_boolean ("prelight",
+                                                                 P_("Prelight"),
+                                                                 P_("Whether activatable icons should prelight when hovered"),
+                                                                 TRUE,
+                                                                 GTK_PARAM_READABLE));
+  
+  /**
+   * GtkEntry::populate-popup:
+   * @entry: The entry on which the signal is emitted
+   * @menu: the menu that is being populated
+   *
+   * The ::populate-popup signal gets emitted before showing the 
+   * context menu of the entry. 
+   *
+   * If you need to add items to the context menu, connect
+   * to this signal and append your menuitems to the @menu.
+   */
   signals[POPULATE_POPUP] =
     g_signal_new (I_("populate-popup"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -677,6 +1121,19 @@ gtk_entry_class_init (GtkEntryClass *class)
   
  /* Action signals */
   
+  /**
+   * GtkEntry::activate:
+   * @entry: The entry on which the signal is emitted
+   *
+   * A  <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted when the user activates the entry.
+   * 
+   * Applications should not connect to it, but may emit it with
+   * g_signal_emit_by_name() if they need to control scrolling
+   * programmatically.
+   *
+   * The default bindings for this signal are all forms of the Enter key.
+   */
   signals[ACTIVATE] =
     g_signal_new (I_("activate"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -687,6 +1144,33 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_NONE, 0);
   widget_class->activate_signal = signals[ACTIVATE];
 
+  /**
+   * GtkEntry::move-cursor:
+   * @entry: the object which received the signal
+   * @step: the granularity of the move, as a #GtkMovementStep
+   * @count: the number of @step units to move
+   * @extend_selection: %TRUE if the move should extend the selection
+   *
+   * The ::move-cursor signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted when the user initiates a cursor movement.
+   * If the cursor is not visible in @entry, this signal causes
+   * the viewport to be moved instead.
+   *
+   * Applications should not connect to it, but may emit it with
+   * g_signal_emit_by_name() if they need to control scrolling
+   * programmatically.
+   *
+   * The default bindings for this signal come in two variants,
+   * the variant with the Shift modifier extends the selection,
+   * the variant without the Shift modifer does not.
+   * There are too many key combinations to list them all here.
+   * <itemizedlist>
+   * <listitem>Arrow keys move by individual characters/lines</listitem>
+   * <listitem>Ctrl-arrow key combinations move by words/paragraphs</listitem>
+   * <listitem>Home/End keys move to the ends of the buffer</listitem>
+   * </itemizedlist>
+   */
   signals[MOVE_CURSOR] = 
     g_signal_new (I_("move-cursor"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -699,6 +1183,18 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_INT,
 		  G_TYPE_BOOLEAN);
 
+  /**
+   * GtkEntry::insert-at-cursor:
+   * @entry: the object which received the signal
+   * @string: the string to insert
+   *
+   * The ::insert-at-cursor signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted when the user initiates the insertion of a
+   * fixed string at the cursor.
+   *
+   * This signal has no default bindings.
+   */
   signals[INSERT_AT_CURSOR] = 
     g_signal_new (I_("insert-at-cursor"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -709,6 +1205,24 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  G_TYPE_NONE, 1,
 		  G_TYPE_STRING);
 
+  /**
+   * GtkEntry::delete-from-cursor:
+   * @entry: the object which received the signal
+   * @type: the granularity of the deletion, as a #GtkDeleteType
+   * @count: the number of @type units to delete
+   *
+   * The ::delete-from-cursor signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted when the user initiates a text deletion.
+   *
+   * If the @type is %GTK_DELETE_CHARS, GTK+ deletes the selection
+   * if there is one, otherwise it deletes the requested number
+   * of characters.
+   *
+   * The default bindings for this signal are
+   * Delete for deleting a character and Ctrl-Delete for
+   * deleting a word.
+   */
   signals[DELETE_FROM_CURSOR] = 
     g_signal_new (I_("delete-from-cursor"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -720,6 +1234,17 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  GTK_TYPE_DELETE_TYPE,
 		  G_TYPE_INT);
 
+  /**
+   * GtkEntry::backspace:
+   * @entry: the object which received the signal
+   *
+   * The ::backspace signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted when the user asks for it.
+   *
+   * The default bindings for this signal are
+   * Backspace and Shift-Backspace.
+   */
   signals[BACKSPACE] =
     g_signal_new (I_("backspace"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -729,6 +1254,17 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  _gtk_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
 
+  /**
+   * GtkEntry::cut-clipboard:
+   * @entry: the object which received the signal
+   *
+   * The ::cut-clipboard signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted to cut the selection to the clipboard.
+   *
+   * The default bindings for this signal are
+   * Ctrl-x and Shift-Delete.
+   */
   signals[CUT_CLIPBOARD] =
     g_signal_new (I_("cut-clipboard"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -738,6 +1274,17 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  _gtk_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
 
+  /**
+   * GtkEntry::copy-clipboard:
+   * @entry: the object which received the signal
+   *
+   * The ::copy-clipboard signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted to copy the selection to the clipboard.
+   *
+   * The default bindings for this signal are
+   * Ctrl-c and Ctrl-Insert.
+   */
   signals[COPY_CLIPBOARD] =
     g_signal_new (I_("copy-clipboard"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -747,6 +1294,18 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  _gtk_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
 
+  /**
+   * GtkEntry::paste-clipboard:
+   * @entry: the object which received the signal
+   *
+   * The ::paste-clipboard signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted to paste the contents of the clipboard
+   * into the text view.
+   *
+   * The default bindings for this signal are
+   * Ctrl-v and Shift-Insert.
+   */
   signals[PASTE_CLIPBOARD] =
     g_signal_new (I_("paste-clipboard"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -756,6 +1315,16 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  _gtk_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
 
+  /**
+   * GtkEntry::toggle-overwrite:
+   * @entry: the object which received the signal
+   *
+   * The ::toggle-overwrite signal is a
+   * <link linkend="keybinding-signals">keybinding signal</link>
+   * which gets emitted to toggle the overwrite mode of the entry.
+   *
+   * The default bindings for this signal is Insert.
+   */
   signals[TOGGLE_OVERWRITE] =
     g_signal_new (I_("toggle-overwrite"),
 		  G_OBJECT_CLASS_TYPE (gobject_class),
@@ -764,6 +1333,51 @@ gtk_entry_class_init (GtkEntryClass *class)
 		  NULL, NULL,
 		  _gtk_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
+
+  /**
+   * GtkEntry::icon-press:
+   * @entry: The entry on which the signal is emitted
+   * @icon_pos: The position of the clicked icon
+   * @event: the button press event
+   *
+   * The ::icon-press signal is emitted when an activatable icon 
+   * is clicked.
+   *
+   * Since: 2.16
+   */
+  signals[ICON_PRESS] =
+    g_signal_new (I_("icon-press"),
+                  G_TYPE_FROM_CLASS (gobject_class),
+                  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                  0,
+                  NULL, NULL,
+                  _gtk_marshal_VOID__ENUM_BOXED,
+                  G_TYPE_NONE, 2,
+                  GTK_TYPE_ENTRY_ICON_POSITION,
+                  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  
+  /**
+   * GtkEntry::icon-release:
+   * @entry: The entry on which the signal is emitted
+   * @icon_pos: The position of the clicked icon
+   * @event: the button release event
+   *
+   * The ::icon-release signal is emitted on the button release from a
+   * mouse click over an activatable icon.
+   *
+   * Since: 2.16
+   */
+  signals[ICON_RELEASE] =
+    g_signal_new (I_("icon-release"),
+                  G_TYPE_FROM_CLASS (gobject_class),
+                  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                  0,
+                  NULL, NULL,
+                  _gtk_marshal_VOID__ENUM_BOXED,
+                  G_TYPE_NONE, 2,
+                  GTK_TYPE_ENTRY_ICON_POSITION,
+                  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
 
   /*
    * Key bindings
@@ -934,6 +1548,21 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                                GTK_TYPE_BORDER,
                                                                GTK_PARAM_READABLE));
 
+   /**
+    * GtkEntry:state-hint:
+    *
+    * Indicates whether to pass a proper widget state when
+    * drawing the shadow and the widget background.
+    *
+    * Since: 2.16
+    */
+   gtk_widget_class_install_style_property (widget_class,
+                                            g_param_spec_boolean ("state-hint",
+                                                                  P_("State Hint"),
+                                                                  P_("Whether to pass a proper state when drawing shadow or background"),
+                                                                  FALSE,
+                                                                  GTK_PARAM_READABLE));
+
    gtk_settings_install_property (g_param_spec_boolean ("gtk-entry-select-on-focus",
 						       P_("Select on focus"),
 						       P_("Whether to select the contents of an entry when it is focused"),
@@ -1063,6 +1692,97 @@ gtk_entry_set_property (GObject         *object,
       gtk_entry_set_overwrite_mode (entry, g_value_get_boolean (value));
       break;
 
+    case PROP_INVISIBLE_CHAR_SET:
+      if (g_value_get_boolean (value))
+        priv->invisible_char_set = TRUE;
+      else
+        gtk_entry_unset_invisible_char (entry);
+      break;
+
+    case PROP_CAPS_LOCK_WARNING:
+      priv->caps_lock_warning = g_value_get_boolean (value);
+      break;
+
+    case PROP_PROGRESS_FRACTION:
+      gtk_entry_set_progress_fraction (entry, g_value_get_double (value));
+      break;
+
+    case PROP_PROGRESS_PULSE_STEP:
+      gtk_entry_set_progress_pulse_step (entry, g_value_get_double (value));
+      break;
+
+    case PROP_PIXBUF_PRIMARY:
+      gtk_entry_set_icon_from_pixbuf (entry,
+                                      GTK_ENTRY_ICON_PRIMARY,
+                                      g_value_get_object (value));
+      break;
+
+    case PROP_PIXBUF_SECONDARY:
+      gtk_entry_set_icon_from_pixbuf (entry,
+                                      GTK_ENTRY_ICON_SECONDARY,
+                                      g_value_get_object (value));
+      break;
+
+    case PROP_STOCK_PRIMARY:
+      gtk_entry_set_icon_from_stock (entry,
+                                     GTK_ENTRY_ICON_PRIMARY,
+                                     g_value_get_string (value));
+      break;
+
+    case PROP_STOCK_SECONDARY:
+      gtk_entry_set_icon_from_stock (entry,
+                                     GTK_ENTRY_ICON_SECONDARY,
+                                     g_value_get_string (value));
+      break;
+
+    case PROP_ICON_NAME_PRIMARY:
+      gtk_entry_set_icon_from_icon_name (entry,
+                                         GTK_ENTRY_ICON_PRIMARY,
+                                         g_value_get_string (value));
+      break;
+
+    case PROP_ICON_NAME_SECONDARY:
+      gtk_entry_set_icon_from_icon_name (entry,
+                                         GTK_ENTRY_ICON_SECONDARY,
+                                         g_value_get_string (value));
+      break;
+
+    case PROP_GICON_PRIMARY:
+      gtk_entry_set_icon_from_gicon (entry,
+                                     GTK_ENTRY_ICON_PRIMARY,
+                                     g_value_get_object (value));
+      break;
+
+    case PROP_GICON_SECONDARY:
+      gtk_entry_set_icon_from_gicon (entry,
+                                     GTK_ENTRY_ICON_SECONDARY,
+                                     g_value_get_object (value));
+      break;
+
+    case PROP_ACTIVATABLE_PRIMARY:
+      gtk_entry_set_icon_activatable (entry,
+                                      GTK_ENTRY_ICON_PRIMARY,
+                                      g_value_get_boolean (value));
+      break;
+
+    case PROP_ACTIVATABLE_SECONDARY:
+      gtk_entry_set_icon_activatable (entry,
+                                      GTK_ENTRY_ICON_SECONDARY,
+                                      g_value_get_boolean (value));
+      break;
+
+    case PROP_SENSITIVE_PRIMARY:
+      gtk_entry_set_icon_sensitive (entry,
+                                    GTK_ENTRY_ICON_PRIMARY,
+                                    g_value_get_boolean (value));
+      break;
+
+    case PROP_SENSITIVE_SECONDARY:
+      gtk_entry_set_icon_sensitive (entry,
+                                    GTK_ENTRY_ICON_SECONDARY,
+                                    g_value_get_boolean (value));
+      break;
+
     case PROP_SCROLL_OFFSET:
     case PROP_CURSOR_POSITION:
     default:
@@ -1085,59 +1805,211 @@ gtk_entry_get_property (GObject         *object,
     case PROP_CURSOR_POSITION:
       g_value_set_int (value, entry->current_pos);
       break;
+
     case PROP_SELECTION_BOUND:
       g_value_set_int (value, entry->selection_bound);
       break;
+
     case PROP_EDITABLE:
       g_value_set_boolean (value, entry->editable);
       break;
+
     case PROP_MAX_LENGTH:
       g_value_set_int (value, entry->text_max_length); 
       break;
+
     case PROP_VISIBILITY:
       g_value_set_boolean (value, entry->visible);
       break;
+
     case PROP_HAS_FRAME:
       g_value_set_boolean (value, entry->has_frame);
       break;
+
     case PROP_INNER_BORDER:
       g_value_set_boxed (value, gtk_entry_get_inner_border (entry));
       break;
+
     case PROP_INVISIBLE_CHAR:
       g_value_set_uint (value, entry->invisible_char);
       break;
+
     case PROP_ACTIVATES_DEFAULT:
       g_value_set_boolean (value, entry->activates_default);
       break;
+
     case PROP_WIDTH_CHARS:
       g_value_set_int (value, entry->width_chars);
       break;
+
     case PROP_SCROLL_OFFSET:
       g_value_set_int (value, entry->scroll_offset);
       break;
+
     case PROP_TEXT:
       g_value_set_string (value, gtk_entry_get_text (entry));
       break;
+
     case PROP_XALIGN:
       g_value_set_float (value, gtk_entry_get_alignment (entry));
       break;
+
     case PROP_TRUNCATE_MULTILINE:
       g_value_set_boolean (value, entry->truncate_multiline);
       break;
+
     case PROP_SHADOW_TYPE:
       g_value_set_enum (value, priv->shadow_type);
       break;
+
     case PROP_OVERWRITE_MODE:
       g_value_set_boolean (value, entry->overwrite_mode);
       break;
+
     case PROP_TEXT_LENGTH:
       g_value_set_uint (value, entry->text_length);
+      break;
+
+    case PROP_INVISIBLE_CHAR_SET:
+      g_value_set_boolean (value, priv->invisible_char_set);
+      break;
+
+    case PROP_CAPS_LOCK_WARNING:
+      g_value_set_boolean (value, priv->caps_lock_warning);
+      break;
+
+    case PROP_PROGRESS_FRACTION:
+      g_value_set_double (value, priv->progress_fraction);
+      break;
+
+    case PROP_PROGRESS_PULSE_STEP:
+      g_value_set_double (value, priv->progress_pulse_fraction);
+      break;
+
+    case PROP_PIXBUF_PRIMARY:
+      g_value_set_object (value,
+                          gtk_entry_get_pixbuf (entry,
+                                                GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_PIXBUF_SECONDARY:
+      g_value_set_object (value,
+                          gtk_entry_get_pixbuf (entry,
+                                                GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_STOCK_PRIMARY:
+      g_value_set_string (value,
+                          gtk_entry_get_stock (entry,
+                                               GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_STOCK_SECONDARY:
+      g_value_set_string (value,
+                          gtk_entry_get_stock (entry,
+                                               GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_ICON_NAME_PRIMARY:
+      g_value_set_string (value,
+                          gtk_entry_get_icon_name (entry,
+                                                   GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_ICON_NAME_SECONDARY:
+      g_value_set_string (value,
+                          gtk_entry_get_icon_name (entry,
+                                                   GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_GICON_PRIMARY:
+      g_value_set_object (value,
+                          gtk_entry_get_gicon (entry,
+                                               GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_GICON_SECONDARY:
+      g_value_set_object (value,
+                          gtk_entry_get_gicon (entry,
+                                               GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_STORAGE_TYPE_PRIMARY:
+      g_value_set_enum (value,
+                        gtk_entry_get_storage_type (entry, GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_STORAGE_TYPE_SECONDARY:
+      g_value_set_enum (value,
+                        gtk_entry_get_storage_type (entry, GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_ACTIVATABLE_PRIMARY:
+      g_value_set_boolean (value,
+                           gtk_entry_get_icon_activatable (entry, GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_ACTIVATABLE_SECONDARY:
+      g_value_set_boolean (value,
+                           gtk_entry_get_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_SENSITIVE_PRIMARY:
+      g_value_set_boolean (value,
+                           gtk_entry_get_icon_sensitive (entry, GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_SENSITIVE_SECONDARY:
+      g_value_set_boolean (value,
+                           gtk_entry_get_icon_sensitive (entry, GTK_ENTRY_ICON_SECONDARY));
       break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
+}
+
+static gunichar
+find_invisible_char (GtkWidget *widget)
+{
+  PangoLayout *layout;
+  PangoAttrList *attr_list;
+  gint i;
+  gunichar invisible_chars [] = {
+    0x25cf, /* BLACK CIRCLE */
+    0x2022, /* BULLET */
+    0x2731, /* HEAVY ASTERISK */
+    0x273a  /* SIXTEEN POINTED ASTERISK */
+  };
+
+  layout = gtk_widget_create_pango_layout (widget, NULL);
+
+  attr_list = pango_attr_list_new ();
+  pango_attr_list_insert (attr_list, pango_attr_fallback_new (FALSE));
+
+  pango_layout_set_attributes (layout, attr_list);
+  pango_attr_list_unref (attr_list);
+
+  for (i = 0; i < G_N_ELEMENTS (invisible_chars); i++)
+    {
+      gchar text[7] = { 0, };
+      gint len, count;
+
+      len = g_unichar_to_utf8 (invisible_chars[i], text);
+      pango_layout_set_text (layout, text, len);
+
+      count = pango_layout_get_unknown_glyphs_count (layout);
+
+      if (count == 0)
+        {
+          g_object_unref (layout);
+          return invisible_chars[i];
+        }
+    }
+
+  g_object_unref (layout);
+  return '*';
 }
 
 static void
@@ -1153,7 +2025,7 @@ gtk_entry_init (GtkEntry *entry)
 
   entry->editable = TRUE;
   entry->visible = TRUE;
-  entry->invisible_char = '*';
+  entry->invisible_char = find_invisible_char (GTK_WIDGET (entry));
   entry->dnd_position = -1;
   entry->width_chars = -1;
   entry->is_cell_renderer = FALSE;
@@ -1162,6 +2034,10 @@ gtk_entry_init (GtkEntry *entry)
   entry->truncate_multiline = FALSE;
   priv->shadow_type = GTK_SHADOW_IN;
   priv->xalign = 0.0;
+  priv->caps_lock_warning = TRUE;
+  priv->caps_lock_warning_shown = FALSE;
+  priv->progress_fraction = 0.0;
+  priv->progress_pulse_fraction = 0.1;
 
   gtk_drag_dest_set (GTK_WIDGET (entry),
                      GTK_DEST_DEFAULT_HIGHLIGHT,
@@ -1183,6 +2059,64 @@ gtk_entry_init (GtkEntry *entry)
   g_signal_connect (entry->im_context, "delete-surrounding",
 		    G_CALLBACK (gtk_entry_delete_surrounding_cb), entry);
 }
+
+static gint
+get_icon_width (GtkEntry             *entry,
+                GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = priv->icons[icon_pos];
+  GdkScreen *screen;
+  GtkSettings *settings;
+  gint menu_icon_width;
+
+  if (!icon_info || icon_info->pixbuf == NULL)
+    return 0;
+
+  screen = gtk_widget_get_screen (GTK_WIDGET (entry));
+  settings = gtk_settings_get_for_screen (screen);
+
+  gtk_icon_size_lookup_for_settings (settings, GTK_ICON_SIZE_MENU,
+                                     &menu_icon_width, NULL);
+
+  return MAX (gdk_pixbuf_get_width (icon_info->pixbuf), menu_icon_width);
+}
+
+static void
+get_icon_allocations (GtkEntry      *entry,
+                      GtkAllocation *primary,
+                      GtkAllocation *secondary)
+
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  gint x, y, width, height;
+
+  gtk_entry_get_text_area_size (entry, &x, &y, &width, &height);
+
+  primary->y = y;
+  primary->height = height;
+  primary->width = get_icon_width (entry, GTK_ENTRY_ICON_PRIMARY);
+  if (primary->width > 0)
+    primary->width += 2 * priv->icon_margin;
+
+  secondary->y = y;
+  secondary->height = height;
+  secondary->width = get_icon_width (entry, GTK_ENTRY_ICON_SECONDARY);
+  if (secondary->width > 0)
+    secondary->width += 2 * priv->icon_margin;
+
+  if (gtk_widget_get_direction (GTK_WIDGET (entry)) == GTK_TEXT_DIR_RTL)
+    {
+      primary->x = x + width - primary->width;
+      secondary->x = x;
+    }
+  else
+    {
+      primary->x = x;
+      secondary->x = x + width - secondary->width;
+    }
+}
+
 
 static void
 begin_change (GtkEntry *entry)
@@ -1267,9 +2201,40 @@ gtk_entry_destroy (GtkObject *object)
 }
 
 static void
+gtk_entry_dispose (GObject *object)
+{
+  GtkEntry *entry = GTK_ENTRY (object);
+
+  gtk_entry_set_icon_from_pixbuf (entry, GTK_ENTRY_ICON_PRIMARY, NULL);
+  gtk_entry_set_icon_tooltip_markup (entry, GTK_ENTRY_ICON_PRIMARY, NULL);
+  gtk_entry_set_icon_from_pixbuf (entry, GTK_ENTRY_ICON_SECONDARY, NULL);
+  gtk_entry_set_icon_tooltip_markup (entry, GTK_ENTRY_ICON_SECONDARY, NULL);
+
+  G_OBJECT_CLASS (gtk_entry_parent_class)->dispose (object);
+}
+
+static void
 gtk_entry_finalize (GObject *object)
 {
   GtkEntry *entry = GTK_ENTRY (object);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = NULL;
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      if ((icon_info = priv->icons[i]) != NULL)
+        {
+          if (icon_info->target_list != NULL)
+            {
+              gtk_target_list_unref (icon_info->target_list);
+              icon_info->target_list = NULL;
+            }
+
+          g_slice_free (EntryIconInfo, icon_info);
+          priv->icons[i] = NULL;
+        }
+    }
 
   gtk_entry_set_completion (entry, NULL);
 
@@ -1298,14 +2263,164 @@ gtk_entry_finalize (GObject *object)
 }
 
 static void
-gtk_entry_realize (GtkWidget *widget)
+update_cursors (GtkWidget *widget)
 {
-  GtkEntry *entry;
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  EntryIconInfo *icon_info = NULL;
+  GdkDisplay *display;
+  GdkCursor *cursor;
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      if ((icon_info = priv->icons[i]) != NULL)
+        {
+          if (icon_info->pixbuf != NULL)
+            gdk_window_show (icon_info->window);
+
+          /* The icon windows are not children of the visible entry window,
+           * thus we can't just inherit the xterm cursor. Slight complication 
+           * here is that for the entry, insensitive => arrow cursor, but for 
+           * an icon in a sensitive entry, insensitive => xterm cursor.
+           */
+          if (GTK_WIDGET_IS_SENSITIVE (widget) && 
+              (icon_info->insensitive || 
+               (icon_info->nonactivatable && icon_info->target_list == NULL)))
+            {
+              display = gtk_widget_get_display (widget);
+              cursor = gdk_cursor_new_for_display (display, GDK_XTERM);
+              gdk_window_set_cursor (icon_info->window, cursor);
+              gdk_cursor_unref (cursor);
+            }
+          else
+            {
+              gdk_window_set_cursor (icon_info->window, NULL);
+            }
+        }
+    }
+}
+
+static void
+realize_icon_info (GtkWidget            *widget, 
+                   GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  EntryIconInfo *icon_info = priv->icons[icon_pos];
   GdkWindowAttr attributes;
   gint attributes_mask;
 
+  g_return_if_fail (icon_info != NULL);
+
+  attributes.x = 0;
+  attributes.y = 0;
+  attributes.width = 1;
+  attributes.height = 1;
+  attributes.window_type = GDK_WINDOW_CHILD;
+  attributes.wclass = GDK_INPUT_OUTPUT;
+  attributes.visual = gtk_widget_get_visual (widget);
+  attributes.colormap = gtk_widget_get_colormap (widget);
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_EXPOSURE_MASK |
+                                GDK_BUTTON_PRESS_MASK |
+                                GDK_BUTTON_RELEASE_MASK |
+                                GDK_BUTTON1_MOTION_MASK |
+                                GDK_BUTTON3_MOTION_MASK |
+                                GDK_POINTER_MOTION_HINT_MASK |
+                                GDK_POINTER_MOTION_MASK |
+                                GDK_ENTER_NOTIFY_MASK |
+                            GDK_LEAVE_NOTIFY_MASK);
+  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+
+  icon_info->window = gdk_window_new (widget->window,
+                                      &attributes,
+                                      attributes_mask);
+  gdk_window_set_user_data (icon_info->window, widget);
+  gdk_window_set_background (icon_info->window,
+                             &widget->style->base[GTK_WIDGET_STATE (widget)]);
+
+  gtk_widget_queue_resize (widget);
+}
+
+static EntryIconInfo*
+construct_icon_info (GtkWidget            *widget, 
+                     GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (priv->icons[icon_pos] == NULL, NULL);
+
+  icon_info = g_slice_new0 (EntryIconInfo);
+  priv->icons[icon_pos] = icon_info;
+
+  if (GTK_WIDGET_REALIZED (widget))
+    realize_icon_info (widget, icon_pos);
+
+  if (GTK_WIDGET_MAPPED (widget))
+    gdk_window_show (icon_info->window);
+
+  return icon_info;
+}
+
+static void
+gtk_entry_map (GtkWidget *widget)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  EntryIconInfo *icon_info = NULL;
+  gint i;
+
+  if (GTK_WIDGET_REALIZED (widget) && !GTK_WIDGET_MAPPED (widget))
+    {
+      GTK_WIDGET_CLASS (gtk_entry_parent_class)->map (widget);
+
+      for (i = 0; i < MAX_ICONS; i++)
+        {
+          if ((icon_info = priv->icons[i]) != NULL)
+            {
+              if (icon_info->pixbuf != NULL && icon_info->window != NULL)
+                gdk_window_show (icon_info->window);
+            }
+        }
+
+      update_cursors (widget);
+    }
+}
+
+static void
+gtk_entry_unmap (GtkWidget *widget)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  EntryIconInfo *icon_info = NULL;
+  gint i;
+
+  if (GTK_WIDGET_MAPPED (widget))
+    {
+      for (i = 0; i < MAX_ICONS; i++)
+        {
+          if ((icon_info = priv->icons[i]) != NULL)
+            {
+              if (icon_info->pixbuf != NULL && icon_info->window != NULL)
+                gdk_window_hide (icon_info->window);
+            }
+        }
+
+      GTK_WIDGET_CLASS (gtk_entry_parent_class)->unmap (widget);
+    }
+}
+
+static void
+gtk_entry_realize (GtkWidget *widget)
+{
+  GtkEntry *entry;
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+  GdkWindowAttr attributes;
+  gint attributes_mask;
+  int i;
+
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
   entry = GTK_ENTRY (widget);
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
 
   attributes.window_type = GDK_WINDOW_CHILD;
   
@@ -1329,7 +2444,7 @@ gtk_entry_realize (GtkWidget *widget)
   widget->window = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
   gdk_window_set_user_data (widget->window, entry);
 
-  get_text_area_size (entry, &attributes.x, &attributes.y, &attributes.width, &attributes.height);
+  gtk_entry_get_text_area_size (entry, &attributes.x, &attributes.y, &attributes.width, &attributes.height);
  
   if (GTK_WIDGET_IS_SENSITIVE (widget))
     {
@@ -1355,13 +2470,30 @@ gtk_entry_realize (GtkWidget *widget)
 
   gtk_entry_adjust_scroll (entry);
   gtk_entry_update_primary_selection (entry);
+
+
+  /* If the icon positions are already setup, create their windows.
+   * Otherwise if they don't exist yet, then construct_icon_info()
+   * will create the windows once the widget is already realized.
+   */
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      if ((icon_info = priv->icons[i]) != NULL)
+        {
+          if (icon_info->window == NULL)
+            realize_icon_info (widget, i);
+        }
+    }
 }
 
 static void
 gtk_entry_unrealize (GtkWidget *widget)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
   GtkClipboard *clipboard;
+  EntryIconInfo *icon_info;
+  gint i;
 
   gtk_entry_reset_layout (entry);
   
@@ -1385,6 +2517,18 @@ gtk_entry_unrealize (GtkWidget *widget)
     }
 
   GTK_WIDGET_CLASS (gtk_entry_parent_class)->unrealize (widget);
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      if ((icon_info = priv->icons[i]) != NULL)
+        {
+          if (icon_info->window != NULL)
+            {
+              gdk_window_destroy (icon_info->window);
+              icon_info->window = NULL;
+            }
+        }
+    }
 }
 
 void
@@ -1418,10 +2562,13 @@ gtk_entry_size_request (GtkWidget      *widget,
 			GtkRequisition *requisition)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
   PangoFontMetrics *metrics;
   gint xborder, yborder;
   GtkBorder inner_border;
   PangoContext *context;
+  int icon_widths = 0;
+  int icon_width, i;
   
   gtk_widget_ensure_style (widget);
   context = gtk_widget_get_pango_context (widget);
@@ -1448,24 +2595,50 @@ gtk_entry_size_request (GtkWidget      *widget,
     
   requisition->height = PANGO_PIXELS (entry->ascent + entry->descent) + yborder * 2 + inner_border.top + inner_border.bottom;
 
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      icon_width = get_icon_width (entry, i);
+      if (icon_width > 0)
+        icon_widths += icon_width + 2 * priv->icon_margin;
+    }
+
+  if (icon_widths > requisition->width)
+    requisition->width += icon_widths;
+
   pango_font_metrics_unref (metrics);
 }
 
 static void
-get_text_area_size (GtkEntry *entry,
-                    gint     *x,
-                    gint     *y,
-                    gint     *width,
-                    gint     *height)
+place_windows (GtkEntry *entry)
+               
 {
-  GtkEntryClass *class;
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  gint x, y, width, height;
+  GtkAllocation primary;
+  GtkAllocation secondary;
+  EntryIconInfo *icon_info = NULL;
 
-  g_return_if_fail (GTK_IS_ENTRY (entry));
+  gtk_entry_get_text_area_size (entry, &x, &y, &width, &height);
 
-  class = GTK_ENTRY_GET_CLASS (entry);
+  get_icon_allocations (entry, &primary, &secondary);
 
-  if (class->get_text_area_size)
-    class->get_text_area_size (entry, x, y, width, height);
+  if (gtk_widget_get_direction (GTK_WIDGET (entry)) == GTK_TEXT_DIR_RTL)
+    x += secondary.width;
+  else
+    x += primary.width;
+  width -= primary.width + secondary.width;
+
+  if ((icon_info = priv->icons[GTK_ENTRY_ICON_PRIMARY]) != NULL)
+    gdk_window_move_resize (icon_info->window, 
+                            primary.x, primary.y,
+                            primary.width, primary.height);
+
+  if ((icon_info = priv->icons[GTK_ENTRY_ICON_SECONDARY]) != NULL)
+    gdk_window_move_resize (icon_info->window,
+                            secondary.x, secondary.y,
+                            secondary.width, secondary.height);
+
+  gdk_window_move_resize (GTK_ENTRY (entry)->text_area, x, y, width, height);
 }
 
 static void
@@ -1475,11 +2648,11 @@ gtk_entry_get_text_area_size (GtkEntry *entry,
 			      gint     *width,
 			      gint     *height)
 {
+  GtkWidget *widget = GTK_WIDGET (entry);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
   gint frame_height;
   gint xborder, yborder;
   GtkRequisition requisition;
-  GtkWidget *widget = GTK_WIDGET (entry);
-  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
 
   gtk_widget_get_child_requisition (widget, &requisition);
   _gtk_entry_get_borders (entry, &xborder, &yborder);
@@ -1490,7 +2663,7 @@ gtk_entry_get_text_area_size (GtkEntry *entry,
     frame_height = requisition.height;
 
   if (GTK_WIDGET_HAS_FOCUS (widget) && !priv->interior_focus)
-      frame_height -= 2 * priv->focus_width;
+    frame_height -= 2 * priv->focus_width;
 
   if (x)
     *x = xborder;
@@ -1584,15 +2757,9 @@ gtk_entry_size_allocate (GtkWidget     *widget,
       GtkEntryCompletion* completion;
 
       get_widget_window_size (entry, &x, &y, &width, &height);
-      
-      gdk_window_move_resize (widget->window,
-                              x, y, width, height);   
+      gdk_window_move_resize (widget->window, x, y, width, height);   
 
-      get_text_area_size (entry, &x, &y, &width, &height);
-      
-      gdk_window_move_resize (entry->text_area,
-                              x, y, width, height);
-
+      place_windows (entry);
       gtk_entry_recompute (entry);
 
       completion = gtk_entry_get_completion (entry);
@@ -1601,12 +2768,161 @@ gtk_entry_size_allocate (GtkWidget     *widget,
     }
 }
 
+/* Kudos to the gnome-panel guys. */
+static void
+colorshift_pixbuf (GdkPixbuf *dest,
+                   GdkPixbuf *src,
+                   gint       shift)
+{
+  gint i, j;
+  gint width, height, has_alpha, src_rowstride, dest_rowstride;
+  guchar *target_pixels;
+  guchar *original_pixels;
+  guchar *pix_src;
+  guchar *pix_dest;
+  int val;
+  guchar r, g, b;
+
+  has_alpha       = gdk_pixbuf_get_has_alpha (src);
+  width           = gdk_pixbuf_get_width (src);
+  height          = gdk_pixbuf_get_height (src);
+  src_rowstride   = gdk_pixbuf_get_rowstride (src);
+  dest_rowstride  = gdk_pixbuf_get_rowstride (dest);
+  original_pixels = gdk_pixbuf_get_pixels (src);
+  target_pixels   = gdk_pixbuf_get_pixels (dest);
+
+  for (i = 0; i < height; i++)
+    {
+      pix_dest = target_pixels   + i * dest_rowstride;
+      pix_src  = original_pixels + i * src_rowstride;
+
+      for (j = 0; j < width; j++)
+        {
+          r = *(pix_src++);
+          g = *(pix_src++);
+          b = *(pix_src++);
+
+          val = r + shift;
+          *(pix_dest++) = CLAMP (val, 0, 255);
+
+          val = g + shift;
+          *(pix_dest++) = CLAMP (val, 0, 255);
+
+          val = b + shift;
+          *(pix_dest++) = CLAMP (val, 0, 255);
+
+          if (has_alpha)
+            *(pix_dest++) = *(pix_src++);
+        }
+    }
+}
+
+static gboolean
+should_prelight (GtkEntry             *entry,
+                 GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = priv->icons[icon_pos];
+  gboolean prelight;
+
+  if (!icon_info) 
+    return FALSE;
+
+  if (icon_info->nonactivatable && icon_info->target_list == NULL)
+    return FALSE;
+
+  if (icon_info->pressed)
+    return FALSE;
+
+  gtk_widget_style_get (GTK_WIDGET (entry),
+                        "prelight", &prelight,
+                        NULL);
+
+  return prelight;
+}
+
+static void
+draw_icon (GtkWidget            *widget,
+           GtkEntryIconPosition  icon_pos)
+{
+  GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = priv->icons[icon_pos];
+  GdkPixbuf *pixbuf;
+  gint x, y, width, height;
+
+  if (!icon_info)
+    return;
+
+  gtk_entry_ensure_pixbuf (entry, icon_pos);
+
+  if (icon_info->pixbuf == NULL)
+    return;
+
+  gdk_drawable_get_size (icon_info->window, &width, &height);
+
+  /* size_allocate hasn't been called yet. These are the default values.
+   */
+  if (width == 1 || height == 1)
+    return;
+
+  pixbuf = icon_info->pixbuf;
+  g_object_ref (pixbuf);
+
+  if (gdk_pixbuf_get_height (pixbuf) > height)
+    {
+      GdkPixbuf *temp_pixbuf;
+      gint scale;
+
+      scale = height - 2 * priv->icon_margin;
+      temp_pixbuf = gdk_pixbuf_scale_simple (pixbuf, scale, scale,
+                                             GDK_INTERP_BILINEAR);
+      g_object_unref (pixbuf);
+      pixbuf = temp_pixbuf;
+    }
+
+  x = (width  - gdk_pixbuf_get_width (pixbuf)) / 2;
+  y = (height - gdk_pixbuf_get_height (pixbuf)) / 2;
+
+  if (!GTK_WIDGET_IS_SENSITIVE (widget) ||
+      icon_info->insensitive)
+    {
+      GdkPixbuf *temp_pixbuf;
+
+      temp_pixbuf = gdk_pixbuf_copy (pixbuf);
+      gdk_pixbuf_saturate_and_pixelate (pixbuf,
+                                        temp_pixbuf,
+                                        0.8f,
+                                        TRUE);
+      g_object_unref (pixbuf);
+      pixbuf = temp_pixbuf;
+    }
+  else if (icon_info->prelight)
+    {
+      GdkPixbuf *temp_pixbuf;
+
+      temp_pixbuf = gdk_pixbuf_copy (pixbuf);
+      colorshift_pixbuf (temp_pixbuf, pixbuf, 30);
+      g_object_unref (pixbuf);
+      pixbuf = temp_pixbuf;
+    }
+
+  gdk_draw_pixbuf (icon_info->window, widget->style->black_gc, pixbuf,
+                   0, 0, x, y, -1, -1,
+                   GDK_RGB_DITHER_NORMAL, 0, 0);
+
+  g_object_unref (pixbuf);
+}
+
+
 static void
 gtk_entry_draw_frame (GtkWidget    *widget,
                       GdkRectangle *area)
 {
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
   gint x = 0, y = 0, width, height;
+  gboolean state_hint;
+  GtkStateType state;
 
   gdk_drawable_get_size (widget->window, &width, &height);
 
@@ -1616,7 +2932,7 @@ gtk_entry_draw_frame (GtkWidget    *widget,
     {
       gint xborder, yborder;
 
-      get_text_area_size (GTK_ENTRY (widget), &x, NULL, &width, NULL);
+      gtk_entry_get_text_area_size (GTK_ENTRY (widget), &x, NULL, &width, NULL);
       _gtk_entry_get_borders (GTK_ENTRY (widget), &xborder, &yborder);
 
       x -= xborder;
@@ -1631,9 +2947,16 @@ gtk_entry_draw_frame (GtkWidget    *widget,
       height -= 2 * priv->focus_width;
     }
 
+  gtk_widget_style_get (widget, "state-hint", &state_hint, NULL);
+  if (state_hint)
+      state = GTK_WIDGET_HAS_FOCUS (widget) ?
+        GTK_STATE_ACTIVE : GTK_WIDGET_STATE (widget);
+  else
+      state = GTK_STATE_NORMAL;
+
   gtk_paint_shadow (widget->style, widget->window,
-		    GTK_STATE_NORMAL, priv->shadow_type,
-		    area, widget, "entry", x, y, width, height);
+                    state, priv->shadow_type,
+                    area, widget, "entry", x, y, width, height);
 
   if (GTK_WIDGET_HAS_FOCUS (widget) && !priv->interior_focus)
     {
@@ -1648,23 +2971,84 @@ gtk_entry_draw_frame (GtkWidget    *widget,
     }
 }
 
+static void
+gtk_entry_draw_progress (GtkWidget      *widget,
+                         GdkEventExpose *event)
+{
+  GtkEntryPrivate *private = GTK_ENTRY_GET_PRIVATE (widget);
+  GtkEntry *entry = GTK_ENTRY (widget);
+
+  if (private->progress_pulse_mode)
+    {
+      gdouble value = private->progress_pulse_current;
+      gint    area_width, area_height;
+
+      gdk_drawable_get_size (entry->text_area, &area_width, &area_height);
+
+      gtk_paint_box (widget->style, entry->text_area,
+                     GTK_STATE_SELECTED, GTK_SHADOW_OUT,
+                     &event->area, widget, "entry-progress",
+                     value * area_width, 0,
+                     private->progress_pulse_fraction * area_width, area_height);
+    }
+  else if (private->progress_fraction > 0)
+    {
+      gdouble value = private->progress_fraction;
+      gint    area_width, area_height;
+
+      gdk_drawable_get_size (entry->text_area, &area_width, &area_height);
+
+      if (gtk_widget_get_direction (GTK_WIDGET (entry)) == GTK_TEXT_DIR_RTL)
+        {
+          gtk_paint_box (widget->style, entry->text_area,
+                         GTK_STATE_SELECTED, GTK_SHADOW_OUT,
+                         &event->area, widget, "entry-progress",
+                         area_width - value * area_width, 0,
+                         value * area_width, area_height);
+        }
+      else
+        {
+          gtk_paint_box (widget->style, entry->text_area,
+                         GTK_STATE_SELECTED, GTK_SHADOW_OUT,
+                         &event->area, widget, "entry-progress",
+                         0, 0,
+                         value * area_width, area_height);
+        }
+    }
+}
+
 static gint
 gtk_entry_expose (GtkWidget      *widget,
 		  GdkEventExpose *event)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
+  gboolean state_hint;
+  GtkStateType state;
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  gtk_widget_style_get (widget, "state-hint", &state_hint, NULL);
+  if (state_hint)
+    state = GTK_WIDGET_HAS_FOCUS (widget) ?
+      GTK_STATE_ACTIVE : GTK_WIDGET_STATE (widget);
+  else
+    state = GTK_WIDGET_STATE(widget);
 
   if (widget->window == event->window)
-    gtk_entry_draw_frame (widget, &event->area);
+    {
+      gtk_entry_draw_frame (widget, &event->area);
+    }
   else if (entry->text_area == event->window)
     {
-      gint area_width, area_height;
-      gdk_drawable_get_size (entry->text_area, &area_width, &area_height);
+      gint width, height;
+
+      gdk_drawable_get_size (entry->text_area, &width, &height);
 
       gtk_paint_flat_box (widget->style, entry->text_area, 
-			  GTK_WIDGET_STATE(widget), GTK_SHADOW_NONE,
+			  state, GTK_SHADOW_NONE,
 			  &event->area, widget, "entry_bg",
-			  0, 0, area_width, area_height);
+			  0, 0, width, height);
+
+      gtk_entry_draw_progress (widget, event);
 
       if (entry->dnd_position != -1)
 	gtk_entry_draw_cursor (GTK_ENTRY (widget), CURSOR_DND);
@@ -1675,6 +3059,85 @@ gtk_entry_expose (GtkWidget      *widget,
 	  GTK_WIDGET_HAS_FOCUS (widget) &&
 	  entry->selection_bound == entry->current_pos && entry->cursor_visible)
 	gtk_entry_draw_cursor (GTK_ENTRY (widget), CURSOR_STANDARD);
+    }
+  else
+    {
+      int i;
+
+      for (i = 0; i < MAX_ICONS; i++)
+        {
+          EntryIconInfo *icon_info = priv->icons[i];
+
+          if (icon_info != NULL && event->window == icon_info->window)
+            {
+              gint width, height;
+
+              gdk_drawable_get_size (icon_info->window, &width, &height);
+
+              gtk_paint_flat_box (widget->style, icon_info->window,
+                                  GTK_WIDGET_STATE (widget), GTK_SHADOW_NONE,
+                                  NULL, widget, "entry_bg",
+                                  0, 0, width, height);
+
+              draw_icon (widget, i);
+
+              break;
+            }
+        }
+    }
+
+  return FALSE;
+}
+
+static gint
+gtk_entry_enter_notify (GtkWidget *widget,
+                        GdkEventCrossing *event)
+{
+  GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      EntryIconInfo *icon_info = priv->icons[i];
+
+      if (icon_info != NULL && event->window == icon_info->window)
+        {
+          if (should_prelight (entry, i))
+            {
+              icon_info->prelight = TRUE;
+              gtk_widget_queue_draw (widget);
+            }
+
+          break;
+        }
+    }
+
+    return FALSE;
+}
+
+static gint
+gtk_entry_leave_notify (GtkWidget        *widget,
+                        GdkEventCrossing *event)
+{
+  GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      EntryIconInfo *icon_info = priv->icons[i];
+
+      if (icon_info != NULL && event->window == icon_info->window)
+        {
+          if (should_prelight (entry, i))
+            {
+              icon_info->prelight = FALSE;
+              gtk_widget_queue_draw (widget);
+            }
+
+          break;
+        }
     }
 
   return FALSE;
@@ -1751,8 +3214,36 @@ gtk_entry_button_press (GtkWidget      *widget,
   GtkEntry *entry = GTK_ENTRY (widget);
   GtkEditable *editable = GTK_EDITABLE (widget);
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = NULL;
   gint tmp_pos;
   gint sel_start, sel_end;
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      icon_info = priv->icons[i];
+
+      if (!icon_info || icon_info->insensitive)
+        continue;
+
+      if (event->window == icon_info->window)
+        {
+          if (should_prelight (entry, i))
+            {
+              icon_info->prelight = FALSE;
+              gtk_widget_queue_draw (widget);
+            }
+
+          priv->start_x = event->x;
+          priv->start_y = event->y;
+          icon_info->pressed = TRUE;
+
+          if (!icon_info->nonactivatable)
+            g_signal_emit (entry, signals[ICON_PRESS], 0, i, event);
+
+          return TRUE;
+        }
+    }
 
   if (event->window != entry->text_area ||
       (entry->button && event->button != entry->button))
@@ -1908,6 +3399,39 @@ gtk_entry_button_release (GtkWidget      *widget,
 			  GdkEventButton *event)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  EntryIconInfo *icon_info = NULL;
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      icon_info = priv->icons[i];
+
+      if (!icon_info || icon_info->insensitive)
+        continue;
+
+      if (event->window == icon_info->window)
+        {
+          gint width, height;
+
+          gdk_drawable_get_size (icon_info->window, &width, &height);
+
+          icon_info->pressed = FALSE;
+
+          if (should_prelight (entry, i) &&
+              event->x >= 0 && event->y >= 0 &&
+              event->x < width && event->y < height)
+            {
+              icon_info->prelight = TRUE;
+              gtk_widget_queue_draw (widget);
+            }
+
+          if (!icon_info->nonactivatable)
+            g_signal_emit (entry, signals[ICON_RELEASE], 0, i, event);
+
+          return TRUE;
+        }
+    }
 
   if (event->window != entry->text_area || entry->button != event->button)
     return FALSE;
@@ -1946,7 +3470,41 @@ gtk_entry_motion_notify (GtkWidget      *widget,
 			 GdkEventMotion *event)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = NULL;
+  GdkDragContext *context;
   gint tmp_pos;
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      icon_info = priv->icons[i];
+
+      if (!icon_info || icon_info->insensitive)
+        continue;
+
+      if (event->window == icon_info->window)
+        {
+          if (icon_info->pressed &&
+              icon_info->target_list != NULL &&
+              gtk_drag_check_threshold (widget,
+                                        priv->start_x,
+                                        priv->start_y,
+                                        event->x,
+                                        event->y))
+            {
+              icon_info->in_drag = TRUE;
+              icon_info->pressed = FALSE;
+              context = gtk_drag_begin (widget,
+                                        icon_info->target_list,
+                                        icon_info->actions,
+                                        1,
+                                        (GdkEvent*)event);
+            }
+
+          return TRUE;
+        }
+    }
 
   if (entry->mouse_cursor_obscured)
     {
@@ -1968,7 +3526,8 @@ gtk_entry_motion_notify (GtkWidget      *widget,
 
   if (entry->in_drag)
     {
-      if (gtk_drag_check_threshold (widget,
+      if (entry->visible &&
+          gtk_drag_check_threshold (widget,
                                     entry->drag_start_x, entry->drag_start_y,
                                     event->x + entry->scroll_offset, event->y))
         {
@@ -1980,11 +3539,8 @@ gtk_entry_motion_notify (GtkWidget      *widget,
 
           gtk_target_list_add_text_targets (target_list, 0);
 
-          if (entry->visible)
-            {
-              text = _gtk_entry_get_selected_text (entry);
-              pixmap = _gtk_text_util_create_drag_icon (widget, text, -1);
-            }
+          text = _gtk_entry_get_selected_text (entry);
+          pixmap = _gtk_text_util_create_drag_icon (widget, text, -1);
 
           context = gtk_drag_begin (widget, target_list, actions,
                                     entry->button, (GdkEvent *)event);
@@ -2172,18 +3728,23 @@ gtk_entry_focus_in (GtkWidget     *widget,
 		    GdkEventFocus *event)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
-  
+  GdkKeymap *keymap;
+
   gtk_widget_queue_draw (widget);
-  
+
+  keymap = gdk_keymap_get_for_display (gtk_widget_get_display (widget));
+
   if (entry->editable)
     {
       entry->need_im_reset = TRUE;
       gtk_im_context_focus_in (entry->im_context);
+      keymap_state_changed (keymap, entry);
+      g_signal_connect (keymap, "state-changed", 
+                        G_CALLBACK (keymap_state_changed), entry);
     }
 
-  g_signal_connect (gdk_keymap_get_for_display (gtk_widget_get_display (widget)),
-		    "direction-changed",
-		    G_CALLBACK (gtk_entry_keymap_direction_changed), entry);
+  g_signal_connect (keymap, "direction-changed",
+		    G_CALLBACK (keymap_direction_changed), entry);
 
   gtk_entry_reset_blink_time (entry);
   gtk_entry_check_cursor_blink (entry);
@@ -2197,20 +3758,23 @@ gtk_entry_focus_out (GtkWidget     *widget,
 {
   GtkEntry *entry = GTK_ENTRY (widget);
   GtkEntryCompletion *completion;
+  GdkKeymap *keymap;
   
   gtk_widget_queue_draw (widget);
+
+  keymap = gdk_keymap_get_for_display (gtk_widget_get_display (widget));
 
   if (entry->editable)
     {
       entry->need_im_reset = TRUE;
       gtk_im_context_focus_out (entry->im_context);
+      remove_capslock_feedback (entry);
     }
 
   gtk_entry_check_cursor_blink (entry);
   
-  g_signal_handlers_disconnect_by_func (gdk_keymap_get_for_display (gtk_widget_get_display (widget)),
-                                        gtk_entry_keymap_direction_changed,
-                                        entry);
+  g_signal_handlers_disconnect_by_func (keymap, keymap_state_changed, entry);
+  g_signal_handlers_disconnect_by_func (keymap, keymap_direction_changed, entry);
 
   completion = gtk_entry_get_completion (entry);
   if (completion)
@@ -2255,12 +3819,20 @@ gtk_entry_state_changed (GtkWidget      *widget,
 			 GtkStateType    previous_state)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
   GdkCursor *cursor;
+  gint i;
   
   if (GTK_WIDGET_REALIZED (widget))
     {
       gdk_window_set_background (widget->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
       gdk_window_set_background (entry->text_area, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+      for (i = 0; i < MAX_ICONS; i++) 
+        {
+          EntryIconInfo *icon_info = priv->icons[i];
+          if (icon_info && icon_info->window)
+            gdk_window_set_background (icon_info->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+        }
 
       if (GTK_WIDGET_IS_SENSITIVE (widget))
         cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget), GDK_XTERM);
@@ -2273,6 +3845,8 @@ gtk_entry_state_changed (GtkWidget      *widget,
         gdk_cursor_unref (cursor);
 
       entry->mouse_cursor_obscured = FALSE;
+
+      update_cursors (widget);
     }
 
   if (!GTK_WIDGET_IS_SENSITIVE (widget))
@@ -2425,14 +3999,49 @@ gtk_entry_get_selection_bounds (GtkEditable *editable,
   return (entry->selection_bound != entry->current_pos);
 }
 
+static void
+icon_theme_changed (GtkEntry *entry)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      EntryIconInfo *icon_info = priv->icons[i];
+      if (icon_info != NULL) 
+        {
+          if (icon_info->storage_type == GTK_IMAGE_ICON_NAME)
+            gtk_entry_set_icon_from_icon_name (entry, i, icon_info->icon_name);
+          else if (icon_info->storage_type == GTK_IMAGE_STOCK)
+            gtk_entry_set_icon_from_stock (entry, i, icon_info->stock_id);
+          else if (icon_info->storage_type == GTK_IMAGE_GICON)
+            gtk_entry_set_icon_from_gicon (entry, i, icon_info->gicon);
+        }
+    }
+
+  gtk_widget_queue_draw (GTK_WIDGET (entry));
+}
+
+static void
+icon_margin_changed (GtkEntry *entry)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  GtkBorder border;
+
+  _gtk_entry_effective_inner_border (GTK_ENTRY (entry), &border);
+
+  priv->icon_margin = border.left;
+}
+
 static void 
-gtk_entry_style_set	(GtkWidget      *widget,
-			 GtkStyle       *previous_style)
+gtk_entry_style_set (GtkWidget *widget,
+                     GtkStyle  *previous_style)
 {
   GtkEntry *entry = GTK_ENTRY (widget);
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
   gint focus_width;
   gboolean interior_focus;
+  gint i;
 
   gtk_widget_style_get (widget,
 			"focus-line-width", &focus_width,
@@ -2441,14 +4050,26 @@ gtk_entry_style_set	(GtkWidget      *widget,
 
   priv->focus_width = focus_width;
   priv->interior_focus = interior_focus;
-  
+
+  if (!priv->invisible_char_set)
+    entry->invisible_char = find_invisible_char (GTK_WIDGET (entry));
+
   gtk_entry_recompute (entry);
 
   if (previous_style && GTK_WIDGET_REALIZED (widget))
     {
       gdk_window_set_background (widget->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
       gdk_window_set_background (entry->text_area, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+      for (i = 0; i < MAX_ICONS; i++) 
+        {
+          EntryIconInfo *icon_info = priv->icons[i];
+          if (icon_info && icon_info->window)
+            gdk_window_set_background (icon_info->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+        }
     }
+
+  icon_theme_changed (entry);
+  icon_margin_changed (entry);
 }
 
 /* GtkCellEditable method implementations
@@ -2625,6 +4246,7 @@ gtk_entry_real_insert_text (GtkEditable *editable,
 
   emit_changed (entry);
   g_object_notify (G_OBJECT (editable), "text");
+  g_object_notify (G_OBJECT (editable), "text-length");
 }
 
 static void
@@ -2675,6 +4297,7 @@ gtk_entry_real_delete_text (GtkEditable *editable,
 
       emit_changed (entry);
       g_object_notify (G_OBJECT (editable), "text");
+      g_object_notify (G_OBJECT (editable), "text-length");
     }
 }
 
@@ -2999,10 +4622,17 @@ gtk_entry_copy_clipboard (GtkEntry *entry)
 {
   GtkEditable *editable = GTK_EDITABLE (entry);
   gint start, end;
+  gchar *str;
 
   if (gtk_editable_get_selection_bounds (editable, &start, &end))
     {
-      gchar *str = gtk_entry_get_public_chars (entry, start, end);
+      if (!entry->visible)
+        {
+          gtk_widget_error_bell (GTK_WIDGET (entry));
+          return;
+        }
+
+      str = gtk_entry_get_public_chars (entry, start, end);
       gtk_clipboard_set_text (gtk_widget_get_clipboard (GTK_WIDGET (entry),
 							GDK_SELECTION_CLIPBOARD),
 			      str, -1);
@@ -3015,6 +4645,12 @@ gtk_entry_cut_clipboard (GtkEntry *entry)
 {
   GtkEditable *editable = GTK_EDITABLE (entry);
   gint start, end;
+
+  if (!entry->visible)
+    {
+      gtk_widget_error_bell (GTK_WIDGET (entry));
+      return;
+    }
 
   gtk_entry_copy_clipboard (entry);
 
@@ -3091,8 +4727,8 @@ gtk_entry_real_activate (GtkEntry *entry)
 }
 
 static void
-gtk_entry_keymap_direction_changed (GdkKeymap *keymap,
-				    GtkEntry  *entry)
+keymap_direction_changed (GdkKeymap *keymap,
+                          GtkEntry  *entry)
 {
   gtk_entry_recompute (entry);
 }
@@ -3132,7 +4768,7 @@ gtk_entry_preedit_changed_cb (GtkIMContext *context,
 
 static gboolean
 gtk_entry_retrieve_surrounding_cb (GtkIMContext *context,
-			       GtkEntry     *entry)
+			       GtkEntry         *entry)
 {
   gtk_im_context_set_surrounding (context,
 				  entry->text,
@@ -3243,9 +4879,8 @@ update_im_cursor_location (GtkEntry *entry)
   gint strong_xoffset;
   gint area_width, area_height;
 
-  gtk_entry_get_cursor_locations (entry, CURSOR_STANDARD, &strong_x, NULL)
-;
-  get_text_area_size (entry, NULL, NULL, &area_width, &area_height);
+  gtk_entry_get_cursor_locations (entry, CURSOR_STANDARD, &strong_x, NULL);
+  gtk_entry_get_text_area_size (entry, NULL, NULL, &area_width, &area_height);
 
   strong_xoffset = strong_x - entry->scroll_offset;
   if (strong_xoffset < 0)
@@ -3360,30 +4995,19 @@ gtk_entry_create_layout (GtkEntry *entry,
       else
         {
           gint ch_len;
-          gint preedit_len_chars;
           gunichar invisible_char;
-
-          ch_len = g_utf8_strlen (entry->text, entry->n_bytes);
-          preedit_len_chars = g_utf8_strlen (preedit_string, -1);
-          ch_len += preedit_len_chars;
 
           if (entry->invisible_char != 0)
             invisible_char = entry->invisible_char;
           else
             invisible_char = ' '; /* just pick a char */
-          
+
+          ch_len = g_utf8_strlen (entry->text, entry->n_bytes);
           append_char (tmp_string, invisible_char, ch_len);
-          
-          /* Fix cursor index to point to invisible char corresponding
-           * to the preedit, fix preedit_length to be the length of
-           * the invisible chars representing the preedit
-           */
           cursor_index =
             g_utf8_offset_to_pointer (tmp_string->str, entry->current_pos) -
             tmp_string->str;
-          preedit_length =
-            preedit_len_chars *
-            g_unichar_to_utf8 (invisible_char, NULL);
+          g_string_insert (tmp_string, cursor_index, preedit_string);
         }
       
       pango_layout_set_text (layout, tmp_string->str, tmp_string->len);
@@ -3425,8 +5049,6 @@ gtk_entry_create_layout (GtkEntry *entry,
 
       pango_context_set_base_dir (gtk_widget_get_pango_context (widget),
 				  pango_dir);
-
-      pango_layout_set_alignment (layout, pango_dir);
 
       entry->resolved_dir = pango_dir;
       
@@ -3540,7 +5162,7 @@ get_layout_position (GtkEntry *entry,
   
   layout = gtk_entry_ensure_layout (entry, TRUE);
 
-  get_text_area_size (entry, NULL, NULL, &area_width, &area_height);
+  gtk_entry_get_text_area_size (entry, NULL, NULL, &area_width, &area_height);
   _gtk_entry_effective_inner_border (entry, &inner_border);
 
   area_height = PANGO_SCALE * (area_height - inner_border.top - inner_border.bottom);
@@ -4387,6 +6009,163 @@ gtk_entry_update_primary_selection (GtkEntry *entry)
   gtk_target_list_unref (list);
 }
 
+static void
+gtk_entry_clear (GtkEntry             *entry,
+                 GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = priv->icons[icon_pos];
+
+  if (!icon_info || icon_info->storage_type == GTK_IMAGE_EMPTY)
+    return;
+
+  g_object_freeze_notify (G_OBJECT (entry));
+
+  /* Explicitly check, as the pointer may become invalidated
+   * during destruction.
+   */
+  if (GDK_IS_WINDOW (icon_info->window))
+    gdk_window_hide (icon_info->window);
+
+  if (icon_info->pixbuf)
+    {
+      g_object_unref (icon_info->pixbuf);
+      icon_info->pixbuf = NULL;
+    }
+
+  switch (icon_info->storage_type)
+    {
+    case GTK_IMAGE_PIXBUF:
+      g_object_notify (G_OBJECT (entry),
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "pixbuf-primary" : "pixbuf-secondary");
+      break;
+
+    case GTK_IMAGE_STOCK:
+      g_free (icon_info->stock_id);
+      icon_info->stock_id = NULL;
+      g_object_notify (G_OBJECT (entry),
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "stock-primary" : "stock-secondary");
+      break;
+
+    case GTK_IMAGE_ICON_NAME:
+      g_free (icon_info->icon_name);
+      icon_info->icon_name = NULL;
+      g_object_notify (G_OBJECT (entry),
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "icon-name-primary" : "icon-name-secondary");
+      break;
+
+    case GTK_IMAGE_GICON:
+      if (icon_info->gicon)
+        {
+          g_object_unref (icon_info->gicon);
+          icon_info->gicon = NULL;
+        }
+      g_object_notify (G_OBJECT (entry),
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "gicon-primary" : "gicon-secondary");
+      break;
+
+    default:
+      g_assert_not_reached ();
+      break;
+    }
+
+  icon_info->storage_type = GTK_IMAGE_EMPTY;
+  g_object_notify (G_OBJECT (entry),
+                   icon_pos == GTK_ENTRY_ICON_PRIMARY ? "storage-type-primary" : "storage-type-secondary");
+
+  g_object_thaw_notify (G_OBJECT (entry));
+}
+
+static void
+gtk_entry_ensure_pixbuf (GtkEntry             *entry,
+                         GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  EntryIconInfo *icon_info = priv->icons[icon_pos];
+  GdkScreen *screen;
+  GtkIconTheme *icon_theme;
+  GtkSettings *settings;
+  gint width, height;
+  GtkIconInfo *info;
+
+  if (!icon_info || icon_info->pixbuf)
+    return;
+
+  switch (icon_info->storage_type)
+    {
+    case GTK_IMAGE_EMPTY:
+    case GTK_IMAGE_PIXBUF:
+      break;
+    case GTK_IMAGE_STOCK:
+      icon_info->pixbuf = gtk_widget_render_icon (GTK_WIDGET (entry),
+                                                  icon_info->stock_id,
+                                                  GTK_ICON_SIZE_MENU,
+                                                  NULL);
+      break;
+
+    case GTK_IMAGE_ICON_NAME:
+      screen = gtk_widget_get_screen (GTK_WIDGET (entry));
+      if (screen)
+        {
+          icon_theme = gtk_icon_theme_get_for_screen (screen);
+          settings = gtk_settings_get_for_screen (screen);
+          
+          gtk_icon_size_lookup_for_settings (settings,
+                                             GTK_ICON_SIZE_MENU,
+                                             &width, &height);
+
+          icon_info->pixbuf = gtk_icon_theme_load_icon (icon_theme,
+                                                        icon_info->icon_name,
+                                                        MIN (width, height),
+                                                        0, NULL);
+
+          if (icon_info->pixbuf == NULL)
+            icon_info->pixbuf = gtk_widget_render_icon (GTK_WIDGET (entry),
+                                                        GTK_STOCK_MISSING_IMAGE,
+                                                        GTK_ICON_SIZE_MENU,
+                                                        NULL);
+        }
+      break;
+
+    case GTK_IMAGE_GICON:
+      screen = gtk_widget_get_screen (GTK_WIDGET (entry));
+      if (screen)
+        {
+          icon_theme = gtk_icon_theme_get_for_screen (screen);
+          settings = gtk_settings_get_for_screen (screen);
+
+          gtk_icon_size_lookup_for_settings (settings,
+                                             GTK_ICON_SIZE_MENU,
+                                             &width, &height);
+
+          info = gtk_icon_theme_lookup_by_gicon (icon_theme,
+                                                 icon_info->gicon,
+                                                 MIN (width, height), 
+                                                 GTK_ICON_LOOKUP_USE_BUILTIN);
+          if (info)
+            {
+              icon_info->pixbuf = gtk_icon_info_load_icon (info, NULL);
+              gtk_icon_info_free (info);
+            }
+
+          if (icon_info->pixbuf == NULL)
+            icon_info->pixbuf = gtk_widget_render_icon (GTK_WIDGET (entry),
+                                                        GTK_STOCK_MISSING_IMAGE,
+                                                        GTK_ICON_SIZE_MENU,
+                                                        NULL);
+        }
+      break;
+
+    default:
+      g_assert_not_reached ();
+      break;
+    }
+
+  if (GDK_IS_WINDOW (icon_info->window))
+    gdk_window_show (icon_info->window);
+}
+
+
 /* Public API
  */
 
@@ -4411,14 +6190,9 @@ gtk_entry_new (void)
  *
  * Creates a new #GtkEntry widget with the given maximum length.
  * 
- * Note: the existence of this function is inconsistent
- * with the rest of the GTK+ API. The normal setup would
- * be to just require the user to make an extra call
- * to gtk_entry_set_max_length() instead. It is not
- * expected that this function will be removed, but
- * it would be better practice not to use it.
- * 
- * Return value: a new #GtkEntry.
+ * Return value: a new #GtkEntry
+ *
+ * Deprecated: Use gtk_entry_set_max_length() instead.
  **/
 GtkWidget*
 gtk_entry_new_with_max_length (gint max)
@@ -4521,7 +6295,7 @@ gtk_entry_prepend_text (GtkEntry *entry,
 /**
  * gtk_entry_set_position:
  * @entry: a #GtkEntry
- * @position:  the position of the cursor. The cursor is displayed
+ * @position: the position of the cursor. The cursor is displayed
  *    before the character with the given (base 0) index in the widget. 
  *    The value must be less than or equal to the number of characters 
  *    in the widget. A value of -1 indicates that the position should
@@ -4534,7 +6308,7 @@ gtk_entry_prepend_text (GtkEntry *entry,
  */
 void
 gtk_entry_set_position (GtkEntry *entry,
-			gint       position)
+			gint      position)
 {
   g_return_if_fail (GTK_IS_ENTRY (entry));
 
@@ -4552,8 +6326,9 @@ gtk_entry_set_position (GtkEntry *entry,
  * as the invisible char, and will also appear that way when 
  * the text in the entry widget is copied elsewhere.
  *
- * The default invisible char is the asterisk '*', but it can
- * be changed with gtk_entry_set_invisible_char().
+ * By default, GTK+ picks the best invisible character available
+ * in the current font, but it can be changed with
+ * gtk_entry_set_invisible_char().
  */
 void
 gtk_entry_set_visibility (GtkEntry *entry,
@@ -4565,28 +6340,6 @@ gtk_entry_set_visibility (GtkEntry *entry,
 
   if (entry->visible != visible)
     {
-      if (GTK_WIDGET_HAS_FOCUS (entry) && !visible)
-	gtk_im_context_focus_out (entry->im_context);
-
-      g_object_unref (entry->im_context);
-
-      if (visible)
-        entry->im_context = gtk_im_multicontext_new ();
-      else
-        entry->im_context = gtk_im_context_simple_new ();
-      
-      g_signal_connect (entry->im_context, "commit",
-			G_CALLBACK (gtk_entry_commit_cb), entry);
-      g_signal_connect (entry->im_context, "preedit-changed",
-			G_CALLBACK (gtk_entry_preedit_changed_cb), entry);
-      g_signal_connect (entry->im_context, "retrieve-surrounding",
-			G_CALLBACK (gtk_entry_retrieve_surrounding_cb), entry);
-      g_signal_connect (entry->im_context, "delete-surrounding",
-			G_CALLBACK (gtk_entry_delete_surrounding_cb), entry);
-
-      if (GTK_WIDGET_HAS_FOCUS (entry) && visible)
-	gtk_im_context_focus_in (entry->im_context); 
-
       entry->visible = visible;
 
       g_object_notify (G_OBJECT (entry), "visibility");
@@ -4619,16 +6372,26 @@ gtk_entry_get_visibility (GtkEntry *entry)
  * Sets the character to use in place of the actual text when
  * gtk_entry_set_visibility() has been called to set text visibility
  * to %FALSE. i.e. this is the character used in "password mode" to
- * show the user how many characters have been typed. The default
- * invisible char is an asterisk ('*').  If you set the invisible char
- * to 0, then the user will get no feedback at all; there will be
- * no text on the screen as they type.
+ * show the user how many characters have been typed. By default, GTK+
+ * picks the best invisible char available in the current font. If you
+ * set the invisible char to 0, then the user will get no feedback
+ * at all; there will be no text on the screen as they type.
  **/
 void
 gtk_entry_set_invisible_char (GtkEntry *entry,
                               gunichar  ch)
 {
+  GtkEntryPrivate *priv;
+
   g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (!priv->invisible_char_set)
+    {
+      priv->invisible_char_set = TRUE;
+      g_object_notify (G_OBJECT (entry), "invisible-char-set");
+    }
 
   if (ch == entry->invisible_char)
     return;
@@ -4654,6 +6417,42 @@ gtk_entry_get_invisible_char (GtkEntry *entry)
   g_return_val_if_fail (GTK_IS_ENTRY (entry), 0);
 
   return entry->invisible_char;
+}
+
+/**
+ * gtk_entry_unset_invisible_char:
+ * @entry: a #GtkEntry
+ *
+ * Unsets the invisible char previously set with
+ * gtk_entry_set_invisible_char(). So that the
+ * default invisible char is used again.
+ *
+ * Since: 2.16
+ **/
+void
+gtk_entry_unset_invisible_char (GtkEntry *entry)
+{
+  GtkEntryPrivate *priv;
+  gunichar ch;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (!priv->invisible_char_set)
+    return;
+
+  priv->invisible_char_set = FALSE;
+  ch = find_invisible_char (GTK_WIDGET (entry));
+
+  if (entry->invisible_char != ch)
+    {
+      entry->invisible_char = ch;
+      g_object_notify (G_OBJECT (entry), "invisible-char");
+    }
+
+  g_object_notify (G_OBJECT (entry), "invisible-char-set");
+  gtk_entry_recompute (entry);
 }
 
 /**
@@ -5137,7 +6936,7 @@ gtk_entry_get_layout_offsets (GtkEntry *entry,
   get_layout_position (entry, x, y);
 
   /* convert to widget coords */
-  get_text_area_size (entry, &text_area_x, &text_area_y, NULL, NULL);
+  gtk_entry_get_text_area_size (entry, &text_area_x, &text_area_y, NULL, NULL);
   
   if (x)
     *x += text_area_x;
@@ -5204,6 +7003,824 @@ gtk_entry_get_alignment (GtkEntry *entry)
 
   return priv->xalign;
 }
+
+/**
+ * gtk_entry_set_icon_from_pixbuf:
+ * @entry: a #GtkEntry
+ * @icon_pos: Icon position
+ * @pixbuf: A #GdkPixbuf, or %NULL
+ *
+ * Sets the icon shown in the specified position using a pixbuf.
+ *
+ * If @pixbuf is %NULL, no icon will be shown in the specified position.
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_from_pixbuf (GtkEntry             *entry,
+                                GtkEntryIconPosition  icon_pos,
+                                GdkPixbuf            *pixbuf)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
+
+  g_object_freeze_notify (G_OBJECT (entry));
+
+  if (pixbuf)
+    g_object_ref (pixbuf);
+
+  gtk_entry_clear (entry, icon_pos);
+
+  if (pixbuf)
+    {
+      icon_info->storage_type = GTK_IMAGE_PIXBUF;
+      icon_info->pixbuf = pixbuf;
+
+      if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
+        {
+          g_object_notify (G_OBJECT (entry), "pixbuf-primary");
+          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+        }
+      else
+        {
+          g_object_notify (G_OBJECT (entry), "pixbuf-secondary");
+          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+        }
+    }
+
+  gtk_entry_ensure_pixbuf (entry, icon_pos);
+  
+  if (GTK_WIDGET_VISIBLE (entry))
+    gtk_widget_queue_resize (GTK_WIDGET (entry));
+
+  g_object_thaw_notify (G_OBJECT (entry));
+}
+
+/**
+ * gtk_entry_set_icon_from_stock:
+ * @entry: A #GtkEntry
+ * @icon_pos: Icon position
+ * @stock_id: The name of the stock item, or %NULL
+ *
+ * Sets the icon shown in the entry at the specified position from
+ * a stock image.
+ *
+ * If @stock_id is %NULL, no icon will be shown in the specified position.
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_from_stock (GtkEntry             *entry,
+                               GtkEntryIconPosition  icon_pos,
+                               const gchar          *stock_id)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+  gchar *new_id;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
+
+  g_object_freeze_notify (G_OBJECT (entry));
+
+  gtk_widget_ensure_style (GTK_WIDGET (entry));
+
+  /* need to dup before clearing */
+  new_id = g_strdup (stock_id);
+
+  gtk_entry_clear (entry, icon_pos);
+
+  if (new_id != NULL)
+    {
+      icon_info->storage_type = GTK_IMAGE_STOCK;
+      icon_info->stock_id = new_id;
+
+      if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
+        {
+          g_object_notify (G_OBJECT (entry), "stock-primary");
+          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+        }
+      else
+        {
+          g_object_notify (G_OBJECT (entry), "stock-secondary");
+          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+        }
+    }
+
+  gtk_entry_ensure_pixbuf (entry, icon_pos);
+
+  if (GTK_WIDGET_VISIBLE (entry))
+    gtk_widget_queue_resize (GTK_WIDGET (entry));
+
+  g_object_thaw_notify (G_OBJECT (entry));
+}
+
+/**
+ * gtk_entry_set_icon_from_icon_name:
+ * @entry: A #GtkEntry
+ * @icon_pos: The position at which to set the icon
+ * @icon_name: An icon name, or %NULL
+ *
+ * Sets the icon shown in the entry at the specified position
+ * from the current icon theme.
+ *
+ * If the icon name isn't known, a "broken image" icon will be displayed
+ * instead.
+ *
+ * If @icon_name is %NULL, no icon will be shown in the specified position.
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_from_icon_name (GtkEntry             *entry,
+                                   GtkEntryIconPosition  icon_pos,
+                                   const gchar          *icon_name)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+  gchar *new_name;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
+
+  g_object_freeze_notify (G_OBJECT (entry));
+
+  gtk_widget_ensure_style (GTK_WIDGET (entry));
+
+  /* need to dup before clearing */
+  new_name = g_strdup (icon_name);
+
+  gtk_entry_clear (entry, icon_pos);
+
+  if (new_name != NULL)
+    {
+      icon_info->storage_type = GTK_IMAGE_ICON_NAME;
+      icon_info->icon_name = new_name;
+
+      if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
+        {
+          g_object_notify (G_OBJECT (entry), "icon-name-primary");
+          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+        }
+      else
+        {
+          g_object_notify (G_OBJECT (entry), "icon-name-secondary");
+          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+        }
+    }
+
+  gtk_entry_ensure_pixbuf (entry, icon_pos);
+
+  if (GTK_WIDGET_VISIBLE (entry))
+    gtk_widget_queue_resize (GTK_WIDGET (entry));
+
+  g_object_thaw_notify (G_OBJECT (entry));
+}
+
+/**
+ * gtk_entry_set_icon_from_gicon:
+ * @entry: A #GtkEntry
+ * @icon_pos: The position at which to set the icon
+ * @icon: The icon to set, or %NULL
+ *
+ * Sets the icon shown in the entry at the specified position
+ * from the current icon theme.
+ * If the icon isn't known, a "broken image" icon will be displayed
+ * instead.
+ *
+ * If @icon is %NULL, no icon will be shown in the specified position.
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_from_gicon (GtkEntry             *entry,
+                               GtkEntryIconPosition  icon_pos,
+                               GIcon                *icon)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
+
+  g_object_freeze_notify (G_OBJECT (entry));
+
+  /* need to ref before clearing */
+  if (icon)
+    g_object_ref (icon);
+
+  gtk_entry_clear (entry, icon_pos);
+
+  if (icon)
+    {
+      icon_info->storage_type = GTK_IMAGE_GICON;
+      icon_info->gicon = icon;
+
+      if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
+        {
+          g_object_notify (G_OBJECT (entry), "gicon-primary");
+          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+        }
+      else
+        {
+          g_object_notify (G_OBJECT (entry), "gicon-secondary");
+          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+        }
+    }
+
+  gtk_entry_ensure_pixbuf (entry, icon_pos);
+
+  if (GTK_WIDGET_VISIBLE (entry))
+    gtk_widget_queue_resize (GTK_WIDGET (entry));
+
+  g_object_thaw_notify (G_OBJECT (entry));
+}
+
+/**
+ * gtk_entry_set_icon_activatable:
+ * @entry: A #GtkEntry
+ * @icon_pos: Icon position
+ * @activatable: %TRUE if the icon should be activatable
+ *
+ * Sets whether the icon is activatable.
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_activatable (GtkEntry             *entry,
+                                GtkEntryIconPosition  icon_pos,
+                                gboolean              activatable)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
+
+  activatable = activatable != FALSE;
+
+  if (icon_info->nonactivatable != !activatable)
+    {
+      icon_info->nonactivatable = !activatable;
+
+      if (GTK_WIDGET_REALIZED (GTK_WIDGET (entry)))
+        update_cursors (GTK_WIDGET (entry));
+
+      g_object_notify (G_OBJECT (entry),
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "activatable-primary" : "activatable-secondary");
+    }
+}
+
+/**
+ * gtk_entry_get_icon_activatable:
+ * @entry: a #GtkEntry
+ * @icon_pos: Icon position
+ *
+ * Returns whether the icon is activatable.
+ *
+ * Returns: %TRUE if the icon is activatable.
+ *
+ * Since: 2.16
+ */
+gboolean
+gtk_entry_get_icon_activatable (GtkEntry             *entry,
+                                GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), FALSE);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), FALSE);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  return (icon_info != NULL && !icon_info->nonactivatable);
+}
+
+/**
+ * gtk_entry_get_pixbuf:
+ * @entry: A #GtkEntry
+ * @icon_pos: Icon position
+ *
+ * Retrieves the image used for the icon.
+ *
+ * Unlike the other methods of setting and getting icon data, this
+ * method will work regardless of whether the icon was set using a
+ * #GdkPixbuf, a #GIcon, a stock item, or an icon name.
+ *
+ * Returns: A #GdkPixbuf, or %NULL if no icon is set for this position.
+ *
+ * Since: 2.16
+ */
+GdkPixbuf *
+gtk_entry_get_pixbuf (GtkEntry             *entry,
+                      GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), NULL);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), NULL);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  if (!icon_info)
+    return NULL;
+
+  gtk_entry_ensure_pixbuf (entry, icon_pos);
+
+  return icon_info->pixbuf;
+}
+
+/**
+ * gtk_entry_get_gicon:
+ * @entry: A #GtkEntry
+ * @icon_pos: Icon position
+ *
+ * Retrieves the #GIcon used for the icon, or %NULL if there is
+ * no icon or if the icon was set by some other method (e.g., by
+ * stock, pixbuf, or icon name).
+ *
+ * Returns: A #GIcon, or %NULL if no icon is set or if the icon
+ *          is not a #GIcon
+ *
+ * Since: 2.16
+ */
+GIcon *
+gtk_entry_get_gicon (GtkEntry             *entry,
+                     GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), NULL);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), NULL);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  if (!icon_info)
+    return NULL;
+
+  return icon_info->storage_type == GTK_IMAGE_GICON ? icon_info->gicon : NULL;
+}
+
+/**
+ * gtk_entry_get_stock:
+ * @entry: A #GtkEntry
+ * @icon_pos: Icon position
+ *
+ * Retrieves the stock id used for the icon, or %NULL if there is
+ * no icon or if the icon was set by some other method (e.g., by
+ * pixbuf, icon name or gicon).
+ *
+ * Returns: A stock id, or %NULL if no icon is set or if the icon
+ *          wasn't set from a stock id
+ *
+ * Since: 2.16
+ */
+const gchar *
+gtk_entry_get_stock (GtkEntry             *entry,
+                     GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), NULL);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), NULL);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  if (!icon_info)
+    return NULL;
+
+  return icon_info->storage_type == GTK_IMAGE_STOCK ? icon_info->stock_id : NULL;
+}
+
+/**
+ * gtk_entry_get_icon_name:
+ * @entry: A #GtkEntry
+ * @icon_pos: Icon position
+ *
+ * Retrieves the icon name used for the icon, or %NULL if there is
+ * no icon or if the icon was set by some other method (e.g., by
+ * pixbuf, stock or gicon).
+ *
+ * Returns: An icon name, or %NULL if no icon is set or if the icon
+ *          wasn't set from an icon name
+ *
+ * Since: 2.16
+ */
+const gchar *
+gtk_entry_get_icon_name (GtkEntry             *entry,
+                         GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), NULL);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), NULL);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  if (!icon_info)
+    return NULL;
+
+  return icon_info->storage_type == GTK_IMAGE_ICON_NAME ? icon_info->icon_name : NULL;
+}
+
+/**
+ * gtk_entry_set_icon_sensitive:
+ * @entry: A #GtkEntry
+ * @icon_pos: Icon position
+ * @sensitive: Specifies whether the icon should appear
+ *             sensitive or insensitive
+ *
+ * Sets the sensitivity for the specified icon.
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_sensitive (GtkEntry             *entry,
+                              GtkEntryIconPosition  icon_pos,
+                              gboolean              sensitive)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
+
+  if (icon_info->insensitive != !sensitive)
+    {
+      icon_info->insensitive = !sensitive;
+
+      if (GTK_WIDGET_REALIZED (GTK_WIDGET (entry)))
+        update_cursors (GTK_WIDGET (entry));
+
+      g_object_notify (G_OBJECT (entry),
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "sensitive-primary" : "sensitive-secondary");
+    }
+}
+
+/**
+ * gtk_entry_get_icon_sensitive:
+ * @entry: a #GtkEntry
+ * @icon_pos: Icon position
+ *
+ * Returns whether the icon appears sensitive or insensitive.
+ *
+ * Returns: %TRUE if the icon is sensitive.
+ *
+ * Since: 2.16
+ */
+gboolean
+gtk_entry_get_icon_sensitive (GtkEntry             *entry,
+                              GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), TRUE);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), TRUE);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  return (!icon_info || !icon_info->insensitive);
+
+}
+
+/**
+ * gtk_entry_get_storage_type:
+ * @entry: a #GtkEntry
+ * @icon_pos: Icon position
+ *
+ * Gets the type of representation being used by the icon
+ * to store image data. If the icon has no image data,
+ * the return value will be %GTK_IMAGE_EMPTY.
+ *
+ * Return value: image representation being used
+ *
+ * Since: 2.16
+ **/
+GtkImageType
+gtk_entry_get_storage_type (GtkEntry             *entry,
+                            GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), GTK_IMAGE_EMPTY);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), GTK_IMAGE_EMPTY);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  if (!icon_info)
+    return GTK_IMAGE_EMPTY;
+
+  return icon_info->storage_type;
+}
+
+/**
+ * gtk_entry_get_icon_at_pos:
+ * @entry: a #GtkEntry
+ * @x: the x coordinate of the position to find
+ * @y: the y coordinate of the position to find
+ *
+ * Finds the icon at the given position and return its index.
+ * If @x, @y doesn't lie inside an icon, -1 is returned.
+ * This function is intended for use in a #GtkWidget::query-tooltip
+ * signal handler.
+ *
+ * Returns: the index of the icon at the given position, or -1
+ *
+ * Since: 2.16
+ */
+gint
+gtk_entry_get_icon_at_pos (GtkEntry *entry,
+                           gint      x,
+                           gint      y)
+{
+  GtkAllocation primary;
+  GtkAllocation secondary;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), -1);
+
+  get_icon_allocations (entry, &primary, &secondary);
+
+  if (primary.x <= x && x < primary.x + primary.width &&
+      primary.y <= y && y < primary.y + primary.height)
+    return GTK_ENTRY_ICON_PRIMARY;
+
+  if (secondary.x <= x && x < secondary.x + secondary.width &&
+      secondary.y <= y && y < secondary.y + secondary.height)
+    return GTK_ENTRY_ICON_SECONDARY;
+
+  return -1;
+}
+
+/**
+ * gtk_entry_set_icon_drag_source:
+ * @entry: a #GtkIconEntry
+ * @icon_pos: icon position
+ * @target_list: the targets (data formats) in which the data can be provided
+ * @actions: a bitmask of the allowed drag actions
+ *
+ * Sets up the icon at the given position so that GTK+ will start a drag
+ * operation when the user clicks and drags the icon.
+ *
+ * To handle the drag operation, you need to connect to the usual
+ * #GtkWidget::drag-data-get (or possibly #GtkWidget::drag-data-delete)
+ * signal, and use gtk_entry_get_current_icon_drag_source() in
+ * your signal handler to find out if the drag was started from
+ * an icon.
+ */
+void
+gtk_entry_set_icon_drag_source (GtkEntry             *entry,
+                                GtkEntryIconPosition  icon_pos,
+                                GtkTargetList        *target_list,
+                                GdkDragAction         actions)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
+
+  if (icon_info->target_list)
+    gtk_target_list_unref (icon_info->target_list);
+  icon_info->target_list = target_list;
+  if (icon_info->target_list)
+    gtk_target_list_ref (icon_info->target_list);
+
+  icon_info->actions = actions;
+}
+
+/**
+ * gtk_entry_get_current_icon_drag_source:
+ * @entry: a #GtkIconEntry
+ *
+ * Returns the index of the icon which is the source of the current
+ * DND operation, or -1.
+ *
+ * This function is meant to be used in a #GtkWidget::drag-data-get
+ * callback.
+ *
+ * Returns: index of the icon which is the source of the current
+ *          DND operation, or -1.
+ */
+gint
+gtk_entry_get_current_icon_drag_source (GtkEntry *entry)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info = NULL;
+  gint i;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), -1);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      if ((icon_info = priv->icons[i]))
+        {
+          if (icon_info->in_drag)
+            return i;
+        }
+    }
+
+  return -1;
+}
+
+static void
+ensure_has_tooltip (GtkEntry *entry)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+  int i;
+  gboolean has_tooltip = FALSE;
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      if ((icon_info = priv->icons[i]) != NULL)
+        {
+          if (icon_info->tooltip != NULL)
+            {
+              has_tooltip = TRUE;
+              break;
+            }
+        }
+    }
+
+  gtk_widget_set_has_tooltip (GTK_WIDGET (entry), has_tooltip);
+}
+
+/**
+ * gtk_entry_set_icon_tooltip_text:
+ * @entry: a #GtkEntry
+ * @icon_pos: the icon position
+ * @tooltip: the contents of the tooltip for the icon, or %NULL
+ *
+ * Sets @tooltip as the contents of the tooltip for the icon
+ * at the specified position.
+ *
+ * Use %NULL for @tooltip to remove an existing tooltip.
+ *
+ * See also gtk_widget_set_tooltip_text() and 
+ * gtk_entry_set_icon_tooltip_markup().
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_tooltip_text (GtkEntry             *entry,
+                                 GtkEntryIconPosition  icon_pos,
+                                 const gchar          *tooltip)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (!(icon_info = priv->icons[icon_pos]))
+    icon_info = priv->icons[icon_pos];
+
+  if (icon_info->tooltip)
+    g_free (icon_info->tooltip);
+
+  icon_info->tooltip = tooltip ? g_markup_escape_text (tooltip, -1) : NULL;
+
+  ensure_has_tooltip (entry);
+}
+
+/**
+ * gtk_entry_set_icon_tooltip_markup:
+ * @entry: a #GtkEntry
+ * @icon_pos: the icon position
+ * @tooltip: the contents of the tooltip for the icon, or %NULL
+ *
+ * Sets @tooltip as the contents of the tooltip for the icon at
+ * the specified position. @tooltip is assumed to be marked up with
+ * the <link linkend="PangoMarkupFormat">Pango text markup language</link>.
+ *
+ * Use %NULL for @tooltip to remove an existing tooltip.
+ *
+ * See also gtk_widget_set_tooltip_markup() and 
+ * gtk_enty_set_icon_tooltip_text().
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_icon_tooltip_markup (GtkEntry             *entry,
+                                   GtkEntryIconPosition  icon_pos,
+                                   const gchar          *tooltip)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+  g_return_if_fail (IS_VALID_ICON_POSITION (icon_pos));
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (!(icon_info = priv->icons[icon_pos]))
+    icon_info = priv->icons[icon_pos];
+
+  if (icon_info->tooltip)
+    g_free (icon_info->tooltip);
+
+  icon_info->tooltip = g_strdup (tooltip);
+
+  ensure_has_tooltip (entry);
+}
+
+static gboolean
+gtk_entry_query_tooltip (GtkWidget  *widget,
+                         gint        x,
+                         gint        y,
+                         gboolean    keyboard_tip,
+                         GtkTooltip *tooltip)
+{
+  GtkEntry *entry;
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+  gint icon_pos;
+
+  entry = GTK_ENTRY (widget);
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (!keyboard_tip)
+    {
+      icon_pos = gtk_entry_get_icon_at_pos (entry, x, y);
+      if (icon_pos != -1)
+        {
+          if ((icon_info = priv->icons[icon_pos]) != NULL)
+            {
+              if (icon_info->tooltip)
+                {
+                  gtk_tooltip_set_markup (tooltip, icon_info->tooltip);
+                  return TRUE;
+                }
+
+              return FALSE;
+            }
+        }
+    }
+
+  return GTK_WIDGET_CLASS (gtk_entry_parent_class)->query_tooltip (widget,
+                                                                   x, y,
+                                                                   keyboard_tip,
+                                                                   tooltip);
+}
+
 
 /* Quick hack of a popup menu
  */
@@ -5341,9 +7958,9 @@ popup_targets_received (GtkClipboard     *clipboard,
 				 popup_menu_detach);
       
       append_action_signal (entry, entry->popup_menu, GTK_STOCK_CUT, "cut-clipboard",
-			    entry->editable && entry->current_pos != entry->selection_bound);
+			    entry->editable && entry->visible && entry->current_pos != entry->selection_bound);
       append_action_signal (entry, entry->popup_menu, GTK_STOCK_COPY, "copy-clipboard",
-			    entry->current_pos != entry->selection_bound);
+			    entry->visible && entry->current_pos != entry->selection_bound);
       append_action_signal (entry, entry->popup_menu, GTK_STOCK_PASTE, "paste-clipboard",
 			    entry->editable && clipboard_contains_text);
       
@@ -5368,9 +7985,6 @@ popup_targets_received (GtkClipboard     *clipboard,
                     "gtk-show-input-method-menu", &show_input_method_menu,
                     "gtk-show-unicode-menu", &show_unicode_menu,
                     NULL);
-
-      if (!entry->visible)
-        show_input_method_menu = FALSE;
 
       if (show_input_method_menu || show_unicode_menu)
         {
@@ -5465,6 +8079,60 @@ gtk_entry_popup_menu (GtkWidget *widget)
 {
   gtk_entry_do_popup (GTK_ENTRY (widget), NULL);
   return TRUE;
+}
+
+static void
+gtk_entry_drag_begin (GtkWidget      *widget,
+                      GdkDragContext *context)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      EntryIconInfo *icon_info = priv->icons[i];
+      
+      if (icon_info != NULL)
+        {
+          if (icon_info->in_drag) 
+            {
+              switch (icon_info->storage_type)
+                {
+                case GTK_IMAGE_STOCK:
+                  gtk_drag_set_icon_stock (context, icon_info->stock_id, -2, -2);
+                  break;
+
+                case GTK_IMAGE_ICON_NAME:
+                  gtk_drag_set_icon_name (context, icon_info->icon_name, -2, -2);
+                  break;
+
+                  /* FIXME: No GIcon support for dnd icons */
+                case GTK_IMAGE_GICON:
+                case GTK_IMAGE_PIXBUF:
+                  gtk_drag_set_icon_pixbuf (context, icon_info->pixbuf, -2, -2);
+                  break;
+                default:
+                  g_assert_not_reached ();
+                }
+            }
+        }
+    }
+}
+
+static void
+gtk_entry_drag_end (GtkWidget      *widget,
+                    GdkDragContext *context)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
+  gint i;
+
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      EntryIconInfo *icon_info = priv->icons[i];
+
+      if (icon_info != NULL)
+        icon_info->in_drag = 0;
+    }
 }
 
 static void
@@ -5625,9 +8293,23 @@ gtk_entry_drag_data_get (GtkWidget        *widget,
 			 guint             time)
 {
   gint sel_start, sel_end;
+  gint i;
 
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
   GtkEditable *editable = GTK_EDITABLE (widget);
-  
+
+  /* If there is an icon drag going on, exit early. */
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      EntryIconInfo *icon_info = priv->icons[i];
+
+      if (icon_info != NULL)
+        {
+          if (icon_info->in_drag)
+            return;
+        }
+    }
+
   if (gtk_editable_get_selection_bounds (editable, &sel_start, &sel_end))
     {
       gchar *str = gtk_entry_get_public_chars (GTK_ENTRY (widget), sel_start, sel_end);
@@ -5644,8 +8326,22 @@ gtk_entry_drag_data_delete (GtkWidget      *widget,
 			    GdkDragContext *context)
 {
   gint sel_start, sel_end;
+  gint i;
 
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (widget);
   GtkEditable *editable = GTK_EDITABLE (widget);
+
+  /* If there is an icon drag going on, exit early. */
+  for (i = 0; i < MAX_ICONS; i++)
+    {
+      EntryIconInfo *icon_info = priv->icons[i];
+
+      if (icon_info != NULL)
+        {
+          if (icon_info->in_drag)
+            return;
+        }
+    }
   
   if (GTK_ENTRY (widget)->editable &&
       gtk_editable_get_selection_bounds (editable, &sel_start, &sel_end))
@@ -6453,6 +9149,240 @@ gtk_entry_get_cursor_hadjustment (GtkEntry *entry)
   g_return_val_if_fail (GTK_IS_ENTRY (entry), NULL);
 
   return g_object_get_qdata (G_OBJECT (entry), quark_cursor_hadjustment);
+}
+
+/**
+ * gtk_entry_set_progress_fraction:
+ * @entry: a #GtkEntry
+ * @fraction: fraction of the task that's been completed
+ *
+ * Causes the entry's progress indicator to "fill in" the given
+ * fraction of the bar. The fraction should be between 0.0 and 1.0,
+ * inclusive.
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_progress_fraction (GtkEntry *entry,
+                                 gdouble   fraction)
+{
+  GtkEntryPrivate *private;
+  gdouble          old_fraction;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  private = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (private->progress_pulse_mode)
+    old_fraction = -1;
+  else
+    old_fraction = private->progress_fraction;
+
+  fraction = CLAMP (fraction, 0.0, 1.0);
+
+  private->progress_fraction = fraction;
+  private->progress_pulse_mode = FALSE;
+  private->progress_pulse_current = 0.0;
+
+  if (fabs (fraction - old_fraction) > 0.0001)
+    gtk_entry_queue_draw (entry);
+
+  if (fraction != old_fraction)
+    g_object_notify (G_OBJECT (entry), "progress-fraction");
+}
+
+/**
+ * gtk_entry_get_progress_fraction:
+ * @entry: a #GtkEntry
+ *
+ * Returns the current fraction of the task that's been completed.
+ * See gtk_entry_set_progress_fraction().
+ *
+ * Return value: a fraction from 0.0 to 1.0
+ *
+ * Since: 2.16
+ */
+gdouble
+gtk_entry_get_progress_fraction (GtkEntry *entry)
+{
+  GtkEntryPrivate *private;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), 0.0);
+
+  private = GTK_ENTRY_GET_PRIVATE (entry);
+
+  return private->progress_fraction;
+}
+
+/**
+ * gtk_entry_set_progress_pulse_step:
+ * @entry: a #GtkEntry
+ * @fraction: fraction between 0.0 and 1.0
+ *
+ * Sets the fraction of total entry width to move the progress
+ * bouncing block for each call to gtk_entry_progress_pulse().
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_set_progress_pulse_step (GtkEntry *entry,
+                                   gdouble   fraction)
+{
+  GtkEntryPrivate *private;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  private = GTK_ENTRY_GET_PRIVATE (entry);
+
+  fraction = CLAMP (fraction, 0.0, 1.0);
+
+  if (fraction != private->progress_pulse_fraction)
+    {
+      private->progress_pulse_fraction = fraction;
+
+      gtk_entry_queue_draw (entry);
+
+      g_object_notify (G_OBJECT (entry), "progress-pulse-step");
+    }
+}
+
+/**
+ * gtk_entry_get_progress_pulse_step:
+ * @entry: a #GtkEntry
+ *
+ * Retrieves the pulse step set with gtk_entry_set_progress_pulse_step().
+ *
+ * Return value: a fraction from 0.0 to 1.0
+ *
+ * Since: 2.16
+ */
+gdouble
+gtk_entry_get_progress_pulse_step (GtkEntry *entry)
+{
+  GtkEntryPrivate *private;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), 0.0);
+
+  private = GTK_ENTRY_GET_PRIVATE (entry);
+
+  return private->progress_pulse_fraction;
+}
+
+/**
+ * gtk_entry_progress_pulse:
+ * @entry: a #GtkEntry
+ *
+ * Indicates that some progress is made, but you don't know how much.
+ * Causes the entry's progress indicator to enter "activity mode,"
+ * where a block bounces back and forth. Each call to
+ * gtk_entry_progress_pulse() causes the block to move by a little bit
+ * (the amount of movement per pulse is determined by
+ * gtk_entry_set_progress_pulse_step()).
+ *
+ * Since: 2.16
+ */
+void
+gtk_entry_progress_pulse (GtkEntry *entry)
+{
+  GtkEntryPrivate *private;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  private = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (private->progress_pulse_mode)
+    {
+      if (private->progress_pulse_way_back)
+        {
+          private->progress_pulse_current -= private->progress_pulse_fraction;
+
+          if (private->progress_pulse_current < 0.0)
+            {
+              private->progress_pulse_current = 0.0;
+              private->progress_pulse_way_back = FALSE;
+            }
+        }
+      else
+        {
+          private->progress_pulse_current += private->progress_pulse_fraction;
+
+          if (private->progress_pulse_current > 1.0 - private->progress_pulse_fraction)
+            {
+              private->progress_pulse_current = 1.0 - private->progress_pulse_fraction;
+              private->progress_pulse_way_back = TRUE;
+            }
+        }
+    }
+  else
+    {
+      private->progress_fraction = 0.0;
+      private->progress_pulse_mode = TRUE;
+      private->progress_pulse_way_back = FALSE;
+      private->progress_pulse_current = 0.0;
+    }
+
+  gtk_entry_queue_draw (entry);
+}
+
+/* Caps Lock warning for password entries */
+
+static void
+show_capslock_feedback (GtkEntry    *entry,
+                        const gchar *text)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (gtk_entry_get_storage_type (entry, GTK_ENTRY_ICON_SECONDARY) == GTK_IMAGE_EMPTY)
+    {
+      gtk_entry_set_icon_from_stock (entry, GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_INFO);
+      gtk_entry_set_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY, FALSE);
+      priv->caps_lock_warning_shown = TRUE;
+    }
+
+  if (priv->caps_lock_warning_shown)
+    gtk_entry_set_icon_tooltip_text (entry, GTK_ENTRY_ICON_SECONDARY, text);
+  else
+    g_warning ("Can't show Caps Lock warning, since secondary icon is set");
+}
+
+static void
+remove_capslock_feedback (GtkEntry *entry)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+
+  if (priv->caps_lock_warning_shown)
+    {
+      gtk_entry_set_icon_from_stock (entry, GTK_ENTRY_ICON_SECONDARY, NULL);
+      priv->caps_lock_warning_shown = FALSE;
+    } 
+}
+
+static void
+keymap_state_changed (GdkKeymap *keymap, 
+                      GtkEntry  *entry)
+{
+  GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+  char *text = NULL;
+
+  if (!entry->visible && priv->caps_lock_warning)
+    { 
+      gboolean capslock_on;
+      gboolean im_on;
+
+      capslock_on = gdk_keymap_get_caps_lock_state (keymap);
+      im_on = g_strcmp0 (gtk_im_multicontext_get_context_id (GTK_IM_MULTICONTEXT (entry->im_context)), "gtk-im-context-simple") != 0;
+      if (capslock_on && im_on)
+        text = _("You have the Caps Lock key on\nand an active input method");
+      else if (capslock_on)
+        text = _("You have the Caps Lock key on");
+      else if (im_on)
+        text = _("You have an active input method");    
+    }
+
+  if (text)
+    show_capslock_feedback (entry, text);
+  else
+    remove_capslock_feedback (entry);
 }
 
 #define __GTK_ENTRY_C__

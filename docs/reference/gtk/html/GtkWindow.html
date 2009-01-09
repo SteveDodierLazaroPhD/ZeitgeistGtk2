@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -305,10 +307,6 @@ void                <a class="link" href="GtkWindow.html#gtk-window-set-mnemonic
                                                          <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkModifierType"
 >GdkModifierType</a> modifier);
-void                <a class="link" href="GtkWindow.html#gtk-window-set-role" title="gtk_window_set_role ()">gtk_window_set_role</a>                 (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *window,
-                                                         const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a> *role);
 void                <a class="link" href="GtkWindow.html#gtk-window-set-type-hint" title="gtk_window_set_type_hint ()">gtk_window_set_type_hint</a>            (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *window,
                                                          <a
 href="/usr/share/gtk-doc/html/gdk/gdk-Windows.html#GdkWindowTypeHint"
@@ -337,6 +335,10 @@ void                <a class="link" href="GtkWindow.html#gtk-window-set-startup-
                                                          const <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *startup_id);
+void                <a class="link" href="GtkWindow.html#gtk-window-set-role" title="gtk_window_set_role ()">gtk_window_set_role</a>                 (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *window,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *role);
 <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="GtkWindow.html#gtk-window-get-decorated" title="gtk_window_get_decorated ()">gtk_window_get_decorated</a>            (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *window);
@@ -622,6 +624,28 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <a name="GtkWindow.description"></a><h2>Description</h2>
 <p>
 </p>
+<div class="refsect2" lang="en">
+<a name="GtkWindow-BUILDER-UI"></a><h3>GtkWindow as GtkBuildable</h3>
+<p>
+The GtkWindow implementation of the GtkBuildable interface supports a
+custom &lt;accel-groups&gt; element, which supports any number of &lt;group&gt;
+elements representing the GtkAccelGroup objects you want to add to your
+window (synonymous with <a class="link" href="GtkWindow.html#gtk-window-add-accel-group" title="gtk_window_add_accel_group ()"><code class="function">gtk_window_add_accel_group()</code></a>.
+</p>
+<div class="example">
+<a name="id3217607"></a><p class="title"><b>Example 10. A UI definition fragment with accel groups</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkWindow"&gt;
+  &lt;accel-groups&gt;
+    &lt;group name="accelgroup1"/&gt;
+  &lt;/accel-groups&gt;
+&lt;/object&gt;
+...
+&lt;object class="GtkAccelGroup" id="accelgroup1"/&gt;
+</pre></div>
+</div>
+<br class="example-break">
+</div>
 </div>
 <div class="refsect1" lang="en">
 <a name="GtkWindow.details"></a><h2>Details</h2>
@@ -787,8 +811,12 @@ The basic ugly truth of this function is that it should be simply:
 should use instead of <a class="link" href="GtkWindow.html#gtk-window-set-policy" title="gtk_window_set_policy ()"><code class="function">gtk_window_set_policy()</code></a>.
 </p>
 <p>
-If set to <code class="literal">TRUE</code>, the <em class="parameter"><code>allow_grow</code></em> parameter allows the user to expand the window
-beyond the size request of its child widgets. If <em class="parameter"><code>allow_grow</code></em> is <code class="literal">TRUE</code>, be sure to
+If set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, the <em class="parameter"><code>allow_grow</code></em> parameter allows the user to expand the window
+beyond the size request of its child widgets. If <em class="parameter"><code>allow_grow</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, be sure to
 check that your child widgets work properly as the window is resized.
 </p>
 <p>
@@ -798,20 +826,30 @@ window will expand to contain them. However, normally the toplevel will not
 shrink to fit the size request of its children if it's too large; the
 <em class="parameter"><code>auto_shrink</code></em> parameter causes the window to shrink when child widgets have too
 much space. <em class="parameter"><code>auto_shrink</code></em> is normally used with the second of the two window
-policies mentioned above.  That is, set <em class="parameter"><code>auto_shrink</code></em> to <code class="literal">TRUE</code> if you want the
+policies mentioned above.  That is, set <em class="parameter"><code>auto_shrink</code></em> to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if you want the
 window to have a fixed, always-optimal size determined by your program.
 </p>
 <p>
 Note that <em class="parameter"><code>auto_shrink</code></em> doesn't do anything if <em class="parameter"><code>allow_shrink</code></em> and <em class="parameter"><code>allow_grow</code></em> are
-both set to <code class="literal">FALSE</code>.
+both set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.
 </p>
 <p>
 Neither of the two suggested window policies set the <em class="parameter"><code>allow_shrink</code></em> parameter to
-<code class="literal">TRUE</code>.  If <em class="parameter"><code>allow_shrink</code></em> is <code class="literal">TRUE</code>, the user can shrink the window so that its
+<a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>.  If <em class="parameter"><code>allow_shrink</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, the user can shrink the window so that its
 children do not receive their full size request; this is basically a bad thing,
 because most widgets will look wrong if this happens. Furthermore GTK+ has a
 tendency to re-expand the window if size is recalculated for any reason. The
-upshot is that <em class="parameter"><code>allow_shrink</code></em> should always be set to <code class="literal">FALSE</code>.
+upshot is that <em class="parameter"><code>allow_shrink</code></em> should always be set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>.
 </p>
 <p>
 Sometimes when you think you want to use <em class="parameter"><code>allow_shrink</code></em>, the real problem is that
@@ -870,7 +908,9 @@ by default.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>resizable</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the user can resize this window
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the user can resize this window
 </td>
 </tr>
 </tbody>
@@ -896,7 +936,9 @@ Gets the value set by <a class="link" href="GtkWindow.html#gtk-window-set-resiza
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the user can resize the window
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the user can resize the window
 </td>
 </tr>
 </tbody>
@@ -961,7 +1003,7 @@ Reverses the effects of <a class="link" href="GtkWindow.html#gtk-window-add-acce
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_window_position</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_window_position</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkWindow.html#gtk-window-set-position" title="gtk_window_set_position ()"><code class="function">gtk_window_set_position()</code></a> instead.</p>
 </div>
 <p>
 Deprecated alias for <a class="link" href="GtkWindow.html#gtk-window-set-position" title="gtk_window_set_position ()"><code class="function">gtk_window_set_position()</code></a>.
@@ -987,7 +1029,9 @@ Activates the current focused widget within the window.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a widget got activated.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a widget got activated.
 </td>
 </tr>
 </tbody>
@@ -1016,7 +1060,9 @@ focused widget is activated.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a widget got activated.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a widget got activated.
 </td>
 </tr>
 </tbody>
@@ -1297,7 +1343,9 @@ much as the window manager would have done on X.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> setting);</pre>
 <p>
-If <em class="parameter"><code>setting</code></em> is <code class="literal">TRUE</code>, then destroying the transient parent of <em class="parameter"><code>window</code></em>
+If <em class="parameter"><code>setting</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, then destroying the transient parent of <em class="parameter"><code>window</code></em>
 will also destroy <em class="parameter"><code>window</code></em> itself. This is useful for dialogs that
 shouldn't persist beyond the lifetime of the main window they're
 associated with, for example.</p>
@@ -1394,7 +1442,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 Returns whether the window is part of the current active toplevel.
 (That is, the toplevel window receiving keystrokes.)
-The return value is <code class="literal">TRUE</code> if the window is active toplevel
+The return value is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the window is active toplevel
 itself, but also if it is, say, a <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a> embedded in the active toplevel.
 You might use this function if you wanted to draw a widget
 differently in an active window from a widget in an inactive window.
@@ -1411,7 +1461,9 @@ See <a class="link" href="GtkWindow.html#gtk-window-has-toplevel-focus" title="g
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the window part of the current active window.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the window part of the current active window.
 
 </td>
 </tr>
@@ -1441,7 +1493,9 @@ but for embedded windows, like <a class="link" href="GtkPlug.html" title="GtkPlu
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the input focus is within this GtkWindow
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the input focus is within this GtkWindow
 
 </td>
 </tr>
@@ -1575,7 +1629,9 @@ Activates the targets associated with the mnemonic.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the activation is done. 
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the activation is done. 
 </td>
 </tr>
 </tbody>
@@ -1614,7 +1670,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEventKey"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a mnemonic or accelerator was found and activated.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a mnemonic or accelerator was found and activated.
 </td>
 </tr>
 </tbody>
@@ -1655,7 +1713,9 @@ href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEventKey"
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a widget in the focus chain handled the event.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a widget in the focus chain handled the event.
 </td>
 </tr>
 </tbody>
@@ -1670,7 +1730,9 @@ Retrieves the current focused widget within the window.
 Note that this is the widget that would have the focus
 if the toplevel window focused; if the toplevel window
 is not focused then  <code class="literal">GTK_WIDGET_HAS_FOCUS (widget)</code> will
-not be <code class="literal">TRUE</code> for the widget.</p>
+not be <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> for the widget.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1683,7 +1745,9 @@ not be <code class="literal">TRUE</code> for the widget.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the currently focused widget, or <code class="literal">NULL</code> if there is none.
+<td> the currently focused widget, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if there is none.
 </td>
 </tr>
 </tbody>
@@ -1696,7 +1760,9 @@ not be <code class="literal">TRUE</code> for the widget.</p>
                                                          <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *focus);</pre>
 <p>
 If <em class="parameter"><code>focus</code></em> is not the current focus widget, and is focusable, sets
-it as the focus widget for the window. If <em class="parameter"><code>focus</code></em> is <code class="literal">NULL</code>, unsets
+it as the focus widget for the window. If <em class="parameter"><code>focus</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, unsets
 the focus widget for this window. To set the focus to a particular
 widget in the toplevel, it is usually more convenient to use
 <a class="link" href="GtkWidget.html#gtk-widget-grab-focus" title="gtk_widget_grab_focus ()"><code class="function">gtk_widget_grab_focus()</code></a> instead of this function.</p>
@@ -1712,7 +1778,9 @@ widget in the toplevel, it is usually more convenient to use
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>focus</code></em> :</span></p></td>
-<td> widget to be the new focus widget, or <code class="literal">NULL</code> to unset
+<td> widget to be the new focus widget, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to unset
   any focus widget for the toplevel window.
 </td>
 </tr>
@@ -1738,7 +1806,9 @@ for more details.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the default widget, or <code class="literal">NULL</code> if there is none.
+<td> the default widget, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if there is none.
 
 </td>
 </tr>
@@ -1771,7 +1841,9 @@ widget you'd like to make the default using <a class="link" href="GtkWidget.html
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>default_widget</code></em> :</span></p></td>
-<td> widget to be the default, or <code class="literal">NULL</code> to unset the
+<td> widget to be the default, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to unset the
                  default widget for the toplevel.
 </td>
 </tr>
@@ -2290,7 +2362,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 By default, windows are decorated with a title bar, resize
 controls, etc.  Some <a class="link" href="gtk-x11.html#gtk-X11-arch" title="Understanding the X11 architecture">window
 managers</a> allow GTK+ to disable these decorations, creating a
-borderless window. If you set the decorated property to <code class="literal">FALSE</code>
+borderless window. If you set the decorated property to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 using this function, GTK+ will do its best to convince the window
 manager not to decorate the window. Depending on the system, this
 function may not have any effect when called on a window that is
@@ -2311,7 +2385,9 @@ policy involved.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to decorate the window
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to decorate the window
 </td>
 </tr>
 </tbody>
@@ -2327,7 +2403,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 By default, windows have a close button in the window frame. Some 
 <a class="link" href="gtk-x11.html#gtk-X11-arch" title="Understanding the X11 architecture">window managers</a> allow GTK+ to 
-disable this button. If you set the deletable property to <code class="literal">FALSE</code>
+disable this button. If you set the deletable property to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
 using this function, GTK+ will do its best to convince the window
 manager not to show a close button. Depending on the system, this
 function may not have any effect when called on a window that is
@@ -2348,7 +2426,9 @@ policy involved.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to decorate the window as deletable
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to decorate the window as deletable
 </td>
 </tr>
 </tbody>
@@ -2427,7 +2507,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
  manager whether to draw the window border.)
 </p>
 <p>
-If this function is called on a window with setting of <code class="literal">TRUE</code>, before
+If this function is called on a window with setting of <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, before
 it is realized or showed, it will have a "frame" window around
 <em class="parameter"><code>window-&gt;window</code></em>, accessible in <em class="parameter"><code>window-&gt;frame</code></em>. Using the signal 
 frame_event you can receive all events targeted at the frame.
@@ -2477,46 +2559,6 @@ Sets the mnemonic modifier for this window.</p>
 <td><p><span class="term"><em class="parameter"><code>modifier</code></em> :</span></p></td>
 <td> the modifier mask used to activate
               mnemonics on this window.
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="gtk-window-set-role"></a><h3>gtk_window_set_role ()</h3>
-<pre class="programlisting">void                gtk_window_set_role                 (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *window,
-                                                         const <a
-href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
->gchar</a> *role);</pre>
-<p>
-This function is only useful on X11, not with other GTK+ targets.
-</p>
-<p>
-In combination with the window title, the window role allows a
-<a class="link" href="gtk-x11.html#gtk-X11-arch" title="Understanding the X11 architecture">window manager</a> to identify "the
-same" window when an application is restarted. So for example you
-might set the "toolbox" role on your app's toolbox window, so that
-when the user restarts their session, the window manager can put
-the toolbox back in the same place.
-</p>
-<p>
-If a window already has a unique title, you don't need to set the
-role, since the WM can use the title to identify the window when
-restoring the session.</p>
-<p>
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>role</code></em> :</span></p></td>
-<td> unique identifier for the window to be used when restoring a session
 </td>
 </tr>
 </tbody>
@@ -2580,7 +2622,9 @@ the window in the task bar. This function sets this hint.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to keep this window from appearing in the task bar
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to keep this window from appearing in the task bar
 </td>
 </tr>
 </tbody>
@@ -2612,7 +2656,9 @@ on the screen.)</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to keep this window from appearing in the pager
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to keep this window from appearing in the pager
 </td>
 </tr>
 </tbody>
@@ -2641,7 +2687,9 @@ the users attention to the window. This function sets this hint.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to mark this window as urgent
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to mark this window as urgent
 </td>
 </tr>
 </tbody>
@@ -2670,7 +2718,9 @@ the input focus. This function sets this hint.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to let this window receive input focus
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to let this window receive input focus
 </td>
 </tr>
 </tbody>
@@ -2700,7 +2750,9 @@ hint.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to let this window receive input focus on map
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to let this window receive input focus on map
 </td>
 </tr>
 </tbody>
@@ -2747,6 +2799,46 @@ This function is only useful on X11, not with other GTK+ targets.</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="gtk-window-set-role"></a><h3>gtk_window_set_role ()</h3>
+<pre class="programlisting">void                gtk_window_set_role                 (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *window,
+                                                         const <a
+href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
+>gchar</a> *role);</pre>
+<p>
+This function is only useful on X11, not with other GTK+ targets.
+</p>
+<p>
+In combination with the window title, the window role allows a
+<a class="link" href="gtk-x11.html#gtk-X11-arch" title="Understanding the X11 architecture">window manager</a> to identify "the
+same" window when an application is restarted. So for example you
+might set the "toolbox" role on your app's toolbox window, so that
+when the user restarts their session, the window manager can put
+the toolbox back in the same place.
+</p>
+<p>
+If a window already has a unique title, you don't need to set the
+role, since the WM can use the title to identify the window when
+restoring the session.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>role</code></em> :</span></p></td>
+<td> unique identifier for the window to be used when restoring a session
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="gtk-window-get-decorated"></a><h3>gtk_window_get_decorated ()</h3>
 <pre class="programlisting"><a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
@@ -2766,7 +2858,9 @@ such as a title bar via <a class="link" href="GtkWindow.html#gtk-window-set-deco
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the window has been set to have decorations
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the window has been set to have decorations
 </td>
 </tr>
 </tbody>
@@ -2793,7 +2887,9 @@ via <a class="link" href="GtkWindow.html#gtk-window-set-deletable" title="gtk_wi
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the window has been set to have a close button
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the window has been set to have a close button
 
 </td>
 </tr>
@@ -2852,12 +2948,16 @@ used.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
-<td> location to store the default width, or <code class="literal">NULL</code>
+<td> location to store the default width, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
-<td> location to store the default height, or <code class="literal">NULL</code>
+<td> location to store the default height, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -2884,7 +2984,9 @@ Returns whether the window will be destroyed with its transient parent. See
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the window will be destroyed with its transient parent.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the window will be destroyed with its transient parent.
 </td>
 </tr>
 </tbody>
@@ -2931,22 +3033,30 @@ See <a class="link" href="GtkWindow.html#gtk-window-set-has-frame" title="gtk_wi
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>left</code></em> :</span></p></td>
-<td> location to store the width of the frame at the left, or <code class="literal">NULL</code>
+<td> location to store the width of the frame at the left, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>top</code></em> :</span></p></td>
-<td> location to store the height of the frame at the top, or <code class="literal">NULL</code>
+<td> location to store the height of the frame at the top, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>right</code></em> :</span></p></td>
-<td> location to store the width of the frame at the returns, or <code class="literal">NULL</code>
+<td> location to store the width of the frame at the returns, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bottom</code></em> :</span></p></td>
-<td> location to store the height of the frame at the bottom, or <code class="literal">NULL</code>
+<td> location to store the height of the frame at the bottom, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -2973,7 +3083,9 @@ Accessor for whether the window has a frame window exterior to
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if a frame has been added to the window
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if a frame has been added to the window
   via <a class="link" href="GtkWindow.html#gtk-window-set-has-frame" title="gtk_window_set_has_frame ()"><code class="function">gtk_window_set_has_frame()</code></a>.
 </td>
 </tr>
@@ -3057,7 +3169,9 @@ see <a class="link" href="GtkWindow.html#gtk-window-set-icon-name" title="gtk_wi
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the icon name or <code class="literal">NULL</code> if the window has 
+<td> the icon name or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if the window has 
 no themed icon
 
 </td>
@@ -3114,7 +3228,9 @@ Returns whether the window is modal. See <a class="link" href="GtkWindow.html#gt
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the window is set to be modal and
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the window is set to be modal and
               establishes a grab when shown
 </td>
 </tr>
@@ -3217,7 +3333,9 @@ further explanation.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the role of the window if set, or <code class="literal">NULL</code>. The
+<td> the role of the window if set, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>. The
   returned is owned by the widget and must not be modified
   or freed.
 </td>
@@ -3299,12 +3417,16 @@ handle the details for you.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
-<td> return location for width, or <code class="literal">NULL</code>
+<td> return location for width, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
-<td> return location for height, or <code class="literal">NULL</code>
+<td> return location for height, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -3330,7 +3452,9 @@ Retrieves the title of the window. See <a class="link" href="GtkWindow.html#gtk-
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the title of the window, or <code class="literal">NULL</code> if none has
+<td> the title of the window, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if none has
    been set explicitely. The returned string is owned by the widget
    and must not be modified or freed.
 </td>
@@ -3357,7 +3481,9 @@ Fetches the transient parent for this window. See
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the transient parent for this window, or <code class="literal">NULL</code>
+<td> the transient parent for this window, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
    if no transient parent has been set.
 </td>
 </tr>
@@ -3410,7 +3536,9 @@ Gets the value set by <a class="link" href="GtkWindow.html#gtk-window-set-skip-t
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if window shouldn't be in taskbar
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if window shouldn't be in taskbar
 
 </td>
 </tr>
@@ -3438,7 +3566,9 @@ Gets the value set by <a class="link" href="GtkWindow.html#gtk-window-set-skip-p
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if window shouldn't be in pager
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if window shouldn't be in pager
 
 </td>
 </tr>
@@ -3466,7 +3596,9 @@ Gets the value set by <a class="link" href="GtkWindow.html#gtk-window-set-urgenc
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if window is urgent
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if window is urgent
 
 </td>
 </tr>
@@ -3494,7 +3626,9 @@ Gets the value set by <a class="link" href="GtkWindow.html#gtk-window-set-accept
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if window should receive the input focus
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if window should receive the input focus
 
 </td>
 </tr>
@@ -3522,7 +3656,9 @@ Gets the value set by <a class="link" href="GtkWindow.html#gtk-window-set-focus-
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if window should receive the input focus when
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if window should receive the input focus when
 mapped.
 
 </td>
@@ -3537,7 +3673,9 @@ mapped.
 <pre class="programlisting"><a class="link" href="GtkWindowGroup.html" title="GtkWindowGroup">GtkWindowGroup</a> *    gtk_window_get_group                (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *window);</pre>
 <p>
 Returns the group for <em class="parameter"><code>window</code></em> or the default group, if
-<em class="parameter"><code>window</code></em> is <code class="literal">NULL</code> or if <em class="parameter"><code>window</code></em> does not have an explicit
+<em class="parameter"><code>window</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> or if <em class="parameter"><code>window</code></em> does not have an explicit
 window group.</p>
 <p>
 </p>
@@ -3546,7 +3684,9 @@ window group.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>, or <code class="literal">NULL</code>
+<td> a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -3653,12 +3793,16 @@ including Win32 but is primarily intended for an X environment.
 </p>
 <p>
 If either a size or a position can be extracted from the
-geometry string, <a class="link" href="GtkWindow.html#gtk-window-parse-geometry" title="gtk_window_parse_geometry ()"><code class="function">gtk_window_parse_geometry()</code></a> returns <code class="literal">TRUE</code>
+geometry string, <a class="link" href="GtkWindow.html#gtk-window-parse-geometry" title="gtk_window_parse_geometry ()"><code class="function">gtk_window_parse_geometry()</code></a> returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>
 and calls <a class="link" href="GtkWindow.html#gtk-window-set-default-size" title="gtk_window_set_default_size ()"><code class="function">gtk_window_set_default_size()</code></a> and/or <a class="link" href="GtkWindow.html#gtk-window-move" title="gtk_window_move ()"><code class="function">gtk_window_move()</code></a>
 to resize/move the window.
 </p>
 <p>
-If <a class="link" href="GtkWindow.html#gtk-window-parse-geometry" title="gtk_window_parse_geometry ()"><code class="function">gtk_window_parse_geometry()</code></a> returns <code class="literal">TRUE</code>, it will also
+If <a class="link" href="GtkWindow.html#gtk-window-parse-geometry" title="gtk_window_parse_geometry ()"><code class="function">gtk_window_parse_geometry()</code></a> returns <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, it will also
 set the <span class="type">GDK_HINT_USER_POS</span> and/or <span class="type">GDK_HINT_USER_SIZE</span> hints
 indicating to the window manager that the size/position of
 the window was user-specified. This causes most window
@@ -3732,7 +3876,9 @@ main (int argc, char *argv[])
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if string was parsed successfully
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if string was parsed successfully
 </td>
 </tr>
 </tbody>
@@ -3867,7 +4013,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <p>
 Sets an icon to be used as fallback for windows that haven't
 had <a class="link" href="GtkWindow.html#gtk-window-set-icon-list" title="gtk_window_set_icon_list ()"><code class="function">gtk_window_set_icon_list()</code></a> called on them from a file
-on disk. Warns on failure if <em class="parameter"><code>err</code></em> is <code class="literal">NULL</code>.</p>
+on disk. Warns on failure if <em class="parameter"><code>err</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -3880,12 +4028,16 @@ on disk. Warns on failure if <em class="parameter"><code>err</code></em> is <cod
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>err</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>.
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if setting the icon succeeded.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if setting the icon succeeded.
 
 </td>
 </tr>
@@ -3957,7 +4109,9 @@ for all windows in your application in one go.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>icon</code></em> :</span></p></td>
-<td> icon image, or <code class="literal">NULL</code>
+<td> icon image, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -4034,7 +4188,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 >GError</a> **err);</pre>
 <p>
 Sets the icon for <em class="parameter"><code>window</code></em>.  
-Warns on failure if <em class="parameter"><code>err</code></em> is <code class="literal">NULL</code>.
+Warns on failure if <em class="parameter"><code>err</code></em> is <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </p>
 <p>
 This function is equivalent to calling <a class="link" href="GtkWindow.html#gtk-window-set-icon" title="gtk_window_set_icon ()"><code class="function">gtk_window_set_icon()</code></a>
@@ -4056,12 +4212,16 @@ with a pixbuf created by loading the image from <em class="parameter"><code>file
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>err</code></em> :</span></p></td>
-<td> location to store error, or <code class="literal">NULL</code>.
+<td> location to store error, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if setting the icon succeeded.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if setting the icon succeeded.
 
 </td>
 </tr>
@@ -4128,7 +4288,9 @@ showing the main window would automatically result in notification.</p>
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to automatically do startup notification
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to automatically do startup notification
 </td>
 </tr></tbody>
 </table></div>
@@ -4494,13 +4656,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>   user_data)      : Run Last / Action</pre>
 <p>
+The ::activate-default signal is a
+keybinding signal
+which gets emitted when the user activates the default widget
+of <em class="parameter"><code>window</code></em>.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the window which received the signal
 </td>
 </tr>
 <tr>
@@ -4518,13 +4685,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>   user_data)      : Run Last / Action</pre>
 <p>
+The ::activate-default signal is a
+keybinding signal
+which gets emitted when the user activates the currently
+focused widget of <em class="parameter"><code>window</code></em>.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the window which received the signal
 </td>
 </tr>
 <tr>
@@ -4581,13 +4753,16 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>   user_data)      : Run First</pre>
 <p>
+The ::keys-changed signal gets emitted when the set of accelerators
+or mnemonics that are associated with <em class="parameter"><code>window</code></em> changes.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the window which received the signal
 </td>
 </tr>
 <tr>

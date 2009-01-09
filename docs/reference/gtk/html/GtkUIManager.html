@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -250,28 +252,29 @@ Definitions</a>.
 &lt;!ELEMENT toolitem     (menu?) &gt;
 &lt;!ELEMENT separator    EMPTY &gt;
 &lt;!ELEMENT accelerator  EMPTY &gt;
-&lt;!ATTLIST menubar      name                  &amp;num;IMPLIED
-                       action                &amp;num;IMPLIED &gt;
-&lt;!ATTLIST toolbar      name                  &amp;num;IMPLIED
-                       action                &amp;num;IMPLIED &gt;
-&lt;!ATTLIST popup        name                  &amp;num;IMPLIED
-                       action                &amp;num;IMPLIED &gt;
-&lt;!ATTLIST placeholder  name                  &amp;num;IMPLIED
-                       action                &amp;num;IMPLIED &gt;
-&lt;!ATTLIST separator    name                  &amp;num;IMPLIED
-                       action                &amp;num;IMPLIED
-                       expand   (true|false) &amp;num;IMPLIED &gt;
-&lt;!ATTLIST menu         name                  &amp;num;IMPLIED
-                       action                &amp;num;REQUIRED
-                       position (top|bot)    &amp;num;IMPLIED &gt;
-&lt;!ATTLIST menuitem     name                  &amp;num;IMPLIED
-                       action                &amp;num;REQUIRED
-                       position (top|bot)    &amp;num;IMPLIED &gt;
-&lt;!ATTLIST toolitem     name                  &amp;num;IMPLIED
-                       action                &amp;num;REQUIRED
-                       position (top|bot)    &amp;num;IMPLIED &gt;
-&lt;!ATTLIST accelerator  name                  &amp;num;IMPLIED
-                       action                &amp;num;REQUIRED &gt;
+&lt;!ATTLIST menubar      name                      &amp;num;IMPLIED
+                       action                    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST toolbar      name                      &amp;num;IMPLIED
+                       action                    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST popup        name                      &amp;num;IMPLIED
+                       action                    &amp;num;IMPLIED
+                       accelerators (true|false) &amp;num;IMPLIED &gt;
+&lt;!ATTLIST placeholder  name                      &amp;num;IMPLIED
+                       action                    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST separator    name                      &amp;num;IMPLIED
+                       action                    &amp;num;IMPLIED
+                       expand       (true|false) &amp;num;IMPLIED &gt;
+&lt;!ATTLIST menu         name                      &amp;num;IMPLIED
+                       action                    &amp;num;REQUIRED
+                       position     (top|bot)    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST menuitem     name                      &amp;num;IMPLIED
+                       action                    &amp;num;REQUIRED
+                       position     (top|bot)    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST toolitem     name                      &amp;num;IMPLIED
+                       action                    &amp;num;REQUIRED
+                       position     (top|bot)    &amp;num;IMPLIED &gt;
+&lt;!ATTLIST accelerator  name                      &amp;num;IMPLIED
+                       action                    &amp;num;REQUIRED &gt;
 </pre>
 <p>
 There are some additional restrictions beyond those specified in the
@@ -289,7 +292,7 @@ enclosed in doublequotes, thus they must not '"' characters or references
 to the &amp;quot; entity.
 </p>
 <div class="example">
-<a name="id3507897"></a><p class="title"><b>Example 29. A UI definition</b></p>
+<a name="id3475208"></a><p class="title"><b>Example 32. A UI definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;ui&gt;
   &lt;menubar&gt;
@@ -390,7 +393,7 @@ toolitem with the same name has path
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3537680"></a><h3>Accelerators</h3>
+<a name="id3548551"></a><h3>Accelerators</h3>
 <p>
 Every action has an accelerator path. Accelerators are installed together with
 menuitem proxies, but they can also be explicitly added with &lt;accelerator&gt;
@@ -418,7 +421,7 @@ Toolitems following an expanding separator are effectively right-aligned.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3537737"></a><h3>Empty Menus</h3>
+<a name="id3548608"></a><h3>Empty Menus</h3>
 <p>
 Submenus pose similar problems to separators inconnection with merging. It is
 impossible to know in advance whether they will end up empty after merging.
@@ -452,7 +455,7 @@ other parts of the constructed user interface with the help of the
 "constructor" attribute. See the example below.
 </p>
 <div class="example">
-<a name="id3537800"></a><p class="title"><b>Example 30. An embedded GtkUIManager UI definition</b></p>
+<a name="id3548671"></a><p class="title"><b>Example 33. An embedded GtkUIManager UI definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkUIManager" id="uiman"&gt;
   &lt;child&gt;
@@ -732,7 +735,9 @@ destruction of the ui manager.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the widget found by following the path, or <code class="literal">NULL</code> if no widget
+<td> the widget found by following the path, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no widget
   was found.
 
 </td>
@@ -810,7 +815,9 @@ for more information about paths.</p>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the action whose proxy widget is found by following the path, 
-    or <code class="literal">NULL</code> if no widget was found.
+    or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if no widget was found.
 
 </td>
 </tr>
@@ -954,16 +961,17 @@ Returns an unused merge id, suitable for use with
 <div class="refsect2" lang="en">
 <a name="GtkUIManagerItemType"></a><h3>enum GtkUIManagerItemType</h3>
 <pre class="programlisting">typedef enum {
-  GTK_UI_MANAGER_AUTO         = 0,
-  GTK_UI_MANAGER_MENUBAR      = 1 &lt;&lt; 0,
-  GTK_UI_MANAGER_MENU         = 1 &lt;&lt; 1,
-  GTK_UI_MANAGER_TOOLBAR      = 1 &lt;&lt; 2,
-  GTK_UI_MANAGER_PLACEHOLDER  = 1 &lt;&lt; 3,
-  GTK_UI_MANAGER_POPUP        = 1 &lt;&lt; 4,
-  GTK_UI_MANAGER_MENUITEM     = 1 &lt;&lt; 5,
-  GTK_UI_MANAGER_TOOLITEM     = 1 &lt;&lt; 6,
-  GTK_UI_MANAGER_SEPARATOR    = 1 &lt;&lt; 7,
-  GTK_UI_MANAGER_ACCELERATOR  = 1 &lt;&lt; 8
+  GTK_UI_MANAGER_AUTO              = 0,
+  GTK_UI_MANAGER_MENUBAR           = 1 &lt;&lt; 0,
+  GTK_UI_MANAGER_MENU              = 1 &lt;&lt; 1,
+  GTK_UI_MANAGER_TOOLBAR           = 1 &lt;&lt; 2,
+  GTK_UI_MANAGER_PLACEHOLDER       = 1 &lt;&lt; 3,
+  GTK_UI_MANAGER_POPUP             = 1 &lt;&lt; 4,
+  GTK_UI_MANAGER_MENUITEM          = 1 &lt;&lt; 5,
+  GTK_UI_MANAGER_TOOLITEM          = 1 &lt;&lt; 6,
+  GTK_UI_MANAGER_SEPARATOR         = 1 &lt;&lt; 7,
+  GTK_UI_MANAGER_ACCELERATOR       = 1 &lt;&lt; 8,
+  GTK_UI_MANAGER_POPUP_WITH_ACCELS = 1 &lt;&lt; 9
 } GtkUIManagerItemType;
 </pre>
 <p>
@@ -1021,6 +1029,11 @@ what UI element to create.
 <tr>
 <td><p><a name="GTK-UI-MANAGER-ACCELERATOR--CAPS"></a><span class="term"><code class="literal">GTK_UI_MANAGER_ACCELERATOR</code></span></p></td>
 <td>Install an accelerator.
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-UI-MANAGER-POPUP-WITH-ACCELS--CAPS"></a><span class="term"><code class="literal">GTK_UI_MANAGER_POPUP_WITH_ACCELS</code></span></p></td>
+<td>Same as <a class="link" href="GtkUIManager.html#GTK-UI-MANAGER-POPUP--CAPS"><code class="literal">GTK_UI_MANAGER_POPUP</code></a>, but the actions' accelerators are shown.
 </td>
 </tr>
 </tbody>
@@ -1085,7 +1098,9 @@ before or after this item, depending on <em class="parameter"><code>top</code></
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>action</code></em> :</span></p></td>
-<td> the name of the action to be proxied, or <code class="literal">NULL</code> to add a separator
+<td> the name of the action to be proxied, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to add a separator
 </td>
 </tr>
 <tr>
@@ -1095,7 +1110,9 @@ before or after this item, depending on <em class="parameter"><code>top</code></
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>top</code></em> :</span></p></td>
-<td> if <code class="literal">TRUE</code>, the UI element is added before its siblings, otherwise it 
+<td> if <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, the UI element is added before its siblings, otherwise it 
   is added after its siblings.
 </td>
 </tr>

@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -206,12 +208,16 @@ Creates a new <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolBu
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>icon_widget</code></em> :</span></p></td>
-<td> a widget that will be used as icon widget, or <code class="literal">NULL</code>
+<td> a widget that will be used as icon widget, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
-<td> a string that will be used as label, or <code class="literal">NULL</code>
+<td> a string that will be used as label, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -432,18 +438,29 @@ tooltip on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkMen
 <a name="GtkMenuToolButton.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
 <a name="GtkMenuToolButton-show-menu"></a><h3>The <code class="literal">"show-menu"</code> signal</h3>
-<pre class="programlisting">void                user_function                      (<a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton">GtkMenuToolButton</a> *menutoolbutton,
+<pre class="programlisting">void                user_function                      (<a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton">GtkMenuToolButton</a> *button,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
->gpointer</a>           user_data)           : Run First</pre>
+>gpointer</a>           user_data)      : Run First</pre>
+<p>
+The ::show-menu signal is emitted before the menu is shown.
+</p>
+<p>
+It can be used to populate the menu on demand, using
+<a class="link" href="GtkMenuToolButton.html#gtk-menu-tool-button-get-menu" title="gtk_menu_tool_button_get_menu ()"><code class="function">gtk_menu_tool_button_get_menu()</code></a>. 
+</p>
+<p>
+Note that even if you populate the menu dynamically in this way, 
+you must set an empty menu on the <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a> beforehand,
+since the arrow is made insensitive if the menu is not set.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>menutoolbutton</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td><p><span class="term"><em class="parameter"><code>button</code></em> :</span></p></td>
+<td> the object on which the signal is emitted
 </td>
 </tr>
 <tr>

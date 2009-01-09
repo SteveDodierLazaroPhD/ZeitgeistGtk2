@@ -48,6 +48,7 @@
 <link rel="chapter" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
+<link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -59,6 +60,7 @@
 <link rel="index" href="api-index-2-10.html" title="Index of new symbols in 2.10">
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
+<link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
@@ -364,7 +366,7 @@ href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttribute"
 ><span class="type">PangoAttribute</span></a> values for this label.
 </p>
 <div class="example">
-<a name="id3252836"></a><p class="title"><b>Example 11. A UI definition fragment specifying Pango attributes</b></p>
+<a name="id3255200"></a><p class="title"><b>Example 13. A UI definition fragment specifying Pango attributes</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkLabel"&gt;
   &lt;attributes&gt;
@@ -384,7 +386,7 @@ content instead.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3252864"></a><h3>Mnemonics</h3>
+<a name="id3255228"></a><h3>Mnemonics</h3>
 <p>
 Labels may contain <em class="firstterm">mnemonics</em>. Mnemonics are
 underlined characters in the label, used for keyboard navigation.
@@ -430,7 +432,7 @@ To create a mnemonic for a widget alongside the label, such as a
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3252998"></a><h3>Markup (styled text)</h3>
+<a name="id3255364"></a><h3>Markup (styled text)</h3>
 <p>
 To make it easy to format text in a label (changing colors, fonts,
 etc.), label text can be provided in a simple <a
@@ -478,7 +480,7 @@ being displayed, so translations will cause problems.
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3253123"></a><h3>Selectable labels</h3>
+<a name="id3255490"></a><h3>Selectable labels</h3>
 <p>
 Labels can be made selectable with <a class="link" href="GtkLabel.html#gtk-label-set-selectable" title="gtk_label_set_selectable ()"><code class="function">gtk_label_set_selectable()</code></a>.
 Selectable labels allow the user to copy the label contents to
@@ -488,7 +490,7 @@ the clipboard. Only labels that contain useful-to-copy information
 </div>
 <hr>
 <div class="refsect2" lang="en">
-<a name="id3253147"></a><h3>Text layout</h3>
+<a name="id3255513"></a><h3>Text layout</h3>
 <p>
 A label can contain any number of paragraphs, but will have
 performance problems if it contains more than a small number.
@@ -524,7 +526,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *str);</pre>
 <p>
 Creates a new label with the given text inside it. You can
-pass <code class="literal">NULL</code> to get an empty label widget.</p>
+pass <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> to get an empty label widget.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -585,9 +589,19 @@ href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"
 Sets a <a
 href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"
 ><span class="type">PangoAttrList</span></a>; the attributes in the list are applied to the
-label text. The attributes set with this function will be ignored
-if the <a class="link" href="GtkLabel.html#GtkLabel--use-underline" title='The "use-underline" property'><span class="type">"use-underline"</span></a>" or <a class="link" href="GtkLabel.html#GtkLabel--use-markup" title='The "use-markup" property'><span class="type">"use-markup"</span></a> properties
-are set to <code class="literal">TRUE</code>.</p>
+label text. 
+</p>
+<p>
+</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Note</h3>
+<p>The attributes set with this function will be applied
+and merged with any other attributes previously effected by way
+of the <a class="link" href="GtkLabel.html#GtkLabel--use-underline" title='The "use-underline" property'><span class="type">"use-underline"</span></a> or <a class="link" href="GtkLabel.html#GtkLabel--use-markup" title='The "use-markup" property'><span class="type">"use-markup"</span></a> properties.
+While it is not recommended to mix markup strings with manually set
+attributes, if you must; know that the attributes will be applied
+to the label after the markup string is parsed.</p>
+</div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -847,7 +861,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> **str);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_label_get</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_label_get</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkLabel.html#gtk-label-get-text" title="gtk_label_get_text ()"><code class="function">gtk_label_get_text()</code></a> instead.</p>
 </div>
 <p>
 Gets the current string of text within the <a class="link" href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a> and writes it to
@@ -881,7 +895,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"
 >gchar</a> *string);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_label_parse_uline</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_label_parse_uline</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkLabel.html#gtk-label-set-use-underline" title="gtk_label_set_use_underline ()"><code class="function">gtk_label_set_use_underline()</code></a> instead.</p>
 </div>
 <p>
 Parses the given string for underscores and converts the next
@@ -919,12 +933,18 @@ probably only used within the GTK+ library itself for menu items and such.
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 >gboolean</a> wrap);</pre>
 <p>
-Toggles line wrapping within the <a class="link" href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a> widget. <code class="literal">TRUE</code> makes it break
-lines if text exceeds the widget's size. <code class="literal">FALSE</code> lets the text get cut off
+Toggles line wrapping within the <a class="link" href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a> widget. <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> makes it break
+lines if text exceeds the widget's size. <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> lets the text get cut off
 by the edge of the widget if it exceeds the widget size.
 </p>
 <p>
-Note that setting line wrapping to <code class="literal">TRUE</code> does not make the label
+Note that setting line wrapping to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> does not make the label
 wrap at its parent container's width, because GTK+ widgets
 conceptually can't make their requisition depend on the parent
 container's size. For a label that wraps at a specific position,
@@ -984,11 +1004,10 @@ wrap on word boundaries.</p>
 </pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_label_set</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_label_set</code> is deprecated and should not be used in newly-written code. Use <a class="link" href="GtkLabel.html#gtk-label-set-text" title="gtk_label_set_text ()"><code class="function">gtk_label_set_text()</code></a> instead.</p>
 </div>
 <p>
-Aliases <a class="link" href="GtkLabel.html#gtk-label-set-text" title="gtk_label_set_text ()"><code class="function">gtk_label_set_text()</code></a>.  Probably used for backward compatibility with
-GTK+ 1.0.x.
+Sets the text within the GtkLabel widget.
 </p>
 </div>
 <hr>
@@ -1028,12 +1047,16 @@ and from pixels using <code class="function">PANGO_PIXELS()</code> or <span clas
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>x</code></em> :</span></p></td>
-<td> location to store X offset of layout, or <code class="literal">NULL</code>
+<td> location to store X offset of layout, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>y</code></em> :</span></p></td>
-<td> location to store Y offset of layout, or <code class="literal">NULL</code>
+<td> location to store Y offset of layout, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
 </td>
 </tr>
 </tbody>
@@ -1087,7 +1110,9 @@ Gets the value set by <a class="link" href="GtkLabel.html#gtk-label-set-selectab
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the user can copy text from the label
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the user can copy text from the label
 </td>
 </tr>
 </tbody>
@@ -1263,7 +1288,9 @@ copy-and-paste.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> to allow selecting text in the label
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to allow selecting text in the label
 </td>
 </tr>
 </tbody>
@@ -1325,7 +1352,9 @@ pango_layout_get_attribute (gtk_label_get_layout (label)).</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the attribute list, or <code class="literal">NULL</code> if none was set.
+<td> the attribute list, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if none was set.
 </td>
 </tr>
 </tbody>
@@ -1527,7 +1556,9 @@ See <a class="link" href="GtkLabel.html#gtk-label-set-line-wrap" title="gtk_labe
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the lines of the label are automatically wrapped.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the lines of the label are automatically wrapped.
 </td>
 </tr>
 </tbody>
@@ -1553,7 +1584,9 @@ Returns line wrap mode used by the label. See <a class="link" href="GtkLabel.htm
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the lines of the label are automatically wrapped.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the lines of the label are automatically wrapped.
 
 </td>
 </tr>
@@ -1580,7 +1613,9 @@ label. See <a class="link" href="GtkLabel.html#gtk-label-set-mnemonic-widget" ti
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the target of the label's mnemonic, or <code class="literal">NULL</code> if none
+<td> the target of the label's mnemonic, or <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> if none
               has been set and the default algorithm will be used.
 </td>
 </tr>
@@ -1600,7 +1635,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> *end);</pre>
 <p>
-Gets the selected range of characters in the label, returning <code class="literal">TRUE</code>
+Gets the selected range of characters in the label, returning <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>
 if there's a selection.</p>
 <p>
 </p>
@@ -1624,7 +1661,9 @@ if there's a selection.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if selection is non-empty
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if selection is non-empty
 </td>
 </tr>
 </tbody>
@@ -1654,7 +1693,9 @@ language</a>. See <a class="link" href="GtkLabel.html#gtk-label-set-use-markup" 
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the label's text will be parsed for markup.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the label's text will be parsed for markup.
 </td>
 </tr>
 </tbody>
@@ -1681,7 +1722,9 @@ mnemonic. See <a class="link" href="GtkLabel.html#gtk-label-set-use-underline" t
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> whether an embedded underline in the label indicates
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> whether an embedded underline in the label indicates
               the mnemonic accelerator keys.
 </td>
 </tr>
@@ -1708,7 +1751,9 @@ Returns whether the label is in single line mode.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <code class="literal">TRUE</code> when the label is in single line mode.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> when the label is in single line mode.
 
 </td>
 </tr>
@@ -1799,7 +1844,9 @@ language</a>. See <a class="link" href="GtkLabel.html#gtk-label-set-markup" titl
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the label's text should be parsed for markup.
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the label's text should be parsed for markup.
 </td>
 </tr>
 </tbody>
@@ -1827,7 +1874,9 @@ used for the mnemonic accelerator key.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setting</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if underlines in the text indicate mnemonics
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if underlines in the text indicate mnemonics
 </td>
 </tr>
 </tbody>
@@ -1854,7 +1903,9 @@ Sets whether the label is in single line mode.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>single_line_mode</code></em> :</span></p></td>
-<td> <code class="literal">TRUE</code> if the label should be in single line mode
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the label should be in single line mode
 </td>
 </tr>
 </tbody>
@@ -1946,9 +1997,9 @@ Note that setting this property to a value other than
 <code class="literal">PANGO_ELLIPSIZE_NONE</code> has the side-effect that the label requests 
 only enough space to display the ellipsis "...". In particular, this 
 means that ellipsizing labels do not work well in notebook tabs, unless 
-the tab's <a
-href="/usr/share/gtk-doc/html/gtk/GtkNotebook.html#GtkNotebook--tab-expand"
-><span class="type">"tab-expand"</span></a> property is set to <code class="literal">TRUE</code>. Other ways
+the tab's <span class="type">"tab-expand"</span> property is set to <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>. Other ways
 to set a label's width are <a class="link" href="GtkWidget.html#gtk-widget-set-size-request" title="gtk_widget_set_size_request ()"><code class="function">gtk_widget_set_size_request()</code></a> and
 <a class="link" href="GtkLabel.html#gtk-label-set-width-chars" title="gtk_label_set_width_chars ()"><code class="function">gtk_label_set_width_chars()</code></a>.</p>
 <p>
@@ -2120,13 +2171,20 @@ means wrap on word boundaries.</p>
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>  user_data)      : Run Last / Action</pre>
 <p>
+The ::copy-clipboard signal is a
+keybinding signal
+which gets emitted to copy the selection to the clipboard.
+</p>
+<p>
+The default binding for this signal is Ctrl-c.</p>
+<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> the object which received the signal
 </td>
 </tr>
 <tr>
@@ -2139,40 +2197,67 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <hr>
 <div class="refsect2" lang="en">
 <a name="GtkLabel-move-cursor"></a><h3>The <code class="literal">"move-cursor"</code> signal</h3>
-<pre class="programlisting">void                user_function                      (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a>       *label,
-                                                        <a class="link" href="gtk-Standard-Enumerations.html#GtkMovementStep" title="enum GtkMovementStep">GtkMovementStep</a> arg1,
+<pre class="programlisting">void                user_function                      (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a>       *entry,
+                                                        <a class="link" href="gtk-Standard-Enumerations.html#GtkMovementStep" title="enum GtkMovementStep">GtkMovementStep</a> step,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
->gint</a>            arg2,
+>gint</a>            count,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
->gboolean</a>        arg3,
+>gboolean</a>        extend_selection,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
->gpointer</a>        user_data)      : Run Last / Action</pre>
+>gpointer</a>        user_data)             : Run Last / Action</pre>
+<p>
+The ::move-cursor signal is a
+keybinding signal
+which gets emitted when the user initiates a cursor movement.
+If the cursor is not visible in <em class="parameter"><code>entry</code></em>, this signal causes
+the viewport to be moved instead.
+</p>
+<p>
+Applications should not connect to it, but may emit it with
+<a
+href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-emit-by-name"
+><code class="function">g_signal_emit_by_name()</code></a> if they need to control scrolling
+programmatically.
+</p>
+<p>
+The default bindings for this signal come in two variants,
+the variant with the Shift modifier extends the selection,
+the variant without the Shift modifer does not.
+There are too many key combinations to list them all here.
+</p>
+<div class="itemizedlist"><ul type="disc">
+<li>Arrow keys move by individual characters/lines</li>
+<li>Ctrl-arrow key combinations move by words/paragraphs</li>
+<li>Home/End keys move to the ends of the buffer</li>
+</ul></div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
+<td> the object which received the signal
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>
+<td><p><span class="term"><em class="parameter"><code>step</code></em> :</span></p></td>
+<td> the granularity of the move, as a <a class="link" href="gtk-Standard-Enumerations.html#GtkMovementStep" title="enum GtkMovementStep"><span class="type">GtkMovementStep</span></a>
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>arg2</code></em> :</span></p></td>
-<td>
+<td><p><span class="term"><em class="parameter"><code>count</code></em> :</span></p></td>
+<td> the number of <em class="parameter"><code>step</code></em> units to move
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>arg3</code></em> :</span></p></td>
-<td>
+<td><p><span class="term"><em class="parameter"><code>extend_selection</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the move should extend the selection
 </td>
 </tr>
 <tr>
@@ -2186,10 +2271,18 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <div class="refsect2" lang="en">
 <a name="GtkLabel-populate-popup"></a><h3>The <code class="literal">"populate-popup"</code> signal</h3>
 <pre class="programlisting">void                user_function                      (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a> *label,
-                                                        <a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a>  *arg1,
+                                                        <a class="link" href="GtkMenu.html" title="GtkMenu">GtkMenu</a>  *menu,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 >gpointer</a>  user_data)      : Run Last</pre>
+<p>
+The ::populate-popup signal gets emitted before showing the
+context menu of the label. Note that only selectable labels
+have context menus.
+</p>
+<p>
+If you need to add items to the context menu, connect
+to this signal and append your menuitems to the <em class="parameter"><code>menu</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2197,12 +2290,12 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td> The label on which the signal is emitted
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>
+<td><p><span class="term"><em class="parameter"><code>menu</code></em> :</span></p></td>
+<td> the menu that is being populated
 </td>
 </tr>
 <tr>
