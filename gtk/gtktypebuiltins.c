@@ -1263,6 +1263,7 @@ gtk_file_chooser_error_get_type (void)
             { GTK_FILE_CHOOSER_ERROR_NONEXISTENT, "GTK_FILE_CHOOSER_ERROR_NONEXISTENT", "nonexistent" },
             { GTK_FILE_CHOOSER_ERROR_BAD_FILENAME, "GTK_FILE_CHOOSER_ERROR_BAD_FILENAME", "bad-filename" },
             { GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS, "GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS", "already-exists" },
+            { GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME, "GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME", "incomplete-hostname" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GtkFileChooserError"), values);

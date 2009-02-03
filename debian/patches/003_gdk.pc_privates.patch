@@ -1,12 +1,12 @@
-Index: gtk+-2.12.1/configure.in
+Index: gtk+2.0-2.15.2/configure.in
 ===================================================================
---- gtk+-2.12.1.orig/configure.in	2007-11-18 00:51:06.548600130 +0100
-+++ gtk+-2.12.1/configure.in	2007-11-18 01:06:06.279872893 +0100
-@@ -1459,21 +1459,23 @@ LDFLAGS="$saved_ldflags"
+--- gtk+2.0-2.15.2.orig/configure.in	2009-01-27 11:20:58.000000000 +0100
++++ gtk+2.0-2.15.2/configure.in	2009-01-27 11:20:58.000000000 +0100
+@@ -1680,21 +1680,23 @@
  
- GDK_PACKAGES="$PANGO_PACKAGES"
+ GDK_PACKAGES="$PANGO_PACKAGES gio-2.0"
  if test "x$gdktarget" = "xx11"; then
--  GDK_PACKAGES="$GDK_PACKAGES $X_PACKAGES"
+-  GDK_PACKAGES="$GDK_PACKAGES $X_PACKAGES cairo-xlib"
 +  GDK_PRIVATE_PACKAGES="$X_PACKAGES"
  fi
 -GDK_DEP_LIBS="$GDK_EXTRA_LIBS `$PKG_CONFIG --libs $GDK_PIXBUF_PACKAGES $GDK_PACKAGES` $GDK_PIXBUF_EXTRA_LIBS"
@@ -22,7 +22,7 @@ Index: gtk+-2.12.1/configure.in
 -  GDK_PACKAGES="$PANGO_PACKAGES"
    GDK_EXTRA_LIBS=
 +else
-+  GDK_PACKAGES="$GDK_PACKAGES $GDK_PRIVATE_PACKAGES"
++  GDK_PACKAGES="$GDK_PACKAGES $GDK_PRIVATE_PACKAGES cairo-xlib"
  fi
  
  AC_SUBST(GDK_PACKAGES)
@@ -30,12 +30,12 @@ Index: gtk+-2.12.1/configure.in
  AC_SUBST(GDK_EXTRA_LIBS)
  AC_SUBST(GDK_EXTRA_CFLAGS)
  AC_SUBST(GDK_DEP_LIBS)
-Index: gtk+-2.12.1/gdk-2.0.pc.in
+Index: gtk+2.0-2.15.2/gdk-2.0.pc.in
 ===================================================================
---- gtk+-2.12.1.orig/gdk-2.0.pc.in	2007-11-17 23:53:16.038827049 +0100
-+++ gtk+-2.12.1/gdk-2.0.pc.in	2007-11-18 01:06:30.821271428 +0100
-@@ -8,5 +8,6 @@ Name: GDK
- Description: GIMP Drawing Kit (${target} target)
+--- gtk+2.0-2.15.2.orig/gdk-2.0.pc.in	2009-01-27 05:03:37.000000000 +0100
++++ gtk+2.0-2.15.2/gdk-2.0.pc.in	2009-01-27 11:20:58.000000000 +0100
+@@ -8,5 +8,6 @@
+ Description: GTK+ Drawing Kit (${target} target)
  Version: @VERSION@
  Requires: gdk-pixbuf-2.0 @GDK_PACKAGES@
 +Requires.private: @GDK_PRIVATE_PACKAGES@

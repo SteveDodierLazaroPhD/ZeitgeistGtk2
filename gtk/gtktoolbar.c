@@ -53,7 +53,6 @@
 #include "gtkseparatortoolitem.h"
 #include "gtkstock.h"
 #include "gtktoolbar.h"
-#include "gtktoolbar.h"
 #include "gtktoolshell.h"
 #include "gtkvbox.h"
 #include "gtkprivate.h"
@@ -1206,6 +1205,8 @@ slide_idle_handler (gpointer data)
 	}
     }
   
+  gtk_widget_queue_resize_no_redraw (GTK_WIDGET (toolbar));
+
   priv->is_sliding = FALSE;
   priv->idle_id = 0;
 

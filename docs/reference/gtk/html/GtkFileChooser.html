@@ -481,7 +481,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Character-Set-Conversion.html#g-filename
 	generate a preview.
       </p>
 <div class="example">
-<a name="example-gtkfilechooser-preview"></a><p class="title"><b>Example 35. Sample Usage</b></p>
+<a name="example-gtkfilechooser-preview"></a><p class="title"><b>Example 36. Sample Usage</b></p>
 <div class="example-contents"><pre class="programlisting">
 {
   GtkImage *preview;
@@ -505,7 +505,7 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
   g_free (filename);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), pixbuf);
   if (pixbuf)
-    gobject_unref (pixbuf);
+    g_object_unref (pixbuf);
   gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
 }
 	</pre></div>
@@ -524,7 +524,7 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 	widgets in a file chooser.
       </p>
 <div class="example">
-<a name="example-gtkfilechooser-extra"></a><p class="title"><b>Example 36. Sample Usage</b></p>
+<a name="example-gtkfilechooser-extra"></a><p class="title"><b>Example 37. Sample Usage</b></p>
 <div class="example-contents"><pre class="programlisting">
 {
   GtkWidget *toggle;
@@ -557,7 +557,7 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 	describes the available key binding signals.
       </p>
 <div class="example">
-<a name="gtkfilechooser-key-binding-example"></a><p class="title"><b>Example 37. GtkFileChooser key binding example</b></p>
+<a name="gtkfilechooser-key-binding-example"></a><p class="title"><b>Example 38. GtkFileChooser key binding example</b></p>
 <div class="example-contents">
 <p>
 	  The default keys that activate the key-binding signals in
@@ -578,14 +578,14 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 <td>location-popup</td>
 <td>
 		  <span class="keycap"><strong>Control</strong></span>+<span class="keycap"><strong>L</strong></span> (empty path);
-		  <span class="keycap"><strong>/</strong></span> (path of "/")<sup>[<a name="id3584084" href="#ftn.id3584084" class="footnote">a</a>]</sup>;
+		  <span class="keycap"><strong>/</strong></span> (path of "/")<sup>[<a name="id3181759" href="#ftn.id3181759" class="footnote">a</a>]</sup>;
 		  <span class="keycap"><strong>~</strong></span> (path of "~")
 		</td>
 </tr>
 <tr>
 <td>up-folder</td>
 <td>
-		  <span class="keycap"><strong>Alt</strong></span>+<span class="keycap"><strong>Up</strong></span><sup>[<a name="id3584134" href="#ftn.id3584134" class="footnote">b</a>]</sup>
+		  <span class="keycap"><strong>Alt</strong></span>+<span class="keycap"><strong>Up</strong></span><sup>[<a name="id3181809" href="#ftn.id3181809" class="footnote">b</a>]</sup>
 		  ;
 		  <span class="keycap"><strong>Backspace</strong></span>
 		</td>
@@ -616,11 +616,11 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 </tr>
 </tbody>
 <tbody class="footnotes"><tr><td colspan="2">
-<div class="footnote"><p><sup>[<a name="ftn.id3584084" href="#id3584084" class="para">a</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3181759" href="#id3181759" class="para">a</a>] </sup>
 		      Both the individual <span class="keycap"><strong>/</strong></span> key and the
 		      numeric keypad's "divide" key are supported.
 		    </p></div>
-<div class="footnote"><p><sup>[<a name="ftn.id3584134" href="#id3584134" class="para">b</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id3181809" href="#id3181809" class="para">b</a>] </sup>
 		      Both the individual Up key and the numeric
 		      keypad's Up key are supported.
 		    </p></div>
@@ -1018,7 +1018,8 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <pre class="programlisting">typedef enum {
   GTK_FILE_CHOOSER_ERROR_NONEXISTENT,
   GTK_FILE_CHOOSER_ERROR_BAD_FILENAME,
-  GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS
+  GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS,
+  GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME
 } GtkFileChooserError;
 </pre>
 <p>
@@ -1042,6 +1043,11 @@ href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"
 <td><p><a name="GTK-FILE-CHOOSER-ERROR-ALREADY-EXISTS--CAPS"></a><span class="term"><code class="literal">GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS</code></span></p></td>
 <td>Indicates a duplicate path (e.g. when
    adding a bookmark).
+</td>
+</tr>
+<tr>
+<td><p><a name="GTK-FILE-CHOOSER-ERROR-INCOMPLETE-HOSTNAME--CAPS"></a><span class="term"><code class="literal">GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME</code></span></p></td>
+<td>
 </td>
 </tr>
 </tbody>
@@ -3357,7 +3363,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
       illustrates this.
     </p>
 <div class="example">
-<a name="gtkfilechooser-confirmation"></a><p class="title"><b>Example 38. Custom confirmation</b></p>
+<a name="gtkfilechooser-confirmation"></a><p class="title"><b>Example 39. Custom confirmation</b></p>
 <div class="example-contents"><pre class="programlisting">
 static GtkFileChooserConfirmation
 confirm_overwrite_callback (GtkFileChooser *chooser, gpointer data)

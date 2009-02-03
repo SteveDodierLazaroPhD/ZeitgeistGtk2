@@ -373,6 +373,7 @@ gdk_window_new (GdkWindow     *parent,
   g_return_val_if_fail (attributes != NULL, NULL);
 
   window = _gdk_window_new (parent, attributes, attributes_mask);
+  g_return_val_if_fail (window != NULL, window);
 
   /* Inherit redirection from parent */
   if (parent != NULL)
@@ -3858,12 +3859,11 @@ gdk_window_set_back_pixmap (GdkWindow *window,
  * @window: a #GdkWindow
  * @cursor: a cursor
  *
- * Sets the mouse pointer for a #GdkWindow. Use gdk_cursor_new() or
- * gdk_cursor_new_from_pixmap() to create the cursor.
- * To make the cursor invisible, use gdk_cursor_new_from_pixmap() to create
- * a cursor with no pixels in it. Passing %NULL for the @cursor argument
- * to gdk_window_set_cursor() means that @window will use the cursor of
- * its parent window. Most windows should use this default.
+ * Sets the mouse pointer for a #GdkWindow. Use gdk_cursor_new_for_display() 
+ * or gdk_cursor_new_from_pixmap() to create the cursor. To make the cursor 
+ * invisible, use %GDK_BLANK_CURSOR. Passing %NULL for the @cursor argument 
+ * to gdk_window_set_cursor() means that @window will use the cursor of its 
+ * parent window. Most windows should use this default.
  */
 void
 gdk_window_set_cursor (GdkWindow *window,
@@ -4405,6 +4405,15 @@ _gdk_window_calculate_full_clip_region (GdkWindow *window,
 	  gdk_region_destroy (tmpreg);
 	}
       
+      /* Clip to the parent */
+      window_get_size_rectangle ((GdkWindow *)parentwin, &visible_rect);
+      /* Convert rect to "window" coords */
+      visible_rect.x += - x_offset;
+      visible_rect.y += - y_offset;
+      
+      tmpreg = gdk_region_rectangle (&visible_rect);
+      gdk_region_intersect (real_clip_region, tmpreg);
+      gdk_region_destroy (tmpreg);
     }
 
   if (gc)

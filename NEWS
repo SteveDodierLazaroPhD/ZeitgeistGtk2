@@ -1,3 +1,169 @@
+Overview of Changes from GTK+ 2.15.2 to 2.15.3
+==============================================
+
+* Keyboard shortcut handling has been changed, to help with a longstanding
+  complaint about the way GTK+ handles multiple layouts. GTK+ now only uses
+  keys from groups other than the current group if they are not present in
+  the current group. Feedback on this change is appreciated.
+
+* Bugs fixed:
+ 569336 change in gtkbutton klass is causing crash...
+ 569435 make maintainer-clean removes non-generated sources
+ 145058 Inputting "^^" requires four keystrokes on Win32...
+ 559408 Transparency lost when images are copied...
+ 359288 Toolbar items are not shown after hiding
+ 569918 64bit portability issue in gtkrecentchooser.c
+ 162726 Multiple Latin layouts in XKB break keyboard shortcuts
+ 569635 fontchooser should reload list of families/styles on...
+
+* Updated translations:
+ Norwegian bokmål (nb)
+ Oriya (or)
+ Brazilian Portugese (pt_BR)
+ Thai (th)
+ Traditional Chinese (zh_HK)
+ Traditional Chinese (zh_TW)
+ 
+
+Overview of Changes from GTK+ 2.15.1 to 2.15.2
+==============================================
+
+* GtkAction:
+ - Make toolitems pick up icon names from actions
+ - Draw proxies of radio actions properly
+ - Make menu proxies of recent actions work
+ - Avoid accidental activations when changing actions on proxies
+ - Make derived button classes work as proxies
+
+* Input methods:
+ - Avoid an assertion due to early use of input methods
+
+* GtkScale:
+ - Avoid a segfault in the marker drawing code
+
+* GtkImageMenuItem:
+ - Add a property to override the show-menu-images setting
+
+* Bugs fixed:
+ 566628 gdk_display_close always asserts on win32 and quartz
+ 569240 Crasher when using markers
+ 569104 Toggle menu entries showed as check menu entries...
+ 322932 Always show icons on panel menus
+
+* Updated translations:
+ Finnish (fi)
+ German (de)
+
+
+Overview of Changes from GTK+ 2.15.0 to 2.15.1
+==============================================
+
+* GtkFileChooser:
+ - Remember the file chooser's size across invocations
+ - Handle uris that are entered in the entry
+ - Improve autocompletion, in particular for uris
+
+* GtkEntry:
+ - New property "im-module" for selecting input methods per-widget
+ - New icon-related API got renamed for consistency
+ - Added properties and setters for icon tooltips
+
+* GtkTextView:
+ - New property "im-module" for selecting input methods per-widget
+ - New signal "paste-done" to allow better handling of async pasting
+
+* GtkScale:
+ - New api to add annotated marks: gtk_scale_add_mark.
+
+* GtkAction:
+ - Rework the way actions and proxies interact, to make the
+   interaction less ad hoc, more extensible, and better suited
+   for support in GUI builders like glade.
+
+   To be used as a proxy, a widget must now implement the
+`  GtkActivatable interface, and GtkActivatable implementations
+   are responsible for syncing their appearance with the action
+   and for activating the action.
+
+   All the widgets that are commonly used as proxies implement
+   GtkActivatable now.
+
+   This is a big change, and it is not unlikely to break some
+   current users of GtkAction, so feedback about problems caused
+   by this is appreciated.
+
+ - Add a "gicon" property to specify the icon with a GIcon
+
+* GDK:
+ - On X11, GDK now caches cursors to avoid cursor theming overhead
+ - New cursor type for blank cursors: GDK_BLANK_CURSOR
+
+* New deprecations:
+   gtk_scale_Button_get_orientation()
+   gtk_scale_button_set_orientation()
+   gtk_action_connect_proxy()
+   gtk_action_disconnect_proxy()
+   gtk_widget_get_action()
+   gtk_action_block_activate_from()
+   gtk_action_unblock_activate_from()
+   direct access to "gtk-action" object data
+
+* Changes that are relevant for translators:
+ - Navigation and Media stock labels have separate message contexts now
+ - The caps lock warning string has been changed
+
+* Bugs fixed:
+ 566083 Icon pixmap hardcoded during DnD
+ 566334 compile failure for gtk+ on Mac OS X
+ 565998 configure script doesn't check for cairo-xlib.pc
+ 566391 gtk_about_dialog_set_url_hook should activate...
+ 566568 gtk_tree_model_get_value docs typo
+ 566628 gdk_display_close always asserts on win32
+ 566733 Add GIcon to GtkAction, GtkToolButton
+ 567024 gtktoolbutton doesn't create right proxy menu item...
+ 523554 Copy from GIMP to Word broke
+ 567468 no check for trailing != NULL in gtk_text_layout_get..
+ 492794 Pasting external text at end of view yields wrong...
+ 164002 query scripts don't work uninstalled on windows
+ 566532 GtkScaleButton implementation of GtkOrientable
+ 450716 New API to change global IM
+ 562701 GtkEntryCompletion popup sizes its rows wrong...
+ 567944 [Win32] Sorted treeview columns can be unreadable
+ 567655 gtk_status_icon_set_tooltip_text/markup should use...
+ 567887 gtk_entry_get_storage_type() should be...
+ 568196 Please change context of Forward stock label
+ 563280 stock items & translation context
+ 568233 Wrong statement about GtkEntry's "activate" signal
+ 568263 gtk can't recognize the wrong X Selection TARGETS...
+ 565656 Add marks to scales
+ 567413 GtkComboBoxEntry doesn't emit "changed" signal...
+ 545980 GtkFileChooserEntry should handle URIs
+ 566862 pixbuf_new_from_file does not autodetect format
+ 568552 gtk_combo + gtk entry in invisible mode takes 100% cpu
+ 561801 "scheduled printing" doesn't function as expected
+ 566535 gtk_widget_get_snapshot does not work if double buff...
+ 567021 gtkimage accessors docs
+ 567761 Spellfixes in GTK+ documentation
+ 568744 Spellfixes in GtkTreeView's documentation
+ 536965 GtkPlug: crash on theme change
+ 567124 proposal to delay doing something related to immodule...
+ 568305 gdk-pixbuf mishandles BI_BITFIELDS bmps
+
+* New and updated translations:
+ Crimean Tatar (crh)
+ Spanish (es)
+ Hebrew (he)
+ Hungarian (hu)
+ Italian (it)
+ Korean (ko)
+ Lithuanian (lt)
+ Norwegian bokmål (nb)
+ Norwegian Nynorsk (nn)
+ Swedish (sv)
+ Thai (th)
+ Simplified Chinese (zh_CN)
+
+
 Overview of Changes from GTK+ 2.14.x to 2.15.0
 ==============================================
 
@@ -18,8 +184,9 @@ Overview of Changes from GTK+ 2.14.x to 2.15.0
 
 * GtkStatusIcon
  - Uses an extension of the tray icon spec to negotiate RGBA support.
-   This is also supported by the GNOME panel. For details, see 
-   http://lists.freedesktop.org/archives/xdg/2008-September/009934.html 
+   This is also supported by the GNOME panel. For details, see the
+   section on "Visual and bckground pixmap handling" in the System
+   Tray Protocol Specification.
  - Supports scroll events, middle clicks and rich tooltips
 
 * GtkLinkButton

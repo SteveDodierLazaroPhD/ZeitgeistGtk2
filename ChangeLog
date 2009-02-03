@@ -1,4 +1,1129 @@
+2009-02-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.15.3 ===
+
+	* NEWS: Updates
+
+2009-02-01  Behdad Esfahbod  <behdad@gnome.org>
+
+	* gtk/gtksettings.c (gtk_settings_class_init): Change the
+	"gtk-fontconfig-timestamp" property from int to uint.  Doesn't affect
+	anything in practice, except that  it overflows years later...
+
+2009-02-01  Behdad Esfahbod  <behdad@gnome.org>
+
+	Bug 569635 – fontchooser should reload list of families/styles on
+	theme change
+
+	* gtk/gtkfontsel.c (gtk_font_selection_class_init),
+	(gtk_font_selection_init), (gtk_font_selection_finalize),
+	(gtk_font_selection_ref_family), (gtk_font_selection_ref_face),
+	(gtk_font_selection_reload_fonts),
+	(gtk_font_selection_screen_changed),
+	(gtk_font_selection_style_set),
+	(gtk_font_selection_scroll_to_selection),
+	(gtk_font_selection_scroll_on_map),
+	(gtk_font_selection_select_font),
+	(gtk_font_selection_show_available_fonts),
+	(gtk_font_selection_show_available_styles),
+	(gtk_font_selection_select_style),
+	(gtk_font_selection_select_font_desc),
+	(gtk_font_selection_set_font_name):
+	Reload Pango families and faces in style_set.  Installing/uninstalling
+	fonts shows up immediately in an open font chooser now.
+
+2009-01-31  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 162726 – Multiple Latin layouts in XKB break keyboard shortcuts
+
+	* gtk/gtkkeyhash.c (_gtk_key_hash_lookup): Change the handling of
+	fuzzy matches: As long there are any exact matches, only exact 
+	matches are returned. If there are no exact matches, fuzzy matches 
+	will be returned, as long as they are not shadowing a possible exact
+	match. This means that fuzzy matches won't be considered if their
+	keyval is present in the current group. Problem reported by
+	many people, patch by Simos Xenitellis.
+
+2009-01-31  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2009-01-30  Fridrich Strba  <fridrich.strba@bluewin.ch>
+
+	* configure.in: Allow linking in static jasper gdk-pixbuf loader.
+	(reviewed by Tor Lillqvist)
+
+2009-01-30  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktextview.c (preedit_changed_handler): Be more careful
+	with the beeps, since preedit-changed is occasionally emitted 
+	without actual input. Pointed out by Tor Lillqvist.
+
+2009-01-30  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 569918 – 64bit portability issue in gtkrecentchooser.c
+
+	* gtk/gtkrecentchooser.c (gtk_recent_chooser_set_use_action_appearance):
+	Avoid a compiler warning. Patch by Magnus Boman.
+
+2009-01-30  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 359288 – Toolbar items are not shown after hiding
+
+	* gtk/gtktoolbar.c (slide_idle_handler): Make sure we queue
+	at least one resize. This fixes a problem with toolitems remaining
+	invisible when they shouldn't that was reported by Christian Weiske.
+
+2009-01-30  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkrecentchoosermenu.c (gtk_recent_chooser_menu_create_item):
+	Always show images.
+
+2009-01-29  Tor Lillqvist  <tml@novell.com>
+
+	Bug 559408 - Transparency lost when images are copied between GTK+
+	and the clipboard on Windows
+
+	The code in gdkselection-win32.c is simplified quite a lot. When
+	an image is stored on the clipboard from GTK+, only the "PNG" and
+	CF_DIB formats are advertised. PNG is our preferred format because
+	it can losslessly represent any image that gdk-pixbuf can handle,
+	even with alpha, unambiguously. CF_DIB is also advertised because
+	of its ubiquitous support in Windows software.
+
+	Delayed rendering is used as before, so for other data than text
+	nothing is actually stored on the clipboard until some app asks
+	for it.
+
+	It's pointless to advertise images formats like "image/png" or
+	"image/x-MS-bmp" that no other Windows application is going to
+	look for anyway. Likewise it's pointless to store text under
+	formats like "text/plain" or "UTF8_STRING". Just store
+	CF_UNICODETEXT. CF_TEXT will be available as a synthesized format
+	anyways.
+
+	Office 2007 offers and asks for images in PNG format using the
+	registered clipboard format name "PNG", so we do likewise. If the
+	"PNG" format is available that is preferred when copying to GTK+
+	from the clipboard.
+
+	Unfortunately Word 2007 still uses CF_DIB without handling
+	alpha. But PowerPoint 2007 uses PNG if available and handles alpha
+	correctly. Both Word and Powerpoint offer PNG with alpha nicely.
+
+	Firefox and IE7 offer images that contain alpha as 32-bit version
+	3 BI_RGB DIBs with the undocumented "extra" bytes actually being
+	alpha. Also, alpha is premultiplied into the RGB bytes, presumably
+	because that is how AlphaBlend() wants such DIBs. That is also
+	taken care of. At least for Firefox it easy to be sure that a
+	CF_DIB on the clipboard is from Firefox.
+
+	Also some general stylistic cleanup, comment improvements, and
+	improvements of debugging printout especially in the clipboard
+	handling. Those are not detailled below.
+
+	* gdk/win32/gdkprivate-win32.h
+	* gdk/win32/gdkglobals-win32.c
+	* gdk/win32/gdkgmain-win32.c: Move some globals that were used
+	only in gdkselection-win32.c to be local to that file.
+
+	* gdk/win32/gdkproperty-win32.c (gdk_property_change): Don't
+	bother checking if text to be placed on the clipboard consists of
+	only ASCII.
+
+	* gdk/win32/gdkselection-win32.c: Add static variables for a list
+	of GdkPixbuf-supported formats, well-known registered clipboard
+	formats for images, and for GdkAtoms for well-known image and text
+	formats.
+
+	(_gdk_win32_selection_init): Initialize above static variables.
+
+	(selection_property_store) (gdk_selection_property_get)
+	(_gdk_selection_property_delete): Don't use a FIFO of GdkSelProps
+	for a window after all, it breaks testtext. See bug #163844.
+
+	(gdk_selection_convert): When converting to the TARGETS format,
+	i.e. when the caller wants to know what clipboard formats are
+	available, if PNG is available we report just that and skip
+	CF_DIB, JPEG and GIF even if advertised.
+
+	If CF_UNICODETEXT is available, report only UTF8_STRING.
+
+	When converting to the UTF8_STRING format, i.e. when the caller
+	wants text from the clipboard, try just CF_UNICODETEXT. There is
+	no point in trying CF_TEXT as Windows will synthesize
+	CF_UNICODETEXT from CF_TEXT anyway, if some app has stored just
+	CF_TEXT.
+
+	When converting to the image/bmp format, i.e. when the caller
+	wants an CF_DIB image from the clipboard, we check if the DIB is a
+	version 3 32-bit BI_RGB one that is likely to actually contain
+	alpha in the "extra" bytes. Such a DIB is likely to have
+	premultiplied alpha even, at least in the case of Firefox 3 and
+	IE7. We then edit the DIB in-place into a version 5 one in
+	BI_BITFIELDS format and undo the alpha premultiplication.
+
+	In any case, prepend a BMP file header before letting go of the
+	data which will be fed to the gdk-pixbuf bmp loader by upper
+	levels.
+
+	(gdk_win32_selection_add_targets): If some kind of pixmap image
+	format is being added, actually advertise just PNG and
+	CF_DIB. Note that alpha won't be stored on the clipboard through
+	CF_DIB. This is because gdk-pixbuf's bmp loader doesn't save
+	alpha. Furthermore, few if any non-GTK+ Windows apps seem to
+	understand a version 5 DIB with proper alpha anyway.
+
+	(_gdk_win32_selection_convert_to_dib): Simplified muchly.
+
+2009-01-29  Tor Lillqvist  <tml@novell.com>
+
+	Bug 145058 - Inputting "^^" requires four keystrokes on Win32,
+	differs from platform default behaviour
+
+	* gtk/gtkimcontextsimple.c
+	(check_win32_special_case_after_compact_match): New
+	function. Called from check_compact_table() after a table-based
+	match has committed a character. In case there was two identical
+	dead accents in the input, another copy of the spacing accent that
+	was already committed is committed. This fixes #145058.
+
+	(check_win32_special_cases): New function. Called first from
+	gtk_im_context_simple_filter_keypress(). This fixes another
+	problem: a dead accent followed by a space should commit the
+	corresponding spacing accent. The compose tables from X commit
+	another character in two cases and we want to override that on
+	Windows.
+
+	Add GTK_NOTE (MISC) debugging output to this code.
+
+2009-01-29  Claudio Saavedra  <csaavedra@igalia.com>
+
+	Bug 569435 – make maintainer-clean removes non-generated sources
+
+	* gdk/Makefile.am: Do not remove gdkprivate.h and gdkwindowimpl.h
+	during make maintainer-clean, as these files are not generated.
+
+2009-01-28  Philip Withnall  <philip@tecnocode.co.uk>
+
+	* gtk/gtktreeview.c: Small documentation fix.
+
+2009-01-27  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkentry.c: Use the get_text_area_size vfunc to make
+	alignment and icons in spin buttons work correctly.
+
+2009-01-27  Matthias Clasen  <mclasen@redhat.com>
+	
+	Bug 569336 – change in gtkbutton klass is causing crash when 
+	activating menu item
+
+	* gtk/gtktogglebutton.c: Don't chain the clicked handler
+	up unconditionally.
+
+2009-01-27  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
+2009-01-27  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.15.2 ===
+
+	* NEWS: Updates
+
+2009-01-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 322932 – Always show icons on panel menus
+
+	* gtk/gtk.symbols:
+	* gtk/gtkimagemenuitem.[hc]: Add a property to override the
+	show-menu-images setting for individual menuitems. Patch by
+	William Jon McCann.
+
+2009-01-26  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkbutton.c: Activate the action in a regular clicked
+	handler instead of the default handler, to make it work with
+	derived classes which don't chain up their clicked handler.
+
+2009-01-26  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 569104 – Toggle menu entries showed as check menu entries 
+	in nautilus
+
+	* gtk/gtkactivatable.c (gtk_activatable_do_set_related_action):
+	Block the previous action when calling reset() to prevent
+	accidental activation of the previous action.
+
+	* gtk/gtkaction.c (gtk_action_activate): Don't compare booleans.
+
+	* gtk/gtktoggleaction.c (gtk_toggle_action_set_active): Remove
+	extraneous braces.
+
+2009-01-26  Bastien Nocera  <hadess@hadess.net>
+
+	Bug 569240 - Crasher when using markers
+
+	* gtk/gtkrange.c (gtk_range_destroy): Avoid crashes when destroying
+	a GtkRange with markers
+
+2009-01-26  Richard Hult  <richard@imendio.com>
+
+	Bug 566628 – gdk_display_close always asserts on win32 and quartz
+
+	* gdk/quartz/gdkdisplay-quartz.c
+	(_gdk_windowing_set_default_display): Copy fix for bug #566628
+	from the win32 backend: Allow also a NULL parameter in the
+	g_assert().
+
+2009-01-25  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktoolitem.[hc]: Export the function to create a proxy
+	menuitem from the action for use in subclasses.
+
+	* gtk/gtktoolbutton.c:
+	* gtk/gtktoggletoolbutton.c: Use it here.
+
+	* gtk/gtkrecentchoosermenu.c: Avoid temporary empty state that
+	can lead to a recent action proxy menu being erroneously hidden.
+
+2009-01-25  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkradioaction.c: Set draw-as-radio to TRUE.
+
+2009-01-24  Matthias Clasen  <mclasen@redhat.com>
+
+	Revert changes for bug 567124. Instead of trying to avoid
+	setting up the im context before the widget is realized, just
+	reset it when the client window is set.
+
+	* gtk/gtkimmulticontext.c: Reset the slave when a client window
+	is set.
+
+	* gtk/gtkimmodule.c
+	* gtk/gtktextview.c: Revert changes for bug 567124.
+
+2009-01-25  Claudio Saavedra  <csaavedra@igalia.com>
+
+	* gtk/gtktreeview.c: Use gtk-doc syntax to refer to properties in
+	the docstrings.
+
+2009-01-25  Claudio Saavedra  <csaavedra@igalia.com>
+
+	* gtk/gtkiconview.c: More docstrings improvements
+	regarding reorderable property.
+
+2009-01-24  Claudio Saavedra  <csaavedra@igalia.com>
+
+	Bug 559420 – gtk_icon_view_enable_model_drag_[source|dest] docs
+	wrt. reorderable property
+
+	* gtk/gtkiconview.c: Improve docstrings regarding reorderable
+        property. Based on a patch by Björn Lindqvist.
+
+2009-01-24  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktoolbutton.c (gtk_tool_button_activatable_reset):
+	Fall back from stock ids to icon names like the old code 
+	did. Patch by Tristan van Berkom.
+
+2009-01-24  Matthias Clasen  <mclasen@redhat.com>
+
+	* tests/testactions.c: Add a testcase for toolitems using
+	icon names.
+
+2009-01-24  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/x11/gdkcursor-x11.c (_gdk_x11_cursor_update_theme):
+	Don't update blank cursors.
+
+2009-01-24  Claudio Saavedra  <csaavedra@igalia.com>
+
+	* gtk/gtktreeview.c: (gtk_tree_view_class_init): Slightly
+	improve ::search-column property description.
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.15.1 ===
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkactivatable.c: Make the section docs produce some valid
+	xml.
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkactivatable.c: Fix the section docs so gtk-doc finds them.
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkrecentchooser.c:
+	* gtk/gtkuimanager.c: Fix issues found by pltcheck
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 560228 – Add "action-controller" property to GtkWidgetClass
+
+	Rework the way actions and proxies interact, to make the
+	interaction less ad hoc, more extensible, and better suited
+	for support in GUI builders like glade. 
+
+	To be used as a proxy, a widget must now implement the 
+	GtkActivatable interface, and GtkActivatable implementations 
+	are responsible for syncing their appearance with the action 
+	and for activating the action.
+
+	All the widgets that are commonly used as proxies implement
+	GtkActivatable now.
+
+	Patch by Tristan van Berkom.
+
+	* gtk/gtkactivatable.[hc]: The GtkActivatable interface.
+
+	* gtk/gtkbutton.c:
+	* gtk/gtktogglebutton.c:
+	* gtk/gtktoolitem.c:
+	* gtk/gtktoolbutton.c:
+	* gtk/gtktoggletoolbutton.c:
+	* gtk/gtkmenuitem.c:
+	* gtk/gtkcheckmenuitem.c:
+	* gtk/gtkimagemenuitem.c:
+	* gtk/gtkradiomenuitem.c:
+	* gtk/gtkrecentchooserprivate.h:
+	* gtk/gtkrecentchooser.c:
+	* gtk/gtkrecentchooserdefault.c:
+	* gtk/gtkrecentchoosermenu.c: Implement GtkActivatable.
+	* gtk/gtkaction.[hc]: Move appearance synchronization to
+	GtkActivatable implementations.
+
+	* gtk/gtkradioaction.c:
+	* gtk/gtkrecentaction.c:
+	* gtk/gtktoggleaction.c:
+	* gtk/gtkactiongroup.c: Adapt.
+
+	* gtk/gtk.h: Include gtkactivatable.h
+	* gtk/gtk.symbols: Add new functions
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 567124 – proposal to delay doing something related to 
+	immodule until widgets realized
+
+	Delay setting up immodules until the widget is realized.
+	Patch by Akira Tagoh
+	
+	* gtk/gtktextview.c: Don't set up im stuff if the widget
+	is not realized.
+
+	* gtk/gtkimmodule.c: Assert that we have a window.
+ 
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Skip Desktop if it equals the home folder
+	Patch by Christian Dywan
+
+	* gtk/gtkfilechooserdefault.c (shortcuts_append_desktop): Skip
+	Desktop if it equals the home folder.
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 536965 – GtkPlug: crash on theme change
+
+	Keep GtkPlug in sync with the global list of toplevels.
+	Patch by Federico Mena Quintero
+
+	* gtk/gtkwindow.h:
+	* gtk/gtkwindow.c (_gtk_window_set_is_toplevel): New internal
+	function used when a GtkPlug parents/unparents itself by an
+	in-process GtkSocket.  This keeps the plug's GTK_TOPLEVEL flag in
+	sync with the global toplevel_list.
+
+	* gtk/gtkplug.c (gtk_plug_set_is_child): Call
+	_gtk_window_set_is_toplevel() to keep the toplevel list updated,
+	instead of just setting/unsetting the GTK_TOPLEVEL flag.
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 568744 – Spellfixes in GtkTreeView's documentation
+
+	* gtk/gtktreeview.c: Fix typos in the docs.
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 567761 – Spellfixes in GTK+ documentation
+
+	* gdk/x11/gdkselection-x11.c:
+	* gtk/gtktestutils.c: Fix typos in the docs.
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 567021 – gtkimage accessors docs
+
+	* gtk/gtkimage.c: Improve docs by mentioning allowed NULL values.
+	Patch by Christian Persch
+
+2009-01-23  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 566535 – gtk_widget_get_snapshot does not work if double buffered 
+	is disabled
+
+	* gtk/gtkwidget.c (gtk_widget_get_snapshot): Use a different approach
+	to snapshotting that is in line with what is done in the client-side
+	windows branch, and that works for widgets regardless if they are
+	double-buffered or not. Patch by Alex Larsson.
+
+	* gdk/gdkwindow.c (_gdk_window_calculate_full_clip_region): Clip
+	to the parent.
+
+2009-01-22  Federico Mena Quintero  <federico@novell.com>
+
+	* gtk/gtkfilechooserentry.c (autocomplete): Relax the assertion;
+	just do nothing if the folder is not loaded or if the cursor position
+	is not at the end of the text.  A very slow-to-load folder can get
+	us into the latter state if the user starts typing first.
+
+2008-01-22  Matthias Clasen  <mnclasen@redhat.com>
+
+	* gtk/gtkaction.c: Revert the last change, since it breaks
+	epiphany.
+
+2009-01-22  Federico Mena Quintero  <federico@novell.com>
+
+	Fix the computation of "complete but unique" in
+	GtkFileChooserEntry.  Fix the case where "/" was not appended to a
+	unique directory name during explicit Tab completion.
+
+	* gtk/gtkfilechooserentry.c (maybe_append_separator_to_file):
+	Return whether anything was appended as well as the new string
+	itself.
+	(find_common_prefix): Oops, only turn on
+	is_complete_not_unique_ret if we had a unique match!
+	(append_common_prefix): If we appended a directory separator, we
+	*did* expand the common prefix, so we are not in the "nothing
+	inserted" case.
+
+2009-01-22  Federico Mena Quintero  <federico@novell.com>
+
+	Return an error code when refreshing the entry from the user's
+	input.  We use this in the completion code to know when completion
+	can't happen due to (for example) having a non-local URI in a file
+	chooser that is local_only=TRUE.
+
+	Also, we start maintaining an invariant that
+	chooser_entry->current_folder_file != NULL implies that:
+
+		* what the user entered is valid
+
+		* we are loading that folder (chooser_entry->load_folder_cancellable != NULL) 
+
+		* or we are done loading that folder, or we have a handle
+		to it at least (chooser_entry->current_folder != NULL)
+
+	The invariant also says that all of the above are NULL (and
+	chooser_entry->current_folder_file == NULL) implies that the user
+	typed something invalid.  This makes
+	_gtk_file_chooser_entry_get_current_folder() not able to return
+	an invalid folder.
+
+	* gtk/gtkfilechooserentry.c (RefreshStatus): New enum.
+	(refresh_current_folder_and_file_part): Return a RefreshStatus.
+	We filter out incomplete hostnames here (typing
+	"sftp://incompl[tab]" will error out), as well as completely
+	unparsable input.
+	(start_explicit_completion): Process the result from refresh...().
+	Here we present the actual feedback about only being able to
+	display local folders for local_only=TRUE.
+	(commit_completion_and_refresh): Don't do anything with the result
+	of refresh...(), since this function doesn't get called during
+	completion-related interaction.
+	(start_autocompletion): Process the result from refresh...().  We
+	only do completion in the REFRESH_OK case.  For the error cases,
+	we don't do anything, as this is autocompletion and must not
+	result in non-asked-for errors popping up.
+	(discard_loading_and_current_folder_file): Factor out function to
+	cancel the cancellable and discard the current_folder_file,
+	i.e. to reset the invariant to the "nothing valid is loaded" case.
+	(gtk_file_chooser_entry_dispose): Use
+	discard_loading_and_current_folder_file().
+	(reload_current_folder): Likewise.
+	(refresh_current_folder_and_file_part): Likewise, and ensure that
+	the error cases result in the invariant being held.
+	(start_loading_current_folder): Check if the folder to be loaded
+	is non-native for the local_only=TRUE case; if so, return an error
+	as we are configured to load only local folders.
+	(reload_current_folder): Pass on errors from
+	start_loading_current_folder().  Tighten the preconditions, as we
+	are sure that we can only receive non-NULL folder-files to load.
+	(refresh_current_folder_and_file_part): Pass on errors from
+	reload_current_folder().  At the very end, assert the invariant
+	described above.
+	
+2009-01-22  Matthew Barnes  <mbarnes@redhat.com>
+
+	Bug 568334 – Constructor properties for GtkAction
+
+	* gtk/gtkaction.c (gtk_action_class_init): Make all properties
+	G_PARAM_CONSTRUCT except "action-group".
+
+2009-01-22  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkicontheme.c (gtk_icon_theme_has_icon): g_return_if_fail()
+	on icon_name != NULL so we get a warning instead of a crash here.
+
+2009-01-21  Matthias Clasen <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2009-01-21  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtkentry.c: Don't show windows that may not exist
+
+2009-01-21  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtklabel.c: Implement select-by-words for selectable labels.
+
+2009-01-21  Tor Lillqvist  <tml@novell.com>
+
+	* gdk/win32/gdkcursor-win32.c: Rename static local functions and
+	variables to not have any unnecessary _ or _gdk_win32 prefix.
+
+	* gdk/win32/gdkcursor-win32.c (hcursor_from_type): Implement
+	creating a GDK_BLANK_CURSOR.
+
+2009-01-21  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkentry.c: Change the Caps Lock warning to the more
+	neutral "Caps Lock is on". Requested by Wouter Bolsterlee
+
+2009-01-21  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 568552 – gtk_combo + gtk entry in invisible mode takes 100% cpu
+
+	* gtk/gtkentry.c: Fix an expose loop caused by raising windows out
+	of an expose handler. Also, don't show the 'Caps Lock' warning for
+	activated input methods, since that makes it permanently shown
+	for some locales. It should not be that necessary, now that we
+	do show preedit text even in password entries. Pointed out by
+	Frederic Crozat.
+	(start_loading_current_folder): Check if the folder to be loaded
+	is non-native for the local_only=TRUE case; if so, return an error
+	as we are configured to load only local folders.
+	(reload_current_folder): Pass on errors from
+	start_loading_current_folder().  Tighten the preconditions, as we
+	are sure that we can only receive non-NULL folder-files to load.
+	(refresh_current_folder_and_file_part): Pass on errors from
+	reload_current_folder().  At the very end, assert the invariant
+	described above.
+	(start_explicit_completion): Add comments for translators, to
+	explain the purpose of the various feedback messages used during
+	completion.
+
+2009-01-21  Federico Mena Quintero  <federico@novell.com>
+
+	* gtk/gtkfilechooserdefault.c (save_widgets_create): Set
+	local_only on the location entry when we create it...
+	(set_local_only): ... and set it here only if the location entry
+	exists.
+
+2009-01-21  Marek Kasik  <mkasik@redhat.com>
+
+	Bug 561801 - "scheduled printing" doesn't function as expected
+
+	* gtk/gtkprintunixdialog: Add tooltip.
+	* modules/printbackends/cups/gtkprintbackendcups.c: Add conversion
+	  from local time to utc time for scheduled printing.
+
+2009-01-20  Federico Mena Quintero  <federico@novell.com>
+
+	http://bugzilla.gnome.org/show_bug.cgi?id=545980 -
+	GtkFileChooserEntry should handle URIs
+
+	* gtk/gtkfilesystem.c (_gtk_file_system_parse): Detect URI schemes
+	and parse the full URI.
+	(has_uri_scheme): New function, stolen from the old
+	gtkfilesystemgnomevfs.c.
+
+	Patch by Carlos Garnacho <carlos@imendio.com>:
+
+	* gtk/gtkfilechooserentry.c (discard_current_folder): New
+	function, factored out for when we need to get rid of the
+	current_folder.
+	(gtk_file_chooser_entry_dispose): Use discard_current_folder().
+	(finished_loading_cb): Fix prototype.
+	(load_directory_get_folder_callback): Discard the completion
+	store, as well as clearing the completion feedback, if we find an
+	error while loading the folder.  Also, use
+	discard_current_folder().
+	(reload_current_folder): Use discard_current_folder().
+
+	Patch by Carlos Garnacho <carlos@imendio.com> - add a local_only
+	property to GtkFileChooserEntry:
+
+	* gtk/gtkfilechooserentry.c (struct _GtkFileChooserEntry): Add a
+	local_only field.
+	(_gtk_file_chooser_entry_init): Default to local_only being true.
+	(start_explicit_completion): Don't allow completion of non-native
+	files if local_only is turned on.
+	(start_loading_current_folder): Don't start loading non-native
+	folders if local_only is turned on.
+	(_gtk_file_chooser_entry_set_local_only): New function.
+	(_gtk_file_chooser_entry_get_local_only): New function.
+
+	* gtk/gtkfilechooserentry.h (_gtk_file_chooser_entry_set_local_only,
+	_gtk_file_chooser_entry_get_local_only): New prototypes.
+
+	* gtk/gtkfilechooserdefault.c (set_local_only): Set the local_only
+	property on the entry.
+
+	Fix completion so it doesn't pop up for every character in a URI
+	hostname:
+
+	* gtk/gtkfilechooser.h (GtkFileChooserError): Add a
+	GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME.
+
+	* gtk/gtkfilesystem.c (_gtk_file_system_parse): Return an
+	"incomplete hostname" error if the user has not typed a full
+	hostname yet in an URI.
+
+	* gtk/gtkfilechooserentry.c (append_common_prefix): If we get an
+	incomplete hostname, just don't pop up an error, since that is a
+	transient state and the user doesn't need to be notified about it.
+	(refresh_current_folder_and_file_part): Don't revert to showing
+	the base folder if we have an incomplete hostname.
+	(reload_current_folder): Handle the passed folder being NULL, even
+	if we must force a reload.  Also, reload the folder if we didn't
+	have a cancellable for it (i.e. we hadn't started to load it
+	before).
+
+2009-01-20  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtkaction.[hc]: Add setters and getters for GtkAction
+	properties, in preparation for bug 560228.
+
+2009-01-21  Christian Dywan  <christian@twotoasts.de>
+
+	Bug 567413 – GtkComboBoxEntry doesn't emit "changed" signal
+        on entry editing
+
+	* gtk/gtkcombobox.c (gtk_combo_box_set_active): Return only if index
+        is set. Patch by Carl-Anton Ingmarsson.
+
+2009-01-20  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* gtk/gtkstyle.c: Add a "Since: 2.16" tag to gtk_style_get.
+
+2009-01-20  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 565656 – Add marks to scales
+
+	* gtk/gtkrange.[hc]: Add internal api to define 'stop values'
+	that have a little resistance when dragging the slider over it.
+
+	* gtk/gtk.symbols:
+	* gtk/gtkscale.[hc] (gtk_scale_add_mark): New function to add
+	a 'mark' to a scale, which will draws a tick, plus optionally
+	some text, and makes the value a stop value.
+	(gtk_scale_clear_values): Removes all marks.
+
+	* tests/testscale.c: Test for marks on scales
+	* tests/Makefile.am: Integrate it
+
+2009-01-19  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkentry.c:
+	* gtk/gtkfilechooserentry.c:
+	* gtk/gtktextview.c: Replace several implementation of
+	blank cursor setting by GDK_BLANK_CURSOR.
+
+2009-01-19  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/gdkcursor.c:
+	* gdk/gdkwindow.c: Update docs on how to create blank cursors.
+
+2009-01-19  Matthias Clasen  <mclasen@redhat.com>
+
+	Cache cursors to avoid libXcursor theme lookup overhead.
+	Patch by David Alan Gilbert.
+
+	* gdk/gdkcursor.h: Add a GDK_BLANK_CURSOR cursor type.
+
+	* gdk/x11/gdkcursor-x11.c: Cache font cursors and named cursors.
+
+	* gdk/x11/gdkprivate-x11.h:
+	* gdk/x11/gdkcdisplay-x11.c: Remove cached cursors when a 
+	display if finalized.
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 568263 – gtk can't recognize the wrong X Selection TARGETS' 
+	type "TARGETS" by java applications
+
+	* gtk/gtkselection.c (gtk_selection_data_get_targets): Accept
+	a type of TARGETS instead of ATOM, too. Based on a patch by 
+	Peng Wu. 
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 568233 – Wrong statement about GtkEntry's "activate" signal
+
+	* gtk/gtkentry.c:
+	* gtk/gtklabel.c:
+	* gtk/gtktextview.c: Correct some copy-and-paste mistakes in
+	keybinding signal docs. Pointed out by Pascal Terjan.
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtkentry.[hc]: Add properties and getters for icon tooltips.
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 563280 – stock items & translation context
+
+	* gtk/gtkstock.c: Solve the msgctxt problem a bit more
+	elegantly, and add some hints about this to the docs of
+	gtk_stock_set_translate_func. Proposed by Christian Persch
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 568196 – Please change context of Forward stock label
+
+	* gtk/gtkstock.c: Reinstate separate translation contexts for
+	navigation and media labels (these were lost in the transition
+	to msgctxt. Pointed out by Gabor Kelemen.
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 567887 – gtk_entry_get_storage_type() should be 
+	gtk_entry_get_icon_storage_type()
+
+	* gtk/gtk.symbols:
+	* gtk/gtkentry.[hc]: Use the last chance to get the api right,
+	and rename things for consistency, requested by Murray Cumming. 
+	In detail,
+	gtk_entry_get_stock -> gtk_entry_get_icon_stock
+	gtk_entry_get_pixbuf -> gtk_entry_get_icon_pixbuf
+	gtk_entry_get_gicon -> gtk_entry_get_icon_gicon
+	gtk_entry_get_storage_type -> gtk_entry_get_icon_storage_type
+	::prelight -> ::icon-prelight
+	::pixbuf-primary -> ::primary-icon-pixbuf
+	::stock-primary -> ::primary-icon-stock
+	::icon-name-primary -> ::primary-icon-name
+	::gicon-primary-> ::primary-icon-gicon
+	::storage-type-primary -> ::primary-icon-storage-type
+	::activatable->primary -> ::primary-icon-activatable
+	::sensitive-primary -> ::primary-icon-sensitive
+	(and similar for secondary properties)
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 567655 – gtk_status_icon_set_tooltip_text and 
+	gtk_status_icon_set_tooltip_markup should use gchar*
+
+	* gtk/gtkstatusicon.h: Use "const gchar*" in new tooltip api.
+	Pointed out by Torsten Schoenfeld.
+
+2009-01-18  Matthias Clasen  <mclasen@redhat.com>
+
+	* demos/gtk-demo/search_entry.c: End the search if the window
+	is closed.
+
+	* demos/gtk-demo/search_entry.c:
+	* demos/gtk-demo/entry_completion.c: Group the entry examples
+	under "Entry".
+
+2009-01-18  Christian Dywan  <christian@twotoasts.de>
+
+	Remove a redundant include from gtktoolbar.c
+
+	* gtk/gtktoolbar.c: Remove second inclusion of gtktoolbar.h.
+        Patch by Enrico Tröger.
+
+2009-01-16  Cody Russell  <bratsche@gnome.org>
+
+	Bug 567944 – [Win32] Sorted treeview columns can be unreadable
+
+	* modules/engines/ms-windows/msw_style.c: Draw selected treeview
+	cells according to treeview focus, but ignore whether it is in
+	a sorted column or not.  Otherwise the intersection of a selected
+	row and a sorted column looks very strange if the treeview does
+	not have focus.
+
+2009-01-16  Daniel Elstner  <danielk@openismus.com>
+
+	* modules/input/gtkimcontextmultipress.[ch]: Remove the namespace
+	prefix from functions defined locally only.  Clean up the code and
+	change indentation to match the GTK+ coding style.
+	(_GtkImContextMultipress::key_sequences): Replace array of pointers
+	by GHashTable.  Adapt the implementation accordingly.
+	(passthrough_enabled_for_window): Remove.  The passthrough hack is
+	no longer necessary thanks to the recently introduced "im-module"
+	property of GtkEntry and GtkTextView.
+	(load_config): Rework to implement an improved configuration file
+	format.  Just fetch all keys of the group instead of expecting the
+	keys to be named a certain way.  This also allows interpreting the
+	config key itself as the GDK key name to bind the character sequence
+	to, thereby making it independent of the sequence itself.
+
+	* modules/input/im-multipress.conf: New example configuration using
+	the new syntax.  The example sequences are now bound to the numeric
+	keypad and imitate the behavior of a standard mobile phone.
+
+2009-01-15  Murray Cumming  <murrayc@murrayc.com>
+
+	* gtk/gtkimcontext.c: documentation description: Mention the various 
+	properties and the environment variable, with links to their 
+ 	documentation.
+	* gtk/gtksettings.c:
+	* gtk/gtktextview.c: Make the im-module property documentation more 
+	expansive.
+
+2009-01-15  Diego Escalante Urrelo  <diegoe@gnome.org>
+
+	Bug 562701 – GtkEntryCompletion popup sizes its rows wrong
+	when they span for more than one line.
+
+	Don't assume actions and results have equal height, this causes
+	negative size requisitions when results are more than one
+	line tall.
+
+	* gtk/gtkentrycompletion.c: change the formula used to calculate
+	the size of the completion popup.
+
+2009-01-14  Federico Mena Quintero  <federico@novell.com>
+
+	Remember the file chooser's geometry across invocations.
+
+	* gtk/gtkfilechoosersettings.h (struct _GtkFileChooserSettings):
+	New fields geometry_x, geometry_y, geometry_width, geometry_height.
+	(_gtk_file_chooser_settings_get_geometry): New prototype.
+	(_gtk_file_chooser_settings_set_geometry): New prototype.
+
+	* gtk/gtkfilechoosersettings.c (GEOMETRY_X_KEY, GEOMETRY_Y_KEY,
+	GEOMETRY_WIDTH_KEY, GEOMETRY_HEIGTH_KEY): New key names.
+	(ensure_settings_read): Read the geometry keys.
+	(_gtk_file_chooser_settings_save): Save the geometry keys.
+	(_gtk_file_chooser_settings_init): Initialize the geometry keys to
+	"don't have this value".
+	(_gtk_file_chooser_settings_get_geometry): New public function.
+	(_gtk_file_chooser_settings_set_geometry): New public function.
+
+	* gtk/gtkfilechooserdefault.c (gtk_file_chooser_default_map):
+	Don't change the default size in ::map() so we don't flicker...
+	(gtk_file_chooser_default_realize): ... so do it in ::realize()
+	instead, when the window is not yet visible.  This avoids a
+	dialog-that-resizes when you first pop up the file chooser.
+	(emit_default_size_changed): Just emit the signal; don't check for
+	the widget's state so we can be emitted during the initial
+	::realize() when we are not mapped yet.
+	(update_preview_widget_visibility): Only emit default_size_changed
+	if the widget is not mapped, to avoid resizing the dialog while it
+	is visible.
+
+	* gtk/gtkfilechooserdialog.c
+	(file_chooser_widget_default_size_changed): Simply resize the
+	dialog to the default size without any fancy clamping.  Also,
+	leave in place ifdef-ed out code to restore the file chooser's
+	position in addition to its size.  The code to restore the
+	position doesn't quite work yet, but we'll leave it in as a
+	reference.
+
+	* gtk/gtkfilechooserdefault.c (save_dialog_geometry): New function.
+	(settings_save): Save the dialog's geometry.
+	(gtk_file_chooser_default_get_default_size): Load the geometry
+	from the settings.  If it was already saved, return that instead
+	of computing an ad-hoc size.
+
+2009-01-13  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 450716 – New API to change global IM
+
+	Requested by Daniel Elstner.
+
+	* gtk/gtk.symbols:
+	* gtk/gtkimmulticontext.[hc] (gtk_im_multicontext_set_context_id):
+	New function to set the context id on a GtkIMMulticontext.
+
+	* gtk/gtkentry.c:
+	* gtk/gtktextview.c: Add a ::im-module property that can be
+	set to override the global setting for the im module to be used.
+
+2009-01-13  Christian Dywan  <christian@imendio.com>
+
+	Bug 566532 – GtkScaleButton implementation of GtkOrientable
+
+	* gtk/gtk.symbols:
+	* gtk/gtkscalebutton.c (gtk_scale_button_class_init),
+	(gtk_scale_button_set_property):
+	* gtk/gtkscalebutton.h: Deprecate gtk_scale_button_get_orientation
+        in favour of implementing GtkOrientable. Patch by Bruce Cowan.
+
+2009-01-13  Tor Lillqvist  <tml@iki.fi>
+
+	Bug 164002 - query scripts don't work uninstalled on windows
+
+	* gtk/gtkmain.c (_gtk_get_libdir): If the gtk DLL is in a ".libs"
+	folder, assume we are running uninstalled, and use the
+	configure-time GTK_LIBDIR.
+
+2009-01-12  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Refer to tray icon spec, instead of a random email.
+
+2009-01-12  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkwindow.c (gtk_window_set_icon_name): Don't cause lots
+	of X traffic when the icon name doesn't actually change. Some
+	apps like to reset their window icon frequently, without actually
+	changing the icon name...
+
+2009-01-12  Paolo Borelli  <pborelli@katamail.com>
+
+	Bug 492794 – Pasting external text at end of view yields wrong
+	scrolling to mark
+
+	* gtk/gtktextbuffer.[ch]:
+	* gtk/gtktextview.c:
+	Add a "paste-done" signal and use it to propelry scroll the
+	view at the end of the pasted text in the case of an async
+	paste. Patch by Ignacio Casal Quintero based on a patch by
+	Yevgen Muntyan.
+
+2009-01-12  Tor Lillqvist  <tml@iki.fi>
+
+	* gdk/gdk.c (gdk_arg_debug_cb) (gdk_arg_no_debug_cb): A
+	GOptionArgFunc should return gboolean and take also a GError
+	pointer parameter, so make these two functions do that. Return
+	FALSE (and set the GError) if the parsing of the debug string
+	failed completely. Note that g_parse_debug_string() doesn't really
+	have any way to return parsing status, and accepts partially
+	incorrect strings, though.
+
+2009-01-12  Claudio Saavedra  <csaavedra@igalia.com>
+
+	Bug 567468 – no check for trailing != NULL in
+	gtk_text_layout_get_iter_at_position()
+
+	* gtk/gtktextlayout.c: (gtk_text_layout_get_iter_at_position):
+	Check for trailing to be non-NULL.
+	* gtk/gtktextview.c: (gtk_text_view_get_iter_at_position): document
+	that trailing may be NULL.
+
+2009-01-11  Tor Lillqvist  <tml@iki.fi>
+
+	Bug 523554 - Copy from GIMP to Word broken
+
+	* gdk/win32/gdkselection-win32.c
+	(_gdk_win32_selection_convert_to_dib): The DIB stored in the
+	Windows Clipboard was for some unknown reason truncated by one
+	byte. Don't do that.
+
+2009-01-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 567024 – gtktoolbutton doesn't create right proxy menu item 
+	image with GIcon
+
+	* gtk/gtktoolbutton.c: Properly create a menu proxy from a GIcon.
+	Patch by Christian Persch
+
+	* tests/testtoolbar.c: Add an example with a GIcon
+
+2009-01-09  Christian Dywan  <christian@imendio.com>
+
+	Fail in gdk_window_new if _gdk_window_new failed
+
+	* gdk/gdkwindow.c (gdk_window_new): Add g_return_val_if_fail
+        in case _gdk_window_new is NULL. Approved by Tim Janik
+
+2009-01-08  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 566733 – Add GIcon to GtkAction, GtkToolButton
+
+	* gtk/gtkaction.c: Add a ::gicon property to GtkAction and set the 
+	icon from it if specified. The stock icon is preferred if a stock id 
+	is given. Based on a patch by A. Walton
+
+2009-01-04  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/stock-icons/{16,24}/gtk-caps-lock-warning.png: New icons
+	* gtk/gtkstock.h: Add GTK_STOCK_CAPS_LOCK_WARNING.
+	* gtk/gtkiconfactory.c (get_default_icons): Register the stock icon.
+	* gtk/gtkentry.c (show_capslock_feedback): Use the new stock icon.
+
+2009-01-05  Tor Lillqvist  <tml@novell.com>
+
+	Bug 566628 - gdk_display_close always asserts on win32
+
+	* gdk/win32/gdkdisplay-win32.c
+	(_gdk_windowing_set_default_display): Allow also a NULL parameter
+	in the g_assert(). Still don't actually do anything in this
+	function, though.
+
+2009-01-04  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 566568 – gtk_tree_model_get_value docs typo
+
+	* gtk/gtktreemodel.c (gtk_tree_model_get_value): Fix a typo
+	in the docs, pointed out by Christian Persch.
+
+2009-01-04  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 566391 – gtk_about_dialog_set_url_hook should activate 
+	pre-existing website links
+
+	* gtk/gtkaboutdialog.c: Make setting website, website-label and
+	url hook work independent of their order. Reported by Steven
+	Sheehy.
+
+2009-01-03  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/x11/gdkscreen-x11.h:
+	* gdk/x11/gdkevents-x11.c (fetch_net_wm_check_window): Recheck
+	_NET_SUPPORTING_WM_CHECK every now and then to avoid getting
+	stuck on the id of a former wmcheck window that got reused by
+	another client (see RH bug 471927)
+
+2009-01-03  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtktreesortable.c: Improve the docs
+
+	* gtk/gtktreemodelsort.c: Don't assert when using the "unsorted"
+	sort column id.
+
+2009-01-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 565998 – configure script doesn't check for cairo-xlib.pc
+
+	* configure.in: Check for cairo-xlib when looking for
+	gdk dependencies. Requested by Alberto Ruiz
+
+2009-01-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 566334 – compile failure for gtk+ on Mac OS X
+
+	* gtk/gtkstatusicon.c: Fix the build on OS X. 
+	Reported by Bart Cortooms.
+
+2009-01-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 566083 – Icon pixmap hardcoded during DnD
+
+	* gtk/gtkwidget.c:
+	* gtk/gtkentry.c: Add docs about using ::drag-begin for setting
+	a custom drag icon. Reported by Xan Lopez
+
 2009-01-01  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
 
 	* === Released 2.15.0 ===
 

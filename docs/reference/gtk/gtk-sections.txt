@@ -188,12 +188,33 @@ gtk_action_disconnect_proxy
 gtk_action_get_proxies
 gtk_action_connect_accelerator
 gtk_action_disconnect_accelerator
+gtk_action_block_activate
+gtk_action_unblock_activate
 gtk_action_block_activate_from
 gtk_action_unblock_activate_from
 gtk_action_get_accel_path
 gtk_action_set_accel_path
 gtk_action_get_accel_closure
 gtk_action_set_accel_group
+gtk_action_set_label
+gtk_action_get_label
+gtk_action_set_short_label
+gtk_action_get_short_label
+gtk_action_set_tooltip
+gtk_action_get_tooltip
+gtk_action_set_stock_id
+gtk_action_get_stock_id
+gtk_action_set_gicon
+gtk_action_get_gicon
+gtk_action_set_icon_name
+gtk_action_get_icon_name
+gtk_action_set_visible_horizontal
+gtk_action_get_visible_horizontal
+gtk_action_set_visible_vertical
+gtk_action_get_visible_vertical
+gtk_action_set_is_important
+gtk_action_get_is_important
+
 <SUBSECTION Standard>
 GTK_TYPE_ACTION
 GTK_ACTION
@@ -205,6 +226,27 @@ GtkActionClass
 <SUBSECTION Private>
 gtk_action_get_type
 GtkActionPrivate
+</SECTION>
+
+<SECTION>
+<FILE>gtkactivatable</FILE>
+<TITLE>GtkActivatable</TITLE>
+GtkActivatable
+GtkActivatableIface
+gtk_activatable_do_set_related_action
+gtk_activatable_get_related_action
+gtk_activatable_get_use_action_appearance
+gtk_activatable_reset
+gtk_activatable_set_related_action
+gtk_activatable_set_use_action_appearance
+<SUBSECTION Standard>
+GTK_ACTIVATABLE
+GTK_ACTIVATABLE_CLASS
+GTK_ACTIVATABLE_GET_IFACE
+GTK_IS_ACTIVATABLE
+GTK_TYPE_ACTIVATABLE
+<SUBSECTION Private>
+gtk_activatable_get_type
 </SECTION>
 
 <SECTION>
@@ -1272,18 +1314,20 @@ gtk_entry_set_icon_from_pixbuf
 gtk_entry_set_icon_from_stock
 gtk_entry_set_icon_from_icon_name
 gtk_entry_set_icon_from_gicon
-gtk_entry_get_storage_type
-gtk_entry_get_pixbuf
-gtk_entry_get_stock 
+gtk_entry_get_icon_storage_type
+gtk_entry_get_icon_pixbuf
+gtk_entry_get_icon_stock 
 gtk_entry_get_icon_name
-gtk_entry_get_gicon
+gtk_entry_get_icon_gicon
 gtk_entry_set_icon_activatable
 gtk_entry_get_icon_activatable
 gtk_entry_set_icon_sensitive
 gtk_entry_get_icon_sensitive
 gtk_entry_get_icon_at_pos
 gtk_entry_set_icon_tooltip_text
+gtk_entry_get_icon_tooltip_text
 gtk_entry_set_icon_tooltip_markup
+gtk_entry_get_icon_tooltip_markup
 gtk_entry_set_icon_drag_source
 gtk_entry_get_current_icon_drag_source
 
@@ -2003,6 +2047,8 @@ gtk_image_menu_item_new_with_label
 gtk_image_menu_item_new_with_mnemonic
 gtk_image_menu_item_get_use_stock
 gtk_image_menu_item_set_use_stock
+gtk_image_menu_item_get_always_show_image
+gtk_image_menu_item_set_always_show_image
 gtk_image_menu_item_set_accel_group
 <SUBSECTION Standard>
 GtkImageMenuItemClass
@@ -2069,6 +2115,7 @@ GtkIMMulticontext
 gtk_im_multicontext_new
 gtk_im_multicontext_append_menuitems
 gtk_im_multicontext_get_context_id
+gtk_im_multicontext_set_context_id
 <SUBSECTION Standard>
 GTK_IM_MULTICONTEXT
 GTK_IS_IM_MULTICONTEXT
@@ -3227,6 +3274,8 @@ gtk_scale_get_draw_value
 gtk_scale_get_value_pos
 gtk_scale_get_layout
 gtk_scale_get_layout_offsets
+gtk_scale_add_mark
+gtk_scale_clear_marks
 <SUBSECTION Standard>
 GTK_SCALE
 GTK_IS_SCALE
@@ -6228,6 +6277,7 @@ GTK_STOCK_ADD
 GTK_STOCK_APPLY
 GTK_STOCK_BOLD
 GTK_STOCK_CANCEL
+GTK_STOCK_CAPS_LOCK_WARNING
 GTK_STOCK_CDROM
 GTK_STOCK_CLEAR
 GTK_STOCK_CLOSE

@@ -50,6 +50,15 @@ typedef enum {
   LOAD_COMPLETE_EXPLICIT_COMPLETION
 } LoadCompleteAction;
 
+typedef enum
+{
+  REFRESH_OK,
+  REFRESH_INVALID_INPUT,
+  REFRESH_INCOMPLETE_HOSTNAME,
+  REFRESH_NONEXISTENT,
+  REFRESH_NOT_LOCAL
+} RefreshStatus;
+
 struct _GtkFileChooserEntry
 {
   GtkEntry parent_instance;
@@ -79,6 +88,7 @@ struct _GtkFileChooserEntry
   guint has_completion : 1;
   guint in_change      : 1;
   guint eat_tabs       : 1;
+  guint local_only     : 1;
 };
 
 enum
@@ -136,17 +146,18 @@ static gboolean completion_match_func     (GtkEntryCompletion  *comp,
 					   gpointer             data);
 static char    *maybe_append_separator_to_file (GtkFileChooserEntry *chooser_entry,
 						GFile               *file,
-						gchar               *display_name);
+						gchar               *display_name,
+						gboolean            *appended);
 
 typedef enum {
   REFRESH_UP_TO_CURSOR_POSITION,
   REFRESH_WHOLE_TEXT
 } RefreshMode;
 
-static void refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry,
+static RefreshStatus refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry,
 						  RefreshMode refresh_mode);
-static void finished_loading_cb (GFile         *file,
-				 gpointer       data);
+static void finished_loading_cb (GtkFolder *folder,
+				 gpointer   data);
 static void autocomplete (GtkFileChooserEntry *chooser_entry);
 static void install_start_autocompletion_idle (GtkFileChooserEntry *chooser_entry);
 static void remove_completion_feedback (GtkFileChooserEntry *chooser_entry);
@@ -193,6 +204,8 @@ _gtk_file_chooser_entry_init (GtkFileChooserEntry *chooser_entry)
 {
   GtkEntryCompletion *comp;
   GtkCellRenderer *cell;
+
+  chooser_entry->local_only = TRUE;
 
   g_object_set (chooser_entry, "truncate-multiline", TRUE, NULL);
 
@@ -245,11 +258,41 @@ gtk_file_chooser_entry_finalize (GObject *object)
 }
 
 static void
+discard_current_folder (GtkFileChooserEntry *chooser_entry)
+{
+  if (chooser_entry->current_folder)
+    {
+      g_signal_handlers_disconnect_by_func (chooser_entry->current_folder,
+					    G_CALLBACK (finished_loading_cb), chooser_entry);
+      g_object_unref (chooser_entry->current_folder);
+      chooser_entry->current_folder = NULL;
+    }
+}
+
+static void
+discard_loading_and_current_folder_file (GtkFileChooserEntry *chooser_entry)
+{
+  if (chooser_entry->load_folder_cancellable)
+    {
+      g_cancellable_cancel (chooser_entry->load_folder_cancellable);
+      chooser_entry->load_folder_cancellable = NULL;
+    }
+
+  if (chooser_entry->current_folder_file)
+    {
+      g_object_unref (chooser_entry->current_folder_file);
+      chooser_entry->current_folder_file = NULL;
+    }
+}
+
+static void
 gtk_file_chooser_entry_dispose (GObject *object)
 {
   GtkFileChooserEntry *chooser_entry = GTK_FILE_CHOOSER_ENTRY (object);
 
   remove_completion_feedback (chooser_entry);
+  discard_current_folder (chooser_entry);
+  discard_loading_and_current_folder_file (chooser_entry);
 
   if (chooser_entry->start_autocompletion_idle_id != 0)
     {
@@ -261,20 +304,6 @@ gtk_file_chooser_entry_dispose (GObject *object)
     {
       g_object_unref (chooser_entry->completion_store);
       chooser_entry->completion_store = NULL;
-    }
-
-  if (chooser_entry->load_folder_cancellable)
-    {
-      g_cancellable_cancel (chooser_entry->load_folder_cancellable);
-      chooser_entry->load_folder_cancellable = NULL;
-    }
-
-  if (chooser_entry->current_folder)
-    {
-      g_signal_handlers_disconnect_by_func (chooser_entry->current_folder,
-					    G_CALLBACK (finished_loading_cb), chooser_entry);
-      g_object_unref (chooser_entry->current_folder);
-      chooser_entry->current_folder = NULL;
     }
 
   if (chooser_entry->file_system)
@@ -296,6 +325,7 @@ match_selected_callback (GtkEntryCompletion  *completion,
   char *display_name;
   GFile *file;
   gint pos;
+  gboolean dummy;
   
   gtk_tree_model_get (model, iter,
 		      DISPLAY_NAME_COLUMN, &display_name,
@@ -310,7 +340,7 @@ match_selected_callback (GtkEntryCompletion  *completion,
       return FALSE;
     }
 
-  display_name = maybe_append_separator_to_file (chooser_entry, file, display_name);
+  display_name = maybe_append_separator_to_file (chooser_entry, file, display_name, &dummy);
 
   pos = chooser_entry->file_part_pos;
 
@@ -422,15 +452,18 @@ beep (GtkFileChooserEntry *chooser_entry)
  * return a new one if needed.  Otherwise, it will return the old one.
  * You should be safe calling
  *
- * display_name = maybe_append_separator_to_file (entry, file, display_name);
+ * display_name = maybe_append_separator_to_file (entry, file, display_name, &appended);
  * ...
  * g_free (display_name);
  */
 static char *
 maybe_append_separator_to_file (GtkFileChooserEntry *chooser_entry,
 				GFile               *file,
-				gchar               *display_name)
+				gchar               *display_name,
+				gboolean            *appended)
 {
+  *appended = FALSE;
+
   if (!g_str_has_suffix (display_name, G_DIR_SEPARATOR_S) && file)
     {
       GFileInfo *info;
@@ -443,6 +476,7 @@ maybe_append_separator_to_file (GtkFileChooserEntry *chooser_entry,
 	    {
 	      gchar *tmp = display_name;
 	      display_name = g_strconcat (tmp, G_DIR_SEPARATOR_S, NULL);
+	      *appended = TRUE;
 	      g_free (tmp);
 	    }
 
@@ -581,7 +615,7 @@ find_common_prefix (GtkFileChooserEntry *chooser_entry,
 	  if (G_IS_DIR_SEPARATOR (display_name[len - 1]))
 	    len--;
 
-	  if (strncmp (*common_prefix_ret, display_name, len) == 0)
+	  if (*unique_file_ret == NULL && strncmp (*common_prefix_ret, display_name, len) == 0)
 	    *is_complete_not_unique_ret = TRUE;
 
 	  g_free (display_name);
@@ -653,7 +687,12 @@ append_common_prefix (GtkFileChooserEntry *chooser_entry,
   error = NULL;
   if (!find_common_prefix (chooser_entry, &common_prefix, &unique_file, &is_complete_not_unique, &prefix_expands_the_file_part, &error))
     {
-      if (show_errors)
+      /* If the user types an incomplete hostname ("http://foo" without a slash
+       * after that), it's not an error.  We just don't want to pop up a
+       * meaningless completion window in that state.
+       */
+      if (!g_error_matches (error, GTK_FILE_CHOOSER_ERROR, GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME)
+	  && show_errors)
 	{
 	  beep (chooser_entry);
 	  pop_up_completion_feedback (chooser_entry, _("Invalid path"));
@@ -669,21 +708,23 @@ append_common_prefix (GtkFileChooserEntry *chooser_entry,
   if (unique_file)
     {
       if (!char_after_cursor_is_directory_separator (chooser_entry))
-	common_prefix = maybe_append_separator_to_file (chooser_entry,
-							unique_file,
-							common_prefix);
+	{
+	  gboolean appended;
+
+	  common_prefix = maybe_append_separator_to_file (chooser_entry,
+							  unique_file,
+							  common_prefix,
+							  &appended);
+	  if (appended)
+	    prefix_expands_the_file_part = TRUE;
+	}
 
       g_object_unref (unique_file);
 
-      if (common_prefix)
-	{
-	  if (prefix_expands_the_file_part)
-	    result = COMPLETED_UNIQUE;
-	  else
-	    result = NOTHING_INSERTED_UNIQUE;
-	}
+      if (prefix_expands_the_file_part)
+	result = COMPLETED_UNIQUE;
       else
-	result = INVALID_INPUT;
+	result = NOTHING_INSERTED_UNIQUE;
 
       have_result = TRUE;
     }
@@ -862,31 +903,15 @@ completion_feedback_window_expose_event_cb (GtkWidget      *widget,
 static void
 set_invisible_mouse_cursor (GdkWindow *window)
 {
-  /* Stolen from gtkentry.c:set_invisible_cursor() */
-  /* FIXME: implement a stupid public gdk_window_set_invisible_mouse_cursor() */
-
-  GdkBitmap *empty_bitmap;
+  GdkDisplay *display;
   GdkCursor *cursor;
-  GdkColor useless;
-  char invisible_cursor_bits[] = { 0x0 };
 
-  useless.red = useless.green = useless.blue = 0;
-  useless.pixel = 0;
-
-  empty_bitmap = gdk_bitmap_create_from_data (window,
-					      invisible_cursor_bits,
-					      1, 1);
-
-  cursor = gdk_cursor_new_from_pixmap (empty_bitmap,
-				       empty_bitmap,
-				       &useless,
-				       &useless, 0, 0);
+  display = gdk_drawable_get_display (window);
+  cursor = gdk_cursor_new_for_display (display, GDK_BLANK_CURSOR);
 
   gdk_window_set_cursor (window, cursor);
 
   gdk_cursor_unref (cursor);
-
-  g_object_unref (empty_bitmap);
 }
 
 static void
@@ -1105,32 +1130,89 @@ explicitly_complete (GtkFileChooserEntry *chooser_entry)
 static void
 start_explicit_completion (GtkFileChooserEntry *chooser_entry)
 {
-  refresh_current_folder_and_file_part (chooser_entry, REFRESH_UP_TO_CURSOR_POSITION);
+  RefreshStatus status;
+  gboolean is_error;
+  char *feedback_msg;
 
-  if (!chooser_entry->current_folder_file)
+  status = refresh_current_folder_and_file_part (chooser_entry, REFRESH_UP_TO_CURSOR_POSITION);
+
+  is_error = FALSE;
+
+  switch (status)
     {
-      /* Here, no folder path means we couldn't parse what the user typed. */
+    case REFRESH_OK:
+      g_assert (chooser_entry->current_folder_file != NULL);
 
-      beep (chooser_entry);
-      pop_up_completion_feedback (chooser_entry, _("Invalid path"));
+      if (chooser_entry->current_folder && _gtk_folder_is_finished_loading (chooser_entry->current_folder))
+	explicitly_complete (chooser_entry);
+      else
+	{
+	  chooser_entry->load_complete_action = LOAD_COMPLETE_EXPLICIT_COMPLETION;
 
-      chooser_entry->load_complete_action = LOAD_COMPLETE_NOTHING;
+	  /* Translators: this text is shown while the system is searching
+	   * for possible completions for filenames in a file chooser entry. */
+	  pop_up_completion_feedback (chooser_entry, _("Completing..."));
+	}
+
+      break;
+
+    case REFRESH_INVALID_INPUT:
+      is_error = TRUE;
+      /* Translators: this is shown in the feedback for Tab-completion in a file
+       * chooser's text entry, when the user enters an invalid path. */
+      feedback_msg = _("Invalid path");
+      break;
+
+    case REFRESH_INCOMPLETE_HOSTNAME:
+      is_error = TRUE;
+
+      if (chooser_entry->local_only)
+	{
+	  /* hostnames in a local_only file chooser?  user error */
+
+	  /* Translators: this is shown in the feedback for Tab-completion in a
+	   * file chooser's text entry when the user enters something like
+	   * "sftp://blahblah" in an app that only supports local filenames. */
+	  feedback_msg = _("Only local files may be selected");
+	}
+      else
+	{
+	  /* Another option is to complete the hostname based on the remote volumes that are mounted */
+
+	  /* Translators: this is shown in the feedback for Tab-completion in a
+	   * file chooser's text entry when the user hasn't entered the first '/'
+	   * after a hostname and yet hits Tab (such as "sftp://blahblah[Tab]") */
+	  feedback_msg = _("Incomplete hostname; end it with '/'");
+	}
+
+      break;
+
+    case REFRESH_NONEXISTENT:
+      is_error = TRUE;
+
+      /* Translators: this is shown in the feedback for Tab-completion in a file
+       * chooser's text entry when the user enters a path that does not exist
+       * and then hits Tab */
+      feedback_msg = _("Path does not exist");
+      break;
+
+    case REFRESH_NOT_LOCAL:
+      is_error = TRUE;
+      feedback_msg = _("Only local files may be selected");
+      break;
+
+    default:
+      g_assert_not_reached ();
       return;
     }
 
-  if (chooser_entry->current_folder
-      && _gtk_folder_is_finished_loading (chooser_entry->current_folder))
+  if (is_error)
     {
-      explicitly_complete (chooser_entry);
-    }
-  else
-    {
-      chooser_entry->load_complete_action = LOAD_COMPLETE_EXPLICIT_COMPLETION;
+      g_assert (chooser_entry->current_folder_file == NULL);
 
-      /* translators: this text is shown while the system is searching
-       * for possible completions for text in a file chooser entry 
-       */
-      pop_up_completion_feedback (chooser_entry, _("Completing..."));
+      beep (chooser_entry);
+      pop_up_completion_feedback (chooser_entry, feedback_msg);
+      chooser_entry->load_complete_action = LOAD_COMPLETE_NOTHING;
     }
 }
 
@@ -1196,6 +1278,7 @@ commit_completion_and_refresh (GtkFileChooserEntry *chooser_entry)
 				 GTK_ENTRY (chooser_entry)->text_length);
     }
 
+  /* Here we ignore the result of refresh_current_folder_and_file_part(); there is nothing we can do with it */
   refresh_current_folder_and_file_part (chooser_entry, REFRESH_WHOLE_TEXT);
 }
 
@@ -1247,8 +1330,9 @@ populate_completion_store (GtkFileChooserEntry *chooser_entry)
 	{
 	  gchar *display_name = g_strdup (g_file_info_get_display_name (info));
 	  GtkTreeIter iter;
+	  gboolean dummy;
 
-          display_name = maybe_append_separator_to_file (chooser_entry, file, display_name);
+          display_name = maybe_append_separator_to_file (chooser_entry, file, display_name, &dummy);
 
 	  gtk_list_store_append (chooser_entry->completion_store, &iter);
 	  gtk_list_store_set (chooser_entry->completion_store, &iter,
@@ -1308,8 +1392,8 @@ finish_folder_load (GtkFileChooserEntry *chooser_entry)
 
 /* Callback when the current folder finishes loading */
 static void
-finished_loading_cb (GFile    *file,
-		     gpointer  data)
+finished_loading_cb (GtkFolder *folder,
+		     gpointer   data)
 {
   GtkFileChooserEntry *chooser_entry = GTK_FILE_CHOOSER_ENTRY (data);
 
@@ -1337,6 +1421,7 @@ load_directory_get_folder_callback (GCancellable  *cancellable,
 
       old_load_complete_action = chooser_entry->load_complete_action;
 
+      discard_completion_store (chooser_entry);
       clear_completions (chooser_entry);
 
       if (old_load_complete_action == LOAD_COMPLETE_EXPLICIT_COMPLETION)
@@ -1347,11 +1432,7 @@ load_directory_get_folder_callback (GCancellable  *cancellable,
 	  pop_up_completion_feedback (chooser_entry, error->message);
 	}
 
-      if (chooser_entry->current_folder)
-	{
-	  g_object_unref (chooser_entry->current_folder);
-	  chooser_entry->current_folder = NULL;
-	}
+      discard_current_folder (chooser_entry);
     }
 
   if (cancelled || error)
@@ -1373,15 +1454,24 @@ out:
   g_object_unref (cancellable);
 }
 
-static void
+static RefreshStatus
 start_loading_current_folder (GtkFileChooserEntry *chooser_entry)
 {
-  if (chooser_entry->current_folder_file == NULL ||
-      chooser_entry->file_system == NULL)
-    return;
+  if (chooser_entry->file_system == NULL)
+    return REFRESH_OK;
 
+  g_assert (chooser_entry->current_folder_file != NULL);
   g_assert (chooser_entry->current_folder == NULL);
   g_assert (chooser_entry->load_folder_cancellable == NULL);
+
+  if (chooser_entry->local_only
+      && !g_file_is_native (chooser_entry->current_folder_file))
+    {
+      g_object_unref (chooser_entry->current_folder_file);
+      chooser_entry->current_folder_file = NULL;
+
+      return REFRESH_NOT_LOCAL;
+    }
 
   chooser_entry->load_folder_cancellable =
     _gtk_file_system_get_folder (chooser_entry->file_system,
@@ -1389,52 +1479,46 @@ start_loading_current_folder (GtkFileChooserEntry *chooser_entry)
 			 	"standard::name,standard::display-name,standard::type",
 			         load_directory_get_folder_callback,
 			         g_object_ref (chooser_entry));
+
+  return REFRESH_OK;
 }
 
-static void
+static RefreshStatus
 reload_current_folder (GtkFileChooserEntry *chooser_entry,
 		       GFile               *folder_file,
 		       gboolean             force_reload)
 {
   gboolean reload = FALSE;
 
+  g_assert (folder_file != NULL);
+
   if (chooser_entry->current_folder_file)
     {
-      if ((folder_file && !g_file_equal (folder_file, chooser_entry->current_folder_file))
+      if ((!(g_file_equal (folder_file, chooser_entry->current_folder_file)
+	     && chooser_entry->load_folder_cancellable))
 	  || force_reload)
 	{
 	  reload = TRUE;
 
-	  /* We changed our current directory.  We need to clear out the old
-	   * directory information.
-	   */
-	  if (chooser_entry->current_folder)
-	    {
-	      if (chooser_entry->load_folder_cancellable)
-		{
-		  g_cancellable_cancel (chooser_entry->load_folder_cancellable);
-		  chooser_entry->load_folder_cancellable = NULL;
-		}
+          discard_current_folder (chooser_entry);
+	  discard_loading_and_current_folder_file (chooser_entry);
 
-	      g_object_unref (chooser_entry->current_folder);
-	      chooser_entry->current_folder = NULL;
-	    }
-
-	  g_object_unref (chooser_entry->current_folder_file);
 	  chooser_entry->current_folder_file = g_object_ref (folder_file);
 	}
     }
   else
     {
-      chooser_entry->current_folder_file = (folder_file) ? g_object_ref (folder_file) : NULL;
+      chooser_entry->current_folder_file = g_object_ref (folder_file);
       reload = TRUE;
     }
 
   if (reload)
-    start_loading_current_folder (chooser_entry);
+    return start_loading_current_folder (chooser_entry);
+  else
+    return REFRESH_OK;
 }
 
-static void
+static RefreshStatus
 refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry,
 				      RefreshMode          refresh_mode)
 {
@@ -1445,6 +1529,8 @@ refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry,
   gchar *file_part;
   gsize total_len, file_part_len;
   gint file_part_pos;
+  GError *error;
+  RefreshStatus result;
 
   editable = GTK_EDITABLE (chooser_entry);
 
@@ -1460,29 +1546,51 @@ refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry,
 
     default:
       g_assert_not_reached ();
-      return;
+      return REFRESH_INVALID_INPUT;
     }
 
   text = gtk_editable_get_chars (editable, 0, end_pos);
-  
+
+  error = NULL;
   if (!chooser_entry->file_system ||
       !chooser_entry->base_folder ||
       !_gtk_file_system_parse (chooser_entry->file_system,
 			       chooser_entry->base_folder, text,
-			       &folder_file, &file_part, NULL)) /* NULL-GError */
+			       &folder_file, &file_part, &error))
     {
-      folder_file = (chooser_entry->base_folder) ? g_object_ref (chooser_entry->base_folder) : NULL;
+      if (g_error_matches (error, GTK_FILE_CHOOSER_ERROR, GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME))
+	{
+	  folder_file = NULL;
+	  result = REFRESH_INCOMPLETE_HOSTNAME;
+	}
+      else
+	{
+	  folder_file = (chooser_entry->base_folder) ? g_object_ref (chooser_entry->base_folder) : NULL;
+
+	  if (g_error_matches (error, GTK_FILE_CHOOSER_ERROR, GTK_FILE_CHOOSER_ERROR_NONEXISTENT))
+	    result = REFRESH_NONEXISTENT;
+	  else
+	    result = REFRESH_INVALID_INPUT;
+	}
+
+      if (error)
+	g_error_free (error);
+
       file_part = g_strdup ("");
       file_part_pos = -1;
     }
   else
     {
+      g_assert (folder_file != NULL);
+
       file_part_len = strlen (file_part);
       total_len = strlen (text);
       if (total_len > file_part_len)
 	file_part_pos = g_utf8_strlen (text, total_len - file_part_len);
       else
 	file_part_pos = 0;
+
+      result = REFRESH_OK;
     }
 
   g_free (text);
@@ -1492,18 +1600,40 @@ refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry,
   chooser_entry->file_part = file_part;
   chooser_entry->file_part_pos = file_part_pos;
 
-  reload_current_folder (chooser_entry, folder_file, file_part_pos == -1);
+  if (result == REFRESH_OK)
+    {
+      result = reload_current_folder (chooser_entry, folder_file, file_part_pos == -1);
+    }
+  else
+    {
+      discard_current_folder (chooser_entry);
+      discard_loading_and_current_folder_file (chooser_entry);
+    }
 
   if (folder_file)
     g_object_unref (folder_file);
+
+  g_assert (/* we are OK and we have a current folder file and (loading process or folder handle)... */
+	    ((result == REFRESH_OK)
+	     && (chooser_entry->current_folder_file != NULL)
+	     && (((chooser_entry->load_folder_cancellable != NULL) && (chooser_entry->current_folder == NULL))
+		 || ((chooser_entry->load_folder_cancellable == NULL) && (chooser_entry->current_folder != NULL))))
+	    /* ... OR we have an error, and we don't have a current folder file nor a loading process nor a folder handle */
+	    || ((result != REFRESH_OK)
+		&& (chooser_entry->current_folder_file == NULL)
+		&& (chooser_entry->load_folder_cancellable == NULL)
+		&& (chooser_entry->current_folder == NULL)));
+
+  return result;
 }
 
 static void
 autocomplete (GtkFileChooserEntry *chooser_entry)
 {
-  g_assert (chooser_entry->current_folder != NULL);
-  g_assert (_gtk_folder_is_finished_loading (chooser_entry->current_folder));
-  g_assert (gtk_editable_get_position (GTK_EDITABLE (chooser_entry)) == GTK_ENTRY (chooser_entry)->text_length);
+  if (!(chooser_entry->current_folder != NULL
+	&& _gtk_folder_is_finished_loading (chooser_entry->current_folder)
+	&& gtk_editable_get_position (GTK_EDITABLE (chooser_entry)) == GTK_ENTRY (chooser_entry)->text_length))
+    return;
 
   append_common_prefix (chooser_entry, TRUE, FALSE);
 }
@@ -1511,20 +1641,34 @@ autocomplete (GtkFileChooserEntry *chooser_entry)
 static void
 start_autocompletion (GtkFileChooserEntry *chooser_entry)
 {
-  refresh_current_folder_and_file_part (chooser_entry, REFRESH_UP_TO_CURSOR_POSITION);
+  RefreshStatus status;
 
-  if (!chooser_entry->current_folder)
+  status = refresh_current_folder_and_file_part (chooser_entry, REFRESH_UP_TO_CURSOR_POSITION);
+
+  switch (status)
     {
+    case REFRESH_OK:
+      g_assert (chooser_entry->current_folder_file != NULL);
+
+      if (chooser_entry->current_folder && _gtk_folder_is_finished_loading (chooser_entry->current_folder))
+	autocomplete (chooser_entry);
+      else
+	chooser_entry->load_complete_action = LOAD_COMPLETE_AUTOCOMPLETE;
+
+      break;
+
+    case REFRESH_INVALID_INPUT:
+    case REFRESH_INCOMPLETE_HOSTNAME:
+    case REFRESH_NONEXISTENT:
+    case REFRESH_NOT_LOCAL:
       /* We don't beep or anything, since this is autocompletion - the user
        * didn't request any action explicitly.
        */
-      return;
-    }
+      break;
 
-  if (_gtk_folder_is_finished_loading (chooser_entry->current_folder))
-    autocomplete (chooser_entry);
-  else
-    chooser_entry->load_complete_action = LOAD_COMPLETE_AUTOCOMPLETE;
+    default:
+      g_assert_not_reached ();
+    }
 }
 
 static gboolean
@@ -1685,12 +1829,11 @@ _gtk_file_chooser_entry_set_base_folder (GtkFileChooserEntry *chooser_entry,
  * @chooser_entry: a #GtkFileChooserEntry
  *
  * Gets the current folder for the #GtkFileChooserEntry. If the
- * user has only entered a filename, this will be the base folder
+ * user has only entered a filename, this will be in the base folder
  * (see _gtk_file_chooser_entry_set_base_folder()), but if the
  * user has entered a relative or absolute path, then it will
- * be different. If the user has entered a relative or absolute
- * path that doesn't point to a folder in the file system, it will
- * be %NULL.
+ * be different.  If the user has entered unparsable text, or text which
+ * the entry cannot handle, this will return %NULL.
  *
  * Return value: the file for the current folder - this value is owned by the
  *  chooser entry and must not be modified or freed.
@@ -1845,3 +1988,16 @@ _gtk_file_chooser_entry_select_filename (GtkFileChooserEntry *chooser_entry)
   gtk_editable_select_region (GTK_EDITABLE (chooser_entry), 0, (gint) len);
 }
 
+void
+_gtk_file_chooser_entry_set_local_only (GtkFileChooserEntry *chooser_entry,
+                                        gboolean             local_only)
+{
+  chooser_entry->local_only = local_only;
+  clear_completions (chooser_entry);
+}
+
+gboolean
+_gtk_file_chooser_entry_get_local_only (GtkFileChooserEntry *chooser_entry)
+{
+  return chooser_entry->local_only;
+}

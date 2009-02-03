@@ -106,15 +106,15 @@ enum                <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</l
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-icon-from-gicon">gtk_entry_set_icon_from_gicon</link>       (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos,
                                                          <link linkend="GIcon">GIcon</link> *icon);
-<link linkend="GtkImageType">GtkImageType</link>        <link linkend="gtk-entry-get-storage-type">gtk_entry_get_storage_type</link>          (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<link linkend="GtkImageType">GtkImageType</link>        <link linkend="gtk-entry-get-icon-storage-type">gtk_entry_get_icon_storage_type</link>     (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);
-<link linkend="GdkPixbuf">GdkPixbuf</link>*          <link linkend="gtk-entry-get-pixbuf">gtk_entry_get_pixbuf</link>                (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<link linkend="GdkPixbuf">GdkPixbuf</link>*          <link linkend="gtk-entry-get-icon-pixbuf">gtk_entry_get_icon_pixbuf</link>           (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);
-const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-get-stock">gtk_entry_get_stock</link>                 (<link linkend="GtkEntry">GtkEntry</link> *entry,
+const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-get-icon-stock">gtk_entry_get_icon_stock</link>            (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);
 const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-get-icon-name">gtk_entry_get_icon_name</link>             (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);
-<link linkend="GIcon">GIcon</link>*              <link linkend="gtk-entry-get-gicon">gtk_entry_get_gicon</link>                 (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<link linkend="GIcon">GIcon</link>*              <link linkend="gtk-entry-get-icon-gicon">gtk_entry_get_icon_gicon</link>            (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-icon-activatable">gtk_entry_set_icon_activatable</link>      (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos,
@@ -132,9 +132,13 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-entry-get-ic
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-icon-tooltip-text">gtk_entry_set_icon_tooltip_text</link>     (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos,
                                                          const <link linkend="gchar">gchar</link> *tooltip);
+<link linkend="gchar">gchar</link> *             <link linkend="gtk-entry-get-icon-tooltip-text">gtk_entry_get_icon_tooltip_text</link>     (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-icon-tooltip-markup">gtk_entry_set_icon_tooltip_markup</link>   (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos,
                                                          const <link linkend="gchar">gchar</link> *tooltip);
+<link linkend="gchar">gchar</link> *             <link linkend="gtk-entry-get-icon-tooltip-markup">gtk_entry_get_icon_tooltip_markup</link>   (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-icon-drag-source">gtk_entry_set_icon_drag_source</link>      (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos,
                                                          <link linkend="GtkTargetList">GtkTargetList</link> *target_list,
@@ -169,35 +173,40 @@ GtkEntry implements
 <refsect1 id="GtkEntry.properties" role="properties">
 <title role="properties.title">Properties</title>
 <synopsis>
-  &quot;<link linkend="GtkEntry--activatable-primary">activatable-primary</link>&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkEntry--activatable-secondary">activatable-secondary</link>&quot;    <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkEntry--activates-default">activates-default</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkEntry--caps-lock-warning">caps-lock-warning</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkEntry--cursor-position">cursor-position</link>&quot;          <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkEntry--editable">editable</link>&quot;                 <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkEntry--gicon-primary">gicon-primary</link>&quot;            <link linkend="GIcon">GIcon</link>*                : Read / Write
-  &quot;<link linkend="GtkEntry--gicon-secondary">gicon-secondary</link>&quot;          <link linkend="GIcon">GIcon</link>*                : Read / Write
   &quot;<link linkend="GtkEntry--has-frame">has-frame</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkEntry--icon-name-primary">icon-name-primary</link>&quot;        <link linkend="gchar">gchar</link>*                : Read / Write
-  &quot;<link linkend="GtkEntry--icon-name-secondary">icon-name-secondary</link>&quot;      <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--im-module">im-module</link>&quot;                <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkEntry--inner-border">inner-border</link>&quot;             <link linkend="GtkBorder">GtkBorder</link>*            : Read / Write
   &quot;<link linkend="GtkEntry--invisible-char">invisible-char</link>&quot;           <link linkend="guint">guint</link>                 : Read / Write
   &quot;<link linkend="GtkEntry--invisible-char-set">invisible-char-set</link>&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkEntry--max-length">max-length</link>&quot;               <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkEntry--overwrite-mode">overwrite-mode</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkEntry--pixbuf-primary">pixbuf-primary</link>&quot;           <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write
-  &quot;<link linkend="GtkEntry--pixbuf-secondary">pixbuf-secondary</link>&quot;         <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-activatable">primary-icon-activatable</link>&quot; <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-gicon">primary-icon-gicon</link>&quot;       <link linkend="GIcon">GIcon</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-name">primary-icon-name</link>&quot;        <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-pixbuf">primary-icon-pixbuf</link>&quot;      <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-sensitive">primary-icon-sensitive</link>&quot;   <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-stock">primary-icon-stock</link>&quot;       <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-storage-type">primary-icon-storage-type</link>&quot; <link linkend="GtkImageType">GtkImageType</link>          : Read
+  &quot;<link linkend="GtkEntry--primary-icon-tooltip-markup">primary-icon-tooltip-markup</link>&quot; <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--primary-icon-tooltip-text">primary-icon-tooltip-text</link>&quot; <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkEntry--progress-fraction">progress-fraction</link>&quot;        <link linkend="gdouble">gdouble</link>               : Read / Write
   &quot;<link linkend="GtkEntry--progress-pulse-step">progress-pulse-step</link>&quot;      <link linkend="gdouble">gdouble</link>               : Read / Write
   &quot;<link linkend="GtkEntry--scroll-offset">scroll-offset</link>&quot;            <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkEntry--secondary-icon-activatable">secondary-icon-activatable</link>&quot; <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkEntry--secondary-icon-gicon">secondary-icon-gicon</link>&quot;     <link linkend="GIcon">GIcon</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--secondary-icon-name">secondary-icon-name</link>&quot;      <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--secondary-icon-pixbuf">secondary-icon-pixbuf</link>&quot;    <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write
+  &quot;<link linkend="GtkEntry--secondary-icon-sensitive">secondary-icon-sensitive</link>&quot; <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkEntry--secondary-icon-stock">secondary-icon-stock</link>&quot;     <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--secondary-icon-storage-type">secondary-icon-storage-type</link>&quot; <link linkend="GtkImageType">GtkImageType</link>          : Read
+  &quot;<link linkend="GtkEntry--secondary-icon-tooltip-markup">secondary-icon-tooltip-markup</link>&quot; <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkEntry--secondary-icon-tooltip-text">secondary-icon-tooltip-text</link>&quot; <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkEntry--selection-bound">selection-bound</link>&quot;          <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkEntry--sensitive-primary">sensitive-primary</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
-  &quot;<link linkend="GtkEntry--sensitive-secondary">sensitive-secondary</link>&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkEntry--shadow-type">shadow-type</link>&quot;              <link linkend="GtkShadowType">GtkShadowType</link>         : Read / Write
-  &quot;<link linkend="GtkEntry--stock-primary">stock-primary</link>&quot;            <link linkend="gchar">gchar</link>*                : Read / Write
-  &quot;<link linkend="GtkEntry--stock-secondary">stock-secondary</link>&quot;          <link linkend="gchar">gchar</link>*                : Read / Write
-  &quot;<link linkend="GtkEntry--storage-type-primary">storage-type-primary</link>&quot;     <link linkend="GtkImageType">GtkImageType</link>          : Read
-  &quot;<link linkend="GtkEntry--storage-type-secondary">storage-type-secondary</link>&quot;   <link linkend="GtkImageType">GtkImageType</link>          : Read
   &quot;<link linkend="GtkEntry--text">text</link>&quot;                     <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkEntry--text-length">text-length</link>&quot;              <link linkend="guint">guint</link>                 : Read
   &quot;<link linkend="GtkEntry--truncate-multiline">truncate-multiline</link>&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -209,8 +218,8 @@ GtkEntry implements
 <refsect1 id="GtkEntry.style-properties" role="style_properties">
 <title role="style_properties.title">Style Properties</title>
 <synopsis>
+  &quot;<link linkend="GtkEntry--s-icon-prelight">icon-prelight</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read
   &quot;<link linkend="GtkEntry--s-inner-border">inner-border</link>&quot;             <link linkend="GtkBorder">GtkBorder</link>*            : Read
-  &quot;<link linkend="GtkEntry--s-prelight">prelight</link>&quot;                 <link linkend="gboolean">gboolean</link>              : Read
   &quot;<link linkend="GtkEntry--s-state-hint">state-hint</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read
 </synopsis>
 </refsect1>
@@ -1146,9 +1155,9 @@ If <parameter>icon</parameter> is <link linkend="NULL--CAPS"><literal>NULL</lite
 <listitem><simpara> The icon to set, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
-<refsect2 id="gtk-entry-get-storage-type" role="function" condition="since:2.16">
-<title>gtk_entry_get_storage_type ()</title>
-<indexterm zone="gtk-entry-get-storage-type" role="2.16"><primary sortas="entry_get_storage_type">gtk_entry_get_storage_type</primary></indexterm><programlisting><link linkend="GtkImageType">GtkImageType</link>        gtk_entry_get_storage_type          (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<refsect2 id="gtk-entry-get-icon-storage-type" role="function" condition="since:2.16">
+<title>gtk_entry_get_icon_storage_type ()</title>
+<indexterm zone="gtk-entry-get-icon-storage-type" role="2.16"><primary sortas="entry_get_icon_storage_type">gtk_entry_get_icon_storage_type</primary></indexterm><programlisting><link linkend="GtkImageType">GtkImageType</link>        gtk_entry_get_icon_storage_type     (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);</programlisting>
 <para>
 Gets the type of representation being used by the icon
@@ -1166,9 +1175,9 @@ the return value will be <link linkend="GTK-IMAGE-EMPTY--CAPS"><literal>GTK_IMAG
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
-<refsect2 id="gtk-entry-get-pixbuf" role="function" condition="since:2.16">
-<title>gtk_entry_get_pixbuf ()</title>
-<indexterm zone="gtk-entry-get-pixbuf" role="2.16"><primary sortas="entry_get_pixbuf">gtk_entry_get_pixbuf</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link>*          gtk_entry_get_pixbuf                (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<refsect2 id="gtk-entry-get-icon-pixbuf" role="function" condition="since:2.16">
+<title>gtk_entry_get_icon_pixbuf ()</title>
+<indexterm zone="gtk-entry-get-icon-pixbuf" role="2.16"><primary sortas="entry_get_icon_pixbuf">gtk_entry_get_icon_pixbuf</primary></indexterm><programlisting><link linkend="GdkPixbuf">GdkPixbuf</link>*          gtk_entry_get_icon_pixbuf           (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);</programlisting>
 <para>
 Retrieves the image used for the icon.
@@ -1189,9 +1198,9 @@ method will work regardless of whether the icon was set using a
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
-<refsect2 id="gtk-entry-get-stock" role="function" condition="since:2.16">
-<title>gtk_entry_get_stock ()</title>
-<indexterm zone="gtk-entry-get-stock" role="2.16"><primary sortas="entry_get_stock">gtk_entry_get_stock</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_entry_get_stock                 (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<refsect2 id="gtk-entry-get-icon-stock" role="function" condition="since:2.16">
+<title>gtk_entry_get_icon_stock ()</title>
+<indexterm zone="gtk-entry-get-icon-stock" role="2.16"><primary sortas="entry_get_icon_stock">gtk_entry_get_icon_stock</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_entry_get_icon_stock            (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);</programlisting>
 <para>
 Retrieves the stock id used for the icon, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if there is
@@ -1231,9 +1240,9 @@ pixbuf, stock or gicon).</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
-<refsect2 id="gtk-entry-get-gicon" role="function" condition="since:2.16">
-<title>gtk_entry_get_gicon ()</title>
-<indexterm zone="gtk-entry-get-gicon" role="2.16"><primary sortas="entry_get_gicon">gtk_entry_get_gicon</primary></indexterm><programlisting><link linkend="GIcon">GIcon</link>*              gtk_entry_get_gicon                 (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<refsect2 id="gtk-entry-get-icon-gicon" role="function" condition="since:2.16">
+<title>gtk_entry_get_icon_gicon ()</title>
+<indexterm zone="gtk-entry-get-icon-gicon" role="2.16"><primary sortas="entry_get_icon_gicon">gtk_entry_get_icon_gicon</primary></indexterm><programlisting><link linkend="GIcon">GIcon</link>*              gtk_entry_get_icon_gicon            (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);</programlisting>
 <para>
 Retrieves the <link linkend="GIcon"><type>GIcon</type></link> used for the icon, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if there is
@@ -1379,6 +1388,26 @@ See also <link linkend="gtk-widget-set-tooltip-text"><function>gtk_widget_set_to
 <listitem><simpara> the contents of the tooltip for the icon, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-entry-get-icon-tooltip-text" role="function" condition="since:2.16">
+<title>gtk_entry_get_icon_tooltip_text ()</title>
+<indexterm zone="gtk-entry-get-icon-tooltip-text" role="2.16"><primary sortas="entry_get_icon_tooltip_text">gtk_entry_get_icon_tooltip_text</primary></indexterm><programlisting><link linkend="gchar">gchar</link> *             gtk_entry_get_icon_tooltip_text     (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);</programlisting>
+<para>
+Gets the contents of the tooltip on the icon at the specified 
+position in <parameter>entry</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>entry</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkEntry"><type>GtkEntry</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon_pos</parameter>&#160;:</term>
+<listitem><simpara> the icon position
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the tooltip text, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>. Free the returned string
+    with <link linkend="g-free"><function>g_free()</function></link> when done.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
 <refsect2 id="gtk-entry-set-icon-tooltip-markup" role="function" condition="since:2.16">
 <title>gtk_entry_set_icon_tooltip_markup ()</title>
 <indexterm zone="gtk-entry-set-icon-tooltip-markup" role="2.16"><primary sortas="entry_set_icon_tooltip_markup">gtk_entry_set_icon_tooltip_markup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_set_icon_tooltip_markup   (<link linkend="GtkEntry">GtkEntry</link> *entry,
@@ -1407,6 +1436,26 @@ See also <link linkend="gtk-widget-set-tooltip-markup"><function>gtk_widget_set_
 <listitem><simpara> the contents of the tooltip for the icon, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-entry-get-icon-tooltip-markup" role="function" condition="since:2.16">
+<title>gtk_entry_get_icon_tooltip_markup ()</title>
+<indexterm zone="gtk-entry-get-icon-tooltip-markup" role="2.16"><primary sortas="entry_get_icon_tooltip_markup">gtk_entry_get_icon_tooltip_markup</primary></indexterm><programlisting><link linkend="gchar">gchar</link> *             gtk_entry_get_icon_tooltip_markup   (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos);</programlisting>
+<para>
+Gets the contents of the tooltip on the icon at the specified 
+position in <parameter>entry</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>entry</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkEntry"><type>GtkEntry</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon_pos</parameter>&#160;:</term>
+<listitem><simpara> the icon position
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the tooltip text, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>. Free the returned string
+    with <link linkend="g-free"><function>g_free()</function></link> when done.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
 <refsect2 id="gtk-entry-set-icon-drag-source" role="function">
 <title>gtk_entry_set_icon_drag_source ()</title>
 <indexterm zone="gtk-entry-set-icon-drag-source"><primary sortas="entry_set_icon_drag_source">gtk_entry_set_icon_drag_source</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_set_icon_drag_source      (<link linkend="GtkEntry">GtkEntry</link> *entry,
@@ -1422,7 +1471,13 @@ To handle the drag operation, you need to connect to the usual
 <link linkend="GtkWidget-drag-data-get"><type>"drag-data-get"</type></link> (or possibly <link linkend="GtkWidget-drag-data-delete"><type>"drag-data-delete"</type></link>)
 signal, and use <link linkend="gtk-entry-get-current-icon-drag-source"><function>gtk_entry_get_current_icon_drag_source()</function></link> in
 your signal handler to find out if the drag was started from
-an icon.</para>
+an icon.
+</para>
+<para>
+By default, GTK+ uses the icon as the drag icon. You can use the 
+<link linkend="GtkWidget-drag-begin"><type>"drag-begin"</type></link> signal to set a different icon. Note that you 
+have to use <link linkend="g-signal-connect-after"><function>g_signal_connect_after()</function></link> to ensure that your signal handler
+gets executed after the default handler.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>entry</parameter>&#160;:</term>
@@ -1462,38 +1517,6 @@ callback.</para>
 </refsect1>
 <refsect1 id="GtkEntry.property-details" role="property_details">
 <title role="property_details.title">Property Details</title>
-<refsect2 id="GtkEntry--activatable-primary" role="property"><title>The <literal>&quot;activatable-primary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--activatable-primary" role="2.16"><primary sortas="Entry:activatable-primary">GtkEntry:activatable-primary</primary></indexterm><programlisting>  &quot;activatable-primary&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
-<para>
-Whether the primary icon is activatable.
-</para>
-<para>
-GTK+ emits the <link linkend="GtkEntry-icon-press"><type>"icon-press"</type></link> and <link linkend="GtkEntry-icon-release"><type>"icon-release"</type></link>
-signals only on sensitive, activatable icons. 
-</para>
-<para>
-Sensitive, but non-activatable icons can be used for purely 
-informational purposes.</para>
-<para>
-</para><para>Default value: FALSE</para>
-<para>Since 2.16</para>
-</refsect2>
-<refsect2 id="GtkEntry--activatable-secondary" role="property"><title>The <literal>&quot;activatable-secondary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--activatable-secondary" role="2.16"><primary sortas="Entry:activatable-secondary">GtkEntry:activatable-secondary</primary></indexterm><programlisting>  &quot;activatable-secondary&quot;    <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
-<para>
-Whether the secondary icon is activatable.
-</para>
-<para>
-GTK+ emits the <link linkend="GtkEntry-icon-press"><type>"icon-press"</type></link> and <link linkend="GtkEntry-icon-release"><type>"icon-release"</type></link> 
-signals only on sensitive, activatable icons.
-</para>
-<para>
-Sensitive, but non-activatable icons can be used for purely 
-informational purposes.</para>
-<para>
-</para><para>Default value: FALSE</para>
-<para>Since 2.16</para>
-</refsect2>
 <refsect2 id="GtkEntry--activates-default" role="property"><title>The <literal>&quot;activates-default&quot;</literal> property</title>
 <indexterm zone="GtkEntry--activates-default"><primary sortas="Entry:activates-default">GtkEntry:activates-default</primary></indexterm><programlisting>  &quot;activates-default&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether to activate the default widget (such as the default button in a dialog) when Enter is pressed.</para><para>Default value: FALSE</para>
@@ -1501,12 +1524,11 @@ informational purposes.</para>
 <refsect2 id="GtkEntry--caps-lock-warning" role="property"><title>The <literal>&quot;caps-lock-warning&quot;</literal> property</title>
 <indexterm zone="GtkEntry--caps-lock-warning" role="2.16"><primary sortas="Entry:caps-lock-warning">GtkEntry:caps-lock-warning</primary></indexterm><programlisting>  &quot;caps-lock-warning&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
-Whether password entries will show a warning when Caps Lock is on
-or an input method is active. 
+Whether password entries will show a warning when Caps Lock is on.
 </para>
 <para>
 Note that the warning is shown using a secondary icon, and thus
-does not work if you are using the secondary icon position for some 
+does not work if you are using the secondary icon position for some
 other purpose.</para>
 <para>
 </para><para>Default value: TRUE</para>
@@ -1521,36 +1543,20 @@ other purpose.</para>
 <indexterm zone="GtkEntry--editable"><primary sortas="Entry:editable">GtkEntry:editable</primary></indexterm><programlisting>  &quot;editable&quot;                 <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the entry contents can be edited.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2 id="GtkEntry--gicon-primary" role="property"><title>The <literal>&quot;gicon-primary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--gicon-primary" role="2.16"><primary sortas="Entry:gicon-primary">GtkEntry:gicon-primary</primary></indexterm><programlisting>  &quot;gicon-primary&quot;            <link linkend="GIcon">GIcon</link>*                : Read / Write</programlisting>
-<para>
-The <link linkend="GIcon"><type>GIcon</type></link> to use for the primary icon for the entry.</para>
-<para>
-</para><para>Since 2.16</para>
-</refsect2>
-<refsect2 id="GtkEntry--gicon-secondary" role="property"><title>The <literal>&quot;gicon-secondary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--gicon-secondary" role="2.16"><primary sortas="Entry:gicon-secondary">GtkEntry:gicon-secondary</primary></indexterm><programlisting>  &quot;gicon-secondary&quot;          <link linkend="GIcon">GIcon</link>*                : Read / Write</programlisting>
-<para>
-The <link linkend="GIcon"><type>GIcon</type></link> to use for the secondary icon for the entry.</para>
-<para>
-</para><para>Since 2.16</para>
-</refsect2>
 <refsect2 id="GtkEntry--has-frame" role="property"><title>The <literal>&quot;has-frame&quot;</literal> property</title>
 <indexterm zone="GtkEntry--has-frame"><primary sortas="Entry:has-frame">GtkEntry:has-frame</primary></indexterm><programlisting>  &quot;has-frame&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>FALSE removes outside bevel from entry.</para><para>Default value: TRUE</para>
 </refsect2>
-<refsect2 id="GtkEntry--icon-name-primary" role="property"><title>The <literal>&quot;icon-name-primary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--icon-name-primary" role="2.16"><primary sortas="Entry:icon-name-primary">GtkEntry:icon-name-primary</primary></indexterm><programlisting>  &quot;icon-name-primary&quot;        <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<refsect2 id="GtkEntry--im-module" role="property"><title>The <literal>&quot;im-module&quot;</literal> property</title>
+<indexterm zone="GtkEntry--im-module" role="2.16"><primary sortas="Entry:im-module">GtkEntry:im-module</primary></indexterm><programlisting>  &quot;im-module&quot;                <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>
-The icon name to use for the primary icon for the entry.</para>
+Which IM (input method) module should be used for this entry. 
+See <link linkend="GtkIMContext"><type>GtkIMContext</type></link>.
+</para>
 <para>
-</para><para>Default value: NULL</para>
-<para>Since 2.16</para>
-</refsect2>
-<refsect2 id="GtkEntry--icon-name-secondary" role="property"><title>The <literal>&quot;icon-name-secondary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--icon-name-secondary" role="2.16"><primary sortas="Entry:icon-name-secondary">GtkEntry:icon-name-secondary</primary></indexterm><programlisting>  &quot;icon-name-secondary&quot;      <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
-<para>
-The icon name to use for the secondary icon for the entry.</para>
+Setting this to a non-<link linkend="NULL--CAPS"><literal>NULL</literal></link> value overrides the
+system-wide IM module setting. See the GtkSettings 
+<link linkend="GtkSettings--gtk-im-module"><type>"gtk-im-module"</type></link> property.</para>
 <para>
 </para><para>Default value: NULL</para>
 <para>Since 2.16</para>
@@ -1587,19 +1593,100 @@ If text is overwritten when typing in the <link linkend="GtkEntry"><type>GtkEntr
 </para><para>Default value: FALSE</para>
 <para>Since 2.14</para>
 </refsect2>
-<refsect2 id="GtkEntry--pixbuf-primary" role="property"><title>The <literal>&quot;pixbuf-primary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--pixbuf-primary" role="2.16"><primary sortas="Entry:pixbuf-primary">GtkEntry:pixbuf-primary</primary></indexterm><programlisting>  &quot;pixbuf-primary&quot;           <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write</programlisting>
+<refsect2 id="GtkEntry--primary-icon-activatable" role="property"><title>The <literal>&quot;primary-icon-activatable&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-activatable" role="2.16"><primary sortas="Entry:primary-icon-activatable">GtkEntry:primary-icon-activatable</primary></indexterm><programlisting>  &quot;primary-icon-activatable&quot; <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Whether the primary icon is activatable.
+</para>
+<para>
+GTK+ emits the <link linkend="GtkEntry-icon-press"><type>"icon-press"</type></link> and <link linkend="GtkEntry-icon-release"><type>"icon-release"</type></link> 
+signals only on sensitive, activatable icons. 
+</para>
+<para>
+Sensitive, but non-activatable icons can be used for purely 
+informational purposes.</para>
+<para>
+</para><para>Default value: FALSE</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--primary-icon-gicon" role="property"><title>The <literal>&quot;primary-icon-gicon&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-gicon" role="2.16"><primary sortas="Entry:primary-icon-gicon">GtkEntry:primary-icon-gicon</primary></indexterm><programlisting>  &quot;primary-icon-gicon&quot;       <link linkend="GIcon">GIcon</link>*                : Read / Write</programlisting>
+<para>
+The <link linkend="GIcon"><type>GIcon</type></link> to use for the primary icon for the entry.</para>
+<para>
+</para><para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--primary-icon-name" role="property"><title>The <literal>&quot;primary-icon-name&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-name" role="2.16"><primary sortas="Entry:primary-icon-name">GtkEntry:primary-icon-name</primary></indexterm><programlisting>  &quot;primary-icon-name&quot;        <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The icon name to use for the primary icon for the entry.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--primary-icon-pixbuf" role="property"><title>The <literal>&quot;primary-icon-pixbuf&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-pixbuf" role="2.16"><primary sortas="Entry:primary-icon-pixbuf">GtkEntry:primary-icon-pixbuf</primary></indexterm><programlisting>  &quot;primary-icon-pixbuf&quot;      <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write</programlisting>
 <para>
 A pixbuf to use as the primary icon for the entry.</para>
 <para>
 </para><para>Since 2.16</para>
 </refsect2>
-<refsect2 id="GtkEntry--pixbuf-secondary" role="property"><title>The <literal>&quot;pixbuf-secondary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--pixbuf-secondary" role="2.16"><primary sortas="Entry:pixbuf-secondary">GtkEntry:pixbuf-secondary</primary></indexterm><programlisting>  &quot;pixbuf-secondary&quot;         <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write</programlisting>
+<refsect2 id="GtkEntry--primary-icon-sensitive" role="property"><title>The <literal>&quot;primary-icon-sensitive&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-sensitive" role="2.16"><primary sortas="Entry:primary-icon-sensitive">GtkEntry:primary-icon-sensitive</primary></indexterm><programlisting>  &quot;primary-icon-sensitive&quot;   <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
-An pixbuf to use as the secondary icon for the entry.</para>
+Whether the primary icon is sensitive.
+</para>
 <para>
-</para><para>Since 2.16</para>
+An insensitive icon appears grayed out. GTK+ does not emit the 
+<link linkend="GtkEntry-icon-press"><type>"icon-press"</type></link> and <link linkend="GtkEntry-icon-release"><type>"icon-release"</type></link> signals and 
+does not allow DND from insensitive icons.
+</para>
+<para>
+An icon should be set insensitive if the action that would trigger
+when clicked is currently not available.</para>
+<para>
+</para><para>Default value: TRUE</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--primary-icon-stock" role="property"><title>The <literal>&quot;primary-icon-stock&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-stock" role="2.16"><primary sortas="Entry:primary-icon-stock">GtkEntry:primary-icon-stock</primary></indexterm><programlisting>  &quot;primary-icon-stock&quot;       <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The stock id to use for the primary icon for the entry.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--primary-icon-storage-type" role="property"><title>The <literal>&quot;primary-icon-storage-type&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-storage-type" role="2.16"><primary sortas="Entry:primary-icon-storage-type">GtkEntry:primary-icon-storage-type</primary></indexterm><programlisting>  &quot;primary-icon-storage-type&quot; <link linkend="GtkImageType">GtkImageType</link>          : Read</programlisting>
+<para>
+The representation which is used for the primary icon of the entry.</para>
+<para>
+</para><para>Default value: GTK_IMAGE_EMPTY</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--primary-icon-tooltip-markup" role="property"><title>The <literal>&quot;primary-icon-tooltip-markup&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-tooltip-markup" role="2.16"><primary sortas="Entry:primary-icon-tooltip-markup">GtkEntry:primary-icon-tooltip-markup</primary></indexterm><programlisting>  &quot;primary-icon-tooltip-markup&quot; <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The contents of the tooltip on the primary icon, which is marked up
+with the <link linkend="PangoMarkupFormat">Pango text markup 
+language</link>.
+</para>
+<para>
+Also see <link linkend="gtk-entry-set-icon-tooltip-markup"><function>gtk_entry_set_icon_tooltip_markup()</function></link>.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--primary-icon-tooltip-text" role="property"><title>The <literal>&quot;primary-icon-tooltip-text&quot;</literal> property</title>
+<indexterm zone="GtkEntry--primary-icon-tooltip-text" role="2.16"><primary sortas="Entry:primary-icon-tooltip-text">GtkEntry:primary-icon-tooltip-text</primary></indexterm><programlisting>  &quot;primary-icon-tooltip-text&quot; <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The contents of the tooltip on the primary icon.
+</para>
+<para>
+Also see <link linkend="gtk-entry-set-icon-tooltip-text"><function>gtk_entry_set_icon_tooltip_text()</function></link>.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
 </refsect2>
 <refsect2 id="GtkEntry--progress-fraction" role="property"><title>The <literal>&quot;progress-fraction&quot;</literal> property</title>
 <indexterm zone="GtkEntry--progress-fraction" role="2.16"><primary sortas="Entry:progress-fraction">GtkEntry:progress-fraction</primary></indexterm><programlisting>  &quot;progress-fraction&quot;        <link linkend="gdouble">gdouble</link>               : Read / Write</programlisting>
@@ -1625,30 +1712,46 @@ bouncing block for each call to <link linkend="gtk-entry-progress-pulse"><functi
 <para>Number of pixels of the entry scrolled off the screen to the left.</para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 0</para>
 </refsect2>
-<refsect2 id="GtkEntry--selection-bound" role="property"><title>The <literal>&quot;selection-bound&quot;</literal> property</title>
-<indexterm zone="GtkEntry--selection-bound"><primary sortas="Entry:selection-bound">GtkEntry:selection-bound</primary></indexterm><programlisting>  &quot;selection-bound&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
-<para>The position of the opposite end of the selection from the cursor in chars.</para><para>Allowed values: [0,65535]</para>
-<para>Default value: 0</para>
-</refsect2>
-<refsect2 id="GtkEntry--sensitive-primary" role="property"><title>The <literal>&quot;sensitive-primary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--sensitive-primary" role="2.16"><primary sortas="Entry:sensitive-primary">GtkEntry:sensitive-primary</primary></indexterm><programlisting>  &quot;sensitive-primary&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkEntry--secondary-icon-activatable" role="property"><title>The <literal>&quot;secondary-icon-activatable&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-activatable" role="2.16"><primary sortas="Entry:secondary-icon-activatable">GtkEntry:secondary-icon-activatable</primary></indexterm><programlisting>  &quot;secondary-icon-activatable&quot; <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
-Whether the primary icon is sensitive.
+Whether the secondary icon is activatable.
 </para>
 <para>
-An insensitive icon appears grayed out. GTK+ does not emit the 
-<link linkend="GtkEntry-icon-press"><type>"icon-press"</type></link> and <link linkend="GtkEntry-icon-release"><type>"icon-release"</type></link> signals and 
-does not allow DND from insensitive icons.
+GTK+ emits the <link linkend="GtkEntry-icon-press"><type>"icon-press"</type></link> and <link linkend="GtkEntry-icon-release"><type>"icon-release"</type></link> 
+signals only on sensitive, activatable icons.
 </para>
 <para>
-An icon should be set insensitive if the action that would trigger
-when clicked is currently not available.</para>
+Sensitive, but non-activatable icons can be used for purely 
+informational purposes.</para>
 <para>
-</para><para>Default value: TRUE</para>
+</para><para>Default value: FALSE</para>
 <para>Since 2.16</para>
 </refsect2>
-<refsect2 id="GtkEntry--sensitive-secondary" role="property"><title>The <literal>&quot;sensitive-secondary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--sensitive-secondary" role="2.16"><primary sortas="Entry:sensitive-secondary">GtkEntry:sensitive-secondary</primary></indexterm><programlisting>  &quot;sensitive-secondary&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<refsect2 id="GtkEntry--secondary-icon-gicon" role="property"><title>The <literal>&quot;secondary-icon-gicon&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-gicon" role="2.16"><primary sortas="Entry:secondary-icon-gicon">GtkEntry:secondary-icon-gicon</primary></indexterm><programlisting>  &quot;secondary-icon-gicon&quot;     <link linkend="GIcon">GIcon</link>*                : Read / Write</programlisting>
+<para>
+The <link linkend="GIcon"><type>GIcon</type></link> to use for the secondary icon for the entry.</para>
+<para>
+</para><para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--secondary-icon-name" role="property"><title>The <literal>&quot;secondary-icon-name&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-name" role="2.16"><primary sortas="Entry:secondary-icon-name">GtkEntry:secondary-icon-name</primary></indexterm><programlisting>  &quot;secondary-icon-name&quot;      <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The icon name to use for the secondary icon for the entry.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--secondary-icon-pixbuf" role="property"><title>The <literal>&quot;secondary-icon-pixbuf&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-pixbuf" role="2.16"><primary sortas="Entry:secondary-icon-pixbuf">GtkEntry:secondary-icon-pixbuf</primary></indexterm><programlisting>  &quot;secondary-icon-pixbuf&quot;    <link linkend="GdkPixbuf">GdkPixbuf</link>*            : Read / Write</programlisting>
+<para>
+An pixbuf to use as the secondary icon for the entry.</para>
+<para>
+</para><para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--secondary-icon-sensitive" role="property"><title>The <literal>&quot;secondary-icon-sensitive&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-sensitive" role="2.16"><primary sortas="Entry:secondary-icon-sensitive">GtkEntry:secondary-icon-sensitive</primary></indexterm><programlisting>  &quot;secondary-icon-sensitive&quot; <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>
 Whether the secondary icon is sensitive.
 </para>
@@ -1664,6 +1767,51 @@ when clicked is currently not available.</para>
 </para><para>Default value: TRUE</para>
 <para>Since 2.16</para>
 </refsect2>
+<refsect2 id="GtkEntry--secondary-icon-stock" role="property"><title>The <literal>&quot;secondary-icon-stock&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-stock" role="2.16"><primary sortas="Entry:secondary-icon-stock">GtkEntry:secondary-icon-stock</primary></indexterm><programlisting>  &quot;secondary-icon-stock&quot;     <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The stock id to use for the secondary icon for the entry.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--secondary-icon-storage-type" role="property"><title>The <literal>&quot;secondary-icon-storage-type&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-storage-type" role="2.16"><primary sortas="Entry:secondary-icon-storage-type">GtkEntry:secondary-icon-storage-type</primary></indexterm><programlisting>  &quot;secondary-icon-storage-type&quot; <link linkend="GtkImageType">GtkImageType</link>          : Read</programlisting>
+<para>
+The representation which is used for the secondary icon of the entry.</para>
+<para>
+</para><para>Default value: GTK_IMAGE_EMPTY</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--secondary-icon-tooltip-markup" role="property"><title>The <literal>&quot;secondary-icon-tooltip-markup&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-tooltip-markup" role="2.16"><primary sortas="Entry:secondary-icon-tooltip-markup">GtkEntry:secondary-icon-tooltip-markup</primary></indexterm><programlisting>  &quot;secondary-icon-tooltip-markup&quot; <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The contents of the tooltip on the secondary icon, which is marked up
+with the <link linkend="PangoMarkupFormat">Pango text markup 
+language</link>.
+</para>
+<para>
+Also see <link linkend="gtk-entry-set-icon-tooltip-markup"><function>gtk_entry_set_icon_tooltip_markup()</function></link>.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--secondary-icon-tooltip-text" role="property"><title>The <literal>&quot;secondary-icon-tooltip-text&quot;</literal> property</title>
+<indexterm zone="GtkEntry--secondary-icon-tooltip-text" role="2.16"><primary sortas="Entry:secondary-icon-tooltip-text">GtkEntry:secondary-icon-tooltip-text</primary></indexterm><programlisting>  &quot;secondary-icon-tooltip-text&quot; <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The contents of the tooltip on the secondary icon.
+</para>
+<para>
+Also see <link linkend="gtk-entry-set-icon-tooltip-text"><function>gtk_entry_set_icon_tooltip_text()</function></link>.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--selection-bound" role="property"><title>The <literal>&quot;selection-bound&quot;</literal> property</title>
+<indexterm zone="GtkEntry--selection-bound"><primary sortas="Entry:selection-bound">GtkEntry:selection-bound</primary></indexterm><programlisting>  &quot;selection-bound&quot;          <link linkend="gint">gint</link>                  : Read</programlisting>
+<para>The position of the opposite end of the selection from the cursor in chars.</para><para>Allowed values: [0,65535]</para>
+<para>Default value: 0</para>
+</refsect2>
 <refsect2 id="GtkEntry--shadow-type" role="property"><title>The <literal>&quot;shadow-type&quot;</literal> property</title>
 <indexterm zone="GtkEntry--shadow-type" role="2.12"><primary sortas="Entry:shadow-type">GtkEntry:shadow-type</primary></indexterm><programlisting>  &quot;shadow-type&quot;              <link linkend="GtkShadowType">GtkShadowType</link>         : Read / Write</programlisting>
 <para>
@@ -1672,38 +1820,6 @@ Which kind of shadow to draw around the entry when
 <para>
 </para><para>Default value: GTK_SHADOW_IN</para>
 <para>Since 2.12</para>
-</refsect2>
-<refsect2 id="GtkEntry--stock-primary" role="property"><title>The <literal>&quot;stock-primary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--stock-primary" role="2.16"><primary sortas="Entry:stock-primary">GtkEntry:stock-primary</primary></indexterm><programlisting>  &quot;stock-primary&quot;            <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
-<para>
-The stock id to use for the primary icon for the entry.</para>
-<para>
-</para><para>Default value: NULL</para>
-<para>Since 2.16</para>
-</refsect2>
-<refsect2 id="GtkEntry--stock-secondary" role="property"><title>The <literal>&quot;stock-secondary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--stock-secondary" role="2.16"><primary sortas="Entry:stock-secondary">GtkEntry:stock-secondary</primary></indexterm><programlisting>  &quot;stock-secondary&quot;          <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
-<para>
-The stock id to use for the secondary icon for the entry.</para>
-<para>
-</para><para>Default value: NULL</para>
-<para>Since 2.16</para>
-</refsect2>
-<refsect2 id="GtkEntry--storage-type-primary" role="property"><title>The <literal>&quot;storage-type-primary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--storage-type-primary" role="2.16"><primary sortas="Entry:storage-type-primary">GtkEntry:storage-type-primary</primary></indexterm><programlisting>  &quot;storage-type-primary&quot;     <link linkend="GtkImageType">GtkImageType</link>          : Read</programlisting>
-<para>
-The representation which is used for the primary icon of the entry.</para>
-<para>
-</para><para>Default value: GTK_IMAGE_EMPTY</para>
-<para>Since 2.16</para>
-</refsect2>
-<refsect2 id="GtkEntry--storage-type-secondary" role="property"><title>The <literal>&quot;storage-type-secondary&quot;</literal> property</title>
-<indexterm zone="GtkEntry--storage-type-secondary" role="2.16"><primary sortas="Entry:storage-type-secondary">GtkEntry:storage-type-secondary</primary></indexterm><programlisting>  &quot;storage-type-secondary&quot;   <link linkend="GtkImageType">GtkImageType</link>          : Read</programlisting>
-<para>
-The representation which is used for the secondary icon of the entry.</para>
-<para>
-</para><para>Default value: GTK_IMAGE_EMPTY</para>
-<para>Since 2.16</para>
 </refsect2>
 <refsect2 id="GtkEntry--text" role="property"><title>The <literal>&quot;text&quot;</literal> property</title>
 <indexterm zone="GtkEntry--text"><primary sortas="Entry:text">GtkEntry:text</primary></indexterm><programlisting>  &quot;text&quot;                     <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
@@ -1749,21 +1865,21 @@ Reversed for RTL layouts.</para>
 </refsect1>
 <refsect1 id="GtkEntry.style-property-details" role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
-<refsect2 id="GtkEntry--s-inner-border" role="property"><title>The <literal>&quot;inner-border&quot;</literal> style property</title>
-<indexterm zone="GtkEntry--s-inner-border" role="2.10"><primary sortas="Entry:inner-border">GtkEntry:inner-border</primary></indexterm><programlisting>  &quot;inner-border&quot;             <link linkend="GtkBorder">GtkBorder</link>*            : Read</programlisting>
-<para>
-Sets the text area's border between the text and the frame.</para>
-<para>
-</para><para>Since 2.10</para>
-</refsect2>
-<refsect2 id="GtkEntry--s-prelight" role="property"><title>The <literal>&quot;prelight&quot;</literal> style property</title>
-<indexterm zone="GtkEntry--s-prelight" role="2.16"><primary sortas="Entry:prelight">GtkEntry:prelight</primary></indexterm><programlisting>  &quot;prelight&quot;                 <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<refsect2 id="GtkEntry--s-icon-prelight" role="property"><title>The <literal>&quot;icon-prelight&quot;</literal> style property</title>
+<indexterm zone="GtkEntry--s-icon-prelight" role="2.16"><primary sortas="Entry:icon-prelight">GtkEntry:icon-prelight</primary></indexterm><programlisting>  &quot;icon-prelight&quot;            <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>
 The prelight style property determines whether activatable
 icons prelight on mouseover.</para>
 <para>
 </para><para>Default value: TRUE</para>
 <para>Since 2.16</para>
+</refsect2>
+<refsect2 id="GtkEntry--s-inner-border" role="property"><title>The <literal>&quot;inner-border&quot;</literal> style property</title>
+<indexterm zone="GtkEntry--s-inner-border" role="2.10"><primary sortas="Entry:inner-border">GtkEntry:inner-border</primary></indexterm><programlisting>  &quot;inner-border&quot;             <link linkend="GtkBorder">GtkBorder</link>*            : Read</programlisting>
+<para>
+Sets the text area's border between the text and the frame.</para>
+<para>
+</para><para>Since 2.10</para>
 </refsect2>
 <refsect2 id="GtkEntry--s-state-hint" role="property"><title>The <literal>&quot;state-hint&quot;</literal> style property</title>
 <indexterm zone="GtkEntry--s-state-hint" role="2.16"><primary sortas="Entry:state-hint">GtkEntry:state-hint</primary></indexterm><programlisting>  &quot;state-hint&quot;               <link linkend="gboolean">gboolean</link>              : Read</programlisting>
@@ -1787,7 +1903,7 @@ which gets emitted when the user activates the entry.
 </para>
 <para>
 Applications should not connect to it, but may emit it with
-<link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control scrolling
+<link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control activation
 programmatically.
 </para>
 <para>
@@ -1891,7 +2007,7 @@ deleting a word.</para>
                                                         <link linkend="GdkEvent">GdkEvent</link>            *event,
                                                         <link linkend="gpointer">gpointer</link>             user_data)      : Run Last / Action</programlisting>
 <para>
-The ::icon-press signal is emitted when an activatable icon
+The ::icon-press signal is emitted when an activatable icon 
 is clicked.</para>
 <para>
 </para><variablelist role="params">
@@ -1964,7 +2080,7 @@ the viewport to be moved instead.
 </para>
 <para>
 Applications should not connect to it, but may emit it with
-<link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control scrolling
+<link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control the cursor
 programmatically.
 </para>
 <para>

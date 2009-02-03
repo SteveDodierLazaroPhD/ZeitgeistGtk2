@@ -1201,7 +1201,8 @@ An enum for determining where a dropped item goes.
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="GdkDragAction">GdkDragAction</link> actions);</programlisting>
 <para>
-Turns <parameter>icon_view</parameter> into a drag source for automatic DND.</para>
+Turns <parameter>icon_view</parameter> into a drag source for automatic DND. Calling this
+method sets <link linkend="GtkIconView--reorderable"><type>"reorderable"</type></link> to <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>icon_view</parameter>&#160;:</term>
@@ -1229,7 +1230,8 @@ Turns <parameter>icon_view</parameter> into a drag source for automatic DND.</pa
                                                          <link linkend="gint">gint</link> n_targets,
                                                          <link linkend="GdkDragAction">GdkDragAction</link> actions);</programlisting>
 <para>
-Turns <parameter>icon_view</parameter> into a drop destination for automatic DND.</para>
+Turns <parameter>icon_view</parameter> into a drop destination for automatic DND. Calling this
+method sets <link linkend="GtkIconView--reorderable"><type>"reorderable"</type></link> to <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>icon_view</parameter>&#160;:</term>
@@ -1251,7 +1253,8 @@ Turns <parameter>icon_view</parameter> into a drop destination for automatic DND
 <indexterm zone="gtk-icon-view-unset-model-drag-source" role="2.8"><primary sortas="icon_view_unset_model_drag_source">gtk_icon_view_unset_model_drag_source</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_icon_view_unset_model_drag_source
                                                         (<link linkend="GtkIconView">GtkIconView</link> *icon_view);</programlisting>
 <para>
-Undoes the effect of <link linkend="gtk-icon-view-enable-model-drag-source"><function>gtk_icon_view_enable_model_drag_source()</function></link>.</para>
+Undoes the effect of <link linkend="gtk-icon-view-enable-model-drag-source"><function>gtk_icon_view_enable_model_drag_source()</function></link>. Calling this
+method sets <link linkend="GtkIconView--reorderable"><type>"reorderable"</type></link> to <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>icon_view</parameter>&#160;:</term>
@@ -1262,7 +1265,8 @@ Undoes the effect of <link linkend="gtk-icon-view-enable-model-drag-source"><fun
 <title>gtk_icon_view_unset_model_drag_dest ()</title>
 <indexterm zone="gtk-icon-view-unset-model-drag-dest" role="2.8"><primary sortas="icon_view_unset_model_drag_dest">gtk_icon_view_unset_model_drag_dest</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_icon_view_unset_model_drag_dest (<link linkend="GtkIconView">GtkIconView</link> *icon_view);</programlisting>
 <para>
-Undoes the effect of <link linkend="gtk-icon-view-enable-model-drag-dest"><function>gtk_icon_view_enable_model_drag_dest()</function></link>.</para>
+Undoes the effect of <link linkend="gtk-icon-view-enable-model-drag-dest"><function>gtk_icon_view_enable_model_drag_dest()</function></link>. Calling this
+method sets <link linkend="GtkIconView--reorderable"><type>"reorderable"</type></link> to <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>icon_view</parameter>&#160;:</term>
@@ -1279,7 +1283,9 @@ support the <link linkend="GtkTreeDragSourceIface"><type>GtkTreeDragSourceIface<
 <link linkend="GtkTreeStore"><type>GtkTreeStore</type></link> and <link linkend="GtkListStore"><type>GtkListStore</type></link> support these.  If <parameter>reorderable</parameter> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>, then
 the user can reorder the model by dragging and dropping rows.  The
 developer can listen to these changes by connecting to the model's
-row_inserted and row_deleted signals.
+row_inserted and row_deleted signals. The reordering is implemented by setting up
+the icon view as a drag source and destination. Therefore, drag and
+drop can not be used in a reorderable view for any other purpose.
 </para>
 <para>
 This function does not give you any degree of control over the order -- any

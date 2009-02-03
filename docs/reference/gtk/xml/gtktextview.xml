@@ -210,6 +210,7 @@ GtkTextView implements
   &quot;<link linkend="GtkTextView--buffer">buffer</link>&quot;                   <link linkend="GtkTextBuffer">GtkTextBuffer</link>*        : Read / Write
   &quot;<link linkend="GtkTextView--cursor-visible">cursor-visible</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkTextView--editable">editable</link>&quot;                 <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkTextView--im-module">im-module</link>&quot;                <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkTextView--indent">indent</link>&quot;                   <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkTextView--justification">justification</link>&quot;            <link linkend="GtkJustification">GtkJustification</link>      : Read / Write
   &quot;<link linkend="GtkTextView--left-margin">left-margin</link>&quot;              <link linkend="gint">gint</link>                  : Read / Write
@@ -629,7 +630,7 @@ characters.</para>
 <listitem><simpara> a <link linkend="GtkTextIter"><type>GtkTextIter</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>trailing</parameter>&#160;:</term>
-<listitem><simpara> location to store an integer indicating where
+<listitem><simpara> if non-<link linkend="NULL--CAPS"><literal>NULL</literal></link>, location to store an integer indicating where
    in the grapheme the user clicked. It will either be
    zero, or the number of characters in the grapheme. 
    0 represents the trailing edge of the grapheme.
@@ -1542,6 +1543,20 @@ in an idle job in the background.
 <indexterm zone="GtkTextView--editable"><primary sortas="TextView:editable">GtkTextView:editable</primary></indexterm><programlisting>  &quot;editable&quot;                 <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether the text can be modified by the user.</para><para>Default value: TRUE</para>
 </refsect2>
+<refsect2 id="GtkTextView--im-module" role="property"><title>The <literal>&quot;im-module&quot;</literal> property</title>
+<indexterm zone="GtkTextView--im-module" role="2.16"><primary sortas="TextView:im-module">GtkTextView:im-module</primary></indexterm><programlisting>  &quot;im-module&quot;                <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+Which IM (input method) module should be used for this entry.
+See <link linkend="GtkIMContext"><type>GtkIMContext</type></link>.
+</para>
+<para>
+Setting this to a non-<link linkend="NULL--CAPS"><literal>NULL</literal></link> value overrides the
+system-wide IM module setting. See the GtkSettings 
+<link linkend="GtkSettings--gtk-im-module"><type>"gtk-im-module"</type></link> property.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.16</para>
+</refsect2>
 <refsect2 id="GtkTextView--indent" role="property"><title>The <literal>&quot;indent&quot;</literal> property</title>
 <indexterm zone="GtkTextView--indent"><primary sortas="TextView:indent">GtkTextView:indent</primary></indexterm><programlisting>  &quot;indent&quot;                   <link linkend="gint">gint</link>                  : Read / Write</programlisting>
 <para>Amount to indent the paragraph, in pixels.</para><para>Default value: 0</para>
@@ -1586,6 +1601,7 @@ in an idle job in the background.
 <indexterm zone="GtkTextView--wrap-mode"><primary sortas="TextView:wrap-mode">GtkTextView:wrap-mode</primary></indexterm><programlisting>  &quot;wrap-mode&quot;                <link linkend="GtkWrapMode">GtkWrapMode</link>           : Read / Write</programlisting>
 <para>Whether to wrap lines never, at word boundaries, or at character boundaries.</para><para>Default value: GTK_WRAP_NONE</para>
 </refsect2>
+
 </refsect1>
 <refsect1 id="GtkTextView.style-property-details" role="style_properties_details">
 <title role="style_properties_details.title">Style Property Details</title>
@@ -1720,7 +1736,7 @@ the viewport to be moved instead.
 </para>
 <para>
 Applications should not connect to it, but may emit it with 
-<link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control scrolling 
+<link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link> if they need to control the cursor
 programmatically.
 </para>
 <para>

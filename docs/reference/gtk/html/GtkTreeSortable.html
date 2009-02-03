@@ -289,7 +289,7 @@ for the "price" column could be one which returns
 <pre class="programlisting">void                gtk_tree_sortable_sort_column_changed
                                                         (<a class="link" href="GtkTreeSortable.html" title="GtkTreeSortable">GtkTreeSortable</a> *sortable);</pre>
 <p>
-Emits a GtkTreeSortable::sort_column_changed signal on</p>
+Emits a <a class="link" href="GtkTreeSortable.html#GtkTreeSortable-sort-column-changed" title='The "sort-column-changed" signal'><span class="type">"sort-column-changed"</span></a> signal on <em class="parameter"><code>sortable</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -314,7 +314,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
                                                          <a class="link" href="gtk-Standard-Enumerations.html#GtkSortType" title="enum GtkSortType">GtkSortType</a> *order);</pre>
 <p>
 Fills in <em class="parameter"><code>sort_column_id</code></em> and <em class="parameter"><code>order</code></em> with the current sort column and the
-order.  It returns <a
+order. It returns <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
 ><code class="literal">TRUE</code></a> unless the <em class="parameter"><code>sort_column_id</code></em> is 
 <code class="literal">GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</code> or 
@@ -360,11 +360,24 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"
 >gint</a> sort_column_id,
                                                          <a class="link" href="gtk-Standard-Enumerations.html#GtkSortType" title="enum GtkSortType">GtkSortType</a> order);</pre>
 <p>
-Sets the current sort column to be <em class="parameter"><code>sort_column_id</code></em>.  The <em class="parameter"><code>sortable</code></em> will
+Sets the current sort column to be <em class="parameter"><code>sort_column_id</code></em>. The <em class="parameter"><code>sortable</code></em> will
 resort itself to reflect this change, after emitting a
-GtkTreeSortable::sort_column_changed signal.  If <em class="parameter"><code>sort_column_id</code></em> is
-<code class="literal">GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</code>, then the default sort function
-will be used, if it is set.</p>
+<a class="link" href="GtkTreeSortable.html#GtkTreeSortable-sort-column-changed" title='The "sort-column-changed" signal'><span class="type">"sort-column-changed"</span></a> signal. <em class="parameter"><code>sortable</code></em> may either be 
+a regular column id, or one of the following special values:
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="literal">GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</code></span></p></td>
+<td>the default sort function will be used, if it is set</td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="literal">GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID</code></span></p></td>
+<td>no sorting will occur</td>
+</tr>
+</tbody>
+</table></div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -403,9 +416,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"
 >GDestroyNotify</a> destroy);</pre>
 <p>
-Sets the comparison function used when sorting to be <em class="parameter"><code>sort_func</code></em>.  If the
-current sort column id of <em class="parameter"><code>sortable</code></em> is the same as <em class="parameter"><code>sort_column_id</code></em>, then the
-model will sort using this function.</p>
+Sets the comparison function used when sorting to be <em class="parameter"><code>sort_func</code></em>. If the
+current sort column id of <em class="parameter"><code>sortable</code></em> is the same as <em class="parameter"><code>sort_column_id</code></em>, then 
+the model will sort using this function.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -466,8 +479,8 @@ If <em class="parameter"><code>sort_func</code></em> is <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL--CAPS"
 ><code class="literal">NULL</code></a>, then there will be no default comparison function.
 This means that once the model  has been sorted, it can't go back to the
-default state. In this case, when the current sort column id of <em class="parameter"><code>sortable</code></em> is
-GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, the model will be unsorted.</p>
+default state. In this case, when the current sort column id of <em class="parameter"><code>sortable</code></em> 
+is <code class="literal">GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</code>, the model will be unsorted.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -510,9 +523,9 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"
 <p>
 Returns <a
 href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
-><code class="literal">TRUE</code></a> if the model has a default sort function.  This is used
-primarily by GtkTreeViewColumns in order to determine if a model can go back
-to the default state, or not.</p>
+><code class="literal">TRUE</code></a> if the model has a default sort function. This is used
+primarily by GtkTreeViewColumns in order to determine if a model can 
+go back to the default state, or not.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -538,18 +551,22 @@ href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE--CAPS"
 <a name="GtkTreeSortable.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2" lang="en">
 <a name="GtkTreeSortable-sort-column-changed"></a><h3>The <code class="literal">"sort-column-changed"</code> signal</h3>
-<pre class="programlisting">void                user_function                      (<a class="link" href="GtkTreeSortable.html" title="GtkTreeSortable">GtkTreeSortable</a> *treesortable,
+<pre class="programlisting">void                user_function                      (<a class="link" href="GtkTreeSortable.html" title="GtkTreeSortable">GtkTreeSortable</a> *sortable,
                                                         <a
 href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
->gpointer</a>         user_data)         : Run Last</pre>
+>gpointer</a>         user_data)      : Run Last</pre>
+<p>
+The ::sort-column-changed signal is emitted when the sort column
+or sort order of <em class="parameter"><code>sortable</code></em> is changed. The signal is emitted before
+the contents of <em class="parameter"><code>sortable</code></em> are resorted.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>treesortable</code></em> :</span></p></td>
-<td>the object which received the signal.
+<td><p><span class="term"><em class="parameter"><code>sortable</code></em> :</span></p></td>
+<td> the object on which the signal is emitted
 </td>
 </tr>
 <tr>

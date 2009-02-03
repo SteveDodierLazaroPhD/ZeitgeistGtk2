@@ -249,15 +249,15 @@ void           gtk_entry_set_icon_from_icon_name         (GtkEntry             *
 void           gtk_entry_set_icon_from_gicon             (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos,
 							  GIcon                *icon);
-GtkImageType gtk_entry_get_storage_type                  (GtkEntry             *entry,
+GtkImageType gtk_entry_get_icon_storage_type             (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos);
-GdkPixbuf*   gtk_entry_get_pixbuf                        (GtkEntry             *entry,
+GdkPixbuf*   gtk_entry_get_icon_pixbuf                   (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos);
-const gchar* gtk_entry_get_stock                         (GtkEntry             *entry,
+const gchar* gtk_entry_get_icon_stock                    (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos);
 const gchar* gtk_entry_get_icon_name                     (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos);
-GIcon*       gtk_entry_get_gicon                         (GtkEntry             *entry,
+GIcon*       gtk_entry_get_icon_gicon                    (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos);
 void         gtk_entry_set_icon_activatable              (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos,
@@ -275,9 +275,13 @@ gint         gtk_entry_get_icon_at_pos                   (GtkEntry             *
 void         gtk_entry_set_icon_tooltip_text             (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos,
 							  const gchar          *tooltip);
+gchar *      gtk_entry_get_icon_tooltip_text             (GtkEntry             *entry,
+                                                          GtkEntryIconPosition  icon_pos);
 void         gtk_entry_set_icon_tooltip_markup           (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos,
 							  const gchar          *tooltip);
+gchar *      gtk_entry_get_icon_tooltip_markup           (GtkEntry             *entry,
+                                                          GtkEntryIconPosition  icon_pos);
 void         gtk_entry_set_icon_drag_source              (GtkEntry             *entry,
 							  GtkEntryIconPosition  icon_pos,
 							  GtkTargetList        *target_list,

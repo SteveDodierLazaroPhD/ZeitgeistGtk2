@@ -51,6 +51,8 @@ const <link linkend="gchar">gchar</link>*        <link linkend="gtk-action-get-n
 <link linkend="GSList">GSList</link> *            <link linkend="gtk-action-get-proxies">gtk_action_get_proxies</link>              (<link linkend="GtkAction">GtkAction</link> *action);
 <link linkend="void">void</link>                <link linkend="gtk-action-connect-accelerator">gtk_action_connect_accelerator</link>      (<link linkend="GtkAction">GtkAction</link> *action);
 <link linkend="void">void</link>                <link linkend="gtk-action-disconnect-accelerator">gtk_action_disconnect_accelerator</link>   (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-block-activate">gtk_action_block_activate</link>           (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-unblock-activate">gtk_action_unblock_activate</link>         (<link linkend="GtkAction">GtkAction</link> *action);
 <link linkend="void">void</link>                <link linkend="gtk-action-block-activate-from">gtk_action_block_activate_from</link>      (<link linkend="GtkAction">GtkAction</link> *action,
                                                          <link linkend="GtkWidget">GtkWidget</link> *proxy);
 <link linkend="void">void</link>                <link linkend="gtk-action-unblock-activate-from">gtk_action_unblock_activate_from</link>    (<link linkend="GtkAction">GtkAction</link> *action,
@@ -61,6 +63,33 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-action-get-a
 <link linkend="GClosure">GClosure</link> *          <link linkend="gtk-action-get-accel-closure">gtk_action_get_accel_closure</link>        (<link linkend="GtkAction">GtkAction</link> *action);
 <link linkend="void">void</link>                <link linkend="gtk-action-set-accel-group">gtk_action_set_accel_group</link>          (<link linkend="GtkAction">GtkAction</link> *action,
                                                          <link linkend="GtkAccelGroup">GtkAccelGroup</link> *accel_group);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-label">gtk_action_set_label</link>                (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *label);
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-action-get-label">gtk_action_get_label</link>                (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-short-label">gtk_action_set_short_label</link>          (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *short_label);
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-action-get-short-label">gtk_action_get_short_label</link>          (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-tooltip">gtk_action_set_tooltip</link>              (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *tooltip);
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-action-get-tooltip">gtk_action_get_tooltip</link>              (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-stock-id">gtk_action_set_stock_id</link>             (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *stock_id);
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-action-get-stock-id">gtk_action_get_stock_id</link>             (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-gicon">gtk_action_set_gicon</link>                (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="GIcon">GIcon</link> *icon);
+<link linkend="GIcon">GIcon</link> *             <link linkend="gtk-action-get-gicon">gtk_action_get_gicon</link>                (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-icon-name">gtk_action_set_icon_name</link>            (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *icon_name);
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-action-get-icon-name">gtk_action_get_icon_name</link>            (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-visible-horizontal">gtk_action_set_visible_horizontal</link>   (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="gboolean">gboolean</link> visible_horizontal);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-action-get-visible-horizontal">gtk_action_get_visible_horizontal</link>   (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-visible-vertical">gtk_action_set_visible_vertical</link>     (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="gboolean">gboolean</link> visible_vertical);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-action-get-visible-vertical">gtk_action_get_visible_vertical</link>     (<link linkend="GtkAction">GtkAction</link> *action);
+<link linkend="void">void</link>                <link linkend="gtk-action-set-is-important">gtk_action_set_is_important</link>         (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="gboolean">gboolean</link> is_important);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-action-get-is-important">gtk_action_get_is_important</link>         (<link linkend="GtkAction">GtkAction</link> *action);
 </synopsis>
 </refsynopsisdiv>
 
@@ -88,6 +117,7 @@ GtkAction implements
 <title role="properties.title">Properties</title>
 <synopsis>
   &quot;<link linkend="GtkAction--action-group">action-group</link>&quot;             <link linkend="GtkActionGroup">GtkActionGroup</link>*       : Read / Write
+  &quot;<link linkend="GtkAction--gicon">gicon</link>&quot;                    <link linkend="GIcon">GIcon</link>*                : Read / Write
   &quot;<link linkend="GtkAction--hide-if-empty">hide-if-empty</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkAction--icon-name">icon-name</link>&quot;                <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkAction--is-important">is-important</link>&quot;             <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -385,10 +415,11 @@ instance of that menu.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.12</para></refsect2>
-<refsect2 id="gtk-action-connect-proxy" role="function" condition="since:2.4">
+<refsect2 id="gtk-action-connect-proxy" role="function" condition="deprecated:|since:2.4">
 <title>gtk_action_connect_proxy ()</title>
-<indexterm zone="gtk-action-connect-proxy" role="2.4"><primary sortas="action_connect_proxy">gtk_action_connect_proxy</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_connect_proxy            (<link linkend="GtkAction">GtkAction</link> *action,
+<indexterm zone="gtk-action-connect-proxy" role="deprecated"><primary sortas="action_connect_proxy">gtk_action_connect_proxy</primary></indexterm><indexterm zone="gtk-action-connect-proxy" role="2.4"><primary sortas="action_connect_proxy">gtk_action_connect_proxy</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_connect_proxy            (<link linkend="GtkAction">GtkAction</link> *action,
                                                          <link linkend="GtkWidget">GtkWidget</link> *proxy);</programlisting>
+<warning><para><literal>gtk_action_connect_proxy</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Connects a widget to an action object as a proxy.  Synchronises 
 various properties of the action with the widget (such as label 
@@ -407,10 +438,11 @@ first.</para>
 <listitem><simpara> the proxy widget
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.4</para></refsect2>
-<refsect2 id="gtk-action-disconnect-proxy" role="function" condition="since:2.4">
+<refsect2 id="gtk-action-disconnect-proxy" role="function" condition="deprecated:|since:2.4">
 <title>gtk_action_disconnect_proxy ()</title>
-<indexterm zone="gtk-action-disconnect-proxy" role="2.4"><primary sortas="action_disconnect_proxy">gtk_action_disconnect_proxy</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_disconnect_proxy         (<link linkend="GtkAction">GtkAction</link> *action,
+<indexterm zone="gtk-action-disconnect-proxy" role="deprecated"><primary sortas="action_disconnect_proxy">gtk_action_disconnect_proxy</primary></indexterm><indexterm zone="gtk-action-disconnect-proxy" role="2.4"><primary sortas="action_disconnect_proxy">gtk_action_disconnect_proxy</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_disconnect_proxy         (<link linkend="GtkAction">GtkAction</link> *action,
                                                          <link linkend="GtkWidget">GtkWidget</link> *proxy);</programlisting>
+<warning><para><literal>gtk_action_disconnect_proxy</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Disconnects a proxy widget from an action.  
 Does <emphasis>not</emphasis> destroy the widget, however.</para>
@@ -469,10 +501,39 @@ Undoes the effect of one call to <link linkend="gtk-action-connect-accelerator">
 <listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.4</para></refsect2>
-<refsect2 id="gtk-action-block-activate-from" role="function" condition="since:2.4">
+<refsect2 id="gtk-action-block-activate" role="function">
+<title>gtk_action_block_activate ()</title>
+<indexterm zone="gtk-action-block-activate"><primary sortas="action_block_activate">gtk_action_block_activate</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_block_activate           (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Disable activation signals from the action 
+</para>
+<para>
+This is needed when updating the state of your proxy
+<link linkend="GtkActivatable"><type>GtkActivatable</type></link> widget could result in calling <link linkend="gtk-action-activate"><function>gtk_action_activate()</function></link>,
+this is a convenience function to avoid recursing in those
+cases (updating toggle state for instance).</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="gtk-action-unblock-activate" role="function">
+<title>gtk_action_unblock_activate ()</title>
+<indexterm zone="gtk-action-unblock-activate"><primary sortas="action_unblock_activate">gtk_action_unblock_activate</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_unblock_activate         (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Reenable activation signals from the action</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="gtk-action-block-activate-from" role="function" condition="deprecated:|since:2.4">
 <title>gtk_action_block_activate_from ()</title>
-<indexterm zone="gtk-action-block-activate-from" role="2.4"><primary sortas="action_block_activate_from">gtk_action_block_activate_from</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_block_activate_from      (<link linkend="GtkAction">GtkAction</link> *action,
+<indexterm zone="gtk-action-block-activate-from" role="deprecated"><primary sortas="action_block_activate_from">gtk_action_block_activate_from</primary></indexterm><indexterm zone="gtk-action-block-activate-from" role="2.4"><primary sortas="action_block_activate_from">gtk_action_block_activate_from</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_block_activate_from      (<link linkend="GtkAction">GtkAction</link> *action,
                                                          <link linkend="GtkWidget">GtkWidget</link> *proxy);</programlisting>
+<warning><para><literal>gtk_action_block_activate_from</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Disables calls to the <link linkend="gtk-action-activate"><function>gtk_action_activate()</function></link>
 function by signals on the given proxy widget.  This is used to
@@ -489,10 +550,11 @@ This function is intended for use by action implementations.</para>
 <listitem><simpara> a proxy widget
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.4</para></refsect2>
-<refsect2 id="gtk-action-unblock-activate-from" role="function" condition="since:2.4">
+<refsect2 id="gtk-action-unblock-activate-from" role="function" condition="deprecated:|since:2.4">
 <title>gtk_action_unblock_activate_from ()</title>
-<indexterm zone="gtk-action-unblock-activate-from" role="2.4"><primary sortas="action_unblock_activate_from">gtk_action_unblock_activate_from</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_unblock_activate_from    (<link linkend="GtkAction">GtkAction</link> *action,
+<indexterm zone="gtk-action-unblock-activate-from" role="deprecated"><primary sortas="action_unblock_activate_from">gtk_action_unblock_activate_from</primary></indexterm><indexterm zone="gtk-action-unblock-activate-from" role="2.4"><primary sortas="action_unblock_activate_from">gtk_action_unblock_activate_from</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_unblock_activate_from    (<link linkend="GtkAction">GtkAction</link> *action,
                                                          <link linkend="GtkWidget">GtkWidget</link> *proxy);</programlisting>
+<warning><para><literal>gtk_action_unblock_activate_from</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Re-enables calls to the <link linkend="gtk-action-activate"><function>gtk_action_activate()</function></link>
 function by signals on the given proxy widget.  This undoes the
@@ -576,6 +638,269 @@ will be installed.</para>
 <listitem><simpara> a <link linkend="GtkAccelGroup"><type>GtkAccelGroup</type></link> or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.4</para></refsect2>
+<refsect2 id="gtk-action-set-label" role="function" condition="since:2.16">
+<title>gtk_action_set_label ()</title>
+<indexterm zone="gtk-action-set-label" role="2.16"><primary sortas="action_set_label">gtk_action_set_label</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_label                (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *label);</programlisting>
+<para>
+Sets the label of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
+<listitem><simpara> the label text to set
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-label" role="function" condition="since:2.16">
+<title>gtk_action_get_label ()</title>
+<indexterm zone="gtk-action-get-label" role="2.16"><primary sortas="action_get_label">gtk_action_get_label</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_action_get_label                (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Gets the label text of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the label text
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-short-label" role="function" condition="since:2.16">
+<title>gtk_action_set_short_label ()</title>
+<indexterm zone="gtk-action-set-short-label" role="2.16"><primary sortas="action_set_short_label">gtk_action_set_short_label</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_short_label          (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *short_label);</programlisting>
+<para>
+Sets a shorter label text on <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>short_label</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-short-label" role="function" condition="since:2.16">
+<title>gtk_action_get_short_label ()</title>
+<indexterm zone="gtk-action-get-short-label" role="2.16"><primary sortas="action_get_short_label">gtk_action_get_short_label</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_action_get_short_label          (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Gets the short label text of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the short label text.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-tooltip" role="function" condition="since:2.16">
+<title>gtk_action_set_tooltip ()</title>
+<indexterm zone="gtk-action-set-tooltip" role="2.16"><primary sortas="action_set_tooltip">gtk_action_set_tooltip</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_tooltip              (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *tooltip);</programlisting>
+<para>
+Sets the tooltip text on <parameter>action</parameter></para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>tooltip</parameter>&#160;:</term>
+<listitem><simpara> the tooltip text
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-tooltip" role="function" condition="since:2.16">
+<title>gtk_action_get_tooltip ()</title>
+<indexterm zone="gtk-action-get-tooltip" role="2.16"><primary sortas="action_get_tooltip">gtk_action_get_tooltip</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_action_get_tooltip              (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Gets the tooltip text of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the tooltip text
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-stock-id" role="function" condition="since:2.16">
+<title>gtk_action_set_stock_id ()</title>
+<indexterm zone="gtk-action-set-stock-id" role="2.16"><primary sortas="action_set_stock_id">gtk_action_set_stock_id</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_stock_id             (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *stock_id);</programlisting>
+<para>
+Sets the stock id on <parameter>action</parameter></para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>stock_id</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-stock-id" role="function" condition="since:2.16">
+<title>gtk_action_get_stock_id ()</title>
+<indexterm zone="gtk-action-get-stock-id" role="2.16"><primary sortas="action_get_stock_id">gtk_action_get_stock_id</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_action_get_stock_id             (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Gets the stock id of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the stock id
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-gicon" role="function" condition="since:2.16">
+<title>gtk_action_set_gicon ()</title>
+<indexterm zone="gtk-action-set-gicon" role="2.16"><primary sortas="action_set_gicon">gtk_action_set_gicon</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_gicon                (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="GIcon">GIcon</link> *icon);</programlisting>
+<para>
+Sets the icon of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon</parameter>&#160;:</term>
+<listitem><simpara> the <link linkend="GIcon"><type>GIcon</type></link> to set
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-gicon" role="function" condition="since:2.16">
+<title>gtk_action_get_gicon ()</title>
+<indexterm zone="gtk-action-get-gicon" role="2.16"><primary sortas="action_get_gicon">gtk_action_get_gicon</primary></indexterm><programlisting><link linkend="GIcon">GIcon</link> *             gtk_action_get_gicon                (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Gets the gicon of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The action's <link linkend="GIcon"><type>GIcon</type></link> if one is set.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-icon-name" role="function" condition="since:2.16">
+<title>gtk_action_set_icon_name ()</title>
+<indexterm zone="gtk-action-set-icon-name" role="2.16"><primary sortas="action_set_icon_name">gtk_action_set_icon_name</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_icon_name            (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         const <link linkend="gchar">gchar</link> *icon_name);</programlisting>
+<para>
+Sets the icon name on <parameter>action</parameter></para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>icon_name</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-icon-name" role="function" condition="since:2.16">
+<title>gtk_action_get_icon_name ()</title>
+<indexterm zone="gtk-action-get-icon-name" role="2.16"><primary sortas="action_get_icon_name">gtk_action_get_icon_name</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_action_get_icon_name            (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Gets the icon name of <parameter>action</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the icon name
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-visible-horizontal" role="function" condition="since:2.16">
+<title>gtk_action_set_visible_horizontal ()</title>
+<indexterm zone="gtk-action-set-visible-horizontal" role="2.16"><primary sortas="action_set_visible_horizontal">gtk_action_set_visible_horizontal</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_visible_horizontal   (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="gboolean">gboolean</link> visible_horizontal);</programlisting>
+<para>
+Sets whether <parameter>action</parameter> is visible when horizontal</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>visible_horizontal</parameter>&#160;:</term>
+<listitem><simpara> whether the action is visible horizontally
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-visible-horizontal" role="function" condition="since:2.16">
+<title>gtk_action_get_visible_horizontal ()</title>
+<indexterm zone="gtk-action-get-visible-horizontal" role="2.16"><primary sortas="action_get_visible_horizontal">gtk_action_get_visible_horizontal</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_action_get_visible_horizontal   (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Checks whether <parameter>action</parameter> is visible when horizontal</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether <parameter>action</parameter> is visible when horizontal
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-visible-vertical" role="function" condition="since:2.16">
+<title>gtk_action_set_visible_vertical ()</title>
+<indexterm zone="gtk-action-set-visible-vertical" role="2.16"><primary sortas="action_set_visible_vertical">gtk_action_set_visible_vertical</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_visible_vertical     (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="gboolean">gboolean</link> visible_vertical);</programlisting>
+<para>
+Sets whether <parameter>action</parameter> is visible when vertical</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>visible_vertical</parameter>&#160;:</term>
+<listitem><simpara> whether the action is visible vertically
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-visible-vertical" role="function" condition="since:2.16">
+<title>gtk_action_get_visible_vertical ()</title>
+<indexterm zone="gtk-action-get-visible-vertical" role="2.16"><primary sortas="action_get_visible_vertical">gtk_action_get_visible_vertical</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_action_get_visible_vertical     (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Checks whether <parameter>action</parameter> is visible when horizontal</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether <parameter>action</parameter> is visible when horizontal
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-set-is-important" role="function" condition="since:2.16">
+<title>gtk_action_set_is_important ()</title>
+<indexterm zone="gtk-action-set-is-important" role="2.16"><primary sortas="action_set_is_important">gtk_action_set_is_important</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_action_set_is_important         (<link linkend="GtkAction">GtkAction</link> *action,
+                                                         <link linkend="gboolean">gboolean</link> is_important);</programlisting>
+<para>
+Sets whether the action is important, this attribute is used
+primarily by toolbar items to decide whether to show a label
+or not.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> the action object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>is_important</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to make the action important
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-action-get-is-important" role="function" condition="since:2.16">
+<title>gtk_action_get_is_important ()</title>
+<indexterm zone="gtk-action-get-is-important" role="2.16"><primary sortas="action_get_is_important">gtk_action_get_is_important</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_action_get_is_important         (<link linkend="GtkAction">GtkAction</link> *action);</programlisting>
+<para>
+Checks whether <parameter>action</parameter> is important or not</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>action</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkAction"><type>GtkAction</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether <parameter>action</parameter> is important
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkAction.property-details" role="property_details">
@@ -583,6 +908,21 @@ will be installed.</para>
 <refsect2 id="GtkAction--action-group" role="property"><title>The <literal>&quot;action-group&quot;</literal> property</title>
 <indexterm zone="GtkAction--action-group"><primary sortas="Action:action-group">GtkAction:action-group</primary></indexterm><programlisting>  &quot;action-group&quot;             <link linkend="GtkActionGroup">GtkActionGroup</link>*       : Read / Write</programlisting>
 <para>The GtkActionGroup this GtkAction is associated with, or NULL (for internal use).</para></refsect2>
+<refsect2 id="GtkAction--gicon" role="property"><title>The <literal>&quot;gicon&quot;</literal> property</title>
+<indexterm zone="GtkAction--gicon" role="2.16"><primary sortas="Action:gicon">GtkAction:gicon</primary></indexterm><programlisting>  &quot;gicon&quot;                    <link linkend="GIcon">GIcon</link>*                : Read / Write</programlisting>
+<para>
+The <link linkend="GIcon"><type>GIcon</type></link> displayed in the <link linkend="GtkAction"><type>GtkAction</type></link>.
+</para>
+<para>
+Note that the stock icon is preferred, if the <link linkend="GtkAction--stock-id"><type>"stock-id"</type></link>
+property holds the id of an existing stock icon.
+</para>
+<para>
+This is an appearance property and thus only applies if 
+<link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>.</para>
+<para>
+</para><para>Since 2.16</para>
+</refsect2>
 <refsect2 id="GtkAction--hide-if-empty" role="property"><title>The <literal>&quot;hide-if-empty&quot;</literal> property</title>
 <indexterm zone="GtkAction--hide-if-empty"><primary sortas="Action:hide-if-empty">GtkAction:hide-if-empty</primary></indexterm><programlisting>  &quot;hide-if-empty&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>When TRUE, empty menu proxies for this action are hidden.</para><para>Default value: TRUE</para>
@@ -590,10 +930,16 @@ will be installed.</para>
 <refsect2 id="GtkAction--icon-name" role="property"><title>The <literal>&quot;icon-name&quot;</literal> property</title>
 <indexterm zone="GtkAction--icon-name" role="2.10"><primary sortas="Action:icon-name">GtkAction:icon-name</primary></indexterm><programlisting>  &quot;icon-name&quot;                <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>
-The name of the icon from the icon theme.
-Note that the stock icon is preferred, if
-the ::stock-id property holds the id of an
-existing stock icon.</para>
+The name of the icon from the icon theme. 
+</para>
+<para>
+Note that the stock icon is preferred, if the <link linkend="GtkAction--stock-id"><type>"stock-id"</type></link> 
+property holds the id of an existing stock icon, and the <link linkend="GIcon"><type>GIcon</type></link> is
+preferred if the <link linkend="GtkAction--gicon"><type>"gicon"</type></link> property is set. 
+</para>
+<para>
+This is an appearance property and thus only applies if 
+<link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>.</para>
 <para>
 </para><para>Default value: NULL</para>
 <para>Since 2.10</para>
@@ -607,7 +953,11 @@ existing stock icon.</para>
 <para>
 The label used for menu items and buttons that activate
 this action. If the label is <link linkend="NULL--CAPS"><literal>NULL</literal></link>, GTK+ uses the stock 
-label specified via the stock-id property.</para>
+label specified via the stock-id property.
+</para>
+<para>
+This is an appearance property and thus only applies if 
+<link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>.</para>
 <para>
 </para><para>Default value: NULL</para>
 </refsect2>
@@ -621,11 +971,25 @@ label specified via the stock-id property.</para>
 </refsect2>
 <refsect2 id="GtkAction--short-label" role="property"><title>The <literal>&quot;short-label&quot;</literal> property</title>
 <indexterm zone="GtkAction--short-label"><primary sortas="Action:short-label">GtkAction:short-label</primary></indexterm><programlisting>  &quot;short-label&quot;              <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
-<para>A shorter label that may be used on toolbar buttons.</para><para>Default value: NULL</para>
+<para>
+A shorter label that may be used on toolbar buttons.
+</para>
+<para>
+This is an appearance property and thus only applies if 
+<link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>.</para>
+<para>
+</para><para>Default value: NULL</para>
 </refsect2>
 <refsect2 id="GtkAction--stock-id" role="property"><title>The <literal>&quot;stock-id&quot;</literal> property</title>
 <indexterm zone="GtkAction--stock-id"><primary sortas="Action:stock-id">GtkAction:stock-id</primary></indexterm><programlisting>  &quot;stock-id&quot;                 <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
-<para>The stock icon displayed in widgets representing this action.</para><para>Default value: NULL</para>
+<para>
+The stock icon displayed in widgets representing this action.
+</para>
+<para>
+This is an appearance property and thus only applies if 
+<link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>.</para>
+<para>
+</para><para>Default value: NULL</para>
 </refsect2>
 <refsect2 id="GtkAction--tooltip" role="property"><title>The <literal>&quot;tooltip&quot;</literal> property</title>
 <indexterm zone="GtkAction--tooltip"><primary sortas="Action:tooltip">GtkAction:tooltip</primary></indexterm><programlisting>  &quot;tooltip&quot;                  <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>

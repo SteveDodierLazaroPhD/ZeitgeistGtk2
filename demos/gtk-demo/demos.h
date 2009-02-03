@@ -50,13 +50,19 @@ Demo child0[] = {
 };
 
 Demo child1[] = {
+  { "Entry Completion", "entry_completion.c", do_entry_completion, NULL },
+  { "Search Entry", "search_entry.c", do_search_entry, NULL },
+  { NULL } 
+};
+
+Demo child2[] = {
   { "Hypertext", "hypertext.c", do_hypertext, NULL },
   { "Multiple Views", "textview.c", do_textview, NULL },
   { "Automatic scrolling", "textscroll.c", do_textscroll, NULL },
   { NULL } 
 };
 
-Demo child2[] = {
+Demo child3[] = {
   { "Icon View Basics", "iconview.c", do_iconview, NULL },
   { "Editing and Drag-and-Drop", "iconview_edit.c", do_iconview_edit, NULL },
   { NULL } 
@@ -73,9 +79,9 @@ Demo testgtk_demos[] = {
   { "Combo boxes", "combobox.c", do_combobox, NULL }, 
   { "Dialog and Message Boxes", "dialog.c", do_dialog, NULL }, 
   { "Drawing Area", "drawingarea.c", do_drawingarea, NULL }, 
-  { "Entry Completion", "entry_completion.c", do_entry_completion, NULL }, 
+  { "Entry", NULL, NULL, child1 }, 
   { "Expander", "expander.c", do_expander, NULL }, 
-  { "Icon View", NULL, NULL, child2 }, 
+  { "Icon View", NULL, NULL, child3 }, 
   { "Images", "images.c", do_images, NULL }, 
   { "Menus", "menus.c", do_menus, NULL }, 
   { "Paned Widgets", "panes.c", do_panes, NULL }, 
@@ -83,10 +89,9 @@ Demo testgtk_demos[] = {
   { "Pixbufs", "pixbufs.c", do_pixbufs, NULL }, 
   { "Printing", "printing.c", do_printing, NULL }, 
   { "Rotated Text", "rotated_text.c", do_rotated_text, NULL }, 
-  { "Search Entry", "search_entry.c", do_search_entry, NULL }, 
   { "Size Groups", "sizegroup.c", do_sizegroup, NULL }, 
   { "Stock Item and Icon Browser", "stock_browser.c", do_stock_browser, NULL }, 
-  { "Text Widget", NULL, NULL, child1 }, 
+  { "Text Widget", NULL, NULL, child2 }, 
   { "Tree View", NULL, NULL, child0 }, 
   { "UI Manager", "ui_manager.c", do_ui_manager, NULL },
   { NULL } 

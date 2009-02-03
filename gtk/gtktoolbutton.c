@@ -32,6 +32,7 @@
 #include "gtkvbox.h"
 #include "gtkintl.h"
 #include "gtktoolbar.h"
+#include "gtkactivatable.h"
 #include "gtkprivate.h"
 #include "gtkalias.h"
 
@@ -77,11 +78,14 @@ static void gtk_tool_button_style_set      (GtkWidget          *widget,
 					    GtkStyle           *prev_style);
 
 static void gtk_tool_button_construct_contents (GtkToolItem *tool_item);
-      
-static GObjectClass *parent_class = NULL;
-static guint         toolbutton_signals[LAST_SIGNAL] = { 0 };
 
-#define GTK_TOOL_BUTTON_GET_PRIVATE(obj)(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_TOOL_BUTTON, GtkToolButtonPrivate))
+static void gtk_tool_button_activatable_interface_init (GtkActivatableIface  *iface);
+static void gtk_tool_button_activatable_update         (GtkActivatable       *activatable,
+							GtkAction            *action,
+							const gchar          *property_name);
+static void gtk_tool_button_activatable_reset          (GtkActivatable       *activatable,
+							GtkAction            *action);
+
 
 struct _GtkToolButtonPrivate
 {
@@ -97,19 +101,37 @@ struct _GtkToolButtonPrivate
   guint contents_invalid : 1;
 };
 
+static GObjectClass        *parent_class = NULL;
+static GtkActivatableIface *parent_activatable_iface;
+static guint                toolbutton_signals[LAST_SIGNAL] = { 0 };
+
+#define GTK_TOOL_BUTTON_GET_PRIVATE(obj)(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_TOOL_BUTTON, GtkToolButtonPrivate))
+
 GType
 gtk_tool_button_get_type (void)
 {
   static GType type = 0;
-
+  
   if (!type)
-    type = g_type_register_static_simple (GTK_TYPE_TOOL_ITEM,
-					  I_("GtkToolButton"),
-					  sizeof (GtkToolButtonClass),
-					  (GClassInitFunc) gtk_tool_button_class_init,
-					  sizeof (GtkToolButton),
-					  (GInstanceInitFunc) gtk_tool_button_init,
-					  0);
+    {
+      static const GInterfaceInfo activatable_info =
+      {
+        (GInterfaceInitFunc) gtk_tool_button_activatable_interface_init,
+        (GInterfaceFinalizeFunc) NULL,
+        NULL
+      };
+
+      type = g_type_register_static_simple (GTK_TYPE_TOOL_ITEM,
+					    I_("GtkToolButton"),
+					    sizeof (GtkToolButtonClass),
+					    (GClassInitFunc) gtk_tool_button_class_init,
+					    sizeof (GtkToolButton),
+					    (GInstanceInitFunc) gtk_tool_button_init,
+					    0);
+
+      g_type_add_interface_static (type, GTK_TYPE_ACTIVATABLE,
+                                   &activatable_info);
+    }
   return type;
 }
 
@@ -579,6 +601,12 @@ clone_image_menu_size (GtkImage *image, GtkSettings *settings)
       gtk_image_get_icon_set (image, &icon_set, NULL);
       return gtk_image_new_from_icon_set (icon_set, GTK_ICON_SIZE_MENU);
     }
+  else if (storage_type == GTK_IMAGE_GICON)
+    {
+      GIcon *icon;
+      gtk_image_get_gicon (image, &icon, NULL);
+      return gtk_image_new_from_gicon (icon, GTK_ICON_SIZE_MENU);
+    }
   else if (storage_type == GTK_IMAGE_PIXBUF)
     {
       gint width, height;
@@ -614,6 +642,9 @@ gtk_tool_button_create_menu_proxy (GtkToolItem *item)
   gboolean use_mnemonic = TRUE;
   const char *label;
 
+  if (_gtk_tool_item_create_menu_proxy (item))
+    return TRUE;
+ 
   if (GTK_IS_LABEL (button->priv->label_widget))
     {
       label = gtk_label_get_label (GTK_LABEL (button->priv->label_widget));
@@ -666,6 +697,13 @@ static void
 button_clicked (GtkWidget     *widget,
 		GtkToolButton *button)
 {
+  GtkAction *action;
+
+  action = gtk_activatable_get_related_action (GTK_ACTIVATABLE (button));
+  
+  if (action)
+    gtk_action_activate (action);
+
   g_signal_emit_by_name (button, "clicked");
 }
 
@@ -696,6 +734,126 @@ gtk_tool_button_style_set (GtkWidget *widget,
 			   GtkStyle  *prev_style)
 {
   gtk_tool_button_update_icon_spacing (GTK_TOOL_BUTTON (widget));
+}
+
+static void 
+gtk_tool_button_activatable_interface_init (GtkActivatableIface  *iface)
+{
+  parent_activatable_iface = g_type_interface_peek_parent (iface);
+  iface->update = gtk_tool_button_activatable_update;
+  iface->reset = gtk_tool_button_activatable_reset;
+}
+
+static void
+gtk_tool_button_activatable_update (GtkActivatable       *activatable,
+				    GtkAction            *action,
+				    const gchar          *property_name)
+{
+  GtkToolButton *button;
+  GtkWidget *image;
+
+  parent_activatable_iface->update (activatable, action, property_name);
+
+  if (!gtk_activatable_get_use_action_appearance (activatable))
+    return;
+
+  button = GTK_TOOL_BUTTON (activatable);
+  
+  if (strcmp (property_name, "short-label") == 0)
+    {
+      if (!gtk_action_get_stock_id (action) &&
+	  !gtk_action_get_icon_name (action))
+	{
+	  gtk_tool_button_set_use_underline (button, TRUE);
+	  gtk_tool_button_set_label (button, gtk_action_get_short_label (action));
+	}
+    }
+  else if (strcmp (property_name, "stock-id") == 0)
+    {
+      if (gtk_action_get_stock_id (action))
+	{	
+	  gtk_tool_button_set_label (button, NULL);
+	  gtk_tool_button_set_icon_name (button, NULL);
+	}
+      gtk_tool_button_set_icon_widget (button, NULL);
+      gtk_tool_button_set_stock_id (button, gtk_action_get_stock_id (action));
+    }
+  else if (strcmp (property_name, "gicon") == 0)
+    {
+      const gchar *stock_id = gtk_action_get_stock_id (action);
+      GIcon *icon = gtk_action_get_gicon (action);
+      GtkIconSize icon_size = GTK_ICON_SIZE_BUTTON;
+
+      if ((stock_id && gtk_icon_factory_lookup_default (stock_id)) || !icon)
+	image = NULL;
+      else 
+	{   
+	  image = gtk_tool_button_get_icon_widget (button);
+	  icon_size = gtk_tool_item_get_icon_size (GTK_TOOL_ITEM (button));
+
+	  if (!image)
+	    image = gtk_image_new ();
+	}
+
+      gtk_tool_button_set_icon_widget (button, image);
+      gtk_image_set_from_gicon (GTK_IMAGE (image), icon, icon_size);
+
+    }
+  else if (strcmp (property_name, "icon-name") == 0)
+    {
+      if (gtk_action_get_icon_name (action))
+	{	
+	  gtk_tool_button_set_label (button, NULL);
+	  gtk_tool_button_set_stock_id (button, NULL);
+	}
+      gtk_tool_button_set_icon_name (button, gtk_action_get_icon_name (action));
+    }
+}
+
+static void
+gtk_tool_button_activatable_reset (GtkActivatable       *activatable,
+				   GtkAction            *action)
+{
+  GtkToolButton *button;
+  GIcon         *icon;
+  const gchar   *stock_id;
+
+  parent_activatable_iface->reset (activatable, action);
+
+  if (!action)
+    return;
+
+  if (!gtk_activatable_get_use_action_appearance (activatable))
+    return;
+
+  button = GTK_TOOL_BUTTON (activatable);
+  stock_id = gtk_action_get_stock_id (action);
+
+  gtk_tool_button_set_label (button, gtk_action_get_short_label (action));
+  gtk_tool_button_set_use_underline (button, TRUE);
+  gtk_tool_button_set_stock_id (button, stock_id);
+  gtk_tool_button_set_icon_name (button, gtk_action_get_icon_name (action));
+
+  if (stock_id && gtk_icon_factory_lookup_default (stock_id))
+      gtk_tool_button_set_icon_widget (button, NULL);
+  else if ((icon = gtk_action_get_gicon (action)) != NULL)
+    {
+      GtkIconSize icon_size = gtk_tool_item_get_icon_size (GTK_TOOL_ITEM (button));
+      GtkWidget  *image = gtk_tool_button_get_icon_widget (button);
+      
+      if (!image)
+	{
+	  image = gtk_image_new ();
+	  gtk_widget_show (image);
+	  gtk_tool_button_set_icon_widget (button, image);
+	}
+
+      gtk_image_set_from_gicon (GTK_IMAGE (image), icon, icon_size);
+    }
+  else if (gtk_action_get_icon_name (action))
+    gtk_tool_button_set_icon_name (button, gtk_action_get_icon_name (action));
+  else
+    gtk_tool_button_set_label (button, gtk_action_get_short_label (action));
 }
 
 /**

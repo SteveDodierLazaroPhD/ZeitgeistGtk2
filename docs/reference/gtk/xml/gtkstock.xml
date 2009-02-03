@@ -44,6 +44,7 @@
 #define             <link linkend="GTK-STOCK-APPLY--CAPS">GTK_STOCK_APPLY</link>
 #define             <link linkend="GTK-STOCK-BOLD--CAPS">GTK_STOCK_BOLD</link>
 #define             <link linkend="GTK-STOCK-CANCEL--CAPS">GTK_STOCK_CANCEL</link>
+#define             <link linkend="GTK-STOCK-CAPS-LOCK-WARNING--CAPS">GTK_STOCK_CAPS_LOCK_WARNING</link>
 #define             <link linkend="GTK-STOCK-CDROM--CAPS">GTK_STOCK_CDROM</link>
 #define             <link linkend="GTK-STOCK-CLEAR--CAPS">GTK_STOCK_CLEAR</link>
 #define             <link linkend="GTK-STOCK-CLOSE--CAPS">GTK_STOCK_CLOSE</link>
@@ -296,7 +297,38 @@ a stock item.
 </para>
 <para>
 If no function is registered for a translation domain,
-<link linkend="g-dgettext"><function>g_dgettext()</function></link> is used.</para>
+<link linkend="g-dgettext"><function>g_dgettext()</function></link> is used.
+</para>
+<para>
+The function is used for all stock items whose
+<parameter>translation_domain</parameter> matches <parameter>domain</parameter>. Note that it is possible
+to use strings different from the actual gettext translation domain
+of your application for this, as long as your <link linkend="GtkTranslateFunc"><type>GtkTranslateFunc</type></link> uses
+the correct domain when calling <link linkend="dgettext"><function>dgettext()</function></link>. This can be useful, e.g.
+when dealing with message contexts:
+</para>
+<para>
+<informalexample><programlisting>
+GtkStockItem items[] = { 
+ { MY_ITEM1, NC_("odd items", "Item 1"), 0, 0, "odd-item-domain" },
+ { MY_ITEM2, NC_("even items", "Item 2"), 0, 0, "even-item-domain" },
+};
+
+gchar *
+my_translate_func (const gchar *msgid,
+                   gpointer     data)
+{
+  gchar *msgctxt = data;
+
+  return (gchar*)g_dpgettext2 (GETTEXT_PACKAGE, msgctxt, msgid);
+}
+
+/&ast; ... &amp;ast/
+
+gtk_stock_add (items, G_N_ELEMENTS (items));
+gtk_stock_set_translate_func ("odd-item-domain", my_translate_func, "odd items"); 
+gtk_stock_set_translate_func ("even-item-domain", my_translate_func, "even items"); 
+</programlisting></informalexample></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>domain</parameter>&#160;:</term>
@@ -353,6 +385,14 @@ The "Bold" item.
 The "Cancel" item.
 <inlinegraphic fileref="gtk-cancel.png" format="PNG"></inlinegraphic>
 </para></refsect2>
+<refsect2 id="GTK-STOCK-CAPS-LOCK-WARNING--CAPS" role="macro" condition="since:2.16">
+<title>GTK_STOCK_CAPS_LOCK_WARNING</title>
+<indexterm zone="GTK-STOCK-CAPS-LOCK-WARNING--CAPS" role="2.16"><primary sortas="STOCK_CAPS_LOCK_WARNING">GTK_STOCK_CAPS_LOCK_WARNING</primary></indexterm><programlisting>#define GTK_STOCK_CAPS_LOCK_WARNING "gtk-caps-lock-warning"
+</programlisting>
+<para>
+The "Caps Lock Warning" icon.
+<inlinegraphic fileref="gtk-caps-lock-warning.png" format="PNG"></inlinegraphic>
+</para><para role="since">Since 2.16</para></refsect2>
 <refsect2 id="GTK-STOCK-CDROM--CAPS" role="macro">
 <title>GTK_STOCK_CDROM</title>
 <indexterm zone="GTK-STOCK-CDROM--CAPS"><primary sortas="STOCK_CDROM">GTK_STOCK_CDROM</primary></indexterm><programlisting>#define GTK_STOCK_CDROM            "gtk-cdrom"

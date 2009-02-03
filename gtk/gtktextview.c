@@ -108,6 +108,7 @@ struct _GtkTextViewPrivate
 {
   guint blink_time;  /* time in msec the cursor has blinked since last user event */
   guint im_spot_idle;
+  gchar *im_module;
 };
 
 
@@ -156,7 +157,8 @@ enum
   PROP_CURSOR_VISIBLE,
   PROP_BUFFER,
   PROP_OVERWRITE,
-  PROP_ACCEPTS_TAB
+  PROP_ACCEPTS_TAB,
+  PROP_IM_MODULE
 };
 
 static void gtk_text_view_destroy              (GtkObject        *object);
@@ -328,6 +330,9 @@ static void gtk_text_view_mark_set_handler       (GtkTextBuffer     *buffer,
                                                   gpointer           data);
 static void gtk_text_view_target_list_notify     (GtkTextBuffer     *buffer,
                                                   const GParamSpec  *pspec,
+                                                  gpointer           data);
+static void gtk_text_view_paste_done_handler     (GtkTextBuffer     *buffer,
+                                                  GtkClipboard      *clipboard,
                                                   gpointer           data);
 static void gtk_text_view_get_cursor_location    (GtkTextView       *text_view,
 						  GdkRectangle      *pos);
@@ -658,6 +663,26 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
 							 TRUE,
 							 GTK_PARAM_READWRITE));
 
+   /**
+    * GtkTextView:im-module:
+    *
+    * Which IM (input method) module should be used for this entry. 
+    * See #GtkIMContext.
+    *
+    * Setting this to a non-%NULL value overrides the
+    * system-wide IM module setting. See the GtkSettings 
+    * #GtkSettings:gtk-im-module property.
+    *
+    * Since: 2.16
+    */
+   g_object_class_install_property (gobject_class,
+                                    PROP_IM_MODULE,
+                                    g_param_spec_string ("im-module",
+                                                         P_("IM module"),
+                                                         P_("Which IM module should be used"),
+                                                         NULL,
+                                                         GTK_PARAM_READWRITE));
+
   /*
    * Style properties
    */
@@ -686,7 +711,7 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
    * the viewport to be moved instead.
    *
    * Applications should not connect to it, but may emit it with 
-   * g_signal_emit_by_name() if they need to control scrolling 
+   * g_signal_emit_by_name() if they need to control the cursor
    * programmatically.
    *
    * The default bindings for this signal come in two variants,
@@ -1384,6 +1409,9 @@ gtk_text_view_set_buffer (GtkTextView   *text_view,
       g_signal_handlers_disconnect_by_func (text_view->buffer,
                                             gtk_text_view_target_list_notify,
                                             text_view);
+      g_signal_handlers_disconnect_by_func (text_view->buffer,
+                                            gtk_text_view_paste_done_handler,
+                                            text_view);
       g_object_unref (text_view->buffer);
       text_view->dnd_mark = NULL;
       text_view->first_para_mark = NULL;
@@ -1424,6 +1452,9 @@ gtk_text_view_set_buffer (GtkTextView   *text_view,
                         text_view);
       g_signal_connect (text_view->buffer, "notify::paste-target-list",
 			G_CALLBACK (gtk_text_view_target_list_notify),
+                        text_view);
+      g_signal_connect (text_view->buffer, "paste-done",
+			G_CALLBACK (gtk_text_view_paste_done_handler),
                         text_view);
 
       gtk_text_view_target_list_notify (text_view->buffer, NULL, text_view);
@@ -1509,7 +1540,7 @@ gtk_text_view_get_iter_at_location (GtkTextView *text_view,
  * gtk_text_view_get_iter_at_position:
  * @text_view: a #GtkTextView
  * @iter: a #GtkTextIter
- * @trailing: location to store an integer indicating where
+ * @trailing: if non-%NULL, location to store an integer indicating where
  *    in the grapheme the user clicked. It will either be
  *    zero, or the number of characters in the grapheme. 
  *    0 represents the trailing edge of the grapheme.
@@ -2836,8 +2867,10 @@ static void
 gtk_text_view_finalize (GObject *object)
 {
   GtkTextView *text_view;
+  GtkTextViewPrivate *priv;
 
   text_view = GTK_TEXT_VIEW (object);
+  priv = GTK_TEXT_VIEW_GET_PRIVATE (text_view);
 
   g_assert (text_view->buffer == NULL);
 
@@ -2870,6 +2903,8 @@ gtk_text_view_finalize (GObject *object)
 
   g_object_unref (text_view->im_context);
 
+  g_free (priv->im_module);
+
   G_OBJECT_CLASS (gtk_text_view_parent_class)->finalize (object);
 }
 
@@ -2880,8 +2915,10 @@ gtk_text_view_set_property (GObject         *object,
 			    GParamSpec      *pspec)
 {
   GtkTextView *text_view;
+  GtkTextViewPrivate *priv;
 
   text_view = GTK_TEXT_VIEW (object);
+  priv = GTK_TEXT_VIEW_GET_PRIVATE (text_view);
 
   switch (prop_id)
     {
@@ -2941,6 +2978,13 @@ gtk_text_view_set_property (GObject         *object,
       gtk_text_view_set_accepts_tab (text_view, g_value_get_boolean (value));
       break;
       
+    case PROP_IM_MODULE:
+      g_free (priv->im_module);
+      priv->im_module = g_strdup (g_value_get_string (value));
+      if (GTK_IS_IM_MULTICONTEXT (text_view->im_context))
+        gtk_im_multicontext_set_context_id (GTK_IM_MULTICONTEXT (text_view->im_context), priv->im_module);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -2954,8 +2998,10 @@ gtk_text_view_get_property (GObject         *object,
 			    GParamSpec      *pspec)
 {
   GtkTextView *text_view;
+  GtkTextViewPrivate *priv;
 
   text_view = GTK_TEXT_VIEW (object);
+  priv = GTK_TEXT_VIEW_GET_PRIVATE (text_view);
 
   switch (prop_id)
     {
@@ -3015,6 +3061,10 @@ gtk_text_view_get_property (GObject         *object,
       g_value_set_boolean (value, text_view->accepts_tab);
       break;
       
+    case PROP_IM_MODULE:
+      g_value_set_string (value, priv->im_module);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -3787,6 +3837,9 @@ gtk_text_view_realize (GtkWidget *widget)
       
       tmp_list = tmp_list->next;
     }
+
+  /* Ensure updating the spot location. */
+  gtk_text_view_update_im_spot_location (text_view);
 }
 
 static void
@@ -3938,28 +3991,15 @@ gtk_text_view_state_changed (GtkWidget      *widget,
 static void
 set_invisible_cursor (GdkWindow *window)
 {
-  GdkBitmap *empty_bitmap;
+  GdkDisplay *display;
   GdkCursor *cursor;
-  GdkColor useless;
-  char invisible_cursor_bits[] = { 0x0 };	
-	
-  useless.red = useless.green = useless.blue = 0;
-  useless.pixel = 0;
-  
-  empty_bitmap = gdk_bitmap_create_from_data (window,
-					      invisible_cursor_bits,
-					      1, 1);
-  
-  cursor = gdk_cursor_new_from_pixmap (empty_bitmap,
-				       empty_bitmap,
-				       &useless,
-				       &useless, 0, 0);
-  
+
+  display = gdk_drawable_get_display (window);
+  cursor = gdk_cursor_new_for_display (display, GDK_BLANK_CURSOR);
+ 
   gdk_window_set_cursor (window, cursor);
   
   gdk_cursor_unref (cursor);
-  
-  g_object_unref (empty_bitmap);
 }
 
 static void
@@ -5702,9 +5742,16 @@ gtk_text_view_paste_clipboard (GtkTextView *text_view)
 				   clipboard,
 				   NULL,
 				   text_view->editable);
+}
+
+static void
+gtk_text_view_paste_done_handler (GtkTextBuffer *buffer,
+                                  GtkClipboard  *clipboard,
+                                  gpointer       data)
+{
+  GtkTextView *text_view = data;
   DV(g_print (G_STRLOC": scrolling onscreen\n"));
-  gtk_text_view_scroll_mark_onscreen (text_view,
-                                      gtk_text_buffer_get_insert (get_buffer (text_view)));
+  gtk_text_view_scroll_mark_onscreen (text_view, gtk_text_buffer_get_insert (buffer));
 }
 
 static void
@@ -7273,21 +7320,24 @@ gtk_text_view_preedit_changed_handler (GtkIMContext *context,
 
   /* Keypress events are passed to input method even if cursor position is not editable;
    * so beep here if it's multi-key input sequence, input method will be reset in 
-   * key-press-event handler. */
-  if (!gtk_text_iter_can_insert (&iter, text_view->editable))
+   * key-press-event handler. 
+   */
+  gtk_im_context_get_preedit_string (context, &str, &attrs, &cursor_pos);
+
+  if (str && str[0] && !gtk_text_iter_can_insert (&iter, text_view->editable))
     {
       gtk_widget_error_bell (GTK_WIDGET (text_view));
-      return;
+      goto out;
     }
 
-  gtk_im_context_get_preedit_string (context, &str, &attrs, &cursor_pos);
   gtk_text_layout_set_preedit_string (text_view->layout, str, attrs, cursor_pos);
-  pango_attr_list_unref (attrs);
-  g_free (str);
-
   if (GTK_WIDGET_HAS_FOCUS (text_view))
     gtk_text_view_scroll_mark_onscreen (text_view,
 					gtk_text_buffer_get_insert (get_buffer (text_view)));
+
+out:
+  pango_attr_list_unref (attrs);
+  g_free (str);
 }
 
 static gboolean

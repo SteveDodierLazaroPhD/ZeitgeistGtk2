@@ -174,7 +174,7 @@ for the "price" column could be one which returns
 <indexterm zone="gtk-tree-sortable-sort-column-changed"><primary sortas="tree_sortable_sort_column_changed">gtk_tree_sortable_sort_column_changed</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_tree_sortable_sort_column_changed
                                                         (<link linkend="GtkTreeSortable">GtkTreeSortable</link> *sortable);</programlisting>
 <para>
-Emits a GtkTreeSortable::sort_column_changed signal on</para>
+Emits a <link linkend="GtkTreeSortable-sort-column-changed"><type>"sort-column-changed"</type></link> signal on <parameter>sortable</parameter>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>sortable</parameter>&#160;:</term>
@@ -189,7 +189,7 @@ Emits a GtkTreeSortable::sort_column_changed signal on</para>
                                                          <link linkend="GtkSortType">GtkSortType</link> *order);</programlisting>
 <para>
 Fills in <parameter>sort_column_id</parameter> and <parameter>order</parameter> with the current sort column and the
-order.  It returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> unless the <parameter>sort_column_id</parameter> is 
+order. It returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> unless the <parameter>sort_column_id</parameter> is 
 <link linkend="GTK-TREE-SORTABLE-DEFAULT-SORT-COLUMN-ID--CAPS"><literal>GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</literal></link> or 
 <link linkend="GTK-TREE-SORTABLE-UNSORTED-SORT-COLUMN-ID--CAPS"><literal>GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID</literal></link>.</para>
 <para>
@@ -214,11 +214,20 @@ order.  It returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> unl
                                                          <link linkend="gint">gint</link> sort_column_id,
                                                          <link linkend="GtkSortType">GtkSortType</link> order);</programlisting>
 <para>
-Sets the current sort column to be <parameter>sort_column_id</parameter>.  The <parameter>sortable</parameter> will
+Sets the current sort column to be <parameter>sort_column_id</parameter>. The <parameter>sortable</parameter> will
 resort itself to reflect this change, after emitting a
-GtkTreeSortable::sort_column_changed signal.  If <parameter>sort_column_id</parameter> is
-<link linkend="GTK-TREE-SORTABLE-DEFAULT-SORT-COLUMN-ID--CAPS"><literal>GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</literal></link>, then the default sort function
-will be used, if it is set.</para>
+<link linkend="GtkTreeSortable-sort-column-changed"><type>"sort-column-changed"</type></link> signal. <parameter>sortable</parameter> may either be 
+a regular column id, or one of the following special values:
+<variablelist>
+<varlistentry>
+  <term><link linkend="GTK-TREE-SORTABLE-DEFAULT-SORT-COLUMN-ID--CAPS"><literal>GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</literal></link></term>
+  <listitem>the default sort function will be used, if it is set</listitem>
+</varlistentry>
+<varlistentry>
+  <term><link linkend="GTK-TREE-SORTABLE-UNSORTED-SORT-COLUMN-ID--CAPS"><literal>GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID</literal></link></term>
+  <listitem>no sorting will occur</listitem>
+</varlistentry>
+</variablelist></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>sortable</parameter>&#160;:</term>
@@ -239,9 +248,9 @@ will be used, if it is set.</para>
                                                          <link linkend="gpointer">gpointer</link> user_data,
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <para>
-Sets the comparison function used when sorting to be <parameter>sort_func</parameter>.  If the
-current sort column id of <parameter>sortable</parameter> is the same as <parameter>sort_column_id</parameter>, then the
-model will sort using this function.</para>
+Sets the comparison function used when sorting to be <parameter>sort_func</parameter>. If the
+current sort column id of <parameter>sortable</parameter> is the same as <parameter>sort_column_id</parameter>, then 
+the model will sort using this function.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>sortable</parameter>&#160;:</term>
@@ -276,8 +285,8 @@ this function.
 <para>
 If <parameter>sort_func</parameter> is <link linkend="NULL--CAPS"><literal>NULL</literal></link>, then there will be no default comparison function.
 This means that once the model  has been sorted, it can't go back to the
-default state. In this case, when the current sort column id of <parameter>sortable</parameter> is
-GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, the model will be unsorted.</para>
+default state. In this case, when the current sort column id of <parameter>sortable</parameter> 
+is <link linkend="GTK-TREE-SORTABLE-DEFAULT-SORT-COLUMN-ID--CAPS"><literal>GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</literal></link>, the model will be unsorted.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>sortable</parameter>&#160;:</term>
@@ -298,9 +307,9 @@ GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, the model will be unsorted.</para>
 <indexterm zone="gtk-tree-sortable-has-default-sort-func"><primary sortas="tree_sortable_has_default_sort_func">gtk_tree_sortable_has_default_sort_func</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_tree_sortable_has_default_sort_func
                                                         (<link linkend="GtkTreeSortable">GtkTreeSortable</link> *sortable);</programlisting>
 <para>
-Returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the model has a default sort function.  This is used
-primarily by GtkTreeViewColumns in order to determine if a model can go back
-to the default state, or not.</para>
+Returns <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the model has a default sort function. This is used
+primarily by GtkTreeViewColumns in order to determine if a model can 
+go back to the default state, or not.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>sortable</parameter>&#160;:</term>
@@ -315,12 +324,16 @@ to the default state, or not.</para>
 <refsect1 id="GtkTreeSortable.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
 <refsect2 id="GtkTreeSortable-sort-column-changed" role="signal"><title>The <literal>&quot;sort-column-changed&quot;</literal> signal</title>
-<indexterm zone="GtkTreeSortable-sort-column-changed"><primary sortas="TreeSortable::sort-column-changed">GtkTreeSortable::sort-column-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeSortable">GtkTreeSortable</link> *treesortable,
-                                                        <link linkend="gpointer">gpointer</link>         user_data)         : Run Last</programlisting>
+<indexterm zone="GtkTreeSortable-sort-column-changed"><primary sortas="TreeSortable::sort-column-changed">GtkTreeSortable::sort-column-changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkTreeSortable">GtkTreeSortable</link> *sortable,
+                                                        <link linkend="gpointer">gpointer</link>         user_data)      : Run Last</programlisting>
+<para>
+The ::sort-column-changed signal is emitted when the sort column
+or sort order of <parameter>sortable</parameter> is changed. The signal is emitted before
+the contents of <parameter>sortable</parameter> are resorted.</para>
 <para>
 </para><variablelist role="params">
-<varlistentry><term><parameter>treesortable</parameter>&#160;:</term>
-<listitem><simpara>the object which received the signal.
+<varlistentry><term><parameter>sortable</parameter>&#160;:</term>
+<listitem><simpara> the object on which the signal is emitted
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>

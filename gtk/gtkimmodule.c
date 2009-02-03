@@ -682,7 +682,7 @@ _gtk_im_module_get_default_context_id (GdkWindow *client_window)
 
   /* Check if the certain immodule is set in XSETTINGS.
    */
-  if (client_window != NULL && GDK_IS_DRAWABLE (client_window))
+  if (GDK_IS_DRAWABLE (client_window))
     {
       screen = gdk_drawable_get_screen (GDK_DRAWABLE (client_window));
       if (screen)

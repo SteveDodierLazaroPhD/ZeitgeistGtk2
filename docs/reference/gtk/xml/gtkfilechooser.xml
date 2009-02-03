@@ -309,7 +309,7 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
   g_free (filename);
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), pixbuf);
   if (pixbuf)
-    gobject_unref (pixbuf);
+    g_object_unref (pixbuf);
   gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
 }
 	</programlisting>
@@ -788,7 +788,8 @@ class "GtkFileChooserDefault" binding "misc-shortcut"
 <indexterm zone="GtkFileChooserError"><primary sortas="FileChooserError">GtkFileChooserError</primary></indexterm><programlisting>typedef enum {
   GTK_FILE_CHOOSER_ERROR_NONEXISTENT,
   GTK_FILE_CHOOSER_ERROR_BAD_FILENAME,
-  GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS
+  GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS,
+  GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME
 } GtkFileChooserError;
 </programlisting>
     <para>
@@ -809,6 +810,11 @@ class "GtkFileChooserDefault" binding "misc-shortcut"
 <term><literal>GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS</literal></term>
 <listitem><simpara>Indicates a duplicate path (e.g. when
    adding a bookmark).
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="GTK-FILE-CHOOSER-ERROR-INCOMPLETE-HOSTNAME--CAPS" role="constant">
+<term><literal>GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME</literal></term>
+<listitem><simpara>
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>

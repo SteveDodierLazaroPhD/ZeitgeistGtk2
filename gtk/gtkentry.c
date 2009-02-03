@@ -140,6 +140,8 @@ struct _GtkEntryPrivate
   gint icon_margin;
   gint start_x;
   gint start_y;
+
+  gchar *im_module;
 };
 
 typedef struct _GtkEntryPasswordHint GtkEntryPasswordHint;
@@ -213,7 +215,12 @@ enum {
   PROP_ACTIVATABLE_PRIMARY,
   PROP_ACTIVATABLE_SECONDARY,
   PROP_SENSITIVE_PRIMARY,
-  PROP_SENSITIVE_SECONDARY
+  PROP_SENSITIVE_SECONDARY,
+  PROP_TOOLTIP_TEXT_PRIMARY,
+  PROP_TOOLTIP_TEXT_SECONDARY,
+  PROP_TOOLTIP_MARKUP_PRIMARY,
+  PROP_TOOLTIP_MARKUP_SECONDARY,
+  PROP_IM_MODULE
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
@@ -442,12 +449,15 @@ static void         gtk_entry_do_popup                 (GtkEntry       *entry,
 							GdkEventButton *event);
 static gboolean     gtk_entry_mnemonic_activate        (GtkWidget      *widget,
 							gboolean        group_cycling);
-static void         gtk_entry_state_changed            (GtkWidget      *widget,
-							GtkStateType    previous_state);
 static void         gtk_entry_check_cursor_blink       (GtkEntry       *entry);
 static void         gtk_entry_pend_cursor_blink        (GtkEntry       *entry);
 static void         gtk_entry_reset_blink_time         (GtkEntry       *entry);
 static void         gtk_entry_get_text_area_size       (GtkEntry       *entry,
+							gint           *x,
+							gint           *y,
+							gint           *width,
+							gint           *height);
+static void         get_text_area_size                 (GtkEntry       *entry,
 							gint           *x,
 							gint           *y,
 							gint           *width,
@@ -792,8 +802,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   /**
    * GtkEntry:caps-lock-warning
    *
-   * Whether password entries will show a warning when Caps Lock is on
-   * or an input method is active. 
+   * Whether password entries will show a warning when Caps Lock is on.
    *
    * Note that the warning is shown using a secondary icon, and thus
    * does not work if you are using the secondary icon position for some 
@@ -805,7 +814,7 @@ gtk_entry_class_init (GtkEntryClass *class)
                                    PROP_CAPS_LOCK_WARNING,
                                    g_param_spec_boolean ("caps-lock-warning",
                                                          P_("Caps Lock warning"),
-                                                         P_("Whether password entries will show a warning when Caps Lock is on or an input method is active"),
+                                                         P_("Whether password entries will show a warning when Caps Lock is on"),
                                                          TRUE,
                                                          GTK_PARAM_READWRITE));
 
@@ -845,7 +854,7 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                         GTK_PARAM_READWRITE));
 
   /**
-   * GtkEntry:pixbuf-primary:
+   * GtkEntry:primary-icon-pixbuf:
    *
    * A pixbuf to use as the primary icon for the entry.
    *
@@ -853,14 +862,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_PIXBUF_PRIMARY,
-                                   g_param_spec_object ("pixbuf-primary",
+                                   g_param_spec_object ("primary-icon-pixbuf",
                                                         P_("Primary pixbuf"),
                                                         P_("Primary pixbuf for the entry"),
                                                         GDK_TYPE_PIXBUF,
                                                         GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:pixbuf-secondary:
+   * GtkEntry:secondary-icon-pixbuf:
    *
    * An pixbuf to use as the secondary icon for the entry.
    *
@@ -868,14 +877,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_PIXBUF_SECONDARY,
-                                   g_param_spec_object ("pixbuf-secondary",
+                                   g_param_spec_object ("secondary-icon-pixbuf",
                                                         P_("Secondary pixbuf"),
                                                         P_("Secondary pixbuf for the entry"),
                                                         GDK_TYPE_PIXBUF,
                                                         GTK_PARAM_READWRITE));
 
   /**
-   * GtkEntry:stock-primary:
+   * GtkEntry:primary-icon-stock:
    *
    * The stock id to use for the primary icon for the entry.
    *
@@ -883,14 +892,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_STOCK_PRIMARY,
-                                   g_param_spec_string ("stock-primary",
+                                   g_param_spec_string ("primary-icon-stock",
                                                         P_("Primary stock ID"),
                                                         P_("Stock ID for primary icon"),
                                                         NULL,
                                                         GTK_PARAM_READWRITE));
 
   /**
-   * GtkEntry:stock-secondary:
+   * GtkEntry:secondary-icon-stock:
    *
    * The stock id to use for the secondary icon for the entry.
    *
@@ -898,14 +907,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_STOCK_SECONDARY,
-                                   g_param_spec_string ("stock-secondary",
+                                   g_param_spec_string ("secondary-icon-stock",
                                                         P_("Secondary stock ID"),
                                                         P_("Stock ID for secondary icon"),
                                                         NULL,
                                                         GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:icon-name-primary:
+   * GtkEntry:primary-icon-name:
    *
    * The icon name to use for the primary icon for the entry.
    *
@@ -913,14 +922,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_ICON_NAME_PRIMARY,
-                                   g_param_spec_string ("icon-name-primary",
+                                   g_param_spec_string ("primary-icon-name",
                                                         P_("Primary icon name"),
                                                         P_("Icon name for primary icon"),
                                                         NULL,
                                                         GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:icon-name-secondary:
+   * GtkEntry:secondary-icon-name:
    *
    * The icon name to use for the secondary icon for the entry.
    *
@@ -928,14 +937,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_ICON_NAME_SECONDARY,
-                                   g_param_spec_string ("icon-name-secondary",
+                                   g_param_spec_string ("secondary-icon-name",
                                                         P_("Secondary icon name"),
                                                         P_("Icon name for secondary icon"),
                                                         NULL,
                                                         GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:gicon-primary:
+   * GtkEntry:primary-icon-gicon:
    *
    * The #GIcon to use for the primary icon for the entry.
    *
@@ -943,14 +952,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_GICON_PRIMARY,
-                                   g_param_spec_object ("gicon-primary",
+                                   g_param_spec_object ("primary-icon-gicon",
                                                         P_("Primary GIcon"),
                                                         P_("GIcon for primary icon"),
                                                         G_TYPE_ICON,
                                                         GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:gicon-secondary:
+   * GtkEntry:secondary-icon-gicon:
    *
    * The #GIcon to use for the secondary icon for the entry.
    *
@@ -958,14 +967,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_GICON_SECONDARY,
-                                   g_param_spec_object ("gicon-secondary",
+                                   g_param_spec_object ("secondary-icon-gicon",
                                                         P_("Secondary GIcon"),
                                                         P_("GIcon for secondary icon"),
                                                         G_TYPE_ICON,
                                                         GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:storage-type-primary:
+   * GtkEntry:primary-icon-storage-type:
    *
    * The representation which is used for the primary icon of the entry.
    *
@@ -973,7 +982,7 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_STORAGE_TYPE_PRIMARY,
-                                   g_param_spec_enum ("storage-type-primary",
+                                   g_param_spec_enum ("primary-icon-storage-type",
                                                       P_("Primary storage type"),
                                                       P_("The representation being used for primary icon"),
                                                       GTK_TYPE_IMAGE_TYPE,
@@ -981,7 +990,7 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                       GTK_PARAM_READABLE));
   
   /**
-   * GtkEntry:storage-type-secondary:
+   * GtkEntry:secondary-icon-storage-type:
    *
    * The representation which is used for the secondary icon of the entry.
    *
@@ -989,7 +998,7 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_STORAGE_TYPE_SECONDARY,
-                                   g_param_spec_enum ("storage-type-secondary",
+                                   g_param_spec_enum ("secondary-icon-storage-type",
                                                       P_("Secondary storage type"),
                                                       P_("The representation being used for secondary icon"),
                                                       GTK_TYPE_IMAGE_TYPE,
@@ -997,7 +1006,7 @@ gtk_entry_class_init (GtkEntryClass *class)
                                                       GTK_PARAM_READABLE));
   
   /**
-   * GtkEntry:activatable-primary:
+   * GtkEntry:primary-icon-activatable:
    *
    * Whether the primary icon is activatable.
    *
@@ -1011,14 +1020,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_ACTIVATABLE_PRIMARY,
-                                   g_param_spec_boolean ("activatable-primary",
+                                   g_param_spec_boolean ("primary-icon-activatable",
                                                          P_("Primary icon activatable"),
                                                          P_("Whether the primary icon is activatable"),
                                                          FALSE,
                                                          GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:activatable-secondary:
+   * GtkEntry:secondary-icon-activatable:
    *
    * Whether the secondary icon is activatable.
    *
@@ -1032,7 +1041,7 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_ACTIVATABLE_SECONDARY,
-                                   g_param_spec_boolean ("activatable-secondary",
+                                   g_param_spec_boolean ("secondary-icon-activatable",
                                                          P_("Secondary icon activatable"),
                                                          P_("Whether the secondary icon is activatable"),
                                                          FALSE,
@@ -1040,7 +1049,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   
   
   /**
-   * GtkEntry:sensitive-primary:
+   * GtkEntry:primary-icon-sensitive:
    *
    * Whether the primary icon is sensitive.
    *
@@ -1055,14 +1064,14 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_SENSITIVE_PRIMARY,
-                                   g_param_spec_boolean ("sensitive-primary",
+                                   g_param_spec_boolean ("primary-icon-sensitive",
                                                          P_("Primary icon sensitive"),
                                                          P_("Whether the primary icon is sensitive"),
                                                          TRUE,
                                                          GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:sensitive-secondary:
+   * GtkEntry:secondary-icon-sensitive:
    *
    * Whether the secondary icon is sensitive.
    *
@@ -1077,14 +1086,106 @@ gtk_entry_class_init (GtkEntryClass *class)
    */
   g_object_class_install_property (gobject_class,
                                    PROP_SENSITIVE_SECONDARY,
-                                   g_param_spec_boolean ("sensitive-secondary",
+                                   g_param_spec_boolean ("secondary-icon-sensitive",
                                                          P_("Secondary icon sensitive"),
                                                          P_("Whether the secondary icon is sensitive"),
                                                          TRUE,
                                                          GTK_PARAM_READWRITE));
   
   /**
-   * GtkEntry:prelight:
+   * GtkEntry:primary-icon-tooltip-text:
+   * 
+   * The contents of the tooltip on the primary icon.
+   *
+   * Also see gtk_entry_set_icon_tooltip_text().
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_TOOLTIP_TEXT_PRIMARY,
+                                   g_param_spec_string ("primary-icon-tooltip-text",
+                                                        P_("Primary icon tooltip text"),
+                                                        P_("The contents of the tooltip on the primary icon"),                              
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+  
+  /**
+   * GtkEntry:secondary-icon-tooltip-text:
+   * 
+   * The contents of the tooltip on the secondary icon.
+   *
+   * Also see gtk_entry_set_icon_tooltip_text().
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_TOOLTIP_TEXT_SECONDARY,
+                                   g_param_spec_string ("secondary-icon-tooltip-text",
+                                                        P_("Secondary icon tooltip text"),
+                                                        P_("The contents of the tooltip on the secondary icon"),                              
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:primary-icon-tooltip-markup:
+   * 
+   * The contents of the tooltip on the primary icon, which is marked up
+   * with the <link linkend="PangoMarkupFormat">Pango text markup 
+   * language</link>.
+   *
+   * Also see gtk_entry_set_icon_tooltip_markup().
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_TOOLTIP_MARKUP_PRIMARY,
+                                   g_param_spec_string ("primary-icon-tooltip-markup",
+                                                        P_("Primary icon tooltip markup"),
+                                                        P_("The contents of the tooltip on the primary icon"),                              
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:secondary-icon-tooltip-markup:
+   * 
+   * The contents of the tooltip on the secondary icon, which is marked up
+   * with the <link linkend="PangoMarkupFormat">Pango text markup 
+   * language</link>.
+   *
+   * Also see gtk_entry_set_icon_tooltip_markup().
+   *
+   * Since: 2.16
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_TOOLTIP_MARKUP_SECONDARY,
+                                   g_param_spec_string ("secondary-icon-tooltip-markup",
+                                                        P_("Secondary icon tooltip markup"),
+                                                        P_("The contents of the tooltip on the secondary icon"),                              
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:im-module:
+   *
+   * Which IM (input method) module should be used for this entry. 
+   * See #GtkIMContext.
+   * 
+   * Setting this to a non-%NULL value overrides the
+   * system-wide IM module setting. See the GtkSettings 
+   * #GtkSettings:gtk-im-module property.
+   *
+   * Since: 2.16
+   */  
+  g_object_class_install_property (gobject_class,
+                                   PROP_IM_MODULE,
+                                   g_param_spec_string ("im-module",
+                                                        P_("IM module"),
+                                                        P_("Which IM module should be used"),
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+
+  /**
+   * GtkEntry:icon-prelight:
    *
    * The prelight style property determines whether activatable
    * icons prelight on mouseover.
@@ -1092,8 +1193,8 @@ gtk_entry_class_init (GtkEntryClass *class)
    * Since: 2.16
    */
   gtk_widget_class_install_style_property (widget_class,
-                                           g_param_spec_boolean ("prelight",
-                                                                 P_("Prelight"),
+                                           g_param_spec_boolean ("icon-prelight",
+                                                                 P_("Icon Prelight"),
                                                                  P_("Whether activatable icons should prelight when hovered"),
                                                                  TRUE,
                                                                  GTK_PARAM_READABLE));
@@ -1129,7 +1230,7 @@ gtk_entry_class_init (GtkEntryClass *class)
    * which gets emitted when the user activates the entry.
    * 
    * Applications should not connect to it, but may emit it with
-   * g_signal_emit_by_name() if they need to control scrolling
+   * g_signal_emit_by_name() if they need to control activation 
    * programmatically.
    *
    * The default bindings for this signal are all forms of the Enter key.
@@ -1158,7 +1259,7 @@ gtk_entry_class_init (GtkEntryClass *class)
    * the viewport to be moved instead.
    *
    * Applications should not connect to it, but may emit it with
-   * g_signal_emit_by_name() if they need to control scrolling
+   * g_signal_emit_by_name() if they need to control the cursor
    * programmatically.
    *
    * The default bindings for this signal come in two variants,
@@ -1783,6 +1884,37 @@ gtk_entry_set_property (GObject         *object,
                                     g_value_get_boolean (value));
       break;
 
+    case PROP_TOOLTIP_TEXT_PRIMARY:
+      gtk_entry_set_icon_tooltip_text (entry,
+                                       GTK_ENTRY_ICON_PRIMARY,
+                                       g_value_get_string (value));
+      break;
+
+    case PROP_TOOLTIP_TEXT_SECONDARY:
+      gtk_entry_set_icon_tooltip_text (entry,
+                                       GTK_ENTRY_ICON_SECONDARY,
+                                       g_value_get_string (value));
+      break;
+
+    case PROP_TOOLTIP_MARKUP_PRIMARY:
+      gtk_entry_set_icon_tooltip_markup (entry,
+                                         GTK_ENTRY_ICON_PRIMARY,
+                                         g_value_get_string (value));
+      break;
+
+    case PROP_TOOLTIP_MARKUP_SECONDARY:
+      gtk_entry_set_icon_tooltip_markup (entry,
+                                         GTK_ENTRY_ICON_SECONDARY,
+                                         g_value_get_string (value));
+      break;
+
+    case PROP_IM_MODULE:
+      g_free (priv->im_module);
+      priv->im_module = g_strdup (g_value_get_string (value));
+      if (GTK_IS_IM_MULTICONTEXT (entry->im_context))
+        gtk_im_multicontext_set_context_id (GTK_IM_MULTICONTEXT (entry->im_context), priv->im_module);
+      break;
+
     case PROP_SCROLL_OFFSET:
     case PROP_CURSOR_POSITION:
     default:
@@ -1874,6 +2006,10 @@ gtk_entry_get_property (GObject         *object,
       g_value_set_boolean (value, priv->invisible_char_set);
       break;
 
+    case PROP_IM_MODULE:
+      g_value_set_string (value, priv->im_module);
+      break;
+
     case PROP_CAPS_LOCK_WARNING:
       g_value_set_boolean (value, priv->caps_lock_warning);
       break;
@@ -1888,26 +2024,26 @@ gtk_entry_get_property (GObject         *object,
 
     case PROP_PIXBUF_PRIMARY:
       g_value_set_object (value,
-                          gtk_entry_get_pixbuf (entry,
-                                                GTK_ENTRY_ICON_PRIMARY));
+                          gtk_entry_get_icon_pixbuf (entry,
+                                                     GTK_ENTRY_ICON_PRIMARY));
       break;
 
     case PROP_PIXBUF_SECONDARY:
       g_value_set_object (value,
-                          gtk_entry_get_pixbuf (entry,
-                                                GTK_ENTRY_ICON_SECONDARY));
+                          gtk_entry_get_icon_pixbuf (entry,
+                                                     GTK_ENTRY_ICON_SECONDARY));
       break;
 
     case PROP_STOCK_PRIMARY:
       g_value_set_string (value,
-                          gtk_entry_get_stock (entry,
-                                               GTK_ENTRY_ICON_PRIMARY));
+                          gtk_entry_get_icon_stock (entry,
+                                                    GTK_ENTRY_ICON_PRIMARY));
       break;
 
     case PROP_STOCK_SECONDARY:
       g_value_set_string (value,
-                          gtk_entry_get_stock (entry,
-                                               GTK_ENTRY_ICON_SECONDARY));
+                          gtk_entry_get_icon_stock (entry,
+                                                    GTK_ENTRY_ICON_SECONDARY));
       break;
 
     case PROP_ICON_NAME_PRIMARY:
@@ -1924,24 +2060,26 @@ gtk_entry_get_property (GObject         *object,
 
     case PROP_GICON_PRIMARY:
       g_value_set_object (value,
-                          gtk_entry_get_gicon (entry,
-                                               GTK_ENTRY_ICON_PRIMARY));
+                          gtk_entry_get_icon_gicon (entry,
+                                                    GTK_ENTRY_ICON_PRIMARY));
       break;
 
     case PROP_GICON_SECONDARY:
       g_value_set_object (value,
-                          gtk_entry_get_gicon (entry,
-                                               GTK_ENTRY_ICON_SECONDARY));
+                          gtk_entry_get_icon_gicon (entry,
+                                                    GTK_ENTRY_ICON_SECONDARY));
       break;
 
     case PROP_STORAGE_TYPE_PRIMARY:
       g_value_set_enum (value,
-                        gtk_entry_get_storage_type (entry, GTK_ENTRY_ICON_PRIMARY));
+                        gtk_entry_get_icon_storage_type (entry, 
+                                                         GTK_ENTRY_ICON_PRIMARY));
       break;
 
     case PROP_STORAGE_TYPE_SECONDARY:
       g_value_set_enum (value,
-                        gtk_entry_get_storage_type (entry, GTK_ENTRY_ICON_SECONDARY));
+                        gtk_entry_get_icon_storage_type (entry, 
+                                                         GTK_ENTRY_ICON_SECONDARY));
       break;
 
     case PROP_ACTIVATABLE_PRIMARY:
@@ -1962,6 +2100,26 @@ gtk_entry_get_property (GObject         *object,
     case PROP_SENSITIVE_SECONDARY:
       g_value_set_boolean (value,
                            gtk_entry_get_icon_sensitive (entry, GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_TOOLTIP_TEXT_PRIMARY:
+      g_value_take_string (value,
+                           gtk_entry_get_icon_tooltip_text (entry, GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_TOOLTIP_TEXT_SECONDARY:
+      g_value_take_string (value,
+                           gtk_entry_get_icon_tooltip_text (entry, GTK_ENTRY_ICON_SECONDARY));
+      break;
+
+    case PROP_TOOLTIP_MARKUP_PRIMARY:
+      g_value_take_string (value,
+                           gtk_entry_get_icon_tooltip_markup (entry, GTK_ENTRY_ICON_PRIMARY));
+      break;
+
+    case PROP_TOOLTIP_MARKUP_SECONDARY:
+      g_value_take_string (value,
+                           gtk_entry_get_icon_tooltip_markup (entry, GTK_ENTRY_ICON_SECONDARY));
       break;
 
     default:
@@ -2091,7 +2249,7 @@ get_icon_allocations (GtkEntry      *entry,
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
   gint x, y, width, height;
 
-  gtk_entry_get_text_area_size (entry, &x, &y, &width, &height);
+  get_text_area_size (entry, &x, &y, &width, &height);
 
   primary->y = y;
   primary->height = height;
@@ -2259,6 +2417,8 @@ gtk_entry_finalize (GObject *object)
       entry->text = NULL;
     }
 
+  g_free (priv->im_module);
+
   G_OBJECT_CLASS (gtk_entry_parent_class)->finalize (object);
 }
 
@@ -2275,8 +2435,8 @@ update_cursors (GtkWidget *widget)
     {
       if ((icon_info = priv->icons[i]) != NULL)
         {
-          if (icon_info->pixbuf != NULL)
-            gdk_window_show (icon_info->window);
+          if (icon_info->pixbuf != NULL && icon_info->window != NULL)
+            gdk_window_show_unraised (icon_info->window);
 
           /* The icon windows are not children of the visible entry window,
            * thus we can't just inherit the xterm cursor. Slight complication 
@@ -2357,7 +2517,7 @@ construct_icon_info (GtkWidget            *widget,
     realize_icon_info (widget, icon_pos);
 
   if (GTK_WIDGET_MAPPED (widget))
-    gdk_window_show (icon_info->window);
+    gdk_window_show_unraised (icon_info->window);
 
   return icon_info;
 }
@@ -2444,7 +2604,7 @@ gtk_entry_realize (GtkWidget *widget)
   widget->window = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
   gdk_window_set_user_data (widget->window, entry);
 
-  gtk_entry_get_text_area_size (entry, &attributes.x, &attributes.y, &attributes.width, &attributes.height);
+  get_text_area_size (entry, &attributes.x, &attributes.y, &attributes.width, &attributes.height);
  
   if (GTK_WIDGET_IS_SENSITIVE (widget))
     {
@@ -2618,7 +2778,7 @@ place_windows (GtkEntry *entry)
   GtkAllocation secondary;
   EntryIconInfo *icon_info = NULL;
 
-  gtk_entry_get_text_area_size (entry, &x, &y, &width, &height);
+  get_text_area_size (entry, &x, &y, &width, &height);
 
   get_icon_allocations (entry, &primary, &secondary);
 
@@ -2677,6 +2837,24 @@ gtk_entry_get_text_area_size (GtkEntry *entry,
   if (height)
     *height = requisition.height - yborder * 2;
 }
+
+static void
+get_text_area_size (GtkEntry *entry,
+                    gint     *x,
+                    gint     *y,
+                    gint     *width,
+                    gint     *height)
+{
+  GtkEntryClass *class;
+
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  class = GTK_ENTRY_GET_CLASS (entry);
+
+  if (class->get_text_area_size)
+    class->get_text_area_size (entry, x, y, width, height);
+}
+
 
 static void
 get_widget_window_size (GtkEntry *entry,
@@ -2835,7 +3013,7 @@ should_prelight (GtkEntry             *entry,
     return FALSE;
 
   gtk_widget_style_get (GTK_WIDGET (entry),
-                        "prelight", &prelight,
+                        "icon-prelight", &prelight,
                         NULL);
 
   return prelight;
@@ -3615,7 +3793,7 @@ gtk_entry_motion_notify (GtkWidget      *widget,
 	  gtk_entry_set_positions (entry, pos, bound);
 	}
       else
-      gtk_entry_set_positions (entry, tmp_pos, -1);
+        gtk_entry_set_positions (entry, tmp_pos, -1);
     }
       
   return TRUE;
@@ -3624,28 +3802,15 @@ gtk_entry_motion_notify (GtkWidget      *widget,
 static void
 set_invisible_cursor (GdkWindow *window)
 {
-  GdkBitmap *empty_bitmap;
+  GdkDisplay *display;
   GdkCursor *cursor;
-  GdkColor useless;
-  char invisible_cursor_bits[] = { 0x0 };	
-	
-  useless.red = useless.green = useless.blue = 0;
-  useless.pixel = 0;
-  
-  empty_bitmap = gdk_bitmap_create_from_data (window,
-					      invisible_cursor_bits,
-					      1, 1);
-  
-  cursor = gdk_cursor_new_from_pixmap (empty_bitmap,
-				       empty_bitmap,
-				       &useless,
-				       &useless, 0, 0);
-  
+
+  display = gdk_drawable_get_display (window);
+  cursor = gdk_cursor_new_for_display (display, GDK_BLANK_CURSOR);
+
   gdk_window_set_cursor (window, cursor);
-  
+
   gdk_cursor_unref (cursor);
-  
-  g_object_unref (empty_bitmap);
 }
 
 static void
@@ -6037,21 +6202,21 @@ gtk_entry_clear (GtkEntry             *entry,
     {
     case GTK_IMAGE_PIXBUF:
       g_object_notify (G_OBJECT (entry),
-                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "pixbuf-primary" : "pixbuf-secondary");
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "primary-icon-pixbuf" : "secondary-icon-pixbuf");
       break;
 
     case GTK_IMAGE_STOCK:
       g_free (icon_info->stock_id);
       icon_info->stock_id = NULL;
       g_object_notify (G_OBJECT (entry),
-                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "stock-primary" : "stock-secondary");
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "primary-icon-stock" : "secondary-icon-stock");
       break;
 
     case GTK_IMAGE_ICON_NAME:
       g_free (icon_info->icon_name);
       icon_info->icon_name = NULL;
       g_object_notify (G_OBJECT (entry),
-                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "icon-name-primary" : "icon-name-secondary");
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "primary-icon-name" : "secondary-icon-name");
       break;
 
     case GTK_IMAGE_GICON:
@@ -6061,7 +6226,7 @@ gtk_entry_clear (GtkEntry             *entry,
           icon_info->gicon = NULL;
         }
       g_object_notify (G_OBJECT (entry),
-                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "gicon-primary" : "gicon-secondary");
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "primary-icon-gicon" : "secondary-icon-gicon");
       break;
 
     default:
@@ -6071,7 +6236,7 @@ gtk_entry_clear (GtkEntry             *entry,
 
   icon_info->storage_type = GTK_IMAGE_EMPTY;
   g_object_notify (G_OBJECT (entry),
-                   icon_pos == GTK_ENTRY_ICON_PRIMARY ? "storage-type-primary" : "storage-type-secondary");
+                   icon_pos == GTK_ENTRY_ICON_PRIMARY ? "primary-icon-storage-type" : "secondary-icon-storage-type");
 
   g_object_thaw_notify (G_OBJECT (entry));
 }
@@ -6160,9 +6325,9 @@ gtk_entry_ensure_pixbuf (GtkEntry             *entry,
       g_assert_not_reached ();
       break;
     }
-
-  if (GDK_IS_WINDOW (icon_info->window))
-    gdk_window_show (icon_info->window);
+    
+  if (icon_info->pixbuf != NULL && icon_info->window != NULL)
+    gdk_window_show_unraised (icon_info->window);
 }
 
 
@@ -7046,13 +7211,13 @@ gtk_entry_set_icon_from_pixbuf (GtkEntry             *entry,
 
       if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
         {
-          g_object_notify (G_OBJECT (entry), "pixbuf-primary");
-          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+          g_object_notify (G_OBJECT (entry), "primary-icon-pixbuf");
+          g_object_notify (G_OBJECT (entry), "primary-icon-storage-type");
         }
       else
         {
-          g_object_notify (G_OBJECT (entry), "pixbuf-secondary");
-          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-pixbuf");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
     }
 
@@ -7110,13 +7275,13 @@ gtk_entry_set_icon_from_stock (GtkEntry             *entry,
 
       if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
         {
-          g_object_notify (G_OBJECT (entry), "stock-primary");
-          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+          g_object_notify (G_OBJECT (entry), "primary-icon-stock");
+          g_object_notify (G_OBJECT (entry), "primary-icon-storage-type");
         }
       else
         {
-          g_object_notify (G_OBJECT (entry), "stock-secondary");
-          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-stock");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
     }
 
@@ -7177,13 +7342,13 @@ gtk_entry_set_icon_from_icon_name (GtkEntry             *entry,
 
       if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
         {
-          g_object_notify (G_OBJECT (entry), "icon-name-primary");
-          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+          g_object_notify (G_OBJECT (entry), "primary-icon-name");
+          g_object_notify (G_OBJECT (entry), "primary-icon-storage-type");
         }
       else
         {
-          g_object_notify (G_OBJECT (entry), "icon-name-secondary");
-          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-name");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
     }
 
@@ -7241,13 +7406,13 @@ gtk_entry_set_icon_from_gicon (GtkEntry             *entry,
 
       if (icon_pos == GTK_ENTRY_ICON_PRIMARY)
         {
-          g_object_notify (G_OBJECT (entry), "gicon-primary");
-          g_object_notify (G_OBJECT (entry), "storage-type-primary");
+          g_object_notify (G_OBJECT (entry), "primary-icon-gicon");
+          g_object_notify (G_OBJECT (entry), "primary-icon-storage-type");
         }
       else
         {
-          g_object_notify (G_OBJECT (entry), "gicon-secondary");
-          g_object_notify (G_OBJECT (entry), "storage-type-secondary");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-gicon");
+          g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
     }
 
@@ -7295,7 +7460,7 @@ gtk_entry_set_icon_activatable (GtkEntry             *entry,
         update_cursors (GTK_WIDGET (entry));
 
       g_object_notify (G_OBJECT (entry),
-                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "activatable-primary" : "activatable-secondary");
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "primary-icon-activatable" : "secondary-icon-activatable");
     }
 }
 
@@ -7327,7 +7492,7 @@ gtk_entry_get_icon_activatable (GtkEntry             *entry,
 }
 
 /**
- * gtk_entry_get_pixbuf:
+ * gtk_entry_get_icon_pixbuf:
  * @entry: A #GtkEntry
  * @icon_pos: Icon position
  *
@@ -7342,8 +7507,8 @@ gtk_entry_get_icon_activatable (GtkEntry             *entry,
  * Since: 2.16
  */
 GdkPixbuf *
-gtk_entry_get_pixbuf (GtkEntry             *entry,
-                      GtkEntryIconPosition  icon_pos)
+gtk_entry_get_icon_pixbuf (GtkEntry             *entry,
+                           GtkEntryIconPosition  icon_pos)
 {
   GtkEntryPrivate *priv;
   EntryIconInfo *icon_info;
@@ -7363,7 +7528,7 @@ gtk_entry_get_pixbuf (GtkEntry             *entry,
 }
 
 /**
- * gtk_entry_get_gicon:
+ * gtk_entry_get_icon_gicon:
  * @entry: A #GtkEntry
  * @icon_pos: Icon position
  *
@@ -7377,8 +7542,8 @@ gtk_entry_get_pixbuf (GtkEntry             *entry,
  * Since: 2.16
  */
 GIcon *
-gtk_entry_get_gicon (GtkEntry             *entry,
-                     GtkEntryIconPosition  icon_pos)
+gtk_entry_get_icon_gicon (GtkEntry             *entry,
+                          GtkEntryIconPosition  icon_pos)
 {
   GtkEntryPrivate *priv;
   EntryIconInfo *icon_info;
@@ -7396,7 +7561,7 @@ gtk_entry_get_gicon (GtkEntry             *entry,
 }
 
 /**
- * gtk_entry_get_stock:
+ * gtk_entry_get_icon_stock:
  * @entry: A #GtkEntry
  * @icon_pos: Icon position
  *
@@ -7410,8 +7575,8 @@ gtk_entry_get_gicon (GtkEntry             *entry,
  * Since: 2.16
  */
 const gchar *
-gtk_entry_get_stock (GtkEntry             *entry,
-                     GtkEntryIconPosition  icon_pos)
+gtk_entry_get_icon_stock (GtkEntry             *entry,
+                          GtkEntryIconPosition  icon_pos)
 {
   GtkEntryPrivate *priv;
   EntryIconInfo *icon_info;
@@ -7496,7 +7661,7 @@ gtk_entry_set_icon_sensitive (GtkEntry             *entry,
         update_cursors (GTK_WIDGET (entry));
 
       g_object_notify (G_OBJECT (entry),
-                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "sensitive-primary" : "sensitive-secondary");
+                       icon_pos == GTK_ENTRY_ICON_PRIMARY ? "primary-icon-sensitive" : "secondary-icon-sensitive");
     }
 }
 
@@ -7529,7 +7694,7 @@ gtk_entry_get_icon_sensitive (GtkEntry             *entry,
 }
 
 /**
- * gtk_entry_get_storage_type:
+ * gtk_entry_get_icon_storage_type:
  * @entry: a #GtkEntry
  * @icon_pos: Icon position
  *
@@ -7542,8 +7707,8 @@ gtk_entry_get_icon_sensitive (GtkEntry             *entry,
  * Since: 2.16
  **/
 GtkImageType
-gtk_entry_get_storage_type (GtkEntry             *entry,
-                            GtkEntryIconPosition  icon_pos)
+gtk_entry_get_icon_storage_type (GtkEntry             *entry,
+                                 GtkEntryIconPosition  icon_pos)
 {
   GtkEntryPrivate *priv;
   EntryIconInfo *icon_info;
@@ -7613,6 +7778,11 @@ gtk_entry_get_icon_at_pos (GtkEntry *entry,
  * signal, and use gtk_entry_get_current_icon_drag_source() in
  * your signal handler to find out if the drag was started from
  * an icon.
+ *
+ * By default, GTK+ uses the icon as the drag icon. You can use the 
+ * #GtkWidget::drag-begin signal to set a different icon. Note that you 
+ * have to use g_signal_connect_after() to ensure that your signal handler
+ * gets executed after the default handler.
  */
 void
 gtk_entry_set_icon_drag_source (GtkEntry             *entry,
@@ -7702,6 +7872,43 @@ ensure_has_tooltip (GtkEntry *entry)
 }
 
 /**
+ * gtk_entry_get_icon_tooltip_text:
+ * @entry: a #GtkEntry
+ * @icon_pos: the icon position
+ *
+ * Gets the contents of the tooltip on the icon at the specified 
+ * position in @entry.
+ * 
+ * Returns: the tooltip text, or %NULL. Free the returned string
+ *     with g_free() when done.
+ * 
+ * Since: 2.16
+ */
+gchar *
+gtk_entry_get_icon_tooltip_text (GtkEntry             *entry,
+                                 GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+  gchar *text = NULL;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), NULL);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), NULL);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  if (!icon_info)
+    return NULL;
+ 
+  if (icon_info->tooltip && 
+      !pango_parse_markup (icon_info->tooltip, -1, 0, NULL, &text, NULL, NULL))
+    g_assert (NULL == text); /* text should still be NULL in case of markup errors */
+
+  return text;
+}
+
+/**
  * gtk_entry_set_icon_tooltip_text:
  * @entry: a #GtkEntry
  * @icon_pos: the icon position
@@ -7736,9 +7943,48 @@ gtk_entry_set_icon_tooltip_text (GtkEntry             *entry,
   if (icon_info->tooltip)
     g_free (icon_info->tooltip);
 
+  /* Treat an empty string as a NULL string,
+   * because an empty string would be useless for a tooltip:
+   */
+  if (tooltip && tooltip[0] == '\0')
+    tooltip = NULL;
+
   icon_info->tooltip = tooltip ? g_markup_escape_text (tooltip, -1) : NULL;
 
   ensure_has_tooltip (entry);
+}
+
+/**
+ * gtk_entry_get_icon_tooltip_markup:
+ * @entry: a #GtkEntry
+ * @icon_pos: the icon position
+ *
+ * Gets the contents of the tooltip on the icon at the specified 
+ * position in @entry.
+ * 
+ * Returns: the tooltip text, or %NULL. Free the returned string
+ *     with g_free() when done.
+ * 
+ * Since: 2.16
+ */
+gchar *
+gtk_entry_get_icon_tooltip_markup (GtkEntry             *entry,
+                                   GtkEntryIconPosition  icon_pos)
+{
+  GtkEntryPrivate *priv;
+  EntryIconInfo *icon_info;
+  gchar *text = NULL;
+
+  g_return_val_if_fail (GTK_IS_ENTRY (entry), NULL);
+  g_return_val_if_fail (IS_VALID_ICON_POSITION (icon_pos), NULL);
+
+  priv = GTK_ENTRY_GET_PRIVATE (entry);
+  icon_info = priv->icons[icon_pos];
+
+  if (!icon_info)
+    return NULL;
+ 
+  return g_strdup (icon_info->tooltip);
 }
 
 /**
@@ -7776,6 +8022,12 @@ gtk_entry_set_icon_tooltip_markup (GtkEntry             *entry,
 
   if (icon_info->tooltip)
     g_free (icon_info->tooltip);
+
+  /* Treat an empty string as a NULL string,
+   * because an empty string would be useless for a tooltip:
+   */
+  if (tooltip && tooltip[0] == '\0')
+    tooltip = NULL;
 
   icon_info->tooltip = g_strdup (tooltip);
 
@@ -9332,9 +9584,9 @@ show_capslock_feedback (GtkEntry    *entry,
 {
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
 
-  if (gtk_entry_get_storage_type (entry, GTK_ENTRY_ICON_SECONDARY) == GTK_IMAGE_EMPTY)
+  if (gtk_entry_get_icon_storage_type (entry, GTK_ENTRY_ICON_SECONDARY) == GTK_IMAGE_EMPTY)
     {
-      gtk_entry_set_icon_from_stock (entry, GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_INFO);
+      gtk_entry_set_icon_from_stock (entry, GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CAPS_LOCK_WARNING);
       gtk_entry_set_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY, FALSE);
       priv->caps_lock_warning_shown = TRUE;
     }
@@ -9366,17 +9618,8 @@ keymap_state_changed (GdkKeymap *keymap,
 
   if (!entry->visible && priv->caps_lock_warning)
     { 
-      gboolean capslock_on;
-      gboolean im_on;
-
-      capslock_on = gdk_keymap_get_caps_lock_state (keymap);
-      im_on = g_strcmp0 (gtk_im_multicontext_get_context_id (GTK_IM_MULTICONTEXT (entry->im_context)), "gtk-im-context-simple") != 0;
-      if (capslock_on && im_on)
-        text = _("You have the Caps Lock key on\nand an active input method");
-      else if (capslock_on)
-        text = _("You have the Caps Lock key on");
-      else if (im_on)
-        text = _("You have an active input method");    
+      if (gdk_keymap_get_caps_lock_state (keymap))
+        text = _("Caps Lock is on");
     }
 
   if (text)

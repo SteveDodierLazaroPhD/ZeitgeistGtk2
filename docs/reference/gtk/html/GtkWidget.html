@@ -949,7 +949,7 @@ custom &lt;accelerator&gt; element, which has attributes named key,
 modifiers and signal and allows to specify accelerators.
 </p>
 <div class="example">
-<a name="id3807634"></a><p class="title"><b>Example 52. A UI definition fragment specifying an accelerator</b></p>
+<a name="id3405968"></a><p class="title"><b>Example 53. A UI definition fragment specifying an accelerator</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkButton"&gt;
   &lt;accelerator key="q" modifiers="GDK_CONTROL_MASK" signal="clicked"/&gt;
@@ -962,7 +962,7 @@ custom &lt;accessible&gt; element, which supports actions and relations.
 Properties on the accessible implementation of an object can be set by accessing the
 internal child "accessible" of a <span class="structname">GtkWidget</span>.
 <div class="example">
-<a name="id3807663"></a><p class="title"><b>Example 53. A UI definition fragment specifying an accessible</b></p>
+<a name="id3405996"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accessible</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkButton" id="label1"/&gt;
   &lt;property name="label"&gt;I am a Label for a Button&lt;/property&gt;
@@ -6787,6 +6787,10 @@ must have previously been added to the list with
 <div class="refsect2" lang="en">
 <a name="gtk-widget-get-action"></a><h3>gtk_widget_get_action ()</h3>
 <pre class="programlisting"><a class="link" href="GtkAction.html" title="GtkAction">GtkAction</a> *         gtk_widget_get_action               (<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a> *widget);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_widget_get_action</code> is deprecated and should not be used in newly-written code.</p>
+</div>
 <p>
 Returns the <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> that <em class="parameter"><code>widget</code></em> is a proxy for. 
 See also <a class="link" href="GtkAction.html#gtk-action-get-proxies" title="gtk_action_get_proxies ()"><code class="function">gtk_action_get_proxies()</code></a>.</p>
@@ -8410,7 +8414,14 @@ href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"
 <p>
 The ::drag-begin signal is emitted on the drag source when a drag is 
 started. A typical reason to connect to this signal is to set up a 
-custom drag icon with <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-source-set-icon" title="gtk_drag_source_set_icon ()"><code class="function">gtk_drag_source_set_icon()</code></a>.</p>
+custom drag icon with <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-source-set-icon" title="gtk_drag_source_set_icon ()"><code class="function">gtk_drag_source_set_icon()</code></a>.
+</p>
+<p>
+Note that some widgets set up a drag icon in the default handler of
+this signal, so you may have to use <a
+href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect-after"
+><code class="function">g_signal_connect_after()</code></a> to
+override what the default handler did.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">

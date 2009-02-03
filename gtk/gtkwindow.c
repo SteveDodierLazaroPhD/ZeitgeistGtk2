@@ -3507,6 +3507,9 @@ gtk_window_set_icon_name (GtkWindow   *window,
 
   info = ensure_icon_info (window);
 
+  if (g_strcmp0 (info->icon_name, name) == 0)
+    return;
+
   tmp = info->icon_name;
   info->icon_name = g_strdup (name);
   g_free (tmp);
@@ -8289,6 +8292,41 @@ _gtk_window_set_is_active (GtkWindow *window,
       window_update_has_focus (window);
 
       g_object_notify (G_OBJECT (window), "is-active");
+    }
+}
+
+/**
+ * _gtk_windwo_set_is_toplevel:
+ * @window: a #GtkWindow
+ * @is_toplevel: %TRUE if the window is still a real toplevel (nominally a
+ * parent of the root window); %FALSE if it is not (for example, for an
+ * in-process, parented GtkPlug)
+ *
+ * Internal function used by #GtkPlug when it gets parented/unparented by a
+ * #GtkSocket.  This keeps the @window's #GTK_TOPLEVEL flag in sync with the
+ * global list of toplevel windows.
+ */
+void
+_gtk_window_set_is_toplevel (GtkWindow *window,
+			     gboolean   is_toplevel)
+{
+  if (GTK_WIDGET_TOPLEVEL (window))
+    g_assert (g_list_find (toplevel_list, window) != NULL);
+  else
+    g_assert (g_list_find (toplevel_list, window) == NULL);
+
+  if (is_toplevel == GTK_WIDGET_TOPLEVEL (window))
+    return;
+
+  if (is_toplevel)
+    {
+      GTK_WIDGET_SET_FLAGS (window, GTK_TOPLEVEL);
+      toplevel_list = g_slist_prepend (toplevel_list, window);
+    }
+  else
+    {
+      GTK_WIDGET_UNSET_FLAGS (window, GTK_TOPLEVEL);
+      toplevel_list = g_slist_remove (toplevel_list, window);
     }
 }
 

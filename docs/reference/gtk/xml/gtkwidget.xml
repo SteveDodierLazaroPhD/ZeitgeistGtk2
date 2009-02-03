@@ -4111,9 +4111,10 @@ must have previously been added to the list with
         <parameter>widget</parameter> with <link linkend="gtk-widget-add-mnemonic-label"><function>gtk_widget_add_mnemonic_label()</function></link>.
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.4</para></refsect2>
-<refsect2 id="gtk-widget-get-action" role="function" condition="since:2.10">
+<refsect2 id="gtk-widget-get-action" role="function" condition="deprecated:|since:2.10">
 <title>gtk_widget_get_action ()</title>
-<indexterm zone="gtk-widget-get-action" role="2.10"><primary sortas="widget_get_action">gtk_widget_get_action</primary></indexterm><programlisting><link linkend="GtkAction">GtkAction</link> *         gtk_widget_get_action               (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<indexterm zone="gtk-widget-get-action" role="deprecated"><primary sortas="widget_get_action">gtk_widget_get_action</primary></indexterm><indexterm zone="gtk-widget-get-action" role="2.10"><primary sortas="widget_get_action">gtk_widget_get_action</primary></indexterm><programlisting><link linkend="GtkAction">GtkAction</link> *         gtk_widget_get_action               (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<warning><para><literal>gtk_widget_get_action</literal> is deprecated and should not be used in newly-written code.</para></warning>
 <para>
 Returns the <link linkend="GtkAction"><type>GtkAction</type></link> that <parameter>widget</parameter> is a proxy for. 
 See also <link linkend="gtk-action-get-proxies"><function>gtk_action_get_proxies()</function></link>.</para>
@@ -4962,7 +4963,12 @@ of a widget changes.</para>
 <para>
 The ::drag-begin signal is emitted on the drag source when a drag is 
 started. A typical reason to connect to this signal is to set up a 
-custom drag icon with <link linkend="gtk-drag-source-set-icon"><function>gtk_drag_source_set_icon()</function></link>.</para>
+custom drag icon with <link linkend="gtk-drag-source-set-icon"><function>gtk_drag_source_set_icon()</function></link>.
+</para>
+<para>
+Note that some widgets set up a drag icon in the default handler of
+this signal, so you may have to use <link linkend="g-signal-connect-after"><function>g_signal_connect_after()</function></link> to
+override what the default handler did.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&#160;:</term>

@@ -38,6 +38,11 @@
 <link linkend="void">void</link>                <link linkend="gtk-scale-get-layout-offsets">gtk_scale_get_layout_offsets</link>        (<link linkend="GtkScale">GtkScale</link> *scale,
                                                          <link linkend="gint">gint</link> *x,
                                                          <link linkend="gint">gint</link> *y);
+<link linkend="void">void</link>                <link linkend="gtk-scale-add-mark">gtk_scale_add_mark</link>                  (<link linkend="GtkScale">GtkScale</link> *scale,
+                                                         <link linkend="gdouble">gdouble</link> value,
+                                                         <link linkend="GtkPositionType">GtkPositionType</link> position,
+                                                         const <link linkend="gchar">gchar</link> *markup);
+<link linkend="void">void</link>                <link linkend="gtk-scale-clear-marks">gtk_scale_clear_marks</link>               (<link linkend="GtkScale">GtkScale</link> *scale);
 </synopsis>
 </refsynopsisdiv>
 
@@ -247,6 +252,55 @@ values are undefined.</para>
 <listitem><simpara> location to store Y offset of layout, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.4</para></refsect2>
+<refsect2 id="gtk-scale-add-mark" role="function" condition="since:2.16">
+<title>gtk_scale_add_mark ()</title>
+<indexterm zone="gtk-scale-add-mark" role="2.16"><primary sortas="scale_add_mark">gtk_scale_add_mark</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_add_mark                  (<link linkend="GtkScale">GtkScale</link> *scale,
+                                                         <link linkend="gdouble">gdouble</link> value,
+                                                         <link linkend="GtkPositionType">GtkPositionType</link> position,
+                                                         const <link linkend="gchar">gchar</link> *markup);</programlisting>
+<para>
+Adds a mark at <parameter>value</parameter>. 
+</para>
+<para>
+A mark is indicated visually by drawing a tick mark next to the scale, 
+and GTK+ makes it easy for the user to position the scale exactly at the 
+marks value.
+</para>
+<para>
+If <parameter>markup</parameter> is not <link linkend="NULL--CAPS"><literal>NULL</literal></link>, text is shown next to the tick mark. 
+</para>
+<para>
+To remove marks from a scale, use <link linkend="gtk-scale-clear-marks"><function>gtk_scale_clear_marks()</function></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkScale"><type>GtkScale</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&#160;:</term>
+<listitem><simpara> the value at which the mark is placed, must be between 
+  the lower and upper limits of the scales' adjustment
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>position</parameter>&#160;:</term>
+<listitem><simpara> where to draw the mark. For a horizontal scale, <link linkend="GTK-POS-TOP--CAPS"><type>GTK_POS_TOP</type></link>
+  is drawn above the scale, anything else below. For a vertical scale,
+  <link linkend="GTK-POS-LEFT--CAPS"><type>GTK_POS_LEFT</type></link> is drawn to the left of the scale, anything else to the
+  right.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>markup</parameter>&#160;:</term>
+<listitem><simpara> Text to be shown at the mark, using <link linkend="PangoMarkupFormat">Pango markup</link>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-scale-clear-marks" role="function" condition="since:2.16">
+<title>gtk_scale_clear_marks ()</title>
+<indexterm zone="gtk-scale-clear-marks" role="2.16"><primary sortas="scale_clear_marks">gtk_scale_clear_marks</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_scale_clear_marks               (<link linkend="GtkScale">GtkScale</link> *scale);</programlisting>
+<para>
+Removes any marks that have been added with <link linkend="gtk-scale-add-mark"><function>gtk_scale_add_mark()</function></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>scale</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkScale"><type>GtkScale</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.16</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkScale.property-details" role="property_details">

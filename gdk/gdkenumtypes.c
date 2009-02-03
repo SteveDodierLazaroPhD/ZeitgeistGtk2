@@ -90,6 +90,7 @@ gdk_cursor_type_get_type (void)
             { GDK_WATCH, "GDK_WATCH", "watch" },
             { GDK_XTERM, "GDK_XTERM", "xterm" },
             { GDK_LAST_CURSOR, "GDK_LAST_CURSOR", "last-cursor" },
+            { GDK_BLANK_CURSOR, "GDK_BLANK_CURSOR", "blank-cursor" },
             { GDK_CURSOR_IS_PIXMAP, "GDK_CURSOR_IS_PIXMAP", "cursor-is-pixmap" },
             { 0, NULL, NULL }
         };

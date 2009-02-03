@@ -640,7 +640,7 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
 				     PROP_SEARCH_COLUMN,
 				     g_param_spec_int ("search-column",
 						       P_("Search Column"),
-						       P_("Model column to search through when searching through code"),
+						       P_("Model column to search through during interactive search"),
 						       -1,
 						       G_MAXINT,
 						       -1,
@@ -673,7 +673,7 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
      * Currently, this works only for the selection modes 
      * %GTK_SELECTION_SINGLE and %GTK_SELECTION_BROWSE.
      *
-     * This mode is primarily indended for treeviews in popups, e.g.
+     * This mode is primarily intended for treeviews in popups, e.g.
      * in #GtkComboBox or #GtkEntryCompletion.
      *
      * Since: 2.6
@@ -690,10 +690,10 @@ gtk_tree_view_class_init (GtkTreeViewClass *class)
      * GtkTreeView:hover-expand:
      * 
      * Enables of disables the hover expansion mode of @tree_view.
-     * Hover expansion makes rows expand or collaps if the pointer moves 
+     * Hover expansion makes rows expand or collapse if the pointer moves 
      * over them.
      *
-     * This mode is primarily indended for treeviews in popups, e.g.
+     * This mode is primarily intended for treeviews in popups, e.g.
      * in #GtkComboBox or #GtkEntryCompletion.
      *
      * Since: 2.6
@@ -13357,7 +13357,7 @@ unset_reorderable (GtkTreeView *tree_view)
  *    widget
  *
  * Turns @tree_view into a drag source for automatic DND. Calling this
- * method sets reorderable to %FALSE.
+ * method sets #GtkTreeView:reorderable to %FALSE.
  **/
 void
 gtk_tree_view_enable_model_drag_source (GtkTreeView              *tree_view,
@@ -13394,7 +13394,7 @@ gtk_tree_view_enable_model_drag_source (GtkTreeView              *tree_view,
  *    widget
  * 
  * Turns @tree_view into a drop destination for automatic DND. Calling
- * this method sets reorderable to %FALSE.
+ * this method sets #GtkTreeView:reorderable to %FALSE.
  **/
 void
 gtk_tree_view_enable_model_drag_dest (GtkTreeView              *tree_view,
@@ -13424,7 +13424,7 @@ gtk_tree_view_enable_model_drag_dest (GtkTreeView              *tree_view,
  *
  * Undoes the effect of
  * gtk_tree_view_enable_model_drag_source(). Calling this method sets
- * reorderable to %FALSE.
+ * #GtkTreeView:reorderable to %FALSE.
  **/
 void
 gtk_tree_view_unset_rows_drag_source (GtkTreeView *tree_view)
@@ -13456,7 +13456,7 @@ gtk_tree_view_unset_rows_drag_source (GtkTreeView *tree_view)
  *
  * Undoes the effect of
  * gtk_tree_view_enable_model_drag_dest(). Calling this method sets
- * reorderable to %FALSE.
+ * #GtkTreeView:reorderable to %FALSE.
  **/
 void
 gtk_tree_view_unset_rows_drag_dest (GtkTreeView *tree_view)
@@ -14021,7 +14021,7 @@ gtk_tree_view_set_search_equal_func (GtkTreeView                *tree_view,
  * gtk_tree_view_get_search_entry:
  * @tree_view: A #GtkTreeView
  *
- * Returns the GtkEntry which is currently in use as interactive search
+ * Returns the #GtkEntry which is currently in use as interactive search
  * entry for @tree_view.  In case the built-in entry is being used, %NULL
  * will be returned.
  *
@@ -14116,7 +14116,7 @@ gtk_tree_view_set_search_entry (GtkTreeView *tree_view,
  * @data: user data to pass to @func, or %NULL
  * @destroy: Destroy notifier for @data, or %NULL
  *
- * Sets the function to use when positioning the seach dialog.
+ * Sets the function to use when positioning the search dialog.
  *
  * Since: 2.10
  **/
@@ -14933,7 +14933,7 @@ gtk_tree_view_get_hover_selection (GtkTreeView *tree_view)
  * @expand: %TRUE to enable hover selection mode
  *
  * Enables of disables the hover expansion mode of @tree_view.
- * Hover expansion makes rows expand or collaps if the pointer 
+ * Hover expansion makes rows expand or collapse if the pointer 
  * moves over them.
  * 
  * Since: 2.6

@@ -492,6 +492,7 @@ noinst_PROGRAMS = $(TEST_PROGS)	\
 	testrecentchooser 		\
 	testrecentchoosermenu		\
 	testrichtext			\
+	testscale			\
 	testselection			\
 	$(testsocket_programs)		\
 	testspinbutton			\
@@ -561,6 +562,7 @@ testrecentchooser_DEPENDENCIES = $(TEST_DEPS)
 testrecentchoosermenu_DEPENDENCIES = $(TEST_DEPS)
 testrgb_DEPENDENCIES = $(TEST_DEPS)
 testrichtext_DEPENDENCIES = $(TEST_DEPS)
+testscale_DEPENDENCIES = $(TEST_DEPS)
 testselection_DEPENDENCIES = $(TEST_DEPS)
 testsocket_DEPENDENCIES = $(DEPS)
 testsocket_child_DEPENDENCIES = $(DEPS)
@@ -618,6 +620,7 @@ testrecentchooser_LDADD = $(LDADDS)
 testrecentchoosermenu_LDADD = $(LDADDS)
 testrgb_LDADD = $(LDADDS)
 testrichtext_LDADD = $(LDADDS)
+testscale_LDADD = $(LDADDS)
 testselection_LDADD = $(LDADDS)
 testsocket_LDADD = $(LDADDS)
 testsocket_child_LDADD = $(LDADDS)
@@ -801,6 +804,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testrecentchooser$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testrecentchoosermenu$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testscale$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testselection$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testsocket$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testsocket_child$(EXEEXT) \
@@ -864,6 +868,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testrecentchooser$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testrecentchoosermenu$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testscale$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testselection$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testspinbutton$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	teststatusicon$(EXEEXT) \
@@ -925,6 +930,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testrecentchooser$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testrecentchoosermenu$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testscale$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testselection$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testsocket$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testsocket_child$(EXEEXT) \
@@ -989,6 +995,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testrecentchooser$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testrecentchoosermenu$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testrichtext$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testscale$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testselection$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testspinbutton$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	teststatusicon$(EXEEXT) \
@@ -1187,6 +1194,9 @@ testrgb_LDFLAGS =
 testrichtext_SOURCES = testrichtext.c
 testrichtext_OBJECTS = testrichtext.$(OBJEXT)
 testrichtext_LDFLAGS =
+testscale_SOURCES = testscale.c
+testscale_OBJECTS = testscale.$(OBJEXT)
+testscale_LDFLAGS =
 testselection_SOURCES = testselection.c
 testselection_OBJECTS = testselection.$(OBJEXT)
 testselection_LDFLAGS =
@@ -1293,6 +1303,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/testrecentchooser.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testrecentchoosermenu.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testrgb.Po ./$(DEPDIR)/testrichtext.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testscale.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testselection.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testsocket.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testsocket_child.Po \
@@ -1342,17 +1353,18 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) pixbuf-lowmem.c \
 	testmountoperation.c testmultidisplay.c testmultiscreen.c \
 	testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) \
 	$(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) \
-	testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) \
-	$(testsocket_child_SOURCES) $(testspinbutton_SOURCES) \
-	$(teststatusicon_SOURCES) $(testtext_SOURCES) \
-	$(testtoolbar_SOURCES) $(testtooltips_SOURCES) \
-	testtreecolumns.c testtreecolumnsizing.c \
-	$(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c \
-	$(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) \
-	$(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+	testrgb.c testrichtext.c testscale.c testselection.c \
+	$(testsocket_SOURCES) $(testsocket_child_SOURCES) \
+	$(testspinbutton_SOURCES) $(teststatusicon_SOURCES) \
+	$(testtext_SOURCES) $(testtoolbar_SOURCES) \
+	$(testtooltips_SOURCES) testtreecolumns.c \
+	testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c \
+	testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c \
+	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
+	testxinerama.c treestoretest.c
 DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl \
 	Makefile.am
-SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testclientmessage.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testentryicons_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testclientmessage.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testentryicons_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testscale.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 
 all: all-am
 
@@ -1505,6 +1517,9 @@ testrgb$(EXEEXT): $(testrgb_OBJECTS) $(testrgb_DEPENDENCIES)
 testrichtext$(EXEEXT): $(testrichtext_OBJECTS) $(testrichtext_DEPENDENCIES) 
 	@rm -f testrichtext$(EXEEXT)
 	$(LINK) $(testrichtext_LDFLAGS) $(testrichtext_OBJECTS) $(testrichtext_LDADD) $(LIBS)
+testscale$(EXEEXT): $(testscale_OBJECTS) $(testscale_DEPENDENCIES) 
+	@rm -f testscale$(EXEEXT)
+	$(LINK) $(testscale_LDFLAGS) $(testscale_OBJECTS) $(testscale_LDADD) $(LIBS)
 testselection$(EXEEXT): $(testselection_OBJECTS) $(testselection_DEPENDENCIES) 
 	@rm -f testselection$(EXEEXT)
 	$(LINK) $(testselection_LDFLAGS) $(testselection_OBJECTS) $(testselection_LDADD) $(LIBS)
@@ -1616,6 +1631,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testrecentchoosermenu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testrgb.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testrichtext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testscale.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testselection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testsocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testsocket_child.Po@am__quote@

@@ -83,6 +83,7 @@
 *tp++ = gtk_accessible_get_type();
 *tp++ = gtk_action_get_type();
 *tp++ = gtk_action_group_get_type();
+*tp++ = gtk_activatable_get_type();
 *tp++ = gtk_adjustment_get_type();
 *tp++ = gtk_alignment_get_type();
 *tp++ = gtk_anchor_type_get_type();

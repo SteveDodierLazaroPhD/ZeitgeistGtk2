@@ -128,6 +128,7 @@ href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"
 #define             <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-APPLY--CAPS" title="GTK_STOCK_APPLY">GTK_STOCK_APPLY</a>
 #define             <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-BOLD--CAPS" title="GTK_STOCK_BOLD">GTK_STOCK_BOLD</a>
 #define             <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-CANCEL--CAPS" title="GTK_STOCK_CANCEL">GTK_STOCK_CANCEL</a>
+#define             <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-CAPS-LOCK-WARNING--CAPS" title="GTK_STOCK_CAPS_LOCK_WARNING">GTK_STOCK_CAPS_LOCK_WARNING</a>
 #define             <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-CDROM--CAPS" title="GTK_STOCK_CDROM">GTK_STOCK_CDROM</a>
 #define             <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-CLEAR--CAPS" title="GTK_STOCK_CLEAR">GTK_STOCK_CLEAR</a>
 #define             <a class="link" href="gtk-Stock-Items.html#GTK-STOCK-CLOSE--CAPS" title="GTK_STOCK_CLOSE">GTK_STOCK_CLOSE</a>
@@ -456,7 +457,41 @@ a stock item.
 If no function is registered for a translation domain,
 <a
 href="/usr/share/gtk-doc/html/glib/glib-I18N.html#g-dgettext"
-><code class="function">g_dgettext()</code></a> is used.</p>
+><code class="function">g_dgettext()</code></a> is used.
+</p>
+<p>
+The function is used for all stock items whose
+<em class="parameter"><code>translation_domain</code></em> matches <em class="parameter"><code>domain</code></em>. Note that it is possible
+to use strings different from the actual gettext translation domain
+of your application for this, as long as your <a class="link" href="GtkItemFactory.html#GtkTranslateFunc" title="GtkTranslateFunc ()"><span class="type">GtkTranslateFunc</span></a> uses
+the correct domain when calling <a
+href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#dgettext"
+><code class="function">dgettext()</code></a>. This can be useful, e.g.
+when dealing with message contexts:
+</p>
+<p>
+</p>
+<div class="informalexample"><pre class="programlisting">
+GtkStockItem items[] = { 
+ { MY_ITEM1, NC_("odd items", "Item 1"), 0, 0, "odd-item-domain" },
+ { MY_ITEM2, NC_("even items", "Item 2"), 0, 0, "even-item-domain" },
+};
+
+gchar *
+my_translate_func (const gchar *msgid,
+                   gpointer     data)
+{
+  gchar *msgctxt = data;
+
+  return (gchar*)g_dpgettext2 (GETTEXT_PACKAGE, msgctxt, msgid);
+}
+
+/* ... &amp;ast/
+
+gtk_stock_add (items, G_N_ELEMENTS (items));
+gtk_stock_set_translate_func ("odd-item-domain", my_translate_func, "odd items"); 
+gtk_stock_set_translate_func ("even-item-domain", my_translate_func, "even items"); 
+</pre></div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -539,6 +574,17 @@ The "Bold" item.
 The "Cancel" item.
 <img src="gtk-cancel.png">
 </p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GTK-STOCK-CAPS-LOCK-WARNING--CAPS"></a><h3>GTK_STOCK_CAPS_LOCK_WARNING</h3>
+<pre class="programlisting">#define GTK_STOCK_CAPS_LOCK_WARNING "gtk-caps-lock-warning"
+</pre>
+<p>
+The "Caps Lock Warning" icon.
+<img src="gtk-caps-lock-warning.png">
+</p>
+<p class="since">Since 2.16</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">

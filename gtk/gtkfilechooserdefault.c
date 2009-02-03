@@ -34,6 +34,7 @@
 #include "gtkexpander.h"
 #include "gtkfilechooserprivate.h"
 #include "gtkfilechooserdefault.h"
+#include "gtkfilechooserdialog.h"
 #include "gtkfilechooserembed.h"
 #include "gtkfilechooserentry.h"
 #include "gtkfilechoosersettings.h"
@@ -274,6 +275,7 @@ static void     gtk_file_chooser_default_get_property (GObject               *ob
 						       GParamSpec            *pspec);
 static void     gtk_file_chooser_default_dispose      (GObject               *object);
 static void     gtk_file_chooser_default_show_all       (GtkWidget             *widget);
+static void     gtk_file_chooser_default_realize        (GtkWidget             *widget);
 static void     gtk_file_chooser_default_map            (GtkWidget             *widget);
 static void     gtk_file_chooser_default_unmap          (GtkWidget             *widget);
 static void     gtk_file_chooser_default_hierarchy_changed (GtkWidget          *widget,
@@ -564,6 +566,7 @@ _gtk_file_chooser_default_class_init (GtkFileChooserDefaultClass *class)
   gobject_class->dispose = gtk_file_chooser_default_dispose;
 
   widget_class->show_all = gtk_file_chooser_default_show_all;
+  widget_class->realize = gtk_file_chooser_default_realize;
   widget_class->map = gtk_file_chooser_default_map;
   widget_class->unmap = gtk_file_chooser_default_unmap;
   widget_class->hierarchy_changed = gtk_file_chooser_default_hierarchy_changed;
@@ -1156,9 +1159,6 @@ change_folder_and_display_error (GtkFileChooserDefault *impl,
 static void
 emit_default_size_changed (GtkFileChooserDefault *impl)
 {
-  if (!GTK_WIDGET_MAPPED (impl))
-    return;
-
   profile_msg ("    emit default-size-changed start", NULL);
   g_signal_emit_by_name (impl, "default-size-changed");
   profile_msg ("    emit default-size-changed end", NULL);
@@ -1192,7 +1192,8 @@ update_preview_widget_visibility (GtkFileChooserDefault *impl)
   else
     gtk_widget_hide (impl->preview_box);
 
-  emit_default_size_changed (impl);
+  if (!GTK_WIDGET_MAPPED (impl))
+    emit_default_size_changed (impl);
 }
 
 static void
@@ -1919,6 +1920,15 @@ shortcuts_append_desktop (GtkFileChooserDefault *impl)
   profile_start ("start", NULL);
 
   name = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
+  /* "To disable a directory, point it to the homedir."
+   * See http://freedesktop.org/wiki/Software/xdg-user-dirs
+   **/
+  if (!g_strcmp0 (name, g_get_home_dir ()))
+    {
+      profile_end ("end", NULL);
+      return;
+    }
+
   file = g_file_new_for_path (name);
   shortcuts_insert_file (impl, -1, SHORTCUT_TYPE_FILE, NULL, file, _("Desktop"), FALSE, SHORTCUTS_DESKTOP);
   impl->has_desktop = TRUE;
@@ -4894,6 +4904,7 @@ save_widgets_create (GtkFileChooserDefault *impl)
   impl->location_entry = _gtk_file_chooser_entry_new (TRUE);
   _gtk_file_chooser_entry_set_file_system (GTK_FILE_CHOOSER_ENTRY (impl->location_entry),
 					   impl->file_system);
+  _gtk_file_chooser_entry_set_local_only (GTK_FILE_CHOOSER_ENTRY (impl->location_entry), impl->local_only);
   gtk_entry_set_width_chars (GTK_ENTRY (impl->location_entry), 45);
   gtk_entry_set_activates_default (GTK_ENTRY (impl->location_entry), TRUE);
   gtk_table_attach (GTK_TABLE (table), impl->location_entry,
@@ -5332,6 +5343,9 @@ set_local_only (GtkFileChooserDefault *impl,
   if (local_only != impl->local_only)
     {
       impl->local_only = local_only;
+
+      if (impl->location_entry)
+	_gtk_file_chooser_entry_set_local_only (GTK_FILE_CHOOSER_ENTRY (impl->location_entry), local_only);
 
       if (impl->shortcuts_model && impl->file_system)
 	{
@@ -6025,6 +6039,31 @@ settings_load (GtkFileChooserDefault *impl)
 }
 
 static void
+save_dialog_geometry (GtkFileChooserDefault *impl, GtkFileChooserSettings *settings)
+{
+  GtkWindow *toplevel;
+  int x, y, width, height;
+
+  /* We don't save the geometry in non-expanded "save" mode, so that the "little
+   * dialog" won't make future Open dialogs too small.
+   */
+  if (!(impl->action == GTK_FILE_CHOOSER_ACTION_OPEN
+	|| impl->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+	|| impl->expand_folders))
+    return;
+
+  toplevel = get_toplevel (GTK_WIDGET (impl));
+
+  if (!(toplevel && GTK_IS_FILE_CHOOSER_DIALOG (toplevel)))
+    return;
+
+  gtk_window_get_position (toplevel, &x, &y);
+  gtk_window_get_size (toplevel, &width, &height);
+
+  _gtk_file_chooser_settings_set_geometry (settings, x, y, width, height);
+}
+
+static void
 settings_save (GtkFileChooserDefault *impl)
 {
   GtkFileChooserSettings *settings;
@@ -6036,10 +6075,26 @@ settings_save (GtkFileChooserDefault *impl)
   _gtk_file_chooser_settings_set_expand_folders (settings, impl->expand_folders);
   _gtk_file_chooser_settings_set_show_size_column (settings, impl->show_size_column);
 
+  save_dialog_geometry (impl, settings);
+
   /* NULL GError */
   _gtk_file_chooser_settings_save (settings, NULL);
 
   g_object_unref (settings);
+}
+
+/* GtkWidget::realize method */
+static void
+gtk_file_chooser_default_realize (GtkWidget *widget)
+{
+  GtkFileChooserDefault *impl;
+  char *current_working_dir;
+
+  impl = GTK_FILE_CHOOSER_DEFAULT (widget);
+
+  GTK_WIDGET_CLASS (_gtk_file_chooser_default_parent_class)->realize (widget);
+
+  emit_default_size_changed (impl);
 }
 
 /* GtkWidget::map method */
@@ -6094,8 +6149,6 @@ gtk_file_chooser_default_map (GtkWidget *widget)
   volumes_bookmarks_changed_cb (impl->file_system, impl);
 
   settings_load (impl);
-
-  emit_default_size_changed (impl);
 
   profile_end ("end", NULL);
 }
@@ -7926,6 +7979,20 @@ gtk_file_chooser_default_get_default_size (GtkFileChooserEmbed *chooser_embed,
       || impl->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
       || impl->expand_folders)
     {
+      GtkFileChooserSettings *settings;
+      int x, y, width, height;
+
+      settings = _gtk_file_chooser_settings_new ();
+      _gtk_file_chooser_settings_get_geometry (settings, &x, &y, &width, &height);
+      g_object_unref (settings);
+
+      if (x >= 0 && y >= 0 && width > 0 && height > 0)
+	{
+	  *default_width = width;
+	  *default_height = height;
+	  return;
+	}
+
       find_good_size_from_style (GTK_WIDGET (chooser_embed), default_width, default_height);
 
       if (impl->preview_widget_active &&
