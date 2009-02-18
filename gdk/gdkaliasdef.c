@@ -1794,6 +1794,9 @@ extern __typeof (gdk_keymap_get_entries_for_keyval) gdk_keymap_get_entries_for_k
 #undef gdk_keymap_get_for_display 
 extern __typeof (gdk_keymap_get_for_display) gdk_keymap_get_for_display __attribute((alias("IA__gdk_keymap_get_for_display"), visibility("default")));
 
+#undef gdk_keymap_get_caps_lock_state 
+extern __typeof (gdk_keymap_get_caps_lock_state) gdk_keymap_get_caps_lock_state __attribute((alias("IA__gdk_keymap_get_caps_lock_state"), visibility("default")));
+
 #undef gdk_keymap_lookup_key 
 extern __typeof (gdk_keymap_lookup_key) gdk_keymap_lookup_key __attribute((alias("IA__gdk_keymap_lookup_key"), visibility("default")));
 

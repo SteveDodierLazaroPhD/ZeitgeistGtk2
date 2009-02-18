@@ -1066,9 +1066,6 @@ extern __typeof (gtk_aspect_frame_set) IA__gtk_aspect_frame_set __attribute((vis
 extern __typeof (gtk_binding_entry_clear) IA__gtk_binding_entry_clear __attribute((visibility("hidden")));
 #define gtk_binding_entry_clear IA__gtk_binding_entry_clear
 
-extern __typeof (gtk_binding_entry_add_signall) IA__gtk_binding_entry_add_signall __attribute((visibility("hidden")));
-#define gtk_binding_entry_add_signall IA__gtk_binding_entry_add_signall
-
 extern __typeof (gtk_binding_parse_binding) IA__gtk_binding_parse_binding __attribute((visibility("hidden")));
 #define gtk_binding_parse_binding IA__gtk_binding_parse_binding
 
@@ -1078,6 +1075,9 @@ extern __typeof (gtk_binding_entry_skip) IA__gtk_binding_entry_skip __attribute(
 
 extern __typeof (gtk_binding_entry_add_signal) IA__gtk_binding_entry_add_signal __attribute((visibility("hidden")));
 #define gtk_binding_entry_add_signal IA__gtk_binding_entry_add_signal
+
+extern __typeof (gtk_binding_entry_add_signall) IA__gtk_binding_entry_add_signall __attribute((visibility("hidden")));
+#define gtk_binding_entry_add_signall IA__gtk_binding_entry_add_signall
 
 extern __typeof (gtk_binding_entry_remove) IA__gtk_binding_entry_remove __attribute((visibility("hidden")));
 #define gtk_binding_entry_remove IA__gtk_binding_entry_remove

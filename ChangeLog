@@ -1,3 +1,192 @@
+2009-02-17  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.15.4 ===
+
+	* gdk/tests/Makefile.am: Disable check-gdk-cairo for now.
+
+2009-02-17  Andre Klapper  <a9016009@gmx.de>
+
+	* demos/gtk-demo/main.c:
+	Fix deprecated glib call.
+
+2009-02-17  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2009-02-16  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572040 – GtkAssistant does not expose page titles
+
+	* gtk/gtkassistant.c (gtk_assistant_accessible_ref_child): Set
+	the object name to the page title. Proposed by Eitan Isaacson
+
+2009-02-16  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572041 – Focus should change when advancing forward in GtkAssistant
+
+	* gtk/gtkassistant.c (set_current_page): Set focus when the current
+	page changes. Pointed out by Eitan Isaacson
+
+2009-02-16  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Require GLib 2.19.7 for GMountOperation::aborted.
+
+	* gtk/gtkmountoperation.c: Implement GMountOperation::aborted.
+
+2009-02-16  Sven Neumann  <sven@gimp.org>
+
+	* gdk/gdk.symbols
+	* gdk/directfb/gdkkeys-directfb.c: implement
+	gdk_keymap_get_caps_lock_state(). No "state-changed" signal yet.
+
+2009-02-16  Tor Lillqvist  <tml@novell.com>
+
+	Bug 571873 - Compile error with gdk/win32/gdkselection-win32.c
+
+	* gdk/win32/gdkselection-win32.c (gdk_selection_convert): Cast
+	gpointer to char * before pointer arithmetic to avoid compilation
+	error with MSVC.
+
+	(_gdk_selection_property_delete): Remove unused variable.
+
+2009-02-13  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/x11/gdkdisplay-x11.c (gdk_display_open): Don't forget to
+	register randr events. Found by Søren Sandmann
+
+2009-02-13  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Check for Xrandr 1.3
+
+	* gdk/x11/gdkdisplay-x11.[ch]: Rename have_randr12 to have_randr13
+	and set if if we have randr 1.3
+
+	* gdk/x11/gdkscreen-x11.c: Go back to using randr for monitor
+	information, if we have XRRGetScreenResourcesCurrent.
+:
+2009-02-12  Cody Russell  <bratsche@gnome.org>
+
+	Bug 571576 – gdk_pixbuf_save_to_stream() broken
+
+	* gdk-pixbuf/gdk-pixbuf-io.c: Fix gdk_pixbuf_save_to_stream() so that
+	it does not always return FALSE (even when it succeeds), and also so
+	that it does not set error to NULL when something goes wrong.
+
+2009-02-12  Marek Kasik  <mkasik@redhat.com>
+
+	Bug 568571 – Asian am/pm format on cups print backend's time parsing
+
+	* modules/printbackends/cups/gtkprintbackendcups.c: Add Asian am/pm
+	format into formats recognized by CUPS backend
+
+2009-02-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 570824 – [a11y] TreeView is not keyboard (re)focusable after 
+	selecting a cell in a non-sortable column
+
+	* gtk/gtktreeview.c (gtk_tree_view_header_focus): Don't grab
+	focus to a header button if it is not focusable. Problem reported
+	by Joanmarie Diggs
+
+2009-02-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 508545 – No way to identify terminal classes from documentation
+
+	* gtk/gtkvolumebutton.[hc]: Move the _GtkVolumeButton definition
+	into the header to make it possible to derive from GtkVoumeButton.
+	Reported by Chris Lord.
+
+2009-02-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 571196 – gtk_binding_entry_add_signall deprecated without 
+	alternative
+	* gtk/gtk.symbols:
+	* gtk/gtkbindings.[hc]: Undeprecate gtk_binding_entry_add_signall
+	since its replacement is a varargs function. Complaint by
+	Torsten Schoenfeld.
+
+2009-02-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 571249 – Icons are not drawn properly when initial widget 
+	state is insensitive
+
+	* gtk/gtkentry.c (gtk_entry_ensure_pixbuf): Render icons
+	in normal state, regardless of the entrys state. Reported by
+	Enrico Tröger.
+
+2009-02-11  Matthias Clasen  <mclasen@redhat.com>
+
+	* gtk/gtkfilechooserbutton.c: Don't emit the file-set signal
+	if the file chooser dialog is canceled. But emit it if a file
+	is received via DND.
+
+2009-02-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 353196 – Add a file-set signal to GtkFileChooserButton
+
+	* gtk/gtkfilechooserbutton.c: Remove GTK_SIGNAL_ACTION
+	from the file-set signal, that wasn't supposed to have it.
+
+2009-02-10  Takao Fujiwara  <takao.fujiwara@sun.com>
+
+	Bug 571015 – libprintbackend-cups has unlocalized strings
+
+	* modules/printbackends/cups/gtkprintbackendcups.c:
+	Added a translator comment with the request of translators.
+
+2009-02-09  Richard Hughes  <richard@hughsie.com>
+
+	* docs/reference/gtk/migrating-GtkEntry-icons.sgml:
+	Fix the enumerated name in the migration document.
+
+2009-02-09  Cody Russell  <bratsche@gnome.org>
+
+	* gdk/win32/gdkwin32.h: Add potentially missing #defines for
+	XBUTTON1, etc.  Fixes the build that was broken in r21746.
+
+2009-02-09  Takao Fujiwara  <takao.fujiwara@sun.com>
+
+	Bug 571015 – libprintbackend-cups has unlocalized strings
+
+	Reviewed by Matthias Clasen  <mclasen@redhat.com>
+
+	* modules/printbackends/cups/gtkprintbackendcups.c (handle_option):
+	Add translatable strings from ppd files.
+
+2009-02-06  Matthias Clasen  <mclasen@redhat.com>
+
+	Make the new GtkAction code work with PolicyKit-gnome's use of actions.
+
+	* gtk/gtkaction.c (gtk_action_[un]block_activate_from): Block
+	the action.
+
+	* gtk/gtkcheckmenuitem.c (gtk_check_menu_item_activatable_reset):
+	* gtk/gtktogglebutton. (gtk_toggle_button_activatable_reset):
+	* gtk/gtktoggletoolbutton.c (gtk_toggle_tool_button_activatable_reset):
+	Work with non-toggle actions without complaining.
+
+	* gtk/gtktoolbutton.c (gtk_tool_button_activatable_update): Updating
+	the icon-name should not remove the label.
+
+	* gtk/gtkimagemenuitem.c (activatable_update_icon_name): Also
+	update the image when the icon name is set to NULL.
+
+2009-02-06  Matthew Barnes  <mbarnes@redhat.com>
+
+	* gtk/gtklabel.c (gtk_label_set_label): Accept a NULL string.
+
+2009-02-03  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 538439 – tooltip may appear in upper left corner instead of 
+	over widget
+
+	* gtk/gtktooltip.c (gtk_tooltip_trigger_query): Set the root 
+	coordinates in the event correctly. Patch by Kristian Rietveld.
+
+2009-02-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2009-02-02  Matthias Clasen  <mclasen@redhat.com>
 
 	* === Released 2.15.3 ===

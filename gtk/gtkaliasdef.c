@@ -1069,9 +1069,6 @@ extern __typeof (gtk_aspect_frame_set) gtk_aspect_frame_set __attribute((alias("
 #undef gtk_binding_entry_clear 
 extern __typeof (gtk_binding_entry_clear) gtk_binding_entry_clear __attribute((alias("IA__gtk_binding_entry_clear"), visibility("default")));
 
-#undef gtk_binding_entry_add_signall 
-extern __typeof (gtk_binding_entry_add_signall) gtk_binding_entry_add_signall __attribute((alias("IA__gtk_binding_entry_add_signall"), visibility("default")));
-
 #undef gtk_binding_parse_binding 
 extern __typeof (gtk_binding_parse_binding) gtk_binding_parse_binding __attribute((alias("IA__gtk_binding_parse_binding"), visibility("default")));
 
@@ -1081,6 +1078,9 @@ extern __typeof (gtk_binding_entry_skip) gtk_binding_entry_skip __attribute((ali
 
 #undef gtk_binding_entry_add_signal 
 extern __typeof (gtk_binding_entry_add_signal) gtk_binding_entry_add_signal __attribute((alias("IA__gtk_binding_entry_add_signal"), visibility("default")));
+
+#undef gtk_binding_entry_add_signall 
+extern __typeof (gtk_binding_entry_add_signall) gtk_binding_entry_add_signall __attribute((alias("IA__gtk_binding_entry_add_signall"), visibility("default")));
 
 #undef gtk_binding_entry_remove 
 extern __typeof (gtk_binding_entry_remove) gtk_binding_entry_remove __attribute((alias("IA__gtk_binding_entry_remove"), visibility("default")));

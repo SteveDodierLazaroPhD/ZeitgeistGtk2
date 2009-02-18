@@ -1,375 +1,67 @@
-gtk+2.0 (2.15.3-0ubuntu2) jaunty; urgency=low
+gtk+2.0 (2.15.4-0ubuntu1) jaunty; urgency=low
 
-  * debian/patches/003_gdk.pc_privates.patch:
-    - Only use cairo-xlib for the X11 backend.
-
- -- Colin Watson <cjwatson@ubuntu.com>  Tue, 10 Feb 2009 14:12:47 +0000
-
-gtk+2.0 (2.15.3-0ubuntu1) jaunty; urgency=low
-
-  * New upstream version:
-    - Keyboard shortcut handling has been changed, to help with a longstanding
-    complaint about the way GTK+ handles multiple layouts. GTK+ now only uses
-    keys from groups other than the current group if they are not present in
-    the current group. Feedback on this change is appreciated. (lp: #23244)
-    - Bugs fixed:
-    569336 change in gtkbutton klass is causing crash...
-    569435 make maintainer-clean removes non-generated sources
-    145058 Inputting "^^" requires four keystrokes on Win32...
-    559408 Transparency lost when images are copied...
-    359288 Toolbar items are not shown after hiding
-    569918 64bit portability issue in gtkrecentchooser.c
-    162726 Multiple Latin layouts in XKB break keyboard shortcuts
-    569635 fontchooser should reload list of families/styles on...
-  * debian/patches/071_jasper_link_fix.patch:
-    - the change is in the new version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 03 Feb 2009 11:27:17 +0100
-
-gtk+2.0 (2.15.2-0ubuntu1) jaunty; urgency=low
-
+  * Resync on Debian
   * New upstream version:
     GtkAction:
-    - Make toolitems pick up icon names from actions
-    - Draw proxies of radio actions properly
-    - Make menu proxies of recent actions work
-    - Avoid accidental activations when changing actions on proxies
-    - Make derived button classes work as proxies
-    Input methods:
-    - Avoid an assertion due to early use of input methods
-    GtkScale:
-    - Avoid a segfault in the marker drawing code
-    GtkImageMenuItem:
-    - Add a property to override the show-menu-images setting
-    Bugs fixed:
-    566628 gdk_display_close always asserts on win32 and quartz
-    569240 Crasher when using markers
-    569104 Toggle menu entries showed as check menu entries...
-    322932 Always show icons on panel menus
-  * debian/patches/061_use_pdf_as_default_printing_standard.patch:
-    - updated to fix an implicit declaration issue (lp: #287611)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 27 Jan 2009 10:52:00 +0100
-
-gtk+2.0 (2.15.1-0ubuntu1) jaunty; urgency=low
-
-  * New upstream version:
-    GtkFileChooser:
-    - Remember the file chooser's size across invocations
-    - Handle uris that are entered in the entry
-    - Improve autocompletion, in particular for uris
-    GtkEntry:
-    - New property "im-module" for selecting input methods per-widget
-    - New icon-related API got renamed for consistency
-    - Added properties and setters for icon tooltips
-    GtkTextView:
-    - New property "im-module" for selecting input methods per-widget
-    - New signal "paste-done" to allow better handling of async pasting
-    GtkScale:
-    - New api to add annotated marks: gtk_scale_add_mark.
-    GtkAction:
-    - Rework the way actions and proxies interact, to make the
-      interaction less ad hoc, more extensible, and better suited
-      for support in GUI builders like glade.
-      To be used as a proxy, a widget must now implement the
-      `  GtkActivatable interface, and GtkActivatable implementations
-      are responsible for syncing their appearance with the action
-      and for activating the action.
-      All the widgets that are commonly used as proxies implement
-      GtkActivatable now.
-      This is a big change, and it is not unlikely to break some
-      current users of GtkAction, so feedback about problems caused
-      by this is appreciated.
-    - Add a "gicon" property to specify the icon with a GIcon
-    GDK:
-    - On X11, GDK now caches cursors to avoid cursor theming overhead
-    - New cursor type for blank cursors: GDK_BLANK_CURSOR
-    New deprecations:
-    gtk_scale_Button_get_orientation
-    gtk_scale_button_set_orientation
-    gtk_action_connect_proxy
-    gtk_action_disconnect_proxy
-    gtk_widget_get_action
-    gtk_action_block_activate_from
-    gtk_action_unblock_activate_from
-    direct access to "gtk-action" object data
-    Changes that are relevant for translators:
-    - Navigation and Media stock labels have separate message contexts now
-    - The caps lock warning string has been changed
-    Bugs fixed:
-    566083 Icon pixmap hardcoded during DnD
-    566334 compile failure for gtk+ on Mac OS X
-    565998 configure script doesn't check for cairo-xlib.pc
-    566391 gtk_about_dialog_set_url_hook should activate...
-    566568 gtk_tree_model_get_value docs typo
-    566628 gdk_display_close always asserts on win32
-    566733 Add GIcon to GtkAction, GtkToolButton
-    567024 gtktoolbutton doesn't create right proxy menu item...
-    523554 Copy from GIMP to Word broke
-    567468 no check for trailing != NULL in gtk_text_layout_get..
-    492794 Pasting external text at end of view yields wrong...
-    164002 query scripts don't work uninstalled on windows
-    566532 GtkScaleButton implementation of GtkOrientable
-    450716 New API to change global IM
-    562701 GtkEntryCompletion popup sizes its rows wrong...
-    567944 [Win32] Sorted treeview columns can be unreadable
-    567655 gtk_status_icon_set_tooltip_text/markup should use...
-    567887 gtk_entry_get_storage_type() should be...
-    568196 Please change context of Forward stock label
-    563280 stock items & translation context
-    568233 Wrong statement about GtkEntry's "activate" signal
-    568263 gtk can't recognize the wrong X Selection TARGETS...
-    565656 Add marks to scales
-    567413 GtkComboBoxEntry doesn't emit "changed" signal...
-    545980 GtkFileChooserEntry should handle URIs
-    566862 pixbuf_new_from_file does not autodetect format
-    568552 gtk_combo + gtk entry in invisible mode takes 100% cpu (lp: #321311)
-    561801 "scheduled printing" doesn't function as expected
-    566535 gtk_widget_get_snapshot does not work if double buff...
-    567021 gtkimage accessors docs
-    567761 Spellfixes in GTK+ documentation
-    568744 Spellfixes in GtkTreeView's documentation
-    536965 GtkPlug: crash on theme change
-    567124 proposal to delay doing something related to immodule...
-    568305 gdk-pixbuf mishandles BI_BITFIELDS bmps
-    - New and updated translations
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 26 Jan 2009 11:07:16 +0100
-
-gtk+2.0 (2.15.0-0ubuntu1) jaunty; urgency=low
-
-  * New upstream version:
-    GtkFileChooser
-    - Optionally shows file sizes
-    - Mounts volumes when necessary
-    - Picks better mime icons
-    GtkEntry
-    - Can show icons at either side of the entry, which can be made
-      clickable, drag sources, etc
-    - Can show progress information
-    - Picks the best available placeholder character for invisible entries 
-      unless it is explicitly set. See the invisible-char-set property
-    - Input methods work again in invisible entries
-    - Invisible entries can optionally display a caps-lock warning. This
-      can be turned off with the caps-lock-warning property
-    GtkStatusIcon
-    - Uses an extension of the tray icon spec to negotiate RGBA support.
-      This is also supported by the GNOME panel. For details, see 
-      http://lists.freedesktop.org/archives/xdg/2008-September/009934.html 
-    - Supports scroll events, middle clicks and rich tooltips
-    GtkLinkButton
-    - Respects user-defined tooltips 
-    - Has a default url hook
-    GtkBuilder
-    - Can construct menus
-    - Can associate accel groups with windows
-    - Child properties can now be translatable, e.g. GtkAssistant::page-title
-    - GtkOrientable
-    - A new interface implemented by all widgets that have horizontal and
-      vertical variants
-    - Printing support
-    - Print-to-file can save to non-local files
-    - Page rendering can be deferred to a thread to avoid blocking the mainloop
+    - More compatibility fixes to make PolicyKit-gnome work
+    GtkFileChooserButton:
+    - Don't emit file-set when the dialog is canceled. But emit it
+      when a file is received via DND
     GDK
-    - GdkKeymap emits a state-changed signal when the caps lock state changes
-    - Newly deprecated functions:
-      gdk_window_get_toplevels
-      gtk_font_selection_dialog_get_apply_button
-      gtk_status_icon_set_tooltip
-      gtk_toolbar_set_orientation
-    - Changes that are relevant for theme authors
-    - The GtkMenu::arrow-placement style property allow more space efficient
-      layout of scrolling menus
-    - Submenu arrows can be scaled relative to the font size, with the
-      GtkMenuItem::arrow-scaling style property
-    - Themes can set the GtkDialog::content-area-spacing style property to 
-      change the spacing between elements of the content area
-    - The GtkEntry::state-hint style property can be used to request that
-      GTK+ should pass the correct state when drawing the background of entries
-    - The GtkEntry::prelight style property can be used to suppress prelighting
-      of icons in entries on mouseover
-    Changes that are relevant for translators
-    - GTK+ has been switched to use the two-argument C_() macro
-      instead of Q_() for messages with context
-    - Bugs fixed:
-    434987 MS Windows style should use pango_win32_font_description_from_logfont
-    325095 show a 'size' column
-    552837 mem leak in gtkimmulticontext
-    83935 GtkEntry's default invisible char should be U+25CF
-    553000 incorrect i18n header in gtkfilesystem.c
-    552789 Show size column in the search and recently used files modes
-    553135 eog crash: assertion failed. 
-    382544 GtkIconView: Selection/focus should be painted around the items
-    541391 Unfocussable Treeview swallows focus
-    408244 add GtkDialog::content-area-spacing
-    538782 Make GtkMenu's arrow size themable
-    553385 gtk-builder-convert creates untranslated combobox models
-    553241 double freed pointer in lpr_write cause firefox3 crash
-    553917 Typo in gdkwindow-win32.c
-    553133 GtkFileChooser won't ask to mount a volume
-    553211 GtkFileChooserButton unsets filter after first use
-    553578 tabs are not drawn correctly
-    553803 eventually call XCloseDevice on XOpenDevice results
-    552956 Should check composite extension version
-    552959 GtkTrayIcon: _NET_SYSTEM_TRAY_VISUAL and real transparency
-    553575 Only draw focus when navigating with the keyboard
-    339367 Incorrect spotlocation
-    554141 uninitialized data use/free in gtkclipboard-quartz.c
-    371908 Password Entry broken
-    317002 Disable input method completely in GtkEntry when it...
-    487624 Tooltips doesn't get updated if ther's no mouse motion...
-    107000 Add signals to GdkKeymap for monitoring caps_lock, etc
-    530568 Entries with visibility=FALSE should warn for caps-lock on
-    553086 hard to see current immodule
-    541009 Get rid of separate subclasses for horizontal and vertical...
-    344522 support non-local destination files 
-    553582 Add orientation API to GtkSeparator
-    554506 combining diacritics broken, became deadkeys
-    553585 Add orientation API to GtkRuler
-    554690 mem leak in filechooser
-    554691 mem leak in filechooser
-    554696 invalid free function used
-    554698 mem leak in filechooser
-    554701 filechooser spams console with useless warnings
-    554704 gtkfilesystemmodel does too much work
-    530575 GtkEntry with invisible chars has a confused cursor in overwrite mode
-    96431 Can't cut and paste / DND within invisible entry
-    132501 Make utility window translate to tool window in win32
-    539464 gtk_cell_view_get_model is missing in GtkCellView
-    553573 Add orientation API to GtkBox
-    555387 Changing the sensitivity of a statusbar mistakenly requires a display
-    436533 Allow more space efficient scroll arrows placement
-    555270 Allow unsetting a MessageDialog's image
-    554702 gtkfilesystem leaks GError
-    554192 double press on the "circumflex" dead key...
-    516425 Optionally display accelerators in popups
-    550342 Splash screens have a caption
-    555578 GtkTable propertiy maxima are wrong
-    555523 gtk_scale_button_set_adjustment should accept NULL
-    555573 gtk_font_selection_set_font_name shouldn't require a screen
-    555676 gtk_widget_real_grab_focus assumes toplevel == window
-    555000 Wrong treatment on non-spacing marks dead keys in GtkIMContextSimple
-    551355 Make glib build with libtool 2.2
-    555186 Setting gtk-toolbar-icon-size with custom icon_size
-    555625 Updated gtk_compose_seqs_compact table
-    555386 format not a string literal and no format arguments
-    552318 menubar mnemonics consumed even when gtk-enable-mnemonics=false
-    555779 GtkCellRendererPixbuf crashed on failed GIcon lookup
-    556150 gtk 'object' property test fixing
-    556527 The current page property is not passed to GtkPrintUnixDialog
-    556578 GIMP windows stay on top of other windows
-    557059 crash when compositing emblems with icon
-    557266 Window Management Problem
-    555920 gtkentry.c passes wrong enum to pango_layout_set_alignment
-    528320 Incorrect icons displayed for files with custom mimetype icons
-    557524 "va_end(args);" should be added into gtk_text_buffer_insert_with_...
-    556835 gtkentry.c: variable is declared at middle of block
-    556954 gtk+/gtk/gtkrecentchooserdefault.c: mismatching allocation...
-    557315 stale clipboard target cache
-    530454 Clarify page_nr when printing
-    557065 gtkcellrendererpixbuf spams console over and over...
-    557894 Wrong return value for gdk_pointer_grab_info_libgtk_only
-    558397 gtk_widget_error_bell undefined without a screen
-    557762 Misleading error message in GDK DirectFB
-    557316 GtkLinkButton should consider user-defined tooltip
-    339714 Set printer dpi on cairo ps/pdf surfaces when printing
-    558522 scroll arrow painted insensitive even though there are pages...
-    347230 testicontheme shortcomings
-    558323 glitches when popping up combos in treeviews
-    558667 gtk_font_selection_dialog_get_apply_button - deprecate
-    412134 Add API to query style properties from the style
-    322934 Replace menu's proxy icons with empty space hiding icons
-    409435 GtkStatusIcon enhancements: scroll events, middle click, rich tooltips
-    558278 Crash when calling a callback set by gdk_add_client_message_filter
-    558929 gtkstatusicon.c: 'event' is a member of the structure
-    558001 gtk_icon_view_enable_model_drag_[source|dest] problem
-    557212 Problem with which window gains focus and is visible
-    559404 gtk_editable_insert_text counts length in bytes
-    558586 handling of keyboard under darwin 
-    558409 GtkLabel::use-underline doesnt work with GtkLabel::attributes
-    553586 Add orientation API to GtkPaned
-    560135 Print when the user double clicks a printer
-    553765 Add orientation API to GtkRange
-    550942 Rework of gdkeventloop-quartz.c
-    525550 GTK+ 2.13.0 GtkCurve test fails
-    559619 invisible-char default cannot be tested
-    560139 GtkEntry doesn't paint with the right state
-    560602 Wrong GtkMenuItem default value 
-    377699 realizing gtk.Progress() causes SEGV
-    561335 Fix typos in GtkToolItem documentation
-    561539 Alignments miscalculate dimensions when allocated less...
-    559947 Unchecked dependency on python>=2.4
-    561504 testgtk should load rc file from sub folder
-    539263 Deprecate gdk_window_get_toplevels
-    554076 eventually release g_new-ed supported_atoms
-    559622 GdkDevice test segfaults
-    554453 "typeahead find" widget of GtkTreeView appears on wrong monitor...
-    562817 GtkDialog: typo
-    555334 connected server feature
-    562878 password save incorrectly set in gtkmountoperation
-    559914 eog doesn't apply paper setup
-    562998 GtkFontButton documentation improvements
-    557420 Some compose sequences don't work anymore 
-    546285 Allow GtkEntry to draw progress
-    563547 Update gdkx11 atom precache table
-    563285 test print backend does not compile
-    559325 documentation for gdk_display_get_window_at_pointer() is wrong
-    554274 Add default hook for GtkLinkButton
-    546378 GtkAssistant page title is not translatable
-    563991 gtk_file_chooser_button_new_with_backend is deprecated...
-    563994 Input method module interface not documented
-    564066 Crash in gtk_rc_parse_default_files
-    563835 Typo in gtk_widget_has_screen() docs
-    564212 gtk_icon_view_accessible_model_rows_reordered explain new_order...
-    563751 xatom cache is prefilled too late
-    556839 Crash when opening a link
-    549251 GTK icon view accessible issue
-    558306 Cannot build gdk (gtk+ 2.14.4) on Solaris 8
-    555560 gtk_combo_box_set_active fails with no model
-    563158 CellRendererProgress pulsing and progressing rows can not...
-    556233 local-only causes G_IS_FILE warning
-    562579 Remove error dialog when directory does not exist
-    561494 FileChooser network browsing and authentication support
-    339318 Allow page rendering to (optionally) happen in a thread
-    85292 add an icon to gtkentry
-    564881 gtkstatusicon.c: 'event' bug again
-    552545 leaks GpImage
-    553374 gdk_pixdata_from_pixbuf fails for some images with use_rle set to TRUE
-    555791 Natuilus Crashes when opening USB MP3 Player Contents
-    561186 GdkPixbuf API type checking needs cleanup
-    559009 gtk_radio_button_get_group documentation needs to say...
-    523264 Update GTK+ reference documentation screenshots
-    563876 [Regression] GTK_MODULES env var is no longer relevant
-    554950 gail must make itself resident
-    555953 libferret missing link against libgtk-x11
-    554002 Orca App-Preferences dialog page tabs are "off" by one...
-    353088 gtk_expander_get_label should return the full label text
-    512743 Applications with lists crash in libgail
-    564555 synaptic cannot be started...
-    565203 icons are misplaced when horizontal gtkiconview is...
-    549251 GTK icon view accessible issue 
-    558694 Paned window splitter keynav broken
-    565846 va_end(args) should be added into gtk_tree_store_new
+    - Use Xrandr 1.3 for tracking monitor information, if available
+    Bugs fixed: 
+    538439 tooltip may appear in upper left corner...
+    571015 libprintbackend-cups has unlocalized strings
+    353196 Add a file-set signal to GtkFileChooserButton
+    571249 Icons are not drawn properly when initial widget...
+    571196 gtk_binding_entry_add_signall deprecated without alternative
+    508545 No way to identify terminal classes from documentation
+    570824 TreeView is not keyboard (re)focusable after selecting a cell...
+    568571 Asian am/pm format on cups print backend's time parsing
+    571576 gdk_pixbuf_save_to_stream() broken
+    571873 Compile error with gdk/win32/gdkselection-win32.c
+    572041 Focus should change when advancing forward in GtkAssistant
+    572040 GtkAssistant does not expose page titles
+    570406 gailutil.def is in srcdir, but used from builddir
+    Updated translations
+  * debian/control.in:
+    - libgtk2.0-0 depends on libgail18 to workaround upgrade issue
+    - use required replaces due to different choice in intrepid and debian
+  * debian/patches/022_disable-viqr-im-for-vi-locale.patch:
+    - change from Ming Hua, don't activate the viqr input method for Vietnamese
   * debian/patches/030_gtkentry_password-char-circle.patch:
     - the issue is fixed in the new version
+  * debian/patches/070_mandatory-relibtoolize.patch:
+    - new version update
+  * debian/patches/071_jasper_link_fix.patch:
+    - the change is in the new version
   * debian/patches/092_fix_printtest_include.patch:
     - the issue is fixed in the new version
   * debian/rules:
+    - Fix the binary-arch/binary-indep targets to build
+      cleanly under make -j, by setting a PARALLEL_FLAGS variable and
+      passing it to make instead of exporting MAKEFLAGS.
     - updated shlibs version
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 09 Jan 2009 18:19:27 +0100
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 18 Feb 2009 14:27:20 +0100
 
-gtk+2.0 (2.14.7-1ubuntu1) jaunty; urgency=low
+gtk+2.0 (2.14.7-2) experimental; urgency=low
 
-  * debian/control.in:
-    - libgtk2.0-0 depends on libgail18 to workaround upgrade issue
-  * debian/patches/022_disable-viqr-im-for-vi-locale.patch:
-    - change from Ming Hua, don't activate the viqr input method for Vietnamese
-  * debian/rules: Fix the binary-arch/binary-indep targets to build
-    cleanly under make -j, by setting a PARALLEL_FLAGS variable and
-    passing it to make instead of exporting MAKEFLAGS.
+  * 008_implicit_pointer_conversion_gdkgc_directfb.patch: removed, it’s 
+    obsolete and just defines the same macro a second time.
+  * 007_implicit_pointer_conversion_gdkdrawable_directfb.patch: removed, 
+    it’s not needed anymore with the latest directfb.
+  * 006_proper-directfb-modules.patch: removed from the package, it 
+    won’t be necessary anymore.
+  * 001_static-linking-dont-query-immodules.patch,
+    002_static-linking-dont-build-perf.patch,
+    003_gdk.pc_privates.patch,
+    004_gtk+-ximian-gtk2-filesel-navbutton-5.patch: refreshed.
+  * Remove 071_correct_directfb_declarations.patch, and replace it by 
+    032_gdkwindowimpl_directfb.patch, a patch from Sven Neumann to 
+    (hopefully) fix DirectFB support for GTK+ 2.14.
 
- -- Sebastien Bacher <seb128@canonical.com>  Thu, 08 Jan 2009 17:48:02 +0100
+ -- Josselin Mouette <joss@debian.org>  Tue, 17 Feb 2009 23:17:56 +0100
 
 gtk+2.0 (2.14.7-1) experimental; urgency=low
 
