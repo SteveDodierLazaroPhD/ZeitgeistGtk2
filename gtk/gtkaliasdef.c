@@ -524,8 +524,8 @@ extern __typeof (gtk_activatable_get_type) gtk_activatable_get_type __attribute(
 #undef gtk_activatable_get_use_action_appearance 
 extern __typeof (gtk_activatable_get_use_action_appearance) gtk_activatable_get_use_action_appearance __attribute((alias("IA__gtk_activatable_get_use_action_appearance"), visibility("default")));
 
-#undef gtk_activatable_reset 
-extern __typeof (gtk_activatable_reset) gtk_activatable_reset __attribute((alias("IA__gtk_activatable_reset"), visibility("default")));
+#undef gtk_activatable_sync_action_properties 
+extern __typeof (gtk_activatable_sync_action_properties) gtk_activatable_sync_action_properties __attribute((alias("IA__gtk_activatable_sync_action_properties"), visibility("default")));
 
 #undef gtk_activatable_set_related_action 
 extern __typeof (gtk_activatable_set_related_action) gtk_activatable_set_related_action __attribute((alias("IA__gtk_activatable_set_related_action"), visibility("default")));
@@ -12088,6 +12088,9 @@ extern __typeof (gtk_window_get_default_widget) gtk_window_get_default_widget __
 
 #undef gtk_window_get_default_icon_list 
 extern __typeof (gtk_window_get_default_icon_list) gtk_window_get_default_icon_list __attribute((alias("IA__gtk_window_get_default_icon_list"), visibility("default")));
+
+#undef gtk_window_get_default_icon_name 
+extern __typeof (gtk_window_get_default_icon_name) gtk_window_get_default_icon_name __attribute((alias("IA__gtk_window_get_default_icon_name"), visibility("default")));
 
 #undef gtk_window_get_default_size 
 extern __typeof (gtk_window_get_default_size) gtk_window_get_default_size __attribute((alias("IA__gtk_window_get_default_size"), visibility("default")));

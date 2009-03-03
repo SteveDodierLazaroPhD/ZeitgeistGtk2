@@ -68,8 +68,7 @@
  * When necessary, #GtkMountOperation shows dialogs to ask for passwords.
  */
 
-/* GObject, GtkObject methods
- */
+static void   gtk_mount_operation_finalize     (GObject          *object);
 static void   gtk_mount_operation_set_property (GObject          *object,
                                                 guint             prop_id,
                                                 const GValue     *value,
@@ -78,10 +77,7 @@ static void   gtk_mount_operation_get_property (GObject          *object,
                                                 guint             prop_id,
                                                 GValue           *value,
                                                 GParamSpec       *pspec);
-static void   gtk_mount_operation_finalize     (GObject          *object);
 
-/* GMountOperation methods
- */
 static void   gtk_mount_operation_ask_password (GMountOperation *op,
                                                 const char      *message,
                                                 const char      *default_user,
@@ -122,29 +118,10 @@ struct _GtkMountOperationPrivate {
 };
 
 static void
-gtk_mount_operation_finalize (GObject *object)
-{
-  GtkMountOperation *operation;
-  GtkMountOperationPrivate *priv;
-
-  operation = GTK_MOUNT_OPERATION (object);
-
-  priv = operation->priv;
-
-  if (priv->parent_window)
-    g_object_unref (priv->parent_window);
-
-  if (priv->screen)
-    g_object_unref (priv->screen);
-
-  G_OBJECT_CLASS (gtk_mount_operation_parent_class)->finalize (object);
-}
-
-static void
 gtk_mount_operation_class_init (GtkMountOperationClass *klass)
 {
   GObjectClass         *object_class = G_OBJECT_CLASS (klass);
-  GMountOperationClass *mount_op_class;
+  GMountOperationClass *mount_op_class = G_MOUNT_OPERATION_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (GtkMountOperationPrivate));
 
@@ -152,7 +129,6 @@ gtk_mount_operation_class_init (GtkMountOperationClass *klass)
   object_class->get_property = gtk_mount_operation_get_property;
   object_class->set_property = gtk_mount_operation_set_property;
 
-  mount_op_class = G_MOUNT_OPERATION_CLASS (klass);
   mount_op_class->ask_password = gtk_mount_operation_ask_password;
   mount_op_class->ask_question = gtk_mount_operation_ask_question;
   mount_op_class->aborted = gtk_mount_operation_aborted;
@@ -180,9 +156,30 @@ gtk_mount_operation_class_init (GtkMountOperationClass *klass)
                                                         P_("The screen where this window will be displayed."),
                                                         GDK_TYPE_SCREEN,
                                                         GTK_PARAM_READWRITE));
-
 }
 
+static void
+gtk_mount_operation_init (GtkMountOperation *operation)
+{
+  operation->priv = G_TYPE_INSTANCE_GET_PRIVATE (operation,
+                                                 GTK_TYPE_MOUNT_OPERATION,
+                                                 GtkMountOperationPrivate);
+}
+
+static void
+gtk_mount_operation_finalize (GObject *object)
+{
+  GtkMountOperation *operation = GTK_MOUNT_OPERATION (object);
+  GtkMountOperationPrivate *priv = operation->priv;
+
+  if (priv->parent_window)
+    g_object_unref (priv->parent_window);
+
+  if (priv->screen)
+    g_object_unref (priv->screen);
+
+  G_OBJECT_CLASS (gtk_mount_operation_parent_class)->finalize (object);
+}
 
 static void
 gtk_mount_operation_set_property (GObject      *object,
@@ -190,25 +187,20 @@ gtk_mount_operation_set_property (GObject      *object,
                                   const GValue *value,
                                   GParamSpec   *pspec)
 {
-  GtkMountOperation *operation;
-  gpointer tmp;
-
-  operation = GTK_MOUNT_OPERATION (object);
+  GtkMountOperation *operation = GTK_MOUNT_OPERATION (object);
 
   switch (prop_id)
     {
-   case PROP_PARENT:
-     tmp = g_value_get_object (value);
-     gtk_mount_operation_set_parent (operation, tmp);
-     break;
+    case PROP_PARENT:
+      gtk_mount_operation_set_parent (operation, g_value_get_object (value));
+      break;
 
-   case PROP_SCREEN:
-      tmp = g_value_get_object (value);
-      gtk_mount_operation_set_screen (operation, tmp);
-     break;
+    case PROP_SCREEN:
+      gtk_mount_operation_set_screen (operation, g_value_get_object (value));
+      break;
 
-   case PROP_IS_SHOWING:
-   default:
+    case PROP_IS_SHOWING:
+    default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
@@ -220,11 +212,8 @@ gtk_mount_operation_get_property (GObject    *object,
                                   GValue     *value,
                                   GParamSpec *pspec)
 {
-  GtkMountOperationPrivate *priv;
-  GtkMountOperation *operation;
-
-  operation = GTK_MOUNT_OPERATION (object);
-  priv = operation->priv;
+  GtkMountOperation *operation = GTK_MOUNT_OPERATION (object);
+  GtkMountOperationPrivate *priv = operation->priv;
 
   switch (prop_id)
     {
@@ -247,14 +236,6 @@ gtk_mount_operation_get_property (GObject    *object,
 }
 
 static void
-gtk_mount_operation_init (GtkMountOperation *operation)
-{
-  operation->priv = G_TYPE_INSTANCE_GET_PRIVATE (operation,
-                                                 GTK_TYPE_MOUNT_OPERATION,
-                                                 GtkMountOperationPrivate);
-}
-
-static void
 remember_button_toggled (GtkToggleButton   *button,
                          GtkMountOperation *operation)
 {
@@ -274,11 +255,8 @@ pw_dialog_got_response (GtkDialog         *dialog,
                         gint               response_id,
                         GtkMountOperation *mount_op)
 {
-  GtkMountOperationPrivate *priv;
-  GMountOperation *op;
-
-  priv = mount_op->priv;
-  op = G_MOUNT_OPERATION (mount_op);
+  GtkMountOperationPrivate *priv = mount_op->priv;
+  GMountOperation *op = G_MOUNT_OPERATION (mount_op);
 
   if (response_id == GTK_RESPONSE_OK)
     {
@@ -456,6 +434,7 @@ gtk_mount_operation_ask_password (GMountOperation   *mount_op,
   GtkWidget *message_label;
   gboolean   can_anonymous;
   guint      rows;
+  const gchar *secondary;
 
   operation = GTK_MOUNT_OPERATION (mount_op);
   priv = operation->priv;
@@ -504,11 +483,33 @@ gtk_mount_operation_ask_password (GMountOperation   *mount_op,
   main_vbox = gtk_vbox_new (FALSE, 18);
   gtk_box_pack_start (GTK_BOX (hbox), main_vbox, TRUE, TRUE, 0);
 
-  message_label = gtk_label_new (message);
-  gtk_misc_set_alignment (GTK_MISC (message_label), 0.0, 0.5);
-  gtk_label_set_line_wrap (GTK_LABEL (message_label), TRUE);
-  gtk_box_pack_start (GTK_BOX (main_vbox), GTK_WIDGET (message_label),
-                      FALSE, FALSE, 0);
+  secondary = strstr (message, "\n");
+  if (secondary != NULL)
+    {
+      gchar *s;
+      gchar *primary;
+
+      primary = g_strndup (message, secondary - message + 1);
+      s = g_strdup_printf ("<big><b>%s</b></big>%s", primary, secondary);
+
+      message_label = gtk_label_new (NULL);
+      gtk_label_set_markup (GTK_LABEL (message_label), s);
+      gtk_misc_set_alignment (GTK_MISC (message_label), 0.0, 0.5);
+      gtk_label_set_line_wrap (GTK_LABEL (message_label), TRUE);
+      gtk_box_pack_start (GTK_BOX (main_vbox), GTK_WIDGET (message_label),
+                          FALSE, TRUE, 0);
+
+      g_free (s);
+      g_free (primary);
+    }
+  else
+    {
+      message_label = gtk_label_new (message);
+      gtk_misc_set_alignment (GTK_MISC (message_label), 0.0, 0.5);
+      gtk_label_set_line_wrap (GTK_LABEL (message_label), TRUE);
+      gtk_box_pack_start (GTK_BOX (main_vbox), GTK_WIDGET (message_label),
+                          FALSE, FALSE, 0);
+    }
 
   vbox = gtk_vbox_new (FALSE, 6);
   gtk_box_pack_start (GTK_BOX (main_vbox), vbox, FALSE, FALSE, 0);

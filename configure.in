@@ -12,7 +12,7 @@ AC_PREREQ(2.54)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [15])
-m4_define([gtk_micro_version], [4])
+m4_define([gtk_micro_version], [5])
 m4_define([gtk_interface_age], [0])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
@@ -503,6 +503,26 @@ LIBS="$LIBS $INTLLIBS"
 AC_OUTPUT_COMMANDS([case "$CONFIG_FILES" in *po-properties/Makefile.in*)
         sed -e "/POTFILES =/r po-properties/POTFILES" po-properties/Makefile.in > po-properties/Makefile
       esac])
+
+dnl Snippet below is copied from AM_GLIB_GNU_GETTEXT to generate a first
+dnl po-properties/POTFILES during configure; see GNOME #573515.
+dnl
+dnl Generate list of files to be processed by xgettext which will
+dnl be included in po-properties/Makefile.
+test -d po-properties || mkdir po-properties
+if test "x$srcdir" != "x."; then
+  if test "x`echo $srcdir | sed 's@/.*@@'`" = "x"; then
+    popropsrcprefix="$srcdir/"
+  else
+    popropsrcprefix="../$srcdir/"
+  fi
+else
+  popropsrcprefix="../"
+fi
+rm -f po-properties/POTFILES
+sed -e "/^#/d" -e "/^\$/d" -e "s,.*,	$popropsrcprefix& \\\\," -e "\$s/\(.*\) \\\\/\1/" \
+< $srcdir/po-properties/POTFILES.in > po-properties/POTFILES
+dnl (End of adapted AM_GLIB_GNU_GETTEXT snippet.)
 
 AM_GLIB_DEFINE_LOCALEDIR(GTK_LOCALEDIR)
 
@@ -1622,7 +1642,7 @@ AC_SUBST(GDK_PIXBUF_XLIB_DEP_LIBS)
 AC_SUBST(GDK_PIXBUF_XLIB_DEP_CFLAGS)
 
 if test "x$gdktarget" = "xdirectfb"; then
-  DIRECTFB_REQUIRED_VERSION=0.9.24
+  DIRECTFB_REQUIRED_VERSION=1.0.0
   AC_MSG_CHECKING(for DirectFB)
 
   if $PKG_CONFIG --atleast-version $DIRECTFB_REQUIRED_VERSION directfb && $PKG_CONFIG --exists cairo-directfb ; then

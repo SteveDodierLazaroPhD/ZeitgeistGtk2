@@ -1,4 +1,4 @@
-/*
+ /*
  * gdkscreen-x11.c
  * 
  * Copyright 2001 Sun Microsystems Inc. 
@@ -663,6 +663,31 @@ init_fake_xinerama (GdkScreen *screen)
   return FALSE;
 }
 
+static int
+monitor_compare_function (GdkX11Monitor *monitor1,
+                          GdkX11Monitor *monitor2)
+{
+  /* Sort the leftmost/topmost monitors first.
+   * For "cloned" monitors, sort the bigger ones first
+   * (giving preference to taller monitors over wider
+   * monitors)
+   */
+
+  if (monitor1->geometry.x != monitor2->geometry.x)
+    return monitor1->geometry.x - monitor2->geometry.x;
+
+  if (monitor1->geometry.y != monitor2->geometry.y)
+    return monitor1->geometry.y - monitor2->geometry.y;
+
+  if (monitor1->geometry.height != monitor2->geometry.height)
+    return - (monitor1->geometry.height - monitor2->geometry.height);
+
+  if (monitor1->geometry.width != monitor2->geometry.width)
+    return - (monitor1->geometry.width - monitor2->geometry.width);
+
+  return 0;
+}
+
 static gboolean
 init_randr13 (GdkScreen *screen)
 {
@@ -695,6 +720,9 @@ init_randr13 (GdkScreen *screen)
       /* Non RandR1.2 X driver have output name "default" */
       randr12_compat |= !g_strcmp0(output->name, "default");
 
+      if (output->connection == RR_Disconnected)
+        continue;
+
       if (output->crtc)
 	{
 	  GdkX11Monitor monitor;
@@ -705,11 +733,11 @@ init_randr13 (GdkScreen *screen)
 	  monitor.geometry.width = crtc->width;
 	  monitor.geometry.height = crtc->height;
 
-	  /* FIXME: fill this out properly - need EDID parser */
 	  monitor.output = resources->outputs[i];
-	  monitor.width_mm = -1;
-	  monitor.height_mm = -1;
-	  monitor.output_name = NULL;
+	  monitor.width_mm = output->mm_width;
+	  monitor.height_mm = output->mm_height;
+	  monitor.output_name = g_strdup (output->name);
+	  /* FIXME: need EDID parser */
 	  monitor.manufacturer = NULL;
 
 	  g_array_append_val (monitors, monitor);
@@ -729,10 +757,12 @@ init_randr13 (GdkScreen *screen)
       return FALSE;
     }
 
+  g_array_sort (monitors,
+                (GCompareFunc) monitor_compare_function);
   screen_x11->n_monitors = monitors->len;
   screen_x11->monitors = (GdkX11Monitor *)g_array_free (monitors, FALSE);
 
-  return TRUE;
+  return screen_x11->n_monitors > 0;
 #endif
   
   return FALSE;
@@ -827,23 +857,70 @@ init_xfree_xinerama (GdkScreen *screen)
 }
 
 static void
+free_monitors (GdkX11Monitor *monitors,
+               gint           n_monitors)
+{
+  int i;
+
+  for (i = 0; i < n_monitors; ++i)
+    {
+      g_free (monitors[i].output_name);
+      g_free (monitors[i].manufacturer);
+    }
+
+  g_free (monitors);
+}
+
+static void
 deinit_multihead (GdkScreen *screen)
 {
   GdkScreenX11 *screen_x11 = GDK_SCREEN_X11 (screen);
-  int i;
 
-  for (i = 0; i < screen_x11->n_monitors; ++i)
-    {
-      GdkX11Monitor *monitor = get_monitor (screen, i);
-
-      g_free (monitor->output_name);
-      g_free (monitor->manufacturer);
-    }
-
-  g_free (screen_x11->monitors);
+  free_monitors (screen_x11->monitors, screen_x11->n_monitors);
 
   screen_x11->n_monitors = 0;
   screen_x11->monitors = NULL;
+}
+
+static gboolean
+compare_monitor (GdkX11Monitor *m1,
+                 GdkX11Monitor *m2)
+{
+  if (m1->geometry.x != m2->geometry.x ||
+      m1->geometry.y != m2->geometry.y ||
+      m1->geometry.width != m2->geometry.width ||
+      m1->geometry.height != m2->geometry.height)
+    return FALSE;
+
+  if (m1->width_mm != m2->width_mm ||
+      m1->height_mm != m2->height_mm)
+    return FALSE;
+
+  if (g_strcmp0 (m1->output_name, m2->output_name) != 0)
+    return FALSE;
+
+  if (g_strcmp0 (m1->manufacturer, m2->manufacturer) != 0)
+    return FALSE;
+
+  return TRUE;
+}
+
+static gboolean
+compare_monitors (GdkX11Monitor *monitors1, gint n_monitors1,
+                  GdkX11Monitor *monitors2, gint n_monitors2)
+{
+  gint i;
+
+  if (n_monitors1 != n_monitors2)
+    return FALSE;
+
+  for (i = 0; i < n_monitors1; i++)
+    {
+      if (!compare_monitor (monitors1 + i, monitors2 + i))
+        return FALSE;
+    }
+
+  return TRUE;
 }
 
 static void
@@ -852,8 +929,6 @@ init_multihead (GdkScreen *screen)
   GdkScreenX11 *screen_x11 = GDK_SCREEN_X11 (screen);
   int opcode, firstevent, firsterror;
 
-  deinit_multihead (screen);
-  
   /* There are four different implementations of multihead support: 
    *
    *  1. Fake Xinerama for debugging purposes
@@ -965,18 +1040,49 @@ init_randr_support (GdkScreen * screen)
 #endif
 }
 
+static void
+process_monitors_change (GdkScreen *screen)
+{
+  GdkScreenX11 *screen_x11 = GDK_SCREEN_X11 (screen);
+  gint		 n_monitors;
+  GdkX11Monitor	*monitors;
+  gboolean changed;
+
+  n_monitors = screen_x11->n_monitors;
+  monitors = screen_x11->monitors;
+
+  screen_x11->n_monitors = 0;
+  screen_x11->monitors = NULL;
+
+  init_multihead (screen);
+
+  changed = !compare_monitors (monitors, n_monitors,
+                               screen_x11->monitors, screen_x11->n_monitors);
+
+  free_monitors (monitors, n_monitors);
+
+  if (changed)
+    g_signal_emit_by_name (screen, "monitors-changed");
+}
+
 void
 _gdk_x11_screen_size_changed (GdkScreen *screen,
 			      XEvent    *event)
 {
   gint width, height;
+  GdkDisplayX11 *display_x11;
+  gboolean monitors_changed;
 
   width = gdk_screen_get_width (screen);
   height = gdk_screen_get_height (screen);
 
 #ifdef HAVE_RANDR
-  if (!XRRUpdateConfiguration (event))
+  display_x11 = GDK_DISPLAY_X11 (gdk_screen_get_display (screen));
+
+  if (display_x11->have_randr13 && event->type == ConfigureNotify)
     return;
+
+  XRRUpdateConfiguration (event);
 #else
   if (event->type == ConfigureNotify)
     {
@@ -990,20 +1096,11 @@ _gdk_x11_screen_size_changed (GdkScreen *screen,
     return;
 #endif
 
-  if (width == gdk_screen_get_width (screen) && 
-      height == gdk_screen_get_height (screen))
-    return;
+  process_monitors_change (screen);
 
-  _gdk_x11_screen_process_monitors_change (screen);
-  g_signal_emit_by_name (screen, "size_changed");
-}
-
-void
-_gdk_x11_screen_process_monitors_change (GdkScreen *screen)
-{
-  init_multihead (screen);
-
-  g_signal_emit_by_name (screen, "monitors_changed");
+  if (width != gdk_screen_get_width (screen) ||
+      height != gdk_screen_get_height (screen))
+    g_signal_emit_by_name (screen, "size-changed");
 }
 
 void
@@ -1030,7 +1127,7 @@ _gdk_x11_screen_process_owner_change (GdkScreen *screen,
 	{
 	  screen_x11->is_composited = composited;
 
-	  g_signal_emit_by_name (screen, "composited_changed");
+	  g_signal_emit_by_name (screen, "composited-changed");
 	}
     }
 #endif

@@ -32,7 +32,8 @@
 <link linkend="GtkAction">GtkAction</link> *         <link linkend="gtk-activatable-get-related-action">gtk_activatable_get_related_action</link>  (<link linkend="GtkActivatable">GtkActivatable</link> *activatable);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-activatable-get-use-action-appearance">gtk_activatable_get_use_action_appearance</link>
                                                         (<link linkend="GtkActivatable">GtkActivatable</link> *activatable);
-<link linkend="void">void</link>                <link linkend="gtk-activatable-reset">gtk_activatable_reset</link>               (<link linkend="GtkActivatable">GtkActivatable</link> *activatable,
+<link linkend="void">void</link>                <link linkend="gtk-activatable-sync-action-properties">gtk_activatable_sync_action_properties</link>
+                                                        (<link linkend="GtkActivatable">GtkActivatable</link> *activatable,
                                                          <link linkend="GtkAction">GtkAction</link> *action);
 <link linkend="void">void</link>                <link linkend="gtk-activatable-set-related-action">gtk_activatable_set_related_action</link>  (<link linkend="GtkActivatable">GtkActivatable</link> *activatable,
                                                          <link linkend="GtkAction">GtkAction</link> *action);
@@ -75,7 +76,7 @@ GtkActivatable is implemented by
 <para>
 Activatable widgets can be connected to a <link linkend="GtkAction"><type>GtkAction</type></link> and reflects
 the state of its action. A <link linkend="GtkActivatable"><type>GtkActivatable</type></link> can also provide feedback
-through its action, as they are responsible for activating their 
+through its action, as they are responsible for activating their
 related actions.
 </para>
 <para>
@@ -83,15 +84,16 @@ related actions.
 <title>Implementing GtkActivatable</title>
 <para>
 When extending a class that is already <link linkend="GtkActivatable"><type>GtkActivatable</type></link>; it is only
-necessary to implement the <link linkend="GtkActivatable-"><type>GtkActivatable-</type></link>><link linkend="reset"><function>reset()</function></link> and <link linkend="GtkActivatable-"><type>GtkActivatable-</type></link>><link linkend="update"><function>update()</function></link>
-methods and chain up to the parent implementation, however when introducing
+necessary to implement the <link linkend="GtkActivatable-"><type>GtkActivatable-</type></link>><link linkend="sync-action-properties"><function>sync_action_properties()</function></link>
+and <link linkend="GtkActivatable-"><type>GtkActivatable-</type></link>><link linkend="update"><function>update()</function></link> methods and chain up to the parent
+implementation, however when introducing
 a new <link linkend="GtkActivatable"><type>GtkActivatable</type></link> class; the <link linkend="GtkActivatable--related-action"><type>"related-action"</type></link> and
 <link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link> properties need to be handled by
-the implementor. Handling these properties is mostly a matter of installing 
-the action pointer and boolean flag on your instance, and calling 
-<link linkend="gtk-activatable-do-set-related-action"><function>gtk_activatable_do_set_related_action()</function></link> and <link linkend="gtk-activatable-reset"><function>gtk_activatable_reset()</function></link> at the
-appropriate times.
-</para> 
+the implementor. Handling these properties is mostly a matter of installing
+the action pointer and boolean flag on your instance, and calling
+<link linkend="gtk-activatable-do-set-related-action"><function>gtk_activatable_do_set_related_action()</function></link> and
+<link linkend="gtk-activatable-sync-action-properties"><function>gtk_activatable_sync_action_properties()</function></link> at the appropriate times.
+</para>
 <example>
 <title>A class fragment implementing <link linkend="GtkActivatable"><type>GtkActivatable</type></link></title>
 <programlisting><![CDATA[
@@ -114,12 +116,12 @@ struct _FooBarPrivate
 
 ...
 
-static void foo_bar_activatable_interface_init (GtkActivatableIface  *iface);
-static void foo_bar_activatable_update         (GtkActivatable       *activatable,
-						   GtkAction            *action,
-						   const gchar          *property_name);
-static void foo_bar_activatable_reset          (GtkActivatable       *activatable,
-						   GtkAction            *action);
+static void foo_bar_activatable_interface_init         (GtkActivatableIface  *iface);
+static void foo_bar_activatable_update                 (GtkActivatable       *activatable,
+						           GtkAction            *action,
+						           const gchar          *property_name);
+static void foo_bar_activatable_sync_action_properties (GtkActivatable       *activatable,
+						           GtkAction            *action);
 ...
 
 
@@ -136,11 +138,11 @@ foo_bar_class_init (FooBarClass *klass)
 }
 
 
-static void 
+static void
 foo_bar_activatable_interface_init (GtkActivatableIface  *iface)
 {
   iface->update = foo_bar_activatable_update;
-  iface->reset = foo_bar_activatable_reset;
+  iface->sync_action_properties = foo_bar_activatable_sync_action_properties;
 }
 
 ... Break the reference using gtk_activatable_do_set_related_action()...
@@ -226,7 +228,7 @@ foo_bar_set_use_action_appearance (FooBar   *bar,
     {
       priv->use_action_appearance = use_appearance;
       
-      gtk_activatable_reset (GTK_ACTIVATABLE (bar), priv->action);
+      gtk_activatable_sync_action_properties (GTK_ACTIVATABLE (bar), priv->action);
     }
 }
 
@@ -248,9 +250,9 @@ foo_bar_set_related_action (FooBar    *bar,
 }
 
 ... Selectively reset and update activatable depending on the use-action-appearance property ...
-static void 
-gtk_button_activatable_reset (GtkActivatable       *activatable,
-		                 GtkAction            *action)
+static void
+gtk_button_activatable_sync_action_properties (GtkActivatable       *activatable,
+		                                  GtkAction            *action)
 {
   GtkButtonPrivate *priv = GTK_BUTTON_GET_PRIVATE (activatable);
 
@@ -280,8 +282,8 @@ gtk_button_activatable_reset (GtkActivatable       *activatable,
 
 static void 
 foo_bar_activatable_update (GtkActivatable       *activatable,
-			    GtkAction            *action,
-			    const gchar          *property_name)
+			       GtkAction            *action,
+			       const gchar          *property_name)
 {
   FooBarPrivate *priv = FOO_BAR_GET_PRIVATE (activatable);
 
@@ -326,11 +328,11 @@ foo_bar_activatable_update (GtkActivatable       *activatable,
   GTypeInterface g_iface;
 
   /* virtual table */
-  void   (* update)  (GtkActivatable *activatable, 
-		      GtkAction      *action, 
-		      const gchar    *property_name);
-  void   (* reset)   (GtkActivatable *activatable, 
-		      GtkAction      *action);
+  void   (* update)                   (GtkActivatable *activatable,
+		                       GtkAction      *action,
+		                       const gchar    *property_name);
+  void   (* sync_action_properties)   (GtkActivatable *activatable,
+		                       GtkAction      *action);
 } GtkActivatableIface;
 </programlisting>
 <para>
@@ -350,9 +352,9 @@ properties that are meant to effect the appearance accordingly.
 </simpara></listitem>
 </varlistentry>
 <varlistentry>
-<term><structfield>reset</structfield>&#160;()</term>
-<listitem><simpara> Called to update the activatable completely, this is called internally when 
-<link linkend="GtkActivatable-related-action"><type>"related-action"</type></link> property is set or unset and by the implementor when 
+<term><structfield>sync_action_properties</structfield>&#160;()</term>
+<listitem><simpara> Called to update the activatable completely, this is called internally when
+<link linkend="GtkActivatable-related-action"><type>"related-action"</type></link> property is set or unset and by the implementor when
 <link linkend="GtkActivatable-use-action-appearance"><type>"use-action-appearance"</type></link> changes.<note><para>This method can be called
 with a <link linkend="NULL--CAPS"><literal>NULL</literal></link> action at times</para></note>
 </simpara></listitem>
@@ -421,14 +423,16 @@ the action changes appearance.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
-<refsect2 id="gtk-activatable-reset" role="function" condition="since:2.16">
-<title>gtk_activatable_reset ()</title>
-<indexterm zone="gtk-activatable-reset" role="2.16"><primary sortas="activatable_reset">gtk_activatable_reset</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_activatable_reset               (<link linkend="GtkActivatable">GtkActivatable</link> *activatable,
+<refsect2 id="gtk-activatable-sync-action-properties" role="function" condition="since:2.16">
+<title>gtk_activatable_sync_action_properties ()</title>
+<indexterm zone="gtk-activatable-sync-action-properties" role="2.16"><primary sortas="activatable_sync_action_properties">gtk_activatable_sync_action_properties</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_activatable_sync_action_properties
+                                                        (<link linkend="GtkActivatable">GtkActivatable</link> *activatable,
                                                          <link linkend="GtkAction">GtkAction</link> *action);</programlisting>
 <para>
-This is called to update the activatable completely, this is called internally when 
-the <link linkend="GtkActivatable-related-action"><type>"related-action"</type></link> property is set or unset and by the implementing 
-class when <link linkend="GtkActivatable-use-action-appearance"><type>"use-action-appearance"</type></link> changes.</para>
+This is called to update the activatable completely, this is called
+internally when the <link linkend="GtkActivatable-related-action"><type>"related-action"</type></link> property is set
+or unset and by the implementing class when
+<link linkend="GtkActivatable-use-action-appearance"><type>"use-action-appearance"</type></link> changes.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>activatable</parameter>&#160;:</term>
@@ -463,12 +467,14 @@ property and call <link linkend="gtk-activatable-do-set-related-action"><functio
                                                         (<link linkend="GtkActivatable">GtkActivatable</link> *activatable,
                                                          <link linkend="gboolean">gboolean</link> use_appearance);</programlisting>
 <para>
-Sets whether this activatable should reset its layout and appearance 
-when setting the related action or when the action changes appearance 
+Sets whether this activatable should reset its layout and appearance
+when setting the related action or when the action changes appearance
 </para>
 <para>
-<note><para><link linkend="GtkActivatable"><type>GtkActivatable</type></link> implementors need to handle the <link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link>
-property and call <link linkend="gtk-activatable-reset"><function>gtk_activatable_reset()</function></link> to update <parameter>activatable</parameter> if needed.</para></note></para>
+<note><para><link linkend="GtkActivatable"><type>GtkActivatable</type></link> implementors need to handle the
+<link linkend="GtkActivatable--use-action-appearance"><type>"use-action-appearance"</type></link> property and call
+<link linkend="gtk-activatable-sync-action-properties"><function>gtk_activatable_sync_action_properties()</function></link> to update <parameter>activatable</parameter>
+if needed.</para></note></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>activatable</parameter>&#160;:</term>
@@ -507,7 +513,8 @@ should be ignored by the <link linkend="GtkActivatable"><type>GtkActivatable</ty
 </para>
 <para>
 <note><para><link linkend="GtkActivatable"><type>GtkActivatable</type></link> implementors need to handle this property
-and call <link linkend="gtk-activatable-reset"><function>gtk_activatable_reset()</function></link> on the activatable widget when it changes.</para></note></para>
+and call <link linkend="gtk-activatable-sync-action-properties"><function>gtk_activatable_sync_action_properties()</function></link> on the activatable
+widget when it changes.</para></note></para>
 <para>
 </para><para>Default value: TRUE</para>
 <para>Since 2.16</para>

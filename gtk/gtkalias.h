@@ -521,8 +521,8 @@ extern __typeof (gtk_activatable_get_type) IA__gtk_activatable_get_type __attrib
 extern __typeof (gtk_activatable_get_use_action_appearance) IA__gtk_activatable_get_use_action_appearance __attribute((visibility("hidden")));
 #define gtk_activatable_get_use_action_appearance IA__gtk_activatable_get_use_action_appearance
 
-extern __typeof (gtk_activatable_reset) IA__gtk_activatable_reset __attribute((visibility("hidden")));
-#define gtk_activatable_reset IA__gtk_activatable_reset
+extern __typeof (gtk_activatable_sync_action_properties) IA__gtk_activatable_sync_action_properties __attribute((visibility("hidden")));
+#define gtk_activatable_sync_action_properties IA__gtk_activatable_sync_action_properties
 
 extern __typeof (gtk_activatable_set_related_action) IA__gtk_activatable_set_related_action __attribute((visibility("hidden")));
 #define gtk_activatable_set_related_action IA__gtk_activatable_set_related_action
@@ -12085,6 +12085,9 @@ extern __typeof (gtk_window_get_default_widget) IA__gtk_window_get_default_widge
 
 extern __typeof (gtk_window_get_default_icon_list) IA__gtk_window_get_default_icon_list __attribute((visibility("hidden")));
 #define gtk_window_get_default_icon_list IA__gtk_window_get_default_icon_list
+
+extern __typeof (gtk_window_get_default_icon_name) IA__gtk_window_get_default_icon_name __attribute((visibility("hidden")));
+#define gtk_window_get_default_icon_name IA__gtk_window_get_default_icon_name
 
 extern __typeof (gtk_window_get_default_size) IA__gtk_window_get_default_size __attribute((visibility("hidden")));
 #define gtk_window_get_default_size IA__gtk_window_get_default_size

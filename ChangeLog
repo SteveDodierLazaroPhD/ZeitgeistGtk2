@@ -1,3 +1,346 @@
+2009-03-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.15.5 ===
+
+2009-03-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+2009-03-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 546285 – Allow GtkEntry to draw progress
+
+	* gtk/gtkentry.c: Improve the drawing of progress in entries,
+	using fg/bg[SELECTED]. Add a progress-border style property.
+	Draw progress behind icons too.
+	* gtk/gtkrc.c: Add defaults for fg/bg[SELECTED] in entries.
+	Patch by Benjamin Berg.
+
+2009-03-02  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 573688 – Don't steal update region in gtk_text_view_paint()
+
+	* gtk/gtktextview.c (gtk_text_view_paint): If additional areas got
+	invalidated, don't try to add them to the paint region: in an expose
+	handler, we cannot paint outside the area that was passed in, since
+	drawing will be clipped. So stealing the update region from the
+	window causes lost draws.
+	Patch by Owen Taylor
+
+2009-03-02  Alexander Larsson  <alexl@redhat.com>
+
+	Bug 573087 – gdkwindow.c: {x,y}_offset used uninitialized
+
+	* gdk/gdkwindow.c (gdk_window_clear_backing_rect_redirect):
+	Don't use uninitialized vars.
+	Fix offsets for redirected pixmap, draw to pixmap not window.
+
+2009-03-02  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Bug 457086 - numpad does not work when the Thai-Lao input method is
+	used
+
+	* modules/input/gtkimcontextthai.c (is_context_lost_key): Do not count
+	character-generating keypads as context-lost keys. (patch recommitted
+	after approval)
+
+2009-03-01  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/gdkkeysyms.h: Fix the sorting of GDK_KP_Equal.
+
+2009-03-01  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 552619 – File Chooser no longer automatically enters newly created
+	directories
+
+	* gtk/gtkfilechooserdefault.c (edited_idle_cb): Switch to the newly
+	created folder on success.
+
+2009-03-01  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 573515 – po-properties/ special Makefile.in.in handling causes
+	failure to build
+
+	* configure.in: Generate po-properties/POTFILES at configure time.
+	Patch by Loïc Minier
+
+2009-03-01  Matthias Clasen  <mclasen@redhat.com>
+
+	* demos/gtk-demo/appwindow.c: Set the program-name property
+	of the about dialog.
+
+	* docs/tools/widgets.c: Add GtkAboutDialog
+
+2009-02-28  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572273 – No replacement documented for gtk_action_connect_proxy()
+
+	* gtk/gtkaction.c: Make gtk-doc pick up deprecation notes.
+	Insisted on by Andre Klapper.
+
+2009-02-28  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 573287 – Warning on startup
+
+	* gtk/gtkstatusicon.c (gtk_status_icon_finalize): Disconnect
+	all tray icon signals. Noticed by Bastien Nocera
+
+2009-02-28  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 573211 – Setting screen for popup windows
+
+	* gtk/gtkentrycompletion.c:
+	* gtk/gtknotebook.c: Keep popups on the right screen.
+	Pointed out by Morten Welinder
+
+2009-02-28  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 573113 – Can't build tests due to testfilechooserbutton.c...
+
+	* tests/testfilechooserbutton.c: Don't use deprecated API.
+	Reported by Tobias Mueller
+
+2009-02-28  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 573069 – Gdk-CRITICAL warnings with Gtk 2.14 when dragging
+	GtkNotebook tabs
+
+	* gtk/gtkwidget.c (_gtk_widget_synthesize_crossing): Be a little
+	more careful when navigating up the parent chain.
+
+	* gdk/gdkwindow.c (_gdk_window_destroy_hierarchy): Reset the
+	pointer window thats stored on the screen when it is destroyed.
+
+2009-02-27  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572996 – crash in Home Folder: Trying to open the sidebar
+
+	* gtk/gtkpaned.c (get_child_panes): Handle widget being NULL.
+	Pointed out by Wouter Bolsterlee.
+
+2009-02-27  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572972 – GtkRecentChooserDefault: memory leak in
+	copy_activated_cb()
+
+	* gtk/gtkrecentchooserdefault.c (copy_activated_cb): Don't leak
+	a GtkRecentInfo. Found by Tommi Rantala
+
+2009-02-27  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572968 – GtkIconView: image_description setter function strdups
+	wrong string
+
+	* gtk/gtkiconview.c
+	(gtk_icon_view_item_accessible_image_set_image_description): Copy
+	the right string. Pointed out by Tommi Rantala
+
+2009-02-27  David Zeuthen  <davidz@redhat.com>
+
+	Bug 573416 – GtkMountOperation fixes for ask_password()
+
+	* gtk/gtkmountoperation.c (gtk_mount_operation_ask_password):
+	Split the message from GMountOperation into primary/secondary like
+	we also do in gtk_mount_operation_ask_question()
+
+2009-02-27  Michael Natterer  <mitch@imendio.com>
+
+	Bug 573383 – Setting a textview's buffer to NULL doesn't do a
+	complete job
+
+	* gtk/gtktextview.c (gtk_text_view_set_buffer): always set
+	text_view->layout's buffer, also if it's NULL.
+
+2009-02-25  Tristan Van Berkom <tvb@gnome.org>
+
+	Bug 572904 – GtkRadioAction broken in trunk
+
+	* gtk/gtkradioaction.c: When setting non active state always
+	notify the action's active state (this prevents toggle type proxies
+	used with radio actions from deactivating when pressed a second time).
+
+2009-02-25  Xan Lopez  <xan@gnome.org>
+
+        Bug 495320 - GtkRange does not use gdk_event_request_motions
+
+        * gtk/gtkrange.c:
+        (gtk_range_motion_notify): Use gdk_event_request_motions to
+        request more motion events, as suggested in the docs for widgets
+        using motion hints.
+
+2009-02-24  Matthias Clasen <mclasen@redhat.com>
+
+	* gdk/x11/gdkevents-x11.c:
+	* gdk/x11/gdkscreen-x11.[hc]: Another attempt at getting Xrandr
+	screen size changes right. Actually handle XRRScreenChangeNotify
+	events, and ignore root ConfigureNotify events if we are using
+	Xrandr. Only emit size-changed signals if the screen size changed,
+	and only emit monitor-changed signals if the monitors changed.
+
+2009-02-23  Matthias Clasen <mclasen@redhat.com>
+
+	Bug 565199 – Ellipsize text in Places list
+
+	* gtk/gtkfilechooserdefault.c (shortcuts_list_create): Never scroll
+	the places horizontally. Instead, ellipsize the text.
+
+2009-02-19  Michael Hasselmann <michaelh@openismus.com>
+
+	* gtk/gtkcombobox.c (gtk_combo_box_set_active_internal):
+	Added a check to not emit a "changed" signal when an already invalid
+	selection was set to invalid.
+
+2009-02-22  Matthias Clasen <mclasen@redhat.com>
+
+	* gtk/gtk.symbols:
+	* gtk/gtkactivatable.[hc]: Rename gtk_activatable_reset to
+	gtk_activatable_sync_action_properties, since the previous name
+	was deemed too generic. Update all implementations.
+
+2009-02-19  Ray Strode  <rstrode@redhat.com>
+
+	* gdk/x11/gdkscreen-x11.c
+	(monitor_compare_function), (init_randr13):
+	After using randr to get a list of monitors,
+	sort the list such that the biggest output
+	of "cloned" outputs comes first in the list.
+	This helps apps that don't generally handle
+	overlapping outputs to work better in randr
+	clone mode.
+
+2009-02-19  Sven Neumann  <sven@gimp.org>
+
+	* gdk/directfb/gdkwindow-directfb.c
+	(gdk_directfb_window_move_resize): looks like being called with
+	negative width and height should be interpreted as a move. Fixes
+	scrolling and makes popups work to some extent.
+
+	(_gdk_directfb_move_resize_child): formatting.
+
+2009-02-19  Sven Neumann  <sven@gimp.org>
+
+	* gdk/directfb/gdkdisplay-directfb.c (gdk_display_open): move the
+	call to _gdk_windowing_window_init() up a little. Fixes a crash
+	when running on pseudo-color visuals. Thanks to Masse Nicolas for
+	pointing this out.
+
+2009-02-19  Sven Neumann  <sven@gimp.org>
+
+	* gdk/directfb/gdkwindow-directfb.c
+	(gdk_window_foreign_new_for_display, gdk_directfb_window_new):
+	initialize private->impl. Thanks to Masse Nicolas for pointing
+	this out.
+
+2009-02-19  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572387 – gdm crashes after gtk 2.15.4 upgrade
+
+	* gdk/x11/gdkscreen-x11.c (init_xrandr13): If X is broken and returns
+	no monitors, fall back to other multihead init methods, so that we
+	at least get one monitor set up.
+
+2009-02-19  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkmountoperation.c: sort functions so their order is more
+	"standard", some cosmetic cleanup (not changing any code).
+
+2009-02-19  Michael Natterer  <mitch@imendio.com>
+
+	* tests/testgtk.c: add some orientation flipping code to the
+	"flipping" test.
+
+2009-02-19  Michael Natterer  <mitch@imendio.com>
+
+	* gtk/gtkscalebutton.c: make the orientation flipping much simpler
+	by using the GtkOrientable features of the involved widgets:
+
+	(gtk_scale_button_init): create the frame, box and scale here,
+	they never need to be recreated because they implement GtkOrientable.
+
+	(gtk_scale_button_constructor): remove their construction here.
+
+	(gtk_scale_button_set_orientation): don't destroy and re-create
+	anything. Instead, simply set the orientation of the above created
+	widgets and fiddle a bit with the "plus" and "minus" buttons'
+	packing and the scale's "inverted" state.
+
+	Remove separate internal GtkScaleButtonHScale and
+	GtkScaleButtonVScale subclasses and simply have a
+	GtkScaleButtonScale directly inherited from GtkScale.
+
+2009-02-19  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	* modules/input/gtkimcontextthai.c (is_context_lost_key): Revert the
+	unapproved patch for bug 457086.
+
+2009-02-18  Matthias Clasen  <mclasen@redhat.com>
+
+	* gdk/x11/gdkscreen-x11.c (init_randr13): Ignore disconnected outputs,
+	and fill in name and physical dimensions.
+
+2009-02-18  Sven Neumann  <sven@gimp.org>
+
+	Bug 533456 – Memory leak when window is destroyed
+
+	* gdk/directfb/gdkdirectfb.h
+	* gdk/directfb/gdkprivate-directfb.h
+	* gdk/directfb/gdkcursor-directfb.c
+	* gdk/directfb/gdkevents-directfb.c
+	* gdk/directfb/gdkwindow-directfb.c: removed all #ifdef checks for
+	DIRECTFB_MAJOR_VERSION >= 1 and compile that code unconditionally.
+	as we depend on DirectFB >= 1.0.0 now.  Fixes a potential build
+	issue that would lead to a memory leak as described in bug #533456.
+
+2009-02-18  Sven Neumann  <sven@gimp.org>
+
+	Bug 513422 – Unknown meaning of translatable messages
+
+	* gdk/directfb/gdkdisplay-directfb.c: removed broken and commented
+	code and the translatable messages that belonged to it.
+
+2009-02-18  Sven Neumann  <sven@gimp.org>
+
+	Bug 560671 – the client_message API doesn't work in DirectFB
+
+	* gdk/directfb/gdkevents-directfb.c: applied a slightly cleaned up
+	patch from Steve Lhomme that adds this functionality using
+	DirectFB's DFBUserEvent.
+
+2009-02-18  Sven Neumann  <sven@gimp.org>
+
+	Bug 543710 – Dead keys do not work anymore with DirectFB
+
+	* gdk/directfb/gdkkeys-directfb.c (gdk_directfb_translate_key):
+	applied patch from Josselin Mouette that removes special handling
+	of dead keys as that is done by DirectFB for a long time already.
+
+2009-02-18  Sven Neumann  <sven@gimp.org>
+
+	* configure.in: depend on DirectFB >= 1.0.0. There's no point in
+	using an earlier development version.
+
+2009-02-18  Sven Neumann  <sven@gimp.org>
+
+	Bug 554407 – directfb backend does not implement GdkWindowImpl
+
+	* gdk/directfb/gdkgeometry-directfb.c
+	* gdk/directfb/gdkprivate-directfb.h
+	* gdk/directfb/gdkwindow-directfb.c: fix the build of the DirectFB
+	backend and resurrect basic functionality. Based on a patch from
+	the Ubuntu bug-tracker and work by Masse Nicolas.
+
+2009-02-18  Theppitak Karoonboonyanan  <thep@linux.thai.net>
+
+	Bug 457086 - numpad does not work when the Thai-Lao input method is
+	used
+
+	* modules/input/gtkimcontextthai.c (is_context_lost_key): Do not count
+	character-generating keypads as context-lost keys.
+
+2009-02-17  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2009-02-17  Matthias Clasen  <mclasen@redhat.com>
 
 	* === Released 2.15.4 ===
