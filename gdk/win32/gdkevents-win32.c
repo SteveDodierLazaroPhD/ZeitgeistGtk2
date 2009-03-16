@@ -2930,6 +2930,7 @@ gdk_event_translate (MSG  *msg,
       break;
 
     case WM_HSCROLL:
+      /* Just print more debugging information, don't actually handle it. */
       GDK_NOTE (EVENTS,
 		(g_print (" %s",
 			  (LOWORD (msg->wParam) == SB_ENDSCROLL ? "ENDSCROLL" :
@@ -2944,17 +2945,18 @@ gdk_event_translate (MSG  *msg,
 				   "???")))))))))),
 		 (LOWORD (msg->wParam) == SB_THUMBPOSITION ||
 		  LOWORD (msg->wParam) == SB_THUMBTRACK) ?
-		 g_print (" %d", HIWORD (msg->wParam)) : 0));
+		 (g_print (" %d", HIWORD (msg->wParam)), 0) : 0));
       break;
 
     case WM_VSCROLL:
+      /* Just print more debugging information, don't actually handle it. */
       GDK_NOTE (EVENTS,
 		(g_print (" %s",
 			  (LOWORD (msg->wParam) == SB_ENDSCROLL ? "ENDSCROLL" :
 			   (LOWORD (msg->wParam) == SB_BOTTOM ? "BOTTOM" :
 			    (LOWORD (msg->wParam) == SB_TOP ? "TOP" :
 			     (LOWORD (msg->wParam) == SB_LINEDOWN ? "LINDOWN" :
-			      (LOWORD (msg->wParam) == SB_LINEUP ? "LINEIP" :
+			      (LOWORD (msg->wParam) == SB_LINEUP ? "LINEUP" :
 			       (LOWORD (msg->wParam) == SB_PAGEDOWN ? "PAGEDOWN" :
 				(LOWORD (msg->wParam) == SB_PAGEUP ? "PAGEUP" :
 				 (LOWORD (msg->wParam) == SB_THUMBPOSITION ? "THUMBPOSITION" :
@@ -2962,7 +2964,7 @@ gdk_event_translate (MSG  *msg,
 				   "???")))))))))),
 		 (LOWORD (msg->wParam) == SB_THUMBPOSITION ||
 		  LOWORD (msg->wParam) == SB_THUMBTRACK) ?
-		 g_print (" %d", HIWORD (msg->wParam)) : 0));
+		 (g_print (" %d", HIWORD (msg->wParam)), 0) : 0));
       break;
 
     case WM_QUERYNEWPALETTE:
@@ -3261,6 +3263,12 @@ gdk_event_translate (MSG  *msg,
 				      (sprintf (buf, "%p", windowpos->hwndInsertAfter),
 				       buf))))),
 				  windowpos->cx, windowpos->cy, windowpos->x, windowpos->y)));
+
+      /* If position and size haven't changed, don't do anything */
+      if (_sizemove_in_progress &&
+	  (windowpos->flags & SWP_NOMOVE) &&
+	  (windowpos->flags & SWP_NOSIZE))
+	break;
 
       /* Once we've entered the moving or sizing modal loop, we won't
        * return to the main loop until we're done sizing or moving.

@@ -3124,8 +3124,8 @@ extern __typeof (gtk_style_set_background) IA__gtk_style_set_background __attrib
 extern __typeof (gtk_draw_insertion_cursor) IA__gtk_draw_insertion_cursor __attribute((visibility("hidden")));
 #define gtk_draw_insertion_cursor IA__gtk_draw_insertion_cursor
 
-extern __typeof (gtk_style_get_property) IA__gtk_style_get_property __attribute((visibility("hidden")));
-#define gtk_style_get_property IA__gtk_style_get_property
+extern __typeof (gtk_style_get_style_property) IA__gtk_style_get_style_property __attribute((visibility("hidden")));
+#define gtk_style_get_style_property IA__gtk_style_get_style_property
 
 extern __typeof (gtk_style_get_valist) IA__gtk_style_get_valist __attribute((visibility("hidden")));
 #define gtk_style_get_valist IA__gtk_style_get_valist

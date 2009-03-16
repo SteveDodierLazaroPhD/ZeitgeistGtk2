@@ -1,3 +1,104 @@
+2009-03-13  Matthias Clasen  <mclasen@redhat.com>
+
+	* === Released 2.16.0 ===
+
+2009-03-13  Matthias Clasen  <mclasen@redhat.com>
+
+	* NEWS: Updates
+
+	* configure.in: Bump version to 2.16.0
+
+2009-03-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 572455 – GtkEntry window layed out wrong if the widget has focus
+
+	* gtk/gtkentry.c: Fix problems with window positioning. Reported
+	by Benjamin Berg.
+
+2009-03-11  Tor Lillqvist  <tml@iki.fi>
+
+	Bug 573067 - Intra-app dnd of text behavior on Windows is wrong
+
+	* gdk/win32/gdkdnd-win32.c (local_send_motion) (gdk_drag_motion):
+	The default action should be move, not copy. Tweak how the
+	GdkDragAction fields in GdkDragContexts are changed. Seems to help
+	the problem.
+
+	Add more debugging printout for --gdk-debug=dnd to many functions.
+
+	* gdk/win32/gdkmain-win32.c
+	* gdk/win32/gdkprivate-win32.h: (_gdk_win32_drag_protocol_to_string)
+	(_gdk_win32_drag_action_to_string): New functions for use in
+	debugging printouts.
+	
+2009-03-11  Tor Lillqvist  <tml@iki.fi>
+
+	* gdk/win32/gdkdnd-win32.c: Use G_DEFINE_TYPE. Some debugging
+	printout changes. Hacking on the OLE2_DND code, which still
+	doesn't work, though, and is not normally compiled.
+
+2009-03-11  Tor Lillqvist  <tml@iki.fi>
+
+	Bug 570896 - gdkevents-win32.c(2947) : error C4053: one void
+	operand for '?:'
+
+	* gdk/win32/gdkevents-win32.c (gdk_event_translate): Fix
+	compilation error with MSVC. While at it add clarifying comments
+	and fix a typo in the debugging output.
+
+2009-03-11  Tor Lillqvist  <tml@iki.fi>
+
+	Bug 574794 - Can not resize shaped windows on Windows
+
+	* gdk/win32/gdkevents-win32.c (gdk_event_translate): On handling
+	WM_WINDOWPOSCHANGED, don't do anything if the position and size
+	hasn't changed. I am not exactly sure I understand why this helps
+	this particular bug.
+
+2009-03-10  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 574561 – gtk_style_get "shadows" g_object_get
+
+	* gtk/gtk.symbols:
+	* gtk/gtkstyle.[hc]: Rename gtk_style_get_property to
+	gtk_style_get_style_property to avoid problems for language
+	bindings. Pointed out by Torsten Schoenfeld.
+
+2009-03-10  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 574622 – GtkEntry: Should we wrap icon-press and icon-release
+	signals?
+
+	* gtk/gtkentry.c: ::icon-press and ::icon-release are not
+	action signals. Pointed out by Murray Cumming
+
+2009-03-04  Michael Hasselmann <michaelh@openismus.com>
+
+	* gtk/gtkcomboboxentry.c (gtk_combo_box_entry_contents_changed):
+	Fixed regression reported in bug #574059. (search button not available in 
+	some cases.) The old implementation relied on bug #572478.
+
+2009-03-10  Alexander Larsson  <alexl@redhat.com>
+
+        * gtk/gtkmountoperation.c:
+        (gtk_mount_operation_ask_password):
+	Clear all optionally created widget pointer in priv. Initially
+	priv is cleared so thats ok, but on a second call we may have
+	leftovers from previous calls which is problematic if for instance
+	we asked for the user the first time and not the second, then we
+	will access the old priv->username_entry.
+
+2009-03-06  Michael Natterer  <mitch@gimp.org>
+
+	* gtk/gtkscalebutton.c (gtk_scale_button_set_property): don't call
+	gtk_orientable_set_orientation() because that calls g_object_set()
+	again -> infinite recursion. Call gtk_scale_button_set_orientation()
+	instead.
+
+2009-03-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* configure.in: Bump version
+
 2009-03-02  Matthias Clasen  <mclasen@redhat.com>
 
 	* === Released 2.15.5 ===

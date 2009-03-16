@@ -1455,7 +1455,7 @@ gtk_entry_class_init (GtkEntryClass *class)
    * @icon_pos: The position of the clicked icon
    * @event: the button press event
    *
-   * The ::icon-press signal is emitted when an activatable icon 
+   * The ::icon-press signal is emitted when an activatable icon
    * is clicked.
    *
    * Since: 2.16
@@ -1463,7 +1463,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   signals[ICON_PRESS] =
     g_signal_new (I_("icon-press"),
                   G_TYPE_FROM_CLASS (gobject_class),
-                  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                  G_SIGNAL_RUN_LAST,
                   0,
                   NULL, NULL,
                   _gtk_marshal_VOID__ENUM_BOXED,
@@ -1485,7 +1485,7 @@ gtk_entry_class_init (GtkEntryClass *class)
   signals[ICON_RELEASE] =
     g_signal_new (I_("icon-release"),
                   G_TYPE_FROM_CLASS (gobject_class),
-                  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                  G_SIGNAL_RUN_LAST,
                   0,
                   NULL, NULL,
                   _gtk_marshal_VOID__ENUM_BOXED,
@@ -2265,6 +2265,9 @@ get_icon_allocations (GtkEntry      *entry,
 
   get_text_area_size (entry, &x, &y, &width, &height);
 
+  if (GTK_WIDGET_HAS_FOCUS (entry) && !priv->interior_focus)
+    y += priv->focus_width;
+
   primary->y = y;
   primary->height = height;
   primary->width = get_icon_width (entry, GTK_ENTRY_ICON_PRIMARY);
@@ -2784,7 +2787,6 @@ gtk_entry_size_request (GtkWidget      *widget,
 
 static void
 place_windows (GtkEntry *entry)
-               
 {
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
   gint x, y, width, height;
@@ -2793,8 +2795,10 @@ place_windows (GtkEntry *entry)
   EntryIconInfo *icon_info = NULL;
 
   get_text_area_size (entry, &x, &y, &width, &height);
-
   get_icon_allocations (entry, &primary, &secondary);
+
+  if (GTK_WIDGET_HAS_FOCUS (entry) && !priv->interior_focus)
+    y += priv->focus_width;
 
   if (gtk_widget_get_direction (GTK_WIDGET (entry)) == GTK_TEXT_DIR_RTL)
     x += secondary.width;
@@ -2803,7 +2807,7 @@ place_windows (GtkEntry *entry)
   width -= primary.width + secondary.width;
 
   if ((icon_info = priv->icons[GTK_ENTRY_ICON_PRIMARY]) != NULL)
-    gdk_window_move_resize (icon_info->window, 
+    gdk_window_move_resize (icon_info->window,
                             primary.x, primary.y,
                             primary.width, primary.height);
 
@@ -2949,7 +2953,7 @@ gtk_entry_size_allocate (GtkWidget     *widget,
       GtkEntryCompletion* completion;
 
       get_widget_window_size (entry, &x, &y, &width, &height);
-      gdk_window_move_resize (widget->window, x, y, width, height);   
+      gdk_window_move_resize (widget->window, x, y, width, height);
 
       place_windows (entry);
       gtk_entry_recompute (entry);
@@ -4010,7 +4014,7 @@ gtk_entry_focus_out (GtkWidget     *widget,
   GtkEntry *entry = GTK_ENTRY (widget);
   GtkEntryCompletion *completion;
   GdkKeymap *keymap;
-  
+
   gtk_widget_queue_draw (widget);
 
   keymap = gdk_keymap_get_for_display (gtk_widget_get_display (widget));

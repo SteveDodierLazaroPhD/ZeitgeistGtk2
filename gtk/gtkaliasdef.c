@@ -3127,8 +3127,8 @@ extern __typeof (gtk_style_set_background) gtk_style_set_background __attribute(
 #undef gtk_draw_insertion_cursor 
 extern __typeof (gtk_draw_insertion_cursor) gtk_draw_insertion_cursor __attribute((alias("IA__gtk_draw_insertion_cursor"), visibility("default")));
 
-#undef gtk_style_get_property 
-extern __typeof (gtk_style_get_property) gtk_style_get_property __attribute((alias("IA__gtk_style_get_property"), visibility("default")));
+#undef gtk_style_get_style_property 
+extern __typeof (gtk_style_get_style_property) gtk_style_get_style_property __attribute((alias("IA__gtk_style_get_style_property"), visibility("default")));
 
 #undef gtk_style_get_valist 
 extern __typeof (gtk_style_get_valist) gtk_style_get_valist __attribute((alias("IA__gtk_style_get_valist"), visibility("default")));
