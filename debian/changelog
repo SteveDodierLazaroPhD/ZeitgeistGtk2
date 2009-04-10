@@ -1,3 +1,57 @@
+gtk+2.0 (2.16.0-1ubuntu8) jaunty; urgency=low
+
+  * Move back MODULES_BASE_PATH and friends.
+
+ -- Loic Minier <lool@dooz.org>  Fri, 10 Apr 2009 22:14:24 +0200
+
+gtk+2.0 (2.16.0-1ubuntu7) jaunty; urgency=low
+
+  * Move LIBDIR def around for OPTLIBDIR to be set properly.
+
+ -- Loic Minier <lool@dooz.org>  Fri, 10 Apr 2009 21:19:02 +0200
+
+gtk+2.0 (2.16.0-1ubuntu6) jaunty; urgency=low
+
+  * Also sed @OPTLIBDIR@.
+
+ -- Loic Minier <lool@dooz.org>  Fri, 10 Apr 2009 00:15:37 +0200
+
+gtk+2.0 (2.16.0-1ubuntu5) jaunty; urgency=low
+
+  [ Loic Minier ]
+  * Merge the following changes by Emmet Hikory:
+
+  [ Emmet Hikory ]
+  * Port optimised flavor work by Loic Minier from pango1.0:
+    - Rework flavor-specific vars.
+      + Introduce $(flavor) which is set to $* to clarify implicit rules
+      + Rename common_configure_flags to configure_flags
+      + Introduce the flavor_get macro to use a flavor specific override or
+        fallback to the common defaults for make vars.
+      + Use $(call flavor_get, ) to retrieve configure_flags, CFLAGS, and
+        LDFLAGS allowing to override these per flavor.
+    - Add support for an optimised pass, implemented as a flavor
+      + Define a default OPTLIBDIR and replace it in the sed foo for %.in
+        files; this is like LIBDIR, but with some hwcaps extension, e.g.
+        usr/lib/vfp.
+      + Add vars to build an optimised vfp flavour for armel with
+        additional CFLAGS
+      + Add the "opt" special flavor to flavors to run the testuites on,
+        CHECK_FLAVORS
+      + Also sed and append %.opt after %.in when generating $ files from
+        %.in; the %.opt file is optional and only included if the opt flavor
+        is included.
+      + Add a debian/libgtk2.0-0.install.opt which lists files from the
+        optimised flavor to install in libgtk2.0-0.
+      + Add a debian/libgail18.install.opt which lists files from the
+        optimised flavor to install in libgail18.
+
+  [ Loic Minier ]
+  * Enable VFP pass on armel; LP: #349460.
+  * Build-dep on autotools-dev for the config.guess / .sub updates to work.
+
+ -- Loic Minier <lool@dooz.org>  Thu, 09 Apr 2009 14:20:02 +0200
+
 gtk+2.0 (2.16.0-1ubuntu4) jaunty; urgency=low
 
   * debian/patches/093_git_change_fix_focus_issue.patch:
