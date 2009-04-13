@@ -18,7 +18,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * $Id: gtkimcontextime.h 20434 2008-06-17 19:11:54Z tml $
+ * $Id$
  */
 
 #include <gtk/gtk.h>

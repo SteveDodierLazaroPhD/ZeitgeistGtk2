@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Migrating from libglade to GtkBuilder</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.74.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.3">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
@@ -88,33 +88,92 @@ href="http://library.gnome.org/devel/gtk/unstable/gtk-builder-convert.html"
     utility on your glade file, and inspect the resulting output.
     If your code uses the <em class="parameter"><code>root</code></em> parameter of <a
 href="/usr/share/gtk-doc/html/libglade/GladeXML.html#glade-xml-new"
-><code class="function">glade_xml_new()</code></a>, you 
+><code class="function">glade_xml_new()</code></a>, you
     may want to split your glade file into multiple GtkBuilder files
-    by using the <code class="option">--root</code> option of 
+    by using the <code class="option">--root</code> option of
     <span class="application">gtk-builder-convert</span>. Alternatively, you
     can use <a class="link" href="GtkBuilder.html#gtk-builder-add-objects-from-file" title="gtk_builder_add_objects_from_file ()"><code class="function">gtk_builder_add_objects_from_file()</code></a> to construct only certain
     objects from a GtkBuilder file.
   </p>
 <p>
+    Alternatively, you can open the glade file with
+    <span class="application">glade3</span> and then save it in GtkBuilder
+    format. This is supported by glade3 since version 3.6.
+  </p>
+<div class="table">
+<a name="id1204131"></a><p class="title"><b>Table 1. Step-by-step instructions for porting code from libglade to GtkBuilder</b></p>
+<div class="table-contents"><table summary="Step-by-step instructions for porting code from libglade to GtkBuilder" width="100%" border="1">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>libglade</th>
+<th>GtkBuilder</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>#include &lt;glade/glade.h&gt;</td>
+<td>not needed</td>
+</tr>
+<tr>
+<td><pre class="screen">GladeXML*</pre></td>
+<td><pre class="screen">GtkBuilder*</pre></td>
+</tr>
+<tr>
+<td><pre class="screen">glade_xml_new (FILE, "first_widget", NULL)</pre></td>
+<td>
+<pre class="screen">
+GError* error = NULL;
+GtkBuilder* builder = gtk_builder_new ();
+if (!gtk_builder_add_from_file (builder, FILE, &amp;error))
+  {
+    g_warning ("Couldn't load builder file: <code class="literal">s</code>", error-&gt;message);
+    g_error_free (error);
+  }
+</pre>
+          </td>
+</tr>
+<tr>
+<td><pre class="screen">glade_xml_get_widget (gxml, “widget_name”)</pre></td>
+<td><pre class="screen">GTK_WIDGET (gtk_builder_get_object (builder, “widget_name”))</pre></td>
+</tr>
+<tr>
+<td><pre class="screen">glade_get_widget_name (widget)</pre></td>
+<td><pre class="screen">gtk_widget_get_name (widget)</pre></td>
+</tr>
+<tr>
+<td><pre class="screen">glade_xml_get_widget_prefix (gxml, “prefix”)</pre></td>
+<td>can be emulated by <code class="literal">gtk_builder_get_objects (builder)</code> together with manual filtering. It returns a GSList* instead of a GList* though.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
     While GtkBuilder strives to be a complete replacement for
     libglade, there are a number of areas where it is currently
     still behind libglade:
     </p>
-<div class="itemizedlist"><ul type="disc"><li><p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>
         GtkBuilder supports context information in translatable
-        properties in a slightly different way than libglade. 
-        Intltool does not yet support this; see 
-        <a class="ulink" href="http://bugzilla.gnome.org/show_bug.cgi?id=454894" target="_top">bug 
-        454894</a> for the current status of intltool support for 
-        GtkBuilder files. Thankfully, context in translations is a 
-        rarely used feature, and if you are not using it, intltools 
+        properties in a slightly different way than libglade.
+        Intltool does not yet support this; see
+        <a class="ulink" href="http://bugzilla.gnome.org/show_bug.cgi?id=454894" target="_top">bug
+        454894</a> for the current status of intltool support for
+        GtkBuilder files. Thankfully, context in translations is a
+        rarely used feature, and if you are not using it, intltools
         glade format support works just fine for GtkBuilder files.
-      </p></li></ul></div>
+      </p></li>
+<li><p>
+        While libglade can often tolerate multiple widgets having the
+        same id in a glade file, GtkBuilder will not accept duplicate
+        object ids. Both <span class="application">gtk-builder-convert</span>
+        and the GtkBuilder parser emit warnings when they see
+        duplicate ids.
+      </p></li>
+</ul></div>
 <p>
-  </p>
-<p>
-    More details about migrating from libglade to GtkBuilder will 
-    appear here over time...
   </p>
 </div>
 <div class="footer">

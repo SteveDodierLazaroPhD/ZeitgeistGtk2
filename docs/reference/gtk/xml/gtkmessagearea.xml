@@ -1,0 +1,509 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!ENTITY version SYSTEM "version.xml">
+]>
+<!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
+<refentry id="GtkMessageArea">
+<refmeta>
+<refentrytitle role="top_of_page" id="GtkMessageArea.top_of_page">GtkMessageArea</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>GTK Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>GtkMessageArea</refname>
+<refpurpose>Report important messages to the user</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="GtkMessageArea.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+
+#include &lt;gtk/gtk.h&gt;
+
+                    <link linkend="GtkMessageArea-struct">GtkMessageArea</link>;
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-message-area-new">gtk_message_area_new</link>                (void);
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-message-area-new-with-buttons">gtk_message_area_new_with_buttons</link>   (const <link linkend="gchar">gchar</link> *first_button_text,
+                                                         ...);
+<link linkend="void">void</link>                <link linkend="gtk-message-area-set-contents">gtk_message_area_set_contents</link>       (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="GtkWidget">GtkWidget</link> *contents);
+<link linkend="void">void</link>                <link linkend="gtk-message-area-add-action-widget">gtk_message_area_add_action_widget</link>  (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="GtkWidget">GtkWidget</link> *child,
+                                                         <link linkend="gint">gint</link> response_id);
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-message-area-add-button">gtk_message_area_add_button</link>         (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         const <link linkend="gchar">gchar</link> *button_text,
+                                                         <link linkend="gint">gint</link> response_id);
+<link linkend="void">void</link>                <link linkend="gtk-message-area-add-buttons">gtk_message_area_add_buttons</link>        (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         const <link linkend="gchar">gchar</link> *first_button_text,
+                                                         ...);
+<link linkend="void">void</link>                <link linkend="gtk-message-area-set-response-sensitive">gtk_message_area_set_response_sensitive</link>
+                                                        (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="gint">gint</link> response_id,
+                                                         <link linkend="gboolean">gboolean</link> setting);
+<link linkend="void">void</link>                <link linkend="gtk-message-area-set-default-response">gtk_message_area_set_default_response</link>
+                                                        (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="gint">gint</link> response_id);
+<link linkend="void">void</link>                <link linkend="gtk-message-area-response">gtk_message_area_response</link>           (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="gint">gint</link> response_id);
+<link linkend="void">void</link>                <link linkend="gtk-message-area-set-message-type">gtk_message_area_set_message_type</link>   (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="GtkMessageType">GtkMessageType</link> message_type);
+<link linkend="GtkMessageType">GtkMessageType</link>      <link linkend="gtk-message-area-get-message-type">gtk_message_area_get_message_type</link>   (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="GtkMessageArea.object-hierarchy" role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<synopsis>
+  <link linkend="GObject">GObject</link>
+   +----<link linkend="GInitiallyUnowned">GInitiallyUnowned</link>
+         +----<link linkend="GtkObject">GtkObject</link>
+               +----<link linkend="GtkWidget">GtkWidget</link>
+                     +----<link linkend="GtkContainer">GtkContainer</link>
+                           +----<link linkend="GtkBox">GtkBox</link>
+                                 +----<link linkend="GtkHBox">GtkHBox</link>
+                                       +----GtkMessageArea
+</synopsis>
+</refsect1>
+
+
+
+<refsect1 id="GtkMessageArea.implemented-interfaces" role="impl_interfaces">
+<title role="impl_interfaces.title">Implemented Interfaces</title>
+<para>
+GtkMessageArea implements
+ <link linkend="AtkImplementorIface">AtkImplementorIface</link>,  <link linkend="GtkBuildable">GtkBuildable</link> and  <link linkend="GtkOrientable">GtkOrientable</link>.</para>
+</refsect1>
+
+
+<refsect1 id="GtkMessageArea.properties" role="properties">
+<title role="properties.title">Properties</title>
+<synopsis>
+  &quot;<link linkend="GtkMessageArea--message-type">message-type</link>&quot;             <link linkend="GtkMessageType">GtkMessageType</link>        : Read / Write / Construct
+</synopsis>
+</refsect1>
+<refsect1 id="GtkMessageArea.style-properties" role="style_properties">
+<title role="style_properties.title">Style Properties</title>
+<synopsis>
+  &quot;<link linkend="GtkMessageArea--s-action-area-border">action-area-border</link>&quot;       <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkMessageArea--s-button-spacing">button-spacing</link>&quot;           <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkMessageArea--s-content-area-border">content-area-border</link>&quot;      <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkMessageArea--s-content-area-spacing">content-area-spacing</link>&quot;     <link linkend="gint">gint</link>                  : Read
+  &quot;<link linkend="GtkMessageArea--s-use-tooltip-style">use-tooltip-style</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read
+</synopsis>
+</refsect1>
+
+<refsect1 id="GtkMessageArea.signals" role="signal_proto">
+<title role="signal_proto.title">Signals</title>
+<synopsis>
+  &quot;<link linkend="GtkMessageArea-close">close</link>&quot;                                          : Run Last / Action
+  &quot;<link linkend="GtkMessageArea-response">response</link>&quot;                                       : Run Last
+</synopsis>
+</refsect1>
+
+
+<refsect1 id="GtkMessageArea.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+<link linkend="GtkMessageArea"><type>GtkMessageArea</type></link> is a widget that can be used to show messages to
+the user without showing a dialog. It is often temporarily shown
+at the top or bottom of a document. In contrast to <link linkend="GtkDialog"><type>GtkDialog</type></link>, which
+has a horizontal action area at the bottom, <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link> has a
+vertical action area at the side.
+</para>
+<para>
+The API of <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link> is very similar to <link linkend="GtkDialog"><type>GtkDialog</type></link>, allowing you
+to add buttons to the action area with <link linkend="gtk-message-area-add-button"><function>gtk_message_area_add_button()</function></link> or
+<link linkend="gtk-message-area-new-with-buttons"><function>gtk_message_area_new_with_buttons()</function></link>. The sensitivity of action widgets
+can be controlled with <link linkend="gtk-message-area-set-response-sensitive"><function>gtk_message_area_set_response_sensitive()</function></link>. To
+add widgets to the main content area of a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>, use
+<link linkend="gtk-message-area-set-contents"><function>gtk_message_area_set_contents()</function></link>.
+</para>
+<para>
+Similar to <link linkend="GtkMessageDialog"><type>GtkMessageDialog</type></link>, the contents of a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link> can by
+classified as error message, warning, informational message, etc, by
+using <link linkend="gtk-message-area-set-message-type"><function>gtk_message_area_set_message_type()</function></link>. GTK+ uses the message type
+to determine the background color of the message area.
+</para>
+<para>
+<example>
+<title>Simple GtkMessageArea usage.</title>
+<programlisting>
+/&ast; set up message area &ast;/
+message_area = gtk_message_area_new ();
+gtk_widget_set_no_show_all (message_area, TRUE);
+message_label = gtk_label_new ("");
+gtk_widget_show (message_label);
+gtk_message_area_set_contents (GTK_MESSAGE_AREA (message_area),
+                               message_label);
+gtk_message_area_add_button (GTK_MESSAGE_AREA (message_area),
+                             GTK_STOCK_OK, GTK_RESPONSE_OK);
+g_signal_connect (message_area, "response",
+                  G_CALLBACK (gtk_widget_hide), NULL);
+gtk_table_attach (GTK_TABLE (table),
+                  message_area,
+                  0, 1, 2, 3,
+                  GTK_EXPAND | GTK_FILL,  0,
+                  0,                      0);
+
+/&ast; ... &ast;/
+
+/&ast; show an error message &ast;/
+gtk_label_set_text (GTK_LABEL (message_label), error_message);
+gtk_message_area_set_message_type (GTK_MESSAGE_AREA (message_area),
+                                   GTK_MESSAGE_ERROR);
+gtk_widget_show (message_area);
+</programlisting>
+</example>
+</para>
+<para>
+<refsect2 id="GtkMessageArea-BUILDER-UI">
+<title>GtkMessageArea as GtkBuildable</title>
+<para>
+The GtkMessageArea implementation of the GtkBuildable interface exposes
+the content area and action area as internal children with the names
+"content_area" and "action_area".
+</para>
+<para>
+GtkMessageArea supports a custom &lt;action-widgets&gt; element, which
+can contain multiple &lt;action-widget&gt; elements. The "response"
+attribute specifies a numeric response, and the content of the element
+is the id of widget (which should be a child of the dialogs <parameter>action_area</parameter>).
+</para>
+</refsect2></para>
+<para>
+</para>
+</refsect1>
+
+<refsect1 id="GtkMessageArea.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="GtkMessageArea-struct" role="struct">
+<title>GtkMessageArea</title>
+<indexterm zone="GtkMessageArea-struct"><primary sortas="MessageArea">GtkMessageArea</primary></indexterm><programlisting>typedef struct _GtkMessageArea GtkMessageArea;</programlisting>
+<para>
+</para></refsect2>
+<refsect2 id="gtk-message-area-new" role="function" condition="since:2.18">
+<title>gtk_message_area_new ()</title>
+<indexterm zone="gtk-message-area-new" role="2.18"><primary sortas="message_area_new">gtk_message_area_new</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_message_area_new                (void);</programlisting>
+<para>
+Creates a new <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link> object.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link> object
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-new-with-buttons" role="function">
+<title>gtk_message_area_new_with_buttons ()</title>
+<indexterm zone="gtk-message-area-new-with-buttons"><primary sortas="message_area_new_with_buttons">gtk_message_area_new_with_buttons</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_message_area_new_with_buttons   (const <link linkend="gchar">gchar</link> *first_button_text,
+                                                         ...);</programlisting>
+<para>
+Creates a new <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link> with buttons. Button text/response ID
+pairs should be listed, with a NULL pointer ending the list. Button
+text can be either a stock ID such as <link linkend="GTK-STOCK-OK--CAPS"><literal>GTK_STOCK_OK</literal></link>, or some arbitrary
+text. A response ID can be any positive number, or one of the values
+in the GtkResponseType enumeration. If the user clicks one of these
+dialog buttons, GtkMessageArea will emit the "response"
+signal with the corresponding response ID.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>first_button_text</parameter>&#160;:</term>
+<listitem><simpara> stock ID or text to go in first button, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara> response ID for first button, then additional buttons, ending
+   with <link linkend="NULL--CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="gtk-message-area-set-contents" role="function" condition="since:2.18">
+<title>gtk_message_area_set_contents ()</title>
+<indexterm zone="gtk-message-area-set-contents" role="2.18"><primary sortas="message_area_set_contents">gtk_message_area_set_contents</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_message_area_set_contents       (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="GtkWidget">GtkWidget</link> *contents);</programlisting>
+<para>
+Adds the <parameter>contents</parameter> widget to the contents area of <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>contents</parameter>&#160;:</term>
+<listitem><simpara> widget you want to add to the contents area
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-add-action-widget" role="function" condition="since:2.18">
+<title>gtk_message_area_add_action_widget ()</title>
+<indexterm zone="gtk-message-area-add-action-widget" role="2.18"><primary sortas="message_area_add_action_widget">gtk_message_area_add_action_widget</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_message_area_add_action_widget  (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="GtkWidget">GtkWidget</link> *child,
+                                                         <link linkend="gint">gint</link> response_id);</programlisting>
+<para>
+Add an activatable widget to the action area of a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>,
+connecting a signal handler that will emit the <link linkend="GtkMessageArea-response"><type>"response"</type></link>
+signal on the message area when the widget is activated. The widget is
+appended to the end of the message areas action area.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>child</parameter>&#160;:</term>
+<listitem><simpara> an activatable widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>response_id</parameter>&#160;:</term>
+<listitem><simpara> response ID for <parameter>child</parameter>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-add-button" role="function" condition="since:2.18">
+<title>gtk_message_area_add_button ()</title>
+<indexterm zone="gtk-message-area-add-button" role="2.18"><primary sortas="message_area_add_button">gtk_message_area_add_button</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_message_area_add_button         (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         const <link linkend="gchar">gchar</link> *button_text,
+                                                         <link linkend="gint">gint</link> response_id);</programlisting>
+<para>
+Adds a button with the given text (or a stock button, if button_text
+is a stock ID) and sets things up so that clicking the button will emit
+the "response" signal with the given response_id. The button is appended
+to the end of the message area's action area. The button widget is
+returned, but usually you don't need it.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>button_text</parameter>&#160;:</term>
+<listitem><simpara> text of button, or stock ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>response_id</parameter>&#160;:</term>
+<listitem><simpara> response ID for the button
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the button widget that was added
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-add-buttons" role="function" condition="since:2.18">
+<title>gtk_message_area_add_buttons ()</title>
+<indexterm zone="gtk-message-area-add-buttons" role="2.18"><primary sortas="message_area_add_buttons">gtk_message_area_add_buttons</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_message_area_add_buttons        (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         const <link linkend="gchar">gchar</link> *first_button_text,
+                                                         ...);</programlisting>
+<para>
+Adds more buttons, same as calling <link linkend="gtk-message-area-add-button"><function>gtk_message_area_add_button()</function></link>
+repeatedly. The variable argument list should be <link linkend="NULL--CAPS"><literal>NULL</literal></link>-terminated as with
+<link linkend="gtk-message-area-new-with-buttons"><function>gtk_message_area_new_with_buttons()</function></link>. Each button must have both text
+and response ID.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>first_button_text</parameter>&#160;:</term>
+<listitem><simpara> button text or stock ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara> response ID for first button, then more text-response_id pairs,
+    ending with <link linkend="NULL--CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-set-response-sensitive" role="function" condition="since:2.18">
+<title>gtk_message_area_set_response_sensitive ()</title>
+<indexterm zone="gtk-message-area-set-response-sensitive" role="2.18"><primary sortas="message_area_set_response_sensitive">gtk_message_area_set_response_sensitive</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_message_area_set_response_sensitive
+                                                        (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="gint">gint</link> response_id,
+                                                         <link linkend="gboolean">gboolean</link> setting);</programlisting>
+<para>
+Calls gtk_widget_set_sensitive (widget, setting) for each widget
+in the dialog's action area with the given response_id. A convenient
+way to sensitize/desensitize dialog buttons.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>response_id</parameter>&#160;:</term>
+<listitem><simpara> a response ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>setting</parameter>&#160;:</term>
+<listitem><simpara> TRUE for sensitive
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-set-default-response" role="function" condition="since:2.18">
+<title>gtk_message_area_set_default_response ()</title>
+<indexterm zone="gtk-message-area-set-default-response" role="2.18"><primary sortas="message_area_set_default_response">gtk_message_area_set_default_response</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_message_area_set_default_response
+                                                        (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="gint">gint</link> response_id);</programlisting>
+<para>
+Emits the 'response' signal with the given <parameter>response_id</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>response_id</parameter>&#160;:</term>
+<listitem><simpara> a response ID
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-response" role="function">
+<title>gtk_message_area_response ()</title>
+<indexterm zone="gtk-message-area-response"><primary sortas="message_area_response">gtk_message_area_response</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_message_area_response           (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="gint">gint</link> response_id);</programlisting>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>response_id</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="gtk-message-area-set-message-type" role="function" condition="since:2.18">
+<title>gtk_message_area_set_message_type ()</title>
+<indexterm zone="gtk-message-area-set-message-type" role="2.18"><primary sortas="message_area_set_message_type">gtk_message_area_set_message_type</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_message_area_set_message_type   (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                         <link linkend="GtkMessageType">GtkMessageType</link> message_type);</programlisting>
+<para>
+Sets the message type of the message area.
+GTK+ uses this type to determine what color to use when
+drawing the message area.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>message_type</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageType"><type>GtkMessageType</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-message-area-get-message-type" role="function" condition="since:2.18">
+<title>gtk_message_area_get_message_type ()</title>
+<indexterm zone="gtk-message-area-get-message-type" role="2.18"><primary sortas="message_area_get_message_type">gtk_message_area_get_message_type</primary></indexterm><programlisting><link linkend="GtkMessageType">GtkMessageType</link>      gtk_message_area_get_message_type   (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area);</programlisting>
+<para>
+Returns the message type of the message area.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMessageArea"><type>GtkMessageArea</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the message type of the message area.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+
+</refsect1>
+<refsect1 id="GtkMessageArea.property-details" role="property_details">
+<title role="property_details.title">Property Details</title>
+<refsect2 id="GtkMessageArea--message-type" role="property"><title>The <literal>&quot;message-type&quot;</literal> property</title>
+<indexterm zone="GtkMessageArea--message-type" role="2.18"><primary sortas="MessageArea:message-type">GtkMessageArea:message-type</primary></indexterm><programlisting>  &quot;message-type&quot;             <link linkend="GtkMessageType">GtkMessageType</link>        : Read / Write / Construct</programlisting>
+<para>
+The type of the message.
+</para>
+<para>
+The type is used to determine the colors to use in the message
+area. The following symbolic color names can by used to customize
+these colors:
+"info_fg_color", "info_bg_color",
+"warning_fg_color", "warning_bg_color",
+"question_fg_color", "question_bg_color",
+"error_fg_color", "error_bg_color",
+"other_fg_color", "other_bg_color".</para>
+<para>
+</para><para>Default value: GTK_MESSAGE_OTHER</para>
+<para>Since 2.18</para>
+</refsect2>
+</refsect1>
+<refsect1 id="GtkMessageArea.style-property-details" role="style_properties_details">
+<title role="style_properties_details.title">Style Property Details</title>
+<refsect2 id="GtkMessageArea--s-action-area-border" role="property"><title>The <literal>&quot;action-area-border&quot;</literal> style property</title>
+<indexterm zone="GtkMessageArea--s-action-area-border" role="2.18"><primary sortas="MessageArea:action-area-border">GtkMessageArea:action-area-border</primary></indexterm><programlisting>  &quot;action-area-border&quot;       <link linkend="gint">gint</link>                  : Read</programlisting>
+<para>
+Width of the border around the action area of the message area.</para>
+<para>
+</para><para>Allowed values: &gt;= 0</para>
+<para>Default value: 5</para>
+<para>Since 2.18</para>
+</refsect2>
+<refsect2 id="GtkMessageArea--s-button-spacing" role="property"><title>The <literal>&quot;button-spacing&quot;</literal> style property</title>
+<indexterm zone="GtkMessageArea--s-button-spacing" role="2.18"><primary sortas="MessageArea:button-spacing">GtkMessageArea:button-spacing</primary></indexterm><programlisting>  &quot;button-spacing&quot;           <link linkend="gint">gint</link>                  : Read</programlisting>
+<para>
+Spacing between buttons in the action area of the message area.</para>
+<para>
+</para><para>Allowed values: &gt;= 0</para>
+<para>Default value: 6</para>
+<para>Since 2.18</para>
+</refsect2>
+<refsect2 id="GtkMessageArea--s-content-area-border" role="property"><title>The <literal>&quot;content-area-border&quot;</literal> style property</title>
+<indexterm zone="GtkMessageArea--s-content-area-border" role="2.18"><primary sortas="MessageArea:content-area-border">GtkMessageArea:content-area-border</primary></indexterm><programlisting>  &quot;content-area-border&quot;      <link linkend="gint">gint</link>                  : Read</programlisting>
+<para>
+The width of the border around the content
+content area of the message area.</para>
+<para>
+</para><para>Allowed values: &gt;= 0</para>
+<para>Default value: 8</para>
+<para>Since 2.18</para>
+</refsect2>
+<refsect2 id="GtkMessageArea--s-content-area-spacing" role="property"><title>The <literal>&quot;content-area-spacing&quot;</literal> style property</title>
+<indexterm zone="GtkMessageArea--s-content-area-spacing" role="2.18"><primary sortas="MessageArea:content-area-spacing">GtkMessageArea:content-area-spacing</primary></indexterm><programlisting>  &quot;content-area-spacing&quot;     <link linkend="gint">gint</link>                  : Read</programlisting>
+<para>
+The default spacing used between elements of the
+content area of the message area.</para>
+<para>
+</para><para>Allowed values: &gt;= 0</para>
+<para>Default value: 16</para>
+<para>Since 2.18</para>
+</refsect2>
+<refsect2 id="GtkMessageArea--s-use-tooltip-style" role="property"><title>The <literal>&quot;use-tooltip-style&quot;</literal> style property</title>
+<indexterm zone="GtkMessageArea--s-use-tooltip-style" role="2.18"><primary sortas="MessageArea:use-tooltip-style">GtkMessageArea:use-tooltip-style</primary></indexterm><programlisting>  &quot;use-tooltip-style&quot;        <link linkend="gboolean">gboolean</link>              : Read</programlisting>
+<para>
+When <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>, use the same background/foreground color as <link linkend="GtkTooltip"><type>GtkTooltip</type></link>.
+Otherwise, GTK+ uses <link linkend="GtkMessageArea-message-type"><type>"message-type"</type></link> to determine which
+symbolic colors to use.</para>
+<para>
+</para><para>Default value: TRUE</para>
+<para>Since 2.18</para>
+</refsect2>
+</refsect1>
+
+<refsect1 id="GtkMessageArea.signal-details" role="signals">
+<title role="signals.title">Signal Details</title>
+<refsect2 id="GtkMessageArea-close" role="signal"><title>The <literal>&quot;close&quot;</literal> signal</title>
+<indexterm zone="GtkMessageArea-close" role="2.18"><primary sortas="MessageArea::close">GtkMessageArea::close</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkMessageArea">GtkMessageArea</link> *arg0,
+                                                        <link linkend="gpointer">gpointer</link>        user_data)      : Run Last / Action</programlisting>
+<para>
+The ::close signal is a
+<link linkend="keybinding-signals">keybinding signal</link>
+which gets emitted when the user uses a keybinding to dismiss
+the message area
+</para>
+<para>
+The default binding for this signal is the Escape key.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2><refsect2 id="GtkMessageArea-response" role="signal"><title>The <literal>&quot;response&quot;</literal> signal</title>
+<indexterm zone="GtkMessageArea-response" role="2.18"><primary sortas="MessageArea::response">GtkMessageArea::response</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkMessageArea">GtkMessageArea</link> *message_area,
+                                                        <link linkend="gint">gint</link>            response_id,
+                                                        <link linkend="gpointer">gpointer</link>        user_data)         : Run Last</programlisting>
+<para>
+Emitted when an action widget is clicked or the application programmer
+calls <link linkend="gtk-dialog-response"><function>gtk_dialog_response()</function></link>. The <parameter>response_id</parameter> depends on which action
+widget was clicked.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>message_area</parameter>&#160;:</term>
+<listitem><simpara> the object on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>response_id</parameter>&#160;:</term>
+<listitem><simpara> the response ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2>
+</refsect1>
+
+
+<refsect1 id="GtkMessageArea.see-also">
+<title>See Also</title>
+#GtkStatusbar, <link linkend="GtkMessageDialog"><type>GtkMessageDialog</type></link>
+</refsect1>
+
+</refentry>

@@ -397,6 +397,9 @@ EXTRA_DIST = \
 	ChangeLog.pre-2-6	\
 	ChangeLog.pre-2-8	\
 	ChangeLog.pre-2-10	\
+	ChangeLog.pre-2-12	\
+	ChangeLog.pre-2-14	\
+	ChangeLog.pre-2-16	\
 	ChangeLog.gtk-async-file-chooser	\
 	ChangeLog.gtk-printing	\
 	README.commits	\
@@ -954,7 +957,7 @@ distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -f Makefile
 distclean-am: clean-am distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags
+	distclean-local distclean-tags
 
 dvi: dvi-recursive
 
@@ -1002,15 +1005,15 @@ uninstall-info: uninstall-info-recursive
 	check-local clean clean-generic clean-libtool clean-recursive \
 	ctags ctags-recursive dist dist-all dist-gzip distcheck \
 	distclean distclean-generic distclean-hdr distclean-libtool \
-	distclean-recursive distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am dvi-recursive info info-am \
-	info-recursive install install-am install-data install-data-am \
-	install-data-recursive install-exec install-exec-am \
-	install-exec-recursive install-info install-info-am \
-	install-info-recursive install-man install-pkgconfigDATA \
-	install-recursive install-strip installcheck installcheck-am \
-	installdirs installdirs-am installdirs-recursive \
-	maintainer-clean maintainer-clean-generic \
+	distclean-local distclean-recursive distclean-tags \
+	distcleancheck distdir distuninstallcheck dvi dvi-am \
+	dvi-recursive info info-am info-recursive install install-am \
+	install-data install-data-am install-data-recursive \
+	install-exec install-exec-am install-exec-recursive \
+	install-info install-info-am install-info-recursive install-man \
+	install-pkgconfigDATA install-recursive install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	installdirs-recursive maintainer-clean maintainer-clean-generic \
 	maintainer-clean-recursive mostlyclean mostlyclean-generic \
 	mostlyclean-libtool mostlyclean-recursive pdf pdf-am \
 	pdf-recursive ps ps-am ps-recursive tags tags-recursive \
@@ -1087,6 +1090,25 @@ gtk+-$(GDKTARGET)-2.0-uninstalled.pc: gtk+-2.0-uninstalled.pc
 gdk-$(GDKTARGET)-2.0-uninstalled.pc: gdk-2.0-uninstalled.pc
 	rm -f gdk-$(GDKTARGET)-2.0-uninstalled.pc && \
 	cp gdk-2.0-uninstalled.pc gdk-$(GDKTARGET)-2.0-uninstalled.pc
+
+distclean-local:
+	if test $(srdcir) = .; then :; else \
+		rm -f ChangeLog; \
+	fi
+
+ChangeLog:
+	@echo Creating $@
+	@if test -d "$(srcdir)/.git"; then \
+	  (GIT_DIR=$(top_srcdir)/.git ./missing --run git log GTK_2_16_0^^.. --stat) | fmt --split-only > $@.tmp \
+	  && mv -f $@.tmp $@ \
+	  || ($(RM) $@.tmp; \
+	      echo Failed to generate ChangeLog, your ChangeLog may be outdated >&2; \
+	      (test -f $@ || echo git-log is required to generate this file >> $@)); \
+	else \
+	  test -f $@ || \
+	  (echo A git checkout and git-log is required to generate ChangeLog >&2 && \
+	  echo A git checkout and git-log is required to generate this file >> $@); \
+	fi
 install-data-hook:
 	(cd $(DESTDIR)$(pkgconfigdir) && \
 	 test -f gdk-$(DEFAULT_GDKTARGET)-2.0.pc && \
@@ -1109,7 +1131,7 @@ dist-hook:
 	     && cp INSTALL README $(distdir) ; \
 	fi
 
-.PHONY: files release sanity snapshot
+.PHONY: files release sanity snapshot ChangeLog
 
 files:
 	@files=`ls $(DISTFILES) 2> /dev/null `; for p in $$files; do \

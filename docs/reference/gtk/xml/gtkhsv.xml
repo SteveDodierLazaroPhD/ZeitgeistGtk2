@@ -5,9 +5,9 @@
 <!ENTITY version SYSTEM "version.xml">
 ]>
 <!--ENTITY index-Objects-Grouped SYSTEM "objects_grouped.sgml"-->
-<refentry id="gtk-GtkHSV">
+<refentry id="GtkHSV">
 <refmeta>
-<refentrytitle role="top_of_page" id="gtk-GtkHSV.top_of_page">GtkHSV</refentrytitle>
+<refentrytitle role="top_of_page" id="GtkHSV.top_of_page">GtkHSV</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>GTK Library</refmiscinfo>
 </refmeta>
@@ -17,14 +17,14 @@
 <refpurpose>A 'color wheel' widget</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="gtk-GtkHSV.synopsis" role="synopsis">
+<refsynopsisdiv id="GtkHSV.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
 <synopsis>
 
 #include &lt;gtk/gtk.h&gt;
 
-                    <link linkend="GtkHSV">GtkHSV</link>;
+                    <link linkend="GtkHSV-struct">GtkHSV</link>;
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-hsv-new">gtk_hsv_new</link>                         (void);
 <link linkend="void">void</link>                <link linkend="gtk-hsv-set-color">gtk_hsv_set_color</link>                   (<link linkend="GtkHSV">GtkHSV</link> *hsv,
                                                          <link linkend="double">double</link> h,
@@ -56,15 +56,38 @@
 </synopsis>
 </refsynopsisdiv>
 
+<refsect1 id="GtkHSV.object-hierarchy" role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<synopsis>
+  <link linkend="GObject">GObject</link>
+   +----<link linkend="GInitiallyUnowned">GInitiallyUnowned</link>
+         +----<link linkend="GtkObject">GtkObject</link>
+               +----<link linkend="GtkWidget">GtkWidget</link>
+                     +----GtkHSV
+</synopsis>
+</refsect1>
 
 
 
+<refsect1 id="GtkHSV.implemented-interfaces" role="impl_interfaces">
+<title role="impl_interfaces.title">Implemented Interfaces</title>
+<para>
+GtkHSV implements
+ <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
+</refsect1>
 
 
 
+<refsect1 id="GtkHSV.signals" role="signal_proto">
+<title role="signal_proto.title">Signals</title>
+<synopsis>
+  &quot;<link linkend="GtkHSV-changed">changed</link>&quot;                                        : Run First
+  &quot;<link linkend="GtkHSV-move">move</link>&quot;                                           : Run Last / Action
+</synopsis>
+</refsect1>
 
 
-<refsect1 id="gtk-GtkHSV.description" role="desc">
+<refsect1 id="GtkHSV.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
 <link linkend="GtkHSV"><type>GtkHSV</type></link> is the 'color wheel' part of a complete color selector widget.
@@ -75,17 +98,11 @@ saturation.
 </para>
 </refsect1>
 
-<refsect1 id="gtk-GtkHSV.details" role="details">
+<refsect1 id="GtkHSV.details" role="details">
 <title role="details.title">Details</title>
-<refsect2 id="GtkHSV" role="struct">
+<refsect2 id="GtkHSV-struct" role="struct">
 <title>GtkHSV</title>
-<indexterm zone="GtkHSV"><primary sortas="HSV">GtkHSV</primary></indexterm><programlisting>typedef struct {
-  GtkWidget parent_instance;
-
-  /* Private data */
-  gpointer GSEAL (priv);
-} GtkHSV;
-</programlisting>
+<indexterm zone="GtkHSV-struct"><primary sortas="HSV">GtkHSV</primary></indexterm><programlisting>typedef struct _GtkHSV GtkHSV;</programlisting>
 <para>
 </para></refsect2>
 <refsect2 id="gtk-hsv-new" role="function" condition="since:2.14">
@@ -273,9 +290,37 @@ output values will be in the same range.</para>
 
 </refsect1>
 
+<refsect1 id="GtkHSV.signal-details" role="signals">
+<title role="signals.title">Signal Details</title>
+<refsect2 id="GtkHSV-changed" role="signal"><title>The <literal>&quot;changed&quot;</literal> signal</title>
+<indexterm zone="GtkHSV-changed"><primary sortas="HSV::changed">GtkHSV::changed</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkHSV">GtkHSV</link>  *hsv,
+                                                        <link linkend="gpointer">gpointer</link> user_data)      : Run First</programlisting>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>hsv</parameter>&#160;:</term>
+<listitem><simpara>the object which received the signal.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="GtkHSV-move" role="signal"><title>The <literal>&quot;move&quot;</literal> signal</title>
+<indexterm zone="GtkHSV-move"><primary sortas="HSV::move">GtkHSV::move</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkHSV">GtkHSV</link>          *hsv,
+                                                        <link linkend="GtkDirectionType">GtkDirectionType</link> arg1,
+                                                        <link linkend="gpointer">gpointer</link>         user_data)      : Run Last / Action</programlisting>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>hsv</parameter>&#160;:</term>
+<listitem><simpara>the object which received the signal.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arg1</parameter>&#160;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
 
 
-<refsect1 id="gtk-GtkHSV.see-also">
+<refsect1 id="GtkHSV.see-also">
 <title>See Also</title>
 <para>
 <variablelist>

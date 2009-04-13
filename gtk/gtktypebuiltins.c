@@ -58,6 +58,7 @@ gtk_builder_error_get_type (void)
             { GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE, "GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE", "missing-property-value" },
             { GTK_BUILDER_ERROR_INVALID_VALUE, "GTK_BUILDER_ERROR_INVALID_VALUE", "invalid-value" },
             { GTK_BUILDER_ERROR_VERSION_MISMATCH, "GTK_BUILDER_ERROR_VERSION_MISMATCH", "version-mismatch" },
+            { GTK_BUILDER_ERROR_DUPLICATE_ID, "GTK_BUILDER_ERROR_DUPLICATE_ID", "duplicate-id" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GtkBuilderError"), values);
