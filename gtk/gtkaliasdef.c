@@ -6706,6 +6706,9 @@ extern __typeof (gtk_print_backend_print_stream) gtk_print_backend_print_stream 
 #undef gtk_print_backend_load_modules 
 extern __typeof (gtk_print_backend_load_modules) gtk_print_backend_load_modules __attribute((alias("IA__gtk_print_backend_load_modules"), visibility("default")));
 
+#undef gtk_print_backend_set_password 
+extern __typeof (gtk_print_backend_set_password) gtk_print_backend_set_password __attribute((alias("IA__gtk_print_backend_set_password"), visibility("default")));
+
 #endif
 #endif
 #endif

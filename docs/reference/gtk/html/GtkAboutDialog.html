@@ -329,16 +329,22 @@ recognized by looking for <code class="literal">http://url</code>, with
 <code class="literal">url</code> extending to the next space, tab or line break.
 </p>
 <p><a name="gtk-about-dialog-hook-setup"></a>
-When setting the website and email hooks for the <a class="link" href="GtkAboutDialog.html" title="GtkAboutDialog"><span class="type">GtkAboutDialog</span></a> widget,
-you should remember that the order is important: you should set the hook
-functions before setting the website and email URL properties, like this:
+Since 2.18 <a class="link" href="GtkAboutDialog.html" title="GtkAboutDialog"><span class="type">GtkAboutDialog</span></a> provides default website and email hooks that use
+<a class="link" href="gtk-Filesystem-utilities.html#gtk-show-uri" title="gtk_show_uri ()"><code class="function">gtk_show_uri()</code></a>.
+</p>
+<p>
+If you want provide your own hooks overriding the default ones, it is important
+to do so before setting the website and email URL properties, like this:
 </p>
 <div class="informalexample"><pre class="programlisting">
 gtk_about_dialog_set_url_hook (GTK_ABOUT_DIALOG (dialog), launch_url, NULL, NULL);
 gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), app_url);
 </pre></div>
 <p>
-Otherwise the GtkAboutDialog widget will not display the website and the
+To disable the default hooks, you can pass <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> as the hook func. Then,
+the <a class="link" href="GtkAboutDialog.html" title="GtkAboutDialog"><span class="type">GtkAboutDialog</span></a> widget will not display the website or the
 email addresses as clickable.
 </p>
 <p>
@@ -1395,7 +1401,13 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNo
 >GDestroyNotify</a> destroy);</pre>
 <p>
 Installs a global function to be called whenever the user activates an
-email link in an about dialog.</p>
+email link in an about dialog. 
+</p>
+<p>
+Since 2.18 there exists a default function which uses <a class="link" href="gtk-Filesystem-utilities.html#gtk-show-uri" title="gtk_show_uri ()"><code class="function">gtk_show_uri()</code></a>. To
+deactivate it, you can pass <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for <em class="parameter"><code>func</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1441,7 +1453,13 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNo
 >GDestroyNotify</a> destroy);</pre>
 <p>
 Installs a global function to be called whenever the user activates a
-URL link in an about dialog.</p>
+URL link in an about dialog.
+</p>
+<p>
+Since 2.18 here exists a default function which uses <a class="link" href="gtk-Filesystem-utilities.html#gtk-show-uri" title="gtk_show_uri ()"><code class="function">gtk_show_uri()</code></a>. To
+deactivate it, you can pass <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a> for <em class="parameter"><code>func</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">

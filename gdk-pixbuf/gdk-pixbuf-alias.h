@@ -262,6 +262,12 @@ extern __typeof (gdk_pixbuf_simple_anim_new) IA__gdk_pixbuf_simple_anim_new __at
 extern __typeof (gdk_pixbuf_simple_anim_add_frame) IA__gdk_pixbuf_simple_anim_add_frame __attribute((visibility("hidden")));
 #define gdk_pixbuf_simple_anim_add_frame IA__gdk_pixbuf_simple_anim_add_frame
 
+extern __typeof (gdk_pixbuf_simple_anim_set_loop) IA__gdk_pixbuf_simple_anim_set_loop __attribute((visibility("hidden")));
+#define gdk_pixbuf_simple_anim_set_loop IA__gdk_pixbuf_simple_anim_set_loop
+
+extern __typeof (gdk_pixbuf_simple_anim_get_loop) IA__gdk_pixbuf_simple_anim_get_loop __attribute((visibility("hidden")));
+#define gdk_pixbuf_simple_anim_get_loop IA__gdk_pixbuf_simple_anim_get_loop
+
 #endif
 #endif
 #if IN_HEADER(GDK_PIXBUF_SCALED_ANIM_H)

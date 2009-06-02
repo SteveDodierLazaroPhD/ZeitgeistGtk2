@@ -6703,6 +6703,9 @@ extern __typeof (gtk_print_backend_print_stream) IA__gtk_print_backend_print_str
 extern __typeof (gtk_print_backend_load_modules) IA__gtk_print_backend_load_modules __attribute((visibility("hidden")));
 #define gtk_print_backend_load_modules IA__gtk_print_backend_load_modules
 
+extern __typeof (gtk_print_backend_set_password) IA__gtk_print_backend_set_password __attribute((visibility("hidden")));
+#define gtk_print_backend_set_password IA__gtk_print_backend_set_password
+
 #endif
 #endif
 #endif

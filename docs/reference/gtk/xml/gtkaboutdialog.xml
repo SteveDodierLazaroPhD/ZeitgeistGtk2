@@ -158,16 +158,20 @@ recognized by looking for <literal>http://url</literal>, with
 <literal>url</literal> extending to the next space, tab or line break.
 </para>
 <para id="gtk-about-dialog-hook-setup">
-When setting the website and email hooks for the <link linkend="GtkAboutDialog"><type>GtkAboutDialog</type></link> widget,
-you should remember that the order is important: you should set the hook
-functions before setting the website and email URL properties, like this:
+Since 2.18 <link linkend="GtkAboutDialog"><type>GtkAboutDialog</type></link> provides default website and email hooks that use
+<link linkend="gtk-show-uri"><function>gtk_show_uri()</function></link>.
+</para>
+<para>
+If you want provide your own hooks overriding the default ones, it is important
+to do so before setting the website and email URL properties, like this:
 </para>
 <informalexample><programlisting>
 gtk_about_dialog_set_url_hook (GTK_ABOUT_DIALOG (dialog), launch_url, NULL, NULL);
 gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), app_url);
 </programlisting></informalexample>
 <para>
-Otherwise the GtkAboutDialog widget will not display the website and the
+To disable the default hooks, you can pass <link linkend="NULL--CAPS"><literal>NULL</literal></link> as the hook func. Then,
+the <link linkend="GtkAboutDialog"><type>GtkAboutDialog</type></link> widget will not display the website or the
 email addresses as clickable.
 </para>
 <para>
@@ -744,7 +748,11 @@ link is activated.
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <para>
 Installs a global function to be called whenever the user activates an
-email link in an about dialog.</para>
+email link in an about dialog. 
+</para>
+<para>
+Since 2.18 there exists a default function which uses <link linkend="gtk-show-uri"><function>gtk_show_uri()</function></link>. To
+deactivate it, you can pass <link linkend="NULL--CAPS"><literal>NULL</literal></link> for <parameter>func</parameter>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>func</parameter>&#160;:</term>
@@ -768,7 +776,11 @@ email link in an about dialog.</para>
                                                          <link linkend="GDestroyNotify">GDestroyNotify</link> destroy);</programlisting>
 <para>
 Installs a global function to be called whenever the user activates a
-URL link in an about dialog.</para>
+URL link in an about dialog.
+</para>
+<para>
+Since 2.18 here exists a default function which uses <link linkend="gtk-show-uri"><function>gtk_show_uri()</function></link>. To
+deactivate it, you can pass <link linkend="NULL--CAPS"><literal>NULL</literal></link> for <parameter>func</parameter>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>func</parameter>&#160;:</term>

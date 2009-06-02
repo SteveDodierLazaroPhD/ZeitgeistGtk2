@@ -173,6 +173,7 @@ GtkPrintOperationPreview is implemented by
   &quot;<link linkend="GtkPrintOperation-preview">preview</link>&quot;                                        : Run Last
   &quot;<link linkend="GtkPrintOperation-request-page-setup">request-page-setup</link>&quot;                             : Run Last
   &quot;<link linkend="GtkPrintOperation-status-changed">status-changed</link>&quot;                                 : Run Last
+  &quot;<link linkend="GtkPrintOperation-update-custom-widget">update-custom-widget</link>&quot;                           : Run Last
   &quot;<link linkend="GtkPrintOperationPreview-got-page-size">got-page-size</link>&quot;                                  : Run Last
   &quot;<link linkend="GtkPrintOperationPreview-ready">ready</link>&quot;                                          : Run Last
 </synopsis>
@@ -1341,7 +1342,7 @@ information you need from the widgets.</para>
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
 Emitted right before <link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link> if you added
-a custom widget in the <link linkend="GtkPrintOperation--"><type>""</type></link>;create-custom-widget handler. 
+a custom widget in the <link linkend="GtkPrintOperation-create-custom-widget"><type>"create-custom-widget"</type></link> handler. 
 When you get this signal you should read the information from the 
 custom widgets, as the widgets are not guaraneed to be around at a 
 later time.</para>
@@ -1587,7 +1588,33 @@ status.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-</variablelist><para>Since 2.10</para></refsect2><refsect2 id="GtkPrintOperationPreview-got-page-size" role="signal"><title>The <literal>&quot;got-page-size&quot;</literal> signal</title>
+</variablelist><para>Since 2.10</para></refsect2><refsect2 id="GtkPrintOperation-update-custom-widget" role="signal"><title>The <literal>&quot;update-custom-widget&quot;</literal> signal</title>
+<indexterm zone="GtkPrintOperation-update-custom-widget" role="2.18"><primary sortas="PrintOperation::update-custom-widget">GtkPrintOperation::update-custom-widget</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *operation,
+                                                        <link linkend="GtkWidget">GtkWidget</link>         *widget,
+                                                        <link linkend="GtkPageSetup">GtkPageSetup</link>      *setup,
+                                                        <link linkend="GtkPrintSettings">GtkPrintSettings</link>  *settings,
+                                                        <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
+<para>
+Emmited after change of selected printer. The actual page setup and
+print settings are passed to the custom widget, which can actualize
+itself according to this change.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>operation</parameter>&#160;:</term>
+<listitem><simpara> the <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link> on which the signal was emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara> the custom widget added in create-custom-widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>setup</parameter>&#160;:</term>
+<listitem><simpara> actual page setup
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>settings</parameter>&#160;:</term>
+<listitem><simpara> actual print settings
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2><refsect2 id="GtkPrintOperationPreview-got-page-size" role="signal"><title>The <literal>&quot;got-page-size&quot;</literal> signal</title>
 <indexterm zone="GtkPrintOperationPreview-got-page-size"><primary sortas="PrintOperationPreview::got-page-size">GtkPrintOperationPreview::got-page-size</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkPrintOperationPreview">GtkPrintOperationPreview</link> *preview,
                                                         <link linkend="GtkPrintContext">GtkPrintContext</link>          *context,
                                                         <link linkend="GtkPageSetup">GtkPageSetup</link>             *page_setup,

@@ -306,6 +306,7 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolea
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-preview" title='The "preview" signal'>preview</a>"                                        : Run Last
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-request-page-setup" title='The "request-page-setup" signal'>request-page-setup</a>"                             : Run Last
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-status-changed" title='The "status-changed" signal'>status-changed</a>"                                 : Run Last
+  "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-update-custom-widget" title='The "update-custom-widget" signal'>update-custom-widget</a>"                           : Run Last
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperationPreview-got-page-size" title='The "got-page-size" signal'>got-page-size</a>"                                  : Run Last
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperationPreview-ready" title='The "ready" signal'>ready</a>"                                          : Run Last
 </pre>
@@ -335,7 +336,7 @@ When the user finished the dialog various signals will be emitted on the
 to catch and render the page on the provided <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> using Cairo.
 </p>
 <div class="example">
-<a name="id1045586"></a><p class="title"><b>Example 45. The high-level printing API</b></p>
+<a name="id945588"></a><p class="title"><b>Example 45. The high-level printing API</b></p>
 <div class="example-contents"><pre class="programlisting">
 static GtkPrintSettings *settings = NULL;
 static void
@@ -2011,7 +2012,7 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointe
 >gpointer</a>           user_data)      : Run Last</pre>
 <p>
 Emitted right before <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-begin-print" title='The "begin-print" signal'><span class="type">"begin-print"</span></a> if you added
-a custom widget in the <span class="type">""</span>;create-custom-widget handler. 
+a custom widget in the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-create-custom-widget" title='The "create-custom-widget" signal'><span class="type">"create-custom-widget"</span></a> handler. 
 When you get this signal you should read the information from the 
 custom widgets, as the widgets are not guaraneed to be around at a 
 later time.</p>
@@ -2426,6 +2427,53 @@ status.</p>
 </tbody>
 </table></div>
 <p>Since 2.10</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkPrintOperation-update-custom-widget"></a><h3>The <code class="literal">"update-custom-widget"</code> signal</h3>
+<pre class="programlisting">void                user_function                      (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *operation,
+                                                        <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>         *widget,
+                                                        <a class="link" href="GtkPageSetup.html" title="GtkPageSetup">GtkPageSetup</a>      *setup,
+                                                        <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a>  *settings,
+                                                        <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"
+>gpointer</a>           user_data)      : Run Last</pre>
+<p>
+Emmited after change of selected printer. The actual page setup and
+print settings are passed to the custom widget, which can actualize
+itself according to this change.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>operation</code></em> :</span></p></td>
+<td> the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation"><span class="type">GtkPrintOperation</span></a> on which the signal was emitted
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td> the custom widget added in create-custom-widget
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>setup</code></em> :</span></p></td>
+<td> actual page setup
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>settings</code></em> :</span></p></td>
+<td> actual print settings
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Since 2.18</p>
 </div>
 <hr>
 <div class="refsect2" lang="en">
