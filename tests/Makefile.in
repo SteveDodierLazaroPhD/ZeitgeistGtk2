@@ -57,6 +57,8 @@ BUILD_DYNAMIC_MODULES_FALSE = @BUILD_DYNAMIC_MODULES_FALSE@
 BUILD_DYNAMIC_MODULES_TRUE = @BUILD_DYNAMIC_MODULES_TRUE@
 BUILD_GDIPLUS_LOADERS_FALSE = @BUILD_GDIPLUS_LOADERS_FALSE@
 BUILD_GDIPLUS_LOADERS_TRUE = @BUILD_GDIPLUS_LOADERS_TRUE@
+CAIRO_BACKEND_CFLAGS = @CAIRO_BACKEND_CFLAGS@
+CAIRO_BACKEND_LIBS = @CAIRO_BACKEND_LIBS@
 CAIRO_PREFIX = @CAIRO_PREFIX@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
@@ -83,6 +85,8 @@ DATADIRNAME = @DATADIRNAME@
 DB2HTML = @DB2HTML@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DIRECTFB_CFLAGS = @DIRECTFB_CFLAGS@
+DIRECTFB_LIBS = @DIRECTFB_LIBS@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
@@ -166,6 +170,10 @@ HAVE_JPEG_FALSE = @HAVE_JPEG_FALSE@
 HAVE_JPEG_TRUE = @HAVE_JPEG_TRUE@
 HAVE_OBJC_FALSE = @HAVE_OBJC_FALSE@
 HAVE_OBJC_TRUE = @HAVE_OBJC_TRUE@
+HAVE_PAPI_CUPS_FALSE = @HAVE_PAPI_CUPS_FALSE@
+HAVE_PAPI_CUPS_TRUE = @HAVE_PAPI_CUPS_TRUE@
+HAVE_PAPI_FALSE = @HAVE_PAPI_FALSE@
+HAVE_PAPI_TRUE = @HAVE_PAPI_TRUE@
 HAVE_PNG_FALSE = @HAVE_PNG_FALSE@
 HAVE_PNG_TRUE = @HAVE_PNG_TRUE@
 HAVE_TIFF_FALSE = @HAVE_TIFF_FALSE@
@@ -491,6 +499,7 @@ noinst_PROGRAMS = $(TEST_PROGS)	\
 	testmultiscreen			\
 	testnotebookdnd			\
 	testnouiprint			\
+	testorientable			\
 	testprint			\
 	testrgb				\
 	testrecentchooser 		\
@@ -561,6 +570,7 @@ testmultidisplay_DEPENDENCIES = $(TEST_DEPS)
 testmultiscreen_DEPENDENCIES = $(TEST_DEPS)
 testnotebookdnd_DEPENDENCIES = $(TEST_DEPS)
 testnouiprint_DEPENDENCIES = $(TEST_DEPS)
+testorientable_DEPENDENCIES = $(TEST_DEPS)
 testprint_DEPENDENCIES = $(TEST_DEPS)
 testrecentchooser_DEPENDENCIES = $(TEST_DEPS)
 testrecentchoosermenu_DEPENDENCIES = $(TEST_DEPS)
@@ -619,6 +629,7 @@ testmultidisplay_LDADD = $(LDADDS)
 testmultiscreen_LDADD = $(LDADDS)
 testnotebookdnd_LDADD = $(LDADDS)
 testnouiprint_LDADD = $(LDADDS)
+testorientable_LDADD = $(LDADDS)
 testprint_LDADD = $(LDADDS)
 testrecentchooser_LDADD = $(LDADDS)
 testrecentchoosermenu_LDADD = $(LDADDS)
@@ -803,6 +814,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testorientable$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testprint$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testrgb$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testrecentchooser$(EXEEXT) \
@@ -867,6 +879,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testorientable$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testprint$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testrgb$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testrecentchooser$(EXEEXT) \
@@ -929,6 +942,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testorientable$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testprint$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testrgb$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testrecentchooser$(EXEEXT) \
@@ -994,6 +1008,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testorientable$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testprint$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testrgb$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testrecentchooser$(EXEEXT) \
@@ -1181,6 +1196,9 @@ testnotebookdnd_LDFLAGS =
 testnouiprint_SOURCES = testnouiprint.c
 testnouiprint_OBJECTS = testnouiprint.$(OBJEXT)
 testnouiprint_LDFLAGS =
+testorientable_SOURCES = testorientable.c
+testorientable_OBJECTS = testorientable.$(OBJEXT)
+testorientable_LDFLAGS =
 am_testprint_OBJECTS = testprint.$(OBJEXT) \
 	testprintfileoperation.$(OBJEXT)
 testprint_OBJECTS = $(am_testprint_OBJECTS)
@@ -1302,6 +1320,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/testmultiscreen.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testnotebookdnd.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testnouiprint.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testorientable.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testprint.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testprintfileoperation.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testrecentchooser.Po \
@@ -1355,20 +1374,20 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) pixbuf-lowmem.c \
 	testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c \
 	testmenubars.c testmenus.c $(testmerge_SOURCES) \
 	testmountoperation.c testmultidisplay.c testmultiscreen.c \
-	testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) \
-	$(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) \
-	testrgb.c testrichtext.c testscale.c testselection.c \
-	$(testsocket_SOURCES) $(testsocket_child_SOURCES) \
-	$(testspinbutton_SOURCES) $(teststatusicon_SOURCES) \
-	$(testtext_SOURCES) $(testtoolbar_SOURCES) \
-	$(testtooltips_SOURCES) testtreecolumns.c \
-	testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c \
-	testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c \
-	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
-	testxinerama.c treestoretest.c
+	testnotebookdnd.c testnouiprint.c testorientable.c \
+	$(testprint_SOURCES) $(testrecentchooser_SOURCES) \
+	$(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c \
+	testscale.c testselection.c $(testsocket_SOURCES) \
+	$(testsocket_child_SOURCES) $(testspinbutton_SOURCES) \
+	$(teststatusicon_SOURCES) $(testtext_SOURCES) \
+	$(testtoolbar_SOURCES) $(testtooltips_SOURCES) \
+	testtreecolumns.c testtreecolumnsizing.c \
+	$(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c \
+	$(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) \
+	$(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl \
 	Makefile.am
-SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testclientmessage.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testentryicons_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testscale.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testclientmessage.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testentryicons_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c testorientable.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testscale.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
 
 all: all-am
 
@@ -1506,6 +1525,9 @@ testnotebookdnd$(EXEEXT): $(testnotebookdnd_OBJECTS) $(testnotebookdnd_DEPENDENC
 testnouiprint$(EXEEXT): $(testnouiprint_OBJECTS) $(testnouiprint_DEPENDENCIES) 
 	@rm -f testnouiprint$(EXEEXT)
 	$(LINK) $(testnouiprint_LDFLAGS) $(testnouiprint_OBJECTS) $(testnouiprint_LDADD) $(LIBS)
+testorientable$(EXEEXT): $(testorientable_OBJECTS) $(testorientable_DEPENDENCIES) 
+	@rm -f testorientable$(EXEEXT)
+	$(LINK) $(testorientable_LDFLAGS) $(testorientable_OBJECTS) $(testorientable_LDADD) $(LIBS)
 testprint$(EXEEXT): $(testprint_OBJECTS) $(testprint_DEPENDENCIES) 
 	@rm -f testprint$(EXEEXT)
 	$(LINK) $(testprint_LDFLAGS) $(testprint_OBJECTS) $(testprint_LDADD) $(LIBS)
@@ -1629,6 +1651,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testmultiscreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testnotebookdnd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testnouiprint.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testorientable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testprint.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testprintfileoperation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testrecentchooser.Po@am__quote@
@@ -2068,6 +2091,8 @@ test-report perf-report full-report:	${TEST_PROGS}
 .PHONY: test test-report perf-report full-report
 # run make test as part of make check
 check-local: test
+
+-include $(top_srcdir)/git.mk
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

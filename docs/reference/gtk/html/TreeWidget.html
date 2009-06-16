@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Tree and List Widget Overview</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.74.3">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
@@ -61,6 +61,7 @@
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
+<link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -70,7 +71,7 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="GtkTreeModel.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr></table>
-<div class="refentry" lang="en">
+<div class="refentry" title="Tree and List Widget Overview">
 <a name="TreeWidget"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -79,15 +80,15 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsect1" lang="en">
-<a name="id452222"></a><h2>Overview</h2>
+<div class="refsect1" title="Overview">
+<a name="id623334"></a><h2>Overview</h2>
 <p>
       To create a tree or list in GTK+, use the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> interface in
       conjunction with the <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget.  This widget is
       designed around a <em class="firstterm">Model/View/Controller</em>
       design and consists of four major parts:
       </p>
-<table class="simplelist" border="0" summary="Simple list">
+<table border="0" summary="Simple list" class="simplelist">
 <tr><td>The tree view widget (<span class="structname">GtkTreeView</span>)</td></tr>
 <tr><td>The view column (<span class="structname">GtkTreeViewColumn</span>)</td></tr>
 <tr><td>The cell renderers (<span class="structname">GtkCellRenderer</span> etc.)</td></tr>
@@ -110,8 +111,8 @@
         it be rendered as a checkbox?
     </p>
 </div>
-<div class="refsect1" lang="en">
-<a name="id611762"></a><h2>Creating a model</h2>
+<div class="refsect1" title="Creating a model">
+<a name="id589526"></a><h2>Creating a model</h2>
 <p>
       GTK+ provides two simple models that can be used: the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a>
       and the <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>.  GtkListStore is used to model list widgets, 
@@ -206,8 +207,8 @@ gtk_tree_store_set (store, &amp;iter2,
                     -1);
 </pre></div>
 </div>
-<div class="refsect1" lang="en">
-<a name="id603694"></a><h2>Creating the view component</h2>
+<div class="refsect1" title="Creating the view component">
+<a name="id686748"></a><h2>Creating the view component</h2>
 <p>
       While there are several different models to choose from, there is
       only one view widget to deal with.  It works with either the list
@@ -220,8 +221,8 @@ GtkWidget *tree;
 
 tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
 </pre></div>
-<div class="refsect2" lang="en">
-<a name="id603848"></a><h3>Columns and cell renderers</h3>
+<div class="refsect2" title="Columns and cell renderers">
+<a name="id687073"></a><h3>Columns and cell renderers</h3>
 <p>
 	Once the <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget has a model, it will need to know how 
         to display the model.  It does this with columns and cell renderers.
@@ -257,8 +258,8 @@ gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
       </p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
-<a name="id667449"></a><h3>Selection handling</h3>
+<div class="refsect2" title="Selection handling">
+<a name="id622471"></a><h3>Selection handling</h3>
 <p>
         Most applications will need to not only deal with displaying data, but 
         also receiving input events from users.  To do this, simply get a 
@@ -301,8 +302,8 @@ tree_selection_changed_cb (GtkTreeSelection *selection, gpointer data)
 </pre></div>
 </div>
 </div>
-<div class="refsect1" lang="en">
-<a name="id604876"></a><h2>Simple Example</h2>
+<div class="refsect1" title="Simple Example">
+<a name="id631746"></a><h2>Simple Example</h2>
 <p>
       Here is a simple example of using a <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a> widget in context 
       of the other widgets.  It simply creates a simple model and view, 

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Changes from 1.2 to 2.0</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.74.3">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="gtk-changes-1-2.html" title="Changes from 1.0 to 1.2">
@@ -61,6 +61,7 @@
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
+<link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -70,7 +71,7 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-migrating-GtkFileChooser.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr></table>
-<div class="refentry" lang="en">
+<div class="refentry" title="Changes from 1.2 to 2.0">
 <a name="gtk-changes-2-0"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -81,8 +82,8 @@ Incompatible changes made between version 1.2 and version 2.0
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsect1" lang="en">
-<a name="id1092952"></a><h2>Incompatible changes from 1.2 to 2.0</h2>
+<div class="refsect1" title="Incompatible changes from 1.2 to 2.0">
+<a name="id1095688"></a><h2>Incompatible changes from 1.2 to 2.0</h2>
 <p>
 The <a class="ulink" href="http://developer.gnome.org/dotplan/porting/" target="_top">GNOME 2.0
 porting guide</a> on <a class="ulink" href="http://developer.gnome.org" target="_top">http://developer.gnome.org</a>
@@ -98,8 +99,8 @@ smaller. Nonetheless, most programs written for 1.2 compile against
 features or very specialized features, and compatibility interfaces
 exist whenever possible.
 </p>
-<div class="itemizedlist"><ul type="disc">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p>
 <code class="function">gtk_container_get_toplevels()</code> was removed and replaced 
   with <code class="function">gtk_window_list_toplevels()</code>, which has different 
   memory management on the return value 
@@ -108,48 +109,48 @@ exist whenever possible.
   so you have to <code class="function">g_list_free()</code> the list after first 
   unref'ing each list member).
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The <code class="function">gdk_time*</code> functions have been removed. This 
   functionality has been unused since the main loop was moved into GLib
   prior to 1.2. 
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The signature for <code class="function">GtkPrintFunc</code> (used for 
   <code class="function">gtk_item_factory_dump_items()</code>)
   has been changed to take a <span class="type">const gchar *</span> instead of 
   <span class="type">gchar *</span>, to match what we do for GLib, and other similar cases.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The detail arguments in the <span class="structname">GtkStyleClass</span> structure 
 are now <span class="type">const gchar *</span>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_paned_set_gutter_size()</code> has been removed, since the 
   small handle tab has been changed to include the entire area previously 
   occupied by the gutter.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_paned_set_handle_size()</code> has been removed, in favor of 
   a style property, since this is an option that only makes sense for themes 
   to adjust.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 GDK no longer selects OwnerGrabButtonMask for button presses. This means  
   that the automatic grab that occurs when the user presses a button
   will have <code class="literal">owner_events = FALSE</code>, so all events are 
   redirected to the grab window, even events that would normally go to
   other windows of the window's owner.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <span class="structname">GtkColorSelectionDialog</span> has now been moved into it's 
   own set of files, <code class="filename">gtkcolorseldialog.c</code> and 
   <code class="filename">gtkcolorseldialog.h</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_widget_shape_combine_mask()</code> now keeps a reference 
   count on the mask pixmap that is passed in.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The <span class="structname">GtkPatternSpec</span> has been moved to GLib as 
   <span class="structname">GPatternSpec</span>, the pattern
   arguments to <code class="function">gtk_item_factory_dump_items()</code> and 
@@ -157,28 +158,28 @@ The <span class="structname">GtkPatternSpec</span> has been moved to GLib as
   have thusly been changed to take a <span class="structname">GPatternSpec</span> 
   instead of a <span class="structname">GtkPatternSpec</span>.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 Type system changes:
 </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
    <code class="literal">GTK_TYPE_OBJECT</code> is not a fundamental type anymore. Type checks of the
     style <code class="literal">(GTK_FUNDAMENTAL_TYPE (some_type) == GTK_TYPE_OBJECT)</code>
     will not work anymore. As a replacement, <code class="literal">(GTK_TYPE_IS_OBJECT (some_type))</code>
     can be used now.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The following types vanished: <code class="literal">GTK_TYPE_ARGS</code>, <code class="literal">GTK_TYPE_CALLBACK</code>,
     <code class="literal">GTK_TYPE_C_CALLBACK</code>, <code class="literal">GTK_TYPE_FOREIGN</code>. The corresponding <span class="structname">GtkArg</span>
     fields and field access macros are also gone.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The following type aliases vanished: <code class="literal">GTK_TYPE_FLAT_FIRST</code>,
     <code class="literal">GTK_TYPE_FLAT_LAST</code>, <code class="literal">GTK_TYPE_STRUCTURED_FIRST</code>,
     <code class="literal">GTK_TYPE_STRUCTURED_LAST</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The type macros <code class="function">GTK_TYPE_MAKE()</code> and <code class="function">GTK_TYPE_SEQNO()</code> vanished, use of
     <code class="function">GTK_FUNDAMENTAL_TYPE()</code> is discouraged. Instead, the corresponding <span class="structname">GType</span>
     API should be used: <code class="function">G_TYPE_FUNDAMENTAL()</code>, <code class="function">G_TYPE_DERIVE_ID()</code>,
@@ -186,7 +187,7 @@ The type macros <code class="function">GTK_TYPE_MAKE()</code> and <code class="f
     type ids based on a global incremental sequential number anymore, but
     numbers new type ids sequentially per fundamental type branch.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 The following type functions vanished/were replaced:
 </p>
@@ -267,23 +268,23 @@ The following type functions vanished/were replaced:
 <p>
 </p>
 </li>
-<li>
+<li class="listitem">
 <p>
 Object system changes:
   <span class="structname">GtkObject</span> derives from <span class="structname">GObject</span>, so is not the basic object type anymore.
   This imposes the following source incompatible changes:
 </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
 <span class="structname">GtkObject</span> has no <em class="structfield"><code>klass</code></em> field anymore, an object's class can be retrieved
     with the object's coresponding <code class="literal">GTK_&lt;OBJECT&gt;_GET_CLASS (object)</code>
     macro.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <span class="structname">GtkObjectClass</span> has no <em class="structfield"><code>type</code></em> field anymore, a class's type can be retrived
     with the <code class="literal">GTK_CLASS_TYPE (class)</code> macro.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 <span class="structname">GtkObjectClass</span> does not introduce the <code class="function">finalize()</code> and <code class="function">shutdown()</code> methods
     anymore. While <code class="function">shutdown()</code> is intended for GTK+ internal use only, <code class="function">finalize()</code>
@@ -311,7 +312,7 @@ Object system changes:
 <p>
 </p>
 </li>
-<li>
+<li class="listitem">
 <p>
 The GtkObject::destroy signal can now be emitted multiple times on an object.
     ::destroy implementations should check that make sure that they take this
@@ -349,7 +350,7 @@ The GtkObject::destroy signal can now be emitted multiple times on an object.
     signal connection to ::destroy.
 </p>
 </li>
-<li>
+<li class="listitem">
 <p>
 Signal system changes:
   The GTK+ 2.0 signal system merely proxies the <span class="structname">GSignal</span> 
@@ -385,23 +386,23 @@ Signal system changes:
   during the emission they were connected within.
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 Inserting and deleting text in <span class="structname">GtkEntry</span> though 
   functions such as <code class="function">gtk_entry_insert_text()</code> now leave 
   the cursor at its original position in the text instead of moving it to 
   the location of the insertion/deletion.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The <em class="structfield"><code>label</code></em> field of <span class="structname">GtkFrame</span> 
   widgets has been removed (as part of a change to allow arbitrary widgets 
   in the title position). The text can now be retrieved with the new function 
   <code class="function">gtk_frame_get_text()</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The 'font' and 'font_set' declarations in RC files are now ignored. There
   is a new 'font_name' field that holds the string form of a Pango font.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 A number of types in GDK have become subclasses of 
   <span class="structname">GObject</span>. For the most part, this should not break 
   anyone's code. However, it's now possible/encouraged to use 
@@ -413,7 +414,7 @@ A number of types in GDK have become subclasses of
   <span class="structname">GdkGC</span>, <span class="structname">GdkDragContext</span>,
   <span class="structname">GdkColormap</span>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 All drawables including pixmaps used to have a type tag, the
   <span class="structname">GdkWindowType</span> enumeration, which included 
   <code class="literal">GDK_WINDOW_PIXMAP</code>.
@@ -423,13 +424,13 @@ All drawables including pixmaps used to have a type tag, the
   <code class="function">GDK_IS_PIXMAP()</code> macro to see if you have a pixmap, if
   you need to know that.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <span class="structname">GtkStyle</span> and <span class="structname">GtkRcStyle</span> are 
   now subclasses of <span class="structname">GObject</span> as well.  This
   requires fairly extensive changes to theme engines, but
   shouldn't affect most other code.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <em class="structfield"><code>xthickness</code></em> and <em class="structfield"><code>ythickness</code></em> have moved from 
   <span class="structname">GtkStyleClass</span> to <span class="structname">GtkStyle</span>
   (from class to instance). This gives themes a bit more flexibility
@@ -437,17 +438,17 @@ All drawables including pixmaps used to have a type tag, the
   your code with <code class="literal">s/style-&gt;klass-&gt;xthickness/style-&gt;xthickness/g</code> and 
   same for <code class="literal">ythickness</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 Some <span class="structname">GtkStyle</span> <code class="function">draw_*</code> methods 
   have been removed (cross, oval, ramp) 
   and others have been added (expander, layout). This will require
   changes to theme engines.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 If you were using private GDK types, they have been rearranged
   significantly. You shouldn't use private types. ;-) 
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The visual for a widget, and also the default visual is now derived
   from the colormap for the widget and the default colormap.
   <code class="function">gtk_widget_set_visual()</code>, 
@@ -457,7 +458,7 @@ The visual for a widget, and also the default visual is now derived
   nothing. Since the visual always had to match that of the colormap,
   it is safe to simply delete all references to these functions.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 A number of functions in GDK have been renamed for consistency and
   clarity. #defines to provide backwards compatibility have been
@@ -559,7 +560,7 @@ A number of functions in GDK have been renamed for consistency and
   <code class="function">gtk_widget_show()</code>.
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gdk_pixmap_foreign_new()</code> no longer calls 
   <code class="function">XFreePixmap()</code> on the pixmap when the 
   <span class="structname">GdkPixmap</span> is finalized. This change corresponds
@@ -568,33 +569,33 @@ A number of functions in GDK have been renamed for consistency and
   If <code class="function">XFreePixmap()</code> is needed, it can be done using the
   destroy-notification facilities of <code class="function">g_object_set_data()</code>.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 <span class="structname">GtkProgress</span>/<span class="structname">GtkProgressBar</span> 
   had serious problems in GTK+ 1.2.
 </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
 Only 3 or 4 functions are really needed for 95% of progress interfaces; 
   <span class="structname">GtkProgress</span>/<span class="structname">GtkProgressBar</span> 
   had about 25 functions, and didn't even include these 3 or 4.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 In activity mode, the API involves setting the adjustment 
     to any random value, just to have the side effect of 
     calling the progress bar update function - the adjustment
     is totally ignored in activity mode.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 You set the activity step as a pixel value, which means to 
     set the activity step you basically need to connect to 
     size_allocate.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 There are <code class="function">ctree_set_expander_style()</code>-functions, to 
     randomly change look-and-feel for no good reason.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The split between <span class="structname">GtkProgress</span> and 
 <span class="structname">GtkProgressBar</span> makes no sense to me whatsoever.
 </p></li>
@@ -624,20 +625,20 @@ The split between <span class="structname">GtkProgress</span> and
 <p>
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 The <span class="structname">GtkNotebookPage</span> structure has been removed from 
   the public header files;
   this was never meant to be a public structure, and all functionality that
   could be done by accessing the struct fields of this structure should be 
   accessible otherwise.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 Negative values of the <em class="parameter"><code>position</code></em> parameter to
   <code class="function">gtk_notebook_reorder_child()</code> now cause the page to be appended, not
   inserted at the beginning. (This gives consistency with
   <code class="function">gtk_box_reorder_child()</code>, <code class="function">gtk_menu_reorder_child()</code>.)
 </p></li>
-<li>
+<li class="listitem">
 <p>
 <code class="function">GtkMenuPositionFunc</code> has a new parameter 
   <code class="literal">push_in</code> which controls how menus placed outside the 
@@ -651,7 +652,7 @@ Negative values of the <em class="parameter"><code>position</code></em> paramete
   outside the screen, using menu scrolling if necessary.
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 The "draw" signal and virtual method on <span class="structname">GtkWidget</span> 
   has been removed.
   All drawing should now occur by invalidating a region of the widget
@@ -667,12 +668,12 @@ The "draw" signal and virtual method on <span class="structname">GtkWidget</span
   implementations. The draw method was rarely called in practice
   anyway.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The <span class="structname">GdkExposeEvent</span> has a new <em class="structfield"><code>region</code></em>
   field. This can be used instead of the <em class="structfield"><code>area</code></em> field if you 
   want a more exact representation of the area to update.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 Sending synthetic exposes using <code class="function">gtk_widget_event()</code> is no 
   longer allowed. If you just need an expose call you should use 
   <code class="function">gdk_window_invalidate_rect()</code> or 
@@ -682,7 +683,7 @@ Sending synthetic exposes using <code class="function">gtk_widget_event()</code>
   <code class="function">gtk_container_propagate_expose()</code>, or chain to the
   default container expose handler.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The draw_default and draw_focus methods/signals on 
   <span class="structname">GtkWidget</span> are gone; simply draw things in your 
   expose handler. <code class="function">gtk_widget_draw_focus()</code> and 
@@ -694,7 +695,7 @@ The draw_default and draw_focus methods/signals on
   <code class="literal">GTK_HAS_FOCUS</code>, and queue a draw. So if your focus in/out 
   handler just does that, you can delete it.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <span class="structname">GtkText</span> and <span class="structname">GtkTree</span> are 
   buggy and broken. We don't recommend using them, and changing old code to 
   avoid them is a good idea. The recommended alternatives are 
@@ -703,16 +704,16 @@ The draw_default and draw_focus methods/signals on
   them, define the symbol <code class="literal">GTK_ENABLE_BROKEN</code> during 
   compilation. In some future release, these widgets will be removed from GTK+.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <span class="structname">GdkColorContext</span> is gone; you probably weren't using 
   it anyway.  Use <span class="structname">GdkColormap</span> and the 
   <code class="function">gdk_rgb_*</code> functions instead.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <span class="structname">GtkMenuBar</span> now draws the <em class="structfield"><code>GtkContainer::border_width</code></em> 
   space outside the frame, not inside the frame.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 In GTK+ 1.2, if an event handler returned <code class="literal">TRUE</code> it prevented
   propagation of that event to parent widgets. That is, the 
   event signal would not be emitted on parent widgets. In 
@@ -720,7 +721,7 @@ In GTK+ 1.2, if an event handler returned <code class="literal">TRUE</code> it p
   signal emission on the current widget is immediately stopped. That is,
   other callbacks connected to the signal will not be invoked.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 <code class="function">gtk_toolbar_new()</code> no longer has arguments. This function 
   was broken because the default <code class="literal">GtkToolbarStyle</code> (icons, 
@@ -738,7 +739,7 @@ In GTK+ 1.2, if an event handler returned <code class="literal">TRUE</code> it p
   <code class="function">gtk_toolbar_set_orientation()</code> to set toolbar orientation.
 </p>
 </li>
-<li>
+<li class="listitem">
 <p>
 <span class="structname">GtkRange</span>/<span class="structname">GtkScrollbar</span>/<span class="structname">GtkScale</span> were rewritten; this means that most
   theme engines won't draw them properly, and any custom subclasses of
@@ -749,53 +750,53 @@ In GTK+ 1.2, if an event handler returned <code class="literal">TRUE</code> it p
 <p>
  Here are some notable changes:
  </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
        <code class="literal">stepper_size</code> style property is the height for 
        vertical ranges, width for horizontal; the other dimension matches 
        the trough size.
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Added the ability to do NeXT-style steppers (and several other styles
        that don't make any sense).
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Added <code class="literal">min_slider_length</code>, 
        <code class="literal">fixed_slider_length</code> properties to
        <span class="structname">GtkScrollbar</span>.
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Cleaned some private (or at least useless) functions out of
        <code class="filename">gtkscale.h</code>, e.g. 
        <code class="function">gtk_scale_value_width</code>.
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Moved bindings from subclasses to <span class="structname">GtkScale</span>, 
        even arrow keys, since blind users don't know scale orientation.
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Changed <code class="literal">move_slider</code> action signal to use new 
        <span class="structname">GtkScrollType</span>, remove  
        <span class="structname">GtkTroughType</span> argument.
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Digits rounds the values a range will input to the given
        number of decimals, but will not try to force adjustment
        values set by other controllers. That is, we no longer
        modify <code class="literal">adjustment-&gt;value</code> inside a 
        <code class="literal">value_changed</code> handler.
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Added getters for <span class="structname">GtkScale</span> setters.
      </p></li>
-<li><p>
+<li class="listitem"><p>
        Middle-click begins a slider drag.
      </p></li>
 </ul></div>
 <p>
 </p>
 </li>
-<li>
+<li class="listitem">
 <p>
 The GtkContainer::focus signal/virtual function and
   <code class="function">gtk_container_focus()</code> call were replaced by 
@@ -811,29 +812,29 @@ The GtkContainer::focus signal/virtual function and
   focusable elements.
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_rc_set_image_loader()</code> and 
 <code class="function">gtk_rc_load_image()</code> have been removed, now 
   that GTK+ includes decent image loading capabilities itself.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 An extra <span class="structname">GtkSettings</span> argument has been added to
   <code class="function">gtk_rc_find_pixmap_in_path()</code>. This function is only 
   actually useful from a theme engine during parsing, at which point the 
   <span class="structname">GtkSettings</span> is provided.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The child argument facility in <code class="filename">gtkcontainer.c</code> has been 
   converted to a child property facility using 
   <span class="structname">GParamSpec</span> and other facilities
   for <span class="structname">GObject</span>.   
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The <code class="function">set_child_arg()</code> and <code class="function">get_child_arg()</code> 
      virtual methods have been replaced with <code class="function">set_child_property()</code>/<code class="function">get_child_property()</code>, which
      work similar to GObject-&gt;set_property/get_property.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 Other removed <span class="structname">GtkContainer</span> functions with the replacements:
 
@@ -879,7 +880,7 @@ Other removed <span class="structname">GtkContainer</span> functions with the re
 <p>
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gdk_image_get()</code> (or rather its replacement,
   <code class="function">gdk_drawable_get_image()</code>) now handles errors properly 
   by returning <code class="literal">NULL</code>, previously it would crash. Also, a 
@@ -888,18 +889,18 @@ Other removed <span class="structname">GtkContainer</span> functions with the re
   using <code class="function">gdk_image_get()</code> should really be ported to
   <code class="function">gdk_pixbuf_get_from_drawable()</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_widget_set_usize()</code> has been renamed to
   <code class="function">gtk_widget_set_size_request()</code>, however the old name 
   still exists unless you define <code class="literal">GTK_DISABLE_DEPRECATED</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_widget_set_uposition()</code> is deprecated; use
   <code class="function">gtk_window_move()</code>, 
   <code class="function">gtk_fixed_put()</code>, or <code class="function">gtk_layout_put()</code>
   instead.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_window_set_policy()</code> is deprecated. To get the effect of
   "allow_shrink", call 
   <code class="literal">gtk_widget_set_size_request (window, 0, 0)</code>. To get the 
@@ -910,7 +911,7 @@ Other removed <span class="structname">GtkContainer</span> functions with the re
   snap a window back to its minimum size (the 1, 1 will be rounded up to the 
   minimum window size).
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The core GTK+ now takes care of handling mapping, unmapping and
   realizing the child widgets of containers in
   <code class="function">gtk_widget_set_parent()</code>. In most cases, this allows 
@@ -918,13 +919,13 @@ The core GTK+ now takes care of handling mapping, unmapping and
   <code class="function">add()</code> methods to map and realize children. However, 
   there are a couple of things to watch out for here:
 </p></li>
-<li><p>
+<li class="listitem"><p>
 If the parent is realized before the <code class="function">add()</code> happens, 
      <code class="function">gtk_widget_set_parent_window()</code> must be called before
      <code class="function">gtk_widget_set_parent()</code>, since 
      <code class="function">gtk_widget_set_parent()</code> will realize the child.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 If a container depended on its children not being mapped
      unless it did so itself (for example, <span class="structname">GtkNotebook</span>
@@ -939,15 +940,15 @@ If a container depended on its children not being mapped
   is necessary are:
 
 </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
 For <code class="literal">!NO_WINDOW</code> widgets, if you create children of 
      <code class="literal">widget-&gt;window</code>
      and don't map them in <code class="function">realize()</code> then you must map them
      in <code class="function">map()</code>. [ In almost all cases, you can simply map the
      windows in <code class="function">realize()</code>. ]
 </p></li>
-<li><p>
+<li class="listitem"><p>
 For <code class="literal">NO_WINDOW</code> widgets, if you create windows in your 
      <code class="function">realize()</code> method, you must map then in 
      <code class="function">map()</code> and unmap them in <code class="function">unmap()</code>.
@@ -956,7 +957,7 @@ For <code class="literal">NO_WINDOW</code> widgets, if you create windows in you
 <p>
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_widget_set_default_style()</code>, 
    <code class="function">gtk_widget_push_style()</code>,
   and <code class="function">gtk_widget_pop_style()</code> have been removed, since they
@@ -966,7 +967,7 @@ For <code class="literal">NO_WINDOW</code> widgets, if you create windows in you
   You should generally use <code class="function">gtk_widget_modify_*()</code>
   instead.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_image_new()</code> now takes no arguments and creates an 
   empty <span class="structname">GtkImage</span> widget. To create a 
   <span class="structname">GtkImage</span> widget from a 
@@ -974,14 +975,14 @@ For <code class="literal">NO_WINDOW</code> widgets, if you create windows in you
   common usage of <span class="structname">GdkImage</span>), use 
   <code class="function">gtk_image_new_from_image()</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="literal">GTK_SELECTION_EXTENDED</code> is now deprecated, and neither the
   <span class="structname">GtkList</span>/<span class="structname">GtkTree</span> nor the 
   <span class="structname">GtkCList</span>/<span class="structname">GtkCTree</span> support
   <code class="literal">GTK_SELECTION_EXTENDED</code> anymore.  However, the old extended
   behavior replaces <code class="literal">MULTIPLE</code> behavior.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 The following variables are no longer exported from GDK. (Other variables
   are also no longer exported; the following are the ones found used
@@ -1047,19 +1048,19 @@ The following variables are no longer exported from GDK. (Other variables
 <p>
 </p>
 </li>
-<li>
+<li class="listitem">
 <p>
 The handling of colormaps and widgets has been changed:
 
 </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
 The default colormap for widgets is now the <span class="structname">GdkRGB</span> 
       colormap, not the system default colormap. If you try to use resources 
       created for  a widget (e.g., <code class="literal">widget-&gt;style</code>) with 
       a window using the system colormap, errors will result on some machines.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 <code class="function">gtk_widget_push()</code>/<code class="function">gtk_widget_pop_colormap()</code> 
       only cause the colormap to be explicitly set on toplevel widgets, not on 
       all widgets. The colormap for other widgets (when not set using 
@@ -1072,12 +1073,12 @@ The default colormap for widgets is now the <span class="structname">GdkRGB</spa
 
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 The default selected day for <span class="structname">GtkCalendar</span> is now the 
   current day in the month, not the first day in the month. The current month 
   and year were already used.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 GDK is no longer put into threaded mode automatically when 
   <code class="function">g_thread_init()</code> has been called. In order to use the 
   global GDK thread mutex with <code class="function">gdk_threads_enter()</code> and 
@@ -1087,7 +1088,7 @@ GDK is no longer put into threaded mode automatically when
   If you aren't using GDK and GTK+ functions from multiple threads,
   there is no reason to call <code class="function">gdk_threads_init()</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The <span class="structname">GtkPreviewInfo</span> struct has had its visual and 
   colormap fields removed.  Also, <code class="function">gtk_preview_get_cmap()</code> 
   and <code class="function">gtk_preview_get_visual()</code> are deprecated, as 
@@ -1096,7 +1097,7 @@ The <span class="structname">GtkPreviewInfo</span> struct has had its visual and
   <code class="literal">gtk_widget_push_cmap (gtk_preview_get_cmap ())</code> in
   your code.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The <span class="structname">GtkBox</span>, <span class="structname">GtkTable</span>, and 
   <span class="structname">GtkAlignment</span> widgets now call
   <code class="literal">gtk_widget_set_redraw_on_allocate (widget, FALSE);</code> on 
@@ -1104,7 +1105,7 @@ The <span class="structname">GtkBox</span>, <span class="structname">GtkTable</s
   one of these widgets, you'll probably want to change this
   in your <code class="function">init()</code> function.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 A number of widgets are now <code class="literal">NO_WINDOW</code> widgets (most 
   importantly <span class="structname">GtkButton</span>, but also 
@@ -1113,13 +1114,13 @@ A number of widgets are now <code class="literal">NO_WINDOW</code> widgets (most
   This has a couple of effects:
 
 </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
 If you are deriving from one of these widgets, you need to
      adapt your code appropriately -- for instance, drawing coordinates
      start from <code class="literal">widget-&gt;allocation.x, widget-&gt;allocation.y</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 If you are embedding one of these widgets in a custom widget,
      you must make sure you call <code class="function">gtk_container_propagate_expose()</code>
      correctly, as you must for any <code class="literal">NO_WINDOW</code> widgets.
@@ -1141,29 +1142,29 @@ If you are embedding one of these widgets in a custom widget,
   handle it properly.
 </p>
 </li>
-<li><p>
+<li class="listitem"><p>
 <span class="structname">GtkLayout</span> no longer has the <em class="structfield"><code>xoffset</code></em>,
   <em class="structfield"><code>yoffset</code></em> fields, which used to store the difference between
   world and window coordinates for <code class="literal">layout-&gt;bin_window</code>. 
   These coordinate systems are now always the same.
 </p></li>
-<li>
+<li class="listitem">
 <p>
 <code class="function">gtk_paint_focus()</code>, <code class="function">gtk_draw_focus()</code> 
   and <code class="function">GtkStyle::draw_focus()</code>
   have been changed a bit:
 
 </p>
-<div class="itemizedlist"><ul type="circle">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>
 A <code class="literal">GtkStateType</code> argument has been added to <code class="function">gtk_paint_focus()</code>.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The default implementation of the <code class="function">GtkStyle::draw_focus()</code> 
      virtual function now draws a focus rectangle whose width is 
      determined by the GtkWidget::focus-width style property.
 </p></li>
-<li><p>
+<li class="listitem"><p>
 The rectangle passed in is the bounding box, instead of
      the rectangle used in the <code class="function">gdk_draw_rectangle()</code> call, 
      so it is no longer necessary to subtract 1 from the width and height.

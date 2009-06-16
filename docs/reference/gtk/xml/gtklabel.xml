@@ -96,6 +96,7 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-label-get-la
                                                          <link linkend="gboolean">gboolean</link> single_line_mode);
 <link linkend="void">void</link>                <link linkend="gtk-label-set-angle">gtk_label_set_angle</link>                 (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gdouble">gdouble</link> angle);
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-label-get-current-uri">gtk_label_get_current_uri</link>           (<link linkend="GtkLabel">GtkLabel</link> *label);
 </synopsis>
 </refsynopsisdiv>
 
@@ -150,6 +151,8 @@ GtkLabel implements
 <refsect1 id="GtkLabel.signals" role="signal_proto">
 <title role="signal_proto.title">Signals</title>
 <synopsis>
+  &quot;<link linkend="GtkLabel-activate-current-link">activate-current-link</link>&quot;                          : Run Last / Action
+  &quot;<link linkend="GtkLabel-activate-link">activate-link</link>&quot;                                  : Run Last
   &quot;<link linkend="GtkLabel-copy-clipboard">copy-clipboard</link>&quot;                                 : Run Last / Action
   &quot;<link linkend="GtkLabel-move-cursor">move-cursor</link>&quot;                                    : Run Last / Action
   &quot;<link linkend="GtkLabel-populate-popup">populate-popup</link>&quot;                                 : Run Last
@@ -296,6 +299,21 @@ Labels can automatically wrap text if you call
 <link linkend="gtk-label-set-justify"><function>gtk_label_set_justify()</function></link> sets how the lines in a label align
 with one another. If you want to set how the label as a whole
 aligns in its available space, see <link linkend="gtk-misc-set-alignment"><function>gtk_misc_set_alignment()</function></link>.
+</para>
+</refsect2>
+<refsect2>
+<title>Links</title>
+<para>
+Since 2.18, GTK+ supports markup for clickable hyperlinks in addition
+to regular Pango markup. The markup for links is borrowed from HTML, using the
+<tag>a</tag> with href and title attributes. GTK+ renders links similar to the
+way they appear in web browsers, with colored, underlined text. The title
+attribute is displayed as a tooltip on the link. An example looks like this:
+<informalexample><programlisting>
+gtk_label_set_markup (label, "Go to the &lt;a href=\"http://www.gtk.org\" title=\"&amp;lt;i&amp;gt;Our&amp;/i&amp;gt; website\"&gt;GTK+ website&lt;/a&gt; for more...");
+</programlisting></informalexample>
+It is possible to implement custom handling for links and their tooltips with
+the <link linkend="GtkLabel-activate-link"><type>"activate-link"</type></link> signal and the <link linkend="gtk-label-get-current-uri"><function>gtk_label_get_current_uri()</function></link> function.
 </para>
 </refsect2>
 </refsect1>
@@ -1086,6 +1104,28 @@ wrapped, or ellipsized.</para>
   the horizontal, in degrees, measured counterclockwise
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.6</para></refsect2>
+<refsect2 id="gtk-label-get-current-uri" role="function" condition="since:2.18">
+<title>gtk_label_get_current_uri ()</title>
+<indexterm zone="gtk-label-get-current-uri" role="2.18"><primary sortas="label_get_current_uri">gtk_label_get_current_uri</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_label_get_current_uri           (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<para>
+Returns the URI for the currently active link in the label.
+The active link is the one under the mouse pointer or, in a
+selectable label, the link in which the text cursor is currently
+positioned.
+</para>
+<para>
+This function is intended for use in a <link linkend="GtkLabel-link-activate"><type>"link-activate"</type></link> handler
+or for use in a <link linkend="GtkWidget-query-tooltip"><type>"query-tooltip"</type></link> handler.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkLabel"><type>GtkLabel</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the currently active URI. The string is owned by GTK+ and must
+  not be freed or modified.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkLabel.property-details" role="property_details">
@@ -1222,7 +1262,47 @@ means wrap on word boundaries.</para>
 
 <refsect1 id="GtkLabel.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2 id="GtkLabel-copy-clipboard" role="signal"><title>The <literal>&quot;copy-clipboard&quot;</literal> signal</title>
+<refsect2 id="GtkLabel-activate-current-link" role="signal"><title>The <literal>&quot;activate-current-link&quot;</literal> signal</title>
+<indexterm zone="GtkLabel-activate-current-link" role="2.18"><primary sortas="Label::activate-current-link">GtkLabel::activate-current-link</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link> *label,
+                                                        <link linkend="gpointer">gpointer</link>  user_data)      : Run Last / Action</programlisting>
+<para>
+A <link linkend="keybinding-signals">keybinding signal</link>
+which gets emitted when the user activates a link in the label.
+</para>
+<para>
+Applications may also emit the signal with <link linkend="g-signal-emit-by-name"><function>g_signal_emit_by_name()</function></link>
+if they need to control activation of URIs programmatically.
+</para>
+<para>
+The default bindings for this signal are all forms of the Enter key.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
+<listitem><simpara> The label on which the signal was emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2><refsect2 id="GtkLabel-activate-link" role="signal"><title>The <literal>&quot;activate-link&quot;</literal> signal</title>
+<indexterm zone="GtkLabel-activate-link" role="2.18"><primary sortas="Label::activate-link">GtkLabel::activate-link</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            user_function                      (<link linkend="GtkLabel">GtkLabel</link> *label,
+                                                        <link linkend="gchar">gchar</link>    *uri,
+                                                        <link linkend="gpointer">gpointer</link>  user_data)      : Run Last</programlisting>
+<para>
+The signal which gets emitted to activate a URI.
+Applications may connect to it to override the default behaviour,
+which is to call <link linkend="gtk-show-uri"><function>gtk_show_uri()</function></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
+<listitem><simpara> The label on which the signal was emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara> the URI that is activated
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the link has been activated
+</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2><refsect2 id="GtkLabel-copy-clipboard" role="signal"><title>The <literal>&quot;copy-clipboard&quot;</literal> signal</title>
 <indexterm zone="GtkLabel-copy-clipboard"><primary sortas="Label::copy-clipboard">GtkLabel::copy-clipboard</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                         <link linkend="gpointer">gpointer</link>  user_data)      : Run Last / Action</programlisting>
 <para>

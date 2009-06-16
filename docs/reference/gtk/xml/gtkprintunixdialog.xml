@@ -46,10 +46,22 @@
                                                         (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog,
                                                          <link linkend="GtkWidget">GtkWidget</link> *child,
                                                          <link linkend="GtkWidget">GtkWidget</link> *tab_label);
+<link linkend="void">void</link>                <link linkend="gtk-print-unix-dialog-set-support-selection">gtk_print_unix_dialog_set_support_selection</link>
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog,
+                                                         <link linkend="gboolean">gboolean</link> support_selection);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-unix-dialog-get-support-selection">gtk_print_unix_dialog_get_support_selection</link>
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog);
+<link linkend="void">void</link>                <link linkend="gtk-print-unix-dialog-set-has-selection">gtk_print_unix_dialog_set_has_selection</link>
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog,
+                                                         <link linkend="gboolean">gboolean</link> has_selection);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-unix-dialog-get-has-selection">gtk_print_unix_dialog_get_has_selection</link>
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog);
 enum                <link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link>;
 <link linkend="void">void</link>                <link linkend="gtk-print-unix-dialog-set-manual-capabilities">gtk_print_unix_dialog_set_manual_capabilities</link>
                                                         (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog,
                                                          <link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link> capabilities);
+<link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link>  <link linkend="gtk-print-unix-dialog-get-manual-capabilities">gtk_print_unix_dialog_get_manual_capabilities</link>
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog);
 </synopsis>
 </refsynopsisdiv>
 
@@ -82,9 +94,12 @@ GtkPrintUnixDialog implements
 <title role="properties.title">Properties</title>
 <synopsis>
   &quot;<link linkend="GtkPrintUnixDialog--current-page">current-page</link>&quot;             <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkPrintUnixDialog--has-selection">has-selection</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkPrintUnixDialog--manual-capabilities">manual-capabilities</link>&quot;      <link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link>  : Read / Write
   &quot;<link linkend="GtkPrintUnixDialog--page-setup">page-setup</link>&quot;               <link linkend="GtkPageSetup">GtkPageSetup</link>*         : Read / Write
   &quot;<link linkend="GtkPrintUnixDialog--print-settings">print-settings</link>&quot;           <link linkend="GtkPrintSettings">GtkPrintSettings</link>*     : Read / Write
   &quot;<link linkend="GtkPrintUnixDialog--selected-printer">selected-printer</link>&quot;         <link linkend="GtkPrinter">GtkPrinter</link>*           : Read
+  &quot;<link linkend="GtkPrintUnixDialog--support-selection">support-selection</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
 </synopsis>
 </refsect1>
 
@@ -313,6 +328,68 @@ Adds a custom tab to the print dialog.</para>
 <listitem><simpara> the widget to use as tab label
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.10</para></refsect2>
+<refsect2 id="gtk-print-unix-dialog-set-support-selection" role="function" condition="since:2.18">
+<title>gtk_print_unix_dialog_set_support_selection ()</title>
+<indexterm zone="gtk-print-unix-dialog-set-support-selection" role="2.18"><primary sortas="print_unix_dialog_set_support_selection">gtk_print_unix_dialog_set_support_selection</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_unix_dialog_set_support_selection
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog,
+                                                         <link linkend="gboolean">gboolean</link> support_selection);</programlisting>
+<para>
+Sets whether the print dialog allows user to print a selection.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>dialog</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintUnixDialog"><type>GtkPrintUnixDialog</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>support_selection</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to allow print selection
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-unix-dialog-get-support-selection" role="function" condition="since:2.18">
+<title>gtk_print_unix_dialog_get_support_selection ()</title>
+<indexterm zone="gtk-print-unix-dialog-get-support-selection" role="2.18"><primary sortas="print_unix_dialog_get_support_selection">gtk_print_unix_dialog_get_support_selection</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_print_unix_dialog_get_support_selection
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog);</programlisting>
+<para>
+Gets the value of <link linkend="GtkPrintUnixDialog-support-selection"><type>"support-selection"</type></link> property.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>dialog</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintUnixDialog"><type>GtkPrintUnixDialog</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether the application supports print of selection
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-unix-dialog-set-has-selection" role="function" condition="since:2.18">
+<title>gtk_print_unix_dialog_set_has_selection ()</title>
+<indexterm zone="gtk-print-unix-dialog-set-has-selection" role="2.18"><primary sortas="print_unix_dialog_set_has_selection">gtk_print_unix_dialog_set_has_selection</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_unix_dialog_set_has_selection
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog,
+                                                         <link linkend="gboolean">gboolean</link> has_selection);</programlisting>
+<para>
+Sets whether a selection exists.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>dialog</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintUnixDialog"><type>GtkPrintUnixDialog</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>has_selection</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> indicates that a selection exists
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-unix-dialog-get-has-selection" role="function" condition="since:2.18">
+<title>gtk_print_unix_dialog_get_has_selection ()</title>
+<indexterm zone="gtk-print-unix-dialog-get-has-selection" role="2.18"><primary sortas="print_unix_dialog_get_has_selection">gtk_print_unix_dialog_get_has_selection</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_print_unix_dialog_get_has_selection
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog);</programlisting>
+<para>
+Gets the value of <link linkend="GtkPrintUnixDialog-has-selection"><type>"has-selection"</type></link> property.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>dialog</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintUnixDialog"><type>GtkPrintUnixDialog</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether there is a selection
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="GtkPrintCapabilities" role="enum">
 <title>enum GtkPrintCapabilities</title>
 <indexterm zone="GtkPrintCapabilities"><primary sortas="PrintCapabilities">GtkPrintCapabilities</primary></indexterm><programlisting>typedef enum
@@ -410,6 +487,21 @@ system automatically handles scaling.</para>
 <listitem><simpara> the printing capabilities of your application
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.10</para></refsect2>
+<refsect2 id="gtk-print-unix-dialog-get-manual-capabilities" role="function" condition="since:2.18">
+<title>gtk_print_unix_dialog_get_manual_capabilities ()</title>
+<indexterm zone="gtk-print-unix-dialog-get-manual-capabilities" role="2.18"><primary sortas="print_unix_dialog_get_manual_capabilities">gtk_print_unix_dialog_get_manual_capabilities</primary></indexterm><programlisting><link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link>  gtk_print_unix_dialog_get_manual_capabilities
+                                                        (<link linkend="GtkPrintUnixDialog">GtkPrintUnixDialog</link> *dialog);</programlisting>
+<para>
+Gets the value of <link linkend="GtkPrintUnixDialog-manual-capabilities"><type>"manual-capabilities"</type></link> property.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>dialog</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintUnixDialog"><type>GtkPrintUnixDialog</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the printing capabilities
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkPrintUnixDialog.property-details" role="property_details">
@@ -419,6 +511,13 @@ system automatically handles scaling.</para>
 <para>The current page in the document.</para><para>Allowed values: &gt;= G_MAXULONG</para>
 <para>Default value: -1</para>
 </refsect2>
+<refsect2 id="GtkPrintUnixDialog--has-selection" role="property"><title>The <literal>&quot;has-selection&quot;</literal> property</title>
+<indexterm zone="GtkPrintUnixDialog--has-selection"><primary sortas="PrintUnixDialog:has-selection">GtkPrintUnixDialog:has-selection</primary></indexterm><programlisting>  &quot;has-selection&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>Whether the application has a selection.</para><para>Default value: FALSE</para>
+</refsect2>
+<refsect2 id="GtkPrintUnixDialog--manual-capabilities" role="property"><title>The <literal>&quot;manual-capabilities&quot;</literal> property</title>
+<indexterm zone="GtkPrintUnixDialog--manual-capabilities"><primary sortas="PrintUnixDialog:manual-capabilities">GtkPrintUnixDialog:manual-capabilities</primary></indexterm><programlisting>  &quot;manual-capabilities&quot;      <link linkend="GtkPrintCapabilities">GtkPrintCapabilities</link>  : Read / Write</programlisting>
+<para>Capabilities the application can handle.</para></refsect2>
 <refsect2 id="GtkPrintUnixDialog--page-setup" role="property"><title>The <literal>&quot;page-setup&quot;</literal> property</title>
 <indexterm zone="GtkPrintUnixDialog--page-setup"><primary sortas="PrintUnixDialog:page-setup">GtkPrintUnixDialog:page-setup</primary></indexterm><programlisting>  &quot;page-setup&quot;               <link linkend="GtkPageSetup">GtkPageSetup</link>*         : Read / Write</programlisting>
 <para>The GtkPageSetup to use.</para></refsect2>
@@ -428,6 +527,10 @@ system automatically handles scaling.</para>
 <refsect2 id="GtkPrintUnixDialog--selected-printer" role="property"><title>The <literal>&quot;selected-printer&quot;</literal> property</title>
 <indexterm zone="GtkPrintUnixDialog--selected-printer"><primary sortas="PrintUnixDialog:selected-printer">GtkPrintUnixDialog:selected-printer</primary></indexterm><programlisting>  &quot;selected-printer&quot;         <link linkend="GtkPrinter">GtkPrinter</link>*           : Read</programlisting>
 <para>The GtkPrinter which is selected.</para></refsect2>
+<refsect2 id="GtkPrintUnixDialog--support-selection" role="property"><title>The <literal>&quot;support-selection&quot;</literal> property</title>
+<indexterm zone="GtkPrintUnixDialog--support-selection"><primary sortas="PrintUnixDialog:support-selection">GtkPrintUnixDialog:support-selection</primary></indexterm><programlisting>  &quot;support-selection&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>Whether the dialog supports selection.</para><para>Default value: FALSE</para>
+</refsect2>
 </refsect1>
 
 

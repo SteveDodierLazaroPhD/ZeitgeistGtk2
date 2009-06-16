@@ -82,6 +82,16 @@ enum                <link linkend="GtkPrintError">GtkPrintError</link>;
 const <link linkend="gchar">gchar</link> *       <link linkend="gtk-print-operation-get-status-string">gtk_print_operation_get_status_string</link>
                                                         (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-operation-is-finished">gtk_print_operation_is_finished</link>     (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);
+<link linkend="void">void</link>                <link linkend="gtk-print-operation-set-support-selection">gtk_print_operation_set_support_selection</link>
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
+                                                         <link linkend="gboolean">gboolean</link> support_selection);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-operation-get-support-selection">gtk_print_operation_get_support_selection</link>
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);
+<link linkend="void">void</link>                <link linkend="gtk-print-operation-set-has-selection">gtk_print_operation_set_has_selection</link>
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
+                                                         <link linkend="gboolean">gboolean</link> has_selection);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-operation-get-has-selection">gtk_print_operation_get_has_selection</link>
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);
 <link linkend="GtkPageSetup">GtkPageSetup</link> *      <link linkend="gtk-print-run-page-setup-dialog">gtk_print_run_page_setup_dialog</link>     (<link linkend="GtkWindow">GtkWindow</link> *parent,
                                                          <link linkend="GtkPageSetup">GtkPageSetup</link> *page_setup,
                                                          <link linkend="GtkPrintSettings">GtkPrintSettings</link> *settings);
@@ -148,12 +158,14 @@ GtkPrintOperationPreview is implemented by
   &quot;<link linkend="GtkPrintOperation--custom-tab-label">custom-tab-label</link>&quot;         <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkPrintOperation--default-page-setup">default-page-setup</link>&quot;       <link linkend="GtkPageSetup">GtkPageSetup</link>*         : Read / Write
   &quot;<link linkend="GtkPrintOperation--export-filename">export-filename</link>&quot;          <link linkend="gchar">gchar</link>*                : Read / Write
+  &quot;<link linkend="GtkPrintOperation--has-selection">has-selection</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--job-name">job-name</link>&quot;                 <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkPrintOperation--n-pages">n-pages</link>&quot;                  <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkPrintOperation--print-settings">print-settings</link>&quot;           <link linkend="GtkPrintSettings">GtkPrintSettings</link>*     : Read / Write
   &quot;<link linkend="GtkPrintOperation--show-progress">show-progress</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--status">status</link>&quot;                   <link linkend="GtkPrintStatus">GtkPrintStatus</link>        : Read
   &quot;<link linkend="GtkPrintOperation--status-string">status-string</link>&quot;            <link linkend="gchar">gchar</link>*                : Read
+  &quot;<link linkend="GtkPrintOperation--support-selection">support-selection</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--track-print-status">track-print-status</link>&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--unit">unit</link>&quot;                     <link linkend="GtkUnit">GtkUnit</link>               : Read / Write
   &quot;<link linkend="GtkPrintOperation--use-full-page">use-full-page</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -943,6 +955,73 @@ the operation status then tracks the print job status on the printer.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.10</para></refsect2>
+<refsect2 id="gtk-print-operation-set-support-selection" role="function" condition="since:2.18">
+<title>gtk_print_operation_set_support_selection ()</title>
+<indexterm zone="gtk-print-operation-set-support-selection" role="2.18"><primary sortas="print_operation_set_support_selection">gtk_print_operation_set_support_selection</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_operation_set_support_selection
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
+                                                         <link linkend="gboolean">gboolean</link> support_selection);</programlisting>
+<para>
+Sets whether selection is supported by <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>support_selection</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to support selection
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-operation-get-support-selection" role="function" condition="since:2.18">
+<title>gtk_print_operation_get_support_selection ()</title>
+<indexterm zone="gtk-print-operation-get-support-selection" role="2.18"><primary sortas="print_operation_get_support_selection">gtk_print_operation_get_support_selection</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_print_operation_get_support_selection
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);</programlisting>
+<para>
+Gets the value of <link linkend="GtkPrintOperation-support-selection"><type>"support-selection"</type></link> property.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether the application supports print of selection
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-operation-set-has-selection" role="function" condition="since:2.18">
+<title>gtk_print_operation_set_has_selection ()</title>
+<indexterm zone="gtk-print-operation-set-has-selection" role="2.18"><primary sortas="print_operation_set_has_selection">gtk_print_operation_set_has_selection</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_operation_set_has_selection
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
+                                                         <link linkend="gboolean">gboolean</link> has_selection);</programlisting>
+<para>
+Sets whether there is a selection to print.
+</para>
+<para>
+Application has to set number of pages to which the selection
+will draw by <link linkend="gtk-print-operation-set-n-pages"><function>gtk_print_operation_set_n_pages()</function></link> in a callback of
+<link linkend="GtkPrintOperation-begin-print"><type>"begin-print"</type></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>has_selection</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> indicates that a selection exists
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-operation-get-has-selection" role="function" condition="since:2.18">
+<title>gtk_print_operation_get_has_selection ()</title>
+<indexterm zone="gtk-print-operation-get-has-selection" role="2.18"><primary sortas="print_operation_get_has_selection">gtk_print_operation_get_has_selection</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_print_operation_get_has_selection
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);</programlisting>
+<para>
+Gets the value of <link linkend="GtkPrintOperation-has-selection"><type>"has-selection"</type></link> property.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether there is a selection
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-print-run-page-setup-dialog" role="function" condition="since:2.10">
 <title>gtk_print_run_page_setup_dialog ()</title>
 <indexterm zone="gtk-print-run-page-setup-dialog" role="2.10"><primary sortas="print_run_page_setup_dialog">gtk_print_run_page_setup_dialog</primary></indexterm><programlisting><link linkend="GtkPageSetup">GtkPageSetup</link> *      gtk_print_run_page_setup_dialog     (<link linkend="GtkWindow">GtkWindow</link> *parent,
@@ -1170,6 +1249,16 @@ list of printers in the print dialog.</para>
 </para><para>Default value: NULL</para>
 <para>Since 2.10</para>
 </refsect2>
+<refsect2 id="GtkPrintOperation--has-selection" role="property"><title>The <literal>&quot;has-selection&quot;</literal> property</title>
+<indexterm zone="GtkPrintOperation--has-selection" role="2.18"><primary sortas="PrintOperation:has-selection">GtkPrintOperation:has-selection</primary></indexterm><programlisting>  &quot;has-selection&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Determines whether there is a selection in your application.
+This can allow your application to print the selection.
+This is typically used to make a "Selection" button sensitive.</para>
+<para>
+</para><para>Default value: FALSE</para>
+<para>Since 2.18</para>
+</refsect2>
 <refsect2 id="GtkPrintOperation--job-name" role="property"><title>The <literal>&quot;job-name&quot;</literal> property</title>
 <indexterm zone="GtkPrintOperation--job-name" role="2.10"><primary sortas="PrintOperation:job-name">GtkPrintOperation:job-name</primary></indexterm><programlisting>  &quot;job-name&quot;                 <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
 <para>
@@ -1246,6 +1335,15 @@ is suitable for programmatic use.</para>
 <para>
 </para><para>Default value: ""</para>
 <para>Since 2.10</para>
+</refsect2>
+<refsect2 id="GtkPrintOperation--support-selection" role="property"><title>The <literal>&quot;support-selection&quot;</literal> property</title>
+<indexterm zone="GtkPrintOperation--support-selection" role="2.18"><primary sortas="PrintOperation:support-selection">GtkPrintOperation:support-selection</primary></indexterm><programlisting>  &quot;support-selection&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+If <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>, the print operation will support print of selection.
+This allows the print dialog to show a "Selection" button.</para>
+<para>
+</para><para>Default value: FALSE</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkPrintOperation--track-print-status" role="property"><title>The <literal>&quot;track-print-status&quot;</literal> property</title>
 <indexterm zone="GtkPrintOperation--track-print-status" role="2.10"><primary sortas="PrintOperation:track-print-status">GtkPrintOperation:track-print-status</primary></indexterm><programlisting>  &quot;track-print-status&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
@@ -1595,7 +1693,7 @@ status.</para>
                                                         <link linkend="GtkPrintSettings">GtkPrintSettings</link>  *settings,
                                                         <link linkend="gpointer">gpointer</link>           user_data)      : Run Last</programlisting>
 <para>
-Emmited after change of selected printer. The actual page setup and
+Emitted after change of selected printer. The actual page setup and
 print settings are passed to the custom widget, which can actualize
 itself according to this change.</para>
 <para>

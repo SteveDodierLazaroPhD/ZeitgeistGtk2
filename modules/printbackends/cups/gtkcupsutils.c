@@ -383,7 +383,8 @@ static const ipp_option_t ipp_options[] = {
   { "saturation",		IPP_TAG_INTEGER },
   { "scaling",			IPP_TAG_INTEGER },
   { "sides",			IPP_TAG_KEYWORD },
-  { "wrap",			IPP_TAG_BOOLEAN }
+  { "wrap",			IPP_TAG_BOOLEAN },
+  { "number-up-layout",		IPP_TAG_INTEGER }
 };
 
 
@@ -1566,7 +1567,7 @@ gtk_cups_connection_test_get_state (GtkCupsConnectionTest *test)
 
           error_code = errno;
 
-          if (code == 0)
+          if (code == 0 || error_code == EISCONN)
             {
               close (test->socket);
               test->socket = -1;

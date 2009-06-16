@@ -198,6 +198,7 @@
 *tp++ = gtk_im_multicontext_get_type();
 *tp++ = gtk_im_preedit_style_get_type();
 *tp++ = gtk_im_status_style_get_type();
+*tp++ = gtk_info_bar_get_type();
 *tp++ = gtk_input_dialog_get_type();
 *tp++ = gtk_invisible_get_type();
 *tp++ = gtk_item_get_type();

@@ -91,6 +91,8 @@ GType gtk_match_type_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_MATCH_TYPE (gtk_match_type_get_type ())
 GType gtk_menu_direction_type_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_MENU_DIRECTION_TYPE (gtk_menu_direction_type_get_type ())
+GType gtk_message_type_get_type (void) G_GNUC_CONST;
+#define GTK_TYPE_MESSAGE_TYPE (gtk_message_type_get_type ())
 GType gtk_metric_type_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_METRIC_TYPE (gtk_metric_type_get_type ())
 GType gtk_movement_step_get_type (void) G_GNUC_CONST;
@@ -197,8 +199,6 @@ GType gtk_image_type_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_IMAGE_TYPE (gtk_image_type_get_type ())
 
 /* enumerations from "gtkmessagedialog.h" */
-GType gtk_message_type_get_type (void) G_GNUC_CONST;
-#define GTK_TYPE_MESSAGE_TYPE (gtk_message_type_get_type ())
 GType gtk_buttons_type_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_BUTTONS_TYPE (gtk_buttons_type_get_type ())
 

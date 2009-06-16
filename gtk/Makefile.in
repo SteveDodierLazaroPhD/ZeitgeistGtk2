@@ -78,6 +78,8 @@ BUILD_DYNAMIC_MODULES_FALSE = @BUILD_DYNAMIC_MODULES_FALSE@
 BUILD_DYNAMIC_MODULES_TRUE = @BUILD_DYNAMIC_MODULES_TRUE@
 BUILD_GDIPLUS_LOADERS_FALSE = @BUILD_GDIPLUS_LOADERS_FALSE@
 BUILD_GDIPLUS_LOADERS_TRUE = @BUILD_GDIPLUS_LOADERS_TRUE@
+CAIRO_BACKEND_CFLAGS = @CAIRO_BACKEND_CFLAGS@
+CAIRO_BACKEND_LIBS = @CAIRO_BACKEND_LIBS@
 CAIRO_PREFIX = @CAIRO_PREFIX@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
@@ -104,6 +106,8 @@ DATADIRNAME = @DATADIRNAME@
 DB2HTML = @DB2HTML@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DIRECTFB_CFLAGS = @DIRECTFB_CFLAGS@
+DIRECTFB_LIBS = @DIRECTFB_LIBS@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
@@ -187,6 +191,10 @@ HAVE_JPEG_FALSE = @HAVE_JPEG_FALSE@
 HAVE_JPEG_TRUE = @HAVE_JPEG_TRUE@
 HAVE_OBJC_FALSE = @HAVE_OBJC_FALSE@
 HAVE_OBJC_TRUE = @HAVE_OBJC_TRUE@
+HAVE_PAPI_CUPS_FALSE = @HAVE_PAPI_CUPS_FALSE@
+HAVE_PAPI_CUPS_TRUE = @HAVE_PAPI_CUPS_TRUE@
+HAVE_PAPI_FALSE = @HAVE_PAPI_FALSE@
+HAVE_PAPI_TRUE = @HAVE_PAPI_TRUE@
 HAVE_PNG_FALSE = @HAVE_PNG_FALSE@
 HAVE_PNG_TRUE = @HAVE_PNG_TRUE@
 HAVE_TIFF_FALSE = @HAVE_TIFF_FALSE@
@@ -471,9 +479,11 @@ XVFB_START = \
 
 SUBDIRS = theme-bits . tests
 DIST_SUBDIRS = theme-bits tests
-@HAVE_CUPS_FALSE@GTK_PRINT_BACKENDS = file,lpr
+@HAVE_CUPS_FALSE@@HAVE_PAPI_CUPS_FALSE@@HAVE_PAPI_TRUE@GTK_PRINT_BACKENDS = file,papi
+@HAVE_CUPS_FALSE@@HAVE_PAPI_CUPS_FALSE@@HAVE_PAPI_FALSE@GTK_PRINT_BACKENDS = file,lpr
+@HAVE_CUPS_TRUE@@HAVE_PAPI_CUPS_FALSE@GTK_PRINT_BACKENDS = file,cups
 
-@HAVE_CUPS_TRUE@GTK_PRINT_BACKENDS = file,cups
+@HAVE_PAPI_CUPS_TRUE@GTK_PRINT_BACKENDS = file,papi,cups
 
 INCLUDES = \
 	-DG_LOG_DOMAIN=\"Gtk\"				\
@@ -627,6 +637,7 @@ gtk_public_h_sources = \
 	gtkimcontextsimple.h	\
 	gtkimmodule.h		\
 	gtkimmulticontext.h	\
+	gtkinfobar.h		\
 	gtkinputdialog.h	\
 	gtkinvisible.h		\
 	gtkitem.h		\
@@ -905,6 +916,7 @@ gtk_base_c_sources = \
 	gtkimcontextsimple.c	\
 	gtkimmodule.c		\
 	gtkimmulticontext.c	\
+	gtkinfobar.c		\
 	gtkinputdialog.c	\
 	gtkinvisible.c		\
 	gtkitem.c		\
@@ -1154,7 +1166,7 @@ gtk_extra_sources = \
 #
 # setup GTK+ sources and their dependencies
 #
-MAINTAINERCLEANFILES = $(gtk_built_sources) $(stamp_files) $(GENERATED_ICONS)
+MAINTAINERCLEANFILES = $(gtk_built_sources) $(stamp_files) $(GENERATED_ICONS) stock-icons/icon-theme.cache
 EXTRA_HEADERS = 
 
 #
@@ -1514,7 +1526,7 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
 	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
 	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinputdialog.c \
+	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
 	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
 	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
 	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
@@ -1595,10 +1607,10 @@ am__objects_2 = gtkquery.lo gtksearchengine.lo gtksearchenginesimple.lo \
 	gtkiconcachevalidator.lo gtkiconfactory.lo gtkicontheme.lo \
 	gtkiconview.lo gtkimage.lo gtkimagemenuitem.lo gtkimcontext.lo \
 	gtkimcontextsimple.lo gtkimmodule.lo gtkimmulticontext.lo \
-	gtkinputdialog.lo gtkinvisible.lo gtkitem.lo gtkkeyhash.lo \
-	gtklabel.lo gtklayout.lo gtklinkbutton.lo gtkliststore.lo \
-	gtkmain.lo gtkmarshal.lo gtkmarshalers.lo gtkmenu.lo \
-	gtkmenubar.lo gtkmenuitem.lo gtkmenushell.lo \
+	gtkinfobar.lo gtkinputdialog.lo gtkinvisible.lo gtkitem.lo \
+	gtkkeyhash.lo gtklabel.lo gtklayout.lo gtklinkbutton.lo \
+	gtkliststore.lo gtkmain.lo gtkmarshal.lo gtkmarshalers.lo \
+	gtkmenu.lo gtkmenubar.lo gtkmenuitem.lo gtkmenushell.lo \
 	gtkmenutoolbutton.lo gtkmessagedialog.lo gtkmisc.lo \
 	gtkmnemonichash.lo gtkmodules.lo gtkmountoperation.lo \
 	gtknotebook.lo gtkobject.lo gtkorientable.lo gtkpagesetup.lo \
@@ -1690,7 +1702,7 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
 	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
 	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinputdialog.c \
+	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
 	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
 	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
 	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
@@ -1769,7 +1781,7 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
 	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
 	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinputdialog.c \
+	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
 	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
 	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
 	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
@@ -1848,7 +1860,7 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
 	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
 	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinputdialog.c \
+	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
 	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
 	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
 	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
@@ -2006,6 +2018,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/gtkimcontextsimple.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkimmodule.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkimmulticontext.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkinfobar.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkinputdialog.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkinvisible.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkitem.Plo \
@@ -2396,6 +2409,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkimcontextsimple.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkimmodule.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkimmulticontext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkinfobar.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkinputdialog.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkinvisible.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkitem.Plo@am__quote@
@@ -3249,6 +3263,8 @@ gtkbuiltincache.h: @REBUILD@ stamp-icons
 	mv gtkbuiltincache.h.tmp gtkbuiltincache.h
 
 install-data-local:
+
+-include $(top_srcdir)/git.mk
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -551,6 +551,24 @@ gtk_menu_direction_type_get_type (void)
 }
 
 GType
+gtk_message_type_get_type (void)
+{
+    static GType etype = 0;
+    if (G_UNLIKELY(etype == 0)) {
+        static const GEnumValue values[] = {
+            { GTK_MESSAGE_INFO, "GTK_MESSAGE_INFO", "info" },
+            { GTK_MESSAGE_WARNING, "GTK_MESSAGE_WARNING", "warning" },
+            { GTK_MESSAGE_QUESTION, "GTK_MESSAGE_QUESTION", "question" },
+            { GTK_MESSAGE_ERROR, "GTK_MESSAGE_ERROR", "error" },
+            { GTK_MESSAGE_OTHER, "GTK_MESSAGE_OTHER", "other" },
+            { 0, NULL, NULL }
+        };
+        etype = g_enum_register_static (g_intern_static_string ("GtkMessageType"), values);
+    }
+    return etype;
+}
+
+GType
 gtk_metric_type_get_type (void)
 {
     static GType etype = 0;
@@ -1074,6 +1092,7 @@ gtk_print_pages_get_type (void)
             { GTK_PRINT_PAGES_ALL, "GTK_PRINT_PAGES_ALL", "all" },
             { GTK_PRINT_PAGES_CURRENT, "GTK_PRINT_PAGES_CURRENT", "current" },
             { GTK_PRINT_PAGES_RANGES, "GTK_PRINT_PAGES_RANGES", "ranges" },
+            { GTK_PRINT_PAGES_SELECTION, "GTK_PRINT_PAGES_SELECTION", "selection" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GtkPrintPages"), values);
@@ -1368,24 +1387,6 @@ gtk_image_type_get_type (void)
 }
 
 /* enumerations from "gtkmessagedialog.h" */
-GType
-gtk_message_type_get_type (void)
-{
-    static GType etype = 0;
-    if (G_UNLIKELY(etype == 0)) {
-        static const GEnumValue values[] = {
-            { GTK_MESSAGE_INFO, "GTK_MESSAGE_INFO", "info" },
-            { GTK_MESSAGE_WARNING, "GTK_MESSAGE_WARNING", "warning" },
-            { GTK_MESSAGE_QUESTION, "GTK_MESSAGE_QUESTION", "question" },
-            { GTK_MESSAGE_ERROR, "GTK_MESSAGE_ERROR", "error" },
-            { GTK_MESSAGE_OTHER, "GTK_MESSAGE_OTHER", "other" },
-            { 0, NULL, NULL }
-        };
-        etype = g_enum_register_static (g_intern_static_string ("GtkMessageType"), values);
-    }
-    return etype;
-}
-
 GType
 gtk_buttons_type_get_type (void)
 {

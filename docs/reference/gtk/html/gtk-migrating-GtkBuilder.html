@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Migrating from libglade to GtkBuilder</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.74.3">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
@@ -61,6 +61,7 @@
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
+<link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -70,7 +71,7 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtk-migrating-tooltips.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr></table>
-<div class="chapter" lang="en">
+<div class="chapter" title="Migrating from libglade to GtkBuilder">
 <div class="titlepage"><div><div><h2 class="title">
 <a name="gtk-migrating-GtkBuilder"></a>Migrating from libglade to GtkBuilder</h2></div></div></div>
 <p>
@@ -101,7 +102,7 @@ href="/usr/share/gtk-doc/html/libglade/GladeXML.html#glade-xml-new"
     format. This is supported by glade3 since version 3.6.
   </p>
 <div class="table">
-<a name="id1166533"></a><p class="title"><b>Table 1. Step-by-step instructions for porting code from libglade to GtkBuilder</b></p>
+<a name="id1204678"></a><p class="title"><b>Table 1. Step-by-step instructions for porting code from libglade to GtkBuilder</b></p>
 <div class="table-contents"><table summary="Step-by-step instructions for porting code from libglade to GtkBuilder" width="100%" border="1">
 <colgroup>
 <col>
@@ -128,7 +129,7 @@ GError* error = NULL;
 GtkBuilder* builder = gtk_builder_new ();
 if (!gtk_builder_add_from_file (builder, FILE, &amp;error))
   {
-    g_warning ("Couldn't load builder file: <code class="literal">s</code>", error-&gt;message);
+    g_warning ("Couldn't load builder file: <code class="literal">amp</code>;s", error-&gt;message);
     g_error_free (error);
   }
 </pre>
@@ -154,8 +155,8 @@ if (!gtk_builder_add_from_file (builder, FILE, &amp;error))
     libglade, there are a number of areas where it is currently
     still behind libglade:
     </p>
-<div class="itemizedlist"><ul type="disc">
-<li><p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p>
         GtkBuilder supports context information in translatable
         properties in a slightly different way than libglade.
         Intltool does not yet support this; see
@@ -165,7 +166,7 @@ if (!gtk_builder_add_from_file (builder, FILE, &amp;error))
         rarely used feature, and if you are not using it, intltools
         glade format support works just fine for GtkBuilder files.
       </p></li>
-<li><p>
+<li class="listitem"><p>
         While libglade can often tolerate multiple widgets having the
         same id in a glade file, GtkBuilder will not accept duplicate
         object ids. Both <span class="application">gtk-builder-convert</span>

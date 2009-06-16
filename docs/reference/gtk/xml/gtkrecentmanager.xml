@@ -71,7 +71,7 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-recent-info-
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-recent-info-get-application-info">gtk_recent_info_get_application_info</link>
                                                         (<link linkend="GtkRecentInfo">GtkRecentInfo</link> *info,
                                                          const <link linkend="gchar">gchar</link> *app_name,
-                                                         <link linkend="gchar">gchar</link> **app_exec,
+                                                         const <link linkend="gchar">gchar</link> **app_exec,
                                                          <link linkend="guint">guint</link> *count,
                                                          <link linkend="time-t">time_t</link> *time_);
 <link linkend="gchar">gchar</link> **            <link linkend="gtk-recent-info-get-applications">gtk_recent_info_get_applications</link>    (<link linkend="GtkRecentInfo">GtkRecentInfo</link> *info,
@@ -800,7 +800,7 @@ applications that have registered them.</para>
 <indexterm zone="gtk-recent-info-get-application-info" role="2.10"><primary sortas="recent_info_get_application_info">gtk_recent_info_get_application_info</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_recent_info_get_application_info
                                                         (<link linkend="GtkRecentInfo">GtkRecentInfo</link> *info,
                                                          const <link linkend="gchar">gchar</link> *app_name,
-                                                         <link linkend="gchar">gchar</link> **app_exec,
+                                                         const <link linkend="gchar">gchar</link> **app_exec,
                                                          <link linkend="guint">guint</link> *count,
                                                          <link linkend="time-t">time_t</link> *time_);</programlisting>
 <para>
@@ -829,8 +829,9 @@ storage specification, they will be expanded.</para>
    for this application
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if an application with <parameter>app_name</parameter> has registered this
-  resource inside the recently used list, or <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> otherwise.  You should
-  free the returned command line using <link linkend="g-free"><function>g_free()</function></link>.
+  resource inside the recently used list, or <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> otherwise. The
+  <parameter>app_exec</parameter> string is owned by the <link linkend="GtkRecentInfo"><type>GtkRecentInfo</type></link> and should not be
+  modified or freed
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.10</para></refsect2>

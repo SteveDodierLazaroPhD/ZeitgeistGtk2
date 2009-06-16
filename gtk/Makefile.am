@@ -10,10 +10,18 @@ endif
 SUBDIRS = theme-bits . tests
 DIST_SUBDIRS=theme-bits tests
 
+if HAVE_PAPI_CUPS
+GTK_PRINT_BACKENDS=file,papi,cups
+else
 if HAVE_CUPS
 GTK_PRINT_BACKENDS=file,cups
 else
+if HAVE_PAPI
+GTK_PRINT_BACKENDS=file,papi
+else
 GTK_PRINT_BACKENDS=file,lpr
+endif
+endif
 endif
 
 INCLUDES =						\
@@ -222,6 +230,7 @@ gtk_public_h_sources =          \
 	gtkimcontextsimple.h	\
 	gtkimmodule.h		\
 	gtkimmulticontext.h	\
+	gtkinfobar.h		\
 	gtkinputdialog.h	\
 	gtkinvisible.h		\
 	gtkitem.h		\
@@ -478,6 +487,7 @@ gtk_base_c_sources =            \
 	gtkimcontextsimple.c	\
 	gtkimmodule.c		\
 	gtkimmulticontext.c	\
+	gtkinfobar.c		\
 	gtkinputdialog.c	\
 	gtkinvisible.c		\
 	gtkitem.c		\
@@ -778,7 +788,7 @@ gtk_extra_sources =				\
 #
 # setup GTK+ sources and their dependencies
 #
-MAINTAINERCLEANFILES = $(gtk_built_sources) $(stamp_files) $(GENERATED_ICONS)
+MAINTAINERCLEANFILES = $(gtk_built_sources) $(stamp_files) $(GENERATED_ICONS) stock-icons/icon-theme.cache
 EXTRA_HEADERS =
 EXTRA_DIST += $(gtk_private_h_sources) $(gtk_extra_sources)
 EXTRA_DIST += $(gtk_built_sources)
@@ -1286,3 +1296,5 @@ EXTRA_DIST +=                   \
 
 
 install-data-local:
+
+-include $(top_srcdir)/git.mk

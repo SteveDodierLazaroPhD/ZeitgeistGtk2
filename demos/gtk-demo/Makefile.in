@@ -55,6 +55,8 @@ BUILD_DYNAMIC_MODULES_FALSE = @BUILD_DYNAMIC_MODULES_FALSE@
 BUILD_DYNAMIC_MODULES_TRUE = @BUILD_DYNAMIC_MODULES_TRUE@
 BUILD_GDIPLUS_LOADERS_FALSE = @BUILD_GDIPLUS_LOADERS_FALSE@
 BUILD_GDIPLUS_LOADERS_TRUE = @BUILD_GDIPLUS_LOADERS_TRUE@
+CAIRO_BACKEND_CFLAGS = @CAIRO_BACKEND_CFLAGS@
+CAIRO_BACKEND_LIBS = @CAIRO_BACKEND_LIBS@
 CAIRO_PREFIX = @CAIRO_PREFIX@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
@@ -81,6 +83,8 @@ DATADIRNAME = @DATADIRNAME@
 DB2HTML = @DB2HTML@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DIRECTFB_CFLAGS = @DIRECTFB_CFLAGS@
+DIRECTFB_LIBS = @DIRECTFB_LIBS@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
@@ -164,6 +168,10 @@ HAVE_JPEG_FALSE = @HAVE_JPEG_FALSE@
 HAVE_JPEG_TRUE = @HAVE_JPEG_TRUE@
 HAVE_OBJC_FALSE = @HAVE_OBJC_FALSE@
 HAVE_OBJC_TRUE = @HAVE_OBJC_TRUE@
+HAVE_PAPI_CUPS_FALSE = @HAVE_PAPI_CUPS_FALSE@
+HAVE_PAPI_CUPS_TRUE = @HAVE_PAPI_CUPS_TRUE@
+HAVE_PAPI_FALSE = @HAVE_PAPI_FALSE@
+HAVE_PAPI_TRUE = @HAVE_PAPI_TRUE@
 HAVE_PNG_FALSE = @HAVE_PNG_FALSE@
 HAVE_PNG_TRUE = @HAVE_PNG_TRUE@
 HAVE_TIFF_FALSE = @HAVE_TIFF_FALSE@
@@ -434,6 +442,7 @@ demos = \
 	iconview.c				\
 	iconview_edit.c				\
 	images.c				\
+        links.c					\
 	list_store.c				\
 	menus.c					\
 	panes.c					\
@@ -520,9 +529,9 @@ am__objects_1 = appwindow.$(OBJEXT) assistant.$(OBJEXT) \
 	dialog.$(OBJEXT) drawingarea.$(OBJEXT) editable_cells.$(OBJEXT) \
 	entry_completion.$(OBJEXT) expander.$(OBJEXT) \
 	hypertext.$(OBJEXT) iconview.$(OBJEXT) iconview_edit.$(OBJEXT) \
-	images.$(OBJEXT) list_store.$(OBJEXT) menus.$(OBJEXT) \
-	panes.$(OBJEXT) pickers.$(OBJEXT) pixbufs.$(OBJEXT) \
-	printing.$(OBJEXT) rotated_text.$(OBJEXT) \
+	images.$(OBJEXT) links.$(OBJEXT) list_store.$(OBJEXT) \
+	menus.$(OBJEXT) panes.$(OBJEXT) pickers.$(OBJEXT) \
+	pixbufs.$(OBJEXT) printing.$(OBJEXT) rotated_text.$(OBJEXT) \
 	search_entry.$(OBJEXT) sizegroup.$(OBJEXT) \
 	stock_browser.$(OBJEXT) textview.$(OBJEXT) textscroll.$(OBJEXT) \
 	tree_store.$(OBJEXT) ui_manager.$(OBJEXT)
@@ -544,10 +553,11 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/expander.Po ./$(DEPDIR)/hypertext.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/iconview.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/iconview_edit.Po ./$(DEPDIR)/images.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/list_store.Po ./$(DEPDIR)/main.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/menus.Po ./$(DEPDIR)/panes.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pickers.Po ./$(DEPDIR)/pixbufs.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/printing.Po ./$(DEPDIR)/rotated_text.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/links.Po ./$(DEPDIR)/list_store.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/main.Po ./$(DEPDIR)/menus.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/panes.Po ./$(DEPDIR)/pickers.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pixbufs.Po ./$(DEPDIR)/printing.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rotated_text.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/search_entry.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sizegroup.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/stock_browser.Po \
@@ -635,6 +645,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iconview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iconview_edit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/images.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/links.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_store.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/menus.Po@am__quote@
@@ -951,6 +962,8 @@ check-local: test
 
 demos.h: @REBUILD@ $(demos) geninclude.pl
 	(here=`pwd` ; cd $(srcdir) && $(PERL) $$here/geninclude.pl $(demos)) > demos.h
+
+-include $(top_srcdir)/git.mk
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

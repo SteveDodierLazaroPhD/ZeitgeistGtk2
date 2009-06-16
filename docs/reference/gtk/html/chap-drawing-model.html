@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>The GTK+ Drawing Model</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.74.3">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="prev" href="gtk-question-index.html" title="Common Questions">
@@ -61,6 +61,7 @@
 <link rel="index" href="api-index-2-12.html" title="Index of new symbols in 2.12">
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
+<link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -70,7 +71,7 @@
 <th width="100%" align="center">GTK+ Reference Manual</th>
 <td><a accesskey="n" href="gtkbase.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr></table>
-<div class="refentry" lang="en">
+<div class="refentry" title="The GTK+ Drawing Model">
 <a name="chap-drawing-model"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -81,7 +82,7 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="Overview of the drawing model">
 <a name="drawing-overview"></a><h2>Overview of the drawing model</h2>
 <p>
       This chapter describes the GTK+ drawing model in detail.  If you
@@ -135,7 +136,7 @@
       need to be repainted, and how widgets work internally in terms
       of the resources they use from the windowing system.
     </p>
-<div class="refsect2" lang="en">
+<div class="refsect2" title="Window and no-window widgets">
 <a name="window-no-window-widgets"></a><h3>Window and no-window widgets</h3>
 <p>
 	A <a
@@ -187,8 +188,8 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
 <p>
 	No-window widgets are useful for various reasons:
       </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
 <p>
 	    Some widgets may want the parent's background to show through, even
 	    when they draw on parts of it.  For example, consider a theme that
@@ -203,7 +204,7 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
 </div>
 <br class="figure-break">
 </li>
-<li><p>
+<li class="listitem"><p>
 	    Reducing the number of windows creates less traffic between GTK+ and
 	    the underlying windowing system, especially when getting events.
 	  </p></li>
@@ -218,7 +219,7 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
       </p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title="Hierarchical drawing">
 <a name="hierarchical-drawing"></a><h3>Hierarchical drawing</h3>
 <p>
 	When the GTK layer receives an exposure event from GDK, it
@@ -248,8 +249,8 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
 	paint itself when it contains only <code class="constant">GTK_NO_WINDOW</code> descendants:
 
 	</p>
-<div class="orderedlist"><ol type="1">
-<li><p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><p>
 	      The outermost, thick rectangle is a toplevel <a class="link" href="GtkWindow.html" title="GtkWindow"><code class="classname">GtkWindow</code></a>,
 	      which is not a <code class="constant">GTK_NO_WINDOW</code> widget —
 	      as such, it does receive its exposure event as it comes from GDK.
@@ -257,7 +258,7 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
 	      background.  Then, it would ask its only child to paint itself,
 	      numbered 2.
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      The dotted rectangle represents a <a class="link" href="GtkVBox.html" title="GtkVBox"><code class="classname">GtkVBox</code></a>, which
 	      has been made the sole child of the
 	      <code class="classname">GtkWindow</code>.  Boxes are just layout
@@ -266,40 +267,40 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
 	      its children to draw themselves.  The children are numbered 3 and
 	      6.
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      The thin rectangle is a <a class="link" href="GtkFrame.html" title="GtkFrame"><code class="classname">GtkFrame</code></a>,
 	      which has two children:  a label for the frame, numbered 4, and
 	      another label inside, numbered 5.  First the frame would draw its
 	      own beveled box, then ask the frame label and its internal child to
 	      draw themselves.
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      The frame label has no children, so it just draws its text:  "Frame Label".
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      The internal label has no children, so it just draws its text:  "This
 	      is some text inside the frame!".
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      The dotted rectangle represents a <a class="link" href="GtkHBox.html" title="GtkHBox"><code class="classname">GtkHBox</code></a>.  Again,
 	      this does not draw anything by itself, but rather asks its children
 	      to draw themselves.  The children are numbered 7 and 9.
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      The thin rectangle is a <a class="link" href="GtkButton.html" title="GtkButton"><code class="classname">GtkButton</code></a> with
 	      a single child, numbered 8.  First the button would draw its
 	      beveled box, and then it would ask its child to draw itself.
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      This is a text label which has no children, so it just draws its
 	      own text:  "Cancel".
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      Similar to number 7, this is a button with a single child, numbered
 	      10.  First the button would draw its beveled box, and then it would
 	      ask its child to draw itself.
 	    </p></li>
-<li><p>
+<li class="listitem"><p>
 	      Similar to number 8, this is a text label which has no children,
 	      so it just draws its own text:  "OK".
 	    </p></li>
@@ -317,7 +318,7 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
       </p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title="Notes on drawing no-window widgets">
 <a name="notes-on-drawing-no-window-widgets"></a><h3>Notes on drawing no-window widgets</h3>
 <p>
 	Remember that the coordinates in a <a
@@ -343,7 +344,7 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Event-Structures.html#GdkE
       </p>
 </div>
 <hr>
-<div class="refsect2" lang="en">
+<div class="refsect2" title="Drawing over child windows">
 <a name="include-inferiors"></a><h3>Drawing over child windows</h3>
 <p>
 	When you draw on a <code class="classname">GdkWindow</code>, your
@@ -358,7 +359,7 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Graphics-Contexts.html"
       </p>
 </div>
 </div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="Double buffering">
 <a name="double-buffering"></a><h2>Double buffering</h2>
 <p>
       When the GTK layer receives an exposure event from GDK, it first finds
@@ -389,7 +390,7 @@ href="http://library.gnome.org/devel/gdk/unstable/gdk-Graphics-Contexts.html"
       redirected to that buffer.  The second function actually paints
       the buffer onto the on-screen window, and frees the buffer.
     </p>
-<div class="refsect2" lang="en">
+<div class="refsect2" title="Automatic double buffering">
 <a name="automatic-double-buffering"></a><h3>Automatic double buffering</h3>
 <p>
 	It would be inconvenient for all widgets to call
@@ -450,7 +451,7 @@ my_widget_init (MyWidget *widget)
       </p>
 </div>
 </div>
-<div class="refsect1" lang="en">
+<div class="refsect1" title="App-paintable widgets">
 <a name="app-paintable-widgets"></a><h2>App-paintable widgets</h2>
 <p>
       Generally, applications use the pre-defined widgets in GTK+ and
@@ -499,12 +500,12 @@ gtk_window_expose (GtkWidget      *widget,
       <span class="emphasis"><em>before</em></span> the widget's default handler, what
       happens is this:
     </p>
-<div class="orderedlist"><ol type="1">
-<li><p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><p>
 	  Your own expose-event handler gets run.  It paints something
 	  on the window or the event box.
 	</p></li>
-<li><p>
+<li class="listitem"><p>
 	  The widget's default expose-event handler gets run.  If
 	  <code class="constant">GTK_APP_PAINTABLE</code> is turned off (this
 	  is the default), <span class="emphasis"><em>your drawing will be
@@ -512,7 +513,7 @@ gtk_window_expose (GtkWidget      *widget,
 	  widget will not draw its default contents and preserve your
 	  drawing instead.
 	</p></li>
-<li><p>
+<li class="listitem"><p>
 	  The expose-event handler for the parent class gets run.
 	  Since both <code class="classname">GtkWindow</code> and
 	  <code class="classname">GtkEventBox</code> are descendants of
@@ -521,7 +522,7 @@ gtk_window_expose (GtkWidget      *widget,
 	  described in <a class="xref" href="chap-drawing-model.html#hierarchical-drawing" title="Hierarchical drawing">the section called “Hierarchical drawing”</a>.
 	</p></li>
 </ol></div>
-<p><b>Summary of app-paintable widgets. </b>
+<p title="Summary of app-paintable widgets"><b>Summary of app-paintable widgets. </b>
 	Turn on the <code class="constant">GTK_APP_PAINTABLE</code> flag if you
 	intend to draw your own content directly on a
 	<code class="classname">GtkWindow</code> and

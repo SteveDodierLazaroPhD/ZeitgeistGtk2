@@ -56,6 +56,8 @@ BUILD_DYNAMIC_MODULES_FALSE = @BUILD_DYNAMIC_MODULES_FALSE@
 BUILD_DYNAMIC_MODULES_TRUE = @BUILD_DYNAMIC_MODULES_TRUE@
 BUILD_GDIPLUS_LOADERS_FALSE = @BUILD_GDIPLUS_LOADERS_FALSE@
 BUILD_GDIPLUS_LOADERS_TRUE = @BUILD_GDIPLUS_LOADERS_TRUE@
+CAIRO_BACKEND_CFLAGS = @CAIRO_BACKEND_CFLAGS@
+CAIRO_BACKEND_LIBS = @CAIRO_BACKEND_LIBS@
 CAIRO_PREFIX = @CAIRO_PREFIX@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
@@ -82,6 +84,8 @@ DATADIRNAME = @DATADIRNAME@
 DB2HTML = @DB2HTML@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DIRECTFB_CFLAGS = @DIRECTFB_CFLAGS@
+DIRECTFB_LIBS = @DIRECTFB_LIBS@
 DISABLE_EXPLICIT_DEPS_FALSE = @DISABLE_EXPLICIT_DEPS_FALSE@
 DISABLE_EXPLICIT_DEPS_TRUE = @DISABLE_EXPLICIT_DEPS_TRUE@
 DLLTOOL = @DLLTOOL@
@@ -165,6 +169,10 @@ HAVE_JPEG_FALSE = @HAVE_JPEG_FALSE@
 HAVE_JPEG_TRUE = @HAVE_JPEG_TRUE@
 HAVE_OBJC_FALSE = @HAVE_OBJC_FALSE@
 HAVE_OBJC_TRUE = @HAVE_OBJC_TRUE@
+HAVE_PAPI_CUPS_FALSE = @HAVE_PAPI_CUPS_FALSE@
+HAVE_PAPI_CUPS_TRUE = @HAVE_PAPI_CUPS_TRUE@
+HAVE_PAPI_FALSE = @HAVE_PAPI_FALSE@
+HAVE_PAPI_TRUE = @HAVE_PAPI_TRUE@
 HAVE_PNG_FALSE = @HAVE_PNG_FALSE@
 HAVE_PNG_TRUE = @HAVE_PNG_TRUE@
 HAVE_TIFF_FALSE = @HAVE_TIFF_FALSE@
@@ -528,6 +536,27 @@ SUBDIRS = po po-properties $(SRC_SUBDIRS) docs m4macros
 
 # require automake 1.4
 AUTOMAKE_OPTIONS = 1.7
+MAINTAINERCLEANFILES = \
+	$(srcdir)/INSTALL \
+	$(srcdir)/README \
+	$(srcdir)/aclocal.m4 \
+	$(srcdir)/autoscan.log \
+	$(srcdir)/compile \
+	$(srcdir)/config.guess \
+	$(srcdir)/config.h.in \
+	$(srcdir)/config.sub \
+	$(srcdir)/configure.scan \
+	$(srcdir)/depcomp \
+	$(srcdir)/install-sh \
+	$(srcdir)/ltmain.sh \
+	$(srcdir)/missing \
+	$(srcdir)/mkinstalldirs \
+	$(srcdir)/omf.make \
+	$(srcdir)/xmldocs.make \
+	$(srcdir)/gtk-doc.make \
+	$(srcdir)/ChangeLog \
+	`find "$(srcdir)" -type f -name Makefile.in -print`
+
 
 GDKTARGET = @gdktarget@
 
@@ -548,6 +577,17 @@ DISTCLEANFILES = \
 DEFAULT_GDKTARGET = x11
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-man --disable-rebuilds
+
+GITIGNOREFILES = \
+	po-properties/Makefile.in.in \
+	po-properties/Makefile.in \
+	po-properties/Makefile \
+	po-properties/*.gmo \
+	po-properties/*.mo \
+	po-properties/POTFILES \
+	po-properties/stamp-it \
+	po-properties/.intltool-merge-cache
+
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -948,6 +988,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-recursive
 
 clean-am: clean-generic clean-libtool mostlyclean-am
@@ -1091,7 +1132,7 @@ gdk-$(GDKTARGET)-2.0-uninstalled.pc: gdk-2.0-uninstalled.pc
 	cp gdk-2.0-uninstalled.pc gdk-$(GDKTARGET)-2.0-uninstalled.pc
 
 distclean-local:
-	if test $(srdcir) = .; then :; else \
+	if test "$(srcdir)" = "."; then :; else \
 		rm -f ChangeLog; \
 	fi
 
@@ -1152,6 +1193,8 @@ sanity:
 
 snapshot:
 	$(MAKE) dist distdir=$(PACKAGE)-snap`date +"%Y%m%d"`
+
+-include $(top_srcdir)/git.mk
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
