@@ -1,6 +1,7 @@
-diff -Nur gtk+2.0-2.17.2/aclocal.m4 gtk+2.0-2.17.2.ubuntu/aclocal.m4
---- gtk+2.0-2.17.2/aclocal.m4	2009-06-16 00:55:55.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/aclocal.m4	2009-06-16 15:48:39.000000000 +0200
+Index: gtk+2.0-2.17.2/aclocal.m4
+===================================================================
+--- gtk+2.0-2.17.2.orig/aclocal.m4	2009-06-16 00:55:55.000000000 +0200
++++ gtk+2.0-2.17.2/aclocal.m4	2009-06-17 00:14:58.000000000 +0200
 @@ -1,7 +1,7 @@
 -# generated automatically by aclocal 1.7.9 -*- Autoconf -*-
 +# generated automatically by aclocal 1.10.2 -*- Autoconf -*-
@@ -5224,10 +5225,19 @@ diff -Nur gtk+2.0-2.17.2/aclocal.m4 gtk+2.0-2.17.2.ubuntu/aclocal.m4
 +]) # _AM_PROG_TAR
  
 +m4_include([acinclude.m4])
-diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
---- gtk+2.0-2.17.2/configure	2009-06-16 00:56:22.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/configure	2009-06-16 15:48:45.000000000 +0200
-@@ -1004,6 +1004,9 @@
+Index: gtk+2.0-2.17.2/configure
+===================================================================
+--- gtk+2.0-2.17.2.orig/configure	2009-06-16 00:56:22.000000000 +0200
++++ gtk+2.0-2.17.2/configure	2009-06-17 00:15:04.000000000 +0200
+@@ -837,6 +837,7 @@
+ GDK_DEP_LIBS
+ GDK_EXTRA_CFLAGS
+ GDK_EXTRA_LIBS
++GDK_PRIVATE_PACKAGES
+ GDK_PACKAGES
+ USE_DIRECTFB_FALSE
+ USE_DIRECTFB_TRUE
+@@ -1004,6 +1005,9 @@
  MAINT
  MAINTAINER_MODE_FALSE
  MAINTAINER_MODE_TRUE
@@ -5237,7 +5247,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  CCASFLAGS
  CCAS
  CXXCPP
-@@ -1039,6 +1042,8 @@
+@@ -1039,6 +1043,8 @@
  CXXFLAGS
  ac_ct_CXX
  CXX
@@ -5246,7 +5256,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  am__fastdepCC_FALSE
  am__fastdepCC_TRUE
  CCDEPMODE
-@@ -1081,13 +1086,17 @@
+@@ -1081,13 +1087,17 @@
  GTK_MICRO_VERSION
  GTK_MINOR_VERSION
  GTK_MAJOR_VERSION
@@ -5265,7 +5275,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  MAKEINFO
  AUTOHEADER
  AUTOMAKE
-@@ -1096,6 +1105,7 @@
+@@ -1096,6 +1106,7 @@
  VERSION
  PACKAGE
  CYGPATH_W
@@ -5273,7 +5283,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  INSTALL_DATA
  INSTALL_SCRIPT
  INSTALL_PROGRAM
-@@ -1188,6 +1198,8 @@
+@@ -1188,6 +1199,8 @@
  CCC
  CPP
  CXXCPP
@@ -5282,7 +5292,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  PKG_CONFIG
  BASE_DEPENDENCIES_CFLAGS
  BASE_DEPENDENCIES_LIBS
-@@ -1830,16 +1842,16 @@
+@@ -1830,16 +1843,16 @@
    --disable-option-checking  ignore unrecognized --enable/--with options
    --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
    --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
@@ -5303,7 +5313,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    --enable-debug=[no/minimum/yes]
                            turn on debugging [default=yes]
    --enable-shm            support shared memory if available [default=yes]
-@@ -1898,6 +1910,8 @@
+@@ -1898,6 +1911,8 @@
    CXXFLAGS    C++ compiler flags
    CPP         C preprocessor
    CXXCPP      C++ preprocessor
@@ -5312,7 +5322,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    PKG_CONFIG  path to pkg-config utility
    BASE_DEPENDENCIES_CFLAGS
                C compiler flags for BASE_DEPENDENCIES, overriding pkg-config
-@@ -2367,7 +2381,8 @@
+@@ -2367,7 +2382,8 @@
  # Save this value here, since automake will set cflags later
  cflags_set=${CFLAGS+set}
  
@@ -5322,7 +5332,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  ac_aux_dir=
  for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
    if test -f "$ac_dir/install-sh"; then
-@@ -2547,7 +2562,6 @@
+@@ -2547,7 +2563,6 @@
  ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
  program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
  
@@ -5330,7 +5340,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  # expand $ac_aux_dir to an absolute path
  am_aux_dir=`cd $ac_aux_dir && pwd`
  
-@@ -2561,6 +2575,54 @@
+@@ -2561,6 +2576,54 @@
  $as_echo "$as_me: WARNING: \`missing' script is too old or missing" >&2;}
  fi
  
@@ -5385,7 +5395,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  for ac_prog in gawk mawk nawk awk
  do
    # Extract the first word of "$ac_prog", so it can be a program name with args.
-@@ -2643,12 +2705,16 @@
+@@ -2643,12 +2706,16 @@
  fi
  rmdir .tst 2>/dev/null
  
@@ -5406,7 +5416,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  fi
  
  # test whether we have cygpath
-@@ -2682,10 +2748,7 @@
+@@ -2682,10 +2749,7 @@
  
  MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
  
@@ -5418,7 +5428,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  
  # Installed binaries are usually stripped using `strip' when the user
  # run `make install-strip'.  However `strip' might not be the right
-@@ -2785,10 +2848,17 @@
+@@ -2785,10 +2849,17 @@
  fi
  
  fi
@@ -5437,7 +5447,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  
  
  
-@@ -3969,9 +4039,7 @@
+@@ -3969,9 +4040,7 @@
    am_depcomp="$ac_aux_dir/depcomp"
    AMDEPBACKSLASH='\'
  fi
@@ -5448,7 +5458,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    AMDEP_TRUE=
    AMDEP_FALSE='#'
  else
-@@ -3981,7 +4049,6 @@
+@@ -3981,7 +4050,6 @@
  
  
  
@@ -5456,7 +5466,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  depcc="$CC"   am_compiler_list=
  
  { $as_echo "$as_me:$LINENO: checking dependency style of $depcc" >&5
-@@ -4023,7 +4090,9 @@
+@@ -4023,7 +4091,9 @@
      : > sub/conftest.c
      for i in 1 2 3 4 5 6; do
        echo '#include "conftst'$i'.h"' >> sub/conftest.c
@@ -5467,7 +5477,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      done
      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
  
-@@ -4047,13 +4116,19 @@
+@@ -4047,13 +4117,19 @@
         depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
         $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
           >/dev/null 2>conftest.err &&
@@ -5490,7 +5500,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
          am_cv_CC_dependencies_compiler_type=$depmode
          break
        fi
-@@ -4071,9 +4146,7 @@
+@@ -4071,9 +4147,7 @@
  $as_echo "$am_cv_CC_dependencies_compiler_type" >&6; }
  CCDEPMODE=depmode=$am_cv_CC_dependencies_compiler_type
  
@@ -5501,7 +5511,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    test "x$enable_dependency_tracking" != xno \
    && test "$am_cv_CC_dependencies_compiler_type" = gcc3; then
    am__fastdepCC_TRUE=
-@@ -4115,6 +4188,14 @@
+@@ -4115,6 +4189,14 @@
  
  
  
@@ -5516,7 +5526,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  
  if test -n "$ac_tool_prefix"; then
    for ac_prog in $CCC c++ g++ gcc CC cxx cc++ cl
-@@ -4637,7 +4718,9 @@
+@@ -4637,7 +4719,9 @@
      : > sub/conftest.c
      for i in 1 2 3 4 5 6; do
        echo '#include "conftst'$i'.h"' >> sub/conftest.c
@@ -5527,7 +5537,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      done
      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
  
-@@ -4661,13 +4744,19 @@
+@@ -4661,13 +4745,19 @@
         depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
         $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
           >/dev/null 2>conftest.err &&
@@ -5550,7 +5560,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
          am_cv_CXX_dependencies_compiler_type=$depmode
          break
        fi
-@@ -4685,9 +4774,7 @@
+@@ -4685,9 +4775,7 @@
  $as_echo "$am_cv_CXX_dependencies_compiler_type" >&6; }
  CXXDEPMODE=depmode=$am_cv_CXX_dependencies_compiler_type
  
@@ -5561,7 +5571,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    test "x$enable_dependency_tracking" != xno \
    && test "$am_cv_CXX_dependencies_compiler_type" = gcc3; then
    am__fastdepCXX_TRUE=
-@@ -4741,9 +4828,7 @@
+@@ -4741,9 +4829,7 @@
  fi
  
  rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
@@ -5572,7 +5582,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_CXX_TRUE=
    HAVE_CXX_FALSE='#'
  else
-@@ -4796,9 +4881,7 @@
+@@ -4796,9 +4882,7 @@
  fi
  
  rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
@@ -5583,24 +5593,24 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_OBJC_TRUE=
    HAVE_OBJC_FALSE='#'
  else
-@@ -5749,13 +5832,13 @@
+@@ -5749,13 +5833,13 @@
  else
    lt_cv_nm_interface="BSD nm"
    echo "int some_variable = 0;" > conftest.$ac_ext
 -  (eval echo "\"\$as_me:5752: $ac_compile\"" >&5)
-+  (eval echo "\"\$as_me:5835: $ac_compile\"" >&5)
++  (eval echo "\"\$as_me:5836: $ac_compile\"" >&5)
    (eval "$ac_compile" 2>conftest.err)
    cat conftest.err >&5
 -  (eval echo "\"\$as_me:5755: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
-+  (eval echo "\"\$as_me:5838: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
++  (eval echo "\"\$as_me:5839: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
    (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
    cat conftest.err >&5
 -  (eval echo "\"\$as_me:5758: output\"" >&5)
-+  (eval echo "\"\$as_me:5841: output\"" >&5)
++  (eval echo "\"\$as_me:5842: output\"" >&5)
    cat conftest.out >&5
    if $GREP 'External.*some_variable' conftest.out > /dev/null; then
      lt_cv_nm_interface="MS dumpbin"
-@@ -6222,7 +6305,7 @@
+@@ -6222,7 +6306,7 @@
    lt_cv_deplibs_check_method=pass_all
    ;;
  
@@ -5609,16 +5619,16 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
      lt_cv_deplibs_check_method='match_pattern /lib[^/]+(\.so\.[0-9]+\.[0-9]+|_pic\.a)$'
    else
-@@ -6958,7 +7041,7 @@
+@@ -6958,7 +7042,7 @@
    ;;
  *-*-irix6*)
    # Find out which ABI we are using.
 -  echo '#line 6961 "configure"' > conftest.$ac_ext
-+  echo '#line 7044 "configure"' > conftest.$ac_ext
++  echo '#line 7045 "configure"' > conftest.$ac_ext
    if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
    (eval $ac_compile) 2>&5
    ac_status=$?
-@@ -8728,7 +8811,9 @@
+@@ -8728,7 +8812,9 @@
      : > sub/conftest.c
      for i in 1 2 3 4 5 6; do
        echo '#include "conftst'$i'.h"' >> sub/conftest.c
@@ -5629,7 +5639,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      done
      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
  
-@@ -8752,13 +8837,19 @@
+@@ -8752,13 +8838,19 @@
         depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
         $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
           >/dev/null 2>conftest.err &&
@@ -5652,7 +5662,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
          am_cv_CXX_dependencies_compiler_type=$depmode
          break
        fi
-@@ -8776,9 +8867,7 @@
+@@ -8776,9 +8868,7 @@
  $as_echo "$am_cv_CXX_dependencies_compiler_type" >&6; }
  CXXDEPMODE=depmode=$am_cv_CXX_dependencies_compiler_type
  
@@ -5663,63 +5673,63 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    test "x$enable_dependency_tracking" != xno \
    && test "$am_cv_CXX_dependencies_compiler_type" = gcc3; then
    am__fastdepCXX_TRUE=
-@@ -9491,11 +9580,11 @@
+@@ -9491,11 +9581,11 @@
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
 -   (eval echo "\"\$as_me:9494: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:9583: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:9584: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>conftest.err)
     ac_status=$?
     cat conftest.err >&5
 -   echo "$as_me:9498: \$? = $ac_status" >&5
-+   echo "$as_me:9587: \$? = $ac_status" >&5
++   echo "$as_me:9588: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s "$ac_outfile"; then
       # The compiler can only warn and ignore the option if not recognized
       # So say no if there are warnings other than the usual output.
-@@ -9830,11 +9919,11 @@
+@@ -9830,11 +9920,11 @@
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
 -   (eval echo "\"\$as_me:9833: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:9922: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:9923: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>conftest.err)
     ac_status=$?
     cat conftest.err >&5
 -   echo "$as_me:9837: \$? = $ac_status" >&5
-+   echo "$as_me:9926: \$? = $ac_status" >&5
++   echo "$as_me:9927: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s "$ac_outfile"; then
       # The compiler can only warn and ignore the option if not recognized
       # So say no if there are warnings other than the usual output.
-@@ -9935,11 +10024,11 @@
+@@ -9935,11 +10025,11 @@
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
 -   (eval echo "\"\$as_me:9938: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:10027: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:10028: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>out/conftest.err)
     ac_status=$?
     cat out/conftest.err >&5
 -   echo "$as_me:9942: \$? = $ac_status" >&5
-+   echo "$as_me:10031: \$? = $ac_status" >&5
++   echo "$as_me:10032: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s out/conftest2.$ac_objext
     then
       # The compiler can only warn and ignore the option if not recognized
-@@ -9990,11 +10079,11 @@
+@@ -9990,11 +10080,11 @@
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
 -   (eval echo "\"\$as_me:9993: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:10082: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:10083: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>out/conftest.err)
     ac_status=$?
     cat out/conftest.err >&5
 -   echo "$as_me:9997: \$? = $ac_status" >&5
-+   echo "$as_me:10086: \$? = $ac_status" >&5
++   echo "$as_me:10087: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s out/conftest2.$ac_objext
     then
       # The compiler can only warn and ignore the option if not recognized
-@@ -10291,7 +10380,7 @@
+@@ -10291,7 +10381,7 @@
        fi
        ;;
  
@@ -5728,7 +5738,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
        if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
  	archive_cmds='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
  	wlarc=
-@@ -10466,6 +10555,7 @@
+@@ -10466,6 +10556,7 @@
  	if test "$aix_use_runtimelinking" = yes; then
  	  shared_flag="$shared_flag "'${wl}-G'
  	fi
@@ -5736,7 +5746,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
        else
  	# not using gcc
  	if test "$host_cpu" = ia64; then
-@@ -10880,7 +10970,7 @@
+@@ -10880,7 +10971,7 @@
        link_all_deplibs=yes
        ;;
  
@@ -5745,7 +5755,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
        if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
  	archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
        else
-@@ -11842,13 +11932,10 @@
+@@ -11842,13 +11933,10 @@
    # before this can be enabled.
    hardcode_into_libs=yes
  
@@ -5760,7 +5770,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    fi
  
    # We used to test for /lib/ld.so.1 and disable shared libraries on
-@@ -11860,6 +11947,18 @@
+@@ -11860,6 +11948,18 @@
    dynamic_linker='GNU/Linux ld.so'
    ;;
  
@@ -5779,25 +5789,25 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  netbsd*)
    version_type=sunos
    need_lib_prefix=no
-@@ -12793,7 +12892,7 @@
+@@ -12793,7 +12893,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
 -#line 12796 "configure"
-+#line 12895 "configure"
++#line 12896 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -12889,7 +12988,7 @@
+@@ -12889,7 +12989,7 @@
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
 -#line 12892 "configure"
-+#line 12991 "configure"
++#line 12992 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -14785,7 +14884,7 @@
+@@ -14785,7 +14885,7 @@
  	    ;;
  	esac
  	;;
@@ -5806,49 +5816,49 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  	;;
        *qnx* | *nto*)
          # QNX uses GNU C++, but need to define -shared option too, otherwise
-@@ -14909,11 +15008,11 @@
+@@ -14909,11 +15009,11 @@
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
 -   (eval echo "\"\$as_me:14912: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:15011: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:15012: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>conftest.err)
     ac_status=$?
     cat conftest.err >&5
 -   echo "$as_me:14916: \$? = $ac_status" >&5
-+   echo "$as_me:15015: \$? = $ac_status" >&5
++   echo "$as_me:15016: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s "$ac_outfile"; then
       # The compiler can only warn and ignore the option if not recognized
       # So say no if there are warnings other than the usual output.
-@@ -15008,11 +15107,11 @@
+@@ -15008,11 +15108,11 @@
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
 -   (eval echo "\"\$as_me:15011: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:15110: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:15111: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>out/conftest.err)
     ac_status=$?
     cat out/conftest.err >&5
 -   echo "$as_me:15015: \$? = $ac_status" >&5
-+   echo "$as_me:15114: \$? = $ac_status" >&5
++   echo "$as_me:15115: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s out/conftest2.$ac_objext
     then
       # The compiler can only warn and ignore the option if not recognized
-@@ -15060,11 +15159,11 @@
+@@ -15060,11 +15160,11 @@
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
 -   (eval echo "\"\$as_me:15063: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:15162: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:15163: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>out/conftest.err)
     ac_status=$?
     cat out/conftest.err >&5
 -   echo "$as_me:15067: \$? = $ac_status" >&5
-+   echo "$as_me:15166: \$? = $ac_status" >&5
++   echo "$as_me:15167: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s out/conftest2.$ac_objext
     then
       # The compiler can only warn and ignore the option if not recognized
-@@ -15136,6 +15235,9 @@
+@@ -15136,6 +15236,9 @@
    cygwin* | mingw* | cegcc*)
      export_symbols_cmds_CXX='$NM $libobjs $convenience | $global_symbol_pipe | $SED -e '\''/^[BCDGRS][ ]/s/.*[ ]\([^ ]*\)/\1 DATA/;/^.*[ ]__nm__/s/^.*[ ]__nm__\([^ ]*\)[ ][^ ]*/\1 DATA/;/^I[ ]/d;/^[AITW][ ]/s/.* //'\'' | sort | uniq > $export_symbols'
    ;;
@@ -5858,7 +5868,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    *)
      export_symbols_cmds_CXX='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
    ;;
-@@ -15707,13 +15809,10 @@
+@@ -15707,13 +15810,10 @@
    # before this can be enabled.
    hardcode_into_libs=yes
  
@@ -5873,7 +5883,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    fi
  
    # We used to test for /lib/ld.so.1 and disable shared libraries on
-@@ -15725,6 +15824,18 @@
+@@ -15725,6 +15825,18 @@
    dynamic_linker='GNU/Linux ld.so'
    ;;
  
@@ -5892,7 +5902,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  netbsd*)
    version_type=sunos
    need_lib_prefix=no
-@@ -17966,9 +18077,117 @@
+@@ -17966,9 +18078,117 @@
  
  # By default we simply use the C compiler to build assembly code.
  
@@ -6013,7 +6023,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  
  
  # Extract the first word of "nm", so it can be a program name with args.
-@@ -18024,9 +18243,7 @@
+@@ -18024,9 +18244,7 @@
  
    { $as_echo "$as_me:$LINENO: result: $USE_MAINTAINER_MODE" >&5
  $as_echo "$USE_MAINTAINER_MODE" >&6; }
@@ -6024,7 +6034,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    MAINTAINER_MODE_TRUE=
    MAINTAINER_MODE_FALSE='#'
  else
-@@ -18050,9 +18267,7 @@
+@@ -18050,9 +18268,7 @@
  esac
  { $as_echo "$as_me:$LINENO: result: $platform_win32" >&5
  $as_echo "$platform_win32" >&6; }
@@ -6035,7 +6045,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    PLATFORM_WIN32_TRUE=
    PLATFORM_WIN32_FALSE='#'
  else
-@@ -18061,9 +18276,7 @@
+@@ -18061,9 +18277,7 @@
  fi
  
  
@@ -6046,7 +6056,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    OS_WIN32_TRUE=
    OS_WIN32_FALSE='#'
  else
-@@ -18071,9 +18284,7 @@
+@@ -18071,9 +18285,7 @@
    OS_WIN32_FALSE=
  fi
  
@@ -6057,7 +6067,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    OS_UNIX_TRUE=
    OS_UNIX_FALSE='#'
  else
-@@ -18081,9 +18292,7 @@
+@@ -18081,9 +18293,7 @@
    OS_UNIX_FALSE=
  fi
  
@@ -6068,7 +6078,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    OS_LINUX_TRUE=
    OS_LINUX_FALSE='#'
  else
-@@ -18229,9 +18438,7 @@
+@@ -18229,9 +18439,7 @@
  
  
  fi
@@ -6079,7 +6089,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    MS_LIB_AVAILABLE_TRUE=
    MS_LIB_AVAILABLE_FALSE='#'
  else
-@@ -18478,333 +18685,70 @@
+@@ -18478,333 +18686,70 @@
  
  fi
  
@@ -6448,7 +6458,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      $as_echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
      break 2
    fi
-@@ -18812,28 +18756,976 @@
+@@ -18812,19 +18757,967 @@
  done
  IFS=$as_save_IFS
  
@@ -6470,15 +6480,6 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  fi
  
 -
--fi
--if test -z "$ac_cv_path_PKG_CONFIG"; then
--  ac_pt_PKG_CONFIG=$PKG_CONFIG
--  # Extract the first word of "pkg-config", so it can be a program name with args.
--set dummy pkg-config; ac_word=$2
--{ $as_echo "$as_me:$LINENO: checking for $ac_word" >&5
--$as_echo_n "checking for $ac_word... " >&6; }
--if test "${ac_cv_path_ac_pt_PKG_CONFIG+set}" = set; then
--  $as_echo_n "(cached) " >&6
 +  if test "x$ac_ct_CC" = x; then
 +    CC=""
 +  else
@@ -7429,19 +7430,10 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
 +fi
 +
 +
-+fi
-+if test -z "$ac_cv_path_PKG_CONFIG"; then
-+  ac_pt_PKG_CONFIG=$PKG_CONFIG
-+  # Extract the first word of "pkg-config", so it can be a program name with args.
-+set dummy pkg-config; ac_word=$2
-+{ $as_echo "$as_me:$LINENO: checking for $ac_word" >&5
-+$as_echo_n "checking for $ac_word... " >&6; }
-+if test "${ac_cv_path_ac_pt_PKG_CONFIG+set}" = set; then
-+  $as_echo_n "(cached) " >&6
- else
-   case $ac_pt_PKG_CONFIG in
-   [\\/]* | ?:[\\/]*)
-@@ -18902,10 +19794,11 @@
+ fi
+ if test -z "$ac_cv_path_PKG_CONFIG"; then
+   ac_pt_PKG_CONFIG=$PKG_CONFIG
+@@ -18902,10 +19795,11 @@
  { $as_echo "$as_me:$LINENO: checking for BASE_DEPENDENCIES" >&5
  $as_echo_n "checking for BASE_DEPENDENCIES... " >&6; }
  
@@ -7457,7 +7449,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.19.7    atk >= 1.13.0    pango >= 1.20    cairo >= 1.6\"") >&5
    ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.19.7    atk >= 1.13.0    pango >= 1.20    cairo >= 1.6") 2>&5
    ac_status=$?
-@@ -18915,13 +19808,15 @@
+@@ -18915,13 +19809,15 @@
  else
    pkg_failed=yes
  fi
@@ -7479,7 +7471,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.19.7    atk >= 1.13.0    pango >= 1.20    cairo >= 1.6\"") >&5
    ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.19.7    atk >= 1.13.0    pango >= 1.20    cairo >= 1.6") 2>&5
    ac_status=$?
-@@ -18931,8 +19826,9 @@
+@@ -18931,8 +19827,9 @@
  else
    pkg_failed=yes
  fi
@@ -7491,7 +7483,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  fi
  
  
-@@ -18945,9 +19841,9 @@
+@@ -18945,9 +19842,9 @@
          _pkg_short_errors_supported=no
  fi
          if test $_pkg_short_errors_supported = yes; then
@@ -7503,7 +7495,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
          fi
  	# Put the nasty error message in config.log where it belongs
  	echo "$BASE_DEPENDENCIES_PKG_ERRORS" >&5
-@@ -19022,10 +19918,11 @@
+@@ -19022,10 +19919,11 @@
  { $as_echo "$as_me:$LINENO: checking for CAIRO_BACKEND" >&5
  $as_echo_n "checking for CAIRO_BACKEND... " >&6; }
  
@@ -7519,7 +7511,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"cairo-\$cairo_backend >= 1.6\"") >&5
    ($PKG_CONFIG --exists --print-errors "cairo-$cairo_backend >= 1.6") 2>&5
    ac_status=$?
-@@ -19035,13 +19932,15 @@
+@@ -19035,13 +19933,15 @@
  else
    pkg_failed=yes
  fi
@@ -7541,7 +7533,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"cairo-\$cairo_backend >= 1.6\"") >&5
    ($PKG_CONFIG --exists --print-errors "cairo-$cairo_backend >= 1.6") 2>&5
    ac_status=$?
-@@ -19051,8 +19950,9 @@
+@@ -19051,8 +19951,9 @@
  else
    pkg_failed=yes
  fi
@@ -7553,7 +7545,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  fi
  
  
-@@ -19065,9 +19965,9 @@
+@@ -19065,9 +19966,9 @@
          _pkg_short_errors_supported=no
  fi
          if test $_pkg_short_errors_supported = yes; then
@@ -7565,7 +7557,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
          fi
  	# Put the nasty error message in config.log where it belongs
  	echo "$CAIRO_BACKEND_PKG_ERRORS" >&5
-@@ -19168,9 +20068,7 @@
+@@ -19168,9 +20069,7 @@
  { $as_echo "$as_me:$LINENO: result: $enable_explicit_deps" >&5
  $as_echo "$enable_explicit_deps" >&6; }
  
@@ -7576,7 +7568,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    DISABLE_EXPLICIT_DEPS_TRUE=
    DISABLE_EXPLICIT_DEPS_FALSE='#'
  else
-@@ -24746,9 +25644,7 @@
+@@ -24746,9 +25645,7 @@
  fi
  
  
@@ -7587,7 +7579,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    BUILD_GDIPLUS_LOADERS_TRUE=
    BUILD_GDIPLUS_LOADERS_FALSE='#'
  else
-@@ -26002,9 +26898,7 @@
+@@ -26002,9 +26899,7 @@
  
  
  
@@ -7598,7 +7590,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    BUILD_DYNAMIC_MODULES_TRUE=
    BUILD_DYNAMIC_MODULES_FALSE='#'
  else
-@@ -26097,9 +26991,7 @@
+@@ -26097,9 +26992,7 @@
  
  
  
@@ -7609,7 +7601,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_PNG_TRUE=
    INCLUDE_PNG_FALSE='#'
  else
-@@ -26107,9 +26999,7 @@
+@@ -26107,9 +27000,7 @@
    INCLUDE_PNG_FALSE=
  fi
  
@@ -7620,7 +7612,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_BMP_TRUE=
    INCLUDE_BMP_FALSE='#'
  else
-@@ -26117,9 +27007,7 @@
+@@ -26117,9 +27008,7 @@
    INCLUDE_BMP_FALSE=
  fi
  
@@ -7631,7 +7623,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_WBMP_TRUE=
    INCLUDE_WBMP_FALSE='#'
  else
-@@ -26127,9 +27015,7 @@
+@@ -26127,9 +27016,7 @@
    INCLUDE_WBMP_FALSE=
  fi
  
@@ -7642,7 +7634,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_GIF_TRUE=
    INCLUDE_GIF_FALSE='#'
  else
-@@ -26137,9 +27023,7 @@
+@@ -26137,9 +27024,7 @@
    INCLUDE_GIF_FALSE=
  fi
  
@@ -7653,7 +7645,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_ICO_TRUE=
    INCLUDE_ICO_FALSE='#'
  else
-@@ -26147,9 +27031,7 @@
+@@ -26147,9 +27032,7 @@
    INCLUDE_ICO_FALSE=
  fi
  
@@ -7664,7 +7656,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_ANI_TRUE=
    INCLUDE_ANI_FALSE='#'
  else
-@@ -26157,9 +27039,7 @@
+@@ -26157,9 +27040,7 @@
    INCLUDE_ANI_FALSE=
  fi
  
@@ -7675,7 +7667,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_JPEG_TRUE=
    INCLUDE_JPEG_FALSE='#'
  else
-@@ -26167,9 +27047,7 @@
+@@ -26167,9 +27048,7 @@
    INCLUDE_JPEG_FALSE=
  fi
  
@@ -7686,7 +7678,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_PNM_TRUE=
    INCLUDE_PNM_FALSE='#'
  else
-@@ -26177,9 +27055,7 @@
+@@ -26177,9 +27056,7 @@
    INCLUDE_PNM_FALSE=
  fi
  
@@ -7697,7 +7689,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_RAS_TRUE=
    INCLUDE_RAS_FALSE='#'
  else
-@@ -26187,9 +27063,7 @@
+@@ -26187,9 +27064,7 @@
    INCLUDE_RAS_FALSE=
  fi
  
@@ -7708,7 +7700,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_TIFF_TRUE=
    INCLUDE_TIFF_FALSE='#'
  else
-@@ -26197,9 +27071,7 @@
+@@ -26197,9 +27072,7 @@
    INCLUDE_TIFF_FALSE=
  fi
  
@@ -7719,7 +7711,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_XPM_TRUE=
    INCLUDE_XPM_FALSE='#'
  else
-@@ -26207,9 +27079,7 @@
+@@ -26207,9 +27080,7 @@
    INCLUDE_XPM_FALSE=
  fi
  
@@ -7730,7 +7722,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_XBM_TRUE=
    INCLUDE_XBM_FALSE='#'
  else
-@@ -26217,9 +27087,7 @@
+@@ -26217,9 +27088,7 @@
    INCLUDE_XBM_FALSE=
  fi
  
@@ -7741,7 +7733,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_TGA_TRUE=
    INCLUDE_TGA_FALSE='#'
  else
-@@ -26227,9 +27095,7 @@
+@@ -26227,9 +27096,7 @@
    INCLUDE_TGA_FALSE=
  fi
  
@@ -7752,7 +7744,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_PCX_TRUE=
    INCLUDE_PCX_FALSE='#'
  else
-@@ -26237,9 +27103,7 @@
+@@ -26237,9 +27104,7 @@
    INCLUDE_PCX_FALSE=
  fi
  
@@ -7763,7 +7755,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_ICNS_TRUE=
    INCLUDE_ICNS_FALSE='#'
  else
-@@ -26247,9 +27111,7 @@
+@@ -26247,9 +27112,7 @@
    INCLUDE_ICNS_FALSE=
  fi
  
@@ -7774,7 +7766,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_JASPER_TRUE=
    INCLUDE_JASPER_FALSE='#'
  else
-@@ -26259,9 +27121,7 @@
+@@ -26259,9 +27122,7 @@
  
  # As all GDI+ loaders are either built-in or not, arbitrarily just
  # check one of the variables here
@@ -7785,7 +7777,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_GDIPLUS_TRUE=
    INCLUDE_GDIPLUS_FALSE='#'
  else
-@@ -26410,9 +27270,7 @@
+@@ -26410,9 +27271,7 @@
  
  { $as_echo "$as_me:$LINENO: result: $included_immodules" >&5
  $as_echo "$included_immodules" >&6; }
@@ -7796,7 +7788,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_INCLUDED_IMMMODULES_TRUE=
    HAVE_INCLUDED_IMMMODULES_FALSE='#'
  else
-@@ -26443,9 +27301,7 @@
+@@ -26443,9 +27302,7 @@
  
  
  
@@ -7807,7 +7799,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_AM_ET_TRUE=
    INCLUDE_IM_AM_ET_FALSE='#'
  else
-@@ -26453,9 +27309,7 @@
+@@ -26453,9 +27310,7 @@
    INCLUDE_IM_AM_ET_FALSE=
  fi
  
@@ -7818,7 +7810,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_CEDILLA_TRUE=
    INCLUDE_IM_CEDILLA_FALSE='#'
  else
-@@ -26463,9 +27317,7 @@
+@@ -26463,9 +27318,7 @@
    INCLUDE_IM_CEDILLA_FALSE=
  fi
  
@@ -7829,7 +7821,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_CYRILLIC_TRANSLIT_TRUE=
    INCLUDE_IM_CYRILLIC_TRANSLIT_FALSE='#'
  else
-@@ -26473,9 +27325,7 @@
+@@ -26473,9 +27326,7 @@
    INCLUDE_IM_CYRILLIC_TRANSLIT_FALSE=
  fi
  
@@ -7840,7 +7832,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_IME_TRUE=
    INCLUDE_IM_IME_FALSE='#'
  else
-@@ -26483,9 +27333,7 @@
+@@ -26483,9 +27334,7 @@
    INCLUDE_IM_IME_FALSE=
  fi
  
@@ -7851,7 +7843,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_INUKTITUT_TRUE=
    INCLUDE_IM_INUKTITUT_FALSE='#'
  else
-@@ -26493,9 +27341,7 @@
+@@ -26493,9 +27342,7 @@
    INCLUDE_IM_INUKTITUT_FALSE=
  fi
  
@@ -7862,7 +7854,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_IPA_TRUE=
    INCLUDE_IM_IPA_FALSE='#'
  else
-@@ -26503,9 +27349,7 @@
+@@ -26503,9 +27350,7 @@
    INCLUDE_IM_IPA_FALSE=
  fi
  
@@ -7873,7 +7865,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_MULTIPRESS_TRUE=
    INCLUDE_IM_MULTIPRESS_FALSE='#'
  else
-@@ -26513,9 +27357,7 @@
+@@ -26513,9 +27358,7 @@
    INCLUDE_IM_MULTIPRESS_FALSE=
  fi
  
@@ -7884,7 +7876,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_THAI_TRUE=
    INCLUDE_IM_THAI_FALSE='#'
  else
-@@ -26523,9 +27365,7 @@
+@@ -26523,9 +27366,7 @@
    INCLUDE_IM_THAI_FALSE=
  fi
  
@@ -7895,7 +7887,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_TI_ER_TRUE=
    INCLUDE_IM_TI_ER_FALSE='#'
  else
-@@ -26533,9 +27373,7 @@
+@@ -26533,9 +27374,7 @@
    INCLUDE_IM_TI_ER_FALSE=
  fi
  
@@ -7906,7 +7898,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_TI_ET_TRUE=
    INCLUDE_IM_TI_ET_FALSE='#'
  else
-@@ -26543,9 +27381,7 @@
+@@ -26543,9 +27382,7 @@
    INCLUDE_IM_TI_ET_FALSE=
  fi
  
@@ -7917,7 +7909,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_VIQR_TRUE=
    INCLUDE_IM_VIQR_FALSE='#'
  else
-@@ -26553,9 +27389,7 @@
+@@ -26553,9 +27390,7 @@
    INCLUDE_IM_VIQR_FALSE=
  fi
  
@@ -7928,7 +7920,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    INCLUDE_IM_XIM_TRUE=
    INCLUDE_IM_XIM_FALSE='#'
  else
-@@ -26692,9 +27526,7 @@
+@@ -26692,9 +27527,7 @@
  
  
  
@@ -7939,7 +7931,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_TIFF_TRUE=
    HAVE_TIFF_FALSE='#'
  else
-@@ -26702,9 +27534,7 @@
+@@ -26702,9 +27535,7 @@
    HAVE_TIFF_FALSE=
  fi
  
@@ -7950,7 +7942,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_PNG_TRUE=
    HAVE_PNG_FALSE='#'
  else
-@@ -26712,9 +27542,7 @@
+@@ -26712,9 +27543,7 @@
    HAVE_PNG_FALSE=
  fi
  
@@ -7961,7 +7953,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_JPEG_TRUE=
    HAVE_JPEG_FALSE='#'
  else
-@@ -26722,9 +27550,7 @@
+@@ -26722,9 +27551,7 @@
    HAVE_JPEG_FALSE=
  fi
  
@@ -7972,7 +7964,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_JASPER_TRUE=
    HAVE_JASPER_FALSE='#'
  else
-@@ -27204,9 +28030,7 @@
+@@ -27204,9 +28031,7 @@
  
      fi
  fi
@@ -7983,7 +7975,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_MEDIALIB_TRUE=
    USE_MEDIALIB_FALSE='#'
  else
-@@ -27214,9 +28038,7 @@
+@@ -27214,9 +28039,7 @@
    USE_MEDIALIB_FALSE=
  fi
  
@@ -7994,7 +7986,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_MEDIALIB25_TRUE=
    USE_MEDIALIB25_FALSE='#'
  else
-@@ -27276,9 +28098,7 @@
+@@ -27276,9 +28099,7 @@
      fi
  fi
  
@@ -8005,7 +7997,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_MMX_TRUE=
    USE_MMX_FALSE='#'
  else
-@@ -27293,9 +28113,7 @@
+@@ -27293,9 +28114,7 @@
  fi
  
  
@@ -8016,7 +8008,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    CROSS_COMPILING_TRUE=
    CROSS_COMPILING_FALSE='#'
  else
-@@ -29458,9 +30276,7 @@
+@@ -29458,9 +30277,7 @@
  _ACEOF
  
    fi
@@ -8027,7 +8019,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_X11R6_TRUE=
    HAVE_X11R6_FALSE='#'
  else
-@@ -30712,9 +31528,7 @@
+@@ -30712,9 +31529,7 @@
  
    fi
  
@@ -8038,7 +8030,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    XINPUT_XFREE_TRUE=
    XINPUT_XFREE_FALSE='#'
  else
-@@ -30794,9 +31608,7 @@
+@@ -30794,9 +31609,7 @@
    CPPFLAGS="$gtk_save_cppflags"
    LIBS="$gtk_save_libs"
  
@@ -8049,7 +8041,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_X11_TRUE=
    USE_X11_FALSE='#'
  else
-@@ -30805,9 +31617,7 @@
+@@ -30805,9 +31618,7 @@
  fi
  
  else
@@ -8060,7 +8052,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    XINPUT_XFREE_TRUE=
    XINPUT_XFREE_FALSE='#'
  else
-@@ -30815,9 +31625,7 @@
+@@ -30815,9 +31626,7 @@
    XINPUT_XFREE_FALSE=
  fi
  
@@ -8071,7 +8063,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_X11_TRUE=
    USE_X11_FALSE='#'
  else
-@@ -30825,9 +31633,7 @@
+@@ -30825,9 +31634,7 @@
    USE_X11_FALSE=
  fi
  
@@ -8082,7 +8074,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_X11R6_TRUE=
    HAVE_X11R6_FALSE='#'
  else
-@@ -30839,9 +31645,7 @@
+@@ -30839,9 +31646,7 @@
  
  if test "x$gdktarget" = "xwin32"; then
    GDK_EXTRA_LIBS="$GDK_EXTRA_LIBS -lgdi32 -limm32 -lshell32 -lole32 -Wl,-luuid"
@@ -8093,7 +8085,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_WIN32_TRUE=
    USE_WIN32_FALSE='#'
  else
-@@ -30850,9 +31654,7 @@
+@@ -30850,9 +31655,7 @@
  fi
  
  else
@@ -8104,7 +8096,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_WIN32_TRUE=
    USE_WIN32_FALSE='#'
  else
-@@ -30864,9 +31666,7 @@
+@@ -30864,9 +31667,7 @@
  
  if test "x$gdktarget" = "xquartz"; then
    GDK_EXTRA_LIBS="$GDK_EXTRA_LIBS -framework Cocoa"
@@ -8115,7 +8107,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_QUARTZ_TRUE=
    USE_QUARTZ_FALSE='#'
  else
-@@ -30875,9 +31675,7 @@
+@@ -30875,9 +31676,7 @@
  fi
  
  else
@@ -8126,7 +8118,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_QUARTZ_TRUE=
    USE_QUARTZ_FALSE='#'
  else
-@@ -30906,10 +31704,11 @@
+@@ -30906,10 +31705,11 @@
  { $as_echo "$as_me:$LINENO: checking for DIRECTFB" >&5
  $as_echo_n "checking for DIRECTFB... " >&6; }
  
@@ -8142,7 +8134,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"directfb >= \$DIRECTFB_REQUIRED_VERSION\"") >&5
    ($PKG_CONFIG --exists --print-errors "directfb >= $DIRECTFB_REQUIRED_VERSION") 2>&5
    ac_status=$?
-@@ -30919,13 +31718,15 @@
+@@ -30919,13 +31719,15 @@
  else
    pkg_failed=yes
  fi
@@ -8164,7 +8156,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"directfb >= \$DIRECTFB_REQUIRED_VERSION\"") >&5
    ($PKG_CONFIG --exists --print-errors "directfb >= $DIRECTFB_REQUIRED_VERSION") 2>&5
    ac_status=$?
-@@ -30935,8 +31736,9 @@
+@@ -30935,8 +31737,9 @@
  else
    pkg_failed=yes
  fi
@@ -8176,7 +8168,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  fi
  
  
-@@ -30949,9 +31751,9 @@
+@@ -30949,9 +31752,9 @@
          _pkg_short_errors_supported=no
  fi
          if test $_pkg_short_errors_supported = yes; then
@@ -8188,7 +8180,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
          fi
  	# Put the nasty error message in config.log where it belongs
  	echo "$DIRECTFB_PKG_ERRORS" >&5
-@@ -31010,9 +31812,7 @@
+@@ -31010,9 +31813,7 @@
  $as_echo "yes" >&6; }
  	:
  fi
@@ -8199,7 +8191,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_DIRECTFB_TRUE=
    USE_DIRECTFB_FALSE='#'
  else
-@@ -31021,9 +31821,7 @@
+@@ -31021,9 +31822,7 @@
  fi
  
  else
@@ -8210,7 +8202,38 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    USE_DIRECTFB_TRUE=
    USE_DIRECTFB_FALSE='#'
  else
-@@ -31266,7 +32064,7 @@
+@@ -31135,16 +31934,18 @@
+ CFLAGS="$saved_cflags"
+ LDFLAGS="$saved_ldflags"
+ 
+-GDK_PACKAGES="$PANGO_PACKAGES gio-2.0 $X_PACKAGES cairo-$cairo_backend"
+-GDK_DEP_LIBS="$GDK_EXTRA_LIBS `$PKG_CONFIG --libs $GDK_PIXBUF_PACKAGES $GDK_PACKAGES` $GDK_PIXBUF_EXTRA_LIBS"
+-GDK_DEP_CFLAGS="`$PKG_CONFIG --cflags  gthread-2.0 $GDK_PIXBUF_PACKAGES $GDK_PACKAGES` $GDK_PIXBUF_EXTRA_CFLAGS $GDK_EXTRA_CFLAGS"
++GDK_PACKAGES="$PANGO_PACKAGES gio-2.0"
++GDK_PRIVATE_PACKAGES="$X_PACKAGES cairo-$cairo_backend"
++GDK_DEP_LIBS="$GDK_EXTRA_LIBS `$PKG_CONFIG --libs $GDK_PIXBUF_PACKAGES $GDK_PACKAGES $GDK_PRIVATE_PACKAGES` $GDK_PIXBUF_EXTRA_LIBS"
++GDK_DEP_CFLAGS="`$PKG_CONFIG --cflags  gthread-2.0 $GDK_PIXBUF_PACKAGES $GDK_PACKAGES $GDK_PRIVATE_PACKAGES` $GDK_PIXBUF_EXTRA_CFLAGS $GDK_EXTRA_CFLAGS"
+ #
+ # If we aren't writing explicit dependencies, then don't put the extra libraries we need
+ # into the pkg-config files
+ #
+ if test $enable_explicit_deps != yes ; then
+-  GDK_PACKAGES="$PANGO_PACKAGES"
+   GDK_EXTRA_LIBS=
++else
++  GDK_PACKAGES="$PANGO_PACKAGES"
+ fi
+ 
+ 
+@@ -31154,6 +31955,7 @@
+ 
+ 
+ 
++
+ ########################################
+ # Check for Accessibility Toolkit flags
+ ########################################
+@@ -31266,7 +32068,7 @@
  CAIRO_PREFIX="`pkg-config --variable=prefix cairo`"
  
  if test $enable_explicit_deps != yes ; then
@@ -8219,7 +8242,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  fi
  
  
-@@ -31899,9 +32697,7 @@
+@@ -31899,9 +32701,7 @@
  
  
    fi
@@ -8230,7 +8253,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_CUPS_TRUE=
    HAVE_CUPS_FALSE='#'
  else
-@@ -32068,9 +32864,7 @@
+@@ -32068,9 +32868,7 @@
    LIBS="$gtk_save_libs"
  
  else
@@ -8241,7 +8264,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_CUPS_TRUE=
    HAVE_CUPS_FALSE='#'
  else
-@@ -32173,9 +32967,7 @@
+@@ -32173,9 +32971,7 @@
  _ACEOF
  
    fi
@@ -8252,7 +8275,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_PAPI_TRUE=
    HAVE_PAPI_FALSE='#'
  else
-@@ -32184,9 +32976,7 @@
+@@ -32184,9 +32980,7 @@
  fi
  
  else
@@ -8263,7 +8286,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_PAPI_TRUE=
    HAVE_PAPI_FALSE='#'
  else
-@@ -32196,9 +32986,7 @@
+@@ -32196,9 +32990,7 @@
  
  fi
  
@@ -8274,7 +8297,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_PAPI_CUPS_TRUE=
    HAVE_PAPI_CUPS_FALSE='#'
  else
-@@ -32514,9 +33302,7 @@
+@@ -32514,9 +33306,7 @@
    enable_test_print_backend=no
  fi
  
@@ -8285,7 +8308,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    TEST_PRINT_BACKEND_TRUE=
    TEST_PRINT_BACKEND_FALSE='#'
  else
-@@ -32639,9 +33425,7 @@
+@@ -32639,9 +33429,7 @@
  done
  
  
@@ -8296,7 +8319,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    ENABLE_GTK_DOC_TRUE=
    ENABLE_GTK_DOC_FALSE='#'
  else
-@@ -32649,9 +33433,7 @@
+@@ -32649,9 +33437,7 @@
    ENABLE_GTK_DOC_FALSE=
  fi
  
@@ -8307,7 +8330,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    GTK_DOC_USE_LIBTOOL_TRUE=
    GTK_DOC_USE_LIBTOOL_FALSE='#'
  else
-@@ -32699,9 +33481,7 @@
+@@ -32699,9 +33485,7 @@
  fi
  
  
@@ -8318,7 +8341,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    HAVE_DOCBOOK_TRUE=
    HAVE_DOCBOOK_FALSE='#'
  else
-@@ -32875,9 +33655,7 @@
+@@ -32875,9 +33659,7 @@
  
  fi
  
@@ -8329,7 +8352,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    ENABLE_MAN_TRUE=
    ENABLE_MAN_FALSE='#'
  else
-@@ -33008,6 +33786,13 @@
+@@ -33008,6 +33790,13 @@
  Usually this means the macro was only invoked conditionally." >&2;}
     { (exit 1); exit 1; }; }
  fi
@@ -8343,7 +8366,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
    { { $as_echo "$as_me:$LINENO: error: conditional \"am__fastdepCXX\" was never defined.
  Usually this means the macro was only invoked conditionally." >&5
-@@ -33036,6 +33821,13 @@
+@@ -33036,6 +33825,13 @@
  Usually this means the macro was only invoked conditionally." >&2;}
     { (exit 1); exit 1; }; }
  fi
@@ -8357,7 +8380,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
    { { $as_echo "$as_me:$LINENO: error: conditional \"MAINTAINER_MODE\" was never defined.
  Usually this means the macro was only invoked conditionally." >&5
-@@ -33078,6 +33870,13 @@
+@@ -33078,6 +33874,13 @@
  Usually this means the macro was only invoked conditionally." >&2;}
     { (exit 1); exit 1; }; }
  fi
@@ -8371,7 +8394,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  if test -z "${DISABLE_EXPLICIT_DEPS_TRUE}" && test -z "${DISABLE_EXPLICIT_DEPS_FALSE}"; then
    { { $as_echo "$as_me:$LINENO: error: conditional \"DISABLE_EXPLICIT_DEPS\" was never defined.
  Usually this means the macro was only invoked conditionally." >&5
-@@ -33915,6 +34714,7 @@
+@@ -33915,6 +34718,7 @@
  ac_pwd='$ac_pwd'
  srcdir='$srcdir'
  INSTALL='$INSTALL'
@@ -8379,7 +8402,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  AWK='$AWK'
  test -n "\$AWK" || AWK=awk
  _ACEOF
-@@ -34985,6 +35785,11 @@
+@@ -34985,6 +35789,11 @@
    [\\/$]* | ?:[\\/]* ) ac_INSTALL=$INSTALL ;;
    *) ac_INSTALL=$ac_top_build_prefix$INSTALL ;;
    esac
@@ -8391,7 +8414,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  _ACEOF
  
  cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
-@@ -35041,6 +35846,7 @@
+@@ -35041,6 +35850,7 @@
  s&@abs_builddir@&$ac_abs_builddir&;t t
  s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
  s&@INSTALL@&$ac_INSTALL&;t t
@@ -8399,7 +8422,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  $ac_datarootdir_hack
  "
  eval sed \"\$ac_sed_extra\" "$ac_file_inputs" | $AWK -f "$tmp/subs.awk" >$tmp/out \
-@@ -35095,21 +35901,22 @@
+@@ -35095,21 +35905,22 @@
     { (exit 1); exit 1; }; }
    fi
  # Compute "$ac_file"'s index in $config_headers.
@@ -8429,7 +8452,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
      sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
  	    s//\1/
  	    q
-@@ -35136,17 +35943,28 @@
+@@ -35136,17 +35947,28 @@
  
  
    case $ac_file$ac_mode in
@@ -8469,7 +8492,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  $as_expr X"$mf" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
  	 X"$mf" : 'X\(//\)[^/]' \| \
  	 X"$mf" : 'X\(//\)$' \| \
-@@ -35169,34 +35987,28 @@
+@@ -35169,34 +35991,28 @@
  	    q
  	  }
  	  s/.*/./; q'`
@@ -8526,7 +8549,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
  $as_expr X"$file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
  	 X"$file" : 'X\(//\)[^/]' \| \
  	 X"$file" : 'X\(//\)$' \| \
-@@ -35219,7 +36031,7 @@
+@@ -35219,7 +36035,7 @@
  	    q
  	  }
  	  s/.*/./; q'`
@@ -8535,7 +8558,7 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
    case $as_dir in #(
    -*) as_dir=./$as_dir;;
    esac
-@@ -35260,10 +36072,11 @@
+@@ -35260,10 +36076,11 @@
    } || test -d "$as_dir" || { { $as_echo "$as_me:$LINENO: error: cannot create directory $as_dir" >&5
  $as_echo "$as_me: error: cannot create directory $as_dir" >&2;}
     { (exit 1); exit 1; }; }; }
@@ -8550,9 +8573,10 @@ diff -Nur gtk+2.0-2.17.2/configure gtk+2.0-2.17.2.ubuntu/configure
   ;;
      "libtool":C)
  
-diff -Nur gtk+2.0-2.17.2/contrib/gdk-pixbuf-xlib/Makefile.in gtk+2.0-2.17.2.ubuntu/contrib/gdk-pixbuf-xlib/Makefile.in
---- gtk+2.0-2.17.2/contrib/gdk-pixbuf-xlib/Makefile.in	2009-06-16 00:56:11.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/contrib/gdk-pixbuf-xlib/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/contrib/gdk-pixbuf-xlib/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/contrib/gdk-pixbuf-xlib/Makefile.in	2009-06-16 00:56:11.000000000 +0200
++++ gtk+2.0-2.17.2/contrib/gdk-pixbuf-xlib/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -9393,9 +9417,10 @@ diff -Nur gtk+2.0-2.17.2/contrib/gdk-pixbuf-xlib/Makefile.in gtk+2.0-2.17.2.ubun
  	uninstall-libgdk_pixbuf_xlibincludeHEADERS \
  	uninstall-pkgconfigDATA
  
-diff -Nur gtk+2.0-2.17.2/contrib/Makefile.in gtk+2.0-2.17.2.ubuntu/contrib/Makefile.in
---- gtk+2.0-2.17.2/contrib/Makefile.in	2009-06-16 00:56:11.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/contrib/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/contrib/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/contrib/Makefile.in	2009-06-16 00:56:11.000000000 +0200
++++ gtk+2.0-2.17.2/contrib/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -10090,9 +10115,10 @@ diff -Nur gtk+2.0-2.17.2/contrib/Makefile.in gtk+2.0-2.17.2.ubuntu/contrib/Makef
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/demos/gtk-demo/Makefile.in gtk+2.0-2.17.2.ubuntu/demos/gtk-demo/Makefile.in
---- gtk+2.0-2.17.2/demos/gtk-demo/Makefile.in	2009-06-16 00:56:12.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/demos/gtk-demo/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/demos/gtk-demo/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/demos/gtk-demo/Makefile.in	2009-06-16 00:56:12.000000000 +0200
++++ gtk+2.0-2.17.2/demos/gtk-demo/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -10949,9 +10975,10 @@ diff -Nur gtk+2.0-2.17.2/demos/gtk-demo/Makefile.in gtk+2.0-2.17.2.ubuntu/demos/
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/demos/Makefile.in gtk+2.0-2.17.2.ubuntu/demos/Makefile.in
---- gtk+2.0-2.17.2/demos/Makefile.in	2009-06-16 00:56:11.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/demos/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/demos/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/demos/Makefile.in	2009-06-16 00:56:11.000000000 +0200
++++ gtk+2.0-2.17.2/demos/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -11900,9 +11927,10 @@ diff -Nur gtk+2.0-2.17.2/demos/Makefile.in gtk+2.0-2.17.2.ubuntu/demos/Makefile.
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/faq/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/faq/Makefile.in
---- gtk+2.0-2.17.2/docs/faq/Makefile.in	2009-06-16 00:56:12.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/faq/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/faq/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/faq/Makefile.in	2009-06-16 00:56:12.000000000 +0200
++++ gtk+2.0-2.17.2/docs/faq/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -12423,9 +12451,10 @@ diff -Nur gtk+2.0-2.17.2/docs/faq/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/faq/Mak
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/Makefile.in
---- gtk+2.0-2.17.2/docs/Makefile.in	2009-06-16 00:56:12.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/Makefile.in	2009-06-16 00:56:12.000000000 +0200
++++ gtk+2.0-2.17.2/docs/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -13148,9 +13177,10 @@ diff -Nur gtk+2.0-2.17.2/docs/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/Makefile.in
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/reference/gdk/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/reference/gdk/Makefile.in
---- gtk+2.0-2.17.2/docs/reference/gdk/Makefile.in	2009-06-16 00:56:12.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/reference/gdk/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/reference/gdk/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/reference/gdk/Makefile.in	2009-06-16 00:56:12.000000000 +0200
++++ gtk+2.0-2.17.2/docs/reference/gdk/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -13731,9 +13761,10 @@ diff -Nur gtk+2.0-2.17.2/docs/reference/gdk/Makefile.in gtk+2.0-2.17.2.ubuntu/do
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/reference/gdk-pixbuf/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/reference/gdk-pixbuf/Makefile.in
---- gtk+2.0-2.17.2/docs/reference/gdk-pixbuf/Makefile.in	2009-06-16 00:56:12.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/reference/gdk-pixbuf/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/reference/gdk-pixbuf/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/reference/gdk-pixbuf/Makefile.in	2009-06-16 00:56:12.000000000 +0200
++++ gtk+2.0-2.17.2/docs/reference/gdk-pixbuf/Makefile.in	2009-06-17 00:14:58.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -14390,9 +14421,10 @@ diff -Nur gtk+2.0-2.17.2/docs/reference/gdk-pixbuf/Makefile.in gtk+2.0-2.17.2.ub
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/reference/gtk/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/reference/gtk/Makefile.in
---- gtk+2.0-2.17.2/docs/reference/gtk/Makefile.in	2009-06-16 00:56:12.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/reference/gtk/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/reference/gtk/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/reference/gtk/Makefile.in	2009-06-16 00:56:12.000000000 +0200
++++ gtk+2.0-2.17.2/docs/reference/gtk/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -15046,9 +15078,10 @@ diff -Nur gtk+2.0-2.17.2/docs/reference/gtk/Makefile.in gtk+2.0-2.17.2.ubuntu/do
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/reference/libgail-util/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/reference/libgail-util/Makefile.in
---- gtk+2.0-2.17.2/docs/reference/libgail-util/Makefile.in	2009-06-16 00:56:13.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/reference/libgail-util/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/reference/libgail-util/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/reference/libgail-util/Makefile.in	2009-06-16 00:56:13.000000000 +0200
++++ gtk+2.0-2.17.2/docs/reference/libgail-util/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -15614,9 +15647,10 @@ diff -Nur gtk+2.0-2.17.2/docs/reference/libgail-util/Makefile.in gtk+2.0-2.17.2.
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/reference/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/reference/Makefile.in
---- gtk+2.0-2.17.2/docs/reference/Makefile.in	2009-06-16 00:56:12.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/reference/Makefile.in	2009-06-16 15:48:46.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/reference/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/reference/Makefile.in	2009-06-16 00:56:12.000000000 +0200
++++ gtk+2.0-2.17.2/docs/reference/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -16315,9 +16349,10 @@ diff -Nur gtk+2.0-2.17.2/docs/reference/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/r
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/tools/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/tools/Makefile.in
---- gtk+2.0-2.17.2/docs/tools/Makefile.in	2009-06-16 00:56:13.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/tools/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/tools/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/tools/Makefile.in	2009-06-16 00:56:13.000000000 +0200
++++ gtk+2.0-2.17.2/docs/tools/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -17026,9 +17061,10 @@ diff -Nur gtk+2.0-2.17.2/docs/tools/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/tools
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/docs/tutorial/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/tutorial/Makefile.in
---- gtk+2.0-2.17.2/docs/tutorial/Makefile.in	2009-06-16 00:56:13.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/docs/tutorial/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/docs/tutorial/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/docs/tutorial/Makefile.in	2009-06-16 00:56:13.000000000 +0200
++++ gtk+2.0-2.17.2/docs/tutorial/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -17590,9 +17626,10 @@ diff -Nur gtk+2.0-2.17.2/docs/tutorial/Makefile.in gtk+2.0-2.17.2.ubuntu/docs/tu
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gdk/directfb/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/directfb/Makefile.in
---- gtk+2.0-2.17.2/gdk/directfb/Makefile.in	2009-06-16 00:56:14.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk/directfb/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk/directfb/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk/directfb/Makefile.in	2009-06-16 00:56:14.000000000 +0200
++++ gtk+2.0-2.17.2/gdk/directfb/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -18386,9 +18423,10 @@ diff -Nur gtk+2.0-2.17.2/gdk/directfb/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/dire
  	uninstall-libgdkincludeHEADERS
  
  # call as: $(XVFB_START) && someprogram
-diff -Nur gtk+2.0-2.17.2/gdk/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/Makefile.in
---- gtk+2.0-2.17.2/gdk/Makefile.in	2009-06-16 00:56:14.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk/Makefile.in	2009-06-16 00:56:14.000000000 +0200
++++ gtk+2.0-2.17.2/gdk/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -19686,9 +19724,10 @@ diff -Nur gtk+2.0-2.17.2/gdk/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/Makefile.in
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gdk/quartz/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/quartz/Makefile.in
---- gtk+2.0-2.17.2/gdk/quartz/Makefile.in	2009-06-16 00:56:14.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk/quartz/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk/quartz/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk/quartz/Makefile.in	2009-06-16 00:56:14.000000000 +0200
++++ gtk+2.0-2.17.2/gdk/quartz/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -20473,9 +20512,10 @@ diff -Nur gtk+2.0-2.17.2/gdk/quartz/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/quartz
  	uninstall-libgdkincludeHEADERS
  
  # call as: $(XVFB_START) && someprogram
-diff -Nur gtk+2.0-2.17.2/gdk/tests/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/tests/Makefile.in
---- gtk+2.0-2.17.2/gdk/tests/Makefile.in	2009-06-16 00:56:14.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk/tests/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk/tests/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk/tests/Makefile.in	2009-06-16 00:56:14.000000000 +0200
++++ gtk+2.0-2.17.2/gdk/tests/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -21124,9 +21164,10 @@ diff -Nur gtk+2.0-2.17.2/gdk/tests/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/tests/M
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gdk/win32/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/win32/Makefile.in
---- gtk+2.0-2.17.2/gdk/win32/Makefile.in	2009-06-16 00:56:15.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk/win32/Makefile.in	2009-06-16 15:48:48.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk/win32/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk/win32/Makefile.in	2009-06-16 00:56:15.000000000 +0200
++++ gtk+2.0-2.17.2/gdk/win32/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -22044,9 +22085,10 @@ diff -Nur gtk+2.0-2.17.2/gdk/win32/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/win32/M
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gdk/win32/rc/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/win32/rc/Makefile.in
---- gtk+2.0-2.17.2/gdk/win32/rc/Makefile.in	2009-06-16 00:56:15.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk/win32/rc/Makefile.in	2009-06-16 15:48:48.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk/win32/rc/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk/win32/rc/Makefile.in	2009-06-16 00:56:15.000000000 +0200
++++ gtk+2.0-2.17.2/gdk/win32/rc/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -22573,9 +22615,10 @@ diff -Nur gtk+2.0-2.17.2/gdk/win32/rc/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/win3
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gdk/x11/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/x11/Makefile.in
---- gtk+2.0-2.17.2/gdk/x11/Makefile.in	2009-06-16 00:56:15.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk/x11/Makefile.in	2009-06-16 15:48:48.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk/x11/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk/x11/Makefile.in	2009-06-16 00:56:15.000000000 +0200
++++ gtk+2.0-2.17.2/gdk/x11/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -23596,9 +23639,10 @@ diff -Nur gtk+2.0-2.17.2/gdk/x11/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk/x11/Makef
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gdk-pixbuf/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk-pixbuf/Makefile.in
---- gtk+2.0-2.17.2/gdk-pixbuf/Makefile.in	2009-06-16 00:56:13.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk-pixbuf/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk-pixbuf/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk-pixbuf/Makefile.in	2009-06-16 00:56:13.000000000 +0200
++++ gtk+2.0-2.17.2/gdk-pixbuf/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -26774,9 +26818,10 @@ diff -Nur gtk+2.0-2.17.2/gdk-pixbuf/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk-pixbuf
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gdk-pixbuf/pixops/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk-pixbuf/pixops/Makefile.in
---- gtk+2.0-2.17.2/gdk-pixbuf/pixops/Makefile.in	2009-06-16 00:56:13.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gdk-pixbuf/pixops/Makefile.in	2009-06-16 15:48:47.000000000 +0200
+Index: gtk+2.0-2.17.2/gdk-pixbuf/pixops/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gdk-pixbuf/pixops/Makefile.in	2009-06-16 00:56:13.000000000 +0200
++++ gtk+2.0-2.17.2/gdk-pixbuf/pixops/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -27555,9 +27600,10 @@ diff -Nur gtk+2.0-2.17.2/gdk-pixbuf/pixops/Makefile.in gtk+2.0-2.17.2.ubuntu/gdk
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gtk/Makefile.in gtk+2.0-2.17.2.ubuntu/gtk/Makefile.in
---- gtk+2.0-2.17.2/gtk/Makefile.in	2009-06-16 00:56:15.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gtk/Makefile.in	2009-06-16 15:48:48.000000000 +0200
+Index: gtk+2.0-2.17.2/gtk/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gtk/Makefile.in	2009-06-16 00:56:15.000000000 +0200
++++ gtk+2.0-2.17.2/gtk/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -31394,9 +31440,10 @@ diff -Nur gtk+2.0-2.17.2/gtk/Makefile.in gtk+2.0-2.17.2.ubuntu/gtk/Makefile.in
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gtk/tests/Makefile.in gtk+2.0-2.17.2.ubuntu/gtk/tests/Makefile.in
---- gtk+2.0-2.17.2/gtk/tests/Makefile.in	2009-06-16 00:56:16.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gtk/tests/Makefile.in	2009-06-16 15:48:48.000000000 +0200
+Index: gtk+2.0-2.17.2/gtk/tests/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gtk/tests/Makefile.in	2009-06-16 00:56:16.000000000 +0200
++++ gtk+2.0-2.17.2/gtk/tests/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -32269,9 +32316,10 @@ diff -Nur gtk+2.0-2.17.2/gtk/tests/Makefile.in gtk+2.0-2.17.2.ubuntu/gtk/tests/M
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/gtk/theme-bits/Makefile.in gtk+2.0-2.17.2.ubuntu/gtk/theme-bits/Makefile.in
---- gtk+2.0-2.17.2/gtk/theme-bits/Makefile.in	2009-06-16 00:56:16.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/gtk/theme-bits/Makefile.in	2009-06-16 15:48:48.000000000 +0200
+Index: gtk+2.0-2.17.2/gtk/theme-bits/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/gtk/theme-bits/Makefile.in	2009-06-16 00:56:16.000000000 +0200
++++ gtk+2.0-2.17.2/gtk/theme-bits/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -32960,9 +33008,10 @@ diff -Nur gtk+2.0-2.17.2/gtk/theme-bits/Makefile.in gtk+2.0-2.17.2.ubuntu/gtk/th
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/m4macros/Makefile.in gtk+2.0-2.17.2.ubuntu/m4macros/Makefile.in
---- gtk+2.0-2.17.2/m4macros/Makefile.in	2009-06-16 00:56:16.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/m4macros/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/m4macros/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/m4macros/Makefile.in	2009-06-16 00:56:16.000000000 +0200
++++ gtk+2.0-2.17.2/m4macros/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -33516,9 +33565,10 @@ diff -Nur gtk+2.0-2.17.2/m4macros/Makefile.in gtk+2.0-2.17.2.ubuntu/m4macros/Mak
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/Makefile.in gtk+2.0-2.17.2.ubuntu/Makefile.in
---- gtk+2.0-2.17.2/Makefile.in	2009-06-16 00:56:11.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/Makefile.in	2009-06-16 15:48:51.000000000 +0200
+Index: gtk+2.0-2.17.2/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/Makefile.in	2009-06-16 00:56:11.000000000 +0200
++++ gtk+2.0-2.17.2/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -34670,9 +34720,10 @@ diff -Nur gtk+2.0-2.17.2/Makefile.in gtk+2.0-2.17.2.ubuntu/Makefile.in
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/engines/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/engines/Makefile.in
---- gtk+2.0-2.17.2/modules/engines/Makefile.in	2009-06-16 00:56:16.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/engines/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/engines/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/engines/Makefile.in	2009-06-16 00:56:16.000000000 +0200
++++ gtk+2.0-2.17.2/modules/engines/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -35368,9 +35419,10 @@ diff -Nur gtk+2.0-2.17.2/modules/engines/Makefile.in gtk+2.0-2.17.2.ubuntu/modul
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/engines/ms-windows/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/engines/ms-windows/Makefile.in
---- gtk+2.0-2.17.2/modules/engines/ms-windows/Makefile.in	2009-06-16 00:56:16.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/engines/ms-windows/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/engines/ms-windows/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/engines/ms-windows/Makefile.in	2009-06-16 00:56:16.000000000 +0200
++++ gtk+2.0-2.17.2/modules/engines/ms-windows/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -36258,9 +36310,10 @@ diff -Nur gtk+2.0-2.17.2/modules/engines/ms-windows/Makefile.in gtk+2.0-2.17.2.u
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in
---- gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in	2009-06-16 00:56:17.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in	2009-06-16 00:56:17.000000000 +0200
++++ gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -36813,9 +36866,10 @@ diff -Nur gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/gtk-2.0/Makefile.in gt
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/engines/ms-windows/Theme/Makefile.in
---- gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/Makefile.in	2009-06-16 00:56:17.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/engines/ms-windows/Theme/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/engines/ms-windows/Theme/Makefile.in	2009-06-16 00:56:17.000000000 +0200
++++ gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -37512,9 +37566,10 @@ diff -Nur gtk+2.0-2.17.2/modules/engines/ms-windows/Theme/Makefile.in gtk+2.0-2.
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/engines/pixbuf/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/engines/pixbuf/Makefile.in
---- gtk+2.0-2.17.2/modules/engines/pixbuf/Makefile.in	2009-06-16 00:56:17.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/engines/pixbuf/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/engines/pixbuf/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/engines/pixbuf/Makefile.in	2009-06-16 00:56:17.000000000 +0200
++++ gtk+2.0-2.17.2/modules/engines/pixbuf/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -38274,9 +38329,10 @@ diff -Nur gtk+2.0-2.17.2/modules/engines/pixbuf/Makefile.in gtk+2.0-2.17.2.ubunt
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/input/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/input/Makefile.in
---- gtk+2.0-2.17.2/modules/input/Makefile.in	2009-06-16 00:56:17.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/input/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/input/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/input/Makefile.in	2009-06-16 00:56:17.000000000 +0200
++++ gtk+2.0-2.17.2/modules/input/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -39774,9 +39830,10 @@ diff -Nur gtk+2.0-2.17.2/modules/input/Makefile.in gtk+2.0-2.17.2.ubuntu/modules
  
  @CROSS_COMPILING_FALSE@all-local: gtk.immodules
  
-diff -Nur gtk+2.0-2.17.2/modules/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/Makefile.in
---- gtk+2.0-2.17.2/modules/Makefile.in	2009-06-16 00:56:16.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/Makefile.in	2009-06-16 00:56:16.000000000 +0200
++++ gtk+2.0-2.17.2/modules/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -40471,9 +40528,10 @@ diff -Nur gtk+2.0-2.17.2/modules/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/Makef
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/other/gail/libgail-util/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/other/gail/libgail-util/Makefile.in
---- gtk+2.0-2.17.2/modules/other/gail/libgail-util/Makefile.in	2009-06-16 00:56:18.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/other/gail/libgail-util/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/other/gail/libgail-util/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/other/gail/libgail-util/Makefile.in	2009-06-16 00:56:18.000000000 +0200
++++ gtk+2.0-2.17.2/modules/other/gail/libgail-util/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -41359,9 +41417,10 @@ diff -Nur gtk+2.0-2.17.2/modules/other/gail/libgail-util/Makefile.in gtk+2.0-2.1
  	uninstall-libgailutilincludeHEADERS uninstall-local
  
  # call as: $(XVFB_START) && someprogram
-diff -Nur gtk+2.0-2.17.2/modules/other/gail/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/other/gail/Makefile.in
---- gtk+2.0-2.17.2/modules/other/gail/Makefile.in	2009-06-16 00:56:18.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/other/gail/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/other/gail/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/other/gail/Makefile.in	2009-06-16 00:56:18.000000000 +0200
++++ gtk+2.0-2.17.2/modules/other/gail/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -44501,9 +44560,10 @@ diff -Nur gtk+2.0-2.17.2/modules/other/gail/Makefile.in gtk+2.0-2.17.2.ubuntu/mo
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/other/gail/tests/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/other/gail/tests/Makefile.in
---- gtk+2.0-2.17.2/modules/other/gail/tests/Makefile.in	2009-06-16 00:56:18.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/other/gail/tests/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/other/gail/tests/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/other/gail/tests/Makefile.in	2009-06-16 00:56:18.000000000 +0200
++++ gtk+2.0-2.17.2/modules/other/gail/tests/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -45785,9 +45845,10 @@ diff -Nur gtk+2.0-2.17.2/modules/other/gail/tests/Makefile.in gtk+2.0-2.17.2.ubu
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/other/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/other/Makefile.in
---- gtk+2.0-2.17.2/modules/other/Makefile.in	2009-06-16 00:56:17.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/other/Makefile.in	2009-06-16 15:48:49.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/other/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/other/Makefile.in	2009-06-16 00:56:17.000000000 +0200
++++ gtk+2.0-2.17.2/modules/other/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -46484,9 +46545,10 @@ diff -Nur gtk+2.0-2.17.2/modules/other/Makefile.in gtk+2.0-2.17.2.ubuntu/modules
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/printbackends/cups/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/printbackends/cups/Makefile.in
---- gtk+2.0-2.17.2/modules/printbackends/cups/Makefile.in	2009-06-16 00:56:19.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/printbackends/cups/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/printbackends/cups/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/printbackends/cups/Makefile.in	2009-06-16 00:56:19.000000000 +0200
++++ gtk+2.0-2.17.2/modules/printbackends/cups/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -47252,9 +47314,10 @@ diff -Nur gtk+2.0-2.17.2/modules/printbackends/cups/Makefile.in gtk+2.0-2.17.2.u
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/printbackends/file/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/printbackends/file/Makefile.in
---- gtk+2.0-2.17.2/modules/printbackends/file/Makefile.in	2009-06-16 00:56:19.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/printbackends/file/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/printbackends/file/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/printbackends/file/Makefile.in	2009-06-16 00:56:19.000000000 +0200
++++ gtk+2.0-2.17.2/modules/printbackends/file/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -48058,9 +48121,10 @@ diff -Nur gtk+2.0-2.17.2/modules/printbackends/file/Makefile.in gtk+2.0-2.17.2.u
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/printbackends/lpr/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/printbackends/lpr/Makefile.in
---- gtk+2.0-2.17.2/modules/printbackends/lpr/Makefile.in	2009-06-16 00:56:19.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/printbackends/lpr/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/printbackends/lpr/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/printbackends/lpr/Makefile.in	2009-06-16 00:56:19.000000000 +0200
++++ gtk+2.0-2.17.2/modules/printbackends/lpr/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -48814,9 +48878,10 @@ diff -Nur gtk+2.0-2.17.2/modules/printbackends/lpr/Makefile.in gtk+2.0-2.17.2.ub
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/printbackends/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/printbackends/Makefile.in
---- gtk+2.0-2.17.2/modules/printbackends/Makefile.in	2009-06-16 00:56:19.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/printbackends/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/printbackends/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/printbackends/Makefile.in	2009-06-16 00:56:19.000000000 +0200
++++ gtk+2.0-2.17.2/modules/printbackends/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -49513,9 +49578,10 @@ diff -Nur gtk+2.0-2.17.2/modules/printbackends/Makefile.in gtk+2.0-2.17.2.ubuntu
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/modules/printbackends/papi/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/printbackends/papi/Makefile.in
---- gtk+2.0-2.17.2/modules/printbackends/papi/Makefile.in	2009-06-16 00:56:19.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/printbackends/papi/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/printbackends/papi/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/printbackends/papi/Makefile.in	2009-06-16 00:56:19.000000000 +0200
++++ gtk+2.0-2.17.2/modules/printbackends/papi/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -50264,9 +50330,10 @@ diff -Nur gtk+2.0-2.17.2/modules/printbackends/papi/Makefile.in gtk+2.0-2.17.2.u
  
  
  -include $(top_srcdir)/git.mk
-diff -Nur gtk+2.0-2.17.2/modules/printbackends/test/Makefile.in gtk+2.0-2.17.2.ubuntu/modules/printbackends/test/Makefile.in
---- gtk+2.0-2.17.2/modules/printbackends/test/Makefile.in	2009-06-16 00:56:19.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/modules/printbackends/test/Makefile.in	2009-06-16 15:48:50.000000000 +0200
+Index: gtk+2.0-2.17.2/modules/printbackends/test/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/modules/printbackends/test/Makefile.in	2009-06-16 00:56:19.000000000 +0200
++++ gtk+2.0-2.17.2/modules/printbackends/test/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -51067,9 +51134,10 @@ diff -Nur gtk+2.0-2.17.2/modules/printbackends/test/Makefile.in gtk+2.0-2.17.2.u
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/perf/Makefile.in gtk+2.0-2.17.2.ubuntu/perf/Makefile.in
---- gtk+2.0-2.17.2/perf/Makefile.in	2009-06-16 00:56:20.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/perf/Makefile.in	2009-06-16 15:48:51.000000000 +0200
+Index: gtk+2.0-2.17.2/perf/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/perf/Makefile.in	2009-06-16 00:56:20.000000000 +0200
++++ gtk+2.0-2.17.2/perf/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
@@ -51820,9 +51888,10 @@ diff -Nur gtk+2.0-2.17.2/perf/Makefile.in gtk+2.0-2.17.2.ubuntu/perf/Makefile.in
  
  # call as: $(XVFB_START) && someprogram
  
-diff -Nur gtk+2.0-2.17.2/tests/Makefile.in gtk+2.0-2.17.2.ubuntu/tests/Makefile.in
---- gtk+2.0-2.17.2/tests/Makefile.in	2009-06-16 00:56:20.000000000 +0200
-+++ gtk+2.0-2.17.2.ubuntu/tests/Makefile.in	2009-06-16 15:48:51.000000000 +0200
+Index: gtk+2.0-2.17.2/tests/Makefile.in
+===================================================================
+--- gtk+2.0-2.17.2.orig/tests/Makefile.in	2009-06-16 00:56:20.000000000 +0200
++++ gtk+2.0-2.17.2/tests/Makefile.in	2009-06-17 00:14:59.000000000 +0200
 @@ -1,8 +1,8 @@
 -# Makefile.in generated by automake 1.7.9 from Makefile.am.
 +# Makefile.in generated by automake 1.10.2 from Makefile.am.
