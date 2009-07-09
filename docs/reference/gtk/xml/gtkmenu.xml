@@ -60,6 +60,9 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-menu-get-tit
                                                          <link linkend="gint">gint</link> monitor_num);
 <link linkend="gint">gint</link>                <link linkend="gtk-menu-get-monitor">gtk_menu_get_monitor</link>                (<link linkend="GtkMenu">GtkMenu</link> *menu);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-menu-get-tearoff-state">gtk_menu_get_tearoff_state</link>          (<link linkend="GtkMenu">GtkMenu</link> *menu);
+<link linkend="void">void</link>                <link linkend="gtk-menu-set-reserve-toggle-size">gtk_menu_set_reserve_toggle_size</link>    (<link linkend="GtkMenu">GtkMenu</link> *menu,
+                                                         <link linkend="gboolean">gboolean</link> reserve_toggle_size);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-menu-get-reserve-toggle-size">gtk_menu_get_reserve_toggle_size</link>    (<link linkend="GtkMenu">GtkMenu</link> *menu);
 
 <link linkend="void">void</link>                <link linkend="gtk-menu-popdown">gtk_menu_popdown</link>                    (<link linkend="GtkMenu">GtkMenu</link> *menu);
 <link linkend="void">void</link>                <link linkend="gtk-menu-reposition">gtk_menu_reposition</link>                 (<link linkend="GtkMenu">GtkMenu</link> *menu);
@@ -116,6 +119,7 @@ GtkMenu implements
   &quot;<link linkend="GtkMenu--active">active</link>&quot;                   <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkMenu--attach-widget">attach-widget</link>&quot;            <link linkend="GtkWidget">GtkWidget</link>*            : Read / Write
   &quot;<link linkend="GtkMenu--monitor">monitor</link>&quot;                  <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkMenu--reserve-toggle-size">reserve-toggle-size</link>&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkMenu--tearoff-state">tearoff-state</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkMenu--tearoff-title">tearoff-title</link>&quot;            <link linkend="gchar">gchar</link>*                : Read / Write
 </synopsis>
@@ -567,6 +571,37 @@ Returns whether the menu is torn off. See
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the menu is currently torn off.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-menu-set-reserve-toggle-size" role="function" condition="since:2.18">
+<title>gtk_menu_set_reserve_toggle_size ()</title>
+<indexterm zone="gtk-menu-set-reserve-toggle-size" role="2.18"><primary sortas="menu_set_reserve_toggle_size">gtk_menu_set_reserve_toggle_size</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_set_reserve_toggle_size    (<link linkend="GtkMenu">GtkMenu</link> *menu,
+                                                         <link linkend="gboolean">gboolean</link> reserve_toggle_size);</programlisting>
+<para>
+Sets whether the menu should reserve space for drawing toggles 
+or icons, regardless of their actual presence.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>menu</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMenu"><type>GtkMenu</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>reserve_toggle_size</parameter>&#160;:</term>
+<listitem><simpara> whether to reserve size for toggles
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-menu-get-reserve-toggle-size" role="function" condition="since:2.18">
+<title>gtk_menu_get_reserve_toggle_size ()</title>
+<indexterm zone="gtk-menu-get-reserve-toggle-size" role="2.18"><primary sortas="menu_get_reserve_toggle_size">gtk_menu_get_reserve_toggle_size</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_menu_get_reserve_toggle_size    (<link linkend="GtkMenu">GtkMenu</link> *menu);</programlisting>
+<para>
+Returns whether the menu reserves space for toggles and
+icons, regardless of their actual presence.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>menu</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkMenu"><type>GtkMenu</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the menu reserves toggle space
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-menu-popdown" role="function">
 <title>gtk_menu_popdown ()</title>
 <indexterm zone="gtk-menu-popdown"><primary sortas="menu_popdown">gtk_menu_popdown</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_menu_popdown                    (<link linkend="GtkMenu">GtkMenu</link> *menu);</programlisting>
@@ -796,6 +831,21 @@ The monitor the menu will be popped up on.</para>
 </para><para>Allowed values: &gt;= G_MAXULONG</para>
 <para>Default value: -1</para>
 <para>Since 2.14</para>
+</refsect2>
+<refsect2 id="GtkMenu--reserve-toggle-size" role="property"><title>The <literal>&quot;reserve-toggle-size&quot;</literal> property</title>
+<indexterm zone="GtkMenu--reserve-toggle-size" role="2.18"><primary sortas="Menu:reserve-toggle-size">GtkMenu:reserve-toggle-size</primary></indexterm><programlisting>  &quot;reserve-toggle-size&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+A boolean that indicates whether the menu reserves space for
+toggles and icons, regardless of their actual presence.
+</para>
+<para>
+This property should only be changed from its default value
+for special-purposes such as tabular menus. Regular menus that
+are connected to a menu bar or context menus should reserve
+toggle space for consistency.</para>
+<para>
+</para><para>Default value: TRUE</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkMenu--tearoff-state" role="property"><title>The <literal>&quot;tearoff-state&quot;</literal> property</title>
 <indexterm zone="GtkMenu--tearoff-state" role="2.6"><primary sortas="Menu:tearoff-state">GtkMenu:tearoff-state</primary></indexterm><programlisting>  &quot;tearoff-state&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>

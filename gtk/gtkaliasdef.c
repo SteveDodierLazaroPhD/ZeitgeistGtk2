@@ -2940,6 +2940,12 @@ extern __typeof (gtk_status_icon_get_geometry) gtk_status_icon_get_geometry __at
 #undef gtk_status_icon_get_x11_window_id 
 extern __typeof (gtk_status_icon_get_x11_window_id) gtk_status_icon_get_x11_window_id __attribute((alias("IA__gtk_status_icon_get_x11_window_id"), visibility("default")));
 
+#undef gtk_status_icon_get_title 
+extern __typeof (gtk_status_icon_get_title) gtk_status_icon_get_title __attribute((alias("IA__gtk_status_icon_get_title"), visibility("default")));
+
+#undef gtk_status_icon_set_title 
+extern __typeof (gtk_status_icon_set_title) gtk_status_icon_set_title __attribute((alias("IA__gtk_status_icon_set_title"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GTK_STYLE_H__)
@@ -5814,6 +5820,9 @@ extern __typeof (gtk_menu_get_attach_widget) gtk_menu_get_attach_widget __attrib
 #undef gtk_menu_get_for_attach_widget 
 extern __typeof (gtk_menu_get_for_attach_widget) gtk_menu_get_for_attach_widget __attribute((alias("IA__gtk_menu_get_for_attach_widget"), visibility("default")));
 
+#undef gtk_menu_get_reserve_toggle_size 
+extern __typeof (gtk_menu_get_reserve_toggle_size) gtk_menu_get_reserve_toggle_size __attribute((alias("IA__gtk_menu_get_reserve_toggle_size"), visibility("default")));
+
 #undef gtk_menu_get_tearoff_state 
 extern __typeof (gtk_menu_get_tearoff_state) gtk_menu_get_tearoff_state __attribute((alias("IA__gtk_menu_get_tearoff_state"), visibility("default")));
 
@@ -5849,6 +5858,9 @@ extern __typeof (gtk_menu_set_active) gtk_menu_set_active __attribute((alias("IA
 
 #undef gtk_menu_set_monitor 
 extern __typeof (gtk_menu_set_monitor) gtk_menu_set_monitor __attribute((alias("IA__gtk_menu_set_monitor"), visibility("default")));
+
+#undef gtk_menu_set_reserve_toggle_size 
+extern __typeof (gtk_menu_set_reserve_toggle_size) gtk_menu_set_reserve_toggle_size __attribute((alias("IA__gtk_menu_set_reserve_toggle_size"), visibility("default")));
 
 #undef gtk_menu_set_screen 
 extern __typeof (gtk_menu_set_screen) gtk_menu_set_screen __attribute((alias("IA__gtk_menu_set_screen"), visibility("default")));

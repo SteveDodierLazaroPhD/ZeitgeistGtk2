@@ -200,6 +200,7 @@ gdk_event_type_get_type (void)
             { GDK_OWNER_CHANGE, "GDK_OWNER_CHANGE", "owner-change" },
             { GDK_GRAB_BROKEN, "GDK_GRAB_BROKEN", "grab-broken" },
             { GDK_DAMAGE, "GDK_DAMAGE", "damage" },
+            { GDK_EVENT_LAST, "GDK_EVENT_LAST", "event-last" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GdkEventType"), values);
@@ -839,6 +840,7 @@ gdk_window_type_get_type (void)
             { GDK_WINDOW_DIALOG, "GDK_WINDOW_DIALOG", "dialog" },
             { GDK_WINDOW_TEMP, "GDK_WINDOW_TEMP", "temp" },
             { GDK_WINDOW_FOREIGN, "GDK_WINDOW_FOREIGN", "foreign" },
+            { GDK_WINDOW_OFFSCREEN, "GDK_WINDOW_OFFSCREEN", "offscreen" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GdkWindowType"), values);

@@ -477,7 +477,7 @@ XVFB_START = \
 @USE_QUARTZ_TRUE@GTK_PRINT_PREVIEW_COMMAND = "open -a /Applications/Preview.app %f"
 @USE_QUARTZ_FALSE@GTK_PRINT_PREVIEW_COMMAND = "evince --unlink-tempfile --preview --print-settings %s %f"
 
-SUBDIRS = theme-bits . tests
+SUBDIRS = theme-bits .
 DIST_SUBDIRS = theme-bits tests
 @HAVE_CUPS_FALSE@@HAVE_PAPI_CUPS_FALSE@@HAVE_PAPI_TRUE@GTK_PRINT_BACKENDS = file,papi
 @HAVE_CUPS_FALSE@@HAVE_PAPI_CUPS_FALSE@@HAVE_PAPI_FALSE@GTK_PRINT_BACKENDS = file,lpr
@@ -797,6 +797,7 @@ gtk_private_h_sources = \
 	gtkintl.h		\
 	gtkkeyhash.h		\
 	gtkmnemonichash.h	\
+	gtkmountoperationprivate.h \
 	gtkpathbar.h		\
 	gtkplugprivate.h	\
 	gtkprintoperation-private.h\
@@ -1087,22 +1088,26 @@ gtk_use_x11_c_sources = \
 	gtkplug-x11.c   \
 	gtksocket-x11.c \
 	gtkxembed.c     \
-	gtktrayicon-x11.c
+	gtktrayicon-x11.c \
+	gtkmountoperation-x11.c
 
 gtk_use_win32_c_sources = \
 	gtkplug-win32.c   \
 	gtksocket-win32.c \
 	gtkwin32embed.c   \
-	gtkwin32embedwidget.c
+	gtkwin32embedwidget.c \
+	gtkmountoperation-stub.c
 
 gtk_use_quartz_c_sources = \
 	gtksearchenginequartz.c	\
 	gtkplug-stub.c		\
-	gtksocket-stub.c
+	gtksocket-stub.c	\
+	gtkmountoperation-stub.c
 
 gtk_use_stub_c_sources = \
 	gtkplug-stub.c   \
-	gtksocket-stub.c
+	gtksocket-stub.c \
+	gtkmountoperation-stub.c
 
 @USE_QUARTZ_TRUE@@USE_WIN32_FALSE@@USE_X11_FALSE@gtk_use_quartz_c_sources_CFLAGS = "-xobjective-c"
 
@@ -1573,9 +1578,10 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
 	gtksearchenginetracker.c gtkprint-win32.c \
 	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkplug-win32.c gtksocket-win32.c \
-	gtkwin32embed.c gtkwin32embedwidget.c gtksearchenginequartz.c \
-	gtkplug-stub.c gtksocket-stub.c
+	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
+	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
+	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 @USE_QUARTZ_TRUE@am__objects_1 = gtkclipboard-quartz.lo gtkdnd-quartz.lo \
 @USE_QUARTZ_TRUE@	gtkquartz.lo
 @USE_QUARTZ_FALSE@am__objects_1 = gtkclipboard.lo gtkdnd.lo
@@ -1658,16 +1664,17 @@ am__objects_3 = gtkpagesetupunixdialog.lo gtkprinter.lo \
 am__objects_5 = gtkprint-win32.lo gtkprintoperation-win32.lo
 @OS_WIN32_TRUE@am__objects_6 = $(am__objects_5)
 am__objects_7 = gtkplug-x11.lo gtksocket-x11.lo gtkxembed.lo \
-	gtktrayicon-x11.lo
+	gtktrayicon-x11.lo gtkmountoperation-x11.lo
 @USE_X11_TRUE@am__objects_8 = $(am__objects_7)
 am__objects_9 = gtkplug-win32.lo gtksocket-win32.lo gtkwin32embed.lo \
-	gtkwin32embedwidget.lo
+	gtkwin32embedwidget.lo gtkmountoperation-stub.lo
 @USE_WIN32_TRUE@@USE_X11_FALSE@am__objects_10 = $(am__objects_9)
 am__objects_11 = gtksearchenginequartz.lo gtkplug-stub.lo \
-	gtksocket-stub.lo
+	gtksocket-stub.lo gtkmountoperation-stub.lo
 @USE_QUARTZ_TRUE@@USE_WIN32_FALSE@@USE_X11_FALSE@am__objects_12 = \
 @USE_QUARTZ_TRUE@@USE_WIN32_FALSE@@USE_X11_FALSE@	$(am__objects_11)
-am__objects_13 = gtkplug-stub.lo gtksocket-stub.lo
+am__objects_13 = gtkplug-stub.lo gtksocket-stub.lo \
+	gtkmountoperation-stub.lo
 @USE_QUARTZ_FALSE@@USE_WIN32_FALSE@@USE_X11_FALSE@am__objects_14 = \
 @USE_QUARTZ_FALSE@@USE_WIN32_FALSE@@USE_X11_FALSE@	$(am__objects_13)
 am__objects_15 = $(am__objects_2) $(am__objects_4) $(am__objects_6) \
@@ -1749,9 +1756,10 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
 	gtksearchenginetracker.c gtkprint-win32.c \
 	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkplug-win32.c gtksocket-win32.c \
-	gtkwin32embed.c gtkwin32embedwidget.c gtksearchenginequartz.c \
-	gtkplug-stub.c gtksocket-stub.c
+	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
+	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
+	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 am_libgtk_quartz_2_0_la_OBJECTS = $(am__objects_15)
 libgtk_quartz_2_0_la_OBJECTS = $(am_libgtk_quartz_2_0_la_OBJECTS)
 am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
@@ -1828,9 +1836,10 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
 	gtksearchenginetracker.c gtkprint-win32.c \
 	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkplug-win32.c gtksocket-win32.c \
-	gtkwin32embed.c gtkwin32embedwidget.c gtksearchenginequartz.c \
-	gtkplug-stub.c gtksocket-stub.c
+	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
+	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
+	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 am_libgtk_win32_2_0_la_OBJECTS = $(am__objects_15)
 libgtk_win32_2_0_la_OBJECTS = $(am_libgtk_win32_2_0_la_OBJECTS)
 am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
@@ -1907,9 +1916,10 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
 	gtksearchenginetracker.c gtkprint-win32.c \
 	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkplug-win32.c gtksocket-win32.c \
-	gtkwin32embed.c gtkwin32embedwidget.c gtksearchenginequartz.c \
-	gtkplug-stub.c gtksocket-stub.c
+	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
+	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
+	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 am_libgtk_x11_2_0_la_OBJECTS = $(am__objects_15)
 libgtk_x11_2_0_la_OBJECTS = $(am_libgtk_x11_2_0_la_OBJECTS)
 bin_PROGRAMS = gtk-query-immodules-2.0$(EXEEXT) \
@@ -2038,6 +2048,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/gtkmisc.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkmnemonichash.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkmodules.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkmountoperation-stub.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkmountoperation-x11.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkmountoperation.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtknotebook.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkobject.Plo \
@@ -2433,6 +2445,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkmisc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkmnemonichash.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkmodules.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkmountoperation-stub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkmountoperation-x11.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkmountoperation.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtknotebook.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkobject.Plo@am__quote@

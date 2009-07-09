@@ -1,3 +1,49 @@
+gtk+2.0 (2.17.3-0ubuntu1) karmic; urgency=low
+
+  * New upstream version:
+    GtkFileChooser:
+    - Shows the size column by default now
+    GtkStatusIcon:
+    - Has a title property, which can be used by ATs when they read status icons
+    GtkInfoBar:
+    - The default theme now includes color definitions for infobars
+    - The ::use-tooltip-style style property has been removed
+    GtkMountOperation now supports interaction during unmount operations.
+    The client-side windows branch has been merged; GDK now maintains
+    its own window hierarchy client-side, and only uses X windows where
+    unavoidable. Some of the benefits of this change are
+    - Reduced flicker
+    - The ability to do transformed and animated rendering of widgets
+    - Easier embedding of GTK+ widgets e.g. into Clutter scene graphs
+      This is a fundamental change to the way GDK works, 
+      so watch out for regressions.
+    Bugs fixed:
+    586315 Crash in GTK+ 2.14 when calling gtk.FileChooser.list_shor...
+    461944 pressing the volume icon in full screen shuts down the sound
+    (lp: #137041)
+    490724 iconview item's height would be changed event with same m...
+    564063 regression: Left margin in popup menus
+    582025 Accelerators fail for submenus
+    585626 Setting widget tooltip hammers X11 server on any TCP/IP X...
+    (lp: #386199)
+    585802 Add API to make GtkStatusIcon accessible with a name
+    585858 right-click Add-to-Booksmarks is sometimes greyed out
+    586330 GtkButton ignores user_underline when an image is set
+    318807 Offscreen windows and window redirection
+    587716 GtkInfoBar broken on resize
+    587485 GMountOperation::show-processes support
+    Updated translations
+  * debian/control.in:
+    - updated libglib requirement
+  * debian/patches/090_directfb_csw_build.patch:
+    - new patch from Cody Russel to fix the directfb build
+  * debian/patches/091_directfb_build_workaround.patch:
+    - workaround build issue
+  * debian/rules:
+    - updated shlibs version
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 09 Jul 2009 17:15:04 +0200
+
 gtk+2.0 (2.17.2-0ubuntu2) karmic; urgency=low
 
   * Updated configure correctly

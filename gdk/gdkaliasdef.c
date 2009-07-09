@@ -121,15 +121,6 @@ extern __typeof (gdk_set_use_xshm) gdk_set_use_xshm __attribute((alias("IA__gdk_
 #undef gdk_keyboard_grab 
 extern __typeof (gdk_keyboard_grab) gdk_keyboard_grab __attribute((alias("IA__gdk_keyboard_grab"), visibility("default")));
 
-#undef gdk_keyboard_grab_info_libgtk_only 
-extern __typeof (gdk_keyboard_grab_info_libgtk_only) gdk_keyboard_grab_info_libgtk_only __attribute((alias("IA__gdk_keyboard_grab_info_libgtk_only"), visibility("default")));
-
-#undef gdk_pointer_grab 
-extern __typeof (gdk_pointer_grab) gdk_pointer_grab __attribute((alias("IA__gdk_pointer_grab"), visibility("default")));
-
-#undef gdk_pointer_grab_info_libgtk_only 
-extern __typeof (gdk_pointer_grab_info_libgtk_only) gdk_pointer_grab_info_libgtk_only __attribute((alias("IA__gdk_pointer_grab_info_libgtk_only"), visibility("default")));
-
 #endif
 #endif
 #if IN_HEADER(__GDK_H__)
@@ -154,6 +145,15 @@ extern __typeof (gdk_event_send_client_message) gdk_event_send_client_message __
 
 #undef gdk_event_send_clientmessage_toall 
 extern __typeof (gdk_event_send_clientmessage_toall) gdk_event_send_clientmessage_toall __attribute((alias("IA__gdk_event_send_clientmessage_toall"), visibility("default")));
+
+#undef gdk_keyboard_grab_info_libgtk_only 
+extern __typeof (gdk_keyboard_grab_info_libgtk_only) gdk_keyboard_grab_info_libgtk_only __attribute((alias("IA__gdk_keyboard_grab_info_libgtk_only"), visibility("default")));
+
+#undef gdk_pointer_grab_info_libgtk_only 
+extern __typeof (gdk_pointer_grab_info_libgtk_only) gdk_pointer_grab_info_libgtk_only __attribute((alias("IA__gdk_pointer_grab_info_libgtk_only"), visibility("default")));
+
+#undef gdk_display_pointer_is_grabbed 
+extern __typeof (gdk_display_pointer_is_grabbed) gdk_display_pointer_is_grabbed __attribute((alias("IA__gdk_display_pointer_is_grabbed"), visibility("default")));
 
 #endif
 #endif
@@ -508,13 +508,6 @@ extern __typeof (gdk_image_type_get_type) gdk_image_type_get_type __attribute((a
 
 #undef gdk_visual_type_get_type 
 extern __typeof (gdk_visual_type_get_type) gdk_visual_type_get_type __attribute((alias("IA__gdk_visual_type_get_type"), visibility("default")));
-
-#endif
-#endif
-#if IN_HEADER(__GDK_PIXMAP_H__)
-#if IN_FILE(__GDK_PIXMAP_X11_C__)
-#undef gdk_bitmap_create_from_data 
-extern __typeof (gdk_bitmap_create_from_data) gdk_bitmap_create_from_data __attribute((alias("IA__gdk_bitmap_create_from_data"), visibility("default")));
 
 #endif
 #endif
@@ -920,9 +913,6 @@ extern __typeof (gdk_display_get_n_screens) gdk_display_get_n_screens __attribut
 
 #undef gdk_display_get_screen 
 extern __typeof (gdk_display_get_screen) gdk_display_get_screen __attribute((alias("IA__gdk_display_get_screen"), visibility("default")));
-
-#undef gdk_display_pointer_is_grabbed 
-extern __typeof (gdk_display_pointer_is_grabbed) gdk_display_pointer_is_grabbed __attribute((alias("IA__gdk_display_pointer_is_grabbed"), visibility("default")));
 
 #undef gdk_display_pointer_ungrab 
 extern __typeof (gdk_display_pointer_ungrab) gdk_display_pointer_ungrab __attribute((alias("IA__gdk_display_pointer_ungrab"), visibility("default")));
@@ -1361,6 +1351,12 @@ extern __typeof (gdk_window_get_geometry) gdk_window_get_geometry __attribute((a
 #undef gdk_window_get_origin 
 extern __typeof (gdk_window_get_origin) gdk_window_get_origin __attribute((alias("IA__gdk_window_get_origin"), visibility("default")));
 
+#undef gdk_window_get_root_coords 
+extern __typeof (gdk_window_get_root_coords) gdk_window_get_root_coords __attribute((alias("IA__gdk_window_get_root_coords"), visibility("default")));
+
+#undef gdk_window_get_deskrelative_origin 
+extern __typeof (gdk_window_get_deskrelative_origin) gdk_window_get_deskrelative_origin __attribute((alias("IA__gdk_window_get_deskrelative_origin"), visibility("default")));
+
 #undef gdk_window_shape_combine_mask 
 extern __typeof (gdk_window_shape_combine_mask) gdk_window_shape_combine_mask __attribute((alias("IA__gdk_window_shape_combine_mask"), visibility("default")));
 
@@ -1372,6 +1368,18 @@ extern __typeof (gdk_window_set_child_shapes) gdk_window_set_child_shapes __attr
 
 #undef gdk_window_merge_child_shapes 
 extern __typeof (gdk_window_merge_child_shapes) gdk_window_merge_child_shapes __attribute((alias("IA__gdk_window_merge_child_shapes"), visibility("default")));
+
+#undef gdk_window_input_shape_combine_mask 
+extern __typeof (gdk_window_input_shape_combine_mask) gdk_window_input_shape_combine_mask __attribute((alias("IA__gdk_window_input_shape_combine_mask"), visibility("default")));
+
+#undef gdk_window_input_shape_combine_region 
+extern __typeof (gdk_window_input_shape_combine_region) gdk_window_input_shape_combine_region __attribute((alias("IA__gdk_window_input_shape_combine_region"), visibility("default")));
+
+#undef gdk_window_set_child_input_shapes 
+extern __typeof (gdk_window_set_child_input_shapes) gdk_window_set_child_input_shapes __attribute((alias("IA__gdk_window_set_child_input_shapes"), visibility("default")));
+
+#undef gdk_window_merge_child_input_shapes 
+extern __typeof (gdk_window_merge_child_input_shapes) gdk_window_merge_child_input_shapes __attribute((alias("IA__gdk_window_merge_child_input_shapes"), visibility("default")));
 
 #undef gdk_window_set_static_gravities 
 extern __typeof (gdk_window_set_static_gravities) gdk_window_set_static_gravities __attribute((alias("IA__gdk_window_set_static_gravities"), visibility("default")));
@@ -1504,6 +1512,38 @@ extern __typeof (gdk_window_thaw_updates) gdk_window_thaw_updates __attribute((a
 #undef gdk_window_set_composited 
 extern __typeof (gdk_window_set_composited) gdk_window_set_composited __attribute((alias("IA__gdk_window_set_composited"), visibility("default")));
 
+#undef gdk_pointer_grab 
+extern __typeof (gdk_pointer_grab) gdk_pointer_grab __attribute((alias("IA__gdk_pointer_grab"), visibility("default")));
+
+#undef gdk_window_beep 
+extern __typeof (gdk_window_beep) gdk_window_beep __attribute((alias("IA__gdk_window_beep"), visibility("default")));
+
+#undef gdk_window_geometry_changed 
+extern __typeof (gdk_window_geometry_changed) gdk_window_geometry_changed __attribute((alias("IA__gdk_window_geometry_changed"), visibility("default")));
+
+#undef gdk_window_ensure_native 
+extern __typeof (gdk_window_ensure_native) gdk_window_ensure_native __attribute((alias("IA__gdk_window_ensure_native"), visibility("default")));
+
+#endif
+#endif
+#if IN_HEADER(__GDK_WINDOW_H__)
+#if IN_FILE(__GDK_OFFSCREEN_WINDOW_C__)
+#undef gdk_offscreen_window_get_pixmap 
+extern __typeof (gdk_offscreen_window_get_pixmap) gdk_offscreen_window_get_pixmap __attribute((alias("IA__gdk_offscreen_window_get_pixmap"), visibility("default")));
+
+#undef gdk_offscreen_window_set_embedder 
+extern __typeof (gdk_offscreen_window_set_embedder) gdk_offscreen_window_set_embedder __attribute((alias("IA__gdk_offscreen_window_set_embedder"), visibility("default")));
+
+#undef gdk_offscreen_window_get_embedder 
+extern __typeof (gdk_offscreen_window_get_embedder) gdk_offscreen_window_get_embedder __attribute((alias("IA__gdk_offscreen_window_get_embedder"), visibility("default")));
+
+#endif
+#endif
+#if IN_HEADER(__GDK_INTERNALS_H__)
+#if IN_FILE(__GDK_OFFSCREEN_WINDOW_C__)
+#undef gdk_offscreen_window_get_type 
+extern __typeof (gdk_offscreen_window_get_type) gdk_offscreen_window_get_type __attribute((alias("IA__gdk_offscreen_window_get_type"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GDK_WINDOW_H__)
@@ -1530,9 +1570,6 @@ extern __typeof (gdk_window_lookup_for_display) gdk_window_lookup_for_display __
 #ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_window_set_hints 
 extern __typeof (gdk_window_set_hints) gdk_window_set_hints __attribute((alias("IA__gdk_window_set_hints"), visibility("default")));
-
-#undef gdk_window_get_deskrelative_origin 
-extern __typeof (gdk_window_get_deskrelative_origin) gdk_window_get_deskrelative_origin __attribute((alias("IA__gdk_window_get_deskrelative_origin"), visibility("default")));
 
 #endif
 #undef gdk_window_get_type_hint 
@@ -1574,12 +1611,6 @@ extern __typeof (gdk_window_get_root_origin) gdk_window_get_root_origin __attrib
 #undef gdk_window_get_frame_extents 
 extern __typeof (gdk_window_get_frame_extents) gdk_window_get_frame_extents __attribute((alias("IA__gdk_window_get_frame_extents"), visibility("default")));
 
-#undef gdk_window_input_shape_combine_mask 
-extern __typeof (gdk_window_input_shape_combine_mask) gdk_window_input_shape_combine_mask __attribute((alias("IA__gdk_window_input_shape_combine_mask"), visibility("default")));
-
-#undef gdk_window_input_shape_combine_region 
-extern __typeof (gdk_window_input_shape_combine_region) gdk_window_input_shape_combine_region __attribute((alias("IA__gdk_window_input_shape_combine_region"), visibility("default")));
-
 #undef gdk_window_set_override_redirect 
 extern __typeof (gdk_window_set_override_redirect) gdk_window_set_override_redirect __attribute((alias("IA__gdk_window_set_override_redirect"), visibility("default")));
 
@@ -1597,9 +1628,6 @@ extern __typeof (gdk_window_set_icon) gdk_window_set_icon __attribute((alias("IA
 
 #undef gdk_window_set_icon_name 
 extern __typeof (gdk_window_set_icon_name) gdk_window_set_icon_name __attribute((alias("IA__gdk_window_set_icon_name"), visibility("default")));
-
-#undef gdk_window_beep 
-extern __typeof (gdk_window_beep) gdk_window_beep __attribute((alias("IA__gdk_window_beep"), visibility("default")));
 
 #undef gdk_window_set_opacity 
 extern __typeof (gdk_window_set_opacity) gdk_window_set_opacity __attribute((alias("IA__gdk_window_set_opacity"), visibility("default")));
@@ -1648,12 +1676,6 @@ extern __typeof (gdk_window_set_decorations) gdk_window_set_decorations __attrib
 
 #undef gdk_window_set_functions 
 extern __typeof (gdk_window_set_functions) gdk_window_set_functions __attribute((alias("IA__gdk_window_set_functions"), visibility("default")));
-
-#undef gdk_window_set_child_input_shapes 
-extern __typeof (gdk_window_set_child_input_shapes) gdk_window_set_child_input_shapes __attribute((alias("IA__gdk_window_set_child_input_shapes"), visibility("default")));
-
-#undef gdk_window_merge_child_input_shapes 
-extern __typeof (gdk_window_merge_child_input_shapes) gdk_window_merge_child_input_shapes __attribute((alias("IA__gdk_window_merge_child_input_shapes"), visibility("default")));
 
 #undef gdk_window_begin_move_drag 
 extern __typeof (gdk_window_begin_move_drag) gdk_window_begin_move_drag __attribute((alias("IA__gdk_window_begin_move_drag"), visibility("default")));
@@ -1946,8 +1968,14 @@ extern __typeof (gdk_pixbuf_render_to_drawable_alpha) gdk_pixbuf_render_to_drawa
 #endif
 #if IN_HEADER(__GDK_PIXMAP_H__)
 #if IN_FILE(__GDK_PIXMAP_C__)
+#undef gdk_bitmap_create_from_data 
+extern __typeof (gdk_bitmap_create_from_data) gdk_bitmap_create_from_data __attribute((alias("IA__gdk_bitmap_create_from_data"), visibility("default")));
+
 #undef gdk_pixmap_colormap_create_from_xpm 
 extern __typeof (gdk_pixmap_colormap_create_from_xpm) gdk_pixmap_colormap_create_from_xpm __attribute((alias("IA__gdk_pixmap_colormap_create_from_xpm"), visibility("default")));
+
+#undef gdk_pixmap_create_from_data 
+extern __typeof (gdk_pixmap_create_from_data) gdk_pixmap_create_from_data __attribute((alias("IA__gdk_pixmap_create_from_data"), visibility("default")));
 
 #undef gdk_pixmap_create_from_xpm 
 extern __typeof (gdk_pixmap_create_from_xpm) gdk_pixmap_create_from_xpm __attribute((alias("IA__gdk_pixmap_create_from_xpm"), visibility("default")));
@@ -1961,13 +1989,13 @@ extern __typeof (gdk_pixmap_create_from_xpm_d) gdk_pixmap_create_from_xpm_d __at
 #undef gdk_pixmap_get_type 
 extern __typeof (gdk_pixmap_get_type) gdk_pixmap_get_type __attribute((alias("IA__gdk_pixmap_get_type"), visibility("default")));
 
+#undef gdk_pixmap_new 
+extern __typeof (gdk_pixmap_new) gdk_pixmap_new __attribute((alias("IA__gdk_pixmap_new"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GDK_PIXMAP_H__)
 #if IN_FILE(__GDK_PIXMAP_X11_C__)
-#undef gdk_pixmap_create_from_data 
-extern __typeof (gdk_pixmap_create_from_data) gdk_pixmap_create_from_data __attribute((alias("IA__gdk_pixmap_create_from_data"), visibility("default")));
-
 #undef gdk_pixmap_foreign_new 
 extern __typeof (gdk_pixmap_foreign_new) gdk_pixmap_foreign_new __attribute((alias("IA__gdk_pixmap_foreign_new"), visibility("default")));
 
@@ -1982,9 +2010,6 @@ extern __typeof (gdk_pixmap_lookup) gdk_pixmap_lookup __attribute((alias("IA__gd
 
 #undef gdk_pixmap_lookup_for_display 
 extern __typeof (gdk_pixmap_lookup_for_display) gdk_pixmap_lookup_for_display __attribute((alias("IA__gdk_pixmap_lookup_for_display"), visibility("default")));
-
-#undef gdk_pixmap_new 
-extern __typeof (gdk_pixmap_new) gdk_pixmap_new __attribute((alias("IA__gdk_pixmap_new"), visibility("default")));
 
 #endif
 #endif
@@ -2001,6 +2026,9 @@ extern __typeof (gdk_region_empty) gdk_region_empty __attribute((alias("IA__gdk_
 
 #undef gdk_region_equal 
 extern __typeof (gdk_region_equal) gdk_region_equal __attribute((alias("IA__gdk_region_equal"), visibility("default")));
+
+#undef gdk_region_rect_equal 
+extern __typeof (gdk_region_rect_equal) gdk_region_rect_equal __attribute((alias("IA__gdk_region_rect_equal"), visibility("default")));
 
 #undef gdk_region_get_clipbox 
 extern __typeof (gdk_region_get_clipbox) gdk_region_get_clipbox __attribute((alias("IA__gdk_region_get_clipbox"), visibility("default")));

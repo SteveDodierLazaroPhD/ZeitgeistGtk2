@@ -83,6 +83,7 @@ enum                <link linkend="GdkWindowAttributesType">GdkWindowAttributesT
                                                          const <link linkend="GdkRegion">GdkRegion</link> *region,
                                                          <link linkend="gint">gint</link> dx,
                                                          <link linkend="gint">gint</link> dy);
+<link linkend="gboolean">gboolean</link>            <link linkend="gdk-window-ensure-native">gdk_window_ensure_native</link>            (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gdk-window-reparent">gdk_window_reparent</link>                 (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkWindow">GdkWindow</link> *new_parent,
                                                          <link linkend="gint">gint</link> x,
@@ -257,6 +258,11 @@ typedef             <link linkend="GdkXEvent">GdkXEvent</link>;
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-window-get-deskrelative-origin">gdk_window_get_deskrelative_origin</link>  (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gint">gint</link> *x,
                                                          <link linkend="gint">gint</link> *y);
+<link linkend="void">void</link>                <link linkend="gdk-window-get-root-coords">gdk_window_get_root_coords</link>          (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y,
+                                                         <link linkend="gint">gint</link> *root_x,
+                                                         <link linkend="gint">gint</link> *root_y);
 <link linkend="GdkWindow">GdkWindow</link>*          <link linkend="gdk-window-get-pointer">gdk_window_get_pointer</link>              (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gint">gint</link> *x,
                                                          <link linkend="gint">gint</link> *y,
@@ -298,6 +304,11 @@ enum                <link linkend="GdkWMFunction">GdkWMFunction</link>;
                     <link linkend="GdkPointerHooks">GdkPointerHooks</link>;
 <link linkend="GdkPointerHooks">GdkPointerHooks</link> *   <link linkend="gdk-set-pointer-hooks">gdk_set_pointer_hooks</link>               (const <link linkend="GdkPointerHooks">GdkPointerHooks</link> *new_hooks);
 
+<link linkend="GdkPixmap">GdkPixmap</link> *         <link linkend="gdk-offscreen-window-get-pixmap">gdk_offscreen_window_get_pixmap</link>     (<link linkend="GdkWindow">GdkWindow</link> *window);
+<link linkend="void">void</link>                <link linkend="gdk-offscreen-window-set-embedder">gdk_offscreen_window_set_embedder</link>   (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="GdkWindow">GdkWindow</link> *embedder);
+<link linkend="GdkWindow">GdkWindow</link> *         <link linkend="gdk-offscreen-window-get-embedder">gdk_offscreen_window_get_embedder</link>   (<link linkend="GdkWindow">GdkWindow</link> *window);
+<link linkend="void">void</link>                <link linkend="gdk-window-geometry-changed">gdk_window_geometry_changed</link>         (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gdk-window-redirect-to-drawable">gdk_window_redirect_to_drawable</link>     (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkDrawable">GdkDrawable</link> *drawable,
                                                          <link linkend="gint">gint</link> src_x,
@@ -324,6 +335,14 @@ enum                <link linkend="GdkWMFunction">GdkWMFunction</link>;
 
 
 
+<refsect1 id="gdk-Windows.signals" role="signal_proto">
+<title role="signal_proto.title">Signals</title>
+<synopsis>
+  &quot;<link linkend="GdkWindow-from-embedder">from-embedder</link>&quot;                                  : Run Last
+  &quot;<link linkend="GdkWindow-pick-embedded-child">pick-embedded-child</link>&quot;                            : Run Last
+  &quot;<link linkend="GdkWindow-to-embedder">to-embedder</link>&quot;                                    : Run Last
+</synopsis>
+</refsect1>
 
 
 <refsect1 id="gdk-Windows.description" role="desc">
@@ -493,7 +512,8 @@ these types.
   GDK_WINDOW_CHILD,
   GDK_WINDOW_DIALOG,
   GDK_WINDOW_TEMP,
-  GDK_WINDOW_FOREIGN
+  GDK_WINDOW_FOREIGN,
+  GDK_WINDOW_OFFSCREEN
 } GdkWindowType;
 </programlisting>
 <para>
@@ -527,6 +547,11 @@ Describes the kind of window.
 <varlistentry id="GDK-WINDOW-FOREIGN--CAPS" role="constant">
 <term><literal>GDK_WINDOW_FOREIGN</literal></term>
 <listitem><simpara>foreign window (see <link linkend="gdk-window-foreign-new"><function>gdk_window_foreign_new()</function></link>)
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="GDK-WINDOW-OFFSCREEN--CAPS" role="constant">
+<term><literal>GDK_WINDOW_OFFSCREEN</literal></term>
+<listitem><simpara>offscreen window. Since 2.18
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
@@ -1605,10 +1630,10 @@ For making non-toplevel windows translucent, see
 <indexterm zone="gdk-window-set-composited" role="2.12"><primary sortas="window_set_composited">gdk_window_set_composited</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_set_composited           (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gboolean">gboolean</link> composited);</programlisting>
 <para>
-Sets a <link linkend="GdkWindow"><type>GdkWindow</type></link> as composited, or unsets it. Composited 
-windows do not automatically have their contents drawn to 
-the screen. Drawing is redirected to an offscreen buffer 
-and an expose event is emitted on the parent of the composited 
+Sets a <link linkend="GdkWindow"><type>GdkWindow</type></link> as composited, or unsets it. Composited
+windows do not automatically have their contents drawn to
+the screen. Drawing is redirected to an offscreen buffer
+and an expose event is emitted on the parent of the composited
 window. It is the responsibility of the parent's expose handler
 to manually merge the off-screen content onto the screen in
 whatever way it sees fit. See <xref linkend="composited-window-example"/>
@@ -1627,7 +1652,7 @@ window are also no longer clipped by the child.
 </para>
 <para>
 This call is only supported on some systems (currently,
-only X11 with new enough Xcomposite and Xdamage extensions). 
+only X11 with new enough Xcomposite and Xdamage extensions).
 You must call <link linkend="gdk-display-supports-composite"><function>gdk_display_supports_composite()</function></link> to check if
 setting a window as composited is supported before
 attempting to do so.</para>
@@ -1774,6 +1799,27 @@ Child windows are not moved.</para>
 <listitem><simpara> Amount to move in the Y direction
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.8</para></refsect2>
+<refsect2 id="gdk-window-ensure-native" role="function" condition="since:2.18">
+<title>gdk_window_ensure_native ()</title>
+<indexterm zone="gdk-window-ensure-native" role="2.18"><primary sortas="window_ensure_native">gdk_window_ensure_native</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_window_ensure_native            (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Tries to ensure that there is a window-system native window for this
+GdkWindow. This may fail in some situations, returning <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>.
+</para>
+<para>
+Offscreen window and children of them can never have native windows.
+</para>
+<para>
+Some backends may not support native child windows.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the window has a native window, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> otherwise
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gdk-window-reparent" role="function">
 <title>gdk_window_reparent ()</title>
 <indexterm zone="gdk-window-reparent"><primary sortas="window_reparent">gdk_window_reparent</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_reparent                 (<link linkend="GdkWindow">GdkWindow</link> *window,
@@ -2045,7 +2091,7 @@ other window managers.</para>
                                                          <link linkend="gint">gint</link> *new_width,
                                                          <link linkend="gint">gint</link> *new_height);</programlisting>
 <para>
-Constrains a desired width and height according to a 
+Constrains a desired width and height according to a
 set of geometry hints (such as minimum and maximum size).</para>
 <para>
 </para><variablelist role="params">
@@ -2226,7 +2272,7 @@ fine grained control over which children are invalidated.</para>
 <listitem><simpara> a <link linkend="GdkRegion"><type>GdkRegion</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>invalidate_children</parameter>&#160;:</term>
-<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to also invalidate child windows 
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to also invalidate child windows
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gdk-window-invalidate-maybe-recurse" role="function">
@@ -2327,7 +2373,7 @@ in the application.</para>
 <indexterm zone="gdk-window-process-updates"><primary sortas="window_process_updates">gdk_window_process_updates</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_process_updates          (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gboolean">gboolean</link> update_children);</programlisting>
 <para>
-Sends one or more expose events to <parameter>window</parameter>. The areas in each 
+Sends one or more expose events to <parameter>window</parameter>. The areas in each
 expose event will cover the entire update area for the window (see
 <link linkend="gdk-window-invalidate-region"><function>gdk_window_invalidate_region()</function></link> for details). Normally GDK calls
 <link linkend="gdk-window-process-all-updates"><function>gdk_window_process_all_updates()</function></link> on your behalf, so there's no
@@ -2399,12 +2445,12 @@ likely to change in future releases of GDK.</para>
 <listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>real_drawable</parameter>&#160;:</term>
-<listitem><simpara> location to store the drawable to which drawing should be 
+<listitem><simpara> location to store the drawable to which drawing should be
            done.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>x_offset</parameter>&#160;:</term>
 <listitem><simpara> location to store the X offset between coordinates in <parameter>window</parameter>,
-           and the underlying window system primitive coordinates for 
+           and the underlying window system primitive coordinates for
            *<parameter>real_drawable</parameter>.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>y_offset</parameter>&#160;:</term>
@@ -2775,12 +2821,12 @@ be merged.</para>
 <para>
 Like <link linkend="gdk-window-shape-combine-mask"><function>gdk_window_shape_combine_mask()</function></link>, but the shape applies
 only to event handling. Mouse events which happen while
-the pointer position corresponds to an unset bit in the 
+the pointer position corresponds to an unset bit in the
 mask will be passed on the window below <parameter>window</parameter>.
 </para>
 <para>
 An input shape is typically used with RGBA windows.
-The alpha channel of the window defines which pixels are 
+The alpha channel of the window defines which pixels are
 invisible and allows for nicely antialiased borders,
 and the input shape controls where the window is
 "clickable".
@@ -2817,12 +2863,12 @@ function does nothing.</para>
 <para>
 Like <link linkend="gdk-window-shape-combine-region"><function>gdk_window_shape_combine_region()</function></link>, but the shape applies
 only to event handling. Mouse events which happen while
-the pointer position corresponds to an unset bit in the 
+the pointer position corresponds to an unset bit in the
 mask will be passed on the window below <parameter>window</parameter>.
 </para>
 <para>
 An input shape is typically used with RGBA windows.
-The alpha channel of the window defines which pixels are 
+The alpha channel of the window defines which pixels are
 invisible and allows for nicely antialiased borders,
 and the input shape controls where the window is
 "clickable".
@@ -2874,7 +2920,7 @@ for <parameter>window</parameter>. See <link linkend="gdk-window-input-shape-com
 </para>
 <para>
 This function is distinct from <link linkend="gdk-window-set-child-input-shapes"><function>gdk_window_set_child_input_shapes()</function></link>
-because it includes <parameter>window</parameter>'s input shape mask in the set of 
+because it includes <parameter>window</parameter>'s input shape mask in the set of
 shapes to be merged.</para>
 <para>
 </para><variablelist role="params">
@@ -3046,10 +3092,10 @@ window.
 <indexterm zone="gdk-window-set-cursor"><primary sortas="window_set_cursor">gdk_window_set_cursor</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_set_cursor               (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkCursor">GdkCursor</link> *cursor);</programlisting>
 <para>
-Sets the mouse pointer for a <link linkend="GdkWindow"><type>GdkWindow</type></link>. Use <link linkend="gdk-cursor-new-for-display"><function>gdk_cursor_new_for_display()</function></link> 
-or <link linkend="gdk-cursor-new-from-pixmap"><function>gdk_cursor_new_from_pixmap()</function></link> to create the cursor. To make the cursor 
-invisible, use <link linkend="GDK-BLANK-CURSOR--CAPS"><literal>GDK_BLANK_CURSOR</literal></link>. Passing <link linkend="NULL--CAPS"><literal>NULL</literal></link> for the <parameter>cursor</parameter> argument 
-to <link linkend="gdk-window-set-cursor"><function>gdk_window_set_cursor()</function></link> means that <parameter>window</parameter> will use the cursor of its 
+Sets the mouse pointer for a <link linkend="GdkWindow"><type>GdkWindow</type></link>. Use <link linkend="gdk-cursor-new-for-display"><function>gdk_cursor_new_for_display()</function></link>
+or <link linkend="gdk-cursor-new-from-pixmap"><function>gdk_cursor_new_from_pixmap()</function></link> to create the cursor. To make the cursor
+invisible, use <link linkend="GDK-BLANK-CURSOR--CAPS"><literal>GDK_BLANK_CURSOR</literal></link>. Passing <link linkend="NULL--CAPS"><literal>NULL</literal></link> for the <parameter>cursor</parameter> argument
+to <link linkend="gdk-window-set-cursor"><function>gdk_window_set_cursor()</function></link> means that <parameter>window</parameter> will use the cursor of its
 parent window. Most windows should use this default.</para>
 <para>
 </para><variablelist role="params">
@@ -3473,6 +3519,36 @@ It's deprecated for that reason.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> not meaningful
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gdk-window-get-root-coords" role="function">
+<title>gdk_window_get_root_coords ()</title>
+<indexterm zone="gdk-window-get-root-coords"><primary sortas="window_get_root_coords">gdk_window_get_root_coords</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_get_root_coords          (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="gint">gint</link> x,
+                                                         <link linkend="gint">gint</link> y,
+                                                         <link linkend="gint">gint</link> *root_x,
+                                                         <link linkend="gint">gint</link> *root_y);</programlisting>
+<para>
+Obtains the position of a window position in root
+window coordinates. This is similar to
+<link linkend="gdk-window-get-origin"><function>gdk_window_get_origin()</function></link> but allows you go pass
+in any position in the window, not just the origin.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&#160;:</term>
+<listitem><simpara> X coordinate in window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&#160;:</term>
+<listitem><simpara> Y coordinate in window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>root_x</parameter>&#160;:</term>
+<listitem><simpara> return location for X coordinate
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>root_y</parameter>&#160;:</term>
+<listitem><simpara> return location for Y coordinate
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="gdk-window-get-pointer" role="function">
 <title>gdk_window_get_pointer ()</title>
 <indexterm zone="gdk-window-get-pointer"><primary sortas="window_get_pointer">gdk_window_get_pointer</primary></indexterm><programlisting><link linkend="GdkWindow">GdkWindow</link>*          gdk_window_get_pointer              (<link linkend="GdkWindow">GdkWindow</link> *window,
@@ -3481,7 +3557,7 @@ It's deprecated for that reason.</para>
                                                          <link linkend="GdkModifierType">GdkModifierType</link> *mask);</programlisting>
 <para>
 Obtains the current pointer position and modifier state.
-The position is given in coordinates relative to the upper left 
+The position is given in coordinates relative to the upper left
 corner of <parameter>window</parameter>.</para>
 <para>
 </para><variablelist role="params">
@@ -3670,7 +3746,12 @@ to reparent them.</para>
 <title>gdk_window_get_toplevel ()</title>
 <indexterm zone="gdk-window-get-toplevel"><primary sortas="window_get_toplevel">gdk_window_get_toplevel</primary></indexterm><programlisting><link linkend="GdkWindow">GdkWindow</link> *         gdk_window_get_toplevel             (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
 <para>
-Gets the toplevel window that's an ancestor of <parameter>window</parameter>.</para>
+Gets the toplevel window that's an ancestor of <parameter>window</parameter>.
+</para>
+<para>
+Any window type but <link linkend="GDK-WINDOW-CHILD--CAPS"><literal>GDK_WINDOW_CHILD</literal></link> is considered a
+toplevel window, as is a <link linkend="GDK-WINDOW-CHILD--CAPS"><literal>GDK_WINDOW_CHILD</literal></link> window that
+has a root window as parent.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>window</parameter>&#160;:</term>
@@ -4170,6 +4251,62 @@ see <link linkend="gdk-display-set-pointer-hooks"><function>gdk_display_set_poin
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the previous pointer hook table
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gdk-offscreen-window-get-pixmap" role="function">
+<title>gdk_offscreen_window_get_pixmap ()</title>
+<indexterm zone="gdk-offscreen-window-get-pixmap"><primary sortas="offscreen_window_get_pixmap">gdk_offscreen_window_get_pixmap</primary></indexterm><programlisting><link linkend="GdkPixmap">GdkPixmap</link> *         gdk_offscreen_window_get_pixmap     (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Gets the offscreen pixmap that an offscreen window renders into.
+If you need to keep this around over window resizes, you need to
+add a reference to it.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The offscreen pixmap, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if not offscreen
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="gdk-offscreen-window-set-embedder" role="function" condition="since:2.18">
+<title>gdk_offscreen_window_set_embedder ()</title>
+<indexterm zone="gdk-offscreen-window-set-embedder" role="2.18"><primary sortas="offscreen_window_set_embedder">gdk_offscreen_window_set_embedder</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_offscreen_window_set_embedder   (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="GdkWindow">GdkWindow</link> *embedder);</programlisting>
+<para>
+</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>embedder</parameter>&#160;:</term>
+<listitem><simpara> the <link linkend="GdkWindow"><type>GdkWindow</type></link> that <parameter>window</parameter> gets embedded in
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gdk-offscreen-window-get-embedder" role="function" condition="since:2.18">
+<title>gdk_offscreen_window_get_embedder ()</title>
+<indexterm zone="gdk-offscreen-window-get-embedder" role="2.18"><primary sortas="offscreen_window_get_embedder">gdk_offscreen_window_get_embedder</primary></indexterm><programlisting><link linkend="GdkWindow">GdkWindow</link> *         gdk_offscreen_window_get_embedder   (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Gets the window that <parameter>window</parameter> is embedded in.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the embedding <link linkend="GdkWindow"><type>GdkWindow</type></link>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if <parameter>window</parameter> is not an
+    embedded offscreen window
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gdk-window-geometry-changed" role="function" condition="since:2.18">
+<title>gdk_window_geometry_changed ()</title>
+<indexterm zone="gdk-window-geometry-changed" role="2.18"><primary sortas="window_geometry_changed">gdk_window_geometry_changed</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_geometry_changed         (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gdk-window-redirect-to-drawable" role="function" condition="since:2.14">
 <title>gdk_window_redirect_to_drawable ()</title>
 <indexterm zone="gdk-window-redirect-to-drawable" role="2.14"><primary sortas="window_redirect_to_drawable">gdk_window_redirect_to_drawable</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_redirect_to_drawable     (<link linkend="GdkWindow">GdkWindow</link> *window,
@@ -4236,6 +4373,91 @@ Removes any active redirection started by
 
 </refsect1>
 
+<refsect1 id="gdk-Windows.signal-details" role="signals">
+<title role="signals.title">Signal Details</title>
+<refsect2 id="GdkWindow-from-embedder" role="signal"><title>The <literal>&quot;from-embedder&quot;</literal> signal</title>
+<indexterm zone="GdkWindow-from-embedder" role="2.18"><primary sortas="Window::from-embedder">GdkWindow::from-embedder</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                        <link linkend="gdouble">gdouble</link>    embedder-x,
+                                                        <link linkend="gdouble">gdouble</link>    embedder-y,
+                                                        <link linkend="gpointer">gpointer</link>   offscreen-x,
+                                                        <link linkend="gpointer">gpointer</link>   offscreen-y,
+                                                        <link linkend="gpointer">gpointer</link>   user_data)        : Run Last</programlisting>
+<para>
+The ::from-embedder signal is emitted to translate coordinates
+in the embedder of an offscreen window to the offscreen window.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> the offscreen window on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>embedder-x</parameter>&#160;:</term>
+<listitem><simpara> x coordinate in the embedder window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>embedder-y</parameter>&#160;:</term>
+<listitem><simpara> y coordinate in the embedder window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offscreen-x</parameter>&#160;:</term>
+<listitem><simpara> return location for the x coordinate in the offscreen window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offscreen-y</parameter>&#160;:</term>
+<listitem><simpara> return location for the y coordinate in the offscreen window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2><refsect2 id="GdkWindow-pick-embedded-child" role="signal"><title>The <literal>&quot;pick-embedded-child&quot;</literal> signal</title>
+<indexterm zone="GdkWindow-pick-embedded-child" role="2.18"><primary sortas="Window::pick-embedded-child">GdkWindow::pick-embedded-child</primary></indexterm><programlisting><link linkend="GdkWindow">GdkWindow</link>*          user_function                      (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                        <link linkend="gdouble">gdouble</link>    x,
+                                                        <link linkend="gdouble">gdouble</link>    y,
+                                                        <link linkend="gpointer">gpointer</link>   user_data)      : Run Last</programlisting>
+<para>
+The ::pick-embedded-child signal is emitted to find an embedded
+child at the given position.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> the window on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>x</parameter>&#160;:</term>
+<listitem><simpara> x coordinate in the window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>y</parameter>&#160;:</term>
+<listitem><simpara> y coordinate in the window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the GdkWindow of the embedded child at <parameter>x</parameter>, <parameter>y</parameter>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2><refsect2 id="GdkWindow-to-embedder" role="signal"><title>The <literal>&quot;to-embedder&quot;</literal> signal</title>
+<indexterm zone="GdkWindow-to-embedder" role="2.18"><primary sortas="Window::to-embedder">GdkWindow::to-embedder</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                        <link linkend="gdouble">gdouble</link>    offscreen-x,
+                                                        <link linkend="gdouble">gdouble</link>    offscreen-y,
+                                                        <link linkend="gpointer">gpointer</link>   embedder-x,
+                                                        <link linkend="gpointer">gpointer</link>   embedder-y,
+                                                        <link linkend="gpointer">gpointer</link>   user_data)        : Run Last</programlisting>
+<para>
+The ::to-embedder signal is emitted to translate coordinates
+in an offscreen window to its embedder.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> the offscreen window on which the signal is emitted
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offscreen-x</parameter>&#160;:</term>
+<listitem><simpara> x coordinate in the offscreen window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offscreen-y</parameter>&#160;:</term>
+<listitem><simpara> y coordinate in the offscreen window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>embedder-x</parameter>&#160;:</term>
+<listitem><simpara> return location for the x coordinate in the embedder window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>embedder-y</parameter>&#160;:</term>
+<listitem><simpara> return location for the y coordinate in the embedder window
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist><para>Since 2.18</para></refsect2>
+</refsect1>
 
 
 

@@ -470,10 +470,12 @@ LDADDS = \
 
 noinst_PROGRAMS = $(TEST_PROGS)	\
 	simple				\
+	flicker				\
 	print-editor			\
 	testaccel			\
 	testassistant			\
 	testbbox			\
+	testbuttons			\
 	testcairo			\
 	testcalendar			\
 	testcombo			\
@@ -499,6 +501,7 @@ noinst_PROGRAMS = $(TEST_PROGS)	\
 	testmultiscreen			\
 	testnotebookdnd			\
 	testnouiprint			\
+	testoffscreen			\
 	testorientable			\
 	testprint			\
 	testrgb				\
@@ -523,6 +526,7 @@ noinst_PROGRAMS = $(TEST_PROGS)	\
 	testtreesort			\
 	treestoretest			\
 	testxinerama			\
+	testwindows			\
 	pixbuf-read			\
 	pixbuf-lowmem			\
 	pixbuf-randomly-modified	\
@@ -540,6 +544,7 @@ $(am__append_1)
 @HAVE_CXX_TRUE@autotestkeywords_CPPFLAGS = -I$(srcdir)/dummy-headers $(am__append_2)
 @HAVE_CXX_TRUE@@HAVE_OBJC_TRUE@autotestkeywords_CXXFLAGS = -x objective-c++
 
+flicker_DEPENDENCIES = $(TEST_DEPS)
 simple_DEPENDENCIES = $(TEST_DEPS)
 print_editor_DEPENDENCIES = $(TEST_DEPS)
 testicontheme_DEPENDENCIES = $(TEST_DEPS)
@@ -547,6 +552,7 @@ testiconview_DEPENDENCIES = $(TEST_DEPS)
 testaccel_DEPENDENCIES = $(TEST_DEPS)
 testassistant_DEPENDENCIES = $(TEST_DEPS)
 testbbox_DEPENDENCIES = $(TEST_DEPS)
+testbuttons_DEPENDENCIES = $(TEST_DEPS)
 testframe_DEPENDENCIES = $(TEST_DEPS)
 testcairo_DEPENDENCIES = $(TEST_DEPS)
 testcalendar_DEPENDENCIES = $(TEST_DEPS)
@@ -570,6 +576,7 @@ testmultidisplay_DEPENDENCIES = $(TEST_DEPS)
 testmultiscreen_DEPENDENCIES = $(TEST_DEPS)
 testnotebookdnd_DEPENDENCIES = $(TEST_DEPS)
 testnouiprint_DEPENDENCIES = $(TEST_DEPS)
+testoffscreen_DEPENDENCIES = $(TEST_DEPS)
 testorientable_DEPENDENCIES = $(TEST_DEPS)
 testprint_DEPENDENCIES = $(TEST_DEPS)
 testrecentchooser_DEPENDENCIES = $(TEST_DEPS)
@@ -598,12 +605,15 @@ testactions_DEPENDENCIES = $(TEST_DEPS)
 testgrouping_DEPENDENCIES = $(TEST_DEPS)
 testtooltips_DEPENDENCIES = $(TEST_DEPS)
 testvolumebutton_DEPENDENCIES = $(TEST_DEPS)
+testwindows_DEPENDENCIES = $(TEST_DEPS)
 
+flicker_LDADD = $(LDADDS)
 simple_LDADD = $(LDADDS)
 print_editor_LDADD = $(LDADDS)
 testaccel_LDADD = $(LDADDS)
 testassistant_LDADD = $(LDADDS)
 testbbox_LDADD = $(LDADDS)
+testbuttons_LDADD = $(LDADDS)
 testframe_LDADD = $(LDADDS)
 testcairo_LDADD = $(LDADDS)
 testcalendar_LDADD = $(LDADDS)
@@ -629,6 +639,7 @@ testmultidisplay_LDADD = $(LDADDS)
 testmultiscreen_LDADD = $(LDADDS)
 testnotebookdnd_LDADD = $(LDADDS)
 testnouiprint_LDADD = $(LDADDS)
+testoffscreen_LDADD = $(LDADDS)
 testorientable_LDADD = $(LDADDS)
 testprint_LDADD = $(LDADDS)
 testrecentchooser_LDADD = $(LDADDS)
@@ -664,6 +675,7 @@ testactions_LDADD = $(LDADDS)
 testgrouping_LDADD = $(LDADDS)
 testtooltips_LDADD = $(LDADDS)
 testvolumebutton_LDADD = $(LDADDS)
+testwindows_LDADD = $(LDADDS)
 
 testentrycompletion_SOURCES = \
 	prop-editor.c		\
@@ -750,6 +762,10 @@ testbbox_SOURCES = \
 	testbbox.c
 
 
+testbuttons_SOURCES = \
+	testbuttons.c
+
+
 testframe_SOURCES = \
 	testframe.c
 
@@ -779,16 +795,28 @@ testrecentchoosermenu_SOURCES = \
 testvolumebutton_SOURCES = \
 	testvolumebutton.c
 
+
+testoffscreen_SOURCES = \
+	gtkoffscreenbox.c	\
+	gtkoffscreenbox.h	\
+	testoffscreen.c
+
+
+testwindow_SOURCES = \
+	testwindows.c
+
 subdir = tests
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@noinst_PROGRAMS = simple$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	flicker$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	print-editor$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testaccel$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testassistant$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testbbox$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testbuttons$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testcairo$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testcalendar$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testcombo$(EXEEXT) \
@@ -814,6 +842,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testoffscreen$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testorientable$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testprint$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testrgb$(EXEEXT) \
@@ -839,6 +868,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_TRUE@	testwindows$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-read$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-lowmem$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	pixbuf-randomly-modified$(EXEEXT) \
@@ -850,10 +880,12 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testtooltips$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_TRUE@	testvolumebutton$(EXEEXT)
 @HAVE_CXX_FALSE@@USE_X11_FALSE@noinst_PROGRAMS = simple$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	flicker$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	print-editor$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testaccel$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testassistant$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testbbox$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testbuttons$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testcairo$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testcalendar$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testcombo$(EXEEXT) \
@@ -879,6 +911,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testoffscreen$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testorientable$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testprint$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testrgb$(EXEEXT) \
@@ -902,6 +935,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_FALSE@@USE_X11_FALSE@	testwindows$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-read$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-lowmem$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	pixbuf-randomly-modified$(EXEEXT) \
@@ -913,10 +947,12 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testtooltips$(EXEEXT) \
 @HAVE_CXX_FALSE@@USE_X11_FALSE@	testvolumebutton$(EXEEXT)
 @HAVE_CXX_TRUE@@USE_X11_TRUE@noinst_PROGRAMS = simple$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	flicker$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	print-editor$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testaccel$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testassistant$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testbbox$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testbuttons$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testcairo$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testcalendar$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testcombo$(EXEEXT) \
@@ -942,6 +978,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testoffscreen$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testorientable$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testprint$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testrgb$(EXEEXT) \
@@ -967,6 +1004,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_TRUE@	testwindows$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-read$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-lowmem$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	pixbuf-randomly-modified$(EXEEXT) \
@@ -979,10 +1017,12 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	testvolumebutton$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_TRUE@	autotestkeywords$(EXEEXT)
 @HAVE_CXX_TRUE@@USE_X11_FALSE@noinst_PROGRAMS = simple$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	flicker$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	print-editor$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testaccel$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testassistant$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testbbox$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testbuttons$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testcairo$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testcalendar$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testcombo$(EXEEXT) \
@@ -1008,6 +1048,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testmultiscreen$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testnotebookdnd$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testnouiprint$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testoffscreen$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testorientable$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testprint$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testrgb$(EXEEXT) \
@@ -1031,6 +1072,7 @@ CONFIG_CLEAN_FILES =
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testtreesort$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	treestoretest$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	testxinerama$(EXEEXT) \
+@HAVE_CXX_TRUE@@USE_X11_FALSE@	testwindows$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-read$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-lowmem$(EXEEXT) \
 @HAVE_CXX_TRUE@@USE_X11_FALSE@	pixbuf-randomly-modified$(EXEEXT) \
@@ -1051,6 +1093,9 @@ autotestkeywords_OBJECTS = $(am_autotestkeywords_OBJECTS)
 autotestkeywords_LDADD = $(LDADD)
 autotestkeywords_DEPENDENCIES =
 autotestkeywords_LDFLAGS =
+flicker_SOURCES = flicker.c
+flicker_OBJECTS = flicker.$(OBJEXT)
+flicker_LDFLAGS =
 pixbuf_lowmem_SOURCES = pixbuf-lowmem.c
 pixbuf_lowmem_OBJECTS = pixbuf-lowmem.$(OBJEXT)
 pixbuf_lowmem_DEPENDENCIES = \
@@ -1111,6 +1156,9 @@ testassistant_LDFLAGS =
 am_testbbox_OBJECTS = testbbox.$(OBJEXT)
 testbbox_OBJECTS = $(am_testbbox_OBJECTS)
 testbbox_LDFLAGS =
+am_testbuttons_OBJECTS = testbuttons.$(OBJEXT)
+testbuttons_OBJECTS = $(am_testbuttons_OBJECTS)
+testbuttons_LDFLAGS =
 testcairo_SOURCES = testcairo.c
 testcairo_OBJECTS = testcairo.$(OBJEXT)
 testcairo_LDFLAGS =
@@ -1196,6 +1244,10 @@ testnotebookdnd_LDFLAGS =
 testnouiprint_SOURCES = testnouiprint.c
 testnouiprint_OBJECTS = testnouiprint.$(OBJEXT)
 testnouiprint_LDFLAGS =
+am_testoffscreen_OBJECTS = gtkoffscreenbox.$(OBJEXT) \
+	testoffscreen.$(OBJEXT)
+testoffscreen_OBJECTS = $(am_testoffscreen_OBJECTS)
+testoffscreen_LDFLAGS =
 testorientable_SOURCES = testorientable.c
 testorientable_OBJECTS = testorientable.$(OBJEXT)
 testorientable_LDFLAGS =
@@ -1276,6 +1328,9 @@ testtreeview_LDFLAGS =
 am_testvolumebutton_OBJECTS = testvolumebutton.$(OBJEXT)
 testvolumebutton_OBJECTS = $(am_testvolumebutton_OBJECTS)
 testvolumebutton_LDFLAGS =
+testwindows_SOURCES = testwindows.c
+testwindows_OBJECTS = testwindows.$(OBJEXT)
+testwindows_LDFLAGS =
 testxinerama_SOURCES = testxinerama.c
 testxinerama_OBJECTS = testxinerama.$(OBJEXT)
 testxinerama_LDFLAGS =
@@ -1287,6 +1342,8 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/autotestkeywords-autotestkeywords.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/flicker.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkoffscreenbox.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pixbuf-lowmem.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pixbuf-random.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pixbuf-randomly-modified.Po \
@@ -1297,7 +1354,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/stresstest-toolbar.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testaccel.Po ./$(DEPDIR)/testactions.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testassistant.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/testbbox.Po ./$(DEPDIR)/testcairo.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testbbox.Po ./$(DEPDIR)/testbuttons.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testcairo.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testcalendar.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testcellrenderertext.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testclientmessage.Po \
@@ -1320,6 +1378,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/testmultiscreen.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testnotebookdnd.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testnouiprint.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testoffscreen.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testorientable.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testprint.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testprintfileoperation.Po \
@@ -1344,6 +1403,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/testtreesort.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testtreeview.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testvolumebutton.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/testwindows.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/testxinerama.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/treestoretest.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -1361,20 +1421,21 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) pixbuf-lowmem.c \
-	pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c \
-	pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c \
-	testaccel.c $(testactions_SOURCES) testassistant.c \
-	$(testbbox_SOURCES) testcairo.c testcalendar.c \
-	testcellrenderertext.c testclientmessage.c testcombo.c \
-	testcombochange.c testdnd.c testellipsise.c \
-	$(testentrycompletion_SOURCES) $(testentryicons_SOURCES) \
-	$(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) \
-	$(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) \
-	testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c \
-	testmenubars.c testmenus.c $(testmerge_SOURCES) \
-	testmountoperation.c testmultidisplay.c testmultiscreen.c \
-	testnotebookdnd.c testnouiprint.c testorientable.c \
+DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) flicker.c \
+	pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c \
+	pixbuf-read.c pixbuf-threads.c print-editor.c simple.c \
+	stresstest-toolbar.c testaccel.c $(testactions_SOURCES) \
+	testassistant.c $(testbbox_SOURCES) $(testbuttons_SOURCES) \
+	testcairo.c testcalendar.c testcellrenderertext.c \
+	testclientmessage.c testcombo.c testcombochange.c testdnd.c \
+	testellipsise.c $(testentrycompletion_SOURCES) \
+	$(testentryicons_SOURCES) $(testfilechooser_SOURCES) \
+	$(testfilechooserbutton_SOURCES) $(testframe_SOURCES) \
+	$(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c \
+	$(testiconview_SOURCES) testimage.c testinput.c testmenubars.c \
+	testmenus.c $(testmerge_SOURCES) testmountoperation.c \
+	testmultidisplay.c testmultiscreen.c testnotebookdnd.c \
+	testnouiprint.c $(testoffscreen_SOURCES) testorientable.c \
 	$(testprint_SOURCES) $(testrecentchooser_SOURCES) \
 	$(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c \
 	testscale.c testselection.c $(testsocket_SOURCES) \
@@ -1384,10 +1445,11 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) pixbuf-lowmem.c \
 	testtreecolumns.c testtreecolumnsizing.c \
 	$(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c \
 	$(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) \
-	$(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+	$(testvolumebutton_SOURCES) testwindows.c testxinerama.c \
+	treestoretest.c
 DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl \
 	Makefile.am
-SOURCES = $(autotestkeywords_SOURCES) pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testclientmessage.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testentryicons_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c testorientable.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testscale.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testxinerama.c treestoretest.c
+SOURCES = $(autotestkeywords_SOURCES) flicker.c pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c pixbuf-read.c pixbuf-threads.c print-editor.c simple.c stresstest-toolbar.c testaccel.c $(testactions_SOURCES) testassistant.c $(testbbox_SOURCES) $(testbuttons_SOURCES) testcairo.c testcalendar.c testcellrenderertext.c testclientmessage.c testcombo.c testcombochange.c testdnd.c testellipsise.c $(testentrycompletion_SOURCES) $(testentryicons_SOURCES) $(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) $(testframe_SOURCES) $(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) testimage.c testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) testmountoperation.c testmultidisplay.c testmultiscreen.c testnotebookdnd.c testnouiprint.c $(testoffscreen_SOURCES) testorientable.c $(testprint_SOURCES) $(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c testscale.c testselection.c $(testsocket_SOURCES) $(testsocket_child_SOURCES) $(testspinbutton_SOURCES) $(teststatusicon_SOURCES) $(testtext_SOURCES) $(testtoolbar_SOURCES) $(testtooltips_SOURCES) testtreecolumns.c testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c $(testtreeview_SOURCES) $(testvolumebutton_SOURCES) testwindows.c testxinerama.c treestoretest.c
 
 all: all-am
 
@@ -1408,6 +1470,9 @@ clean-noinstPROGRAMS:
 autotestkeywords$(EXEEXT): $(autotestkeywords_OBJECTS) $(autotestkeywords_DEPENDENCIES) 
 	@rm -f autotestkeywords$(EXEEXT)
 	$(CXXLINK) $(autotestkeywords_LDFLAGS) $(autotestkeywords_OBJECTS) $(autotestkeywords_LDADD) $(LIBS)
+flicker$(EXEEXT): $(flicker_OBJECTS) $(flicker_DEPENDENCIES) 
+	@rm -f flicker$(EXEEXT)
+	$(LINK) $(flicker_LDFLAGS) $(flicker_OBJECTS) $(flicker_LDADD) $(LIBS)
 pixbuf-lowmem$(EXEEXT): $(pixbuf_lowmem_OBJECTS) $(pixbuf_lowmem_DEPENDENCIES) 
 	@rm -f pixbuf-lowmem$(EXEEXT)
 	$(LINK) $(pixbuf_lowmem_LDFLAGS) $(pixbuf_lowmem_OBJECTS) $(pixbuf_lowmem_LDADD) $(LIBS)
@@ -1444,6 +1509,9 @@ testassistant$(EXEEXT): $(testassistant_OBJECTS) $(testassistant_DEPENDENCIES)
 testbbox$(EXEEXT): $(testbbox_OBJECTS) $(testbbox_DEPENDENCIES) 
 	@rm -f testbbox$(EXEEXT)
 	$(LINK) $(testbbox_LDFLAGS) $(testbbox_OBJECTS) $(testbbox_LDADD) $(LIBS)
+testbuttons$(EXEEXT): $(testbuttons_OBJECTS) $(testbuttons_DEPENDENCIES) 
+	@rm -f testbuttons$(EXEEXT)
+	$(LINK) $(testbuttons_LDFLAGS) $(testbuttons_OBJECTS) $(testbuttons_LDADD) $(LIBS)
 testcairo$(EXEEXT): $(testcairo_OBJECTS) $(testcairo_DEPENDENCIES) 
 	@rm -f testcairo$(EXEEXT)
 	$(LINK) $(testcairo_LDFLAGS) $(testcairo_OBJECTS) $(testcairo_LDADD) $(LIBS)
@@ -1525,6 +1593,9 @@ testnotebookdnd$(EXEEXT): $(testnotebookdnd_OBJECTS) $(testnotebookdnd_DEPENDENC
 testnouiprint$(EXEEXT): $(testnouiprint_OBJECTS) $(testnouiprint_DEPENDENCIES) 
 	@rm -f testnouiprint$(EXEEXT)
 	$(LINK) $(testnouiprint_LDFLAGS) $(testnouiprint_OBJECTS) $(testnouiprint_LDADD) $(LIBS)
+testoffscreen$(EXEEXT): $(testoffscreen_OBJECTS) $(testoffscreen_DEPENDENCIES) 
+	@rm -f testoffscreen$(EXEEXT)
+	$(LINK) $(testoffscreen_LDFLAGS) $(testoffscreen_OBJECTS) $(testoffscreen_LDADD) $(LIBS)
 testorientable$(EXEEXT): $(testorientable_OBJECTS) $(testorientable_DEPENDENCIES) 
 	@rm -f testorientable$(EXEEXT)
 	$(LINK) $(testorientable_LDFLAGS) $(testorientable_OBJECTS) $(testorientable_LDADD) $(LIBS)
@@ -1597,6 +1668,9 @@ testtreeview$(EXEEXT): $(testtreeview_OBJECTS) $(testtreeview_DEPENDENCIES)
 testvolumebutton$(EXEEXT): $(testvolumebutton_OBJECTS) $(testvolumebutton_DEPENDENCIES) 
 	@rm -f testvolumebutton$(EXEEXT)
 	$(LINK) $(testvolumebutton_LDFLAGS) $(testvolumebutton_OBJECTS) $(testvolumebutton_LDADD) $(LIBS)
+testwindows$(EXEEXT): $(testwindows_OBJECTS) $(testwindows_DEPENDENCIES) 
+	@rm -f testwindows$(EXEEXT)
+	$(LINK) $(testwindows_LDFLAGS) $(testwindows_OBJECTS) $(testwindows_LDADD) $(LIBS)
 testxinerama$(EXEEXT): $(testxinerama_OBJECTS) $(testxinerama_DEPENDENCIES) 
 	@rm -f testxinerama$(EXEEXT)
 	$(LINK) $(testxinerama_LDFLAGS) $(testxinerama_OBJECTS) $(testxinerama_LDADD) $(LIBS)
@@ -1611,6 +1685,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/autotestkeywords-autotestkeywords.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flicker.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkoffscreenbox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pixbuf-lowmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pixbuf-random.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pixbuf-randomly-modified.Po@am__quote@
@@ -1624,6 +1700,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testactions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testassistant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testbbox.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testbuttons.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcairo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcalendar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testcellrenderertext.Po@am__quote@
@@ -1651,6 +1728,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testmultiscreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testnotebookdnd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testnouiprint.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testoffscreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testorientable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testprint.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testprintfileoperation.Po@am__quote@
@@ -1677,6 +1755,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtreesort.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testtreeview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testvolumebutton.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testwindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testxinerama.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/treestoretest.Po@am__quote@
 

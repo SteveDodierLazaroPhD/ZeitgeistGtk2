@@ -2937,6 +2937,12 @@ extern __typeof (gtk_status_icon_get_geometry) IA__gtk_status_icon_get_geometry 
 extern __typeof (gtk_status_icon_get_x11_window_id) IA__gtk_status_icon_get_x11_window_id __attribute((visibility("hidden")));
 #define gtk_status_icon_get_x11_window_id IA__gtk_status_icon_get_x11_window_id
 
+extern __typeof (gtk_status_icon_get_title) IA__gtk_status_icon_get_title __attribute((visibility("hidden")));
+#define gtk_status_icon_get_title IA__gtk_status_icon_get_title
+
+extern __typeof (gtk_status_icon_set_title) IA__gtk_status_icon_set_title __attribute((visibility("hidden")));
+#define gtk_status_icon_set_title IA__gtk_status_icon_set_title
+
 #endif
 #endif
 #if IN_HEADER(__GTK_STYLE_H__)
@@ -5811,6 +5817,9 @@ extern __typeof (gtk_menu_get_attach_widget) IA__gtk_menu_get_attach_widget __at
 extern __typeof (gtk_menu_get_for_attach_widget) IA__gtk_menu_get_for_attach_widget __attribute((visibility("hidden")));
 #define gtk_menu_get_for_attach_widget IA__gtk_menu_get_for_attach_widget
 
+extern __typeof (gtk_menu_get_reserve_toggle_size) IA__gtk_menu_get_reserve_toggle_size __attribute((visibility("hidden")));
+#define gtk_menu_get_reserve_toggle_size IA__gtk_menu_get_reserve_toggle_size
+
 extern __typeof (gtk_menu_get_tearoff_state) IA__gtk_menu_get_tearoff_state __attribute((visibility("hidden")));
 #define gtk_menu_get_tearoff_state IA__gtk_menu_get_tearoff_state
 
@@ -5846,6 +5855,9 @@ extern __typeof (gtk_menu_set_active) IA__gtk_menu_set_active __attribute((visib
 
 extern __typeof (gtk_menu_set_monitor) IA__gtk_menu_set_monitor __attribute((visibility("hidden")));
 #define gtk_menu_set_monitor IA__gtk_menu_set_monitor
+
+extern __typeof (gtk_menu_set_reserve_toggle_size) IA__gtk_menu_set_reserve_toggle_size __attribute((visibility("hidden")));
+#define gtk_menu_set_reserve_toggle_size IA__gtk_menu_set_reserve_toggle_size
 
 extern __typeof (gtk_menu_set_screen) IA__gtk_menu_set_screen __attribute((visibility("hidden")));
 #define gtk_menu_set_screen IA__gtk_menu_set_screen

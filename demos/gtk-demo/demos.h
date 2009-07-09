@@ -27,6 +27,7 @@ GtkWidget *do_hypertext (GtkWidget *do_widget);
 GtkWidget *do_iconview (GtkWidget *do_widget);
 GtkWidget *do_iconview_edit (GtkWidget *do_widget);
 GtkWidget *do_images (GtkWidget *do_widget);
+GtkWidget *do_infobar (GtkWidget *do_widget);
 GtkWidget *do_links (GtkWidget *do_widget);
 GtkWidget *do_list_store (GtkWidget *do_widget);
 GtkWidget *do_menus (GtkWidget *do_widget);
@@ -84,6 +85,7 @@ Demo testgtk_demos[] = {
   { "Expander", "expander.c", do_expander, NULL }, 
   { "Icon View", NULL, NULL, child3 }, 
   { "Images", "images.c", do_images, NULL }, 
+  { "Info bar", "infobar.c", do_infobar, NULL }, 
   { "Links", "links.c", do_links, NULL }, 
   { "Menus", "menus.c", do_menus, NULL }, 
   { "Paned Widgets", "panes.c", do_panes, NULL }, 

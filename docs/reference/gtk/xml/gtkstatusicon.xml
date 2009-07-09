@@ -61,6 +61,9 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-status-icon-
 <link linkend="void">void</link>                <link linkend="gtk-status-icon-set-has-tooltip">gtk_status_icon_set_has_tooltip</link>     (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
                                                          <link linkend="gboolean">gboolean</link> has_tooltip);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-status-icon-get-has-tooltip">gtk_status_icon_get_has_tooltip</link>     (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
+<link linkend="void">void</link>                <link linkend="gtk-status-icon-set-title">gtk_status_icon_set_title</link>           (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
+                                                         const <link linkend="gchar">gchar</link> *title);
+const <link linkend="gchar">gchar</link> *       <link linkend="gtk-status-icon-get-title">gtk_status_icon_get_title</link>           (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
 <link linkend="void">void</link>                <link linkend="gtk-status-icon-set-visible">gtk_status_icon_set_visible</link>         (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
                                                          <link linkend="gboolean">gboolean</link> visible);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-status-icon-get-visible">gtk_status_icon_get_visible</link>         (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);
@@ -108,6 +111,7 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-status-icon-
   &quot;<link linkend="GtkStatusIcon--size">size</link>&quot;                     <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkStatusIcon--stock">stock</link>&quot;                    <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkStatusIcon--storage-type">storage-type</link>&quot;             <link linkend="GtkImageType">GtkImageType</link>          : Read
+  &quot;<link linkend="GtkStatusIcon--title">title</link>&quot;                    <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkStatusIcon--tooltip-markup">tooltip-markup</link>&quot;           <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkStatusIcon--tooltip-text">tooltip-text</link>&quot;             <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkStatusIcon--visible">visible</link>&quot;                  <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -610,6 +614,38 @@ See <link linkend="GtkStatusIcon--has-tooltip"><type>"has-tooltip"</type></link>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-status-icon-set-title" role="function" condition="since:2.18">
+<title>gtk_status_icon_set_title ()</title>
+<indexterm zone="gtk-status-icon-set-title" role="2.18"><primary sortas="status_icon_set_title">gtk_status_icon_set_title</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_status_icon_set_title           (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
+                                                         const <link linkend="gchar">gchar</link> *title);</programlisting>
+<para>
+Sets the title of this tray icon.
+This should be a short, human-readable, localized string 
+describing the tray icon. It may be used by tools like screen
+readers to render the tray icon.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>status_icon</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
+<listitem><simpara> the title 
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-status-icon-get-title" role="function" condition="since:2.18">
+<title>gtk_status_icon_get_title ()</title>
+<indexterm zone="gtk-status-icon-get-title" role="2.18"><primary sortas="status_icon_get_title">gtk_status_icon_get_title</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link> *       gtk_status_icon_get_title           (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon);</programlisting>
+<para>
+Gets the title of this tray icon. See <link linkend="gtk-status-icon-set-title"><function>gtk_status_icon_set_title()</function></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>status_icon</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the title of the status icon
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-status-icon-set-visible" role="function" condition="since:2.10">
 <title>gtk_status_icon_set_visible ()</title>
 <indexterm zone="gtk-status-icon-set-visible" role="2.10"><primary sortas="status_icon_set_visible">gtk_status_icon_set_visible</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_status_icon_set_visible         (<link linkend="GtkStatusIcon">GtkStatusIcon</link> *status_icon,
@@ -871,6 +907,16 @@ is embedded.</para>
 <refsect2 id="GtkStatusIcon--storage-type" role="property"><title>The <literal>&quot;storage-type&quot;</literal> property</title>
 <indexterm zone="GtkStatusIcon--storage-type"><primary sortas="StatusIcon:storage-type">GtkStatusIcon:storage-type</primary></indexterm><programlisting>  &quot;storage-type&quot;             <link linkend="GtkImageType">GtkImageType</link>          : Read</programlisting>
 <para>The representation being used for image data.</para><para>Default value: GTK_IMAGE_EMPTY</para>
+</refsect2>
+<refsect2 id="GtkStatusIcon--title" role="property"><title>The <literal>&quot;title&quot;</literal> property</title>
+<indexterm zone="GtkStatusIcon--title" role="2.18"><primary sortas="StatusIcon:title">GtkStatusIcon:title</primary></indexterm><programlisting>  &quot;title&quot;                    <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>
+<para>
+The title of this tray icon. This should be a short, human-readable,
+localized string describing the tray icon. It may be used by tools
+like screen readers to render the tray icon.</para>
+<para>
+</para><para>Default value: NULL</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkStatusIcon--tooltip-markup" role="property"><title>The <literal>&quot;tooltip-markup&quot;</literal> property</title>
 <indexterm zone="GtkStatusIcon--tooltip-markup" role="2.16"><primary sortas="StatusIcon:tooltip-markup">GtkStatusIcon:tooltip-markup</primary></indexterm><programlisting>  &quot;tooltip-markup&quot;           <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>

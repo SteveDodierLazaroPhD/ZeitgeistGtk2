@@ -538,6 +538,7 @@ gdk_c_sources = \
 	gdkintl.h		\
 	gdkkeys.c		\
 	gdkkeyuni.c		\
+	gdkoffscreenwindow.c	\
 	gdkpango.c		\
 	gdkpixbuf-drawable.c	\
 	gdkpixbuf-render.c	\
@@ -571,10 +572,10 @@ gdk_built_sources = \
 gdkincludedir = $(includedir)/gtk-2.0/gdk
 gdkinclude_HEADERS = $(gdk_public_h_sources) $(gdk_built_public_sources)
 
-# gdkmarshalers.c is not here because it is currently an empty file
 common_sources = \
 	$(gdk_c_sources)	\
 	gdkenumtypes.c		\
+	gdkmarshalers.c		\
 	gdkmarshalers.h
 
 
@@ -639,23 +640,24 @@ am__libgdk_directfb_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
 	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
 	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
-	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
-	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
-	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
-	gdkmarshalers.h
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkoffscreenwindow.c gdkpango.c \
+	gdkpixbuf-drawable.c gdkpixbuf-render.c gdkpixmap.c \
+	gdkpoly-generic.h gdkpolyreg-generic.c gdkrectangle.c \
+	gdkregion-generic.c gdkregion-generic.h gdkrgb.c gdkscreen.c \
+	gdkselection.c gdkvisual.c gdkwindow.c gdkwindowimpl.c \
+	gdkenumtypes.c gdkmarshalers.c gdkmarshalers.h
 @USE_MEDIALIB_TRUE@am__objects_1 = gdkmedialib.lo
 @USE_MEDIALIB_FALSE@am__objects_1 =
 am__objects_2 = $(am__objects_1) gdk.lo gdkapplaunchcontext.lo \
 	gdkcairo.lo gdkcolor.lo gdkcursor.lo gdkdisplay.lo \
 	gdkdisplaymanager.lo gdkdnd.lo gdkdraw.lo gdkevents.lo \
 	gdkfont.lo gdkgc.lo gdkglobals.lo gdkimage.lo gdkkeys.lo \
-	gdkkeyuni.lo gdkpango.lo gdkpixbuf-drawable.lo \
-	gdkpixbuf-render.lo gdkpixmap.lo gdkpolyreg-generic.lo \
-	gdkrectangle.lo gdkregion-generic.lo gdkrgb.lo gdkscreen.lo \
-	gdkselection.lo gdkvisual.lo gdkwindow.lo gdkwindowimpl.lo
-am__objects_3 = $(am__objects_2) gdkenumtypes.lo
+	gdkkeyuni.lo gdkoffscreenwindow.lo gdkpango.lo \
+	gdkpixbuf-drawable.lo gdkpixbuf-render.lo gdkpixmap.lo \
+	gdkpolyreg-generic.lo gdkrectangle.lo gdkregion-generic.lo \
+	gdkrgb.lo gdkscreen.lo gdkselection.lo gdkvisual.lo \
+	gdkwindow.lo gdkwindowimpl.lo
+am__objects_3 = $(am__objects_2) gdkenumtypes.lo gdkmarshalers.lo
 am_libgdk_directfb_2_0_la_OBJECTS = $(am__objects_3)
 libgdk_directfb_2_0_la_OBJECTS = $(am_libgdk_directfb_2_0_la_OBJECTS)
 libgdk_quartz_2_0_la_DEPENDENCIES = quartz/libgdk-quartz.la \
@@ -664,24 +666,24 @@ am__libgdk_quartz_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
 	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
 	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
-	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
-	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
-	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
-	gdkmarshalers.h gdkkeynames.c
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkoffscreenwindow.c gdkpango.c \
+	gdkpixbuf-drawable.c gdkpixbuf-render.c gdkpixmap.c \
+	gdkpoly-generic.h gdkpolyreg-generic.c gdkrectangle.c \
+	gdkregion-generic.c gdkregion-generic.h gdkrgb.c gdkscreen.c \
+	gdkselection.c gdkvisual.c gdkwindow.c gdkwindowimpl.c \
+	gdkenumtypes.c gdkmarshalers.c gdkmarshalers.h gdkkeynames.c
 am_libgdk_quartz_2_0_la_OBJECTS = $(am__objects_3) gdkkeynames.lo
 libgdk_quartz_2_0_la_OBJECTS = $(am_libgdk_quartz_2_0_la_OBJECTS)
 am__libgdk_win32_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
 	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
 	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
-	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
-	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
-	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
-	gdkmarshalers.h gdkkeynames.c
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkoffscreenwindow.c gdkpango.c \
+	gdkpixbuf-drawable.c gdkpixbuf-render.c gdkpixmap.c \
+	gdkpoly-generic.h gdkpolyreg-generic.c gdkrectangle.c \
+	gdkregion-generic.c gdkregion-generic.h gdkrgb.c gdkscreen.c \
+	gdkselection.c gdkvisual.c gdkwindow.c gdkwindowimpl.c \
+	gdkenumtypes.c gdkmarshalers.c gdkmarshalers.h gdkkeynames.c
 am_libgdk_win32_2_0_la_OBJECTS = $(am__objects_3) gdkkeynames.lo
 libgdk_win32_2_0_la_OBJECTS = $(am_libgdk_win32_2_0_la_OBJECTS)
 libgdk_x11_2_0_la_DEPENDENCIES = x11/libgdk-x11.la \
@@ -690,12 +692,12 @@ am__libgdk_x11_2_0_la_SOURCES_DIST = gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
 	gdkdisplay.c gdkdisplaymanager.c gdkdnd.c gdkdraw.c gdkevents.c \
 	gdkfont.c gdkgc.c gdkglobals.c gdkimage.c gdkinternals.h \
-	gdkintl.h gdkkeys.c gdkkeyuni.c gdkpango.c gdkpixbuf-drawable.c \
-	gdkpixbuf-render.c gdkpixmap.c gdkpoly-generic.h \
-	gdkpolyreg-generic.c gdkrectangle.c gdkregion-generic.c \
-	gdkregion-generic.h gdkrgb.c gdkscreen.c gdkselection.c \
-	gdkvisual.c gdkwindow.c gdkwindowimpl.c gdkenumtypes.c \
-	gdkmarshalers.h
+	gdkintl.h gdkkeys.c gdkkeyuni.c gdkoffscreenwindow.c gdkpango.c \
+	gdkpixbuf-drawable.c gdkpixbuf-render.c gdkpixmap.c \
+	gdkpoly-generic.h gdkpolyreg-generic.c gdkrectangle.c \
+	gdkregion-generic.c gdkregion-generic.h gdkrgb.c gdkscreen.c \
+	gdkselection.c gdkvisual.c gdkwindow.c gdkwindowimpl.c \
+	gdkenumtypes.c gdkmarshalers.c gdkmarshalers.h
 am_libgdk_x11_2_0_la_OBJECTS = $(am__objects_3)
 libgdk_x11_2_0_la_OBJECTS = $(am_libgdk_x11_2_0_la_OBJECTS)
 
@@ -715,7 +717,9 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/gdkimage.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkkeynames.Plo ./$(DEPDIR)/gdkkeys.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkkeyuni.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gdkmarshalers.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkmedialib.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gdkoffscreenwindow.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkpango.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkpixbuf-drawable.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gdkpixbuf-render.Plo \
@@ -823,7 +827,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkkeynames.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkkeys.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkkeyuni.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkmarshalers.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkmedialib.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkoffscreenwindow.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkpango.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkpixbuf-drawable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdkpixbuf-render.Plo@am__quote@
@@ -1365,11 +1371,11 @@ gdkenumtypes.c: @REBUILD@ $(gdk_public_h_sources) gdkenumtypes.c.template
 # Marshaller generation
 #
 gdkmarshalers.h: @REBUILD@ gdkmarshalers.list
-	$(GLIB_GENMARSHAL) --prefix=gdk_marshal $(srcdir)/gdkmarshalers.list --header > gdkmarshalers-h.tmp \
+	$(GLIB_GENMARSHAL) --prefix=_gdk_marshal $(srcdir)/gdkmarshalers.list --header > gdkmarshalers-h.tmp \
 	&& mv gdkmarshalers-h.tmp gdkmarshalers.h \
 	|| ( rm -f gdkmarshalers-h.tmp && exit 1)
 gdkmarshalers.c: @REBUILD@ gdkmarshalers.list
-	(echo "#include \"gdkalias.h\""; $(GLIB_GENMARSHAL) --prefix=gdk_marshal $(srcdir)/gdkmarshalers.list --body) > gdkmarshalers-c.tmp	\
+	(echo "#include \"gdkalias.h\""; $(GLIB_GENMARSHAL) --prefix=_gdk_marshal $(srcdir)/gdkmarshalers.list --body) > gdkmarshalers-c.tmp	\
 	&& mv gdkmarshalers-c.tmp gdkmarshalers.c \
 	|| ( rm -f gdkmarshalers-c.tmp && exit 1 )
 

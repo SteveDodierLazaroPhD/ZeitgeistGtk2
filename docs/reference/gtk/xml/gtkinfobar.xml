@@ -47,6 +47,8 @@
 <link linkend="void">void</link>                <link linkend="gtk-info-bar-set-message-type">gtk_info_bar_set_message_type</link>       (<link linkend="GtkInfoBar">GtkInfoBar</link> *info_bar,
                                                          <link linkend="GtkMessageType">GtkMessageType</link> message_type);
 <link linkend="GtkMessageType">GtkMessageType</link>      <link linkend="gtk-info-bar-get-message-type">gtk_info_bar_get_message_type</link>       (<link linkend="GtkInfoBar">GtkInfoBar</link> *info_bar);
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-info-bar-get-action-area">gtk_info_bar_get_action_area</link>        (<link linkend="GtkInfoBar">GtkInfoBar</link> *info_bar);
+<link linkend="GtkWidget">GtkWidget</link> *         <link linkend="gtk-info-bar-get-content-area">gtk_info_bar_get_content_area</link>       (<link linkend="GtkInfoBar">GtkInfoBar</link> *info_bar);
 </synopsis>
 </refsynopsisdiv>
 
@@ -87,7 +89,6 @@ GtkInfoBar implements
   &quot;<link linkend="GtkInfoBar--s-button-spacing">button-spacing</link>&quot;           <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkInfoBar--s-content-area-border">content-area-border</link>&quot;      <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkInfoBar--s-content-area-spacing">content-area-spacing</link>&quot;     <link linkend="gint">gint</link>                  : Read
-  &quot;<link linkend="GtkInfoBar--s-use-tooltip-style">use-tooltip-style</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read
 </synopsis>
 </refsect1>
 
@@ -370,6 +371,34 @@ Returns the message type of the message area.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-info-bar-get-action-area" role="function" condition="since:2.18">
+<title>gtk_info_bar_get_action_area ()</title>
+<indexterm zone="gtk-info-bar-get-action-area" role="2.18"><primary sortas="info_bar_get_action_area">gtk_info_bar_get_action_area</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_info_bar_get_action_area        (<link linkend="GtkInfoBar">GtkInfoBar</link> *info_bar);</programlisting>
+<para>
+Returns the action area of <parameter>info_bar</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>info_bar</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkInfoBar"><type>GtkInfoBar</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the action area.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-info-bar-get-content-area" role="function" condition="since:2.18">
+<title>gtk_info_bar_get_content_area ()</title>
+<indexterm zone="gtk-info-bar-get-content-area" role="2.18"><primary sortas="info_bar_get_content_area">gtk_info_bar_get_content_area</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link> *         gtk_info_bar_get_content_area       (<link linkend="GtkInfoBar">GtkInfoBar</link> *info_bar);</programlisting>
+<para>
+Returns the content area of <parameter>info_bar</parameter>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>info_bar</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkInfoBar"><type>GtkInfoBar</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the content area.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkInfoBar.property-details" role="property_details">
@@ -386,10 +415,14 @@ these colors:
 "info_fg_color", "info_bg_color",
 "warning_fg_color", "warning_bg_color",
 "question_fg_color", "question_bg_color",
-"error_fg_color", "error_bg_color",
-"other_fg_color", "other_bg_color".</para>
+"error_fg_color", "error_bg_color".
+"other_fg_color", "other_bg_color".
+</para>
 <para>
-</para><para>Default value: GTK_MESSAGE_OTHER</para>
+If the type is <link linkend="GTK-MESSAGE-OTHER--CAPS"><type>GTK_MESSAGE_OTHER</type></link>, no info bar is painted but the
+colors are still set.</para>
+<para>
+</para><para>Default value: GTK_MESSAGE_INFO</para>
 <para>Since 2.18</para>
 </refsect2>
 </refsect1>
@@ -431,16 +464,6 @@ content area of the info bar.</para>
 <para>
 </para><para>Allowed values: &gt;= 0</para>
 <para>Default value: 16</para>
-<para>Since 2.18</para>
-</refsect2>
-<refsect2 id="GtkInfoBar--s-use-tooltip-style" role="property"><title>The <literal>&quot;use-tooltip-style&quot;</literal> style property</title>
-<indexterm zone="GtkInfoBar--s-use-tooltip-style" role="2.18"><primary sortas="InfoBar:use-tooltip-style">GtkInfoBar:use-tooltip-style</primary></indexterm><programlisting>  &quot;use-tooltip-style&quot;        <link linkend="gboolean">gboolean</link>              : Read</programlisting>
-<para>
-When <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>, use the same background/foreground color as <link linkend="GtkTooltip"><type>GtkTooltip</type></link>.
-Otherwise, GTK+ uses <link linkend="GtkInfoBar-message-type"><type>"message-type"</type></link> to determine which
-symbolic colors to use.</para>
-<para>
-</para><para>Default value: TRUE</para>
 <para>Since 2.18</para>
 </refsect2>
 </refsect1>
