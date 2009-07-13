@@ -1,0 +1,24 @@
+From 26e67850a70869f24686df1f8bc0bab9049e5925 Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Mon, 13 Jul 2009 03:04:57 +0000
+Subject: Revert 8031432c09c864d6fe635a8e8890c5221399fc4f
+
+We can't disallow single-includes unconditionally because gtkentrybuffer.h
+is included in gtkentry.h.
+---
+diff --git a/gtk/gtkentrybuffer.h b/gtk/gtkentrybuffer.h
+index cf2ddda..275aaa1 100644
+--- a/gtk/gtkentrybuffer.h
++++ b/gtk/gtkentrybuffer.h
+@@ -17,7 +17,7 @@
+  * Boston, MA 02111-1307, USA.
+  */
+ 
+-#if !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
++#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+ #error "Only <gtk/gtk.h> can be included directly."
+ #endif
+ 
+--
+cgit v0.8.2
+
