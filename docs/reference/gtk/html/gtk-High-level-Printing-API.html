@@ -207,6 +207,15 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolea
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-get-has-selection" title="gtk_print_operation_get_has_selection ()">gtk_print_operation_get_has_selection</a>
                                                         (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op);
+void                <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-set-embed-page-setup" title="gtk_print_operation_set_embed_page_setup ()">gtk_print_operation_set_embed_page_setup</a>
+                                                        (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op,
+                                                         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a> embed);
+<a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-get-embed-page-setup" title="gtk_print_operation_get_embed_page_setup ()">gtk_print_operation_get_embed_page_setup</a>
+                                                        (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op);
 <a class="link" href="GtkPageSetup.html" title="GtkPageSetup">GtkPageSetup</a> *      <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-run-page-setup-dialog" title="gtk_print_run_page_setup_dialog ()">gtk_print_run_page_setup_dialog</a>     (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *parent,
                                                          <a class="link" href="GtkPageSetup.html" title="GtkPageSetup">GtkPageSetup</a> *page_setup,
                                                          <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a> *settings);
@@ -286,6 +295,9 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--default-page-setup" title='The "default-page-setup" property'>default-page-setup</a>"       <a class="link" href="GtkPageSetup.html" title="GtkPageSetup">GtkPageSetup</a>*         : Read / Write
+  "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--embed-page-setup" title='The "embed-page-setup" property'>embed-page-setup</a>"         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--export-filename" title='The "export-filename" property'>export-filename</a>"          <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"
 >gchar</a>*                : Read / Write
@@ -361,7 +373,7 @@ When the user finished the dialog various signals will be emitted on the
 to catch and render the page on the provided <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> using Cairo.
 </p>
 <div class="example">
-<a name="id950905"></a><p class="title"><b>Example 46. The high-level printing API</b></p>
+<a name="id1186709"></a><p class="title"><b>Example 46. The high-level printing API</b></p>
 <div class="example-contents"><pre class="programlisting">
 static GtkPrintSettings *settings = NULL;
 static void
@@ -1561,6 +1573,67 @@ Gets the value of <span class="type">"has-selection"</span> property.</p>
 <p class="since">Since 2.18</p>
 </div>
 <hr>
+<div class="refsect2" title="gtk_print_operation_set_embed_page_setup ()">
+<a name="gtk-print-operation-set-embed-page-setup"></a><h3>gtk_print_operation_set_embed_page_setup ()</h3>
+<pre class="programlisting">void                gtk_print_operation_set_embed_page_setup
+                                                        (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op,
+                                                         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a> embed);</pre>
+<p>
+Embed page size combo box and orientation combo box into page setup page.
+Selected page setup is stored as default page setup in <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation"><span class="type">GtkPrintOperation</span></a>.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>op</code></em> :</span></p></td>
+<td> a <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation"><span class="type">GtkPrintOperation</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>embed</code></em> :</span></p></td>
+<td> <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to embed page setup selection in the <span class="type">GtkPrintDialog</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_print_operation_get_embed_page_setup ()">
+<a name="gtk-print-operation-get-embed-page-setup"></a><h3>gtk_print_operation_get_embed_page_setup ()</h3>
+<pre class="programlisting"><a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>            gtk_print_operation_get_embed_page_setup
+                                                        (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op);</pre>
+<p>
+Gets the value of <span class="type">"embed-page-setup"</span> property.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>op</code></em> :</span></p></td>
+<td> a <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation"><span class="type">GtkPrintOperation</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> whether page setup selection combos are embedded
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
+</div>
+<hr>
 <div class="refsect2" title="gtk_print_run_page_setup_dialog ()">
 <a name="gtk-print-run-page-setup-dialog"></a><h3>gtk_print_run_page_setup_dialog ()</h3>
 <pre class="programlisting"><a class="link" href="GtkPageSetup.html" title="GtkPageSetup">GtkPageSetup</a> *      gtk_print_run_page_setup_dialog     (<a class="link" href="GtkWindow.html" title="GtkWindow">GtkWindow</a> *parent,
@@ -1883,6 +1956,21 @@ to the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-
 <p>
 </p>
 <p>Since 2.10</p>
+</div>
+<hr>
+<div class="refsect2" title='The "embed-page-setup" property'>
+<a name="GtkPrintOperation--embed-page-setup"></a><h3>The <code class="literal">"embed-page-setup"</code> property</h3>
+<pre class="programlisting">  "embed-page-setup"         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write</pre>
+<p>
+If <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>, page size combo box and orientation combo box are embedded into page setup page.</p>
+<p>
+</p>
+<p>Default value: FALSE</p>
+<p>Since 2.18</p>
 </div>
 <hr>
 <div class="refsect2" title='The "export-filename" property'>

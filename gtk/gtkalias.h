@@ -3212,6 +3212,9 @@ extern __typeof (gtk_entry_get_activates_default) IA__gtk_entry_get_activates_de
 extern __typeof (gtk_entry_get_alignment) IA__gtk_entry_get_alignment __attribute((visibility("hidden")));
 #define gtk_entry_get_alignment IA__gtk_entry_get_alignment
 
+extern __typeof (gtk_entry_get_buffer) IA__gtk_entry_get_buffer __attribute((visibility("hidden")));
+#define gtk_entry_get_buffer IA__gtk_entry_get_buffer
+
 extern __typeof (gtk_entry_get_completion) IA__gtk_entry_get_completion __attribute((visibility("hidden")));
 #define gtk_entry_get_completion IA__gtk_entry_get_completion
 
@@ -3299,6 +3302,9 @@ extern __typeof (gtk_entry_layout_index_to_text_index) IA__gtk_entry_layout_inde
 extern __typeof (gtk_entry_new) IA__gtk_entry_new __attribute((visibility("hidden")));
 #define gtk_entry_new IA__gtk_entry_new
 
+extern __typeof (gtk_entry_new_with_buffer) IA__gtk_entry_new_with_buffer __attribute((visibility("hidden")));
+#define gtk_entry_new_with_buffer IA__gtk_entry_new_with_buffer
+
 extern __typeof (gtk_entry_progress_pulse) IA__gtk_entry_progress_pulse __attribute((visibility("hidden")));
 #define gtk_entry_progress_pulse IA__gtk_entry_progress_pulse
 
@@ -3307,6 +3313,9 @@ extern __typeof (gtk_entry_set_activates_default) IA__gtk_entry_set_activates_de
 
 extern __typeof (gtk_entry_set_alignment) IA__gtk_entry_set_alignment __attribute((visibility("hidden")));
 #define gtk_entry_set_alignment IA__gtk_entry_set_alignment
+
+extern __typeof (gtk_entry_set_buffer) IA__gtk_entry_set_buffer __attribute((visibility("hidden")));
+#define gtk_entry_set_buffer IA__gtk_entry_set_buffer
 
 extern __typeof (gtk_entry_set_completion) IA__gtk_entry_set_completion __attribute((visibility("hidden")));
 #define gtk_entry_set_completion IA__gtk_entry_set_completion
@@ -3478,6 +3487,46 @@ extern __typeof (gtk_entry_completion_set_popup_single_match) IA__gtk_entry_comp
 
 extern __typeof (gtk_entry_completion_set_text_column) IA__gtk_entry_completion_set_text_column __attribute((visibility("hidden")));
 #define gtk_entry_completion_set_text_column IA__gtk_entry_completion_set_text_column
+
+#endif
+#endif
+#if IN_HEADER(__GTK_ENTRY_BUFFER_H__)
+#if IN_FILE(__GTK_ENTRY_BUFFER_C__)
+extern __typeof (gtk_entry_buffer_get_type) IA__gtk_entry_buffer_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gtk_entry_buffer_get_type IA__gtk_entry_buffer_get_type
+
+extern __typeof (gtk_entry_buffer_new) IA__gtk_entry_buffer_new __attribute((visibility("hidden")));
+#define gtk_entry_buffer_new IA__gtk_entry_buffer_new
+
+extern __typeof (gtk_entry_buffer_get_bytes) IA__gtk_entry_buffer_get_bytes __attribute((visibility("hidden")));
+#define gtk_entry_buffer_get_bytes IA__gtk_entry_buffer_get_bytes
+
+extern __typeof (gtk_entry_buffer_get_length) IA__gtk_entry_buffer_get_length __attribute((visibility("hidden")));
+#define gtk_entry_buffer_get_length IA__gtk_entry_buffer_get_length
+
+extern __typeof (gtk_entry_buffer_get_text) IA__gtk_entry_buffer_get_text __attribute((visibility("hidden")));
+#define gtk_entry_buffer_get_text IA__gtk_entry_buffer_get_text
+
+extern __typeof (gtk_entry_buffer_set_text) IA__gtk_entry_buffer_set_text __attribute((visibility("hidden")));
+#define gtk_entry_buffer_set_text IA__gtk_entry_buffer_set_text
+
+extern __typeof (gtk_entry_buffer_set_max_length) IA__gtk_entry_buffer_set_max_length __attribute((visibility("hidden")));
+#define gtk_entry_buffer_set_max_length IA__gtk_entry_buffer_set_max_length
+
+extern __typeof (gtk_entry_buffer_get_max_length) IA__gtk_entry_buffer_get_max_length __attribute((visibility("hidden")));
+#define gtk_entry_buffer_get_max_length IA__gtk_entry_buffer_get_max_length
+
+extern __typeof (gtk_entry_buffer_insert_text) IA__gtk_entry_buffer_insert_text __attribute((visibility("hidden")));
+#define gtk_entry_buffer_insert_text IA__gtk_entry_buffer_insert_text
+
+extern __typeof (gtk_entry_buffer_delete_text) IA__gtk_entry_buffer_delete_text __attribute((visibility("hidden")));
+#define gtk_entry_buffer_delete_text IA__gtk_entry_buffer_delete_text
+
+extern __typeof (gtk_entry_buffer_emit_inserted_text) IA__gtk_entry_buffer_emit_inserted_text __attribute((visibility("hidden")));
+#define gtk_entry_buffer_emit_inserted_text IA__gtk_entry_buffer_emit_inserted_text
+
+extern __typeof (gtk_entry_buffer_emit_deleted_text) IA__gtk_entry_buffer_emit_deleted_text __attribute((visibility("hidden")));
+#define gtk_entry_buffer_emit_deleted_text IA__gtk_entry_buffer_emit_deleted_text
 
 #endif
 #endif
@@ -5271,6 +5320,12 @@ extern __typeof (gtk_label_set_width_chars) IA__gtk_label_set_width_chars __attr
 extern __typeof (gtk_label_get_current_uri) IA__gtk_label_get_current_uri __attribute((visibility("hidden")));
 #define gtk_label_get_current_uri IA__gtk_label_get_current_uri
 
+extern __typeof (gtk_label_set_track_visited_links) IA__gtk_label_set_track_visited_links __attribute((visibility("hidden")));
+#define gtk_label_set_track_visited_links IA__gtk_label_set_track_visited_links
+
+extern __typeof (gtk_label_get_track_visited_links) IA__gtk_label_get_track_visited_links __attribute((visibility("hidden")));
+#define gtk_label_get_track_visited_links IA__gtk_label_get_track_visited_links
+
 #endif
 #endif
 #if IN_HEADER(__GTK_LAYOUT_H__)
@@ -6684,6 +6739,13 @@ extern __typeof (gtk_paper_size_get_default) IA__gtk_paper_size_get_default __at
 
 #endif
 #endif
+#if IN_HEADER(__GTK_CUSTOM_PAPER_UNIX_DIALOG_H__)
+#if IN_FILE(__GTK_CUSTOM_PAPER_UNIX_DIALOG_C__)
+extern __typeof (gtk_custom_paper_unix_dialog_get_type) IA__gtk_custom_paper_unix_dialog_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gtk_custom_paper_unix_dialog_get_type IA__gtk_custom_paper_unix_dialog_get_type
+
+#endif
+#endif
 #if IN_HEADER(__GTK_PRINT_BACKEND_H__)
 #if IN_FILE(__GTK_PRINT_BACKEND_C__)
 #ifdef G_OS_UNIX
@@ -7104,6 +7166,12 @@ extern __typeof (gtk_print_operation_set_has_selection) IA__gtk_print_operation_
 extern __typeof (gtk_print_operation_get_has_selection) IA__gtk_print_operation_get_has_selection __attribute((visibility("hidden")));
 #define gtk_print_operation_get_has_selection IA__gtk_print_operation_get_has_selection
 
+extern __typeof (gtk_print_operation_set_embed_page_setup) IA__gtk_print_operation_set_embed_page_setup __attribute((visibility("hidden")));
+#define gtk_print_operation_set_embed_page_setup IA__gtk_print_operation_set_embed_page_setup
+
+extern __typeof (gtk_print_operation_get_embed_page_setup) IA__gtk_print_operation_get_embed_page_setup __attribute((visibility("hidden")));
+#define gtk_print_operation_get_embed_page_setup IA__gtk_print_operation_get_embed_page_setup
+
 #endif
 #endif
 #if IN_HEADER(__GTK_PRINT_OPERATION_PREVIEW_H__)
@@ -7425,6 +7493,15 @@ extern __typeof (gtk_print_unix_dialog_set_has_selection) IA__gtk_print_unix_dia
 
 extern __typeof (gtk_print_unix_dialog_get_has_selection) IA__gtk_print_unix_dialog_get_has_selection __attribute((visibility("hidden")));
 #define gtk_print_unix_dialog_get_has_selection IA__gtk_print_unix_dialog_get_has_selection
+
+extern __typeof (gtk_print_unix_dialog_set_embed_page_setup) IA__gtk_print_unix_dialog_set_embed_page_setup __attribute((visibility("hidden")));
+#define gtk_print_unix_dialog_set_embed_page_setup IA__gtk_print_unix_dialog_set_embed_page_setup
+
+extern __typeof (gtk_print_unix_dialog_get_embed_page_setup) IA__gtk_print_unix_dialog_get_embed_page_setup __attribute((visibility("hidden")));
+#define gtk_print_unix_dialog_get_embed_page_setup IA__gtk_print_unix_dialog_get_embed_page_setup
+
+extern __typeof (gtk_print_unix_dialog_get_page_setup_set) IA__gtk_print_unix_dialog_get_page_setup_set __attribute((visibility("hidden")));
+#define gtk_print_unix_dialog_get_page_setup_set IA__gtk_print_unix_dialog_get_page_setup_set
 
 #endif
 #endif

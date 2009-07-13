@@ -92,6 +92,11 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-print-operat
                                                          <link linkend="gboolean">gboolean</link> has_selection);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-operation-get-has-selection">gtk_print_operation_get_has_selection</link>
                                                         (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);
+<link linkend="void">void</link>                <link linkend="gtk-print-operation-set-embed-page-setup">gtk_print_operation_set_embed_page_setup</link>
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
+                                                         <link linkend="gboolean">gboolean</link> embed);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-print-operation-get-embed-page-setup">gtk_print_operation_get_embed_page_setup</link>
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);
 <link linkend="GtkPageSetup">GtkPageSetup</link> *      <link linkend="gtk-print-run-page-setup-dialog">gtk_print_run_page_setup_dialog</link>     (<link linkend="GtkWindow">GtkWindow</link> *parent,
                                                          <link linkend="GtkPageSetup">GtkPageSetup</link> *page_setup,
                                                          <link linkend="GtkPrintSettings">GtkPrintSettings</link> *settings);
@@ -157,6 +162,7 @@ GtkPrintOperationPreview is implemented by
   &quot;<link linkend="GtkPrintOperation--current-page">current-page</link>&quot;             <link linkend="gint">gint</link>                  : Read / Write
   &quot;<link linkend="GtkPrintOperation--custom-tab-label">custom-tab-label</link>&quot;         <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkPrintOperation--default-page-setup">default-page-setup</link>&quot;       <link linkend="GtkPageSetup">GtkPageSetup</link>*         : Read / Write
+  &quot;<link linkend="GtkPrintOperation--embed-page-setup">embed-page-setup</link>&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--export-filename">export-filename</link>&quot;          <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkPrintOperation--has-selection">has-selection</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--job-name">job-name</link>&quot;                 <link linkend="gchar">gchar</link>*                : Read / Write
@@ -1022,6 +1028,38 @@ Gets the value of <link linkend="GtkPrintOperation-has-selection"><type>"has-sel
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-operation-set-embed-page-setup" role="function" condition="since:2.18">
+<title>gtk_print_operation_set_embed_page_setup ()</title>
+<indexterm zone="gtk-print-operation-set-embed-page-setup" role="2.18"><primary sortas="print_operation_set_embed_page_setup">gtk_print_operation_set_embed_page_setup</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_operation_set_embed_page_setup
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
+                                                         <link linkend="gboolean">gboolean</link> embed);</programlisting>
+<para>
+Embed page size combo box and orientation combo box into page setup page.
+Selected page setup is stored as default page setup in <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>embed</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to embed page setup selection in the <link linkend="GtkPrintDialog"><type>GtkPrintDialog</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-print-operation-get-embed-page-setup" role="function" condition="since:2.18">
+<title>gtk_print_operation_get_embed_page_setup ()</title>
+<indexterm zone="gtk-print-operation-get-embed-page-setup" role="2.18"><primary sortas="print_operation_get_embed_page_setup">gtk_print_operation_get_embed_page_setup</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_print_operation_get_embed_page_setup
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);</programlisting>
+<para>
+Gets the value of <link linkend="GtkPrintOperation-embed-page-setup"><type>"embed-page-setup"</type></link> property.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether page setup selection combos are embedded
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-print-run-page-setup-dialog" role="function" condition="since:2.10">
 <title>gtk_print_run_page_setup_dialog ()</title>
 <indexterm zone="gtk-print-run-page-setup-dialog" role="2.10"><primary sortas="print_run_page_setup_dialog">gtk_print_run_page_setup_dialog</primary></indexterm><programlisting><link linkend="GtkPageSetup">GtkPageSetup</link> *      gtk_print_run_page_setup_dialog     (<link linkend="GtkWindow">GtkWindow</link> *parent,
@@ -1230,6 +1268,14 @@ but it can be overridden on a per-page basis by connecting
 to the <link linkend="GtkPrintOperation-request-page-setup"><type>"request-page-setup"</type></link> signal.</para>
 <para>
 </para><para>Since 2.10</para>
+</refsect2>
+<refsect2 id="GtkPrintOperation--embed-page-setup" role="property"><title>The <literal>&quot;embed-page-setup&quot;</literal> property</title>
+<indexterm zone="GtkPrintOperation--embed-page-setup" role="2.18"><primary sortas="PrintOperation:embed-page-setup">GtkPrintOperation:embed-page-setup</primary></indexterm><programlisting>  &quot;embed-page-setup&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+If <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>, page size combo box and orientation combo box are embedded into page setup page.</para>
+<para>
+</para><para>Default value: FALSE</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkPrintOperation--export-filename" role="property"><title>The <literal>&quot;export-filename&quot;</literal> property</title>
 <indexterm zone="GtkPrintOperation--export-filename" role="2.10"><primary sortas="PrintOperation:export-filename">GtkPrintOperation:export-filename</primary></indexterm><programlisting>  &quot;export-filename&quot;          <link linkend="gchar">gchar</link>*                : Read / Write</programlisting>

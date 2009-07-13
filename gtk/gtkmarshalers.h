@@ -648,10 +648,20 @@ extern void _gtk_marshal_VOID__UINT_OBJECT_UINT_FLAGS_FLAGS (GClosure     *closu
                                                              gpointer      invocation_hint,
                                                              gpointer      marshal_data);
 
-/* VOID:VOID (./gtkmarshalers.list:110) */
+/* VOID:UINT,STRING,UINT (./gtkmarshalers.list:110) */
+extern void _gtk_marshal_VOID__UINT_STRING_UINT (GClosure     *closure,
+                                                 GValue       *return_value,
+                                                 guint         n_param_values,
+                                                 const GValue *param_values,
+                                                 gpointer      invocation_hint,
+                                                 gpointer      marshal_data);
+
+/* VOID:UINT,UINT (./gtkmarshalers.list:111) */
+
+/* VOID:VOID (./gtkmarshalers.list:112) */
 #define _gtk_marshal_VOID__VOID	g_cclosure_marshal_VOID__VOID
 
-/* OBJECT:OBJECT,INT,INT (./gtkmarshalers.list:111) */
+/* OBJECT:OBJECT,INT,INT (./gtkmarshalers.list:113) */
 extern void _gtk_marshal_OBJECT__OBJECT_INT_INT (GClosure     *closure,
                                                  GValue       *return_value,
                                                  guint         n_param_values,

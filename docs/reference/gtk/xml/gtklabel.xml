@@ -97,6 +97,9 @@ const <link linkend="gchar">gchar</link> *       <link linkend="gtk-label-get-la
 <link linkend="void">void</link>                <link linkend="gtk-label-set-angle">gtk_label_set_angle</link>                 (<link linkend="GtkLabel">GtkLabel</link> *label,
                                                          <link linkend="gdouble">gdouble</link> angle);
 const <link linkend="gchar">gchar</link> *       <link linkend="gtk-label-get-current-uri">gtk_label_get_current_uri</link>           (<link linkend="GtkLabel">GtkLabel</link> *label);
+<link linkend="void">void</link>                <link linkend="gtk-label-set-track-visited-links">gtk_label_set_track_visited_links</link>   (<link linkend="GtkLabel">GtkLabel</link> *label,
+                                                         <link linkend="gboolean">gboolean</link> track_links);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-label-get-track-visited-links">gtk_label_get_track_visited_links</link>   (<link linkend="GtkLabel">GtkLabel</link> *label);
 </synopsis>
 </refsynopsisdiv>
 
@@ -140,6 +143,7 @@ GtkLabel implements
   &quot;<link linkend="GtkLabel--selectable">selectable</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkLabel--selection-bound">selection-bound</link>&quot;          <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkLabel--single-line-mode">single-line-mode</link>&quot;         <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkLabel--track-visited-links">track-visited-links</link>&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkLabel--use-markup">use-markup</link>&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkLabel--use-underline">use-underline</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkLabel--width-chars">width-chars</link>&quot;              <link linkend="gint">gint</link>                  : Read / Write
@@ -1126,6 +1130,37 @@ or for use in a <link linkend="GtkWidget-query-tooltip"><type>"query-tooltip"</t
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-label-set-track-visited-links" role="function" condition="since:2.18">
+<title>gtk_label_set_track_visited_links ()</title>
+<indexterm zone="gtk-label-set-track-visited-links" role="2.18"><primary sortas="label_set_track_visited_links">gtk_label_set_track_visited_links</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_label_set_track_visited_links   (<link linkend="GtkLabel">GtkLabel</link> *label,
+                                                         <link linkend="gboolean">gboolean</link> track_links);</programlisting>
+<para>
+Sets whether the label should keep track of clicked
+links (and use a different color for them).</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkLabel"><type>GtkLabel</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>track_links</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to track visited links
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-label-get-track-visited-links" role="function" condition="since:2.18">
+<title>gtk_label_get_track_visited_links ()</title>
+<indexterm zone="gtk-label-get-track-visited-links" role="2.18"><primary sortas="label_get_track_visited_links">gtk_label_get_track_visited_links</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_label_get_track_visited_links   (<link linkend="GtkLabel">GtkLabel</link> *label);</programlisting>
+<para>
+Returns whether the label is currently keeping track
+of clicked links.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>label</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkLabel"><type>GtkLabel</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if clicked links are remembered
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkLabel.property-details" role="property_details">
@@ -1221,6 +1256,16 @@ changes would be distracting, e.g. in a statusbar.</para>
 <para>
 </para><para>Default value: FALSE</para>
 <para>Since 2.6</para>
+</refsect2>
+<refsect2 id="GtkLabel--track-visited-links" role="property"><title>The <literal>&quot;track-visited-links&quot;</literal> property</title>
+<indexterm zone="GtkLabel--track-visited-links" role="2.18"><primary sortas="Label:track-visited-links">GtkLabel:track-visited-links</primary></indexterm><programlisting>  &quot;track-visited-links&quot;      <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Set this property to <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> to make the label track which links
+have been clicked. It will then apply the ::visited-link-color
+color, instead of ::link-color.</para>
+<para>
+</para><para>Default value: TRUE</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkLabel--use-markup" role="property"><title>The <literal>&quot;use-markup&quot;</literal> property</title>
 <indexterm zone="GtkLabel--use-markup"><primary sortas="Label:use-markup">GtkLabel:use-markup</primary></indexterm><programlisting>  &quot;use-markup&quot;               <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>

@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="NumericEntry.html" title="Numeric/Text Data Entry">
 <link rel="prev" href="NumericEntry.html" title="Numeric/Text Data Entry">
-<link rel="next" href="GtkEntryCompletion.html" title="GtkEntryCompletion">
+<link rel="next" href="GtkEntryBuffer.html" title="GtkEntryBuffer">
 <meta name="generator" content="GTK-Doc V1.11 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
@@ -70,7 +70,7 @@
 <td><a accesskey="u" href="NumericEntry.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">GTK+ Reference Manual</th>
-<td><a accesskey="n" href="GtkEntryCompletion.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GtkEntryBuffer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#GtkEntry.synopsis" class="shortcut">Top</a>
@@ -105,9 +105,13 @@
 
                     <a class="link" href="GtkEntry.html#GtkEntry-struct" title="GtkEntry">GtkEntry</a>;
 <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkEntry.html#gtk-entry-new" title="gtk_entry_new ()">gtk_entry_new</a>                       (void);
+<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkEntry.html#gtk-entry-new-with-buffer" title="gtk_entry_new_with_buffer ()">gtk_entry_new_with_buffer</a>           (<a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a> *buffer);
 <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          <a class="link" href="GtkEntry.html#gtk-entry-new-with-max-length" title="gtk_entry_new_with_max_length ()">gtk_entry_new_with_max_length</a>       (<a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
 >gint</a> max);
+<a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a>*     <a class="link" href="GtkEntry.html#gtk-entry-get-buffer" title="gtk_entry_get_buffer ()">gtk_entry_get_buffer</a>                (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry);
+void                <a class="link" href="GtkEntry.html#gtk-entry-set-buffer" title="gtk_entry_set_buffer ()">gtk_entry_set_buffer</a>                (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry,
+                                                         <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a> *buffer);
 void                <a class="link" href="GtkEntry.html#gtk-entry-set-text" title="gtk_entry_set_text ()">gtk_entry_set_text</a>                  (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry,
                                                          const <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"
@@ -369,6 +373,7 @@ GtkEntry implements
   "<a class="link" href="GtkEntry.html#GtkEntry--activates-default" title='The "activates-default" property'>activates-default</a>"        <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write
+  "<a class="link" href="GtkEntry.html#GtkEntry--buffer" title='The "buffer" property'>buffer</a>"                   <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a>*       : Read / Write / Construct
   "<a class="link" href="GtkEntry.html#GtkEntry--caps-lock-warning" title='The "caps-lock-warning" property'>caps-lock-warning</a>"        <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write
@@ -584,6 +589,32 @@ Creates a new entry.</p>
 </table></div>
 </div>
 <hr>
+<div class="refsect2" title="gtk_entry_new_with_buffer ()">
+<a name="gtk-entry-new-with-buffer"></a><h3>gtk_entry_new_with_buffer ()</h3>
+<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_entry_new_with_buffer           (<a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a> *buffer);</pre>
+<p>
+Creates a new entry with the specified text buffer.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> The buffer to use for the new <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a>
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
+</div>
+<hr>
 <div class="refsect2" title="gtk_entry_new_with_max_length ()">
 <a name="gtk-entry-new-with-max-length"></a><h3>gtk_entry_new_with_max_length ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>*          gtk_entry_new_with_max_length       (<a
@@ -617,6 +648,59 @@ Creates a new <a class="link" href="GtkEntry.html" title="GtkEntry"><span class=
 </table></div>
 </div>
 <hr>
+<div class="refsect2" title="gtk_entry_get_buffer ()">
+<a name="gtk-entry-get-buffer"></a><h3>gtk_entry_get_buffer ()</h3>
+<pre class="programlisting"><a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a>*     gtk_entry_get_buffer                (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry);</pre>
+<p>
+Get the <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer"><span class="type">GtkEntryBuffer</span></a> object which holds the text for
+this widget.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer"><span class="type">GtkEntryBuffer</span></a> object.
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_entry_set_buffer ()">
+<a name="gtk-entry-set-buffer"></a><h3>gtk_entry_set_buffer ()</h3>
+<pre class="programlisting">void                gtk_entry_set_buffer                (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry,
+                                                         <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a> *buffer);</pre>
+<p>
+Set the <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer"><span class="type">GtkEntryBuffer</span></a> object which holds the text for
+this widget.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer"><span class="type">GtkEntryBuffer</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
+</div>
+<hr>
 <div class="refsect2" title="gtk_entry_set_text ()">
 <a name="gtk-entry-set-text"></a><h3>gtk_entry_set_text ()</h3>
 <pre class="programlisting">void                gtk_entry_set_text                  (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry,
@@ -625,7 +709,10 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"
 >gchar</a> *text);</pre>
 <p>
 Sets the text in the widget to the given
-value, replacing the current contents.</p>
+value, replacing the current contents.
+</p>
+<p>
+See <a class="link" href="GtkEntryBuffer.html#gtk-entry-buffer-set-text" title="gtk_entry_buffer_set_text ()"><code class="function">gtk_entry_buffer_set_text()</code></a>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -750,7 +837,16 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"
 >gchar</a>*        gtk_entry_get_text                  (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry);</pre>
 <p>
 Retrieves the contents of the entry widget.
-See also <a class="link" href="GtkEditable.html#gtk-editable-get-chars" title="gtk_editable_get_chars ()"><code class="function">gtk_editable_get_chars()</code></a>.</p>
+See also <a class="link" href="GtkEditable.html#gtk-editable-get-chars" title="gtk_editable_get_chars ()"><code class="function">gtk_editable_get_chars()</code></a>.
+</p>
+<p>
+This is equivalent to:
+</p>
+<p>
+</p>
+<div class="informalexample"><pre class="programlisting">
+gtk_entry_buffer_get_text (gtk_entry_get_buffer (entry));
+</pre></div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -780,7 +876,16 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint16
 >guint16</a>             gtk_entry_get_text_length           (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry);</pre>
 <p>
 Retrieves the current length of the text in
-<em class="parameter"><code>entry</code></em>.</p>
+<em class="parameter"><code>entry</code></em>. 
+</p>
+<p>
+This is equivalent to:
+</p>
+<p>
+</p>
+<div class="informalexample"><pre class="programlisting">
+gtk_entry_buffer_get_length (gtk_entry_get_buffer (entry));
+</pre></div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -985,7 +1090,16 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
 <p>
 Sets the maximum allowed length of the contents of the widget. If
 the current contents are longer than the given length, then they
-will be truncated to fit.</p>
+will be truncated to fit.
+</p>
+<p>
+This is equivalent to:
+</p>
+<p>
+</p>
+<div class="informalexample"><pre class="programlisting">
+gtk_entry_buffer_set_max_length (gtk_entry_get_buffer (entry), max);
+</pre></div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -1594,7 +1708,16 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
 >gint</a>                gtk_entry_get_max_length            (<a class="link" href="GtkEntry.html" title="GtkEntry">GtkEntry</a> *entry);</pre>
 <p>
 Retrieves the maximum allowed length of the text in
-<em class="parameter"><code>entry</code></em>. See <a class="link" href="GtkEntry.html#gtk-entry-set-max-length" title="gtk_entry_set_max_length ()"><code class="function">gtk_entry_set_max_length()</code></a>.</p>
+<em class="parameter"><code>entry</code></em>. See <a class="link" href="GtkEntry.html#gtk-entry-set-max-length" title="gtk_entry_set_max_length ()"><code class="function">gtk_entry_set_max_length()</code></a>.
+</p>
+<p>
+This is equivalent to:
+</p>
+<p>
+</p>
+<div class="informalexample"><pre class="programlisting">
+gtk_entry_buffer_get_max_length (gtk_entry_get_buffer (entry));
+</pre></div>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2783,6 +2906,12 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolea
 >gboolean</a>              : Read / Write</pre>
 <p>Whether to activate the default widget (such as the default button in a dialog) when Enter is pressed.</p>
 <p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2" title='The "buffer" property'>
+<a name="GtkEntry--buffer"></a><h3>The <code class="literal">"buffer"</code> property</h3>
+<pre class="programlisting">  "buffer"                   <a class="link" href="GtkEntryBuffer.html" title="GtkEntryBuffer">GtkEntryBuffer</a>*       : Read / Write / Construct</pre>
+<p>Text buffer object which actually stores entry text.</p>
 </div>
 <hr>
 <div class="refsect2" title='The "caps-lock-warning" property'>

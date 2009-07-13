@@ -26,7 +26,11 @@
 
                     <link linkend="GtkEntry-struct">GtkEntry</link>;
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-entry-new">gtk_entry_new</link>                       (void);
+<link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-entry-new-with-buffer">gtk_entry_new_with_buffer</link>           (<link linkend="GtkEntryBuffer">GtkEntryBuffer</link> *buffer);
 <link linkend="GtkWidget">GtkWidget</link>*          <link linkend="gtk-entry-new-with-max-length">gtk_entry_new_with_max_length</link>       (<link linkend="gint">gint</link> max);
+<link linkend="GtkEntryBuffer">GtkEntryBuffer</link>*     <link linkend="gtk-entry-get-buffer">gtk_entry_get_buffer</link>                (<link linkend="GtkEntry">GtkEntry</link> *entry);
+<link linkend="void">void</link>                <link linkend="gtk-entry-set-buffer">gtk_entry_set_buffer</link>                (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="GtkEntryBuffer">GtkEntryBuffer</link> *buffer);
 <link linkend="void">void</link>                <link linkend="gtk-entry-set-text">gtk_entry_set_text</link>                  (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          const <link linkend="gchar">gchar</link> *text);
 <link linkend="void">void</link>                <link linkend="gtk-entry-append-text">gtk_entry_append_text</link>               (<link linkend="GtkEntry">GtkEntry</link> *entry,
@@ -174,6 +178,7 @@ GtkEntry implements
 <title role="properties.title">Properties</title>
 <synopsis>
   &quot;<link linkend="GtkEntry--activates-default">activates-default</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
+  &quot;<link linkend="GtkEntry--buffer">buffer</link>&quot;                   <link linkend="GtkEntryBuffer">GtkEntryBuffer</link>*       : Read / Write / Construct
   &quot;<link linkend="GtkEntry--caps-lock-warning">caps-lock-warning</link>&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkEntry--cursor-position">cursor-position</link>&quot;          <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkEntry--editable">editable</link>&quot;                 <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -308,6 +313,20 @@ Creates a new entry.</para>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkEntry"><type>GtkEntry</type></link>.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-entry-new-with-buffer" role="function" condition="since:2.18">
+<title>gtk_entry_new_with_buffer ()</title>
+<indexterm zone="gtk-entry-new-with-buffer" role="2.18"><primary sortas="entry_new_with_buffer">gtk_entry_new_with_buffer</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_entry_new_with_buffer           (<link linkend="GtkEntryBuffer">GtkEntryBuffer</link> *buffer);</programlisting>
+<para>
+Creates a new entry with the specified text buffer.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>buffer</parameter>&#160;:</term>
+<listitem><simpara> The buffer to use for the new <link linkend="GtkEntry"><type>GtkEntry</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a new <link linkend="GtkEntry"><type>GtkEntry</type></link>
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-entry-new-with-max-length" role="function" condition="deprecated:Use gtk_entry_set_max_length() instead.">
 <title>gtk_entry_new_with_max_length ()</title>
 <indexterm zone="gtk-entry-new-with-max-length" role="deprecated"><primary sortas="entry_new_with_max_length">gtk_entry_new_with_max_length</primary></indexterm><programlisting><link linkend="GtkWidget">GtkWidget</link>*          gtk_entry_new_with_max_length       (<link linkend="gint">gint</link> max);</programlisting>
@@ -325,13 +344,46 @@ Creates a new <link linkend="GtkEntry"><type>GtkEntry</type></link> widget with 
 
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gtk-entry-get-buffer" role="function" condition="since:2.18">
+<title>gtk_entry_get_buffer ()</title>
+<indexterm zone="gtk-entry-get-buffer" role="2.18"><primary sortas="entry_get_buffer">gtk_entry_get_buffer</primary></indexterm><programlisting><link linkend="GtkEntryBuffer">GtkEntryBuffer</link>*     gtk_entry_get_buffer                (<link linkend="GtkEntry">GtkEntry</link> *entry);</programlisting>
+<para>
+Get the <link linkend="GtkEntryBuffer"><type>GtkEntryBuffer</type></link> object which holds the text for
+this widget.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>entry</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkEntry"><type>GtkEntry</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A <link linkend="GtkEntryBuffer"><type>GtkEntryBuffer</type></link> object.
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-entry-set-buffer" role="function" condition="since:2.18">
+<title>gtk_entry_set_buffer ()</title>
+<indexterm zone="gtk-entry-set-buffer" role="2.18"><primary sortas="entry_set_buffer">gtk_entry_set_buffer</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_set_buffer                (<link linkend="GtkEntry">GtkEntry</link> *entry,
+                                                         <link linkend="GtkEntryBuffer">GtkEntryBuffer</link> *buffer);</programlisting>
+<para>
+Set the <link linkend="GtkEntryBuffer"><type>GtkEntryBuffer</type></link> object which holds the text for
+this widget.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>entry</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkEntry"><type>GtkEntry</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>buffer</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkEntryBuffer"><type>GtkEntryBuffer</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-entry-set-text" role="function">
 <title>gtk_entry_set_text ()</title>
 <indexterm zone="gtk-entry-set-text"><primary sortas="entry_set_text">gtk_entry_set_text</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_set_text                  (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          const <link linkend="gchar">gchar</link> *text);</programlisting>
 <para>
 Sets the text in the widget to the given
-value, replacing the current contents.</para>
+value, replacing the current contents.
+</para>
+<para>
+See <link linkend="gtk-entry-buffer-set-text"><function>gtk_entry_buffer_set_text()</function></link>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>entry</parameter>&#160;:</term>
@@ -399,7 +451,15 @@ Sets the cursor position in an entry to the given value.</para>
 <indexterm zone="gtk-entry-get-text"><primary sortas="entry_get_text">gtk_entry_get_text</primary></indexterm><programlisting>const <link linkend="gchar">gchar</link>*        gtk_entry_get_text                  (<link linkend="GtkEntry">GtkEntry</link> *entry);</programlisting>
 <para>
 Retrieves the contents of the entry widget.
-See also <link linkend="gtk-editable-get-chars"><function>gtk_editable_get_chars()</function></link>.</para>
+See also <link linkend="gtk-editable-get-chars"><function>gtk_editable_get_chars()</function></link>.
+</para>
+<para>
+This is equivalent to:
+</para>
+<para>
+<informalexample><programlisting>
+gtk_entry_buffer_get_text (gtk_entry_get_buffer (entry));
+</programlisting></informalexample></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>entry</parameter>&#160;:</term>
@@ -416,7 +476,15 @@ See also <link linkend="gtk-editable-get-chars"><function>gtk_editable_get_chars
 <indexterm zone="gtk-entry-get-text-length" role="2.14"><primary sortas="entry_get_text_length">gtk_entry_get_text_length</primary></indexterm><programlisting><link linkend="guint16">guint16</link>             gtk_entry_get_text_length           (<link linkend="GtkEntry">GtkEntry</link> *entry);</programlisting>
 <para>
 Retrieves the current length of the text in
-<parameter>entry</parameter>.</para>
+<parameter>entry</parameter>. 
+</para>
+<para>
+This is equivalent to:
+</para>
+<para>
+<informalexample><programlisting>
+gtk_entry_buffer_get_length (gtk_entry_get_buffer (entry));
+</programlisting></informalexample></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>entry</parameter>&#160;:</term>
@@ -534,7 +602,15 @@ widget or not.</para>
 <para>
 Sets the maximum allowed length of the contents of the widget. If
 the current contents are longer than the given length, then they
-will be truncated to fit.</para>
+will be truncated to fit.
+</para>
+<para>
+This is equivalent to:
+</para>
+<para>
+<informalexample><programlisting>
+gtk_entry_buffer_set_max_length (gtk_entry_get_buffer (entry), max);
+</programlisting></informalexample></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>entry</parameter>&#160;:</term>
@@ -865,7 +941,15 @@ Converts from a position in the entry's <link linkend="PangoLayout"><type>PangoL
 <indexterm zone="gtk-entry-get-max-length"><primary sortas="entry_get_max_length">gtk_entry_get_max_length</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_entry_get_max_length            (<link linkend="GtkEntry">GtkEntry</link> *entry);</programlisting>
 <para>
 Retrieves the maximum allowed length of the text in
-<parameter>entry</parameter>. See <link linkend="gtk-entry-set-max-length"><function>gtk_entry_set_max_length()</function></link>.</para>
+<parameter>entry</parameter>. See <link linkend="gtk-entry-set-max-length"><function>gtk_entry_set_max_length()</function></link>.
+</para>
+<para>
+This is equivalent to:
+</para>
+<para>
+<informalexample><programlisting>
+gtk_entry_buffer_get_max_length (gtk_entry_get_buffer (entry));
+</programlisting></informalexample></para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>entry</parameter>&#160;:</term>
@@ -1523,6 +1607,9 @@ callback.</para>
 <indexterm zone="GtkEntry--activates-default"><primary sortas="Entry:activates-default">GtkEntry:activates-default</primary></indexterm><programlisting>  &quot;activates-default&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>Whether to activate the default widget (such as the default button in a dialog) when Enter is pressed.</para><para>Default value: FALSE</para>
 </refsect2>
+<refsect2 id="GtkEntry--buffer" role="property"><title>The <literal>&quot;buffer&quot;</literal> property</title>
+<indexterm zone="GtkEntry--buffer"><primary sortas="Entry:buffer">GtkEntry:buffer</primary></indexterm><programlisting>  &quot;buffer&quot;                   <link linkend="GtkEntryBuffer">GtkEntryBuffer</link>*       : Read / Write / Construct</programlisting>
+<para>Text buffer object which actually stores entry text.</para></refsect2>
 <refsect2 id="GtkEntry--caps-lock-warning" role="property"><title>The <literal>&quot;caps-lock-warning&quot;</literal> property</title>
 <indexterm zone="GtkEntry--caps-lock-warning" role="2.16"><primary sortas="Entry:caps-lock-warning">GtkEntry:caps-lock-warning</primary></indexterm><programlisting>  &quot;caps-lock-warning&quot;        <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
 <para>

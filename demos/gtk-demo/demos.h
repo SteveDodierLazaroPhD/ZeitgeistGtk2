@@ -21,6 +21,7 @@ GtkWidget *do_combobox (GtkWidget *do_widget);
 GtkWidget *do_dialog (GtkWidget *do_widget);
 GtkWidget *do_drawingarea (GtkWidget *do_widget);
 GtkWidget *do_editable_cells (GtkWidget *do_widget);
+GtkWidget *do_entry_buffer (GtkWidget *do_widget);
 GtkWidget *do_entry_completion (GtkWidget *do_widget);
 GtkWidget *do_expander (GtkWidget *do_widget);
 GtkWidget *do_hypertext (GtkWidget *do_widget);
@@ -52,6 +53,7 @@ Demo child0[] = {
 };
 
 Demo child1[] = {
+  { "Entry Buffer", "entry_buffer.c", do_entry_buffer, NULL },
   { "Entry Completion", "entry_completion.c", do_entry_completion, NULL },
   { "Search Entry", "search_entry.c", do_search_entry, NULL },
   { NULL } 

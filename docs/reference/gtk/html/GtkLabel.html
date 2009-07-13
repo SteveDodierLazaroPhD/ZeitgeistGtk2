@@ -264,6 +264,13 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble
 const <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"
 >gchar</a> *       <a class="link" href="GtkLabel.html#gtk-label-get-current-uri" title="gtk_label_get_current_uri ()">gtk_label_get_current_uri</a>           (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a> *label);
+void                <a class="link" href="GtkLabel.html#gtk-label-set-track-visited-links" title="gtk_label_set_track_visited_links ()">gtk_label_set_track_visited_links</a>   (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a> *label,
+                                                         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a> track_links);
+<a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="GtkLabel.html#gtk-label-get-track-visited-links" title="gtk_label_get_track_visited_links ()">gtk_label_get_track_visited_links</a>   (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a> *label);
 </pre>
 </div>
 <div class="refsect1" title="Object Hierarchy">
@@ -327,6 +334,9 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
   "<a class="link" href="GtkLabel.html#GtkLabel--single-line-mode" title='The "single-line-mode" property'>single-line-mode</a>"         <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write
+  "<a class="link" href="GtkLabel.html#GtkLabel--track-visited-links" title='The "track-visited-links" property'>track-visited-links</a>"      <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write
   "<a class="link" href="GtkLabel.html#GtkLabel--use-markup" title='The "use-markup" property'>use-markup</a>"               <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
 >gboolean</a>              : Read / Write
@@ -372,7 +382,7 @@ href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttribute"
 ><span class="type">PangoAttribute</span></a> values for this label.
 </p>
 <div class="example">
-<a name="id528294"></a><p class="title"><b>Example 13. A UI definition fragment specifying Pango attributes</b></p>
+<a name="id760770"></a><p class="title"><b>Example 13. A UI definition fragment specifying Pango attributes</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkLabel"&gt;
   &lt;attributes&gt;
@@ -392,7 +402,7 @@ content instead.
 </div>
 <hr>
 <div class="refsect2" title="Mnemonics">
-<a name="id528317"></a><h3>Mnemonics</h3>
+<a name="id760793"></a><h3>Mnemonics</h3>
 <p>
 Labels may contain <em class="firstterm">mnemonics</em>. Mnemonics are
 underlined characters in the label, used for keyboard navigation.
@@ -438,7 +448,7 @@ To create a mnemonic for a widget alongside the label, such as a
 </div>
 <hr>
 <div class="refsect2" title="Markup (styled text)">
-<a name="id528438"></a><h3>Markup (styled text)</h3>
+<a name="id760915"></a><h3>Markup (styled text)</h3>
 <p>
 To make it easy to format text in a label (changing colors, fonts,
 etc.), label text can be provided in a simple <a
@@ -486,7 +496,7 @@ being displayed, so translations will cause problems.
 </div>
 <hr>
 <div class="refsect2" title="Selectable labels">
-<a name="id528555"></a><h3>Selectable labels</h3>
+<a name="id761032"></a><h3>Selectable labels</h3>
 <p>
 Labels can be made selectable with <a class="link" href="GtkLabel.html#gtk-label-set-selectable" title="gtk_label_set_selectable ()"><code class="function">gtk_label_set_selectable()</code></a>.
 Selectable labels allow the user to copy the label contents to
@@ -496,7 +506,7 @@ the clipboard. Only labels that contain useful-to-copy information
 </div>
 <hr>
 <div class="refsect2" title="Text layout">
-<a name="id528578"></a><h3>Text layout</h3>
+<a name="id761055"></a><h3>Text layout</h3>
 <p>
 A label can contain any number of paragraphs, but will have
 performance problems if it contains more than a small number.
@@ -515,7 +525,7 @@ aligns in its available space, see <a class="link" href="GtkMisc.html#gtk-misc-s
 </div>
 <hr>
 <div class="refsect2" title="Links">
-<a name="id528630"></a><h3>Links</h3>
+<a name="id761106"></a><h3>Links</h3>
 <p>
 Since 2.18, GTK+ supports markup for clickable hyperlinks in addition
 to regular Pango markup. The markup for links is borrowed from HTML, using the
@@ -2008,6 +2018,68 @@ or for use in a <a class="link" href="GtkWidget.html#GtkWidget-query-tooltip" ti
 </table></div>
 <p class="since">Since 2.18</p>
 </div>
+<hr>
+<div class="refsect2" title="gtk_label_set_track_visited_links ()">
+<a name="gtk-label-set-track-visited-links"></a><h3>gtk_label_set_track_visited_links ()</h3>
+<pre class="programlisting">void                gtk_label_set_track_visited_links   (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a> *label,
+                                                         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a> track_links);</pre>
+<p>
+Sets whether the label should keep track of clicked
+links (and use a different color for them).</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>track_links</code></em> :</span></p></td>
+<td> <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to track visited links
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_label_get_track_visited_links ()">
+<a name="gtk-label-get-track-visited-links"></a><h3>gtk_label_get_track_visited_links ()</h3>
+<pre class="programlisting"><a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>            gtk_label_get_track_visited_links   (<a class="link" href="GtkLabel.html" title="GtkLabel">GtkLabel</a> *label);</pre>
+<p>
+Returns whether the label is currently keeping track
+of clicked links.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if clicked links are remembered
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
+</div>
 </div>
 <div class="refsect1" title="Property Details">
 <a name="GtkLabel.property-details"></a><h2>Property Details</h2>
@@ -2164,6 +2236,23 @@ changes would be distracting, e.g. in a statusbar.</p>
 </p>
 <p>Default value: FALSE</p>
 <p>Since 2.6</p>
+</div>
+<hr>
+<div class="refsect2" title='The "track-visited-links" property'>
+<a name="GtkLabel--track-visited-links"></a><h3>The <code class="literal">"track-visited-links"</code> property</h3>
+<pre class="programlisting">  "track-visited-links"      <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>              : Read / Write</pre>
+<p>
+Set this property to <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> to make the label track which links
+have been clicked. It will then apply the ::visited-link-color
+color, instead of ::link-color.</p>
+<p>
+</p>
+<p>Default value: TRUE</p>
+<p>Since 2.18</p>
 </div>
 <hr>
 <div class="refsect2" title='The "use-markup" property'>

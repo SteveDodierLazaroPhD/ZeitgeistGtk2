@@ -477,7 +477,7 @@ XVFB_START = \
 @USE_QUARTZ_TRUE@GTK_PRINT_PREVIEW_COMMAND = "open -a /Applications/Preview.app %f"
 @USE_QUARTZ_FALSE@GTK_PRINT_PREVIEW_COMMAND = "evince --unlink-tempfile --preview --print-settings %s %f"
 
-SUBDIRS = theme-bits .
+SUBDIRS = theme-bits . tests
 DIST_SUBDIRS = theme-bits tests
 @HAVE_CUPS_FALSE@@HAVE_PAPI_CUPS_FALSE@@HAVE_PAPI_TRUE@GTK_PRINT_BACKENDS = file,papi
 @HAVE_CUPS_FALSE@@HAVE_PAPI_CUPS_FALSE@@HAVE_PAPI_FALSE@GTK_PRINT_BACKENDS = file,lpr
@@ -604,6 +604,7 @@ gtk_public_h_sources = \
 	gtkdrawingarea.h	\
 	gtkeditable.h           \
 	gtkentry.h		\
+	gtkentrybuffer.h	\
 	gtkentrycompletion.h	\
 	gtkenums.h		\
 	gtkeventbox.h		\
@@ -785,6 +786,7 @@ gtk_private_h_sources = \
 	gtkdndcursors.h		\
 	gtkentryprivate.h	\
 	gtkbuilderprivate.h 	\
+	gtkcustompaperunixdialog.h\
 	gtkfilechooserdefault.h	\
 	gtkfilechooserembed.h	\
 	gtkfilechooserentry.h	\
@@ -876,6 +878,7 @@ gtk_base_c_sources = \
 	gtkdrawingarea.c	\
 	gtkeditable.c           \
 	gtkentry.c		\
+	gtkentrybuffer.c	\
 	gtkentrycompletion.c	\
 	gtkeventbox.c		\
 	gtkexpander.c		\
@@ -1066,6 +1069,7 @@ gtk_c_sources = $(gtk_base_c_sources) $(am__append_5) $(am__append_7) $(am__appe
 gtk_all_c_sources = $(gtk_base_c_sources) $(gtk_os_unix_c_sources) $(gtk_os_win32_c_sources) $(gtk_use_x11_c_sources) $(gtk_use_win32_c_sources) $(gtk_use_quartz_c_sources) $(gtk_use_stub_c_sources)
 
 gtk_os_unix_c_sources = \
+	gtkcustompaperunixdialog.c	\
 	gtkpagesetupunixdialog.c	\
 	gtkprinter.c			\
 	gtkprinteroption.c		\
@@ -1519,26 +1523,26 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkcheckmenuitem.c gtkcolorbutton.c gtkcolorsel.c \
 	gtkcolorseldialog.c gtkcombobox.c gtkcomboboxentry.c \
 	gtkcontainer.c gtkcurve.c gtkdialog.c gtkdrawingarea.c \
-	gtkeditable.c gtkentry.c gtkentrycompletion.c gtkeventbox.c \
-	gtkexpander.c gtkfilechooser.c gtkfilechooserbutton.c \
-	gtkfilechooserdefault.c gtkfilechooserdialog.c \
-	gtkfilechooserembed.c gtkfilechooserentry.c \
-	gtkfilechoosersettings.c gtkfilechooserutils.c \
-	gtkfilechooserwidget.c gtkfilefilter.c gtkfilesystem.c \
-	gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c gtkfontsel.c \
-	gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c gtkhbbox.c \
-	gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c gtkhscrollbar.c \
-	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
-	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
-	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
-	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
-	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
-	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
-	gtkmenushell.c gtkmenutoolbutton.c gtkmessagedialog.c gtkmisc.c \
-	gtkmnemonichash.c gtkmodules.c gtkmountoperation.c \
-	gtknotebook.c gtkobject.c gtkorientable.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkeditable.c gtkentry.c gtkentrybuffer.c gtkentrycompletion.c \
+	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
+	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkfilechooserdialog.c gtkfilechooserembed.c \
+	gtkfilechooserentry.c gtkfilechoosersettings.c \
+	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
+	gtkfilesystem.c gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c \
+	gtkfontsel.c gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c \
+	gtkhbbox.c gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c \
+	gtkhscrollbar.c gtkhseparator.c gtkhsv.c gtkiconcache.c \
+	gtkiconcachevalidator.c gtkiconfactory.c gtkicontheme.c \
+	gtkiconview.c gtkimage.c gtkimagemenuitem.c gtkimcontext.c \
+	gtkimcontextsimple.c gtkimmodule.c gtkimmulticontext.c \
+	gtkinfobar.c gtkinputdialog.c gtkinvisible.c gtkitem.c \
+	gtkkeyhash.c gtklabel.c gtklayout.c gtklinkbutton.c \
+	gtkliststore.c gtkmain.c gtkmarshal.c gtkmarshalers.c gtkmenu.c \
+	gtkmenubar.c gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
+	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -1572,15 +1576,15 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkclist.c gtkcombo.c gtkctree.c gtkfilesel.c gtkitemfactory.c \
 	gtklist.c gtklistitem.c gtkoldeditable.c gtkoptionmenu.c \
 	gtkpixmap.c gtkpreview.c gtkprogress.c gtksignal.c \
-	gtktipsquery.c gtktooltips.c gtkpagesetupunixdialog.c \
-	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
-	gtkprinteroptionwidget.c gtkprintjob.c gtkprintoperation-unix.c \
-	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
-	gtksearchenginetracker.c gtkprint-win32.c \
-	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
-	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
-	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtktipsquery.c gtktooltips.c gtkcustompaperunixdialog.c \
+	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
+	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
+	gtkprint-win32.c gtkprintoperation-win32.c gtkplug-x11.c \
+	gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
+	gtkmountoperation-x11.c gtkplug-win32.c gtksocket-win32.c \
+	gtkwin32embed.c gtkwin32embedwidget.c gtkmountoperation-stub.c \
 	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 @USE_QUARTZ_TRUE@am__objects_1 = gtkclipboard-quartz.lo gtkdnd-quartz.lo \
 @USE_QUARTZ_TRUE@	gtkquartz.lo
@@ -1600,8 +1604,9 @@ am__objects_2 = gtkquery.lo gtksearchengine.lo gtksearchenginesimple.lo \
 	gtkcheckmenuitem.lo gtkcolorbutton.lo gtkcolorsel.lo \
 	gtkcolorseldialog.lo gtkcombobox.lo gtkcomboboxentry.lo \
 	gtkcontainer.lo gtkcurve.lo gtkdialog.lo gtkdrawingarea.lo \
-	gtkeditable.lo gtkentry.lo gtkentrycompletion.lo gtkeventbox.lo \
-	gtkexpander.lo gtkfilechooser.lo gtkfilechooserbutton.lo \
+	gtkeditable.lo gtkentry.lo gtkentrybuffer.lo \
+	gtkentrycompletion.lo gtkeventbox.lo gtkexpander.lo \
+	gtkfilechooser.lo gtkfilechooserbutton.lo \
 	gtkfilechooserdefault.lo gtkfilechooserdialog.lo \
 	gtkfilechooserembed.lo gtkfilechooserentry.lo \
 	gtkfilechoosersettings.lo gtkfilechooserutils.lo \
@@ -1654,8 +1659,8 @@ am__objects_2 = gtkquery.lo gtksearchengine.lo gtksearchenginesimple.lo \
 	gtkfilesel.lo gtkitemfactory.lo gtklist.lo gtklistitem.lo \
 	gtkoldeditable.lo gtkoptionmenu.lo gtkpixmap.lo gtkpreview.lo \
 	gtkprogress.lo gtksignal.lo gtktipsquery.lo gtktooltips.lo
-am__objects_3 = gtkpagesetupunixdialog.lo gtkprinter.lo \
-	gtkprinteroption.lo gtkprinteroptionset.lo \
+am__objects_3 = gtkcustompaperunixdialog.lo gtkpagesetupunixdialog.lo \
+	gtkprinter.lo gtkprinteroption.lo gtkprinteroptionset.lo \
 	gtkprinteroptionwidget.lo gtkprintjob.lo \
 	gtkprintoperation-unix.lo gtkprintunixdialog.lo \
 	gtkprintbackend.lo gtksearchenginebeagle.lo \
@@ -1697,26 +1702,26 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkcheckmenuitem.c gtkcolorbutton.c gtkcolorsel.c \
 	gtkcolorseldialog.c gtkcombobox.c gtkcomboboxentry.c \
 	gtkcontainer.c gtkcurve.c gtkdialog.c gtkdrawingarea.c \
-	gtkeditable.c gtkentry.c gtkentrycompletion.c gtkeventbox.c \
-	gtkexpander.c gtkfilechooser.c gtkfilechooserbutton.c \
-	gtkfilechooserdefault.c gtkfilechooserdialog.c \
-	gtkfilechooserembed.c gtkfilechooserentry.c \
-	gtkfilechoosersettings.c gtkfilechooserutils.c \
-	gtkfilechooserwidget.c gtkfilefilter.c gtkfilesystem.c \
-	gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c gtkfontsel.c \
-	gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c gtkhbbox.c \
-	gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c gtkhscrollbar.c \
-	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
-	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
-	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
-	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
-	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
-	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
-	gtkmenushell.c gtkmenutoolbutton.c gtkmessagedialog.c gtkmisc.c \
-	gtkmnemonichash.c gtkmodules.c gtkmountoperation.c \
-	gtknotebook.c gtkobject.c gtkorientable.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkeditable.c gtkentry.c gtkentrybuffer.c gtkentrycompletion.c \
+	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
+	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkfilechooserdialog.c gtkfilechooserembed.c \
+	gtkfilechooserentry.c gtkfilechoosersettings.c \
+	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
+	gtkfilesystem.c gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c \
+	gtkfontsel.c gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c \
+	gtkhbbox.c gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c \
+	gtkhscrollbar.c gtkhseparator.c gtkhsv.c gtkiconcache.c \
+	gtkiconcachevalidator.c gtkiconfactory.c gtkicontheme.c \
+	gtkiconview.c gtkimage.c gtkimagemenuitem.c gtkimcontext.c \
+	gtkimcontextsimple.c gtkimmodule.c gtkimmulticontext.c \
+	gtkinfobar.c gtkinputdialog.c gtkinvisible.c gtkitem.c \
+	gtkkeyhash.c gtklabel.c gtklayout.c gtklinkbutton.c \
+	gtkliststore.c gtkmain.c gtkmarshal.c gtkmarshalers.c gtkmenu.c \
+	gtkmenubar.c gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
+	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -1750,15 +1755,15 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkclist.c gtkcombo.c gtkctree.c gtkfilesel.c gtkitemfactory.c \
 	gtklist.c gtklistitem.c gtkoldeditable.c gtkoptionmenu.c \
 	gtkpixmap.c gtkpreview.c gtkprogress.c gtksignal.c \
-	gtktipsquery.c gtktooltips.c gtkpagesetupunixdialog.c \
-	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
-	gtkprinteroptionwidget.c gtkprintjob.c gtkprintoperation-unix.c \
-	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
-	gtksearchenginetracker.c gtkprint-win32.c \
-	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
-	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
-	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtktipsquery.c gtktooltips.c gtkcustompaperunixdialog.c \
+	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
+	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
+	gtkprint-win32.c gtkprintoperation-win32.c gtkplug-x11.c \
+	gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
+	gtkmountoperation-x11.c gtkplug-win32.c gtksocket-win32.c \
+	gtkwin32embed.c gtkwin32embedwidget.c gtkmountoperation-stub.c \
 	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 am_libgtk_quartz_2_0_la_OBJECTS = $(am__objects_15)
 libgtk_quartz_2_0_la_OBJECTS = $(am_libgtk_quartz_2_0_la_OBJECTS)
@@ -1777,26 +1782,26 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkcheckmenuitem.c gtkcolorbutton.c gtkcolorsel.c \
 	gtkcolorseldialog.c gtkcombobox.c gtkcomboboxentry.c \
 	gtkcontainer.c gtkcurve.c gtkdialog.c gtkdrawingarea.c \
-	gtkeditable.c gtkentry.c gtkentrycompletion.c gtkeventbox.c \
-	gtkexpander.c gtkfilechooser.c gtkfilechooserbutton.c \
-	gtkfilechooserdefault.c gtkfilechooserdialog.c \
-	gtkfilechooserembed.c gtkfilechooserentry.c \
-	gtkfilechoosersettings.c gtkfilechooserutils.c \
-	gtkfilechooserwidget.c gtkfilefilter.c gtkfilesystem.c \
-	gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c gtkfontsel.c \
-	gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c gtkhbbox.c \
-	gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c gtkhscrollbar.c \
-	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
-	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
-	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
-	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
-	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
-	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
-	gtkmenushell.c gtkmenutoolbutton.c gtkmessagedialog.c gtkmisc.c \
-	gtkmnemonichash.c gtkmodules.c gtkmountoperation.c \
-	gtknotebook.c gtkobject.c gtkorientable.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkeditable.c gtkentry.c gtkentrybuffer.c gtkentrycompletion.c \
+	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
+	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkfilechooserdialog.c gtkfilechooserembed.c \
+	gtkfilechooserentry.c gtkfilechoosersettings.c \
+	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
+	gtkfilesystem.c gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c \
+	gtkfontsel.c gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c \
+	gtkhbbox.c gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c \
+	gtkhscrollbar.c gtkhseparator.c gtkhsv.c gtkiconcache.c \
+	gtkiconcachevalidator.c gtkiconfactory.c gtkicontheme.c \
+	gtkiconview.c gtkimage.c gtkimagemenuitem.c gtkimcontext.c \
+	gtkimcontextsimple.c gtkimmodule.c gtkimmulticontext.c \
+	gtkinfobar.c gtkinputdialog.c gtkinvisible.c gtkitem.c \
+	gtkkeyhash.c gtklabel.c gtklayout.c gtklinkbutton.c \
+	gtkliststore.c gtkmain.c gtkmarshal.c gtkmarshalers.c gtkmenu.c \
+	gtkmenubar.c gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
+	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -1830,15 +1835,15 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkclist.c gtkcombo.c gtkctree.c gtkfilesel.c gtkitemfactory.c \
 	gtklist.c gtklistitem.c gtkoldeditable.c gtkoptionmenu.c \
 	gtkpixmap.c gtkpreview.c gtkprogress.c gtksignal.c \
-	gtktipsquery.c gtktooltips.c gtkpagesetupunixdialog.c \
-	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
-	gtkprinteroptionwidget.c gtkprintjob.c gtkprintoperation-unix.c \
-	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
-	gtksearchenginetracker.c gtkprint-win32.c \
-	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
-	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
-	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtktipsquery.c gtktooltips.c gtkcustompaperunixdialog.c \
+	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
+	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
+	gtkprint-win32.c gtkprintoperation-win32.c gtkplug-x11.c \
+	gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
+	gtkmountoperation-x11.c gtkplug-win32.c gtksocket-win32.c \
+	gtkwin32embed.c gtkwin32embedwidget.c gtkmountoperation-stub.c \
 	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 am_libgtk_win32_2_0_la_OBJECTS = $(am__objects_15)
 libgtk_win32_2_0_la_OBJECTS = $(am_libgtk_win32_2_0_la_OBJECTS)
@@ -1857,26 +1862,26 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkcheckmenuitem.c gtkcolorbutton.c gtkcolorsel.c \
 	gtkcolorseldialog.c gtkcombobox.c gtkcomboboxentry.c \
 	gtkcontainer.c gtkcurve.c gtkdialog.c gtkdrawingarea.c \
-	gtkeditable.c gtkentry.c gtkentrycompletion.c gtkeventbox.c \
-	gtkexpander.c gtkfilechooser.c gtkfilechooserbutton.c \
-	gtkfilechooserdefault.c gtkfilechooserdialog.c \
-	gtkfilechooserembed.c gtkfilechooserentry.c \
-	gtkfilechoosersettings.c gtkfilechooserutils.c \
-	gtkfilechooserwidget.c gtkfilefilter.c gtkfilesystem.c \
-	gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c gtkfontsel.c \
-	gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c gtkhbbox.c \
-	gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c gtkhscrollbar.c \
-	gtkhseparator.c gtkhsv.c gtkiconcache.c gtkiconcachevalidator.c \
-	gtkiconfactory.c gtkicontheme.c gtkiconview.c gtkimage.c \
-	gtkimagemenuitem.c gtkimcontext.c gtkimcontextsimple.c \
-	gtkimmodule.c gtkimmulticontext.c gtkinfobar.c gtkinputdialog.c \
-	gtkinvisible.c gtkitem.c gtkkeyhash.c gtklabel.c gtklayout.c \
-	gtklinkbutton.c gtkliststore.c gtkmain.c gtkmarshal.c \
-	gtkmarshalers.c gtkmenu.c gtkmenubar.c gtkmenuitem.c \
-	gtkmenushell.c gtkmenutoolbutton.c gtkmessagedialog.c gtkmisc.c \
-	gtkmnemonichash.c gtkmodules.c gtkmountoperation.c \
-	gtknotebook.c gtkobject.c gtkorientable.c gtkpagesetup.c \
-	gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
+	gtkeditable.c gtkentry.c gtkentrybuffer.c gtkentrycompletion.c \
+	gtkeventbox.c gtkexpander.c gtkfilechooser.c \
+	gtkfilechooserbutton.c gtkfilechooserdefault.c \
+	gtkfilechooserdialog.c gtkfilechooserembed.c \
+	gtkfilechooserentry.c gtkfilechoosersettings.c \
+	gtkfilechooserutils.c gtkfilechooserwidget.c gtkfilefilter.c \
+	gtkfilesystem.c gtkfilesystemmodel.c gtkfixed.c gtkfontbutton.c \
+	gtkfontsel.c gtkframe.c gtkgamma.c gtkgc.c gtkhandlebox.c \
+	gtkhbbox.c gtkhbox.c gtkhpaned.c gtkhruler.c gtkhscale.c \
+	gtkhscrollbar.c gtkhseparator.c gtkhsv.c gtkiconcache.c \
+	gtkiconcachevalidator.c gtkiconfactory.c gtkicontheme.c \
+	gtkiconview.c gtkimage.c gtkimagemenuitem.c gtkimcontext.c \
+	gtkimcontextsimple.c gtkimmodule.c gtkimmulticontext.c \
+	gtkinfobar.c gtkinputdialog.c gtkinvisible.c gtkitem.c \
+	gtkkeyhash.c gtklabel.c gtklayout.c gtklinkbutton.c \
+	gtkliststore.c gtkmain.c gtkmarshal.c gtkmarshalers.c gtkmenu.c \
+	gtkmenubar.c gtkmenuitem.c gtkmenushell.c gtkmenutoolbutton.c \
+	gtkmessagedialog.c gtkmisc.c gtkmnemonichash.c gtkmodules.c \
+	gtkmountoperation.c gtknotebook.c gtkobject.c gtkorientable.c \
+	gtkpagesetup.c gtkpaned.c gtkpapersize.c gtkpathbar.c gtkplug.c \
 	gtkprintcontext.c gtkprintoperation.c \
 	gtkprintoperationpreview.c gtkprintsettings.c gtkprintutils.c \
 	gtkprogressbar.c gtkradioaction.c gtkradiobutton.c \
@@ -1910,15 +1915,15 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
 	gtkclist.c gtkcombo.c gtkctree.c gtkfilesel.c gtkitemfactory.c \
 	gtklist.c gtklistitem.c gtkoldeditable.c gtkoptionmenu.c \
 	gtkpixmap.c gtkpreview.c gtkprogress.c gtksignal.c \
-	gtktipsquery.c gtktooltips.c gtkpagesetupunixdialog.c \
-	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
-	gtkprinteroptionwidget.c gtkprintjob.c gtkprintoperation-unix.c \
-	gtkprintunixdialog.c gtkprintbackend.c gtksearchenginebeagle.c \
-	gtksearchenginetracker.c gtkprint-win32.c \
-	gtkprintoperation-win32.c gtkplug-x11.c gtksocket-x11.c \
-	gtkxembed.c gtktrayicon-x11.c gtkmountoperation-x11.c \
-	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
-	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+	gtktipsquery.c gtktooltips.c gtkcustompaperunixdialog.c \
+	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
+	gtkprintoperation-unix.c gtkprintunixdialog.c gtkprintbackend.c \
+	gtksearchenginebeagle.c gtksearchenginetracker.c \
+	gtkprint-win32.c gtkprintoperation-win32.c gtkplug-x11.c \
+	gtksocket-x11.c gtkxembed.c gtktrayicon-x11.c \
+	gtkmountoperation-x11.c gtkplug-win32.c gtksocket-win32.c \
+	gtkwin32embed.c gtkwin32embedwidget.c gtkmountoperation-stub.c \
 	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
 am_libgtk_x11_2_0_la_OBJECTS = $(am__objects_15)
 libgtk_x11_2_0_la_OBJECTS = $(am_libgtk_x11_2_0_la_OBJECTS)
@@ -1985,12 +1990,14 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/gtkcomboboxentry.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkcontainer.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkctree.Plo ./$(DEPDIR)/gtkcurve.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkcustompaperunixdialog.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkdialog.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkdnd-quartz.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkdnd.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkdrawingarea.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkeditable.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkentry.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gtkentrybuffer.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkentrycompletion.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkeventbox.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/gtkexpander.Plo \
@@ -2373,12 +2380,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkcontainer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkctree.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkcurve.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkcustompaperunixdialog.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkdialog.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkdnd-quartz.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkdnd.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkdrawingarea.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkeditable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkentry.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkentrybuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkentrycompletion.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkeventbox.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkexpander.Plo@am__quote@

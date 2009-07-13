@@ -149,6 +149,7 @@
 *tp++ = gtk_drag_result_get_type();
 *tp++ = gtk_drawing_area_get_type();
 *tp++ = gtk_editable_get_type();
+*tp++ = gtk_entry_buffer_get_type();
 *tp++ = gtk_entry_completion_get_type();
 *tp++ = gtk_entry_get_type();
 *tp++ = gtk_entry_icon_position_get_type();
