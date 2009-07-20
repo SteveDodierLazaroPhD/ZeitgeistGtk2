@@ -391,6 +391,7 @@ GtkWidget implements
   &quot;<link linkend="GtkWidget--can-default">can-default</link>&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkWidget--can-focus">can-focus</link>&quot;                <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkWidget--composite-child">composite-child</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read
+  &quot;<link linkend="GtkWidget--double-buffered">double-buffered</link>&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkWidget--events">events</link>&quot;                   <link linkend="GdkEventMask">GdkEventMask</link>          : Read / Write
   &quot;<link linkend="GtkWidget--extension-events">extension-events</link>&quot;         <link linkend="GdkExtensionMode">GdkExtensionMode</link>      : Read / Write
   &quot;<link linkend="GtkWidget--has-default">has-default</link>&quot;              <link linkend="gboolean">gboolean</link>              : Read / Write
@@ -1897,8 +1898,11 @@ toplevel widget additionally has the global input focus.)</para>
 <para>
 Causes <parameter>widget</parameter> to have the keyboard focus for the <link linkend="GtkWindow"><type>GtkWindow</type></link> it's
 inside. <parameter>widget</parameter> must be a focusable widget, such as a <link linkend="GtkEntry"><type>GtkEntry</type></link>;
-something like <link linkend="GtkFrame"><type>GtkFrame</type></link> won't work. (More precisely, it must have the
-<link linkend="GTK-CAN-FOCUS--CAPS"><literal>GTK_CAN_FOCUS</literal></link> flag set.)</para>
+something like <link linkend="GtkFrame"><type>GtkFrame</type></link> won't work.
+</para>
+<para>
+More precisely, it must have the <link linkend="GTK-CAN-FOCUS--CAPS"><literal>GTK_CAN_FOCUS</literal></link> flag set. Use
+<link linkend="gtk-widget-set-can-focus"><function>gtk_widget_set_can_focus()</function></link> to modify that flag.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>widget</parameter>&#160;:</term>
@@ -1911,8 +1915,8 @@ something like <link linkend="GtkFrame"><type>GtkFrame</type></link> won't work.
 <para>
 Causes <parameter>widget</parameter> to become the default widget. <parameter>widget</parameter> must have the
 <link linkend="GTK-CAN-DEFAULT--CAPS"><literal>GTK_CAN_DEFAULT</literal></link> flag set; typically you have to set this flag
-yourself by calling <literal>GTK_WIDGET_SET_FLAGS (<parameter>widget</parameter>,
-GTK_CAN_DEFAULT)</literal>. The default widget is activated when 
+yourself by calling <literal>gtk_widget_set_can_default (<parameter>widget</parameter>,
+<link linkend="TRUE--CAPS"><literal>TRUE</literal></link>)</literal>. The default widget is activated when 
 the user presses Enter in a window. Default widgets must be 
 activatable, that is, <link linkend="gtk-widget-activate"><function>gtk_widget_activate()</function></link> should affect them.</para>
 <para>
@@ -4481,6 +4485,10 @@ Frees a <link linkend="GtkRequisition"><type>GtkRequisition</type></link>.</para
 <refsect2 id="GtkWidget--composite-child" role="property"><title>The <literal>&quot;composite-child&quot;</literal> property</title>
 <indexterm zone="GtkWidget--composite-child"><primary sortas="Widget:composite-child">GtkWidget:composite-child</primary></indexterm><programlisting>  &quot;composite-child&quot;          <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>Whether the widget is part of a composite widget.</para><para>Default value: FALSE</para>
+</refsect2>
+<refsect2 id="GtkWidget--double-buffered" role="property"><title>The <literal>&quot;double-buffered&quot;</literal> property</title>
+<indexterm zone="GtkWidget--double-buffered"><primary sortas="Widget:double-buffered">GtkWidget:double-buffered</primary></indexterm><programlisting>  &quot;double-buffered&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>Whether or not the widget is double buffered.</para><para>Default value: TRUE</para>
 </refsect2>
 <refsect2 id="GtkWidget--events" role="property"><title>The <literal>&quot;events&quot;</literal> property</title>
 <indexterm zone="GtkWidget--events"><primary sortas="Widget:events">GtkWidget:events</primary></indexterm><programlisting>  &quot;events&quot;                   <link linkend="GdkEventMask">GdkEventMask</link>          : Read / Write</programlisting>

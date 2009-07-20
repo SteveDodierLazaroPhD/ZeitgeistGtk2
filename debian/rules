@@ -56,7 +56,7 @@ DEBVERSION := $(shell dpkg-parsechangelog | sed -n -e 's/^Version: //p')
 VERSION := $(shell echo $(DEBVERSION) | sed -e 's/-[^-]*$$//')
 APIVER := 2.0
 SONAME := 0
-SHVER := 2.17.4
+SHVER := 2.17.5
 
 # earliest version that this release has backwards binary compatibility for
 GTK_BINARY_VERSION := 2.10.0
@@ -149,14 +149,15 @@ endif
 shared_configure_flags := $(configure_flags) \
 			--with-xinput=yes \
 			--enable-shared \
-			--disable-static
+			--disable-static \
+			--with-libjasper
 opt_configure_flags := $(shared_configure_flags)
 static_configure_flags := $(configure_flags) \
 			--with-xinput=yes \
 			--with-included-loaders=yes \
 			--disable-modules \
 			--disable-shared \
-			--enable-static
+			--enable-static --with-libjasper
 directfb_configure_flags := $(configure_flags) \
 			--with-xinput=no \
 			--enable-shared \

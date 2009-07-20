@@ -1481,8 +1481,17 @@ extern __typeof (gtk_cell_renderer_editing_canceled) IA__gtk_cell_renderer_editi
 #define gtk_cell_renderer_editing_canceled IA__gtk_cell_renderer_editing_canceled
 
 #endif
+extern __typeof (gtk_cell_renderer_get_alignment) IA__gtk_cell_renderer_get_alignment __attribute((visibility("hidden")));
+#define gtk_cell_renderer_get_alignment IA__gtk_cell_renderer_get_alignment
+
 extern __typeof (gtk_cell_renderer_get_fixed_size) IA__gtk_cell_renderer_get_fixed_size __attribute((visibility("hidden")));
 #define gtk_cell_renderer_get_fixed_size IA__gtk_cell_renderer_get_fixed_size
+
+extern __typeof (gtk_cell_renderer_get_padding) IA__gtk_cell_renderer_get_padding __attribute((visibility("hidden")));
+#define gtk_cell_renderer_get_padding IA__gtk_cell_renderer_get_padding
+
+extern __typeof (gtk_cell_renderer_get_sensitive) IA__gtk_cell_renderer_get_sensitive __attribute((visibility("hidden")));
+#define gtk_cell_renderer_get_sensitive IA__gtk_cell_renderer_get_sensitive
 
 extern __typeof (gtk_cell_renderer_get_size) IA__gtk_cell_renderer_get_size __attribute((visibility("hidden")));
 #define gtk_cell_renderer_get_size IA__gtk_cell_renderer_get_size
@@ -1490,11 +1499,26 @@ extern __typeof (gtk_cell_renderer_get_size) IA__gtk_cell_renderer_get_size __at
 extern __typeof (gtk_cell_renderer_get_type) IA__gtk_cell_renderer_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_cell_renderer_get_type IA__gtk_cell_renderer_get_type
 
+extern __typeof (gtk_cell_renderer_get_visible) IA__gtk_cell_renderer_get_visible __attribute((visibility("hidden")));
+#define gtk_cell_renderer_get_visible IA__gtk_cell_renderer_get_visible
+
 extern __typeof (gtk_cell_renderer_render) IA__gtk_cell_renderer_render __attribute((visibility("hidden")));
 #define gtk_cell_renderer_render IA__gtk_cell_renderer_render
 
+extern __typeof (gtk_cell_renderer_set_alignment) IA__gtk_cell_renderer_set_alignment __attribute((visibility("hidden")));
+#define gtk_cell_renderer_set_alignment IA__gtk_cell_renderer_set_alignment
+
 extern __typeof (gtk_cell_renderer_set_fixed_size) IA__gtk_cell_renderer_set_fixed_size __attribute((visibility("hidden")));
 #define gtk_cell_renderer_set_fixed_size IA__gtk_cell_renderer_set_fixed_size
+
+extern __typeof (gtk_cell_renderer_set_padding) IA__gtk_cell_renderer_set_padding __attribute((visibility("hidden")));
+#define gtk_cell_renderer_set_padding IA__gtk_cell_renderer_set_padding
+
+extern __typeof (gtk_cell_renderer_set_sensitive) IA__gtk_cell_renderer_set_sensitive __attribute((visibility("hidden")));
+#define gtk_cell_renderer_set_sensitive IA__gtk_cell_renderer_set_sensitive
+
+extern __typeof (gtk_cell_renderer_set_visible) IA__gtk_cell_renderer_set_visible __attribute((visibility("hidden")));
+#define gtk_cell_renderer_set_visible IA__gtk_cell_renderer_set_visible
 
 extern __typeof (gtk_cell_renderer_start_editing) IA__gtk_cell_renderer_start_editing __attribute((visibility("hidden")));
 #define gtk_cell_renderer_start_editing IA__gtk_cell_renderer_start_editing
@@ -1569,6 +1593,9 @@ extern __typeof (gtk_cell_renderer_text_set_fixed_height_from_font) IA__gtk_cell
 #endif
 #if IN_HEADER(__GTK_CELL_RENDERER_TOGGLE_H__)
 #if IN_FILE(__GTK_CELL_RENDERER_TOGGLE_C__)
+extern __typeof (gtk_cell_renderer_toggle_get_activatable) IA__gtk_cell_renderer_toggle_get_activatable __attribute((visibility("hidden")));
+#define gtk_cell_renderer_toggle_get_activatable IA__gtk_cell_renderer_toggle_get_activatable
+
 extern __typeof (gtk_cell_renderer_toggle_get_active) IA__gtk_cell_renderer_toggle_get_active __attribute((visibility("hidden")));
 #define gtk_cell_renderer_toggle_get_active IA__gtk_cell_renderer_toggle_get_active
 
@@ -1580,6 +1607,9 @@ extern __typeof (gtk_cell_renderer_toggle_get_type) IA__gtk_cell_renderer_toggle
 
 extern __typeof (gtk_cell_renderer_toggle_new) IA__gtk_cell_renderer_toggle_new __attribute((visibility("hidden")));
 #define gtk_cell_renderer_toggle_new IA__gtk_cell_renderer_toggle_new
+
+extern __typeof (gtk_cell_renderer_toggle_set_activatable) IA__gtk_cell_renderer_toggle_set_activatable __attribute((visibility("hidden")));
+#define gtk_cell_renderer_toggle_set_activatable IA__gtk_cell_renderer_toggle_set_activatable
 
 extern __typeof (gtk_cell_renderer_toggle_set_active) IA__gtk_cell_renderer_toggle_set_active __attribute((visibility("hidden")));
 #define gtk_cell_renderer_toggle_set_active IA__gtk_cell_renderer_toggle_set_active
@@ -6741,9 +6771,11 @@ extern __typeof (gtk_paper_size_get_default) IA__gtk_paper_size_get_default __at
 #endif
 #if IN_HEADER(__GTK_CUSTOM_PAPER_UNIX_DIALOG_H__)
 #if IN_FILE(__GTK_CUSTOM_PAPER_UNIX_DIALOG_C__)
+#ifdef G_OS_UNIX
 extern __typeof (gtk_custom_paper_unix_dialog_get_type) IA__gtk_custom_paper_unix_dialog_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_custom_paper_unix_dialog_get_type IA__gtk_custom_paper_unix_dialog_get_type
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_PRINT_BACKEND_H__)
@@ -11792,6 +11824,9 @@ extern __typeof (gtk_widget_get_accessible) IA__gtk_widget_get_accessible __attr
 extern __typeof (gtk_widget_get_ancestor) IA__gtk_widget_get_ancestor __attribute((visibility("hidden")));
 #define gtk_widget_get_ancestor IA__gtk_widget_get_ancestor
 
+extern __typeof (gtk_widget_get_app_paintable) IA__gtk_widget_get_app_paintable __attribute((visibility("hidden")));
+#define gtk_widget_get_app_paintable IA__gtk_widget_get_app_paintable
+
 extern __typeof (gtk_widget_get_child_requisition) IA__gtk_widget_get_child_requisition __attribute((visibility("hidden")));
 #define gtk_widget_get_child_requisition IA__gtk_widget_get_child_requisition
 
@@ -11824,6 +11859,9 @@ extern __typeof (gtk_widget_get_direction) IA__gtk_widget_get_direction __attrib
 
 extern __typeof (gtk_widget_get_display) IA__gtk_widget_get_display __attribute((visibility("hidden")));
 #define gtk_widget_get_display IA__gtk_widget_get_display
+
+extern __typeof (gtk_widget_get_double_buffered) IA__gtk_widget_get_double_buffered __attribute((visibility("hidden")));
+#define gtk_widget_get_double_buffered IA__gtk_widget_get_double_buffered
 
 extern __typeof (gtk_widget_get_events) IA__gtk_widget_get_events __attribute((visibility("hidden")));
 #define gtk_widget_get_events IA__gtk_widget_get_events
@@ -11861,6 +11899,9 @@ extern __typeof (gtk_widget_get_root_window) IA__gtk_widget_get_root_window __at
 extern __typeof (gtk_widget_get_screen) IA__gtk_widget_get_screen __attribute((visibility("hidden")));
 #define gtk_widget_get_screen IA__gtk_widget_get_screen
 
+extern __typeof (gtk_widget_get_sensitive) IA__gtk_widget_get_sensitive __attribute((visibility("hidden")));
+#define gtk_widget_get_sensitive IA__gtk_widget_get_sensitive
+
 extern __typeof (gtk_widget_get_settings) IA__gtk_widget_get_settings __attribute((visibility("hidden")));
 #define gtk_widget_get_settings IA__gtk_widget_get_settings
 
@@ -11869,6 +11910,9 @@ extern __typeof (gtk_widget_get_size_request) IA__gtk_widget_get_size_request __
 
 extern __typeof (gtk_widget_get_snapshot) IA__gtk_widget_get_snapshot __attribute((visibility("hidden")));
 #define gtk_widget_get_snapshot IA__gtk_widget_get_snapshot
+
+extern __typeof (gtk_widget_get_state) IA__gtk_widget_get_state __attribute((visibility("hidden")));
+#define gtk_widget_get_state IA__gtk_widget_get_state
 
 extern __typeof (gtk_widget_get_style) IA__gtk_widget_get_style __attribute((visibility("hidden")));
 #define gtk_widget_get_style IA__gtk_widget_get_style
@@ -11897,6 +11941,9 @@ extern __typeof (gtk_widget_grab_default) IA__gtk_widget_grab_default __attribut
 extern __typeof (gtk_widget_grab_focus) IA__gtk_widget_grab_focus __attribute((visibility("hidden")));
 #define gtk_widget_grab_focus IA__gtk_widget_grab_focus
 
+extern __typeof (gtk_widget_has_focus) IA__gtk_widget_has_focus __attribute((visibility("hidden")));
+#define gtk_widget_has_focus IA__gtk_widget_has_focus
+
 extern __typeof (gtk_widget_has_screen) IA__gtk_widget_has_screen __attribute((visibility("hidden")));
 #define gtk_widget_has_screen IA__gtk_widget_has_screen
 
@@ -11917,6 +11964,9 @@ extern __typeof (gtk_widget_is_ancestor) IA__gtk_widget_is_ancestor __attribute(
 
 extern __typeof (gtk_widget_is_focus) IA__gtk_widget_is_focus __attribute((visibility("hidden")));
 #define gtk_widget_is_focus IA__gtk_widget_is_focus
+
+extern __typeof (gtk_widget_is_sensitive) IA__gtk_widget_is_sensitive __attribute((visibility("hidden")));
+#define gtk_widget_is_sensitive IA__gtk_widget_is_sensitive
 
 extern __typeof (gtk_widget_keynav_failed) IA__gtk_widget_keynav_failed __attribute((visibility("hidden")));
 #define gtk_widget_keynav_failed IA__gtk_widget_keynav_failed
@@ -12162,6 +12212,27 @@ extern __typeof (gtk_widget_unrealize) IA__gtk_widget_unrealize __attribute((vis
 
 extern __typeof (gtk_widget_get_window) IA__gtk_widget_get_window __attribute((visibility("hidden")));
 #define gtk_widget_get_window IA__gtk_widget_get_window
+
+extern __typeof (gtk_widget_set_has_window) IA__gtk_widget_set_has_window __attribute((visibility("hidden")));
+#define gtk_widget_set_has_window IA__gtk_widget_set_has_window
+
+extern __typeof (gtk_widget_get_has_window) IA__gtk_widget_get_has_window __attribute((visibility("hidden")));
+#define gtk_widget_get_has_window IA__gtk_widget_get_has_window
+
+extern __typeof (gtk_widget_set_can_default) IA__gtk_widget_set_can_default __attribute((visibility("hidden")));
+#define gtk_widget_set_can_default IA__gtk_widget_set_can_default
+
+extern __typeof (gtk_widget_get_can_default) IA__gtk_widget_get_can_default __attribute((visibility("hidden")));
+#define gtk_widget_get_can_default IA__gtk_widget_get_can_default
+
+extern __typeof (gtk_widget_has_default) IA__gtk_widget_has_default __attribute((visibility("hidden")));
+#define gtk_widget_has_default IA__gtk_widget_has_default
+
+extern __typeof (gtk_widget_set_can_focus) IA__gtk_widget_set_can_focus __attribute((visibility("hidden")));
+#define gtk_widget_set_can_focus IA__gtk_widget_set_can_focus
+
+extern __typeof (gtk_widget_get_can_focus) IA__gtk_widget_get_can_focus __attribute((visibility("hidden")));
+#define gtk_widget_get_can_focus IA__gtk_widget_get_can_focus
 
 #endif
 #endif
