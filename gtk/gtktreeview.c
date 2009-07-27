@@ -14591,8 +14591,8 @@ gtk_tree_view_search_iter (GtkTreeModel     *model,
             {
               gtk_tree_view_scroll_to_cell (tree_view, path, NULL,
 					    TRUE, 0.5, 0.0);
-	      gtk_tree_view_real_set_cursor (tree_view, path, FALSE, TRUE);
               gtk_tree_selection_select_iter (selection, iter);
+              gtk_tree_view_real_set_cursor (tree_view, path, FALSE, TRUE);
 
 	      if (path)
 		gtk_tree_path_free (path);
@@ -14678,7 +14678,6 @@ gtk_tree_view_search_init (GtkWidget   *entry,
 			   GtkTreeView *tree_view)
 {
   gint ret;
-  gint len;
   gint count = 0;
   const gchar *text;
   GtkTreeIter iter;
@@ -14689,7 +14688,7 @@ gtk_tree_view_search_init (GtkWidget   *entry,
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
 
   text = gtk_entry_get_text (GTK_ENTRY (entry));
-  len = strlen (text);
+
   model = gtk_tree_view_get_model (tree_view);
   selection = gtk_tree_view_get_selection (tree_view);
 
@@ -14705,7 +14704,7 @@ gtk_tree_view_search_init (GtkWidget   *entry,
 		       tree_view);
     }
 
-  if (len < 1)
+  if (*text == '\0')
     return;
 
   if (!gtk_tree_model_get_iter_first (model, &iter))

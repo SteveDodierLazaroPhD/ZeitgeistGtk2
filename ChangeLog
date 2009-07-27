@@ -1,3 +1,760 @@
+commit 012ff55b84023fe7c1527310451d6df6424e3d3a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 24 22:52:21 2009 -0400
+
+    Updates
+
+ NEWS |   34 ++++++++++++++++++++++++++++++++++
+ 1 files changed, 34 insertions(+), 0 deletions(-)
+
+commit a504784b4b458d32e770cab3c0e48229552652a5
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Jul 24 21:41:37 2009 +0200
+
+    Fix cairo rendering on large subwindows
+
+    We get the real pixmap size and use as cairo surface size rather
+    than doing some magic to try to get clipping on the right hand size
+    (and the magic looks wrong anyway).
+
+    The previous code could result in the width/height being to big for
+    the cairo 28.4 fix point size and thus not drawing anything.
+
+    This fixes bug #588076.
+
+ gdk/gdkwindow.c |    7 +------
+ 1 files changed, 1 insertions(+), 6 deletions(-)
+
+commit ee876f94b145089baafbda05b05623b4c4de6ae7
+Author: Li Yuan <li.yuan@sun.com>
+Date:   Fri Jul 24 16:23:57 2009 +0800
+
+    Remove both SHOWING and SELECTED states when menuitem is not visible
+
+    Bug #582674 and Bug #574674. Remove SHOWING state also.
+
+ modules/other/gail/gailmenuitem.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit de718dbe93f16499fd6c3485270d7136446b0bf0
+Author: Li Yuan <li.yuan@sun.com>
+Date:   Fri Jul 24 16:11:30 2009 +0800
+
+    Remove ATK_STATE_SHOWING state when menuitem is not visible
+
+    When the menu is not selected, remove ATK_STATE_SHOWING state. And
+    emit state change signal if the menu is selected/unselected.
+
+ modules/other/gail/gailmenuitem.c |   34
+ +++++++++++++++++++++++++++++++++-
+ 1 files changed, 33 insertions(+), 1 deletions(-)
+
+commit 9660bfe9daaee78c4cd78a1ccc8004129a0fb9a0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 24 00:45:34 2009 -0400
+
+    Fix issues with resize handles
+
+    The resize handles were not correctly redrawn and not positioned
+    correctly, initially.
+
+ gtk/gtkstatusbar.c |   35 +++++++++++++++++++++--------------
+ 1 files changed, 21 insertions(+), 14 deletions(-)
+
+commit 9d69355e6f000ba2b8c7ae8897a04f3d6c8c19da
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Jul 23 21:53:46 2009 +0200
+
+    Fix clipping of pixbuf drawing to windows
+
+    When the fallback for gdk_draw_pixbuf (gdk_drawable_real_draw_pixbuf)
+    is called with a window destination we have already applied any clip
+    regions and offsets for the window, but the window we get is a wrapper
+    and not an impl. We have to ensure we really draw to the impl, as
+    otherwise the pixbuf drawing will be clipped by client side
+    subwindows.
+
+    This fixes bug 588553.
+
+ gdk/gdkdraw.c |   17 ++++++++++++++---
+ 1 files changed, 14 insertions(+), 3 deletions(-)
+
+commit e71c5d3ab544466754bb1b85358186e8d7e7b9f9
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Jul 23 21:52:32 2009 +0200
+
+    Avoid unnecessary indirect call
+
+    Call klass->draw_pixbuf directly inside gdk_window_draw_pixbuf
+    instead of gdk_draw_pixbuf to avoid doing all checks twice.
+
+ gdk/gdkwindow.c |   20 ++++++++++++--------
+ 1 files changed, 12 insertions(+), 8 deletions(-)
+
+commit 82ba9628e53958d862cdcced97c4a5c9692396ea
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Thu Jul 23 19:08:44 2009 +0300
+
+    Updating Estonian translation
+
+ po-properties/et.po | 2484
+ ++++-----------------------------------------------
+ 1 files changed, 180 insertions(+), 2304 deletions(-)
+
+commit 141e983d241efa57c99308f275ee1bf34c15df57
+Author: Daniel Nylander <po@danielnylander.se>
+Date:   Wed Jul 22 14:23:31 2009 +0200
+
+    Updated Swedish translation
+
+ po-properties/sv.po | 4852
+ ++++++++++++++++++++++++---------------------------
+ 1 files changed, 2311 insertions(+), 2541 deletions(-)
+
+commit 0c5e3b390bcfc3d94a840e327178d48eb484f713
+Author: Daniel Nylander <po@danielnylander.se>
+Date:   Wed Jul 22 13:51:09 2009 +0200
+
+    Updated Swedish translation
+
+ po/sv.po | 2858
+ ++++++++++++++++++++++++++++----------------------------------
+ 1 files changed, 1294 insertions(+), 1564 deletions(-)
+
+commit cfc27be34e7aeb4fa288eb135598c299aab376c5
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Tue Jul 21 12:48:39 2009 -0400
+
+    Slightly updated grammer in migrating-GtkBuilder.sgml
+
+    Just fixes the previous patch concerning using Glade if
+    possible before resorting to gtk-builder-convert to have
+    better grammer.
+
+ docs/reference/gtk/migrating-GtkBuilder.sgml |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit f4d1246700b220829920356860c5b6b95fe34e57
+Author: Javier Jardón <javierjc1982@gmail.com>
+Date:   Tue Jul 21 01:45:43 2009 +0200
+
+    Suggesto to use Glade instead gtk-builder-convert script
+    (GnomeBug:587337)
+
+    * docs/reference/gtk/migrating-GtkBuilder.sgml
+
+ docs/reference/gtk/migrating-GtkBuilder.sgml |   19 ++++++++-----------
+ 1 files changed, 8 insertions(+), 11 deletions(-)
+
+commit d84b575cd0a4cb411489007687086149c5c670cd
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Tue Jul 21 11:44:25 2009 -0500
+
+    Bug 589275 – [csw] Trying to destroy NULL regions
+
+    gdk_window_input_shape_combine_mask() can accept NULL for the mask
+    parameter, but it wasn't checking for NULL before passing the
+    resulting GdkRegion to gdk_region_destroy().  Fixes #589275
+
+ gdk/gdkwindow.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 18048308e48e2b8f72162bd76e3229f186e68b41
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Jul 20 23:18:41 2009 +0200
+
+    Revert all handling of clip_region being unset for non-viewable
+    windows
+
+    This is now handled by explicitly setting it to empty for all
+    non-viewable
+    windows.
+
+    This reverts these commits:
+    82e609c2a025224921908e3a0e7472256e7e1269
+    36861cf6088442bfe438be6b48a1b19c85c61a01
+    454160ad9e39e75d9c37dd43f445b8b3540bba57
+    7adf894a29d87ba85f0d27f71e2480caf53dae79
+    ed2c83757417a1ca19bb54f11b74c8fd93ef81c0
+
+ gdk/gdkwindow.c |   41 ++++++++++++++---------------------------
+ 1 files changed, 14 insertions(+), 27 deletions(-)
+
+commit 3c03683e0992bf34be2a32a41fc79cf5f5c8c716
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Jul 20 23:15:34 2009 +0200
+
+    Set clip region to empty for non-viewable windows
+
+    This lets us avoid lots of viewable checks and still not waste
+    time computing clip regions for non-viewable windows
+
+ gdk/gdkwindow.c |   49 +++++++++++++++++++++++++++----------------------
+ 1 files changed, 27 insertions(+), 22 deletions(-)
+
+commit 82e609c2a025224921908e3a0e7472256e7e1269
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Jul 20 22:36:02 2009 +0200
+
+    Make gdk_window_begin/end_paint handle non-viewable windows
+
+    These are updated to not read clip region is not viewable
+
+ gdk/gdkwindow.c |    9 +++++++--
+ 1 files changed, 7 insertions(+), 2 deletions(-)
+
+commit 36861cf6088442bfe438be6b48a1b19c85c61a01
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Jul 20 22:30:48 2009 +0200
+
+    Make gdk_drawable_get_visible/clip_region handle the !viewable case
+
+    We can't access ->clip_region for these cases as its not yet
+    calculated.
+
+ gdk/gdkwindow.c |   21 ++++++++++++---------
+ 1 files changed, 12 insertions(+), 9 deletions(-)
+
+commit bf78db5690062a9427f616a569830ddc3d0fb043
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Jul 20 22:19:35 2009 +0200
+
+    Calculate clip region when window goes viewable
+
+    Since we're no longer calculating clip regions for non-viewable
+    windows
+    we need to calculate it when it goes viewable.
+
+ gdk/gdkwindow.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 6e4aff86083983be6307aee822360f87fa53ea23
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Mon Jul 20 20:28:40 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po | 6462
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 files changed, 5755 insertions(+), 707 deletions(-)
+
+commit 6b3613d30c1f0c4306a59499fc371300583d97a4
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Mon Jul 20 20:27:43 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po | 6462
+ +++++++-------------------------------------------------------
+ 1 files changed, 707 insertions(+), 5755 deletions(-)
+
+commit dbc80f47b1805ae53207d6386228e4940d0671f0
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Mon Jul 20 20:19:09 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po |  110
+ +++++++++++++++++++++++++++++++++----------------------------
+ 1 files changed, 59 insertions(+), 51 deletions(-)
+
+commit c564b3ef2b45b995bce9ff14e5b43d1bb0b6b1a5
+Author: Paolo Borelli <porelli@gnome.org>
+Date:   Sat Jul 18 12:28:05 2009 +0200
+
+    Microoptimization in interactive search handling
+
+ gtk/gtktreeview.c |    5 ++---
+ 1 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 48f1b45b62af538016545f8d6e4ef84743b21abe
+Author: Paolo Borelli <porelli@gnome.org>
+Date:   Sat Jul 18 13:14:07 2009 +0200
+
+    Bug 588943 – set correct selection before emitting cursor-changed
+    when searching
+
+    Make sure the correct selection is set when emitting cursor-changed
+    during an interactive search
+
+ gtk/gtktreeview.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 3484246dc3a4c72b980c88d57fb4a88d331ee08d
+Author: Xan Lopez <xan@gnome.org>
+Date:   Mon Jul 20 09:58:22 2009 +0300
+
+    g_strdup_print does not exist, the function is g_strdup_printf.
+
+ gtk/gtkfilechooserdefault.c  |    2 +-
+ gtk/gtkpagesetupunixdialog.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 267d2094416c5c13292a58f7b63de3027dade829
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 20 01:10:52 2009 -0400
+
+    Remove markup from translatable strings
+
+    Pointed out in bug 588964. String change !
+
+ gtk/gtkfilechooserdefault.c  |   10 ++++++++--
+ gtk/gtkpagesetupunixdialog.c |   22 ++++++++++++----------
+ 2 files changed, 20 insertions(+), 12 deletions(-)
+
+commit 8430e215a71c0d3114fd395f0ed62ae3549b79b6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 20 00:31:20 2009 -0400
+
+    Remove a duplicate include.
+
+    This was pointed out in bug 588897.
+
+ gdk/gdkwindow.c |    4 ----
+ 1 files changed, 0 insertions(+), 4 deletions(-)
+
+commit d6afa6eff295e90532f456a48c8f5533b7d51093
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Jul 19 23:46:53 2009 -0400
+
+    Fix a typo in the startup-id property definition
+
+    As well as some new GtkPrintOperation properties, which were not
+    correctly set up. This was noticed in bug 588958.
+
+ gtk/gtkprintoperation.c |   20 +++++++++++++++++---
+ gtk/gtkwindow.c         |    6 +++---
+ 2 files changed, 20 insertions(+), 6 deletions(-)
+
+commit 4f49287659f39c8b44912d0fd6c410b9bae36c42
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Jul 19 23:21:52 2009 -0400
+
+    Add a translator comment
+
+    This fixes bug 589035.
+
+ gtk/gtkmountoperation-x11.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit aa47fca68f9e71e49677d90e0e93578d4db3ac96
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sun Jul 19 22:36:43 2009 +0200
+
+    Exit remove_child_area when region is empty
+
+    When the region is empty we can return early, because there
+    is no more area to remove. This happens often for children
+    of scrolled windows (i.e. things that are clipped out.
+
+ gdk/gdkwindow.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+commit a057c038893b7a9c84524796662de17a97e4437a
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sun Jul 19 22:35:25 2009 +0200
+
+    Optimize remove_child_area for children outside region
+
+    If a child is totally outside the current region, bail early instead
+    of doing costly calculations to subtract the child region.
+
+ gdk/gdkwindow.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit ef8ce08edf8fa28b990e2cdac81113877ff22dc3
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Sun Jul 19 18:45:41 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po |  180
+ ++++++++++++++++++++++++++++++--------------------------------
+ 1 files changed, 87 insertions(+), 93 deletions(-)
+
+commit e87db9e44aedeb96d62196a937e5489f004d718c
+Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Date:   Sun Jul 19 13:02:49 2009 +0700
+
+    Updated Thai translation.
+
+ po/th.po |  111
+ ++++++++++++++++++++++++-------------------------------------
+ 1 files changed, 44 insertions(+), 67 deletions(-)
+
+commit 454160ad9e39e75d9c37dd43f445b8b3540bba57
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 21:56:03 2009 +0200
+
+    Fix read of non-initialized clip_region
+
+    Foreign children are always viewable but may not have a viewable
+    parent, so ensure we don't read the parent for them.
+
+ gdk/gdkwindow.c |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
+
+commit 7adf894a29d87ba85f0d27f71e2480caf53dae79
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 21:55:17 2009 +0200
+
+    Don't read non-initialized clip region
+
+    The clip region is only initialized (and needed) for viewable windows.
+
+ gdk/gdkwindow.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit b36b7000f194cd16cfa5f07b0fb07afbd1f7bbf9
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 21:53:15 2009 +0200
+
+    Only handle viewable windows in collect_native_child_region
+
+    There is no need to handle non-viewable windows and additionally
+    they may not have the clip region set yet.
+
+ gdk/gdkwindow.c |   34 +++++++++++++++++++---------------
+ 1 files changed, 19 insertions(+), 15 deletions(-)
+
+commit ed2c83757417a1ca19bb54f11b74c8fd93ef81c0
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 21:51:11 2009 +0200
+
+    Only apply clip_region shape for viewable windows
+
+    This fixes a problem where the clip region is not yet calculated
+
+ gdk/gdkwindow.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 7cbb573ca9f61569d91452a4bf43dd219e5c945f
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 20:52:30 2009 +0200
+
+    Only calculate clipping regions for viewable windows
+
+ gdk/gdkwindow.c |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+commit 027f411150b313082c4bb729ed242d561c98782f
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 20:37:19 2009 +0200
+
+    Check for viewable to avoid doing work instead of mapped
+
+    This is now cheap and allows us to avoid more work.
+
+ gdk/gdkwindow.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit aa8693f2cb67d29720672203bcc9a36a3660ad29
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 20:29:50 2009 +0200
+
+    Track viewable for GdkWindow
+
+ gdk/directfb/gdkwindow-directfb.c |    2 +
+ gdk/gdkevents.c                   |    3 ++
+ gdk/gdkinternals.h                |    2 +
+ gdk/gdkwindow.c                   |   63
+ ++++++++++++++++++++++++++++---------
+ gdk/quartz/gdkwindow-quartz.c     |    1 +
+ gdk/win32/gdkwindow-win32.c       |    2 +
+ gdk/x11/gdkwindow-x11.c           |    4 ++-
+ 7 files changed, 61 insertions(+), 16 deletions(-)
+
+commit 7efa439fb3c49cb4efbfcb5eefe783a0642f7288
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Sat Jul 18 20:45:09 2009 +0200
+
+    Updated French translation
+
+    Contributed by Laurent Coudeur and Claude Paroz.
+
+ po-properties/fr.po | 3553
+ ++++++++++++++++++++++++++-------------------------
+ po/fr.po            | 2237 ++++++++++++++++----------------
+ 2 files changed, 2893 insertions(+), 2897 deletions(-)
+
+commit db4dabf5e7a934bbf71c7ffc6be6edc83f0b54fe
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Sat Jul 18 15:04:06 2009 +0200
+
+    GDK_WINDOW_TYPE does a runtime typecheck, don't call it unnecessary
+
+    Looking at a profile the typecheck from GDK_WINDOW_TYPE stood
+    out quite
+    a bit, which is fixed by not using it unnecessarily.
+
+ gdk/gdkwindow.c |   70
+ ++++++++++++++++++++++++++++--------------------------
+ 1 files changed, 36 insertions(+), 34 deletions(-)
+
+commit cf08a43eaa6c67c50e0557888dd72354d6e70895
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Sat Jul 18 14:40:07 2009 +0200
+
+    Updated Spanish translation
+
+ po-properties/es.po | 3499
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1758 insertions(+), 1741 deletions(-)
+
+commit dd0d0753e9f0e33a5fa5c2a6bc6088ccb716c204
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Sat Jul 18 13:53:50 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po | 2220
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1113 insertions(+), 1107 deletions(-)
+
+commit 1e765d2df07b7031925aee5de6566fa896459849
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sat Jul 18 13:31:51 2009 +0200
+
+    Use perl to make gtkalias.h without warnings
+
+ gtk/makefile.msc.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit f3668e96e78d7a060f9affa8f6dc6fe15251c5b1
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sat Jul 18 13:08:13 2009 +0200
+
+    Bug #588398 - Leak with testgtk::preview_(color|gray) and more
+
+    Revert to gdk_win32_ref_cairo_surface() implementation from gtk-2-16
+    and make _gdk_windowing_create_cairo_surface() simply delegate to it.
+
+ gdk/win32/gdkdrawable-win32.c |   19 +++++++++----------
+ 1 files changed, 9 insertions(+), 10 deletions(-)
+
+commit 630441030f3b75fe5777332ed162d58e1cf366b9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 17 23:11:12 2009 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 37b1a1acf66e95dfb01e04937f5cfd83cef0a524
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 17 23:08:51 2009 -0400
+
+    2.17.5
+
+ docs/reference/gtk/tmpl/gtkwidget.sgml |    5 +
+ po-properties/af.po                    |  420 +++--
+ po-properties/am.po                    |  414 +++--
+ po-properties/ang.po                   |  411 ++--
+ po-properties/ar.po                    |  421 +++--
+ po-properties/as.po                    |  423 +++--
+ po-properties/ast.po                   |  410 ++--
+ po-properties/az.po                    |  419 +++--
+ po-properties/az_IR.po                 |  410 ++--
+ po-properties/be.po                    |  418 +++--
+ po-properties/be@latin.po              |  420 +++--
+ po-properties/bg.po                    |  423 +++--
+ po-properties/bn.po                    |  421 +++--
+ po-properties/bn_IN.po                 |  419 +++--
+ po-properties/br.po                    |  414 +++--
+ po-properties/bs.po                    |  419 +++--
+ po-properties/ca.po                    |  423 +++--
+ po-properties/ca@valencia.po           |  420 +++--
+ po-properties/crh.po                   |  431 +++--
+ po-properties/cs.po                    |  422 +++--
+ po-properties/cy.po                    |  420 +++--
+ po-properties/da.po                    |  422 +++--
+ po-properties/de.po                    |  423 +++--
+ po-properties/dz.po                    |  420 +++--
+ po-properties/el.po                    |  423 +++--
+ po-properties/en_CA.po                 |  420 +++--
+ po-properties/en_GB.po                 |  421 +++--
+ po-properties/eo.po                    |  410 ++--
+ po-properties/es.po                    | 3509
+ ++++++++++++++++---------------
+ po-properties/et.po                    |  419 +++--
+ po-properties/eu.po                    |  424 +++--
+ po-properties/fa.po                    |  416 +++--
+ po-properties/fi.po                    |  421 +++--
+ po-properties/fr.po                    |  423 +++--
+ po-properties/ga.po                    |  413 +++--
+ po-properties/gl.po                    |  423 +++--
+ po-properties/gu.po                    |  421 +++--
+ po-properties/he.po                    |  421 +++--
+ po-properties/hi.po                    |  421 +++--
+ po-properties/hr.po                    |  420 +++--
+ po-properties/hu.po                    |  421 +++--
+ po-properties/hy.po                    |  414 +++--
+ po-properties/ia.po                    |  411 ++--
+ po-properties/id.po                    |  420 +++--
+ po-properties/io.po                    |  410 ++--
+ po-properties/is.po                    |  415 +++--
+ po-properties/it.po                    |  427 +++--
+ po-properties/ja.po                    |  421 +++--
+ po-properties/ka.po                    |  422 +++--
+ po-properties/kn.po                    |  421 +++--
+ po-properties/ko.po                    |  421 +++--
+ po-properties/ku.po                    |  413 +++--
+ po-properties/li.po                    |  418 +++--
+ po-properties/lt.po                    |  421 +++--
+ po-properties/lv.po                    |  420 +++--
+ po-properties/mai.po                   |  420 +++--
+ po-properties/mi.po                    |  410 ++--
+ po-properties/mk.po                    |  420 +++--
+ po-properties/ml.po                    |  421 +++--
+ po-properties/mn.po                    |  428 +++--
+ po-properties/mr.po                    |  421 +++--
+ po-properties/ms.po                    |  419 +++--
+ po-properties/nb.po                    |  420 +++--
+ po-properties/ne.po                    |  420 +++--
+ po-properties/nl.po                    |  422 +++--
+ po-properties/nn.po                    |  419 +++--
+ po-properties/nso.po                   |  421 +++--
+ po-properties/oc.po                    |  415 +++--
+ po-properties/or.po                    |  420 +++--
+ po-properties/pa.po                    |  421 +++--
+ po-properties/pl.po                    |  422 +++--
+ po-properties/ps.po                    |  415 +++--
+ po-properties/pt.po                    |  421 +++--
+ po-properties/pt_BR.po                 |  422 +++--
+ po-properties/ro.po                    |  423 +++--
+ po-properties/ru.po                    |  422 +++--
+ po-properties/rw.po                    |  421 +++--
+ po-properties/si.po                    |  416 +++--
+ po-properties/sk.po                    |  421 +++--
+ po-properties/sl.po                    |  421 +++--
+ po-properties/sq.po                    |  422 +++--
+ po-properties/sr.po                    |  420 +++--
+ po-properties/sr@ije.po                |  419 +++--
+ po-properties/sr@latin.po              |  420 +++--
+ po-properties/sv.po                    |  422 +++--
+ po-properties/ta.po                    |  421 +++--
+ po-properties/te.po                    |  421 +++--
+ po-properties/th.po                    |  415 +++--
+ po-properties/tk.po                    |  413 +++--
+ po-properties/tr.po                    |  430 +++--
+ po-properties/tt.po                    |  417 +++--
+ po-properties/uk.po                    |  423 +++--
+ po-properties/ur.po                    |  411 ++--
+ po-properties/uz.po                    |  418 +++--
+ po-properties/uz@cyrillic.po           |  418 +++--
+ po-properties/vi.po                    |  421 +++--
+ po-properties/wa.po                    |  419 +++--
+ po-properties/xh.po                    |  421 +++--
+ po-properties/yi.po                    |  418 +++--
+ po-properties/zh_CN.po                 |  421 +++--
+ po-properties/zh_HK.po                 | 3601
+ ++++++++++++++++----------------
+ po-properties/zh_TW.po                 | 3504
+ ++++++++++++++++---------------
+ po/af.po                               |  337 ++--
+ po/am.po                               |  326 ++-
+ po/ang.po                              |  322 ++-
+ po/ar.po                               |  332 ++--
+ po/as.po                               |  336 ++--
+ po/ast.po                              |  332 ++--
+ po/az.po                               |  330 ++--
+ po/az_IR.po                            |  299 ++-
+ po/be.po                               |  330 ++--
+ po/be@latin.po                         |  332 ++--
+ po/bg.po                               |  332 ++--
+ po/bn.po                               |  336 ++--
+ po/bn_IN.po                            |  332 ++--
+ po/br.po                               |  344 ++--
+ po/bs.po                               |  330 ++--
+ po/ca.po                               |  341 ++--
+ po/ca@valencia.po                      |  341 ++--
+ po/crh.po                              |  345 ++--
+ po/cs.po                               |  332 ++--
+ po/cy.po                               |  336 ++--
+ po/da.po                               |  336 ++--
+ po/de.po                               |  338 ++--
+ po/dz.po                               |  336 ++--
+ po/el.po                               |  332 ++--
+ po/en_CA.po                            |  332 ++--
+ po/en_GB.po                            |  336 ++--
+ po/eo.po                               |  336 ++--
+ po/es.po                               | 2309 +++++++++++----------
+ po/et.po                               |  332 ++--
+ po/eu.po                               |  332 ++--
+ po/fa.po                               |  330 ++--
+ po/fi.po                               |  332 ++--
+ po/fr.po                               |  332 ++--
+ po/ga.po                               |  332 ++--
+ po/gl.po                               |  336 ++--
+ po/gu.po                               |  332 ++--
+ po/he.po                               |  332 ++--
+ po/hi.po                               |  340 ++--
+ po/hr.po                               |  330 ++--
+ po/hu.po                               |  332 ++--
+ po/hy.po                               |  315 ++-
+ po/ia.po                               |  311 ++-
+ po/id.po                               |  336 ++--
+ po/io.po                               |  332 ++--
+ po/is.po                               |  334 ++--
+ po/it.po                               |  332 ++--
+ po/ja.po                               |  332 ++--
+ po/ka.po                               |  332 ++--
+ po/kn.po                               |  332 ++--
+ po/ko.po                               |  332 ++--
+ po/ku.po                               |  332 ++--
+ po/li.po                               |  332 ++--
+ po/lt.po                               |  336 ++--
+ po/lv.po                               |  332 ++--
+ po/mai.po                              |  332 ++--
+ po/mi.po                               |  326 ++-
+ po/mk.po                               |  336 ++--
+ po/ml.po                               |  332 ++--
+ po/mn.po                               |  346 ++--
+ po/mr.po                               |  332 ++--
+ po/ms.po                               |  330 ++--
+ po/nb.po                               | 2270 +++++++++++----------
+ po/ne.po                               |  315 ++-
+ po/nl.po                               |  340 ++--
+ po/nn.po                               |  366 ++--
+ po/nso.po                              |  330 ++--
+ po/oc.po                               |  318 ++-
+ po/or.po                               |  332 ++--
+ po/pa.po                               |  332 ++--
+ po/pl.po                               |  336 ++--
+ po/ps.po                               |  324 ++--
+ po/pt.po                               |  336 ++--
+ po/pt_BR.po                            | 2214 ++++++++++----------
+ po/ro.po                               |  332 ++--
+ po/ru.po                               |  332 ++--
+ po/rw.po                               |  332 ++-
+ po/si.po                               |  336 ++--
+ po/sk.po                               |  332 ++--
+ po/sl.po                               |  332 ++--
+ po/sq.po                               |  332 ++--
+ po/sr.po                               |  336 ++--
+ po/sr@ije.po                           |  333 ++--
+ po/sr@latin.po                         |  336 ++--
+ po/sv.po                               |  336 ++--
+ po/ta.po                               |  332 ++--
+ po/te.po                               |  332 ++--
+ po/th.po                               |  336 ++--
+ po/tk.po                               |  326 ++-
+ po/tr.po                               |  348 ++--
+ po/tt.po                               |  315 ++-
+ po/uk.po                               |  336 ++--
+ po/ur.po                               |  295 ++-
+ po/uz.po                               |  326 ++--
+ po/uz@cyrillic.po                      |  326 ++--
+ po/vi.po                               |  332 ++--
+ po/wa.po                               |  330 ++--
+ po/xh.po                               |  330 ++--
+ po/yi.po                               |  330 ++--
+ po/zh_CN.po                            |  332 ++--
+ po/zh_HK.po                            | 2316 +++++++++++----------
+ po/zh_TW.po                            | 2306 +++++++++++----------
+ 203 files changed, 54741 insertions(+), 40259 deletions(-)
+
 commit 40408e74dde4615f56e8befdf4a8e71451eff0f0
 Author: Michael Natterer <mitch@gimp.org>
 Date:   Fri Jul 17 21:49:58 2009 +0200
