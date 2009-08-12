@@ -801,6 +801,7 @@ _gtk_file_chooser_default_init (GtkFileChooserDefault *impl)
   impl->sort_column = FILE_LIST_COL_NAME;
   impl->sort_order = GTK_SORT_ASCENDING;
   impl->recent_manager = gtk_recent_manager_get_default ();
+  impl->create_folders = TRUE;
 
   gtk_box_set_spacing (GTK_BOX (impl), 12);
 
@@ -3007,24 +3008,27 @@ bookmarks_check_remove_sensitivity (GtkFileChooserDefault *impl)
   GtkTreeIter iter;
   gboolean removable = FALSE;
   gchar *name = NULL;
+  gchar *tip;
   
   if (shortcuts_get_selected (impl, &iter))
-    gtk_tree_model_get (GTK_TREE_MODEL (impl->shortcuts_model), &iter,
-			SHORTCUTS_COL_REMOVABLE, &removable,
-			SHORTCUTS_COL_NAME, &name,
-			-1);
-
-  gtk_widget_set_sensitive (impl->browse_shortcuts_remove_button, removable);
-
-  if (removable)
     {
-      gchar *tip;
+      gtk_tree_model_get (GTK_TREE_MODEL (impl->shortcuts_model), &iter,
+                          SHORTCUTS_COL_REMOVABLE, &removable,
+                          SHORTCUTS_COL_NAME, &name,
+                          -1);
+      gtk_widget_set_sensitive (impl->browse_shortcuts_remove_button, removable);
 
-      tip = g_strdup_printf (_("Remove the bookmark '%s'"), name);
+      if (removable)
+        tip = g_strdup_printf (_("Remove the bookmark '%s'"), name);
+      else
+        tip = g_strdup_printf (_("Bookmark '%s' cannot be removed"), name);
+
       gtk_widget_set_tooltip_text (impl->browse_shortcuts_remove_button, tip);
       g_free (tip);
     }
-
+  else
+    gtk_widget_set_tooltip_text (impl->browse_shortcuts_remove_button,
+                                 _("Remove the selected bookmark"));
   g_free (name);
 }
 
@@ -3649,26 +3653,34 @@ shortcuts_row_separator_func (GtkTreeModel *model,
   return shortcut_type == SHORTCUT_TYPE_SEPARATOR;
 }
 
-/* Since GtkTreeView has a keybinding attached to '/', we need to catch
- * keypresses before the TreeView gets them.
- */
 static gboolean
-tree_view_keybinding_cb (GtkWidget             *tree_view,
-			 GdkEventKey           *event,
-			 GtkFileChooserDefault *impl)
+shortcuts_key_press_event_after_cb (GtkWidget             *tree_view,
+				    GdkEventKey           *event,
+				    GtkFileChooserDefault *impl)
 {
-  if ((event->keyval == GDK_slash
-       || event->keyval == GDK_KP_Divide
-#ifdef G_OS_UNIX
-       || event->keyval == GDK_asciitilde
-#endif
-       ) && ! (event->state & (~GDK_SHIFT_MASK & gtk_accelerator_get_default_mod_mask ())))
-    {
-      location_popup_handler (impl, event->string);
-      return TRUE;
-    }
+  GtkWidget *entry;
 
-  return FALSE;
+  /* don't screw up focus switching with Tab */
+  if (event->keyval == GDK_Tab
+      || event->keyval == GDK_KP_Tab
+      || event->keyval == GDK_ISO_Left_Tab
+      || event->length < 1)
+    return FALSE;
+
+  if (impl->location_entry)
+    entry = impl->location_entry;
+  else if (impl->search_entry)
+    entry = impl->search_entry;
+  else
+    entry = NULL;
+
+  if (entry)
+    {
+      gtk_widget_grab_focus (entry);
+      return gtk_widget_event (entry, (GdkEvent *) event);
+    }
+  else
+    return FALSE;
 }
 
 /* Callback used when the file list's popup menu is detached */
@@ -3883,11 +3895,28 @@ shortcuts_list_create (GtkFileChooserDefault *impl)
   /* Tree */
 
   impl->browse_shortcuts_tree_view = gtk_tree_view_new ();
+  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (impl->browse_shortcuts_tree_view), FALSE);
 #ifdef PROFILE_FILE_CHOOSER
   g_object_set_data (G_OBJECT (impl->browse_shortcuts_tree_view), "fmq-name", "shortcuts");
 #endif
-  g_signal_connect (impl->browse_shortcuts_tree_view, "key-press-event",
-		    G_CALLBACK (tree_view_keybinding_cb), impl);
+
+  /* Connect "after" to key-press-event on the shortcuts pane.  We want this action to be possible:
+   *
+   *   1. user brings up a SAVE dialog
+   *   2. user clicks on a shortcut in the shortcuts pane
+   *   3. user starts typing a filename
+   *
+   * Normally, the user's typing would be ignored, as the shortcuts treeview doesn't
+   * support interactive search.  However, we'd rather focus the location entry
+   * so that the user can type *there*.
+   *
+   * To preserve keyboard navigation in the shortcuts pane, we don't focus the
+   * filename entry if one clicks on a shortcut; rather, we focus the entry only
+   * if the user starts typing while the focus is in the shortcuts pane.
+   */
+  g_signal_connect_after (impl->browse_shortcuts_tree_view, "key-press-event",
+			  G_CALLBACK (shortcuts_key_press_event_after_cb), impl);
+
   g_signal_connect (impl->browse_shortcuts_tree_view, "popup-menu",
 		    G_CALLBACK (shortcuts_popup_menu_cb), impl);
   g_signal_connect (impl->browse_shortcuts_tree_view, "button-press-event",
@@ -4030,14 +4059,28 @@ shortcuts_pane_create (GtkFileChooserDefault *impl,
   return vbox;
 }
 
+static gboolean
+key_is_left_or_right (GdkEventKey *event)
+{
+  guint modifiers;
+
+  modifiers = gtk_accelerator_get_default_mod_mask ();
+
+  return ((event->keyval == GDK_Right
+	   || event->keyval == GDK_KP_Right
+	   || event->keyval == GDK_Left
+	   || event->keyval == GDK_KP_Left)
+	  && (event->state & modifiers) == 0);
+}
+
 /* Handles key press events on the file list, so that we can trap Enter to
  * activate the default button on our own.  Also, checks to see if '/' has been
  * pressed.  See comment by tree_view_keybinding_cb() for more details.
  */
 static gboolean
-trap_activate_cb (GtkWidget   *widget,
-		  GdkEventKey *event,
-		  gpointer     data)
+browse_files_key_press_event_cb (GtkWidget   *widget,
+				 GdkEventKey *event,
+				 gpointer     data)
 {
   GtkFileChooserDefault *impl;
   int modifiers;
@@ -4054,6 +4097,12 @@ trap_activate_cb (GtkWidget   *widget,
        ) && ! (event->state & (~GDK_SHIFT_MASK & modifiers)))
     {
       location_popup_handler (impl, event->string);
+      return TRUE;
+    }
+
+  if (key_is_left_or_right (event))
+    {
+      gtk_widget_grab_focus (impl->browse_shortcuts_tree_view);
       return TRUE;
     }
 
@@ -4635,7 +4684,7 @@ create_file_list (GtkFileChooserDefault *impl)
   g_signal_connect (impl->browse_files_tree_view, "row-activated",
 		    G_CALLBACK (list_row_activated), impl);
   g_signal_connect (impl->browse_files_tree_view, "key-press-event",
-    		    G_CALLBACK (trap_activate_cb), impl);
+    		    G_CALLBACK (browse_files_key_press_event_cb), impl);
   g_signal_connect (impl->browse_files_tree_view, "popup-menu",
 		    G_CALLBACK (list_popup_menu_cb), impl);
   g_signal_connect (impl->browse_files_tree_view, "button-press-event",
@@ -5576,7 +5625,7 @@ update_appearance (GtkFileChooserDefault *impl)
   if (impl->location_entry)
     _gtk_file_chooser_entry_set_action (GTK_FILE_CHOOSER_ENTRY (impl->location_entry), impl->action);
 
-  if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN)
+  if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN || !impl->create_folders)
     gtk_widget_hide (impl->browse_new_folder_button);
   else
     gtk_widget_show (impl->browse_new_folder_button);
@@ -5691,6 +5740,14 @@ gtk_file_chooser_default_set_property (GObject      *object,
       }
       break;
 
+    case GTK_FILE_CHOOSER_PROP_CREATE_FOLDERS:
+      {
+        gboolean create_folders = g_value_get_boolean (value);
+        impl->create_folders = create_folders;
+        update_appearance (impl);
+      }
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -5745,6 +5802,10 @@ gtk_file_chooser_default_get_property (GObject    *object,
 
     case GTK_FILE_CHOOSER_PROP_DO_OVERWRITE_CONFIRMATION:
       g_value_set_boolean (value, impl->do_overwrite_confirmation);
+      break;
+
+    case GTK_FILE_CHOOSER_PROP_CREATE_FOLDERS:
+      g_value_set_boolean (value, impl->create_folders);
       break;
 
     default:
@@ -9166,7 +9227,7 @@ search_switch_to_browse_mode (GtkFileChooserDefault *impl)
   impl->search_entry = NULL;
 
   gtk_widget_show (impl->browse_path_bar);
-  if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN)
+  if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN || !impl->create_folders)
     gtk_widget_hide (impl->browse_new_folder_button);
   else
     gtk_widget_show (impl->browse_new_folder_button);
@@ -9738,7 +9799,7 @@ recent_switch_to_browse_mode (GtkFileChooserDefault *impl)
   impl->recent_hbox = NULL;
 
   gtk_widget_show (impl->browse_path_bar);
-  if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN)
+  if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN || !impl->create_folders)
     gtk_widget_hide (impl->browse_new_folder_button);
   else
     gtk_widget_show (impl->browse_new_folder_button);
@@ -10385,11 +10446,15 @@ set_current_filter (GtkFileChooserDefault *impl,
       if (impl->browse_files_model)
 	install_list_model_filter (impl);
 
-      if (impl->search_model_filter)
+      if (impl->operation_mode == OPERATION_MODE_SEARCH &&
+          impl->search_model_filter != NULL)
         gtk_tree_model_filter_refilter (impl->search_model_filter);
 
-      if (impl->recent_model_filter)
-        gtk_tree_model_filter_refilter (impl->recent_model_filter);
+      /* we want to have all the matching results, and not just a
+       * filter of the previous model
+       */
+      if (impl->operation_mode == OPERATION_MODE_RECENT)
+        recent_start_loading (impl);
 
       g_object_notify (G_OBJECT (impl), "filter");
     }
@@ -10748,6 +10813,12 @@ shortcuts_key_press_event_cb (GtkWidget             *widget,
   guint modifiers;
 
   modifiers = gtk_accelerator_get_default_mod_mask ();
+
+  if (key_is_left_or_right (event))
+    {
+      gtk_widget_grab_focus (impl->browse_files_tree_view);
+      return TRUE;
+    }
 
   if ((event->keyval == GDK_BackSpace
       || event->keyval == GDK_Delete

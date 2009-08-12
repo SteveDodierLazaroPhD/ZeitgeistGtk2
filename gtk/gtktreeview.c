@@ -345,15 +345,6 @@ static void     gtk_tree_view_build_tree                     (GtkTreeView       
 							      GtkTreeIter        *iter,
 							      gint                depth,
 							      gboolean            recurse);
-static gboolean gtk_tree_view_discover_dirty_iter            (GtkTreeView        *tree_view,
-							      GtkTreeIter        *iter,
-							      gint                depth,
-							      gint               *height,
-							      GtkRBNode          *node);
-static void     gtk_tree_view_discover_dirty                 (GtkTreeView        *tree_view,
-							      GtkRBTree          *tree,
-							      GtkTreeIter        *iter,
-							      gint                depth);
 static void     gtk_tree_view_clamp_node_visible             (GtkTreeView        *tree_view,
 							      GtkRBTree          *tree,
 							      GtkRBNode          *node);
@@ -5482,6 +5473,12 @@ gtk_tree_view_enter_notify (GtkWidget        *widget,
   if (tree_view->priv->tree == NULL)
     return FALSE;
 
+  if (event->mode == GDK_CROSSING_GRAB ||
+      event->mode == GDK_CROSSING_GTK_GRAB ||
+      event->mode == GDK_CROSSING_GTK_UNGRAB ||
+      event->mode == GDK_CROSSING_STATE_CHANGED)
+    return TRUE;
+
   /* find the node internally */
   new_y = TREE_WINDOW_Y_TO_RBTREE_Y(tree_view, event->y);
   if (new_y < 0)
@@ -8760,133 +8757,6 @@ gtk_tree_view_build_tree (GtkTreeView *tree_view,
   if (path)
     gtk_tree_path_free (path);
 }
-
-/* If height is non-NULL, then we set it to be the new height.  if it's all
- * dirty, then height is -1.  We know we'll remeasure dirty rows, anyways.
- */
-static gboolean
-gtk_tree_view_discover_dirty_iter (GtkTreeView *tree_view,
-				   GtkTreeIter *iter,
-				   gint         depth,
-				   gint        *height,
-				   GtkRBNode   *node)
-{
-  GtkTreeViewColumn *column;
-  GList *list;
-  gboolean retval = FALSE;
-  gint tmpheight;
-  gint horizontal_separator;
-
-  gtk_widget_style_get (GTK_WIDGET (tree_view),
-			"horizontal-separator", &horizontal_separator,
-			NULL);
-
-  if (height)
-    *height = -1;
-
-  for (list = tree_view->priv->columns; list; list = list->next)
-    {
-      gint width;
-      column = list->data;
-      if (column->dirty == TRUE)
-	continue;
-      if (height == NULL && column->column_type == GTK_TREE_VIEW_COLUMN_FIXED)
-	continue;
-      if (!column->visible)
-	continue;
-
-      gtk_tree_view_column_cell_set_cell_data (column, tree_view->priv->model, iter,
-					       GTK_RBNODE_FLAG_SET (node, GTK_RBNODE_IS_PARENT),
-					       node->children?TRUE:FALSE);
-
-      if (height)
-	{
-	  gtk_tree_view_column_cell_get_size (column,
-					      NULL, NULL, NULL,
-					      &width, &tmpheight);
-	  *height = MAX (*height, tmpheight);
-	}
-      else
-	{
-	  gtk_tree_view_column_cell_get_size (column,
-					      NULL, NULL, NULL,
-					      &width, NULL);
-	}
-
-      if (gtk_tree_view_is_expander_column (tree_view, column))
-	{
-	  int tmp = 0;
-
-	  tmp = horizontal_separator + width + (depth - 1) * tree_view->priv->level_indentation;
-	  if (TREE_VIEW_DRAW_EXPANDERS (tree_view))
-	    tmp += depth * tree_view->priv->expander_size;
-
-	  if (tmp > column->requested_width)
-	    {
-	      _gtk_tree_view_column_cell_set_dirty (column, TRUE);
-	      retval = TRUE;
-	    }
-	}
-      else
-	{
-	  if (horizontal_separator + width > column->requested_width)
-	    {
-	      _gtk_tree_view_column_cell_set_dirty (column, TRUE);
-	      retval = TRUE;
-	    }
-	}
-    }
-
-  return retval;
-}
-
-static void
-gtk_tree_view_discover_dirty (GtkTreeView *tree_view,
-			      GtkRBTree   *tree,
-			      GtkTreeIter *iter,
-			      gint         depth)
-{
-  GtkRBNode *temp = tree->root;
-  GtkTreeViewColumn *column;
-  GList *list;
-  GtkTreeIter child;
-  gboolean is_all_dirty;
-
-  TREE_VIEW_INTERNAL_ASSERT_VOID (tree != NULL);
-
-  while (temp->left != tree->nil)
-    temp = temp->left;
-
-  do
-    {
-      TREE_VIEW_INTERNAL_ASSERT_VOID (temp != NULL);
-      is_all_dirty = TRUE;
-      for (list = tree_view->priv->columns; list; list = list->next)
-	{
-	  column = list->data;
-	  if (column->dirty == FALSE)
-	    {
-	      is_all_dirty = FALSE;
-	      break;
-	    }
-	}
-
-      if (is_all_dirty)
-	return;
-
-      gtk_tree_view_discover_dirty_iter (tree_view,
-					 iter,
-					 depth,
-					 NULL,
-					 temp);
-      if (gtk_tree_model_iter_children (tree_view->priv->model, &child, iter) &&
-	  temp->children != NULL)
-	gtk_tree_view_discover_dirty (tree_view, temp->children, &child, depth + 1);
-      temp = _gtk_rbtree_next (tree, temp);
-    }
-  while (gtk_tree_model_iter_next (tree_view->priv->model, iter));
-}
-
 
 /* Make sure the node is visible vertically */
 static void
@@ -12653,6 +12523,9 @@ gtk_tree_view_get_cursor (GtkTreeView        *tree_view,
  * This function is often followed by @gtk_widget_grab_focus (@tree_view) 
  * in order to give keyboard focus to the widget.  Please note that editing 
  * can only happen when the widget is realized.
+ *
+ * If @path is invalid for @model, the current cursor (if any) will be unset
+ * and the function will return without failing.
  **/
 void
 gtk_tree_view_set_cursor (GtkTreeView       *tree_view,
@@ -12684,6 +12557,9 @@ gtk_tree_view_set_cursor (GtkTreeView       *tree_view,
  * widget.  Please note that editing can only happen when the widget is
  * realized.
  *
+ * If @path is invalid for @model, the current cursor (if any) will be unset
+ * and the function will return without failing.
+ *
  * Since: 2.2
  **/
 void
@@ -12694,9 +12570,12 @@ gtk_tree_view_set_cursor_on_cell (GtkTreeView       *tree_view,
 				  gboolean           start_editing)
 {
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
-  g_return_if_fail (tree_view->priv->tree != NULL);
   g_return_if_fail (path != NULL);
   g_return_if_fail (focus_column == NULL || GTK_IS_TREE_VIEW_COLUMN (focus_column));
+
+  if (!tree_view->priv->model)
+    return;
+
   if (focus_cell)
     {
       g_return_if_fail (focus_column);
@@ -12769,7 +12648,8 @@ gtk_tree_view_get_bin_window (GtkTreeView *tree_view)
  * with the column at that point.  @cell_x and @cell_y return the coordinates
  * relative to the cell background (i.e. the @background_area passed to
  * gtk_cell_renderer_render()).  This function is only meaningful if
- * @tree_view is realized.
+ * @tree_view is realized.  Therefore this function will always return %FALSE
+ * if @tree_view is not realized or does not have a model.
  *
  * For converting widget coordinates (eg. the ones you get from
  * GtkWidget::query-tooltip), please see
@@ -12791,12 +12671,14 @@ gtk_tree_view_get_path_at_pos (GtkTreeView        *tree_view,
   gint y_offset;
 
   g_return_val_if_fail (tree_view != NULL, FALSE);
-  g_return_val_if_fail (tree_view->priv->bin_window != NULL, FALSE);
 
   if (path)
     *path = NULL;
   if (column)
     *column = NULL;
+
+  if (tree_view->priv->bin_window == NULL)
+    return FALSE;
 
   if (tree_view->priv->tree == NULL)
     return FALSE;
@@ -13620,9 +13502,12 @@ gtk_tree_view_get_drag_dest_row (GtkTreeView              *tree_view,
  * @pos: Return location for the drop position, or %NULL
  * 
  * Determines the destination row for a given position.  @drag_x and
- * @drag_y are expected to be in widget coordinates.
+ * @drag_y are expected to be in widget coordinates.  This function is only
+ * meaningful if @tree_view is realized.  Therefore this function will always
+ * return %FALSE if @tree_view is not realized or does not have a model.
  * 
- * Return value: whether there is a row at the given position.
+ * Return value: whether there is a row at the given position, %TRUE if this
+ * is indeed the case.
  **/
 gboolean
 gtk_tree_view_get_dest_row_at_pos (GtkTreeView             *tree_view,
@@ -13646,11 +13531,12 @@ gtk_tree_view_get_dest_row_at_pos (GtkTreeView             *tree_view,
   g_return_val_if_fail (tree_view != NULL, FALSE);
   g_return_val_if_fail (drag_x >= 0, FALSE);
   g_return_val_if_fail (drag_y >= 0, FALSE);
-  g_return_val_if_fail (tree_view->priv->bin_window != NULL, FALSE);
-
 
   if (path)
     *path = NULL;
+
+  if (tree_view->priv->bin_window == NULL)
+    return FALSE;
 
   if (tree_view->priv->tree == NULL)
     return FALSE;

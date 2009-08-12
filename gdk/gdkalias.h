@@ -1342,6 +1342,9 @@ extern __typeof (gdk_window_set_back_pixmap) IA__gdk_window_set_back_pixmap __at
 extern __typeof (gdk_window_set_cursor) IA__gdk_window_set_cursor __attribute((visibility("hidden")));
 #define gdk_window_set_cursor IA__gdk_window_set_cursor
 
+extern __typeof (gdk_window_get_cursor) IA__gdk_window_get_cursor __attribute((visibility("hidden")));
+#define gdk_window_get_cursor IA__gdk_window_get_cursor
+
 extern __typeof (gdk_window_get_geometry) IA__gdk_window_get_geometry __attribute((visibility("hidden")));
 #define gdk_window_get_geometry IA__gdk_window_get_geometry
 

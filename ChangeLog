@@ -1,3 +1,1365 @@
+commit bdffae7f6c28e0215504ebf77d0d7bb395e8df1b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 14:19:35 2009 -0400
+
+    Make setting the root cursor work again
+
+    This used to work, and CSW broke it. Bug 591462, 589844.
+
+ gdk/gdkwindow.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+commit f96d9132d6cbe3f0651ac36472eab996123b613d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 14:18:13 2009 -0400
+
+    Fix make check
+
+ gtk/gtk.symbols   |    1 +
+ gtk/gtkiconview.c |    8 ++++++++
+ 2 files changed, 9 insertions(+), 0 deletions(-)
+
+commit dffb6283a0530ded9ec305b95a9808cefd43f62e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 12:47:09 2009 -0400
+
+    Updates
+
+ NEWS |   62
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 62 insertions(+), 0 deletions(-)
+
+commit fa214590662ae57ec0011e25ec0c6fafb65b165d
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Aug 11 15:41:23 2009 +0200
+
+    Fix clearing of window background for some transparent notification
+    icons
+
+    This extends the usage of the native clear region call such that its
+    called also for windows that have parent relative background all the
+    way up to a native window. That way we get true background relative
+    background clearing even to a foreign parent, which means that some
+    transparent notification icons look right again.
+
+ gdk/gdkwindow.c |   20 +++++++++++++++++++-
+ 1 files changed, 19 insertions(+), 1 deletions(-)
+
+commit 60fa0da96d43baec777f598467044fbd816c4c47
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Aug 11 12:58:48 2009 +0200
+
+    Implement fallback for old draw_drawable vfunc
+
+    GdkDrawable->draw_drawback was replaced with a new vfunc
+    draw_drawback_with_src that is now called from gdk_draw_drawable.
+    However, some code seems to call the vfunc directly (see bug #591288),
+    so make it chain to the new call.
+
+    Note that such direct vfunc calls are a bad idea and won't work
+    for all
+    cases.
+
+ gdk/gdkdraw.c |   35 +++++++++++++++++++++++++++++++++++
+ 1 files changed, 35 insertions(+), 0 deletions(-)
+
+commit f30cfd729a99f4d2a8b69f94a96b9385835ad59e
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Aug 11 11:30:55 2009 +0200
+
+    Show/Hide native window when updating viewable
+
+    This moves the native show/hide calls to the generic code
+    for calculating viewable rather than in its own separate code
+    called from gdk_window_show/hide. This simplifies the code a bit,
+    but most significantly it means things are correctly shown when
+    they become viewable for other reasons than a show/hide call.
+
+    For instance, this fixes bug 590442 (gvim embedding) where the
+    toplevel GtkPlug is mapped by the embedder and we didn't previously
+    pick up that the native children became viewable and should be shown.
+
+ gdk/gdkinternals.h |    2 +-
+ gdk/gdkwindow.c    |  129
+ ++++++++++++++++++++++++++--------------------------
+ 2 files changed, 65 insertions(+), 66 deletions(-)
+
+commit 70efa7331100df0743bd8a1b85231dc3ec67c24d
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Tue Aug 11 09:24:18 2009 +0200
+
+    Print when Enter pressed in certain GtkEntries of the print dialog
+
+    Print when Enter pressed in Name entry or Command Line entry in the
+    print dialog (#564695).
+    Add gtk_printer_option_set_activates_default() function and
+    gtk_printer_option_get_activates_default() function to control
+    behaviour of GtkPrinterOptionWidget.
+
+ gtk/gtk.symbols                                  |    2 +
+ gtk/gtkprinteroption.c                           |   18 +++++++++
+ gtk/gtkprinteroption.h                           |   41
+ ++++++++++++---------
+ gtk/gtkprinteroptionwidget.c                     |    4 ++
+ modules/printbackends/file/gtkprintbackendfile.c |    1 +
+ modules/printbackends/lpr/gtkprintbackendlpr.c   |    1 +
+ 6 files changed, 49 insertions(+), 18 deletions(-)
+
+commit 527e0937a82729edc7d856c5730967b491a5403d
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Tue Aug 11 09:29:08 2009 +0300
+
+    Updating Estonian translation
+
+ po/et.po |   17 ++++++++++++-----
+ 1 files changed, 12 insertions(+), 5 deletions(-)
+
+commit f04a410dc599c94fe98bfd2de69f82d5821002d1
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Mon Aug 10 19:59:25 2009 +0200
+
+    Updated Basque language
+
+ po/eu.po | 1788
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 files changed, 1755 insertions(+), 33 deletions(-)
+
+commit 321c034cd65476e8b1f6e2698dfbb61dc9603e21
+Author: Antón Méixome <meixome@mancomun.org>
+Date:   Mon Aug 10 17:19:30 2009 +0200
+
+    Updated Galician translation
+
+ po-properties/gl.po | 3576
+ ++++++++++++++++++++++++++-------------------------
+ po/gl.po            | 3384
+ +++++++++++++++++-------------------------------
+ 2 files changed, 2986 insertions(+), 3974 deletions(-)
+
+commit 67718230c789183ad560e3d110a412117e567d57
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Mon Aug 10 18:50:51 2009 +0200
+
+    Updated Basque language
+
+ po/eu.po |   48 +++++++++++++++++++++++++++++++-----------------
+ 1 files changed, 31 insertions(+), 17 deletions(-)
+
+commit 4d49969d5fd7b537b98186bb9da1d095a0ee2ea0
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Mon Aug 10 18:49:34 2009 +0200
+
+    Updated Basque language
+
+ po-properties/eu.po | 3913
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1922 insertions(+), 1991 deletions(-)
+
+commit 19c1c11322baa4fc8a1314b6550665414fdc4f60
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Aug 10 15:35:33 2009 +0200
+
+    Don't invalidate unnecessary areas on raise
+
+    We used to invalidate the whole window when raised, but this is
+    unnecessary much, we now just invalidate the visible area minus the
+    previously visible area.
+
+    This also fixes a problem where expose calling raise caused a loop
+    (#588438)
+
+ gdk/gdkwindow.c |   17 ++++++++++++++++-
+ 1 files changed, 16 insertions(+), 1 deletions(-)
+
+commit 0fc8c475a840527ec9a4bb030939f7c7e0dc0bde
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Aug 10 14:27:53 2009 +0200
+
+    Remove old comment about guffaw scrolling
+
+    We no longer use guffaw scrolling since the client side windows
+    branch was merged.
+
+ gdk/x11/gdkgeometry-x11.c |  112
+ ---------------------------------------------
+ 1 files changed, 0 insertions(+), 112 deletions(-)
+
+commit 7f92684237fe842621b2653cc8b46288646a61b3
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Aug 10 14:08:37 2009 +0200
+
+    Don't ever invalidate the root window
+
+    This never worked before csw since the root window is never
+    set as IS_MAPPED, but with the new viewable check (which is
+    true for the root window) we could erronously queue exposes
+    on the root window.
+
+    This happened unexpectedly in bug 589369, where metacity
+    got a GraphicsExpose event on the root window due to some
+    graphics operation, queueing an expose which would be handled
+    by clearing that area. That is fixed with this commit.
+
+ gdk/gdkwindow.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit c68194b951b25c4d9b6cb6b8f7e731b98a535dee
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Mon Aug 10 14:35:05 2009 +0200
+
+    Updated Basque language
+
+ po/eu.po | 3461
+ +++++++++++++++-----------------------------------------------
+ 1 files changed, 839 insertions(+), 2622 deletions(-)
+
+commit d878dc8e1ad82bbdf5838ffab804d05c93e48352
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Mon Aug 10 11:37:32 2009 +0200
+
+    Increment page sequence before print of the page, not after
+
+    When printing, increment page sequence before rendering of the page,
+    not after (#590084).
+    In opposite case it runs "end_page" function with wrong parameters
+    when
+    drawing a page in another thread.
+
+ gtk/gtkprintoperation.c |   17 +++++++++++------
+ 1 files changed, 11 insertions(+), 6 deletions(-)
+
+commit ec7c24d227fc1a480dec1975f4dc6c383f941070
+Author: Javier Jardón <javierjc1982@gmail.com>
+Date:   Sun Aug 9 12:01:03 2009 +0200
+
+    Remove some unused variables (GnomeBug:591218)
+
+ demos/gtk-demo/links.c  |    1 -
+ gdk/x11/gdkscreen-x11.c |    1 -
+ gtk/gtkimagemenuitem.c  |    1 -
+ gtk/gtkliststore.c      |    1 -
+ gtk/gtkmenu.c           |    1 -
+ gtk/gtkscale.c          |    1 -
+ tests/testscale.c       |    1 -
+ 7 files changed, 0 insertions(+), 7 deletions(-)
+
+commit 54863bbba61f0f40b714a83cf93dc568a9e52f83
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 8 22:43:16 2009 -0400
+
+    Correct a doc comment
+
+    Add 'papi' to the list of possible print backends, and mention 'file'
+    instead of 'pdf'.
+
+ gtk/gtksettings.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 69fc109c22a59acdf0fbf35c03b9c7a516869ba8
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 7 12:00:10 2009 -0400
+
+    Avoid some gratitious behaviour changes
+
+    Go back to allowing a lot of the WM-level functions on foreign
+    windows,
+    since we used to allow that before csw. Fixes bug 589732.
+
+ gdk/x11/gdkwindow-x11.c |  140
+ +++++++++++++++++++++++------------------------
+ 1 files changed, 69 insertions(+), 71 deletions(-)
+
+commit 913c95a5b50e8e1c3054041137f4b9554a57c453
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Aug 8 21:32:20 2009 +0300
+
+    Updated Arabic translation
+
+ po/ar.po | 2329
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1160 insertions(+), 1169 deletions(-)
+
+commit a6632e9499fccad30e6e5d92a4f1566cfff904f7
+Author: Seán de Búrca <leftmostcat@gmail.com>
+Date:   Sat Aug 8 02:23:01 2009 -0600
+
+    Updated Irish translation
+
+ po-properties/ga.po | 3781
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1897 insertions(+), 1884 deletions(-)
+
+commit f57e212695f5a78a5b055fb7cac4736b323c4a4d
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Fri Aug 7 19:54:02 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po |  125
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 65 insertions(+), 60 deletions(-)
+
+commit ea746ed15151159821394dc821f89ad08cf08722
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Fri Aug 7 19:29:25 2009 +0200
+
+    Updated Spanish translation
+
+ po-properties/es.po |  148
+ ++++++++++++++++++++++++++++-----------------------
+ 1 files changed, 81 insertions(+), 67 deletions(-)
+
+commit 9124254974686ce30d49194b15ddb6fb514e2169
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Fri Aug 7 18:51:12 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po |  308
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 156 insertions(+), 152 deletions(-)
+
+commit dfe0c8c0ca4823c77fa71b0048f6454958170b4e
+Author: Xan Lopez <xan@gnome.org>
+Date:   Fri Aug 7 15:39:49 2009 +0300
+
+    Revert "Bug 590959 - Set child_has_focus flag properly"
+
+    This reverts commit 6e0af6c25225440263792a3cbecd8f4301e3def5.
+
+    The patch seems to break focus handling in some applications, like
+    Epiphany.
+
+ gtk/gtknotebook.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 8296bf70353180c7b975a02767c12339a768cf2e
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Aug 7 14:48:00 2009 +0200
+
+    Bug 69872 – GTK_WIDGET_SET_FLAGS should be deprecated
+
+    Add gtk_widget_has_grab() as replacement for GTK_WIDGET_HAS_GRAB().
+
+ gtk/gtk.symbols |    3 ++-
+ gtk/gtkwidget.c |   21 +++++++++++++++++++++
+ gtk/gtkwidget.h |    2 ++
+ 3 files changed, 25 insertions(+), 1 deletions(-)
+
+commit 8a6bb818a44ed98e1abf9d54363825435117f658
+Author: Seán de Búrca <leftmostcat@gmail.com>
+Date:   Fri Aug 7 02:27:37 2009 -0600
+
+    Updated Irish translation
+
+ po/ga.po |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit c775906e4a1bf45e5c9dc4a810b1ca15d0235d97
+Author: Carlos Garcia Campos <carlosgc@gnome.org>
+Date:   Wed Aug 5 20:20:05 2009 +0200
+
+    Add gtk_print_operation_get_n_pages_to_print()
+
+    It returns the number of pages that will be printed to allow tracking
+    the progress of a print operation. Fixes bgo#582964.
+
+ gtk/gtkprintoperation.c |   56
+ ++++++++++++++++++++++++++++++++++++++++++++++-
+ gtk/gtkprintoperation.h |    1 +
+ 2 files changed, 56 insertions(+), 1 deletions(-)
+
+commit d468aee5d980d41fceb6deecd5a0319b2ca0d87b
+Author: Seán de Búrca <leftmostcat@gmail.com>
+Date:   Fri Aug 7 01:17:14 2009 -0600
+
+    Updated Irish translation
+
+ po/ga.po | 2276
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1126 insertions(+), 1150 deletions(-)
+
+commit eb0a5721d96bc937daeb742c9c216549a9456eba
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Aug 7 08:53:32 2009 +0200
+
+    Bug 69872 – GTK_WIDGET_SET_FLAGS should be deprecated
+
+    Add gtk_widget_get_visible(). For symmetry reasons and for convenience
+    when a widget's visibility state is available as a boolean condition,
+    also add gtk_widget_set_visible() (which simply calls show()/hide()).
+
+ gtk/gtk.symbols |    2 ++
+ gtk/gtkwidget.c |   52
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkwidget.h |    4 ++++
+ 3 files changed, 58 insertions(+), 0 deletions(-)
+
+commit b514c6ac22300b99836f1c6a1abaa97f41f448f3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 7 00:10:43 2009 -0400
+
+    Fix a logic error in gdk_window_set_title on OS X
+
+    Also fix a similar error in gdk_window_set_transient_for.
+    This fixes bug 589738
+
+ gdk/quartz/gdkwindow-quartz.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 5002976fabfd650b2d95dc6371fb125e52bebda5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 7 00:10:43 2009 -0400
+
+    Fix a logic error in gdk_window_set_title on OS X
+
+    This fixes bug 589738
+
+ gdk/quartz/gdkwindow-quartz.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 549ffcbf5cb3ef0e18b8c0cc5ca155ffb7d37559
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Aug 6 23:56:30 2009 -0400
+
+    Add a GtkIconView::item-padding property
+
+    The property can be used to fine-tune who much space each column
+    needs. See bug 586100.
+
+ docs/reference/gtk/gtk-sections.txt |    2 +
+ gtk/gtk.symbols                     |    2 +
+ gtk/gtkiconview.c                   |  104
+ ++++++++++++++++++++++++++++-------
+ gtk/gtkiconview.h                   |    3 +
+ 4 files changed, 90 insertions(+), 21 deletions(-)
+
+commit ae37d2097eff40ede42d2cc1e8490092bd3ac4f6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Aug 6 23:52:18 2009 -0400
+
+    Emit GtkAssistant::apply before computing the next step
+
+    This fixes bug 589745.
+
+ gtk/gtkassistant.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit d769808cbb48f3c154615cb64d5452f360d5f1e0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Aug 6 23:49:02 2009 -0400
+
+    Fix a typo
+
+    This was reported in bug 586808.
+
+ docs/reference/gtk/migrating-GtkEntry-icons.sgml |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
+
+commit 00c439dfcb3d909320499b343ea77d35409ce996
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Aug 6 23:44:00 2009 -0400
+
+    Fix a typo
+
+    This was reported in bug 586347.
+
+ gtk/gtkicontheme.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit f8171ce092ccc1308e9d31996d2ce9d8cce6caeb
+Author: Pascal Terjan <pterjan@mandriva.com>
+Date:   Fri Jul 31 18:27:51 2009 +0200
+
+    Update tooltip if no removable one is selected
+
+ gtk/gtkfilechooserdefault.c |   25 ++++++++++++++-----------
+ 1 files changed, 14 insertions(+), 11 deletions(-)
+
+commit 6e0af6c25225440263792a3cbecd8f4301e3def5
+Author: Benjamin Otte <otte@gnome.org>
+Date:   Thu Aug 6 16:25:20 2009 +0200
+
+    Bug 590959 - Set child_has_focus flag properly
+
+    Previously, this flag wasn't cleared properly when the notebook lost
+    focus, but only when the notebook was focussed again later.
+    As this flag is only used to advance correctly focus pages by grabbing
+    focus to the new page after switching the page, this is not good.
+    In particular, it can cause a focus grab when programmatically
+    switching
+    the notebook page and the focus is inside a completely different
+    widget.
+
+ gtk/gtknotebook.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit c44b0d2f7a587b70b207d3168b018c2d6db56496
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Thu Aug 6 09:11:31 2009 +0200
+
+    Check for details request before print
+
+    Checks for details request before sending a job to a printer.
+    Shows busy state indication (cursor + status field).
+    This avoids printing to wrong printer (bug #576601).
+
+ gtk/gtkprintunixdialog.c |  161
+ +++++++++++++++++++++++++++++----------------
+ 1 files changed, 104 insertions(+), 57 deletions(-)
+
+commit 94bc87c637c2acd9f9f3e69211b7d4a5aeb64030
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Wed Aug 5 10:34:27 2009 +0200
+
+    Get default cover sheets from each printer separately
+
+    Fixes bug #590309.
+    Add default_cover_before string and default_cover_after string
+    to GtkPrinterCups and fill it when getting list of printers.
+
+ modules/printbackends/cups/gtkprintbackendcups.c |   35
+ +++++++++------------
+ modules/printbackends/cups/gtkprintercups.c      |    4 ++
+ modules/printbackends/cups/gtkprintercups.h      |    3 ++
+ 3 files changed, 22 insertions(+), 20 deletions(-)
+
+commit d4ac4f69d11cfbff45f57e756c1ece1a5657b42e
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Tue Aug 4 19:31:33 2009 +0200
+
+    Updated Spanish translation
+
+ po-properties/es.po | 3488
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1771 insertions(+), 1717 deletions(-)
+
+commit d6d39154a26daa4eb242c60f32da6093ee9f854e
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Tue Aug 4 19:31:27 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po | 2197
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1102 insertions(+), 1095 deletions(-)
+
+commit e87a9021a22ced3183f329bd40d8545f90dd8a3f
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Tue Aug 4 10:23:58 2009 +0300
+
+    Updating Estonian translation
+
+ po/et.po |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
+
+commit 055c7aa454fc672a7abdce9d0342d92eeaa68d89
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Mon Aug 3 20:48:29 2009 +0300
+
+    Updating Estonian translation
+
+ po/et.po |   14 +++++++-------
+ 1 files changed, 7 insertions(+), 7 deletions(-)
+
+commit 39b960216c91dba2af2730e0e49893af155b0bfc
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Mon Aug 3 11:25:19 2009 +0200
+
+    Add SVG support to GtkPrintBackendFile
+
+    This add support for printing to SVG 1.2 files (#357655).
+
+ demos/gtk-demo/printing.c                        |    2 +
+ modules/printbackends/file/gtkprintbackendfile.c |   58
+ +++++++++++++++++++---
+ 2 files changed, 52 insertions(+), 8 deletions(-)
+
+commit f29b9e2dafc458f88837e4484b729ed10b92dbb5
+Author: Denis Arnaud <darnaud@src.gnome.org>
+Date:   Sat Aug 1 01:26:38 2009 +0200
+
+    Updated breton translation
+
+ po-properties/br.po | 3418
+ ++++++++++++++++++++++++---------------------------
+ 1 files changed, 1603 insertions(+), 1815 deletions(-)
+
+commit 1fa297c82fbef542984c808cd876401aa2b1a288
+Author: Kjartan Maraas <kmaraas@gnome.org>
+Date:   Mon Aug 3 00:21:24 2009 +0200
+
+    Updated Norwegian bokmål translation.
+
+ po/nb.po |  230
+ ++++++++++++++++++++++++++++----------------------------------
+ 1 files changed, 104 insertions(+), 126 deletions(-)
+
+commit ad3be192517c10097b91a618f62fd741d8e681f6
+Author: Sam Thursfield <ssssam@gmail.com>
+Date:   Sun Aug 2 10:40:13 2009 +0300
+
+    Make gdk-pixbuf-csource work on Windows also in the build tree.
+
+    Patch from bug #590448.
+
+ gdk-pixbuf/gdk-pixbuf-io.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+commit 2f0dd2d8064195e52369ef3e59b207e07bbede41
+Author: Sam Thursfield <ssssam@gmail.com>
+Date:   Sun Aug 2 10:32:47 2009 +0300
+
+    Fix configure.in to work without --with-gdktarget on non-X11.
+
+    Patch from bug #590086.
+
+ configure.in |    9 ++++++---
+ 1 files changed, 6 insertions(+), 3 deletions(-)
+
+commit 5ab28ed9fa619a2adefa7212cf67d9f0e6bcd859
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Sun Aug 2 09:39:18 2009 +0300
+
+    Updating Estonian translation
+
+ po-properties/et.po | 1814
+ ++-------------------------------------------------
+ 1 files changed, 52 insertions(+), 1762 deletions(-)
+
+commit c009f49f935e28cc18ec3959462b4489d8ffff4b
+Author: Leonardo Ferreira Fontenelle <leonardof@gnome.org>
+Date:   Sun Aug 2 01:27:31 2009 -0300
+
+    Updated Brazilian Portuguese translation.
+
+ po/pt_BR.po | 2258
+ +++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 1122 insertions(+), 1136 deletions(-)
+
+commit 8c8e1daefae30245b1aa5e03e1d37d1eff3c3d60
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Jul 31 21:22:54 2009 +0200
+
+    Add stubs for missing GDK windowing functions to Quartz backend
+
+    This seems to more or less fix the build.  On Tiger there are
+    still issues
+    with libresolv missing on the link line, I will figure out what's
+    up with
+    that soonish.
+
+ gdk/quartz/gdkwindow-quartz.c |   21 +++++++++++++++++++++
+ 1 files changed, 21 insertions(+), 0 deletions(-)
+
+commit 1946086d8bebe473260ed18a0df59585d5d91a59
+Author: Yaron Sharabani <sh.yaron@gmail.com>
+Date:   Fri Jul 31 17:25:36 2009 +0300
+
+    updated hebrew translation
+
+ po-properties/he.po | 3524
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1772 insertions(+), 1752 deletions(-)
+
+commit 493d3868347c19ace284930e200a7ec57b7cf2f8
+Author: Stefan Kost <ensonic@users.sf.net>
+Date:   Fri Jul 31 13:27:48 2009 +0300
+
+    docs: don't invent new docbook tags, it is <type> not <typename>
+
+ docs/reference/gtk/migrating-GtkIconView.sgml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit bd439f65e259abae5326857d8ccfbdec32816ee5
+Author: Stefan Kost <ensonic@users.sf.net>
+Date:   Fri Jul 31 10:26:34 2009 +0300
+
+    docs: fix include by adding GtkLabel-links doc to expand_content_files
+
+ docs/reference/gtk/Makefile.am |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit d743b2fbeab01f9a9904712a5b751afd0519696d
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 30 21:23:47 2009 +0200
+
+    Bug 586374 – code does not follow documentation
+
+    Properly invalidate iterators in iter_next, iter_children,
+    iter_nth_child and iter_parent when FALSE is returned.  ListStore was
+    actually already mostly in order as the GSequence pointers are very
+    strictly checked, but to be a little stricter we've added stamp = 0
+    lines.  TreeStore did not invalidate its iterators, so stamp = 0 lines
+    were added where appropriate.  Unit tests have been added to check
+    this.
+
+    Fixes bug 586374, reported by Mike Gemunde.
+
+ gtk/gtkliststore.c    |   21 +++++++++++--
+ gtk/gtktreestore.c    |   20 ++++++++++--
+ gtk/tests/liststore.c |   80
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ gtk/tests/treestore.c |   80
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 194 insertions(+), 7 deletions(-)
+
+commit a79ef0866bb14a31ad789c4a8750f66ec1d7ad64
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 30 20:22:45 2009 +0200
+
+    Bug 555109 – selection broken when typeahead active
+
+    gtk_tree_view_enter_notify() now "ignores" the synthesized crossing
+    events.  The synthesized crossing events always have (0, 0) as
+    coordinates, which messes things up.  This patch does not fix
+    all issues,
+    at least it makes the behavior much more reasonable again.  Watch bug
+    555109 for further discussion on the issue.
+
+ gtk/gtktreeview.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+commit bce2a5173de6dea42d7cfeee88ab84f8cc6c95b0
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 30 14:35:09 2009 +0200
+
+    Bug 573321 – additional check in gtk_tree_model_filter_convert_*
+
+    Added checks to see whether the passed iterators are not the same in
+    convert_child_iter_to_iter() and iter_to_child_iter() functions
+    in both
+    the sort and filter models.
+
+    Fixes bug 573321, suggestion by Vadim Godunko.
+
+ gtk/gtktreemodelfilter.c |    2 ++
+ gtk/gtktreemodelsort.c   |    2 ++
+ 2 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 069a593b0fc73cffe2015558a0c8160c92c61465
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 30 14:17:00 2009 +0200
+
+    Bug 539377 – Unnecessary warnings when GtkTreeView is not realized
+
+    Adapt gtk_tree_view_get_path_at_pos() and
+    gtk_tree_view_get_drag_dest_row() to just return FALSE when bin_window
+    is NULL and not hit a warning.  Makes this case consistent with
+    the tree
+    view not having a model.  Documentation has been updated to clarify
+    this, unit test has been added.
+
+    Fixes bug 539377, based on a patch by Bjorn Lindqvist.
+
+ gtk/gtktreeview.c    |   19 +++++++++++++------
+ gtk/tests/treeview.c |   28 ++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 6 deletions(-)
+
+commit ff10f9ce0243a06d24e1319fa546d5a6e6d5eb69
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 30 13:58:25 2009 +0200
+
+    Bug 498010, 546005 - fix assertion in gtk_tree_view_set_cursor_on_cell
+
+    Instead of failing with warning on !tree_view->priv->tree, return
+    silently when tree_view->priv->model is NULL.  Clarified in the
+    documentation that for invalid paths (and every path is invalid
+    when no
+    model is set), the function will fail silently although the current
+    cursor will be unset.
+
+    Fixes bugs 498010 and 546005.
+
+ gtk/gtktreeview.c |   11 ++++++++++-
+ 1 files changed, 10 insertions(+), 1 deletions(-)
+
+commit 531c7e535bceb05ace097b9e9fdc4720e18b2252
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 30 13:54:30 2009 +0200
+
+    Start general GtkTreeView unit tests
+
+    Includes a test case for bug 546005 to start with, logic provided by
+    Paul Pogonyshev and Bjorn Lindqvist.  In the future, we should maybe
+    merge treeview-scrolling.c with this one to create one large
+    monolithic
+    tree view tester.
+
+ gtk/tests/Makefile.am |    4 ++
+ gtk/tests/treeview.c  |   81
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 85 insertions(+), 0 deletions(-)
+
+commit a4514f993e3d9176fdd8ee62b0654cbefb463e6f
+Author: Pascal Terjan <pterjan@mandriva.com>
+Date:   Tue Jul 28 14:15:59 2009 +0200
+
+    Allow disabling New Folder button in File Choser
+
+    Bug #570516. Add a new property "create-folders" meaning that the
+    "New Folder" button should be displayed in the modes where it used
+    to be.
+
+ docs/reference/gtk/gtk-sections.txt |    2 +
+ gtk/gtk.symbols                     |    2 +
+ gtk/gtkfilechooser.c                |   59
+ +++++++++++++++++++++++++++++++++++
+ gtk/gtkfilechooser.h                |    4 ++
+ gtk/gtkfilechooserbutton.c          |    1 +
+ gtk/gtkfilechooserdefault.c         |   19 +++++++++--
+ gtk/gtkfilechooserprivate.h         |    1 +
+ gtk/gtkfilechooserutils.c           |    3 ++
+ gtk/gtkfilechooserutils.h           |    3 +-
+ 9 files changed, 90 insertions(+), 4 deletions(-)
+
+commit d75ccb5c0d4876c3c021668fdad02e68d0501f4d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jul 30 09:07:37 2009 -0400
+
+    Correct a thinko
+
+    The xml way of saying %s is &percnt;s, not &amp;s.
+
+ docs/reference/gtk/migrating-GtkBuilder.sgml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 2d794051186deb05e440ede12434c261906dc3c1
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Sat May 30 12:43:28 2009 +0100
+
+    Bug #514260 – Better filtering for "Recently Used" files
+
+    Instead of refiltering the recently used files we should rebuild
+    the list altogether when the current GtkFileFilter changes; this
+    allows us to keep showing the maximum amount of recently used
+    files.
+
+    Fixes bug:
+
+      http://bugzilla.gnome.org/show_bug.cgi?id=514260
+
+ gtk/gtkfilechooserdefault.c |   10 +++++++---
+ 1 files changed, 7 insertions(+), 3 deletions(-)
+
+commit 6f0f5f8dc73611bfce9cf33ab19159fea0f8c5eb
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Thu Jul 30 11:10:45 2009 +0100
+
+    Fix gdk_window_get_cursor() documentation
+
+    The 'Return value' annotation is missing from the documentation
+    of gdk_window_get_cursor().
+
+ gdk/gdkwindow.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 1811ecfb583f33d7af537c50047217c9a3c9d2e1
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Thu Jul 30 11:10:22 2009 +0100
+
+    Add missing gdk_window_get_cursor to the GDK symbols
+
+ gdk/gdk.symbols |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit c035c122e2194a57a0a3a54a46a0765ec135228d
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 30 12:00:12 2009 +0200
+
+    Remove unused dirty iter discovery functions
+
+    gtk_tree_view_discover_dirty_iter() and gtk_tree_view_discover_iter()
+    have been in the tree forever, but unused since 1.3.8 or so.
+    I guess we
+    no longer need them, so removed them.  Fixes a compiler warning
+    as well.
+
+ gtk/gtktreeview.c |  136
+ -----------------------------------------------------
+ 1 files changed, 0 insertions(+), 136 deletions(-)
+
+commit 60077615498bc6a213e19f01f8c168c90a8fa5d8
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Jul 30 11:49:47 2009 +0200
+
+    Fix gtk_widget_get_allocation()
+
+    - add it to the header
+    - add the symbol to gtk.symbols
+    - fix coding style and check for allocation != NULL
+
+ gtk/gtk.symbols |    1 +
+ gtk/gtkwidget.c |    4 +++-
+ gtk/gtkwidget.h |    3 +++
+ 3 files changed, 7 insertions(+), 1 deletions(-)
+
+commit 94f887390c09476445ca42487ac15bf2b8a20d02
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Thu Jul 30 08:50:39 2009 +0300
+
+    Updating Estonian translation
+
+ po/et.po | 1141
+ +-------------------------------------------------------------
+ 1 files changed, 15 insertions(+), 1126 deletions(-)
+
+commit 1780361b799822d63aafd164a52b287ab9643f4f
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Thu Jul 16 01:16:01 2009 -0500
+
+    add gdk_window_get_cursor()
+
+ gdk/gdkwindow.c |   92
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ gdk/gdkwindow.h |    1 +
+ 2 files changed, 93 insertions(+), 0 deletions(-)
+
+commit 4a73b41a3496db5f50c4afd3c6678a9c98070979
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Wed Jul 29 22:28:17 2009 -0500
+
+    add getter function for widget->allocation
+
+    Add gtk_widget_get_allocation() to retrieve a widget's allocation.
+    Needed as a step to enable GSEAL building.
+
+    This fixes bug #585211
+
+ gtk/gtkwidget.c |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+
+commit f22239c4aae183e3ff5d19c06c21fbc8e15a40be
+Author: Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
+Date:   Wed Jul 29 11:55:53 2009 +0800
+
+    Report ATK_STATE_SHOWING only when all parents are visible
+
+    Bug #509650. Checks if all the predecesors (the parent widget,
+    his parent, etc) are visible. Only reports ATK_STATE_SHOWING when
+    all parents are visible.
+    Signed-off-by: Li Yuan <li.yuan@sun.com>
+
+ modules/other/gail/gailwidget.c |   32 ++++++++++++++++++++++++++++++--
+ 1 files changed, 30 insertions(+), 2 deletions(-)
+
+commit a96bf76db3cc21d735749bd36dd81b94fe8db8d0
+Author: Jamy <jamybzh@free.fr>
+Date:   Tue Jul 28 13:46:41 2009 +0200
+
+    Updated breton translation
+
+ 0 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 29870ca2f95a6ba6f3c6ebbd318e7d46b5864b6f
+Author: Jamy <jamybzh@free.fr>
+Date:   Tue Jul 28 13:45:35 2009 +0200
+
+    Updated breton translation
+
+ po/br.po | 2683
+ +++++++++++++++++++++++++-------------------------------------
+ 1 files changed, 1063 insertions(+), 1620 deletions(-)
+
+commit 0e6d121b836ef0f34fbecf733d9b3d7354f03d39
+Author: Stefan Kost <ensonic@users.sf.net>
+Date:   Tue Jul 28 11:21:49 2009 +0300
+
+    docs: add missing <variablelist> tags
+
+    Fixes docbook validation for these files.
+
+ docs/reference/gtk/tmpl/gtkmenutoolbutton.sgml   |   28 ++++++++-------
+ docs/reference/gtk/tmpl/gtktoggletoolbutton.sgml |   40
+ +++++++++++----------
+ 2 files changed, 36 insertions(+), 32 deletions(-)
+
+commit ed58c1028a1d03c03b981c86943f08cce413588e
+Author: Stefan Kost <ensonic@users.sf.net>
+Date:   Tue Jul 28 11:20:22 2009 +0300
+
+    docs: inline see_also to sections docs and add missing <variablelist>
+
+    This fixes docbook validation for the file.
+
+ docs/reference/gtk/tmpl/gtktoolitem.sgml |   17 -----------------
+ gtk/gtktoolitem.c                        |   16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 17 deletions(-)
+
+commit d55ff39ad0e8cdfa2ce37c2551b2177026436c65
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Mon Jul 27 19:24:42 2009 -0500
+
+    bgo#161489 - In the file chooser, let the left/right arrow keys
+    switch focus between the file list and shortcuts
+
+    Based on a patch by Christian Neumair <cneumair@gnome.org>
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |   34 ++++++++++++++++++++++++++++++----
+ 1 files changed, 30 insertions(+), 4 deletions(-)
+
+commit b50548e35015910f62e36b96e74a54382b97cdb2
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Mon Jul 27 18:04:51 2009 -0500
+
+    From the shortcuts pane, focus the GtkEntry and redirect unhandled
+    keystrokes to it
+
+    This lets us do this:
+
+    1. click on a folder in the shortcuts pane
+    2. start typing a filename
+
+    Then, the typed filename will actually go to the filename entry, like
+    the user expects.  (Or to the search entry, in case the user clicked
+    on the Search shortcut.)
+
+    Also, removed the obsolete callback that made "/" and "~" typed in the
+    shortcuts pane bring up the location entry.
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |   60
+ ++++++++++++++++++++++++++++++-------------
+ 1 files changed, 42 insertions(+), 18 deletions(-)
+
+commit 0f5f7539f33d64ced71537612146d71920abc9a3
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Mon Jul 27 17:21:28 2009 -0500
+
+    bgo#534462: Disable interactive search in the file chooser's
+    shortcuts pane
+
+    People often do this:
+    1. Bring up a SAVE dialog
+    2. Click on a folder in the shortcuts pane
+    3. Start typing a filename
+    4. Oops!  The interactive-search entry in the shortcuts pane appears.
+
+    With this, the shortcuts pane will not bring up the interactive-search
+    entry.  Then it
+    will be clear that you are not typing in the right place.
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 00ff4d622b512bab5a2d77b857aa954cb3406c11
+Author: Daniel Nylander <po@danielnylander.se>
+Date:   Tue Jul 28 02:22:30 2009 +0200
+
+    Updated Swedish translation
+
+ po-properties/sv.po | 4790
+ ++++++++++++++++++++++++---------------------------
+ 1 files changed, 2292 insertions(+), 2498 deletions(-)
+
+commit 313b6f39a62fae3bbbd6d55993a2c3cfa03e3ba9
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Mon Jul 27 15:39:28 2009 -0500
+
+    _gdk_window_impl_new() on directfb
+
+ gdk/directfb/gdkwindow-directfb.c |  159
+ ++++++++++++++-----------------------
+ 1 files changed, 59 insertions(+), 100 deletions(-)
+
+commit 10e249f035c4df7fff96d63723906f74a73b0f65
+Author: Kjartan Maraas <kmaraas@gnome.org>
+Date:   Mon Jul 27 16:36:56 2009 +0200
+
+    Fix translation
+
+ po/nb.po | 2181
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1086 insertions(+), 1095 deletions(-)
+
+commit a7394dc88739eef0ead6b096d18dc0c61a34bc56
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sun Jul 26 19:12:30 2009 +0200
+
+    Implement GdkDrawableImplWin32::draw_pixbuf
+
+ gdk/win32/gdkdrawable-win32.c |   34 ++++++++++++++++++++++++++++++++++
+ 1 files changed, 34 insertions(+), 0 deletions(-)
+
+commit 45344cdf7c0ded79b6f4f642a0b0f501e1da4679
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sun Jul 26 19:10:13 2009 +0200
+
+    Use G_DEFINE_TYPE (GdkDrawableImplWin32, ...)
+
+ gdk/win32/gdkdrawable-win32.c |   43
+ ++++++++--------------------------------
+ gdk/win32/gdkdrawable-win32.h |    4 +-
+ 2 files changed, 11 insertions(+), 36 deletions(-)
+
+commit c5c87a918f891f791131d13ea4bc0fcbae8b69c3
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sun Jul 26 19:08:49 2009 +0200
+
+    Some cursor work for csw(win32), more left to do
+
+ gdk/win32/gdkevents-win32.c |   49
+ ++++++++++++++++++++++++++++++++++++++++--
+ gdk/win32/gdkwindow-win32.c |    3 +-
+ 2 files changed, 48 insertions(+), 4 deletions(-)
+
+commit 31357a7ab6efe6c3b34b50d95062fa59db0bfbd3
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sun Jul 26 19:05:45 2009 +0200
+
+    Enable big_window bench on win32, dialog for everyone
+
+ tests/testgtk.c |    7 +------
+ 1 files changed, 1 insertions(+), 6 deletions(-)
+
+commit 4d2c165b75fc3a624ce9fbb6969133714b90dcd9
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sat Jul 18 16:24:02 2009 +0200
+
+    Formatting and removing commented/obsolete code
+
+ gdk/win32/gdkwindow-win32.c |   68
+ +++++++++++-------------------------------
+ 1 files changed, 18 insertions(+), 50 deletions(-)
+
+commit f9a1bfb7b9c7fde1b45a263387b1b36fc7f7b492
+Author: Philip Withnall <philip@tecnocode.co.uk>
+Date:   Sat Jul 25 17:46:09 2009 +0100
+
+    Bug 589336 – Add GtkTreeViewColumn:sort-column-id property
+
+    Add the property, change notifications and documentation stubs.
+
+ docs/reference/gtk/tmpl/gtktreeviewcolumn.sgml |    5 +++
+ gtk/gtktreeviewcolumn.c                        |   34
+ ++++++++++++++++++++++-
+ 2 files changed, 37 insertions(+), 2 deletions(-)
+
+commit 88d96c7246f668edbc07133f9714e32470bb917e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 24 23:51:47 2009 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit a99a4d35e4da8ef68b6db791eb1a4cd6cd2d34a1
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 24 23:49:37 2009 -0400
+
+    2.17.6
+
+ po-properties/af.po          |   68 +-
+ po-properties/am.po          |   68 +-
+ po-properties/ang.po         |   68 +-
+ po-properties/ar.po          |   68 +-
+ po-properties/as.po          |   68 +-
+ po-properties/ast.po         |   68 +-
+ po-properties/az.po          |   68 +-
+ po-properties/az_IR.po       |   68 +-
+ po-properties/be.po          |   68 +-
+ po-properties/be@latin.po    |   68 +-
+ po-properties/bg.po          |   68 +-
+ po-properties/bn.po          |   68 +-
+ po-properties/bn_IN.po       |   68 +-
+ po-properties/br.po          |   68 +-
+ po-properties/bs.po          |   68 +-
+ po-properties/ca.po          |   68 +-
+ po-properties/ca@valencia.po |   68 +-
+ po-properties/crh.po         |   68 +-
+ po-properties/cs.po          |   68 +-
+ po-properties/cy.po          |   68 +-
+ po-properties/da.po          |   68 +-
+ po-properties/de.po          |   68 +-
+ po-properties/dz.po          |   68 +-
+ po-properties/el.po          |   68 +-
+ po-properties/en_CA.po       |   68 +-
+ po-properties/en_GB.po       |   68 +-
+ po-properties/eo.po          |   68 +-
+ po-properties/es.po          | 3459 +++++++++++++++---------------
+ po-properties/et.po          | 2472 ++++++++++++++++++++--
+ po-properties/eu.po          |   68 +-
+ po-properties/fa.po          |   68 +-
+ po-properties/fi.po          |   68 +-
+ po-properties/fr.po          | 3463 +++++++++++++++---------------
+ po-properties/ga.po          |   68 +-
+ po-properties/gl.po          |   68 +-
+ po-properties/gu.po          |   68 +-
+ po-properties/he.po          |   68 +-
+ po-properties/hi.po          |   68 +-
+ po-properties/hr.po          |   68 +-
+ po-properties/hu.po          |   68 +-
+ po-properties/hy.po          |   68 +-
+ po-properties/ia.po          |   68 +-
+ po-properties/id.po          |   68 +-
+ po-properties/io.po          |   68 +-
+ po-properties/is.po          |   68 +-
+ po-properties/it.po          |   68 +-
+ po-properties/ja.po          |   68 +-
+ po-properties/ka.po          |   68 +-
+ po-properties/kn.po          |   68 +-
+ po-properties/ko.po          |   68 +-
+ po-properties/ku.po          |   68 +-
+ po-properties/li.po          |   68 +-
+ po-properties/lt.po          |   68 +-
+ po-properties/lv.po          |   68 +-
+ po-properties/mai.po         |   68 +-
+ po-properties/mi.po          |   68 +-
+ po-properties/mk.po          |   68 +-
+ po-properties/ml.po          |   68 +-
+ po-properties/mn.po          |   68 +-
+ po-properties/mr.po          |   68 +-
+ po-properties/ms.po          |   68 +-
+ po-properties/nb.po          |   68 +-
+ po-properties/ne.po          |   68 +-
+ po-properties/nl.po          |   68 +-
+ po-properties/nn.po          |   68 +-
+ po-properties/nso.po         |   68 +-
+ po-properties/oc.po          |   68 +-
+ po-properties/or.po          |   68 +-
+ po-properties/pa.po          |   68 +-
+ po-properties/pl.po          |   68 +-
+ po-properties/ps.po          |   68 +-
+ po-properties/pt.po          |   68 +-
+ po-properties/pt_BR.po       |   68 +-
+ po-properties/ro.po          |   68 +-
+ po-properties/ru.po          |   68 +-
+ po-properties/rw.po          |   68 +-
+ po-properties/si.po          |   68 +-
+ po-properties/sk.po          |   68 +-
+ po-properties/sl.po          |   68 +-
+ po-properties/sq.po          |   68 +-
+ po-properties/sr.po          |   68 +-
+ po-properties/sr@ije.po      |   68 +-
+ po-properties/sr@latin.po    |   68 +-
+ po-properties/sv.po          | 4780
+ ++++++++++++++++++++++--------------------
+ po-properties/ta.po          |   68 +-
+ po-properties/te.po          |   68 +-
+ po-properties/th.po          |   68 +-
+ po-properties/tk.po          |   68 +-
+ po-properties/tr.po          |   68 +-
+ po-properties/tt.po          |   68 +-
+ po-properties/uk.po          |   68 +-
+ po-properties/ur.po          |   68 +-
+ po-properties/uz.po          |   68 +-
+ po-properties/uz@cyrillic.po |   68 +-
+ po-properties/vi.po          |   68 +-
+ po-properties/wa.po          |   68 +-
+ po-properties/xh.po          |   68 +-
+ po-properties/yi.po          |   68 +-
+ po-properties/zh_CN.po       |   68 +-
+ po-properties/zh_HK.po       |   68 +-
+ po-properties/zh_TW.po       |   68 +-
+ po/af.po                     |  102 +-
+ po/am.po                     |   90 +-
+ po/ang.po                    |   89 +-
+ po/ar.po                     |  102 +-
+ po/as.po                     |  102 +-
+ po/ast.po                    |  102 +-
+ po/az.po                     |   90 +-
+ po/az_IR.po                  |   89 +-
+ po/be.po                     |   90 +-
+ po/be@latin.po               |  102 +-
+ po/bg.po                     |  102 +-
+ po/bn.po                     |   91 +-
+ po/bn_IN.po                  |  102 +-
+ po/br.po                     |   90 +-
+ po/bs.po                     |   90 +-
+ po/ca.po                     |  102 +-
+ po/ca@valencia.po            |  102 +-
+ po/crh.po                    |  103 +-
+ po/cs.po                     |  102 +-
+ po/cy.po                     |  102 +-
+ po/da.po                     |  102 +-
+ po/de.po                     |  100 +-
+ po/dz.po                     |   91 +-
+ po/el.po                     |  102 +-
+ po/en_CA.po                  |  102 +-
+ po/en_GB.po                  |  102 +-
+ po/eo.po                     |   91 +-
+ po/es.po                     | 2196 ++++++++++----------
+ po/et.po                     |  100 +-
+ po/eu.po                     |  102 +-
+ po/fa.po                     |   90 +-
+ po/fi.po                     |  102 +-
+ po/fr.po                     | 2208 ++++++++++----------
+ po/ga.po                     |  102 +-
+ po/gl.po                     |  102 +-
+ po/gu.po                     |  102 +-
+ po/he.po                     |  102 +-
+ po/hi.po                     |  102 +-
+ po/hr.po                     |  101 +-
+ po/hu.po                     |  102 +-
+ po/hy.po                     |   90 +-
+ po/ia.po                     |   90 +-
+ po/id.po                     |   94 +-
+ po/io.po                     |   96 +-
+ po/is.po                     |   90 +-
+ po/it.po                     |  105 +-
+ po/ja.po                     |  102 +-
+ po/ka.po                     |  102 +-
+ po/kn.po                     |  102 +-
+ po/ko.po                     |  102 +-
+ po/ku.po                     |  102 +-
+ po/li.po                     |   90 +-
+ po/lt.po                     |  102 +-
+ po/lv.po                     |  102 +-
+ po/mai.po                    |  102 +-
+ po/mi.po                     |   90 +-
+ po/mk.po                     |  102 +-
+ po/ml.po                     |  102 +-
+ po/mn.po                     |   91 +-
+ po/mr.po                     |  102 +-
+ po/ms.po                     |   90 +-
+ po/nb.po                     |  100 +-
+ po/ne.po                     |   90 +-
+ po/nl.po                     |  104 +-
+ po/nn.po                     |  106 +-
+ po/nso.po                    |   90 +-
+ po/oc.po                     |   96 +-
+ po/or.po                     |  102 +-
+ po/pa.po                     |  102 +-
+ po/pl.po                     |  102 +-
+ po/ps.po                     |  101 +-
+ po/pt.po                     |  102 +-
+ po/pt_BR.po                  |  102 +-
+ po/ro.po                     |  102 +-
+ po/ru.po                     |  102 +-
+ po/rw.po                     |   92 +-
+ po/si.po                     |  102 +-
+ po/sk.po                     |  102 +-
+ po/sl.po                     |  102 +-
+ po/sq.po                     |  102 +-
+ po/sr.po                     |  102 +-
+ po/sr@ije.po                 |   90 +-
+ po/sr@latin.po               |  102 +-
+ po/sv.po                     | 2798 ++++++++++++++-----------
+ po/ta.po                     |  102 +-
+ po/te.po                     |  102 +-
+ po/th.po                     |  100 +-
+ po/tk.po                     |   90 +-
+ po/tr.po                     |  103 +-
+ po/tt.po                     |   90 +-
+ po/uk.po                     |  100 +-
+ po/ur.po                     |   90 +-
+ po/uz.po                     |  101 +-
+ po/uz@cyrillic.po            |  101 +-
+ po/vi.po                     |  100 +-
+ po/wa.po                     |   90 +-
+ po/xh.po                     |   90 +-
+ po/yi.po                     |   90 +-
+ po/zh_CN.po                  |  102 +-
+ po/zh_HK.po                  |  100 +-
+ po/zh_TW.po                  |  100 +-
+ 202 files changed, 20356 insertions(+), 17251 deletions(-)
+
 commit 012ff55b84023fe7c1527310451d6df6424e3d3a
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Fri Jul 24 22:52:21 2009 -0400

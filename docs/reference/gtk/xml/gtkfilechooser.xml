@@ -48,6 +48,9 @@ enum                <link linkend="GtkFileChooserError">GtkFileChooserError</lin
                                                          <link linkend="gboolean">gboolean</link> do_overwrite_confirmation);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-file-chooser-get-do-overwrite-confirmation">gtk_file_chooser_get_do_overwrite_confirmation</link>
                                                         (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
+<link linkend="void">void</link>                <link linkend="gtk-file-chooser-set-create-folders">gtk_file_chooser_set_create_folders</link> (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="gboolean">gboolean</link> create_folders);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-file-chooser-get-create-folders">gtk_file_chooser_get_create_folders</link> (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
 <link linkend="void">void</link>                <link linkend="gtk-file-chooser-set-current-name">gtk_file_chooser_set_current_name</link>   (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
                                                          const <link linkend="gchar">gchar</link> *name);
 <link linkend="gchar">gchar</link> *             <link linkend="gtk-file-chooser-get-filename">gtk_file_chooser_get_filename</link>       (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);
@@ -171,6 +174,7 @@ GtkFileChooser is implemented by
 <title role="properties.title">Properties</title>
 <synopsis>
   &quot;<link linkend="GtkFileChooser--action">action</link>&quot;                   <link linkend="GtkFileChooserAction">GtkFileChooserAction</link>  : Read / Write
+  &quot;<link linkend="GtkFileChooser--create-folders">create-folders</link>&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkFileChooser--do-overwrite-confirmation">do-overwrite-confirmation</link>&quot; <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkFileChooser--extra-widget">extra-widget</link>&quot;             <link linkend="GtkWidget">GtkWidget</link>*            : Read / Write
   &quot;<link linkend="GtkFileChooser--file-system-backend">file-system-backend</link>&quot;      <link linkend="gchar">gchar</link>*                : Write / Construct Only
@@ -999,6 +1003,38 @@ types a file name that already exists.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.8</para></refsect2>
+<refsect2 id="gtk-file-chooser-set-create-folders" role="function" condition="since:2.18">
+<title>gtk_file_chooser_set_create_folders ()</title>
+<indexterm zone="gtk-file-chooser-set-create-folders" role="2.18"><primary sortas="file_chooser_set_create_folders">gtk_file_chooser_set_create_folders</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_chooser_set_create_folders (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
+                                                         <link linkend="gboolean">gboolean</link> create_folders);</programlisting>
+<para>
+Sets whether file choser will offer to create new folders.
+This is only relevant if the action is not set to be 
+GTK_FILE_CHOOSER_ACTION_OPEN.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>create_folders</parameter>&#160;:</term>
+<listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the New Folder button should be displayed
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-file-chooser-get-create-folders" role="function" condition="since:2.18">
+<title>gtk_file_chooser_get_create_folders ()</title>
+<indexterm zone="gtk-file-chooser-get-create-folders" role="2.18"><primary sortas="file_chooser_get_create_folders">gtk_file_chooser_get_create_folders</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_file_chooser_get_create_folders (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser);</programlisting>
+<para>
+Gets whether file choser will offer to create new folders.
+See <link linkend="gtk-file-chooser-set-create-folders"><function>gtk_file_chooser_set_create_folders()</function></link>.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>chooser</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkFileChooser"><type>GtkFileChooser</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the New Folder button should be displayed.
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-file-chooser-set-current-name" role="function" condition="since:2.4">
 <title>gtk_file_chooser_set_current_name ()</title>
 <indexterm zone="gtk-file-chooser-set-current-name" role="2.4"><primary sortas="file_chooser_set_current_name">gtk_file_chooser_set_current_name</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_file_chooser_set_current_name   (<link linkend="GtkFileChooser">GtkFileChooser</link> *chooser,
@@ -2017,6 +2053,15 @@ directory, does not exist, or is otherwise not currently selected, does nothing.
 <refsect2 id="GtkFileChooser--action" role="property"><title>The <literal>&quot;action&quot;</literal> property</title>
 <indexterm zone="GtkFileChooser--action"><primary sortas="FileChooser:action">GtkFileChooser:action</primary></indexterm><programlisting>  &quot;action&quot;                   <link linkend="GtkFileChooserAction">GtkFileChooserAction</link>  : Read / Write</programlisting>
 <para>The type of operation that the file selector is performing.</para><para>Default value: GTK_FILE_CHOOSER_ACTION_OPEN</para>
+</refsect2>
+<refsect2 id="GtkFileChooser--create-folders" role="property"><title>The <literal>&quot;create-folders&quot;</literal> property</title>
+<indexterm zone="GtkFileChooser--create-folders" role="2.18"><primary sortas="FileChooser:create-folders">GtkFileChooser:create-folders</primary></indexterm><programlisting>  &quot;create-folders&quot;           <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Whether a file chooser not in <link linkend="GTK-FILE-CHOOSER-ACTION-OPEN--CAPS"><literal>GTK_FILE_CHOOSER_ACTION_OPEN</literal></link> mode
+will offer the user to create new folders.</para>
+<para>
+</para><para>Default value: TRUE</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkFileChooser--do-overwrite-confirmation" role="property"><title>The <literal>&quot;do-overwrite-confirmation&quot;</literal> property</title>
 <indexterm zone="GtkFileChooser--do-overwrite-confirmation" role="2.8"><primary sortas="FileChooser:do-overwrite-confirmation">GtkFileChooser:do-overwrite-confirmation</primary></indexterm><programlisting>  &quot;do-overwrite-confirmation&quot; <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>

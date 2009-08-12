@@ -1345,6 +1345,9 @@ extern __typeof (gdk_window_set_back_pixmap) gdk_window_set_back_pixmap __attrib
 #undef gdk_window_set_cursor 
 extern __typeof (gdk_window_set_cursor) gdk_window_set_cursor __attribute((alias("IA__gdk_window_set_cursor"), visibility("default")));
 
+#undef gdk_window_get_cursor 
+extern __typeof (gdk_window_get_cursor) gdk_window_get_cursor __attribute((alias("IA__gdk_window_get_cursor"), visibility("default")));
+
 #undef gdk_window_get_geometry 
 extern __typeof (gdk_window_get_geometry) gdk_window_get_geometry __attribute((alias("IA__gdk_window_get_geometry"), visibility("default")));
 

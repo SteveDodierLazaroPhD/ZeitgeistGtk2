@@ -49,6 +49,7 @@
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
 <link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
+<link rel="chapter" href="gtk-migrating-label-links.html" title="Migrating from SexyUrlLabel to GtkLabel">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -138,6 +139,10 @@ void                <a class="link" href="gtk-High-level-Printing-API.html#gtk-p
                                                          <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
 >gint</a> n_pages);
+<a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
+>gint</a>                <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-get-n-pages-to-print" title="gtk_print_operation_get_n_pages_to_print ()">gtk_print_operation_get_n_pages_to_print</a>
+                                                        (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op);
 void                <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-set-current-page" title="gtk_print_operation_set_current_page ()">gtk_print_operation_set_current_page</a>
                                                         (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op,
                                                          <a
@@ -310,6 +315,9 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--n-pages" title='The "n-pages" property'>n-pages</a>"                  <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
 >gint</a>                  : Read / Write
+  "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--n-pages-to-print" title='The "n-pages-to-print" property'>n-pages-to-print</a>"         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
+>gint</a>                  : Read
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--print-settings" title='The "print-settings" property'>print-settings</a>"           <a class="link" href="GtkPrintSettings.html" title="GtkPrintSettings">GtkPrintSettings</a>*     : Read / Write
   "<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation--show-progress" title='The "show-progress" property'>show-progress</a>"            <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
@@ -373,7 +381,7 @@ When the user finished the dialog various signals will be emitted on the
 to catch and render the page on the provided <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> using Cairo.
 </p>
 <div class="example">
-<a name="id975408"></a><p class="title"><b>Example 46. The high-level printing API</b></p>
+<a name="id1035100"></a><p class="title"><b>Example 46. The high-level printing API</b></p>
 <div class="example-contents"><pre class="programlisting">
 static GtkPrintSettings *settings = NULL;
 static void
@@ -914,6 +922,44 @@ will be for page <em class="parameter"><code>n_pages</code></em> - 1.</p>
 </tbody>
 </table></div>
 <p class="since">Since 2.10</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_print_operation_get_n_pages_to_print ()">
+<a name="gtk-print-operation-get-n-pages-to-print"></a><h3>gtk_print_operation_get_n_pages_to_print ()</h3>
+<pre class="programlisting"><a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
+>gint</a>                gtk_print_operation_get_n_pages_to_print
+                                                        (<a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation">GtkPrintOperation</a> *op);</pre>
+<p>
+Returns the number of pages that will be printed.
+</p>
+<p>
+Note that this value is set during print preparation phase
+(<a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-STATUS-PREPARING--CAPS"><code class="literal">GTK_PRINT_STATUS_PREPARING</code></a>), so this function should never be
+called before the data generation phase (<a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><code class="literal">GTK_PRINT_STATUS_GENERATING_DATA</code></a>).
+You can connect to the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-status-changed" title='The "status-changed" signal'><span class="type">"status-changed"</span></a> signal
+and call <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-get-n-pages-to-print" title="gtk_print_operation_get_n_pages_to_print ()"><code class="function">gtk_print_operation_get_n_pages_to_print()</code></a> when
+print status is <a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><code class="literal">GTK_PRINT_STATUS_GENERATING_DATA</code></a>.
+This is typically used to track the progress of print operation.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>op</code></em> :</span></p></td>
+<td> a <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation"><span class="type">GtkPrintOperation</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the number of pages that will be printed
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
 </div>
 <hr>
 <div class="refsect2" title="gtk_print_operation_set_current_page ()">
@@ -2053,6 +2099,29 @@ will be for page <em class="parameter"><code>n_pages</code></em> - 1.</p>
 <p>Allowed values: &gt;= G_MAXULONG</p>
 <p>Default value: -1</p>
 <p>Since 2.10</p>
+</div>
+<hr>
+<div class="refsect2" title='The "n-pages-to-print" property'>
+<a name="GtkPrintOperation--n-pages-to-print"></a><h3>The <code class="literal">"n-pages-to-print"</code> property</h3>
+<pre class="programlisting">  "n-pages-to-print"         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
+>gint</a>                  : Read</pre>
+<p>
+The number of pages that will be printed.
+</p>
+<p>
+Note that this value is set during print preparation phase
+(<a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-STATUS-PREPARING--CAPS"><code class="literal">GTK_PRINT_STATUS_PREPARING</code></a>), so this value should never be
+get before the data generation phase (<a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><code class="literal">GTK_PRINT_STATUS_GENERATING_DATA</code></a>).
+You can connect to the <a class="link" href="gtk-High-level-Printing-API.html#GtkPrintOperation-status-changed" title='The "status-changed" signal'><span class="type">"status-changed"</span></a> signal
+and call <a class="link" href="gtk-High-level-Printing-API.html#gtk-print-operation-get-n-pages-to-print" title="gtk_print_operation_get_n_pages_to_print ()"><code class="function">gtk_print_operation_get_n_pages_to_print()</code></a> when
+print status is <a class="link" href="gtk-High-level-Printing-API.html#GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><code class="literal">GTK_PRINT_STATUS_GENERATING_DATA</code></a>.
+This is typically used to track the progress of print operation.</p>
+<p>
+</p>
+<p>Allowed values: &gt;= G_MAXULONG</p>
+<p>Default value: -1</p>
+<p>Since 2.18</p>
 </div>
 <hr>
 <div class="refsect2" title='The "print-settings" property'>

@@ -49,6 +49,8 @@ enum                <link linkend="GtkPrintError">GtkPrintError</link>;
                                                          const <link linkend="gchar">gchar</link> *job_name);
 <link linkend="void">void</link>                <link linkend="gtk-print-operation-set-n-pages">gtk_print_operation_set_n_pages</link>     (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
                                                          <link linkend="gint">gint</link> n_pages);
+<link linkend="gint">gint</link>                <link linkend="gtk-print-operation-get-n-pages-to-print">gtk_print_operation_get_n_pages_to_print</link>
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);
 <link linkend="void">void</link>                <link linkend="gtk-print-operation-set-current-page">gtk_print_operation_set_current_page</link>
                                                         (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op,
                                                          <link linkend="gint">gint</link> current_page);
@@ -167,6 +169,7 @@ GtkPrintOperationPreview is implemented by
   &quot;<link linkend="GtkPrintOperation--has-selection">has-selection</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--job-name">job-name</link>&quot;                 <link linkend="gchar">gchar</link>*                : Read / Write
   &quot;<link linkend="GtkPrintOperation--n-pages">n-pages</link>&quot;                  <link linkend="gint">gint</link>                  : Read / Write
+  &quot;<link linkend="GtkPrintOperation--n-pages-to-print">n-pages-to-print</link>&quot;         <link linkend="gint">gint</link>                  : Read
   &quot;<link linkend="GtkPrintOperation--print-settings">print-settings</link>&quot;           <link linkend="GtkPrintSettings">GtkPrintSettings</link>*     : Read / Write
   &quot;<link linkend="GtkPrintOperation--show-progress">show-progress</link>&quot;            <link linkend="gboolean">gboolean</link>              : Read / Write
   &quot;<link linkend="GtkPrintOperation--status">status</link>&quot;                   <link linkend="GtkPrintStatus">GtkPrintStatus</link>        : Read
@@ -621,6 +624,30 @@ will be for page <parameter>n_pages</parameter> - 1.</para>
 <listitem><simpara> the number of pages
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.10</para></refsect2>
+<refsect2 id="gtk-print-operation-get-n-pages-to-print" role="function" condition="since:2.18">
+<title>gtk_print_operation_get_n_pages_to_print ()</title>
+<indexterm zone="gtk-print-operation-get-n-pages-to-print" role="2.18"><primary sortas="print_operation_get_n_pages_to_print">gtk_print_operation_get_n_pages_to_print</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_print_operation_get_n_pages_to_print
+                                                        (<link linkend="GtkPrintOperation">GtkPrintOperation</link> *op);</programlisting>
+<para>
+Returns the number of pages that will be printed.
+</para>
+<para>
+Note that this value is set during print preparation phase
+(<link linkend="GTK-PRINT-STATUS-PREPARING--CAPS"><literal>GTK_PRINT_STATUS_PREPARING</literal></link>), so this function should never be
+called before the data generation phase (<link linkend="GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><literal>GTK_PRINT_STATUS_GENERATING_DATA</literal></link>).
+You can connect to the <link linkend="GtkPrintOperation-status-changed"><type>"status-changed"</type></link> signal
+and call <link linkend="gtk-print-operation-get-n-pages-to-print"><function>gtk_print_operation_get_n_pages_to_print()</function></link> when
+print status is <link linkend="GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><literal>GTK_PRINT_STATUS_GENERATING_DATA</literal></link>.
+This is typically used to track the progress of print operation.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkPrintOperation"><type>GtkPrintOperation</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the number of pages that will be printed
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-print-operation-set-current-page" role="function" condition="since:2.10">
 <title>gtk_print_operation_set_current_page ()</title>
 <indexterm zone="gtk-print-operation-set-current-page" role="2.10"><primary sortas="print_operation_set_current_page">gtk_print_operation_set_current_page</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_print_operation_set_current_page
@@ -1338,6 +1365,24 @@ will be for page <parameter>n_pages</parameter> - 1.</para>
 </para><para>Allowed values: &gt;= G_MAXULONG</para>
 <para>Default value: -1</para>
 <para>Since 2.10</para>
+</refsect2>
+<refsect2 id="GtkPrintOperation--n-pages-to-print" role="property"><title>The <literal>&quot;n-pages-to-print&quot;</literal> property</title>
+<indexterm zone="GtkPrintOperation--n-pages-to-print" role="2.18"><primary sortas="PrintOperation:n-pages-to-print">GtkPrintOperation:n-pages-to-print</primary></indexterm><programlisting>  &quot;n-pages-to-print&quot;         <link linkend="gint">gint</link>                  : Read</programlisting>
+<para>
+The number of pages that will be printed.
+</para>
+<para>
+Note that this value is set during print preparation phase
+(<link linkend="GTK-PRINT-STATUS-PREPARING--CAPS"><literal>GTK_PRINT_STATUS_PREPARING</literal></link>), so this value should never be
+get before the data generation phase (<link linkend="GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><literal>GTK_PRINT_STATUS_GENERATING_DATA</literal></link>).
+You can connect to the <link linkend="GtkPrintOperation-status-changed"><type>"status-changed"</type></link> signal
+and call <link linkend="gtk-print-operation-get-n-pages-to-print"><function>gtk_print_operation_get_n_pages_to_print()</function></link> when
+print status is <link linkend="GTK-PRINT-STATUS-GENERATING-DATA--CAPS"><literal>GTK_PRINT_STATUS_GENERATING_DATA</literal></link>.
+This is typically used to track the progress of print operation.</para>
+<para>
+</para><para>Allowed values: &gt;= G_MAXULONG</para>
+<para>Default value: -1</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkPrintOperation--print-settings" role="property"><title>The <literal>&quot;print-settings&quot;</literal> property</title>
 <indexterm zone="GtkPrintOperation--print-settings" role="2.10"><primary sortas="PrintOperation:print-settings">GtkPrintOperation:print-settings</primary></indexterm><programlisting>  &quot;print-settings&quot;           <link linkend="GtkPrintSettings">GtkPrintSettings</link>*     : Read / Write</programlisting>

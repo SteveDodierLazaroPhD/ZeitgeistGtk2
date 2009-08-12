@@ -72,7 +72,8 @@ enum
   PROP_CUSTOM_TAB_LABEL,
   PROP_EMBED_PAGE_SETUP,
   PROP_HAS_SELECTION,
-  PROP_SUPPORT_SELECTION
+  PROP_SUPPORT_SELECTION,
+  PROP_N_PAGES_TO_PRINT
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
@@ -400,6 +401,9 @@ gtk_print_operation_get_property (GObject    *object,
       break;
     case PROP_SUPPORT_SELECTION:
       g_value_set_boolean (value, priv->support_selection);
+      break;
+    case PROP_N_PAGES_TO_PRINT:
+      g_value_set_int (value, priv->nr_of_pages_to_print);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1266,6 +1270,30 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("TRUE if page setup combos are embedded in GtkPrintDialog"),
 							 FALSE,
 							 GTK_PARAM_READWRITE));
+  /**
+   * GtkPrintOperation:n-pages-to-print:
+   *
+   * The number of pages that will be printed.
+   *
+   * Note that this value is set during print preparation phase
+   * (%GTK_PRINT_STATUS_PREPARING), so this value should never be
+   * get before the data generation phase (%GTK_PRINT_STATUS_GENERATING_DATA).
+   * You can connect to the #GtkPrintOperation::status-changed signal
+   * and call gtk_print_operation_get_n_pages_to_print() when
+   * print status is %GTK_PRINT_STATUS_GENERATING_DATA.
+   * This is typically used to track the progress of print operation.
+   *
+   * Since: 2.18
+   */
+  g_object_class_install_property (gobject_class,
+				   PROP_N_PAGES_TO_PRINT,
+				   g_param_spec_int ("n-pages-to-print",
+						     P_("Number of Pages To Print"),
+						     P_("The number of pages that will be printed."),
+						     -1,
+						     G_MAXINT,
+						     -1,
+						     GTK_PARAM_READABLE));
 }
 
 /**
@@ -2069,6 +2097,12 @@ increment_page_sequence (PrintPagesData *data)
   GtkPrintOperationPrivate *priv = data->op->priv;
   gint inc;
 
+  if (data->total == -1)
+    {
+      data->total = 0;
+      return;
+    }
+
   /* check whether we reached last position */
   if (priv->page_position == data->last_position &&
       !(data->collated_copies > 1 && data->collated < (data->collated_copies - 1)))
@@ -2202,7 +2236,7 @@ update_progress (PrintPagesData *data)
 	    text = g_strdup (_("Preparing"));
 	}
       else if (priv->status == GTK_PRINT_STATUS_GENERATING_DATA)
-	text = g_strdup_printf (_("Printing %d"), data->total - 1);
+	text = g_strdup_printf (_("Printing %d"), data->total);
       
       if (text)
 	{
@@ -2632,7 +2666,7 @@ prepare_data (PrintPagesData *data)
         counter++;
       }
 
-  data->total = 0;
+  data->total = -1;
   data->collated = 0;
   data->uncollated = 0;
 
@@ -2730,11 +2764,10 @@ print_pages_idle (gpointer user_data)
           goto out;
         }
 
+      increment_page_sequence (data);
+
       if (!data->done)
-        {
-	  common_render_page (data->op, data->page);
-	  increment_page_sequence (data);
-        }
+        common_render_page (data->op, data->page);
       else
         done = priv->page_drawing_state == GTK_PAGE_DRAWING_STATE_READY;
 
@@ -3187,6 +3220,32 @@ gtk_print_operation_get_has_selection (GtkPrintOperation *op)
   g_return_val_if_fail (GTK_IS_PRINT_OPERATION (op), FALSE);
 
   return op->priv->has_selection;
+}
+
+/**
+ * gtk_print_operation_get_n_pages_to_print:
+ * @op: a #GtkPrintOperation
+ *
+ * Returns the number of pages that will be printed.
+ *
+ * Note that this value is set during print preparation phase
+ * (%GTK_PRINT_STATUS_PREPARING), so this function should never be
+ * called before the data generation phase (%GTK_PRINT_STATUS_GENERATING_DATA).
+ * You can connect to the #GtkPrintOperation::status-changed signal
+ * and call gtk_print_operation_get_n_pages_to_print() when
+ * print status is %GTK_PRINT_STATUS_GENERATING_DATA.
+ * This is typically used to track the progress of print operation.
+ *
+ * Returns: the number of pages that will be printed
+ *
+ * Since: 2.18
+ **/
+gint
+gtk_print_operation_get_n_pages_to_print (GtkPrintOperation *op)
+{
+  g_return_if_fail (GTK_IS_PRINT_OPERATION (op));
+
+  return op->priv->nr_of_pages_to_print;
 }
 
 #define __GTK_PRINT_OPERATION_C__

@@ -32,6 +32,7 @@
 #include "gdk.h"		/* For gdk_rectangle_union() */
 #include "gdkpixmap.h"
 #include "gdkdrawable.h"
+#include "gdkintl.h"
 #include "gdkscreen.h"
 #include "gdkmarshalers.h"
 #include "gdkalias.h"
@@ -126,6 +127,11 @@ enum {
   TO_EMBEDDER,
   FROM_EMBEDDER,
   LAST_SIGNAL
+};
+
+enum {
+  PROP_0,
+  PROP_CURSOR
 };
 
 struct _GdkWindowPaint
@@ -293,6 +299,16 @@ static void gdk_window_free_paint_stack (GdkWindow *window);
 static void gdk_window_init       (GdkWindowObject      *window);
 static void gdk_window_class_init (GdkWindowObjectClass *klass);
 static void gdk_window_finalize   (GObject              *object);
+
+static void gdk_window_set_property (GObject      *object,
+                                     guint         prop_id,
+                                     const GValue *value,
+                                     GParamSpec   *pspec);
+static void gdk_window_get_property (GObject      *object,
+                                     guint         prop_id,
+                                     GValue       *value,
+                                     GParamSpec   *pspec);
+
 static void gdk_window_clear_backing_region (GdkWindow *window,
 					     GdkRegion *region);
 static void gdk_window_redirect_free      (GdkWindowRedirect *redirect);
@@ -410,6 +426,8 @@ gdk_window_class_init (GdkWindowObjectClass *klass)
   parent_class = g_type_class_peek_parent (klass);
 
   object_class->finalize = gdk_window_finalize;
+  object_class->set_property = gdk_window_set_property;
+  object_class->get_property = gdk_window_get_property;
 
   drawable_class->create_gc = gdk_window_create_gc;
   drawable_class->draw_rectangle = gdk_window_draw_rectangle;
@@ -443,6 +461,14 @@ gdk_window_class_init (GdkWindowObjectClass *klass)
 
   quark_pointer_window = g_quark_from_static_string ("gtk-pointer-window");
 
+
+  /* Properties */
+  g_object_class_install_property (object_class,
+                                   PROP_CURSOR,
+                                   g_param_spec_pointer ("cursor",
+                                                         P_("Cursor"),
+                                                         P_("Cursor"),
+                                                         G_PARAM_READWRITE));
 
   /**
    * GdkWindow::pick-embedded-child:
@@ -566,6 +592,46 @@ gdk_window_finalize (GObject *object)
     gdk_cursor_unref (obj->cursor);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static void
+gdk_window_set_property (GObject      *object,
+                         guint         prop_id,
+                         const GValue *value,
+                         GParamSpec   *pspec)
+{
+  GdkWindow *window = (GdkWindow *)object;
+
+  switch (prop_id)
+    {
+    case PROP_CURSOR:
+      gdk_window_set_cursor (window, g_value_get_pointer (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+gdk_window_get_property (GObject    *object,
+                         guint       prop_id,
+                         GValue     *value,
+                         GParamSpec *pspec)
+{
+  GdkWindow *window = (GdkWindow *) object;
+
+  switch (prop_id)
+    {
+    case PROP_CURSOR:
+      g_value_set_pointer (value, gdk_window_get_cursor (window));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
 }
 
 static gboolean
@@ -4060,6 +4126,24 @@ gdk_window_clear (GdkWindow *window)
 			 width, height);
 }
 
+static gboolean
+clears_on_native (GdkWindowObject *private)
+{
+  GdkWindowObject *next;
+
+  next = private;
+  do
+    {
+      private = next;
+      if (gdk_window_has_impl (private))
+	return TRUE;
+      next = private->parent;
+    }
+  while (private->bg_pixmap == GDK_PARENT_RELATIVE_BG &&
+	 next && next->window_type != GDK_WINDOW_ROOT);
+  return FALSE;
+}
+
 static void
 gdk_window_clear_region_internal (GdkWindow *window,
 				  GdkRegion *region,
@@ -4075,7 +4159,7 @@ gdk_window_clear_region_internal (GdkWindow *window,
 	gdk_window_clear_backing_region_redirect (window, region);
 
       if (GDK_WINDOW_IMPL_GET_IFACE (private->impl)->clear_region &&
-	  gdk_window_has_impl (private))
+	  clears_on_native (private))
 	{
 	  GdkRegion *copy;
 	  copy = gdk_region_copy (region);
@@ -5069,7 +5153,8 @@ gdk_window_invalidate_maybe_recurse (GdkWindow       *window,
 
   if (private->input_only ||
       !private->viewable ||
-      gdk_region_empty (region))
+      gdk_region_empty (region) ||
+      private->window_type == GDK_WINDOW_ROOT)
     return;
 
   visible_region = gdk_drawable_get_visible_region (window);
@@ -5751,37 +5836,16 @@ gdk_window_raise_internal (GdkWindow *window)
     }
 }
 
-/* Showing a non-native parent may cause children to become visible,
-   we need to handle this by manually showing them then. To simplify
-   things we hide them all when they are not visible. */
-static void
-show_all_visible_impls (GdkWindowObject *private, gboolean already_mapped)
-{
-  GdkWindowObject *child;
-  GList *l;
-
-  for (l = private->children; l != NULL; l = l->next)
-    {
-      child = l->data;
-
-      /* For foreign windows, only show if if was
-	 explicitly hidden, otherwise we might cause
-	 suprising things to happen to the other client. */
-      if (GDK_WINDOW_IS_MAPPED (child) &&
-	  child->window_type != GDK_WINDOW_FOREIGN)
-	show_all_visible_impls (child, FALSE);
-    }
-
-  if (gdk_window_has_impl (private))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->show ((GdkWindow *)private, already_mapped);
-}
-
-static void
+/* Returns TRUE If the native window was mapped or unmapped */
+static gboolean
 set_viewable (GdkWindowObject *w,
 	      gboolean val)
 {
   GdkWindowObject *child;
   GList *l;
+
+  if (w->viewable == val)
+    return FALSE;
 
   w->viewable = val;
 
@@ -5796,9 +5860,48 @@ set_viewable (GdkWindowObject *w,
 	  child->window_type != GDK_WINDOW_FOREIGN)
 	set_viewable (child, val);
     }
+
+  if (gdk_window_has_impl (w)  &&
+      w->window_type != GDK_WINDOW_FOREIGN &&
+      w->parent != NULL &&
+      w->parent->window_type != GDK_WINDOW_ROOT)
+    {
+      /* For most native windows we show/hide them not when they are
+       * mapped/unmapped, because that may not produce the correct results.
+       * For instance, if a native window have a non-native parent which is
+       * hidden, but its native parent is viewable then showing the window
+       * would make it viewable to X but its not viewable wrt the non-native
+       * hierarchy. In order to handle this we track the gdk side viewability
+       * and only map really viewable windows.
+       *
+       * There are two exceptions though:
+       *
+       * For foreign windows we don't want ever change the mapped state
+       * except when explicitly done via gdk_window_show/hide, as this may
+       * cause problems for client owning the foreign window when its window
+       * is suddenly mapped or unmapped.
+       *
+       * For toplevel windows embedded in a foreign window (e.g. a plug)
+       * we sometimes synthesize a map of a window, but the native
+       * window is really shown by the embedder, so we don't want to
+       * do the show ourselves. We can't really tell this case from the normal
+       * toplevel show as such toplevels are seen by gdk as parents of the
+       * root window, so we make an exception for all toplevels.
+       */
+
+      if (val)
+	GDK_WINDOW_IMPL_GET_IFACE (w->impl)->show ((GdkWindow *)w, FALSE);
+      else
+	GDK_WINDOW_IMPL_GET_IFACE (w->impl)->hide ((GdkWindow *)w);
+
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
-void
+/* Returns TRUE If the native window was mapped or unmapped */
+gboolean
 _gdk_window_update_viewable (GdkWindow *window)
 {
   GdkWindowObject *priv = (GdkWindowObject *)window;
@@ -5814,15 +5917,15 @@ _gdk_window_update_viewable (GdkWindow *window)
   else
     viewable = FALSE;
 
-  if (priv->viewable != viewable)
-    set_viewable (priv, viewable);
+  return set_viewable (priv, viewable);
 }
 
 static void
 gdk_window_show_internal (GdkWindow *window, gboolean raise)
 {
   GdkWindowObject *private;
-  gboolean was_mapped;
+  gboolean was_mapped, was_viewable;
+  gboolean did_show;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -5831,6 +5934,7 @@ gdk_window_show_internal (GdkWindow *window, gboolean raise)
     return;
 
   was_mapped = GDK_WINDOW_IS_MAPPED (window);
+  was_viewable = private->viewable;
 
   if (raise)
     /* Keep children in (reverse) stacking order */
@@ -5848,10 +5952,17 @@ gdk_window_show_internal (GdkWindow *window, gboolean raise)
       private->state = 0;
     }
 
-  _gdk_window_update_viewable (window);
+  did_show = _gdk_window_update_viewable (window);
 
-  if (gdk_window_is_viewable (window))
-    show_all_visible_impls (private, was_mapped);
+  /* If it was already viewable the backend show op won't be called, call it
+     again to ensure things happen right if the mapped tracking was not right
+     for e.g. a foreign window.
+     Dunno if this is strictly needed but its what happened pre-csw.
+     Also show if not done by gdk_window_update_viewable. */
+  if (gdk_window_has_impl (private) && (was_viewable || !did_show))
+    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->show ((GdkWindow *)private,
+						     !did_show ?
+						     was_mapped : TRUE);
 
   if (!was_mapped && !gdk_window_has_impl (private))
     {
@@ -5911,6 +6022,7 @@ void
 gdk_window_raise (GdkWindow *window)
 {
   GdkWindowObject *private;
+  GdkRegion *old_region, *new_region;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -5918,12 +6030,26 @@ gdk_window_raise (GdkWindow *window)
   if (private->destroyed)
     return;
 
+  old_region = NULL;
+  if (gdk_window_is_viewable (window) &&
+      !private->input_only)
+    old_region = gdk_region_copy (private->clip_region);
+
   /* Keep children in (reverse) stacking order */
   gdk_window_raise_internal (window);
 
   recompute_visible_regions (private, TRUE, FALSE);
 
-  gdk_window_invalidate_rect (window, NULL, TRUE);
+  if (old_region)
+    {
+      new_region = gdk_region_copy (private->clip_region);
+
+      gdk_region_subtract (new_region, old_region);
+      gdk_window_invalidate_region (window, new_region, TRUE);
+
+      gdk_region_destroy (old_region);
+      gdk_region_destroy (new_region);
+    }
 }
 
 static void
@@ -6064,33 +6190,6 @@ gdk_window_show (GdkWindow *window)
   gdk_window_show_internal (window, TRUE);
 }
 
-/* Hiding a non-native parent may cause parents to become non-visible,
-   even if their parent native window is visible. We need to handle this
-   by manually hiding them then. To simplify things we hide them all
-   when they are not visible. */
-static void
-hide_all_visible_impls (GdkWindowObject *private)
-{
-  GdkWindowObject *child;
-  GList *l;
-
-  for (l = private->children; l != NULL; l = l->next)
-    {
-      child = l->data;
-
-      /* For foreign windows, only hide if if was
-	 explicitly hidden, otherwise we might cause
-	 suprising things to happen to the other client. */
-      if (GDK_WINDOW_IS_MAPPED (child) &&
-	  child->window_type != GDK_WINDOW_FOREIGN)
-	hide_all_visible_impls (child);
-    }
-
-  if (gdk_window_has_impl (private))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->hide ((GdkWindow *)private);
-}
-
-
 /**
  * gdk_window_hide:
  * @window: a #GdkWindow
@@ -6104,7 +6203,7 @@ void
 gdk_window_hide (GdkWindow *window)
 {
   GdkWindowObject *private;
-  gboolean was_mapped, was_viewable;
+  gboolean was_mapped, did_hide;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -6113,7 +6212,6 @@ gdk_window_hide (GdkWindow *window)
     return;
 
   was_mapped = GDK_WINDOW_IS_MAPPED (private);
-  was_viewable = gdk_window_is_viewable (window);
 
   if (gdk_window_has_impl (private))
     {
@@ -6152,10 +6250,11 @@ gdk_window_hide (GdkWindow *window)
       private->state = GDK_WINDOW_STATE_WITHDRAWN;
     }
 
-  _gdk_window_update_viewable (window);
+  did_hide = _gdk_window_update_viewable (window);
 
-  if (was_viewable)
-    hide_all_visible_impls (private);
+  /* Hide foreign window as those are not handled by update_viewable. */
+  if (gdk_window_has_impl (private) && (!did_hide))
+    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->hide ((GdkWindow *)private);
 
   recompute_visible_regions (private, TRUE, FALSE);
 
@@ -6948,6 +7047,34 @@ gdk_window_set_back_pixmap (GdkWindow *window,
 }
 
 /**
+ * gdk_window_get_cursor:
+ * @window: a #GdkWindow
+ * @cursor: a cursor
+ *
+ * Retrieves a #GdkCursor pointer for the cursor currently set on the
+ * specified #GdkWindow, or %NULL.  If the return value is %NULL then
+ * there is no custom cursor set on the specified window, and it is
+ * using the cursor for its parent window.
+ *
+ * Return value: a #GdkCursor, or %NULL. The returned object is owned
+ *   by the #GdkWindow and should not be unreferenced directly. Use
+ *   gdk_window_set_cursor() to unset the cursor of the window
+ *
+ * Since: 2.18
+ */
+GdkCursor *
+gdk_window_get_cursor (GdkWindow *window)
+{
+  GdkWindowObject *private;
+
+  g_return_val_if_fail (GDK_IS_WINDOW (window), NULL);
+
+  private = (GdkWindowObject *) window;
+
+  return private->cursor;
+}
+
+/**
  * gdk_window_set_cursor:
  * @window: a #GdkWindow
  * @cursor: a cursor
@@ -6981,8 +7108,13 @@ gdk_window_set_cursor (GdkWindow *window,
       if (cursor)
 	private->cursor = gdk_cursor_ref (cursor);
 
-      if (_gdk_window_event_parent_of (window, display->pointer_info.window_under_pointer))
+      if (private->window_type == GDK_WINDOW_ROOT ||
+          private->window_type == GDK_WINDOW_FOREIGN)
+        GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_cursor (window, cursor);
+      else if (_gdk_window_event_parent_of (window, display->pointer_info.window_under_pointer))
 	update_cursor (display);
+
+      g_object_notify (G_OBJECT (window), "cursor");
     }
 }
 

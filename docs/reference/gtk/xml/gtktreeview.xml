@@ -1257,7 +1257,11 @@ it. Additionally, if <parameter>focus_column</parameter> is specified, and <para
 <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>, then editing should be started in the specified cell.  
 This function is often followed by <parameter>gtk_widget_grab_focus</parameter> (<parameter>tree_view</parameter>) 
 in order to give keyboard focus to the widget.  Please note that editing 
-can only happen when the widget is realized.</para>
+can only happen when the widget is realized.
+</para>
+<para>
+If <parameter>path</parameter> is invalid for <parameter>model</parameter>, the current cursor (if any) will be unset
+and the function will return without failing.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>tree_view</parameter>&#160;:</term>
@@ -1291,7 +1295,11 @@ specified, and <parameter>start_editing</parameter> is <link linkend="TRUE--CAPS
 the specified cell.  This function is often followed by
 <parameter>gtk_widget_grab_focus</parameter> (<parameter>tree_view</parameter>) in order to give keyboard focus to the
 widget.  Please note that editing can only happen when the widget is
-realized.</para>
+realized.
+</para>
+<para>
+If <parameter>path</parameter> is invalid for <parameter>model</parameter>, the current cursor (if any) will be unset
+and the function will return without failing.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>tree_view</parameter>&#160;:</term>
@@ -1529,7 +1537,8 @@ with the <link linkend="GtkTreePath"><type>GtkTreePath</type></link> at that poi
 with the column at that point.  <parameter>cell_x</parameter> and <parameter>cell_y</parameter> return the coordinates
 relative to the cell background (i.e. the <parameter>background_area</parameter> passed to
 <link linkend="gtk-cell-renderer-render"><function>gtk_cell_renderer_render()</function></link>).  This function is only meaningful if
-<parameter>tree_view</parameter> is realized.
+<parameter>tree_view</parameter> is realized.  Therefore this function will always return <link linkend="FALSE--CAPS"><literal>FALSE</literal></link>
+if <parameter>tree_view</parameter> is not realized or does not have a model.
 </para>
 <para>
 For converting widget coordinates (eg. the ones you get from
@@ -2051,7 +2060,9 @@ Gets information about the row that is highlighted for feedback.</para>
                                                          <link linkend="GtkTreeViewDropPosition">GtkTreeViewDropPosition</link> *pos);</programlisting>
 <para>
 Determines the destination row for a given position.  <parameter>drag_x</parameter> and
-<parameter>drag_y</parameter> are expected to be in widget coordinates.</para>
+<parameter>drag_y</parameter> are expected to be in widget coordinates.  This function is only
+meaningful if <parameter>tree_view</parameter> is realized.  Therefore this function will always
+return <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> if <parameter>tree_view</parameter> is not realized or does not have a model.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>tree_view</parameter>&#160;:</term>
@@ -2069,7 +2080,8 @@ Determines the destination row for a given position.  <parameter>drag_x</paramet
 <varlistentry><term><parameter>pos</parameter>&#160;:</term>
 <listitem><simpara> Return location for the drop position, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether there is a row at the given position.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> whether there is a row at the given position, <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if this
+is indeed the case.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="gtk-tree-view-create-row-drag-icon" role="function">

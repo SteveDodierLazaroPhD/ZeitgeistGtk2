@@ -395,7 +395,7 @@ GTESTER_REPORT = gtester-report		# in $PATH for non-GLIB packages
 # initialize variables for unconditional += appending
 EXTRA_DIST = 
 
-TEST_PROGS = testing liststore treestore treeview-scrolling recentmanager floating object builder $(am__append_1) textbuffer
+TEST_PROGS = testing liststore treestore treeview treeview-scrolling recentmanager floating object builder $(am__append_1) textbuffer
 
 ### testing rules
 
@@ -450,6 +450,8 @@ liststore_SOURCES = liststore.c
 liststore_LDADD = $(progs_ldadd)
 treestore_SOURCES = treestore.c
 treestore_LDADD = $(progs_ldadd)
+treeview_SOURCES = treeview.c
+treeview_LDADD = $(progs_ldadd)
 treeview_scrolling_SOURCES = treeview-scrolling.c
 treeview_scrolling_LDADD = $(progs_ldadd)
 recentmanager_SOURCES = recentmanager.c
@@ -484,12 +486,14 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 @OS_UNIX_TRUE@noinst_PROGRAMS = testing$(EXEEXT) liststore$(EXEEXT) \
-@OS_UNIX_TRUE@	treestore$(EXEEXT) treeview-scrolling$(EXEEXT) \
+@OS_UNIX_TRUE@	treestore$(EXEEXT) treeview$(EXEEXT) \
+@OS_UNIX_TRUE@	treeview-scrolling$(EXEEXT) \
 @OS_UNIX_TRUE@	recentmanager$(EXEEXT) floating$(EXEEXT) \
 @OS_UNIX_TRUE@	object$(EXEEXT) builder$(EXEEXT) \
 @OS_UNIX_TRUE@	defaultvalue$(EXEEXT) textbuffer$(EXEEXT)
 @OS_UNIX_FALSE@noinst_PROGRAMS = testing$(EXEEXT) liststore$(EXEEXT) \
-@OS_UNIX_FALSE@	treestore$(EXEEXT) treeview-scrolling$(EXEEXT) \
+@OS_UNIX_FALSE@	treestore$(EXEEXT) treeview$(EXEEXT) \
+@OS_UNIX_FALSE@	treeview-scrolling$(EXEEXT) \
 @OS_UNIX_FALSE@	recentmanager$(EXEEXT) floating$(EXEEXT) \
 @OS_UNIX_FALSE@	object$(EXEEXT) builder$(EXEEXT) \
 @OS_UNIX_FALSE@	textbuffer$(EXEEXT)
@@ -557,6 +561,13 @@ treestore_DEPENDENCIES = \
 	$(top_builddir)/gdk/$(gdktargetlib) \
 	$(top_builddir)/gtk/$(gtktargetlib)
 treestore_LDFLAGS =
+am_treeview_OBJECTS = treeview.$(OBJEXT)
+treeview_OBJECTS = $(am_treeview_OBJECTS)
+treeview_DEPENDENCIES = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(top_builddir)/gdk/$(gdktargetlib) \
+	$(top_builddir)/gtk/$(gtktargetlib)
+treeview_LDFLAGS =
 am_treeview_scrolling_OBJECTS = treeview-scrolling.$(OBJEXT)
 treeview_scrolling_OBJECTS = $(am_treeview_scrolling_OBJECTS)
 treeview_scrolling_DEPENDENCIES = \
@@ -574,7 +585,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/pixbuf-init.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/recentmanager.Po ./$(DEPDIR)/testing.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/textbuffer.Po ./$(DEPDIR)/treestore.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/treeview-scrolling.Po
+@AMDEP_TRUE@	./$(DEPDIR)/treeview-scrolling.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/treeview.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -585,11 +597,11 @@ LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 DIST_SOURCES = $(builder_SOURCES) $(defaultvalue_SOURCES) \
 	$(floating_SOURCES) $(liststore_SOURCES) $(object_SOURCES) \
 	$(recentmanager_SOURCES) $(testing_SOURCES) \
-	$(textbuffer_SOURCES) $(treestore_SOURCES) \
+	$(textbuffer_SOURCES) $(treestore_SOURCES) $(treeview_SOURCES) \
 	$(treeview_scrolling_SOURCES)
 DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl \
 	Makefile.am
-SOURCES = $(builder_SOURCES) $(defaultvalue_SOURCES) $(floating_SOURCES) $(liststore_SOURCES) $(object_SOURCES) $(recentmanager_SOURCES) $(testing_SOURCES) $(textbuffer_SOURCES) $(treestore_SOURCES) $(treeview_scrolling_SOURCES)
+SOURCES = $(builder_SOURCES) $(defaultvalue_SOURCES) $(floating_SOURCES) $(liststore_SOURCES) $(object_SOURCES) $(recentmanager_SOURCES) $(testing_SOURCES) $(textbuffer_SOURCES) $(treestore_SOURCES) $(treeview_SOURCES) $(treeview_scrolling_SOURCES)
 
 all: all-am
 
@@ -634,6 +646,9 @@ textbuffer$(EXEEXT): $(textbuffer_OBJECTS) $(textbuffer_DEPENDENCIES)
 treestore$(EXEEXT): $(treestore_OBJECTS) $(treestore_DEPENDENCIES) 
 	@rm -f treestore$(EXEEXT)
 	$(LINK) $(treestore_LDFLAGS) $(treestore_OBJECTS) $(treestore_LDADD) $(LIBS)
+treeview$(EXEEXT): $(treeview_OBJECTS) $(treeview_DEPENDENCIES) 
+	@rm -f treeview$(EXEEXT)
+	$(LINK) $(treeview_LDFLAGS) $(treeview_OBJECTS) $(treeview_LDADD) $(LIBS)
 treeview-scrolling$(EXEEXT): $(treeview_scrolling_OBJECTS) $(treeview_scrolling_DEPENDENCIES) 
 	@rm -f treeview-scrolling$(EXEEXT)
 	$(LINK) $(treeview_scrolling_LDFLAGS) $(treeview_scrolling_OBJECTS) $(treeview_scrolling_LDADD) $(LIBS)
@@ -655,6 +670,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/textbuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/treestore.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/treeview-scrolling.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/treeview.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \

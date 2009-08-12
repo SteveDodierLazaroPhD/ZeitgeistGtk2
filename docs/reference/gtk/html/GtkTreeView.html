@@ -49,6 +49,7 @@
 <link rel="chapter" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
 <link rel="chapter" href="gtk-migrating-tooltips.html" title="Migrating from GtkTooltips to GtkTooltip">
 <link rel="chapter" href="gtk-migrating-entry-icons.html" title="Migrating from SexyIconEntry to GtkEntry">
+<link rel="chapter" href="gtk-migrating-label-links.html" title="Migrating from SexyUrlLabel to GtkLabel">
 <link rel="part" href="pt05.html" title="Part V. GTK+ Tools">
 <link rel="glossary" href="glossary.html" title="Glossary">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -842,7 +843,7 @@ The GtkTreeView implementation of the GtkBuildable interface accepts
 GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
 </p>
 <div class="example">
-<a name="id772745"></a><p class="title"><b>Example 22. A UI definition fragment with GtkTreeView</b></p>
+<a name="id832942"></a><p class="title"><b>Example 22. A UI definition fragment with GtkTreeView</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkTreeView" id="treeview"&gt;
   &lt;property name="model"&gt;liststore1&lt;/property&gt;
@@ -2264,7 +2265,11 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRU
 ><code class="literal">TRUE</code></a>, then editing should be started in the specified cell.  
 This function is often followed by <em class="parameter"><code>gtk_widget_grab_focus</code></em> (<em class="parameter"><code>tree_view</code></em>) 
 in order to give keyboard focus to the widget.  Please note that editing 
-can only happen when the widget is realized.</p>
+can only happen when the widget is realized.
+</p>
+<p>
+If <em class="parameter"><code>path</code></em> is invalid for <em class="parameter"><code>model</code></em>, the current cursor (if any) will be unset
+and the function will return without failing.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2324,7 +2329,11 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRU
 the specified cell.  This function is often followed by
 <em class="parameter"><code>gtk_widget_grab_focus</code></em> (<em class="parameter"><code>tree_view</code></em>) in order to give keyboard focus to the
 widget.  Please note that editing can only happen when the widget is
-realized.</p>
+realized.
+</p>
+<p>
+If <em class="parameter"><code>path</code></em> is invalid for <em class="parameter"><code>model</code></em>, the current cursor (if any) will be unset
+and the function will return without failing.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2756,7 +2765,10 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NUL
 with the column at that point.  <em class="parameter"><code>cell_x</code></em> and <em class="parameter"><code>cell_y</code></em> return the coordinates
 relative to the cell background (i.e. the <em class="parameter"><code>background_area</code></em> passed to
 <a class="link" href="GtkCellRenderer.html#gtk-cell-renderer-render" title="gtk_cell_renderer_render ()"><code class="function">gtk_cell_renderer_render()</code></a>).  This function is only meaningful if
-<em class="parameter"><code>tree_view</code></em> is realized.
+<em class="parameter"><code>tree_view</code></em> is realized.  Therefore this function will always return <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>
+if <em class="parameter"><code>tree_view</code></em> is not realized or does not have a model.
 </p>
 <p>
 For converting widget coordinates (eg. the ones you get from
@@ -3712,7 +3724,11 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
                                                          <a class="link" href="GtkTreeView.html#GtkTreeViewDropPosition" title="enum GtkTreeViewDropPosition">GtkTreeViewDropPosition</a> *pos);</pre>
 <p>
 Determines the destination row for a given position.  <em class="parameter"><code>drag_x</code></em> and
-<em class="parameter"><code>drag_y</code></em> are expected to be in widget coordinates.</p>
+<em class="parameter"><code>drag_y</code></em> are expected to be in widget coordinates.  This function is only
+meaningful if <em class="parameter"><code>tree_view</code></em> is realized.  Therefore this function will always
+return <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a> if <em class="parameter"><code>tree_view</code></em> is not realized or does not have a model.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -3749,7 +3765,10 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NUL
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> whether there is a row at the given position.
+<td> whether there is a row at the given position, <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if this
+is indeed the case.
 </td>
 </tr>
 </tbody>

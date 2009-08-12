@@ -115,6 +115,18 @@ static void gdk_win32_draw_image     (GdkDrawable     *drawable,
 				      gint             ydest,
 				      gint             width,
 				      gint             height);
+static void gdk_win32_draw_pixbuf     (GdkDrawable     *drawable,
+				      GdkGC           *gc,
+				      GdkPixbuf       *pixbuf,
+				      gint             src_x,
+				      gint             src_y,
+				      gint             dest_x,
+				      gint             dest_y,
+				      gint             width,
+				      gint             height,
+				      GdkRgbDither     dither,
+				      gint             x_dither,
+				      gint             y_dither);
 
 static cairo_surface_t *gdk_win32_ref_cairo_surface (GdkDrawable *drawable);
      
@@ -129,48 +141,18 @@ static GdkScreen *  gdk_win32_get_screen     (GdkDrawable    *drawable);
 
 static GdkVisual*   gdk_win32_get_visual     (GdkDrawable    *drawable);
 
-static void gdk_drawable_impl_win32_class_init (GdkDrawableImplWin32Class *klass);
-
 static void gdk_drawable_impl_win32_finalize   (GObject *object);
 
-static gpointer parent_class = NULL;
 static const cairo_user_data_key_t gdk_win32_cairo_key;
 
-GType
-gdk_drawable_impl_win32_get_type (void)
-{
-  static GType object_type = 0;
+G_DEFINE_TYPE (GdkDrawableImplWin32,  _gdk_drawable_impl_win32, GDK_TYPE_DRAWABLE)
 
-  if (!object_type)
-    {
-      static const GTypeInfo object_info =
-      {
-        sizeof (GdkDrawableImplWin32Class),
-        (GBaseInitFunc) NULL,
-        (GBaseFinalizeFunc) NULL,
-        (GClassInitFunc) gdk_drawable_impl_win32_class_init,
-        NULL,           /* class_finalize */
-        NULL,           /* class_data */
-        sizeof (GdkDrawableImplWin32),
-        0,              /* n_preallocs */
-        (GInstanceInitFunc) NULL,
-      };
-      
-      object_type = g_type_register_static (GDK_TYPE_DRAWABLE,
-                                            "GdkDrawableImplWin32",
-                                            &object_info, 0);
-    }
-  
-  return object_type;
-}
 
 static void
-gdk_drawable_impl_win32_class_init (GdkDrawableImplWin32Class *klass)
+_gdk_drawable_impl_win32_class_init (GdkDrawableImplWin32Class *klass)
 {
   GdkDrawableClass *drawable_class = GDK_DRAWABLE_CLASS (klass);
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  parent_class = g_type_class_peek_parent (klass);
 
   object_class->finalize = gdk_drawable_impl_win32_finalize;
 
@@ -185,6 +167,7 @@ gdk_drawable_impl_win32_class_init (GdkDrawableImplWin32Class *klass)
   drawable_class->draw_segments = gdk_win32_draw_segments;
   drawable_class->draw_lines = gdk_win32_draw_lines;
   drawable_class->draw_image = gdk_win32_draw_image;
+  drawable_class->draw_pixbuf = gdk_win32_draw_pixbuf;
   
   drawable_class->ref_cairo_surface = gdk_win32_ref_cairo_surface;
   
@@ -199,11 +182,16 @@ gdk_drawable_impl_win32_class_init (GdkDrawableImplWin32Class *klass)
 }
 
 static void
+_gdk_drawable_impl_win32_init (GdkDrawableImplWin32 *impl)
+{
+}
+
+static void
 gdk_drawable_impl_win32_finalize (GObject *object)
 {
   gdk_drawable_set_colormap (GDK_DRAWABLE (object), NULL);
 
-  G_OBJECT_CLASS (parent_class)->finalize (object);
+  G_OBJECT_CLASS (_gdk_drawable_impl_win32_parent_class)->finalize (object);
 }
 
 /*****************************************************
@@ -1782,6 +1770,27 @@ gdk_win32_draw_image (GdkDrawable     *drawable,
   _gdk_win32_blit (TRUE, (GdkDrawableImplWin32 *) drawable,
 		   gc, (GdkPixmap *) image->windowing_data,
 		   xsrc, ysrc, xdest, ydest, width, height);
+}
+
+static void
+gdk_win32_draw_pixbuf (GdkDrawable     *drawable,
+			GdkGC           *gc,
+			GdkPixbuf       *pixbuf,
+			gint             src_x,
+			gint             src_y,
+			gint             dest_x,
+			gint             dest_y,
+			gint             width,
+			gint             height,
+			GdkRgbDither     dither,
+			gint             x_dither,
+			gint             y_dither)
+{
+  GdkDrawable *wrapper = GDK_DRAWABLE_IMPL_WIN32 (drawable)->wrapper;
+  GDK_DRAWABLE_CLASS (_gdk_drawable_impl_win32_parent_class)->draw_pixbuf (wrapper, gc, pixbuf,
+									     src_x, src_y, dest_x, dest_y,
+									     width, height,
+									     dither, x_dither, y_dither);
 }
 
 /**

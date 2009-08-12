@@ -5472,6 +5472,27 @@ gtk_widget_grab_default (GtkWidget *widget)
 }
 
 /**
+ * gtk_widget_has_grab:
+ * @widget: a #GtkWidget
+ *
+ * Determines whether the widget is currently grabbing events, so it
+ * is the only widget receiving input events (keyboard and mouse).
+ *
+ * See also gtk_grab_add().
+ *
+ * Return value: %TRUE if the widget is in the grab_widgets stack
+ *
+ * Since: 2.18
+ **/
+gboolean
+gtk_widget_has_grab (GtkWidget *widget)
+{
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+
+  return (GTK_WIDGET_FLAGS (widget) & GTK_HAS_GRAB) != 0;
+}
+
+/**
  * gtk_widget_set_name:
  * @widget: a #GtkWidget
  * @name: name for the widget
@@ -5575,6 +5596,58 @@ gtk_widget_get_state (GtkWidget *widget)
   g_return_val_if_fail (GTK_IS_WIDGET (widget), GTK_STATE_NORMAL);
 
   return widget->state;
+}
+
+/**
+ * gtk_widget_set_visible:
+ * @widget: a #GtkWidget
+ * @visible: whether the widget should be shown or not
+ *
+ * Sets the visibility state of @widget. Note that setting this to
+ * %TRUE doesn't mean the widget is actually viewable, see
+ * gtk_widget_get_visible().
+ *
+ * This function simply calls gtk_widget_show() or gtk_widget_hide()
+ * but is nicer to use when the visibility of the widget depends on
+ * some condition.
+ *
+ * Since: 2.18
+ **/
+void
+gtk_widget_set_visible (GtkWidget *widget,
+                        gboolean   visible)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+
+  if (visible != GTK_WIDGET_VISIBLE (widget))
+    {
+      if (visible)
+        gtk_widget_show (widget);
+      else
+        gtk_widget_hide (widget);
+    }
+}
+
+/**
+ * gtk_widget_get_visible:
+ * @widget: a #GtkWidget
+ *
+ * Determines whether the widget is visible. Note that this doesn't
+ * take into account whether the widget's parent is also visible
+ * or the widget is obscured in any way.
+ *
+ * See gtk_widget_set_visible().
+ *
+ * Return value: %TRUE if the widget is visible
+ *
+ * Since: 2.18
+ **/
+gboolean
+gtk_widget_get_visible (GtkWidget *widget)
+{
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+
+  return (GTK_WIDGET_FLAGS (widget) & GTK_VISIBLE) != 0;
 }
 
 /**
@@ -10674,6 +10747,25 @@ gtk_widget_get_has_tooltip (GtkWidget *widget)
   g_object_get (G_OBJECT (widget), "has-tooltip", &has_tooltip, NULL);
 
   return has_tooltip;
+}
+
+/**
+ * gtk_widget_get_allocation:
+ * @widget: a #GtkWidget
+ * @allocation: a pointer to a #GtkAllocation to copy to
+ *
+ * Retrieves the widget's allocation.
+ *
+ * Since: 2.18
+ */
+void
+gtk_widget_get_allocation (GtkWidget     *widget,
+                           GtkAllocation *allocation)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+  g_return_if_fail (allocation != NULL);
+
+  *allocation = widget->allocation;
 }
 
 /**
