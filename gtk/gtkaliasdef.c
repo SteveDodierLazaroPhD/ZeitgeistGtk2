@@ -12126,6 +12126,9 @@ extern __typeof (gtk_widget_send_expose) gtk_widget_send_expose __attribute((ali
 #undef gtk_widget_set_accel_path 
 extern __typeof (gtk_widget_set_accel_path) gtk_widget_set_accel_path __attribute((alias("IA__gtk_widget_set_accel_path"), visibility("default")));
 
+#undef gtk_widget_set_allocation 
+extern __typeof (gtk_widget_set_allocation) gtk_widget_set_allocation __attribute((alias("IA__gtk_widget_set_allocation"), visibility("default")));
+
 #undef gtk_widget_set_app_paintable 
 extern __typeof (gtk_widget_set_app_paintable) gtk_widget_set_app_paintable __attribute((alias("IA__gtk_widget_set_app_paintable"), visibility("default")));
 

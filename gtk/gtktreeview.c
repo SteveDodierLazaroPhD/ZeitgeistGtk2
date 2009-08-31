@@ -5988,15 +5988,23 @@ validate_visible_area (GtkTreeView *tree_view)
   while (area_above > 0)
     {
       _gtk_rbtree_prev_full (tree, node, &tree, &node);
-      if (! gtk_tree_path_prev (above_path) && node != NULL)
-	{
-	  gtk_tree_path_free (above_path);
-	  above_path = _gtk_tree_view_find_path (tree_view, tree, node);
-	}
-      gtk_tree_model_get_iter (tree_view->priv->model, &iter, above_path);
+
+      /* Always find the new path in the tree.  We cannot just assume
+       * a gtk_tree_path_prev() is enough here, as there might be children
+       * in between this node and the previous sibling node.  If this
+       * appears to be a performance hotspot in profiles, we can look into
+       * intrigate logic for keeping path, node and iter in sync like
+       * we do for forward walks.  (Which will be hard because of the lacking
+       * iter_prev).
+       */
 
       if (node == NULL)
 	break;
+
+      gtk_tree_path_free (above_path);
+      above_path = _gtk_tree_view_find_path (tree_view, tree, node);
+
+      gtk_tree_model_get_iter (tree_view->priv->model, &iter, above_path);
 
       if (GTK_RBNODE_FLAG_SET (node, GTK_RBNODE_INVALID) ||
 	  GTK_RBNODE_FLAG_SET (node, GTK_RBNODE_COLUMN_INVALID))
@@ -9737,6 +9745,8 @@ gtk_tree_view_move_cursor_page_up_down (GtkTreeView *tree_view,
   if (!gtk_tree_path_compare (old_cursor_path, cursor_path))
     gtk_widget_error_bell (GTK_WIDGET (tree_view));
 
+  gtk_widget_grab_focus (GTK_WIDGET (tree_view));
+
 cleanup:
   gtk_tree_path_free (old_cursor_path);
   gtk_tree_path_free (cursor_path);
@@ -9831,6 +9841,7 @@ gtk_tree_view_move_cursor_left_right (GtkTreeView *tree_view,
 				        cursor_node,
 				        NULL);
       g_signal_emit (tree_view, tree_view_signals[CURSOR_CHANGED], 0);
+      gtk_widget_grab_focus (GTK_WIDGET (tree_view));
     }
   else
     {
@@ -9896,6 +9907,7 @@ gtk_tree_view_move_cursor_start_end (GtkTreeView *tree_view,
   if (gtk_tree_path_compare (old_path, path))
     {
       gtk_tree_view_real_set_cursor (tree_view, path, TRUE, TRUE);
+      gtk_widget_grab_focus (GTK_WIDGET (tree_view));
     }
   else
     {

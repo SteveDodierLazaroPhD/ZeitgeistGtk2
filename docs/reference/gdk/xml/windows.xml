@@ -215,6 +215,7 @@ typedef             <link linkend="GdkXEvent">GdkXEvent</link>;
 #define             <link linkend="GDK-PARENT-RELATIVE--CAPS">GDK_PARENT_RELATIVE</link>
 <link linkend="void">void</link>                <link linkend="gdk-window-set-cursor">gdk_window_set_cursor</link>               (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkCursor">GdkCursor</link> *cursor);
+<link linkend="GdkCursor">GdkCursor</link> *         <link linkend="gdk-window-get-cursor">gdk_window_get_cursor</link>               (<link linkend="GdkWindow">GdkWindow</link> *window);
 #define             <link linkend="gdk-window-set-colormap">gdk_window_set_colormap</link>
 <link linkend="void">void</link>                <link linkend="gdk-window-get-user-data">gdk_window_get_user_data</link>            (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="gpointer">gpointer</link> *data);
@@ -3112,6 +3113,25 @@ parent window. Most windows should use this default.</para>
 <listitem><simpara> a cursor
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gdk-window-get-cursor" role="function" condition="since:2.18">
+<title>gdk_window_get_cursor ()</title>
+<indexterm zone="gdk-window-get-cursor" role="2.18"><primary sortas="window_get_cursor">gdk_window_get_cursor</primary></indexterm><programlisting><link linkend="GdkCursor">GdkCursor</link> *         gdk_window_get_cursor               (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Retrieves a <link linkend="GdkCursor"><type>GdkCursor</type></link> pointer for the cursor currently set on the
+specified <link linkend="GdkWindow"><type>GdkWindow</type></link>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>.  If the return value is <link linkend="NULL--CAPS"><literal>NULL</literal></link> then
+there is no custom cursor set on the specified window, and it is
+using the cursor for its parent window.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> a <link linkend="GdkCursor"><type>GdkCursor</type></link>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>. The returned object is owned
+  by the <link linkend="GdkWindow"><type>GdkWindow</type></link> and should not be unreferenced directly. Use
+  <link linkend="gdk-window-set-cursor"><function>gdk_window_set_cursor()</function></link> to unset the cursor of the window
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gdk-window-set-colormap" role="macro" condition="deprecated:">
 <title>gdk_window_set_colormap</title>
 <indexterm zone="gdk-window-set-colormap" role="deprecated"><primary sortas="window_set_colormap">gdk_window_set_colormap</primary></indexterm><programlisting>#define gdk_window_set_colormap        gdk_drawable_set_colormap

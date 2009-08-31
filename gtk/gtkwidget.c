@@ -5425,17 +5425,17 @@ gtk_widget_get_can_default (GtkWidget *widget)
 }
 
 /**
- * gtk_widget_get_has_default:
+ * gtk_widget_has_default:
  * @widget: a #GtkWidget
  *
  * Determines whether @widget is the current default widget within its
  * toplevel. See gtk_widget_set_can_default().
  *
  * Return value: %TRUE if @widget is the current default widget within
- * its toplevel, %FALSE otherwise
+ *     its toplevel, %FALSE otherwise
  *
  * Since: 2.18
- **/
+ */
 gboolean
 gtk_widget_has_default (GtkWidget *widget)
 {
@@ -5586,10 +5586,12 @@ gtk_widget_set_state (GtkWidget           *widget,
  * gtk_widget_get_state:
  * @widget: a #GtkWidget
  *
- * Returns: the state of @widget. See gtk_widget_set_state().
+ * Returns the widget's state. See gtk_widget_set_state().
+ *
+ * Returns: the state of @widget.
  *
  * Since: 2.18
- **/
+ */
 GtkStateType
 gtk_widget_get_state (GtkWidget *widget)
 {
@@ -5913,13 +5915,16 @@ gtk_widget_set_sensitive (GtkWidget *widget,
  * gtk_widget_get_sensitive:
  * @widget: a #GtkWidget
  *
- * Returns: %TRUE if the widget is sensitive (in the sense of returning
- * the value that has been set using gtk_widget_set_sensitive()). The
- * effective sensitivity of a widget is however determined by both its
+ * Returns the widget's sensitivity (in the sense of returning
+ * the value that has been set using gtk_widget_set_sensitive()).
+ *
+ * The effective sensitivity of a widget is however determined by both its
  * own and its parent widget's sensitivity. See gtk_widget_is_sensitive().
  *
+ * Returns: %TRUE if the widget is sensitive
+ *
  * Since: 2.18
- **/
+ */
 gboolean
 gtk_widget_get_sensitive (GtkWidget *widget)
 {
@@ -5932,11 +5937,13 @@ gtk_widget_get_sensitive (GtkWidget *widget)
  * gtk_widget_is_sensitive:
  * @widget: a #GtkWidget
  *
- * Returns: %TRUE if the widget is effectively sensitive, which means
+ * Returns the widget's effective sensitivity, which means
  * it is sensitive itself and also its parent widget is sensntive
  *
+ * Returns: %TRUE if the widget is effectively sensitive
+ *
  * Since: 2.18
- **/
+ */
 gboolean
 gtk_widget_is_sensitive (GtkWidget *widget)
 {
@@ -10766,6 +10773,26 @@ gtk_widget_get_allocation (GtkWidget     *widget,
   g_return_if_fail (allocation != NULL);
 
   *allocation = widget->allocation;
+}
+
+/**
+ * gtk_widget_set_allocation:
+ * @widget: a #GtkWidget
+ * @allocation: a pointer to a #GtkAllocation to copy from
+ *
+ * Sets the widget's allocation.  This should not be used
+ * directly, but from within a widget's size_allocate method.
+ *
+ * Since: 2.18
+ */
+void
+gtk_widget_set_allocation (GtkWidget           *widget,
+                           const GtkAllocation *allocation)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+  g_return_if_fail (allocation != NULL);
+
+  widget->allocation = *allocation;
 }
 
 /**

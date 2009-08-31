@@ -12123,6 +12123,9 @@ extern __typeof (gtk_widget_send_expose) IA__gtk_widget_send_expose __attribute(
 extern __typeof (gtk_widget_set_accel_path) IA__gtk_widget_set_accel_path __attribute((visibility("hidden")));
 #define gtk_widget_set_accel_path IA__gtk_widget_set_accel_path
 
+extern __typeof (gtk_widget_set_allocation) IA__gtk_widget_set_allocation __attribute((visibility("hidden")));
+#define gtk_widget_set_allocation IA__gtk_widget_set_allocation
+
 extern __typeof (gtk_widget_set_app_paintable) IA__gtk_widget_set_app_paintable __attribute((visibility("hidden")));
 #define gtk_widget_set_app_paintable IA__gtk_widget_set_app_paintable
 

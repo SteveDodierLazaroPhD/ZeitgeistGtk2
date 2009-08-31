@@ -329,6 +329,7 @@ static void do_move_region_bits_on_impl (GdkWindowObject *private,
 static void gdk_window_invalidate_in_parent (GdkWindowObject *private);
 static void move_native_children (GdkWindowObject *private);
 static void update_cursor (GdkDisplay *display);
+static void gdk_window_region_move_free (GdkWindowRegionMove *move);
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -865,8 +866,14 @@ recompute_visible_regions_internal (GdkWindowObject *private,
 	    {
 	      gdk_region_intersect (new_clip, private->parent->clip_region);
 
-	      /* Remove all overlapping children from parent */
-	      remove_child_area (private->parent, private, FALSE, new_clip);
+	      /* Remove all overlapping children from parent.
+	       * Unless we're all native, because then we don't need to take
+	       * siblings into account since X does that clipping for us.
+	       * This makes things like SWT that modify the raw X stacking
+	       * order without GDKs knowledge work.
+	       */
+	      if (!_gdk_native_windows)
+		remove_child_area (private->parent, private, FALSE, new_clip);
 	    }
 
 	  /* Convert from parent coords to window coords */
@@ -1092,8 +1099,11 @@ find_native_sibling_above (GdkWindowObject *parent,
 static GdkEventMask
 get_native_event_mask (GdkWindowObject *private)
 {
-  if (private->window_type != GDK_WINDOW_ROOT &&
-      private->window_type != GDK_WINDOW_FOREIGN)
+  if (_gdk_native_windows ||
+      private->window_type == GDK_WINDOW_ROOT ||
+      private->window_type == GDK_WINDOW_FOREIGN)
+    return private->event_mask;
+  else
     {
       return
 	/* We need thse for all native window so we can emulate
@@ -1115,13 +1125,13 @@ get_native_event_mask (GdkWindowObject *private)
 	   GDK_BUTTON2_MOTION_MASK |
 	   GDK_BUTTON3_MOTION_MASK));
     }
-  else
-    return private->event_mask;
 }
 
 /* Puts the native window in the right order wrt the other native windows
-   in the hierarchy, given the position it has in the client side data.
-   This is useful if some operation changed the stacking order. */
+ * in the hierarchy, given the position it has in the client side data.
+ * This is useful if some operation changed the stacking order.
+ * This calls assumes the native window is now topmost in its native parent.
+ */
 static void
 sync_native_window_stack_position (GdkWindow *window)
 {
@@ -1185,6 +1195,13 @@ gdk_window_new (GdkWindow     *parent,
 
   if (GDK_WINDOW_DESTROYED (parent))
     return NULL;
+
+  if (attributes->window_type == GDK_WINDOW_OFFSCREEN &&
+      _gdk_native_windows)
+    {
+      g_warning ("Offscreen windows not supported with native-windows gdk");
+      return NULL;
+    }
 
   window = g_object_new (GDK_TYPE_WINDOW, NULL);
   private = (GdkWindowObject *) window;
@@ -1273,7 +1290,7 @@ gdk_window_new (GdkWindow     *parent,
       private->input_only = FALSE;
       private->depth = visual->depth;
 
-      private->bg_color.pixel = 0; // TODO: BlackPixel (xdisplay, screen_x11->screen_num);
+      private->bg_color.pixel = 0; /* TODO: BlackPixel (xdisplay, screen_x11->screen_num); */
       private->bg_color.red = private->bg_color.green = private->bg_color.blue = 0;
 
       private->bg_pixmap = NULL;
@@ -1287,7 +1304,7 @@ gdk_window_new (GdkWindow     *parent,
   if (private->parent)
     private->parent->children = g_list_prepend (private->parent->children, window);
 
-  native = FALSE; /* Default */
+  native = _gdk_native_windows; /* Default */
   if (private->parent->window_type == GDK_WINDOW_ROOT)
     native = TRUE; /* Always use native windows for toplevels */
   else if (!private->input_only &&
@@ -1312,7 +1329,8 @@ gdk_window_new (GdkWindow     *parent,
 
       /* This will put the native window topmost in the native parent, which may
        * be wrong wrt other native windows in the non-native hierarchy, so restack */
-      sync_native_window_stack_position (window);
+      if (!_gdk_window_has_impl (real_parent))
+	sync_native_window_stack_position (window);
     }
   else
     {
@@ -1431,7 +1449,7 @@ gdk_window_reparent (GdkWindow *window,
   GdkWindowObject *new_parent_private;
   GdkWindowObject *old_parent;
   GdkScreen *screen;
-  gboolean show, was_toplevel, was_mapped;
+  gboolean show, was_mapped;
   gboolean do_reparent_to_impl;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
@@ -1475,7 +1493,6 @@ gdk_window_reparent (GdkWindow *window,
       private->redirect = NULL;
     }
 
-  was_toplevel = private->parent == NULL;
   was_mapped = GDK_WINDOW_IS_MAPPED (window);
   show = FALSE;
 
@@ -1575,7 +1592,8 @@ gdk_window_reparent (GdkWindow *window,
       /* The reparent will have put the native window topmost in the native parent,
        * which may be wrong wrt other native windows in the non-native hierarchy,
        * so restack */
-      sync_native_window_stack_position (window);
+      if (!gdk_window_has_impl (new_parent_private))
+	sync_native_window_stack_position (window);
     }
 
   if (show)
@@ -1644,8 +1662,9 @@ gdk_window_ensure_native (GdkWindow *window)
   change_impl (private, private, new_impl);
 
   /* Native window creation will put the native window topmost in the
-   * native parent, which may be wrong wrt other native windows in the
-   * non-native hierarchy, so restack */
+   * native parent, which may be wrong wrt the position of the previous
+   * non-native window wrt to the other non-native children, so correct this.
+   */
   above = find_native_sibling_above (private->parent, private);
   if (above)
     {
@@ -1866,6 +1885,25 @@ _gdk_window_destroy_hierarchy (GdkWindow *window,
 	    {
 	      g_object_unref (display->pointer_info.toplevel_under_pointer);
 	      display->pointer_info.toplevel_under_pointer = NULL;
+	    }
+
+	  if (private->clip_region)
+	    {
+	      gdk_region_destroy (private->clip_region);
+	      private->clip_region = NULL;
+	    }
+
+	  if (private->clip_region_with_children)
+	    {
+	      gdk_region_destroy (private->clip_region_with_children);
+	      private->clip_region_with_children = NULL;
+	    }
+
+	  if (private->outstanding_moves)
+	    {
+	      g_list_foreach (private->outstanding_moves, (GFunc)gdk_window_region_move_free, NULL);
+	      g_list_free (private->outstanding_moves);
+	      private->outstanding_moves = NULL;
 	    }
 	}
       break;
@@ -2340,6 +2378,9 @@ gdk_window_begin_implicit_paint (GdkWindow *window, GdkRectangle *rect)
   GdkWindowPaint *paint;
 
   g_assert (gdk_window_has_impl (private));
+
+  if (_gdk_native_windows)
+    return FALSE; /* No need for implicit paints since we can't merge draws anyway */
 
   if (GDK_IS_PAINTABLE (private->impl))
     return FALSE; /* Implementation does double buffering */
@@ -2828,16 +2869,16 @@ do_move_region_bits_on_impl (GdkWindowObject *impl_window,
     }
   tmp_gc = _gdk_drawable_get_subwindow_scratch_gc ((GdkWindow *)private);
 
+  gdk_region_get_clipbox (dest_region, &copy_rect);
+  gdk_gc_set_clip_region (tmp_gc, dest_region);
+
   /* The region area is moved and we queue translations for all expose events
      to the source area that were sent prior to the copy */
-  gdk_region_offset (dest_region, -dx, -dy); /* Temporarily move to source area */
+  gdk_region_offset (dest_region, -dx, -dy); /* Move to source region */
   GDK_WINDOW_IMPL_GET_IFACE (private->impl)->queue_translation ((GdkWindow *)impl_window,
+								tmp_gc,
 								dest_region, dx, dy);
-  gdk_region_offset (dest_region, dx, dy); /* back to dest area */
 
-  gdk_region_get_clipbox (dest_region, &copy_rect);
-
-  gdk_gc_set_clip_region (tmp_gc, dest_region);
   gdk_draw_drawable (impl_window->impl,
 		     tmp_gc,
 		     private->impl,
@@ -2981,8 +3022,8 @@ append_move_region (GdkWindowObject *impl_window,
     }
 }
 
-/* Moves bits and update area by dx/dy in impl window,
-   takes ownership of region */
+/* Moves bits and update area by dx/dy in impl window.
+   Takes ownership of region to avoid copy (because we may change it) */
 static void
 move_region_on_impl (GdkWindowObject *private,
 		     GdkRegion *region, /* In impl window coords */
@@ -3008,7 +3049,10 @@ move_region_on_impl (GdkWindowObject *private,
       /* Convert from target to source */
       gdk_region_offset (update_area, -dx, -dy);
       gdk_region_intersect (update_area, impl_window->update_area);
-      gdk_region_subtract (impl_window->update_area, update_area);
+      /* We only copy the area, so keep the old update area invalid.
+	 It would be safe to remove it too, as code that uses
+	 move_region_on_impl generally also invalidate the source
+	 area. However, it would just use waste cycles. */
 
       /* Convert back */
       gdk_region_offset (update_area, dx, dy);
@@ -3240,8 +3284,8 @@ start_draw_helper (GdkDrawable *drawable,
 	 guarantee ordering. */
       gdk_window_flush ((GdkWindow *)drawable);
 
-      /* Don't clip when drawing to root */
-      if (private->window_type != GDK_WINDOW_ROOT)
+      /* Don't clip when drawing to root or all native */
+      if (!_gdk_native_windows && private->window_type != GDK_WINDOW_ROOT)
 	{
 	  if (_gdk_gc_get_subwindow (gc) == GDK_CLIP_BY_CHILDREN)
 	    clip = private->clip_region_with_children;
@@ -4728,17 +4772,21 @@ _gdk_window_process_updates_recurse (GdkWindow *window,
   GdkWindowObject *child;
   GdkRegion *child_region;
   GdkRectangle r;
-  GList *l;
+  GList *l, *children;
 
   if (gdk_region_empty (expose_region))
     return;
 
+  /* Make this reentrancy safe for expose handlers freeing windows */
+  children = g_list_copy (private->children);
+  g_list_foreach (children, (GFunc)g_object_ref, NULL);
+
   /* Iterate over children, starting at topmost */
-  for (l = private->children; l != NULL; l = l->next)
+  for (l = children; l != NULL; l = l->next)
     {
       child = l->data;
 
-      if (!GDK_WINDOW_IS_MAPPED (child) || child->input_only || child->composited)
+      if (child->destroyed || !GDK_WINDOW_IS_MAPPED (child) || child->input_only || child->composited)
 	continue;
 
       /* Ignore offscreen children, as they don't draw in their parent and
@@ -4776,7 +4824,11 @@ _gdk_window_process_updates_recurse (GdkWindow *window,
       gdk_region_destroy (child_region);
     }
 
-  if (!gdk_region_empty (expose_region))
+  g_list_foreach (children, (GFunc)g_object_unref, NULL);
+  g_list_free (children);
+
+  if (!gdk_region_empty (expose_region) &&
+      !private->destroyed)
     {
       if (private->event_mask & GDK_EXPOSURE_MASK)
 	{
@@ -4809,12 +4861,22 @@ _gdk_window_process_updates_recurse (GdkWindow *window,
     }
 }
 
+/* Process and remove any invalid area on the native window by creating
+ * expose events for the window and all non-native descendants.
+ * Also processes any outstanding moves on the window before doing
+ * any drawing. Note that its possible to have outstanding moves without
+ * any invalid area as we use the update idle mechanism to coalesce
+ * multiple moves as well as multiple invalidations.
+ */
 static void
 gdk_window_process_updates_internal (GdkWindow *window)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
   gboolean save_region = FALSE;
   GdkRectangle clip_box;
+
+  /* Ensure the window lives while updating it */
+  g_object_ref (window);
 
   /* If an update got queued during update processing, we can get a
    * window in the update queue that has an empty update_area.
@@ -4828,9 +4890,7 @@ gdk_window_process_updates_internal (GdkWindow *window)
       if (_gdk_event_func && gdk_window_is_viewable (window)  &&
 	  private->window_type != GDK_WINDOW_FOREIGN)
 	{
-	  GdkRectangle window_rect;
 	  GdkRegion *expose_region;
-	  GdkRegion *window_region;
 	  gboolean end_implicit;
 
 	  /* Clip to part visible in toplevel */
@@ -4843,24 +4903,12 @@ gdk_window_process_updates_internal (GdkWindow *window)
 	      g_usleep (70000);
 	    }
 
-	  save_region = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->queue_antiexpose (window, update_area);
-	  if (save_region)
-	    expose_region = gdk_region_copy (update_area);
-	  else
-	    expose_region = update_area;
-
-	  window_rect.x = 0;
-	  window_rect.y = 0;
-	  window_rect.width = private->width;
-	  window_rect.height = private->height;
-
-	  window_region = gdk_region_rectangle (&window_rect);
-	  gdk_region_intersect (expose_region,
-				window_region);
-	  gdk_region_destroy (window_region);
-
-
-	  /* No need to do any moves that will end up over the update area */
+	  /* At this point we will be completely redrawing all of update_area.
+	   * If we have any outstanding moves that end up moving stuff inside
+	   * this area we don't actually need to move that as that part would
+	   * be overdrawn by the expose anyway. So, in order to copy less data
+	   * we remove these areas from the outstanding moves.
+	   */
 	  if (private->outstanding_moves)
 	    {
 	      GdkWindowRegionMove *move;
@@ -4868,10 +4916,13 @@ gdk_window_process_updates_internal (GdkWindow *window)
 	      GList *l, *prev;
 
 	      remove = gdk_region_copy (update_area);
+	      /* We iterate backwards, starting from the state that would be
+		 if we had applied all the moves. */
 	      for (l = g_list_last (private->outstanding_moves); l != NULL; l = prev)
 		{
 		  prev = l->prev;
 		  move = l->data;
+
 		  /* Don't need this area */
 		  gdk_region_subtract (move->dest_region, remove);
 
@@ -4887,26 +4938,82 @@ gdk_window_process_updates_internal (GdkWindow *window)
 		      private->outstanding_moves =
 			g_list_delete_link (private->outstanding_moves, l);
 		    }
-		  else
+		  else /* move back */
 		    gdk_region_offset (move->dest_region, move->dx, move->dy);
 		}
 	      gdk_region_destroy (remove);
 	    }
 
-	  gdk_region_get_clipbox (expose_region, &clip_box);
+	  /* By now we a set of window moves that should be applied, and then
+	   * an update region that should be repainted. A trivial implementation
+	   * would just do that in order, however in order to get nicer drawing
+	   * we do some tricks:
+	   *
+	   * First of all, each subwindow expose may be double buffered by
+	   * itself (depending on widget setting) via
+	   * gdk_window_begin/end_paint(). But we also do an "implicit" paint,
+	   * creating a single pixmap the size of the invalid area on the
+	   * native window which all the individual normal paints will draw
+	   * into. This way in the normal case there will be only one pixmap
+	   * allocated and only once pixmap draw done for all the windows
+	   * in this native window.
+	   * There are a couple of reasons this may fail, for instance, some
+	   * backends (like quartz) do its own double buffering, so we disable
+	   * gdk double buffering there. Secondly, some subwindow could be
+	   * non-double buffered and draw directly to the window outside a
+	   * begin/end_paint pair. That will be lead to a gdk_window_flush
+	   * which immediately executes all outstanding moves and paints+removes
+	   * the implicit paint (further paints will allocate their own pixmap).
+	   *
+	   * Secondly, in the case of implicit double buffering we expose all
+	   * the child windows into the implicit pixmap before we execute
+	   * the outstanding moves. This way we minimize the time between
+	   * doing the moves and rendering the new update area, thus minimizing
+	   * flashing. Of course, if any subwindow is non-double buffered we
+	   * well flush earlier than that.
+	   *
+	   * Thirdly, after having done the outstanding moves we queue an
+	   * "antiexpose" on the area that will be drawn by the expose, which
+	   * means that any invalid region on the native window side before
+	   * the first expose drawing operation will be discarded, as it
+	   * has by then been overdrawn with valid data. This means we can
+	   * avoid doing the unnecessary repaint any outstanding expose events.
+	   */
+
+	  gdk_region_get_clipbox (update_area, &clip_box);
 	  end_implicit = gdk_window_begin_implicit_paint (window, &clip_box);
-	  if (end_implicit) /* rendering is not double buffered, do moves now */
-	      gdk_window_flush_outstanding_moves (window);
-	  _gdk_windowing_window_process_updates_recurse (window, expose_region);
-	  if (end_implicit)
+	  expose_region = gdk_region_copy (update_area);
+	  if (!end_implicit)
 	    {
-	      /* Do moves right before exposes are rendered */
+	      /* Rendering is not double buffered by gdk, do outstanding
+	       * moves and queue antiexposure immediately. No need to do
+	       * any tricks */
 	      gdk_window_flush_outstanding_moves (window);
-	      gdk_window_end_implicit_paint (window);
+	      save_region = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->queue_antiexpose (window, update_area);
 	    }
 
-	  if (expose_region != update_area)
-	    gdk_region_destroy (expose_region);
+	  /* Render the invalid areas to the implicit paint, by sending exposes.
+	   * May flush if non-double buffered widget draw. */
+	  _gdk_windowing_window_process_updates_recurse (window, expose_region);
+
+	  if (end_implicit)
+	    {
+	      /* Do moves right before exposes are rendered to the window */
+	      gdk_window_flush_outstanding_moves (window);
+
+	      /* By this time we know that any outstanding expose for this
+	       * area is invalid and we can avoid it, so queue an antiexpose.
+	       * However, it may be that due to an non-double buffered expose
+	       * we have already started drawing to the window, so it would
+	       * be to late to anti-expose now. Since this is merely an
+	       * optimization we just avoid doing it at all in that case.
+	       */
+	      if (private->implicit_paint != NULL) /* didn't flush implicit paint */
+		save_region = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->queue_antiexpose (window, update_area);
+
+	      gdk_window_end_implicit_paint (window);
+	    }
+	  gdk_region_destroy (expose_region);
 	}
       if (!save_region)
 	gdk_region_destroy (update_area);
@@ -4918,6 +5025,8 @@ gdk_window_process_updates_internal (GdkWindow *window)
 	 no actual invalid area */
       gdk_window_flush_outstanding_moves (window);
     }
+
+  g_object_unref (window);
 }
 
 static void
@@ -5021,6 +5130,12 @@ gdk_window_process_updates (GdkWindow *window,
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
+  if (GDK_WINDOW_DESTROYED (window))
+    return;
+
+  /* Make sure the window lives during the expose callouts */
+  g_object_ref (window);
+
   impl_window = gdk_window_get_impl_window (private);
   if ((impl_window->update_area ||
        impl_window->outstanding_moves) &&
@@ -5036,10 +5151,21 @@ gdk_window_process_updates (GdkWindow *window,
       /* process updates in reverse stacking order so composition or
        * painting over achieves the desired effect for offscreen windows
        */
-      GList *node;
-      for (node = g_list_last (private->children); node; node = node->prev)
-	gdk_window_process_updates (node->data, TRUE);
+      GList *node, *children;
+
+      children = g_list_copy (private->children);
+      g_list_foreach (children, (GFunc)g_object_ref, NULL);
+
+      for (node = g_list_last (children); node; node = node->prev)
+	{
+	  gdk_window_process_updates (node->data, TRUE);
+	  g_object_unref (node->data);
+	}
+
+      g_list_free (children);
     }
+
+  g_object_unref (window);
 }
 
 /**
@@ -5297,8 +5423,37 @@ gdk_window_invalidate_region (GdkWindow       *window,
  **/
 void
 _gdk_window_invalidate_for_expose (GdkWindow       *window,
-				   const GdkRegion *region)
+				   GdkRegion       *region)
 {
+  GdkWindowObject *private = (GdkWindowObject *) window;
+  GdkWindowRegionMove *move;
+  GdkRegion *move_region;
+  GList *l;
+
+  /* Any invalidations comming from the windowing system will
+     be in areas that may be moved by outstanding moves,
+     so we need to modify the expose region correspondingly,
+     otherwise we would expose in the wrong place, as the
+     outstanding moves will be copied before we draw the
+     exposes. */
+  for (l = private->outstanding_moves; l != NULL; l = l->next)
+    {
+      move = l->data;
+
+      /* covert to move source region */
+      move_region = gdk_region_copy (move->dest_region);
+      gdk_region_offset (move_region, -move->dx, -move->dy);
+
+      /* Move area of region that intersects with move source
+	 by dx, dy of the move*/
+      gdk_region_intersect (move_region, region);
+      gdk_region_subtract (region, move_region);
+      gdk_region_offset (move_region, move->dx, move->dy);
+      gdk_region_union (region, move_region);
+
+      gdk_region_destroy (move_region);
+    }
+
   gdk_window_invalidate_maybe_recurse (window, region,
 				       (gboolean (*) (GdkWindow *, gpointer))gdk_window_has_no_impl,
 				       NULL);
@@ -5794,7 +5949,13 @@ gdk_window_raise_internal (GdkWindow *window)
 
   /* Just do native raise for toplevels */
   if (private->parent == NULL ||
-      private->parent->window_type == GDK_WINDOW_ROOT)
+      private->parent->window_type == GDK_WINDOW_ROOT ||
+      /* The restack_under codepath should work correctly even if the parent
+	 is native, but it relies on the order of ->children to be correct,
+	 and some apps like SWT reorder the x windows without gdks knowledge,
+	 so we use raise directly in order to make these behave as before
+	 when using native windows */
+      (gdk_window_has_impl (private) && gdk_window_has_impl (parent)))
     {
       GDK_WINDOW_IMPL_GET_IFACE (private->impl)->raise (window);
     }
@@ -6069,7 +6230,13 @@ gdk_window_lower_internal (GdkWindow *window)
 
   /* Just do native lower for toplevels */
   if (private->parent == NULL ||
-      private->parent->window_type == GDK_WINDOW_ROOT)
+      private->parent->window_type == GDK_WINDOW_ROOT ||
+      /* The restack_under codepath should work correctly even if the parent
+	 is native, but it relies on the order of ->children to be correct,
+	 and some apps like SWT reorder the x windows without gdks knowledge,
+	 so we use lower directly in order to make these behave as before
+	 when using native windows */
+      (gdk_window_has_impl (private) && gdk_window_has_impl (parent)))
     {
       GDK_WINDOW_IMPL_GET_IFACE (private->impl)->lower (window);
     }
@@ -6928,17 +7095,19 @@ gdk_window_move_region (GdkWindow       *window,
   gdk_region_offset (copy_area, dx, dy);
   gdk_region_intersect (copy_area, private->clip_region_with_children);
 
-  /* invalidate parts of the region not covered by the copy */
+  /* Invalidate parts of the region (source and dest) not covered
+     by the copy */
   nocopy_area = gdk_region_copy (region);
   gdk_region_offset (nocopy_area, dx, dy);
+  gdk_region_union (nocopy_area, region);
   gdk_region_subtract (nocopy_area, copy_area);
-  gdk_window_invalidate_region (window, nocopy_area, FALSE);
-  gdk_region_destroy (nocopy_area);
 
   /* convert from window coords to impl */
   gdk_region_offset (copy_area, private->abs_x, private->abs_y);
-
   move_region_on_impl (impl_window, copy_area, dx, dy); /* Takes ownership of copy_area */
+
+  gdk_window_invalidate_region (window, nocopy_area, FALSE);
+  gdk_region_destroy (nocopy_area);
 }
 
 /**
@@ -7108,7 +7277,8 @@ gdk_window_set_cursor (GdkWindow *window,
       if (cursor)
 	private->cursor = gdk_cursor_ref (cursor);
 
-      if (private->window_type == GDK_WINDOW_ROOT ||
+      if (_gdk_native_windows ||
+	  private->window_type == GDK_WINDOW_ROOT ||
           private->window_type == GDK_WINDOW_FOREIGN)
         GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_cursor (window, cursor);
       else if (_gdk_window_event_parent_of (window, display->pointer_info.window_under_pointer))
@@ -7158,7 +7328,7 @@ gdk_window_get_geometry (GdkWindow *window,
 			 gint      *height,
 			 gint      *depth)
 {
-  GdkWindowObject *private;
+  GdkWindowObject *private, *parent;
 
   if (!window)
     {
@@ -7175,9 +7345,19 @@ gdk_window_get_geometry (GdkWindow *window,
   if (!GDK_WINDOW_DESTROYED (window))
     {
       if (gdk_window_has_impl (private))
-	GDK_WINDOW_IMPL_GET_IFACE (private->impl)->get_geometry (window, x, y,
-								 width, height,
-								 depth);
+	{
+	  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->get_geometry (window, x, y,
+								   width, height,
+								   depth);
+	  /* This reports the position wrt to the native parent, we need to convert
+	     it to be relative to the client side parent */
+	  parent = private->parent;
+	  if (parent && !gdk_window_has_impl (parent))
+	    {
+	      *x -= parent->abs_x;
+	      *y -= parent->abs_y;
+	    }
+	}
       else
 	{
 	  if (x)
@@ -8859,6 +9039,11 @@ _gdk_display_set_window_under_pointer (GdkDisplay *display,
 {
   GdkWindowObject *private;
 
+  /* We don't track this if all native, and it can cause issues
+     with the update_cursor call below */
+  if (_gdk_native_windows)
+    return;
+
   private = (GdkWindowObject *)window;
 
   if (display->pointer_info.window_under_pointer)
@@ -8927,7 +9112,10 @@ gdk_pointer_grab (GdkWindow *	  window,
       !gdk_window_is_viewable (window))
     return GDK_GRAB_NOT_VIEWABLE;
 
-  native = gdk_window_get_toplevel (window);
+  if (_gdk_native_windows)
+    native = window;
+  else
+    native = gdk_window_get_toplevel (window);
   while (gdk_window_is_offscreen ((GdkWindowObject *)native))
     {
       native = gdk_offscreen_window_get_embedder (native);
@@ -9031,6 +9219,9 @@ _gdk_synthesize_crossing_events_for_geometry_change (GdkWindow *changed_window)
   GdkDisplay *display;
   GdkWindow *toplevel;
   GdkWindowObject *toplevel_priv;
+
+  if (_gdk_native_windows)
+    return; /* We use the native crossing events if all native */
 
   display = gdk_drawable_get_display (changed_window);
 
@@ -9503,6 +9694,42 @@ _gdk_windowing_got_event (GdkDisplay *display,
   event_window = event->any.window;
   if (!event_window)
     return;
+
+  if (_gdk_native_windows)
+    {
+      if (event->type == GDK_BUTTON_PRESS &&
+	  _gdk_display_has_pointer_grab (display, serial) == NULL)
+	{
+	  _gdk_display_add_pointer_grab  (display,
+					  event_window,
+					  event_window,
+					  FALSE,
+					  gdk_window_get_events (event_window),
+					  serial,
+					  gdk_event_get_time (event),
+					  TRUE);
+	  _gdk_display_pointer_grab_update (display,
+					    serial);
+	}
+      if (event->type == GDK_BUTTON_RELEASE)
+	{
+	  button_release_grab =
+	    _gdk_display_has_pointer_grab (display, serial);
+	  if (button_release_grab &&
+	      button_release_grab->implicit &&
+	      (event->button.state & GDK_ANY_BUTTON_MASK & ~(GDK_BUTTON1_MASK << (event->button.button - 1))) == 0)
+	    {
+	      button_release_grab->serial_end = serial;
+	      button_release_grab->implicit_ungrab = TRUE;
+	      _gdk_display_pointer_grab_update (display, serial);
+	    }
+	}
+
+      if (event->type == GDK_BUTTON_PRESS)
+	_gdk_event_button_generate (display, event);
+
+      return;
+    }
 
   event_private = GDK_WINDOW_OBJECT (event_window);
 
