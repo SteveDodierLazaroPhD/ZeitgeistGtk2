@@ -480,7 +480,7 @@ gdk_window_class_init (GdkWindowObjectClass *klass)
    * The ::pick-embedded-child signal is emitted to find an embedded
    * child at the given position.
    *
-   * Returns: the GdkWindow of the embedded child at @x, @y, or %NULL
+   * Returns: the #GdkWindow of the embedded child at @x, @y, or %NULL
    *
    * Since: 2.18
    */
@@ -506,6 +506,8 @@ gdk_window_class_init (GdkWindowObjectClass *klass)
    *
    * The ::to-embedder signal is emitted to translate coordinates
    * in an offscreen window to its embedder.
+   *
+   * See also #GtkWindow::from-embedder.
    *
    * Since: 2.18
    */
@@ -533,6 +535,8 @@ gdk_window_class_init (GdkWindowObjectClass *klass)
    *
    * The ::from-embedder signal is emitted to translate coordinates
    * in the embedder of an offscreen window to the offscreen window.
+   *
+   * See also #GtkWindow::to-embedder.
    *
    * Since: 2.18
    */
@@ -657,6 +661,14 @@ static gboolean
 gdk_window_has_impl (GdkWindowObject *window)
 {
   return window->impl_window == window;
+}
+
+static gboolean
+gdk_window_is_toplevel (GdkWindowObject *window)
+{
+  return
+    window->parent == NULL ||
+    window->parent->window_type == GDK_WINDOW_ROOT;
 }
 
 gboolean
@@ -810,6 +822,61 @@ gdk_window_update_visibility_recursively (GdkWindowObject *private,
     }
 }
 
+static gboolean
+should_apply_clip_as_shape (GdkWindowObject *private)
+{
+  return
+    gdk_window_has_impl (private) &&
+    /* Not for offscreens */
+    private->window_type != GDK_WINDOW_OFFSCREEN &&
+    /* or for toplevels */
+    !gdk_window_is_toplevel (private) &&
+    /* or for foreign windows */
+    private->window_type != GDK_WINDOW_FOREIGN &&
+    /* or for the root window */
+    private->window_type != GDK_WINDOW_ROOT;
+}
+
+static void
+apply_shape (GdkWindowObject *private,
+	     GdkRegion *region)
+{
+  GdkWindowImplIface *impl_iface;
+
+  /* We trash whether we applied a shape so that
+     we can avoid unsetting it many times, which
+     could happen in e.g. apply_clip_as_shape as
+     windows get resized */
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+  if (region)
+    impl_iface->shape_combine_region ((GdkWindow *)private,
+				      region, 0, 0);
+  else if (private->applied_shape)
+    impl_iface->shape_combine_region ((GdkWindow *)private,
+				      NULL, 0, 0);
+
+  private->applied_shape = region != NULL;
+}
+
+static void
+apply_clip_as_shape (GdkWindowObject *private)
+{
+  GdkRectangle r;
+
+  r.x = r.y = 0;
+  r.width = private->width;
+  r.height = private->height;
+
+  /* We only apply the clip region if would differ
+     from the actual clip region implied by the size
+     of the window. This is to avoid unneccessarily
+     adding meaningless shapes to all native subwindows */
+  if (!gdk_region_rect_equal (private->clip_region, &r))
+    apply_shape (private, private->clip_region);
+  else
+    apply_shape (private, NULL);
+}
+
 static void
 recompute_visible_regions_internal (GdkWindowObject *private,
 				    gboolean recalculate_clip,
@@ -861,8 +928,7 @@ recompute_visible_regions_internal (GdkWindowObject *private,
 	  r.height = private->height;
 	  new_clip = gdk_region_rectangle (&r);
 
-	  if (private->parent != NULL &&
-	      private->parent->window_type != GDK_WINDOW_ROOT)
+	  if (!gdk_window_is_toplevel (private))
 	    {
 	      gdk_region_intersect (new_clip, private->parent->clip_region);
 
@@ -913,23 +979,26 @@ recompute_visible_regions_internal (GdkWindowObject *private,
 
       if (gdk_region_empty (private->clip_region))
 	visibility = GDK_VISIBILITY_FULLY_OBSCURED;
-      else {
-	if (private->shape)
-	  fully_visible = gdk_region_equal (private->clip_region,
-					    private->shape);
-	else
-	  {
-	    r.x = 0;
-	    r.y = 0;
-	    r.width = private->width;
-	    r.height = private->height;
-	    fully_visible = gdk_region_rect_equal (private->clip_region, &r);
-	  }
+      else
+        {
+          if (private->shape)
+            {
+	      fully_visible = gdk_region_equal (private->clip_region,
+	                                        private->shape);
+            }
+          else
+            {
+	      r.x = 0;
+	      r.y = 0;
+	      r.width = private->width;
+	      r.height = private->height;
+	      fully_visible = gdk_region_rect_equal (private->clip_region, &r);
+	    }
 
-	if (fully_visible)
-	  visibility = GDK_VISIBILITY_UNOBSCURED;
-	else
-	  visibility = GDK_VISIBILITY_PARTIAL;
+	  if (fully_visible)
+	    visibility = GDK_VISIBILITY_UNOBSCURED;
+	  else
+	    visibility = GDK_VISIBILITY_PARTIAL;
 	}
 
       if (private->visibility != visibility)
@@ -957,25 +1026,11 @@ recompute_visible_regions_internal (GdkWindowObject *private,
     }
 
   if (clip_region_changed &&
-      gdk_window_has_impl (private) &&
-      /* Not for offscreens */
-      private->window_type != GDK_WINDOW_OFFSCREEN &&
-      /* or for non-shaped toplevels */
-      (private->shaped ||
-       (private->parent != NULL &&
-	private->parent->window_type != GDK_WINDOW_ROOT)) &&
-      /* or for foreign windows */
-      private->window_type != GDK_WINDOW_FOREIGN &&
-      /* or for the root window */
-      private->window_type != GDK_WINDOW_ROOT
-      )
-    {
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->shape_combine_region ((GdkWindow *)private, private->clip_region, 0, 0);
-    }
+      should_apply_clip_as_shape (private))
+    apply_clip_as_shape (private);
 
   if (recalculate_siblings &&
-      private->parent != NULL &&
-      private->parent->window_type != GDK_WINDOW_ROOT)
+      !gdk_window_is_toplevel (private))
     {
       /* If we moved a child window in parent or changed the stacking order, then we
        * need to recompute the visible area of all the other children in the parent
@@ -1137,16 +1192,18 @@ sync_native_window_stack_position (GdkWindow *window)
 {
   GdkWindowObject *above;
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
   GList listhead = {0};
 
   private = (GdkWindowObject *) window;
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
 
   above = find_native_sibling_above (private->parent, private);
   if (above)
     {
       listhead.data = window;
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->restack_under ((GdkWindow *)above,
-								&listhead);
+      impl_iface->restack_under ((GdkWindow *)above,
+				 &listhead);
     }
 }
 
@@ -1194,7 +1251,10 @@ gdk_window_new (GdkWindow     *parent,
   g_return_val_if_fail (GDK_IS_WINDOW (parent), NULL);
 
   if (GDK_WINDOW_DESTROYED (parent))
-    return NULL;
+    {
+      g_warning ("gdk_window_new(): parent is destroyed\n");
+      return NULL;
+    }
 
   if (attributes->window_type == GDK_WINDOW_OFFSCREEN &&
       _gdk_native_windows)
@@ -1407,6 +1467,9 @@ reparent_to_impl (GdkWindowObject *private)
   GList *l;
   GdkWindowObject *child;
   gboolean show;
+  GdkWindowImplIface *impl_iface;
+
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
 
   /* Enumerate in reverse order so we get the right order for the native
      windows (first in childrens list is topmost, and reparent places on top) */
@@ -1418,9 +1481,9 @@ reparent_to_impl (GdkWindowObject *private)
 	reparent_to_impl (child);
       else
 	{
-	  show = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->reparent ((GdkWindow *)child,
-								      (GdkWindow *)private,
-								      child->x, child->y);
+	  show = impl_iface->reparent ((GdkWindow *)child,
+				       (GdkWindow *)private,
+				       child->x, child->y);
 	  if (show)
 	    gdk_window_show_unraised ((GdkWindow *)child);
 	}
@@ -1449,8 +1512,10 @@ gdk_window_reparent (GdkWindow *window,
   GdkWindowObject *new_parent_private;
   GdkWindowObject *old_parent;
   GdkScreen *screen;
-  gboolean show, was_mapped;
+  gboolean show, was_mapped, applied_clip_as_shape;
   gboolean do_reparent_to_impl;
+  GdkEventMask old_native_event_mask;
+  GdkWindowImplIface *impl_iface;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
   g_return_if_fail (new_parent == NULL || GDK_IS_WINDOW (new_parent));
@@ -1484,6 +1549,7 @@ gdk_window_reparent (GdkWindow *window,
 				   NULL, NULL);
     }
 
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
   old_parent = private->parent;
 
   /* Break up redirection if inherited */
@@ -1501,11 +1567,15 @@ gdk_window_reparent (GdkWindow *window,
       new_parent_private->window_type == GDK_WINDOW_FOREIGN)
     gdk_window_ensure_native (window);
 
+  applied_clip_as_shape = should_apply_clip_as_shape (private);
+
+  old_native_event_mask = 0;
   do_reparent_to_impl = FALSE;
   if (gdk_window_has_impl (private))
     {
+      old_native_event_mask = get_native_event_mask (private);
       /* Native window */
-      show = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->reparent (window, new_parent, x, y);
+      show = impl_iface->reparent (window, new_parent, x, y);
     }
   else
     {
@@ -1570,7 +1640,12 @@ gdk_window_reparent (GdkWindow *window,
   /* We might have changed window type for a native windows, so we
      need to change the event mask too. */
   if (gdk_window_has_impl (private))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_events (window, get_native_event_mask (private));
+    {
+      GdkEventMask native_event_mask = get_native_event_mask (private);
+
+      if (native_event_mask != old_native_event_mask)
+	impl_iface->set_events (window,	native_event_mask);
+    }
 
   /* Inherit parent redirect if we don't have our own */
   if (private->parent && private->redirect == NULL)
@@ -1584,6 +1659,13 @@ gdk_window_reparent (GdkWindow *window,
   recompute_visible_regions (private, TRUE, FALSE);
   if (old_parent && GDK_WINDOW_TYPE (old_parent) != GDK_WINDOW_ROOT)
     recompute_visible_regions (old_parent, FALSE, TRUE);
+
+  /* We used to apply the clip as the shape, but no more.
+     Reset this to the real shape */
+  if (gdk_window_has_impl (private) &&
+      applied_clip_as_shape &&
+      !should_apply_clip_as_shape (private))
+    apply_shape (private, private->shape);
 
   if (do_reparent_to_impl)
     reparent_to_impl (private);
@@ -1628,6 +1710,7 @@ gdk_window_ensure_native (GdkWindow *window)
   GdkWindowAttr attributes;
   GdkWindowObject *above;
   GList listhead;
+  GdkWindowImplIface *impl_iface;
 
   g_return_val_if_fail (GDK_IS_WINDOW (window), FALSE);
 
@@ -1654,12 +1737,16 @@ gdk_window_ensure_native (GdkWindow *window)
   attributes.colormap = gdk_drawable_get_colormap (window);
 
   old_impl = private->impl;
-  _gdk_window_impl_new (window, (GdkWindow *)private->parent, screen, visual,
-			get_native_event_mask (private), &attributes, GDK_WA_COLORMAP);
+  _gdk_window_impl_new (window, (GdkWindow *)private->parent,
+			screen, visual,
+			get_native_event_mask (private),
+			&attributes, GDK_WA_COLORMAP);
   new_impl = private->impl;
 
   private->impl = old_impl;
   change_impl (private, private, new_impl);
+
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
 
   /* Native window creation will put the native window topmost in the
    * native parent, which may be wrong wrt the position of the previous
@@ -1671,29 +1758,31 @@ gdk_window_ensure_native (GdkWindow *window)
       listhead.data = window;
       listhead.prev = NULL;
       listhead.next = NULL;
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->restack_under ((GdkWindow *)above,
-								&listhead);
+      impl_iface->restack_under ((GdkWindow *)above, &listhead);
     }
 
   recompute_visible_regions (private, FALSE, FALSE);
 
   /* The shape may not have been set, as the clip region doesn't actually
      change, so do it here manually */
-  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->shape_combine_region ((GdkWindow *)private, private->clip_region, 0, 0);
+  if (should_apply_clip_as_shape (private))
+    apply_clip_as_shape (private);
 
   reparent_to_impl (private);
 
   if (!private->input_only)
     {
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_background (window, &private->bg_color);
+      impl_iface->set_background (window, &private->bg_color);
       if (private->bg_pixmap != NULL)
-	GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_back_pixmap (window, private->bg_pixmap);
+	impl_iface->set_back_pixmap (window, private->bg_pixmap);
     }
 
-  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->input_shape_combine_region ((GdkWindow *)private, private->input_shape, 0, 0);
+  impl_iface->input_shape_combine_region (window,
+					  private->input_shape,
+					  0, 0);
 
   if (gdk_window_is_viewable (window))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->show (window, FALSE);
+    impl_iface->show (window, FALSE);
 
   return TRUE;
 }
@@ -1741,6 +1830,7 @@ _gdk_window_destroy_hierarchy (GdkWindow *window,
 {
   GdkWindowObject *private;
   GdkWindowObject *temp_private;
+  GdkWindowImplIface *impl_iface;
   GdkWindow *temp_window;
   GdkScreen *screen;
   GdkDisplay *display;
@@ -1854,13 +1944,14 @@ _gdk_window_destroy_hierarchy (GdkWindow *window,
 	    }
 
 
+	  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+
 	  if (private->extension_events)
-	    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->input_window_destroy (window);
+	    impl_iface->input_window_destroy (window);
 
 	  if (gdk_window_has_impl (private))
-	    {
-	      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->destroy (window, recursing_native, foreign_destroy);
-	    }
+	    impl_iface->destroy (window, recursing_native,
+				 foreign_destroy);
 	  else
 	    {
 	      /* hide to make sure we repaint and break grabs */
@@ -2080,8 +2171,7 @@ gdk_window_get_toplevel (GdkWindow *window)
 
   while (obj->window_type == GDK_WINDOW_CHILD)
     {
-      if (obj->parent == NULL ||
-	  obj->parent->window_type == GDK_WINDOW_ROOT)
+      if (gdk_window_is_toplevel (obj))
 	break;
       obj = obj->parent;
     }
@@ -2292,7 +2382,7 @@ gdk_screen_get_toplevel_windows (GdkScreen *screen)
  * Return value: list of toplevel windows, free with g_list_free()
  *
  * Deprecated: 2.16: Use gdk_screen_get_toplevel_windows() instead.
- **/
+ */
 GList *
 gdk_window_get_toplevels (void)
 {
@@ -2852,6 +2942,7 @@ do_move_region_bits_on_impl (GdkWindowObject *impl_window,
   GdkGC *tmp_gc;
   GdkRectangle copy_rect;
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
 
   /* We need to get data from subwindows here, because we might have
    * shaped a native window over the moving region (with bg none,
@@ -2860,8 +2951,7 @@ do_move_region_bits_on_impl (GdkWindowObject *impl_window,
    * so we copy from the toplevel with INCLUDE_INFERIORS.
    */
   private = impl_window;
-  while (private->parent != NULL &&
-	 private->parent->window_type != GDK_WINDOW_ROOT)
+  while (!gdk_window_is_toplevel (private))
     {
       dx -= private->parent->abs_x + private->x;
       dy -= private->parent->abs_y + private->y;
@@ -2875,9 +2965,11 @@ do_move_region_bits_on_impl (GdkWindowObject *impl_window,
   /* The region area is moved and we queue translations for all expose events
      to the source area that were sent prior to the copy */
   gdk_region_offset (dest_region, -dx, -dy); /* Move to source region */
-  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->queue_translation ((GdkWindow *)impl_window,
-								tmp_gc,
-								dest_region, dx, dy);
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+
+  impl_iface->queue_translation ((GdkWindow *)impl_window,
+				 tmp_gc,
+				 dest_region, dx, dy);
 
   gdk_draw_drawable (impl_window->impl,
 		     tmp_gc,
@@ -3654,8 +3746,14 @@ gdk_window_draw_drawable (GdkDrawable *drawable,
 
   BEGIN_DRAW;
 
-  gdk_draw_drawable (impl, gc, src, xsrc, ysrc,
-		     xdest - x_offset, ydest - y_offset, width, height);
+  /* Call the method directly to avoid getting the composite drawable again */
+  GDK_DRAWABLE_GET_CLASS (impl)->draw_drawable_with_src (impl, gc,
+							 src,
+							 xsrc, ysrc,
+							 xdest - x_offset,
+							 ydest - y_offset,
+							 width, height,
+							 original_src);
 
   if (!private->paint_stack)
     {
@@ -4194,6 +4292,7 @@ gdk_window_clear_region_internal (GdkWindow *window,
 				  gboolean   send_expose)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
+  GdkWindowImplIface *impl_iface;
 
   if (private->paint_stack)
     gdk_window_clear_backing_region (window, region);
@@ -4202,15 +4301,16 @@ gdk_window_clear_region_internal (GdkWindow *window,
       if (private->redirect)
 	gdk_window_clear_backing_region_redirect (window, region);
 
-      if (GDK_WINDOW_IMPL_GET_IFACE (private->impl)->clear_region &&
-	  clears_on_native (private))
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+
+      if (impl_iface->clear_region && clears_on_native (private))
 	{
 	  GdkRegion *copy;
 	  copy = gdk_region_copy (region);
-	  gdk_region_intersect (copy, private->clip_region_with_children);
+	  gdk_region_intersect (copy,
+				private->clip_region_with_children);
 
-	  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->clear_region
-	    (window, copy, send_expose);
+	  impl_iface->clear_region (window, copy, send_expose);
 
 	  gdk_region_destroy (copy);
 	}
@@ -4596,10 +4696,10 @@ gdk_window_set_cairo_clip (GdkDrawable *drawable,
 
   if (!private->paint_stack)
     {
+      cairo_reset_clip (cr);
+
       cairo_save (cr);
       cairo_identity_matrix (cr);
-
-      cairo_reset_clip (cr);
 
       cairo_new_path (cr);
       gdk_cairo_region (cr, private->clip_region_with_children);
@@ -4613,12 +4713,11 @@ gdk_window_set_cairo_clip (GdkDrawable *drawable,
 
       /* Only needs to clip to region if piggybacking
 	 on an implicit paint pixmap */
+      cairo_reset_clip (cr);
       if (paint->uses_implicit)
 	{
 	  cairo_save (cr);
 	  cairo_identity_matrix (cr);
-
-	  cairo_reset_clip (cr);
 
 	  cairo_new_path (cr);
 	  gdk_cairo_region (cr, paint->region);
@@ -4872,6 +4971,7 @@ static void
 gdk_window_process_updates_internal (GdkWindow *window)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
+  GdkWindowImplIface *impl_iface;
   gboolean save_region = FALSE;
   GdkRectangle clip_box;
 
@@ -4989,7 +5089,8 @@ gdk_window_process_updates_internal (GdkWindow *window)
 	       * moves and queue antiexposure immediately. No need to do
 	       * any tricks */
 	      gdk_window_flush_outstanding_moves (window);
-	      save_region = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->queue_antiexpose (window, update_area);
+	      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+	      save_region = impl_iface->queue_antiexpose (window, update_area);
 	    }
 
 	  /* Render the invalid areas to the implicit paint, by sending exposes.
@@ -5009,7 +5110,10 @@ gdk_window_process_updates_internal (GdkWindow *window)
 	       * optimization we just avoid doing it at all in that case.
 	       */
 	      if (private->implicit_paint != NULL) /* didn't flush implicit paint */
-		save_region = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->queue_antiexpose (window, update_area);
+		{
+		  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+		  save_region = impl_iface->queue_antiexpose (window, update_area);
+		}
 
 	      gdk_window_end_implicit_paint (window);
 	    }
@@ -5940,6 +6044,7 @@ gdk_window_raise_internal (GdkWindow *window)
   GdkWindowObject *above;
   GList *native_children;
   GList *l, listhead;
+  GdkWindowImplIface *impl_iface;
 
   if (parent)
     {
@@ -5947,9 +6052,9 @@ gdk_window_raise_internal (GdkWindow *window)
       parent->children = g_list_prepend (parent->children, window);
     }
 
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
   /* Just do native raise for toplevels */
-  if (private->parent == NULL ||
-      private->parent->window_type == GDK_WINDOW_ROOT ||
+  if (gdk_window_is_toplevel (private) ||
       /* The restack_under codepath should work correctly even if the parent
 	 is native, but it relies on the order of ->children to be correct,
 	 and some apps like SWT reorder the x windows without gdks knowledge,
@@ -5957,7 +6062,7 @@ gdk_window_raise_internal (GdkWindow *window)
 	 when using native windows */
       (gdk_window_has_impl (private) && gdk_window_has_impl (parent)))
     {
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->raise (window);
+      impl_iface->raise (window);
     }
   else if (gdk_window_has_impl (private))
     {
@@ -5967,11 +6072,11 @@ gdk_window_raise_internal (GdkWindow *window)
 	  listhead.data = window;
 	  listhead.next = NULL;
 	  listhead.prev = NULL;
-	  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->restack_under ((GdkWindow *)above,
-								    &listhead);
+	  impl_iface->restack_under ((GdkWindow *)above,
+				     &listhead);
 	}
       else
-	GDK_WINDOW_IMPL_GET_IFACE (private->impl)->raise (window);
+	impl_iface->raise (window);
     }
   else
     {
@@ -5982,13 +6087,13 @@ gdk_window_raise_internal (GdkWindow *window)
 	  above = find_native_sibling_above (parent, private);
 
 	  if (above)
-	    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->restack_under ((GdkWindow *)above,
-								      native_children);
+	    impl_iface->restack_under ((GdkWindow *)above,
+				       native_children);
 	  else
 	    {
 	      /* Right order, since native_children is bottom-topmost first */
 	      for (l = native_children; l != NULL; l = l->next)
-		GDK_WINDOW_IMPL_GET_IFACE (private->impl)->raise (l->data);
+		impl_iface->raise (l->data);
 	    }
 
 	  g_list_free (native_children);
@@ -6003,6 +6108,7 @@ set_viewable (GdkWindowObject *w,
 	      gboolean val)
 {
   GdkWindowObject *child;
+  GdkWindowImplIface *impl_iface;
   GList *l;
 
   if (w->viewable == val)
@@ -6022,10 +6128,10 @@ set_viewable (GdkWindowObject *w,
 	set_viewable (child, val);
     }
 
-  if (gdk_window_has_impl (w)  &&
+  if (!_gdk_native_windows &&
+      gdk_window_has_impl (w)  &&
       w->window_type != GDK_WINDOW_FOREIGN &&
-      w->parent != NULL &&
-      w->parent->window_type != GDK_WINDOW_ROOT)
+      !gdk_window_is_toplevel (w))
     {
       /* For most native windows we show/hide them not when they are
        * mapped/unmapped, because that may not produce the correct results.
@@ -6048,12 +6154,16 @@ set_viewable (GdkWindowObject *w,
        * do the show ourselves. We can't really tell this case from the normal
        * toplevel show as such toplevels are seen by gdk as parents of the
        * root window, so we make an exception for all toplevels.
+       *
+       * Also, when in GDK_NATIVE_WINDOW mode we never need to play games
+       * like this, so we just always show/hide directly.
        */
 
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (w->impl);
       if (val)
-	GDK_WINDOW_IMPL_GET_IFACE (w->impl)->show ((GdkWindow *)w, FALSE);
+	impl_iface->show ((GdkWindow *)w, FALSE);
       else
-	GDK_WINDOW_IMPL_GET_IFACE (w->impl)->hide ((GdkWindow *)w);
+	impl_iface->hide ((GdkWindow *)w);
 
       return TRUE;
     }
@@ -6071,8 +6181,7 @@ _gdk_window_update_viewable (GdkWindow *window)
   if (priv->window_type == GDK_WINDOW_FOREIGN ||
       priv->window_type == GDK_WINDOW_ROOT)
     viewable = TRUE;
-  else if (priv->parent == NULL ||
-	   priv->parent->window_type == GDK_WINDOW_ROOT ||
+  else if (gdk_window_is_toplevel (priv) ||
 	   priv->parent->viewable)
     viewable = GDK_WINDOW_IS_MAPPED (priv);
   else
@@ -6085,6 +6194,7 @@ static void
 gdk_window_show_internal (GdkWindow *window, gboolean raise)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
   gboolean was_mapped, was_viewable;
   gboolean did_show;
 
@@ -6121,9 +6231,11 @@ gdk_window_show_internal (GdkWindow *window, gboolean raise)
      Dunno if this is strictly needed but its what happened pre-csw.
      Also show if not done by gdk_window_update_viewable. */
   if (gdk_window_has_impl (private) && (was_viewable || !did_show))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->show ((GdkWindow *)private,
-						     !did_show ?
-						     was_mapped : TRUE);
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->show ((GdkWindow *)private,
+			!did_show ? was_mapped : TRUE);
+    }
 
   if (!was_mapped && !gdk_window_has_impl (private))
     {
@@ -6218,6 +6330,7 @@ gdk_window_lower_internal (GdkWindow *window)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
   GdkWindowObject *parent = private->parent;
+  GdkWindowImplIface *impl_iface;
   GdkWindowObject *above;
   GList *native_children;
   GList *l, listhead;
@@ -6228,9 +6341,9 @@ gdk_window_lower_internal (GdkWindow *window)
       parent->children = g_list_append (parent->children, window);
     }
 
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
   /* Just do native lower for toplevels */
-  if (private->parent == NULL ||
-      private->parent->window_type == GDK_WINDOW_ROOT ||
+  if (gdk_window_is_toplevel (private) ||
       /* The restack_under codepath should work correctly even if the parent
 	 is native, but it relies on the order of ->children to be correct,
 	 and some apps like SWT reorder the x windows without gdks knowledge,
@@ -6238,7 +6351,7 @@ gdk_window_lower_internal (GdkWindow *window)
 	 when using native windows */
       (gdk_window_has_impl (private) && gdk_window_has_impl (parent)))
     {
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->lower (window);
+      impl_iface->lower (window);
     }
   else if (gdk_window_has_impl (private))
     {
@@ -6248,11 +6361,10 @@ gdk_window_lower_internal (GdkWindow *window)
 	  listhead.data = window;
 	  listhead.next = NULL;
 	  listhead.prev = NULL;
-	  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->restack_under ((GdkWindow *)above,
-								    &listhead);
+	  impl_iface->restack_under ((GdkWindow *)above, &listhead);
 	}
       else
-	GDK_WINDOW_IMPL_GET_IFACE (private->impl)->raise (window);
+	impl_iface->raise (window);
     }
   else
     {
@@ -6263,13 +6375,13 @@ gdk_window_lower_internal (GdkWindow *window)
 	  above = find_native_sibling_above (parent, private);
 
 	  if (above)
-	    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->restack_under ((GdkWindow *)above,
-								      native_children);
+	    impl_iface->restack_under ((GdkWindow *)above,
+				       native_children);
 	  else
 	    {
 	      /* Right order, since native_children is bottom-topmost first */
 	      for (l = native_children; l != NULL; l = l->next)
-		GDK_WINDOW_IMPL_GET_IFACE (private->impl)->raise (l->data);
+		impl_iface->raise (l->data);
 	    }
 
 	  g_list_free (native_children);
@@ -6283,8 +6395,7 @@ gdk_window_invalidate_in_parent (GdkWindowObject *private)
 {
   GdkRectangle r, child;
 
-  if (private->parent == NULL ||
-      private->parent->window_type == GDK_WINDOW_ROOT)
+  if (gdk_window_is_toplevel (private))
     return;
 
   /* get the visible rectangle of the parent */
@@ -6370,6 +6481,7 @@ void
 gdk_window_hide (GdkWindow *window)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
   gboolean was_mapped, did_hide;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
@@ -6421,7 +6533,10 @@ gdk_window_hide (GdkWindow *window)
 
   /* Hide foreign window as those are not handled by update_viewable. */
   if (gdk_window_has_impl (private) && (!did_hide))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->hide ((GdkWindow *)private);
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->hide (window);
+    }
 
   recompute_visible_regions (private, TRUE, FALSE);
 
@@ -6455,6 +6570,7 @@ void
 gdk_window_withdraw (GdkWindow *window)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
   gboolean was_mapped;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
@@ -6467,7 +6583,8 @@ gdk_window_withdraw (GdkWindow *window)
 
   if (gdk_window_has_impl (private))
     {
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->withdraw (window);
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->withdraw (window);
 
       if (was_mapped)
 	{
@@ -6499,8 +6616,8 @@ gdk_window_set_events (GdkWindow       *window,
 		       GdkEventMask     event_mask)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
   GdkDisplay *display;
-
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -6517,8 +6634,11 @@ gdk_window_set_events (GdkWindow       *window,
   private->event_mask = event_mask;
 
   if (gdk_window_has_impl (private))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_events (window,
-							   get_native_event_mask (private));
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->set_events (window,
+			      get_native_event_mask (private));
+    }
 
 }
 
@@ -6554,7 +6674,7 @@ gdk_window_move_resize_toplevel (GdkWindow *window,
 {
   GdkWindowObject *private;
   GdkRegion *old_region, *new_region;
-  GdkWindowObject *impl_window;
+  GdkWindowImplIface *impl_iface;
   gboolean expose;
   int old_x, old_y, old_abs_x, old_abs_y;
   int dx, dy;
@@ -6564,8 +6684,6 @@ gdk_window_move_resize_toplevel (GdkWindow *window,
 
   expose = FALSE;
   old_region = NULL;
-
-  impl_window = gdk_window_get_impl_window (private);
 
   old_x = private->x;
   old_y = private->y;
@@ -6579,7 +6697,8 @@ gdk_window_move_resize_toplevel (GdkWindow *window,
       old_region = gdk_region_copy (private->clip_region);
     }
 
-  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->move_resize (window, with_move, x, y, width, height);
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+  impl_iface->move_resize (window, with_move, x, y, width, height);
 
   dx = private->x - old_x;
   dy = private->y - old_y;
@@ -6615,13 +6734,19 @@ move_native_children (GdkWindowObject *private)
 {
   GList *l;
   GdkWindowObject *child;
+  GdkWindowImplIface *impl_iface;
 
   for (l = private->children; l; l = l->next)
     {
       child = l->data;
 
       if (child->impl != private->impl)
-	GDK_WINDOW_IMPL_GET_IFACE (child->impl)->move_resize ((GdkWindow *)child, TRUE, child->x, child->y, child->width, child->height);
+	{
+	  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (child->impl);
+	  impl_iface->move_resize ((GdkWindow *)child, TRUE,
+				   child->x, child->y,
+				   child->width, child->height);
+	}
       else
 	move_native_children  (child);
     }
@@ -6697,6 +6822,7 @@ gdk_window_move_resize_internal (GdkWindow *window,
   GdkRegion *old_region, *new_region, *copy_area;
   GdkRegion *old_native_child_region, *new_native_child_region;
   GdkWindowObject *impl_window;
+  GdkWindowImplIface *impl_iface;
   gboolean expose;
   int old_x, old_y, old_abs_x, old_abs_y;
   int dx, dy;
@@ -6707,8 +6833,7 @@ gdk_window_move_resize_internal (GdkWindow *window,
   if (private->destroyed)
     return;
 
-  if (private->parent == NULL ||
-      private->parent->window_type == GDK_WINDOW_ROOT)
+  if (gdk_window_is_toplevel (private))
     {
       gdk_window_move_resize_toplevel (window, with_move, x, y, width, height);
       return;
@@ -6784,9 +6909,13 @@ gdk_window_move_resize_internal (GdkWindow *window,
 
   if (gdk_window_has_impl (private))
     {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+
       /* Do the actual move after recomputing things, as this will have set the shape to
 	 the now correct one, thus avoiding copying regions that should not be copied. */
-      GDK_WINDOW_IMPL_GET_IFACE (private->impl)->move_resize (window, TRUE, private->x, private->y, private->width, private->height);
+      impl_iface->move_resize (window, TRUE,
+			       private->x, private->y,
+			       private->width, private->height);
     }
   else if (old_abs_x != private->abs_x ||
 	   old_abs_y != private->abs_y)
@@ -7131,6 +7260,7 @@ gdk_window_set_background (GdkWindow      *window,
 {
   GdkWindowObject *private;
   GdkColormap *colormap = gdk_drawable_get_colormap (window);
+  GdkWindowImplIface *impl_iface;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -7149,7 +7279,10 @@ gdk_window_set_background (GdkWindow      *window,
   if (!GDK_WINDOW_DESTROYED (window) &&
       gdk_window_has_impl (private) &&
       !private->input_only)
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_background (window, &private->bg_color);
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->set_background (window, &private->bg_color);
+    }
 }
 
 /**
@@ -7184,6 +7317,7 @@ gdk_window_set_back_pixmap (GdkWindow *window,
 			    gboolean   parent_relative)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
   g_return_if_fail (pixmap == NULL || !parent_relative);
@@ -7212,13 +7346,15 @@ gdk_window_set_back_pixmap (GdkWindow *window,
   if (!GDK_WINDOW_DESTROYED (window) &&
       gdk_window_has_impl (private) &&
       !private->input_only)
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_back_pixmap (window, private->bg_pixmap);
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->set_back_pixmap (window, private->bg_pixmap);
+    }
 }
 
 /**
  * gdk_window_get_cursor:
  * @window: a #GdkWindow
- * @cursor: a cursor
  *
  * Retrieves a #GdkCursor pointer for the cursor currently set on the
  * specified #GdkWindow, or %NULL.  If the return value is %NULL then
@@ -7259,6 +7395,7 @@ gdk_window_set_cursor (GdkWindow *window,
 		       GdkCursor *cursor)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
   GdkDisplay *display;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
@@ -7280,7 +7417,10 @@ gdk_window_set_cursor (GdkWindow *window,
       if (_gdk_native_windows ||
 	  private->window_type == GDK_WINDOW_ROOT ||
           private->window_type == GDK_WINDOW_FOREIGN)
-        GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_cursor (window, cursor);
+	{
+	  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+	  impl_iface->set_cursor (window, cursor);
+	}
       else if (_gdk_window_event_parent_of (window, display->pointer_info.window_under_pointer))
 	update_cursor (display);
 
@@ -7329,6 +7469,7 @@ gdk_window_get_geometry (GdkWindow *window,
 			 gint      *depth)
 {
   GdkWindowObject *private, *parent;
+  GdkWindowImplIface *impl_iface;
 
   if (!window)
     {
@@ -7346,16 +7487,19 @@ gdk_window_get_geometry (GdkWindow *window,
     {
       if (gdk_window_has_impl (private))
 	{
-	  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->get_geometry (window, x, y,
-								   width, height,
-								   depth);
+	  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+	  impl_iface->get_geometry (window, x, y,
+				    width, height,
+				    depth);
 	  /* This reports the position wrt to the native parent, we need to convert
 	     it to be relative to the client side parent */
 	  parent = private->parent;
 	  if (parent && !gdk_window_has_impl (parent))
 	    {
-	      *x -= parent->abs_x;
-	      *y -= parent->abs_y;
+	      if (x)
+		*x -= parent->abs_x;
+	      if (y)
+		*y -= parent->abs_y;
 	    }
 	}
       else
@@ -7393,6 +7537,7 @@ gdk_window_get_origin (GdkWindow *window,
 		       gint      *y)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
 
   g_return_val_if_fail (GDK_IS_WINDOW (window), 0);
 
@@ -7407,10 +7552,11 @@ gdk_window_get_origin (GdkWindow *window,
   
   private = (GdkWindowObject *) window;
 
-  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->get_root_coords (window,
-							      private->abs_x,
-							      private->abs_y,
-							      x, y);
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+  impl_iface->get_root_coords (window,
+			       private->abs_x,
+			       private->abs_y,
+			       x, y);
 
   return TRUE;
 }
@@ -7436,6 +7582,7 @@ gdk_window_get_root_coords (GdkWindow *window,
 			    gint      *root_y)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -7450,10 +7597,11 @@ gdk_window_get_root_coords (GdkWindow *window,
       return;
     }
   
-  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->get_root_coords (window,
-							      x + private->abs_x,
-							      y + private->abs_y,
-							      root_x, root_y);
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+  impl_iface->get_root_coords (window,
+			       x + private->abs_x,
+			       y + private->abs_y,
+			       root_x, root_y);
 }
 
 
@@ -7478,6 +7626,7 @@ gdk_window_get_deskrelative_origin (GdkWindow *window,
 				    gint      *y)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
   gboolean return_val = FALSE;
   gint tx = 0;
   gint ty = 0;
@@ -7488,7 +7637,8 @@ gdk_window_get_deskrelative_origin (GdkWindow *window,
 
   if (!GDK_WINDOW_DESTROYED (window))
     {
-      return_val = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->get_deskrelative_origin (window, &tx, &ty);
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      return_val = impl_iface->get_deskrelative_origin (window, &tx, &ty);
 
       if (x)
 	*x = tx + private->abs_x;
@@ -7606,6 +7756,10 @@ gdk_window_shape_combine_region (GdkWindow       *window,
 
   recompute_visible_regions (private, TRUE, FALSE);
 
+  if (gdk_window_has_impl (private) &&
+      !should_apply_clip_as_shape (private))
+    apply_shape (private, private->shape);
+
   if (old_region)
     {
       new_region = gdk_region_copy (private->clip_region);
@@ -7618,8 +7772,7 @@ gdk_window_shape_combine_region (GdkWindow       *window,
 
       gdk_region_destroy (diff);
 
-      if (private->parent != NULL &&
-	  private->parent->window_type != GDK_WINDOW_ROOT)
+      if (!gdk_window_is_toplevel (private))
 	{
 	  /* New area in the non-root parent window, needs invalidation */
 	  diff = gdk_region_copy (old_region);
@@ -7785,6 +7938,7 @@ gdk_window_input_shape_combine_region (GdkWindow       *window,
 				       gint             offset_y)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
 
   g_return_if_fail (GDK_IS_WINDOW (window));
 
@@ -7805,7 +7959,10 @@ gdk_window_input_shape_combine_region (GdkWindow       *window,
     private->input_shape = NULL;
 
   if (gdk_window_has_impl (private))
-    GDK_WINDOW_IMPL_GET_IFACE (private->impl)->input_shape_combine_region ((GdkWindow *)private, private->input_shape, 0, 0);
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->input_shape_combine_region (window, private->input_shape, 0, 0);
+    }
 
   /* Pointer may have e.g. moved outside window due to the input mask change */
   _gdk_synthesize_crossing_events_for_geometry_change (window);
@@ -7898,13 +8055,17 @@ gdk_window_set_static_gravities (GdkWindow *window,
 				 gboolean   use_static)
 {
   GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
 
   g_return_val_if_fail (GDK_IS_WINDOW (window), FALSE);
 
   private = (GdkWindowObject *) window;
 
   if (gdk_window_has_impl (private))
-    return GDK_WINDOW_IMPL_GET_IFACE (private->impl)->set_static_gravities (window, use_static);
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      return impl_iface->set_static_gravities (window, use_static);
+    }
 
   return FALSE;
 }
@@ -8052,8 +8213,8 @@ apply_redirect_to_children (GdkWindowObject   *private,
  * @src_y: y position in @window
  * @dest_x: x position in @drawable
  * @dest_y: y position in @drawable
- * @width: width of redirection
- * @height: height of redirection
+ * @width: width of redirection, or -1 to use the width of @window
+ * @height: height of redirection or -1 to use the height of @window
  *
  * Redirects drawing into @window so that drawing to the
  * window in the rectangle specified by @src_x, @src_y,
@@ -8303,6 +8464,7 @@ static void
 update_cursor (GdkDisplay *display)
 {
   GdkWindowObject *pointer_window, *cursor_window, *parent, *toplevel;
+  GdkWindowImplIface *impl_iface;
   GdkPointerGrabInfo *grab;
 
   pointer_window = (GdkWindowObject *)display->pointer_info.window_under_pointer;
@@ -8323,14 +8485,16 @@ update_cursor (GdkDisplay *display)
   /* Set all cursors on toplevel, otherwise its tricky to keep track of
    * which native window has what cursor set. */
   toplevel = (GdkWindowObject *)get_event_toplevel ((GdkWindow *)pointer_window);
-  GDK_WINDOW_IMPL_GET_IFACE (toplevel->impl)->set_cursor
-    ((GdkWindow *)toplevel, cursor_window->cursor);
+  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (toplevel->impl);
+  impl_iface->set_cursor ((GdkWindow *)toplevel, cursor_window->cursor);
 }
 
 static void
 from_embedder (GdkWindowObject *window,
-	       double embedder_x, double embedder_y,
-	       double *offscreen_x, double *offscreen_y)
+	       gdouble          embedder_x,
+               gdouble          embedder_y,
+	       gdouble         *offscreen_x,
+               gdouble         *offscreen_y)
 {
   g_signal_emit (window,
 		 signals[FROM_EMBEDDER], 0,
@@ -8341,8 +8505,10 @@ from_embedder (GdkWindowObject *window,
 
 static void
 convert_coords_to_child (GdkWindowObject *child,
-			 double x, double y,
-			 double *child_x, double *child_y)
+			 gdouble          x,
+                         gdouble          y,
+			 gdouble         *child_x,
+                         gdouble         *child_y)
 {
   if (gdk_window_is_offscreen (child))
     {
@@ -8358,7 +8524,8 @@ convert_coords_to_child (GdkWindowObject *child,
 
 static gboolean
 point_in_window (GdkWindowObject *window,
-		 double x, double y)
+		 gdouble          x,
+                 gdouble          y)
 {
   return
     x >= 0 && x < window->width &&
@@ -8373,8 +8540,10 @@ point_in_window (GdkWindowObject *window,
 
 static GdkWindow *
 convert_native_coords_to_toplevel (GdkWindow *window,
-				   double child_x, double child_y,
-				   double *toplevel_x, double *toplevel_y)
+				   gdouble    child_x,
+                                   gdouble    child_y,
+				   gdouble   *toplevel_x,
+                                   gdouble   *toplevel_y)
 {
   GdkWindowObject *private = (GdkWindowObject *)window;
   gdouble x, y;
@@ -8382,8 +8551,7 @@ convert_native_coords_to_toplevel (GdkWindow *window,
   x = child_x;
   y = child_y;
 
-  while (private->parent != NULL &&
-	 (private->parent->window_type != GDK_WINDOW_ROOT))
+  while (!gdk_window_is_toplevel (private))
     {
       x += private->x;
       y += private->y;
@@ -8432,7 +8600,8 @@ convert_toplevel_coords_to_window (GdkWindow *window,
 
 static GdkWindowObject *
 pick_embedded_child (GdkWindowObject *window,
-		      double x, double y)
+		     gdouble          x,
+                     gdouble          y)
 {
   GdkWindowObject *res;
 
@@ -8446,7 +8615,8 @@ pick_embedded_child (GdkWindowObject *window,
 
 GdkWindow *
 _gdk_window_find_child_at (GdkWindow *window,
-			   int x, int y)
+			   int        x,
+                           int        y)
 {
   GdkWindowObject *private, *sub;
   double child_x, child_y;
@@ -8485,12 +8655,13 @@ _gdk_window_find_child_at (GdkWindow *window,
 
 GdkWindow *
 _gdk_window_find_descendant_at (GdkWindow *toplevel,
-				double x, double y,
-				double *found_x,
-				double *found_y)
+				gdouble    x,
+                                gdouble    y,
+				gdouble   *found_x,
+				gdouble   *found_y)
 {
   GdkWindowObject *private, *sub;
-  double child_x, child_y;
+  gdouble child_x, child_y;
   GList *l;
   gboolean found;
 
@@ -8574,7 +8745,7 @@ gdk_window_beep (GdkWindow *window)
   toplevel = get_event_toplevel (window);
   display = gdk_drawable_get_display (GDK_DRAWABLE (window));
 
-  if (toplevel && gdk_window_is_offscreen ((GdkWindowObject *)toplevel))
+  if (toplevel && !gdk_window_is_offscreen ((GdkWindowObject *)toplevel))
     _gdk_windowing_window_beep (toplevel);
   else
     gdk_display_beep (display);
@@ -8712,6 +8883,8 @@ _gdk_make_event (GdkWindow    *window,
 
   event->any.window = g_object_ref (window);
   event->any.send_event = FALSE;
+  if (event_in_queue && event_in_queue->any.send_event)
+    event->any.send_event = TRUE;
 
   switch (type)
     {
@@ -8817,6 +8990,7 @@ send_crossing_event (GdkDisplay                 *display,
   GdkEvent *event;
   guint32 event_mask;
   GdkPointerGrabInfo *grab;
+  GdkWindowImplIface *impl_iface;
 
   grab = _gdk_display_has_pointer_grab (display, serial);
 
@@ -8831,8 +9005,11 @@ send_crossing_event (GdkDisplay                 *display,
     event_mask = GDK_ENTER_NOTIFY_MASK;
 
   if (window->extension_events != 0)
-    GDK_WINDOW_IMPL_GET_IFACE (window->impl)->input_window_crossing ((GdkWindow *)window,
-								     type == GDK_ENTER_NOTIFY);
+    {
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (window->impl);
+      impl_iface->input_window_crossing ((GdkWindow *)window,
+					 type == GDK_ENTER_NOTIFY);
+    }
 
   if (window->event_mask & event_mask)
     {
@@ -9155,7 +9332,11 @@ gdk_pointer_grab (GdkWindow *	  window,
 
 /**
  * gdk_window_geometry_changed:
- * @window: a #GdkWindow
+ * @window: an embedded offscreen #GdkWindow
+ *
+ * This function informs GDK that the geometry of an embedded
+ * offscreen window has changed. This is necessary for GDK to keep
+ * track of which offscreen window the pointer is in.
  *
  * Since: 2.18
  */
@@ -9601,6 +9782,15 @@ gdk_window_print (GdkWindowObject *window,
 		  int indent)
 {
   GdkRectangle r;
+  const char *window_types[] = {
+    "root",
+    "toplevel",
+    "child",
+    "dialog",
+    "temp",
+    "foreign",
+    "offscreen"
+  };
 
   g_print ("%*s%p: [%s] %d,%d %dx%d", indent, "", window,
 	   window->user_data ? g_type_name_from_instance (window->user_data) : "no widget",
@@ -9615,8 +9805,14 @@ gdk_window_print (GdkWindowObject *window,
 #endif
     }
 
+  if (window->window_type != GDK_WINDOW_CHILD)
+    g_print (" %s", window_types[window->window_type]);
+
   if (window->input_only)
     g_print (" input-only");
+
+  if (window->shaped)
+    g_print (" shaped");
 
   if (!gdk_window_is_visible ((GdkWindow *)window))
     g_print (" hidden");
@@ -9695,6 +9891,18 @@ _gdk_windowing_got_event (GdkDisplay *display,
   if (!event_window)
     return;
 
+  event_private = GDK_WINDOW_OBJECT (event_window);
+
+#ifdef DEBUG_WINDOW_PRINTING
+  if (event->type == GDK_KEY_PRESS &&
+      (event->key.keyval == 0xa7 ||
+       event->key.keyval == 0xbd))
+    {
+      gdk_window_print_tree (event_window, 0,
+			     event->key.keyval == 0xbd);
+    }
+#endif
+
   if (_gdk_native_windows)
     {
       if (event->type == GDK_BUTTON_PRESS &&
@@ -9731,18 +9939,6 @@ _gdk_windowing_got_event (GdkDisplay *display,
       return;
     }
 
-  event_private = GDK_WINDOW_OBJECT (event_window);
-
-#ifdef DEBUG_WINDOW_PRINTING
-  if (event->type == GDK_KEY_PRESS &&
-      (event->key.keyval == 0xa7 ||
-       event->key.keyval == 0xbd))
-    {
-      gdk_window_print_tree (event_window, 0,
-			     event->key.keyval == 0xbd);
-    }
-#endif
-
   if (event->type == GDK_VISIBILITY_NOTIFY)
     {
       event_private->native_visibility = event->visibility.state;
@@ -9759,9 +9955,7 @@ _gdk_windowing_got_event (GdkDisplay *display,
       event_private->window_type == GDK_WINDOW_ROOT)
     return;
 
-  is_toplevel =
-    event_private->parent == NULL ||
-    event_private->parent->window_type == GDK_WINDOW_ROOT;
+  is_toplevel = gdk_window_is_toplevel (event_private);
 
   if ((event->type == GDK_ENTER_NOTIFY ||
        event->type == GDK_LEAVE_NOTIFY) &&

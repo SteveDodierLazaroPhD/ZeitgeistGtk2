@@ -634,7 +634,7 @@ gdk_draw_drawable (GdkDrawable *drawable,
 		   gint         width,
 		   gint         height)
 {
-  GdkDrawable *composite, *composite_impl;
+  GdkDrawable *composite;
   gint composite_x_offset = 0;
   gint composite_y_offset = 0;
 
@@ -663,24 +663,13 @@ gdk_draw_drawable (GdkDrawable *drawable,
                                                           &composite_x_offset,
                                                           &composite_y_offset);
 
-  /* The draw_drawable call below is will recurse into gdk_draw_drawable again,
-   * specifying the right impl for the destination. This means the composite
-   * we got here will be fed to get_composite_drawable again, which is a problem
-   * for window as that causes double the composite offset. Avoid this by passing
-   * in the impl directly.
-   */
-  if (GDK_IS_WINDOW (composite))
-    composite_impl = GDK_WINDOW_OBJECT (src)->impl;
-  else
-    composite_impl = composite;
-
   /* TODO: For non-native windows this may copy stuff from other overlapping
      windows. We should clip that and (for windows with bg != None) clear that
      area in the destination instead. */
 
   if (GDK_DRAWABLE_GET_CLASS (drawable)->draw_drawable_with_src)
     GDK_DRAWABLE_GET_CLASS (drawable)->draw_drawable_with_src (drawable, gc,
-							       composite_impl,
+							       composite,
 							       xsrc - composite_x_offset,
 							       ysrc - composite_y_offset,
 							       xdest, ydest,
@@ -688,7 +677,7 @@ gdk_draw_drawable (GdkDrawable *drawable,
 							       src);
   else /* backwards compat for old out-of-tree implementations of GdkDrawable (are there any?) */
     GDK_DRAWABLE_GET_CLASS (drawable)->draw_drawable (drawable, gc,
-						      composite_impl,
+						      composite,
 						      xsrc - composite_x_offset,
 						      ysrc - composite_y_offset,
 						      xdest, ydest,
@@ -1638,12 +1627,14 @@ gdk_drawable_real_draw_pixbuf (GdkDrawable  *drawable,
      have already retargeted the destination to any
      impl window and set the clip, so what we really
      want to do is draw directly on the impl, ignoring
-     client side subwindows. */
+     client side subwindows. We also use the impl
+     in the pixmap target case to avoid resetting the
+     already set clip on the GC. */
   if (GDK_IS_WINDOW (drawable))
     real_drawable = GDK_WINDOW_OBJECT (drawable)->impl;
   else
-    real_drawable = drawable;
-  
+    real_drawable = GDK_PIXMAP_OBJECT (drawable)->impl;
+
   if (pixbuf->has_alpha)
     {
       GdkVisual *visual = gdk_drawable_get_visual (drawable);

@@ -7808,6 +7808,9 @@ extern __typeof (gtk_range_get_adjustment) gtk_range_get_adjustment __attribute(
 #undef gtk_range_get_fill_level 
 extern __typeof (gtk_range_get_fill_level) gtk_range_get_fill_level __attribute((alias("IA__gtk_range_get_fill_level"), visibility("default")));
 
+#undef gtk_range_get_flippable 
+extern __typeof (gtk_range_get_flippable) gtk_range_get_flippable __attribute((alias("IA__gtk_range_get_flippable"), visibility("default")));
+
 #undef gtk_range_get_inverted 
 extern __typeof (gtk_range_get_inverted) gtk_range_get_inverted __attribute((alias("IA__gtk_range_get_inverted"), visibility("default")));
 
@@ -7837,6 +7840,9 @@ extern __typeof (gtk_range_set_adjustment) gtk_range_set_adjustment __attribute(
 
 #undef gtk_range_set_fill_level 
 extern __typeof (gtk_range_set_fill_level) gtk_range_set_fill_level __attribute((alias("IA__gtk_range_set_fill_level"), visibility("default")));
+
+#undef gtk_range_set_flippable 
+extern __typeof (gtk_range_set_flippable) gtk_range_set_flippable __attribute((alias("IA__gtk_range_set_flippable"), visibility("default")));
 
 #undef gtk_range_set_increments 
 extern __typeof (gtk_range_set_increments) gtk_range_set_increments __attribute((alias("IA__gtk_range_set_increments"), visibility("default")));
@@ -12004,6 +12010,12 @@ extern __typeof (gtk_widget_is_focus) gtk_widget_is_focus __attribute((alias("IA
 #undef gtk_widget_is_sensitive 
 extern __typeof (gtk_widget_is_sensitive) gtk_widget_is_sensitive __attribute((alias("IA__gtk_widget_is_sensitive"), visibility("default")));
 
+#undef gtk_widget_is_toplevel 
+extern __typeof (gtk_widget_is_toplevel) gtk_widget_is_toplevel __attribute((alias("IA__gtk_widget_is_toplevel"), visibility("default")));
+
+#undef gtk_widget_is_drawable 
+extern __typeof (gtk_widget_is_drawable) gtk_widget_is_drawable __attribute((alias("IA__gtk_widget_is_drawable"), visibility("default")));
+
 #undef gtk_widget_keynav_failed 
 extern __typeof (gtk_widget_keynav_failed) gtk_widget_keynav_failed __attribute((alias("IA__gtk_widget_keynav_failed"), visibility("default")));
 
@@ -12203,6 +12215,9 @@ extern __typeof (gtk_widget_set_tooltip_window) gtk_widget_set_tooltip_window __
 
 #undef gtk_widget_set_visible 
 extern __typeof (gtk_widget_set_visible) gtk_widget_set_visible __attribute((alias("IA__gtk_widget_set_visible"), visibility("default")));
+
+#undef gtk_widget_set_window 
+extern __typeof (gtk_widget_set_window) gtk_widget_set_window __attribute((alias("IA__gtk_widget_set_window"), visibility("default")));
 
 #undef gtk_widget_shape_combine_mask 
 extern __typeof (gtk_widget_shape_combine_mask) gtk_widget_shape_combine_mask __attribute((alias("IA__gtk_widget_shape_combine_mask"), visibility("default")));

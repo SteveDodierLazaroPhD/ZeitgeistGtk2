@@ -694,7 +694,7 @@ gtk_widget_class_init (GtkWidgetClass *klass)
 							GTK_PARAM_READABLE));
 
   /**
-   * GtkWidget::double-buffered
+   * GtkWidget:double-buffered
    *
    * Whether or not the widget is double buffered.
    *
@@ -5699,6 +5699,46 @@ gtk_widget_get_has_window (GtkWidget *widget)
   g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
 
   return !GTK_WIDGET_NO_WINDOW (widget);
+}
+
+/**
+ * gtk_widget_is_toplevel:
+ * @widget: a #GtkWidget
+ *
+ * Determines whether @widget is a toplevel widget. Currently only
+ * #GtkWindow and #GtkInvisible are toplevel widgets. Toplevel
+ * widgets have no parent widget.
+ *
+ * Return value: %TRUE if @widget is a toplevel, %FALSE otherwise
+ *
+ * Since: 2.18
+ **/
+gboolean
+gtk_widget_is_toplevel (GtkWidget *widget)
+{
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+
+  return (GTK_WIDGET_FLAGS (widget) & GTK_TOPLEVEL) != 0;
+}
+
+/**
+ * gtk_widget_is_drawable:
+ * @widget: a #GtkWidget
+ *
+ * Determines whether @widget can be drawn to. A widget can be drawn
+ * to if it is mapped and visible.
+ *
+ * Return value: %TRUE if @widget is drawable, %FALSE otherwise
+ *
+ * Since: 2.18
+ **/
+gboolean
+gtk_widget_is_drawable (GtkWidget *widget)
+{
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+
+  return ((GTK_WIDGET_FLAGS (widget) & GTK_VISIBLE) != 0 &&
+          (GTK_WIDGET_FLAGS (widget) & GTK_MAPPED) != 0);
 }
 
 /**
@@ -10793,6 +10833,37 @@ gtk_widget_set_allocation (GtkWidget           *widget,
   g_return_if_fail (allocation != NULL);
 
   widget->allocation = *allocation;
+}
+
+/**
+ * gtk_widget_set_window:
+ * @widget: a #GtkWidget
+ * @window: a #GdkWindow
+ *
+ * Sets a widget's window. This function should only be used in a
+ * widget's GtkWidget::realize() implementation. The %window passed is
+ * usually either new window created with gdk_window_new(), or the
+ * window of its parent widget as returned by
+ * gtk_widget_get_parent_window().
+ *
+ * Widgets must indicate whether they will create their own #GdkWindow
+ * by calling gtk_widget_set_has_window(). This is usually done in the
+ * widget's init() function.
+ *
+ * Since: 2.18
+ */
+void
+gtk_widget_set_window (GtkWidget *widget,
+                       GdkWindow *window)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+  g_return_if_fail (window == NULL || GDK_IS_WINDOW (window));
+
+  if (widget->window != window)
+    {
+      widget->window = window;
+      g_object_notify (G_OBJECT (widget), "window");
+    }
 }
 
 /**

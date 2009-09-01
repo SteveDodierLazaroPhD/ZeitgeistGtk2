@@ -32,6 +32,8 @@ GtkWidget *do_infobar (GtkWidget *do_widget);
 GtkWidget *do_links (GtkWidget *do_widget);
 GtkWidget *do_list_store (GtkWidget *do_widget);
 GtkWidget *do_menus (GtkWidget *do_widget);
+GtkWidget *do_offscreen_window (GtkWidget *do_widget);
+GtkWidget *do_offscreen_window2 (GtkWidget *do_widget);
 GtkWidget *do_panes (GtkWidget *do_widget);
 GtkWidget *do_pickers (GtkWidget *do_widget);
 GtkWidget *do_pixbufs (GtkWidget *do_widget);
@@ -72,6 +74,12 @@ Demo child3[] = {
   { NULL } 
 };
 
+Demo child4[] = {
+  { "Rotated button", "offscreen_window.c", do_offscreen_window, NULL },
+  { "Effects", "offscreen_window2.c", do_offscreen_window2, NULL },
+  { NULL } 
+};
+
 Demo testgtk_demos[] = {
   { "Application main window", "appwindow.c", do_appwindow, NULL }, 
   { "Assistant", "assistant.c", do_assistant, NULL }, 
@@ -90,6 +98,7 @@ Demo testgtk_demos[] = {
   { "Info bar", "infobar.c", do_infobar, NULL }, 
   { "Links", "links.c", do_links, NULL }, 
   { "Menus", "menus.c", do_menus, NULL }, 
+  { "Offscreen windows", NULL, NULL, child4 }, 
   { "Paned Widgets", "panes.c", do_panes, NULL }, 
   { "Pickers", "pickers.c", do_pickers, NULL }, 
   { "Pixbufs", "pixbufs.c", do_pixbufs, NULL }, 

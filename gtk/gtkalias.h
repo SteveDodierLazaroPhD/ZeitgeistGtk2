@@ -7805,6 +7805,9 @@ extern __typeof (gtk_range_get_adjustment) IA__gtk_range_get_adjustment __attrib
 extern __typeof (gtk_range_get_fill_level) IA__gtk_range_get_fill_level __attribute((visibility("hidden")));
 #define gtk_range_get_fill_level IA__gtk_range_get_fill_level
 
+extern __typeof (gtk_range_get_flippable) IA__gtk_range_get_flippable __attribute((visibility("hidden")));
+#define gtk_range_get_flippable IA__gtk_range_get_flippable
+
 extern __typeof (gtk_range_get_inverted) IA__gtk_range_get_inverted __attribute((visibility("hidden")));
 #define gtk_range_get_inverted IA__gtk_range_get_inverted
 
@@ -7834,6 +7837,9 @@ extern __typeof (gtk_range_set_adjustment) IA__gtk_range_set_adjustment __attrib
 
 extern __typeof (gtk_range_set_fill_level) IA__gtk_range_set_fill_level __attribute((visibility("hidden")));
 #define gtk_range_set_fill_level IA__gtk_range_set_fill_level
+
+extern __typeof (gtk_range_set_flippable) IA__gtk_range_set_flippable __attribute((visibility("hidden")));
+#define gtk_range_set_flippable IA__gtk_range_set_flippable
 
 extern __typeof (gtk_range_set_increments) IA__gtk_range_set_increments __attribute((visibility("hidden")));
 #define gtk_range_set_increments IA__gtk_range_set_increments
@@ -12001,6 +12007,12 @@ extern __typeof (gtk_widget_is_focus) IA__gtk_widget_is_focus __attribute((visib
 extern __typeof (gtk_widget_is_sensitive) IA__gtk_widget_is_sensitive __attribute((visibility("hidden")));
 #define gtk_widget_is_sensitive IA__gtk_widget_is_sensitive
 
+extern __typeof (gtk_widget_is_toplevel) IA__gtk_widget_is_toplevel __attribute((visibility("hidden")));
+#define gtk_widget_is_toplevel IA__gtk_widget_is_toplevel
+
+extern __typeof (gtk_widget_is_drawable) IA__gtk_widget_is_drawable __attribute((visibility("hidden")));
+#define gtk_widget_is_drawable IA__gtk_widget_is_drawable
+
 extern __typeof (gtk_widget_keynav_failed) IA__gtk_widget_keynav_failed __attribute((visibility("hidden")));
 #define gtk_widget_keynav_failed IA__gtk_widget_keynav_failed
 
@@ -12200,6 +12212,9 @@ extern __typeof (gtk_widget_set_tooltip_window) IA__gtk_widget_set_tooltip_windo
 
 extern __typeof (gtk_widget_set_visible) IA__gtk_widget_set_visible __attribute((visibility("hidden")));
 #define gtk_widget_set_visible IA__gtk_widget_set_visible
+
+extern __typeof (gtk_widget_set_window) IA__gtk_widget_set_window __attribute((visibility("hidden")));
+#define gtk_widget_set_window IA__gtk_widget_set_window
 
 extern __typeof (gtk_widget_shape_combine_mask) IA__gtk_widget_shape_combine_mask __attribute((visibility("hidden")));
 #define gtk_widget_shape_combine_mask IA__gtk_widget_shape_combine_mask

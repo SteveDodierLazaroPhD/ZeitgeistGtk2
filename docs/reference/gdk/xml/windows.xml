@@ -361,6 +361,14 @@ GTK+ level. A <link linkend="GtkWindow"><type>GtkWindow</type></link> is a tople
 as a "window" with a titlebar and so on; a <link linkend="GtkWindow"><type>GtkWindow</type></link> may contain many <link linkend="GdkWindow"><type>GdkWindow</type></link>.
 For example, each <link linkend="GtkButton"><type>GtkButton</type></link> has a <link linkend="GdkWindow"><type>GdkWindow</type></link> associated with it.
 </para>
+<refsect2 id="COMPOSITED-WINDOWS"><title>Composited Windows</title>
+<para>
+Normally, the windowing system takes care of rendering the contents of a child
+window onto its parent window. This mechanism can be intercepted by calling
+<link linkend="gdk-window-set-composited"><function>gdk_window_set_composited()</function></link> on the child window. For a
+<firstterm>composited</firstterm> window it is the responsibility of the
+application to render the window contents at the right spot.
+</para>
 <example id="composited-window-example"><title>Composited windows</title>
 <programlisting><![CDATA[
 #include <gtk/gtk.h>
@@ -399,7 +407,7 @@ transparent_expose (GtkWidget      *widget,
  * this handler is called after the red has been drawn. If it was
  * called before then GTK would just blindly paint over our work.
  *
- * Note: if the child window has children, then you need a cairo 1.16
+ * Note: if the child window has children, then you need a cairo 1.6
  * feature to make this work correctly.
  */
 static gboolean
@@ -496,6 +504,28 @@ In our case, we merge the contents with a 50% transparency. We
 also set the background colour of the window to red. The effect is
 that the background shows through the button.
 </para>
+</refsect2>
+<refsect2 id="OFFSCREEN-WINDOWS"><title>Offscreen Windows</title>
+<para>
+Offscreen windows are more general than composited windows, since they
+allow not only to modify the rendering of the child window onto its parent,
+but also to apply coordinate transformations.
+</para>
+<para>
+To integrate an offscreen window into a window hierarchy, one has to call
+<link linkend="gdk-window-set-embedder"><function>gdk_window_set_embedder()</function></link> and handle a number of signals. The
+<link linkend="gdk-offscreen-window-set-embedder"><function>gdk_offscreen_window_set_embedder()</function></link> and handle a number of signals. The
+<link linkend="GdkWindow-pick-embedded-child"><type>"pick-embedded-child"</type></link> signal on the embedder window is used to
+select an offscreen child at given coordinates, and the <link linkend="GdkWindow-to-embedder"><type>"to-embedder"</type></link>
+and <link linkend="GdkWindow-from-embedder"><type>"from-embedder"</type></link> signals on the offscreen window are used to
+translate coordinates between the embedder and the offscreen window.
+</para>
+<para>
+For rendering an offscreen window onto its embedder, the contents of the
+offscreen window are available as a pixmap, via
+<link linkend="gdk-offscreen-window-get-pixmap"><function>gdk_offscreen_window_get_pixmap()</function></link>.
+</para>
+</refsect2>
 </refsect1>
 
 <refsect1 id="gdk-Windows.details" role="details">
@@ -558,7 +588,7 @@ Describes the kind of window.
 </varlistentry>
 <varlistentry id="GDK-WINDOW-OFFSCREEN--CAPS" role="constant">
 <term><literal>GDK_WINDOW_OFFSCREEN</literal></term>
-<listitem><simpara>offscreen window. Since 2.18
+<listitem><simpara>offscreen window (see <xref linkend="OFFSCREEN-WINDOWS"/>). Since 2.18
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
@@ -4277,9 +4307,9 @@ see <link linkend="gdk-display-set-pointer-hooks"><function>gdk_display_set_poin
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the previous pointer hook table
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="gdk-offscreen-window-get-pixmap" role="function">
+<refsect2 id="gdk-offscreen-window-get-pixmap" role="function" condition="since:2.18">
 <title>gdk_offscreen_window_get_pixmap ()</title>
-<indexterm zone="gdk-offscreen-window-get-pixmap"><primary sortas="offscreen_window_get_pixmap">gdk_offscreen_window_get_pixmap</primary></indexterm><programlisting><link linkend="GdkPixmap">GdkPixmap</link> *         gdk_offscreen_window_get_pixmap     (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<indexterm zone="gdk-offscreen-window-get-pixmap" role="2.18"><primary sortas="offscreen_window_get_pixmap">gdk_offscreen_window_get_pixmap</primary></indexterm><programlisting><link linkend="GdkPixmap">GdkPixmap</link> *         gdk_offscreen_window_get_pixmap     (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
 <para>
 Gets the offscreen pixmap that an offscreen window renders into.
 If you need to keep this around over window resizes, you need to
@@ -4290,14 +4320,21 @@ add a reference to it.</para>
 <listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The offscreen pixmap, or <link linkend="NULL--CAPS"><literal>NULL</literal></link> if not offscreen
+
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gdk-offscreen-window-set-embedder" role="function" condition="since:2.18">
 <title>gdk_offscreen_window_set_embedder ()</title>
 <indexterm zone="gdk-offscreen-window-set-embedder" role="2.18"><primary sortas="offscreen_window_set_embedder">gdk_offscreen_window_set_embedder</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_offscreen_window_set_embedder   (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkWindow">GdkWindow</link> *embedder);</programlisting>
 <para>
+Sets <parameter>window</parameter> to be embedded in <parameter>embedder</parameter>.
 </para>
+<para>
+To fully embed an offscreen window, in addition to calling this
+function, it is also necessary to handle the <link linkend="GdkWindow-pick-embedded-child"><type>"pick-embedded-child"</type></link>
+signal on the <parameter>embedder</parameter> and the <link linkend="GdkWindow-to-embedder"><type>"to-embedder"</type></link> and
+<link linkend="GdkWindow-from-embedder"><type>"from-embedder"</type></link> signals on <parameter>window</parameter>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>window</parameter>&#160;:</term>
@@ -4326,11 +4363,13 @@ Gets the window that <parameter>window</parameter> is embedded in.</para>
 <title>gdk_window_geometry_changed ()</title>
 <indexterm zone="gdk-window-geometry-changed" role="2.18"><primary sortas="window_geometry_changed">gdk_window_geometry_changed</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_geometry_changed         (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
 <para>
-</para>
+This function informs GDK that the geometry of an embedded
+offscreen window has changed. This is necessary for GDK to keep
+track of which offscreen window the pointer is in.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>window</parameter>&#160;:</term>
-<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+<listitem><simpara> an embedded offscreen <link linkend="GdkWindow"><type>GdkWindow</type></link>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gdk-window-redirect-to-drawable" role="function" condition="since:2.14">
@@ -4378,10 +4417,10 @@ is called.</para>
 <listitem><simpara> y position in <parameter>drawable</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>width</parameter>&#160;:</term>
-<listitem><simpara> width of redirection
+<listitem><simpara> width of redirection, or -1 to use the width of <parameter>window</parameter>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>height</parameter>&#160;:</term>
-<listitem><simpara> height of redirection
+<listitem><simpara> height of redirection or -1 to use the height of <parameter>window</parameter>
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gdk-window-remove-redirection" role="function" condition="since:2.14">
@@ -4416,7 +4455,10 @@ Removes any active redirection started by
                                                         <link linkend="gpointer">gpointer</link>   user_data)        : Run Last</programlisting>
 <para>
 The ::from-embedder signal is emitted to translate coordinates
-in the embedder of an offscreen window to the offscreen window.</para>
+in the embedder of an offscreen window to the offscreen window.
+</para>
+<para>
+See also <link linkend="GtkWindow-to-embedder"><type>"to-embedder"</type></link>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>window</parameter>&#160;:</term>
@@ -4457,7 +4499,7 @@ child at the given position.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>user_data</parameter>&#160;:</term>
 <listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the GdkWindow of the embedded child at <parameter>x</parameter>, <parameter>y</parameter>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the <link linkend="GdkWindow"><type>GdkWindow</type></link> of the embedded child at <parameter>x</parameter>, <parameter>y</parameter>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
 </simpara></listitem></varlistentry>
 </variablelist><para>Since 2.18</para></refsect2><refsect2 id="GdkWindow-to-embedder" role="signal"><title>The <literal>&quot;to-embedder&quot;</literal> signal</title>
 <indexterm zone="GdkWindow-to-embedder" role="2.18"><primary sortas="Window::to-embedder">GdkWindow::to-embedder</primary></indexterm><programlisting><link linkend="void">void</link>                user_function                      (<link linkend="GdkWindow">GdkWindow</link> *window,
@@ -4468,7 +4510,10 @@ child at the given position.</para>
                                                         <link linkend="gpointer">gpointer</link>   user_data)        : Run Last</programlisting>
 <para>
 The ::to-embedder signal is emitted to translate coordinates
-in an offscreen window to its embedder.</para>
+in an offscreen window to its embedder.
+</para>
+<para>
+See also <link linkend="GtkWindow-from-embedder"><type>"from-embedder"</type></link>.</para>
 <para>
 </para><variablelist role="params">
 <varlistentry><term><parameter>window</parameter>&#160;:</term>

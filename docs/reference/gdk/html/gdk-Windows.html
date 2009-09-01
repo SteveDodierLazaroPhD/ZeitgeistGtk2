@@ -642,6 +642,15 @@ For example, each <a
 href="http://library.gnome.org/devel/gtk/unstable/GtkButton.html"
 ><span class="type">GtkButton</span></a> has a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> associated with it.
 </p>
+<div class="refsect2" title="Composited Windows">
+<a name="COMPOSITED-WINDOWS"></a><h3>Composited Windows</h3>
+<p>
+Normally, the windowing system takes care of rendering the contents of a child
+window onto its parent window. This mechanism can be intercepted by calling
+<a class="link" href="gdk-Windows.html#gdk-window-set-composited" title="gdk_window_set_composited ()"><code class="function">gdk_window_set_composited()</code></a> on the child window. For a
+<em class="firstterm">composited</em> window it is the responsibility of the
+application to render the window contents at the right spot.
+</p>
 <div class="example">
 <a name="composited-window-example"></a><p class="title"><b>Example 7. Composited windows</b></p>
 <div class="example-contents"><pre class="programlisting">
@@ -681,7 +690,7 @@ transparent_expose (GtkWidget      *widget,
  * this handler is called after the red has been drawn. If it was
  * called before then GTK would just blindly paint over our work.
  *
- * Note: if the child window has children, then you need a cairo 1.16
+ * Note: if the child window has children, then you need a cairo 1.6
  * feature to make this work correctly.
  */
 static gboolean
@@ -782,6 +791,30 @@ also set the background colour of the window to red. The effect is
 that the background shows through the button.
 </p>
 </div>
+<hr>
+<div class="refsect2" title="Offscreen Windows">
+<a name="OFFSCREEN-WINDOWS"></a><h3>Offscreen Windows</h3>
+<p>
+Offscreen windows are more general than composited windows, since they
+allow not only to modify the rendering of the child window onto its parent,
+but also to apply coordinate transformations.
+</p>
+<p>
+To integrate an offscreen window into a window hierarchy, one has to call
+<code class="function">gdk_window_set_embedder()</code> and handle a number of signals. The
+<a class="link" href="gdk-Windows.html#gdk-offscreen-window-set-embedder" title="gdk_offscreen_window_set_embedder ()"><code class="function">gdk_offscreen_window_set_embedder()</code></a> and handle a number of signals. The
+<a class="link" href="gdk-Windows.html#GdkWindow-pick-embedded-child" title='The "pick-embedded-child" signal'><span class="type">"pick-embedded-child"</span></a> signal on the embedder window is used to
+select an offscreen child at given coordinates, and the <a class="link" href="gdk-Windows.html#GdkWindow-to-embedder" title='The "to-embedder" signal'><span class="type">"to-embedder"</span></a>
+and <a class="link" href="gdk-Windows.html#GdkWindow-from-embedder" title='The "from-embedder" signal'><span class="type">"from-embedder"</span></a> signals on the offscreen window are used to
+translate coordinates between the embedder and the offscreen window.
+</p>
+<p>
+For rendering an offscreen window onto its embedder, the contents of the
+offscreen window are available as a pixmap, via
+<a class="link" href="gdk-Windows.html#gdk-offscreen-window-get-pixmap" title="gdk_offscreen_window_get_pixmap ()"><code class="function">gdk_offscreen_window_get_pixmap()</code></a>.
+</p>
+</div>
+</div>
 <div class="refsect1" title="Details">
 <a name="gdk-Windows.details"></a><h2>Details</h2>
 <div class="refsect2" title="struct GdkWindow">
@@ -853,7 +886,7 @@ href="http://library.gnome.org/devel/gtk/unstable/GtkMenu.html"
 </tr>
 <tr>
 <td><p><a name="GDK-WINDOW-OFFSCREEN--CAPS"></a><span class="term"><code class="literal">GDK_WINDOW_OFFSCREEN</code></span></p></td>
-<td>offscreen window. Since 2.18
+<td>offscreen window (see <a class="xref" href="gdk-Windows.html#OFFSCREEN-WINDOWS" title="Offscreen Windows">the section called “Offscreen Windows”</a>). Since 2.18
 </td>
 </tr>
 </tbody>
@@ -6493,10 +6526,12 @@ add a reference to it.</p>
 <td> The offscreen pixmap, or <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL--CAPS"
 ><code class="literal">NULL</code></a> if not offscreen
+
 </td>
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 2.18</p>
 </div>
 <hr>
 <div class="refsect2" title="gdk_offscreen_window_set_embedder ()">
@@ -6504,7 +6539,13 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NUL
 <pre class="programlisting">void                gdk_offscreen_window_set_embedder   (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window,
                                                          <a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *embedder);</pre>
 <p>
+Sets <em class="parameter"><code>window</code></em> to be embedded in <em class="parameter"><code>embedder</code></em>.
 </p>
+<p>
+To fully embed an offscreen window, in addition to calling this
+function, it is also necessary to handle the <a class="link" href="gdk-Windows.html#GdkWindow-pick-embedded-child" title='The "pick-embedded-child" signal'><span class="type">"pick-embedded-child"</span></a>
+signal on the <em class="parameter"><code>embedder</code></em> and the <a class="link" href="gdk-Windows.html#GdkWindow-to-embedder" title='The "to-embedder" signal'><span class="type">"to-embedder"</span></a> and
+<a class="link" href="gdk-Windows.html#GdkWindow-from-embedder" title='The "from-embedder" signal'><span class="type">"from-embedder"</span></a> signals on <em class="parameter"><code>window</code></em>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -6558,14 +6599,16 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NUL
 <a name="gdk-window-geometry-changed"></a><h3>gdk_window_geometry_changed ()</h3>
 <pre class="programlisting">void                gdk_window_geometry_changed         (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);</pre>
 <p>
-</p>
+This function informs GDK that the geometry of an embedded
+offscreen window has changed. This is necessary for GDK to keep
+track of which offscreen window the pointer is in.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
-<td> a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
+<td> an embedded offscreen <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
 </td>
 </tr></tbody>
 </table></div>
@@ -6645,12 +6688,12 @@ is called.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
-<td> width of redirection
+<td> width of redirection, or -1 to use the width of <em class="parameter"><code>window</code></em>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
-<td> height of redirection
+<td> height of redirection or -1 to use the height of <em class="parameter"><code>window</code></em>
 </td>
 </tr>
 </tbody>
@@ -6709,7 +6752,10 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointe
 >gpointer</a>   user_data)        : Run Last</pre>
 <p>
 The ::from-embedder signal is emitted to translate coordinates
-in the embedder of an offscreen window to the offscreen window.</p>
+in the embedder of an offscreen window to the offscreen window.
+</p>
+<p>
+See also <span class="type">"to-embedder"</span>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -6790,7 +6836,7 @@ child at the given position.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the GdkWindow of the embedded child at <em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em>, or <a
+<td> the <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> of the embedded child at <em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em>, or <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL--CAPS"
 ><code class="literal">NULL</code></a>
 </td>
@@ -6820,7 +6866,10 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointe
 >gpointer</a>   user_data)        : Run Last</pre>
 <p>
 The ::to-embedder signal is emitted to translate coordinates
-in an offscreen window to its embedder.</p>
+in an offscreen window to its embedder.
+</p>
+<p>
+See also <span class="type">"from-embedder"</span>.</p>
 <p>
 </p>
 <div class="variablelist"><table border="0">

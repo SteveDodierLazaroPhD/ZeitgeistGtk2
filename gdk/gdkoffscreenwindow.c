@@ -837,6 +837,8 @@ gdk_offscreen_window_get_pointer (GdkWindow       *window,
  * add a reference to it.
  *
  * Returns: The offscreen pixmap, or %NULL if not offscreen
+ *
+ * Since: 2.18
  */
 GdkPixmap *
 gdk_offscreen_window_get_pixmap (GdkWindow *window)
@@ -1160,6 +1162,13 @@ gdk_offscreen_window_queue_translation (GdkWindow *window,
  * gdk_offscreen_window_set_embedder:
  * @window: a #GdkWindow
  * @embedder: the #GdkWindow that @window gets embedded in
+ *
+ * Sets @window to be embedded in @embedder.
+ *
+ * To fully embed an offscreen window, in addition to calling this
+ * function, it is also necessary to handle the #GdkWindow::pick-embedded-child
+ * signal on the @embedder and the #GdkWindow::to-embedder and
+ * #GdkWindow::from-embedder signals on @window.
  *
  * Since: 2.18
  */

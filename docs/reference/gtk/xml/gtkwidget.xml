@@ -337,7 +337,7 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
 <link linkend="void">void</link>                <link linkend="gtk-widget-trigger-tooltip-query">gtk_widget_trigger_tooltip_query</link>    (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="GdkPixmap">GdkPixmap</link> *         <link linkend="gtk-widget-get-snapshot">gtk_widget_get_snapshot</link>             (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GdkRectangle">GdkRectangle</link> *clip_rect);
-<link linkend="GdkWindow">GdkWindow</link>*          <link linkend="gtk-widget-get-window">gtk_widget_get_window</link>               (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="GdkWindow">GdkWindow</link> *         <link linkend="gtk-widget-get-window">gtk_widget_get_window</link>               (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="void">void</link>                <link linkend="gtk-widget-get-allocation">gtk_widget_get_allocation</link>           (<link linkend="GtkWidget">GtkWidget</link> *widget,
                                                          <link linkend="GtkAllocation">GtkAllocation</link> *allocation);
 <link linkend="void">void</link>                <link linkend="gtk-widget-set-allocation">gtk_widget_set_allocation</link>           (<link linkend="GtkWidget">GtkWidget</link> *widget,
@@ -362,6 +362,10 @@ enum                <link linkend="GtkTextDirection">GtkTextDirection</link>;
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-has-default">gtk_widget_has_default</link>              (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-has-focus">gtk_widget_has_focus</link>                (<link linkend="GtkWidget">GtkWidget</link> *widget);
 <link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-has-grab">gtk_widget_has_grab</link>                 (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-is-drawable">gtk_widget_is_drawable</link>              (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="gboolean">gboolean</link>            <link linkend="gtk-widget-is-toplevel">gtk_widget_is_toplevel</link>              (<link linkend="GtkWidget">GtkWidget</link> *widget);
+<link linkend="void">void</link>                <link linkend="gtk-widget-set-window">gtk_widget_set_window</link>               (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         <link linkend="GdkWindow">GdkWindow</link> *window);
 
 <link linkend="GtkRequisition">GtkRequisition</link> *    <link linkend="gtk-requisition-copy">gtk_requisition_copy</link>                (const <link linkend="GtkRequisition">GtkRequisition</link> *requisition);
 <link linkend="void">void</link>                <link linkend="gtk-requisition-free">gtk_requisition_free</link>                (<link linkend="GtkRequisition">GtkRequisition</link> *requisition);
@@ -4454,7 +4458,7 @@ The returned pixmap can be <link linkend="NULL--CAPS"><literal>NULL</literal></l
 </variablelist><para role="since">Since 2.14</para></refsect2>
 <refsect2 id="gtk-widget-get-window" role="function" condition="since:2.14">
 <title>gtk_widget_get_window ()</title>
-<indexterm zone="gtk-widget-get-window" role="2.14"><primary sortas="widget_get_window">gtk_widget_get_window</primary></indexterm><programlisting><link linkend="GdkWindow">GdkWindow</link>*          gtk_widget_get_window               (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<indexterm zone="gtk-widget-get-window" role="2.14"><primary sortas="widget_get_window">gtk_widget_get_window</primary></indexterm><programlisting><link linkend="GdkWindow">GdkWindow</link> *         gtk_widget_get_window               (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
 <para>
 Returns the widget's window if it is realized, <link linkend="NULL--CAPS"><literal>NULL</literal></link> otherwise</para>
 <para>
@@ -4775,6 +4779,61 @@ See also <link linkend="gtk-grab-add"><function>gtk_grab_add()</function></link>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-widget-is-drawable" role="function" condition="since:2.18">
+<title>gtk_widget_is_drawable ()</title>
+<indexterm zone="gtk-widget-is-drawable" role="2.18"><primary sortas="widget_is_drawable">gtk_widget_is_drawable</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_widget_is_drawable              (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<para>
+Determines whether <parameter>widget</parameter> can be drawn to. A widget can be drawn
+to if it is mapped and visible.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if <parameter>widget</parameter> is drawable, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> otherwise
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-widget-is-toplevel" role="function" condition="since:2.18">
+<title>gtk_widget_is_toplevel ()</title>
+<indexterm zone="gtk-widget-is-toplevel" role="2.18"><primary sortas="widget_is_toplevel">gtk_widget_is_toplevel</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gtk_widget_is_toplevel              (<link linkend="GtkWidget">GtkWidget</link> *widget);</programlisting>
+<para>
+Determines whether <parameter>widget</parameter> is a toplevel widget. Currently only
+<link linkend="GtkWindow"><type>GtkWindow</type></link> and <link linkend="GtkInvisible"><type>GtkInvisible</type></link> are toplevel widgets. Toplevel
+widgets have no parent widget.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if <parameter>widget</parameter> is a toplevel, <link linkend="FALSE--CAPS"><literal>FALSE</literal></link> otherwise
+
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
+<refsect2 id="gtk-widget-set-window" role="function" condition="since:2.18">
+<title>gtk_widget_set_window ()</title>
+<indexterm zone="gtk-widget-set-window" role="2.18"><primary sortas="widget_set_window">gtk_widget_set_window</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_widget_set_window               (<link linkend="GtkWidget">GtkWidget</link> *widget,
+                                                         <link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Sets a widget's window. This function should only be used in a
+widget's GtkWidget::<link linkend="realize"><function>realize()</function></link> implementation. The <link linkend="window"><literal>window</literal></link> passed is
+usually either new window created with <link linkend="gdk-window-new"><function>gdk_window_new()</function></link>, or the
+window of its parent widget as returned by
+<link linkend="gtk-widget-get-parent-window"><function>gtk_widget_get_parent_window()</function></link>.
+</para>
+<para>
+Widgets must indicate whether they will create their own <link linkend="GdkWindow"><type>GdkWindow</type></link>
+by calling <link linkend="gtk-widget-set-has-window"><function>gtk_widget_set_has_window()</function></link>. This is usually done in the
+widget's <link linkend="init"><function>init()</function></link> function.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GtkWidget"><type>GtkWidget</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gtk-requisition-copy" role="function">
 <title>gtk_requisition_copy ()</title>
 <indexterm zone="gtk-requisition-copy"><primary sortas="requisition_copy">gtk_requisition_copy</primary></indexterm><programlisting><link linkend="GtkRequisition">GtkRequisition</link> *    gtk_requisition_copy                (const <link linkend="GtkRequisition">GtkRequisition</link> *requisition);</programlisting>
@@ -4820,8 +4879,12 @@ Frees a <link linkend="GtkRequisition"><type>GtkRequisition</type></link>.</para
 <para>Whether the widget is part of a composite widget.</para><para>Default value: FALSE</para>
 </refsect2>
 <refsect2 id="GtkWidget--double-buffered" role="property"><title>The <literal>&quot;double-buffered&quot;</literal> property</title>
-<indexterm zone="GtkWidget--double-buffered"><primary sortas="Widget:double-buffered">GtkWidget:double-buffered</primary></indexterm><programlisting>  &quot;double-buffered&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
-<para>Whether or not the widget is double buffered.</para><para>Default value: TRUE</para>
+<indexterm zone="GtkWidget--double-buffered" role="2.18"><primary sortas="Widget:double-buffered">GtkWidget:double-buffered</primary></indexterm><programlisting>  &quot;double-buffered&quot;          <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
+<para>
+Whether or not the widget is double buffered.</para>
+<para>
+</para><para>Default value: TRUE</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkWidget--events" role="property"><title>The <literal>&quot;events&quot;</literal> property</title>
 <indexterm zone="GtkWidget--events"><primary sortas="Widget:events">GtkWidget:events</primary></indexterm><programlisting>  &quot;events&quot;                   <link linkend="GdkEventMask">GdkEventMask</link>          : Read / Write</programlisting>
