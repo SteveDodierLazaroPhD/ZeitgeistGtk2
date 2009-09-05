@@ -2415,11 +2415,10 @@ gtk_widget_set_property (GObject         *object,
   switch (prop_id)
     {
       gboolean tmp;
-      guint32 saved_flags;
       gchar *tooltip_markup;
       const gchar *tooltip_text;
       GtkWindow *tooltip_window;
-      
+
     case PROP_NAME:
       gtk_widget_set_name (widget, g_value_get_string (value));
       break;
@@ -2433,10 +2432,7 @@ gtk_widget_set_property (GObject         *object,
       gtk_widget_set_usize_internal (widget, -2, g_value_get_int (value));
       break;
     case PROP_VISIBLE:
-      if (g_value_get_boolean (value))
-	gtk_widget_show (widget);
-      else
-	gtk_widget_hide (widget);
+      gtk_widget_set_visible (widget, g_value_get_boolean (value));
       break;
     case PROP_SENSITIVE:
       gtk_widget_set_sensitive (widget, g_value_get_boolean (value));
@@ -2445,13 +2441,7 @@ gtk_widget_set_property (GObject         *object,
       gtk_widget_set_app_paintable (widget, g_value_get_boolean (value));
       break;
     case PROP_CAN_FOCUS:
-      saved_flags = GTK_WIDGET_FLAGS (widget);
-      if (g_value_get_boolean (value))
-	GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_FOCUS);
-      else
-	GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
-      if (saved_flags != GTK_WIDGET_FLAGS (widget))
-	gtk_widget_queue_resize (widget);
+      gtk_widget_set_can_focus (widget, g_value_get_boolean (value));
       break;
     case PROP_HAS_FOCUS:
       if (g_value_get_boolean (value))
@@ -2462,23 +2452,14 @@ gtk_widget_set_property (GObject         *object,
 	gtk_widget_grab_focus (widget);
       break;
     case PROP_CAN_DEFAULT:
-      saved_flags = GTK_WIDGET_FLAGS (widget);
-      if (g_value_get_boolean (value))
-	GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_DEFAULT);
-      else
-	GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_DEFAULT);
-      if (saved_flags != GTK_WIDGET_FLAGS (widget))
-	gtk_widget_queue_resize (widget);
+      gtk_widget_set_can_default (widget, g_value_get_boolean (value));
       break;
     case PROP_HAS_DEFAULT:
       if (g_value_get_boolean (value))
 	gtk_widget_grab_default (widget);
       break;
     case PROP_RECEIVES_DEFAULT:
-      if (g_value_get_boolean (value))
-	GTK_WIDGET_SET_FLAGS (widget, GTK_RECEIVES_DEFAULT);
-      else
-	GTK_WIDGET_UNSET_FLAGS (widget, GTK_RECEIVES_DEFAULT);
+      gtk_widget_set_receives_default (widget, g_value_get_boolean (value));
       break;
     case PROP_STYLE:
       gtk_widget_set_style (widget, g_value_get_object (value));
@@ -5469,6 +5450,60 @@ gtk_widget_grab_default (GtkWidget *widget)
     gtk_window_set_default (GTK_WINDOW (window), widget);
   else
     g_warning (G_STRLOC ": widget not within a GtkWindow");
+}
+
+/**
+ * gtk_widget_set_receives_default:
+ * @widget: a #GtkWidget
+ * @receives_default: whether or not @widget can be a default widget.
+ *
+ * Specifies whether @widget will be treated as the default widget
+ * within its toplevel when it has the focus, even if another widget
+ * is the default.
+ *
+ * See gtk_widget_grab_default() for details about the meaning of
+ * "default".
+ *
+ * Since: 2.18
+ **/
+void
+gtk_widget_set_receives_default (GtkWidget *widget,
+                                 gboolean   receives_default)
+{
+  g_return_if_fail (GTK_IS_WIDGET (widget));
+
+  if (receives_default != gtk_widget_get_receives_default (widget))
+    {
+      if (receives_default)
+        GTK_WIDGET_SET_FLAGS (widget, GTK_RECEIVES_DEFAULT);
+      else
+        GTK_WIDGET_UNSET_FLAGS (widget, GTK_RECEIVES_DEFAULT);
+
+      g_object_notify (G_OBJECT (widget), "receives-default");
+    }
+}
+
+/**
+ * gtk_widget_get_receives_default:
+ * @widget: a #GtkWidget
+ *
+ * Determines whether @widget is alyways treated as default widget
+ * withing its toplevel when it has the focus, even if another widget
+ * is the default.
+ *
+ * See gtk_widget_set_receives_default().
+ *
+ * Return value: %TRUE if @widget acts as default widget when focussed,
+ *               %FALSE otherwise
+ *
+ * Since: 2.18
+ **/
+gboolean
+gtk_widget_get_receives_default (GtkWidget *widget)
+{
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+
+  return (GTK_WIDGET_FLAGS (widget) & GTK_RECEIVES_DEFAULT) != 0;
 }
 
 /**

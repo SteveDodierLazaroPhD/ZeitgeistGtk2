@@ -10531,6 +10531,9 @@ gtk_tree_view_adjustment_changed (GtkAdjustment *adjustment,
           if (!tree_view->priv->in_top_row_to_dy)
             gtk_tree_view_dy_to_top_row (tree_view);
 	}
+
+      gdk_window_process_updates (tree_view->priv->header_window, TRUE);
+      gdk_window_process_updates (tree_view->priv->bin_window, TRUE);
     }
 }
 
@@ -15007,6 +15010,10 @@ gtk_tree_view_set_row_separator_func (GtkTreeView                 *tree_view,
   tree_view->priv->row_separator_func = func;
   tree_view->priv->row_separator_data = data;
   tree_view->priv->row_separator_destroy = destroy;
+
+  /* Have the tree recalculate heights */
+  _gtk_rbtree_mark_invalid (tree_view->priv->tree);
+  gtk_widget_queue_resize (GTK_WIDGET (tree_view));
 }
 
   

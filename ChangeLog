@@ -1,3 +1,823 @@
+commit d09d810261a959b53f1da7a5c344a22d70cba28a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 23:27:37 2009 -0400
+
+    Fix a typo
+
+ gdk/gdkcairo.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit bec0d570b0a6d8c296d6113fe361514252eca0cf
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 23:00:27 2009 -0400
+
+    Fix the build
+
+ gdk/x11/gdkevents-x11.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 5c4f248ff93a70061831b6566bfb4b9e5040496f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 22:53:03 2009 -0400
+
+    Documentation additions
+
+ docs/reference/gdk/gdk-sections.txt |    3 +++
+ docs/reference/gtk/gtk-sections.txt |    2 ++
+ 2 files changed, 5 insertions(+), 0 deletions(-)
+
+commit 96636bd8cdaafd91b2f21c55533194aefc82c19c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 22:47:59 2009 -0400
+
+    Updates
+
+ NEWS |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 39 insertions(+), 0 deletions(-)
+
+commit d6f3af077782527a26debc81740600b1abba605b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 22:20:28 2009 -0400
+
+    Make gtk_combo_box_entry_set_text_column more forgiving
+
+    The assertions in there were unnecessarily restrictive. This has
+    been reported in bug 564160.
+
+ gtk/gtkcomboboxentry.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 6b7fef09ca588ce6e24bb76284adf3fee576f6a5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 20:34:09 2009 -0400
+
+    Don't forget to set the client window on the slave
+
+ gtk/gtkimmulticontext.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 5c14089225e5706af90e0c195d2e95886bef6418
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 20:22:43 2009 -0400
+
+    Make window manager tracking work better
+
+    We were getting the new wm name with a 15 second delay, due to
+    some race. Reported in bug 593644.
+
+ gdk/x11/gdkevents-x11.c |   64
+ +++++++++++++++++++++++++++-------------------
+ 1 files changed, 37 insertions(+), 27 deletions(-)
+
+commit 079cc2195603110ff021aebb8a8710fdd1d2907b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 18:22:30 2009 -0400
+
+    Avoid a segfault if license is NULL
+
+    The license field was introduced later on, so some out-of-tree loaders
+    may not set it. And Solaris printf() doesn't take NULL for a string...
+    Bug 594178.
+
+ gdk-pixbuf/queryloaders.c |   15 +++++++++------
+ 1 files changed, 9 insertions(+), 6 deletions(-)
+
+commit 1c0ecc0380f8e30df297c5f1156c11ce70c98c81
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 18:09:44 2009 -0400
+
+    Rework the way IM contexts are set
+
+    Add a function to obtain the effective context id, and reset the slave
+    only when the effective context id is different from the current
+    context
+    id, when setting a client window and on focus in. This might fix
+    bug 593868 and bug 567124.
+
+ gtk/gtkimmodule.c       |   10 ++----
+ gtk/gtkimmulticontext.c |   72
+ +++++++++++++++++++++-------------------------
+ 2 files changed, 36 insertions(+), 46 deletions(-)
+
+commit ea98cdc164b8837ff20d8906764a2e679686dd6b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 15:13:09 2009 -0400
+
+    Try again to allow newer automake
+
+ autogen.sh   |   12 ++++++++++--
+ configure.in |    1 +
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+commit 8654ffd9db89730bf3a89998e35a761e5324ecb0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 12:05:10 2009 -0400
+
+    Revert "Add AM_PROG_CC_C_O"
+
+    This reverts commit 1606b822321fb4cd370a2cd2e117481e125722ee.
+
+ configure.in |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit 5cfe90d60ce97c9d9d8d659539199912626bb2a8
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 12:04:51 2009 -0400
+
+    Revert "Accept automake 1.10 and 1.11"
+
+    This reverts commit 76dab7b3b745c285f814311b071fefc8244d5245.
+
+ autogen.sh |   12 ++----------
+ 1 files changed, 2 insertions(+), 10 deletions(-)
+
+commit 812b3c451d2717e54ff7eb778f8dfbd018da48a7
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 17:53:27 2009 +0200
+
+    Deprecate GDK_WINDOW_OBJECT and GdkWindowObject
+
+ gdk/gdkwindow.h     |    4 ++++
+ gtk/gtktestutils.c  |    2 ++
+ tests/testwindows.c |    1 +
+ 3 files changed, 7 insertions(+), 0 deletions(-)
+
+commit d0ac27fe5f95a92af8cb40ed3db6d35e1874851f
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 17:52:46 2009 +0200
+
+    Add function accessors for x11 window/pixmap impl
+
+ gdk/gdk.symbols           |    2 ++
+ gdk/x11/gdkdrawable-x11.c |   11 +++++++++++
+ gdk/x11/gdkdrawable-x11.h |    2 ++
+ gdk/x11/gdkx.h            |    6 ++++--
+ 4 files changed, 19 insertions(+), 2 deletions(-)
+
+commit 0c7830aa42d3e6cd89b42b1c7d42aeaa14fccc7e
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 17:50:42 2009 +0200
+
+    Make public GDK_WINDOW_TYPE and GDK_WINDOW_DESTROYED use functions
+    calls
+
+ gdk/gdkinternals.h |    2 ++
+ gdk/gdkprivate.h   |    6 ++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+commit f64ef921da53be7268f4a337e1fbeaa3332016b0
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 17:49:57 2009 +0200
+
+    Add gdk_window_is_destroyed
+
+ gdk/gdk.symbols |    1 +
+ gdk/gdkwindow.c |   14 ++++++++++++++
+ gdk/gdkwindow.h |    1 +
+ 3 files changed, 16 insertions(+), 0 deletions(-)
+
+commit a10e90b79990fea43817367f3fb47e7fa21262f7
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 17:48:49 2009 +0200
+
+    Move _gdk_window_event_parent_of to gdkinternals.h
+
+    gdkprivate.h is in installed file and this function does not
+    need to be exported.
+
+ gdk/gdkinternals.h |    2 ++
+ gdk/gdkprivate.h   |    3 ---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 76dab7b3b745c285f814311b071fefc8244d5245
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 11:52:55 2009 -0400
+
+    Accept automake 1.10 and 1.11
+
+    This was tested to work in bug 588788.
+
+ autogen.sh |   12 ++++++++++--
+ 1 files changed, 10 insertions(+), 2 deletions(-)
+
+commit 1606b822321fb4cd370a2cd2e117481e125722ee
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 4 11:51:50 2009 -0400
+
+    Add AM_PROG_CC_C_O
+
+ configure.in |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit a47aadb05ec83cecac777b31b03fba05504bc144
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 17:40:12 2009 +0200
+
+    Protect gtk_text_view_scroll_mark_onscreen() from using invalid marks
+
+    Suggested by Paolo Borelli.
+
+ gtk/gtktextview.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+commit 5ec80eb5ba09409ef36d8b9430d681bbd49e2872
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 16:56:05 2009 +0200
+
+    Recalculate heights when a (new) separator func is set on GtkTreeView
+
+ gtk/gtktreeview.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit dcc87f7a6786065b919516b7c806e3f33c5c10a3
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 16:38:04 2009 +0200
+
+    Move mark check to gtk_text_view_scroll_to_mark()
+
+    Also use a different means to check that the given mark is in the text
+    view's buffer.  This will also play nice with anonymous and NULL
+    marks.
+    Suggested by Paolo Borelli.
+
+ gtk/gtktextview.c |   12 +++++-------
+ 1 files changed, 5 insertions(+), 7 deletions(-)
+
+commit 4adcb39f86e972cad16f7758184248dcb34a382a
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 16:01:35 2009 +0200
+
+    Ensure clip region valid before using it for emulating graphics
+    exposures
+
+    If there is a drawable clip on it we don't want to use that.
+
+ gdk/gdkwindow.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 294e222fa8d516b5dee6c989a57a5538ef93fe37
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 15:59:22 2009 +0200
+
+    Ensure gc clip region valid in _gdk_gc_update_context
+
+    There might be an old drawable clip on it, if so remove it.
+
+ gdk/gdkgc.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 6ee228a36349a26a96a5e51d31d055be45b712be
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Sep 4 15:18:24 2009 +0200
+
+    gtk_widget_set_property(): use accessors instead of setting flags
+
+    Use the newly added accessors to set the "can-focus", "can-default"
+    and "receives-default" properties.
+
+ gtk/gtkwidget.c |   24 ++++--------------------
+ 1 files changed, 4 insertions(+), 20 deletions(-)
+
+commit 026bea22934e79b94ac6b28f3b08ca78046bfabc
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Sep 4 14:54:13 2009 +0200
+
+    gtk_widget_set_property(): use gtk_widget_set_visible()
+
+    Use the new API instead of show() and hide().
+
+ gtk/gtkwidget.c |    5 +----
+ 1 files changed, 1 insertions(+), 4 deletions(-)
+
+commit b81079d898050dec2211abc96a0dcad332a7cb59
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Sep 4 14:50:35 2009 +0200
+
+    Bug 69872 - GTK_WIDGET_SET_FLAGS should be deprecated
+
+    Add gtk_widget_set_receives_default() and
+    gtk_widget_get_receives_default() as accessors for
+    GTK_RECEIVES_DEFAULT.
+
+ gtk/gtk.symbols |    2 ++
+ gtk/gtkwidget.c |   54
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkwidget.h |    4 ++++
+ 3 files changed, 60 insertions(+), 0 deletions(-)
+
+commit dc3fb714a08a102c0972489afd0c566b9a17cc56
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 13:41:17 2009 +0200
+
+    Improve unsetting old buffer in gtk_text_view_set_buffer()
+
+    When unsetting the old buffer always set the buffer on the layout to
+    NULL.  More importantly, clear the pending scroll.  (The scroll is
+    handled in an idle, when not cleared an idle handler might touch the
+    layout later on, possibly corrupting the BTree).  Unref the buffer
+    after
+    removing the selection from the clipboard, not before.  Patch merged
+    from maemo-gtk.
+
+ gtk/gtktextview.c |   14 ++++++++++----
+ 1 files changed, 10 insertions(+), 4 deletions(-)
+
+commit 7a3d98324df08cce17ee0ffce74c0fa73b38ee4a
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 13:34:56 2009 +0200
+
+    Fail to scroll if the given mark is not in text view's current buffer
+
+    In gtk_text_view_queue_scroll() we need to verify if the given mark
+    exists in the text view's current buffer.  When not done, this can
+    result in corruption of the BTree data structure.  Patch merged from
+    maemo-gtk.
+
+ gtk/gtktextview.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+commit 3a917a2a677b02b587a44b7157231418508faa5e
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 13:30:48 2009 +0200
+
+    Update IM spot location before running _validate_onscreen()
+
+    Updating the IM spot location in gtk_text_view_value_changed() might
+    invalidate the layout, so we need to make sure that we update
+    it before
+    validating the layout again.  Otherwise, the layout will be
+    invalidated
+    right after validating it (possibly resulting in a failed
+    onscreen_validated assertion).  Patch merged from maemo-gtk.
+
+ gtk/gtktextview.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
+
+commit 4f219692ed25e2405be4302738c8c867af9094d8
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 13:21:26 2009 +0200
+
+    Make toggle cell renderer follow insensitive state of widget
+
+    Likewise to other cell renderers, GtkCellRendererToggle now properly
+    follows the insensitive state of the widget requesting rendering.  It
+    does this by checking the state of the widget pointer, not by using
+    GtkCellRendererFlags (there exists an insensitive flags).  Later on, I
+    think we should move to using GtkCellRendererFlags and not the
+    state of
+    the widget requesting rendering.  Patch merged from maemo-gtk.
+
+ gtk/gtkcellrenderertoggle.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 6f20cf691ed473228b49912096a31a112ffecee9
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 13:11:19 2009 +0200
+
+    Propagate insensitive state to cell renderers in GtkCellView
+
+    If the cell view is insensitive, it needs to properly propagate this
+    insensitive state to the cell renderers using cell renderer flags.
+    Merged from maemo-gtk.
+
+ gtk/gtkcellview.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 3f306a40422e367ef03b9e6f6c80dec9fc932602
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 4 11:06:11 2009 +0200
+
+    Have tree view process exposes after adjustments have been updated
+
+    This was removed long ago by the patch in bug 101235.  On a hindsight,
+    all other scrollable widgets are processing exposes at this point,
+    which
+    completely makes sense to me, so I am putting it back.
+
+ gtk/gtktreeview.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 223bcd23f71e66a4d9afd1ad8c9ed175b6090ca6
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 13:14:25 2009 +0200
+
+    Correct the antiexposure vs implicit paint flush race
+
+    The check for a possible implicit paint flush before queueing an
+    antiexposure was wrong. An implicit flush doesn't actually NULL
+    the implicit paint, se we have add a flag to explicitly track if
+    it is flushed.
+
+ gdk/gdkwindow.c |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
+
+commit 753f159aad956de1455f5d7c0b2cd8b79a7fb7f5
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 13:10:35 2009 +0200
+
+    Don't access region when it might be freed
+
+    Passing region into _gdk_gc_set_clip_region_internal takes ownership,
+    so don't use it after that. We can just as well just move the usage
+    above the call.
+
+ gdk/gdkwindow.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 587bc97d9c88d2eae56cfef1a00e2933f8ea3502
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 4 11:08:46 2009 +0200
+
+    Fix warnings in gdk_window_restack
+
+ gdk/gdkwindow.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 6b9a3c9057244c5d1a6032e0e5a1e62b53247bc4
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Thu Sep 3 11:30:12 2009 +0200
+
+    Bug 584638 - Build of gtkupdateiconcache without NLS breaks
+
+    Wrap textdomain calls in updateiconcache.c in NLS conditionals.
+
+ gtk/updateiconcache.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 2f80806359f9d6f064cdc85f61eae1021e486bb2
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 2 22:50:05 2009 -0400
+
+    Fix the return type of gdk_selection_property_get
+
+    It returns the length of the property, not a boolean. Reported
+    in bug 593788.
+
+ gdk/gdkselection.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 05d39e4085d70d0693af1afb24ad08dee14b3d99
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 2 22:14:47 2009 -0400
+
+    Add a missing include
+
+    This was reported in bug 593606.
+
+ gtk/gtkcellrendereraccel.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 908b6620bdbb2794064c008e3f4004669ca89f6e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 2 22:11:28 2009 -0400
+
+    Remove sincos use
+
+    It turns out to be not worth the portability pain. Bug 593877
+
+ demos/gtk-demo/offscreen_window.c |   16 ++++++++++------
+ 1 files changed, 10 insertions(+), 6 deletions(-)
+
+commit 36a73586cea7783c06aa6eab08751b1abf58c8c1
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 2 21:39:36 2009 -0400
+
+    Fix a merge conflict
+
+ po/hu.po |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit 4e6e46d621f128c3756b476a8d4b3a540c0df285
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 1 09:25:18 2009 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 781e878efbd63d3241eb3edc49eebd6fe6512d13
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 1 09:23:08 2009 -0400
+
+    2.17.10
+
+ po-properties/af.po          |   10 +-
+ po-properties/am.po          |   10 +-
+ po-properties/ang.po         |   10 +-
+ po-properties/ar.po          |   10 +-
+ po-properties/as.po          |   10 +-
+ po-properties/ast.po         |   10 +-
+ po-properties/az.po          |   10 +-
+ po-properties/az_IR.po       |   10 +-
+ po-properties/be.po          |   10 +-
+ po-properties/be@latin.po    |   10 +-
+ po-properties/bg.po          |   10 +-
+ po-properties/bn.po          |   10 +-
+ po-properties/bn_IN.po       |   10 +-
+ po-properties/br.po          |   10 +-
+ po-properties/bs.po          |   10 +-
+ po-properties/ca.po          |   10 +-
+ po-properties/ca@valencia.po |   10 +-
+ po-properties/crh.po         |   10 +-
+ po-properties/cs.po          | 3474
+ +++++++++++++++++++-------------------
+ po-properties/cy.po          |   10 +-
+ po-properties/da.po          |   10 +-
+ po-properties/de.po          |   10 +-
+ po-properties/dz.po          |   10 +-
+ po-properties/el.po          |   10 +-
+ po-properties/en_CA.po       |   10 +-
+ po-properties/en_GB.po       |   10 +-
+ po-properties/eo.po          |   10 +-
+ po-properties/es.po          |   10 +-
+ po-properties/et.po          |   10 +-
+ po-properties/eu.po          | 3808
+ +++++++++++++++++++++---------------------
+ po-properties/fa.po          |   10 +-
+ po-properties/fi.po          | 3474
+ +++++++++++++++++++-------------------
+ po-properties/ga.po          |   10 +-
+ po-properties/gl.po          |   10 +-
+ po-properties/gu.po          |   10 +-
+ po-properties/hi.po          | 3664
+ ++++++++++++++++++++--------------------
+ po-properties/hr.po          |   10 +-
+ po-properties/hy.po          |   10 +-
+ po-properties/ia.po          |   10 +-
+ po-properties/id.po          |   10 +-
+ po-properties/io.po          |   10 +-
+ po-properties/is.po          |   10 +-
+ po-properties/it.po          |   10 +-
+ po-properties/ja.po          |   10 +-
+ po-properties/ka.po          |   10 +-
+ po-properties/kn.po          | 3718
+ +++++++++++++++++++++--------------------
+ po-properties/ko.po          |   10 +-
+ po-properties/ku.po          |   10 +-
+ po-properties/li.po          |   10 +-
+ po-properties/lt.po          |   10 +-
+ po-properties/lv.po          |   10 +-
+ po-properties/mai.po         |   10 +-
+ po-properties/mi.po          |   10 +-
+ po-properties/mk.po          |   10 +-
+ po-properties/ml.po          |   10 +-
+ po-properties/mn.po          |   10 +-
+ po-properties/mr.po          |   10 +-
+ po-properties/ms.po          |   10 +-
+ po-properties/nb.po          |   10 +-
+ po-properties/ne.po          |   10 +-
+ po-properties/nl.po          |   10 +-
+ po-properties/nn.po          |   10 +-
+ po-properties/nso.po         |   10 +-
+ po-properties/oc.po          |   10 +-
+ po-properties/or.po          |  185 ++-
+ po-properties/pa.po          |   10 +-
+ po-properties/pl.po          | 3474
+ +++++++++++++++++++-------------------
+ po-properties/ps.po          |   10 +-
+ po-properties/pt.po          |   10 +-
+ po-properties/pt_BR.po       |   10 +-
+ po-properties/ro.po          |   10 +-
+ po-properties/ru.po          |   10 +-
+ po-properties/rw.po          |   10 +-
+ po-properties/si.po          |   10 +-
+ po-properties/sk.po          |   10 +-
+ po-properties/sl.po          |   10 +-
+ po-properties/sq.po          |   10 +-
+ po-properties/sr.po          | 3597
+ +++++++++++++++++++++-------------------
+ po-properties/sr@ije.po      |   10 +-
+ po-properties/sr@latin.po    | 3662
+ +++++++++++++++++++++-------------------
+ po-properties/sv.po          |   10 +-
+ po-properties/ta.po          | 3675
+ ++++++++++++++++++++--------------------
+ po-properties/te.po          | 3624
+ ++++++++++++++++++++--------------------
+ po-properties/th.po          |   10 +-
+ po-properties/tk.po          |   10 +-
+ po-properties/tr.po          |   10 +-
+ po-properties/tt.po          |   10 +-
+ po-properties/uk.po          |   10 +-
+ po-properties/ur.po          |   10 +-
+ po-properties/uz.po          |   10 +-
+ po-properties/uz@cyrillic.po |   10 +-
+ po-properties/vi.po          |   10 +-
+ po-properties/wa.po          |   10 +-
+ po-properties/xh.po          |   10 +-
+ po-properties/yi.po          |   10 +-
+ po-properties/zh_CN.po       |   10 +-
+ po-properties/zh_HK.po       |   10 +-
+ po-properties/zh_TW.po       |   10 +-
+ po/af.po                     |  280 ++--
+ po/am.po                     |  280 ++--
+ po/ang.po                    |  280 ++--
+ po/ar.po                     |  280 ++--
+ po/as.po                     |  280 ++--
+ po/ast.po                    | 2194 ++++++++++++------------
+ po/az.po                     |  280 ++--
+ po/az_IR.po                  |  280 ++--
+ po/be.po                     |  280 ++--
+ po/be@latin.po               |  280 ++--
+ po/bg.po                     |  280 ++--
+ po/bn.po                     |  280 ++--
+ po/bn_IN.po                  | 2223 +++++++++++++------------
+ po/br.po                     |  280 ++--
+ po/bs.po                     |  280 ++--
+ po/ca.po                     |  280 ++--
+ po/ca@valencia.po            |  280 ++--
+ po/crh.po                    |  280 ++--
+ po/cs.po                     | 2174 ++++++++++++------------
+ po/cy.po                     |  280 ++--
+ po/da.po                     |  280 ++--
+ po/de.po                     |  280 ++--
+ po/dz.po                     |  280 ++--
+ po/el.po                     |  280 ++--
+ po/en_CA.po                  |  280 ++--
+ po/en_GB.po                  |  280 ++--
+ po/eo.po                     |  280 ++--
+ po/es.po                     |  280 ++--
+ po/et.po                     |  280 ++--
+ po/eu.po                     |  280 ++--
+ po/fa.po                     |  280 ++--
+ po/fi.po                     | 2194 ++++++++++++------------
+ po/ga.po                     |  280 ++--
+ po/gl.po                     |  280 ++--
+ po/gu.po                     |  280 ++--
+ po/he.po                     |  280 ++--
+ po/hi.po                     | 2220 +++++++++++++------------
+ po/hr.po                     |  280 ++--
+ po/hu.po                     |    2 +-
+ po/hy.po                     |  280 ++--
+ po/ia.po                     |  280 ++--
+ po/id.po                     |  280 ++--
+ po/io.po                     |  280 ++--
+ po/is.po                     |  280 ++--
+ po/it.po                     |  280 ++--
+ po/ja.po                     |  280 ++--
+ po/ka.po                     |  280 ++--
+ po/kn.po                     | 2235 +++++++++++++------------
+ po/ko.po                     |  280 ++--
+ po/ku.po                     |  280 ++--
+ po/li.po                     |  280 ++--
+ po/lt.po                     |  280 ++--
+ po/lv.po                     |  280 ++--
+ po/mai.po                    |  280 ++--
+ po/mi.po                     |  280 ++--
+ po/mk.po                     |  280 ++--
+ po/ml.po                     |  280 ++--
+ po/mn.po                     |  280 ++--
+ po/mr.po                     |  280 ++--
+ po/ms.po                     |  280 ++--
+ po/nb.po                     |   13 -
+ po/ne.po                     |  280 ++--
+ po/nl.po                     |  280 ++--
+ po/nn.po                     |  280 ++--
+ po/nso.po                    |  280 ++--
+ po/oc.po                     |  280 ++--
+ po/or.po                     | 2223 +++++++++++++------------
+ po/pa.po                     |  280 ++--
+ po/pl.po                     | 2545 ++++++++++++++--------------
+ po/ps.po                     |  280 ++--
+ po/pt.po                     |  280 ++--
+ po/pt_BR.po                  |  280 ++--
+ po/ro.po                     |  280 ++--
+ po/ru.po                     |  280 ++--
+ po/rw.po                     |  280 ++--
+ po/si.po                     |  280 ++--
+ po/sk.po                     |  280 ++--
+ po/sl.po                     |  280 ++--
+ po/sq.po                     |  280 ++--
+ po/sr.po                     | 2201 ++++++++++++------------
+ po/sr@ije.po                 |  280 ++--
+ po/sr@latin.po               | 2232 +++++++++++++------------
+ po/sv.po                     |  280 ++--
+ po/ta.po                     | 2223 +++++++++++++------------
+ po/te.po                     | 2235 +++++++++++++------------
+ po/th.po                     |  280 ++--
+ po/tk.po                     |  280 ++--
+ po/tr.po                     |  280 ++--
+ po/tt.po                     |  280 ++--
+ po/uk.po                     |  280 ++--
+ po/ur.po                     |  280 ++--
+ po/uz.po                     |  280 ++--
+ po/uz@cyrillic.po            |  280 ++--
+ po/vi.po                     |  280 ++--
+ po/wa.po                     |  280 ++--
+ po/xh.po                     |  280 ++--
+ po/yi.po                     |  280 ++--
+ po/zh_CN.po                  |  280 ++--
+ po/zh_HK.po                  |  280 ++--
+ po/zh_TW.po                  |  280 ++--
+ 198 files changed, 44429 insertions(+), 43790 deletions(-)
+
+commit e1b0e761961698767e559579cc4ca957b128c43d
+Author: Gabor Kelemen <kelemeng@gnome.hu>
+Date:   Thu Sep 3 02:48:08 2009 +0200
+
+    Hungarian translation updated
+
+ po-properties/hu.po | 3877
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1892 insertions(+), 1985 deletions(-)
+
+commit 4ab7255b0aa6e38087893b40fc0d721862f661ff
+Author: Gabor Kelemen <kelemeng@gnome.hu>
+Date:   Thu Sep 3 00:08:59 2009 +0200
+
+    Hungarian translation updated
+
+ po/hu.po | 2311
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1138 insertions(+), 1173 deletions(-)
+
+commit d5125660c1d92646bc69c90186051cc32bb589ff
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Sep 2 23:39:57 2009 +0200
+
+    Add test for gdk_window_restack
+
+ tests/testwindows.c |   44 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 43 insertions(+), 1 deletions(-)
+
+commit d67a7eda16d64ba44fa759530abd08147347bae6
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Sep 2 23:38:55 2009 +0200
+
+    Add gdk_window_restack
+
+    This lets you restack a window above or below a specified sibling.
+    At least eclipse wants this functionallity.
+
+ gdk/gdk.symbols               |    1 +
+ gdk/gdkwindow.c               |  116
+ +++++++++++++++++++++++++++++++++++++++++
+ gdk/gdkwindow.h               |    3 +
+ gdk/gdkwindowimpl.h           |    3 +
+ gdk/quartz/gdkwindow-quartz.c |    9 +++
+ gdk/win32/gdkwindow-win32.c   |    9 +++
+ gdk/x11/gdkwindow-x11.c       |   16 ++++++
+ 7 files changed, 157 insertions(+), 0 deletions(-)
+
+commit 45956aea21e9c8a279f096a0536826a5d14a9c82
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Sep 1 17:05:50 2009 +0200
+
+    Add gdk_cairo_reset_clip
+
+    This is required to get back the original drawable clip due to
+    non-native windows on a cairo_t.
+
+ gdk/gdk.symbols |    1 +
+ gdk/gdkcairo.c  |   28 ++++++++++++++++++++++++++++
+ gdk/gdkcairo.h  |    2 ++
+ 3 files changed, 31 insertions(+), 0 deletions(-)
+
+commit f97a33ad9c6936b1ce6c5d4e937a17cc392b95b3
+Author: Paolo Borelli <porelli@gnome.org>
+Date:   Mon Aug 3 21:39:34 2009 +0200
+
+    Move timer removal in dispose
+
+    Move removal of timer function in dispose to prevent potentially
+    running
+    them on a diposed-but-not-finalized tooltip
+
+ gtk/gtktooltip.c |    9 +++++----
+ 1 files changed, 5 insertions(+), 4 deletions(-)
+
+commit b31f1cd80a2d72270035fda35b3d0192c563afdb
+Author: Yaron Shahrabani <sh.yaron@gmail.com>
+Date:   Tue Sep 1 16:17:13 2009 +0300
+
+    Updated Hebrew translation
+
+ po-properties/he.po | 4758
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 2292 insertions(+), 2466 deletions(-)
+
+commit ce0cfa2620bf319387dbd8e93c38b98e6fa7fd98
+Author: Kjartan Maraas <kmaraas@gnome.org>
+Date:   Tue Sep 1 10:49:44 2009 +0200
+
+    Update Norwegian bokmål translation.
+
+ po/nb.po | 2180
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1093 insertions(+), 1087 deletions(-)
+
+commit 42f2549303d06aa6b4b777b658209fca9bebd3ee
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Tue Sep 1 09:43:36 2009 +0200
+
+    Updated French translation
+
+ po-properties/fr.po | 3511
+ ++++++++++++++++++++++++++-------------------------
+ po/fr.po            | 2214 ++++++++++++++++----------------
+ 2 files changed, 2866 insertions(+), 2859 deletions(-)
+
 commit 32d59d174ef8e514644a9fd516ba9e2bbc661e32
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Tue Sep 1 00:53:44 2009 -0400

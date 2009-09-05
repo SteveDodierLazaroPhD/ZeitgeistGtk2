@@ -605,6 +605,9 @@ extern __typeof (gdk_fontset_load_for_display) IA__gdk_fontset_load_for_display 
 extern __typeof (gdk_cairo_create) IA__gdk_cairo_create __attribute((visibility("hidden")));
 #define gdk_cairo_create IA__gdk_cairo_create
 
+extern __typeof (gdk_cairo_reset_clip) IA__gdk_cairo_reset_clip __attribute((visibility("hidden")));
+#define gdk_cairo_reset_clip IA__gdk_cairo_reset_clip
+
 extern __typeof (gdk_cairo_set_source_color) IA__gdk_cairo_set_source_color __attribute((visibility("hidden")));
 #define gdk_cairo_set_source_color IA__gdk_cairo_set_source_color
 
@@ -1318,6 +1321,9 @@ extern __typeof (gdk_window_raise) IA__gdk_window_raise __attribute((visibility(
 extern __typeof (gdk_window_lower) IA__gdk_window_lower __attribute((visibility("hidden")));
 #define gdk_window_lower IA__gdk_window_lower
 
+extern __typeof (gdk_window_restack) IA__gdk_window_restack __attribute((visibility("hidden")));
+#define gdk_window_restack IA__gdk_window_restack
+
 extern __typeof (gdk_window_move) IA__gdk_window_move __attribute((visibility("hidden")));
 #define gdk_window_move IA__gdk_window_move
 
@@ -1460,6 +1466,9 @@ extern __typeof (gdk_window_get_user_data) IA__gdk_window_get_user_data __attrib
 
 extern __typeof (gdk_window_get_window_type) IA__gdk_window_get_window_type __attribute((visibility("hidden")));
 #define gdk_window_get_window_type IA__gdk_window_get_window_type
+
+extern __typeof (gdk_window_is_destroyed) IA__gdk_window_is_destroyed __attribute((visibility("hidden")));
+#define gdk_window_is_destroyed IA__gdk_window_is_destroyed
 
 extern __typeof (gdk_window_invalidate_maybe_recurse) IA__gdk_window_invalidate_maybe_recurse __attribute((visibility("hidden")));
 #define gdk_window_invalidate_maybe_recurse IA__gdk_window_invalidate_maybe_recurse
@@ -2487,6 +2496,12 @@ extern __typeof (gdk_x11_drawable_get_xdisplay) IA__gdk_x11_drawable_get_xdispla
 
 extern __typeof (gdk_x11_drawable_get_xid) IA__gdk_x11_drawable_get_xid __attribute((visibility("hidden")));
 #define gdk_x11_drawable_get_xid IA__gdk_x11_drawable_get_xid
+
+extern __typeof (gdk_x11_window_get_drawable_impl) IA__gdk_x11_window_get_drawable_impl __attribute((visibility("hidden")));
+#define gdk_x11_window_get_drawable_impl IA__gdk_x11_window_get_drawable_impl
+
+extern __typeof (gdk_x11_pixmap_get_drawable_impl) IA__gdk_x11_pixmap_get_drawable_impl __attribute((visibility("hidden")));
+#define gdk_x11_pixmap_get_drawable_impl IA__gdk_x11_pixmap_get_drawable_impl
 
 #endif
 #if IN_FILE(__GDK_FONT_X11_C__)

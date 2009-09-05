@@ -82,6 +82,10 @@ void                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-r
 href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-t"
 >cairo_t</a> *cr,
                                                          const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRegion" title="GdkRegion">GdkRegion</a> *region);
+void                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-reset-clip" title="gdk_cairo_reset_clip ()">gdk_cairo_reset_clip</a>                (<a
+href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-t"
+>cairo_t</a> *cairo_t,
+                                                         <a class="link" href="gdk-Drawing-Primitives.html#GdkDrawable">GdkDrawable</a> *drawable);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -319,6 +323,47 @@ href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-t"
 </tbody>
 </table></div>
 <p class="since">Since 2.8</p>
+</div>
+<hr>
+<div class="refsect2" title="gdk_cairo_reset_clip ()">
+<a name="gdk-cairo-reset-clip"></a><h3>gdk_cairo_reset_clip ()</h3>
+<pre class="programlisting">void                gdk_cairo_reset_clip                (<a
+href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-t"
+>cairo_t</a> *cairo_t,
+                                                         <a class="link" href="gdk-Drawing-Primitives.html#GdkDrawable">GdkDrawable</a> *drawable);</pre>
+<p>
+Resets the clip region for a Cairo context created by <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-create" title="gdk_cairo_create ()"><code class="function">gdk_cairo_create()</code></a>.
+</p>
+<p>
+This resets the clip region to the "empty" state for the given drawable.
+This is required for non-native windows since a direct call to
+<a
+href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-reset-clip"
+><code class="function">cairo_reset_clip()</code></a> would unset the clip region inherited from the
+drawable (i.e. the window clip region), and thus let you e.g.
+draw outside your window.
+</p>
+<p>
+This is rarely needed though, since most code just create a new cairo_t
+using <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-create" title="gdk_cairo_create ()"><code class="function">gdk_cairo_create()</code></a> each time they want to draw something.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cairo_t</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>drawable</code></em> :</span></p></td>
+<td> a <a class="link" href="gdk-Drawing-Primitives.html#GdkDrawable"><span class="type">GdkDrawable</span></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
 </div>
 </div>
 </div>

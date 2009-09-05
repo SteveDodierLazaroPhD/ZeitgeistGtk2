@@ -608,6 +608,9 @@ extern __typeof (gdk_fontset_load_for_display) gdk_fontset_load_for_display __at
 #undef gdk_cairo_create 
 extern __typeof (gdk_cairo_create) gdk_cairo_create __attribute((alias("IA__gdk_cairo_create"), visibility("default")));
 
+#undef gdk_cairo_reset_clip 
+extern __typeof (gdk_cairo_reset_clip) gdk_cairo_reset_clip __attribute((alias("IA__gdk_cairo_reset_clip"), visibility("default")));
+
 #undef gdk_cairo_set_source_color 
 extern __typeof (gdk_cairo_set_source_color) gdk_cairo_set_source_color __attribute((alias("IA__gdk_cairo_set_source_color"), visibility("default")));
 
@@ -1321,6 +1324,9 @@ extern __typeof (gdk_window_raise) gdk_window_raise __attribute((alias("IA__gdk_
 #undef gdk_window_lower 
 extern __typeof (gdk_window_lower) gdk_window_lower __attribute((alias("IA__gdk_window_lower"), visibility("default")));
 
+#undef gdk_window_restack 
+extern __typeof (gdk_window_restack) gdk_window_restack __attribute((alias("IA__gdk_window_restack"), visibility("default")));
+
 #undef gdk_window_move 
 extern __typeof (gdk_window_move) gdk_window_move __attribute((alias("IA__gdk_window_move"), visibility("default")));
 
@@ -1463,6 +1469,9 @@ extern __typeof (gdk_window_get_user_data) gdk_window_get_user_data __attribute(
 
 #undef gdk_window_get_window_type 
 extern __typeof (gdk_window_get_window_type) gdk_window_get_window_type __attribute((alias("IA__gdk_window_get_window_type"), visibility("default")));
+
+#undef gdk_window_is_destroyed 
+extern __typeof (gdk_window_is_destroyed) gdk_window_is_destroyed __attribute((alias("IA__gdk_window_is_destroyed"), visibility("default")));
 
 #undef gdk_window_invalidate_maybe_recurse 
 extern __typeof (gdk_window_invalidate_maybe_recurse) gdk_window_invalidate_maybe_recurse __attribute((alias("IA__gdk_window_invalidate_maybe_recurse"), visibility("default")));
@@ -2490,6 +2499,12 @@ extern __typeof (gdk_x11_drawable_get_xdisplay) gdk_x11_drawable_get_xdisplay __
 
 #undef gdk_x11_drawable_get_xid 
 extern __typeof (gdk_x11_drawable_get_xid) gdk_x11_drawable_get_xid __attribute((alias("IA__gdk_x11_drawable_get_xid"), visibility("default")));
+
+#undef gdk_x11_window_get_drawable_impl 
+extern __typeof (gdk_x11_window_get_drawable_impl) gdk_x11_window_get_drawable_impl __attribute((alias("IA__gdk_x11_window_get_drawable_impl"), visibility("default")));
+
+#undef gdk_x11_pixmap_get_drawable_impl 
+extern __typeof (gdk_x11_pixmap_get_drawable_impl) gdk_x11_pixmap_get_drawable_impl __attribute((alias("IA__gdk_x11_pixmap_get_drawable_impl"), visibility("default")));
 
 #endif
 #if IN_FILE(__GDK_FONT_X11_C__)

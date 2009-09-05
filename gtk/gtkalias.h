@@ -11923,6 +11923,9 @@ extern __typeof (gtk_widget_get_parent_window) IA__gtk_widget_get_parent_window 
 extern __typeof (gtk_widget_get_pointer) IA__gtk_widget_get_pointer __attribute((visibility("hidden")));
 #define gtk_widget_get_pointer IA__gtk_widget_get_pointer
 
+extern __typeof (gtk_widget_get_receives_default) IA__gtk_widget_get_receives_default __attribute((visibility("hidden")));
+#define gtk_widget_get_receives_default IA__gtk_widget_get_receives_default
+
 extern __typeof (gtk_widget_get_root_window) IA__gtk_widget_get_root_window __attribute((visibility("hidden")));
 #define gtk_widget_get_root_window IA__gtk_widget_get_root_window
 
@@ -12182,6 +12185,9 @@ extern __typeof (gtk_widget_set_parent) IA__gtk_widget_set_parent __attribute((v
 
 extern __typeof (gtk_widget_set_parent_window) IA__gtk_widget_set_parent_window __attribute((visibility("hidden")));
 #define gtk_widget_set_parent_window IA__gtk_widget_set_parent_window
+
+extern __typeof (gtk_widget_set_receives_default) IA__gtk_widget_set_receives_default __attribute((visibility("hidden")));
+#define gtk_widget_set_receives_default IA__gtk_widget_set_receives_default
 
 extern __typeof (gtk_widget_set_redraw_on_allocate) IA__gtk_widget_set_redraw_on_allocate __attribute((visibility("hidden")));
 #define gtk_widget_set_redraw_on_allocate IA__gtk_widget_set_redraw_on_allocate

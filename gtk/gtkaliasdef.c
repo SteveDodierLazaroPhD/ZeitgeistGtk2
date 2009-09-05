@@ -11926,6 +11926,9 @@ extern __typeof (gtk_widget_get_parent_window) gtk_widget_get_parent_window __at
 #undef gtk_widget_get_pointer 
 extern __typeof (gtk_widget_get_pointer) gtk_widget_get_pointer __attribute((alias("IA__gtk_widget_get_pointer"), visibility("default")));
 
+#undef gtk_widget_get_receives_default 
+extern __typeof (gtk_widget_get_receives_default) gtk_widget_get_receives_default __attribute((alias("IA__gtk_widget_get_receives_default"), visibility("default")));
+
 #undef gtk_widget_get_root_window 
 extern __typeof (gtk_widget_get_root_window) gtk_widget_get_root_window __attribute((alias("IA__gtk_widget_get_root_window"), visibility("default")));
 
@@ -12185,6 +12188,9 @@ extern __typeof (gtk_widget_set_parent) gtk_widget_set_parent __attribute((alias
 
 #undef gtk_widget_set_parent_window 
 extern __typeof (gtk_widget_set_parent_window) gtk_widget_set_parent_window __attribute((alias("IA__gtk_widget_set_parent_window"), visibility("default")));
+
+#undef gtk_widget_set_receives_default 
+extern __typeof (gtk_widget_set_receives_default) gtk_widget_set_receives_default __attribute((alias("IA__gtk_widget_set_receives_default"), visibility("default")));
 
 #undef gtk_widget_set_redraw_on_allocate 
 extern __typeof (gtk_widget_set_redraw_on_allocate) gtk_widget_set_redraw_on_allocate __attribute((alias("IA__gtk_widget_set_redraw_on_allocate"), visibility("default")));

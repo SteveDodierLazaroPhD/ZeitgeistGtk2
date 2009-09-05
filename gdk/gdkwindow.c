@@ -142,6 +142,7 @@ struct _GdkWindowPaint
   gint y_offset;
   cairo_surface_t *surface;
   guint uses_implicit : 1;
+  guint flushed : 1;
   guint32 region_tag;
 };
 
@@ -2096,6 +2097,20 @@ gdk_window_get_window_type (GdkWindow *window)
 }
 
 /**
+ * gdk_window_is_destroyed:
+ * @window: a #GdkWindow
+ *
+ * Check to see if a window is destroyed..
+ *
+ * Return value: %TRUE if the window is destroyed
+ **/
+gboolean
+gdk_window_is_destroyed (GdkWindow *window)
+{
+  return GDK_WINDOW_DESTROYED (window);
+}
+
+/**
  * gdk_window_get_position:
  * @window: a #GdkWindow
  * @x: X coordinate of window
@@ -2484,6 +2499,7 @@ gdk_window_begin_implicit_paint (GdkWindow *window, GdkRectangle *rect)
   paint->x_offset = rect->x;
   paint->y_offset = rect->y;
   paint->uses_implicit = FALSE;
+  paint->flushed = FALSE;
   paint->surface = NULL;
   paint->pixmap =
     gdk_pixmap_new (window,
@@ -2512,6 +2528,7 @@ gdk_window_flush_implicit_paint (GdkWindow *window)
     return;
 
   paint = impl_window->implicit_paint;
+  paint->flushed = TRUE;
   region = gdk_region_copy (private->clip_region_with_children);
 
   /* Don't flush active double buffers, as that may show partially done
@@ -2528,6 +2545,9 @@ gdk_window_flush_implicit_paint (GdkWindow *window)
 
   if (!gdk_region_empty (region))
     {
+      /* Remove flushed region from the implicit paint */
+      gdk_region_subtract (paint->region, region);
+
       /* Some regions are valid, push these to window now */
       tmp_gc = _gdk_drawable_get_scratch_gc ((GdkDrawable *)window, FALSE);
       _gdk_gc_set_clip_region_internal (tmp_gc, region, TRUE);
@@ -2535,9 +2555,6 @@ gdk_window_flush_implicit_paint (GdkWindow *window)
 			 0, 0, paint->x_offset, paint->y_offset, -1, -1);
       /* Reset clip region of the cached GdkGC */
       gdk_gc_set_clip_region (tmp_gc, NULL);
-
-      /* Remove flushed region from the implicit paint */
-      gdk_region_subtract (paint->region, region);
     }
   else
     gdk_region_destroy (region);
@@ -3778,6 +3795,7 @@ gdk_window_draw_drawable (GdkDrawable *drawable,
 	    clip = private->clip_region;
 	  gdk_region_intersect (exposure_region, clip);
 
+	  _gdk_gc_remove_drawable_clip (gc);
 	  clip = _gdk_gc_get_clip_region (gc);
 	  if (clip)
 	    {
@@ -5109,7 +5127,8 @@ gdk_window_process_updates_internal (GdkWindow *window)
 	       * be to late to anti-expose now. Since this is merely an
 	       * optimization we just avoid doing it at all in that case.
 	       */
-	      if (private->implicit_paint != NULL) /* didn't flush implicit paint */
+	      if (private->implicit_paint != NULL &&
+		  !private->implicit_paint->flushed)
 		{
 		  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
 		  save_region = impl_iface->queue_antiexpose (window, update_area);
@@ -6447,6 +6466,123 @@ gdk_window_lower (GdkWindow *window)
   _gdk_synthesize_crossing_events_for_geometry_change (window);
   gdk_window_invalidate_in_parent (private);
 }
+
+/**
+ * gdk_window_restack:
+ * @window: a #GdkWindow
+ * @sibling: a #GdkWindow that is a sibling of @window, or %NULL
+ * @above: a boolean
+ *
+ * Changes the position of  @window in the Z-order (stacking order), so that
+ * it is above @sibling (if @above is %TRUE) or below @sibling (if @above is
+ * %FALSE).
+ *
+ * If @sibling is %NULL, then this either raises (if @above is %TRUE) or
+ * lowers the window.
+ *
+ * If @window is a toplevel, the window manager may choose to deny the
+ * request to move the window in the Z-order, gdk_window_restack() only
+ * requests the restack, does not guarantee it.
+ *
+ * Since: 2.18
+ */
+void
+gdk_window_restack (GdkWindow     *window,
+		    GdkWindow     *sibling,
+		    gboolean       above)
+{
+  GdkWindowObject *private;
+  GdkWindowImplIface *impl_iface;
+  GdkWindowObject *parent;
+  GdkWindowObject *above_native;
+  GList *sibling_link;
+  GList *native_children;
+  GList *l, listhead;
+
+  g_return_if_fail (GDK_IS_WINDOW (window));
+  g_return_if_fail (sibling == NULL || GDK_IS_WINDOW (sibling));
+
+  private = (GdkWindowObject *) window;
+  if (private->destroyed)
+    return;
+
+  if (sibling == NULL)
+    {
+      if (above)
+	gdk_window_raise (window);
+      else
+	gdk_window_lower (window);
+      return;
+    }
+
+  if (gdk_window_is_toplevel (private))
+    {
+      g_return_if_fail (gdk_window_is_toplevel (GDK_WINDOW_OBJECT (sibling)));
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->restack_toplevel (window, sibling, above);
+      return;
+    }
+
+  parent = private->parent;
+  if (parent)
+    {
+      sibling_link = g_list_find (parent->children, sibling);
+      g_return_if_fail (sibling_link != NULL);
+      if (sibling_link == NULL)
+	return;
+
+      parent->children = g_list_remove (parent->children, window);
+      if (above)
+	parent->children = g_list_insert_before (parent->children,
+						 sibling_link,
+						 window);
+      else
+	parent->children = g_list_insert_before (parent->children,
+						 sibling_link->next,
+						 window);
+
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      if (gdk_window_has_impl (private))
+	{
+	  above_native = find_native_sibling_above (parent, private);
+	  if (above_native)
+	    {
+	      listhead.data = window;
+	      listhead.next = NULL;
+	      listhead.prev = NULL;
+	      impl_iface->restack_under ((GdkWindow *)above_native, &listhead);
+	    }
+	  else
+	    impl_iface->raise (window);
+	}
+      else
+	{
+	  native_children = NULL;
+	  get_all_native_children (private, &native_children);
+	  if (native_children != NULL)
+	    {
+	      above_native = find_native_sibling_above (parent, private);
+	      if (above_native)
+		impl_iface->restack_under ((GdkWindow *)above_native,
+					   native_children);
+	      else
+		{
+		  /* Right order, since native_children is bottom-topmost first */
+		  for (l = native_children; l != NULL; l = l->next)
+		    impl_iface->raise (l->data);
+		}
+
+	      g_list_free (native_children);
+	    }
+	}
+    }
+
+  recompute_visible_regions (private, TRUE, FALSE);
+
+  _gdk_synthesize_crossing_events_for_geometry_change (window);
+  gdk_window_invalidate_in_parent (private);
+}
+
 
 /**
  * gdk_window_show:

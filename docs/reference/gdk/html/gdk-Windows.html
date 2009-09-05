@@ -89,6 +89,9 @@ void                <a class="link" href="gdk-Windows.html#gdk-window-show-unrai
 void                <a class="link" href="gdk-Windows.html#gdk-window-hide" title="gdk_window_hide ()">gdk_window_hide</a>                     (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);
 <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>            <a class="link" href="gdk-Windows.html#gdk-window-is-destroyed" title="gdk_window_is_destroyed ()">gdk_window_is_destroyed</a>             (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);
+<a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
 >gboolean</a>            <a class="link" href="gdk-Windows.html#gdk-window-is-visible" title="gdk_window_is_visible ()">gdk_window_is_visible</a>               (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);
 <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
@@ -202,6 +205,11 @@ href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"
 #define             <a class="link" href="gdk-Windows.html#gdk-window-copy-area" title="gdk_window_copy_area()">gdk_window_copy_area</a>                (drawable,gc,x,y,source_drawable,source_x,source_y,width,height)
 void                <a class="link" href="gdk-Windows.html#gdk-window-raise" title="gdk_window_raise ()">gdk_window_raise</a>                    (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);
 void                <a class="link" href="gdk-Windows.html#gdk-window-lower" title="gdk_window_lower ()">gdk_window_lower</a>                    (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);
+void                <a class="link" href="gdk-Windows.html#gdk-window-restack" title="gdk_window_restack ()">gdk_window_restack</a>                  (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window,
+                                                         <a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *sibling,
+                                                         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a> above);
 void                <a class="link" href="gdk-Windows.html#gdk-window-focus" title="gdk_window_focus ()">gdk_window_focus</a>                    (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window,
                                                          <a
 href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint32"
@@ -1909,6 +1917,34 @@ href="http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#gtk-widget-hide
 </table></div>
 </div>
 <hr>
+<div class="refsect2" title="gdk_window_is_destroyed ()">
+<a name="gdk-window-is-destroyed"></a><h3>gdk_window_is_destroyed ()</h3>
+<pre class="programlisting"><a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a>            gdk_window_is_destroyed             (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window);</pre>
+<p>
+Check to see if a window is destroyed..</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td> a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a> if the window is destroyed
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
 <div class="refsect2" title="gdk_window_is_visible ()">
 <a name="gdk-window-is-visible"></a><h3>gdk_window_is_visible ()</h3>
 <pre class="programlisting"><a
@@ -2950,6 +2986,61 @@ function before <a class="link" href="gdk-Windows.html#gdk-window-show" title="g
 </td>
 </tr></tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2" title="gdk_window_restack ()">
+<a name="gdk-window-restack"></a><h3>gdk_window_restack ()</h3>
+<pre class="programlisting">void                gdk_window_restack                  (<a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *window,
+                                                         <a class="link" href="gdk-Windows.html#GdkWindow">GdkWindow</a> *sibling,
+                                                         <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"
+>gboolean</a> above);</pre>
+<p>
+Changes the position of  <em class="parameter"><code>window</code></em> in the Z-order (stacking order), so that
+it is above <em class="parameter"><code>sibling</code></em> (if <em class="parameter"><code>above</code></em> is <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>) or below <em class="parameter"><code>sibling</code></em> (if <em class="parameter"><code>above</code></em> is
+<a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"
+><code class="literal">FALSE</code></a>).
+</p>
+<p>
+If <em class="parameter"><code>sibling</code></em> is <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>, then this either raises (if <em class="parameter"><code>above</code></em> is <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"
+><code class="literal">TRUE</code></a>) or
+lowers the window.
+</p>
+<p>
+If <em class="parameter"><code>window</code></em> is a toplevel, the window manager may choose to deny the
+request to move the window in the Z-order, <a class="link" href="gdk-Windows.html#gdk-window-restack" title="gdk_window_restack ()"><code class="function">gdk_window_restack()</code></a> only
+requests the restack, does not guarantee it.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td> a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>sibling</code></em> :</span></p></td>
+<td> a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> that is a sibling of <em class="parameter"><code>window</code></em>, or <a
+href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL--CAPS"
+><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>above</code></em> :</span></p></td>
+<td> a boolean
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.18</p>
 </div>
 <hr>
 <div class="refsect2" title="gdk_window_focus ()">

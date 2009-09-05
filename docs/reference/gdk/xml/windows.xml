@@ -45,6 +45,7 @@ enum                <link linkend="GdkWindowAttributesType">GdkWindowAttributesT
 <link linkend="void">void</link>                <link linkend="gdk-window-show">gdk_window_show</link>                     (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gdk-window-show-unraised">gdk_window_show_unraised</link>            (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gdk-window-hide">gdk_window_hide</link>                     (<link linkend="GdkWindow">GdkWindow</link> *window);
+<link linkend="gboolean">gboolean</link>            <link linkend="gdk-window-is-destroyed">gdk_window_is_destroyed</link>             (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-window-is-visible">gdk_window_is_visible</link>               (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-window-is-viewable">gdk_window_is_viewable</link>              (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="GdkWindowState">GdkWindowState</link>      <link linkend="gdk-window-get-state">gdk_window_get_state</link>                (<link linkend="GdkWindow">GdkWindow</link> *window);
@@ -102,6 +103,9 @@ enum                <link linkend="GdkWindowAttributesType">GdkWindowAttributesT
 #define             <link linkend="gdk-window-copy-area">gdk_window_copy_area</link>                (drawable,gc,x,y,source_drawable,source_x,source_y,width,height)
 <link linkend="void">void</link>                <link linkend="gdk-window-raise">gdk_window_raise</link>                    (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gdk-window-lower">gdk_window_lower</link>                    (<link linkend="GdkWindow">GdkWindow</link> *window);
+<link linkend="void">void</link>                <link linkend="gdk-window-restack">gdk_window_restack</link>                  (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="GdkWindow">GdkWindow</link> *sibling,
+                                                         <link linkend="gboolean">gboolean</link> above);
 <link linkend="void">void</link>                <link linkend="gdk-window-focus">gdk_window_focus</link>                    (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="guint32">guint32</link> timestamp);
 <link linkend="void">void</link>                <link linkend="gdk-window-register-dnd">gdk_window_register_dnd</link>             (<link linkend="GdkWindow">GdkWindow</link> *window);
@@ -1376,6 +1380,19 @@ part of <link linkend="gtk-widget-hide"><function>gtk_widget_hide()</function></
 <listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gdk-window-is-destroyed" role="function">
+<title>gdk_window_is_destroyed ()</title>
+<indexterm zone="gdk-window-is-destroyed"><primary sortas="window_is_destroyed">gdk_window_is_destroyed</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_window_is_destroyed             (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Check to see if a window is destroyed..</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> <link linkend="TRUE--CAPS"><literal>TRUE</literal></link> if the window is destroyed
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="gdk-window-is-visible" role="function">
 <title>gdk_window_is_visible ()</title>
 <indexterm zone="gdk-window-is-visible"><primary sortas="window_is_visible">gdk_window_is_visible</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_window_is_visible               (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
@@ -2026,6 +2043,36 @@ function before <link linkend="gdk-window-show"><function>gdk_window_show()</fun
 <listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="gdk-window-restack" role="function" condition="since:2.18">
+<title>gdk_window_restack ()</title>
+<indexterm zone="gdk-window-restack" role="2.18"><primary sortas="window_restack">gdk_window_restack</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_restack                  (<link linkend="GdkWindow">GdkWindow</link> *window,
+                                                         <link linkend="GdkWindow">GdkWindow</link> *sibling,
+                                                         <link linkend="gboolean">gboolean</link> above);</programlisting>
+<para>
+Changes the position of  <parameter>window</parameter> in the Z-order (stacking order), so that
+it is above <parameter>sibling</parameter> (if <parameter>above</parameter> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>) or below <parameter>sibling</parameter> (if <parameter>above</parameter> is
+<link linkend="FALSE--CAPS"><literal>FALSE</literal></link>).
+</para>
+<para>
+If <parameter>sibling</parameter> is <link linkend="NULL--CAPS"><literal>NULL</literal></link>, then this either raises (if <parameter>above</parameter> is <link linkend="TRUE--CAPS"><literal>TRUE</literal></link>) or
+lowers the window.
+</para>
+<para>
+If <parameter>window</parameter> is a toplevel, the window manager may choose to deny the
+request to move the window in the Z-order, <link linkend="gdk-window-restack"><function>gdk_window_restack()</function></link> only
+requests the restack, does not guarantee it.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>sibling</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link> that is a sibling of <parameter>window</parameter>, or <link linkend="NULL--CAPS"><literal>NULL</literal></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>above</parameter>&#160;:</term>
+<listitem><simpara> a boolean
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gdk-window-focus" role="function">
 <title>gdk_window_focus ()</title>
 <indexterm zone="gdk-window-focus"><primary sortas="window_focus">gdk_window_focus</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_focus                    (<link linkend="GdkWindow">GdkWindow</link> *window,
