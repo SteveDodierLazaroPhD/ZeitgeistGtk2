@@ -84,6 +84,7 @@ enum                <link linkend="GdkWindowAttributesType">GdkWindowAttributesT
                                                          const <link linkend="GdkRegion">GdkRegion</link> *region,
                                                          <link linkend="gint">gint</link> dx,
                                                          <link linkend="gint">gint</link> dy);
+<link linkend="void">void</link>                <link linkend="gdk-window-flush">gdk_window_flush</link>                    (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="gboolean">gboolean</link>            <link linkend="gdk-window-ensure-native">gdk_window_ensure_native</link>            (<link linkend="GdkWindow">GdkWindow</link> *window);
 <link linkend="void">void</link>                <link linkend="gdk-window-reparent">gdk_window_reparent</link>                 (<link linkend="GdkWindow">GdkWindow</link> *window,
                                                          <link linkend="GdkWindow">GdkWindow</link> *new_parent,
@@ -1853,6 +1854,33 @@ Child windows are not moved.</para>
 <listitem><simpara> Amount to move in the Y direction
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.8</para></refsect2>
+<refsect2 id="gdk-window-flush" role="function" condition="since:2.18">
+<title>gdk_window_flush ()</title>
+<indexterm zone="gdk-window-flush" role="2.18"><primary sortas="window_flush">gdk_window_flush</primary></indexterm><programlisting><link linkend="void">void</link>                gdk_window_flush                    (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>
+<para>
+Flush all outstanding cached operations on a window, leaving the
+window in a state which reflects all that has been drawn before.
+</para>
+<para>
+Gdk uses multiple kinds of caching to get better performance and
+nicer drawing. For instance, during exposes all paints to a window
+using double buffered rendering are keep on a pixmap until the last
+window has been exposed. It also delays window moves/scrolls until
+as long as possible until next update to avoid tearing when moving
+windows.
+</para>
+<para>
+Normally this should be completely invisible to applications, as
+we automatically flush the windows when required, but this might
+be needed if you for instance mix direct native drawing with
+gdk drawing. For Gtk widgets that don't use double buffering this
+will be called automatically before sending the expose event.</para>
+<para>
+</para><variablelist role="params">
+<varlistentry><term><parameter>window</parameter>&#160;:</term>
+<listitem><simpara> a <link linkend="GdkWindow"><type>GdkWindow</type></link>
+</simpara></listitem></varlistentry>
+</variablelist><para role="since">Since 2.18</para></refsect2>
 <refsect2 id="gdk-window-ensure-native" role="function" condition="since:2.18">
 <title>gdk_window_ensure_native ()</title>
 <indexterm zone="gdk-window-ensure-native" role="2.18"><primary sortas="window_ensure_native">gdk_window_ensure_native</primary></indexterm><programlisting><link linkend="gboolean">gboolean</link>            gdk_window_ensure_native            (<link linkend="GdkWindow">GdkWindow</link> *window);</programlisting>

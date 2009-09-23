@@ -14,9 +14,11 @@
 extern __typeof (gdk_add_client_message_filter) IA__gdk_add_client_message_filter __attribute((visibility("hidden")));
 #define gdk_add_client_message_filter IA__gdk_add_client_message_filter
 
+#ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_event_get_graphics_expose) IA__gdk_event_get_graphics_expose __attribute((visibility("hidden")));
 #define gdk_event_get_graphics_expose IA__gdk_event_get_graphics_expose
 
+#endif
 extern __typeof (gdk_events_pending) IA__gdk_events_pending __attribute((visibility("hidden")));
 #define gdk_events_pending IA__gdk_events_pending
 
@@ -1422,6 +1424,9 @@ extern __typeof (gdk_window_destroy) IA__gdk_window_destroy __attribute((visibil
 
 extern __typeof (gdk_window_end_paint) IA__gdk_window_end_paint __attribute((visibility("hidden")));
 #define gdk_window_end_paint IA__gdk_window_end_paint
+
+extern __typeof (gdk_window_flush) IA__gdk_window_flush __attribute((visibility("hidden")));
+#define gdk_window_flush IA__gdk_window_flush
 
 extern __typeof (gdk_window_foreign_new) IA__gdk_window_foreign_new __attribute((visibility("hidden")));
 #define gdk_window_foreign_new IA__gdk_window_foreign_new

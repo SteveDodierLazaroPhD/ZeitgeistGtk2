@@ -54,7 +54,8 @@ CONFIG_CLEAN_VPATH_FILES =
 am__EXEEXT_2 = testing$(EXEEXT) liststore$(EXEEXT) treestore$(EXEEXT) \
 	treeview$(EXEEXT) treeview-scrolling$(EXEEXT) \
 	recentmanager$(EXEEXT) floating$(EXEEXT) object$(EXEEXT) \
-	builder$(EXEEXT) $(am__EXEEXT_1) textbuffer$(EXEEXT)
+	builder$(EXEEXT) $(am__EXEEXT_1) textbuffer$(EXEEXT) \
+	filtermodel$(EXEEXT) expander$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 am_builder_OBJECTS = builder.$(OBJEXT)
 builder_OBJECTS = $(am_builder_OBJECTS)
@@ -68,6 +69,12 @@ builder_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 am_defaultvalue_OBJECTS = defaultvalue.$(OBJEXT) pixbuf-init.$(OBJEXT)
 defaultvalue_OBJECTS = $(am_defaultvalue_OBJECTS)
 defaultvalue_DEPENDENCIES = $(progs_ldadd)
+am_expander_OBJECTS = expander.$(OBJEXT)
+expander_OBJECTS = $(am_expander_OBJECTS)
+expander_DEPENDENCIES = $(progs_ldadd)
+am_filtermodel_OBJECTS = filtermodel.$(OBJEXT)
+filtermodel_OBJECTS = $(am_filtermodel_OBJECTS)
+filtermodel_DEPENDENCIES = $(progs_ldadd)
 am_floating_OBJECTS = floating.$(OBJEXT)
 floating_OBJECTS = $(am_floating_OBJECTS)
 floating_DEPENDENCIES = $(progs_ldadd)
@@ -122,12 +129,14 @@ AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(builder_SOURCES) $(defaultvalue_SOURCES) \
-	$(floating_SOURCES) $(liststore_SOURCES) $(object_SOURCES) \
+	$(expander_SOURCES) $(filtermodel_SOURCES) $(floating_SOURCES) \
+	$(liststore_SOURCES) $(object_SOURCES) \
 	$(recentmanager_SOURCES) $(testing_SOURCES) \
 	$(textbuffer_SOURCES) $(treestore_SOURCES) $(treeview_SOURCES) \
 	$(treeview_scrolling_SOURCES)
 DIST_SOURCES = $(builder_SOURCES) $(defaultvalue_SOURCES) \
-	$(floating_SOURCES) $(liststore_SOURCES) $(object_SOURCES) \
+	$(expander_SOURCES) $(filtermodel_SOURCES) $(floating_SOURCES) \
+	$(liststore_SOURCES) $(object_SOURCES) \
 	$(recentmanager_SOURCES) $(testing_SOURCES) \
 	$(textbuffer_SOURCES) $(treestore_SOURCES) $(treeview_SOURCES) \
 	$(treeview_scrolling_SOURCES)
@@ -374,7 +383,7 @@ GTESTER_REPORT = gtester-report		# in $PATH for non-GLIB packages
 EXTRA_DIST = 
 TEST_PROGS = testing liststore treestore treeview treeview-scrolling \
 	recentmanager floating object builder $(am__append_1) \
-	textbuffer
+	textbuffer filtermodel expander
 
 ### testing rules
 
@@ -454,6 +463,10 @@ defaultvalue_SOURCES = defaultvalue.c pixbuf-init.c
 defaultvalue_LDADD = $(progs_ldadd)
 textbuffer_SOURCES = textbuffer.c pixbuf-init.c
 textbuffer_LDADD = $(progs_ldadd)
+filtermodel_SOURCES = filtermodel.c
+filtermodel_LDADD = $(progs_ldadd)
+expander_SOURCES = expander.c
+expander_LDADD = $(progs_ldadd)
 all: all-am
 
 .SUFFIXES:
@@ -503,6 +516,12 @@ builder$(EXEEXT): $(builder_OBJECTS) $(builder_DEPENDENCIES)
 defaultvalue$(EXEEXT): $(defaultvalue_OBJECTS) $(defaultvalue_DEPENDENCIES) 
 	@rm -f defaultvalue$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(defaultvalue_OBJECTS) $(defaultvalue_LDADD) $(LIBS)
+expander$(EXEEXT): $(expander_OBJECTS) $(expander_DEPENDENCIES) 
+	@rm -f expander$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(expander_OBJECTS) $(expander_LDADD) $(LIBS)
+filtermodel$(EXEEXT): $(filtermodel_OBJECTS) $(filtermodel_DEPENDENCIES) 
+	@rm -f filtermodel$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(filtermodel_OBJECTS) $(filtermodel_LDADD) $(LIBS)
 floating$(EXEEXT): $(floating_OBJECTS) $(floating_DEPENDENCIES) 
 	@rm -f floating$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(floating_OBJECTS) $(floating_LDADD) $(LIBS)
@@ -539,6 +558,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/builder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/defaultvalue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expander.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filtermodel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/liststore.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/object.Po@am__quote@

@@ -17,9 +17,11 @@
 #undef gdk_add_client_message_filter 
 extern __typeof (gdk_add_client_message_filter) gdk_add_client_message_filter __attribute((alias("IA__gdk_add_client_message_filter"), visibility("default")));
 
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_event_get_graphics_expose 
 extern __typeof (gdk_event_get_graphics_expose) gdk_event_get_graphics_expose __attribute((alias("IA__gdk_event_get_graphics_expose"), visibility("default")));
 
+#endif
 #undef gdk_events_pending 
 extern __typeof (gdk_events_pending) gdk_events_pending __attribute((alias("IA__gdk_events_pending"), visibility("default")));
 
@@ -1425,6 +1427,9 @@ extern __typeof (gdk_window_destroy) gdk_window_destroy __attribute((alias("IA__
 
 #undef gdk_window_end_paint 
 extern __typeof (gdk_window_end_paint) gdk_window_end_paint __attribute((alias("IA__gdk_window_end_paint"), visibility("default")));
+
+#undef gdk_window_flush 
+extern __typeof (gdk_window_flush) gdk_window_flush __attribute((alias("IA__gdk_window_flush"), visibility("default")));
 
 #undef gdk_window_foreign_new 
 extern __typeof (gdk_window_foreign_new) gdk_window_foreign_new __attribute((alias("IA__gdk_window_foreign_new"), visibility("default")));

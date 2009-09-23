@@ -348,11 +348,29 @@ gdk_window_impl_quartz_end_paint (GdkPaintable *paintable)
 }
 
 void
+_gdk_quartz_window_set_needs_display_in_rect (GdkWindow    *window,
+                                              GdkRectangle *rect)
+{
+  GdkWindowObject *private;
+  GdkWindowImplQuartz *impl;
+
+  private = GDK_WINDOW_OBJECT (window);
+  impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+
+  if (!impl->needs_display_region)
+    impl->needs_display_region = gdk_region_new ();
+
+  gdk_region_union_with_rect (impl->needs_display_region, rect);
+
+  [impl->view setNeedsDisplayInRect:NSMakeRect (rect->x, rect->y,
+                                                rect->width, rect->height)];
+
+}
+
+void
 _gdk_windowing_window_process_updates_recurse (GdkWindow *window,
                                                GdkRegion *region)
 {
-  GdkWindowObject *private = (GdkWindowObject *)window;
-  GdkWindowImplQuartz *impl = (GdkWindowImplQuartz *)private->impl;
   int i, n_rects;
   GdkRectangle *rects;
 
@@ -389,10 +407,7 @@ _gdk_windowing_window_process_updates_recurse (GdkWindow *window,
   gdk_region_get_rectangles (region, &rects, &n_rects);
 
   for (i = 0; i < n_rects; i++)
-    {
-      [impl->view setNeedsDisplayInRect:NSMakeRect (rects[i].x, rects[i].y,
-                                                    rects[i].width, rects[i].height)];
-    }
+    _gdk_quartz_window_set_needs_display_in_rect (window, &rects[i]);
 
   g_free (rects);
 
@@ -955,16 +970,20 @@ _gdk_windowing_window_init (void)
   private->impl = g_object_new (_gdk_window_impl_get_type (), NULL);
   private->impl_window = private;
 
-  /* Note: This needs to be reworked for multi-screen support. */
   impl = GDK_WINDOW_IMPL_QUARTZ (GDK_WINDOW_OBJECT (_gdk_root)->impl);
-  rect = [[NSScreen mainScreen] frame];
 
+  /* The size of the root window should be the same as the size of
+   * the screen it belongs to.
+   *
+   * FIXME: Of course this needs to be updated when you change the monitor
+   * configuration (add another one, remove one, etc).
+   */
   private->x = 0;
   private->y = 0;
   private->abs_x = 0;
   private->abs_y = 0;
-  private->width = rect.size.width;
-  private->height = rect.size.height;
+  private->width = gdk_screen_get_width (_gdk_screen);
+  private->height = gdk_screen_get_height (_gdk_screen);
 
   private->state = 0; /* We don't want GDK_WINDOW_STATE_WITHDRAWN here */
   private->window_type = GDK_WINDOW_ROOT;
@@ -1290,12 +1309,7 @@ move_resize_window_internal (GdkWindow *window,
               gdk_region_get_rectangles (expose_region, &rects, &n_rects);
 
               for (n = 0; n < n_rects; ++n)
-                {
-                  [impl->view setNeedsDisplayInRect:NSMakeRect (rects[n].x,
-                                                                rects[n].y,
-                                                                rects[n].width,
-                                                                rects[n].height)];
-                }
+                _gdk_quartz_window_set_needs_display_in_rect (window, &rects[n]);
 
               g_free (rects);
             }

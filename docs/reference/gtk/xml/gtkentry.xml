@@ -1542,9 +1542,9 @@ position in <parameter>entry</parameter>.</para>
 
 </simpara></listitem></varlistentry>
 </variablelist><para role="since">Since 2.16</para></refsect2>
-<refsect2 id="gtk-entry-set-icon-drag-source" role="function">
+<refsect2 id="gtk-entry-set-icon-drag-source" role="function" condition="since:2.16">
 <title>gtk_entry_set_icon_drag_source ()</title>
-<indexterm zone="gtk-entry-set-icon-drag-source"><primary sortas="entry_set_icon_drag_source">gtk_entry_set_icon_drag_source</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_set_icon_drag_source      (<link linkend="GtkEntry">GtkEntry</link> *entry,
+<indexterm zone="gtk-entry-set-icon-drag-source" role="2.16"><primary sortas="entry_set_icon_drag_source">gtk_entry_set_icon_drag_source</primary></indexterm><programlisting><link linkend="void">void</link>                gtk_entry_set_icon_drag_source      (<link linkend="GtkEntry">GtkEntry</link> *entry,
                                                          <link linkend="GtkEntryIconPosition">GtkEntryIconPosition</link> icon_pos,
                                                          <link linkend="GtkTargetList">GtkTargetList</link> *target_list,
                                                          <link linkend="GdkDragAction">GdkDragAction</link> actions);</programlisting>
@@ -1578,10 +1578,10 @@ gets executed after the default handler.</para>
 <varlistentry><term><parameter>actions</parameter>&#160;:</term>
 <listitem><simpara> a bitmask of the allowed drag actions
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="gtk-entry-get-current-icon-drag-source" role="function">
+</variablelist><para role="since">Since 2.16</para></refsect2>
+<refsect2 id="gtk-entry-get-current-icon-drag-source" role="function" condition="since:2.16">
 <title>gtk_entry_get_current_icon_drag_source ()</title>
-<indexterm zone="gtk-entry-get-current-icon-drag-source"><primary sortas="entry_get_current_icon_drag_source">gtk_entry_get_current_icon_drag_source</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_entry_get_current_icon_drag_source
+<indexterm zone="gtk-entry-get-current-icon-drag-source" role="2.16"><primary sortas="entry_get_current_icon_drag_source">gtk_entry_get_current_icon_drag_source</primary></indexterm><programlisting><link linkend="gint">gint</link>                gtk_entry_get_current_icon_drag_source
                                                         (<link linkend="GtkEntry">GtkEntry</link> *entry);</programlisting>
 <para>
 Returns the index of the icon which is the source of the current
@@ -1597,8 +1597,9 @@ callback.</para>
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> index of the icon which is the source of the current
          DND operation, or -1.
+
 </simpara></listitem></varlistentry>
-</variablelist></refsect2>
+</variablelist><para role="since">Since 2.16</para></refsect2>
 
 </refsect1>
 <refsect1 id="GtkEntry.property-details" role="property_details">
@@ -1658,8 +1659,20 @@ Sets the text area's border between the text and the frame.</para>
 </para><para>Since 2.10</para>
 </refsect2>
 <refsect2 id="GtkEntry--invisible-char" role="property"><title>The <literal>&quot;invisible-char&quot;</literal> property</title>
-<indexterm zone="GtkEntry--invisible-char"><primary sortas="Entry:invisible-char">GtkEntry:invisible-char</primary></indexterm><programlisting>  &quot;invisible-char&quot;           <link linkend="guint">guint</link>                 : Read / Write</programlisting>
-<para>The character to use when masking entry contents (in "password mode").</para><para>Default value: '*'</para>
+<indexterm zone="GtkEntry--invisible-char" role="2.18"><primary sortas="Entry:invisible-char">GtkEntry:invisible-char</primary></indexterm><programlisting>  &quot;invisible-char&quot;           <link linkend="guint">guint</link>                 : Read / Write</programlisting>
+<para>
+The invisible character is used when masking entry contents (in
+\"password mode\")"). When it is not explicitly set with the
+<link linkend="GtkEntry-invisible-char"><type>"invisible-char"</type></link> property, GTK+ determines the character
+to use from a list of possible candidates, depending on availability
+in the current font.
+</para>
+<para>
+This style property allows the theme to prepend a character
+to the list of candidates.</para>
+<para>
+</para><para>Default value: '*'</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkEntry--invisible-char-set" role="property"><title>The <literal>&quot;invisible-char-set&quot;</literal> property</title>
 <indexterm zone="GtkEntry--invisible-char-set" role="2.16"><primary sortas="Entry:invisible-char-set">GtkEntry:invisible-char-set</primary></indexterm><programlisting>  &quot;invisible-char-set&quot;       <link linkend="gboolean">gboolean</link>              : Read / Write</programlisting>
@@ -1971,12 +1984,28 @@ Sets the text area's border between the text and the frame.</para>
 </para><para>Since 2.10</para>
 </refsect2>
 <refsect2 id="GtkEntry--s-invisible-char" role="property"><title>The <literal>&quot;invisible-char&quot;</literal> style property</title>
-<indexterm zone="GtkEntry--s-invisible-char"><primary sortas="Entry:invisible-char">GtkEntry:invisible-char</primary></indexterm><programlisting>  &quot;invisible-char&quot;           <link linkend="guint">guint</link>                 : Read</programlisting>
-<para>The character to use when masking entry contents (in "password mode").</para><para>Default value: 0</para>
+<indexterm zone="GtkEntry--s-invisible-char" role="2.18"><primary sortas="Entry:invisible-char">GtkEntry:invisible-char</primary></indexterm><programlisting>  &quot;invisible-char&quot;           <link linkend="guint">guint</link>                 : Read</programlisting>
+<para>
+The invisible character is used when masking entry contents (in
+\"password mode\")"). When it is not explicitly set with the
+<link linkend="GtkEntry-invisible-char"><type>"invisible-char"</type></link> property, GTK+ determines the character
+to use from a list of possible candidates, depending on availability
+in the current font.
+</para>
+<para>
+This style property allows the theme to prepend a character
+to the list of candidates.</para>
+<para>
+</para><para>Default value: 0</para>
+<para>Since 2.18</para>
 </refsect2>
 <refsect2 id="GtkEntry--s-progress-border" role="property"><title>The <literal>&quot;progress-border&quot;</literal> style property</title>
-<indexterm zone="GtkEntry--s-progress-border"><primary sortas="Entry:progress-border">GtkEntry:progress-border</primary></indexterm><programlisting>  &quot;progress-border&quot;          <link linkend="GtkBorder">GtkBorder</link>*            : Read</programlisting>
-<para>Border around the progress bar.</para></refsect2>
+<indexterm zone="GtkEntry--s-progress-border" role="2.16"><primary sortas="Entry:progress-border">GtkEntry:progress-border</primary></indexterm><programlisting>  &quot;progress-border&quot;          <link linkend="GtkBorder">GtkBorder</link>*            : Read</programlisting>
+<para>
+The border around the progress bar in the entry.</para>
+<para>
+</para><para>Since 2.16</para>
+</refsect2>
 <refsect2 id="GtkEntry--s-state-hint" role="property"><title>The <literal>&quot;state-hint&quot;</literal> style property</title>
 <indexterm zone="GtkEntry--s-state-hint" role="2.16"><primary sortas="Entry:state-hint">GtkEntry:state-hint</primary></indexterm><programlisting>  &quot;state-hint&quot;               <link linkend="gboolean">gboolean</link>              : Read</programlisting>
 <para>

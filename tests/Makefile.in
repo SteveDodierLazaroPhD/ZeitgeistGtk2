@@ -72,7 +72,7 @@ noinst_PROGRAMS = $(am__EXEEXT_1) simple$(EXEEXT) flicker$(EXEEXT) \
 	$(am__EXEEXT_3)
 @HAVE_CXX_TRUE@am__append_1 = autotestkeywords
 @HAVE_CXX_TRUE@TESTS = autotestkeywords$(EXEEXT)
-@HAVE_CXX_TRUE@@HAVE_OBJC_TRUE@am__append_2 = -DHAVE_OBJC=1
+@HAVE_CXX_TRUE@@HAVE_OBJC_TRUE@am__append_2 = -DHAVE_OBJC=1 -x objective-c++
 subdir = tests
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
@@ -96,10 +96,6 @@ autotestkeywords_LDADD = $(LDADD)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
-autotestkeywords_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(autotestkeywords_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
 flicker_SOURCES = flicker.c
 flicker_OBJECTS = flicker.$(OBJEXT)
 pixbuf_lowmem_SOURCES = pixbuf-lowmem.c
@@ -645,7 +641,6 @@ LDADDS = \
 @HAVE_CXX_TRUE@autotestkeywords_SOURCES = autotestkeywords.cc
 @HAVE_CXX_TRUE@autotestkeywords_CPPFLAGS = -I$(srcdir)/dummy-headers \
 @HAVE_CXX_TRUE@	$(am__append_2)
-@HAVE_CXX_TRUE@@HAVE_OBJC_TRUE@autotestkeywords_CXXFLAGS = -x objective-c++
 flicker_DEPENDENCIES = $(TEST_DEPS)
 simple_DEPENDENCIES = $(TEST_DEPS)
 print_editor_DEPENDENCIES = $(TEST_DEPS)
@@ -923,7 +918,7 @@ clean-noinstPROGRAMS:
 	rm -f $$list
 autotestkeywords$(EXEEXT): $(autotestkeywords_OBJECTS) $(autotestkeywords_DEPENDENCIES) 
 	@rm -f autotestkeywords$(EXEEXT)
-	$(AM_V_CXXLD)$(autotestkeywords_LINK) $(autotestkeywords_OBJECTS) $(autotestkeywords_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(CXXLINK) $(autotestkeywords_OBJECTS) $(autotestkeywords_LDADD) $(LIBS)
 flicker$(EXEEXT): $(flicker_OBJECTS) $(flicker_DEPENDENCIES) 
 	@rm -f flicker$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(flicker_OBJECTS) $(flicker_LDADD) $(LIBS)
@@ -1262,20 +1257,20 @@ distclean-compile:
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
 autotestkeywords-autotestkeywords.o: autotestkeywords.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -MT autotestkeywords-autotestkeywords.o -MD -MP -MF $(DEPDIR)/autotestkeywords-autotestkeywords.Tpo -c -o autotestkeywords-autotestkeywords.o `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT autotestkeywords-autotestkeywords.o -MD -MP -MF $(DEPDIR)/autotestkeywords-autotestkeywords.Tpo -c -o autotestkeywords-autotestkeywords.o `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/autotestkeywords-autotestkeywords.Tpo $(DEPDIR)/autotestkeywords-autotestkeywords.Po
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='autotestkeywords.cc' object='autotestkeywords-autotestkeywords.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -c -o autotestkeywords-autotestkeywords.o `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o autotestkeywords-autotestkeywords.o `test -f 'autotestkeywords.cc' || echo '$(srcdir)/'`autotestkeywords.cc
 
 autotestkeywords-autotestkeywords.obj: autotestkeywords.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -MT autotestkeywords-autotestkeywords.obj -MD -MP -MF $(DEPDIR)/autotestkeywords-autotestkeywords.Tpo -c -o autotestkeywords-autotestkeywords.obj `if test -f 'autotestkeywords.cc'; then $(CYGPATH_W) 'autotestkeywords.cc'; else $(CYGPATH_W) '$(srcdir)/autotestkeywords.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT autotestkeywords-autotestkeywords.obj -MD -MP -MF $(DEPDIR)/autotestkeywords-autotestkeywords.Tpo -c -o autotestkeywords-autotestkeywords.obj `if test -f 'autotestkeywords.cc'; then $(CYGPATH_W) 'autotestkeywords.cc'; else $(CYGPATH_W) '$(srcdir)/autotestkeywords.cc'; fi`
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/autotestkeywords-autotestkeywords.Tpo $(DEPDIR)/autotestkeywords-autotestkeywords.Po
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='autotestkeywords.cc' object='autotestkeywords-autotestkeywords.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(autotestkeywords_CXXFLAGS) $(CXXFLAGS) -c -o autotestkeywords-autotestkeywords.obj `if test -f 'autotestkeywords.cc'; then $(CYGPATH_W) 'autotestkeywords.cc'; else $(CYGPATH_W) '$(srcdir)/autotestkeywords.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(autotestkeywords_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o autotestkeywords-autotestkeywords.obj `if test -f 'autotestkeywords.cc'; then $(CYGPATH_W) 'autotestkeywords.cc'; else $(CYGPATH_W) '$(srcdir)/autotestkeywords.cc'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
