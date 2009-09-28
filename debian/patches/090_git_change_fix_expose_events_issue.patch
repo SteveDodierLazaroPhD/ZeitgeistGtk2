@@ -1,0 +1,44 @@
+Subject: Send expose events on foreign windows
+
+F-Spot needs this as it draws on a foreign (screensaver) window, which
+used to work.
+
+I believe this is safe, because in all typical cases the expose
+mask will not be set, so we won't do anything, and its what we used to
+do.
+---
+diff --git a/gdk/gdkwindow.c b/gdk/gdkwindow.c
+index 500bf65..3231dea 100644
+--- a/gdk/gdkwindow.c
++++ b/gdk/gdkwindow.c
+@@ -5023,12 +5023,17 @@ _gdk_window_process_updates_recurse (GdkWindow *window,
+ 
+ 	  g_object_unref (window);
+ 	}
+-      else if (private->bg_pixmap != GDK_NO_BG)
++      else if (private->bg_pixmap != GDK_NO_BG &&
++	       private->window_type != GDK_WINDOW_FOREIGN)
+ 	{
+ 	  /* No exposure mask set, so nothing will be drawn, the
+ 	   * app relies on the background being what it specified
+ 	   * for the window. So, we need to clear this manually.
+ 	   *
++	   * For foreign windows if expose is not set that generally
++	   * means some other client paints them, so don't clear
++	   * there.
++	   *
+ 	   * We use begin/end_paint around the clear so that we can
+ 	   * piggyback on the implicit paint */
+ 
+@@ -5066,8 +5071,7 @@ gdk_window_process_updates_internal (GdkWindow *window)
+       GdkRegion *update_area = private->update_area;
+       private->update_area = NULL;
+ 
+-      if (_gdk_event_func && gdk_window_is_viewable (window)  &&
+-	  private->window_type != GDK_WINDOW_FOREIGN)
++      if (_gdk_event_func && gdk_window_is_viewable (window))
+ 	{
+ 	  GdkRegion *expose_region;
+ 	  gboolean end_implicit;
+--
+
