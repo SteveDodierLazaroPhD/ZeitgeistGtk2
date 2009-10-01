@@ -1,3 +1,979 @@
+commit 121868f660c7558c91fbc67df4caff41b9c20945
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 30 16:28:02 2009 -0400
+
+    Updates
+
+ NEWS |   48 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 files changed, 46 insertions(+), 2 deletions(-)
+
+commit 724b2bae64de6a81815e4f33a3673f7195c8a28d
+Author: Petr Kovar <pknbe@volny.cz>
+Date:   Wed Sep 30 21:23:10 2009 +0200
+
+    Updated Czech translation
+
+ po/cs.po | 2216
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1125 insertions(+), 1091 deletions(-)
+
+commit 7c3e8130c471c617d8a686735da0c08a99c7d618
+Author: Adrian Johnson <ajohnson@redneon.com>
+Date:   Wed Sep 30 12:47:55 2009 -0400
+
+    Correct the orientation of landscape pages
+
+    The convention for landscape pages, and required by PostScript
+    Language Reference Manual, is for landscape printing to rotate user
+    space 90 degrees counterclockwise. Part of bug 596423
+
+ gtk/gtkprintcontext.c |   16 ++++++++--------
+ 1 files changed, 8 insertions(+), 8 deletions(-)
+
+commit 4261efda2bdcc458f9e0898f3d9c9861c124c6d0
+Author: Adrian Johnson <ajohnson@redneon.com>
+Date:   Wed Sep 30 12:46:58 2009 -0400
+
+    Emit PageOrientation DSC comment into PostScript print output
+
+    The PageOrientation DSC comment tells PostScript viewers such as gv or
+    evince the orientation to use when displaying the page. Part of
+    bug 596423
+
+ gtk/gtkprintoperation-unix.c |   21 +++++++++++++++++++--
+ 1 files changed, 19 insertions(+), 2 deletions(-)
+
+commit dd52987d1fe3c3481fffc5b776fcac6b02114b01
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Wed Sep 30 12:40:11 2009 -0400
+
+    Speed up printer listing in the print dialog
+
+    Use shorter timeout for connection testing to avoid A 3-6 second
+    delay before the printers appear. Bug 594643
+
+ modules/printbackends/cups/gtkprintbackendcups.c |   50
+ ++++++++++++++++++----
+ modules/printbackends/cups/gtkprintercups.c      |    2 +
+ modules/printbackends/cups/gtkprintercups.h      |    1 +
+ 3 files changed, 45 insertions(+), 8 deletions(-)
+
+commit 14f3006d124cc42dd5110b4fa7e49176ac3cd2fc
+Author: Gabor Kelemen <kelemeng@gnome.hu>
+Date:   Wed Sep 30 16:49:55 2009 +0200
+
+    Updated Hungarian translation
+
+ po/hu.po |  195
+ ++++++++++++++++++++++++++++++++++----------------------------
+ 1 files changed, 108 insertions(+), 87 deletions(-)
+
+commit a4145bfeefef97b88e280b25e87b3414cd0e85d7
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Wed Sep 30 15:07:37 2009 +0200
+
+    Bug 588449 - DnD doesn't work on GDK/Quartz
+
+    Patch from Paul Davis.  This gets the basics of drag and drop properly
+    working on Mac OS X.
+
+ gdk/quartz/GdkQuartzWindow.c |   30 +++++++++
+ gdk/quartz/gdkdnd-quartz.c   |    6 ++
+ gtk/gtkdnd-quartz.c          |  134
+ ++++++++++++++++++++++++++++++------------
+ 3 files changed, 132 insertions(+), 38 deletions(-)
+
+commit 31771cc6402ac4ae637d0a126295ba0dc6b879bc
+Author: Christian Dywan <christian@lanedo.com>
+Date:   Wed Sep 30 08:45:30 2009 -0400
+
+    Add a note about tooltip theming
+
+    This should help to reduce the amount of confusion about how to
+    make a tooltip window appear like a tooltip. Bug 596080.
+
+ gtk/gtkwidget.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 2518fbdc02bd1e58631bb6379539d5e343dc2300
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Wed Sep 30 13:09:22 2009 +0200
+
+    Fix compile warning in defaultvalue test
+
+ gtk/tests/defaultvalue.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit dc04e012cf99278f4915717637ccd9280906dd55
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Wed Sep 30 13:05:33 2009 +0200
+
+    Ignore certain GtkSettings in defaultvalues unit test
+
+    Like the other GtkSettings already registered, these are influenced
+    from
+    the outside and cannot be properly tested.  The defaultvalues test
+    passes again now.
+
+ gtk/tests/defaultvalue.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+commit 28d56cbbda3ee3605280210b79ca05ac3c01ce38
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Wed Sep 30 13:00:28 2009 +0200
+
+    Use boxed accessors for setting and retrieving cursor property
+
+ gdk/gdkwindow.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 77fc6e35397d96c4a511d65dff58ce42e58a39ec
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Wed Sep 30 10:19:07 2009 +0200
+
+    Bug 596580 - Blank rows in entry autocompletion
+
+    gtk_tree_model_build_level() always needs to emit row-inserted when
+    requested, this should not depend on whether the level has a parent
+    level or a virtual root, which is a check whether or not we need to
+    reference the node in the child model.  Furthermore, we also need
+    to emit row-has-child-toggled after row-inserted when appropriate.
+
+    When gtk_tree_model_filter_row_changed() pulls in the root level, it
+    must request build_level() to emit signals for this.  The refilter
+    function uses row_changed to process the changes, so build_level() in
+    the first call to row_changed() might pull in multiple new nodes
+    in this
+    scenario, for all of these signals need to be emitted.  Of course,
+    build_level() will then also emit the signals for the node
+    row_changed()
+    is processing, we should not emit a duplicate signal, this is now
+    accounted for.
+
+    Add a unit test for this.  For this small functionality to block the
+    row-changed signal has been implemented, so that we can simulate calls
+    to the refilter function using the current visible column setup.
+
+ gtk/gtktreemodelfilter.c |   55 +++++++----
+ gtk/tests/filtermodel.c  |  227
+ ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 261 insertions(+), 21 deletions(-)
+
+commit 3a69f6772bfa8a560e3fef557d292851a5da45a4
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Tue Sep 29 17:12:37 2009 +0200
+
+    Pretty print non-matching signals in filter model test suite
+
+ gtk/tests/filtermodel.c |   64
+ ++++++++++++++++++++++++++++++++++++++++++----
+ 1 files changed, 58 insertions(+), 6 deletions(-)
+
+commit efd28144777ceab95b929b41e901ee13efe86445
+Author: Daniel Nylander <po@danielnylander.se>
+Date:   Wed Sep 30 09:58:00 2009 +0200
+
+    Updated Swedish translation
+
+ po/sv.po |  195
+ ++++++++++++++++++++++++++++++++++----------------------------
+ 1 files changed, 108 insertions(+), 87 deletions(-)
+
+commit 35845f1efe6c46f4cc6cadbade122aedc242ba49
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 02:23:25 2009 -0400
+
+    Interpret min_value == max_value correctly
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+ gdk/x11/gdkinput-x11.c |   27 ++++++++++++++++++++++-----
+ 1 files changed, 22 insertions(+), 5 deletions(-)
+
+commit 70bd23537f3cf78f4d17118f5249a4ea93d413a0
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 02:20:40 2009 -0400
+
+    Select for DeviceStateNotify
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+ gdk/x11/gdkinput-x11.c    |   21 +++++++++++++++++++++
+ gdk/x11/gdkinputprivate.h |    2 +-
+ 2 files changed, 22 insertions(+), 1 deletions(-)
+
+commit 0178ebf739cb5c69e83664f25343b1bb022e33f8
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 11:57:50 2009 -0400
+
+    Keep track of axis values
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+ gdk/x11/gdkinput-x11.c    |   25 +++++++++++++++++++++++--
+ gdk/x11/gdkinput.c        |    2 ++
+ gdk/x11/gdkinputprivate.h |    1 +
+ 3 files changed, 26 insertions(+), 2 deletions(-)
+
+commit ee25051f9690106d93de998183717e50d9d89829
+Author: Jürg Billeter <j@bitron.ch>
+Date:   Wed Sep 30 00:43:51 2009 -0400
+
+    Support tracker 0.7
+
+    Make GtkSearchEngineTracker work with libtracker 0.6 and 0.7.
+    See bug 596081.
+
+ gtk/gtksearchenginetracker.c |   95
+ +++++++++++++++++++++++++++++------------
+ 1 files changed, 67 insertions(+), 28 deletions(-)
+
+commit f0f39c34f807dcd4775415f1b7604b9debc16c60
+Author: Xan Lopez <xan@gnome.org>
+Date:   Tue Sep 29 23:45:03 2009 -0400
+
+    Update last_window only when needed
+
+    _gtk_tooltip_handle_event, which is called for many events in the GTK+
+    main loop, calls gtk_tooltip_set_last_window, which keeps a weak
+    reference to the last window we passed through. If the window being
+    set is the same than the last one there's really no need to update our
+    weak reference, so add a check for that and exit early.
+
+ gtk/gtktooltip.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 67728ac004eff3cb2175a8c1db9bfbc749985cda
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 02:14:12 2009 -0400
+
+    Filter out events that the current window didn't select for
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+ gdk/x11/gdkinput-x11.c    |   49
+ +++++++++++++++++++++++++++++++++++++++++++++
+ gdk/x11/gdkinput-xfree.c  |    2 +-
+ gdk/x11/gdkinputprivate.h |    3 ++
+ 3 files changed, 53 insertions(+), 1 deletions(-)
+
+commit 51f2a99096958e1eeaef82a13240d28a40e5db53
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 02:12:27 2009 -0400
+
+    Always select all XInput motion events
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+ gdk/x11/gdkinput-x11.c |   44
+ ++++----------------------------------------
+ 1 files changed, 4 insertions(+), 40 deletions(-)
+
+commit acdecb6aa440eb98066acc4d3c316affbc62a944
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 01:56:59 2009 -0400
+
+    Report XInput button motion events until all buttons are released.
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+ gdk/x11/gdkinput-xfree.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 2635fb75c688b9c44a7db4840afaadba4c6d31b3
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 01:51:44 2009 -0400
+
+    XInput allows up to 255 buttons
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+ gdk/x11/gdkinput-x11.c    |   16 +++++++++++++---
+ gdk/x11/gdkinput-xfree.c  |    5 +++--
+ gdk/x11/gdkinputprivate.h |    3 ++-
+ 3 files changed, 18 insertions(+), 6 deletions(-)
+
+commit abf7742beb53f8a2c8012a353299abc68b5dbaaf
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Tue Sep 29 01:48:59 2009 -0400
+
+    Refactor _gdk_input_other_event
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=588649
+
+ gdk/x11/gdkinput-xfree.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+commit bd51d930e8901a348eb6ea8190dc3e4764990ede
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Mon Sep 28 20:21:33 2009 -0400
+
+    Use strstr instead of g_strrstr.
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+ gdk/x11/gdkinput-x11.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 6fef640debbe468586ff866cbef38d7a29c452d1
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Sep 29 12:56:57 2009 +0200
+
+    Only select for button and pointer event on toplevels
+
+    These event types propagate up the hierarchy anyway, so this means
+    we avoid setting it unnecessarily. This is especially important
+    for button press event, since only one client can select for this
+    on each window, causing X errors if two clients do it.
+
+ gdk/gdkwindow.c |   53
+ ++++++++++++++++++++++++++++++++++++-----------------
+ 1 files changed, 36 insertions(+), 17 deletions(-)
+
+commit 5a39fdbba1ed4922b65b0a9e9c245c7dabbb688d
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Tue Sep 29 12:03:40 2009 +0200
+
+    Updated French translation
+
+ po/fr.po |  196
+ ++++++++++++++++++++++++++++++++++---------------------------
+ 1 files changed, 109 insertions(+), 87 deletions(-)
+
+commit 987b45da7b44d8c65fdae20e11711732810d5a25
+Author: Amitakhya Phukan <aphukan@fedoraproject.org>
+Date:   Tue Sep 29 11:19:07 2009 +0530
+
+    Updating corrected Assamese translations.
+
+ po/as.po |   97
+ +++++++++++++++++++++++++++----------------------------------
+ 1 files changed, 43 insertions(+), 54 deletions(-)
+
+commit 894e11e447ad0c4ff49643a2f0e29eb347016c09
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 28 12:41:29 2009 -0400
+
+    Always initialize out params
+
+    This was causing a crash in the appearance capplet, reported in
+    bug 596345.
+
+ gtk/gtkiconview.c |   14 +++++++-------
+ 1 files changed, 7 insertions(+), 7 deletions(-)
+
+commit 7d196b3939e1bbf5eddc5da0980e30c2f38c9cdd
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Mon Sep 28 01:39:42 2009 -0400
+
+    Improve detection of input device source type
+
+    This detection code is not 100% reliable, but it should fare much
+    better
+    than the current code, which just compares the device name to a fixed
+    set of strings.  Many applications depend on erasers being recognized
+    reliably, so we start by checking for a device name containing the
+    substring 'eraser'.
+
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+
+ gdk/x11/gdkinput-x11.c |   14 ++++++--------
+ 1 files changed, 6 insertions(+), 8 deletions(-)
+
+commit e81501ebea4cceffce2890519807b0c243fec0a3
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Sep 28 15:29:37 2009 +0200
+
+    Sent button events don't cause passive grabs
+
+    Don't track sent button events as causing or removing
+    passive grabs.
+
+ gdk/gdkwindow.c |    8 ++++++--
+ 1 files changed, 6 insertions(+), 2 deletions(-)
+
+commit 739121dee0bddddffc43d48803ca84996f42142c
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Sep 28 15:26:19 2009 +0200
+
+    Remove unused grab_one_pointer_release_event var
+
+    We don't use this anymore, so just remove.
+
+ gdk/gdkdisplay.c   |    4 +---
+ gdk/gdkinternals.h |    1 -
+ 2 files changed, 1 insertions(+), 4 deletions(-)
+
+commit 5ebb32d1ffa23241d562fb4d5be02bc6f156b515
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Sep 28 15:21:54 2009 +0200
+
+    Extend _gdk_windowing_window_at_pointer to be able to get toplevels
+    only
+
+    This has two advantages:
+    1) In many backends, this is faster as we can terminate the window
+    hierarchy traversal earlier
+    2) When used in gdkdisplay.c::get_current_toplevel() to get the
+    current toplevel that has the pointer we now correctly return
+    a toplevel with the pointer in it where the pointer is inside
+    some foreign subwindow of a toplevel window.
+
+    The second advantage fixes some bugs in client side event generation
+    when the pointer is inside such a foreign child window.
+
+ gdk/directfb/gdkwindow-directfb.c |   20 ++++++++++++++++++++
+ gdk/gdkdisplay.c                  |   20 +++-----------------
+ gdk/gdkinternals.h                |    3 ++-
+ gdk/quartz/gdkwindow-quartz.c     |   23 ++++++++++++++++++++++-
+ gdk/win32/gdkwindow-win32.c       |    8 +++++++-
+ gdk/x11/gdkwindow-x11.c           |   11 ++++++++++-
+ 6 files changed, 64 insertions(+), 21 deletions(-)
+
+commit fe188a18f324f4545af857436a6060e676a1287d
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Sun Sep 27 14:37:19 2009 -0500
+
+    Bug 596494 - New property "cursor" in 2.18's GdkWindow with wrong
+    type?
+
+    Use a boxed paramspec with GDK_TYPE_CURSOR instead of a pointer
+    paramspec.
+
+ gdk/gdkwindow.c |    9 +++++----
+ 1 files changed, 5 insertions(+), 4 deletions(-)
+
+commit f2d9f5a9e6d4d9d3de1510b39d9a0ce0a976a4b3
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sun Sep 27 13:43:35 2009 +0200
+
+    Remove unused variable
+
+ gdk/quartz/gdkwindow-quartz.c |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit 2f782de1b7eb1b3dd778d01867e4e56a77af4a8c
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sun Sep 27 13:36:08 2009 +0200
+
+    Bug 596012 - popup menu position is horribly off on gdk quartz
+    with ...
+
+    Based on first patches by Christian Hergert.  Change
+    screen_get_monitor_geometry() so that it translates the layout of
+    the screens
+    from Cocoa layout to GDK layout.  In Cocoa, the screen locations
+    are specified in Cocoa geometry, as well as that GDK uses a
+    different way
+    to place individual monitors in the root window.  For now only
+    monitors
+    that are laid out horizontally are supported (see the FIXMEs in
+    the source),
+    in bug 596238 we will track future work to get things fully right.
+
+    Modify _gdk_quartz_window_get_inverted_screen_y() to take the
+    differences
+    in screen layout between Cocoa and GDK into account.  Also this
+    function
+    is subject to future work.
+
+ gdk/quartz/gdkscreen-quartz.c |   32 +++++++++++++++++++++++++++++++-
+ gdk/quartz/gdkwindow-quartz.c |   11 +++++++++--
+ 2 files changed, 40 insertions(+), 3 deletions(-)
+
+commit f506752affaf5bc0e8e96ab6c3421b042ab0319a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 27 00:14:54 2009 -0400
+
+    Handle child widgets correctly with multiple views
+
+    This was broken by an RTL fix in April.
+
+ gtk/gtktextlayout.c |   65
+ ++++++++++++++++++++++++++------------------------
+ 1 files changed, 34 insertions(+), 31 deletions(-)
+
+commit 17130a8ec9f461b681cce41215f460307a20aaba
+Author: Christian Hergert <chris@dronelabs.com>
+Date:   Fri Sep 25 21:52:13 2009 +0200
+
+    Bug 517394 - Native resize grip steals button release ...
+
+    Explicitly handle resizing by leaving all events in the lower
+    right 15x15
+    corner to Cocoa, if the window shows a resizing indicator.  Some
+    applications may have widgets allocated in this area.  Generally,
+    these
+    widgets are likely larger than 15x15 so they can still be hit.  Often
+    scroll bars are found in this area and these can also be manipulated
+    by
+    other means.  Since this is the only way of resizing windows on Mac
+    OS X,
+    it is too important to keep it broken.
+
+ gdk/quartz/gdkevents-quartz.c |   36 ++++++++++++++++++++++++++++++++++--
+ 1 files changed, 34 insertions(+), 2 deletions(-)
+
+commit 785e55f87ddd364f2686a3bc5ed324ec629d7ef3
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 25 18:16:06 2009 +0200
+
+    Bug 596250 - Gdkcursor-quartz.c doesn't implement GDK_BLANK_CURSOR
+
+    Support GDK_BLANK_CURSOR.  Patch by John Ralls.
+
+ gdk/quartz/gdkcursor-quartz.c |   21 ++++++++++++++++++++-
+ 1 files changed, 20 insertions(+), 1 deletions(-)
+
+commit cdec2caaf3571dbaf0ccd52aab6a111b1bcb1307
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Sep 25 17:23:54 2009 +0200
+
+    Send a motion-notify when a (new) main window became active
+
+    This motion-notify even will make sure that things like highlights are
+    set up correctly now that the window has become active.
+
+ gdk/quartz/gdkwindow-quartz.c |   65
+ ++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 64 insertions(+), 1 deletions(-)
+
+commit 3bcf8b39fb7651cbdeaf356cbe829799cc0b1ed0
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Sep 25 11:28:26 2009 +0200
+
+    On pointer grab request native events needed for event emulation
+
+    When we grab the pointer we need to request more events than what is
+    specified, otherwise our event emulation stop working and you won't
+    e.g. get crossing event unless you specified motion event mask.
+
+ gdk/gdkwindow.c |   19 ++++++++++++++++++-
+ 1 files changed, 18 insertions(+), 1 deletions(-)
+
+commit f8aba1471462f4a7e6f03e9e26289ebf6398b13c
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Fri Sep 25 08:16:56 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po |  201
+ +++++++++++++++++++++++++++++++++++---------------------------
+ 1 files changed, 113 insertions(+), 88 deletions(-)
+
+commit 06c208f8f1db10fc46ea44dc06fdd92b76467b4f
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Fri Sep 25 07:23:11 2009 +0300
+
+    Updating Estonian translation
+
+ po/et.po |   69
+ +++++++++++++++++++++++++++++++++++++------------------------
+ 1 files changed, 42 insertions(+), 27 deletions(-)
+
+commit cdba018fe9e6b33a92d1f936b10715efd7c49022
+Author: Mario Blättermann <mariobl@gnome.org>
+Date:   Thu Sep 24 19:41:16 2009 +0200
+
+    Updated German translation
+
+ po/de.po |  200
+ +++++++++++++++++++++++++++++++++++---------------------------
+ 1 files changed, 112 insertions(+), 88 deletions(-)
+
+commit afc19eb4a7e4ec4420dc202e0da0fe2c4d1ca7c2
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Sep 24 16:42:52 2009 +0200
+
+    Send expose events on foreign windows
+
+    F-Spot needs this as it draws on a foreign (screensaver) window, which
+    used to work.
+
+    I believe this is safe, because in all typical cases the expose
+    mask will not be set, so we won't do anything, and its what we used to
+    do.
+
+ gdk/gdkwindow.c |   10 +++++++---
+ 1 files changed, 7 insertions(+), 3 deletions(-)
+
+commit 402d60e5b4b657ea0ce8a60eb15e7e1e33bf3db3
+Author: Antón Méixome <meixome@mancomun.org>
+Date:   Thu Sep 24 15:44:12 2009 +0200
+
+    Updated Galician Translation
+
+ po/gl.po | 2228
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1130 insertions(+), 1098 deletions(-)
+
+commit a3e07662185f17e5bff1a732db3aa9dad121a763
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Thu Sep 24 15:34:56 2009 +0200
+
+    Add support for 'auth-info' attribute to the CUPS backend
+
+    Check for 'auth-info-required' attribute from printer attributes to
+    find out whether an authentization of user is needed.
+    Change password dialog of print backend to be able to require
+    informations
+    requested thru 'auth-info-required' (#566522).
+
+ gtk/gtkmarshalers.list                           |    1 +
+ gtk/gtkprintbackend.c                            |  164 +++++++-------
+ gtk/gtkprintbackend.h                            |   16 +-
+ modules/printbackends/cups/gtkcupsutils.c        |    5 +
+ modules/printbackends/cups/gtkcupsutils.h        |    3 +
+ modules/printbackends/cups/gtkprintbackendcups.c |  267
+ ++++++++++++++++++++--
+ modules/printbackends/cups/gtkprintercups.c      |    2 +
+ modules/printbackends/cups/gtkprintercups.h      |    1 +
+ 8 files changed, 351 insertions(+), 108 deletions(-)
+
+commit 9439a7ee0e1bc53e4f0246e6d6c441a253f36140
+Author: Matej Urbančič <mateju@svn.gnome.org>
+Date:   Thu Sep 24 12:41:34 2009 +0200
+
+    Updated Slovenian translation
+
+ po/sl.po | 2915
+ +++++++++++++++++++++++++++++---------------------------------
+ 1 files changed, 1357 insertions(+), 1558 deletions(-)
+
+commit c8f06be920bd67c78467e6441376df351fc51d0e
+Author: Ivar Smolin <okul@linux.ee>
+Date:   Thu Sep 24 13:28:31 2009 +0300
+
+    Updating Estonian translation
+
+ po/et.po | 1105
+ +-------------------------------------------------------------
+ 1 files changed, 7 insertions(+), 1098 deletions(-)
+
+commit e1a47f4f43841e5f9c1fa2847a6c07dd6f2bd449
+Author: Gabor Kelemen <kelemeng@gnome.hu>
+Date:   Thu Sep 24 12:26:34 2009 +0200
+
+    Updated Hungarian translation
+
+ po/hu.po | 2236
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1109 insertions(+), 1127 deletions(-)
+
+commit bde1767f8d87326565f43ead23f275bf4ef99848
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Thu Sep 24 10:23:00 2009 +0200
+
+    Updated Spanish translation
+
+ po/es.po | 2206
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1107 insertions(+), 1099 deletions(-)
+
+commit 29b6013e178ccbe92aac00d6c78b8641a121acca
+Author: Philip Withnall <philip@tecnocode.co.uk>
+Date:   Wed Sep 23 23:12:50 2009 +0100
+
+    Updated British English translation
+
+ po-properties/en_GB.po | 3490
+ ++++++++++++++++++++++++------------------------
+ 1 files changed, 1758 insertions(+), 1732 deletions(-)
+
+commit fc3f46856b903beb5d68f595320acf4616d3fd78
+Author: Philip Withnall <philip@tecnocode.co.uk>
+Date:   Wed Sep 23 22:03:05 2009 +0100
+
+    Updated British English translation
+
+ po/en_GB.po | 2184
+ ++++++++++++++++++++++++++++++-----------------------------
+ 1 files changed, 1097 insertions(+), 1087 deletions(-)
+
+commit 2c4d706350c84715381c470ac1a81aa2ae0b8a58
+Author: Daniel Nylander <po@danielnylander.se>
+Date:   Wed Sep 23 22:15:34 2009 +0200
+
+    Updated Swedish translation
+
+ po/sv.po | 2793
+ ++++++++++++++++++++++++++++----------------------------------
+ 1 files changed, 1271 insertions(+), 1522 deletions(-)
+
+commit ac2ecf64bb826047a6f2cb92597bd6802a0a62c8
+Author: Mario Blättermann <mariobl@gnome.org>
+Date:   Wed Sep 23 21:39:40 2009 +0200
+
+    Updated German translation
+
+ po/de.po | 2267
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1134 insertions(+), 1133 deletions(-)
+
+commit a2c2427562f9d5b041a8762a8e62e1c2f55b3fba
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Wed Sep 23 21:01:38 2009 +0200
+
+    Updated French translation
+
+ po/fr.po | 2192
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1094 insertions(+), 1098 deletions(-)
+
+commit 5f4915f62403ddb2502fa7b431a97943c9b56b88
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Wed Sep 23 14:35:26 2009 +0200
+
+    Don't hang print dialog when remote CUPS printer is not available
+
+    This patch tests availability of remote host before getting ppd file
+    for selected printer (#586207). It also adds a state message for
+    failure of getting details.
+
+ gtk/gtkprintunixdialog.c                         |   28 ++++++++-----
+ modules/printbackends/cups/gtkprintbackendcups.c |   47
+ ++++++++++++++++++++--
+ modules/printbackends/cups/gtkprintercups.c      |    8 ++++
+ modules/printbackends/cups/gtkprintercups.h      |    5 ++
+ 4 files changed, 74 insertions(+), 14 deletions(-)
+
+commit 915957fca35ead312f7327ce59a73eb301024faf
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 23 00:08:43 2009 -0400
+
+    Bump version
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit b841251ca79c332fd9922973b2a40e1298ae7f47
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 23 00:02:47 2009 -0400
+
+    2.18.0
+
+ docs/reference/gdk/tmpl/cairo_interaction.sgml |    2 +-
+ docs/reference/gdk/tmpl/windows.sgml           |    8 +
+ po-properties/af.po                            |   76 +-
+ po-properties/am.po                            |   76 +-
+ po-properties/ang.po                           |   76 +-
+ po-properties/ar.po                            |   76 +-
+ po-properties/as.po                            |  265 +-
+ po-properties/ast.po                           |   76 +-
+ po-properties/az.po                            |   76 +-
+ po-properties/az_IR.po                         |   76 +-
+ po-properties/be.po                            |   76 +-
+ po-properties/be@latin.po                      |   76 +-
+ po-properties/bg.po                            |   76 +-
+ po-properties/bn.po                            |   76 +-
+ po-properties/bn_IN.po                         | 3712 ++++++++++---------
+ po-properties/br.po                            |   76 +-
+ po-properties/bs.po                            |   76 +-
+ po-properties/ca.po                            |   76 +-
+ po-properties/ca@valencia.po                   |   76 +-
+ po-properties/crh.po                           |   76 +-
+ po-properties/cs.po                            |   76 +-
+ po-properties/cy.po                            |   76 +-
+ po-properties/da.po                            | 3474 +++++++++---------
+ po-properties/de.po                            | 3474 +++++++++---------
+ po-properties/dz.po                            |   76 +-
+ po-properties/el.po                            |   76 +-
+ po-properties/en_CA.po                         |   76 +-
+ po-properties/en_GB.po                         | 3474 +++++++++---------
+ po-properties/eo.po                            |   76 +-
+ po-properties/es.po                            |   76 +-
+ po-properties/et.po                            |   76 +-
+ po-properties/eu.po                            |   76 +-
+ po-properties/fa.po                            |   76 +-
+ po-properties/fi.po                            |   76 +-
+ po-properties/fr.po                            |   76 +-
+ po-properties/ga.po                            |   76 +-
+ po-properties/gl.po                            |   76 +-
+ po-properties/gu.po                            | 3646 +++++++++---------
+ po-properties/he.po                            |   76 +-
+ po-properties/hi.po                            |   76 +-
+ po-properties/hr.po                            |   76 +-
+ po-properties/hu.po                            |   76 +-
+ po-properties/hy.po                            |   76 +-
+ po-properties/ia.po                            |   76 +-
+ po-properties/id.po                            |   76 +-
+ po-properties/io.po                            |   76 +-
+ po-properties/is.po                            |   76 +-
+ po-properties/it.po                            | 3484 +++++++++---------
+ po-properties/ja.po                            |   78 +-
+ po-properties/ka.po                            |   76 +-
+ po-properties/kn.po                            |   76 +-
+ po-properties/ko.po                            |   76 +-
+ po-properties/ku.po                            |   76 +-
+ po-properties/li.po                            |   76 +-
+ po-properties/lt.po                            | 3474 +++++++++---------
+ po-properties/lv.po                            |   76 +-
+ po-properties/mai.po                           | 3642 +++++++++---------
+ po-properties/mi.po                            |   76 +-
+ po-properties/mk.po                            |   76 +-
+ po-properties/ml.po                            | 3663 +++++++++---------
+ po-properties/mn.po                            |   76 +-
+ po-properties/mr.po                            | 3664 +++++++++---------
+ po-properties/ms.po                            |   76 +-
+ po-properties/nb.po                            | 3476 +++++++++---------
+ po-properties/ne.po                            |   76 +-
+ po-properties/nl.po                            |   76 +-
+ po-properties/nn.po                            |   76 +-
+ po-properties/nso.po                           |   76 +-
+ po-properties/oc.po                            |   76 +-
+ po-properties/or.po                            | 3757
+ ++++++++++----------
+ po-properties/pa.po                            |   76 +-
+ po-properties/pl.po                            |   76 +-
+ po-properties/ps.po                            |   76 +-
+ po-properties/pt.po                            |   76 +-
+ po-properties/pt_BR.po                         |   76 +-
+ po-properties/ro.po                            |   95 +-
+ po-properties/ru.po                            |   76 +-
+ po-properties/rw.po                            |   76 +-
+ po-properties/si.po                            |   76 +-
+ po-properties/sk.po                            |   76 +-
+ po-properties/sl.po                            | 4733
+ ++++++++++++------------
+ po-properties/sq.po                            |   76 +-
+ po-properties/sr.po                            |   76 +-
+ po-properties/sr@ije.po                        |   76 +-
+ po-properties/sr@latin.po                      |   76 +-
+ po-properties/sv.po                            |   76 +-
+ po-properties/ta.po                            |   76 +-
+ po-properties/te.po                            |   76 +-
+ po-properties/th.po                            |   76 +-
+ po-properties/tk.po                            |   76 +-
+ po-properties/tr.po                            |   76 +-
+ po-properties/tt.po                            |   76 +-
+ po-properties/uk.po                            | 3474 +++++++++---------
+ po-properties/ur.po                            |   76 +-
+ po-properties/uz.po                            |   76 +-
+ po-properties/uz@cyrillic.po                   |   76 +-
+ po-properties/vi.po                            |   76 +-
+ po-properties/wa.po                            |   76 +-
+ po-properties/xh.po                            |   76 +-
+ po-properties/yi.po                            |   76 +-
+ po-properties/zh_CN.po                         | 3477 +++++++++---------
+ po-properties/zh_HK.po                         | 3571 +++++++++---------
+ po-properties/zh_TW.po                         | 3474 +++++++++---------
+ po/af.po                                       | 2174 ++++++------
+ po/am.po                                       |   48 +-
+ po/ang.po                                      |   48 +-
+ po/ar.po                                       |   48 +-
+ po/as.po                                       |   85 +-
+ po/ast.po                                      |   48 +-
+ po/az.po                                       |   48 +-
+ po/az_IR.po                                    |   48 +-
+ po/be.po                                       |   48 +-
+ po/be@latin.po                                 |   48 +-
+ po/bg.po                                       |   48 +-
+ po/bn.po                                       |   48 +-
+ po/bn_IN.po                                    |   48 +-
+ po/br.po                                       |   48 +-
+ po/bs.po                                       |   48 +-
+ po/ca.po                                       | 2196 ++++++------
+ po/ca@valencia.po                              |   48 +-
+ po/crh.po                                      |   48 +-
+ po/cs.po                                       |   48 +-
+ po/cy.po                                       |   48 +-
+ po/da.po                                       | 2194 ++++++------
+ po/de.po                                       | 2197 ++++++------
+ po/dz.po                                       |   48 +-
+ po/el.po                                       | 2569 +++++++-------
+ po/en_CA.po                                    |   48 +-
+ po/en_GB.po                                    | 2194 ++++++------
+ po/eo.po                                       |   48 +-
+ po/es.po                                       |   48 +-
+ po/et.po                                       |   48 +-
+ po/eu.po                                       |   48 +-
+ po/fa.po                                       |   48 +-
+ po/fi.po                                       |   48 +-
+ po/fr.po                                       |   48 +-
+ po/ga.po                                       |   48 +-
+ po/gl.po                                       |   48 +-
+ po/gu.po                                       | 2229 ++++++------
+ po/he.po                                       |   48 +-
+ po/hi.po                                       | 2193 ++++++------
+ po/hr.po                                       |   48 +-
+ po/hu.po                                       |   48 +-
+ po/hy.po                                       |   48 +-
+ po/ia.po                                       |   48 +-
+ po/id.po                                       |   48 +-
+ po/io.po                                       |   48 +-
+ po/is.po                                       |   48 +-
+ po/it.po                                       | 2189 ++++++------
+ po/ja.po                                       |   50 +-
+ po/ka.po                                       |   48 +-
+ po/kn.po                                       |   48 +-
+ po/ko.po                                       |   48 +-
+ po/ku.po                                       |   48 +-
+ po/li.po                                       |   48 +-
+ po/lt.po                                       | 2198 ++++++------
+ po/lv.po                                       |   48 +-
+ po/mai.po                                      | 2232 ++++++------
+ po/mi.po                                       |   48 +-
+ po/mk.po                                       |   48 +-
+ po/ml.po                                       | 2229 ++++++------
+ po/mn.po                                       |   48 +-
+ po/mr.po                                       | 2235 ++++++------
+ po/ms.po                                       |   48 +-
+ po/nb.po                                       | 2174 ++++++------
+ po/ne.po                                       |   48 +-
+ po/nl.po                                       | 2589 +++++++-------
+ po/nn.po                                       |   48 +-
+ po/nso.po                                      |   48 +-
+ po/oc.po                                       |   48 +-
+ po/or.po                                       | 2223 ++++++------
+ po/pa.po                                       |   48 +-
+ po/pl.po                                       | 2552 +++++++-------
+ po/ps.po                                       |   48 +-
+ po/pt.po                                       |   48 +-
+ po/pt_BR.po                                    | 2174 ++++++------
+ po/ro.po                                       | 2212 ++++++------
+ po/ru.po                                       |   48 +-
+ po/rw.po                                       |   48 +-
+ po/si.po                                       |   48 +-
+ po/sk.po                                       |   48 +-
+ po/sl.po                                       | 2774 ++++++++-------
+ po/sq.po                                       |   48 +-
+ po/sr.po                                       |   48 +-
+ po/sr@ije.po                                   |   48 +-
+ po/sr@latin.po                                 |   48 +-
+ po/sv.po                                       |   48 +-
+ po/ta.po                                       |   48 +-
+ po/te.po                                       |   48 +-
+ po/th.po                                       |   48 +-
+ po/tk.po                                       |   48 +-
+ po/tr.po                                       |   48 +-
+ po/tt.po                                       |   48 +-
+ po/uk.po                                       | 2174 ++++++------
+ po/ur.po                                       |   48 +-
+ po/uz.po                                       |   48 +-
+ po/uz@cyrillic.po                              |   48 +-
+ po/vi.po                                       |   48 +-
+ po/wa.po                                       |   48 +-
+ po/xh.po                                       |   48 +-
+ po/yi.po                                       |   48 +-
+ po/zh_CN.po                                    | 2193 ++++++------
+ po/zh_HK.po                                    | 2200 ++++++------
+ po/zh_TW.po                                    | 2190 ++++++------
+ 204 files changed, 63501 insertions(+), 62991 deletions(-)
+
 commit 5a7dc8cc71f677f3104d434adcb0497e0f0ede58
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Tue Sep 22 22:19:06 2009 -0400

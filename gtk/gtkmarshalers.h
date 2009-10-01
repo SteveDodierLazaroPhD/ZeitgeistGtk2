@@ -669,6 +669,14 @@ extern void _gtk_marshal_OBJECT__OBJECT_INT_INT (GClosure     *closure,
                                                  gpointer      invocation_hint,
                                                  gpointer      marshal_data);
 
+/* VOID:POINTER,POINTER,POINTER,POINTER,STRING (./gtkmarshalers.list:114) */
+extern void _gtk_marshal_VOID__POINTER_POINTER_POINTER_POINTER_STRING (GClosure     *closure,
+                                                                       GValue       *return_value,
+                                                                       guint         n_param_values,
+                                                                       const GValue *param_values,
+                                                                       gpointer      invocation_hint,
+                                                                       gpointer      marshal_data);
+
 G_END_DECLS
 
 #endif /* ___gtk_marshal_MARSHAL_H__ */
