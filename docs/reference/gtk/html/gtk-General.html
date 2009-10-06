@@ -372,7 +372,7 @@ When your callbacks are invoked, you would typically take some action
 to the main loop and await more user input.
 </p>
 <div class="example">
-<a name="id583752"></a><p class="title"><b>Example 2. Typical <code class="function">main</code> function for a GTK+ application</b></p>
+<a name="id619183"></a><p class="title"><b>Example 2. Typical <code class="function">main</code> function for a GTK+ application</b></p>
 <div class="example-contents"><pre class="programlisting">
 int
 main (int argc, char **argv)
@@ -574,6 +574,21 @@ the option group returned by <a class="link" href="gtk-General.html#gtk-get-opti
 This function will terminate your program if it was unable to initialize 
 the GUI for some reason. If you want your program to fall back to a 
 textual interface you want to call <a class="link" href="gtk-General.html#gtk-init-check" title="gtk_init_check ()"><code class="function">gtk_init_check()</code></a> instead.
+</p>
+</div>
+<p>
+</p>
+<p>
+</p>
+<div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Note</h3>
+<p>
+Since 2.18, GTK+ calls <code class="literal">signal (SIGPIPE, SIG_IGN)</code>
+during initialization, to ignore SIGPIPE signals, since these are
+almost never wanted in graphical applications. If you do need to
+handle SIGPIPE for some reason, reset the handler after <a class="link" href="gtk-General.html#gtk-init" title="gtk_init ()"><code class="function">gtk_init()</code></a>,
+but notice that other libraries (e.g. libdbus or gvfs) might do
+similar things.
 </p>
 </div>
 <p>
@@ -813,7 +828,7 @@ Checks if any events are pending. This can be used to update the GUI
 and invoke timeouts etc. while doing some time intensive computation.
 </p>
 <div class="example">
-<a name="id585247"></a><p class="title"><b>Example 3. Updating the GUI during a long computation.</b></p>
+<a name="id620704"></a><p class="title"><b>Example 3. Updating the GUI during a long computation.</b></p>
 <div class="example-contents"><pre class="programlisting">
 	/* computation going on */
 ...
@@ -1058,7 +1073,7 @@ not do this as the user expects a reaction from clicking the close
 icon of the window...
 </p>
 <div class="example">
-<a name="id600389"></a><p class="title"><b>Example 4. A persistent window</b></p>
+<a name="id635872"></a><p class="title"><b>Example 4. A persistent window</b></p>
 <div class="example-contents"><pre class="programlisting">
 ##include &lt;gtk/gtk.h&gt;
 int

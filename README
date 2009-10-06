@@ -1,7 +1,7 @@
 General Information
 ===================
 
-This is GTK+ version 2.18.1. GTK+ is a multi-platform toolkit for
+This is GTK+ version 2.18.2. GTK+ is a multi-platform toolkit for
 creating graphical user interfaces. Offering a complete set of widgets,
 GTK+ is suitable for projects ranging from small one-off projects to
 complete application suites.
@@ -44,6 +44,11 @@ Release notes for 2.18
   GDK_NATIVE_WINDOWS makes GDK create a native X11 window for each
   GDK window, which might make problematic applications work better.
 
+* GTK+ calls signal (SIGPIPE, SIG_IGN) during initialization, to ignore
+  SIGPIPE signals, since these are almost never wanted in graphical
+  applications. If you do need to handle SIGPIPE for some reason, reset
+  the handler after gtk_init(), but notice that other libraries (e.g.
+  libdbus or gvfs) might do similar things.
 
 Release notes for 2.16
 ======================

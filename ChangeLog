@@ -1,3 +1,366 @@
+commit c29e8f6cff0ee3b755b7ec712f342547b30b09f4
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 5 16:43:37 2009 -0400
+
+    Updates
+
+ NEWS |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+
+commit c5d086117982b1997389afd08a52ddaf2fdf8254
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Oct 5 22:07:06 2009 +0200
+
+    Don't request window sizes with zero width or height
+
+    Zero width/height is unsupported and will magically be turned
+    into one.
+    For instance, gtk_widget_size_allocate() will eventually do this magic
+    on the value stored in widget->allocation.
+
+    However, if we don't do this magic conversion early, then the value
+    returned from gtk_window_compute_configure_request() will not be
+    comparable with whats stored in widget->allocation. (I.E. they will
+    differ if width or height are zero).
+
+    This is dangerous, as we do such a comparison in
+    gtk_window_move_resize().
+    Currently a change from e.g. 10x1 (current allocation) to 10x0
+    (new size)
+    will be expected to produce a ConfigureNotify, when it actually won't,
+    thus never thawing the frozen toplevel.
+
+    Fixes bug #588059
+
+ gtk/gtkwindow.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+commit 786b589d95077b465dcc2311ff2489ee7bb9a49f
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Oct 5 11:39:29 2009 +0200
+
+    Fix up _gdk_windowing_window_at_pointer coordinate reporting
+
+    We need to do a final XQueryWindow to get the coordinates inside the
+    windows rather than in the parent window.
+
+    This fixes bug #597386, "Cannot click buttons more than once...",
+    which
+    failed due to the grab tracking stuff getting the wrong coordinates as
+    per the above.
+
+ gdk/x11/gdkwindow-x11.c |   19 +++++++++++--------
+ 1 files changed, 11 insertions(+), 8 deletions(-)
+
+commit 4581432387ad1667a25a5645cc37f8b55345d3fb
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Oct 4 22:35:12 2009 -0400
+
+    Plug a memory leak
+
+    Valgrind reported a leak of regions from
+    gdk_window_process_updates_internal.
+
+ gdk/gdkwindow.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 05ded28d7d282bed6de457edeeb3e1461ea0d0ac
+Author: Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>
+Date:   Sat Oct 3 18:34:58 2009 +0900
+
+    Updated Japanese translation
+
+ po/ja.po |   38 ++++++++++++++++++--------------------
+ 1 files changed, 18 insertions(+), 20 deletions(-)
+
+commit c3b22ee7c49677d5ba474c597255e469194a437c
+Author: Luca Ferretti <elle.uca@libero.it>
+Date:   Sat Oct 3 09:20:44 2009 +0200
+
+    Updated Italian translation
+
+ po/it.po | 2224
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1106 insertions(+), 1118 deletions(-)
+
+commit 59177b19322729e50ac6748274f250c04ad08fa0
+Author: Sebastian Dröge <sebastian.droege@collabora.co.uk>
+Date:   Fri Oct 2 07:39:34 2009 +0200
+
+    Bug 596959 - DirectFB backend compilation broken with changes from
+    2.18.0 to 2.18.1
+
+    Fix compilation of the DirectFB backend after internal API changes
+    of GDK.
+
+ gdk/directfb/gdkwindow-directfb.c |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+commit f3013bf6ed127ffdaae940d32f08ec0f6229e6e2
+Author: Pascal Terjan <pterjan@mandriva.com>
+Date:   Thu Oct 1 17:47:22 2009 +0200
+
+    Call XReconfigureWMWindow with proper screen
+
+    Thanks gcc :
+
+    gdkwindow-x11.c:1731: warning: passing argument 3 of
+    'XReconfigureWMWindow' makes integer from pointer without a cast
+    /usr/include/X11/Xlib.h:1871: note: expected 'int' but argument is of
+    type 'struct GdkScreen *'
+
+    Signed-off-by: Pascal Terjan <pterjan@mandriva.com>
+
+ gdk/x11/gdkwindow-x11.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 97d15954ad426ea792e1c237dfefe754614a0e9e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Oct 1 11:41:17 2009 -0400
+
+    Move SIGPIPE suppression to gtk_init and document it
+
+    Some people were unhappy with doing it deep inside the lpr print
+    backend at an unpredictable time, and SIGPIPE is almost never
+    wanted anyway.
+
+ README.in                                      |    5 +++++
+ gtk/gtkmain.c                                  |   11 +++++++++++
+ modules/printbackends/lpr/gtkprintbackendlpr.c |    2 --
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+
+commit 42ad005847e9270d39ef692291fc95dfb96750fb
+Author: Miloš Popović <mpopovic@src.gnome.org>
+Date:   Thu Oct 1 01:23:06 2009 +0000
+
+    Updated Serbian translation
+
+ po/sr.po       | 2246
+ ++++++++++++++++++++++++++++----------------------------
+ po/sr@latin.po | 2277
+ ++++++++++++++++++++++++++++----------------------------
+ 2 files changed, 2259 insertions(+), 2264 deletions(-)
+
+commit 3b39aacd295253daada8f5e517cc0aab658b10b6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 30 18:02:46 2009 -0400
+
+    Bump version
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit df3775821d766b0619236cf0213d80850b7acd91
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 30 18:00:21 2009 -0400
+
+    2.18.1
+
+ po-properties/af.po          |    2 +-
+ po-properties/am.po          |    2 +-
+ po-properties/ang.po         |    2 +-
+ po-properties/ar.po          |    2 +-
+ po-properties/as.po          |    2 +-
+ po-properties/ast.po         |    2 +-
+ po-properties/az.po          |    2 +-
+ po-properties/az_IR.po       |    2 +-
+ po-properties/be.po          |    2 +-
+ po-properties/be@latin.po    |    2 +-
+ po-properties/bg.po          |    2 +-
+ po-properties/bn.po          |    2 +-
+ po-properties/bn_IN.po       |    2 +-
+ po-properties/br.po          |    2 +-
+ po-properties/bs.po          |    2 +-
+ po-properties/ca.po          |    2 +-
+ po-properties/ca@valencia.po |    2 +-
+ po-properties/crh.po         |    2 +-
+ po-properties/cs.po          |    2 +-
+ po-properties/cy.po          |    2 +-
+ po-properties/da.po          |    2 +-
+ po-properties/de.po          |    2 +-
+ po-properties/dz.po          |    2 +-
+ po-properties/el.po          |    2 +-
+ po-properties/en_CA.po       |    2 +-
+ po-properties/en_GB.po       | 3474
+ +++++++++++++++++++++---------------------
+ po-properties/eo.po          |    2 +-
+ po-properties/es.po          |    2 +-
+ po-properties/et.po          |    2 +-
+ po-properties/eu.po          |    2 +-
+ po-properties/fa.po          |    2 +-
+ po-properties/fi.po          |    2 +-
+ po-properties/fr.po          |    2 +-
+ po-properties/ga.po          |    2 +-
+ po-properties/gl.po          |    2 +-
+ po-properties/gu.po          |    2 +-
+ po-properties/he.po          |    2 +-
+ po-properties/hi.po          |    2 +-
+ po-properties/hr.po          |    2 +-
+ po-properties/hu.po          |    2 +-
+ po-properties/hy.po          |    2 +-
+ po-properties/ia.po          |    2 +-
+ po-properties/id.po          |    2 +-
+ po-properties/io.po          |    2 +-
+ po-properties/is.po          |    2 +-
+ po-properties/it.po          |    2 +-
+ po-properties/ja.po          |    2 +-
+ po-properties/ka.po          |    2 +-
+ po-properties/kn.po          |    2 +-
+ po-properties/ko.po          |    2 +-
+ po-properties/ku.po          |    2 +-
+ po-properties/li.po          |    2 +-
+ po-properties/lt.po          |    2 +-
+ po-properties/lv.po          |    2 +-
+ po-properties/mai.po         |    2 +-
+ po-properties/mi.po          |    2 +-
+ po-properties/mk.po          |    2 +-
+ po-properties/ml.po          |    2 +-
+ po-properties/mn.po          |    2 +-
+ po-properties/mr.po          |    2 +-
+ po-properties/ms.po          |    2 +-
+ po-properties/nb.po          |    2 +-
+ po-properties/ne.po          |    2 +-
+ po-properties/nl.po          |    2 +-
+ po-properties/nn.po          |    2 +-
+ po-properties/nso.po         |    2 +-
+ po-properties/oc.po          |    2 +-
+ po-properties/or.po          |    2 +-
+ po-properties/pa.po          |    2 +-
+ po-properties/pl.po          |    2 +-
+ po-properties/ps.po          |    2 +-
+ po-properties/pt.po          |    2 +-
+ po-properties/pt_BR.po       |    2 +-
+ po-properties/ro.po          |    2 +-
+ po-properties/ru.po          |    2 +-
+ po-properties/rw.po          |    2 +-
+ po-properties/si.po          |    2 +-
+ po-properties/sk.po          |    2 +-
+ po-properties/sl.po          |    2 +-
+ po-properties/sq.po          |    2 +-
+ po-properties/sr.po          |    2 +-
+ po-properties/sr@ije.po      |    2 +-
+ po-properties/sr@latin.po    |    2 +-
+ po-properties/sv.po          |    2 +-
+ po-properties/ta.po          |    2 +-
+ po-properties/te.po          |    2 +-
+ po-properties/th.po          |    2 +-
+ po-properties/tk.po          |    2 +-
+ po-properties/tr.po          |    2 +-
+ po-properties/tt.po          |    2 +-
+ po-properties/uk.po          |    2 +-
+ po-properties/ur.po          |    2 +-
+ po-properties/uz.po          |    2 +-
+ po-properties/uz@cyrillic.po |    2 +-
+ po-properties/vi.po          |    2 +-
+ po-properties/wa.po          |    2 +-
+ po-properties/xh.po          |    2 +-
+ po-properties/yi.po          |    2 +-
+ po-properties/zh_CN.po       |    2 +-
+ po-properties/zh_HK.po       |    2 +-
+ po-properties/zh_TW.po       |    2 +-
+ po/af.po                     |  350 +++--
+ po/am.po                     |  350 +++--
+ po/ang.po                    |  348 +++--
+ po/ar.po                     |  348 +++--
+ po/as.po                     |  431 +++---
+ po/ast.po                    |  349 +++--
+ po/az.po                     |  350 +++--
+ po/az_IR.po                  |  345 +++--
+ po/be.po                     |  350 +++--
+ po/be@latin.po               |  350 +++--
+ po/bg.po                     |  348 +++--
+ po/bn.po                     |  347 +++--
+ po/bn_IN.po                  |  348 +++--
+ po/br.po                     |  346 +++--
+ po/bs.po                     |  350 +++--
+ po/ca.po                     |  348 +++--
+ po/ca@valencia.po            |  350 +++--
+ po/crh.po                    |  355 +++--
+ po/cs.po                     | 2190 +++++++++++++-------------
+ po/cy.po                     |  350 +++--
+ po/da.po                     |  349 +++--
+ po/de.po                     | 2280 ++++++++++++++--------------
+ po/dz.po                     |  350 +++--
+ po/el.po                     |  349 +++--
+ po/en_CA.po                  |  350 +++--
+ po/en_GB.po                  | 2211 ++++++++++++++-------------
+ po/eo.po                     |  350 +++--
+ po/es.po                     | 2217 ++++++++++++++--------------
+ po/et.po                     | 1108 ++++++++++++++-
+ po/eu.po                     |  349 +++--
+ po/fa.po                     |  350 +++--
+ po/fi.po                     |  348 +++--
+ po/fr.po                     | 2200 ++++++++++++++-------------
+ po/ga.po                     |  348 +++--
+ po/gl.po                     | 2190 +++++++++++++-------------
+ po/gu.po                     |  348 +++--
+ po/he.po                     |  350 +++--
+ po/hi.po                     |  348 +++--
+ po/hr.po                     |  350 +++--
+ po/hu.po                     | 2249 ++++++++++++++--------------
+ po/hy.po                     |  350 +++--
+ po/ia.po                     |  350 +++--
+ po/id.po                     |  350 +++--
+ po/io.po                     |  350 +++--
+ po/is.po                     |  350 +++--
+ po/it.po                     |  349 +++--
+ po/ja.po                     |  348 +++--
+ po/ka.po                     |  350 +++--
+ po/kn.po                     |  348 +++--
+ po/ko.po                     |  348 +++--
+ po/ku.po                     |  350 +++--
+ po/li.po                     |  350 +++--
+ po/lt.po                     |  350 +++--
+ po/lv.po                     |  350 +++--
+ po/mai.po                    |  348 +++--
+ po/mi.po                     |  350 +++--
+ po/mk.po                     |  350 +++--
+ po/ml.po                     |  348 +++--
+ po/mn.po                     |  355 +++--
+ po/mr.po                     |  348 +++--
+ po/ms.po                     |  350 +++--
+ po/nb.po                     |  348 +++--
+ po/ne.po                     |  350 +++--
+ po/nl.po                     |  349 +++--
+ po/nn.po                     |  350 +++--
+ po/nso.po                    |  350 +++--
+ po/oc.po                     |  348 +++--
+ po/or.po                     |  348 +++--
+ po/pa.po                     |  348 +++--
+ po/pl.po                     |  349 +++--
+ po/ps.po                     |  350 +++--
+ po/pt.po                     |  349 +++--
+ po/pt_BR.po                  |  350 +++--
+ po/ro.po                     |  351 +++--
+ po/ru.po                     |  348 +++--
+ po/rw.po                     |  355 +++--
+ po/si.po                     |  350 +++--
+ po/sk.po                     |  350 +++--
+ po/sl.po                     | 2806 ++++++++++++++++++----------------
+ po/sq.po                     |  350 +++--
+ po/sr.po                     |  348 +++--
+ po/sr@ije.po                 |  350 +++--
+ po/sr@latin.po               |  348 +++--
+ po/sv.po                     | 2803 +++++++++++++++++++----------------
+ po/ta.po                     |  348 +++--
+ po/te.po                     |  348 +++--
+ po/th.po                     |  348 +++--
+ po/tk.po                     |  350 +++--
+ po/tr.po                     |  355 +++--
+ po/tt.po                     |  350 +++--
+ po/uk.po                     |  348 +++--
+ po/ur.po                     |  346 +++--
+ po/uz.po                     |  350 +++--
+ po/uz@cyrillic.po            |  350 +++--
+ po/vi.po                     |  347 +++--
+ po/wa.po                     |  350 +++--
+ po/xh.po                     |  350 +++--
+ po/yi.po                     |  350 +++--
+ po/zh_CN.po                  |  348 +++--
+ po/zh_HK.po                  |  348 +++--
+ po/zh_TW.po                  |  348 +++--
+ 202 files changed, 30924 insertions(+), 26871 deletions(-)
+
 commit 121868f660c7558c91fbc67df4caff41b9c20945
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Wed Sep 30 16:28:02 2009 -0400

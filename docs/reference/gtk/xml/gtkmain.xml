@@ -313,6 +313,16 @@ the option group returned by <link linkend="gtk-get-option-group"><function>gtk_
 This function will terminate your program if it was unable to initialize 
 the GUI for some reason. If you want your program to fall back to a 
 textual interface you want to call <link linkend="gtk-init-check"><function>gtk_init_check()</function></link> instead.
+</para></note>
+</para>
+<para>
+<note><para>
+Since 2.18, GTK+ calls <literal>signal (SIGPIPE, SIG_IGN)</literal>
+during initialization, to ignore SIGPIPE signals, since these are
+almost never wanted in graphical applications. If you do need to
+handle SIGPIPE for some reason, reset the handler after <link linkend="gtk-init"><function>gtk_init()</function></link>,
+but notice that other libraries (e.g. libdbus or gvfs) might do
+similar things.
 </para></note></para>
 <para>
 </para>
