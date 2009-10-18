@@ -35,9 +35,9 @@
  */
 #define GTK_MAJOR_VERSION				(2)
 #define GTK_MINOR_VERSION				(18)
-#define GTK_MICRO_VERSION				(2)
-#define GTK_BINARY_AGE					(1802)
-#define GTK_INTERFACE_AGE				(2)
+#define GTK_MICRO_VERSION				(3)
+#define GTK_BINARY_AGE					(1803)
+#define GTK_INTERFACE_AGE				(3)
 
 /* check whether a Gtk+ version equal to or greater than
  * major.minor.micro is present.
