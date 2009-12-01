@@ -5604,7 +5604,7 @@ gtk_label_rescan_links (GtkLabel *label)
   PangoAttrIterator *iter;
   GList *links;
 
-  if (!label->select_info)
+  if (!label->select_info || !label->select_info->links)
     return;
 
   attlist = pango_layout_get_attributes (layout);
@@ -5738,7 +5738,7 @@ gtk_label_get_current_link (GtkLabel *label)
  * selectable label, the link in which the text cursor is currently
  * positioned.
  *
- * This function is intended for use in a #GtkLabel::link-activate handler
+ * This function is intended for use in a #GtkLabel::activate-link handler
  * or for use in a #GtkWidget::query-tooltip handler.
  *
  * Returns: the currently active URI. The string is owned by GTK+ and must

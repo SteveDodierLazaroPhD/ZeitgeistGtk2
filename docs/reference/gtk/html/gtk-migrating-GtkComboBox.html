@@ -8,7 +8,7 @@
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="migrating-gnomeuiinfo.html" title="Migrating from GnomeUIInfo">
 <link rel="next" href="migrating-GtkCombo.html" title="Migrating from GtkCombo to GtkComboBoxEntry">
-<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -64,6 +64,7 @@
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 <link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
+<link rel="index" href="api-index-2-20.html" title="Index of new symbols in 2.20">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -102,43 +103,80 @@
 <a name="migrating-GtkOptionMenu"></a>Migrating from GtkOptionMenu to GtkComboBox</h2></div></div></div>
 <p>
       Here is an example of a simple, but typical use of 
-      <span class="type">""</span>
+      <a class="link" href="GtkOptionMenu.html" title="GtkOptionMenu"><span class="type">GtkOptionMenu</span></a>:
       </p>
-<div class="informalexample"><pre class="programlisting">
-GtkWidget *option_menu, *menu, *menu_item;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkWidget *option_menu, *menu, *menu_item;
 
-option_menu = gtk_option_menu_new ();      
+option_menu = gtk_option_menu_new ();
 menu = gtk_menu_new ();
 
-menu_item = gtk_menu_item_new_with_label ("First Item");
+menu_item = gtk_menu_item_new_with_label (<span class="number">&quot;First Item&quot;</span>);
 gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 gtk_widget_show (menu_item);
-menu_item = gtk_menu_item_new_with_label ("Second Item");
+menu_item = gtk_menu_item_new_with_label (<span class="number">&quot;Second Item&quot;</span>);
 gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 gtk_widget_show (menu_item);
-menu_item = gtk_menu_item_new_with_label ("Third Item");
+menu_item = gtk_menu_item_new_with_label (<span class="number">&quot;Third Item&quot;</span>);
 gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 gtk_widget_show (menu_item);
 
-gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
-      </pre></div>
+gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
       In order to react to the user's selection, connect to the "changed"
       signal on the option menu and use <a class="link" href="GtkOptionMenu.html#gtk-option-menu-get-history" title="gtk_option_menu_get_history ()"><code class="function">gtk_option_menu_get_history()</code></a>
       to retrieve the index of the selected item.
     </p>
 <p>
-      And here is how it would be done with a <span class="type">""</span>
+      And here is how it would be done with a <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a>:
       </p>
-<div class="informalexample"><pre class="programlisting">
-GtkWidget *combo_box;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkWidget *combo_box;
 
 combo_box = gtk_combo_box_new_text ();
 
-gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), "First Item");
-gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), "Second Item");
-gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), "Third Item");
-      </pre></div>
+gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), <span class="number">&quot;First Item&quot;</span>);
+gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), <span class="number">&quot;Second Item&quot;</span>);
+gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), <span class="number">&quot;Third Item&quot;</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
       In order to react to the user's selection, connect to the 
       <a class="link" href="GtkComboBox.html#GtkComboBox-changed" title='The "changed" signal'><span class="type">"changed"</span></a> signal and use <a class="link" href="GtkComboBox.html#gtk-combo-box-get-active" title="gtk_combo_box_get_active ()"><code class="function">gtk_combo_box_get_active()</code></a>
@@ -147,67 +185,127 @@ gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), "Third Item");
 <p>
       A slightly more complex example involving images:
       </p>
-<div class="informalexample"><pre class="programlisting">
-GtkWidget *option_menu, *menu, *menu_item;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkWidget *option_menu, *menu, *menu_item;
 
-option_menu = gtk_option_menu_new ();      
+option_menu = gtk_option_menu_new ();
 menu = gtk_menu_new ();
 
-menu_item = gtk_image_menu_item_new_with_label ("First Item");
+menu_item = gtk_image_menu_item_new_with_label (<span class="number">&quot;First Item&quot;</span>);
 gtk_image_menu_item_set_image (gtk_image_new_from_pixbuf (pixbuf1));
 gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 gtk_widget_show (menu_item);
-menu_item = gtk_image_menu_item_new_with_label ("Second Item");
+menu_item = gtk_image_menu_item_new_with_label (<span class="number">&quot;Second Item&quot;</span>);
 gtk_image_menu_item_set_image (gtk_image_new_from_pixbuf (pixbuf2));
 gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 gtk_widget_show (menu_item);
-menu_item = gtk_image_menu_item_new_with_label ("Third Item");
+menu_item = gtk_image_menu_item_new_with_label (<span class="number">&quot;Third Item&quot;</span>);
 gtk_image_menu_item_set_image (gtk_image_new_from_pixbuf (pixbuf3));
 gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 gtk_widget_show (menu_item);
 
-gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
-      </pre></div>
+gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
     </p>
 <p>
       can be done using a <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> as follows:
       </p>
-<div class="informalexample"><pre class="programlisting">
-GtkListStore *store;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkListStore *store;
 GtkTreeIter iter;
 GtkCellRenderer *renderer;
 GtkWidget *combo_box;
 
-store = gtk_list_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+store = gtk_list_store_new (<span class="number">2</span>, GDK_TYPE_PIXBUF, G_TYPE_STRING);
 
 gtk_list_store_append (store, &amp;iter);
-gtk_list_store_set (store, &amp;iter, 0, pixbuf1, 1, "First Item", -1);
+gtk_list_store_set (store, &amp;iter, <span class="number">0</span>, pixbuf1, <span class="number">1</span>, <span class="number">&quot;First Item&quot;</span>, -<span class="number">1</span>);
 gtk_list_store_append (store, &amp;iter);
-gtk_list_store_set (store, &amp;iter, 0, pixbuf2, 1, "Second Item", -1);
+gtk_list_store_set (store, &amp;iter, <span class="number">0</span>, pixbuf2, <span class="number">1</span>, <span class="number">&quot;Second Item&quot;</span>, -<span class="number">1</span>);
 gtk_list_store_append (store, &amp;iter);
-gtk_list_store_set (store, &amp;iter, 0, pixbuf3, 1, "Third Item", -1);
+gtk_list_store_set (store, &amp;iter, <span class="number">0</span>, pixbuf3, <span class="number">1</span>, <span class="number">&quot;Third Item&quot;</span>, -<span class="number">1</span>);
 
 combo_box = gtk_combo_box_new_with_model (GTK_TREE_MODEL (store));
 
 renderer = gtk_cell_renderer_pixbuf_new ();
 gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_box), renderer, FALSE);
 gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo_box), renderer,
-                                "pixbuf", 0,
-                                NULL);
+                                <span class="number">&quot;pixbuf&quot;</span>, <span class="number">0</span>,
+                                <span class="number">NULL</span>);
 
 renderer = gtk_cell_renderer_text_new ();
 gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_box), renderer, TRUE);
 gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo_box), renderer,
-                                "text", 1,
-                                NULL);
-      </pre></div>
+                                <span class="number">&quot;text&quot;</span>, <span class="number">1</span>,
+                                <span class="number">NULL</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
     </p>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.11</div>
+          Generated by GTK-Doc V1.12</div>
 </body>
 </html>

@@ -309,6 +309,17 @@ libpixbufloader_pnm_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 @BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_PNM_FALSE@am_libpixbufloader_pnm_la_rpath =  \
 @BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_PNM_FALSE@	-rpath \
 @BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_PNM_FALSE@	$(loaderdir)
+libpixbufloader_qtif_la_DEPENDENCIES = $(am__DEPENDENCIES_2)
+am_libpixbufloader_qtif_la_OBJECTS = io-qtif.lo
+libpixbufloader_qtif_la_OBJECTS =  \
+	$(am_libpixbufloader_qtif_la_OBJECTS)
+libpixbufloader_qtif_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(libpixbufloader_qtif_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+@BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_QTIF_FALSE@am_libpixbufloader_qtif_la_rpath =  \
+@BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_QTIF_FALSE@	-rpath \
+@BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_QTIF_FALSE@	$(loaderdir)
 libpixbufloader_ras_la_DEPENDENCIES = $(am__DEPENDENCIES_2)
 am_libpixbufloader_ras_la_OBJECTS = io-ras.lo
 libpixbufloader_ras_la_OBJECTS = $(am_libpixbufloader_ras_la_OBJECTS)
@@ -470,6 +481,11 @@ am_libstatic_pixbufloader_pnm_la_OBJECTS = io-pnm.lo
 libstatic_pixbufloader_pnm_la_OBJECTS =  \
 	$(am_libstatic_pixbufloader_pnm_la_OBJECTS)
 @INCLUDE_PNM_TRUE@am_libstatic_pixbufloader_pnm_la_rpath =
+libstatic_pixbufloader_qtif_la_LIBADD =
+am_libstatic_pixbufloader_qtif_la_OBJECTS = io-qtif.lo
+libstatic_pixbufloader_qtif_la_OBJECTS =  \
+	$(am_libstatic_pixbufloader_qtif_la_OBJECTS)
+@INCLUDE_QTIF_TRUE@am_libstatic_pixbufloader_qtif_la_rpath =
 libstatic_pixbufloader_ras_la_LIBADD =
 am_libstatic_pixbufloader_ras_la_OBJECTS = io-ras.lo
 libstatic_pixbufloader_ras_la_OBJECTS =  \
@@ -554,6 +570,7 @@ SOURCES = $(libgdk_pixbuf_2_0_la_SOURCES) \
 	$(libpixbufloader_pcx_la_SOURCES) \
 	$(libpixbufloader_png_la_SOURCES) \
 	$(libpixbufloader_pnm_la_SOURCES) \
+	$(libpixbufloader_qtif_la_SOURCES) \
 	$(libpixbufloader_ras_la_SOURCES) \
 	$(libpixbufloader_tga_la_SOURCES) \
 	$(libpixbufloader_tiff_la_SOURCES) \
@@ -577,6 +594,7 @@ SOURCES = $(libgdk_pixbuf_2_0_la_SOURCES) \
 	$(libstatic_pixbufloader_pcx_la_SOURCES) \
 	$(libstatic_pixbufloader_png_la_SOURCES) \
 	$(libstatic_pixbufloader_pnm_la_SOURCES) \
+	$(libstatic_pixbufloader_qtif_la_SOURCES) \
 	$(libstatic_pixbufloader_ras_la_SOURCES) \
 	$(libstatic_pixbufloader_tga_la_SOURCES) \
 	$(libstatic_pixbufloader_tiff_la_SOURCES) \
@@ -603,6 +621,7 @@ DIST_SOURCES = $(libgdk_pixbuf_2_0_la_SOURCES) \
 	$(libpixbufloader_pcx_la_SOURCES) \
 	$(libpixbufloader_png_la_SOURCES) \
 	$(libpixbufloader_pnm_la_SOURCES) \
+	$(libpixbufloader_qtif_la_SOURCES) \
 	$(libpixbufloader_ras_la_SOURCES) \
 	$(libpixbufloader_tga_la_SOURCES) \
 	$(libpixbufloader_tiff_la_SOURCES) \
@@ -626,6 +645,7 @@ DIST_SOURCES = $(libgdk_pixbuf_2_0_la_SOURCES) \
 	$(libstatic_pixbufloader_pcx_la_SOURCES) \
 	$(libstatic_pixbufloader_png_la_SOURCES) \
 	$(libstatic_pixbufloader_pnm_la_SOURCES) \
+	$(libstatic_pixbufloader_qtif_la_SOURCES) \
 	$(libstatic_pixbufloader_ras_la_SOURCES) \
 	$(libstatic_pixbufloader_tga_la_SOURCES) \
 	$(libstatic_pixbufloader_tiff_la_SOURCES) \
@@ -764,6 +784,8 @@ GMSGFMT = @GMSGFMT@
 GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
 GTKDOC_CHECK = @GTKDOC_CHECK@
+GTKDOC_MKPDF = @GTKDOC_MKPDF@
+GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_API_VERSION = @GTK_API_VERSION@
 GTK_BINARY_AGE = @GTK_BINARY_AGE@
 GTK_BINARY_VERSION = @GTK_BINARY_VERSION@
@@ -1089,6 +1111,14 @@ libpixbufloader_jasper_la_SOURCES = io-jasper.c
 libpixbufloader_jasper_la_LDFLAGS = -avoid-version -module $(no_undefined)
 libpixbufloader_jasper_la_LIBADD = $(LIBJASPER) $(module_libs)
 
+#
+# The QTIF loader
+#
+libstatic_pixbufloader_qtif_la_SOURCES = io-qtif.c
+libpixbufloader_qtif_la_SOURCES = io-qtif.c
+libpixbufloader_qtif_la_LDFLAGS = -avoid-version -module $(no_undefined)
+libpixbufloader_qtif_la_LIBADD = $(module_libs)
+
 # When building the GDI+ loader statically, we put the "common" objects
 # only in one of the archives to avoid duplicate definitions
 @BUILD_GDIPLUS_LOADERS_TRUE@@INCLUDE_GDIPLUS_TRUE@STATIC_GDIPLUS_LIBS = \
@@ -1263,6 +1293,8 @@ libpixbufloader_jasper_la_LIBADD = $(LIBJASPER) $(module_libs)
 @INCLUDE_ICNS_FALSE@ICNS_LIB = libpixbufloader-icns.la
 @HAVE_JASPER_TRUE@@INCLUDE_JASPER_TRUE@STATIC_JASPER_LIB = libstatic-pixbufloader-jasper.la
 @HAVE_JASPER_TRUE@@INCLUDE_JASPER_FALSE@JASPER_LIB = libpixbufloader-jasper.la
+@INCLUDE_QTIF_TRUE@STATIC_QTIF_LIB = libstatic-pixbufloader-qtif.la
+@INCLUDE_QTIF_FALSE@QTIF_LIB = libpixbufloader-qtif.la
 @BUILD_DYNAMIC_MODULES_TRUE@loader_LTLIBRARIES = \
 @BUILD_DYNAMIC_MODULES_TRUE@	$(PNG_LIB)	\
 @BUILD_DYNAMIC_MODULES_TRUE@	$(BMP_LIB)	\
@@ -1280,6 +1312,7 @@ libpixbufloader_jasper_la_LIBADD = $(LIBJASPER) $(module_libs)
 @BUILD_DYNAMIC_MODULES_TRUE@	$(ICNS_LIB)	\
 @BUILD_DYNAMIC_MODULES_TRUE@	$(PCX_LIB)	\
 @BUILD_DYNAMIC_MODULES_TRUE@	$(JASPER_LIB)	\
+@BUILD_DYNAMIC_MODULES_TRUE@	$(QTIF_LIB)	\
 @BUILD_DYNAMIC_MODULES_TRUE@	$(GDIPLUS_LIBS)
 
 noinst_LTLIBRARIES = \
@@ -1299,6 +1332,7 @@ noinst_LTLIBRARIES = \
 	$(STATIC_ICNS_LIB)	\
 	$(STATIC_PCX_LIB)	\
 	$(STATIC_JASPER_LIB)	\
+	$(STATIC_QTIF_LIB)	\
 	$(STATIC_GDIPLUS_LIBS)
 
 builtin_objs = @INCLUDED_LOADER_OBJ@
@@ -1538,6 +1572,8 @@ libpixbufloader-png.la: $(libpixbufloader_png_la_OBJECTS) $(libpixbufloader_png_
 	$(AM_V_CCLD)$(libpixbufloader_png_la_LINK) $(am_libpixbufloader_png_la_rpath) $(libpixbufloader_png_la_OBJECTS) $(libpixbufloader_png_la_LIBADD) $(LIBS)
 libpixbufloader-pnm.la: $(libpixbufloader_pnm_la_OBJECTS) $(libpixbufloader_pnm_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libpixbufloader_pnm_la_LINK) $(am_libpixbufloader_pnm_la_rpath) $(libpixbufloader_pnm_la_OBJECTS) $(libpixbufloader_pnm_la_LIBADD) $(LIBS)
+libpixbufloader-qtif.la: $(libpixbufloader_qtif_la_OBJECTS) $(libpixbufloader_qtif_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libpixbufloader_qtif_la_LINK) $(am_libpixbufloader_qtif_la_rpath) $(libpixbufloader_qtif_la_OBJECTS) $(libpixbufloader_qtif_la_LIBADD) $(LIBS)
 libpixbufloader-ras.la: $(libpixbufloader_ras_la_OBJECTS) $(libpixbufloader_ras_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libpixbufloader_ras_la_LINK) $(am_libpixbufloader_ras_la_rpath) $(libpixbufloader_ras_la_OBJECTS) $(libpixbufloader_ras_la_LIBADD) $(LIBS)
 libpixbufloader-tga.la: $(libpixbufloader_tga_la_OBJECTS) $(libpixbufloader_tga_la_DEPENDENCIES) 
@@ -1584,6 +1620,8 @@ libstatic-pixbufloader-png.la: $(libstatic_pixbufloader_png_la_OBJECTS) $(libsta
 	$(AM_V_CCLD)$(LINK) $(am_libstatic_pixbufloader_png_la_rpath) $(libstatic_pixbufloader_png_la_OBJECTS) $(libstatic_pixbufloader_png_la_LIBADD) $(LIBS)
 libstatic-pixbufloader-pnm.la: $(libstatic_pixbufloader_pnm_la_OBJECTS) $(libstatic_pixbufloader_pnm_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK) $(am_libstatic_pixbufloader_pnm_la_rpath) $(libstatic_pixbufloader_pnm_la_OBJECTS) $(libstatic_pixbufloader_pnm_la_LIBADD) $(LIBS)
+libstatic-pixbufloader-qtif.la: $(libstatic_pixbufloader_qtif_la_OBJECTS) $(libstatic_pixbufloader_qtif_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(LINK) $(am_libstatic_pixbufloader_qtif_la_rpath) $(libstatic_pixbufloader_qtif_la_OBJECTS) $(libstatic_pixbufloader_qtif_la_LIBADD) $(LIBS)
 libstatic-pixbufloader-ras.la: $(libstatic_pixbufloader_ras_la_OBJECTS) $(libstatic_pixbufloader_ras_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK) $(am_libstatic_pixbufloader_ras_la_rpath) $(libstatic_pixbufloader_ras_la_OBJECTS) $(libstatic_pixbufloader_ras_la_LIBADD) $(LIBS)
 libstatic-pixbufloader-tga.la: $(libstatic_pixbufloader_tga_la_OBJECTS) $(libstatic_pixbufloader_tga_la_DEPENDENCIES) 
@@ -1697,6 +1735,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io-pcx.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io-png.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io-pnm.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io-qtif.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io-ras.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io-tga.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io-tiff.Plo@am__quote@

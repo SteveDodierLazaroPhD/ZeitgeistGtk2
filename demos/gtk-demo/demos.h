@@ -41,9 +41,11 @@ GtkWidget *do_printing (GtkWidget *do_widget);
 GtkWidget *do_rotated_text (GtkWidget *do_widget);
 GtkWidget *do_search_entry (GtkWidget *do_widget);
 GtkWidget *do_sizegroup (GtkWidget *do_widget);
+GtkWidget *do_spinner (GtkWidget *do_widget);
 GtkWidget *do_stock_browser (GtkWidget *do_widget);
 GtkWidget *do_textview (GtkWidget *do_widget);
 GtkWidget *do_textscroll (GtkWidget *do_widget);
+GtkWidget *do_toolpalette (GtkWidget *do_widget);
 GtkWidget *do_tree_store (GtkWidget *do_widget);
 GtkWidget *do_ui_manager (GtkWidget *do_widget);
 
@@ -105,8 +107,10 @@ Demo testgtk_demos[] = {
   { "Printing", "printing.c", do_printing, NULL }, 
   { "Rotated Text", "rotated_text.c", do_rotated_text, NULL }, 
   { "Size Groups", "sizegroup.c", do_sizegroup, NULL }, 
+  { "Spinner", "spinner.c", do_spinner, NULL }, 
   { "Stock Item and Icon Browser", "stock_browser.c", do_stock_browser, NULL }, 
   { "Text Widget", NULL, NULL, child2 }, 
+  { "Tool Palette", "toolpalette.c", do_toolpalette, NULL }, 
   { "Tree View", NULL, NULL, child0 }, 
   { "UI Manager", "ui_manager.c", do_ui_manager, NULL },
   { NULL } 

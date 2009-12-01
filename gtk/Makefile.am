@@ -178,6 +178,7 @@ gtk_public_h_sources =          \
 	gtkcellrendererpixbuf.h	\
 	gtkcellrendererprogress.h \
 	gtkcellrendererspin.h   \
+	gtkcellrendererspinner.h\
 	gtkcellrenderertext.h	\
 	gtkcellrenderertoggle.h	\
 	gtkcellview.h		\
@@ -190,7 +191,6 @@ gtk_public_h_sources =          \
 	gtkcombobox.h		\
 	gtkcomboboxentry.h	\
 	gtkcontainer.h		\
-	gtkcurve.h		\
 	gtkdebug.h              \
 	gtkdialog.h		\
 	gtkdnd.h		\
@@ -211,7 +211,6 @@ gtk_public_h_sources =          \
 	gtkfontbutton.h		\
 	gtkfontsel.h		\
 	gtkframe.h		\
-	gtkgamma.h		\
 	gtkgc.h			\
 	gtkhandlebox.h		\
 	gtkhbbox.h		\
@@ -232,7 +231,6 @@ gtk_public_h_sources =          \
 	gtkimmodule.h		\
 	gtkimmulticontext.h	\
 	gtkinfobar.h		\
-	gtkinputdialog.h	\
 	gtkinvisible.h		\
 	gtkitem.h		\
 	gtklabel.h		\
@@ -289,6 +287,7 @@ gtk_public_h_sources =          \
 	gtksizegroup.h		\
 	gtksocket.h		\
 	gtkspinbutton.h		\
+	gtkspinner.h		\
 	gtkstatusbar.h		\
 	gtkstatusicon.h		\
 	gtkstock.h		\
@@ -311,6 +310,8 @@ gtk_public_h_sources =          \
 	gtktoolbar.h		\
 	gtktoolbutton.h		\
 	gtktoolitem.h		\
+	gtktoolitemgroup.h	\
+	gtktoolpalette.h	\
 	gtktoolshell.h		\
 	gtktooltip.h		\
 	gtktreednd.h		\
@@ -392,6 +393,7 @@ gtk_private_h_sources =		\
 	gtktextutil.h		\
 	gtkthemes.h		\
 	gtktoggleactionprivate.h\
+	gtktoolpaletteprivate.h	\
 	gtktreedatalist.h	\
 	gtktreeprivate.h	\
 	gtkwindow-decorate.h	\
@@ -433,6 +435,7 @@ gtk_base_c_sources =            \
 	gtkcellrendererpixbuf.c	\
 	gtkcellrendererprogress.c \
 	gtkcellrendererspin.c   \
+	gtkcellrendererspinner.c\
 	gtkcellrenderertext.c	\
 	gtkcellrenderertoggle.c	\
 	gtkcellview.c		\
@@ -444,7 +447,6 @@ gtk_base_c_sources =            \
 	gtkcombobox.c		\
 	gtkcomboboxentry.c	\
 	gtkcontainer.c		\
-	gtkcurve.c		\
 	gtkdialog.c		\
 	gtkdrawingarea.c	\
 	gtkeditable.c           \
@@ -469,7 +471,6 @@ gtk_base_c_sources =            \
 	gtkfontbutton.c         \
 	gtkfontsel.c            \
 	gtkframe.c		\
-	gtkgamma.c		\
 	gtkgc.c			\
 	gtkhandlebox.c		\
 	gtkhbbox.c		\
@@ -557,6 +558,7 @@ gtk_base_c_sources =            \
 	gtkshow.c		\
 	gtksocket.c		\
 	gtkspinbutton.c		\
+	gtkspinner.c		\
 	gtkstatusbar.c		\
 	gtkstatusicon.c		\
 	gtkstock.c		\
@@ -586,6 +588,8 @@ gtk_base_c_sources =            \
 	gtktoolbar.c		\
 	gtktoolbutton.c		\
 	gtktoolitem.c		\
+	gtktoolitemgroup.c		\
+	gtktoolpalette.c	\
 	gtktoolshell.c		\
 	gtktooltip.c		\
 	gtktreedatalist.c	\
@@ -630,7 +634,10 @@ gtk_public_h_sources += \
 	gtkclist.h		\
 	gtkcombo.h		\
 	gtkctree.h		\
+ 	gtkcurve.h		\
 	gtkfilesel.h		\
+ 	gtkgamma.h		\
+	gtkinputdialog.h	\
 	gtkitemfactory.h	\
 	gtklist.h		\
 	gtklistitem.h		\
@@ -646,7 +653,9 @@ gtk_base_c_sources += \
 	gtkclist.c		\
 	gtkcombo.c		\
 	gtkctree.c		\
+	gtkcurve.c		\
 	gtkfilesel.c		\
+	gtkgamma.c		\
 	gtkitemfactory.c	\
 	gtklist.c		\
 	gtklistitem.c		\
@@ -911,8 +920,19 @@ if DISABLE_EXPLICIT_DEPS
 	$(SHELL) $(top_srcdir)/sanitize-la.sh $(DESTDIR)$(libdir)/$(gtktargetlib)
 endif
 
+if USE_QUARTZ
+install-mac-key-theme:
+	$(mkinstalldirs) $(DESTDIR)$(datadir)/themes/Mac/gtk-2.0-key
+	$(INSTALL_DATA) $(srcdir)/gtkrc.key.mac $(DESTDIR)$(datadir)/themes/Mac/gtk-2.0-key/gtkrc
+uninstall-mac-key-theme:
+	rm -f $(DESTDIR)$(datadir)/themes/Mac/gtk-2.0-key/gtkrc
+else
+install-mac-key-theme:
+uninstall-mac-key-theme:
+endif
+
 # Install a RC file for the default GTK+ theme, and key themes
-install-data-local: install-ms-lib install-def-file
+install-data-local: install-ms-lib install-def-file install-mac-key-theme
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/themes/Raleigh/gtk-2.0
 	$(INSTALL_DATA) $(srcdir)/gtkrc.default $(DESTDIR)$(datadir)/themes/Raleigh/gtk-2.0/gtkrc
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/themes/Default/gtk-2.0-key
@@ -920,7 +940,7 @@ install-data-local: install-ms-lib install-def-file
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/themes/Emacs/gtk-2.0-key
 	$(INSTALL_DATA) $(srcdir)/gtkrc.key.emacs $(DESTDIR)$(datadir)/themes/Emacs/gtk-2.0-key/gtkrc
 
-uninstall-local: uninstall-ms-lib uninstall-def-file
+uninstall-local: uninstall-ms-lib uninstall-def-file uninstall-mac-key-theme
 	rm -f $(DESTDIR)$(datadir)/themes/Raleigh/gtk-2.0/gtkrc
 	rm -f $(DESTDIR)$(datadir)/themes/Default/gtk-2.0-key/gtkrc
 	rm -f $(DESTDIR)$(datadir)/themes/Emacs/gtk-2.0-key/gtkrc
@@ -1328,6 +1348,7 @@ EXTRA_DIST +=                   \
 	gtkrc.default		\
 	gtkrc.key.default	\
 	gtkrc.key.emacs		\
+	gtkrc.key.mac		\
 	makefile.msc		\
 	makefile.msc.in		\
 	makegtkalias.pl		\

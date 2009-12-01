@@ -8,7 +8,7 @@
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="gtk-changes-1-2.html" title="Changes from 1.0 to 1.2">
 <link rel="next" href="gtk-migrating-GtkFileChooser.html" title="Migrating from GtkFileSelection to GtkFileChooser">
-<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -64,6 +64,7 @@
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 <link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
+<link rel="index" href="api-index-2-20.html" title="Index of new symbols in 2.20">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -85,7 +86,7 @@ Incompatible changes made between version 1.2 and version 2.0
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1" title="Incompatible changes from 1.2 to 2.0">
-<a name="id1231466"></a><h2>Incompatible changes from 1.2 to 2.0</h2>
+<a name="id1374909"></a><h2>Incompatible changes from 1.2 to 2.0</h2>
 <p>
 The <a class="ulink" href="http://developer.gnome.org/dotplan/porting/" target="_top">GNOME 2.0
 porting guide</a> on <a class="ulink" href="http://developer.gnome.org" target="_top">http://developer.gnome.org</a>
@@ -293,20 +294,39 @@ Object system changes:
     is required by a variety of object implementations. <code class="function">GObjectClass.finalize</code>
     should be overriden here, e.g.:
 </p>
-<div class="informalexample"><pre class="programlisting">
-    static void gtk_label_finalize (GObject *gobject)
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> <span class="type">void</span> gtk_label_finalize (GObject *gobject)
     {
       GtkLabel *label = GTK_LABEL (gobject);
-      
+
       G_OBJECT_CLASS (parent_class)-&gt;finalize (object);
     }
-    static void gtk_label_class_init (GtkLabelClass *class)
+    <span class="type">static</span> <span class="type">void</span> gtk_label_class_init (GtkLabelClass *<span class="type">class</span>)
     {
-      GObjectClass *gobject_class = G_OBJECT_CLASS (class);
-      
+      GObjectClass *gobject_class = G_OBJECT_CLASS (<span class="type">class</span>);
+
       gobject_class-&gt;finalize = gtk_label_finalize;
-    }
-</pre></div>
+    }</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 </p>
 </li>
@@ -321,25 +341,49 @@ The GtkObject::destroy signal can now be emitted multiple times on an object.
     into account, by checking to make sure that resources are there before
     freeing them. For example:
 </p>
-<div class="informalexample"><pre class="programlisting">
-    if (object-&gt;foo_data)
-      { 
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="keyword">if</span> (object-&gt;foo_data)
+      {
         g_free (object-&gt;foo_data);
-        object-&gt;foo_data = NULL;
-      }
-</pre></div>
+        object-&gt;foo_data = <span class="number">NULL</span>;
+      }</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 
     Also, ::destroy implementations have to release object references that
     the object holds. Code in finalize implementations such as:
 </p>
-<div class="informalexample"><pre class="programlisting">
-    if (object-&gt;adjustment)
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="keyword">if</span> (object-&gt;adjustment)
       {
         gtk_object_unref (object-&gt;adjustment);
-        object-&gt;adjustment = NULL;
-      }
-</pre></div>
+        object-&gt;adjustment = <span class="number">NULL</span>;
+      }</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
     have to be moved into the ::destroy implementations. The reason for doing
     this is that all object reference cycles should be broken at destruction 
@@ -1181,6 +1225,6 @@ The rectangle passed in is the bounding box, instead of
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.11</div>
+          Generated by GTK-Doc V1.12</div>
 </body>
 </html>

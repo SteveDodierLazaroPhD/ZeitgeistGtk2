@@ -396,6 +396,9 @@ gdk_pixbuf_io_init (void)
 #ifdef INCLUDE_jasper
 	load_one_builtin_module (jasper);
 #endif
+#ifdef INCLUDE_qtif
+	load_one_builtin_module (qtif);
+#endif
 #ifdef INCLUDE_gdiplus
 	/* We don't bother having the GDI+ loaders individually selectable
 	 * for building in or not.
@@ -589,6 +592,7 @@ module (tga);
 module (pcx);
 module (icns);
 module (jasper);
+module (qtif);
 module (gdip_ico);
 module (gdip_wmf);
 module (gdip_emf);
@@ -666,6 +670,9 @@ gdk_pixbuf_load_module_unlocked (GdkPixbufModule *image_module,
 #endif
 #ifdef INCLUDE_jasper
 	try_module (jasper,jasper);
+#endif
+#ifdef INCLUDE_qtif
+	try_module (qtif,qtif);
 #endif
 #ifdef INCLUDE_gdiplus
 	try_module (ico,gdip_ico);
@@ -1894,6 +1901,10 @@ gdk_pixbuf_real_save_to_callback (GdkPixbuf         *pixbuf,
  * The values are UTF-8 encoded strings. The PNG compression level can
  * be specified using the "compression" parameter; it's value is in an
  * integer in the range of [0,9].
+ *
+ * TIFF images recognize a "compression" option which acceps an integer value.
+ * Among the codecs are 1 None, 2 Huffman, 5 LZW, 7 JPEG and 8 Deflate, see
+ * the libtiff documentation and tiff.h for all supported codec values.
  *
  * ICO images can be saved in depth 16, 24, or 32, by using the "depth"
  * parameter. When the ICO saver is given "x_hot" and "y_hot" parameters,

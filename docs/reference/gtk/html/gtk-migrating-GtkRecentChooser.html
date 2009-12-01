@@ -8,7 +8,7 @@
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="setting-the-page-flow.html" title="Setting the page flow">
 <link rel="next" href="gtkrecent-chooser.html" title="Displaying the Recently Used Documents">
-<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -64,6 +64,7 @@
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 <link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
+<link rel="index" href="api-index-2-20.html" title="Index of new symbols in 2.20">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -141,61 +142,120 @@
       To add a document to the list, you can use <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item" title="gtk_recent_manager_add_item ()"><code class="function">gtk_recent_manager_add_item()</code></a>,
       like:
       </p>
-<div class="informalexample"><pre class="programlisting">
-        GtkRecentManager *manager;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkRecentManager *manager;
 
-	manager = gtk_recent_manager_new ();
+        manager = gtk_recent_manager_new ();
 
-	if (!gtk_recent_manager_add_item (manager, document_uri))
-	  {
-	    /* warn about the error */
-	  }
-	
-	g_object_unref (manager);
-      </pre></div>
+        <span class="keyword">if</span> (!gtk_recent_manager_add_item (manager, document_uri))
+          {
+            <span class="comment">/*</span><span class="comment"> warn about the error </span><span class="comment">*/</span>
+          }
+
+        g_object_unref (manager);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
       The <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item" title="gtk_recent_manager_add_item ()"><code class="function">gtk_recent_manager_add_item()</code></a> function will try and guess some of the
       meta-data associated to a URI. If you know some of meta-data about the
       document yourself, set the desired fields of a <a class="link" href="GtkRecentManager.html#GtkRecentData" title="GtkRecentData"><span class="type">GtkRecentData</span></a> structure
       and pass it to the <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-full" title="gtk_recent_manager_add_full ()"><code class="function">gtk_recent_manager_add_full()</code></a> function instead:
       </p>
-<div class="informalexample"><pre class="programlisting">
-        GtkRecentManager *manager;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkRecentManager *manager;
         GtkRecentData *recent_data;
 
-	manager = gtk_recent_manager_new ();
-	
-	recent_data = g_new0 (GtkRecentData, 1);
-	/* the user visible name of the document (maybe its title); should
-	 * be preferred when displaying the item into the list
-	 */
+        manager = gtk_recent_manager_new ();
+
+        recent_data = g_new0 (GtkRecentData, <span class="number">1</span>);
+        <span class="comment">/*</span><span class="comment"> the user visible name of the document (maybe its title); should</span>
+<span class="comment">         * be preferred when displaying the item into the list</span>
+<span class="comment">         </span><span class="comment">*/</span>
         recent_data-&gt;display_name = document_name;
-	
-	/* the MIME type is mandatory */
-	recent_data-&gt;mime_type = document_mime_type;
 
-	/* the name of the application that is registering the document
-	 * (also mandatory); usually, the same name you used with
-	 * the g_set_application_name () function.
-	 */
-	recent_data-&amp;app_name = APP_NAME;
+        <span class="comment">/*</span><span class="comment"> the MIME type is mandatory </span><span class="comment">*/</span>
+        recent_data-&gt;mime_type = document_mime_type;
 
-	/* the command to open a file; the %u string will be automagically
-	 * expanded to the document's URI when getting the application's
-	 * command line from the GtkRecentInfo object with
-	 * gtk_recent_info_get_application_info ()
-	 */
-	recent_data-&amp;app_exec = g_strjoin (" ", g_get_prgname (), "--open-file", "%u", NULL);
+        <span class="comment">/*</span><span class="comment"> the name of the application that is registering the document</span>
+<span class="comment">         * (also mandatory); usually, the same name you used with</span>
+<span class="comment">         * the g_set_application_name () function.</span>
+<span class="comment">         </span><span class="comment">*/</span>
+        recent_data-&amp;app_name = APP_NAME;
 
-	if (!gtk_recent_manager_add_full (manager, document_uri, recent_data))
-	  {
-	    /* warn about the error */
-	  }
+        <span class="comment">/*</span><span class="comment"> the command to open a file; the %u string will be automagically</span>
+<span class="comment">         * expanded to the document's URI when getting the application's</span>
+<span class="comment">         * command line from the GtkRecentInfo object with</span>
+<span class="comment">         * gtk_recent_info_get_application_info ()</span>
+<span class="comment">         </span><span class="comment">*/</span>
+        recent_data-&amp;app_exec = g_strjoin (<span class="number">&quot; &quot;</span>, g_get_prgname (), <span class="number">&quot;--open-file&quot;</span>, <span class="number">&quot;</span><span class="symbol">%u</span><span class="number">&quot;</span>, <span class="number">NULL</span>);
 
-	g_free (recent_data-&gt;app_exec);
-	g_free (recent_data);
-	g_object_unref (manager);
-      </pre></div>
+        <span class="keyword">if</span> (!gtk_recent_manager_add_full (manager, document_uri, recent_data))
+          {
+            <span class="comment">/*</span><span class="comment"> warn about the error </span><span class="comment">*/</span>
+          }
+
+        g_free (recent_data-&gt;app_exec);
+        g_free (recent_data);
+        g_object_unref (manager);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
     </p>
 <p>
@@ -205,45 +265,91 @@
       around, so you must remember to free the data inside the list and then
       the list itself when you are done using it:
       </p>
-<div class="informalexample"><pre class="programlisting">
-        GtkRecentManager *manager;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkRecentManager *manager;
         GList *recent_items, *l;
 
-	manager = gtk_recent_manager_get_default();
+        manager = gtk_recent_manager_get_default();
 
-	recent_items = gtk_recent_manager_get_items (manager);
-	for (l = recent_items; l != NULL; l = l-&gt;next)
-	  {
-	    GtkRecentInfo *recent_info = l-&gt;data;
+        recent_items = gtk_recent_manager_get_items (manager);
+        <span class="keyword">for</span> (l = recent_items; l != <span class="number">NULL</span>; l = l-&gt;next)
+          {
+            GtkRecentInfo *recent_info = l-&gt;data;
 
-	    do_something_with_the_item (recent_info);
-	  }
-	
-	/* free everything and the list */
-	g_list_foreach (recent_items, (GFunc) gtk_recent_info_unref, NULL);
-	g_list_free (recent_items);
-      </pre></div>
+            do_something_with_the_item (recent_info);
+          }
+
+        <span class="comment">/*</span><span class="comment"> free everything and the list </span><span class="comment">*/</span>
+        g_list_foreach (recent_items, (GFunc) gtk_recent_info_unref, <span class="number">NULL</span>);
+        g_list_free (recent_items);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
       You can also look up a single item:
       </p>
-<div class="informalexample"><pre class="programlisting">
-        GtkRecentInfo *recent_info;
-	GError *error = NULL;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkRecentInfo *recent_info;
+        GError *error = <span class="number">NULL</span>;
 
-	recent_info = gtk_recent_manager_lookup_item (manager, document_uri, &amp;error);
-	if (error)
-	  {
-	    display_error (error);
+        recent_info = gtk_recent_manager_lookup_item (manager, document_uri, &amp;error);
+        <span class="keyword">if</span> (error)
+          {
+            display_error (error);
 
-	    g_error_free (error);
-	  }
-	else
-	  {
-	    do_something_with_the_item (recent_info);
+            g_error_free (error);
+          }
+        <span class="keyword">else</span>
+          {
+            do_something_with_the_item (recent_info);
 
-	    gtk_recent_info_unref (recent_info);
-	  }
-      </pre></div>
+            gtk_recent_info_unref (recent_info);
+          }</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
       The <a class="link" href="GtkRecentManager.html#GtkRecentInfo" title="GtkRecentInfo"><span class="type">GtkRecentInfo</span></a> is a reference counted boxed type, and it holds all
       the meta-data of a recently used document, like its display name, its
@@ -254,6 +360,6 @@
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.11</div>
+          Generated by GTK-Doc V1.12</div>
 </body>
 </html>

@@ -118,6 +118,7 @@
 *tp++ = gtk_cell_renderer_pixbuf_get_type();
 *tp++ = gtk_cell_renderer_progress_get_type();
 *tp++ = gtk_cell_renderer_spin_get_type();
+*tp++ = gtk_cell_renderer_spinner_get_type();
 *tp++ = gtk_cell_renderer_state_get_type();
 *tp++ = gtk_cell_renderer_text_get_type();
 *tp++ = gtk_cell_renderer_toggle_get_type();
@@ -138,7 +139,6 @@
 *tp++ = gtk_ctree_expansion_type_get_type();
 *tp++ = gtk_ctree_line_style_get_type();
 *tp++ = gtk_ctree_pos_get_type();
-*tp++ = gtk_curve_get_type();
 *tp++ = gtk_curve_type_get_type();
 *tp++ = gtk_debug_flag_get_type();
 *tp++ = gtk_delete_type_get_type();
@@ -170,7 +170,6 @@
 *tp++ = gtk_font_selection_dialog_get_type();
 *tp++ = gtk_font_selection_get_type();
 *tp++ = gtk_frame_get_type();
-*tp++ = gtk_gamma_curve_get_type();
 *tp++ = gtk_handle_box_get_type();
 *tp++ = gtk_hbox_get_type();
 *tp++ = gtk_hbutton_box_get_type();
@@ -200,7 +199,6 @@
 *tp++ = gtk_im_preedit_style_get_type();
 *tp++ = gtk_im_status_style_get_type();
 *tp++ = gtk_info_bar_get_type();
-*tp++ = gtk_input_dialog_get_type();
 *tp++ = gtk_invisible_get_type();
 *tp++ = gtk_item_get_type();
 *tp++ = gtk_justification_get_type();
@@ -303,6 +301,7 @@
 *tp++ = gtk_sort_type_get_type();
 *tp++ = gtk_spin_button_get_type();
 *tp++ = gtk_spin_button_update_policy_get_type();
+*tp++ = gtk_spinner_get_type();
 *tp++ = gtk_spin_type_get_type();
 *tp++ = gtk_state_type_get_type();
 *tp++ = gtk_statusbar_get_type();
@@ -336,6 +335,9 @@
 *tp++ = gtk_toolbar_style_get_type();
 *tp++ = gtk_tool_button_get_type();
 *tp++ = gtk_tool_item_get_type();
+*tp++ = gtk_tool_item_group_get_type();
+*tp++ = gtk_tool_palette_drag_targets_get_type();
+*tp++ = gtk_tool_palette_get_type();
 *tp++ = gtk_tool_shell_get_type();
 *tp++ = gtk_tooltip_get_type();
 *tp++ = gtk_tree_drag_dest_get_type();

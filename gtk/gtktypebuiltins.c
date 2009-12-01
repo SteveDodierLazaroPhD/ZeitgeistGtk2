@@ -1879,6 +1879,22 @@ gtk_toolbar_space_style_get_type (void)
     return etype;
 }
 
+/* enumerations from "gtktoolpalette.h" */
+GType
+gtk_tool_palette_drag_targets_get_type (void)
+{
+    static GType etype = 0;
+    if (G_UNLIKELY(etype == 0)) {
+        static const GFlagsValue values[] = {
+            { GTK_TOOL_PALETTE_DRAG_ITEMS, "GTK_TOOL_PALETTE_DRAG_ITEMS", "items" },
+            { GTK_TOOL_PALETTE_DRAG_GROUPS, "GTK_TOOL_PALETTE_DRAG_GROUPS", "groups" },
+            { 0, NULL, NULL }
+        };
+        etype = g_flags_register_static (g_intern_static_string ("GtkToolPaletteDragTargets"), values);
+    }
+    return etype;
+}
+
 /* enumerations from "gtktreemodel.h" */
 GType
 gtk_tree_model_flags_get_type (void)

@@ -31,8 +31,10 @@
 #include "config.h"
 
 #include <string.h>
+#include "gtkaccellabel.h"
 #include "gtkactivatable.h"
 #include "gtkbuildable.h"
+#include "gtkimagemenuitem.h"
 #include "gtkintl.h"
 #include "gtkmarshalers.h"
 #include "gtkmenu.h"
@@ -82,6 +84,8 @@ struct _Node {
   guint dirty : 1;
   guint expand : 1;  /* used for separators */
   guint popup_accels : 1;
+  guint always_show_image_set : 1; /* used for menu items */
+  guint always_show_image     : 1; /* used for menu items */
 };
 
 #define GTK_UI_MANAGER_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_UI_MANAGER, GtkUIManagerPrivate))
@@ -939,6 +943,23 @@ gtk_ui_manager_get_action (GtkUIManager *self,
   return GTK_UI_MANAGER_GET_CLASS (self)->get_action (self, path);
 }
 
+static gboolean
+node_is_dead (GNode *node)
+{
+  GNode *child;
+
+  if (NODE_INFO (node)->uifiles != NULL)
+    return FALSE;
+
+  for (child = node->children; child != NULL; child = child->next)
+    {
+      if (!node_is_dead (child))
+	return FALSE;
+    }
+
+  return TRUE;
+}
+
 static GNode *
 get_child_node (GtkUIManager *self, 
 		GNode        *parent,
@@ -973,7 +994,18 @@ get_child_node (GtkUIManager *self,
 			       node_type, 
 			       NODE_INFO (child)->name,
 			       NODE_INFO (child)->type);
-		  
+
+                    if (node_is_dead (child))
+                      {
+                        /* This node was removed but is still dirty so
+                         * it is still in the tree. We want to treat this
+                         * as if it didn't exist, which means we move it
+                         * to the position it would have been created at.
+                         */
+                        g_node_unlink (child);
+                        goto insert_child;
+                      }
+
 		  return child;
 		}
 	    }
@@ -986,21 +1018,21 @@ get_child_node (GtkUIManager *self,
 	  mnode->type = node_type;
 	  mnode->name = g_strndup (childname, childname_length);
 
+	  child = g_node_new (mnode);
+	insert_child:
 	  if (sibling)
 	    {
 	      if (top)
-		child = g_node_insert_before (parent, sibling, 
-					      g_node_new (mnode));
+		g_node_insert_before (parent, sibling, child);
 	      else
-		child = g_node_insert_after (parent, sibling, 
-					     g_node_new (mnode));
+		g_node_insert_after (parent, sibling, child);
 	    }
 	  else
 	    {
 	      if (top)
-		child = g_node_prepend_data (parent, mnode);
+		g_node_prepend (parent, child);
 	      else
-		child = g_node_append_data (parent, mnode);
+		g_node_append (parent, child);
 	    }
 
 	  mark_node_dirty (child);
@@ -1211,6 +1243,7 @@ start_element_handler (GMarkupParseContext *context,
   gboolean top;
   gboolean expand = FALSE;
   gboolean accelerators = FALSE;
+  gboolean always_show_image_set = FALSE, always_show_image = FALSE;
 
   gboolean raise_error = TRUE;
 
@@ -1241,6 +1274,11 @@ start_element_handler (GMarkupParseContext *context,
       else if (!strcmp (attribute_names[i], "accelerators"))
         {
           accelerators = !strcmp (attribute_values[i], "true");
+        }
+      else if (!strcmp (attribute_names[i], "always-show-image"))
+        {
+          always_show_image_set = TRUE;
+          always_show_image = !strcmp (attribute_values[i], "true");
         }
       /*  else silently skip unknown attributes to be compatible with
        *  future additional attributes.
@@ -1340,7 +1378,10 @@ start_element_handler (GMarkupParseContext *context,
 				 TRUE, top);
 	  if (NODE_INFO (node)->action_name == 0)
 	    NODE_INFO (node)->action_name = action_quark;
-	  
+
+	  NODE_INFO (node)->always_show_image_set = always_show_image_set;
+	  NODE_INFO (node)->always_show_image = always_show_image;
+
 	  node_prepend_ui_reference (node, ctx->merge_id, action_quark);
 	  
 	  raise_error = FALSE;
@@ -2577,7 +2618,12 @@ update_node (GtkUIManager *self,
 	      info->proxy = gtk_action_create_menu_item (action);
 	      g_object_ref_sink (info->proxy);
 	      gtk_widget_set_name (info->proxy, info->name);
-	  
+
+              if (info->always_show_image_set &&
+                  GTK_IS_IMAGE_MENU_ITEM (info->proxy))
+                gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (info->proxy),
+                                                           info->always_show_image);
+
 	      gtk_menu_shell_insert (GTK_MENU_SHELL (menushell),
 				     info->proxy, pos);
            }
@@ -2598,8 +2644,9 @@ update_node (GtkUIManager *self,
           if (in_popup && !popup_accels)
 	    {
 	      /* don't show accels in popups */
-	      GtkWidget *label = GTK_BIN (info->proxy)->child;
-	      g_object_set (label, "accel-closure", NULL, NULL);
+	      GtkWidget *child = gtk_bin_get_child (GTK_BIN (info->proxy));
+	      if (GTK_IS_ACCEL_LABEL (child))
+	        g_object_set (child, "accel-closure", NULL, NULL);
 	    }
         }
       

@@ -8,7 +8,7 @@
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="gtkrecent-advanced.html" title="Advanced usage">
 <link rel="next" href="gtk-migrating-GtkBuilder.html" title="Migrating from libglade to GtkBuilder">
-<meta name="generator" content="GTK-Doc V1.11 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -64,6 +64,7 @@
 <link rel="index" href="api-index-2-14.html" title="Index of new symbols in 2.14">
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 <link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
+<link rel="index" href="api-index-2-20.html" title="Index of new symbols in 2.20">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -87,56 +88,112 @@
     default action for <a class="link" href="GtkButton.html#GtkButton-clicked" title='The "clicked" signal'><span class="type">"clicked"</span></a> signal. So instead of simply 
     creating the widget
     </p>
-<div class="informalexample"><pre class="programlisting">
-      GtkWidget *button;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkWidget *button;
 
-      button = gnome_href_new (url, "");
-    </pre></div>
+      button = gnome_href_new (url, <span class="number">&quot;&quot;</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
     you will have to handle the activation of the <a class="link" href="GtkLinkButton.html" title="GtkLinkButton"><span class="type">GtkLinkButton</span></a>, using
     the ::clicked signal for instance
     </p>
-<div class="informalexample"><pre class="programlisting">
-      static void
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> <span class="type">void</span>
       link_button_clicked_cb (GtkWidget *widget,
                               gpointer   data)
       {
-        const gchar *link;
+        <span class="type">const</span> gchar *link;
 
-	link = gtk_link_button_get_uri (GTK_LINK_BUTTON (widget));
-	open_browser_at_url (link);
+        link = gtk_link_button_get_uri (GTK_LINK_BUTTON (widget));
+        open_browser_at_url (link);
       }
 
-      /* ... */
-      
+      <span class="comment">/*</span><span class="comment"> ... </span><span class="comment">*/</span>
+
         GtkWidget *button;
 
-	button = gtk_link_button_new (url);
-	g_signal_connect (button, "clicked",
-	                  G_CALLBACK (link_button_clicked_cb), NULL);
-     </pre></div>
+        button = gtk_link_button_new (url);
+        g_signal_connect (button, <span class="number">&quot;clicked&quot;</span>,
+                          G_CALLBACK (link_button_clicked_cb), <span class="number">NULL</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
     If you have more than one <a class="link" href="GtkLinkButton.html" title="GtkLinkButton"><span class="type">GtkLinkButton</span></a> instead of connecting
     a signal to each one, you can use a "hook function" which will be
     called whenever a user activates a link button
     </p>
-<div class="informalexample"><pre class="programlisting">
-      static void
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> <span class="type">void</span>
       link_button_hook (GtkLinkButton *button,
-                        const gchar   *link,
-			gpointer       user_data)
-      
+                        <span class="type">const</span> gchar   *link,
+                        gpointer       user_data)
+
       {
         open_browser_at_url (link);
       }
-      
-      /* ... */
-      
-        GtkWidget *button1 = gtk_link_button_new (uri1);
-	GtkWidget *button2 = gtk_link_button_new (uri2);
 
-        gtk_link_button_set_uri_hook (link_button_hook, NULL, NULL);
-    </pre></div>
+      <span class="comment">/*</span><span class="comment"> ... </span><span class="comment">*/</span>
+
+        GtkWidget *button1 = gtk_link_button_new (uri1);
+        GtkWidget *button2 = gtk_link_button_new (uri2);
+
+        gtk_link_button_set_uri_hook (link_button_hook, <span class="number">NULL</span>, <span class="number">NULL</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 
   </p>
@@ -148,6 +205,6 @@
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.11</div>
+          Generated by GTK-Doc V1.12</div>
 </body>
 </html>

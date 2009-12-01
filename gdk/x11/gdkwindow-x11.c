@@ -2920,6 +2920,7 @@ gdk_window_get_frame_extents (GdkWindow    *window,
 {
   GdkDisplay *display;
   GdkWindowObject *private;
+  GdkWindowImplX11 *impl;
   Window xwindow;
   Window xparent;
   Window root;
@@ -2955,7 +2956,8 @@ gdk_window_get_frame_extents (GdkWindow    *window,
   rect->y = private->y;
   gdk_drawable_get_size ((GdkDrawable *)private, &rect->width, &rect->height);
 
-  if (GDK_WINDOW_DESTROYED (private))
+  impl = GDK_WINDOW_IMPL_X11 (private->impl);
+  if (GDK_WINDOW_DESTROYED (private) || impl->override_redirect)
     return;
 
   nvroots = 0;
@@ -3439,8 +3441,6 @@ do_shape_combine_region (GdkWindow       *window,
 			 gint             offset_y,
 			 gint             shape)
 {
-  GdkWindowObject *private = (GdkWindowObject *)window;
-  
   if (GDK_WINDOW_DESTROYED (window))
     return;
 
@@ -5606,6 +5606,7 @@ gdk_window_impl_iface_init (GdkWindowImplIface *iface)
   iface->destroy = _gdk_x11_window_destroy;
   iface->input_window_destroy = _gdk_input_window_destroy;
   iface->input_window_crossing = _gdk_input_crossing_event;
+  iface->supports_native_bg = TRUE;
 }
 
 #define __GDK_WINDOW_X11_C__
