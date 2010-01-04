@@ -257,7 +257,7 @@ on the image, such as button clicks, place the image inside a
 <a class="link" href="GtkEventBox.html" title="GtkEventBox"><span class="type">GtkEventBox</span></a>, then connect to the event signals on the event box.
 </p>
 <div class="example">
-<a name="id773998"></a><p class="title"><b>Example 12. Handling button press events on a
+<a name="id614630"></a><p class="title"><b>Example 12. Handling button press events on a
 <span class="structname">GtkImage</span>.</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
@@ -290,7 +290,14 @@ on the image, such as button clicks, place the image inside a
 25
 26
 27
-28</pre></td>
+28
+29
+30
+31
+32
+33
+34
+35</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="type">static</span> gboolean
   button_press_callback (GtkWidget      *event_box,
                          GdkEventButton *event,
@@ -298,6 +305,7 @@ on the image, such as button clicks, place the image inside a
   {
     g_print (<span class="number">&quot;Event box clicked at coordinates </span><span class="symbol">%f</span><span class="number">,</span><span class="symbol">%f</span><span class="symbol">\n</span><span class="number">&quot;</span>,
              event-&gt;x, event-&gt;y);
+
     <span class="comment">/*</span><span class="comment"> Returning TRUE means we handled the event, so the signal</span>
 <span class="comment">     * emission should be stopped (don't call any further</span>
 <span class="comment">     * callbacks that may be connected). Return FALSE</span>
@@ -305,18 +313,24 @@ on the image, such as button clicks, place the image inside a
 <span class="comment">     </span><span class="comment">*/</span>
     <span class="keyword">return</span> TRUE;
   }
+
   <span class="type">static</span> GtkWidget*
   create_image (<span class="type">void</span>)
   {
     GtkWidget *image;
     GtkWidget *event_box;
+
     image = gtk_image_new_from_file (<span class="number">&quot;myfile.png&quot;</span>);
+
     event_box = gtk_event_box_new ();
+
     gtk_container_add (GTK_CONTAINER (event_box), image);
+
     g_signal_connect (G_OBJECT (event_box),
                       <span class="number">&quot;button_press_event&quot;</span>,
                       G_CALLBACK (button_press_callback),
                       image);
+
     <span class="keyword">return</span> image;
   }</pre></td>
       </tr>
@@ -341,8 +355,7 @@ files, such as image files. GTK+ comes with a program to avoid this,
 called <span class="application">gdk-pixbuf-csource</span>. This program
 allows you to convert an image into a C variable declaration, which
 can then be loaded into a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> using
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-creating.html#gdk-pixbuf-new-from-inline"><code class="function">gdk_pixbuf_new_from_inline()</code></a>.
-</p>
+<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-creating.html#gdk-pixbuf-new-from-inline"><code class="function">gdk_pixbuf_new_from_inline()</code></a>.</p>
 </div>
 <div class="refsect1" title="Details">
 <a name="GtkImage.details"></a><h2>Details</h2>
@@ -351,8 +364,7 @@ can then be loaded into a <a href="http://library.gnome.org/devel/gdk-pixbuf/uns
 <pre class="programlisting">typedef struct _GtkImage GtkImage;</pre>
 <p>
 This struct contain private data only and should be accessed by the functions
-below.
-</p>
+below.</p>
 </div>
 <hr>
 <div class="refsect2" title="enum GtkImageType">
@@ -377,56 +389,55 @@ currently-stored representation. e.g.  if the
 <a class="link" href="GtkImage.html#gtk-image-get-storage-type" title="gtk_image_get_storage_type ()"><code class="function">gtk_image_get_storage_type()</code></a> returns <a class="link" href="GtkImage.html#GTK-IMAGE-PIXBUF:CAPS"><span class="type">GTK_IMAGE_PIXBUF</span></a>, then you can
 call <a class="link" href="GtkImage.html#gtk-image-get-pixbuf" title="gtk_image_get_pixbuf ()"><code class="function">gtk_image_get_pixbuf()</code></a> but not <a class="link" href="GtkImage.html#gtk-image-get-stock" title="gtk_image_get_stock ()"><code class="function">gtk_image_get_stock()</code></a>.  For empty
 images, you can request any storage type (call any of the "get"
-functions), but they will all return <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> values.
-</p>
+functions), but they will all return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> values.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><a name="GTK-IMAGE-EMPTY:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_EMPTY</code></span></p></td>
-<td>there is no image displayed by the widget
+<td> there is no image displayed by the widget
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-PIXMAP:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_PIXMAP</code></span></p></td>
-<td>the widget contains a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a>
+<td> the widget contains a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a>
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-IMAGE:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_IMAGE</code></span></p></td>
-<td>the widget contains a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>
+<td> the widget contains a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-PIXBUF:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_PIXBUF</code></span></p></td>
-<td>the widget contains a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>
+<td> the widget contains a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-STOCK:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_STOCK</code></span></p></td>
-<td>the widget contains a stock icon name (see <a class="xref" href="gtk-Stock-Items.html" title="Stock Items"><span class="refentrytitle"><a name="gtk-Stock-Items.top_of_page"></a>Stock Items</span>(3)</a>)
+<td> the widget contains a stock icon name (see <a class="xref" href="gtk-Stock-Items.html" title="Stock Items"><span class="refentrytitle"><a name="gtk-Stock-Items.top_of_page"></a>Stock Items</span>(3)</a>)
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-ICON-SET:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_ICON_SET</code></span></p></td>
-<td>the widget contains a <a class="link" href="gtk-Themeable-Stock-Images.html#GtkIconSet" title="GtkIconSet"><span class="type">GtkIconSet</span></a>
+<td> the widget contains a <a class="link" href="gtk-Themeable-Stock-Images.html#GtkIconSet" title="GtkIconSet"><span class="type">GtkIconSet</span></a>
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-ANIMATION:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_ANIMATION</code></span></p></td>
-<td>the widget contains a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-animation.html#GdkPixbufAnimation"><span class="type">GdkPixbufAnimation</span></a>
+<td> the widget contains a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-animation.html#GdkPixbufAnimation"><span class="type">GdkPixbufAnimation</span></a>
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-ICON-NAME:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_ICON_NAME</code></span></p></td>
-<td>the widget contains a named icon. 
-  This image type was added in GTK+ 2.6
+<td> the widget contains a named icon.
+ This image type was added in GTK+ 2.6
 </td>
 </tr>
 <tr>
 <td><p><a name="GTK-IMAGE-GICON:CAPS"></a><span class="term"><code class="literal">GTK_IMAGE_GICON</code></span></p></td>
-<td>the widget contains a <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a>.
-  This image type was added in GTK+ 2.14
+<td> the widget contains a <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a>.
+ This image type was added in GTK+ 2.14
 </td>
 </tr>
 </tbody>
@@ -452,13 +463,11 @@ The storage type of the image must be <a class="link" href="GtkImage.html#GTK-IM
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>icon_set</code></em> :</span></p></td>
-<td> location to store a <a class="link" href="gtk-Themeable-Stock-Images.html#GtkIconSet" title="GtkIconSet"><span class="type">GtkIconSet</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> location to store a stock icon size, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (allow-none) (type int. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -485,13 +494,11 @@ returned image and mask.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gdk_image</code></em> :</span></p></td>
-<td> return location for a <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td> return location for a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -516,8 +523,7 @@ returned pixbuf.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the displayed pixbuf, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if the image is empty
-</td>
+<td>transfer none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -544,13 +550,11 @@ returned pixmap and mask.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixmap</code></em> :</span></p></td>
-<td> location to store the pixmap, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td> location to store the mask, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -577,13 +581,11 @@ be freed.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stock_id</code></em> :</span></p></td>
-<td> place to store a stock icon name, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> place to store a stock icon size, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (allow-none) (type int. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -608,8 +610,7 @@ returned animation.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the displayed animation, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> if the image is empty
-</td>
+<td>transfer none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -636,13 +637,11 @@ be freed.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>icon_name</code></em> :</span></p></td>
-<td> place to store an icon name, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> place to store an icon size, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (allow-none) (type int. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -670,13 +669,11 @@ returned <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span 
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gicon</code></em> :</span></p></td>
-<td> place to store a <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (transfer none) (allow-none. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=out"><span class="acronym">out</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=transfer%20none"><span class="acronym">transfer none</span></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> place to store an icon size, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td>out) (allow-none) (type int. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -713,7 +710,7 @@ the return value will be <a class="link" href="GtkImage.html#GTK-IMAGE-EMPTY:CAP
 <p>
 Creates a new <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> displaying the file <em class="parameter"><code>filename</code></em>. If the file
 isn't found or can't be loaded, the resulting <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> will
-display a "broken image" icon. This function never returns <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>,
+display a "broken image" icon. This function never returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>,
 it always returns a valid <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> widget.
 </p>
 <p>
@@ -774,8 +771,7 @@ icon set; you still need to unref it if you own references.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> a stock icon size
-</td>
+<td> a stock icon size. type int</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -801,13 +797,11 @@ image or mask; you still need to unref them if you own references.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>image</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> 
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -836,8 +830,7 @@ you should use <a class="link" href="GtkImage.html#gtk-image-new-from-icon-set" 
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixbuf</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -863,13 +856,11 @@ pixmap or mask; you still need to unref them if you own references.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixmap</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a>, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -901,8 +892,7 @@ You can register your own stock icon names, see
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> a stock icon size
-</td>
+<td> a stock icon size. type int</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -924,7 +914,7 @@ animation; you still need to unref it if you own references.
 </p>
 <p>
 Note that the animation frames are shown using a timeout with
-<a href="http://library.gnome.org/devel/glib/unstable/glib-The-Main-Event-Loop.html#G-PRIORITY-DEFAULT--CAPS"><span class="type">G_PRIORITY_DEFAULT</span></a>. When using animations to indicate busyness,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-The-Main-Event-Loop.html#G-PRIORITY-DEFAULT:CAPS"><span class="type">G_PRIORITY_DEFAULT</span></a>. When using animations to indicate busyness,
 keep in mind that the animation will only be shown if the main loop
 is not busy with something that has a higher priority.</p>
 <div class="variablelist"><table border="0">
@@ -963,8 +953,7 @@ will be updated appropriately.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> a stock icon size
-</td>
+<td> a stock icon size. type int</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -996,8 +985,7 @@ will be updated appropriately.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> a stock icon size
-</td>
+<td> a stock icon size. type int</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1026,8 +1014,7 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-file" title="gtk_imag
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
-<td> a filename or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a filename or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -1055,8 +1042,7 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-icon-set" title="gtk_
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> a stock icon size
-</td>
+<td> a stock icon size. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -1079,13 +1065,11 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-image" title="gtk_ima
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gdk_image</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -1107,8 +1091,7 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-pixbuf" title="gtk_im
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixbuf</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -1131,13 +1114,11 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-pixmap" title="gtk_im
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixmap</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=allow-none"><span class="acronym">allow-none</span></a>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -1165,8 +1146,7 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-stock" title="gtk_ima
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> a stock icon size
-</td>
+<td> a stock icon size. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -1178,7 +1158,7 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-stock" title="gtk_ima
                                                          <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-animation.html#GdkPixbufAnimation"><span class="returnvalue">GdkPixbufAnimation</span></a> *animation);</pre>
 <p>
 Causes the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> to display the given animation (or display
-nothing, if you set the animation to <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>).</p>
+nothing, if you set the animation to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>).</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -1218,8 +1198,7 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-icon-name" title="gtk
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> an icon size
-</td>
+<td> an icon size. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -1248,8 +1227,7 @@ See <a class="link" href="GtkImage.html#gtk-image-new-from-gicon" title="gtk_ima
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td> an icon size
-</td>
+<td> an icon size. type int</td>
 </tr>
 </tbody>
 </table></div>
@@ -1294,27 +1272,26 @@ Creates a new empty <a class="link" href="GtkImage.html" title="GtkImage"><span 
                                                          <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="returnvalue">GdkBitmap</span></a> *mask);</pre>
 <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_image_set</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_image_set</code> has been deprecated since version 2.0 and should not be used in newly-written code. Use <a class="link" href="GtkImage.html#gtk-image-set-from-image" title="gtk_image_set_from_image ()"><code class="function">gtk_image_set_from_image()</code></a> instead.</p>
 </div>
 <p>
-Sets the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>.
-</p>
+Sets the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>image</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>
+<td> a <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>val</code></em> :</span></p></td>
-<td>a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td>a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> that indicates which parts of the image should be transparent.
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> that indicates which parts of the image should be transparent.
 </td>
 </tr>
 </tbody>
@@ -1328,27 +1305,26 @@ Sets the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type
                                                          <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="returnvalue">GdkBitmap</span></a> **mask);</pre>
 <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_image_get</code> is deprecated and should not be used in newly-written code.</p>
+<p><code class="literal">gtk_image_get</code> has been deprecated since version 2.0 and should not be used in newly-written code. Use <a class="link" href="GtkImage.html#gtk-image-get-image" title="gtk_image_get_image ()"><code class="function">gtk_image_get_image()</code></a> instead.</p>
 </div>
 <p>
-Gets the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>.
-</p>
+Gets the <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>image</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>
+<td> a <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>val</code></em> :</span></p></td>
-<td>return location for a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>
+<td> return location for a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Images.html#GdkImage"><span class="type">GdkImage</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mask</code></em> :</span></p></td>
-<td>a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> that indicates which parts of the image should be transparent.
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Bitmaps-and-Pixmaps.html#GdkBitmap"><span class="type">GdkBitmap</span></a> that indicates which parts of the image should be transparent.
 </td>
 </tr>
 </tbody>
@@ -1506,9 +1482,7 @@ overriding the <a class="link" href="GtkImage.html#GtkImage--icon-size" title='T
 </div>
 <div class="refsect1" title="See Also">
 <a name="GtkImage.see-also"></a><h2>See Also</h2>
-<p>
 <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>
-</p>
 </div>
 </div>
 <div class="footer">

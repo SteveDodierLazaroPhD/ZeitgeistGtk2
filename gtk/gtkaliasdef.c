@@ -6905,6 +6905,9 @@ extern __typeof (gtk_print_context_get_dpi_x) gtk_print_context_get_dpi_x __attr
 #undef gtk_print_context_get_dpi_y 
 extern __typeof (gtk_print_context_get_dpi_y) gtk_print_context_get_dpi_y __attribute((alias("IA__gtk_print_context_get_dpi_y"), visibility("default")));
 
+#undef gtk_print_context_get_hard_margins 
+extern __typeof (gtk_print_context_get_hard_margins) gtk_print_context_get_hard_margins __attribute((alias("IA__gtk_print_context_get_hard_margins"), visibility("default")));
+
 #undef gtk_print_context_get_pango_fontmap 
 extern __typeof (gtk_print_context_get_pango_fontmap) gtk_print_context_get_pango_fontmap __attribute((alias("IA__gtk_print_context_get_pango_fontmap"), visibility("default")));
 
@@ -6972,6 +6975,9 @@ extern __typeof (gtk_printer_request_details) gtk_printer_request_details __attr
 
 #undef gtk_printer_get_capabilities 
 extern __typeof (gtk_printer_get_capabilities) gtk_printer_get_capabilities __attribute((alias("IA__gtk_printer_get_capabilities"), visibility("default")));
+
+#undef gtk_printer_get_hard_margins 
+extern __typeof (gtk_printer_get_hard_margins) gtk_printer_get_hard_margins __attribute((alias("IA__gtk_printer_get_hard_margins"), visibility("default")));
 
 #undef gtk_enumerate_printers 
 extern __typeof (gtk_enumerate_printers) gtk_enumerate_printers __attribute((alias("IA__gtk_enumerate_printers"), visibility("default")));
@@ -12609,6 +12615,9 @@ extern __typeof (gtk_window_get_icon_name) gtk_window_get_icon_name __attribute(
 #undef gtk_window_get_mnemonic_modifier 
 extern __typeof (gtk_window_get_mnemonic_modifier) gtk_window_get_mnemonic_modifier __attribute((alias("IA__gtk_window_get_mnemonic_modifier"), visibility("default")));
 
+#undef gtk_window_get_mnemonics_visible 
+extern __typeof (gtk_window_get_mnemonics_visible) gtk_window_get_mnemonics_visible __attribute((alias("IA__gtk_window_get_mnemonics_visible"), visibility("default")));
+
 #undef gtk_window_get_modal 
 extern __typeof (gtk_window_get_modal) gtk_window_get_modal __attribute((alias("IA__gtk_window_get_modal"), visibility("default")));
 
@@ -12805,6 +12814,9 @@ extern __typeof (gtk_window_set_keep_below) gtk_window_set_keep_below __attribut
 
 #undef gtk_window_set_mnemonic_modifier 
 extern __typeof (gtk_window_set_mnemonic_modifier) gtk_window_set_mnemonic_modifier __attribute((alias("IA__gtk_window_set_mnemonic_modifier"), visibility("default")));
+
+#undef gtk_window_set_mnemonics_visible 
+extern __typeof (gtk_window_set_mnemonics_visible) gtk_window_set_mnemonics_visible __attribute((alias("IA__gtk_window_set_mnemonics_visible"), visibility("default")));
 
 #undef gtk_window_set_modal 
 extern __typeof (gtk_window_set_modal) gtk_window_set_modal __attribute((alias("IA__gtk_window_set_modal"), visibility("default")));

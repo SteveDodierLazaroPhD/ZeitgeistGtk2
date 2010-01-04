@@ -1378,6 +1378,9 @@ gtk_tree_view_init (GtkTreeView *tree_view)
 
   tree_view->priv->last_button_x = -1;
   tree_view->priv->last_button_y = -1;
+
+  tree_view->priv->event_last_x = -10000;
+  tree_view->priv->event_last_y = -10000;
 }
 
 
@@ -2052,6 +2055,25 @@ gtk_tree_view_size_request (GtkWidget      *widget,
     }
 }
 
+static int
+gtk_tree_view_calculate_width_before_expander (GtkTreeView *tree_view)
+{
+  int width = 0;
+  GList *list;
+  gboolean rtl;
+
+  rtl = (gtk_widget_get_direction (GTK_WIDGET (tree_view)) == GTK_TEXT_DIR_RTL);
+  for (list = (rtl ? g_list_last (tree_view->priv->columns) : g_list_first (tree_view->priv->columns));
+       list->data != tree_view->priv->expander_column;
+       list = (rtl ? list->prev : list->next))
+    {
+      GtkTreeViewColumn *column = list->data;
+
+      width += column->width;
+    }
+
+  return width;
+}
 
 static void
 invalidate_column (GtkTreeView       *tree_view,
@@ -2438,14 +2460,30 @@ gtk_tree_view_size_allocate (GtkWidget     *widget,
 	    }
 	}
 
+      if (width_changed && tree_view->priv->expander_column)
+        {
+          /* Might seem awkward, but is the best heuristic I could come up
+           * with.  Only if the width of the columns before the expander
+           * changes, we will update the prelight status.  It is this
+           * width that makes the expander move vertically.  Always updating
+           * prelight status causes trouble with hover selections.
+           */
+          gint width_before_expander;
+
+          width_before_expander = gtk_tree_view_calculate_width_before_expander (tree_view);
+
+          if (tree_view->priv->prev_width_before_expander
+              != width_before_expander)
+              update_prelight (tree_view,
+                               -tree_view->priv->event_last_x,
+                               -tree_view->priv->event_last_y);
+
+          tree_view->priv->prev_width_before_expander = width_before_expander;
+        }
+
       /* This little hack only works if we have an LTR locale, and no column has the  */
       if (width_changed)
 	{
-          if (tree_view->priv->tree)
-            update_prelight (tree_view,
-                             tree_view->priv->event_last_x,
-                             tree_view->priv->event_last_y);
-
 	  if (gtk_widget_get_direction (GTK_WIDGET (tree_view)) == GTK_TEXT_DIR_LTR &&
 	      ! has_expand_column)
 	    invalidate_last_column (tree_view);
@@ -3265,6 +3303,16 @@ prelight_or_select (GtkTreeView *tree_view,
 }
 
 static void
+ensure_unprelighted (GtkTreeView *tree_view)
+{
+  do_prelight (tree_view,
+	       NULL, NULL,
+	       -1000, -1000); /* coords not possibly over an arrow */
+
+  g_assert (tree_view->priv->prelight_node == NULL);
+}
+
+static void
 update_prelight (GtkTreeView *tree_view,
                  gint         x,
                  gint         y)
@@ -3272,6 +3320,12 @@ update_prelight (GtkTreeView *tree_view,
   int new_y;
   GtkRBTree *tree;
   GtkRBNode *node;
+
+  if (x == -10000)
+    {
+      ensure_unprelighted (tree_view);
+      return;
+    }
 
   new_y = TREE_WINDOW_Y_TO_RBTREE_Y (tree_view, y);
   if (new_y < 0)
@@ -3282,16 +3336,6 @@ update_prelight (GtkTreeView *tree_view,
 
   if (node)
     prelight_or_select (tree_view, tree, node, x, y);
-}
-
-static void
-ensure_unprelighted (GtkTreeView *tree_view)
-{
-  do_prelight (tree_view,
-	       NULL, NULL,
-	       -1000, -1000); /* coords not possibly over an arrow */
-
-  g_assert (tree_view->priv->prelight_node == NULL);
 }
 
 
@@ -5507,6 +5551,9 @@ gtk_tree_view_enter_notify (GtkWidget        *widget,
     new_y = 0;
   _gtk_rbtree_find_offset (tree_view->priv->tree, new_y, &tree, &node);
 
+  tree_view->priv->event_last_x = event->x;
+  tree_view->priv->event_last_y = event->y;
+
   if ((tree_view->priv->button_pressed_node == NULL) ||
       (tree_view->priv->button_pressed_node == node))
     prelight_or_select (tree_view, tree, node, event->x, event->y);
@@ -5530,6 +5577,9 @@ gtk_tree_view_leave_notify (GtkWidget        *widget,
                                    tree_view->priv->prelight_tree,
                                    tree_view->priv->prelight_node,
                                    NULL);
+
+  tree_view->priv->event_last_x = -10000;
+  tree_view->priv->event_last_y = -10000;
 
   prelight_or_select (tree_view,
 		      NULL, NULL,
@@ -10622,10 +10672,10 @@ gtk_tree_view_get_model (GtkTreeView *tree_view)
 /**
  * gtk_tree_view_set_model:
  * @tree_view: A #GtkTreeNode.
- * @model: The model.
+ * @model: (allow-none): The model.
  *
  * Sets the model for a #GtkTreeView.  If the @tree_view already has a model
- * set, it will remove it before setting the new model.  If @model is %NULL, 
+ * set, it will remove it before setting the new model.  If @model is %NULL,
  * then it will unset the old model.
  **/
 void
@@ -11359,7 +11409,7 @@ gtk_tree_view_get_column (GtkTreeView *tree_view,
  * Returns a #GList of all the #GtkTreeViewColumn s currently in @tree_view.
  * The returned list must be freed with g_list_free ().
  *
- * Return value: A list of #GtkTreeViewColumn s
+ * Return value: (element-type GtkTreeViewColumn) (transfer container): A list of #GtkTreeViewColumn s
  **/
 GList *
 gtk_tree_view_get_columns (GtkTreeView *tree_view)
@@ -11373,7 +11423,7 @@ gtk_tree_view_get_columns (GtkTreeView *tree_view)
  * gtk_tree_view_move_column_after:
  * @tree_view: A #GtkTreeView
  * @column: The #GtkTreeViewColumn to be moved.
- * @base_column: The #GtkTreeViewColumn to be moved relative to, or %NULL.
+ * @base_column: (allow-none): The #GtkTreeViewColumn to be moved relative to, or %NULL.
  *
  * Moves @column to be after to @base_column.  If @base_column is %NULL, then
  * @column is placed in the first position.
@@ -11556,8 +11606,8 @@ gtk_tree_view_scroll_to_point (GtkTreeView *tree_view,
 /**
  * gtk_tree_view_scroll_to_cell:
  * @tree_view: A #GtkTreeView.
- * @path: The path of the row to move to, or %NULL.
- * @column: The #GtkTreeViewColumn to move horizontally to, or %NULL.
+ * @path: (allow-none): The path of the row to move to, or %NULL.
+ * @column: (allow-none): The #GtkTreeViewColumn to move horizontally to, or %NULL.
  * @use_align: whether to use alignment arguments, or %FALSE.
  * @row_align: The vertical alignment of the row specified by @path.
  * @col_align: The horizontal alignment of the column specified by @column.
@@ -12549,7 +12599,7 @@ gtk_tree_view_get_cursor (GtkTreeView        *tree_view,
  * gtk_tree_view_set_cursor:
  * @tree_view: A #GtkTreeView
  * @path: A #GtkTreePath
- * @focus_column: A #GtkTreeViewColumn, or %NULL
+ * @focus_column: (allow-none): A #GtkTreeViewColumn, or %NULL
  * @start_editing: %TRUE if the specified cell should start being edited.
  *
  * Sets the current keyboard focus to be at @path, and selects it.  This is
@@ -12578,8 +12628,8 @@ gtk_tree_view_set_cursor (GtkTreeView       *tree_view,
  * gtk_tree_view_set_cursor_on_cell:
  * @tree_view: A #GtkTreeView
  * @path: A #GtkTreePath
- * @focus_column: A #GtkTreeViewColumn, or %NULL
- * @focus_cell: A #GtkCellRenderer, or %NULL
+ * @focus_column: (allow-none): A #GtkTreeViewColumn, or %NULL
+ * @focus_cell: (allow-none): A #GtkCellRenderer, or %NULL
  * @start_editing: %TRUE if the specified cell should start being edited.
  *
  * Sets the current keyboard focus to be at @path, and selects it.  This is
@@ -12801,8 +12851,8 @@ gtk_tree_view_get_path_at_pos (GtkTreeView        *tree_view,
 /**
  * gtk_tree_view_get_cell_area:
  * @tree_view: a #GtkTreeView
- * @path: a #GtkTreePath for the row, or %NULL to get only horizontal coordinates
- * @column: a #GtkTreeViewColumn for the column, or %NULL to get only vertical coordinates
+ * @path: (allow-none): a #GtkTreePath for the row, or %NULL to get only horizontal coordinates
+ * @column: (allow-none): a #GtkTreeViewColumn for the column, or %NULL to get only vertical coordinates
  * @rect: rectangle to fill with cell rect
  *
  * Fills the bounding rectangle in bin_window coordinates for the cell at the
@@ -13985,7 +14035,7 @@ gtk_tree_view_get_search_entry (GtkTreeView *tree_view)
 /**
  * gtk_tree_view_set_search_entry:
  * @tree_view: A #GtkTreeView
- * @entry: the entry the interactive search code of @tree_view should use or %NULL
+ * @entry: (allow-none): the entry the interactive search code of @tree_view should use or %NULL
  *
  * Sets the entry which the interactive search code will use for this
  * @tree_view.  This is useful when you want to provide a search entry

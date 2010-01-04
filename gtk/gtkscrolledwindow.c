@@ -377,12 +377,12 @@ gtk_scrolled_window_init (GtkScrolledWindow *scrolled_window)
 
 /**
  * gtk_scrolled_window_new:
- * @hadjustment: horizontal adjustment
- * @vadjustment: vertical adjustment
- * 
- * Creates a new scrolled window. 
+ * @hadjustment: (allow-none): horizontal adjustment
+ * @vadjustment: (allow-none): vertical adjustment
  *
- * The two arguments are the scrolled window's adjustments; these will be 
+ * Creates a new scrolled window.
+ *
+ * The two arguments are the scrolled window's adjustments; these will be
  * shared with the scrollbars and the child widget to keep the bars in sync 
  * with the child. Usually you want to pass %NULL for the adjustments, which 
  * will cause the scrolled window to create them for you.
@@ -852,6 +852,9 @@ gtk_scrolled_window_destroy (GtkObject *object)
 
   if (scrolled_window->hscrollbar)
     {
+      g_signal_handlers_disconnect_by_func (gtk_range_get_adjustment (GTK_RANGE (scrolled_window->hscrollbar)),
+					    gtk_scrolled_window_adjustment_changed,
+					    scrolled_window);
       gtk_widget_unparent (scrolled_window->hscrollbar);
       gtk_widget_destroy (scrolled_window->hscrollbar);
       g_object_unref (scrolled_window->hscrollbar);
@@ -859,6 +862,9 @@ gtk_scrolled_window_destroy (GtkObject *object)
     }
   if (scrolled_window->vscrollbar)
     {
+      g_signal_handlers_disconnect_by_func (gtk_range_get_adjustment (GTK_RANGE (scrolled_window->vscrollbar)),
+					    gtk_scrolled_window_adjustment_changed,
+					    scrolled_window);
       gtk_widget_unparent (scrolled_window->vscrollbar);
       gtk_widget_destroy (scrolled_window->vscrollbar);
       g_object_unref (scrolled_window->vscrollbar);

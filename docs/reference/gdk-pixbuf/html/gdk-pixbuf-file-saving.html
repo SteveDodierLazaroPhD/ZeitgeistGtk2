@@ -124,7 +124,7 @@ to a socket or store it in a database.
                                                          <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
 <p>
 Saves pixbuf to a file in <em class="parameter"><code>type</code></em>, which is currently "jpeg", "png", "tiff", "ico" or "bmp".
-If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a> will be returned. 
+If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned. 
 See <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save" title="gdk_pixbuf_save ()"><code class="function">gdk_pixbuf_save()</code></a> for more details.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -146,7 +146,7 @@ See <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save" title="gd
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>option_keys</code></em> :</span></p></td>
-<td> name of options to set, <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated
+<td> name of options to set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated
 </td>
 </tr>
 <tr>
@@ -156,7 +156,7 @@ See <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save" title="gd
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for error, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> return location for error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -215,11 +215,11 @@ g_slist_free (formats);</pre></td>
 <p>
 </p>
 <p>
-If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a> will be returned. Possible errors include 
-those in the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a> domain and those in the <a href="http://library.gnome.org/devel/glib/unstable/glib-File-Utilities.html#G-FILE-ERROR--CAPS"><span class="type">G_FILE_ERROR</span></a> domain.
+If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned. Possible errors include 
+those in the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a> domain and those in the <a href="http://library.gnome.org/devel/glib/unstable/glib-File-Utilities.html#G-FILE-ERROR:CAPS"><span class="type">G_FILE_ERROR</span></a> domain.
 </p>
 <p>
-The variable argument list should be <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated; if not empty,
+The variable argument list should be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated; if not empty,
 it should contain pairs of strings that modify the save
 parameters. For example:
 </p>
@@ -250,6 +250,40 @@ be specified using the "compression" parameter; it's value is in an
 integer in the range of [0,9].
 </p>
 <p>
+ICC color profiles can also be embedded into PNG and TIFF images.
+The "icc-profile" value should be the complete ICC profile encoded
+into base64.
+</p>
+<p>
+</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></td>
+        <td class="listing_code"><pre class="programlisting">gchar *contents;
+gchar *contents_encode;
+gsize length;
+g_file_get_contents (<span class="number">&quot;/home/hughsie/.color/icc/L225W.icm&quot;</span>, &amp;contents, &amp;length, <span class="number">NULL</span>);
+contents_encode = g_base64_encode ((<span class="type">const</span> guchar *) contents, length);
+gdk_pixbuf_save (pixbuf, handle, <span class="number">&quot;png&quot;</span>, &amp;error,
+                 <span class="number">&quot;icc-profile&quot;</span>, contents_encode,
+                 <span class="number">NULL</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+</p>
+<p>
 TIFF images recognize a "compression" option which acceps an integer value.
 Among the codecs are 1 None, 2 Huffman, 5 LZW, 7 JPEG and 8 Deflate, see
 the libtiff documentation and tiff.h for all supported codec values.
@@ -278,7 +312,7 @@ it produces a CUR instead of an ICO.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for error, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> return location for error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -305,8 +339,8 @@ it produces a CUR instead of an ICO.</p>
 Specifies the type of the function passed to
 <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save-to-callback" title="gdk_pixbuf_save_to_callback ()"><code class="function">gdk_pixbuf_save_to_callback()</code></a>.  It is called once for each block of
 bytes that is "written" by <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save-to-callback" title="gdk_pixbuf_save_to_callback ()"><code class="function">gdk_pixbuf_save_to_callback()</code></a>.  If
-successful it should return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"><code class="literal">TRUE</code></a>.  If an error occurs it should set
-<em class="parameter"><code>error</code></em> and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a>, in which case <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save-to-callback" title="gdk_pixbuf_save_to_callback ()"><code class="function">gdk_pixbuf_save_to_callback()</code></a>
+successful it should return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.  If an error occurs it should set
+<em class="parameter"><code>error</code></em> and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, in which case <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save-to-callback" title="gdk_pixbuf_save_to_callback ()"><code class="function">gdk_pixbuf_save_to_callback()</code></a>
 will fail with the same error.
 </p>
 <div class="variablelist"><table border="0">
@@ -335,7 +369,7 @@ will fail with the same error.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a> (with <em class="parameter"><code>error</code></em> set) if failed.
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> (with <em class="parameter"><code>error</code></em> set) if failed.
 </td>
 </tr>
 </tbody>
@@ -355,7 +389,7 @@ will fail with the same error.
 Saves pixbuf in format <em class="parameter"><code>type</code></em> by feeding the produced data to a 
 callback. Can be used when you want to store the image to something 
 other than a file, such as an in-memory buffer or a socket.  
-If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a> will be returned. Possible errors
+If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned. Possible errors
 include those in the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a> domain and whatever the save
 function generates.
 </p>
@@ -387,7 +421,7 @@ See <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save" title="gd
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for error, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> return location for error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -417,7 +451,7 @@ See <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save" title="gd
                                                          <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="returnvalue">GError</span></a> **error);</pre>
 <p>
 Saves pixbuf to a callback in format <em class="parameter"><code>type</code></em>, which is currently "jpeg",
-"png", "tiff", "ico" or "bmp".  If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a> will be returned. See
+"png", "tiff", "ico" or "bmp".  If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned. See
 <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save-to-callback" title="gdk_pixbuf_save_to_callback ()"><code class="function">gdk_pixbuf_save_to_callback()</code></a> for more details.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -445,7 +479,7 @@ Saves pixbuf to a callback in format <em class="parameter"><code>type</code></em
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>option_keys</code></em> :</span></p></td>
-<td> name of options to set, <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated
+<td> name of options to set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated
 </td>
 </tr>
 <tr>
@@ -455,7 +489,7 @@ Saves pixbuf to a callback in format <em class="parameter"><code>type</code></em
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for error, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> return location for error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -482,8 +516,8 @@ Saves pixbuf to a new buffer in format <em class="parameter"><code>type</code></
 "png", "tiff", "ico" or "bmp".  This is a convenience function that uses
 <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save-to-callback" title="gdk_pixbuf_save_to_callback ()"><code class="function">gdk_pixbuf_save_to_callback()</code></a> to do the real work. Note that the buffer 
 is not nul-terminated and may contain embedded  nuls.
-If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a> will be returned and <em class="parameter"><code>buffer</code></em> will be set to
-<a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>. Possible errors include those in the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a>
+If <em class="parameter"><code>error</code></em> is set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned and <em class="parameter"><code>buffer</code></em> will be set to
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. Possible errors include those in the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a>
 domain.
 </p>
 <p>
@@ -513,7 +547,7 @@ See <a class="link" href="gdk-pixbuf-file-saving.html#gdk-pixbuf-save" title="gd
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for error, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> return location for error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -570,7 +604,7 @@ for more details.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>option_keys</code></em> :</span></p></td>
-<td> name of options to set, <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated
+<td> name of options to set, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated
 </td>
 </tr>
 <tr>
@@ -580,7 +614,7 @@ for more details.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for error, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> return location for error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -613,7 +647,7 @@ Supported file formats are currently "jpeg", "tiff", "png", "ico" or
 The <em class="parameter"><code>cancellable</code></em> can be used to abort the operation from another 
 thread. If the operation was cancelled, the error <code class="literal">GIO_ERROR_CANCELLED</code> 
 will be returned. Other possible errors are in the <a class="link" href="gdk-pixbuf-gdk-pixbuf.html#GDK-PIXBUF-ERROR:CAPS" title="GDK_PIXBUF_ERROR"><span class="type">GDK_PIXBUF_ERROR</span></a> 
-and <a href="http://library.gnome.org/devel/gio/unstable/gio-GIOError.html#G-IO-ERROR--CAPS"><code class="literal">G_IO_ERROR</code></a> domains. 
+and <a href="http://library.gnome.org/devel/gio/unstable/gio-GIOError.html#G-IO-ERROR:CAPS"><code class="literal">G_IO_ERROR</code></a> domains. 
 </p>
 <p>
 The stream is not closed.</p>
@@ -637,12 +671,12 @@ The stream is not closed.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
-<td> optional <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> object, <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore
+<td> optional <a href="http://library.gnome.org/devel/gio/unstable/GCancellable.html"><span class="type">GCancellable</span></a> object, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for error, or <a href="/usr/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td> return location for error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -652,7 +686,7 @@ The stream is not closed.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE--CAPS"><code class="literal">TRUE</code></a> if the pixbuf was saved successfully, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE--CAPS"><code class="literal">FALSE</code></a> if an
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pixbuf was saved successfully, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if an
     error was set.
 
 </td>

@@ -738,7 +738,8 @@ gtk_tool_item_get_ellipsize_mode (GtkToolItem *tool_item)
  * #GtkToolItem should call this function to find out what size icons
  * they should use.
  * 
- * Return value: a #GtkIconSize indicating the icon size used for @tool_item
+ * Return value: (type int): a #GtkIconSize indicating the icon size
+ * used for @tool_item
  * 
  * Since: 2.4
  **/
@@ -924,7 +925,7 @@ gtk_tool_item_get_text_size_group (GtkToolItem *tool_item)
 {
   GtkWidget *parent;
   
-  g_return_val_if_fail (GTK_IS_TOOL_ITEM (tool_item), GTK_ORIENTATION_HORIZONTAL);
+  g_return_val_if_fail (GTK_IS_TOOL_ITEM (tool_item), NULL);
 
   parent = GTK_WIDGET (tool_item)->parent;
   if (!parent || !GTK_IS_TOOL_SHELL (parent))
@@ -1094,10 +1095,10 @@ gtk_tool_item_real_set_tooltip (GtkToolItem *tool_item,
 
 /**
  * gtk_tool_item_set_tooltip:
- * @tool_item: a #GtkToolItem 
+ * @tool_item: a #GtkToolItem
  * @tooltips: The #GtkTooltips object to be used
- * @tip_text: text to be used as tooltip text for @tool_item
- * @tip_private: text to be used as private tooltip text
+ * @tip_text: (allow-none): text to be used as tooltip text for @tool_item
+ * @tip_private: (allow-none): text to be used as private tooltip text
  *
  * Sets the #GtkTooltips object to be used for @tool_item, the
  * text to be displayed as tooltip on the item and the private text
@@ -1332,10 +1333,10 @@ gtk_tool_item_get_visible_vertical (GtkToolItem *toolitem)
  * Returns the #GtkMenuItem that was last set by
  * gtk_tool_item_set_proxy_menu_item(), ie. the #GtkMenuItem
  * that is going to appear in the overflow menu.
- * 
- * Return value: The #GtkMenuItem that is going to appear in the
+ *
+ * Return value: (transfer none): The #GtkMenuItem that is going to appear in the
  * overflow menu for @tool_item.
- * 
+ *
  * Since: 2.4
  **/
 GtkWidget *

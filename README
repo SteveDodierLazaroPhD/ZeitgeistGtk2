@@ -1,7 +1,7 @@
 General Information
 ===================
 
-This is GTK+ version 2.19.1. GTK+ is a multi-platform toolkit for
+This is GTK+ version 2.19.2. GTK+ is a multi-platform toolkit for
 creating graphical user interfaces. Offering a complete set of widgets,
 GTK+ is suitable for projects ranging from small one-off projects to
 complete application suites.
@@ -36,6 +36,14 @@ Release notes for 2.20
   by accessing the innards of the statusbar widget directly. Applications
   which are doing so may need some adjustments, since the addition of the
   message area changed the internal widget hierarchy.
+
+* GDK will now set all matching virtual modifiers in the state field of
+  key events. Depending on your X modifier map, this can lead to more bits
+  in the state field being set than before. If you are manually matching
+  key events against key/modifier combinations you should make sure that
+  you properly mask away irrelevant parts of the state field. The
+  gdk_keymap_map_virtual_modifiers() function can help with matching
+  against virtual modifiers.
 
 Release notes for 2.18
 ======================

@@ -1985,9 +1985,13 @@ gtk_entry_set_property (GObject         *object,
 
     case PROP_IM_MODULE:
       g_free (priv->im_module);
-      priv->im_module = g_strdup (g_value_get_string (value));
+      priv->im_module = g_value_dup_string (value);
       if (GTK_IS_IM_MULTICONTEXT (entry->im_context))
         gtk_im_multicontext_set_context_id (GTK_IM_MULTICONTEXT (entry->im_context), priv->im_module);
+      break;
+
+    case PROP_EDITING_CANCELED:
+      entry->editing_canceled = g_value_get_boolean (value);
       break;
 
     case PROP_SCROLL_OFFSET:
@@ -7238,7 +7242,7 @@ gtk_entry_get_has_frame (GtkEntry *entry)
 /**
  * gtk_entry_set_inner_border:
  * @entry: a #GtkEntry
- * @border: a #GtkBorder, or %NULL
+ * @border: (allow-none): a #GtkBorder, or %NULL
  *
  * Sets %entry's inner-border property to %border, or clears it if %NULL
  * is passed. The inner-border is the area around the entry's text, but
@@ -7276,7 +7280,7 @@ gtk_entry_set_inner_border (GtkEntry        *entry,
  * This function returns the entry's #GtkEntry:inner-border property. See
  * gtk_entry_set_inner_border() for more information.
  *
- * Return value: the entry's #GtkBorder, or %NULL if none was set.
+ * Return value: (transfer none): the entry's #GtkBorder, or %NULL if none was set.
  *
  * Since: 2.10
  **/
@@ -7302,8 +7306,8 @@ gtk_entry_get_inner_border (GtkEntry *entry)
  * gtk_entry_layout_index_to_text_index() and
  * gtk_entry_text_index_to_layout_index() are needed to convert byte
  * indices in the layout to byte indices in the entry contents.
- * 
- * Return value: the #PangoLayout for this entry
+ *
+ * Return value: (transfer none): the #PangoLayout for this entry
  **/
 PangoLayout*
 gtk_entry_get_layout (GtkEntry *entry)
@@ -9626,7 +9630,7 @@ connect_completion_signals (GtkEntry           *entry,
 /**
  * gtk_entry_set_completion:
  * @entry: A #GtkEntry
- * @completion: The #GtkEntryCompletion or %NULL
+ * @completion: (allow-none): The #GtkEntryCompletion or %NULL
  *
  * Sets @completion to be the auxiliary completion object to use with @entry.
  * All further configuration of the completion mechanism is done on
@@ -9743,9 +9747,9 @@ gtk_entry_set_cursor_hadjustment (GtkEntry      *entry,
  * Retrieves the horizontal cursor adjustment for the entry. 
  * See gtk_entry_set_cursor_hadjustment().
  *
- * Return value: the horizontal cursor adjustment, or %NULL 
+ * Return value: (transfer none): the horizontal cursor adjustment, or %NULL
  *   if none has been set.
- * 
+ *
  * Since: 2.12
  */
 GtkAdjustment*

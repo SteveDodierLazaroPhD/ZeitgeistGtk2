@@ -1,5 +1,15 @@
 # Makefile.am for gtk+/gtk
 include $(top_srcdir)/Makefile.decl
+include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = \
+	--add-include-path=../gdk-pixbuf \
+	--add-include-path=../gdk
+INTROSPECTION_COMPILER_ARGS = \
+	--includedir=$(srcdir) \
+    --includedir=. \
+    --includedir=../gdk-pixbuf \
+    --includedir=../gdk
 
 if USE_QUARTZ
 GTK_PRINT_PREVIEW_COMMAND="open -a /Applications/Preview.app %f"
@@ -959,7 +969,36 @@ TEST_DEPS = $(DEPS) gtk.immodules
 LDADDS =								\
 	$(gtktargetlib)							\
 	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la	\
-	$(top_builddir)/gdk/$(gdktargetlib)
+	$(top_builddir)/gdk/$(gdktargetlib)                             \
+	$(GTK_DEP_LIBS)
+
+if HAVE_INTROSPECTION
+introspection_files = \
+    $(gtkinclude_HEADERS) \
+    $(gtk_all_c_sources) \
+    gtktypebuiltins.h \
+    gtktypebuiltins.c
+
+Gtk-2.0.gir: $(INTROSPECTION_SCANNER) $(gtktargetlib) Makefile
+Gtk_2_0_gir_SCANNERFLAGS = --strip-prefix=Gtk
+Gtk_2_0_gir_INCLUDES = Atk-1.0 Gdk-2.0
+Gtk_2_0_gir_CFLAGS = \
+		$(INCLUDES) \
+		-UGDK_DISABLE_DEPRECATED \
+		-UGTK_DISABLE_DEPRECATED \
+		-DGTK_TEXT_USE_INTERNAL_UNSUPPORTED_API
+Gtk_2_0_gir_LIBS = $(gtktargetlib)
+Gtk_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
+INTROSPECTION_GIRS += Gtk-2.0.gir
+
+girdir = $(INTROSPECTION_GIRDIR)
+dist_gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibsdir = $(INTROSPECTION_TYPELIBDIR)
+typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES += $(dist_gir_DATA) $(typelibs_DATA)
+endif
 
 #
 # Installed tools
@@ -1008,7 +1047,10 @@ gtk_query_immodules_2_0_LDADD = $(LDADDS)
 
 gtk_query_immodules_2_0_SOURCES = queryimmodules.c
 
-gtk_update_icon_cache_LDADD = $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
+gtk_update_icon_cache_LDADD = \
+	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
+	$(GDK_PIXBUF_DEP_LIBS)
+
 
 gtk_update_icon_cache_SOURCES = \
 	updateiconcache.c 

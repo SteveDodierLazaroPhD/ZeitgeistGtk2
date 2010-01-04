@@ -86,7 +86,7 @@ How to compile your GTK+ application
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1" title="Compiling GTK+ Applications on UNIX">
-<a name="id598459"></a><h2>Compiling GTK+ Applications on UNIX</h2>
+<a name="id437434"></a><h2>Compiling GTK+ Applications on UNIX</h2>
 <p>
 To compile a GTK+ application, you need to tell the compiler where to 
 find the GTK+ header files and libraries. This is done with the
@@ -138,7 +138,16 @@ toplevel headers <code class="filename">gtk.h</code>, <code class="filename">gdk
 If you want to make sure that your program follows this recommended
 practise, you can define the preprocessor symbols GTK_DISABLE_SINGLE_INCLUDES
 and GDK_PIXBUF_DISABLE_SINGLE_INCLUDES to make GTK+ generate an error
-when individual headers are directly included. 
+when individual headers are directly included.
+There are some exceptions: <code class="filename">gdkkeysyms.h</code> is not included in
+<code class="filename">gdk.h</code> because the file is quite large; see
+<a href="http://library.gnome.org/devel/gdk/unstable/gdk-Keyboard-Handling.html">Key Values documentation</a>.
+<code class="filename">gdkx.h</code> must be included independently because It's
+platform-specific; see
+<a href="http://library.gnome.org/devel/gdk/unstable/gdk-X-Window-System-Interaction.html">X Window System Interaction</a>
+documentation.
+The same for <code class="filename">gtkunixprint.h</code> if you use the non-portable
+<a class="link" href="GtkPrintUnixDialog.html" title="GtkPrintUnixDialog">GtkPrintUnixDialog</a> API.
 </p>
 </div>
 </div>

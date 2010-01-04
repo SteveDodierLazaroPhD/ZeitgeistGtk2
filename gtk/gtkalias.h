@@ -6902,6 +6902,9 @@ extern __typeof (gtk_print_context_get_dpi_x) IA__gtk_print_context_get_dpi_x __
 extern __typeof (gtk_print_context_get_dpi_y) IA__gtk_print_context_get_dpi_y __attribute((visibility("hidden")));
 #define gtk_print_context_get_dpi_y IA__gtk_print_context_get_dpi_y
 
+extern __typeof (gtk_print_context_get_hard_margins) IA__gtk_print_context_get_hard_margins __attribute((visibility("hidden")));
+#define gtk_print_context_get_hard_margins IA__gtk_print_context_get_hard_margins
+
 extern __typeof (gtk_print_context_get_pango_fontmap) IA__gtk_print_context_get_pango_fontmap __attribute((visibility("hidden")));
 #define gtk_print_context_get_pango_fontmap IA__gtk_print_context_get_pango_fontmap
 
@@ -6969,6 +6972,9 @@ extern __typeof (gtk_printer_request_details) IA__gtk_printer_request_details __
 
 extern __typeof (gtk_printer_get_capabilities) IA__gtk_printer_get_capabilities __attribute((visibility("hidden")));
 #define gtk_printer_get_capabilities IA__gtk_printer_get_capabilities
+
+extern __typeof (gtk_printer_get_hard_margins) IA__gtk_printer_get_hard_margins __attribute((visibility("hidden")));
+#define gtk_printer_get_hard_margins IA__gtk_printer_get_hard_margins
 
 extern __typeof (gtk_enumerate_printers) IA__gtk_enumerate_printers __attribute((visibility("hidden")));
 #define gtk_enumerate_printers IA__gtk_enumerate_printers
@@ -12606,6 +12612,9 @@ extern __typeof (gtk_window_get_icon_name) IA__gtk_window_get_icon_name __attrib
 extern __typeof (gtk_window_get_mnemonic_modifier) IA__gtk_window_get_mnemonic_modifier __attribute((visibility("hidden")));
 #define gtk_window_get_mnemonic_modifier IA__gtk_window_get_mnemonic_modifier
 
+extern __typeof (gtk_window_get_mnemonics_visible) IA__gtk_window_get_mnemonics_visible __attribute((visibility("hidden")));
+#define gtk_window_get_mnemonics_visible IA__gtk_window_get_mnemonics_visible
+
 extern __typeof (gtk_window_get_modal) IA__gtk_window_get_modal __attribute((visibility("hidden")));
 #define gtk_window_get_modal IA__gtk_window_get_modal
 
@@ -12802,6 +12811,9 @@ extern __typeof (gtk_window_set_keep_below) IA__gtk_window_set_keep_below __attr
 
 extern __typeof (gtk_window_set_mnemonic_modifier) IA__gtk_window_set_mnemonic_modifier __attribute((visibility("hidden")));
 #define gtk_window_set_mnemonic_modifier IA__gtk_window_set_mnemonic_modifier
+
+extern __typeof (gtk_window_set_mnemonics_visible) IA__gtk_window_set_mnemonics_visible __attribute((visibility("hidden")));
+#define gtk_window_set_mnemonics_visible IA__gtk_window_set_mnemonics_visible
 
 extern __typeof (gtk_window_set_modal) IA__gtk_window_set_modal __attribute((visibility("hidden")));
 #define gtk_window_set_modal IA__gtk_window_set_modal

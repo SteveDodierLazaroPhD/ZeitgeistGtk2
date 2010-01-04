@@ -1808,6 +1808,9 @@ extern __typeof (gdk_keymap_lookup_key) gdk_keymap_lookup_key __attribute((alias
 #undef gdk_keymap_translate_keyboard_state 
 extern __typeof (gdk_keymap_translate_keyboard_state) gdk_keymap_translate_keyboard_state __attribute((alias("IA__gdk_keymap_translate_keyboard_state"), visibility("default")));
 
+#undef gdk_keymap_map_virtual_modifiers 
+extern __typeof (gdk_keymap_map_virtual_modifiers) gdk_keymap_map_virtual_modifiers __attribute((alias("IA__gdk_keymap_map_virtual_modifiers"), visibility("default")));
+
 #undef gdk_keyval_convert_case 
 extern __typeof (gdk_keyval_convert_case) gdk_keyval_convert_case __attribute((alias("IA__gdk_keyval_convert_case"), visibility("default")));
 
@@ -2252,6 +2255,9 @@ extern __typeof (gdk_screen_get_height_mm) gdk_screen_get_height_mm __attribute(
 
 #undef gdk_screen_get_number 
 extern __typeof (gdk_screen_get_number) gdk_screen_get_number __attribute((alias("IA__gdk_screen_get_number"), visibility("default")));
+
+#undef gdk_screen_get_primary_monitor 
+extern __typeof (gdk_screen_get_primary_monitor) gdk_screen_get_primary_monitor __attribute((alias("IA__gdk_screen_get_primary_monitor"), visibility("default")));
 
 #undef gdk_screen_get_root_window 
 extern __typeof (gdk_screen_get_root_window) gdk_screen_get_root_window __attribute((alias("IA__gdk_screen_get_root_window"), visibility("default")));

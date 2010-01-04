@@ -58,6 +58,8 @@ typedef struct
   gint wrap_width;
   gint width_chars;
   gint max_width_chars;
+
+  gboolean mnemonics_visible;
 } GtkLabelPrivate;
 
 /* Notes about the handling of links:
@@ -262,6 +264,9 @@ static void     gtk_label_buildable_custom_finished    (GtkBuildable     *builda
 							GObject          *child,
 							const gchar      *tagname,
 							gpointer          user_data);
+
+
+static void connect_mnemonics_visible_notify    (GtkLabel   *label);
 
 
 /* For selectable labels: */
@@ -1037,6 +1042,8 @@ gtk_label_init (GtkLabel *label)
   label->mnemonic_widget = NULL;
   label->mnemonic_window = NULL;
 
+  priv->mnemonics_visible = TRUE;
+
   gtk_label_set_text (label, "");
 }
 
@@ -1486,7 +1493,9 @@ gtk_label_setup_mnemonic (GtkLabel *label,
     }
   
   if (label->mnemonic_keyval == GDK_VoidSymbol)
-    goto done;
+      goto done;
+
+  connect_mnemonics_visible_notify (GTK_LABEL (widget));
 
   toplevel = gtk_widget_get_toplevel (widget);
   if (GTK_WIDGET_TOPLEVEL (toplevel))
@@ -1565,6 +1574,62 @@ label_shortcut_setting_changed (GtkSettings *settings)
 }
 
 static void
+mnemonics_visible_apply (GtkWidget *widget,
+                         gboolean   mnemonics_visible)
+{
+  GtkLabel *label;
+  GtkLabelPrivate *priv;
+
+  label = GTK_LABEL (widget);
+
+  priv = GTK_LABEL_GET_PRIVATE (label);
+
+  mnemonics_visible = mnemonics_visible != FALSE;
+
+  if (priv->mnemonics_visible != mnemonics_visible)
+    {
+      priv->mnemonics_visible = mnemonics_visible;
+
+      gtk_label_recalculate (label);
+    }
+}
+
+static void
+label_mnemonics_visible_traverse_container (GtkWidget *widget,
+                                            gpointer   data)
+{
+  gboolean mnemonics_visible = GPOINTER_TO_INT (data);
+
+  _gtk_label_mnemonics_visible_apply_recursively (widget, mnemonics_visible);
+}
+
+void
+_gtk_label_mnemonics_visible_apply_recursively (GtkWidget *widget,
+                                                gboolean   mnemonics_visible)
+{
+  if (GTK_IS_LABEL (widget))
+    mnemonics_visible_apply (widget, mnemonics_visible);
+  else if (GTK_IS_CONTAINER (widget))
+    gtk_container_forall (GTK_CONTAINER (widget),
+                          label_mnemonics_visible_traverse_container,
+                          GINT_TO_POINTER (mnemonics_visible));
+}
+
+static void
+label_mnemonics_visible_changed (GtkWindow  *window,
+                                 GParamSpec *pspec,
+                                 gpointer    data)
+{
+  gboolean mnemonics_visible;
+
+  g_object_get (window, "mnemonics-visible", &mnemonics_visible, NULL);
+
+  gtk_container_forall (GTK_CONTAINER (window),
+                        label_mnemonics_visible_traverse_container,
+                        GINT_TO_POINTER (mnemonics_visible));
+}
+
+static void
 gtk_label_screen_changed (GtkWidget *widget,
 			  GdkScreen *old_screen)
 {
@@ -1610,7 +1675,7 @@ label_mnemonic_widget_weak_notify (gpointer      data,
 /**
  * gtk_label_set_mnemonic_widget:
  * @label: a #GtkLabel
- * @widget: the target #GtkWidget 
+ * @widget: (allow-none): the target #GtkWidget
  *
  * If the label has been set so that it has an mnemonic key (using
  * i.e. gtk_label_set_markup_with_mnemonic(),
@@ -2420,8 +2485,10 @@ static void
 gtk_label_set_pattern_internal (GtkLabel    *label,
 				const gchar *pattern)
 {
+  GtkLabelPrivate *priv = GTK_LABEL_GET_PRIVATE (label);
   PangoAttrList *attrs;
   gboolean enable_mnemonics;
+  gboolean auto_mnemonics;
 
   g_return_if_fail (GTK_IS_LABEL (label));
 
@@ -2430,9 +2497,14 @@ gtk_label_set_pattern_internal (GtkLabel    *label,
 
   g_object_get (gtk_widget_get_settings (GTK_WIDGET (label)),
 		"gtk-enable-mnemonics", &enable_mnemonics,
+		"gtk-auto-mnemonics", &auto_mnemonics,
 		NULL);
 
-  if (enable_mnemonics && pattern)
+  if (enable_mnemonics && priv->mnemonics_visible && pattern &&
+      (!auto_mnemonics ||
+       (GTK_WIDGET_IS_SENSITIVE (label) &&
+        (!label->mnemonic_widget ||
+         GTK_WIDGET_IS_SENSITIVE (label->mnemonic_widget)))))
     attrs = gtk_label_pattern_to_attrs (label, pattern);
   else
     attrs = NULL;
@@ -4179,6 +4251,38 @@ gtk_label_button_release (GtkWidget      *widget,
 }
 
 static void
+connect_mnemonics_visible_notify (GtkLabel *label)
+{
+  GtkLabelPrivate *priv = GTK_LABEL_GET_PRIVATE (label);
+  GtkWidget *toplevel;
+  gboolean connected;
+
+  toplevel = gtk_widget_get_toplevel (GTK_WIDGET (label));
+
+  if (!GTK_IS_WINDOW (toplevel))
+    return;
+
+  /* always set up this widgets initial value */
+  priv->mnemonics_visible =
+    gtk_window_get_mnemonics_visible (GTK_WINDOW (toplevel));
+
+  connected =
+    GPOINTER_TO_INT (g_object_get_data (G_OBJECT (toplevel),
+                                        "gtk-label-mnemonics-visible-connected"));
+
+  if (!connected)
+    {
+      g_signal_connect (toplevel,
+                        "notify::mnemonics-visible",
+                        G_CALLBACK (label_mnemonics_visible_changed),
+                        label);
+      g_object_set_data (G_OBJECT (toplevel),
+                         "gtk-label-mnemonics-visible-connected",
+                         GINT_TO_POINTER (1));
+    }
+}
+
+static void
 drag_begin_cb (GtkWidget      *widget,
                GdkDragContext *context,
                gpointer        data)
@@ -4850,8 +4954,8 @@ gtk_label_get_selection_bounds (GtkLabel  *label,
  * pixel positions, in combination with gtk_label_get_layout_offsets().
  * The returned layout is owned by the label so need not be
  * freed by the caller.
- * 
- * Return value: the #PangoLayout for this label
+ *
+ * Return value: (transfer none): the #PangoLayout for this label
  **/
 PangoLayout*
 gtk_label_get_layout (GtkLabel *label)
@@ -5707,7 +5811,7 @@ gtk_label_activate_current_link (GtkLabel *label)
           if (window &&
               window->default_widget != widget &&
               !(widget == window->focus_widget &&
-                (!window->default_widget || !GTK_WIDGET_SENSITIVE (window->default_widget))))
+                (!window->default_widget || !GTK_WIDGET_IS_SENSITIVE (window->default_widget))))
             gtk_window_activate_default (window);
         }
     }

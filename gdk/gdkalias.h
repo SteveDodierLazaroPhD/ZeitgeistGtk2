@@ -1805,6 +1805,9 @@ extern __typeof (gdk_keymap_lookup_key) IA__gdk_keymap_lookup_key __attribute((v
 extern __typeof (gdk_keymap_translate_keyboard_state) IA__gdk_keymap_translate_keyboard_state __attribute((visibility("hidden")));
 #define gdk_keymap_translate_keyboard_state IA__gdk_keymap_translate_keyboard_state
 
+extern __typeof (gdk_keymap_map_virtual_modifiers) IA__gdk_keymap_map_virtual_modifiers __attribute((visibility("hidden")));
+#define gdk_keymap_map_virtual_modifiers IA__gdk_keymap_map_virtual_modifiers
+
 extern __typeof (gdk_keyval_convert_case) IA__gdk_keyval_convert_case __attribute((visibility("hidden")));
 #define gdk_keyval_convert_case IA__gdk_keyval_convert_case
 
@@ -2249,6 +2252,9 @@ extern __typeof (gdk_screen_get_height_mm) IA__gdk_screen_get_height_mm __attrib
 
 extern __typeof (gdk_screen_get_number) IA__gdk_screen_get_number __attribute((visibility("hidden")));
 #define gdk_screen_get_number IA__gdk_screen_get_number
+
+extern __typeof (gdk_screen_get_primary_monitor) IA__gdk_screen_get_primary_monitor __attribute((visibility("hidden")));
+#define gdk_screen_get_primary_monitor IA__gdk_screen_get_primary_monitor
 
 extern __typeof (gdk_screen_get_root_window) IA__gdk_screen_get_root_window __attribute((visibility("hidden")));
 #define gdk_screen_get_root_window IA__gdk_screen_get_root_window
