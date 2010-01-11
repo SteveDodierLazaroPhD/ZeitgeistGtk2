@@ -246,7 +246,7 @@ gtk_container_class_init (GtkContainerClass *class)
                                                       P_("Border width"),
                                                       P_("The width of the empty border outside the containers children"),
 						      0,
-						      G_MAXINT,
+						      65535,
 						      0,
                                                       GTK_PARAM_READWRITE));
   g_object_class_install_property (gobject_class,
@@ -1261,7 +1261,7 @@ gtk_container_set_resize_mode (GtkContainer  *container,
   g_return_if_fail (GTK_IS_CONTAINER (container));
   g_return_if_fail (resize_mode <= GTK_RESIZE_IMMEDIATE);
   
-  if (GTK_WIDGET_TOPLEVEL (container) &&
+  if (gtk_widget_is_toplevel (GTK_WIDGET (container)) &&
       resize_mode == GTK_RESIZE_PARENT)
     {
       resize_mode = GTK_RESIZE_QUEUE;
@@ -1380,7 +1380,7 @@ _gtk_container_queue_resize (GtkContainer *container)
   if (resize_container)
     {
       if (GTK_WIDGET_VISIBLE (resize_container) &&
- 	  (GTK_WIDGET_TOPLEVEL (resize_container) || GTK_WIDGET_REALIZED (resize_container)))
+ 	  (gtk_widget_is_toplevel (GTK_WIDGET (resize_container)) || GTK_WIDGET_REALIZED (resize_container)))
 	{
 	  switch (resize_container->resize_mode)
 	    {
@@ -1690,11 +1690,14 @@ gchar*
 _gtk_container_child_composite_name (GtkContainer *container,
 				    GtkWidget    *child)
 {
+  gboolean composite_child;
+
   g_return_val_if_fail (GTK_IS_CONTAINER (container), NULL);
   g_return_val_if_fail (GTK_IS_WIDGET (child), NULL);
   g_return_val_if_fail (child->parent == GTK_WIDGET (container), NULL);
 
-  if (GTK_WIDGET_COMPOSITE_CHILD (child))
+  g_object_get (child, "composite-child", &composite_child, NULL);
+  if (composite_child)
     {
       static GQuark quark_composite_name = 0;
       gchar *name;
@@ -1808,7 +1811,7 @@ gtk_container_focus (GtkWidget        *widget,
 
   return_val = FALSE;
 
-  if (GTK_WIDGET_CAN_FOCUS (container))
+  if (gtk_widget_get_can_focus (GTK_WIDGET (container)))
     {
       if (!GTK_WIDGET_HAS_FOCUS (container))
 	{
@@ -2071,13 +2074,13 @@ gtk_container_focus_sort_up_down (GtkContainer     *container,
 	}
       else
 	{
-	  if (GTK_WIDGET_NO_WINDOW (widget))
+	  if (!gtk_widget_get_has_window (widget))
 	    compare.x = widget->allocation.x + widget->allocation.width / 2;
 	  else
 	    compare.x = widget->allocation.width / 2;
 	}
       
-      if (GTK_WIDGET_NO_WINDOW (widget))
+      if (!gtk_widget_get_has_window (widget))
 	compare.y = (direction == GTK_DIR_DOWN) ? widget->allocation.y : widget->allocation.y + widget->allocation.height;
       else
 	compare.y = (direction == GTK_DIR_DOWN) ? 0 : + widget->allocation.height;
@@ -2198,13 +2201,13 @@ gtk_container_focus_sort_left_right (GtkContainer     *container,
 	}
       else
 	{
-	  if (GTK_WIDGET_NO_WINDOW (widget))
+	  if (!gtk_widget_get_has_window (widget))
 	    compare.y = widget->allocation.y + widget->allocation.height / 2;
 	  else
 	    compare.y = widget->allocation.height / 2;
 	}
       
-      if (GTK_WIDGET_NO_WINDOW (widget))
+      if (!gtk_widget_get_has_window (widget))
 	compare.x = (direction == GTK_DIR_RIGHT) ? widget->allocation.x : widget->allocation.x + widget->allocation.width;
       else
 	compare.x = (direction == GTK_DIR_RIGHT) ? 0 : widget->allocation.width;
@@ -2667,7 +2670,7 @@ gtk_container_map (GtkWidget *widget)
 			gtk_container_map_child,
 			NULL);
 
-  if (!GTK_WIDGET_NO_WINDOW (widget))
+  if (gtk_widget_get_has_window (widget))
     gdk_window_show (widget->window);
 }
 
@@ -2676,7 +2679,7 @@ gtk_container_unmap (GtkWidget *widget)
 {
   GTK_WIDGET_UNSET_FLAGS (widget, GTK_MAPPED);
 
-  if (!GTK_WIDGET_NO_WINDOW (widget))
+  if (gtk_widget_get_has_window (widget))
     gdk_window_hide (widget->window);
   else
     gtk_container_forall (GTK_CONTAINER (widget),
@@ -2718,7 +2721,7 @@ gtk_container_propagate_expose (GtkContainer   *container,
   g_assert (child->parent == GTK_WIDGET (container));
   
   if (GTK_WIDGET_DRAWABLE (child) &&
-      GTK_WIDGET_NO_WINDOW (child) &&
+      !gtk_widget_get_has_window (child) &&
       (child->window == event->window))
     {
       child_event = gdk_event_new (GDK_EXPOSE);

@@ -4087,9 +4087,6 @@ extern __typeof (gtk_file_selection_show_fileop_buttons) gtk_file_selection_show
 #endif
 #if IN_HEADER(__GTK_FIXED_H__)
 #if IN_FILE(__GTK_FIXED_C__)
-#undef gtk_fixed_get_has_window 
-extern __typeof (gtk_fixed_get_has_window) gtk_fixed_get_has_window __attribute((alias("IA__gtk_fixed_get_has_window"), visibility("default")));
-
 #undef gtk_fixed_get_type 
 extern __typeof (gtk_fixed_get_type) gtk_fixed_get_type __attribute((alias("IA__gtk_fixed_get_type"), visibility("default")));
 
@@ -4102,9 +4099,14 @@ extern __typeof (gtk_fixed_new) gtk_fixed_new __attribute((alias("IA__gtk_fixed_
 #undef gtk_fixed_put 
 extern __typeof (gtk_fixed_put) gtk_fixed_put __attribute((alias("IA__gtk_fixed_put"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_fixed_set_has_window 
 extern __typeof (gtk_fixed_set_has_window) gtk_fixed_set_has_window __attribute((alias("IA__gtk_fixed_set_has_window"), visibility("default")));
 
+#undef gtk_fixed_get_has_window 
+extern __typeof (gtk_fixed_get_has_window) gtk_fixed_get_has_window __attribute((alias("IA__gtk_fixed_get_has_window"), visibility("default")));
+
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_FONT_BUTTON_H__)
@@ -6455,6 +6457,22 @@ extern __typeof (gtk_object_destroy) gtk_object_destroy __attribute((alias("IA__
 
 #undef gtk_object_get_type 
 extern __typeof (gtk_object_get_type) gtk_object_get_type __attribute((alias("IA__gtk_object_get_type"), visibility("default")));
+
+#endif
+#endif
+#if IN_HEADER(__GTK_OFFSCREEN_WINDOW_H__)
+#if IN_FILE(__GTK_OFFSCREEN_WINDOW_C__)
+#undef gtk_offscreen_window_get_type 
+extern __typeof (gtk_offscreen_window_get_type) gtk_offscreen_window_get_type __attribute((alias("IA__gtk_offscreen_window_get_type"), visibility("default")));
+
+#undef gtk_offscreen_window_new 
+extern __typeof (gtk_offscreen_window_new) gtk_offscreen_window_new __attribute((alias("IA__gtk_offscreen_window_new"), visibility("default")));
+
+#undef gtk_offscreen_window_get_pixmap 
+extern __typeof (gtk_offscreen_window_get_pixmap) gtk_offscreen_window_get_pixmap __attribute((alias("IA__gtk_offscreen_window_get_pixmap"), visibility("default")));
+
+#undef gtk_offscreen_window_get_pixbuf 
+extern __typeof (gtk_offscreen_window_get_pixbuf) gtk_offscreen_window_get_pixbuf __attribute((alias("IA__gtk_offscreen_window_get_pixbuf"), visibility("default")));
 
 #endif
 #endif

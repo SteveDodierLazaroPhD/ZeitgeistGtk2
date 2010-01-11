@@ -224,6 +224,7 @@
 *tp++ = gtk_number_up_layout_get_type();
 *tp++ = gtk_object_flags_get_type();
 *tp++ = gtk_object_get_type();
+*tp++ = gtk_offscreen_window_get_type();
 *tp++ = gtk_orientable_get_type();
 *tp++ = gtk_orientation_get_type();
 *tp++ = gtk_pack_direction_get_type();

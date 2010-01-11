@@ -1489,7 +1489,7 @@ gtk_combo_box_menu_position_below (GtkMenu  *menu,
 
   sx = sy = 0;
 
-  if (GTK_WIDGET_NO_WINDOW (child))
+  if (!gtk_widget_get_has_window (child))
     {
       sx += child->allocation.x;
       sy += child->allocation.y;
@@ -1652,7 +1652,7 @@ gtk_combo_box_list_position (GtkComboBox *combo_box,
 
   *x = *y = 0;
 
-  if (GTK_WIDGET_NO_WINDOW (sample))
+  if (!gtk_widget_get_has_window (sample))
     {
       *x += sample->allocation.x;
       *y += sample->allocation.y;
@@ -5001,10 +5001,12 @@ gtk_combo_box_get_active_iter (GtkComboBox     *combo_box,
 /**
  * gtk_combo_box_set_active_iter:
  * @combo_box: A #GtkComboBox
- * @iter: The #GtkTreeIter
+ * @iter: The #GtkTreeIter, or %NULL
  * 
- * Sets the current active item to be the one referenced by @iter. 
- * @iter must correspond to a path of depth one.
+ * Sets the current active item to be the one referenced by @iter, or
+ * unsets the active item if @iter is %NULL.
+ *
+ * @iter must correspond to a path of depth one, or be %NULL.
  * 
  * Since: 2.4
  */
@@ -5012,11 +5014,13 @@ void
 gtk_combo_box_set_active_iter (GtkComboBox     *combo_box,
                                GtkTreeIter     *iter)
 {
-  GtkTreePath *path;
+  GtkTreePath *path = NULL;
 
   g_return_if_fail (GTK_IS_COMBO_BOX (combo_box));
 
-  path = gtk_tree_model_get_path (gtk_combo_box_get_model (combo_box), iter);
+  if (iter)
+    path = gtk_tree_model_get_path (gtk_combo_box_get_model (combo_box), iter);
+
   gtk_combo_box_set_active_internal (combo_box, path);
   gtk_tree_path_free (path);
 }

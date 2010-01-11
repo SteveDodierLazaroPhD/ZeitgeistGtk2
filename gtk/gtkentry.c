@@ -171,6 +171,7 @@ enum {
   TOGGLE_OVERWRITE,
   ICON_PRESS,
   ICON_RELEASE,
+  PREEDIT_CHANGED,
   LAST_SIGNAL
 };
 
@@ -1549,6 +1550,27 @@ gtk_entry_class_init (GtkEntryClass *class)
                   G_TYPE_NONE, 2,
                   GTK_TYPE_ENTRY_ICON_POSITION,
                   GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GtkEntry::preedit-changed:
+   * @entry: the object which received the signal
+   * @preedit: the current preedit string
+   *
+   * If an input method is used, the typed text will not immediately
+   * be committed to the buffer. So if you are interested in the text,
+   * connect to this signal.
+   *
+   * Since: 2.20
+   */
+  signals[PREEDIT_CHANGED] =
+    g_signal_new_class_handler (I_("preedit-changed"),
+                                G_OBJECT_CLASS_TYPE (gobject_class),
+                                G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                NULL,
+                                NULL, NULL,
+                                _gtk_marshal_VOID__STRING,
+                                G_TYPE_NONE, 1,
+                                G_TYPE_STRING);
 
 
   /*
@@ -4537,7 +4559,7 @@ gtk_entry_real_insert_text (GtkEditable *editable,
    * following signal handlers: buffer_inserted_text(), buffer_notify_display_text(),
    * buffer_notify_text(), buffer_notify_length()
    */
-  n_inserted = gtk_entry_buffer_insert_text (GTK_ENTRY_GET_PRIVATE (editable)->buffer, *position, new_text, n_chars);
+  n_inserted = gtk_entry_buffer_insert_text (get_buffer (GTK_ENTRY (editable)), *position, new_text, n_chars);
 
   if (n_inserted != n_chars)
       gtk_widget_error_bell (GTK_WIDGET (editable));
@@ -5154,6 +5176,7 @@ gtk_entry_preedit_changed_cb (GtkIMContext *context,
       gtk_im_context_get_preedit_string (entry->im_context,
                                          &preedit_string, NULL,
                                          &cursor_pos);
+      g_signal_emit (entry, signals[PREEDIT_CHANGED], 0, preedit_string);
       entry->preedit_length = strlen (preedit_string);
       cursor_pos = CLAMP (cursor_pos, 0, g_utf8_strlen (preedit_string, -1));
       entry->preedit_cursor = cursor_pos;
@@ -6568,7 +6591,7 @@ gtk_entry_new_with_buffer (GtkEntryBuffer *buffer)
  * 
  * Return value: a new #GtkEntry
  *
- * Deprecated: Use gtk_entry_set_max_length() instead.
+ * Deprecated: 2.0: Use gtk_entry_set_max_length() instead.
  **/
 GtkWidget*
 gtk_entry_new_with_max_length (gint max)

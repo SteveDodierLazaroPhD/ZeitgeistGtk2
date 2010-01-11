@@ -51,10 +51,7 @@ bin_PROGRAMS = gdk-pixbuf-csource$(EXEEXT) \
 @HAVE_INTROSPECTION_TRUE@am__append_2 = $(dist_gir_DATA) $(typelibs_DATA)
 subdir = gdk-pixbuf
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/gtk-doc.m4 \
-	$(top_srcdir)/m4/introspection.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
 	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -1452,9 +1449,9 @@ MAINTAINERCLEANFILES = gdk-pixbuf-aliasdef.c gdk-pixbuf-enum-types.h \
 @HAVE_INTROSPECTION_TRUE@    $(addprefix $(srcdir)/,$(libgdk_pixbufinclude_HEADERS)) \
 @HAVE_INTROSPECTION_TRUE@    $(addprefix $(srcdir)/,$(libgdk_pixbuf_2_0_la_SOURCES))
 
-@HAVE_INTROSPECTION_TRUE@girdir = $(INTROSPECTION_GIRDIR)
+@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
 @HAVE_INTROSPECTION_TRUE@dist_gir_DATA = $(INTROSPECTION_GIRS)
-@HAVE_INTROSPECTION_TRUE@typelibsdir = $(INTROSPECTION_TYPELIBDIR)
+@HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0
 @HAVE_INTROSPECTION_TRUE@typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 @CROSS_COMPILING_FALSE@RUN_QUERY_LOADER_TEST = test -z "$(DESTDIR)"
 @CROSS_COMPILING_TRUE@RUN_QUERY_LOADER_TEST = false
@@ -2354,7 +2351,7 @@ test-report perf-report full-report:	${TEST_PROGS}
 .PHONY: test test-report perf-report full-report
 # run make test as part of make check
 check-local: test
-include $(INTROSPECTION_MAKEFILE)
+-include $(INTROSPECTION_MAKEFILE)
 
 @OS_WIN32_TRUE@gdk_pixbuf-win32-res.o : gdk_pixbuf.rc
 @OS_WIN32_TRUE@	$(WINDRES) gdk_pixbuf.rc $@

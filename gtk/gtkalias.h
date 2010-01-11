@@ -4084,9 +4084,6 @@ extern __typeof (gtk_file_selection_show_fileop_buttons) IA__gtk_file_selection_
 #endif
 #if IN_HEADER(__GTK_FIXED_H__)
 #if IN_FILE(__GTK_FIXED_C__)
-extern __typeof (gtk_fixed_get_has_window) IA__gtk_fixed_get_has_window __attribute((visibility("hidden")));
-#define gtk_fixed_get_has_window IA__gtk_fixed_get_has_window
-
 extern __typeof (gtk_fixed_get_type) IA__gtk_fixed_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_fixed_get_type IA__gtk_fixed_get_type
 
@@ -4099,9 +4096,14 @@ extern __typeof (gtk_fixed_new) IA__gtk_fixed_new __attribute((visibility("hidde
 extern __typeof (gtk_fixed_put) IA__gtk_fixed_put __attribute((visibility("hidden")));
 #define gtk_fixed_put IA__gtk_fixed_put
 
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_fixed_set_has_window) IA__gtk_fixed_set_has_window __attribute((visibility("hidden")));
 #define gtk_fixed_set_has_window IA__gtk_fixed_set_has_window
 
+extern __typeof (gtk_fixed_get_has_window) IA__gtk_fixed_get_has_window __attribute((visibility("hidden")));
+#define gtk_fixed_get_has_window IA__gtk_fixed_get_has_window
+
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_FONT_BUTTON_H__)
@@ -6452,6 +6454,22 @@ extern __typeof (gtk_object_destroy) IA__gtk_object_destroy __attribute((visibil
 
 extern __typeof (gtk_object_get_type) IA__gtk_object_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_object_get_type IA__gtk_object_get_type
+
+#endif
+#endif
+#if IN_HEADER(__GTK_OFFSCREEN_WINDOW_H__)
+#if IN_FILE(__GTK_OFFSCREEN_WINDOW_C__)
+extern __typeof (gtk_offscreen_window_get_type) IA__gtk_offscreen_window_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gtk_offscreen_window_get_type IA__gtk_offscreen_window_get_type
+
+extern __typeof (gtk_offscreen_window_new) IA__gtk_offscreen_window_new __attribute((visibility("hidden")));
+#define gtk_offscreen_window_new IA__gtk_offscreen_window_new
+
+extern __typeof (gtk_offscreen_window_get_pixmap) IA__gtk_offscreen_window_get_pixmap __attribute((visibility("hidden")));
+#define gtk_offscreen_window_get_pixmap IA__gtk_offscreen_window_get_pixmap
+
+extern __typeof (gtk_offscreen_window_get_pixbuf) IA__gtk_offscreen_window_get_pixbuf __attribute((visibility("hidden")));
+#define gtk_offscreen_window_get_pixbuf IA__gtk_offscreen_window_get_pixbuf
 
 #endif
 #endif

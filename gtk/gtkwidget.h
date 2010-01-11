@@ -140,22 +140,30 @@ typedef enum
 
 /* Macros for extracting various fields from GtkWidget and GtkWidgetClass.
  */
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_TYPE:
  * @wid: a #GtkWidget.
  *
  * Gets the type of a widget.
+ *
+ * Deprecated: 2.20: Use G_OBJECT_TYPE() instead.
  */
 #define GTK_WIDGET_TYPE(wid)		  (GTK_OBJECT_TYPE (wid))
+#endif
 
 /**
  * GTK_WIDGET_STATE:
  * @wid: a #GtkWidget.
  *
  * Returns the current state of the widget, as a #GtkStateType.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_state() instead.
  */
 #define GTK_WIDGET_STATE(wid)		  (GTK_WIDGET (wid)->state)
+/* FIXME: Deprecating GTK_WIDGET_STATE requires fixing GTK internals. */
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_SAVED_STATE:
  * @wid: a #GtkWidget.
@@ -165,8 +173,11 @@ typedef enum
  * The saved state will be restored when a widget gets sensitive
  * again, after it has been made insensitive with gtk_widget_set_state()
  * or gtk_widget_set_sensitive().
+ *
+ * Deprecated: 2.20: Do not used it.
  */
 #define GTK_WIDGET_SAVED_STATE(wid)	  (GTK_WIDGET (wid)->saved_state)
+#endif
 
 
 /* Macros for extracting the widget flags from GtkWidget.
@@ -176,24 +187,34 @@ typedef enum
  * @wid: a #GtkWidget.
  *
  * Returns the widget flags from @wid.
+ *
+ * Deprecated: 2.20: Do not use it.
  */
 #define GTK_WIDGET_FLAGS(wid)		  (GTK_OBJECT_FLAGS (wid))
+/* FIXME: Deprecating GTK_WIDGET_FLAGS requires fixing GTK internals. */
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_TOPLEVEL:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is a toplevel widget.
+ *
+ * Deprecated: 2.20: Use gtk_widget_is_toplevel() instead.
  */
 #define GTK_WIDGET_TOPLEVEL(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_TOPLEVEL) != 0)
+#endif
 
 /**
  * GTK_WIDGET_NO_WINDOW:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget doesn't have an own #GdkWindow.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_has_window() instead.
  */
 #define GTK_WIDGET_NO_WINDOW(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_NO_WINDOW) != 0)
+/* FIXME: Deprecating GTK_WIDGET_NO_WINDOW requires fixing GTK internals. */
 
 /**
  * GTK_WIDGET_REALIZED:
@@ -251,13 +272,18 @@ typedef enum
  */
 #define GTK_WIDGET_IS_SENSITIVE(wid)	  (GTK_WIDGET_SENSITIVE (wid) && \
 					   GTK_WIDGET_PARENT_SENSITIVE (wid))
+
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_CAN_FOCUS:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is able to handle focus grabs.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_can_focus() instead.
  */
 #define GTK_WIDGET_CAN_FOCUS(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_CAN_FOCUS) != 0)
+#endif
 
 /**
  * GTK_WIDGET_HAS_FOCUS:
@@ -268,31 +294,43 @@ typedef enum
  */
 #define GTK_WIDGET_HAS_FOCUS(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_HAS_FOCUS) != 0)
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_CAN_DEFAULT:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is allowed to receive the default action
  * via gtk_widget_grab_default().
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_can_default() instead.
  */
 #define GTK_WIDGET_CAN_DEFAULT(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_CAN_DEFAULT) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_HAS_DEFAULT:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget currently is receiving the default action.
+ *
+ * Deprecated: 2.20: Use gtk_widget_has_default() instead.
  */
 #define GTK_WIDGET_HAS_DEFAULT(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_HAS_DEFAULT) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_HAS_GRAB:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is in the grab_widgets stack, and will be
  * the preferred one for receiving events other than ones of cosmetic value.
+ *
+ * Deprecated: 2.20: Use gtk_widget_has_grab() instead.
  */
 #define GTK_WIDGET_HAS_GRAB(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_HAS_GRAB) != 0)
+#endif
 
 /**
  * GTK_WIDGET_RC_STYLE:
@@ -302,39 +340,54 @@ typedef enum
  * mechanism.
  */
 #define GTK_WIDGET_RC_STYLE(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_RC_STYLE) != 0)
-
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_COMPOSITE_CHILD:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is a composite child of its parent.
+ *
+ * Deprecated: 2.20: Use the "composite-child" property instead.
  */
 #define GTK_WIDGET_COMPOSITE_CHILD(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_COMPOSITE_CHILD) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_APP_PAINTABLE:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the #GTK_APP_PAINTABLE flag has been set on the widget.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_app_paintable() instead.
  */
 #define GTK_WIDGET_APP_PAINTABLE(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_APP_PAINTABLE) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_RECEIVES_DEFAULT:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget when focused will receive the default action
  * even if there is a different widget set as default.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_receives_default() instead.
  */
 #define GTK_WIDGET_RECEIVES_DEFAULT(wid)  ((GTK_WIDGET_FLAGS (wid) & GTK_RECEIVES_DEFAULT) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_DOUBLE_BUFFERED:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the #GTK_DOUBLE_BUFFERED flag has been set on the widget.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_double_buffered() instead.
  */
 #define GTK_WIDGET_DOUBLE_BUFFERED(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_DOUBLE_BUFFERED) != 0)
+#endif
 
 
 /* Macros for setting and clearing widget flags.
@@ -1039,7 +1092,7 @@ void        gtk_widget_modify_font        (GtkWidget            *widget,
  *
  * Equivalent to <literal>gtk_widget_set_style (widget, NULL)</literal>.
  *
- * Deprecated: Use gtk_widget_set_style() with a %NULL @style argument instead.
+ * Deprecated: 2.0: Use gtk_widget_set_style() with a %NULL @style argument instead.
  */
 #define gtk_widget_set_rc_style(widget)          (gtk_widget_set_style (widget, NULL))
 
@@ -1049,7 +1102,7 @@ void        gtk_widget_modify_font        (GtkWidget            *widget,
  *
  * Equivalent to <literal>gtk_widget_set_style (widget, NULL)</literal>.
  *
- * Deprecated: Use gtk_widget_set_style() with a %NULL @style argument instead.
+ * Deprecated: 2.0: Use gtk_widget_set_style() with a %NULL @style argument instead.
  */
 #define gtk_widget_restore_default_style(widget) (gtk_widget_set_style (widget, NULL))
 #endif

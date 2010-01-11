@@ -488,7 +488,7 @@ gail_widget_ref_state_set (AtkObject *accessible)
           atk_state_set_add_state (state_set, ATK_STATE_ENABLED);
         }
   
-      if (GTK_WIDGET_CAN_FOCUS (widget))
+      if (gtk_widget_get_can_focus (widget))
         {
           atk_state_set_add_state (state_set, ATK_STATE_FOCUSABLE);
         }
@@ -529,7 +529,7 @@ gail_widget_ref_state_set (AtkObject *accessible)
           if (focus_obj == NULL)
             atk_state_set_add_state (state_set, ATK_STATE_FOCUSED);
         }
-      if (GTK_WIDGET_HAS_DEFAULT(widget))
+      if (gtk_widget_has_default (widget))
         {
           atk_state_set_add_state (state_set, ATK_STATE_DEFAULT);
         }
@@ -735,11 +735,11 @@ gail_widget_grab_focus (AtkComponent   *component)
   GtkWidget *toplevel;
 
   gail_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
-  if (GTK_WIDGET_CAN_FOCUS (widget))
+  if (gtk_widget_get_can_focus (widget))
     {
       gtk_widget_grab_focus (widget);
       toplevel = gtk_widget_get_toplevel (widget);
-      if (GTK_WIDGET_TOPLEVEL (toplevel))
+      if (gtk_widget_is_toplevel (toplevel))
 	{
 #ifdef GDK_WINDOWING_X11
 	  gtk_window_present_with_time (GTK_WINDOW (toplevel), gdk_x11_get_server_time (widget->window));
@@ -777,7 +777,7 @@ gail_widget_set_extents (AtkComponent   *component,
     return FALSE;
   gail_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
 
-  if (GTK_WIDGET_TOPLEVEL (widget))
+  if (gtk_widget_is_toplevel (widget))
     {
       if (coord_type == ATK_XY_WINDOW)
         {
@@ -821,7 +821,7 @@ gail_widget_set_position (AtkComponent   *component,
     return FALSE;
   gail_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
 
-  if (GTK_WIDGET_TOPLEVEL (widget))
+  if (gtk_widget_is_toplevel (widget))
     {
       if (coord_type == ATK_XY_WINDOW)
         {
@@ -862,7 +862,7 @@ gail_widget_set_size (AtkComponent   *component,
     return FALSE;
   gail_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
 
-  if (GTK_WIDGET_TOPLEVEL (widget))
+  if (gtk_widget_is_toplevel (widget))
     {
       gtk_widget_set_size_request (widget, width, height);
       return TRUE;

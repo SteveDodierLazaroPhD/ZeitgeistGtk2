@@ -1,6 +1,6 @@
 ## Makefile.am for gtk+/gdk
 include $(top_srcdir)/Makefile.decl
-include $(INTROSPECTION_MAKEFILE)
+-include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = \
    --add-include-path=../gdk-pixbuf
@@ -207,11 +207,11 @@ Gdk_2_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_files))
 Gdk_2_0_gir_CFLAGS = $(INCLUDES)
 INTROSPECTION_GIRS += Gdk-2.0.gir
 
-girdir = $(INTROSPECTION_GIRDIR)
+girdir = $(datadir)/gir-1.0
 dist_gir_DATA = $(INTROSPECTION_GIRS)
 
-typelibsdir = $(INTROSPECTION_TYPELIBDIR)
-typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
+typelibsdir = $(libdir)/girepository-1.0
+typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
 CLEANFILES += $(dist_gir_DATA) $(typelibs_DATA)
 endif

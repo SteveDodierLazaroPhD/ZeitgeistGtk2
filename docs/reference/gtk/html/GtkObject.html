@@ -102,8 +102,8 @@
 #include &lt;gtk/gtk.h&gt;
 
                     <a class="link" href="GtkObject.html#GtkObject-struct" title="GtkObject">GtkObject</a>;
-#define             <a class="link" href="GtkObject.html#GTK-OBJECT-TYPE:CAPS" title="GTK_OBJECT_TYPE()">GTK_OBJECT_TYPE</a>                     (object)
-#define             <a class="link" href="GtkObject.html#GTK-OBJECT-TYPE-NAME:CAPS" title="GTK_OBJECT_TYPE_NAME()">GTK_OBJECT_TYPE_NAME</a>                (object)
+#define             <a class="link" href="GtkObject.html#GTK-OBJECT-TYPE:CAPS" title="GTK_OBJECT_TYPE">GTK_OBJECT_TYPE</a>
+#define             <a class="link" href="GtkObject.html#GTK-OBJECT-TYPE-NAME:CAPS" title="GTK_OBJECT_TYPE_NAME">GTK_OBJECT_TYPE_NAME</a>
 enum                <a class="link" href="GtkObject.html#GtkObjectFlags" title="enum GtkObjectFlags">GtkObjectFlags</a>;
 #define             <a class="link" href="GtkObject.html#GTK-OBJECT-FLAGS:CAPS" title="GTK_OBJECT_FLAGS()">GTK_OBJECT_FLAGS</a>                    (obj)
 #define             <a class="link" href="GtkObject.html#GTK-OBJECT-FLOATING:CAPS" title="GTK_OBJECT_FLOATING()">GTK_OBJECT_FLOATING</a>                 (obj)
@@ -170,7 +170,7 @@ enum                <a class="link" href="GtkObject.html#GtkArgFlags" title="enu
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
          +----GtkObject
-               +----<a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
+               +----<a href="http://library.gnome.org/devel/gtk/unstable/GtkWidget.html">GtkWidget</a>
                +----<a class="link" href="GtkAdjustment.html" title="GtkAdjustment">GtkAdjustment</a>
                +----<a class="link" href="GtkCellRenderer.html" title="GtkCellRenderer">GtkCellRenderer</a>
                +----<a class="link" href="gtk-gtkfilefilter.html#GtkFileFilter">GtkFileFilter</a>
@@ -195,7 +195,7 @@ enum                <a class="link" href="GtkObject.html#GtkArgFlags" title="enu
 <div class="refsect1" title="Description">
 <a name="GtkObject.description"></a><h2>Description</h2>
 <div class="refsect2" title="Description">
-<a name="id1144524"></a><h3>Description</h3>
+<a name="id1150688"></a><h3>Description</h3>
 <p>
 <a class="link" href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> is the base class for all widgets, and for a few
 non-widget objects such as <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>. <a class="link" href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> predates
@@ -304,35 +304,41 @@ The object itself.  You should never use these members directly -
 </p>
 </div>
 <hr>
-<div class="refsect2" title="GTK_OBJECT_TYPE()">
-<a name="GTK-OBJECT-TYPE:CAPS"></a><h3>GTK_OBJECT_TYPE()</h3>
-<pre class="programlisting">#define GTK_OBJECT_TYPE(object)		  (G_TYPE_FROM_INSTANCE (object))
+<div class="refsect2" title="GTK_OBJECT_TYPE">
+<a name="GTK-OBJECT-TYPE:CAPS"></a><h3>GTK_OBJECT_TYPE</h3>
+<pre class="programlisting">#define GTK_OBJECT_TYPE                   G_OBJECT_TYPE
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_OBJECT_TYPE</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-TYPE:CAPS"><code class="function">G_OBJECT_TYPE()</code></a> instead.</p>
+</div>
 <p>
-Gets the type of an object.
-</p>
+Gets the type of an object.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>.
+<td> a <a class="link" href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>.
 </td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="GTK_OBJECT_TYPE_NAME()">
-<a name="GTK-OBJECT-TYPE-NAME:CAPS"></a><h3>GTK_OBJECT_TYPE_NAME()</h3>
-<pre class="programlisting">#define GTK_OBJECT_TYPE_NAME(object)	  (g_type_name (GTK_OBJECT_TYPE (object)))
+<div class="refsect2" title="GTK_OBJECT_TYPE_NAME">
+<a name="GTK-OBJECT-TYPE-NAME:CAPS"></a><h3>GTK_OBJECT_TYPE_NAME</h3>
+<pre class="programlisting">#define GTK_OBJECT_TYPE_NAME              G_OBJECT_TYPE_NAME
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_OBJECT_TYPE_NAME</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-TYPE-NAME:CAPS"><code class="function">G_OBJECT_TYPE_NAME()</code></a> instead.</p>
+</div>
 <p>
-Gets the name of an objects type.
-</p>
+Gets the name of an object's type.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>.
+<td> a <a class="link" href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a>.
 </td>
 </tr></tbody>
 </table></div>

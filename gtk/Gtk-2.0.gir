@@ -4559,7 +4559,7 @@ can do any preparation which are necessary before showing @page."
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="1902">
+    <constant name="BINARY_AGE" value="1903">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -15044,7 +15044,8 @@ also set the original color to be @color too."
       <method name="get_color"
               c:identifier="gtk_color_selection_get_color"
               doc="Sets @color to be the current color in the GtkColorSelection widget."
-              deprecated="Use gtk_color_selection_get_current_color() instead.">
+              deprecated="Use gtk_color_selection_get_current_color() instead."
+              deprecated-version="2.0">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -15638,7 +15639,8 @@ Sets the active item of @combo_box to be the item at @index."
       </method>
       <method name="set_active_iter"
               c:identifier="gtk_combo_box_set_active_iter"
-              doc="Sets the current active item to be the one referenced by @iter."
+              doc="Sets the current active item to be the one referenced by @iter, or
+unsets the active item if @iter is %NULL."
               version="2.4">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -18554,7 +18556,8 @@ it from being inserted entirely.">
                    doc="(other than the maximum length of entries.) The value passed in will
 be clamped to the range 0-65536.
 Creates a new #GtkEntry widget with the given maximum length."
-                   deprecated="Use gtk_entry_set_max_length() instead.">
+                   deprecated="Use gtk_entry_set_max_length() instead."
+                   deprecated-version="2.0">
         <return-value transfer-ownership="full">
           <type name="Entry" c:type="GtkWidget*"/>
         </return-value>
@@ -20043,6 +20046,20 @@ to this signal and append your menuitems to the @menu.">
         <parameters>
           <parameter name="menu" transfer-ownership="none">
             <type name="Menu" c:type="GtkMenu"/>
+          </parameter>
+        </parameters>
+      </glib:signal>
+      <glib:signal name="preedit-changed"
+                   doc="If an input method is used, the typed text will not immediately
+be committed to the buffer. So if you are interested in the text,
+connect to this signal."
+                   version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="preedit" transfer-ownership="none">
+            <type name="utf8" c:type="gchararray"/>
           </parameter>
         </parameters>
       </glib:signal>
@@ -23586,7 +23603,9 @@ created with no separate #GdkWindow). This function must be called
 while the #GtkFixed is not realized, for instance, immediately after the
 window is created.
 This function was added to provide an easy migration path for
-older applications which may expect #GtkFixed to have a separate window.">
+older applications which may expect #GtkFixed to have a separate window."
+              deprecated="Use gtk_widget_set_has_window() instead."
+              deprecated-version="2.20">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -23599,7 +23618,9 @@ older applications which may expect #GtkFixed to have a separate window.">
       <method name="get_has_window"
               c:identifier="gtk_fixed_get_has_window"
               doc="Gets whether the #GtkFixed has its own #GdkWindow.
-See gtk_fixed_set_has_window().">
+See gtk_fixed_set_has_window()."
+              deprecated="Use gtk_widget_get_has_window() instead."
+              deprecated-version="2.20">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -33703,7 +33724,7 @@ will be moved to the end of the list."
     <constant name="MAX_COMPOSE_LEN" value="7">
       <type name="int"/>
     </constant>
-    <constant name="MICRO_VERSION" value="2">
+    <constant name="MICRO_VERSION" value="3">
       <type name="int"/>
     </constant>
     <constant name="MINOR_VERSION" value="19">
@@ -37786,6 +37807,57 @@ right after a page has been reordered."
               c:identifier="GTK_RESERVED_2"
               glib:nick="reserved-2"/>
     </bitfield>
+    <class name="OffscreenWindow"
+           c:type="GtkOffscreenWindow"
+           parent="Window"
+           glib:type-name="GtkOffscreenWindow"
+           glib:get-type="gtk_offscreen_window_get_type"
+           glib:type-struct="OffscreenWindowClass">
+      <implements name="Atk.ImplementorIface"/>
+      <implements name="Buildable"/>
+      <constructor name="new"
+                   c:identifier="gtk_offscreen_window_new"
+                   doc="Creates a toplevel container widget that is used to retrieve
+snapshots of widgets without showing them on the screen.  For
+widgets that are on the screen and part of a normal widget
+hierarchy, gtk_widget_get_snapshot() can be used instead."
+                   version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="OffscreenWindow" c:type="GtkWidget*"/>
+        </return-value>
+      </constructor>
+      <method name="get_pixmap"
+              c:identifier="gtk_offscreen_window_get_pixmap"
+              doc="Retrieves a snapshot of the contained widget in the form of
+a #GdkPixmap.  If you need to keep this around over window
+resizes then you should add a reference to it."
+              version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="Gdk.Pixmap" c:type="GdkPixmap*"/>
+        </return-value>
+      </method>
+      <method name="get_pixbuf"
+              c:identifier="gtk_offscreen_window_get_pixbuf"
+              doc="Retrieves a snapshot of the contained widget in the form of
+a #GdkPixbuf.  This is a new pixbuf with a reference count of 1,
+and the application should unreference it once it is no longer
+needed."
+              version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
+        </return-value>
+      </method>
+      <field name="parent_object">
+        <type name="Window" c:type="GtkWindow"/>
+      </field>
+    </class>
+    <record name="OffscreenWindowClass"
+            c:type="GtkOffscreenWindowClass"
+            glib:is-gtype-struct-for="OffscreenWindow">
+      <field name="parent_class">
+        <type name="WindowClass" c:type="GtkWindowClass"/>
+      </field>
+    </record>
     <class name="OldEditable"
            c:type="GtkOldEditable"
            parent="Widget"
@@ -62221,6 +62293,22 @@ to this signal and append your menuitems to the @menu.">
           </parameter>
         </parameters>
       </glib:signal>
+      <glib:signal name="preedit-changed"
+                   doc="If an input method is used, the typed text will not immediately
+be committed to the buffer. So if you are interested in the text,
+connect to this signal.
+This signal is only emitted if the text at the given position
+is actually editable."
+                   version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="preedit" transfer-ownership="none">
+            <type name="utf8" c:type="gchararray"/>
+          </parameter>
+        </parameters>
+      </glib:signal>
       <glib:signal name="select-all"
                    doc="The ::select-all signal is a
 &lt;link linkend=&quot;keybinding-signals&quot;&gt;keybinding signal&lt;/link&gt;
@@ -67325,6 +67413,8 @@ then fill it with the desired values.">
       </glib:signal>
       <glib:signal name="rows-reordered"
                    doc="have been reordered
+each child to its old position before the re-ordering,
+i.e. @new_order&lt;literal&gt;[newpos] = oldpos&lt;/literal&gt;.
 This signal is emitted when the children of a node in the #GtkTreeModel
 have been reordered.
 Note that this signal is &lt;emphasis&gt;not&lt;/emphasis&gt; emitted
@@ -67334,13 +67424,13 @@ by removing and then reinserting the row.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="object" transfer-ownership="none">
+          <parameter name="path" transfer-ownership="none">
             <type name="TreePath" c:type="GtkTreePath"/>
           </parameter>
-          <parameter name="p0" transfer-ownership="none">
+          <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter"/>
           </parameter>
-          <parameter name="p1" transfer-ownership="none">
+          <parameter name="new_order" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -75784,7 +75874,7 @@ gtk_widget_get_toplevel() and check if the %TOPLEVEL flags
 is set on the result.
 |[
 GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
-if (GTK_WIDGET_TOPLEVEL (toplevel))
+if (gtk_widget_is_toplevel (toplevel))
 {
 /&amp;ast; Perform action on toplevel. &amp;ast;/
 }
@@ -77867,7 +77957,9 @@ This signal will be sent to the grab widget if there is one.
           </parameter>
         </parameters>
       </glib:signal>
-      <glib:signal name="state-changed">
+      <glib:signal name="state-changed"
+                   doc="The ::state-changed signal is emitted when the widget state changes.
+See gtk_widget_get_state().">
         <return-value transfer-ownership="full">
           <type name="none" c:type="void"/>
         </return-value>
@@ -79601,7 +79693,7 @@ for more details."
               c:identifier="gtk_window_activate_default"
               doc="Activates the default widget for the window, unless the current
 focused widget has been configured to receive the default action
-(see #GTK_RECEIVES_DEFAULT in #GtkWidgetFlags), in which case the
+(see gtk_widget_set_receives_default()), in which case the
 focused widget is activated.">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
