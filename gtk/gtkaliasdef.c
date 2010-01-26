@@ -3006,6 +3006,9 @@ extern __typeof (gtk_status_icon_get_title) gtk_status_icon_get_title __attribut
 #undef gtk_status_icon_set_title 
 extern __typeof (gtk_status_icon_set_title) gtk_status_icon_set_title __attribute((alias("IA__gtk_status_icon_set_title"), visibility("default")));
 
+#undef gtk_status_icon_set_name 
+extern __typeof (gtk_status_icon_set_name) gtk_status_icon_set_name __attribute((alias("IA__gtk_status_icon_set_name"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GTK_STYLE_H__)
@@ -3323,6 +3326,9 @@ extern __typeof (gtk_entry_get_icon_tooltip_markup) gtk_entry_get_icon_tooltip_m
 #undef gtk_entry_get_icon_tooltip_text 
 extern __typeof (gtk_entry_get_icon_tooltip_text) gtk_entry_get_icon_tooltip_text __attribute((alias("IA__gtk_entry_get_icon_tooltip_text"), visibility("default")));
 
+#undef gtk_entry_get_icon_window 
+extern __typeof (gtk_entry_get_icon_window) gtk_entry_get_icon_window __attribute((alias("IA__gtk_entry_get_icon_window"), visibility("default")));
+
 #undef gtk_entry_get_inner_border 
 extern __typeof (gtk_entry_get_inner_border) gtk_entry_get_inner_border __attribute((alias("IA__gtk_entry_get_inner_border"), visibility("default")));
 
@@ -3361,6 +3367,9 @@ extern __typeof (gtk_entry_get_visibility) gtk_entry_get_visibility __attribute(
 
 #undef gtk_entry_get_width_chars 
 extern __typeof (gtk_entry_get_width_chars) gtk_entry_get_width_chars __attribute((alias("IA__gtk_entry_get_width_chars"), visibility("default")));
+
+#undef gtk_entry_get_text_window 
+extern __typeof (gtk_entry_get_text_window) gtk_entry_get_text_window __attribute((alias("IA__gtk_entry_get_text_window"), visibility("default")));
 
 #undef gtk_entry_layout_index_to_text_index 
 extern __typeof (gtk_entry_layout_index_to_text_index) gtk_entry_layout_index_to_text_index __attribute((alias("IA__gtk_entry_layout_index_to_text_index"), visibility("default")));
@@ -7180,9 +7189,6 @@ extern __typeof (gtk_print_job_get_title) gtk_print_job_get_title __attribute((a
 #undef gtk_print_job_get_status 
 extern __typeof (gtk_print_job_get_status) gtk_print_job_get_status __attribute((alias("IA__gtk_print_job_get_status"), visibility("default")));
 
-#undef gtk_print_job_set_status 
-extern __typeof (gtk_print_job_set_status) gtk_print_job_set_status __attribute((alias("IA__gtk_print_job_set_status"), visibility("default")));
-
 #undef gtk_print_job_set_source_file 
 extern __typeof (gtk_print_job_set_source_file) gtk_print_job_set_source_file __attribute((alias("IA__gtk_print_job_set_source_file"), visibility("default")));
 
@@ -7197,6 +7203,15 @@ extern __typeof (gtk_print_job_set_track_print_status) gtk_print_job_set_track_p
 
 #undef gtk_print_job_get_track_print_status 
 extern __typeof (gtk_print_job_get_track_print_status) gtk_print_job_get_track_print_status __attribute((alias("IA__gtk_print_job_get_track_print_status"), visibility("default")));
+
+#endif
+#endif
+#endif
+#if IN_HEADER(__GTK_PRINTER_PRIVATE_H__)
+#if IN_FILE(__GTK_PRINT_JOB_C__)
+#ifdef G_OS_UNIX
+#undef gtk_print_job_set_status 
+extern __typeof (gtk_print_job_set_status) gtk_print_job_set_status __attribute((alias("IA__gtk_print_job_set_status"), visibility("default")));
 
 #endif
 #endif
@@ -7888,11 +7903,23 @@ extern __typeof (gtk_range_get_inverted) gtk_range_get_inverted __attribute((ali
 #undef gtk_range_get_lower_stepper_sensitivity 
 extern __typeof (gtk_range_get_lower_stepper_sensitivity) gtk_range_get_lower_stepper_sensitivity __attribute((alias("IA__gtk_range_get_lower_stepper_sensitivity"), visibility("default")));
 
+#undef gtk_range_get_min_slider_size 
+extern __typeof (gtk_range_get_min_slider_size) gtk_range_get_min_slider_size __attribute((alias("IA__gtk_range_get_min_slider_size"), visibility("default")));
+
+#undef gtk_range_get_range_rect 
+extern __typeof (gtk_range_get_range_rect) gtk_range_get_range_rect __attribute((alias("IA__gtk_range_get_range_rect"), visibility("default")));
+
 #undef gtk_range_get_restrict_to_fill_level 
 extern __typeof (gtk_range_get_restrict_to_fill_level) gtk_range_get_restrict_to_fill_level __attribute((alias("IA__gtk_range_get_restrict_to_fill_level"), visibility("default")));
 
 #undef gtk_range_get_show_fill_level 
 extern __typeof (gtk_range_get_show_fill_level) gtk_range_get_show_fill_level __attribute((alias("IA__gtk_range_get_show_fill_level"), visibility("default")));
+
+#undef gtk_range_get_slider_range 
+extern __typeof (gtk_range_get_slider_range) gtk_range_get_slider_range __attribute((alias("IA__gtk_range_get_slider_range"), visibility("default")));
+
+#undef gtk_range_get_slider_size_fixed 
+extern __typeof (gtk_range_get_slider_size_fixed) gtk_range_get_slider_size_fixed __attribute((alias("IA__gtk_range_get_slider_size_fixed"), visibility("default")));
 
 #undef gtk_range_get_type 
 extern __typeof (gtk_range_get_type) gtk_range_get_type __attribute((alias("IA__gtk_range_get_type"), visibility("default")));
@@ -7924,6 +7951,9 @@ extern __typeof (gtk_range_set_inverted) gtk_range_set_inverted __attribute((ali
 #undef gtk_range_set_lower_stepper_sensitivity 
 extern __typeof (gtk_range_set_lower_stepper_sensitivity) gtk_range_set_lower_stepper_sensitivity __attribute((alias("IA__gtk_range_set_lower_stepper_sensitivity"), visibility("default")));
 
+#undef gtk_range_set_min_slider_size 
+extern __typeof (gtk_range_set_min_slider_size) gtk_range_set_min_slider_size __attribute((alias("IA__gtk_range_set_min_slider_size"), visibility("default")));
+
 #undef gtk_range_set_range 
 extern __typeof (gtk_range_set_range) gtk_range_set_range __attribute((alias("IA__gtk_range_set_range"), visibility("default")));
 
@@ -7932,6 +7962,9 @@ extern __typeof (gtk_range_set_restrict_to_fill_level) gtk_range_set_restrict_to
 
 #undef gtk_range_set_show_fill_level 
 extern __typeof (gtk_range_set_show_fill_level) gtk_range_set_show_fill_level __attribute((alias("IA__gtk_range_set_show_fill_level"), visibility("default")));
+
+#undef gtk_range_set_slider_size_fixed 
+extern __typeof (gtk_range_set_slider_size_fixed) gtk_range_set_slider_size_fixed __attribute((alias("IA__gtk_range_set_slider_size_fixed"), visibility("default")));
 
 #undef gtk_range_set_update_policy 
 extern __typeof (gtk_range_set_update_policy) gtk_range_set_update_policy __attribute((alias("IA__gtk_range_set_update_policy"), visibility("default")));
@@ -12239,6 +12272,9 @@ extern __typeof (gtk_widget_has_focus) gtk_widget_has_focus __attribute((alias("
 
 #undef gtk_widget_has_grab 
 extern __typeof (gtk_widget_has_grab) gtk_widget_has_grab __attribute((alias("IA__gtk_widget_has_grab"), visibility("default")));
+
+#undef gtk_widget_has_rc_style 
+extern __typeof (gtk_widget_has_rc_style) gtk_widget_has_rc_style __attribute((alias("IA__gtk_widget_has_rc_style"), visibility("default")));
 
 #undef gtk_widget_has_screen 
 extern __typeof (gtk_widget_has_screen) gtk_widget_has_screen __attribute((alias("IA__gtk_widget_has_screen"), visibility("default")));

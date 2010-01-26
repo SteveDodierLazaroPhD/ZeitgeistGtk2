@@ -276,6 +276,7 @@ static cairo_surface_t *gdk_window_ref_cairo_surface (GdkDrawable *drawable);
 static cairo_surface_t *gdk_window_create_cairo_surface (GdkDrawable *drawable,
 							 int width,
 							 int height);
+static void             gdk_window_drop_cairo_surface (GdkWindowObject *private);
 static void             gdk_window_set_cairo_clip    (GdkDrawable *drawable,
 						      cairo_t *cr);
 
@@ -1214,8 +1215,15 @@ get_native_event_mask (GdkWindowObject *private)
        * important thing, because in X only one client can do
        * so, and we don't want to unexpectedly prevent another
        * client from doing it.
+       *
+       * We also need to do the same if the app selects for button presses
+       * because then we will get implicit grabs for this window, and the
+       * event mask used for that grab is based on the rest of the mask
+       * for the window, but we might need more events than this window
+       * lists due to some non-native child window.
        */
-      if (gdk_window_is_toplevel (private))
+      if (gdk_window_is_toplevel (private) ||
+	  mask & GDK_BUTTON_PRESS_MASK)
 	mask |=
 	  GDK_POINTER_MOTION_MASK |
 	  GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
@@ -1596,14 +1604,9 @@ gdk_window_reparent (GdkWindow *window,
   if (is_parent_of (window, new_parent))
     return;
 
-  if (private->cairo_surface)
-    {
-      /* This might be wrong in the new parent, e.g. for non-native surfaces.
-	 To make sure we're ok, just wipe it. */
-      cairo_surface_finish (private->cairo_surface);
-      cairo_surface_set_user_data (private->cairo_surface, &gdk_window_cairo_key,
-				   NULL, NULL);
-    }
+  /* This might be wrong in the new parent, e.g. for non-native surfaces.
+     To make sure we're ok, just wipe it. */
+  gdk_window_drop_cairo_surface (private);
 
   impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
   old_parent = private->parent;
@@ -1855,6 +1858,8 @@ gdk_window_ensure_native (GdkWindow *window)
   if (impl_window->input_window)
     disabled_extension_events = temporary_disable_extension_events (private);
 
+  gdk_window_drop_cairo_surface (private);
+
   screen = gdk_drawable_get_screen (window);
   visual = gdk_drawable_get_visual (window);
 
@@ -2063,13 +2068,7 @@ _gdk_window_destroy_hierarchy (GdkWindow *window,
 
 	  _gdk_window_clear_update_area (window);
 
-	  if (private->cairo_surface)
-	    {
-	      cairo_surface_finish (private->cairo_surface);
-	      cairo_surface_set_user_data (private->cairo_surface, &gdk_window_cairo_key,
-					   NULL, NULL);
-	    }
-
+	  gdk_window_drop_cairo_surface (private);
 
 	  impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
 
@@ -2622,6 +2621,9 @@ gdk_window_begin_implicit_paint (GdkWindow *window, GdkRectangle *rect)
       private->implicit_paint != NULL)
     return FALSE; /* Don't stack implicit paints */
 
+  if (private->outstanding_surfaces != 0)
+    return FALSE; /* May conflict with direct drawing to cairo surface */
+
   /* Never do implicit paints for foreign windows, they don't need
    * double buffer combination since they have no client side children,
    * and creating pixmaps for them is risky since they could disappear
@@ -2679,7 +2681,7 @@ gdk_window_flush_implicit_paint (GdkWindow *window)
   gdk_region_offset (region, private->abs_x, private->abs_y);
   gdk_region_intersect (region, paint->region);
 
-  if (!gdk_region_empty (region))
+  if (!GDK_WINDOW_DESTROYED (window) && !gdk_region_empty (region))
     {
       /* Remove flushed region from the implicit paint */
       gdk_region_subtract (paint->region, region);
@@ -2712,7 +2714,7 @@ gdk_window_end_implicit_paint (GdkWindow *window)
 
   private->implicit_paint = NULL;
 
-  if (!gdk_region_empty (paint->region))
+  if (!GDK_WINDOW_DESTROYED (window) && !gdk_region_empty (paint->region))
     {
       /* Some regions are valid, push these to window now */
       tmp_gc = _gdk_drawable_get_scratch_gc ((GdkDrawable *)window, FALSE);
@@ -3327,7 +3329,7 @@ move_region_on_impl (GdkWindowObject *impl_window,
       gdk_region_destroy (exposing);
     }
 
-  if (1) /* Enable flicker free handling of moves. */
+  if (impl_window->outstanding_surfaces == 0) /* Enable flicker free handling of moves. */
     append_move_region (impl_window, region, dx, dy);
   else
     do_move_region_bits_on_impl (impl_window,
@@ -4841,11 +4843,23 @@ gdk_window_copy_to_image (GdkDrawable     *drawable,
 }
 
 static void
+gdk_window_drop_cairo_surface (GdkWindowObject *private)
+{
+  if (private->cairo_surface)
+    {
+      cairo_surface_finish (private->cairo_surface);
+      cairo_surface_set_user_data (private->cairo_surface, &gdk_window_cairo_key,
+				   NULL, NULL);
+    }
+}
+
+static void
 gdk_window_cairo_surface_destroy (void *data)
 {
   GdkWindowObject *private = (GdkWindowObject*) data;
 
   private->cairo_surface = NULL;
+  private->impl_window->outstanding_surfaces--;
 }
 
 static cairo_surface_t *
@@ -4889,11 +4903,12 @@ gdk_window_ref_cairo_surface (GdkDrawable *drawable)
 
 	  source = _gdk_drawable_get_source_drawable (drawable);
 
-	  /* TODO: Avoid the typecheck crap by adding virtual call */
 	  private->cairo_surface = _gdk_drawable_create_cairo_surface (source, width, height);
 
 	  if (private->cairo_surface)
 	    {
+	      private->impl_window->outstanding_surfaces++;
+
 	      cairo_surface_set_device_offset (private->cairo_surface,
 					       private->abs_x,
 					       private->abs_y);

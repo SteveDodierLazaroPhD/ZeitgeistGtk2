@@ -196,8 +196,8 @@ testnouiprint_OBJECTS = testnouiprint.$(OBJEXT)
 am_testoffscreen_OBJECTS = gtkoffscreenbox.$(OBJEXT) \
 	testoffscreen.$(OBJEXT)
 testoffscreen_OBJECTS = $(am_testoffscreen_OBJECTS)
-testoffscreenwindow_SOURCES = testoffscreenwindow.c
-testoffscreenwindow_OBJECTS = testoffscreenwindow.$(OBJEXT)
+am_testoffscreenwindow_OBJECTS = testoffscreenwindow.$(OBJEXT)
+testoffscreenwindow_OBJECTS = $(am_testoffscreenwindow_OBJECTS)
 testorientable_SOURCES = testorientable.c
 testorientable_OBJECTS = testorientable.$(OBJEXT)
 am_testprint_OBJECTS = testprint.$(OBJEXT) \
@@ -252,8 +252,8 @@ am_testtreeview_OBJECTS = prop-editor.$(OBJEXT) testtreeview.$(OBJEXT)
 testtreeview_OBJECTS = $(am_testtreeview_OBJECTS)
 am_testvolumebutton_OBJECTS = testvolumebutton.$(OBJEXT)
 testvolumebutton_OBJECTS = $(am_testvolumebutton_OBJECTS)
-testwindows_SOURCES = testwindows.c
-testwindows_OBJECTS = testwindows.$(OBJEXT)
+am_testwindows_OBJECTS = testwindows.$(OBJEXT)
+testwindows_OBJECTS = $(am_testwindows_OBJECTS)
 testxinerama_SOURCES = testxinerama.c
 testxinerama_OBJECTS = testxinerama.$(OBJEXT)
 treestoretest_SOURCES = treestoretest.c
@@ -314,7 +314,7 @@ SOURCES = $(autotestkeywords_SOURCES) flicker.c pixbuf-lowmem.c \
 	testimage.c testinput.c testmenubars.c testmenus.c \
 	$(testmerge_SOURCES) testmountoperation.c testmultidisplay.c \
 	testmultiscreen.c testnotebookdnd.c testnouiprint.c \
-	$(testoffscreen_SOURCES) testoffscreenwindow.c \
+	$(testoffscreen_SOURCES) $(testoffscreenwindow_SOURCES) \
 	testorientable.c $(testprint_SOURCES) \
 	$(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) \
 	testrgb.c testrichtext.c testscale.c testselection.c \
@@ -325,7 +325,7 @@ SOURCES = $(autotestkeywords_SOURCES) flicker.c pixbuf-lowmem.c \
 	testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c \
 	testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c \
 	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
-	testwindows.c testxinerama.c treestoretest.c
+	$(testwindows_SOURCES) testxinerama.c treestoretest.c
 DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) flicker.c \
 	pixbuf-lowmem.c pixbuf-random.c pixbuf-randomly-modified.c \
 	pixbuf-read.c pixbuf-threads.c print-editor.c simple.c \
@@ -340,18 +340,19 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) flicker.c \
 	$(testiconview_SOURCES) testimage.c testinput.c testmenubars.c \
 	testmenus.c $(testmerge_SOURCES) testmountoperation.c \
 	testmultidisplay.c testmultiscreen.c testnotebookdnd.c \
-	testnouiprint.c $(testoffscreen_SOURCES) testoffscreenwindow.c \
-	testorientable.c $(testprint_SOURCES) \
-	$(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) \
-	testrgb.c testrichtext.c testscale.c testselection.c \
-	$(testsocket_SOURCES) $(testsocket_child_SOURCES) \
-	$(testspinbutton_SOURCES) $(teststatusicon_SOURCES) \
-	$(testtext_SOURCES) $(testtoolbar_SOURCES) \
-	$(testtooltips_SOURCES) testtreecolumns.c \
-	testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c \
-	testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c \
+	testnouiprint.c $(testoffscreen_SOURCES) \
+	$(testoffscreenwindow_SOURCES) testorientable.c \
+	$(testprint_SOURCES) $(testrecentchooser_SOURCES) \
+	$(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c \
+	testscale.c testselection.c $(testsocket_SOURCES) \
+	$(testsocket_child_SOURCES) $(testspinbutton_SOURCES) \
+	$(teststatusicon_SOURCES) $(testtext_SOURCES) \
+	$(testtoolbar_SOURCES) $(testtooltips_SOURCES) \
+	testtreecolumns.c testtreecolumnsizing.c \
+	$(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c \
+	$(testtreemodel_SOURCES) testtreesort.c \
 	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
-	testwindows.c testxinerama.c treestoretest.c
+	$(testwindows_SOURCES) testxinerama.c treestoretest.c
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -891,10 +892,10 @@ testoffscreen_SOURCES = \
 	gtkoffscreenbox.h	\
 	testoffscreen.c
 
-testoffscreenwindnow_SOURCES = \
+testoffscreenwindow_SOURCES = \
 	testoffscreenwindow.c
 
-testwindow_SOURCES = \
+testwindows_SOURCES = \
 	testwindows.c
 
 all: all-am

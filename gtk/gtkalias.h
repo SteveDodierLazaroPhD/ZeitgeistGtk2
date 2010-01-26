@@ -3003,6 +3003,9 @@ extern __typeof (gtk_status_icon_get_title) IA__gtk_status_icon_get_title __attr
 extern __typeof (gtk_status_icon_set_title) IA__gtk_status_icon_set_title __attribute((visibility("hidden")));
 #define gtk_status_icon_set_title IA__gtk_status_icon_set_title
 
+extern __typeof (gtk_status_icon_set_name) IA__gtk_status_icon_set_name __attribute((visibility("hidden")));
+#define gtk_status_icon_set_name IA__gtk_status_icon_set_name
+
 #endif
 #endif
 #if IN_HEADER(__GTK_STYLE_H__)
@@ -3320,6 +3323,9 @@ extern __typeof (gtk_entry_get_icon_tooltip_markup) IA__gtk_entry_get_icon_toolt
 extern __typeof (gtk_entry_get_icon_tooltip_text) IA__gtk_entry_get_icon_tooltip_text __attribute((visibility("hidden")));
 #define gtk_entry_get_icon_tooltip_text IA__gtk_entry_get_icon_tooltip_text
 
+extern __typeof (gtk_entry_get_icon_window) IA__gtk_entry_get_icon_window __attribute((visibility("hidden")));
+#define gtk_entry_get_icon_window IA__gtk_entry_get_icon_window
+
 extern __typeof (gtk_entry_get_inner_border) IA__gtk_entry_get_inner_border __attribute((visibility("hidden")));
 #define gtk_entry_get_inner_border IA__gtk_entry_get_inner_border
 
@@ -3358,6 +3364,9 @@ extern __typeof (gtk_entry_get_visibility) IA__gtk_entry_get_visibility __attrib
 
 extern __typeof (gtk_entry_get_width_chars) IA__gtk_entry_get_width_chars __attribute((visibility("hidden")));
 #define gtk_entry_get_width_chars IA__gtk_entry_get_width_chars
+
+extern __typeof (gtk_entry_get_text_window) IA__gtk_entry_get_text_window __attribute((visibility("hidden")));
+#define gtk_entry_get_text_window IA__gtk_entry_get_text_window
 
 extern __typeof (gtk_entry_layout_index_to_text_index) IA__gtk_entry_layout_index_to_text_index __attribute((visibility("hidden")));
 #define gtk_entry_layout_index_to_text_index IA__gtk_entry_layout_index_to_text_index
@@ -7177,9 +7186,6 @@ extern __typeof (gtk_print_job_get_title) IA__gtk_print_job_get_title __attribut
 extern __typeof (gtk_print_job_get_status) IA__gtk_print_job_get_status __attribute((visibility("hidden")));
 #define gtk_print_job_get_status IA__gtk_print_job_get_status
 
-extern __typeof (gtk_print_job_set_status) IA__gtk_print_job_set_status __attribute((visibility("hidden")));
-#define gtk_print_job_set_status IA__gtk_print_job_set_status
-
 extern __typeof (gtk_print_job_set_source_file) IA__gtk_print_job_set_source_file __attribute((visibility("hidden")));
 #define gtk_print_job_set_source_file IA__gtk_print_job_set_source_file
 
@@ -7194,6 +7200,15 @@ extern __typeof (gtk_print_job_set_track_print_status) IA__gtk_print_job_set_tra
 
 extern __typeof (gtk_print_job_get_track_print_status) IA__gtk_print_job_get_track_print_status __attribute((visibility("hidden")));
 #define gtk_print_job_get_track_print_status IA__gtk_print_job_get_track_print_status
+
+#endif
+#endif
+#endif
+#if IN_HEADER(__GTK_PRINTER_PRIVATE_H__)
+#if IN_FILE(__GTK_PRINT_JOB_C__)
+#ifdef G_OS_UNIX
+extern __typeof (gtk_print_job_set_status) IA__gtk_print_job_set_status __attribute((visibility("hidden")));
+#define gtk_print_job_set_status IA__gtk_print_job_set_status
 
 #endif
 #endif
@@ -7885,11 +7900,23 @@ extern __typeof (gtk_range_get_inverted) IA__gtk_range_get_inverted __attribute(
 extern __typeof (gtk_range_get_lower_stepper_sensitivity) IA__gtk_range_get_lower_stepper_sensitivity __attribute((visibility("hidden")));
 #define gtk_range_get_lower_stepper_sensitivity IA__gtk_range_get_lower_stepper_sensitivity
 
+extern __typeof (gtk_range_get_min_slider_size) IA__gtk_range_get_min_slider_size __attribute((visibility("hidden")));
+#define gtk_range_get_min_slider_size IA__gtk_range_get_min_slider_size
+
+extern __typeof (gtk_range_get_range_rect) IA__gtk_range_get_range_rect __attribute((visibility("hidden")));
+#define gtk_range_get_range_rect IA__gtk_range_get_range_rect
+
 extern __typeof (gtk_range_get_restrict_to_fill_level) IA__gtk_range_get_restrict_to_fill_level __attribute((visibility("hidden")));
 #define gtk_range_get_restrict_to_fill_level IA__gtk_range_get_restrict_to_fill_level
 
 extern __typeof (gtk_range_get_show_fill_level) IA__gtk_range_get_show_fill_level __attribute((visibility("hidden")));
 #define gtk_range_get_show_fill_level IA__gtk_range_get_show_fill_level
+
+extern __typeof (gtk_range_get_slider_range) IA__gtk_range_get_slider_range __attribute((visibility("hidden")));
+#define gtk_range_get_slider_range IA__gtk_range_get_slider_range
+
+extern __typeof (gtk_range_get_slider_size_fixed) IA__gtk_range_get_slider_size_fixed __attribute((visibility("hidden")));
+#define gtk_range_get_slider_size_fixed IA__gtk_range_get_slider_size_fixed
 
 extern __typeof (gtk_range_get_type) IA__gtk_range_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_range_get_type IA__gtk_range_get_type
@@ -7921,6 +7948,9 @@ extern __typeof (gtk_range_set_inverted) IA__gtk_range_set_inverted __attribute(
 extern __typeof (gtk_range_set_lower_stepper_sensitivity) IA__gtk_range_set_lower_stepper_sensitivity __attribute((visibility("hidden")));
 #define gtk_range_set_lower_stepper_sensitivity IA__gtk_range_set_lower_stepper_sensitivity
 
+extern __typeof (gtk_range_set_min_slider_size) IA__gtk_range_set_min_slider_size __attribute((visibility("hidden")));
+#define gtk_range_set_min_slider_size IA__gtk_range_set_min_slider_size
+
 extern __typeof (gtk_range_set_range) IA__gtk_range_set_range __attribute((visibility("hidden")));
 #define gtk_range_set_range IA__gtk_range_set_range
 
@@ -7929,6 +7959,9 @@ extern __typeof (gtk_range_set_restrict_to_fill_level) IA__gtk_range_set_restric
 
 extern __typeof (gtk_range_set_show_fill_level) IA__gtk_range_set_show_fill_level __attribute((visibility("hidden")));
 #define gtk_range_set_show_fill_level IA__gtk_range_set_show_fill_level
+
+extern __typeof (gtk_range_set_slider_size_fixed) IA__gtk_range_set_slider_size_fixed __attribute((visibility("hidden")));
+#define gtk_range_set_slider_size_fixed IA__gtk_range_set_slider_size_fixed
 
 extern __typeof (gtk_range_set_update_policy) IA__gtk_range_set_update_policy __attribute((visibility("hidden")));
 #define gtk_range_set_update_policy IA__gtk_range_set_update_policy
@@ -12236,6 +12269,9 @@ extern __typeof (gtk_widget_has_focus) IA__gtk_widget_has_focus __attribute((vis
 
 extern __typeof (gtk_widget_has_grab) IA__gtk_widget_has_grab __attribute((visibility("hidden")));
 #define gtk_widget_has_grab IA__gtk_widget_has_grab
+
+extern __typeof (gtk_widget_has_rc_style) IA__gtk_widget_has_rc_style __attribute((visibility("hidden")));
+#define gtk_widget_has_rc_style IA__gtk_widget_has_rc_style
 
 extern __typeof (gtk_widget_has_screen) IA__gtk_widget_has_screen __attribute((visibility("hidden")));
 #define gtk_widget_has_screen IA__gtk_widget_has_screen

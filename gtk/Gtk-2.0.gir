@@ -4559,7 +4559,7 @@ can do any preparation which are necessary before showing @page."
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="1903">
+    <constant name="BINARY_AGE" value="1904">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -18609,6 +18609,18 @@ this widget."
           </parameter>
         </parameters>
       </method>
+      <method name="get_text_window"
+              c:identifier="gtk_entry_get_text_window"
+              doc="Returns the #GdkWindow which contains the text. This function is
+useful when drawing something to the entry in an expose-event
+callback because it enables the callback to distinguish between
+the text window and entry&apos;s icon windows.
+See also gtk_entry_get_icon_window()."
+              version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="Gdk.Window" c:type="GdkWindow*"/>
+        </return-value>
+      </method>
       <method name="set_visibility"
               c:identifier="gtk_entry_set_visibility"
               doc="as plaintext
@@ -19424,6 +19436,22 @@ DND operation, or -1."
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
+      </method>
+      <method name="get_icon_window"
+              c:identifier="gtk_entry_get_icon_window"
+              doc="Returns the #GdkWindow which contains the entry&apos;s icon at
+entry in an expose-event callback because it enables the callback
+to distinguish between the text window and entry&apos;s icon windows.
+See also gtk_entry_get_text_window()."
+              version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="Gdk.Window" c:type="GdkWindow*"/>
+        </return-value>
+        <parameters>
+          <parameter name="icon_pos" transfer-ownership="none">
+            <type name="EntryIconPosition" c:type="GtkEntryIconPosition"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="append_text"
               c:identifier="gtk_entry_append_text"
@@ -33724,7 +33752,7 @@ will be moved to the end of the list."
     <constant name="MAX_COMPOSE_LEN" value="7">
       <type name="int"/>
     </constant>
-    <constant name="MICRO_VERSION" value="3">
+    <constant name="MICRO_VERSION" value="4">
       <type name="int"/>
     </constant>
     <constant name="MINOR_VERSION" value="19">
@@ -36761,8 +36789,8 @@ the widget and must not be freed.">
               c:identifier="gtk_notebook_query_tab_label_packing"
               doc="Query the packing attributes for the tab label of the page
 containing @child.
-properties instead."
-              deprecated="Modify the &quot;tab-expand&quot; and &quot;tab-fill&quot; child"
+#GtkNotebook:tab-fill child properties instead."
+              deprecated="Modify the #GtkNotebook:tab-expand and"
               deprecated-version="2.20">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -36787,8 +36815,8 @@ properties instead."
               doc="Sets the packing parameters for the tab label of the page
 containing @child. See gtk_box_pack_start() for the exact meaning
 of the parameters.
-properties instead."
-              deprecated="Modify the &quot;tab-expand&quot; and &quot;tab-fill&quot; child"
+#GtkNotebook:tab-fill child properties instead."
+              deprecated="Modify the #GtkNotebook:tab-expand and"
               deprecated-version="2.20">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -44491,6 +44519,90 @@ See gtk_widget_get_direction()."
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
+      <method name="set_slider_size_fixed"
+              c:identifier="gtk_range_set_slider_size_fixed"
+              doc="Sets whether the range&apos;s slider has a fixed size, or a size that
+depends on it&apos;s adjustment&apos;s page size.
+This function is useful mainly for #GtkRange subclasses."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="size_fixed" transfer-ownership="none">
+            <type name="boolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_slider_size_fixed"
+              c:identifier="gtk_range_get_slider_size_fixed"
+              doc="This function is useful mainly for #GtkRange subclasses.
+See gtk_range_set_slider_size_fixed()."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
+      <method name="set_min_slider_size"
+              c:identifier="gtk_range_set_min_slider_size"
+              doc="Sets the minimum size of the range&apos;s slider.
+This function is useful mainly for #GtkRange subclasses."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="min_size" transfer-ownership="none">
+            <type name="boolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_min_slider_size"
+              c:identifier="gtk_range_get_min_slider_size"
+              doc="This function is useful mainly for #GtkRange subclasses.
+See gtk_range_set_min_slider_size()."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+      </method>
+      <method name="get_range_rect"
+              c:identifier="gtk_range_get_range_rect"
+              doc="This function returns the area that contains the range&apos;s trough
+and its steppers, in widget-&gt;window coordinates.
+This function is useful mainly for #GtkRange subclasses."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="range_rect" transfer-ownership="none">
+            <type name="Gdk.Rectangle" c:type="GdkRectangle*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_slider_range"
+              c:identifier="gtk_range_get_slider_range"
+              doc="This function returns sliders range along the long dimension,
+in widget-&gt;window coordinates.
+This function is useful mainly for #GtkRange subclasses."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="slider_start"
+                     direction="out"
+                     transfer-ownership="full">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+          <parameter name="slider_end"
+                     direction="out"
+                     transfer-ownership="full">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_lower_stepper_sensitivity"
               c:identifier="gtk_range_set_lower_stepper_sensitivity"
               doc="Sets the sensitivity policy for the stepper that points to the
@@ -51701,6 +51813,22 @@ readers to render the tray icon."
         <return-value transfer-ownership="none">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
+      </method>
+      <method name="set_name"
+              c:identifier="gtk_status_icon_set_name"
+              doc="Sets the name of this tray icon.
+This should be a string identifying this icon. It is may be
+used for sorting the icons in the tray and will not be shown to
+the user."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="name" transfer-ownership="none">
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+        </parameters>
       </method>
       <method name="set_visible"
               c:identifier="gtk_status_icon_set_visible"
@@ -64527,7 +64655,7 @@ If position is 0 the group will become the first child, if position is
         </return-value>
         <parameters>
           <parameter name="group" transfer-ownership="none">
-            <type name="Widget" c:type="GtkWidget*"/>
+            <type name="ToolItemGroup" c:type="GtkToolItemGroup*"/>
           </parameter>
           <parameter name="position" transfer-ownership="none">
             <type name="int" c:type="gint"/>
@@ -64544,7 +64672,7 @@ If an exclusive group is expanded all other groups are collapsed."
         </return-value>
         <parameters>
           <parameter name="group" transfer-ownership="none">
-            <type name="Widget" c:type="GtkWidget*"/>
+            <type name="ToolItemGroup" c:type="GtkToolItemGroup*"/>
           </parameter>
           <parameter name="exclusive" transfer-ownership="none">
             <type name="boolean" c:type="gboolean"/>
@@ -64560,7 +64688,7 @@ If an exclusive group is expanded all other groups are collapsed."
         </return-value>
         <parameters>
           <parameter name="group" transfer-ownership="none">
-            <type name="Widget" c:type="GtkWidget*"/>
+            <type name="ToolItemGroup" c:type="GtkToolItemGroup*"/>
           </parameter>
           <parameter name="expand" transfer-ownership="none">
             <type name="boolean" c:type="gboolean"/>
@@ -64577,7 +64705,7 @@ See gtk_tool_palette_set_group_position()."
         </return-value>
         <parameters>
           <parameter name="group" transfer-ownership="none">
-            <type name="Widget" c:type="GtkWidget*"/>
+            <type name="ToolItemGroup" c:type="GtkToolItemGroup*"/>
           </parameter>
         </parameters>
       </method>
@@ -64591,7 +64719,7 @@ See gtk_tool_palette_set_exclusive()."
         </return-value>
         <parameters>
           <parameter name="group" transfer-ownership="none">
-            <type name="Widget" c:type="GtkWidget*"/>
+            <type name="ToolItemGroup" c:type="GtkToolItemGroup*"/>
           </parameter>
         </parameters>
       </method>
@@ -64605,7 +64733,7 @@ See gtk_tool_palette_set_expand()."
         </return-value>
         <parameters>
           <parameter name="group" transfer-ownership="none">
-            <type name="Widget" c:type="GtkWidget*"/>
+            <type name="ToolItemGroup" c:type="GtkToolItemGroup*"/>
           </parameter>
         </parameters>
       </method>
@@ -64697,7 +64825,7 @@ See gtk_tool_palette_get_drop_group()."
 if there is no such group"
               version="2.20">
         <return-value transfer-ownership="full">
-          <type name="Widget" c:type="GtkWidget*"/>
+          <type name="ToolItemGroup" c:type="GtkToolItemGroup*"/>
         </return-value>
         <parameters>
           <parameter name="x" transfer-ownership="none">
@@ -76172,6 +76300,15 @@ result is that clicking the close button for a window (on the
 window frame, top right corner usually) will hide but not destroy
 the window. By default, GTK+ destroys windows when ::delete-event
 is received.">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
+      <method name="has_rc_style"
+              c:identifier="gtk_widget_has_rc_style"
+              doc="Determines if the widget style has been looked up through the rc mechanism.
+mechanism, %FALSE otherwise."
+              version="2.20">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>

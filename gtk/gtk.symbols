@@ -1244,6 +1244,7 @@ gtk_status_icon_get_geometry
 gtk_status_icon_get_x11_window_id
 gtk_status_icon_get_title
 gtk_status_icon_set_title
+gtk_status_icon_set_name
 #endif
 #endif
 
@@ -1367,6 +1368,7 @@ gtk_entry_get_icon_stock
 gtk_entry_get_icon_storage_type
 gtk_entry_get_icon_tooltip_markup
 gtk_entry_get_icon_tooltip_text
+gtk_entry_get_icon_window
 gtk_entry_get_inner_border
 gtk_entry_get_invisible_char
 gtk_entry_get_layout
@@ -1380,6 +1382,7 @@ gtk_entry_get_text_length
 gtk_entry_get_type G_GNUC_CONST
 gtk_entry_get_visibility
 gtk_entry_get_width_chars
+gtk_entry_get_text_window
 gtk_entry_layout_index_to_text_index
 gtk_entry_new
 gtk_entry_new_with_buffer
@@ -3044,12 +3047,19 @@ gtk_print_job_get_settings
 gtk_print_job_get_printer
 gtk_print_job_get_title
 gtk_print_job_get_status
-gtk_print_job_set_status
 gtk_print_job_set_source_file
 gtk_print_job_get_surface
 gtk_print_job_send
 gtk_print_job_set_track_print_status
 gtk_print_job_get_track_print_status
+#endif
+#endif
+#endif
+
+#if IN_HEADER(__GTK_PRINTER_PRIVATE_H__)
+#if IN_FILE(__GTK_PRINT_JOB_C__)
+#ifdef G_OS_UNIX
+gtk_print_job_set_status
 #endif
 #endif
 #endif
@@ -3340,8 +3350,12 @@ gtk_range_get_fill_level
 gtk_range_get_flippable
 gtk_range_get_inverted
 gtk_range_get_lower_stepper_sensitivity
+gtk_range_get_min_slider_size
+gtk_range_get_range_rect
 gtk_range_get_restrict_to_fill_level
 gtk_range_get_show_fill_level
+gtk_range_get_slider_range
+gtk_range_get_slider_size_fixed
 gtk_range_get_type G_GNUC_CONST
 gtk_range_get_update_policy
 gtk_range_get_upper_stepper_sensitivity
@@ -3352,9 +3366,11 @@ gtk_range_set_flippable
 gtk_range_set_increments
 gtk_range_set_inverted
 gtk_range_set_lower_stepper_sensitivity
+gtk_range_set_min_slider_size
 gtk_range_set_range
 gtk_range_set_restrict_to_fill_level
 gtk_range_set_show_fill_level
+gtk_range_set_slider_size_fixed
 gtk_range_set_update_policy
 gtk_range_set_upper_stepper_sensitivity
 gtk_range_set_value
@@ -5125,6 +5141,7 @@ gtk_widget_grab_focus
 gtk_widget_has_default
 gtk_widget_has_focus
 gtk_widget_has_grab
+gtk_widget_has_rc_style
 gtk_widget_has_screen
 gtk_widget_hide
 gtk_widget_hide_all

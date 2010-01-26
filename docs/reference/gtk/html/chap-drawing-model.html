@@ -65,6 +65,7 @@
 <link rel="index" href="api-index-2-16.html" title="Index of new symbols in 2.16">
 <link rel="index" href="api-index-2-18.html" title="Index of new symbols in 2.18">
 <link rel="index" href="api-index-2-20.html" title="Index of new symbols in 2.20">
+<link rel="glossary" href="annotation-glossary.html" title="Annotation Glossary">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
@@ -159,7 +160,7 @@
 	<code class="classname">GdkWindow</code>, GDK generates an event of
 	type <code class="constant">GDK_EVENT_EXPOSE</code>
 	for that window.  The GTK+ widget layer in turn finds the
-	widget that corresponds to that window, and emits the <a href="http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#GtkWidget-expose-event">expose-event signal</a>
+	widget that corresponds to that window, and emits the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event signal</a>
 	for that widget.
       </p>
 <p>
@@ -168,8 +169,8 @@
 	scheme, the drawing cycle would be trivial:  when GDK notifies
 	the GTK layer about an exposure event for a
 	<code class="classname">GdkWindow</code>, the GTK layer would simply
-	emit the <GTKDOCLINK HREF="GtkWidget-expose-event">expose-event
-	signal</GTKDOCLINK> for that widget.  The widget's expose event
+	emit the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event
+	signal</a> for that widget.  The widget's expose event
 	handler would subsequently repaint the widget.  No further
 	work would be necessary; the windowing system would generate
 	exposure events for each window that needs it, and then each
@@ -180,7 +181,7 @@
 	not have a <code class="classname">GdkWindow</code> of their own, but
 	rather share the one from their parent widget.  Such widgets
 	have called <code class="function">gtk_widget_set_has_window</code> to
-	disable it; this can be tested easily with the <a href="http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#gtk-widget-get-has-window"><code class="function">gtk_widget_get_has_window()</code></a>
+	disable it; this can be tested easily with the <a class="link" href="GtkWidget.html#gtk-widget-get-has-window" title="gtk_widget_get_has_window ()"><code class="function">gtk_widget_get_has_window()</code></a>
 	function.  As such, these are called <em class="firstterm">no-window
 	widgets</em>.
       </p>
@@ -359,7 +360,7 @@
 <p>
       When the GTK layer receives an exposure event from GDK, it first finds
       the <code class="literal">!<code class="constant">GTK_NO_WINDOW</code></code> widget that
-      corresponds to the event's window.  Then, it emits the <a href="http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#GtkWidget-expose-event">expose-event signal</a> for that
+      corresponds to the event's window.  Then, it emits the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event signal</a> for that
       widget.  As described above, that widget will first draw its background,
       and then ask each of its <code class="constant">GTK_NO_WINDOW</code> children to
       draw themselves.
@@ -395,7 +396,7 @@
       </p>
 <p>
 	To make this easier, most GTK+ widgets have the
-	<code class="constant">GTK_DOUBLE_BUFFERED</code> <a href="http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#GtkWidgetFlags">widget flag</a> turned on by
+	<code class="constant">GTK_DOUBLE_BUFFERED</code> <a class="link" href="GtkWidget.html#GtkWidgetFlags" title="enum GtkWidgetFlags">widget flag</a> turned on by
 	default.  When GTK+ encounters such a widget, it automatically
 	calls <code class="function">gdk_window_begin_paint_region()</code>
 	before emitting the expose-event signal for the widget, and
@@ -478,7 +479,7 @@ my_widget_init (MyWidget *widget)
       <code class="classname">GtkWindow</code> and
       <code class="classname">GtkEventBox</code> are the only two widgets
       which will draw their default contents unless you turn on the
-      <code class="constant">GTK_APP_PAINTABLE</code> <a href="http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#GtkWidgetFlags">widget flag</a>.  If you turn on
+      <code class="constant">GTK_APP_PAINTABLE</code> <a class="link" href="GtkWidget.html#GtkWidgetFlags" title="enum GtkWidgetFlags">widget flag</a>.  If you turn on
       this flag, then they will not draw their contents and let you do
       it instead.
     </p>
@@ -506,8 +507,8 @@ gtk_window_expose (GtkWidget      *widget,
       is implemented in a similar fashion.
     </p>
 <p>
-      Since the <GTKDOCLINK HREF="GtkWidget-expose-event">expose-event
-	signal</GTKDOCLINK> runs user-connected handlers
+      Since the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event
+	signal</a> runs user-connected handlers
       <span class="emphasis"><em>before</em></span> the widget's default handler, what
       happens is this:
     </p>

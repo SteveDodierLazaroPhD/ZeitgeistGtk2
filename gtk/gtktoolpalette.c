@@ -798,11 +798,13 @@ gtk_tool_palette_set_child_property (GtkContainer *container,
   switch (prop_id)
     {
       case CHILD_PROP_EXCLUSIVE:
-        gtk_tool_palette_set_exclusive (palette, child, g_value_get_boolean (value));
+        gtk_tool_palette_set_exclusive (palette, GTK_TOOL_ITEM_GROUP (child), 
+          g_value_get_boolean (value));
         break;
 
       case CHILD_PROP_EXPAND:
-        gtk_tool_palette_set_expand (palette, child, g_value_get_boolean (value));
+        gtk_tool_palette_set_expand (palette, GTK_TOOL_ITEM_GROUP (child), 
+          g_value_get_boolean (value));
         break;
 
       default:
@@ -823,11 +825,13 @@ gtk_tool_palette_get_child_property (GtkContainer *container,
   switch (prop_id)
     {
       case CHILD_PROP_EXCLUSIVE:
-        g_value_set_boolean (value, gtk_tool_palette_get_exclusive (palette, child));
+        g_value_set_boolean (value, 
+          gtk_tool_palette_get_exclusive (palette, GTK_TOOL_ITEM_GROUP (child)));
         break;
 
       case CHILD_PROP_EXPAND:
-        g_value_set_boolean (value, gtk_tool_palette_get_expand (palette, child));
+        g_value_set_boolean (value, 
+          gtk_tool_palette_get_expand (palette, GTK_TOOL_ITEM_GROUP (child)));
         break;
 
       default:
@@ -1294,9 +1298,9 @@ _gtk_tool_palette_compare_groups (gconstpointer a,
  * Since: 2.20
  */
 void
-gtk_tool_palette_set_group_position (GtkToolPalette *palette,
-                                     GtkWidget      *group,
-                                     gint            position)
+gtk_tool_palette_set_group_position (GtkToolPalette   *palette,
+                                     GtkToolItemGroup *group,
+                                     gint             position)
 {
   GtkToolItemGroupInfo *group_new;
   GtkToolItemGroupInfo *group_old;
@@ -1362,9 +1366,9 @@ gtk_tool_palette_group_notify_collapsed (GtkToolItemGroup *group,
  * Since: 2.20
  */
 void
-gtk_tool_palette_set_exclusive (GtkToolPalette *palette,
-                                GtkWidget      *group,
-                                gboolean        exclusive)
+gtk_tool_palette_set_exclusive (GtkToolPalette   *palette,
+                                GtkToolItemGroup *group,
+                                gboolean          exclusive)
 {
   GtkToolItemGroupInfo *group_info;
   gint position;
@@ -1399,7 +1403,7 @@ gtk_tool_palette_set_exclusive (GtkToolPalette *palette,
     }
 
   gtk_tool_palette_group_notify_collapsed (group_info->widget, NULL, palette);
-  gtk_widget_child_notify (group, "exclusive");
+  gtk_widget_child_notify (GTK_WIDGET (group), "exclusive");
 }
 
 /**
@@ -1413,8 +1417,8 @@ gtk_tool_palette_set_exclusive (GtkToolPalette *palette,
  * Since: 2.20
  */
 void
-gtk_tool_palette_set_expand (GtkToolPalette *palette,
-                             GtkWidget      *group,
+gtk_tool_palette_set_expand (GtkToolPalette   *palette,
+                             GtkToolItemGroup *group,
                              gboolean        expand)
 {
   GtkToolItemGroupInfo *group_info;
@@ -1432,7 +1436,7 @@ gtk_tool_palette_set_expand (GtkToolPalette *palette,
     {
       group_info->expand = expand;
       gtk_widget_queue_resize (GTK_WIDGET (palette));
-      gtk_widget_child_notify (group, "expand");
+      gtk_widget_child_notify (GTK_WIDGET (group), "expand");
     }
 }
 
@@ -1449,8 +1453,8 @@ gtk_tool_palette_set_expand (GtkToolPalette *palette,
  * Since: 2.20
  */
 gint
-gtk_tool_palette_get_group_position (GtkToolPalette *palette,
-                                     GtkWidget      *group)
+gtk_tool_palette_get_group_position (GtkToolPalette   *palette,
+                                     GtkToolItemGroup *group)
 {
   guint i;
 
@@ -1480,8 +1484,8 @@ gtk_tool_palette_get_group_position (GtkToolPalette *palette,
  * Since: 2.20
  */
 gboolean
-gtk_tool_palette_get_exclusive (GtkToolPalette *palette,
-                                GtkWidget      *group)
+gtk_tool_palette_get_exclusive (GtkToolPalette   *palette,
+                                GtkToolItemGroup *group)
 {
   gint position;
   GtkToolItemGroupInfo *info;
@@ -1510,8 +1514,8 @@ gtk_tool_palette_get_exclusive (GtkToolPalette *palette,
  * Since: 2.20
  */
 gboolean
-gtk_tool_palette_get_expand (GtkToolPalette *palette,
-                             GtkWidget      *group)
+gtk_tool_palette_get_expand (GtkToolPalette   *palette,
+                             GtkToolItemGroup *group)
 {
   gint position;
   GtkToolItemGroupInfo *info;
@@ -1545,12 +1549,13 @@ gtk_tool_palette_get_drop_item (GtkToolPalette *palette,
                                 gint            x,
                                 gint            y)
 {
-  GtkWidget *group = gtk_tool_palette_get_drop_group (palette, x, y);
+  GtkToolItemGroup *group = gtk_tool_palette_get_drop_group (palette, x, y);
+  GtkWidget *widget = GTK_WIDGET (group);
 
   if (group)
-    return gtk_tool_item_group_get_drop_item (GTK_TOOL_ITEM_GROUP (group),
-                                              x - group->allocation.x,
-                                              y - group->allocation.y);
+    return gtk_tool_item_group_get_drop_item (group,
+                                              x - widget->allocation.x,
+                                              y - widget->allocation.y);
 
   return NULL;
 }
@@ -1568,7 +1573,7 @@ gtk_tool_palette_get_drop_item (GtkToolPalette *palette,
  *
  * Since: 2.20
  */
-GtkWidget*
+GtkToolItemGroup*
 gtk_tool_palette_get_drop_group (GtkToolPalette *palette,
                                  gint            x,
                                  gint            y)
@@ -1599,7 +1604,7 @@ gtk_tool_palette_get_drop_group (GtkToolPalette *palette,
 
       if (x0 >= 0 && x0 < widget->allocation.width &&
           y0 >= 0 && y0 < widget->allocation.height)
-        return widget;
+        return GTK_TOOL_ITEM_GROUP (widget);
     }
 
   return NULL;
