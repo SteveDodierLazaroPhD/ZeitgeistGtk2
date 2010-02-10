@@ -252,7 +252,7 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
                                                          <a class="link" href="GtkStyle.html" title="Styles"><span class="returnvalue">GtkStyle</span></a> *style);
 #define             <a class="link" href="GtkWidget.html#gtk-widget-set-rc-style" title="gtk_widget_set_rc_style()">gtk_widget_set_rc_style</a>             (widget)
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-ensure-style" title="gtk_widget_ensure_style ()">gtk_widget_ensure_style</a>             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
-<a class="link" href="GtkStyle.html" title="Styles"><span class="returnvalue">GtkStyle</span></a>*           <a class="link" href="GtkWidget.html#gtk-widget-get-style" title="gtk_widget_get_style ()">gtk_widget_get_style</a>                (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
+<a class="link" href="GtkStyle.html" title="Styles"><span class="returnvalue">GtkStyle</span></a> *          <a class="link" href="GtkWidget.html#gtk-widget-get-style" title="gtk_widget_get_style ()">gtk_widget_get_style</a>                (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
 #define             <a class="link" href="GtkWidget.html#gtk-widget-restore-default-style" title="gtk_widget_restore_default_style()">gtk_widget_restore_default_style</a>    (widget)
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-reset-rc-styles" title="gtk_widget_reset_rc_styles ()">gtk_widget_reset_rc_styles</a>          (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-push-colormap" title="gtk_widget_push_colormap ()">gtk_widget_push_colormap</a>            (<a href="http://library.gnome.org/devel/gdk/unstable/gdk-Colormaps-and-Colors.html#GdkColormap"><span class="returnvalue">GdkColormap</span></a> *cmap);
@@ -454,6 +454,11 @@ enum                <a class="link" href="GtkWidget.html#GtkTextDirection" title
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-set-receives-default" title="gtk_widget_set_receives_default ()">gtk_widget_set_receives_default</a>     (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
                                                          <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> receives_default);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkWidget.html#gtk-widget-get-receives-default" title="gtk_widget_get_receives_default ()">gtk_widget_get_receives_default</a>     (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
+<span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-set-realized" title="gtk_widget_set_realized ()">gtk_widget_set_realized</a>             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> realized);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkWidget.html#gtk-widget-get-realized" title="gtk_widget_get_realized ()">gtk_widget_get_realized</a>             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
+<span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-set-mapped" title="gtk_widget_set_mapped ()">gtk_widget_set_mapped</a>               (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> mapped);
 
 <a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *    <a class="link" href="GtkWidget.html#gtk-requisition-copy" title="gtk_requisition_copy ()">gtk_requisition_copy</a>                (const <a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *requisition);
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-requisition-free" title="gtk_requisition_free ()">gtk_requisition_free</a>                (<a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *requisition);
@@ -650,7 +655,7 @@ custom &lt;accelerator&gt; element, which has attributes named key,
 modifiers and signal and allows to specify accelerators.
 </p>
 <div class="example">
-<a name="id1319941"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
+<a name="id1223788"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -674,7 +679,7 @@ Properties on the accessible implementation of an object can be set by accessing
 internal child "accessible" of a <span class="structname">GtkWidget</span>.
 </p>
 <div class="example">
-<a name="id1319969"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
+<a name="id1223817"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -3326,7 +3331,7 @@ already.</p>
 <hr>
 <div class="refsect2" title="gtk_widget_get_style ()">
 <a name="gtk-widget-get-style"></a><h3>gtk_widget_get_style ()</h3>
-<pre class="programlisting"><a class="link" href="GtkStyle.html" title="Styles"><span class="returnvalue">GtkStyle</span></a>*           gtk_widget_get_style                (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);</pre>
+<pre class="programlisting"><a class="link" href="GtkStyle.html" title="Styles"><span class="returnvalue">GtkStyle</span></a> *          gtk_widget_get_style                (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);</pre>
 <p>
 Simply an accessor function that returns <em class="parameter"><code>widget-&gt;style</code></em>.</p>
 <div class="variablelist"><table border="0">
@@ -6744,6 +6749,86 @@ See <a class="link" href="GtkWidget.html#gtk-widget-set-receives-default" title=
 </tbody>
 </table></div>
 <p class="since">Since 2.18</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_widget_set_realized ()">
+<a name="gtk-widget-set-realized"></a><h3>gtk_widget_set_realized ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_widget_set_realized             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> realized);</pre>
+<p>
+Marks the widget as being realized.
+</p>
+<p>
+This function should only ever be called in a derived widget's
+"realize" or "unrealize" implementation.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>realized</code></em> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to mark the widget as realized
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_widget_get_realized ()">
+<a name="gtk-widget-get-realized"></a><h3>gtk_widget_get_realized ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gtk_widget_get_realized             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);</pre>
+<p>
+Determines whether <em class="parameter"><code>widget</code></em> is realized.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>widget</code></em> is realized, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_widget_set_mapped ()">
+<a name="gtk-widget-set-mapped"></a><h3>gtk_widget_set_mapped ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_widget_set_mapped               (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> mapped);</pre>
+<p>
+Marks the widget as being realized.
+</p>
+<p>
+This function should only ever be called in a derived widget's
+"map" or "unmap" implementation.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mapped</code></em> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to mark the widget as mapped
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
 </div>
 <hr>
 <div class="refsect2" title="gtk_requisition_copy ()">

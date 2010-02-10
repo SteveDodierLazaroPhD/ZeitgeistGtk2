@@ -6547,6 +6547,9 @@ extern __typeof (gtk_paned_get_child1) IA__gtk_paned_get_child1 __attribute((vis
 extern __typeof (gtk_paned_get_child2) IA__gtk_paned_get_child2 __attribute((visibility("hidden")));
 #define gtk_paned_get_child2 IA__gtk_paned_get_child2
 
+extern __typeof (gtk_paned_get_handle_window) IA__gtk_paned_get_handle_window __attribute((visibility("hidden")));
+#define gtk_paned_get_handle_window IA__gtk_paned_get_handle_window
+
 extern __typeof (gtk_paned_get_position) IA__gtk_paned_get_position __attribute((visibility("hidden")));
 #define gtk_paned_get_position IA__gtk_paned_get_position
 
@@ -12530,6 +12533,9 @@ extern __typeof (gtk_widget_size_allocate) IA__gtk_widget_size_allocate __attrib
 extern __typeof (gtk_widget_size_request) IA__gtk_widget_size_request __attribute((visibility("hidden")));
 #define gtk_widget_size_request IA__gtk_widget_size_request
 
+extern __typeof (gtk_widget_style_attach) IA__gtk_widget_style_attach __attribute((visibility("hidden")));
+#define gtk_widget_style_attach IA__gtk_widget_style_attach
+
 extern __typeof (gtk_widget_style_get) IA__gtk_widget_style_get __attribute((visibility("hidden"))) G_GNUC_NULL_TERMINATED;
 #define gtk_widget_style_get IA__gtk_widget_style_get
 
@@ -12577,6 +12583,18 @@ extern __typeof (gtk_widget_set_can_focus) IA__gtk_widget_set_can_focus __attrib
 
 extern __typeof (gtk_widget_get_can_focus) IA__gtk_widget_get_can_focus __attribute((visibility("hidden")));
 #define gtk_widget_get_can_focus IA__gtk_widget_get_can_focus
+
+extern __typeof (gtk_widget_set_realized) IA__gtk_widget_set_realized __attribute((visibility("hidden")));
+#define gtk_widget_set_realized IA__gtk_widget_set_realized
+
+extern __typeof (gtk_widget_get_realized) IA__gtk_widget_get_realized __attribute((visibility("hidden")));
+#define gtk_widget_get_realized IA__gtk_widget_get_realized
+
+extern __typeof (gtk_widget_set_mapped) IA__gtk_widget_set_mapped __attribute((visibility("hidden")));
+#define gtk_widget_set_mapped IA__gtk_widget_set_mapped
+
+extern __typeof (gtk_widget_get_mapped) IA__gtk_widget_get_mapped __attribute((visibility("hidden")));
+#define gtk_widget_get_mapped IA__gtk_widget_get_mapped
 
 #endif
 #endif

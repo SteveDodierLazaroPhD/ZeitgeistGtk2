@@ -6550,6 +6550,9 @@ extern __typeof (gtk_paned_get_child1) gtk_paned_get_child1 __attribute((alias("
 #undef gtk_paned_get_child2 
 extern __typeof (gtk_paned_get_child2) gtk_paned_get_child2 __attribute((alias("IA__gtk_paned_get_child2"), visibility("default")));
 
+#undef gtk_paned_get_handle_window 
+extern __typeof (gtk_paned_get_handle_window) gtk_paned_get_handle_window __attribute((alias("IA__gtk_paned_get_handle_window"), visibility("default")));
+
 #undef gtk_paned_get_position 
 extern __typeof (gtk_paned_get_position) gtk_paned_get_position __attribute((alias("IA__gtk_paned_get_position"), visibility("default")));
 
@@ -12533,6 +12536,9 @@ extern __typeof (gtk_widget_size_allocate) gtk_widget_size_allocate __attribute(
 #undef gtk_widget_size_request 
 extern __typeof (gtk_widget_size_request) gtk_widget_size_request __attribute((alias("IA__gtk_widget_size_request"), visibility("default")));
 
+#undef gtk_widget_style_attach 
+extern __typeof (gtk_widget_style_attach) gtk_widget_style_attach __attribute((alias("IA__gtk_widget_style_attach"), visibility("default")));
+
 #undef gtk_widget_style_get 
 extern __typeof (gtk_widget_style_get) gtk_widget_style_get __attribute((alias("IA__gtk_widget_style_get"), visibility("default")));
 
@@ -12580,6 +12586,18 @@ extern __typeof (gtk_widget_set_can_focus) gtk_widget_set_can_focus __attribute(
 
 #undef gtk_widget_get_can_focus 
 extern __typeof (gtk_widget_get_can_focus) gtk_widget_get_can_focus __attribute((alias("IA__gtk_widget_get_can_focus"), visibility("default")));
+
+#undef gtk_widget_set_realized 
+extern __typeof (gtk_widget_set_realized) gtk_widget_set_realized __attribute((alias("IA__gtk_widget_set_realized"), visibility("default")));
+
+#undef gtk_widget_get_realized 
+extern __typeof (gtk_widget_get_realized) gtk_widget_get_realized __attribute((alias("IA__gtk_widget_get_realized"), visibility("default")));
+
+#undef gtk_widget_set_mapped 
+extern __typeof (gtk_widget_set_mapped) gtk_widget_set_mapped __attribute((alias("IA__gtk_widget_set_mapped"), visibility("default")));
+
+#undef gtk_widget_get_mapped 
+extern __typeof (gtk_widget_get_mapped) gtk_widget_get_mapped __attribute((alias("IA__gtk_widget_get_mapped"), visibility("default")));
 
 #endif
 #endif

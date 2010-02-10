@@ -150,6 +150,17 @@ enum                <a class="link" href="GtkRange.html#GtkSensitivityType" titl
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkRange.html#gtk-range-get-flippable" title="gtk_range_get_flippable ()">gtk_range_get_flippable</a>             (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range);
 <span class="returnvalue">void</span>                <a class="link" href="GtkRange.html#gtk-range-set-flippable" title="gtk_range_set_flippable ()">gtk_range_set_flippable</a>             (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
                                                          <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> flippable);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="GtkRange.html#gtk-range-get-min-slider-size" title="gtk_range_get_min_slider_size ()">gtk_range_get_min_slider_size</a>       (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range);
+<span class="returnvalue">void</span>                <a class="link" href="GtkRange.html#gtk-range-get-range-rect" title="gtk_range_get_range_rect ()">gtk_range_get_range_rect</a>            (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Points-Rectangles-and-Regions.html#GdkRectangle"><span class="returnvalue">GdkRectangle</span></a> *range_rect);
+<span class="returnvalue">void</span>                <a class="link" href="GtkRange.html#gtk-range-get-slider-range" title="gtk_range_get_slider_range ()">gtk_range_get_slider_range</a>          (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *slider_start,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *slider_end);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkRange.html#gtk-range-get-slider-size-fixed" title="gtk_range_get_slider_size_fixed ()">gtk_range_get_slider_size_fixed</a>     (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range);
+<span class="returnvalue">void</span>                <a class="link" href="GtkRange.html#gtk-range-set-min-slider-size" title="gtk_range_set_min_slider_size ()">gtk_range_set_min_slider_size</a>       (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> min_size);
+<span class="returnvalue">void</span>                <a class="link" href="GtkRange.html#gtk-range-set-slider-size-fixed" title="gtk_range_set_slider_size_fixed ()">gtk_range_set_slider_size_fixed</a>     (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> size_fixed);
 </pre>
 </div>
 <div class="refsect1" title="Object Hierarchy">
@@ -853,6 +864,177 @@ See <a class="link" href="GtkWidget.html#gtk-widget-get-direction" title="gtk_wi
 </tbody>
 </table></div>
 <p class="since">Since 2.18</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_range_get_min_slider_size ()">
+<a name="gtk-range-get-min-slider-size"></a><h3>gtk_range_get_min_slider_size ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                gtk_range_get_min_slider_size       (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range);</pre>
+<p>
+This function is useful mainly for <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a> subclasses.
+</p>
+<p>
+See <a class="link" href="GtkRange.html#gtk-range-set-min-slider-size" title="gtk_range_set_min_slider_size ()"><code class="function">gtk_range_set_min_slider_size()</code></a>.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>range</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The minimum size of the range's slider.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_range_get_range_rect ()">
+<a name="gtk-range-get-range-rect"></a><h3>gtk_range_get_range_rect ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_range_get_range_rect            (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Points-Rectangles-and-Regions.html#GdkRectangle"><span class="returnvalue">GdkRectangle</span></a> *range_rect);</pre>
+<p>
+This function returns the area that contains the range's trough
+and its steppers, in widget-&gt;window coordinates.
+</p>
+<p>
+This function is useful mainly for <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a> subclasses.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>range</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>range_rect</code></em> :</span></p></td>
+<td> return location for the range rectangle
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_range_get_slider_range ()">
+<a name="gtk-range-get-slider-range"></a><h3>gtk_range_get_slider_range ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_range_get_slider_range          (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *slider_start,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *slider_end);</pre>
+<p>
+This function returns sliders range along the long dimension,
+in widget-&gt;window coordinates.
+</p>
+<p>
+This function is useful mainly for <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a> subclasses.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>range</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>slider_start</code></em> :</span></p></td>
+<td> return location for the slider's start, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>slider_end</code></em> :</span></p></td>
+<td> return location for the slider's end, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_range_get_slider_size_fixed ()">
+<a name="gtk-range-get-slider-size-fixed"></a><h3>gtk_range_get_slider_size_fixed ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gtk_range_get_slider_size_fixed     (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range);</pre>
+<p>
+This function is useful mainly for <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a> subclasses.
+</p>
+<p>
+See <a class="link" href="GtkRange.html#gtk-range-set-slider-size-fixed" title="gtk_range_set_slider_size_fixed ()"><code class="function">gtk_range_set_slider_size_fixed()</code></a>.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>range</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> whether the range's slider has a fixed size.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_range_set_min_slider_size ()">
+<a name="gtk-range-set-min-slider-size"></a><h3>gtk_range_set_min_slider_size ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_range_set_min_slider_size       (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> min_size);</pre>
+<p>
+Sets the minimum size of the range's slider.
+</p>
+<p>
+This function is useful mainly for <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a> subclasses.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>range</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>min_size</code></em> :</span></p></td>
+<td> The slider's minimum size
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_range_set_slider_size_fixed ()">
+<a name="gtk-range-set-slider-size-fixed"></a><h3>gtk_range_set_slider_size_fixed ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_range_set_slider_size_fixed     (<a class="link" href="GtkRange.html" title="GtkRange"><span class="returnvalue">GtkRange</span></a> *range,
+                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> size_fixed);</pre>
+<p>
+Sets whether the range's slider has a fixed size, or a size that
+depends on it's adjustment's page size.
+</p>
+<p>
+This function is useful mainly for <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a> subclasses.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>range</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkRange.html" title="GtkRange"><span class="type">GtkRange</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>size_fixed</code></em> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to make the slider size constant
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
 </div>
 </div>
 <div class="refsect1" title="Property Details">

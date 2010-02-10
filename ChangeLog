@@ -1,3 +1,843 @@
+commit da68b2e600b015f970dd7953d9f90965eaf0f8a3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 9 14:12:54 2010 -0500
+
+    Updates
+
+ NEWS |   43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 43 insertions(+), 0 deletions(-)
+
+commit e821eea4f017cc7ae7689daed0c3a56859268c80
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 9 13:40:58 2010 -0500
+
+    Add some more goddamn accessors
+
+ docs/reference/gtk/gtk-sections.txt |    4 ++
+ gtk/gtk.symbols                     |    4 ++
+ gtk/gtkwidget.c                     |   94
+ +++++++++++++++++++++++++++++++++++
+ gtk/gtkwidget.h                     |   12 +++++
+ 4 files changed, 114 insertions(+), 0 deletions(-)
+
+commit 893408352d89a04fe70d4b160a6010a0e00072a4
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 9 00:42:56 2010 -0500
+
+    Avoid overlap of scale marks
+
+    This was reported to be a problem in bug 608807.
+
+ gtk/gtkscale.c |   88
+ ++++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 files changed, 79 insertions(+), 9 deletions(-)
+
+commit 412beb444440c01e2e2558cd0d20dac0fc1d9a69
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Feb 8 21:18:13 2010 -0500
+
+    Avoid a crash when setting a tooltip on a GtkCalendar
+
+    The details code was assuming that it controls ::has-tooltip.
+    Reported by Bill Nottingham, bug 607344.
+
+ gtk/gtkcalendar.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit beddf67e562e1670d692cb9ba0a2546713cc80fc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Feb 8 20:08:22 2010 -0500
+
+    Fix a refcounting issues in GtkPlug
+
+    When the foreign window already has a GdkWindow, we forget to take
+    an extra references, leading to crashes later on. Patch by
+    Karl Tomlinson, bug 607061.
+
+ gtk/gtkplug.c |   35 +++++++++++++++++++++--------------
+ 1 files changed, 21 insertions(+), 14 deletions(-)
+
+commit 9fc642019eef6fc6bc2ad01fc2bfd4c07b720885
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Feb 8 14:20:55 2010 -0500
+
+    Allow running without any im context
+
+    Setting GtkSettings::im-module to gtk-im-context-none will make
+    GtkIMMultiContext just pass through.
+
+ gtk/gtkimmulticontext.c |   40 +++++++++++++++++++++++++++++++++++++---
+ 1 files changed, 37 insertions(+), 3 deletions(-)
+
+commit b193be900347e0986b8d5b8923b7f9a1469ae216
+Author: Alan Knowles <alan@akbkhome.com>
+Date:   Tue Feb 9 12:27:05 2010 -0500
+
+    Add introspection annotations for
+    gtk_tree_model_get_path+gtk_tree_store_newv
+
+ gtk/gtktreemodel.c |    2 +-
+ gtk/gtktreestore.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 9497a198f7c6fc528391648f5e85dfa09364fc74
+Author: Christian Persch <chpe@gnome.org>
+Date:   Tue Jan 26 15:41:00 2010 +0100
+
+    Correctly clone the toolbutton's icon-name image widget
+
+    Bug #608162.
+
+ gtk/gtktoolbutton.c |    6 ++++++
+ tests/testtoolbar.c |    5 +++++
+ 2 files changed, 11 insertions(+), 0 deletions(-)
+
+commit bc39d88b4479051360cf8a16f40bbf51b7b758c4
+Author: Alejandro Piñeiro <apinheiro@igalia.com>
+Date:   Tue Feb 9 11:52:49 2010 +0100
+
+    Solve a wrong reference on gdk_keymap_translate_keyboard_state
+
+    Solves https://bugzilla.gnome.org/show_bug.cgi?id=608345
+
+ docs/reference/gdk/tmpl/keys.sgml |    2 +-
+ gdk/x11/gdkkeys-x11.c             |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit d2b412af409b692500ee615b0857ed88ff2c7dbd
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Mon Feb 8 10:41:51 2010 +0200
+
+    Use correct processorArchitecture for x86_64 in manifest file
+
+ configure.in    |    3 +++
+ gtk/Makefile.am |    2 +-
+ 2 files changed, 4 insertions(+), 1 deletions(-)
+
+commit 2adef27d7b16612e0a4f2f0cffee1a726a660fcd
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Nov 6 05:44:29 2009 +0100
+
+    Move documentation to inline comments: GtkAccelLabel
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=403485
+
+ docs/reference/gtk/tmpl/gtkaccellabel.sgml |  158
+ ----------------------------
+ gtk/gtkaccellabel.c                        |   86 +++++++++++++++-
+ gtk/gtkaccellabel.h                        |    6 +
+ 3 files changed, 90 insertions(+), 160 deletions(-)
+
+commit db45d38b6fbbf19653c1294fdd0b87fb2469a94d
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jan 7 07:51:13 2010 +0100
+
+    [tests] Not use GtkOptionMenu deprecate widget.
+
+    Replace GtkOptionMenu with GtkComboBox.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=606288
+
+ tests/prop-editor.c |   36 ++++++++++++------------------------
+ 1 files changed, 12 insertions(+), 24 deletions(-)
+
+commit d1d98ad97b8f6a15a4884882b0b15c1c44685cca
+Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Date:   Mon Feb 8 11:13:03 2010 +0700
+
+    Updated Thai translation.
+
+ po/th.po |  273
+ +++++++++++++++++++++++++++++++++++---------------------------
+ 1 files changed, 153 insertions(+), 120 deletions(-)
+
+commit 12edc32d95ddbb40182c16f088156d322781ebe9
+Author: André Draszik <gtk@andred.net>
+Date:   Sun Sep 13 14:11:49 2009 +0100
+
+    gdk/directfb: cursor size is artificially limited
+
+    Cursor sizes in DirectFB can be large (4095x4095), limit to 128x128
+    though, because the x11 backend has this limit, too - for max.
+    compatibility.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=609201
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ gdk/directfb/gdkcursor-directfb.c |   12 +++++++++---
+ 1 files changed, 9 insertions(+), 3 deletions(-)
+
+commit 7f8b96d9bc220218f95dc081ba16cba915dd7e00
+Author: André Draszik <gtk@andred.net>
+Date:   Sun Sep 13 14:08:21 2009 +0100
+
+    gdk/directfb: convert gdkgc-directfb to using G_DEFINE_TYPE
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=609199
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ gdk/directfb/gdkgc-directfb.c      |   70
+ +++++++++++------------------------
+ gdk/directfb/gdkprivate-directfb.h |   10 +++---
+ 2 files changed, 27 insertions(+), 53 deletions(-)
+
+commit e1a83243e41f5bfc3d7b0b0536a3ec5d2e841a2a
+Author: André Draszik <gtk@andred.net>
+Date:   Sun Sep 13 14:08:21 2009 +0100
+
+    gdk/directfb: gdkdnd-directfb's private data is used uninitialized
+
+    Use G_TYPE_INSTANCE_GET_PRIVATE() instead
+
+    In the process, convert to using G_DEFINE_TYPE, too.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=609195
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ gdk/directfb/gdkdnd-directfb.c |   84
+ ++++++++++++---------------------------
+ 1 files changed, 26 insertions(+), 58 deletions(-)
+
+commit bc36a1544602241107a17b6330e4c6ff69294d83
+Author: André Draszik <gtk@andred.net>
+Date:   Sun Sep 13 14:08:21 2009 +0100
+
+    gdk/directfb: convert gdkcolor-directfb to using G_DEFINE_TYPE
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=609191
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ gdk/directfb/gdkcolor-directfb.c |   39
+ ++-----------------------------------
+ 1 files changed, 3 insertions(+), 36 deletions(-)
+
+commit e71d3c459aa7b1d81be82a841cd7c34d6ea230ed
+Author: André Draszik <andre.draszik@st.com>
+Date:   Sun Sep 13 15:16:13 2009 +0100
+
+    gdk/directfb: fix _gdk_windowing_pointer_grab()
+
+    Fix for bgo #609188
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ gdk/directfb/gdkmain-directfb.c |   10 ++++++----
+ 1 files changed, 6 insertions(+), 4 deletions(-)
+
+commit f94d62aeab94c6ddffbffef5e4e7d563383a5b50
+Author: Steffen Macke <sdteffen@gmail.com>
+Date:   Sat Feb 6 20:04:30 2010 +0200
+
+    Fix menu bar problem in ms-windows theme engine on Windows 7
+
+    Patch from bug #591186. It won't have any effect in this branch as the
+    whole XP-and-later theming code is broken and disabled, but when/if
+    that is fixed, then this patch should help.
+
+ modules/engines/ms-windows/msw_style.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 5adb75f26b481b3d0677a5d165d6b82e4cc19e2d
+Author: Christian Dywan <christian@lanedo.com>
+Date:   Sun Feb 7 01:52:58 2010 +0100
+
+    [gtk] Deprecate GtkCurveType enum
+
+    It's only used by already deprecated GtkCurve and GtkGammaCurve
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=556263
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ gtk/gtkenums.h |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit e9d0bb5d58f16f25009393abe872d6460a60d591
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Sat Feb 6 23:00:16 2010 +0100
+
+    Updated French translation
+
+ po-properties/fr.po | 3667
+ +++++++++++++++++++++++++++------------------------
+ po/fr.po            | 2294 ++++++++++++++++----------------
+ 2 files changed, 3073 insertions(+), 2888 deletions(-)
+
+commit 07dc2f6c35cbe1909f6194ffe8dafdd7c82a9380
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Sat Feb 6 15:57:15 2010 +0100
+
+    gtk: fix crash in _gtk_rbtree_find_offset() called from
+    update_prelight()
+
+    Move the check for tree_view->priv->tree being NULL into
+    update_prelight()
+    so the function will never call _gtk_rbtree_find_offset() on a
+    NULL rbtree.
+
+ gtk/gtktreeview.c |   10 ++++++----
+ 1 files changed, 6 insertions(+), 4 deletions(-)
+
+commit ee57066cac11e918172c3bdb68ff7b3be901dbc7
+Author: Jonh Wendell <jwendell@gnome.org>
+Date:   Fri Feb 5 15:20:03 2010 -0300
+
+    Updated Brazilian Portuguese translation
+
+ po-properties/pt_BR.po | 3655
+ +++++++++++++++++++++++++-----------------------
+ 1 files changed, 1901 insertions(+), 1754 deletions(-)
+
+commit 42081e5f4a134db655aca059ca83689e99deb148
+Author: Jonh Wendell <jwendell@gnome.org>
+Date:   Fri Feb 5 11:30:41 2010 -0300
+
+    Updated Brazilian Portuguese translation
+
+ po/pt_BR.po | 2279
+ ++++++++++++++++++++++++++++++-----------------------------
+ 1 files changed, 1164 insertions(+), 1115 deletions(-)
+
+commit 69aa7a6392f2ed5d20483b01c0183a3b0fece0be
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Feb 4 19:15:54 2010 -0500
+
+    Make DND work better with shaped windows
+
+    If mouse clicks go through, drag-and-drop should too...
+    Fixes bug 608615.
+
+ gdk/x11/gdkdisplay-x11.c |    4 +-
+ gdk/x11/gdkdisplay-x11.h |    1 +
+ gdk/x11/gdkdnd-x11.c     |  148
+ +++++++++++++++++++++++++++++++++++++++++-----
+ gdk/x11/gdkprivate-x11.h |    4 +
+ gdk/x11/gdkwindow-x11.c  |   14 ++--
+ 5 files changed, 146 insertions(+), 25 deletions(-)
+
+commit 0d946179358abc3c0e0618d35243cb11d1a54028
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Thu Feb 4 15:33:55 2010 -0800
+
+    Bug 554420 - Seal GtkTextTag
+
+    Seal GtkTextTag.
+
+ gtk/gtktexttag.h |   56
+ +++++++++++++++++++++++++++---------------------------
+ 1 files changed, 28 insertions(+), 28 deletions(-)
+
+commit 465dd9207cdb0667c78751cd9ece10f73551c016
+Author: Petr Kovar <pknbe@volny.cz>
+Date:   Thu Feb 4 23:39:36 2010 +0100
+
+    Update Czech properties translation
+
+ po-properties/cs.po | 3675
+ ++++++++++++++++++++++++++------------------------
+ 1 files changed, 1911 insertions(+), 1764 deletions(-)
+
+commit 6c12219eb3b1e10589d238948f69bdb97d173036
+Author: Petr Kovar <pknbe@volny.cz>
+Date:   Thu Feb 4 22:45:51 2010 +0100
+
+    Update Czech translation
+
+ po/cs.po | 2280
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 1163 insertions(+), 1117 deletions(-)
+
+commit 9d4c8f38d813460a1796dca00f898834b9fdc0db
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Feb 4 16:43:54 2010 +0100
+
+    Bug 608993 - Add gtk_widget_style_attach()
+
+    As replacement for:
+    widget->style = gtk_style_attach (widget->style, widget->window);
+
+ gtk/gtk.symbols |    1 +
+ gtk/gtkwidget.c |   26 ++++++++++++++++++++++++++
+ gtk/gtkwidget.h |   12 +++++++-----
+ 3 files changed, 34 insertions(+), 5 deletions(-)
+
+commit 91c4184af63e8bb3af653030755d1de38b80dd2a
+Author: Pavol Šimo <palo.simo@gmail.com>
+Date:   Thu Feb 4 09:18:05 2010 +0100
+
+    Updated Slovak translation
+
+ po/sk.po | 2468
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1248 insertions(+), 1220 deletions(-)
+
+commit 11bd065adff4848e395264c5596162a2bdaece49
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Feb 2 20:57:21 2010 +0100
+
+    [docs] Add anchor for keybinding signals
+
+ docs/reference/gtk/tmpl/gtkbindings.sgml |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 6a05e5edbf9b500c530865e73fd4c19701a155c1
+Author: Mattias Põldaru <mahfiaz gmail com>
+Date:   Mon Feb 1 17:09:06 2010 +0200
+
+    Updating Estonian translation
+
+ po/et.po |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit ac2df186aa8805730b916f4cb3c41ad61e752180
+Author: Mattias Põldaru <mahfiaz gmail com>
+Date:   Mon Feb 1 09:41:45 2010 +0200
+
+    Updating Estonian translation
+
+ po/et.po | 1302
+ +-------------------------------------------------------------
+ 1 files changed, 12 insertions(+), 1290 deletions(-)
+
+commit 4c3f32a632797c4d6013deeaccd01a0b064b3aba
+Author: Mattias Põldaru <mahfiaz gmail com>
+Date:   Mon Feb 1 09:33:49 2010 +0200
+
+    Updating Estonian translation
+
+ po-properties/et.po | 1851
+ ++-------------------------------------------------
+ 1 files changed, 41 insertions(+), 1810 deletions(-)
+
+commit dead9af3d46d324b344b4b8410d98a598f8c27b8
+Author: Kjartan Maraas <kmaraas@gnome.org>
+Date:   Sun Jan 31 20:03:30 2010 +0100
+
+    Updated Norwegian bokmål translation
+
+ po/nb.po | 2251
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 1151 insertions(+), 1100 deletions(-)
+
+commit 54b3340eeef9d07615ac568189e9f5561c46ded4
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Sun Jan 31 13:31:26 2010 +0100
+
+    Updated Spanish translation
+
+ po-properties/es.po |   44 +++++++++++++++++++++++---------------------
+ 1 files changed, 23 insertions(+), 21 deletions(-)
+
+commit 66207cf13eb7b3837dd9b37dc31bd93c7ca59dfe
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sun Jan 3 15:27:53 2010 +0100
+
+    Improve enter/motion notify semantics
+
+    On X11 we receive enter notify and motion notify events for a window
+    regardless of its focus state.  On Mac OS X this is not the case.
+    This
+    commit improves the semantics to overcome this difference.
+    It improves
+    on my earlier patch that sent a motion notify event when a window
+    became
+    main.
+
+    Instead of sending a motion notify when a window becomes main, we now
+    send one when a window becomes key, which comes closest to a window
+    getting focus in X11.  This motion notify is needed because Mac OS
+    X does
+    not send motion events when an application is inactive (none of its
+    windows have focus), these events are sent in X11.  This dummy motion
+    notify event (with current coordinates of the mouse cursor) allows an
+    application to get its prelight and other state right when it
+    gets focus
+    and thus user attention.
+
+    Another change is to send an enter notify event when updating the
+    tracking rectangle of a GdkQuartView and the mouse cursor is
+    currently in
+    this rectangle.  This rectangle is at least updated on window
+    creation.
+    This enter notify event is important for the case where a new window
+    appears right below the mouse cursor.  The window has to receive
+    an enter
+    notify event for the subsequent events to be processed correctly.  Mac
+    OS X does not send one in this case, so we generate it ourselves.
+
+    Both of these synthesized events have to go through
+    _gdk_windowing_got_event() for updating statekeeping, etc.
+    append_event() has a boolean flag now to make this convenient.
+
+ gdk/quartz/GdkQuartzView.c     |    9 +++
+ gdk/quartz/gdkevents-quartz.c  |  113
+ +++++++++++++++++++++++++++++++++++++--
+ gdk/quartz/gdkprivate-quartz.h |    2 +
+ gdk/quartz/gdkwindow-quartz.c  |   63 +----------------------
+ 4 files changed, 119 insertions(+), 68 deletions(-)
+
+commit 15ef288b9baf831ef80e7cb9f2a3d81506be1b80
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Sat Jan 30 20:03:42 2010 +0100
+
+    Updated Spanish translation
+
+ po-properties/es.po |   31 +++++++++----------------------
+ 1 files changed, 9 insertions(+), 22 deletions(-)
+
+commit f0005fb96b4bb2c4fa3936d715066e8a7fc68e1c
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Sat Jan 30 16:17:18 2010 +0100
+
+    Updated Spanish translation
+
+ po-properties/es.po | 3661
+ +++++++++++++++++++++++++++------------------------
+ 1 files changed, 1924 insertions(+), 1737 deletions(-)
+
+commit a5d7a7a6a36dfe09ee42f6c379bdf52a14d704cc
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Sat Jan 30 16:17:14 2010 +0100
+
+    Updated Spanish translation
+
+ po/es.po | 2280
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 1165 insertions(+), 1115 deletions(-)
+
+commit 2d0cef0896dbc70456b73bac130cd53f0ea3d171
+Author: Andre Klapper <a9016009@gmx.de>
+Date:   Fri Jan 29 22:28:45 2010 +0100
+
+    Add missing files to POTFILES.in to make l10n.gnome.org happy
+
+ po-properties/POTFILES.in |    5 +++++
+ po/POTFILES.in            |    3 +++
+ 2 files changed, 8 insertions(+), 0 deletions(-)
+
+commit 2147e57f46c43ef3fd3c145735329f8f2a558c4f
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Fri Jan 29 11:09:13 2010 -0600
+
+    Remove existing signal connections in gtk_drag_dest_unset().
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=608370
+
+ gtk/gtkdnd.c |   14 ++++++++++++++
+ 1 files changed, 14 insertions(+), 0 deletions(-)
+
+commit c9639c924b123628cb7d1032af066fa4ea4d49fa
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Fri Jan 29 16:49:12 2010 +0100
+
+    Implement gtk_paned_get_handle_window
+
+    Fixes: https://bugzilla.gnome.org/show_bug.cgi?id=607885
+
+ gtk/gtk.symbols |    1 +
+ gtk/gtkpaned.c  |   21 +++++++++++++++++++++
+ gtk/gtkpaned.h  |    2 ++
+ 3 files changed, 24 insertions(+), 0 deletions(-)
+
+commit a23f581c5d6f9256303df5cb639ebf6c935a886b
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Fri Jan 29 16:43:15 2010 +0100
+
+    Do not update paned position if it's already at the given value
+
+    Fixes: https://bugzilla.gnome.org/show_bug.cgi?id=561816
+
+ gtk/gtkpaned.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit da86b0bd3f3c4bf3ec98812885ca2639364f95ed
+Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Date:   Fri Jan 29 21:46:36 2010 +0700
+
+    Updated Thai translation.
+
+ po/th.po |    5 ++---
+ 1 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 899d425e5020ad39b6c48f08754ae91cdccfef48
+Author: Li Yuan <li.yuan@sun.com>
+Date:   Fri Jan 29 14:16:24 2010 +0800
+
+    Bug #608410. Set cursor position after inserting text.
+
+ modules/other/gail/gailentry.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 3a796a515883a2fbe125cd20b3fcdfc6f77d7fd2
+Author: Jamil Ahmed <itsjamil@gmail.com>
+Date:   Fri Jan 29 00:53:15 2010 +0600
+
+    Updated Bengali translation
+
+ po/bn.po |12809
+ ++++++++++++++++++++++++++------------------------------------
+ 1 files changed, 5439 insertions(+), 7370 deletions(-)
+
+commit 7aa3414c41e47d7b3b5bc97954e84dcc09722760
+Author: Jamil Ahmed <itsjamil@gmail.com>
+Date:   Fri Jan 29 00:49:07 2010 +0600
+
+    Updated Bengali translation
+
+ po-properties/bn.po | 5010
+ ++++++++++++++++++++++++---------------------------
+ 1 files changed, 2357 insertions(+), 2653 deletions(-)
+
+commit 6048c4b127a5aee3c3c9730f5da3b6124073a5bb
+Author: Jamil Ahmed <itsjamil@gmail.com>
+Date:   Fri Jan 29 00:44:43 2010 +0600
+
+    Updated Bengali translation
+
+ po/bn.po |12331
+ ++++++++++++++++++++++++++++++++++++--------------------------
+ 1 files changed, 7134 insertions(+), 5197 deletions(-)
+
+commit cc62ab3a0cf52aa5850c6ea733a07326327da03a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jan 28 03:10:09 2010 +0100
+
+    [docs] Fix GtkOffscreenWindow documentation
+
+ docs/reference/gtk/gtk-docs.sgml |    1 +
+ docs/reference/gtk/gtk.types     |    1 +
+ gtk/gtkoffscreenwindow.c         |   16 +++++++++-------
+ 3 files changed, 11 insertions(+), 7 deletions(-)
+
+commit f5a8db1536fd2b614d442c83897358cf84532f88
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jan 25 23:25:17 2010 -0500
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 7ad6567d77ad60f933cd51f477934d1124278475
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jan 25 23:23:51 2010 -0500
+
+    2.19.4
+
+ docs/reference/gtk/tmpl/gtkstatusicon.sgml |    9 +
+ po-properties/af.po                        |    4 +-
+ po-properties/am.po                        |    4 +-
+ po-properties/ang.po                       |    4 +-
+ po-properties/ar.po                        |    4 +-
+ po-properties/as.po                        |    4 +-
+ po-properties/ast.po                       | 5065 +++++++------
+ po-properties/az.po                        |    4 +-
+ po-properties/az_IR.po                     |    4 +-
+ po-properties/be.po                        |    4 +-
+ po-properties/be@latin.po                  |    4 +-
+ po-properties/bg.po                        | 3486 +++++-----
+ po-properties/bn.po                        |    4 +-
+ po-properties/bn_IN.po                     |    4 +-
+ po-properties/br.po                        |    4 +-
+ po-properties/bs.po                        |    4 +-
+ po-properties/ca.po                        |    4 +-
+ po-properties/ca@valencia.po               |    4 +-
+ po-properties/crh.po                       |    4 +-
+ po-properties/cs.po                        |    4 +-
+ po-properties/cy.po                        |    4 +-
+ po-properties/da.po                        |    4 +-
+ po-properties/de.po                        |    4 +-
+ po-properties/dz.po                        |    4 +-
+ po-properties/el.po                        |    4 +-
+ po-properties/en_CA.po                     |    4 +-
+ po-properties/en_GB.po                     |    4 +-
+ po-properties/eo.po                        |    4 +-
+ po-properties/es.po                        |    4 +-
+ po-properties/et.po                        |    4 +-
+ po-properties/eu.po                        | 3824 +++++-----
+ po-properties/fa.po                        |    4 +-
+ po-properties/fi.po                        |    4 +-
+ po-properties/fr.po                        |    4 +-
+ po-properties/ga.po                        |    4 +-
+ po-properties/gl.po                        |    4 +-
+ po-properties/gu.po                        |    4 +-
+ po-properties/he.po                        |    4 +-
+ po-properties/hi.po                        |    4 +-
+ po-properties/hr.po                        |    4 +-
+ po-properties/hu.po                        |    4 +-
+ po-properties/hy.po                        |    4 +-
+ po-properties/ia.po                        |    4 +-
+ po-properties/id.po                        |    4 +-
+ po-properties/io.po                        |    4 +-
+ po-properties/is.po                        |    4 +-
+ po-properties/it.po                        |    4 +-
+ po-properties/ja.po                        |    4 +-
+ po-properties/ka.po                        |    4 +-
+ po-properties/kn.po                        |    4 +-
+ po-properties/ko.po                        |    4 +-
+ po-properties/ku.po                        |    4 +-
+ po-properties/li.po                        |    4 +-
+ po-properties/lt.po                        |    4 +-
+ po-properties/lv.po                        |    4 +-
+ po-properties/mai.po                       |    4 +-
+ po-properties/mi.po                        |    4 +-
+ po-properties/mk.po                        |    4 +-
+ po-properties/ml.po                        |    4 +-
+ po-properties/mn.po                        |    4 +-
+ po-properties/mr.po                        |    4 +-
+ po-properties/ms.po                        |    4 +-
+ po-properties/my.po                        | 3552 +++++-----
+ po-properties/nb.po                        | 3498 +++++-----
+ po-properties/nds.po                       |    4 +-
+ po-properties/ne.po                        |    4 +-
+ po-properties/nl.po                        |    4 +-
+ po-properties/nn.po                        |    4 +-
+ po-properties/nso.po                       |    4 +-
+ po-properties/oc.po                        |    4 +-
+ po-properties/or.po                        |    4 +-
+ po-properties/pa.po                        |    4 +-
+ po-properties/pl.po                        |    4 +-
+ po-properties/ps.po                        |    4 +-
+ po-properties/pt.po                        |    4 +-
+ po-properties/pt_BR.po                     |    4 +-
+ po-properties/ro.po                        |    4 +-
+ po-properties/ru.po                        |    4 +-
+ po-properties/rw.po                        |    4 +-
+ po-properties/si.po                        |    4 +-
+ po-properties/sk.po                        |    4 +-
+ po-properties/sl.po                        |    4 +-
+ po-properties/sq.po                        |    4 +-
+ po-properties/sr.po                        |    4 +-
+ po-properties/sr@ije.po                    |    4 +-
+ po-properties/sr@latin.po                  |    4 +-
+ po-properties/sv.po                        |    4 +-
+ po-properties/ta.po                        |    4 +-
+ po-properties/te.po                        |    4 +-
+ po-properties/th.po                        |    4 +-
+ po-properties/tk.po                        |    4 +-
+ po-properties/tr.po                        |    4 +-
+ po-properties/tt.po                        |    4 +-
+ po-properties/uk.po                        |    4 +-
+ po-properties/ur.po                        |    4 +-
+ po-properties/uz.po                        |    4 +-
+ po-properties/uz@cyrillic.po               |    4 +-
+ po-properties/vi.po                        |    4 +-
+ po-properties/wa.po                        |    4 +-
+ po-properties/xh.po                        |    4 +-
+ po-properties/yi.po                        |    4 +-
+ po-properties/zh_CN.po                     |    4 +-
+ po-properties/zh_HK.po                     |    4 +-
+ po-properties/zh_TW.po                     |    4 +-
+ po/af.po                                   |  567 +-
+ po/am.po                                   |  567 +-
+ po/ang.po                                  |  567 +-
+ po/ar.po                                   | 2204 +++---
+ po/as.po                                   |  568 +-
+ po/ast.po                                  | 2807 ++++----
+ po/az.po                                   |  567 +-
+ po/az_IR.po                                |  567 +-
+ po/be.po                                   |  567 +-
+ po/be@latin.po                             |  568 +-
+ po/bg.po                                   | 2204 +++---
+ po/bn.po                                   |10826
+ ++++++++++++++--------------
+ po/bn_IN.po                                |  568 +-
+ po/br.po                                   |  567 +-
+ po/bs.po                                   |  567 +-
+ po/ca.po                                   |  568 +-
+ po/ca@valencia.po                          |  568 +-
+ po/crh.po                                  |  568 +-
+ po/cs.po                                   |  568 +-
+ po/cy.po                                   |  568 +-
+ po/da.po                                   |  568 +-
+ po/de.po                                   |  568 +-
+ po/dz.po                                   |  568 +-
+ po/el.po                                   |  568 +-
+ po/en_CA.po                                |  568 +-
+ po/en_GB.po                                |  568 +-
+ po/eo.po                                   |  567 +-
+ po/es.po                                   | 2229 +++---
+ po/et.po                                   |  568 +-
+ po/eu.po                                   | 3988 +++++++---
+ po/fa.po                                   |  567 +-
+ po/fi.po                                   |  568 +-
+ po/fr.po                                   |  568 +-
+ po/ga.po                                   |  568 +-
+ po/gl.po                                   |  568 +-
+ po/gu.po                                   |  568 +-
+ po/he.po                                   |  568 +-
+ po/hi.po                                   |  568 +-
+ po/hr.po                                   |  567 +-
+ po/hu.po                                   |  568 +-
+ po/hy.po                                   |  567 +-
+ po/ia.po                                   |  567 +-
+ po/id.po                                   |  568 +-
+ po/io.po                                   |  568 +-
+ po/is.po                                   |  567 +-
+ po/it.po                                   |  568 +-
+ po/ja.po                                   |  568 +-
+ po/ka.po                                   |  568 +-
+ po/kn.po                                   |  568 +-
+ po/ko.po                                   |  568 +-
+ po/ku.po                                   |  568 +-
+ po/li.po                                   |  567 +-
+ po/lt.po                                   |  568 +-
+ po/lv.po                                   |  568 +-
+ po/mai.po                                  |  568 +-
+ po/mi.po                                   |  567 +-
+ po/mk.po                                   |  568 +-
+ po/ml.po                                   |  568 +-
+ po/mn.po                                   |  567 +-
+ po/mr.po                                   |  568 +-
+ po/ms.po                                   |  567 +-
+ po/my.po                                   | 2256 +++---
+ po/nb.po                                   | 2204 +++---
+ po/nds.po                                  |  568 +-
+ po/ne.po                                   |  567 +-
+ po/nl.po                                   |  568 +-
+ po/nn.po                                   |  568 +-
+ po/nso.po                                  |  567 +-
+ po/oc.po                                   |  568 +-
+ po/or.po                                   |  568 +-
+ po/pa.po                                   |  568 +-
+ po/pl.po                                   |  568 +-
+ po/ps.po                                   |  567 +-
+ po/pt.po                                   |  568 +-
+ po/pt_BR.po                                |  568 +-
+ po/ro.po                                   |  568 +-
+ po/ru.po                                   |  568 +-
+ po/rw.po                                   |  567 +-
+ po/si.po                                   |  568 +-
+ po/sk.po                                   |  568 +-
+ po/sl.po                                   | 2809 ++++----
+ po/sq.po                                   |  569 +-
+ po/sr.po                                   |  568 +-
+ po/sr@ije.po                               |  567 +-
+ po/sr@latin.po                             |  568 +-
+ po/sv.po                                   | 2824 ++++----
+ po/ta.po                                   |  568 +-
+ po/te.po                                   |  568 +-
+ po/th.po                                   |  568 +-
+ po/tk.po                                   |  567 +-
+ po/tr.po                                   |  568 +-
+ po/tt.po                                   |  567 +-
+ po/uk.po                                   |  568 +-
+ po/ur.po                                   |  567 +-
+ po/uz.po                                   |  568 +-
+ po/uz@cyrillic.po                          |  568 +-
+ po/vi.po                                   |  568 +-
+ po/wa.po                                   |  568 +-
+ po/xh.po                                   |  567 +-
+ po/yi.po                                   |  567 +-
+ po/zh_CN.po                                |  568 +-
+ po/zh_HK.po                                |  568 +-
+ po/zh_TW.po                                |  568 +-
+ 207 files changed, 62697 insertions(+), 44277 deletions(-)
+
 commit aa81f217ccd9cb905efd25f5dabc58ecfd494758
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Jan 25 22:35:02 2010 -0500

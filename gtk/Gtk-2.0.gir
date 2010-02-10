@@ -1096,13 +1096,17 @@ their visual representation if the @accel_closure is theirs.">
     </record>
     <class name="AccelLabel"
            c:type="GtkAccelLabel"
+           doc="The #GtkAccelLabel-struct struct contains private data only, and
+should be accessed using the functions below."
            parent="Label"
            glib:type-name="GtkAccelLabel"
            glib:get-type="gtk_accel_label_get_type"
            glib:type-struct="AccelLabelClass">
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
-      <constructor name="new" c:identifier="gtk_accel_label_new">
+      <constructor name="new"
+                   c:identifier="gtk_accel_label_new"
+                   doc="Creates a new #GtkAccelLabel.">
         <return-value transfer-ownership="full">
           <type name="AccelLabel" c:type="GtkWidget*"/>
         </return-value>
@@ -1115,14 +1119,16 @@ their visual representation if the @accel_closure is theirs.">
       <method name="get_accel_widget"
               c:identifier="gtk_accel_label_get_accel_widget"
               doc="Fetches the widget monitored by this accelerator label. See
-gtk_accel_label_set_accel_widget().
-or %NULL.">
+gtk_accel_label_set_accel_widget().">
         <return-value transfer-ownership="full">
           <type name="Widget" c:type="GtkWidget*"/>
         </return-value>
       </method>
       <method name="get_accel_width"
-              c:identifier="gtk_accel_label_get_accel_width">
+              c:identifier="gtk_accel_label_get_accel_width"
+              doc="Returns the width needed to display the accelerator key(s).
+This is used by menus to align all of the #GtkMenuItem widgets, and shouldn&apos;t
+be needed by applications.">
         <return-value transfer-ownership="none">
           <type name="uint" c:type="guint"/>
         </return-value>
@@ -1152,7 +1158,11 @@ must be connected to an accelerator group; see gtk_accel_group_connect().">
           </parameter>
         </parameters>
       </method>
-      <method name="refetch" c:identifier="gtk_accel_label_refetch">
+      <method name="refetch"
+              c:identifier="gtk_accel_label_refetch"
+              doc="Recreates the string representing the accelerator keys.
+This should not be needed since the string is automatically updated whenever
+accelerators are added or removed from the associated widget.">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -4559,7 +4569,7 @@ can do any preparation which are necessary before showing @page."
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="1904">
+    <constant name="BINARY_AGE" value="1905">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -33752,7 +33762,7 @@ will be moved to the end of the list."
     <constant name="MAX_COMPOSE_LEN" value="7">
       <type name="int"/>
     </constant>
-    <constant name="MICRO_VERSION" value="4">
+    <constant name="MICRO_VERSION" value="5">
       <type name="int"/>
     </constant>
     <constant name="MINOR_VERSION" value="19">
@@ -39238,6 +39248,17 @@ Sets the position of the divider between the two panes.">
               version="2.4">
         <return-value transfer-ownership="full">
           <type name="Widget" c:type="GtkWidget*"/>
+        </return-value>
+      </method>
+      <method name="get_handle_window"
+              c:identifier="gtk_paned_get_handle_window"
+              doc="Returns the #GdkWindow of the handle. This function is
+useful when handling button or motion events because it
+enables the callback to distinguish between the window
+of the paned, a child and the handle."
+              version="2.20">
+        <return-value transfer-ownership="full">
+          <type name="Gdk.Window" c:type="GdkWindow*"/>
         </return-value>
       </method>
       <method name="compute_position"
@@ -67199,7 +67220,10 @@ to free any allocated memory.">
           <parameter name="column" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="value" transfer-ownership="none">
+          <parameter name="value"
+                     direction="inout"
+                     transfer-ownership="none"
+                     doc="An empty #GValue to set.">
             <type name="GObject.Value" c:type="GValue*"/>
           </parameter>
         </parameters>
@@ -69499,8 +69523,12 @@ or a method on the #GtkTreeModel interface is called.">
           <parameter name="n_columns" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="types" direction="out" transfer-ownership="full">
-            <type name="GType" c:type="GType*"/>
+          <parameter name="types"
+                     transfer-ownership="none"
+                     doc="An array of #GType types, one for each column">
+            <array length="1" c:type="GType*">
+              <type name="GType"/>
+            </array>
           </parameter>
         </parameters>
       </method>
@@ -75184,6 +75212,52 @@ emitted.">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
+      <method name="set_realized"
+              c:identifier="gtk_widget_set_realized"
+              doc="Marks the widget as being realized.
+This function should only ever be called in a derived widget&apos;s
+&quot;realize&quot; or &quot;unrealize&quot; implementation."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="realized" transfer-ownership="none">
+            <type name="boolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_realized"
+              c:identifier="gtk_widget_get_realized"
+              doc="Determines whether @widget is realized."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
+      <method name="set_mapped"
+              c:identifier="gtk_widget_set_mapped"
+              doc="Marks the widget as being realized.
+This function should only ever be called in a derived widget&apos;s
+&quot;map&quot; or &quot;unmap&quot; implementation."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="mapped" transfer-ownership="none">
+            <type name="boolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_mapped"
+              c:identifier="gtk_widget_get_mapped"
+              doc="Whether the widget is mapped."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
       <method name="set_can_focus"
               c:identifier="gtk_widget_set_can_focus"
               doc="Specifies whether @widget can own the input focus. See
@@ -76302,6 +76376,22 @@ the window. By default, GTK+ destroys windows when ::delete-event
 is received.">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
+      <method name="style_attach"
+              c:identifier="gtk_widget_style_attach"
+              doc="This function attaches the widget&apos;s #GtkStyle to the widget&apos;s
+#GdkWindow. It is a replacement for
+&lt;programlisting&gt;
+widget-&gt;style = gtk_style_attach (widget-&gt;style, widget-&gt;window);
+&lt;/programlisting&gt;
+and should only ever be called in a derived widget&apos;s &quot;realize&quot;
+implementation which does not chain up to its parent class&apos;
+&quot;realize&quot; implementation, because one of the parent classes
+(finally #GtkWidget) would attach the style itself."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
         </return-value>
       </method>
       <method name="has_rc_style"

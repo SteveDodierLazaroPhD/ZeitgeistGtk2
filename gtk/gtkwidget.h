@@ -874,6 +874,12 @@ void	gtk_widget_child_notify		  (GtkWidget	       *widget,
 					   const gchar	       *child_property);
 void	gtk_widget_thaw_child_notify	  (GtkWidget	       *widget);
 
+void       gtk_widget_set_realized        (GtkWidget           *widget,
+                                           gboolean             realized);
+gboolean   gtk_widget_get_realized        (GtkWidget           *widget);
+void       gtk_widget_set_mapped          (GtkWidget           *widget,
+                                           gboolean             mapped);
+gboolean   gtk_widget_get_mapped          (GtkWidget           *widget);
 void       gtk_widget_set_can_focus       (GtkWidget           *widget,
                                            gboolean             can_focus);
 gboolean   gtk_widget_get_can_focus       (GtkWidget           *widget);
@@ -916,6 +922,12 @@ gboolean              gtk_widget_get_has_window         (GtkWidget    *widget);
 
 gboolean              gtk_widget_is_toplevel            (GtkWidget    *widget);
 gboolean              gtk_widget_is_drawable            (GtkWidget    *widget);
+void                  gtk_widget_set_realized           (GtkWidget    *widget,
+                                                         gboolean      realized);
+gboolean              gtk_widget_get_realized           (GtkWidget    *widget);
+void                  gtk_widget_set_mapped             (GtkWidget    *widget,
+                                                         gboolean      mapped);
+gboolean              gtk_widget_get_mapped             (GtkWidget    *widget);
 
 void                  gtk_widget_set_app_paintable      (GtkWidget    *widget,
 							 gboolean      app_paintable);
@@ -1063,11 +1075,13 @@ gboolean     gtk_widget_hide_on_delete	(GtkWidget	*widget);
 
 /* Widget styles.
  */
-gboolean    gtk_widget_has_rc_style       (GtkWidget           *widget);
-void	   gtk_widget_set_style		(GtkWidget	*widget,
-					 GtkStyle	*style);
-void	   gtk_widget_ensure_style	(GtkWidget	*widget);
-GtkStyle*  gtk_widget_get_style		(GtkWidget	*widget);
+void        gtk_widget_style_attach       (GtkWidget            *style);
+
+gboolean    gtk_widget_has_rc_style       (GtkWidget            *widget);
+void	    gtk_widget_set_style          (GtkWidget            *widget,
+                                           GtkStyle             *style);
+void        gtk_widget_ensure_style       (GtkWidget            *widget);
+GtkStyle *  gtk_widget_get_style          (GtkWidget            *widget);
 
 void        gtk_widget_modify_style       (GtkWidget            *widget,
 					   GtkRcStyle           *style);
