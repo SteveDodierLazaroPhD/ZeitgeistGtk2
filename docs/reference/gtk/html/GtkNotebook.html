@@ -8,7 +8,7 @@
 <link rel="up" href="LayoutContainers.html" title="Layout Containers">
 <link rel="prev" href="GtkLayout.html" title="GtkLayout">
 <link rel="next" href="GtkTable.html" title="GtkTable">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -341,40 +341,21 @@ To add a child widget in the notebooks action area, specify
 element.
 </p>
 <div class="example">
-<a name="id1025474"></a><p class="title"><b>Example 43. A UI definition fragment with GtkNotebook</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12</pre></td>
-        <td class="listing_code"><pre class="programlisting">&lt;object <span class="type">class</span>=<span class="number">&quot;GtkNotebook&quot;</span>&gt;
+<a name="id1127337"></a><p class="title"><b>Example 43. A UI definition fragment with GtkNotebook</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkNotebook"&gt;
   &lt;child&gt;
-    &lt;object <span class="type">class</span>=<span class="number">&quot;GtkLabel&quot;</span> id=<span class="number">&quot;notebook-content&quot;</span>&gt;
-      &lt;property name=<span class="number">&quot;label&quot;</span>&gt;Content&lt;/property&gt;
+    &lt;object class="GtkLabel" id="notebook-content"&gt;
+      &lt;property name="label"&gt;Content&lt;/property&gt;
     &lt;/object&gt;
   &lt;/child&gt;
-  &lt;child type=<span class="number">&quot;tab&quot;</span>&gt;
-    &lt;object <span class="type">class</span>=<span class="number">&quot;GtkLabel&quot;</span> id=<span class="number">&quot;notebook-tab&quot;</span>&gt;
-      &lt;property name=<span class="number">&quot;label&quot;</span>&gt;Tab&lt;/property&gt;
+  &lt;child type="tab"&gt;
+    &lt;object class="GtkLabel" id="notebook-tab"&gt;
+      &lt;property name="label"&gt;Tab&lt;/property&gt;
     &lt;/object&gt;
   &lt;/child&gt;
-&lt;/object&gt;</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+&lt;/object&gt;
+</pre></div>
 </div>
 <br class="example-break">
 </div>
@@ -1430,30 +1411,8 @@ destination and accept the target "GTK_NOTEBOOK_TAB". The notebook
 will fill the selection with a GtkWidget** pointing to the child
 widget that corresponds to the dropped tab.
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> <span class="type">void</span>
+<div class="informalexample"><pre class="programlisting">
+ static void
  on_drop_zone_drag_data_received (GtkWidget        *widget,
                                   GdkDragContext   *context,
                                   gint              x,
@@ -1465,18 +1424,14 @@ widget that corresponds to the dropped tab.
  {
    GtkWidget *notebook;
    GtkWidget **child;
-
+   
    notebook = gtk_drag_get_source_widget (context);
-   child = (<span class="type">void</span>*) selection_data-&gt;data;
-
+   child = (void*) selection_data-&gt;data;
+   
    process_widget (*child);
    gtk_container_remove (GTK_CONTAINER (notebook), *child);
- }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+ }
+</pre></div>
 <p>
 </p>
 <p>
@@ -1832,8 +1787,7 @@ not be able to exchange tabs with any other notebook.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>group</code></em> :</span></p></td>
-<td> a pointer to identify the notebook group, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to unset it
-</td>
+<td> a pointer to identify the notebook group, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to unset it. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -1997,8 +1951,7 @@ when a detached tab is dropped in an empty area.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
-<td> the <a class="link" href="GtkNotebook.html#GtkNotebookWindowCreationFunc" title="GtkNotebookWindowCreationFunc ()"><span class="type">GtkNotebookWindowCreationFunc</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> the <a class="link" href="GtkNotebook.html#GtkNotebookWindowCreationFunc" title="GtkNotebookWindowCreationFunc ()"><span class="type">GtkNotebookWindowCreationFunc</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
@@ -2007,8 +1960,7 @@ when a detached tab is dropped in an empty area.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>destroy</code></em> :</span></p></td>
-<td> Destroy notifier for <em class="parameter"><code>data</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> Destroy notifier for <em class="parameter"><code>data</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -2628,6 +2580,6 @@ Emitted when the user or a function changes the current page.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

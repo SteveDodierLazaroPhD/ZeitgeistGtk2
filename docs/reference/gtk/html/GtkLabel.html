@@ -8,7 +8,7 @@
 <link rel="up" href="DisplayWidgets.html" title="Display Widgets">
 <link rel="prev" href="GtkImage.html" title="GtkImage">
 <link rel="next" href="GtkProgressBar.html" title="GtkProgressBar">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -251,28 +251,15 @@ elements. the &lt;attribute&gt; element has attributes named name, value,
 start and end and allows you to specify <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttribute"><span class="type">PangoAttribute</span></a> values for this label.
 </p>
 <div class="example">
-<a name="id632860"></a><p class="title"><b>Example 13. A UI definition fragment specifying Pango attributes</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6</pre></td>
-        <td class="listing_code"><pre class="programlisting">&lt;object <span class="type">class</span>=<span class="number">&quot;GtkLabel&quot;</span>&gt;
+<a name="id734201"></a><p class="title"><b>Example 13. A UI definition fragment specifying Pango attributes</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkLabel"&gt;
   &lt;attributes&gt;
-    &lt;attribute name=<span class="number">&quot;weight&quot;</span> value=<span class="number">&quot;PANGO_WEIGHT_BOLD&quot;</span>/&gt;
-    &lt;attribute name=<span class="number">&quot;background&quot;</span> value=<span class="number">&quot;red&quot;</span> start=<span class="number">&quot;5&quot;</span> end=<span class="number">&quot;10&quot;</span>/&gt;<span class="number">&quot;</span>
+    &lt;attribute name="weight" value="PANGO_WEIGHT_BOLD"/&gt;
+    &lt;attribute name="background" value="red" start="5" end="10"/&gt;"
   &lt;/attributes&gt;
-&lt;/object&gt;</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+&lt;/object&gt;
+</pre></div>
 </div>
 <br class="example-break"><p>
 The start and end attributes specify the range of characters to which the
@@ -284,7 +271,7 @@ content instead.
 </div>
 <hr>
 <div class="refsect2" title="Mnemonics">
-<a name="id632883"></a><h3>Mnemonics</h3>
+<a name="id734224"></a><h3>Mnemonics</h3>
 <p>
 Labels may contain <em class="firstterm">mnemonics</em>. Mnemonics are
 underlined characters in the label, used for keyboard navigation.
@@ -300,86 +287,46 @@ mnemonic's target widget, you have to tell the label about the target
 using <a class="link" href="GtkLabel.html#gtk-label-set-mnemonic-widget" title="gtk_label_set_mnemonic_widget ()"><code class="function">gtk_label_set_mnemonic_widget()</code></a>. Here's a simple example where
 the label is inside a button:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> Pressing Alt+H will activate this button </span><span class="comment">*/</span>
+<div class="informalexample"><pre class="programlisting">
+  /* Pressing Alt+H will activate this button */
   button = gtk_button_new ();
-  label = gtk_label_new_with_mnemonic (<span class="number">&quot;_Hello&quot;</span>);
-  gtk_container_add (GTK_CONTAINER (button), label);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  label = gtk_label_new_with_mnemonic ("_Hello");
+  gtk_container_add (GTK_CONTAINER (button), label);
+</pre></div>
 <p>
 There's a convenience function to create buttons with a mnemonic label
 already inside:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> Pressing Alt+H will activate this button </span><span class="comment">*/</span>
-  button = gtk_button_new_with_mnemonic (<span class="number">&quot;_Hello&quot;</span>);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+  /* Pressing Alt+H will activate this button */
+  button = gtk_button_new_with_mnemonic ("_Hello");
+</pre></div>
 <p>
 To create a mnemonic for a widget alongside the label, such as a
 <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a>, you have to point the label at the entry with
 <a class="link" href="GtkLabel.html#gtk-label-set-mnemonic-widget" title="gtk_label_set_mnemonic_widget ()"><code class="function">gtk_label_set_mnemonic_widget()</code></a>:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> Pressing Alt+H will focus the entry </span><span class="comment">*/</span>
+<div class="informalexample"><pre class="programlisting">
+  /* Pressing Alt+H will focus the entry */
   entry = gtk_entry_new ();
-  label = gtk_label_new_with_mnemonic (<span class="number">&quot;_Hello&quot;</span>);
-  gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  label = gtk_label_new_with_mnemonic ("_Hello");
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+</pre></div>
 <p>
 </p>
 </div>
 <hr>
 <div class="refsect2" title="Markup (styled text)">
-<a name="id633005"></a><h3>Markup (styled text)</h3>
+<a name="id734346"></a><h3>Markup (styled text)</h3>
 <p>
 To make it easy to format text in a label (changing colors, fonts,
 etc.), label text can be provided in a simple <a href="/usr/share/gtk-doc/html/pango/PangoMarkupFormat.html">markup format</a>.
 Here's how to create a label with a small font:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2</pre></td>
-        <td class="listing_code"><pre class="programlisting">label = gtk_label_new (<span class="number">NULL</span>);
-  gtk_label_set_markup (GTK_LABEL (label), <span class="number">&quot;&lt;small&gt;Small text&lt;/small&gt;&quot;</span>);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+  label = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (label), "&lt;small&gt;Small text&lt;/small&gt;");
+</pre></div>
 <p>
 (See <a href="/usr/share/gtk-doc/html/pango/PangoMarkupFormat.html">complete documentation</a> of available
 tags in the Pango manual.)
@@ -404,7 +351,7 @@ being displayed, so translations will cause problems.
 </div>
 <hr>
 <div class="refsect2" title="Selectable labels">
-<a name="id633122"></a><h3>Selectable labels</h3>
+<a name="id734463"></a><h3>Selectable labels</h3>
 <p>
 Labels can be made selectable with <a class="link" href="GtkLabel.html#gtk-label-set-selectable" title="gtk_label_set_selectable ()"><code class="function">gtk_label_set_selectable()</code></a>.
 Selectable labels allow the user to copy the label contents to
@@ -414,7 +361,7 @@ the clipboard. Only labels that contain useful-to-copy information
 </div>
 <hr>
 <div class="refsect2" title="Text layout">
-<a name="id633145"></a><h3>Text layout</h3>
+<a name="id734486"></a><h3>Text layout</h3>
 <p>
 A label can contain any number of paragraphs, but will have
 performance problems if it contains more than a small number.
@@ -433,7 +380,7 @@ aligns in its available space, see <a class="link" href="GtkMisc.html#gtk-misc-s
 </div>
 <hr>
 <div class="refsect2" title="Links">
-<a name="id633196"></a><h3>Links</h3>
+<a name="id734537"></a><h3>Links</h3>
 <p>
 Since 2.18, GTK+ supports markup for clickable hyperlinks in addition
 to regular Pango markup. The markup for links is borrowed from HTML, using the
@@ -441,17 +388,9 @@ to regular Pango markup. The markup for links is borrowed from HTML, using the
 way they appear in web browsers, with colored, underlined text. The title
 attribute is displayed as a tooltip on the link. An example looks like this:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_label_set_markup (label, <span class="number">&quot;Go to the &lt;a href=</span><span class="symbol">\&quot;</span><span class="number"><a href="http://www.gtk.org">http://www.gtk.org</a></span><span class="symbol">\&quot;</span><span class="number"> title=</span><span class="symbol">\&quot;</span><span class="number">&amp;lt;i&amp;gt;Our&amp;/i&amp;gt; website</span><span class="symbol">\&quot;</span><span class="number">&gt;GTK+ website&lt;/a&gt; for more...&quot;</span>);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+gtk_label_set_markup (label, "Go to the &lt;a href=\"http://www.gtk.org\" title=\"&amp;lt;i&amp;gt;Our&amp;/i&amp;gt; website\"&gt;GTK+ website&lt;/a&gt; for more...");
+</pre></div>
 <p>
 It is possible to implement custom handling for links and their tooltips with
 the <a class="link" href="GtkLabel.html#GtkLabel-activate-link" title='The "activate-link" signal'><span class="type">"activate-link"</span></a> signal and the <a class="link" href="GtkLabel.html#gtk-label-get-current-uri" title="gtk_label_get_current_uri ()"><code class="function">gtk_label_get_current_uri()</code></a> function.
@@ -565,25 +504,13 @@ label's text and attribute list based on the parse results. If the <em class="pa
 external data, you may need to escape it with <a href="http://library.gnome.org/devel/glib/unstable/glib-Simple-XML-Subset-Parser.html#g-markup-escape-text"><code class="function">g_markup_escape_text()</code></a> or
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Simple-XML-Subset-Parser.html#g-markup-printf-escaped"><code class="function">g_markup_printf_escaped()</code></a>:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">char</span> *markup;
-
-markup = g_markup_printf_escaped (<span class="number">&quot;&lt;span style=</span><span class="symbol">\&quot;</span><span class="number">italic</span><span class="symbol">\&quot;</span><span class="number">&gt;</span><span class="symbol">%s</span><span class="number">&lt;/span&gt;&quot;</span>, str);
+<div class="informalexample"><pre class="programlisting">
+char *markup;
+  
+markup = g_markup_printf_escaped ("&lt;span style=\"italic\"&gt;%s&lt;/span&gt;", str);
 gtk_label_set_markup (GTK_LABEL (label), markup);
-g_free (markup);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+g_free (markup);
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -921,13 +848,11 @@ and from pixels using <a href="/usr/share/gtk-doc/html/pango/pango-Glyph-Storage
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>x</code></em> :</span></p></td>
-<td> location to store X offset of layout, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store X offset of layout, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>y</code></em> :</span></p></td>
-<td> location to store Y offset of layout, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store Y offset of layout, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -2121,6 +2046,6 @@ to this signal and append your menuitems to the <em class="parameter"><code>menu
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

@@ -1808,6 +1808,9 @@ extern __typeof (gdk_keymap_lookup_key) gdk_keymap_lookup_key __attribute((alias
 #undef gdk_keymap_translate_keyboard_state 
 extern __typeof (gdk_keymap_translate_keyboard_state) gdk_keymap_translate_keyboard_state __attribute((alias("IA__gdk_keymap_translate_keyboard_state"), visibility("default")));
 
+#undef gdk_keymap_add_virtual_modifiers 
+extern __typeof (gdk_keymap_add_virtual_modifiers) gdk_keymap_add_virtual_modifiers __attribute((alias("IA__gdk_keymap_add_virtual_modifiers"), visibility("default")));
+
 #undef gdk_keymap_map_virtual_modifiers 
 extern __typeof (gdk_keymap_map_virtual_modifiers) gdk_keymap_map_virtual_modifiers __attribute((alias("IA__gdk_keymap_map_virtual_modifiers"), visibility("default")));
 

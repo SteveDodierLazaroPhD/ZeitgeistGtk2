@@ -1805,6 +1805,9 @@ extern __typeof (gdk_keymap_lookup_key) IA__gdk_keymap_lookup_key __attribute((v
 extern __typeof (gdk_keymap_translate_keyboard_state) IA__gdk_keymap_translate_keyboard_state __attribute((visibility("hidden")));
 #define gdk_keymap_translate_keyboard_state IA__gdk_keymap_translate_keyboard_state
 
+extern __typeof (gdk_keymap_add_virtual_modifiers) IA__gdk_keymap_add_virtual_modifiers __attribute((visibility("hidden")));
+#define gdk_keymap_add_virtual_modifiers IA__gdk_keymap_add_virtual_modifiers
+
 extern __typeof (gdk_keymap_map_virtual_modifiers) IA__gdk_keymap_map_virtual_modifiers __attribute((visibility("hidden")));
 #define gdk_keymap_map_virtual_modifiers IA__gdk_keymap_map_virtual_modifiers
 

@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Feature-Test-Macros.html" title="Version Information">
 <link rel="next" href="gtk-Types.html" title="Types">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -175,7 +175,7 @@ usage, direct use of the <a href="http://library.gnome.org/devel/gobject/unstabl
 performance hits where <a class="link" href="gtk-Types.html#GtkArg" title="GtkArg"><span class="type">GtkArg</span></a> structures have to be converted into <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a>s.
 </p>
 <div class="refsect2" title="What are signals?">
-<a name="id437345"></a><h3>What are signals?</h3>
+<a name="id529419"></a><h3>What are signals?</h3>
 <p>
 Signals are a way to get notification when something happens
 and to customize object behavior according to the
@@ -210,7 +210,7 @@ methods.
 </div>
 <hr>
 <div class="refsect2" title="How are signals used?">
-<a name="id497676"></a><h3>How are signals used?</h3>
+<a name="id577311"></a><h3>How are signals used?</h3>
 <p>
 There are two basic actions in the signal handling game.
 If you want notification of an event, you must <span class="emphasis"><em>connect</em></span>
@@ -227,7 +227,7 @@ Functions that want to notify the user of certain actions,
 </div>
 <hr>
 <div class="refsect2" title="Basic Terminology">
-<a name="id521986"></a><h3>Basic Terminology</h3>
+<a name="id623444"></a><h3>Basic Terminology</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -286,7 +286,7 @@ maps to a unique connection id.
 </div>
 <hr>
 <div class="refsect2" title="A brief note on how they work.">
-<a name="id507630"></a><h3>A brief note on how they work.</h3>
+<a name="id563400"></a><h3>A brief note on how they work.</h3>
 <p>
 The functions responsible for translating an array of <a href="gtk-Types.html#GtkArg"><span class="type">GtkArgs</span></a>
 to your C compiler's normal semantics are called Marshallers.
@@ -874,39 +874,20 @@ Here is how one passes an integer as user data,
 for when you just want to specify a constant int
 as parameter to your function:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> <span class="type">void</span> button_clicked_int (GtkButton* button, gpointer func_data)
+<div class="informalexample"><pre class="programlisting">
+static void button_clicked_int (GtkButton* button, gpointer func_data)
 {
-        g_print (<span class="number">&quot;button pressed: </span><span class="symbol">%d</span><span class="symbol">\n</span><span class="number">&quot;</span>, GPOINTER_TO_INT (func_data));
+	g_print ("button pressed: %d\n", GPOINTER_TO_INT (func_data));
 }
-<span class="comment">/*</span><span class="comment"> By calling this function, you will make the g_print above</span>
-<span class="comment"> * execute, printing the number passed as `to_print'. </span><span class="comment">*/</span>
-<span class="type">static</span> <span class="type">void</span> attach_print_signal (GtkButton* button, gint to_print)
+/* By calling this function, you will make the g_print above
+ * execute, printing the number passed as `to_print'. */
+static void attach_print_signal (GtkButton* button, gint to_print)
 {
-        gtk_signal_connect (GTK_OBJECT (button), <span class="number">&quot;clicked&quot;</span>,
-                GTK_SIGNAL_FUNC (button_clicked_int),
-                GINT_TO_POINTER (to_print));
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+	gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		GTK_SIGNAL_FUNC (button_clicked_int),
+		GINT_TO_POINTER (to_print));
+}
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -1004,17 +985,9 @@ This is useful for passing a standard function in as a callback.
 For example, if you wanted a button's press to <a class="link" href="GtkWidget.html#gtk-widget-show" title="gtk_widget_show ()"><code class="function">gtk_widget_show()</code></a>
 some widget, you could write:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_signal_connect_object (button, <span class="number">&quot;clicked&quot;</span>, gtk_widget_show, window);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+gtk_signal_connect_object (button, "clicked", gtk_widget_show, window);
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -1686,6 +1659,6 @@ A marshaller that returns void and takes no extra parameters.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

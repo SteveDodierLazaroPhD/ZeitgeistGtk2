@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Themeable-Stock-Images.html" title="Themeable Stock Images">
 <link rel="next" href="GtkSettings.html" title="Settings">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -160,7 +160,7 @@ various aspects of the operation of a GTK+ program
 at runtime.
 </p>
 <div class="refsect2" title="Default files">
-<a name="id414483"></a><h3>Default files</h3>
+<a name="id538413"></a><h3>Default files</h3>
 <p>
 An application can cause GTK+ to parse a specific RC
 file by calling <a class="link" href="gtk-Resource-Files.html#gtk-rc-parse" title="gtk_rc_parse ()"><code class="function">gtk_rc_parse()</code></a>. In addition to this,
@@ -194,7 +194,7 @@ and parses the first of those that exists.
 </div>
 <hr>
 <div class="refsect2" title="Pathnames and patterns">
-<a name="id434114"></a><h3>Pathnames and patterns</h3>
+<a name="id578858"></a><h3>Pathnames and patterns</h3>
 <a name="gtkrc-pathnames-and-patterns"></a><p>
 A resource file defines a number of styles and key bindings and
 attaches them to particular widgets. The attachment is done
@@ -202,17 +202,9 @@ by the <code class="literal">widget</code>, <code class="literal">widget_class</
 and <code class="literal">class</code> declarations. As an example
 of such a statement:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">widget <span class="number">&quot;mywindow.*.GtkEntry&quot;</span> style <span class="number">&quot;my-entry-class&quot;</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+widget "mywindow.*.GtkEntry" style "my-entry-class"
+</pre></div>
 <p>
 attaches the style <code class="literal">"my-entry-class"</code> to all
 widgets  whose <em class="firstterm">widget path</em> matches the
@@ -238,17 +230,9 @@ Since GTK+ 2.10,<code class="literal">widget_class</code> paths can also contain
 <code class="literal">&lt;classname&gt;</code> substrings, which are matching
 the class with the given name and any derived classes. For instance,
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">widget_class <span class="number">&quot;*&lt;GtkMenuItem&gt;.GtkLabel&quot;</span> style <span class="number">&quot;my-style&quot;</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+widget_class "*&lt;GtkMenuItem&gt;.GtkLabel" style "my-style"
+</pre></div>
 <p>
 will match <a class="link" href="GtkLabel.html" title="GtkLabel"><span class="type">GtkLabel</span></a> widgets which are contained in any kind of menu item.
 </p>
@@ -263,17 +247,9 @@ Matching against class is a little different. The pattern match is done
 against all class names in the widgets class hierarchy (not the layout
 hierarchy) in sequence, so the pattern:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">class</span> <span class="number">&quot;GtkButton&quot;</span> style <span class="number">&quot;my-style&quot;</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+class "GtkButton" style "my-style"
+</pre></div>
 <p>
 will match not just <a class="link" href="GtkButton.html" title="GtkButton"><span class="type">GtkButton</span></a> widgets, but also <a class="link" href="GtkToggleButton.html" title="GtkToggleButton"><span class="type">GtkToggleButton</span></a> and
 <a class="link" href="GtkCheckButton.html" title="GtkCheckButton"><span class="type">GtkCheckButton</span></a> widgets, since those classes derive from <a class="link" href="GtkButton.html" title="GtkButton"><span class="type">GtkButton</span></a>.
@@ -304,7 +280,7 @@ that GTK+ creates internally.
 </div>
 <hr>
 <div class="refsect2" title="Optimizing RC Style Matches">
-<a name="id505499"></a><h3>Optimizing RC Style Matches</h3>
+<a name="id578430"></a><h3>Optimizing RC Style Matches</h3>
 <a name="optimizing-rc-style-matches"></a><p>
 Everytime a widget is created and added to the layout hierarchy of a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>
 ("anchored" to be exact), a list of matching RC styles out of all RC styles read
@@ -330,39 +306,19 @@ matches:
 <p>
   Merge multiple styles which use the same matching rule, for instance:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4</pre></td>
-        <td class="listing_code"><pre class="programlisting">style <span class="number">&quot;Foo&quot;</span> { foo_content }
-     <span class="type">class</span> <span class="number">&quot;X&quot;</span> style <span class="number">&quot;Foo&quot;</span>
-     style <span class="number">&quot;Bar&quot;</span> { bar_content }
-     <span class="type">class</span> <span class="number">&quot;X&quot;</span> style <span class="number">&quot;Bar&quot;</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+     style "Foo" { foo_content }
+     class "X" style "Foo"
+     style "Bar" { bar_content }
+     class "X" style "Bar"
+</pre></div>
 <p>
    is faster to match as:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2</pre></td>
-        <td class="listing_code"><pre class="programlisting">style <span class="number">&quot;FooBar&quot;</span> { foo_content bar_content }
-     <span class="type">class</span> <span class="number">&quot;X&quot;</span> style <span class="number">&quot;FooBar&quot;</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+     style "FooBar" { foo_content bar_content }
+     class "X" style "FooBar"
+</pre></div>
 <p>
   </p>
 </li>
@@ -399,7 +355,7 @@ matches:
 </div>
 <hr>
 <div class="refsect2" title="Toplevel declarations">
-<a name="id505677"></a><h3>Toplevel declarations</h3>
+<a name="id606963"></a><h3>Toplevel declarations</h3>
 <p>
 An RC file is a text file which is composed of a sequence
 of declarations. <code class="literal">'#'</code> characters delimit comments and
@@ -487,7 +443,7 @@ The possible toplevel declarations are:
 </div>
 <hr>
 <div class="refsect2" title="Styles">
-<a name="id505978"></a><h3>Styles</h3>
+<a name="id607264"></a><h3>Styles</h3>
 <p>
 A RC style is specified by a <code class="literal">style</code>
 declaration in a RC file, and then bound to widgets
@@ -731,21 +687,11 @@ colors. The following expressions are currently supported:
 <p>
 Here are some examples of color expressions:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3</pre></td>
-        <td class="listing_code"><pre class="programlisting">mix (<span class="number">0.5</span>, <span class="number">&quot;red&quot;</span>, <span class="number">&quot;blue&quot;</span>)
- shade (<span class="number">1.5</span>, mix (<span class="number">0.3</span>, <span class="number">&quot;#0abbc0&quot;</span>, <span class="Error">{</span> <span class="number">0.3</span>, <span class="number">0.5</span>, <span class="number">0.9</span> <span class="Error">}</span>))
- lighter (@foreground)</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+ mix (0.5, "red", "blue")
+ shade (1.5, mix (0.3, "#0abbc0", { 0.3, 0.5, 0.9 }))
+ lighter (@foreground)
+</pre></div>
 <p>
 </p>
 <p>
@@ -761,73 +707,36 @@ wildcard, and if direction/state/size are omitted they default to
 <code class="literal">*</code>. So for example, the following specifies different icons to
 use for left-to-right and right-to-left languages:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5</pre></td>
-        <td class="listing_code"><pre class="programlisting">stock[<span class="number">&quot;my-stock-item&quot;</span>] =
+<div class="informalexample"><pre class="programlisting">
+stock["my-stock-item"] =
 {
-  { <span class="number">&quot;itemltr.png&quot;</span>, LTR, *, * },
-  { <span class="number">&quot;itemrtl.png&quot;</span>, RTL, *, * }
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  { "itemltr.png", LTR, *, * },
+  { "itemrtl.png", RTL, *, * }
+}
+</pre></div>
 <p>
 This could be abbreviated as follows:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5</pre></td>
-        <td class="listing_code"><pre class="programlisting">stock[<span class="number">&quot;my-stock-item&quot;</span>] =
+<div class="informalexample"><pre class="programlisting">
+stock["my-stock-item"] =
 {
-  { <span class="number">&quot;itemltr.png&quot;</span>, LTR },
-  { <span class="number">&quot;itemrtl.png&quot;</span>, RTL }
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  { "itemltr.png", LTR },
+  { "itemrtl.png", RTL }
+}
+</pre></div>
 <p>
 </p>
 <p>
 You can specify custom icons for specific sizes, as follows:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6</pre></td>
-        <td class="listing_code"><pre class="programlisting">stock[<span class="number">&quot;my-stock-item&quot;</span>] =
+<div class="informalexample"><pre class="programlisting">
+stock["my-stock-item"] =
 {
-  { <span class="number">&quot;itemmenusize.png&quot;</span>, *, *, <span class="number">&quot;gtk-menu&quot;</span> },
-  { <span class="number">&quot;itemtoolbarsize.png&quot;</span>, *, *, <span class="number">&quot;gtk-large-toolbar&quot;</span> }
-  { <span class="number">&quot;itemgeneric.png&quot;</span> } <span class="comment">/*</span><span class="comment"> implicit *, *, * as a fallback </span><span class="comment">*/</span>
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  { "itemmenusize.png", *, *, "gtk-menu" },
+  { "itemtoolbarsize.png", *, *, "gtk-large-toolbar" }
+  { "itemgeneric.png" } /* implicit *, *, * as a fallback */
+}
+</pre></div>
 <p>
 The sizes that come with GTK+ itself are <code class="literal">"gtk-menu"</code>,
 <code class="literal">"gtk-small-toolbar"</code>, <code class="literal">"gtk-large-toolbar"</code>,
@@ -837,27 +746,14 @@ can define other sizes.
 <p>
 It's also possible to use custom icons for a given state, for example:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6</pre></td>
-        <td class="listing_code"><pre class="programlisting">stock[<span class="number">&quot;my-stock-item&quot;</span>] =
+<div class="informalexample"><pre class="programlisting">
+stock["my-stock-item"] =
 {
-  { <span class="number">&quot;itemprelight.png&quot;</span>, *, PRELIGHT },
-  { <span class="number">&quot;iteminsensitive.png&quot;</span>, *, INSENSITIVE },
-  { <span class="number">&quot;itemgeneric.png&quot;</span> } <span class="comment">/*</span><span class="comment"> implicit *, *, * as a fallback </span><span class="comment">*/</span>
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  { "itemprelight.png", *, PRELIGHT },
+  { "iteminsensitive.png", *, INSENSITIVE },
+  { "itemgeneric.png" } /* implicit *, *, * as a fallback */
+}
+</pre></div>
 <p>
 </p>
 <p>
@@ -871,35 +767,21 @@ match the state and size the user requested.
 </div>
 <hr>
 <div class="refsect2" title="Key bindings">
-<a name="id507029"></a><h3>Key bindings</h3>
+<a name="id608315"></a><h3>Key bindings</h3>
 <p>
 Key bindings allow the user to specify actions to be
 taken on particular key presses. The form of a binding
 set declaration is:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7</pre></td>
-        <td class="listing_code"><pre class="programlisting">binding &lt;em <span class="type">class</span>=<span class="number">&quot;replaceable&quot;</span>&gt;&lt;code&gt;name&lt;/code&gt;&lt;/em&gt; {
-  bind &lt;em <span class="type">class</span>=<span class="number">&quot;replaceable&quot;</span>&gt;&lt;code&gt;key&lt;/code&gt;&lt;/em&gt; {
-    &lt;em <span class="type">class</span>=<span class="number">&quot;replaceable&quot;</span>&gt;&lt;code&gt;signalname&lt;/code&gt;&lt;/em&gt; (&lt;em <span class="type">class</span>=<span class="number">&quot;replaceable&quot;</span>&gt;&lt;code&gt;param&lt;/code&gt;&lt;/em&gt;, ...)
+<div class="informalexample"><pre class="programlisting">
+binding <em class="replaceable"><code>name</code></em> {
+  bind <em class="replaceable"><code>key</code></em> {
+    <em class="replaceable"><code>signalname</code></em> (<em class="replaceable"><code>param</code></em>, ...)
     ...
   }
   ...
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+}
+</pre></div>
 <p>
 <em class="replaceable"><code>key</code></em> is a string consisting of a
 series of modifiers followed by the name of a key. The
@@ -1131,25 +1013,13 @@ would be items inside a GNOME canvas widget.
 <p>
 The action of <a class="link" href="gtk-Resource-Files.html#gtk-rc-get-style" title="gtk_rc_get_style ()"><code class="function">gtk_rc_get_style()</code></a> is similar to:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_widget_path (widget, <span class="number">NULL</span>, &amp;path, <span class="number">NULL</span>);
- gtk_widget_class_path (widget, <span class="number">NULL</span>, &amp;class_path, <span class="number">NULL</span>);
- gtk_rc_get_style_by_paths (gtk_widget_get_settings (widget),
+<div class="informalexample"><pre class="programlisting">
+ gtk_widget_path (widget, NULL, &amp;path, NULL);
+ gtk_widget_class_path (widget, NULL, &amp;class_path, NULL);
+ gtk_rc_get_style_by_paths (gtk_widget_get_settings (widget), 
                             path, class_path,
-                            G_OBJECT_TYPE (widget));</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+                            G_OBJECT_TYPE (widget));
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -1177,7 +1047,7 @@ The action of <a class="link" href="gtk-Resource-Files.html#gtk-rc-get-style" ti
 <td> A style created by matching with the supplied paths,
   or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if nothing matching was specified and the default style should
   be used. The returned value is owned by GTK+ as part of an internal cache,
-  so you must call <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a> on the returned value if you want to
+  so you must call <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> on the returned value if you want to
   keep a reference to it.
 </td>
 </tr>
@@ -1487,8 +1357,7 @@ references to symbolic colors.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
-<td> a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>color</code></em> :</span></p></td>
@@ -1754,7 +1623,7 @@ derived from <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span cla
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_rc_style_ref                    (<a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="returnvalue">GtkRcStyle</span></a> *rc_style);</pre>
 <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_rc_style_ref</code> is deprecated and should not be used in newly-written code. Use <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a> instead</p>
+<p><code class="literal">gtk_rc_style_ref</code> is deprecated and should not be used in newly-written code. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> instead</p>
 </div>
 <p>
 Increments the reference count of a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a>.
@@ -1774,7 +1643,7 @@ Increments the reference count of a <a class="link" href="gtk-Resource-Files.htm
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_rc_style_unref                  (<a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="returnvalue">GtkRcStyle</span></a> *rc_style);</pre>
 <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_rc_style_unref</code> is deprecated and should not be used in newly-written code. Use <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a> instead</p>
+<p><code class="literal">gtk_rc_style_unref</code> is deprecated and should not be used in newly-written code. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> instead</p>
 </div>
 <p>
 Decrements the reference count of a <a class="link" href="gtk-Resource-Files.html#GtkRcStyle"><span class="type">GtkRcStyle</span></a> and
@@ -1793,6 +1662,6 @@ frees if the result is 0.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

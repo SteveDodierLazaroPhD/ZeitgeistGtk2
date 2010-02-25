@@ -882,7 +882,7 @@ gtk_info_bar_new (void)
 
 /**
  * gtk_info_bar_new_with_buttons:
- * @first_button_text: stock ID or text to go in first button, or %NULL
+ * @first_button_text: (allow-none): stock ID or text to go in first button, or %NULL
  * @...: response ID for first button, then additional buttons, ending
  *    with %NULL
  *
@@ -955,6 +955,9 @@ gtk_info_bar_set_response_sensitive (GtkInfoBar *info_bar,
  * Sets the last widget in the info bar's action area with
  * the given response_id as the default widget for the dialog.
  * Pressing "Enter" normally activates the default widget.
+ *
+ * Note that this function currently requires @info_bar to
+ * be added to a widget hierarchy. 
  *
  * Since: 2.18
  */

@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Fonts.html" title="Fonts">
 <link rel="next" href="gdk-Windows.html" title="Windows">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="reference" href="reference.html" title="API Reference">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -735,78 +735,40 @@ from inline data as in the below example.
 <p>
 </p>
 <div class="example">
-<a name="id717689"></a><p class="title"><b>Example 6. Creating a custom cursor</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> This data is in X bitmap format, and can be created with the 'bitmap'</span>
-<span class="comment">   utility. </span><span class="comment">*/</span>
-<span class="preproc">#define cursor1_width </span><span class="number">16</span>
-<span class="preproc">#define cursor1_height </span><span class="number">16</span>
-<span class="type">static</span> <span class="type">unsigned</span> <span class="type">char</span> cursor1_bits[] = {
-  <span class="number">0x80</span>, <span class="number">0x01</span>, <span class="number">0x40</span>, <span class="number">0x02</span>, <span class="number">0x20</span>, <span class="number">0x04</span>, <span class="number">0x10</span>, <span class="number">0x08</span>, <span class="number">0x08</span>, <span class="number">0x10</span>, <span class="number">0x04</span>, <span class="number">0x20</span>,
-  <span class="number">0x82</span>, <span class="number">0x41</span>, <span class="number">0x41</span>, <span class="number">0x82</span>, <span class="number">0x41</span>, <span class="number">0x82</span>, <span class="number">0x82</span>, <span class="number">0x41</span>, <span class="number">0x04</span>, <span class="number">0x20</span>, <span class="number">0x08</span>, <span class="number">0x10</span>,
-  <span class="number">0x10</span>, <span class="number">0x08</span>, <span class="number">0x20</span>, <span class="number">0x04</span>, <span class="number">0x40</span>, <span class="number">0x02</span>, <span class="number">0x80</span>, <span class="number">0x01</span>};
-
-<span class="type">static</span> <span class="type">unsigned</span> <span class="type">char</span> cursor1mask_bits[] = {
-  <span class="number">0x80</span>, <span class="number">0x01</span>, <span class="number">0xc0</span>, <span class="number">0x03</span>, <span class="number">0x60</span>, <span class="number">0x06</span>, <span class="number">0x30</span>, <span class="number">0x0c</span>, <span class="number">0x18</span>, <span class="number">0x18</span>, <span class="number">0x8c</span>, <span class="number">0x31</span>,
-  <span class="number">0xc6</span>, <span class="number">0x63</span>, <span class="number">0x63</span>, <span class="number">0xc6</span>, <span class="number">0x63</span>, <span class="number">0xc6</span>, <span class="number">0xc6</span>, <span class="number">0x63</span>, <span class="number">0x8c</span>, <span class="number">0x31</span>, <span class="number">0x18</span>, <span class="number">0x18</span>,
-  <span class="number">0x30</span>, <span class="number">0x0c</span>, <span class="number">0x60</span>, <span class="number">0x06</span>, <span class="number">0xc0</span>, <span class="number">0x03</span>, <span class="number">0x80</span>, <span class="number">0x01</span>};
-
-
+<a name="id628402"></a><p class="title"><b>Example 6. Creating a custom cursor</b></p>
+<div class="example-contents"><pre class="programlisting">
+/* This data is in X bitmap format, and can be created with the 'bitmap'
+   utility. */
+#define cursor1_width 16
+#define cursor1_height 16
+static unsigned char cursor1_bits[] = {
+  0x80, 0x01, 0x40, 0x02, 0x20, 0x04, 0x10, 0x08, 0x08, 0x10, 0x04, 0x20,
+  0x82, 0x41, 0x41, 0x82, 0x41, 0x82, 0x82, 0x41, 0x04, 0x20, 0x08, 0x10,
+  0x10, 0x08, 0x20, 0x04, 0x40, 0x02, 0x80, 0x01};
+ 
+static unsigned char cursor1mask_bits[] = {
+  0x80, 0x01, 0xc0, 0x03, 0x60, 0x06, 0x30, 0x0c, 0x18, 0x18, 0x8c, 0x31,
+  0xc6, 0x63, 0x63, 0xc6, 0x63, 0xc6, 0xc6, 0x63, 0x8c, 0x31, 0x18, 0x18,
+  0x30, 0x0c, 0x60, 0x06, 0xc0, 0x03, 0x80, 0x01};
+ 
+ 
  GdkCursor *cursor;
  GdkPixmap *source, *mask;
- GdkColor fg = { <span class="number">0</span>, <span class="number">65535</span>, <span class="number">0</span>, <span class="number">0</span> }; <span class="comment">/*</span><span class="comment"> Red. </span><span class="comment">*/</span>
- GdkColor bg = { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">65535</span> }; <span class="comment">/*</span><span class="comment"> Blue. </span><span class="comment">*/</span>
-
-
- source = gdk_bitmap_create_from_data (<span class="number">NULL</span>, cursor1_bits,
+ GdkColor fg = { 0, 65535, 0, 0 }; /* Red. */
+ GdkColor bg = { 0, 0, 0, 65535 }; /* Blue. */
+ 
+ 
+ source = gdk_bitmap_create_from_data (NULL, cursor1_bits,
                                        cursor1_width, cursor1_height);
- mask = gdk_bitmap_create_from_data (<span class="number">NULL</span>, cursor1mask_bits,
+ mask = gdk_bitmap_create_from_data (NULL, cursor1mask_bits,
                                      cursor1_width, cursor1_height);
- cursor = gdk_cursor_new_from_pixmap (source, mask, &amp;fg, &amp;bg, <span class="number">8</span>, <span class="number">8</span>);
+ cursor = gdk_cursor_new_from_pixmap (source, mask, &amp;fg, &amp;bg, 8, 8);
  g_object_unref (source);
  g_object_unref (mask);
-
-
- gdk_window_set_cursor (widget-&gt;window, cursor);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+ 
+ 
+ gdk_window_set_cursor (widget-&gt;window, cursor);
+</pre></div>
 </div>
 <p><br class="example-break"></p>
 <div class="variablelist"><table border="0">
@@ -1137,6 +1099,6 @@ Destroys a cursor, freeing any resources allocated for it.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

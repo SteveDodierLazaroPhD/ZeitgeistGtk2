@@ -8,7 +8,7 @@
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkTreeSortable.html" title="GtkTreeSortable">
 <link rel="next" href="GtkTreeModelFilter.html" title="GtkTreeModelFilter">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -168,56 +168,29 @@ sort the second.
 <p>
 </p>
 <div class="example">
-<a name="id752942"></a><p class="title"><b>Example 23. Using a <span class="structname">GtkTreeModelSort</span></b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20</pre></td>
-        <td class="listing_code"><pre class="programlisting">{
+<a name="id787687"></a><p class="title"><b>Example 23. Using a <span class="structname">GtkTreeModelSort</span></b></p>
+<div class="example-contents"><pre class="programlisting">
+{
   GtkTreeView *tree_view1;
   GtkTreeView *tree_view2;
   GtkTreeModel *sort_model1;
   GtkTreeModel *sort_model2;
   GtkTreeModel *child_model;
-  <span class="comment">/*</span><span class="comment"> get the child model </span><span class="comment">*/</span>
+  /* get the child model */
   child_model = get_my_model ();
-  <span class="comment">/*</span><span class="comment"> Create the first tree </span><span class="comment">*/</span>
+  /* Create the first tree */
   sort_model1 = gtk_tree_model_sort_new_with_model (child_model);
   tree_view1 = gtk_tree_view_new_with_model (sort_model1);
-  <span class="comment">/*</span><span class="comment"> Create the second tree </span><span class="comment">*/</span>
+  /* Create the second tree */
   sort_model2 = gtk_tree_model_sort_new_with_model (child_model);
   tree_view2 = gtk_tree_view_new_with_model (sort_model2);
-  <span class="comment">/*</span><span class="comment"> Now we can sort the two models independently </span><span class="comment">*/</span>
+  /* Now we can sort the two models independently */
   gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (sort_model1),
                                         COLUMN_1, GTK_SORT_ASCENDING);
   gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (sort_model2),
                                         COLUMN_1, GTK_SORT_DESCENDING);
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+}
+</pre></div>
 </div>
 <p><br class="example-break">
 </p>
@@ -231,88 +204,45 @@ child model, and change the row there.
 <p>
 </p>
 <div class="example">
-<a name="id727531"></a><p class="title"><b>Example 24. Accessing the child model of in a selection changed callback</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">void</span>
+<a name="id878776"></a><p class="title"><b>Example 24. Accessing the child model of in a selection changed callback</b></p>
+<div class="example-contents"><pre class="programlisting">
+void
 selection_changed (GtkTreeSelection *selection, gpointer data)
 {
-  GtkTreeModel *sort_model = <span class="number">NULL</span>;
+  GtkTreeModel *sort_model = NULL;
   GtkTreeModel *child_model;
   GtkTreeIter sort_iter;
   GtkTreeIter child_iter;
-  <span class="type">char</span> *some_data = <span class="number">NULL</span>;
-  <span class="type">char</span> *modified_data;
-  <span class="comment">/*</span><span class="comment"> Get the current selected row and the model. </span><span class="comment">*/</span>
-  <span class="keyword">if</span> (! gtk_tree_selection_get_selected (selection,
+  char *some_data = NULL;
+  char *modified_data;
+  /* Get the current selected row and the model. */
+  if (! gtk_tree_selection_get_selected (selection,
                                          &amp;sort_model,
                                          &amp;sort_iter))
-    <span class="keyword">return</span>;
-  <span class="comment">/*</span><span class="comment"> Look up the current value on the selected row and get a new value</span>
-<span class="comment">   * to change it to.</span>
-<span class="comment">   </span><span class="comment">*/</span>
+    return;
+  /* Look up the current value on the selected row and get a new value
+   * to change it to.
+   */
   gtk_tree_model_get (GTK_TREE_MODEL (sort_model), &amp;sort_iter,
                       COLUMN_1, &amp;some_data,
-                      -<span class="number">1</span>);
+                      -1);
   modified_data = change_the_data (some_data);
   g_free (some_data);
-  <span class="comment">/*</span><span class="comment"> Get an iterator on the child model, instead of the sort model. </span><span class="comment">*/</span>
+  /* Get an iterator on the child model, instead of the sort model. */
   gtk_tree_model_sort_convert_iter_to_child_iter (GTK_TREE_MODEL_SORT (sort_model),
                                                   &amp;child_iter,
                                                   &amp;sort_iter);
-  <span class="comment">/*</span><span class="comment"> Get the child model and change the value of the row.  In this</span>
-<span class="comment">   * example, the child model is a GtkListStore.  It could be any other</span>
-<span class="comment">   * type of model, though.</span>
-<span class="comment">   </span><span class="comment">*/</span>
+  /* Get the child model and change the value of the row.  In this
+   * example, the child model is a GtkListStore.  It could be any other
+   * type of model, though.
+   */
   child_model = gtk_tree_model_sort_get_model (GTK_TREE_MODEL_SORT (sort_model));
   gtk_list_store_set (GTK_LIST_STORE (child_model), &amp;child_iter,
                       COLUMN_1, &amp;modified_data,
-                      -<span class="number">1</span>);
+                      -1);
   g_free (modified_data);
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+}
+</pre></div>
 </div>
 <p><br class="example-break">
 </p>
@@ -600,6 +530,6 @@ Checks if the given iter is a valid iter for this <a class="link" href="GtkTreeM
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

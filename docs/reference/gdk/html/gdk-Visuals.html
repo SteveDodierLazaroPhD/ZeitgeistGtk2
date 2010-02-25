@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Colormaps-and-Colors.html" title="Colormaps and Colors">
 <link rel="next" href="gdk-Fonts.html" title="Fonts">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="reference" href="reference.html" title="API Reference">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -148,31 +148,16 @@ a particular visual.
 </p>
 <div class="example">
 <a name="rgbmask"></a><p class="title"><b>Example 5. Constructing a pixel value from components</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></td>
-        <td class="listing_code"><pre class="programlisting">guint
+<div class="example-contents"><pre class="programlisting">
+guint
 pixel_from_rgb (GdkVisual *visual,
                 guchar r, guchar b, guchar g)
 {
-  <span class="keyword">return</span> ((r &gt;&gt; (<span class="number">16</span> - visual-&gt;red_prec))   &lt;&lt; visual-&gt;red_shift) |
-         ((g &gt;&gt; (<span class="number">16</span> - visual-&gt;green_prec)) &lt;&lt; visual-&gt;green_shift) |
-         ((r &gt;&gt; (<span class="number">16</span> - visual-&gt;blue_prec))  &lt;&lt; visual-&gt;blue_shift);
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  return ((r &gt;&gt; (16 - visual-&gt;red_prec))   &lt;&lt; visual-&gt;red_shift) |
+         ((g &gt;&gt; (16 - visual-&gt;green_prec)) &lt;&lt; visual-&gt;green_shift) |
+         ((r &gt;&gt; (16 - visual-&gt;blue_prec))  &lt;&lt; visual-&gt;blue_shift);
+}
+</pre></div>
 </div>
 <br class="example-break"><div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -488,15 +473,14 @@ Return the best available visual type for the default GDK screen.</p>
 <a name="gdk-visual-get-system"></a><h3>gdk_visual_get_system ()</h3>
 <pre class="programlisting"><a class="link" href="gdk-Visuals.html#GdkVisual" title="GdkVisual"><span class="returnvalue">GdkVisual</span></a>*          gdk_visual_get_system               (void);</pre>
 <p>
-Get the system'sdefault visual for the default GDK screen.
+Get the system's default visual for the default GDK screen.
 This is the visual for the root window of the display.
 The return value should not be freed.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> system visual
-</td>
+<td> system visual. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
 </tr></tbody>
 </table></div>
 </div>
@@ -511,8 +495,7 @@ GDK screen. The return value should not be freed.</p>
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> best visual
-</td>
+<td> best visual. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
 </tr></tbody>
 </table></div>
 </div>
@@ -535,8 +518,7 @@ be freed. <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Ma
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> best visual for the given depth
-</td>
+<td> best visual for the given depth. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -560,8 +542,7 @@ should not be freed. <a href="http://library.gnome.org/devel/glib/unstable/glib-
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> best visual of the given type
-</td>
+<td> best visual of the given type. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -588,8 +569,7 @@ Combines <a class="link" href="gdk-Visuals.html#gdk-visual-get-best-with-depth" 
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> best visual with both <em class="parameter"><code>depth</code></em> and <em class="parameter"><code>visual_type</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none
-</td>
+<td>transfer none. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -604,7 +584,7 @@ Combines <a class="link" href="gdk-Visuals.html#gdk-visual-get-best-with-depth" 
 <p><code class="literal">gdk_visual_ref</code> is deprecated and should not be used in newly-written code.</p>
 </div>
 <p>
-Deprecated equivalent of <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a>.
+Deprecated equivalent of <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -632,7 +612,7 @@ Deprecated equivalent of <a href="/usr/share/gtk-doc/html/libmissioncontrol-serv
 <p><code class="literal">gdk_visual_unref</code> is deprecated and should not be used in newly-written code.</p>
 </div>
 <p>
-Deprecated equivalent of <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a>.
+Deprecated equivalent of <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -659,9 +639,7 @@ Gets the screen to which this visual belongs</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the screen to which this visual belongs.
-
-</td>
+<td> the screen to which this visual belongs.. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -677,6 +655,6 @@ Gets the screen to which this visual belongs</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

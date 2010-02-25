@@ -12219,6 +12219,9 @@ extern __typeof (gtk_widget_get_receives_default) gtk_widget_get_receives_defaul
 #undef gtk_widget_get_root_window 
 extern __typeof (gtk_widget_get_root_window) gtk_widget_get_root_window __attribute((alias("IA__gtk_widget_get_root_window"), visibility("default")));
 
+#undef gtk_widget_get_requisition 
+extern __typeof (gtk_widget_get_requisition) gtk_widget_get_requisition __attribute((alias("IA__gtk_widget_get_requisition"), visibility("default")));
+
 #undef gtk_widget_get_screen 
 extern __typeof (gtk_widget_get_screen) gtk_widget_get_screen __attribute((alias("IA__gtk_widget_get_screen"), visibility("default")));
 

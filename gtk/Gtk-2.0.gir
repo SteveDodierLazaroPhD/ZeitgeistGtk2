@@ -726,7 +726,8 @@ link is activated.">
                 c:identifier="gtk_accel_group_from_accel_closure"
                 doc="Finds the #GtkAccelGroup to which @closure is connected;
 see gtk_accel_group_connect().">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the #GtkAccelGroup to which @closure is connected, or %NULL.">
           <type name="AccelGroup" c:type="GtkAccelGroup*"/>
         </return-value>
         <parameters>
@@ -833,7 +834,10 @@ Since 2.20 @closure can be %NULL.">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="closure" transfer-ownership="none">
+          <parameter name="closure"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the closure to remove from this accelerator group, or %NULL">
             <type name="GObject.Closure" c:type="GClosure*"/>
           </parameter>
         </parameters>
@@ -898,7 +902,8 @@ Finds the first entry in an accelerator group for which">
       <method name="query"
               c:identifier="gtk_accel_group_query"
               doc="Queries an accelerator group for all entries matching @accel_key and">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="an array of @n_entries #GtkAccelGroupEntry elements, or %NULL. The array is owned by GTK+ and must not be freed.">
           <type name="AccelGroupEntry" c:type="GtkAccelGroupEntry*"/>
         </return-value>
         <parameters>
@@ -910,7 +915,9 @@ Finds the first entry in an accelerator group for which">
           </parameter>
           <parameter name="n_entries"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return the number of entries found, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
         </parameters>
@@ -1658,10 +1665,16 @@ names."
           <parameter name="name" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="label" transfer-ownership="none">
+          <parameter name="label"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the label displayed in menu items and on buttons, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="tooltip" transfer-ownership="none">
+          <parameter name="tooltip"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a tooltip for the action, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="stock_id" transfer-ownership="none">
@@ -3031,7 +3044,10 @@ or unset and by the implementing class when
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="action" transfer-ownership="none">
+          <parameter name="action"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the related #GtkAction or %NULL">
             <type name="Action" c:type="GtkAction*"/>
           </parameter>
         </parameters>
@@ -3628,22 +3644,30 @@ See gtk_alignment_set_padding ()."
         <parameters>
           <parameter name="padding_top"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the padding for the top of the widget, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
           <parameter name="padding_bottom"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the padding for the bottom of the widget, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
           <parameter name="padding_left"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the padding for the left of the widget, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
           <parameter name="padding_right"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the padding for the right of the widget, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
         </parameters>
@@ -4143,9 +4167,11 @@ page."
         <parameters>
           <parameter name="page_func"
                      transfer-ownership="none"
+                     allow-none="1"
                      scope="notified"
                      closure="2"
-                     destroy="3">
+                     destroy="3"
+                     doc="the #GtkAssistantPageFunc, or %NULL to use the default one">
             <type name="AssistantPageFunc" c:type="GtkAssistantPageFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -4569,7 +4595,7 @@ can do any preparation which are necessary before showing @page."
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="1905">
+    <constant name="BINARY_AGE" value="1906">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -5243,7 +5269,10 @@ describing how the child should be added."
           <parameter name="child" transfer-ownership="none">
             <type name="GObject.Object" c:type="GObject*"/>
           </parameter>
-          <parameter name="type" transfer-ownership="none">
+          <parameter name="type"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="kind of child or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -5298,7 +5327,10 @@ if it doesn&apos;t."
           <parameter name="builder" transfer-ownership="none">
             <type name="Builder" c:type="GtkBuilder*"/>
           </parameter>
-          <parameter name="child" transfer-ownership="none">
+          <parameter name="child"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="child object or %NULL for non-child tags">
             <type name="GObject.Object" c:type="GObject*"/>
           </parameter>
           <parameter name="tagname" transfer-ownership="none">
@@ -5324,7 +5356,10 @@ the buildable."
           <parameter name="builder" transfer-ownership="none">
             <type name="Builder" c:type="GtkBuilder*"/>
           </parameter>
-          <parameter name="child" transfer-ownership="none">
+          <parameter name="child"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="child object or %NULL for non-child tags">
             <type name="GObject.Object" c:type="GObject*"/>
           </parameter>
           <parameter name="tagname" transfer-ownership="none">
@@ -5347,7 +5382,10 @@ called once for each custom tag handled by the @buildable."
           <parameter name="builder" transfer-ownership="none">
             <type name="Builder" c:type="GtkBuilder*"/>
           </parameter>
-          <parameter name="child" transfer-ownership="none">
+          <parameter name="child"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="child object or %NULL for non-child tags">
             <type name="GObject.Object" c:type="GObject*"/>
           </parameter>
           <parameter name="tagname" transfer-ownership="none">
@@ -5788,7 +5826,10 @@ See #GtkBuilder:translation-domain."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="domain" transfer-ownership="none">
+          <parameter name="domain"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the translation domain or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -10286,18 +10327,24 @@ headings)."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="year" direction="out" transfer-ownership="full">
+          <parameter name="year"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the year number, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
           <parameter name="month"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
           <parameter name="day"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
@@ -10843,7 +10890,10 @@ initiated through programatic means.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="event" transfer-ownership="none">
+          <parameter name="event"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A #GdkEvent, or %NULL">
             <type name="Gdk.Event" c:type="GdkEvent*"/>
           </parameter>
         </parameters>
@@ -11538,19 +11588,38 @@ in @x_offset and @y_offset are inclusive of the xpad and ypad properties.">
           <parameter name="widget" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="cell_area" transfer-ownership="none">
+          <parameter name="cell_area"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The area a cell will be allocated, or %NULL">
             <type name="Gdk.Rectangle" c:type="GdkRectangle*"/>
           </parameter>
-          <parameter name="x_offset" direction="out" transfer-ownership="full">
+          <parameter name="x_offset"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return x offset of cell relative to @cell_area, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="y_offset" direction="out" transfer-ownership="full">
+          <parameter name="y_offset"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return y offset of cell relative to @cell_area, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return width needed to render a cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return height needed to render a cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -11667,10 +11736,18 @@ Passes an activate event to the cell renderer for possible processing.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to fill in with the fixed width of the cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to fill in with the fixed height of the cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -11699,10 +11776,18 @@ Passes an activate event to the cell renderer for possible processing.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="xalign" direction="out" transfer-ownership="full">
+          <parameter name="xalign"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to fill in with the x alignment of the cell, or %NULL">
             <type name="float" c:type="gfloat*"/>
           </parameter>
-          <parameter name="yalign" direction="out" transfer-ownership="full">
+          <parameter name="yalign"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to fill in with the y alignment of the cell, or %NULL">
             <type name="float" c:type="gfloat*"/>
           </parameter>
         </parameters>
@@ -11731,10 +11816,18 @@ Passes an activate event to the cell renderer for possible processing.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="xpad" direction="out" transfer-ownership="full">
+          <parameter name="xpad"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to fill in with the x padding of the cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="ypad" direction="out" transfer-ownership="full">
+          <parameter name="ypad"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to fill in with the y padding of the cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -15656,7 +15749,10 @@ unsets the active item if @iter is %NULL."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="iter" transfer-ownership="none">
+          <parameter name="iter"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -15713,10 +15809,16 @@ function is %NULL, no separators are drawn. This is the default value."
             <type name="TreeViewRowSeparatorFunc"
                   c:type="GtkTreeViewRowSeparatorFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="user data to pass to @func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -16212,7 +16314,8 @@ to be @text_column."
                 c:identifier="gtk_container_class_find_child_property"
                 doc="child property with that name.
 Finds a child property of a container class by name.">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the #GParamSpec of the child property or %NULL if @class has no">
           <type name="GObject.ParamSpec" c:type="GParamSpec*"/>
         </return-value>
         <parameters>
@@ -18926,10 +19029,18 @@ indices in the layout to byte indices in the entry contents.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="x" direction="out" transfer-ownership="full">
+          <parameter name="x"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store X offset of layout, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="y" direction="out" transfer-ownership="full">
+          <parameter name="y"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store Y offset of layout, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -19113,7 +19224,10 @@ If @pixbuf is %NULL, no icon will be shown in the specified position."
           <parameter name="icon_pos" transfer-ownership="none">
             <type name="EntryIconPosition" c:type="GtkEntryIconPosition"/>
           </parameter>
-          <parameter name="pixbuf" transfer-ownership="none">
+          <parameter name="pixbuf"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A #GdkPixbuf, or %NULL">
             <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
           </parameter>
         </parameters>
@@ -19131,7 +19245,10 @@ If @stock_id is %NULL, no icon will be shown in the specified position."
           <parameter name="icon_pos" transfer-ownership="none">
             <type name="EntryIconPosition" c:type="GtkEntryIconPosition"/>
           </parameter>
-          <parameter name="stock_id" transfer-ownership="none">
+          <parameter name="stock_id"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The name of the stock item, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -19151,7 +19268,10 @@ If @icon_name is %NULL, no icon will be shown in the specified position."
           <parameter name="icon_pos" transfer-ownership="none">
             <type name="EntryIconPosition" c:type="GtkEntryIconPosition"/>
           </parameter>
-          <parameter name="icon_name" transfer-ownership="none">
+          <parameter name="icon_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="An icon name, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -19171,7 +19291,10 @@ If @icon is %NULL, no icon will be shown in the specified position."
           <parameter name="icon_pos" transfer-ownership="none">
             <type name="EntryIconPosition" c:type="GtkEntryIconPosition"/>
           </parameter>
-          <parameter name="icon" transfer-ownership="none">
+          <parameter name="icon"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The icon to set, or %NULL">
             <type name="Gio.Icon" c:type="GIcon*"/>
           </parameter>
         </parameters>
@@ -19348,7 +19471,10 @@ gtk_entry_set_icon_tooltip_markup()."
           <parameter name="icon_pos" transfer-ownership="none">
             <type name="EntryIconPosition" c:type="GtkEntryIconPosition"/>
           </parameter>
-          <parameter name="tooltip" transfer-ownership="none">
+          <parameter name="tooltip"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the contents of the tooltip for the icon, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -19384,7 +19510,10 @@ gtk_enty_set_icon_tooltip_text()."
           <parameter name="icon_pos" transfer-ownership="none">
             <type name="EntryIconPosition" c:type="GtkEntryIconPosition"/>
           </parameter>
-          <parameter name="tooltip" transfer-ownership="none">
+          <parameter name="tooltip"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the contents of the tooltip for the icon, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -20126,7 +20255,10 @@ Optionally, specify initial text to set in the buffer."
           <type name="EntryBuffer" c:type="GtkEntryBuffer*"/>
         </return-value>
         <parameters>
-          <parameter name="initial_chars" transfer-ownership="none">
+          <parameter name="initial_chars"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="initial buffer text, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="n_initial_chars" transfer-ownership="none">
@@ -23008,16 +23140,25 @@ gtk_dialog_new_with_buttons()."
           <type name="FileChooserDialog" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="title" transfer-ownership="none">
+          <parameter name="title"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Title of the dialog, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Transient parent of the dialog, or %NULL">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
           <parameter name="action" transfer-ownership="none">
             <type name="FileChooserAction" c:type="GtkFileChooserAction"/>
           </parameter>
-          <parameter name="first_button_text" transfer-ownership="none">
+          <parameter name="first_button_text"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="stock ID or text to go in the first button, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter transfer-ownership="none">
@@ -23039,10 +23180,16 @@ to load files."
           <type name="FileChooserDialog" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="title" transfer-ownership="none">
+          <parameter name="title"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Title of the dialog, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Transient parent of the dialog, or %NULL">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
           <parameter name="action" transfer-ownership="none">
@@ -23051,7 +23198,10 @@ to load files."
           <parameter name="backend" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="first_button_text" transfer-ownership="none">
+          <parameter name="first_button_text"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="stock ID or text to go in the first button, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter transfer-ownership="none">
@@ -23201,7 +23351,10 @@ there is a selectable list of filters."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="name" transfer-ownership="none">
+          <parameter name="name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the human-readable-name for the filter, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -24478,10 +24631,18 @@ gtk_frame_set_label_align().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="xalign" direction="out" transfer-ownership="full">
+          <parameter name="xalign"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store X alignment of frame&apos;s label, or %NULL">
             <type name="float" c:type="gfloat*"/>
           </parameter>
-          <parameter name="yalign" direction="out" transfer-ownership="full">
+          <parameter name="yalign"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store X alignment of frame&apos;s label, or %NULL">
             <type name="float" c:type="gfloat*"/>
           </parameter>
         </parameters>
@@ -25080,7 +25241,10 @@ needs, use gtk_scale_set_digits() to correct it.">
           <type name="HScrollbar" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="adjustment" transfer-ownership="none">
+          <parameter name="adjustment"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the #GtkAdjustment to use, or %NULL to create a new adjustment">
             <type name="Adjustment" c:type="GtkAdjustment*"/>
           </parameter>
         </parameters>
@@ -25471,7 +25635,10 @@ also be used for purposes internal to the input method.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="window" transfer-ownership="none">
+          <parameter name="window"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the client window. This may be %NULL to indicate">
             <type name="Gdk.Window" c:type="GdkWindow*"/>
           </parameter>
         </parameters>
@@ -26595,12 +26762,17 @@ emblems or overlays to the icon."
           <parameter name="points"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="location to store pointer to an array of points, or %NULL">
             <array length="2" c:type="GdkPoint**">
               <type name="Gdk.Point"/>
             </array>
           </parameter>
-          <parameter name="n_points" direction="out" transfer-ownership="full">
+          <parameter name="n_points"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the number of points in @points, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -26741,10 +26913,16 @@ image&quot; icon will be returned instead.">
           <parameter name="size" transfer-ownership="none" doc="1">
             <type name="int" c:type="GtkIconSize"/>
           </parameter>
-          <parameter name="widget" transfer-ownership="none">
+          <parameter name="widget"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="widget that will display the icon, or %NULL.">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="detail" transfer-ownership="none">
+          <parameter name="detail"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="detail to pass to the theme engine, or %NULL.">
             <type name="utf8" c:type="char*"/>
           </parameter>
         </parameters>
@@ -27260,6 +27438,7 @@ Gets the current search path. See gtk_icon_theme_set_search_path()."
           <parameter name="path"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="location to store a list of icon theme path directories or %NULL">
             <array length="2" c:type="gchar**">
               <type name="utf8"/>
@@ -27918,7 +28097,10 @@ widget coordinates to bin_window coordinates."
           <parameter name="y" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the path, or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
           <parameter name="cell" transfer-ownership="none">
@@ -27936,10 +28118,16 @@ Both paths should be freed with gtk_tree_path_free() after use."
           <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="start_path" transfer-ownership="none">
+          <parameter name="start_path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for start of region, or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="end_path" transfer-ownership="none">
+          <parameter name="end_path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for end of region, or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
         </parameters>
@@ -28111,10 +28299,16 @@ The returned #GtkTreePath must be freed with gtk_tree_path_free()."
           <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the current cursor path, or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="cell" transfer-ownership="none">
+          <parameter name="cell"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location the current focus cell, or %NULL">
             <type name="CellRenderer" c:type="GtkCellRenderer**"/>
           </parameter>
         </parameters>
@@ -28274,10 +28468,16 @@ See gtk_icon_view_set_reorderable()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the path of the highlighted item, or %NULL.">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="pos" transfer-ownership="none">
+          <parameter name="pos"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the drop position, or %NULL">
             <type name="IconViewDropPosition"
                   c:type="GtkIconViewDropPosition*"/>
           </parameter>
@@ -28297,10 +28497,16 @@ See gtk_icon_view_set_reorderable()."
           <parameter name="drag_y" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the path of the item, or %NULL.">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="pos" transfer-ownership="none">
+          <parameter name="pos"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the drop position, or %NULL">
             <type name="IconViewDropPosition"
                   c:type="GtkIconViewDropPosition*"/>
           </parameter>
@@ -28377,7 +28583,10 @@ See also gtk_icon_view_set_tooltip_column() for a simpler alternative."
           <parameter name="path" transfer-ownership="none">
             <type name="TreePath" c:type="GtkTreePath*"/>
           </parameter>
-          <parameter name="cell" transfer-ownership="none">
+          <parameter name="cell"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkCellRenderer or %NULL">
             <type name="CellRenderer" c:type="GtkCellRenderer*"/>
           </parameter>
         </parameters>
@@ -28407,13 +28616,22 @@ to be relative to @icon_view&apos;s bin_window if @keyboard_tooltip is %FALSE."
           <parameter name="keyboard_tip" transfer-ownership="none">
             <type name="boolean" c:type="gboolean"/>
           </parameter>
-          <parameter name="model" transfer-ownership="none">
+          <parameter name="model"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a pointer to receive a #GtkTreeModel or %NULL">
             <type name="TreeModel" c:type="GtkTreeModel**"/>
           </parameter>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a pointer to receive a #GtkTreePath or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="iter" transfer-ownership="none">
+          <parameter name="iter"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a pointer to receive a #GtkTreeIter or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -29961,7 +30179,10 @@ the &quot;response&quot; signal with the corresponding response ID.">
           <type name="InfoBar" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="first_button_text" transfer-ownership="none">
+          <parameter name="first_button_text"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="stock ID or text to go in first button, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter transfer-ownership="none">
@@ -30068,7 +30289,9 @@ A convenient way to sensitize/desensitize dialog buttons."
               c:identifier="gtk_info_bar_set_default_response"
               doc="Sets the last widget in the info bar&apos;s action area with
 the given response_id as the default widget for the dialog.
-Pressing &quot;Enter&quot; normally activates the default widget."
+Pressing &quot;Enter&quot; normally activates the default widget.
+Note that this function currently requires @info_bar to
+be added to a widget hierarchy."
               version="2.18">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -30675,7 +30898,8 @@ be removed in the future."
                 doc="Obtains the item factory from which a widget was created."
                 deprecated="Use #GtkUIManager instead."
                 deprecated-version="2.4">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the item factory from which @widget was created, or %NULL">
           <type name="ItemFactory" c:type="GtkItemFactory*"/>
         </return-value>
         <parameters>
@@ -30729,7 +30953,8 @@ Finds an item factory which has been constructed using the
 for gtk_item_factory_new()."
                 deprecated="Use #GtkUIManager instead."
                 deprecated-version="2.4">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the #GtkItemFactory created for the given factory path, or %NULL">
           <type name="ItemFactory" c:type="GtkItemFactory*"/>
         </return-value>
         <parameters>
@@ -30797,7 +31022,8 @@ submenu, then the submenu is returned. If you are interested in the menu
 item, use gtk_item_factory_get_item() instead."
               deprecated="Use #GtkUIManager instead."
               deprecated-version="2.4">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the widget for the given path, or %NULL if @path doesn&apos;t lead">
           <type name="Widget" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
@@ -30816,7 +31042,8 @@ If there are multiple items with the same action, the result is
 undefined."
               deprecated="Use #GtkUIManager instead."
               deprecated-version="2.4">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the widget which corresponds to the given action, or %NULL">
           <type name="Widget" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
@@ -30833,7 +31060,8 @@ Obtains the menu item which was constructed from the first
 #GtkItemFactoryEntry with the given @action."
               deprecated="Use #GtkUIManager instead."
               deprecated-version="2.4">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the menu item which corresponds to the given action, or %NULL">
           <type name="Widget" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
@@ -31753,10 +31981,18 @@ and from pixels using PANGO_PIXELS() or #PANGO_SCALE.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="x" direction="out" transfer-ownership="full">
+          <parameter name="x"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store X offset of layout, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="y" direction="out" transfer-ownership="full">
+          <parameter name="y"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store Y offset of layout, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -32202,10 +32438,16 @@ you&apos;d like the layout to use for scrolling, pass %NULL for">
           <type name="Layout" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="hadjustment" transfer-ownership="none">
+          <parameter name="hadjustment"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="horizontal scroll adjustment, or %NULL">
             <type name="Adjustment" c:type="GtkAdjustment*"/>
           </parameter>
-          <parameter name="vadjustment" transfer-ownership="none">
+          <parameter name="vadjustment"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="vertical scroll adjustment, or %NULL">
             <type name="Adjustment" c:type="GtkAdjustment*"/>
           </parameter>
         </parameters>
@@ -32278,10 +32520,18 @@ gtk_layout_set_size ().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the width set on @layout, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the height set on @layout, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
         </parameters>
@@ -32522,15 +32772,23 @@ If no uri hook has been set, GTK+ defaults to calling gtk_show_uri()."
         <parameters>
           <parameter name="func"
                      transfer-ownership="none"
+                     allow-none="1"
                      scope="notified"
                      closure="1"
-                     destroy="2">
+                     destroy="2"
+                     doc="a function called each time a #GtkLinkButton is clicked, or %NULL">
             <type name="LinkButtonUriFunc" c:type="GtkLinkButtonUriFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="user data to be passed to @func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GDestroyNotify that gets called when @data is no longer needed, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -33464,7 +33722,10 @@ values, you need to call gtk_list_store_set() or gtk_list_store_set_value().">
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="sibling" transfer-ownership="none">
+          <parameter name="sibling"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -33482,7 +33743,10 @@ in values, you need to call gtk_list_store_set() or gtk_list_store_set_value()."
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="sibling" transfer-ownership="none">
+          <parameter name="sibling"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -33511,7 +33775,10 @@ inserting rows in a sorted list store."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="iter" transfer-ownership="none">
+          <parameter name="iter"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="An unset #GtkTreeIter to set to the new row, or %NULL.">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
           <parameter name="position" transfer-ownership="none">
@@ -33534,7 +33801,10 @@ language-bindings."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="iter" transfer-ownership="none">
+          <parameter name="iter"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="An unset #GtkTreeIter to set to the new row, or %NULL.">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
           <parameter name="position" transfer-ownership="none">
@@ -33762,7 +34032,7 @@ will be moved to the end of the list."
     <constant name="MAX_COMPOSE_LEN" value="7">
       <type name="int"/>
     </constant>
-    <constant name="MICRO_VERSION" value="5">
+    <constant name="MICRO_VERSION" value="6">
       <type name="int"/>
     </constant>
     <constant name="MINOR_VERSION" value="19">
@@ -33847,16 +34117,29 @@ be used instead.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="parent_menu_shell" transfer-ownership="none">
+          <parameter name="parent_menu_shell"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the menu shell containing the triggering menu item, or %NULL">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="parent_menu_item" transfer-ownership="none">
+          <parameter name="parent_menu_item"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the menu item whose activation triggered the popup, or %NULL">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="4">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     closure="4"
+                     doc="a user supplied function used to position the menu, or %NULL">
             <type name="MenuPositionFunc" c:type="GtkMenuPositionFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="user supplied data to be passed to @func.">
             <type name="any" c:type="gpointer"/>
           </parameter>
           <parameter name="button" transfer-ownership="none">
@@ -34525,7 +34808,10 @@ submenu is passed.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="submenu" transfer-ownership="none">
+          <parameter name="submenu"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the submenu, or %NULL">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
         </parameters>
@@ -35349,10 +35635,16 @@ another item."
           <type name="MenuToolButton" c:type="GtkToolItem*"/>
         </return-value>
         <parameters>
-          <parameter name="icon_widget" transfer-ownership="none">
+          <parameter name="icon_widget"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a widget that will be used as icon widget, or %NULL">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="label" transfer-ownership="none">
+          <parameter name="label"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a string that will be used as label, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -35601,7 +35893,10 @@ markup);
           <type name="MessageDialog" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="transient parent, or %NULL for none">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
           <parameter name="flags" transfer-ownership="none">
@@ -35615,6 +35910,7 @@ markup);
           </parameter>
           <parameter name="message_format"
                      transfer-ownership="none"
+                     allow-none="1"
                      doc="style format string, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
@@ -35673,6 +35969,7 @@ bold, unless you have provided explicit markup."
         <parameters>
           <parameter name="message_format"
                      transfer-ownership="none"
+                     allow-none="1"
                      doc="style format string, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
@@ -35877,10 +36174,18 @@ See gtk_misc_set_alignment().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="xalign" direction="out" transfer-ownership="full">
+          <parameter name="xalign"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store X alignment of @misc, or %NULL">
             <type name="float" c:type="gfloat*"/>
           </parameter>
-          <parameter name="yalign" direction="out" transfer-ownership="full">
+          <parameter name="yalign"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store Y alignment of @misc, or %NULL">
             <type name="float" c:type="gfloat*"/>
           </parameter>
         </parameters>
@@ -35906,10 +36211,18 @@ See gtk_misc_set_padding().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="xpad" direction="out" transfer-ownership="full">
+          <parameter name="xpad"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store padding in the X direction, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="ypad" direction="out" transfer-ownership="full">
+          <parameter name="ypad"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store padding in the Y direction, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -35987,7 +36300,10 @@ See gtk_misc_set_padding().">
           <type name="MountOperation" c:type="GMountOperation*"/>
         </return-value>
         <parameters>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="transient parent of the window, or %NULL">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
         </parameters>
@@ -36010,7 +36326,10 @@ a window."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="transient parent of the window, or %NULL">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
         </parameters>
@@ -36169,16 +36488,21 @@ when a detached tab is dropped in an empty area."
         <parameters>
           <parameter name="func"
                      transfer-ownership="none"
+                     allow-none="1"
                      scope="notified"
                      closure="1"
-                     destroy="2">
+                     destroy="2"
+                     doc="the #GtkNotebookWindowCreationFunc, or %NULL">
             <type name="NotebookWindowCreationFunc"
                   c:type="GtkNotebookWindowCreationFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -36424,7 +36748,10 @@ not be able to exchange tabs with any other notebook."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="group" transfer-ownership="none">
+          <parameter name="group"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a pointer to identify the notebook group, or %NULL to unset it">
             <type name="any" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -38823,7 +39150,10 @@ page setup, or %NULL if an error occurred."
           <parameter name="key_file" transfer-ownership="none">
             <type name="GLib.KeyFile" c:type="GKeyFile*"/>
           </parameter>
-          <parameter name="group_name" transfer-ownership="none">
+          <parameter name="group_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the name of the group in the key_file to read, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -39116,7 +39446,10 @@ Reads the page setup from the group @group_name in the key file"
           <parameter name="key_file" transfer-ownership="none">
             <type name="GLib.KeyFile" c:type="GKeyFile*"/>
           </parameter>
-          <parameter name="group_name" transfer-ownership="none">
+          <parameter name="group_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the name of the group in the key_file to read, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -40094,8 +40427,7 @@ instance with gtk_socket_add_id().">
         <type name="uint" c:type="guint"/>
       </field>
       <glib:signal name="embedded"
-                   doc="Gets emitted when the plug becomes embedded in a socket
-and when the embedding ends.">
+                   doc="Gets emitted when the plug becomes embedded in a socket.">
         <return-value transfer-ownership="full">
           <type name="none" c:type="void"/>
         </return-value>
@@ -40838,7 +41170,10 @@ some platforms may not allow asynchronous operation."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="label" transfer-ownership="none">
+          <parameter name="label"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the label to use, or %NULL to use the default label">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -41424,7 +41759,10 @@ finished by calling gtk_print_operation_preview_end_preview()
           <parameter name="context" transfer-ownership="none">
             <type name="PrintContext" c:type="GtkPrintContext"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the #GtkWindow to use as window parent, or %NULL">
             <type name="Window" c:type="GtkWindow"/>
           </parameter>
         </parameters>
@@ -42083,7 +42421,10 @@ a #GFileError or #GKeyFileError."
           <parameter name="key_file" transfer-ownership="none">
             <type name="GLib.KeyFile" c:type="GKeyFile*"/>
           </parameter>
-          <parameter name="group_name" transfer-ownership="none">
+          <parameter name="group_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the name of the group to use, or %NULL to use">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -42143,7 +42484,10 @@ file could not be loaded then error is set to either a #GFileError or
           <parameter name="key_file" transfer-ownership="none">
             <type name="GLib.KeyFile" c:type="GKeyFile*"/>
           </parameter>
-          <parameter name="group_name" transfer-ownership="none">
+          <parameter name="group_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the name of the group to use, or %NULL to use the default">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -43340,7 +43684,10 @@ per pulse is determined by gtk_progress_bar_set_pulse_step()).">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="text" transfer-ownership="none">
+          <parameter name="text"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a UTF-8 string, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -43735,10 +44082,16 @@ call gtk_action_group_add_action_with_accel()."
           <parameter name="name" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="label" transfer-ownership="none">
+          <parameter name="label"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The label displayed in menu items and on buttons, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="tooltip" transfer-ownership="none">
+          <parameter name="tooltip"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A tooltip for this action, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="stock_id" transfer-ownership="none">
@@ -44013,7 +44366,10 @@ in @label indicate the mnemonic for the button.">
           <type name="RadioButton" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="radio_group_member" transfer-ownership="none">
+          <parameter name="radio_group_member"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="widget to get radio group from or %NULL">
             <type name="RadioButton" c:type="GtkRadioButton*"/>
           </parameter>
           <parameter name="label" transfer-ownership="none">
@@ -44300,7 +44656,10 @@ The new #GtkRadioMenuItem is added to the same group as @group."
           <type name="RadioToolButton" c:type="GtkToolItem*"/>
         </return-value>
         <parameters>
-          <parameter name="group" transfer-ownership="none">
+          <parameter name="group"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="An existing radio button group, or %NULL if you are creating a new group">
             <type name="GLib.SList" c:type="GSList*"/>
           </parameter>
         </parameters>
@@ -44315,7 +44674,10 @@ stock item indicated by @stock_id."
           <type name="RadioToolButton" c:type="GtkToolItem*"/>
         </return-value>
         <parameters>
-          <parameter name="group" transfer-ownership="none">
+          <parameter name="group"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="an existing radio button group, or %NULL if you are creating a new group">
             <type name="GLib.SList" c:type="GSList*"/>
           </parameter>
           <parameter name="stock_id" transfer-ownership="none">
@@ -44614,12 +44976,16 @@ This function is useful mainly for #GtkRange subclasses."
         <parameters>
           <parameter name="slider_start"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for the slider&apos;s start, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
           <parameter name="slider_end"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for the slider&apos;s end, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -45536,10 +45902,16 @@ call gtk_action_group_add_action_with_accel()."
           <parameter name="name" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="label" transfer-ownership="none">
+          <parameter name="label"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the label displayed in menu items and on buttons, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="tooltip" transfer-ownership="none">
+          <parameter name="tooltip"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a tooltip for the action, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="stock_id" transfer-ownership="none">
@@ -45562,16 +45934,25 @@ call gtk_action_group_add_action_with_accel()."
           <parameter name="name" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="label" transfer-ownership="none">
+          <parameter name="label"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the label displayed in menu items and on buttons, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="tooltip" transfer-ownership="none">
+          <parameter name="tooltip"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a tooltip for the action, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="stock_id" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="manager" transfer-ownership="none">
+          <parameter name="manager"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkRecentManager, or %NULL for using the default">
             <type name="RecentManager" c:type="GtkRecentManager*"/>
           </parameter>
         </parameters>
@@ -45952,10 +46333,16 @@ a negative integer if the first item comes after the second."
                      destroy="3">
             <type name="RecentSortFunc" c:type="GtkRecentSortFunc"/>
           </parameter>
-          <parameter name="sort_data" transfer-ownership="none">
+          <parameter name="sort_data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="user data to pass to @sort_func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="data_destroy" transfer-ownership="none">
+          <parameter name="data_destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="destroy notifier for @sort_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -46064,7 +46451,11 @@ g_strfreev() to free it."
           </array>
         </return-value>
         <parameters>
-          <parameter name="length" direction="out" transfer-ownership="full">
+          <parameter name="length"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for a the length of the URI list, or %NULL">
             <type name="size_t" c:type="gsize*"/>
           </parameter>
         </parameters>
@@ -46232,13 +46623,22 @@ gtk_dialog_new_with_buttons()."
           <type name="RecentChooserDialog" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="title" transfer-ownership="none">
+          <parameter name="title"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Title of the dialog, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Transient parent of the dialog, or %NULL,">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
-          <parameter name="first_button_text" transfer-ownership="none">
+          <parameter name="first_button_text"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="stock ID or text to go in the first button, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter transfer-ownership="none">
@@ -46258,16 +46658,25 @@ have a customized instance of a #GtkRecentManager object."
           <type name="RecentChooserDialog" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="title" transfer-ownership="none">
+          <parameter name="title"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Title of the dialog, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Transient parent of the dialog, or %NULL,">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
           <parameter name="manager" transfer-ownership="none">
             <type name="RecentManager" c:type="GtkRecentManager*"/>
           </parameter>
-          <parameter name="first_button_text" transfer-ownership="none">
+          <parameter name="first_button_text"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="stock ID or text to go in the first button, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter transfer-ownership="none">
@@ -47450,7 +47859,10 @@ by the URIs, but only the URI used in the recently used resources list."
           <parameter name="uri" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="new_uri" transfer-ownership="none">
+          <parameter name="new_uri"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the new URI of the recently used resource, or %NULL to">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -47832,13 +48244,25 @@ See gtk_ruler_set_range().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="lower" direction="out" transfer-ownership="full">
+          <parameter name="lower"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store lower limit of the ruler, or %NULL">
             <type name="double" c:type="gdouble*"/>
           </parameter>
-          <parameter name="upper" direction="out" transfer-ownership="full">
+          <parameter name="upper"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store upper limit of the ruler, or %NULL">
             <type name="double" c:type="gdouble*"/>
           </parameter>
-          <parameter name="position" direction="out" transfer-ownership="full">
+          <parameter name="position"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the current position of the mark on the ruler, or %NULL">
             <type name="double" c:type="gdouble*"/>
           </parameter>
           <parameter name="max_size" direction="out" transfer-ownership="full">
@@ -48422,10 +48846,18 @@ values are undefined."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="x" direction="out" transfer-ownership="full">
+          <parameter name="x"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store X offset of layout, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="y" direction="out" transfer-ownership="full">
+          <parameter name="y"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store Y offset of layout, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -48453,7 +48885,10 @@ To remove marks from a scale, use gtk_scale_clear_marks()."
           <parameter name="position" transfer-ownership="none">
             <type name="PositionType" c:type="GtkPositionType"/>
           </parameter>
-          <parameter name="markup" transfer-ownership="none">
+          <parameter name="markup"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Text to be shown at the mark, using &lt;link linkend=&quot;PangoMarkupFormat&quot;&gt;Pango markup&lt;/link&gt;, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -48546,7 +48981,10 @@ a stepping of @step."
           <parameter name="step" transfer-ownership="none">
             <type name="double" c:type="gdouble"/>
           </parameter>
-          <parameter name="icons" transfer-ownership="none">
+          <parameter name="icons"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a %NULL-terminated array of icon names, or %NULL if">
             <array c:type="gchar**">
               <type name="utf8"/>
             </array>
@@ -50931,10 +51369,18 @@ gtk_spin_button_set_increments().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="step" direction="out" transfer-ownership="full">
+          <parameter name="step"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store step increment, or %NULL">
             <type name="double" c:type="gdouble*"/>
           </parameter>
-          <parameter name="page" direction="out" transfer-ownership="full">
+          <parameter name="page"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store page increment, or %NULL">
             <type name="double" c:type="gdouble*"/>
           </parameter>
         </parameters>
@@ -50962,10 +51408,18 @@ gtk_spin_button_set_range().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="min" direction="out" transfer-ownership="full">
+          <parameter name="min"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store minimum allowed value, or %NULL">
             <type name="double" c:type="gdouble*"/>
           </parameter>
-          <parameter name="max" direction="out" transfer-ownership="full">
+          <parameter name="max"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store maximum allowed value, or %NULL">
             <type name="double" c:type="gdouble*"/>
           </parameter>
         </parameters>
@@ -51806,7 +52260,10 @@ gtk_tooltip_set_markup()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="markup" transfer-ownership="none">
+          <parameter name="markup"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the contents of the tooltip for @status_icon, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -53604,7 +54061,10 @@ use style-&gt;font_desc instead.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="font" transfer-ownership="none">
+          <parameter name="font"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GdkFont, or %NULL to use the #GdkFont corresponding">
             <type name="Gdk.Font" c:type="GdkFont*"/>
           </parameter>
         </parameters>
@@ -55864,7 +56324,10 @@ if the reference count reaches 0.">
           <type name="TextBuffer" c:type="GtkTextBuffer*"/>
         </return-value>
         <parameters>
-          <parameter name="table" transfer-ownership="none">
+          <parameter name="table"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a tag table, or %NULL to create a new one">
             <type name="TextTagTable" c:type="GtkTextTagTable*"/>
           </parameter>
         </parameters>
@@ -56589,10 +57052,16 @@ of properties to set on the tag, as with g_object_set().">
           <type name="TextTag" c:type="GtkTextTag*"/>
         </return-value>
         <parameters>
-          <parameter name="tag_name" transfer-ownership="none">
+          <parameter name="tag_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="name of the new tag, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="first_property_name" transfer-ownership="none">
+          <parameter name="first_property_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="name of first property to set, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter transfer-ownership="none">
@@ -58323,7 +58792,10 @@ gtk_text_iter_has_tag () tells you whether an iterator is
           <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="tag" transfer-ownership="none">
+          <parameter name="tag"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkTextTag, or %NULL">
             <type name="TextTag" c:type="GtkTextTag*"/>
           </parameter>
         </parameters>
@@ -59132,7 +59604,10 @@ If @pred never returns %TRUE, @iter is set to @limit if">
           <parameter name="user_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="limit" transfer-ownership="none">
+          <parameter name="limit"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="search limit, or %NULL for none">
             <type name="TextIter" c:type="GtkTextIter*"/>
           </parameter>
         </parameters>
@@ -59150,7 +59625,10 @@ If @pred never returns %TRUE, @iter is set to @limit if">
           <parameter name="user_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="limit" transfer-ownership="none">
+          <parameter name="limit"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="search limit, or %NULL for none">
             <type name="TextIter" c:type="GtkTextIter*"/>
           </parameter>
         </parameters>
@@ -59832,10 +60310,12 @@ direction of the paragraph are inserted.">
           <parameter name="iter" transfer-ownership="none">
             <type name="TextIter" c:type="GtkTextIter*"/>
           </parameter>
-          <parameter name="strong_pos" transfer-ownership="none">
+          <parameter name="strong_pos"
+                     transfer-ownership="none"
+                     allow-none="1">
             <type name="Gdk.Rectangle" c:type="GdkRectangle*"/>
           </parameter>
-          <parameter name="weak_pos" transfer-ownership="none">
+          <parameter name="weak_pos" transfer-ownership="none" allow-none="1">
             <type name="Gdk.Rectangle" c:type="GdkRectangle*"/>
           </parameter>
         </parameters>
@@ -60377,7 +60857,10 @@ side of the text you&apos;re typing)."
           <type name="TextMark" c:type="GtkTextMark*"/>
         </return-value>
         <parameters>
-          <parameter name="name" transfer-ownership="none">
+          <parameter name="name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="mark name or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="left_gravity" transfer-ownership="none">
@@ -60518,7 +61001,10 @@ i.e. using g_object_set().">
           <type name="TextTag" c:type="GtkTextTag*"/>
         </return-value>
         <parameters>
-          <parameter name="name" transfer-ownership="none">
+          <parameter name="name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="tag name, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -63056,10 +63542,16 @@ call gtk_action_group_add_action_with_accel()."
           <parameter name="name" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="label" transfer-ownership="none">
+          <parameter name="label"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The label displayed in menu items and on buttons, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="tooltip" transfer-ownership="none">
+          <parameter name="tooltip"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A tooltip for the action, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="stock_id" transfer-ownership="none">
@@ -64460,7 +64952,10 @@ of the usual label."
         </parameters>
       </method>
       <method name="set_header_relief"
-              c:identifier="gtk_tool_item_group_set_header_relief">
+              c:identifier="gtk_tool_item_group_set_header_relief"
+              doc="Set the button relief of the group header.
+See gtk_button_set_relief() for details."
+              version="2.20">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -65778,7 +66273,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="type" transfer-ownership="none">
             <type name="ToolbarChildType" c:type="GtkToolbarChildType"/>
           </parameter>
-          <parameter name="widget" transfer-ownership="none">
+          <parameter name="widget"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkWidget, or %NULL.">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
           <parameter name="text" transfer-ownership="none">
@@ -65818,7 +66316,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="type" transfer-ownership="none">
             <type name="ToolbarChildType" c:type="GtkToolbarChildType"/>
           </parameter>
-          <parameter name="widget" transfer-ownership="none">
+          <parameter name="widget"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkWidget, or %NULL">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
           <parameter name="text" transfer-ownership="none">
@@ -65859,7 +66360,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="type" transfer-ownership="none">
             <type name="ToolbarChildType" c:type="GtkToolbarChildType"/>
           </parameter>
-          <parameter name="widget" transfer-ownership="none">
+          <parameter name="widget"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkWidget, or %NULL.">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
           <parameter name="text" transfer-ownership="none">
@@ -66278,7 +66782,10 @@ If @markup is %NULL, the label will be hidden."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="markup" transfer-ownership="none" doc="or %NULL">
+          <parameter name="markup"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -66292,7 +66799,10 @@ will be hidden. See also gtk_tooltip_set_markup()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="text" transfer-ownership="none">
+          <parameter name="text"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a text string or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -66305,7 +66815,10 @@ will be hidden. See also gtk_tooltip_set_markup()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="pixbuf" transfer-ownership="none">
+          <parameter name="pixbuf"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GdkPixbuf, or %NULL">
             <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
           </parameter>
         </parameters>
@@ -66320,7 +66833,10 @@ by @size.  If @stock_id is %NULL, the image will be hidden."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="stock_id" transfer-ownership="none">
+          <parameter name="stock_id"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a stock id, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="size"
@@ -66340,7 +66856,10 @@ by @size.  If @icon_name is %NULL, the image will be hidden."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="icon_name" transfer-ownership="none">
+          <parameter name="icon_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="an icon name, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="size"
@@ -66360,7 +66879,10 @@ by @size. If @gicon is %NULL, the image will be hidden."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="gicon" transfer-ownership="none">
+          <parameter name="gicon"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GIcon representing the icon, or %NULL">
             <type name="Gio.Icon" c:type="GIcon*"/>
           </parameter>
           <parameter name="size"
@@ -66382,7 +66904,10 @@ and gtk_tooltip_set_icon()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="custom_widget" transfer-ownership="none">
+          <parameter name="custom_widget"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkWidget, or %NULL to unset the old custom widget.">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
         </parameters>
@@ -67657,10 +68182,16 @@ return visible;
             <type name="TreeModelFilterVisibleFunc"
                   c:type="GtkTreeModelFilterVisibleFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="User data to pass to the visible function, or %NULL.">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier of @data, or %NULL.">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -67693,10 +68224,16 @@ modify function."
             <type name="TreeModelFilterModifyFunc"
                   c:type="GtkTreeModelFilterModifyFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="User data to pass to the modify function, or %NULL.">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier of @data, or %NULL.">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -69292,10 +69829,16 @@ the model will sort using this function.">
                      destroy="4">
             <type name="TreeIterCompareFunc" c:type="GtkTreeIterCompareFunc"/>
           </parameter>
-          <parameter name="user_data" transfer-ownership="none">
+          <parameter name="user_data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="User data to pass to @sort_func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier of @user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -69321,10 +69864,16 @@ is %GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, the model will be unsorted.">
                      destroy="3">
             <type name="TreeIterCompareFunc" c:type="GtkTreeIterCompareFunc"/>
           </parameter>
-          <parameter name="user_data" transfer-ownership="none">
+          <parameter name="user_data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="User data to pass to @sort_func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier of @user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -69505,8 +70054,12 @@ GDK_TYPE_PIXBUF);&lt;/literal&gt; will create a new #GtkTreeStore with three col
           <parameter name="n_columns" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="types" direction="out" transfer-ownership="full">
-            <type name="GType" c:type="GType*"/>
+          <parameter name="types"
+                     transfer-ownership="none"
+                     doc="an array of #GType types for the columns, from first to last">
+            <array length="0" c:type="GType*">
+              <type name="GType"/>
+            </array>
           </parameter>
         </parameters>
       </constructor>
@@ -69588,11 +70141,19 @@ the number of columns to change is not known until run-time."
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="columns" direction="out" transfer-ownership="full">
-            <type name="int" c:type="gint*"/>
+          <parameter name="columns"
+                     transfer-ownership="none"
+                     doc="an array of column numbers">
+            <array length="4" c:type="gint*">
+              <type name="int"/>
+            </array>
           </parameter>
-          <parameter name="values" transfer-ownership="none">
-            <type name="GObject.Value" c:type="GValue*"/>
+          <parameter name="values"
+                     transfer-ownership="none"
+                     doc="an array of GValues">
+            <array length="4" c:type="GValue*">
+              <type name="GObject.Value"/>
+            </array>
           </parameter>
           <parameter name="n_values" transfer-ownership="none">
             <type name="int" c:type="gint"/>
@@ -69629,7 +70190,10 @@ gtk_tree_store_set_value().">
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
           <parameter name="position" transfer-ownership="none">
@@ -69652,10 +70216,16 @@ gtk_tree_store_set() or gtk_tree_store_set_value().">
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="sibling" transfer-ownership="none">
+          <parameter name="sibling"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -69675,10 +70245,16 @@ gtk_tree_store_set() or gtk_tree_store_set_value().">
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="sibling" transfer-ownership="none">
+          <parameter name="sibling"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -69707,10 +70283,16 @@ inserting rows in a sorted tree store."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="iter" transfer-ownership="none">
+          <parameter name="iter"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="An unset #GtkTreeIter to set the new row, or %NULL.">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
           <parameter name="position" transfer-ownership="none">
@@ -69732,10 +70314,16 @@ function is mainly intended for language bindings."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="iter" transfer-ownership="none">
+          <parameter name="iter"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="An unset #GtkTreeIter to set the new row, or %NULL.">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
           <parameter name="position" transfer-ownership="none">
@@ -69766,7 +70354,10 @@ call gtk_tree_store_set() or gtk_tree_store_set_value().">
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -69785,7 +70376,10 @@ gtk_tree_store_set() or gtk_tree_store_set_value().">
           <parameter name="iter" transfer-ownership="none">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
-          <parameter name="parent" transfer-ownership="none">
+          <parameter name="parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A valid #GtkTreeIter, or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -70070,7 +70664,10 @@ used.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="adjustment" transfer-ownership="none">
+          <parameter name="adjustment"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The #GtkAdjustment to set, or %NULL">
             <type name="Adjustment" c:type="GtkAdjustment*"/>
           </parameter>
         </parameters>
@@ -70090,7 +70687,10 @@ used.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="adjustment" transfer-ownership="none">
+          <parameter name="adjustment"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The #GtkAdjustment to set, or %NULL">
             <type name="Adjustment" c:type="GtkAdjustment*"/>
           </parameter>
         </parameters>
@@ -70344,16 +70944,24 @@ dropped everywhere.">
         <parameters>
           <parameter name="func"
                      transfer-ownership="none"
+                     allow-none="1"
                      scope="notified"
                      closure="2"
-                     destroy="3">
+                     destroy="3"
+                     doc="A function to determine which columns are reorderable, or %NULL.">
             <type name="TreeViewColumnDropFunc"
                   c:type="GtkTreeViewColumnDropFunc"/>
           </parameter>
-          <parameter name="user_data" transfer-ownership="none">
+          <parameter name="user_data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="User data to be passed to @func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier for @user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -70625,10 +71233,16 @@ you are done with it.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A pointer to be filled with the current cursor path, or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="focus_column" transfer-ownership="none">
+          <parameter name="focus_column"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="A pointer to be filled with the current focus column, or %NULL">
             <type name="TreeViewColumn" c:type="GtkTreeViewColumn**"/>
           </parameter>
         </parameters>
@@ -70668,16 +71282,32 @@ gtk_tree_view_convert_widget_to_bin_window_coords().">
           <parameter name="y" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #GtkTreePath pointer to be filled in, or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="column" transfer-ownership="none">
+          <parameter name="column"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #GtkTreeViewColumn pointer to be filled in, or %NULL">
             <type name="TreeViewColumn" c:type="GtkTreeViewColumn**"/>
           </parameter>
-          <parameter name="cell_x" direction="out" transfer-ownership="full">
+          <parameter name="cell_x"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer where the X coordinate relative to the cell can be placed, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="cell_y" direction="out" transfer-ownership="full">
+          <parameter name="cell_y"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer where the Y coordinate relative to the cell can be placed, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -70728,10 +71358,16 @@ itself, excluding surrounding borders and the tree expander area.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkTreePath for the row, or %NULL to get only horizontal coordinates">
             <type name="TreePath" c:type="GtkTreePath*"/>
           </parameter>
-          <parameter name="column" transfer-ownership="none">
+          <parameter name="column"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkTreeViewColumn for the column, or %NULL to get only vertical coordiantes">
             <type name="TreeViewColumn" c:type="GtkTreeViewColumn*"/>
           </parameter>
           <parameter name="rect" transfer-ownership="none">
@@ -70819,10 +71455,16 @@ The paths should be freed with gtk_tree_path_free() after use."
           <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="start_path" transfer-ownership="none">
+          <parameter name="start_path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for start of region, or %NULL.">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="end_path" transfer-ownership="none">
+          <parameter name="end_path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for end of region, or %NULL.">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
         </parameters>
@@ -70895,7 +71537,10 @@ gtk_tree_view_enable_model_drag_dest(). Calling this method sets
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The path of the row to highlight, or %NULL.">
             <type name="TreePath" c:type="GtkTreePath*"/>
           </parameter>
           <parameter name="pos" transfer-ownership="none">
@@ -70911,10 +71556,16 @@ gtk_tree_view_enable_model_drag_dest(). Calling this method sets
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the path of the highlighted row, or %NULL.">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="pos" transfer-ownership="none">
+          <parameter name="pos"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the drop position, or %NULL">
             <type name="TreeViewDropPosition"
                   c:type="GtkTreeViewDropPosition*"/>
           </parameter>
@@ -70936,10 +71587,16 @@ is indeed the case.">
           <parameter name="drag_y" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the path of the highlighted row, or %NULL.">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="pos" transfer-ownership="none">
+          <parameter name="pos"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Return location for the drop position, or %NULL">
             <type name="TreeViewDropPosition"
                   c:type="GtkTreeViewDropPosition*"/>
           </parameter>
@@ -71031,10 +71688,16 @@ that somewhat like strcmp() returning 0 for equality
             <type name="TreeViewSearchEqualFunc"
                   c:type="GtkTreeViewSearchEqualFunc"/>
           </parameter>
-          <parameter name="search_user_data" transfer-ownership="none">
+          <parameter name="search_user_data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="user data to pass to @search_equal_func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="search_destroy" transfer-ownership="none">
+          <parameter name="search_destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier for @search_user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -71087,16 +71750,24 @@ Sets the function to use when positioning the search dialog."
         <parameters>
           <parameter name="func"
                      transfer-ownership="none"
+                     allow-none="1"
                      scope="notified"
                      closure="2"
-                     destroy="3">
+                     destroy="3"
+                     doc="the function to use to position the search dialog, or %NULL">
             <type name="TreeViewSearchPositionFunc"
                   c:type="GtkTreeViewSearchPositionFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="user data to pass to @func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -71250,16 +71921,24 @@ user collapses a row, or a row is deleted.">
         <parameters>
           <parameter name="func"
                      transfer-ownership="none"
+                     allow-none="1"
                      scope="notified"
                      closure="2"
-                     destroy="3">
+                     destroy="3"
+                     doc="Function to be called when a view row is destroyed, or %NULL">
             <type name="TreeDestroyCountFunc"
                   c:type="GtkTreeDestroyCountFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="User data to be passed to @func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="Destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -71398,10 +72077,16 @@ function is %NULL, no separators are drawn. This is the default value."
             <type name="TreeViewRowSeparatorFunc"
                   c:type="GtkTreeViewRowSeparatorFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="user data to pass to @func, or %NULL">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -71542,13 +72227,22 @@ See also gtk_tree_view_set_tooltip_column() for a simpler alternative."
           <parameter name="tooltip" transfer-ownership="none">
             <type name="Tooltip" c:type="GtkTooltip*"/>
           </parameter>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkTreePath or %NULL">
             <type name="TreePath" c:type="GtkTreePath*"/>
           </parameter>
-          <parameter name="column" transfer-ownership="none">
+          <parameter name="column"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkTreeViewColumn or %NULL">
             <type name="TreeViewColumn" c:type="GtkTreeViewColumn*"/>
           </parameter>
-          <parameter name="cell" transfer-ownership="none">
+          <parameter name="cell"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkCellRenderer or %NULL">
             <type name="CellRenderer" c:type="GtkCellRenderer*"/>
           </parameter>
         </parameters>
@@ -71578,13 +72272,22 @@ to be relative to @tree_view&apos;s bin_window if @keyboard_tooltip is %FALSE."
           <parameter name="keyboard_tip" transfer-ownership="none">
             <type name="boolean" c:type="gboolean"/>
           </parameter>
-          <parameter name="model" transfer-ownership="none">
+          <parameter name="model"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a pointer to receive a #GtkTreeModel or %NULL">
             <type name="TreeModel" c:type="GtkTreeModel**"/>
           </parameter>
-          <parameter name="path" transfer-ownership="none">
+          <parameter name="path"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a pointer to receive a #GtkTreePath or %NULL">
             <type name="TreePath" c:type="GtkTreePath**"/>
           </parameter>
-          <parameter name="iter" transfer-ownership="none">
+          <parameter name="iter"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a pointer to receive a #GtkTreeIter or %NULL">
             <type name="TreeIter" c:type="GtkTreeIter*"/>
           </parameter>
         </parameters>
@@ -72752,19 +73455,38 @@ primarily by the #GtkTreeView.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="cell_area" transfer-ownership="none">
+          <parameter name="cell_area"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="The area a cell in the column will be allocated, or %NULL">
             <type name="Gdk.Rectangle" c:type="GdkRectangle*"/>
           </parameter>
-          <parameter name="x_offset" direction="out" transfer-ownership="full">
+          <parameter name="x_offset"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return x offset of a cell relative to @cell_area, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="y_offset" direction="out" transfer-ownership="full">
+          <parameter name="y_offset"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return y offset of a cell relative to @cell_area, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return width needed to render a cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to return height needed to render a cell, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -74092,7 +74814,10 @@ needs, use gtk_scale_set_digits() to correct it.">
           <type name="VScrollbar" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="adjustment" transfer-ownership="none">
+          <parameter name="adjustment"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the #GtkAdjustment to use, or %NULL to create a new adjustment">
             <type name="Adjustment" c:type="GtkAdjustment*"/>
           </parameter>
         </parameters>
@@ -75212,52 +75937,6 @@ emitted.">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="set_realized"
-              c:identifier="gtk_widget_set_realized"
-              doc="Marks the widget as being realized.
-This function should only ever be called in a derived widget&apos;s
-&quot;realize&quot; or &quot;unrealize&quot; implementation."
-              version="2.20">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="realized" transfer-ownership="none">
-            <type name="boolean" c:type="gboolean"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="get_realized"
-              c:identifier="gtk_widget_get_realized"
-              doc="Determines whether @widget is realized."
-              version="2.20">
-        <return-value transfer-ownership="none">
-          <type name="boolean" c:type="gboolean"/>
-        </return-value>
-      </method>
-      <method name="set_mapped"
-              c:identifier="gtk_widget_set_mapped"
-              doc="Marks the widget as being realized.
-This function should only ever be called in a derived widget&apos;s
-&quot;map&quot; or &quot;unmap&quot; implementation."
-              version="2.20">
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <parameter name="mapped" transfer-ownership="none">
-            <type name="boolean" c:type="gboolean"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="get_mapped"
-              c:identifier="gtk_widget_get_mapped"
-              doc="Whether the widget is mapped."
-              version="2.20">
-        <return-value transfer-ownership="none">
-          <type name="boolean" c:type="gboolean"/>
-        </return-value>
-      </method>
       <method name="set_can_focus"
               c:identifier="gtk_widget_set_can_focus"
               doc="Specifies whether @widget can own the input focus. See
@@ -75559,6 +76238,52 @@ to if it is mapped and visible."
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
+      <method name="set_realized"
+              c:identifier="gtk_widget_set_realized"
+              doc="Marks the widget as being realized.
+This function should only ever be called in a derived widget&apos;s
+&quot;realize&quot; or &quot;unrealize&quot; implementation."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="realized" transfer-ownership="none">
+            <type name="boolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_realized"
+              c:identifier="gtk_widget_get_realized"
+              doc="Determines whether @widget is realized."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
+      <method name="set_mapped"
+              c:identifier="gtk_widget_set_mapped"
+              doc="Marks the widget as being realized.
+This function should only ever be called in a derived widget&apos;s
+&quot;map&quot; or &quot;unmap&quot; implementation."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="mapped" transfer-ownership="none">
+            <type name="boolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_mapped"
+              c:identifier="gtk_widget_get_mapped"
+              doc="Whether the widget is mapped."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
       <method name="set_app_paintable"
               c:identifier="gtk_widget_set_app_paintable"
               doc="Sets whether the application intends to draw on the widget in
@@ -75795,6 +76520,27 @@ directly, but from within a widget&apos;s size_allocate method."
           </parameter>
         </parameters>
       </method>
+      <method name="get_requisition"
+              c:identifier="gtk_widget_get_requisition"
+              doc="Retrieves the widget&apos;s requisition.
+This function should only be used by widget implementations in
+order to figure whether the widget&apos;s requisition has actually
+changed after some internal state change (so that they can call
+gtk_widget_queue_resize() instead of gtk_widget_queue_draw()).
+Normally, gtk_widget_size_request() should be used."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="requisition"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="a pointer to a #GtkRequisition to copy to">
+            <type name="Requisition" c:type="GtkRequisition*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="child_focus"
               c:identifier="gtk_widget_child_focus"
               doc="This function is used by custom widget implementations; if you&apos;re
@@ -75934,12 +76680,14 @@ this function.">
           <parameter name="width"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="return location for width, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
           <parameter name="height"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="return location for height, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
@@ -76244,7 +76992,10 @@ The returned pixmap can be %NULL, if the resulting @clip_area was empty."
           <type name="Gdk.Pixmap" c:type="GdkPixmap*"/>
         </return-value>
         <parameters>
-          <parameter name="clip_rect" transfer-ownership="none">
+          <parameter name="clip_rect"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GdkRectangle or %NULL">
             <type name="Gdk.Rectangle" c:type="GdkRectangle*"/>
           </parameter>
         </parameters>
@@ -76814,7 +77565,10 @@ for more information.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="shape_mask" transfer-ownership="none">
+          <parameter name="shape_mask"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="shape to be added, or %NULL to remove an existing shape">
             <type name="Gdk.Bitmap" c:type="GdkBitmap*"/>
           </parameter>
           <parameter name="offset_x" transfer-ownership="none">
@@ -76997,7 +77751,10 @@ have the name &quot;gtk-tooltip&quot;, see gtk_widget_set_name()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="custom_window" transfer-ownership="none">
+          <parameter name="custom_window"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GtkWindow, or %NULL">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
         </parameters>
@@ -77061,7 +77818,10 @@ gtk_tooltip_set_markup()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="markup" transfer-ownership="none">
+          <parameter name="markup"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the contents of the tooltip for @widget, or %NULL">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -77843,7 +78603,10 @@ a widget changes from un-anchored to anchored or vice-versa.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="previous_toplevel" transfer-ownership="none">
+          <parameter name="previous_toplevel"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the previous toplevel ancestor, or %NULL">
             <type name="Widget" c:type="GtkWidget"/>
           </parameter>
         </parameters>
@@ -77984,7 +78747,10 @@ has been set on a widget.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="old_parent" transfer-ownership="none">
+          <parameter name="old_parent"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the previous parent, or %NULL if the widget">
             <type name="Widget" c:type="GtkWidget"/>
           </parameter>
         </parameters>
@@ -78068,7 +78834,10 @@ screen of a widget has changed.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="previous_screen" transfer-ownership="none">
+          <parameter name="previous_screen"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the previous screen, or %NULL if the">
             <type name="Gdk.Screen" c:type="GdkScreen"/>
           </parameter>
         </parameters>
@@ -78205,7 +78974,10 @@ gtk_widget_modify_base() also cause this signal to be emitted.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="previous_style" transfer-ownership="none">
+          <parameter name="previous_style"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the previous style, or %NULL if the widget">
             <type name="Style" c:type="GtkStyle"/>
           </parameter>
         </parameters>
@@ -79381,7 +80153,8 @@ style property is determined by the value type of @pspec.">
               doc="style property with that name.
 Finds a style property of a widget class by name."
               version="2.2">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full"
+                      doc="the #GParamSpec of the style property or %NULL if @class has no">
           <type name="GObject.ParamSpec" c:type="GParamSpec*"/>
         </return-value>
         <parameters>
@@ -80151,7 +80924,9 @@ gtk_window_set_destroy_with_parent ().">
         </return-value>
       </method>
       <method name="set_mnemonics_visible"
-              c:identifier="gtk_window_set_mnemonics_visible">
+              c:identifier="gtk_window_set_mnemonics_visible"
+              doc="Sets the #GtkWindow:mnemonics-visible property."
+              version="2.20">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -80337,16 +81112,32 @@ See gtk_window_set_has_frame(), gtk_window_set_frame_dimensions().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="left" direction="out" transfer-ownership="full">
+          <parameter name="left"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the width of the frame at the left, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="top" direction="out" transfer-ownership="full">
+          <parameter name="top"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the height of the frame at the top, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="right" direction="out" transfer-ownership="full">
+          <parameter name="right"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the width of the frame at the returns, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="bottom" direction="out" transfer-ownership="full">
+          <parameter name="bottom"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the height of the frame at the bottom, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -80996,10 +81787,18 @@ used.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the default width, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="location to store the default height, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
@@ -81073,12 +81872,14 @@ handle the details for you.">
           <parameter name="width"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="return location for width, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
           <parameter name="height"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="return location for height, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
@@ -82395,7 +83196,10 @@ passes the correct target list to this function.">
         <parameter name="context" transfer-ownership="none">
           <type name="Gdk.DragContext" c:type="GdkDragContext*"/>
         </parameter>
-        <parameter name="target_list" transfer-ownership="none">
+        <parameter name="target_list"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="list of droppable targets, or %NULL to use">
           <type name="TargetList" c:type="GtkTargetList*"/>
         </parameter>
       </parameters>
@@ -82519,7 +83323,10 @@ gtk_drag_dest_set().">
         <parameter name="widget" transfer-ownership="none">
           <type name="Widget" c:type="GtkWidget*"/>
         </parameter>
-        <parameter name="target_list" transfer-ownership="none">
+        <parameter name="target_list"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="list of droppable targets, or %NULL for none">
           <type name="TargetList" c:type="GtkTargetList*"/>
         </parameter>
       </parameters>
@@ -82722,7 +83529,10 @@ will be more convenient to use.">
         <parameter name="pixmap" transfer-ownership="none">
           <type name="Gdk.Pixmap" c:type="GdkPixmap*"/>
         </parameter>
-        <parameter name="mask" transfer-ownership="none">
+        <parameter name="mask"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="the transparency mask for the icon or %NULL for none.">
           <type name="Gdk.Bitmap" c:type="GdkBitmap*"/>
         </parameter>
         <parameter name="hot_x" transfer-ownership="none">
@@ -82957,7 +83767,10 @@ gtk_drag_source_set()."
         <parameter name="widget" transfer-ownership="none">
           <type name="Widget" c:type="GtkWidget*"/>
         </parameter>
-        <parameter name="target_list" transfer-ownership="none">
+        <parameter name="target_list"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="list of draggable targets, or %NULL for none">
           <type name="TargetList" c:type="GtkTargetList*"/>
         </parameter>
       </parameters>
@@ -85332,13 +86145,16 @@ Draws a spinner on @window using the given parameters."
         <parameter name="state_type" transfer-ownership="none">
           <type name="StateType" c:type="GtkStateType"/>
         </parameter>
-        <parameter name="area" transfer-ownership="none">
+        <parameter name="area"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="clip rectangle, or %NULL if the">
           <type name="Gdk.Rectangle" c:type="GdkRectangle*"/>
         </parameter>
-        <parameter name="widget" transfer-ownership="none">
+        <parameter name="widget" transfer-ownership="none" allow-none="1">
           <type name="Widget" c:type="GtkWidget*"/>
         </parameter>
-        <parameter name="detail" transfer-ownership="none">
+        <parameter name="detail" transfer-ownership="none" allow-none="1">
           <type name="utf8" c:type="gchar*"/>
         </parameter>
         <parameter name="step" transfer-ownership="none">
@@ -85603,10 +86419,16 @@ from a signal handler for the ::response signal of the dialog."
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="parent" transfer-ownership="none">
+        <parameter name="parent"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="transient parent, or %NULL">
           <type name="Window" c:type="GtkWindow*"/>
         </parameter>
-        <parameter name="page_setup" transfer-ownership="none">
+        <parameter name="page_setup"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="an existing #GtkPageSetup, or %NULL">
           <type name="PageSetup" c:type="GtkPageSetup*"/>
         </parameter>
         <parameter name="settings" transfer-ownership="none">
@@ -85972,7 +86794,10 @@ that was expected but not found"
         <parameter name="scanner" transfer-ownership="none">
           <type name="GLib.Scanner" c:type="GScanner*"/>
         </parameter>
-        <parameter name="style" transfer-ownership="none">
+        <parameter name="style"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="a #GtkRcStyle, or %NULL">
           <type name="RcStyle" c:type="GtkRcStyle*"/>
         </parameter>
         <parameter name="color" transfer-ownership="none">
@@ -86344,7 +87169,10 @@ or, if @widget is %NULL, release ownership of the selection.">
         <type name="boolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="widget" transfer-ownership="none">
+        <parameter name="widget"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="a #GtkWidget, or %NULL.">
           <type name="Widget" c:type="GtkWidget*"/>
         </parameter>
         <parameter name="selection" transfer-ownership="none">
@@ -86429,7 +87257,10 @@ reused for future invocations of this function."
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="parent" transfer-ownership="none">
+        <parameter name="parent"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="transient parent, or %NULL for none">
           <type name="Window" c:type="GtkWindow*"/>
         </parameter>
         <parameter name="first_property_name" transfer-ownership="none">
@@ -86462,7 +87293,10 @@ and gnome_url_show()."
         <type name="boolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="screen" transfer-ownership="none">
+        <parameter name="screen"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="screen to show the uri on or %NULL for the default screen">
           <type name="Gdk.Screen" c:type="GdkScreen*"/>
         </parameter>
         <parameter name="uri" transfer-ownership="none">

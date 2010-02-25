@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtk-Drag-and-Drop.html" title="Drag and Drop">
 <link rel="next" href="gtk-Stock-Items.html" title="Stock Items">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -244,53 +244,27 @@ so that the icon information is shared with other people
 looking up icons. In the case where the default screen is
 being used, looking up an icon can be as simple as:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19</pre></td>
-        <td class="listing_code"><pre class="programlisting">GError *error = <span class="number">NULL</span>;
+<div class="informalexample"><pre class="programlisting">
+GError *error = NULL;
 GtkIconTheme *icon_theme;
 GdkPixbuf *pixbuf;
 icon_theme = gtk_icon_theme_get_default ();
 pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                   <span class="number">&quot;my-icon-name&quot;</span>, <span class="comment">/*</span><span class="comment"> icon name </span><span class="comment">*/</span>
-                                   <span class="number">48</span>, <span class="comment">/*</span><span class="comment"> size </span><span class="comment">*/</span>
-                                   <span class="number">0</span>,  <span class="comment">/*</span><span class="comment"> flags </span><span class="comment">*/</span>
+                                   "my-icon-name", /* icon name */
+                                   48, /* size */
+                                   0,  /* flags */
                                    &amp;error);
-<span class="keyword">if</span> (!pixbuf)
+if (!pixbuf)
   {
-    g_warning (<span class="number">&quot;Couldn't load icon: </span><span class="symbol">%s</span><span class="number">&quot;</span>, error-&gt;message);
+    g_warning ("Couldn't load icon: %s", error-&gt;message);
     g_error_free (error);
   }
-<span class="keyword">else</span>
+else
   {
-    <span class="comment">/*</span><span class="comment"> Use the pixbuf </span><span class="comment">*/</span>
+    /* Use the pixbuf */
     g_object_unref (pixbuf);
-  }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  }
+</pre></div>
 </div>
 <div class="refsect1" title="Details">
 <a name="GtkIconTheme.details"></a><h2>Details</h2>
@@ -559,7 +533,7 @@ Gets the current search path. See <a class="link" href="GtkIconTheme.html#gtk-ic
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
-<td>array length=n_elements) (out. <acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_elements. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> length=n_elements. </td>
+<td>allow-none): (array length=n_elements) (out. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>n_elements</code></em> :</span></p></td>
@@ -877,14 +851,13 @@ icon theme loaded, which would be a waste of memory.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> Location to store error information on failure, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
-</td>
+<td> Location to store error information on failure, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the rendered icon; this may be a newly created icon
  or a new reference to an internal icon, so you must not modify
- the icon. Use <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a> to release your reference to the
+ the icon. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> to release your reference to the
  icon. <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the icon isn't found.
 
 </td>
@@ -1271,14 +1244,13 @@ returned by this function will be scaled to the exact size.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error information on failure, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
-</td>
+<td> location to store error information on failure, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the rendered icon; this may be a newly created icon
  or a new reference to an internal icon, so you must not modify
- the icon. Use <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a> to release your reference to the
+ the icon. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> to release your reference to the
  icon.
 
 </td>
@@ -1384,12 +1356,11 @@ emblems or overlays to the icon.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>points</code></em> :</span></p></td>
-<td>array length=n_points) (out. <acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_points. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> length=n_points. </td>
+<td>allow-none): (array length=n_points) (out. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>n_points</code></em> :</span></p></td>
-<td> location to store the number of points in <em class="parameter"><code>points</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store the number of points in <em class="parameter"><code>points</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1459,6 +1430,6 @@ icon theme.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

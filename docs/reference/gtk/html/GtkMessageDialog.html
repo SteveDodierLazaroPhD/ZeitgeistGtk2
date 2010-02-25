@@ -8,7 +8,7 @@
 <link rel="up" href="WindowWidgets.html" title="Windows">
 <link rel="prev" href="GtkInvisible.html" title="GtkInvisible">
 <link rel="next" href="GtkWindow.html" title="GtkWindow">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -188,32 +188,17 @@ makes the dialog modal and waits for the user to respond to it. <a class="link" 
 returns when any dialog button is clicked.
 </p>
 <div class="example">
-<a name="id536974"></a><p class="title"><b>Example 8. A modal dialog.</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></td>
-        <td class="listing_code"><pre class="programlisting">dialog = gtk_message_dialog_new (main_application_window,
+<a name="id599490"></a><p class="title"><b>Example 8. A modal dialog.</b></p>
+<div class="example-contents"><pre class="programlisting">
+ dialog = gtk_message_dialog_new (main_application_window,
                                   GTK_DIALOG_DESTROY_WITH_PARENT,
                                   GTK_MESSAGE_ERROR,
                                   GTK_BUTTONS_CLOSE,
-                                  <span class="number">&quot;Error loading file '</span><span class="symbol">%s</span><span class="number">': </span><span class="symbol">%s</span><span class="number">&quot;</span>,
+                                  "Error loading file '%s': %s",
                                   filename, g_strerror (errno));
  gtk_dialog_run (GTK_DIALOG (dialog));
- gtk_widget_destroy (dialog);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+ gtk_widget_destroy (dialog);
+</pre></div>
 </div>
 <p><br class="example-break">
 </p>
@@ -221,36 +206,19 @@ returns when any dialog button is clicked.
 You might do a non-modal <a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> as follows:
 </p>
 <div class="example">
-<a name="id519491"></a><p class="title"><b>Example 9. A non-modal dialog.</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10</pre></td>
-        <td class="listing_code"><pre class="programlisting">dialog = gtk_message_dialog_new (main_application_window,
+<a name="id566393"></a><p class="title"><b>Example 9. A non-modal dialog.</b></p>
+<div class="example-contents"><pre class="programlisting">
+ dialog = gtk_message_dialog_new (main_application_window,
                                   GTK_DIALOG_DESTROY_WITH_PARENT,
                                   GTK_MESSAGE_ERROR,
                                   GTK_BUTTONS_CLOSE,
-                                  <span class="number">&quot;Error loading file '</span><span class="symbol">%s</span><span class="number">': </span><span class="symbol">%s</span><span class="number">&quot;</span>,
+                                  "Error loading file '%s': %s",
                                   filename, g_strerror (errno));
- <span class="comment">/*</span><span class="comment"> Destroy the dialog when the user responds to it (e.g. clicks a button) </span><span class="comment">*/</span>
- g_signal_connect_swapped (dialog, <span class="number">&quot;response&quot;</span>,
+ /* Destroy the dialog when the user responds to it (e.g. clicks a button) */
+ g_signal_connect_swapped (dialog, "response",
                            G_CALLBACK (gtk_widget_destroy),
-                           dialog);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+                           dialog);
+</pre></div>
 </div>
 <p><br class="example-break">
 </p>
@@ -443,38 +411,22 @@ instead, since you can't pass the markup string either
 as the format (it might contain '%' characters) or as a string
 argument.
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkWidget *dialog;
+<div class="informalexample"><pre class="programlisting">
+ GtkWidget *dialog;
  dialog = gtk_message_dialog_new (main_application_window,
                                   GTK_DIALOG_DESTROY_WITH_PARENT,
                                   GTK_MESSAGE_ERROR,
                                   GTK_BUTTONS_CLOSE,
-                                  <span class="number">NULL</span>);
+                                  NULL);
  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dialog),
-                                markup);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+                                markup);
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> transient parent, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none 
-</td>
+<td> transient parent, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none . <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
@@ -493,8 +445,7 @@ argument.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message_format</code></em> :</span></p></td>
-<td> <code class="function">printf()</code>-style format string, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> <code class="function">printf()</code>-style format string, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
@@ -609,8 +560,7 @@ bold, unless you have provided explicit markup.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message_format</code></em> :</span></p></td>
-<td> <code class="function">printf()</code>-style format string, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> <code class="function">printf()</code>-style format string, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
@@ -645,25 +595,13 @@ to escape it.
 </p>
 <p>
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5</pre></td>
-        <td class="listing_code"><pre class="programlisting">gchar *msg;
-
+<div class="informalexample"><pre class="programlisting">
+gchar *msg;
+ 
 msg = g_markup_printf_escaped (message_format, ...);
-gtk_message_dialog_format_secondary_markup (message_dialog, <span class="number">&quot;</span><span class="symbol">%s</span><span class="number">&quot;</span>, msg);
-g_free (msg);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+gtk_message_dialog_format_secondary_markup (message_dialog, "%s", msg);
+g_free (msg);
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -783,6 +721,6 @@ in the dialog.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

@@ -171,8 +171,7 @@ gtk_plug_class_init (GtkPlugClass *class)
    * GtkPlug::embedded:
    * @plug: the object on which the signal was emitted
    *
-   * Gets emitted when the plug becomes embedded in a socket
-   * and when the embedding ends.
+   * Gets emitted when the plug becomes embedded in a socket.
    */ 
   plug_signals[EMBEDDED] =
     g_signal_new (I_("embedded"),
@@ -326,6 +325,8 @@ _gtk_plug_add_to_socket (GtkPlug   *plug,
 
   plug->socket_window = GTK_WIDGET (socket_)->window;
   g_object_ref (plug->socket_window);
+  g_signal_emit (plug, plug_signals[EMBEDDED], 0);
+  g_object_notify (G_OBJECT (plug), "embedded");
 
   if (GTK_WIDGET_REALIZED (widget))
     {

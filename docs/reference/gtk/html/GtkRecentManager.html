@@ -8,7 +8,7 @@
 <link rel="up" href="RecentDocuments.html" title="Recently Used Documents">
 <link rel="prev" href="RecentDocuments.html" title="Recently Used Documents">
 <link rel="next" href="GtkRecentChooser.html" title="GtkRecentChooser">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -214,61 +214,29 @@ files is shared with other people using them.  In case the
 default screen is being used, adding a new recently used
 file is as simple as:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkRecentManager *manager;
+<div class="informalexample"><pre class="programlisting">
+GtkRecentManager *manager;
 manager = gtk_recent_manager_get_default ();
-gtk_recent_manager_add_item (manager, file_uri);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+gtk_recent_manager_add_item (manager, file_uri);
+  </pre></div>
 While looking up a recently used file is as simple as:
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkRecentManager *manager;
+<div class="informalexample"><pre class="programlisting">
+GtkRecentManager *manager;
 GtkRecentInfo *info;
-GError *error = <span class="number">NULL</span>;
+GError *error = NULL;
 manager = gtk_recent_manager_get_default ();
 info = gtk_recent_manager_lookup_item (manager, file_uri, &amp;error);
-<span class="keyword">if</span> (error)
+if (error)
   {
-    g_warning (<span class="number">&quot;Could not find the file: </span><span class="symbol">%s</span><span class="number">&quot;</span>, error-&gt;message);
+    g_warning ("Could not find the file: %s", error-&gt;message);
     g_error_free (error);
   }
-<span class="keyword">else</span>
+else
   {
-    <span class="comment">/*</span><span class="comment"> Use the info object </span><span class="comment">*/</span>
+    /* Use the info object */
     gtk_recent_info_unref (info);
-  }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  }
+  </pre></div>
 <p>
 Recently used files are supported since GTK+ 2.10.
 </p>
@@ -669,8 +637,7 @@ list handled by a recent manager.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -708,8 +675,7 @@ like its MIME type, or its display name.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> a return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -783,14 +749,11 @@ by the URIs, but only the URI used in the recently used resources list.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>new_uri</code></em> :</span></p></td>
-<td> the new URI of the recently used resource, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to
-   remove the item pointed by <em class="parameter"><code>uri</code></em> in the list
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> a return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -892,8 +855,7 @@ Purges every item from the recently used resources list.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> a return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a return location for a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1373,7 +1335,7 @@ Retrieves the icon of size <em class="parameter"><code>size</code></em> associat
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> containing the icon, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. Use
-  <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a> when finished using the icon.
+  <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> when finished using the icon.
 
 </td>
 </tr>
@@ -1606,6 +1568,6 @@ contents.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

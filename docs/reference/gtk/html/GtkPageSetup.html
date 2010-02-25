@@ -8,7 +8,7 @@
 <link rel="up" href="Printing.html" title="Printing">
 <link rel="prev" href="GtkPrintSettings.html" title="GtkPrintSettings">
 <link rel="next" href="gtk-GtkPaperSize.html" title="GtkPaperSize">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -189,44 +189,23 @@ to get the defaults, or use <a class="link" href="gtk-High-level-Printing-API.ht
 the page setup dialog and receive the resulting page setup.
 </p>
 <div class="example">
-<a name="id1060477"></a><p class="title"><b>Example 48. A page setup dialog</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> GtkPrintSettings *settings = <span class="number">NULL</span>;
-<span class="type">static</span> GtkPageSetup *page_setup = <span class="number">NULL</span>;
-<span class="type">static</span> <span class="type">void</span>
-do_page_setup (<span class="type">void</span>)
+<a name="id1140783"></a><p class="title"><b>Example 48. A page setup dialog</b></p>
+<div class="example-contents"><pre class="programlisting">
+static GtkPrintSettings *settings = NULL;
+static GtkPageSetup *page_setup = NULL;
+static void
+do_page_setup (void)
 {
   GtkPageSetup *new_page_setup;
-  <span class="keyword">if</span> (settings == <span class="number">NULL</span>)
+  if (settings == NULL)
     settings = gtk_print_settings_new ();
   new_page_setup = gtk_print_run_page_setup_dialog (GTK_WINDOW (main_window),
                                                     page_setup, settings);
-  <span class="keyword">if</span> (page_setup)
+  if (page_setup)
     g_object_unref (page_setup);
   page_setup = new_page_setup;
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+}
+</pre></div>
 </div>
 <br class="example-break"><p>
 Printing support was added in GTK+ 2.10.
@@ -804,8 +783,7 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -837,14 +815,11 @@ page setup, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standa
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>group_name</code></em> :</span></p></td>
-<td> the name of the group in the key_file to read, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-             to use the default name "Page Setup"
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -880,8 +855,7 @@ See <a class="link" href="GtkPageSetup.html#gtk-page-setup-to-file" title="gtk_p
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -918,14 +892,11 @@ Reads the page setup from the group <em class="parameter"><code>group_name</code
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>group_name</code></em> :</span></p></td>
-<td> the name of the group in the key_file to read, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-             to use the default name "Page Setup"
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -960,8 +931,7 @@ This function saves the information from <em class="parameter"><code>setup</code
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for errors, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for errors, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1008,6 +978,6 @@ This function adds the page setup from <em class="parameter"><code>setup</code><
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

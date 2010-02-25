@@ -8,7 +8,7 @@
 <link rel="up" href="WindowWidgets.html" title="Windows">
 <link rel="prev" href="GtkWindowGroup.html" title="GtkWindowGroup">
 <link rel="next" href="GtkAssistant.html" title="GtkAssistant">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -239,19 +239,10 @@ If you want provide your own hooks overriding the default ones, it is
 important to do so before setting the website and email URL properties,
 like this:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_about_dialog_set_url_hook (GTK_ABOUT_DIALOG (dialog), launch_url, <span class="number">NULL</span>, <span class="number">NULL</span>);
-gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), app_url);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+gtk_about_dialog_set_url_hook (GTK_ABOUT_DIALOG (dialog), launch_url, NULL, NULL);
+gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), app_url);
+</pre></div>
 <p>
 To disable the default hooks, you can pass <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> as the hook func. Then,
 the <a class="link" href="GtkAboutDialog.html" title="GtkAboutDialog"><span class="type">GtkAboutDialog</span></a> widget will not display the website or the
@@ -269,25 +260,13 @@ application, but in order to ensure proper translation of the title,
 applications should set the title property explicitly when constructing
 a <a class="link" href="GtkAboutDialog.html" title="GtkAboutDialog"><span class="type">GtkAboutDialog</span></a>, as shown in the following example:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_show_about_dialog (<span class="number">NULL</span>,
-                       <span class="number">&quot;program-name&quot;</span>, <span class="number">&quot;ExampleCode&quot;</span>,
-                       <span class="number">&quot;logo&quot;</span>, example_logo,
-                       <span class="number">&quot;title&quot;</span> _(<span class="number">&quot;About ExampleCode&quot;</span>),
-                       <span class="number">NULL</span>);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+gtk_show_about_dialog (NULL,
+                       "program-name", "ExampleCode",
+                       "logo", example_logo,
+                       "title" _("About ExampleCode"),
+                       NULL);
+</pre></div>
 <p>
 Note that prior to GTK+ 2.12, the <a class="link" href="GtkAboutDialog.html#GtkAboutDialog--program-name" title='The "program-name" property'><span class="type">"program-name"</span></a> property
 was called "name". This was changed to avoid the conflict with the
@@ -971,20 +950,12 @@ the translators tab of the secondary credits dialog.
 <p>
 The intended use for this string is to display the translator
 of the language which is currently used in the user interface.
-Using <a href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#gettext"><code class="function">gettext()</code></a>, a simple way to achieve that is to mark the
+Using <code class="function">gettext()</code>, a simple way to achieve that is to mark the
 string for translation:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_about_dialog_set_translator_credits (about, _(<span class="number">&quot;translator-credits&quot;</span>));</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+ gtk_about_dialog_set_translator_credits (about, _("translator-credits"));
+</pre></div>
 <p>
 It is a good idea to use the customary msgid "translator-credits" for this
 purpose, since translators will already know the purpose of that msgid, and
@@ -1024,7 +995,7 @@ Returns the pixbuf displayed as logo in the about dialog.</p>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the pixbuf displayed as logo. The pixbuf is
   owned by the about dialog. If you want to keep a reference
-  to it, you have to call <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a> on it.
+  to it, you have to call <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> on it.
 
 </td>
 </tr>
@@ -1239,8 +1210,7 @@ reused for future invocations of this function.</p>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
-<td> transient parent, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none
-</td>
+<td> transient parent, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>first_property_name</code></em> :</span></p></td>
@@ -1407,6 +1377,6 @@ Whether to wrap the text in the license dialog.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

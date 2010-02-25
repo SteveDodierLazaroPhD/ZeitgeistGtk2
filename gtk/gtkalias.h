@@ -12216,6 +12216,9 @@ extern __typeof (gtk_widget_get_receives_default) IA__gtk_widget_get_receives_de
 extern __typeof (gtk_widget_get_root_window) IA__gtk_widget_get_root_window __attribute((visibility("hidden")));
 #define gtk_widget_get_root_window IA__gtk_widget_get_root_window
 
+extern __typeof (gtk_widget_get_requisition) IA__gtk_widget_get_requisition __attribute((visibility("hidden")));
+#define gtk_widget_get_requisition IA__gtk_widget_get_requisition
+
 extern __typeof (gtk_widget_get_screen) IA__gtk_widget_get_screen __attribute((visibility("hidden")));
 #define gtk_widget_get_screen IA__gtk_widget_get_screen
 

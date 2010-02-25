@@ -8,7 +8,7 @@
 <link rel="up" href="gtk-migrating-GtkRecentChooser.html" title="Migrating from EggRecent to GtkRecentChooser">
 <link rel="prev" href="gtkrecent-chooser.html" title="Displaying the Recently Used Documents">
 <link rel="next" href="gtk-migrating-GtkLinkButton.html" title="Migrating from GnomeHRef to GtkLinkButton">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -91,104 +91,52 @@
 <p>
       Available sorting methods are:
       </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> no sorting </span><span class="comment">*/</span>
-        gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser), GTK_RECENT_SORT_NONE);
-
-        <span class="comment">/*</span><span class="comment"> most recently used first </span><span class="comment">*/</span>
-        gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser), GTK_RECENT_SORT_MRU);
-
-        <span class="comment">/*</span><span class="comment"> most recently used last </span><span class="comment">*/</span>
-        gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser), GTK_RECENT_SORT_LRU);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+        /* no sorting */
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser), GTK_RECENT_SORT_NONE);
+	
+        /* most recently used first */
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser), GTK_RECENT_SORT_MRU);
+	
+	/* most recently used last */
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser), GTK_RECENT_SORT_LRU);
+      </pre></div>
 <p>
       You can create your own sorting function, and the use the
       GTK_RECENT_SORT_CUSTOM method:
       </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> custom sorting function, based on the registration count</span>
-<span class="comment">         * (most used first)</span>
-<span class="comment">         </span><span class="comment">*/</span>
-        <span class="type">static</span> <span class="type">void</span>
-        sort_by_usage_count (GtkRecentInfo *a,
+<div class="informalexample"><pre class="programlisting">
+	/* custom sorting function, based on the registration count
+	 * (most used first)
+	 */
+	static void
+	sort_by_usage_count (GtkRecentInfo *a,
                              GtkRecentInfo *b,
                              gpointer       data)
         {
-          gint count_a, count_b;
+	  gint count_a, count_b;
 
-          count_a = count_b = <span class="number">0</span>;
+	  count_a = count_b = 0;
 
-          <span class="keyword">if</span> (gtk_recent_info_has_application (a, APP_NAME))
-            gtk_recent_info_get_application_info (a, APP_NAME, <span class="number">NULL</span>, &amp;count_a, <span class="number">NULL</span>);
+	  if (gtk_recent_info_has_application (a, APP_NAME))
+	    gtk_recent_info_get_application_info (a, APP_NAME, NULL, &amp;count_a, NULL);
 
-          <span class="keyword">if</span> (gtk_recent_info_has_application (b, APP_NAME))
-            gtk_recent_info_get_application_info (b, APP_NAME, <span class="number">NULL</span>, &amp;count_b, <span class="number">NULL</span>);
+	  if (gtk_recent_info_has_application (b, APP_NAME))
+	    gtk_recent_info_get_application_info (b, APP_NAME, NULL, &amp;count_b, NULL);
 
-          <span class="keyword">return</span> count_a &lt; count_b;
-        }
+	  return count_a &lt; count_b;
+	}
 
-        ...
+	...
 
-          <span class="comment">/*</span><span class="comment"> set custom sorting and set the custom sorting function </span><span class="comment">*/</span>
-          gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser),
-                                            GTK_RECENT_SORT_CUSTOM);
-          gtk_recent_chooser_set_sort_func (GTK_RECENT_CHOOSER,
-                                            sort_by_usage_count,
-                                            <span class="number">NULL</span>, <span class="comment">/*</span><span class="comment"> sort function data </span><span class="comment">*/</span>
-                                            <span class="number">NULL</span>  <span class="comment">/*</span><span class="comment"> destroy notify for the data </span><span class="comment">*/</span>);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+	  /* set custom sorting and set the custom sorting function */
+	  gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (chooser),
+	                                    GTK_RECENT_SORT_CUSTOM);
+	  gtk_recent_chooser_set_sort_func (GTK_RECENT_CHOOSER,
+	                                    sort_by_usage_count,
+			  		    NULL, /* sort function data */
+					    NULL  /* destroy notify for the data */);
+      </pre></div>
 <p>
     </p>
 <p>
@@ -198,57 +146,29 @@
       meta-data exposed by the <a class="link" href="GtkRecentManager.html#GtkRecentInfo" title="GtkRecentInfo"><span class="type">GtkRecentInfo</span></a> object. It also allows custom
       filtering function:
       </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkRecentFilter *filter;
+<div class="informalexample"><pre class="programlisting">
+        GtkRecentFilter *filter;
 
-        filter = gtk_recent_filter_new ();
+	filter = gtk_recent_filter_new ();
+	
+	/* set the user visible name of the filter */
+	gtk_recent_filter_set_name (filter, "Since Last Month");
 
-        <span class="comment">/*</span><span class="comment"> set the user visible name of the filter </span><span class="comment">*/</span>
-        gtk_recent_filter_set_name (filter, <span class="number">&quot;Since Last Month&quot;</span>);
+	/* set the maximum age of a recently used document */
+	gtk_recent_filter_set_age (filter, 31);
 
-        <span class="comment">/*</span><span class="comment"> set the maximum age of a recently used document </span><span class="comment">*/</span>
-        gtk_recent_filter_set_age (filter, <span class="number">31</span>);
+	/* the chooser takes the ownership of the object */
+	gtk_recent_chooser_add_filter (GTK_RECENT_CHOOSER (chooser), filter);
 
-        <span class="comment">/*</span><span class="comment"> the chooser takes the ownership of the object </span><span class="comment">*/</span>
-        gtk_recent_chooser_add_filter (GTK_RECENT_CHOOSER (chooser), filter);
+	/* set the currently used filter */
+	gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (chooser), filter);
 
-        <span class="comment">/*</span><span class="comment"> set the currently used filter </span><span class="comment">*/</span>
-        gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (chooser), filter);
+	filter = gtk_recent_filter_new ();
+	gtk_recent_filter_set_name (filter, "Every text file");
+	gtk_recent_filter_set_mime_type (filter, "text/plain");
 
-        filter = gtk_recent_filter_new ();
-        gtk_recent_filter_set_name (filter, <span class="number">&quot;Every text file&quot;</span>);
-        gtk_recent_filter_set_mime_type (filter, <span class="number">&quot;text/plain&quot;</span>);
-
-        gtk_recent_chooser_add_filter (GTK_RECENT_CHOOSER (chooser), filter);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+	gtk_recent_chooser_add_filter (GTK_RECENT_CHOOSER (chooser), filter);
+      </pre></div>
 <p>
       The <a class="link" href="GtkRecentChooserWidget.html" title="GtkRecentChooserWidget"><span class="type">GtkRecentChooserWidget</span></a> and <a class="link" href="GtkRecentChooserDialog.html" title="GtkRecentChooserDialog"><span class="type">GtkRecentChooserDialog</span></a> widgets allow
       multiple filters and the selection of an appropriate one; the
@@ -257,6 +177,6 @@
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

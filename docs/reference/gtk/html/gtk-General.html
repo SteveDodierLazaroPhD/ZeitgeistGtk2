@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="next" href="gtk-Keyboard-Accelerators.html" title="Accelerator Groups">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -231,52 +231,27 @@ When your callbacks are invoked, you would typically take some action
 to the main loop and await more user input.
 </p>
 <div class="example">
-<a name="id449274"></a><p class="title"><b>Example 2. Typical <code class="function">main</code> function for a GTK+ application</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">int</span>
-main (<span class="type">int</span> argc, <span class="type">char</span> **argv)
+<a name="id550582"></a><p class="title"><b>Example 2. Typical <code class="function">main</code> function for a GTK+ application</b></p>
+<div class="example-contents"><pre class="programlisting">
+int
+main (int argc, char **argv)
 {
-  <span class="comment">/*</span><span class="comment"> Initialize i18n support </span><span class="comment">*/</span>
+  /* Initialize i18n support */
   gtk_set_locale ();
-  <span class="comment">/*</span><span class="comment"> Initialize the widget set </span><span class="comment">*/</span>
+  /* Initialize the widget set */
   gtk_init (&amp;argc, &amp;argv);
-  <span class="comment">/*</span><span class="comment"> Create the main window </span><span class="comment">*/</span>
+  /* Create the main window */
   mainwin = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  <span class="comment">/*</span><span class="comment"> Set up our GUI elements </span><span class="comment">*/</span>
+  /* Set up our GUI elements */
   ...
-  <span class="comment">/*</span><span class="comment"> Show the application window </span><span class="comment">*/</span>
+  /* Show the application window */
   gtk_widget_show_all (mainwin);
-  <span class="comment">/*</span><span class="comment"> Enter the main event loop, and wait for user interaction </span><span class="comment">*/</span>
+  /* Enter the main event loop, and wait for user interaction */
   gtk_main ();
-  <span class="comment">/*</span><span class="comment"> The user lost interest </span><span class="comment">*/</span>
-  <span class="keyword">return</span> <span class="number">0</span>;
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  /* The user lost interest */
+  return 0;
+}
+</pre></div>
 </div>
 <br class="example-break"><p>
 It's OK to use the GLib main loop directly instead of <a class="link" href="gtk-General.html#gtk-main" title="gtk_main ()"><code class="function">gtk_main()</code></a>,
@@ -531,7 +506,7 @@ be terminated after writing out the help output.</p>
 <td><p><span class="term"><em class="parameter"><code>translation_domain</code></em> :</span></p></td>
 <td> a translation domain to use for translating
    the <code class="option">--help</code> output for the options in <em class="parameter"><code>entries</code></em>
-   with <a href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#gettext"><code class="function">gettext()</code></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+   with <code class="function">gettext()</code>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 </td>
 </tr>
 <tr>
@@ -611,28 +586,15 @@ Checks if any events are pending. This can be used to update the GUI
 and invoke timeouts etc. while doing some time intensive computation.
 </p>
 <div class="example">
-<a name="id450761"></a><p class="title"><b>Example 3. Updating the GUI during a long computation.</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> computation going on </span><span class="comment">*/</span>
+<a name="id552069"></a><p class="title"><b>Example 3. Updating the GUI during a long computation.</b></p>
+<div class="example-contents"><pre class="programlisting">
+	/* computation going on */
 ...
-        <span class="keyword">while</span> (gtk_events_pending ())
-          gtk_main_iteration ();
+        while (gtk_events_pending ())
+	  gtk_main_iteration ();
 ...
-        <span class="comment">/*</span><span class="comment"> computation continued </span><span class="comment">*/</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+	/* computation continued */
+</pre></div>
 </div>
 <br class="example-break"><div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -851,54 +813,28 @@ not do this as the user expects a reaction from clicking the close
 icon of the window...
 </p>
 <div class="example">
-<a name="id466206"></a><p class="title"><b>Example 4. A persistent window</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19</pre></td>
-        <td class="listing_code"><pre class="programlisting">##include &lt;gtk/gtk.h&gt;
-<span class="type">int</span>
-main (<span class="type">int</span> argc, <span class="type">char</span> **argv)
+<a name="id567514"></a><p class="title"><b>Example 4. A persistent window</b></p>
+<div class="example-contents"><pre class="programlisting">
+##include &lt;gtk/gtk.h&gt;
+int
+main (int argc, char **argv)
 {
   GtkWidget     *win, *but;
   gtk_init( &amp;argc, &amp;argv );
   win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  g_signal_connect (win, <span class="number">&quot;delete-event&quot;</span>,
-                    G_CALLBACK (gtk_true), <span class="number">NULL</span>);
-  g_signal_connect (win, <span class="number">&quot;destroy&quot;</span>,
-                    G_CALLBACK (gtk_main_quit), <span class="number">NULL</span>);
-  but = gtk_button_new_with_label (<span class="number">&quot;Close yourself. I mean it!&quot;</span>);
-  g_signal_connect_swapped (but, <span class="number">&quot;clicked&quot;</span>,
-                  G_CALLBACK (gtk_object_destroy), win);
+  g_signal_connect (win, "delete-event",
+                    G_CALLBACK (gtk_true), NULL);
+  g_signal_connect (win, "destroy",
+		    G_CALLBACK (gtk_main_quit), NULL);
+  but = gtk_button_new_with_label ("Close yourself. I mean it!");
+  g_signal_connect_swapped (but, "clicked",
+		  G_CALLBACK (gtk_object_destroy), win);
   gtk_container_add (GTK_CONTAINER (win), but);
   gtk_widget_show_all (win);
   gtk_main ();
-  <span class="keyword">return</span> <span class="number">0</span>;
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  return 0;
+}
+</pre></div>
 </div>
 <br class="example-break"><div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1831,6 +1767,6 @@ functions such as <a href="http://library.gnome.org/devel/gobject/unstable/gobje
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

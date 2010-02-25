@@ -8,7 +8,7 @@
 <link rel="up" href="SelectorWidgets.html" title="Selectors (File/Font/Color/Input Devices)">
 <link rel="prev" href="GtkHSV.html" title="GtkHSV">
 <link rel="next" href="GtkFileChooserButton.html" title="GtkFileChooserButton">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -368,44 +368,8 @@ generate a preview.
 </p>
 <div class="example">
 <a name="example-gtkfilechooser-preview"></a><p class="title"><b>Example 37. Sample Usage</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33</pre></td>
-        <td class="listing_code"><pre class="programlisting">{
+<div class="example-contents"><pre class="programlisting">
+{
   GtkImage *preview;
 
   ...
@@ -413,36 +377,32 @@ generate a preview.
   preview = gtk_image_new ();
 
   gtk_file_chooser_set_preview_widget (my_file_chooser, preview);
-  g_signal_connect (my_file_chooser, <span class="number">&quot;update-preview&quot;</span>,
-                    G_CALLBACK (update_preview_cb), preview);
+  g_signal_connect (my_file_chooser, "update-preview",
+		    G_CALLBACK (update_preview_cb), preview);
 }
 
-<span class="type">static</span> <span class="type">void</span>
+static void
 update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 {
   GtkWidget *preview;
-  <span class="type">char</span> *filename;
+  char *filename;
   GdkPixbuf *pixbuf;
   gboolean have_preview;
 
   preview = GTK_WIDGET (data);
   filename = gtk_file_chooser_get_preview_filename (file_chooser);
 
-  pixbuf = gdk_pixbuf_new_from_file_at_size (filename, <span class="number">128</span>, <span class="number">128</span>, <span class="number">NULL</span>);
-  have_preview = (pixbuf != <span class="number">NULL</span>);
+  pixbuf = gdk_pixbuf_new_from_file_at_size (filename, 128, 128, NULL);
+  have_preview = (pixbuf != NULL);
   g_free (filename);
 
   gtk_image_set_from_pixbuf (GTK_IMAGE (preview), pixbuf);
-  <span class="keyword">if</span> (pixbuf)
+  if (pixbuf)
     g_object_unref (pixbuf);
 
   gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+}
+</pre></div>
 </div>
 <br class="example-break">
 </div>
@@ -461,31 +421,17 @@ widgets in a file chooser.
 </p>
 <div class="example">
 <a name="example-gtkfilechooser-extra"></a><p class="title"><b>Example 38. Sample Usage</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkWidget *toggle;
+<div class="example-contents"><pre class="programlisting">
+
+  GtkWidget *toggle;
 
   ...
 
-  toggle = gtk_check_button_new_with_label (<span class="number">&quot;Open file read-only&quot;</span>);
+  toggle = gtk_check_button_new_with_label ("Open file read-only");
   gtk_widget_show (toggle);
   gtk_file_chooser_set_extra_widget (my_file_chooser, toggle);
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+}
+</pre></div>
 </div>
 <br class="example-break"><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Note</h3>
@@ -531,7 +477,7 @@ follows:
 <td>
 		  <span class="keycap"><strong>Control</strong></span>+<span class="keycap"><strong>L</strong></span> (empty path);
 		  <span class="keycap"><strong>/</strong></span> (path of "/")
-               <sup>[<a name="id984989" href="#ftn.id984989" class="footnote">a</a>]</sup>;
+               <sup>[<a name="id1086968" href="#ftn.id1086968" class="footnote">a</a>]</sup>;
 		  <span class="keycap"><strong>~</strong></span> (path of "~")
 		</td>
 </tr>
@@ -539,7 +485,7 @@ follows:
 <td>up-folder</td>
 <td>
 		  <span class="keycap"><strong>Alt</strong></span>+<span class="keycap"><strong>Up</strong></span>
-               <sup>[<a name="id985034" href="#ftn.id985034" class="footnote">b</a>]</sup>
+               <sup>[<a name="id1087013" href="#ftn.id1087013" class="footnote">b</a>]</sup>
 		  ;
 		  <span class="keycap"><strong>Backspace</strong></span>
 		</td>
@@ -570,7 +516,7 @@ follows:
 </tr>
 </tbody>
 <tbody class="footnotes"><tr><td colspan="2">
-<div class="footnote"><span class="keycap"><strong><sup>[<a name="ftn.id984989" href="#id984989" class="keycap">a</a>] </sup>/</strong></span></div>
+<div class="footnote"><span class="keycap"><strong><sup>[<a name="ftn.id1086968" href="#id1086968" class="keycap">a</a>] </sup>/</strong></span></div>
 <div class="footnote"></div>
 </td></tr></tbody>
 </table></div>
@@ -1403,37 +1349,19 @@ a file name already — for example, if the user just created a new
 file and is saving it for the first time, do not call this function.  
 Instead, use something similar to this:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="keyword">if</span> (document_is_new)
+<div class="informalexample"><pre class="programlisting">
+if (document_is_new)
   {
-    <span class="comment">/*</span><span class="comment"> the user just created a new document </span><span class="comment">*/</span>
+    /* the user just created a new document */
     gtk_file_chooser_set_current_folder (chooser, default_folder_for_saving);
-    gtk_file_chooser_set_current_name (chooser, <span class="number">&quot;Untitled document&quot;</span>);
+    gtk_file_chooser_set_current_name (chooser, "Untitled document");
   }
-<span class="keyword">else</span>
+else
   {
-    <span class="comment">/*</span><span class="comment"> the user edited an existing document </span><span class="comment">*/</span>
+    /* the user edited an existing document */ 
     gtk_file_chooser_set_filename (chooser, existing_filename);
-  }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  }
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -1704,37 +1632,19 @@ a file name already — for example, if the user just created a new
 file and is saving it for the first time, do not call this function.  
 Instead, use something similar to this:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="keyword">if</span> (document_is_new)
+<div class="informalexample"><pre class="programlisting">
+if (document_is_new)
   {
-    <span class="comment">/*</span><span class="comment"> the user just created a new document </span><span class="comment">*/</span>
+    /* the user just created a new document */
     gtk_file_chooser_set_current_folder_uri (chooser, default_folder_for_saving);
-    gtk_file_chooser_set_current_name (chooser, <span class="number">&quot;Untitled document&quot;</span>);
+    gtk_file_chooser_set_current_name (chooser, "Untitled document");
   }
-<span class="keyword">else</span>
+else
   {
-    <span class="comment">/*</span><span class="comment"> the user edited an existing document </span><span class="comment">*/</span>
+    /* the user edited an existing document */ 
     gtk_file_chooser_set_uri (chooser, existing_uri);
-  }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  }
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -2348,8 +2258,7 @@ application.  For example, you can use this to add a
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2386,8 +2295,7 @@ Removes a folder from a file chooser's list of shortcut folders.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2453,8 +2361,7 @@ by the application.  For example, you can use this to add a
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2491,8 +2398,7 @@ Removes a folder URI from a file chooser's list of shortcut folders.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2580,7 +2486,7 @@ folder.</p>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> a selected <a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a>. You own the returned file; use
-         <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a> to release it.
+         <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> to release it.
 
 </td>
 </tr>
@@ -2629,7 +2535,7 @@ Internal function, see <a class="link" href="GtkFileChooser.html#gtk-file-choose
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> the <a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> for the file to preview, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no file
- is selected. Free with <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a>.
+ is selected. Free with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.
 
 </td>
 </tr>
@@ -2661,8 +2567,7 @@ Selects the file referred to by <em class="parameter"><code>file</code></em>. An
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2700,8 +2605,7 @@ Internal function, see <a class="link" href="GtkFileChooser.html#gtk-file-choose
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
-</td>
+<td> location to store error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2745,37 +2649,19 @@ a file name already — for example, if the user just created a new
 file and is saving it for the first time, do not call this function.
 Instead, use something similar to this:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="keyword">if</span> (document_is_new)
+<div class="informalexample"><pre class="programlisting">
+if (document_is_new)
   {
-    <span class="comment">/*</span><span class="comment"> the user just created a new document </span><span class="comment">*/</span>
+    /* the user just created a new document */
     gtk_file_chooser_set_current_folder_file (chooser, default_file_for_saving);
-    gtk_file_chooser_set_current_name (chooser, <span class="number">&quot;Untitled document&quot;</span>);
+    gtk_file_chooser_set_current_name (chooser, "Untitled document");
   }
-<span class="keyword">else</span>
+else
   {
-    <span class="comment">/*</span><span class="comment"> the user edited an existing document </span><span class="comment">*/</span>
+    /* the user edited an existing document */
     gtk_file_chooser_set_file (chooser, existing_file);
-  }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  }
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -2791,8 +2677,7 @@ Instead, use something similar to this:
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> location to store the error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore errors.
-</td>
+<td> location to store the error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore errors.. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2957,52 +2842,21 @@ illustrates this.
 </p>
 <div class="example">
 <a name="gtkfilechooser-confirmation"></a><p class="title"><b>Example 40. Custom confirmation</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> GtkFileChooserConfirmation
+<div class="example-contents"><pre class="programlisting">
+static GtkFileChooserConfirmation
 confirm_overwrite_callback (GtkFileChooser *chooser, gpointer data)
 {
-  <span class="type">char</span> *uri;
+  char *uri;
   uri = gtk_file_chooser_get_uri (chooser);
 
-  <span class="keyword">if</span> (is_uri_read_only (uri))
+  if (is_uri_read_only (uri))
     {
-      <span class="keyword">if</span> (user_wants_to_replace_read_only_file (uri))
-        <span class="keyword">return</span> GTK_FILE_CHOOSER_CONFIRMATION_ACCEPT_FILENAME;
-      <span class="keyword">else</span>
-        <span class="keyword">return</span> GTK_FILE_CHOOSER_CONFIRMATION_SELECT_AGAIN;
-    } <span class="keyword">else</span>
-      <span class="keyword">return</span> GTK_FILE_CHOOSER_CONFIRMATION_CONFIRM; <span class="comment">// fall back to the default dialog</span>
+      if (user_wants_to_replace_read_only_file (uri))
+        return GTK_FILE_CHOOSER_CONFIRMATION_ACCEPT_FILENAME;
+      else
+        return GTK_FILE_CHOOSER_CONFIRMATION_SELECT_AGAIN;
+    } else
+      return GTK_FILE_CHOOSER_CONFIRMATION_CONFIRM; // fall back to the default dialog
 }
 
 ...
@@ -3010,18 +2864,14 @@ confirm_overwrite_callback (GtkFileChooser *chooser, gpointer data)
 chooser = gtk_file_chooser_dialog_new (...);
 
 gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
-g_signal_connect (chooser, <span class="number">&quot;confirm-overwrite&quot;</span>,
-                  G_CALLBACK (confirm_overwrite_callback), <span class="number">NULL</span>);
+g_signal_connect (chooser, "confirm-overwrite",
+                  G_CALLBACK (confirm_overwrite_callback), NULL);
 
-<span class="keyword">if</span> (gtk_dialog_run (chooser) == GTK_RESPONSE_ACCEPT)
+if (gtk_dialog_run (chooser) == GTK_RESPONSE_ACCEPT)
         save_to_file (gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
 
-gtk_widget_destroy (chooser);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+gtk_widget_destroy (chooser);
+</pre></div>
 </div>
 <p><br class="example-break"></p>
 <div class="variablelist"><table border="0">
@@ -3207,6 +3057,6 @@ See also: <a class="link" href="GtkFileChooser.html#gtk-file-chooser-set-preview
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <link rel="up" href="Builder.html" title="Interface builder">
 <link rel="prev" href="gtk-gtkbuildable.html" title="GtkBuildable">
 <link rel="next" href="DeprecatedObjects.html" title="Deprecated">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -192,7 +192,7 @@ with <a class="link" href="GtkWidget.html#gtk-widget-destroy" title="gtk_widget_
 larger hierarchy constructed by the builder (in which case you should
 not have to worry about their lifecycle), or without a parent, in which
 case they have to be added to some container to make use of them.
-Non-widget objects need to be reffed with <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a> to keep them
+Non-widget objects need to be reffed with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> to keep them
 beyond the lifespan of the builder.
 </p>
 <p>
@@ -245,7 +245,7 @@ which are more limited in scope.
 <p>
 The toplevel element is &lt;interface&gt;.
 It optionally takes a "domain" attribute, which will make
-the builder look for translated strings using <a href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#dgettext"><code class="function">dgettext()</code></a> in the
+the builder look for translated strings using <code class="function">dgettext()</code> in the
 domain specified. This can also be done by calling
 <a class="link" href="GtkBuilder.html#gtk-builder-set-translation-domain" title="gtk_builder_set_translation_domain ()"><code class="function">gtk_builder_set_translation_domain()</code></a> on the builder.
 Objects are described by &lt;object&gt; elements, which can
@@ -285,7 +285,7 @@ Setting properties of objects is pretty straightforward with
 the &lt;property&gt; element: the "name" attribute specifies
 the name of the property, and the content of the element
 specifies the value. If the "translatable" attribute is
-set to a true value, GTK+ uses <a href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#gettext"><code class="function">gettext()</code></a> (or <a href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#dgettext"><code class="function">dgettext()</code></a> if
+set to a true value, GTK+ uses <code class="function">gettext()</code> (or <code class="function">dgettext()</code> if
 the builder has a translation domain set) to find a translation
 for the value. This happens before the value is parsed, so
 it can be used for properties of any type, but it is probably
@@ -338,45 +338,21 @@ The possible values for the "type" attribute are described in
 the sections describing the widget-specific portions of UI definitions.
 </p>
 <div class="example">
-<a name="id1201316"></a><p class="title"><b>Example 58. A GtkBuilder UI Definition</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21</pre></td>
-        <td class="listing_code"><pre class="programlisting">&lt;interface&gt;
-  &lt;object <span class="type">class</span>=<span class="number">&quot;GtkDialog&quot;</span> id=<span class="number">&quot;dialog1&quot;</span>&gt;
-    &lt;child internal-child=<span class="number">&quot;vbox&quot;</span>&gt;
-      &lt;object <span class="type">class</span>=<span class="number">&quot;GtkVBox&quot;</span> id=<span class="number">&quot;vbox1&quot;</span>&gt;
-        &lt;property name=<span class="number">&quot;border-width&quot;</span>&gt;<span class="number">10</span>&lt;/property&gt;
-        &lt;child internal-child=<span class="number">&quot;action_area&quot;</span>&gt;
-          &lt;object <span class="type">class</span>=<span class="number">&quot;GtkHButtonBox&quot;</span> id=<span class="number">&quot;hbuttonbox1&quot;</span>&gt;
-            &lt;property name=<span class="number">&quot;border-width&quot;</span>&gt;<span class="number">20</span>&lt;/property&gt;
+<a name="id1303232"></a><p class="title"><b>Example 58. A GtkBuilder UI Definition</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;interface&gt;
+  &lt;object class="GtkDialog" id="dialog1"&gt;
+    &lt;child internal-child="vbox"&gt;
+      &lt;object class="GtkVBox" id="vbox1"&gt;
+        &lt;property name="border-width"&gt;10&lt;/property&gt;
+        &lt;child internal-child="action_area"&gt;
+          &lt;object class="GtkHButtonBox" id="hbuttonbox1"&gt;
+            &lt;property name="border-width"&gt;20&lt;/property&gt;
             &lt;child&gt;
-              &lt;object <span class="type">class</span>=<span class="number">&quot;GtkButton&quot;</span> id=<span class="number">&quot;ok_button&quot;</span>&gt;
-                &lt;property name=<span class="number">&quot;label&quot;</span>&gt;gtk-ok&lt;/property&gt;
-                &lt;property name=<span class="number">&quot;use-stock&quot;</span>&gt;TRUE&lt;/property&gt;
-                &lt;signal name=<span class="number">&quot;clicked&quot;</span> handler=<span class="number">&quot;ok_button_clicked&quot;</span>/&gt;
+              &lt;object class="GtkButton" id="ok_button"&gt;
+                &lt;property name="label"&gt;gtk-ok&lt;/property&gt;
+                &lt;property name="use-stock"&gt;TRUE&lt;/property&gt;
+                &lt;signal name="clicked" handler="ok_button_clicked"/&gt;
               &lt;/object&gt;
             &lt;/child&gt;
           &lt;/object&gt;
@@ -384,12 +360,8 @@ the sections describing the widget-specific portions of UI definitions.
       &lt;/object&gt;
     &lt;/child&gt;
   &lt;/object&gt;
-&lt;/interface&gt;</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+&lt;/interface&gt;
+</pre></div>
 </div>
 <br class="example-break"><p>
 Beyond this general structure, several object classes define
@@ -615,8 +587,7 @@ UI definition</a> and merges it with the current contents of <em class="paramete
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -658,8 +629,7 @@ UI definition</a> and merges it with the current contents of <em class="paramete
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -713,8 +683,7 @@ its child (for instance a <a class="link" href="GtkTreeView.html" title="GtkTree
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -774,8 +743,7 @@ its child (for instance a <a class="link" href="GtkTreeView.html" title="GtkTree
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -932,8 +900,7 @@ See <a class="link" href="GtkBuilder.html#GtkBuilder--translation-domain" title=
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>domain</code></em> :</span></p></td>
-<td> the translation domain or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> the translation domain or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -1040,8 +1007,7 @@ still to come.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1091,8 +1057,7 @@ need not be initialised beforehand.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> return location for an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1146,7 +1111,7 @@ The <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.h
 <p>
 The translation domain used when translating property values that
 have been marked as translatable in interface descriptions.
-If the translation domain is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> uses <a href="/usr/share/gtk-doc/html/camel/camel-camel-i18n.html#gettext"><code class="function">gettext()</code></a>,
+If the translation domain is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> uses <code class="function">gettext()</code>,
 otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#g-dgettext"><code class="function">g_dgettext()</code></a>.</p>
 <p>Default value: NULL</p>
 <p class="since">Since 2.12</p>
@@ -1155,6 +1120,6 @@ otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#g
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

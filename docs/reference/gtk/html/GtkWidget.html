@@ -8,7 +8,7 @@
 <link rel="up" href="AbstractObjects.html" title="Abstract Base Classes">
 <link rel="prev" href="GtkSeparator.html" title="GtkSeparator">
 <link rel="next" href="GtkIMContext.html" title="GtkIMContext">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="part" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="part" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -655,22 +655,12 @@ custom &lt;accelerator&gt; element, which has attributes named key,
 modifiers and signal and allows to specify accelerators.
 </p>
 <div class="example">
-<a name="id1223788"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3</pre></td>
-        <td class="listing_code"><pre class="programlisting">&lt;object <span class="type">class</span>=<span class="number">&quot;GtkButton&quot;</span>&gt;
-  &lt;accelerator key=<span class="number">&quot;q&quot;</span> modifiers=<span class="number">&quot;GDK_CONTROL_MASK&quot;</span> signal=<span class="number">&quot;clicked&quot;</span>/&gt;
-&lt;/object&gt;</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<a name="id1325793"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkButton"&gt;
+  &lt;accelerator key="q" modifiers="GDK_CONTROL_MASK" signal="clicked"/&gt;
+&lt;/object&gt;
+</pre></div>
 </div>
 <br class="example-break"><p>
 In addition to accelerators, <span class="structname">GtkWidget</span> also support a
@@ -679,44 +669,23 @@ Properties on the accessible implementation of an object can be set by accessing
 internal child "accessible" of a <span class="structname">GtkWidget</span>.
 </p>
 <div class="example">
-<a name="id1223817"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14</pre></td>
-        <td class="listing_code"><pre class="programlisting">&lt;object <span class="type">class</span>=<span class="number">&quot;GtkButton&quot;</span> id=<span class="number">&quot;label1&quot;</span>/&gt;
-  &lt;property name=<span class="number">&quot;label&quot;</span>&gt;I am a Label <span class="keyword">for</span> a Button&lt;/property&gt;
+<a name="id1325822"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
+<div class="example-contents"><pre class="programlisting">
+&lt;object class="GtkButton" id="label1"/&gt;
+  &lt;property name="label"&gt;I am a Label for a Button&lt;/property&gt;
 &lt;/object&gt;
-&lt;object <span class="type">class</span>=<span class="number">&quot;GtkButton&quot;</span> id=<span class="number">&quot;button1&quot;</span>&gt;
+&lt;object class="GtkButton" id="button1"&gt;
   &lt;accessibility&gt;
-    &lt;action action_name=<span class="number">&quot;click&quot;</span> translatable=<span class="number">&quot;yes&quot;</span>&gt;Click the button.&lt;/action&gt;
-    &lt;relation target=<span class="number">&quot;label1&quot;</span> type=<span class="number">&quot;labelled-by&quot;</span>/&gt;
+    &lt;action action_name="click" translatable="yes"&gt;Click the button.&lt;/action&gt;
+    &lt;relation target="label1" type="labelled-by"/&gt;
   &lt;/accessibility&gt;
-  &lt;child internal-child=<span class="number">&quot;accessible&quot;</span>&gt;
-    &lt;object <span class="type">class</span>=<span class="number">&quot;AtkObject&quot;</span> id=<span class="number">&quot;a11y-button1&quot;</span>&gt;
-      &lt;property name=<span class="number">&quot;AtkObject::name&quot;</span>&gt;Clickable Button&lt;/property&gt;
+  &lt;child internal-child="accessible"&gt;
+    &lt;object class="AtkObject" id="a11y-button1"&gt;
+      &lt;property name="AtkObject::name"&gt;Clickable Button&lt;/property&gt;
     &lt;/object&gt;
   &lt;/child&gt;
-&lt;/object&gt;</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+&lt;/object&gt;
+</pre></div>
 </div>
 <br class="example-break">
 </div>
@@ -1640,11 +1609,11 @@ cast the object yourself.</p>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a>*          gtk_widget_ref                      (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);</pre>
 <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_widget_ref</code> has been deprecated since version 2.12 and should not be used in newly-written code. Use <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a> instead.</p>
+<p><code class="literal">gtk_widget_ref</code> has been deprecated since version 2.12 and should not be used in newly-written code. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> instead.</p>
 </div>
 <p>
 Adds a reference to a widget. This function is exactly the same
-as calling <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a>, and exists mostly for historical
+as calling <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a>, and exists mostly for historical
 reasons. It can still be convenient to avoid casting a widget
 to a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>, it saves a small amount of typing.</p>
 <div class="variablelist"><table border="0">
@@ -1670,10 +1639,10 @@ to a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-O
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_widget_unref                    (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);</pre>
 <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_widget_unref</code> has been deprecated since version 2.12 and should not be used in newly-written code. Use <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a> instead.</p>
+<p><code class="literal">gtk_widget_unref</code> has been deprecated since version 2.12 and should not be used in newly-written code. Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> instead.</p>
 </div>
 <p>
-Inverse of <a class="link" href="GtkWidget.html#gtk-widget-ref" title="gtk_widget_ref ()"><code class="function">gtk_widget_ref()</code></a>. Equivalent to <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a>.</p>
+Inverse of <a class="link" href="GtkWidget.html#gtk-widget-ref" title="gtk_widget_ref ()"><code class="function">gtk_widget_ref()</code></a>. Equivalent to <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
@@ -1697,7 +1666,7 @@ from the container. If the widget is a toplevel (derived from
 reference GTK+ holds to it will be removed. Removing a
 widget from its container or the list of toplevels results in the
 widget being finalized, unless you've added additional references
-to the widget with <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-ref"><code class="function">g_object_ref()</code></a>.
+to the widget with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a>.
 </p>
 <p>
 In most cases, only toplevel widgets (windows) require explicit
@@ -2958,25 +2927,13 @@ To reliably find the toplevel <a class="link" href="GtkWindow.html" title="GtkWi
 <a class="link" href="GtkWidget.html#gtk-widget-get-toplevel" title="gtk_widget_get_toplevel ()"><code class="function">gtk_widget_get_toplevel()</code></a> and check if the <code class="literal">TOPLEVEL</code> flags
 is set on the result.
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
- <span class="keyword">if</span> (gtk_widget_is_toplevel (toplevel))
+<div class="informalexample"><pre class="programlisting">
+ GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
+ if (gtk_widget_is_toplevel (toplevel))
    {
-     <span class="comment">/*</span><span class="comment"> Perform action on toplevel. </span><span class="comment">*/</span>
-   }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+     /* Perform action on toplevel. */
+   }
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -3599,8 +3556,7 @@ for more information.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>shape_mask</code></em> :</span></p></td>
-<td> shape to be added, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to remove an existing shape
-</td>
+<td> shape to be added, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to remove an existing shape. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>offset_x</code></em> :</span></p></td>
@@ -4142,7 +4098,7 @@ theme engines can special-case rendering for that widget or code.
 <p>
 The pixels in the returned <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> are shared with the rest of
 the application and should not be modified. The pixbuf should be freed
-after use with <a href="/usr/share/gtk-doc/html/libmissioncontrol-server/libmissioncontrol-server-mcd-debug.html#g-object-unref"><code class="function">g_object_unref()</code></a>.</p>
+after use with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -4200,29 +4156,15 @@ builders might want to treat them in a different way.
 <p>
 Here is a simple example:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_widget_push_composite_child ();
+<div class="informalexample"><pre class="programlisting">
+  gtk_widget_push_composite_child ();
   scrolled_window-&gt;hscrollbar = gtk_hscrollbar_new (hadjustment);
-  gtk_widget_set_composite_name (scrolled_window-&gt;hscrollbar, <span class="number">&quot;hscrollbar&quot;</span>);
+  gtk_widget_set_composite_name (scrolled_window-&gt;hscrollbar, "hscrollbar");
   gtk_widget_pop_composite_child ();
-  gtk_widget_set_parent (scrolled_window-&gt;hscrollbar,
+  gtk_widget_set_parent (scrolled_window-&gt;hscrollbar, 
                          GTK_WIDGET (scrolled_window));
-  g_object_ref (scrolled_window-&gt;hscrollbar);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  g_object_ref (scrolled_window-&gt;hscrollbar);
+</pre></div>
 </div>
 <hr>
 <div class="refsect2" title="gtk_widget_queue_clear ()">
@@ -4394,21 +4336,11 @@ Note that the background is still drawn when the widget is mapped.
 If this is not suitable (e.g. because you want to make a transparent
 window using an RGBA visual), you can work around this by doing:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_widget_realize (window);
- gdk_window_set_back_pixmap (window-&gt;window, <span class="number">NULL</span>, FALSE);
- gtk_widget_show (window);</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+<div class="informalexample"><pre class="programlisting">
+ gtk_widget_realize (window);
+ gdk_window_set_back_pixmap (window-&gt;window, NULL, FALSE);
+ gtk_widget_show (window);
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -4677,9 +4609,7 @@ Finds a style property of a widget class by name.</p>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> of the style property or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if <em class="parameter"><code>class</code></em> has no
-  style property with that name.
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -5274,11 +5204,11 @@ this function.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
-<td> return location for width, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
+<td> return location for width, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
-<td> return location for height, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
+<td> return location for height, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -5831,8 +5761,7 @@ See also the GtkWidget:tooltip-markup property and
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>markup</code></em> :</span></p></td>
-<td> the contents of the tooltip for <em class="parameter"><code>widget</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> the contents of the tooltip for <em class="parameter"><code>widget</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -5941,8 +5870,7 @@ have the name "gtk-tooltip", see <a class="link" href="GtkWidget.html#gtk-widget
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>custom_window</code></em> :</span></p></td>
-<td> a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>
@@ -6062,8 +5990,7 @@ The returned pixmap can be <a href="http://library.gnome.org/devel/glib/unstable
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clip_rect</code></em> :</span></p></td>
-<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Points-Rectangles-and-Regions.html#GdkRectangle"><span class="type">GdkRectangle</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-</td>
+<td> a <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Points-Rectangles-and-Regions.html#GdkRectangle"><span class="type">GdkRectangle</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -7760,48 +7687,8 @@ The handler may inspect and modify <em class="parameter"><code>drag_context-&gt;
 <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-finish" title="gtk_drag_finish ()"><code class="function">gtk_drag_finish()</code></a>, e.g. to implement <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Drag-and-Drop.html#GDK-ACTION-ASK:CAPS"><code class="literal">GDK_ACTION_ASK</code></a> as shown in the 
 following example:
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">void</span>
+<div class="informalexample"><pre class="programlisting">
+void  
 drag_data_received (GtkWidget          *widget,
                     GdkDragContext     *drag_context,
                     gint                x,
@@ -7810,39 +7697,35 @@ drag_data_received (GtkWidget          *widget,
                     guint               info,
                     guint               time)
 {
-  <span class="keyword">if</span> ((data-&gt;length &gt;= <span class="number">0</span>) &amp;&amp; (data-&gt;format == <span class="number">8</span>))
+  if ((data-&gt;length &gt;= 0) &amp;&amp; (data-&gt;format == 8))
     {
-      <span class="keyword">if</span> (drag_context-&gt;action == GDK_ACTION_ASK)
+      if (drag_context-&gt;action == GDK_ACTION_ASK) 
         {
           GtkWidget *dialog;
           gint response;
-
-          dialog = gtk_message_dialog_new (<span class="number">NULL</span>,
-                                           GTK_DIALOG_MODAL |
+          
+          dialog = gtk_message_dialog_new (NULL,
+                                           GTK_DIALOG_MODAL | 
                                            GTK_DIALOG_DESTROY_WITH_PARENT,
                                            GTK_MESSAGE_INFO,
                                            GTK_BUTTONS_YES_NO,
-                                           <span class="number">&quot;Move the data ?</span><span class="symbol">\n</span><span class="number">&quot;</span>);
+                                           "Move the data ?\n");
           response = gtk_dialog_run (GTK_DIALOG (dialog));
           gtk_widget_destroy (dialog);
-
-          <span class="keyword">if</span> (response == GTK_RESPONSE_YES)
+            
+          if (response == GTK_RESPONSE_YES)
             drag_context-&gt;action = GDK_ACTION_MOVE;
-          <span class="keyword">else</span>
+          else
             drag_context-&gt;action = GDK_ACTION_COPY;
          }
-
+         
       gtk_drag_finish (drag_context, TRUE, FALSE, time);
-      <span class="keyword">return</span>;
+      return;
     }
-
+      
    gtk_drag_finish (drag_context, FALSE, FALSE, time);
- }</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+ }
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -8095,71 +7978,8 @@ last <a class="link" href="GtkWidget.html#GtkWidget-drag-leave" title='The "drag
 an "enter" signal. Upon an "enter", the handler will typically highlight
 the drop site with <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-highlight" title="gtk_drag_highlight ()"><code class="function">gtk_drag_highlight()</code></a>.
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> <span class="type">void</span>
+<div class="informalexample"><pre class="programlisting">
+static void
 drag_motion (GtkWidget *widget,
              GdkDragContext *context,
              gint x,
@@ -8167,28 +7987,28 @@ drag_motion (GtkWidget *widget,
              guint time)
 {
   GdkAtom target;
-
+ 
   PrivateData *private_data = GET_PRIVATE_DATA (widget);
-
-  <span class="keyword">if</span> (!private_data-&gt;drag_highlight)
+ 
+  if (!private_data-&gt;drag_highlight) 
    {
-     private_data-&gt;drag_highlight = <span class="number">1</span>;
+     private_data-&gt;drag_highlight = 1;
      gtk_drag_highlight (widget);
    }
-
-  target = gtk_drag_dest_find_target (widget, context, <span class="number">NULL</span>);
-  <span class="keyword">if</span> (target == GDK_NONE)
-    gdk_drag_status (context, <span class="number">0</span>, time);
-  <span class="keyword">else</span>
+ 
+  target = gtk_drag_dest_find_target (widget, context, NULL);
+  if (target == GDK_NONE)
+    gdk_drag_status (context, 0, time);
+  else 
    {
      private_data-&gt;pending_status = context-&gt;suggested_action;
      gtk_drag_get_data (widget, context, target, time);
    }
-
-  <span class="keyword">return</span> TRUE;
+ 
+  return TRUE;
 }
-
-<span class="type">static</span> <span class="type">void</span>
+  
+static void
 drag_data_received (GtkWidget        *widget,
                     GdkDragContext   *context,
                     gint              x,
@@ -8198,32 +8018,28 @@ drag_data_received (GtkWidget        *widget,
                     guint             time)
 {
   PrivateData *private_data = GET_PRIVATE_DATA (widget);
-
-  <span class="keyword">if</span> (private_data-&gt;suggested_action)
+  
+  if (private_data-&gt;suggested_action) 
    {
-     private_data-&gt;suggested_action = <span class="number">0</span>;
-
-    <span class="comment">/*</span><span class="comment"> We are getting this data due to a request in drag_motion,</span>
-<span class="comment">     * rather than due to a request in drag_drop, so we are just</span>
-<span class="comment">     * supposed to call gdk_drag_status (), not actually paste in </span>
-<span class="comment">     * the data.</span>
-<span class="comment">     </span><span class="comment">*/</span>
+     private_data-&gt;suggested_action = 0;
+     
+    /* We are getting this data due to a request in drag_motion,
+     * rather than due to a request in drag_drop, so we are just
+     * supposed to call gdk_drag_status (), not actually paste in 
+     * the data.
+     */
      str = gtk_selection_data_get_text (selection_data);
-     <span class="keyword">if</span> (!data_is_acceptable (str))
-       gdk_drag_status (context, <span class="number">0</span>, time);
-     <span class="keyword">else</span>
+     if (!data_is_acceptable (str)) 
+       gdk_drag_status (context, 0, time);
+     else
        gdk_drag_status (context, private_data-&gt;suggested_action, time);
    }
-  <span class="keyword">else</span>
+  else
    {
-     <span class="comment">/*</span><span class="comment"> accept the drop </span><span class="comment">*/</span>
+     /* accept the drop */
    }
-}</pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+}
+</pre></div>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -8668,9 +8484,7 @@ a widget changes from un-anchored to anchored or vice-versa.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>previous_toplevel</code></em> :</span></p></td>
-<td> the previous toplevel ancestor, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-  if the widget was previously unanchored
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -9052,9 +8866,7 @@ has been set on a widget.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>old_parent</code></em> :</span></p></td>
-<td> the previous parent, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the widget 
-  just got its initial parent.
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -9317,9 +9129,7 @@ screen of a widget has changed.</p>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>previous_screen</code></em> :</span></p></td>
-<td> the previous screen, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the
-  widget was not associated with a screen before
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -9690,9 +9500,7 @@ on a widget. Note that style-modifying functions like
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>previous_style</code></em> :</span></p></td>
-<td> the previous style, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the widget 
-  just got its initial style 
-</td>
+<td>allow-none. <acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>. </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -9864,6 +9672,6 @@ this mask automatically for all new windows.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

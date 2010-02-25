@@ -1554,7 +1554,7 @@ gtk_assistant_set_current_page (GtkAssistant *assistant,
   if (page_num >= 0)
     page = (GtkAssistantPage *) g_list_nth_data (priv->pages, page_num);
   else
-    page = (GtkAssistantPage *) g_list_last (priv->pages);
+    page = (GtkAssistantPage *) g_list_last (priv->pages)->data;
 
   g_return_if_fail (page != NULL);
 
@@ -1615,10 +1615,14 @@ gtk_assistant_get_nth_page (GtkAssistant *assistant,
   GList *elem;
 
   g_return_val_if_fail (GTK_IS_ASSISTANT (assistant), NULL);
+  g_return_val_if_fail (page_num >= -1, NULL);
 
   priv = assistant->priv;
 
-  elem = g_list_nth (priv->pages, page_num);
+  if (page_num == -1)
+    elem = g_list_last (priv->pages);
+  else
+    elem = g_list_nth (priv->pages, page_num);
 
   if (!elem)
     return NULL;
@@ -1736,7 +1740,7 @@ gtk_assistant_insert_page (GtkAssistant *assistant,
 /**
  * gtk_assistant_set_forward_page_func:
  * @assistant: a #GtkAssistant
- * @page_func: the #GtkAssistantPageFunc, or %NULL to use the default one
+ * @page_func: (allow-none): the #GtkAssistantPageFunc, or %NULL to use the default one
  * @data: user data for @page_func
  * @destroy: destroy notifier for @data
  *

@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Event-Structures.html" title="Event Structures">
 <link rel="next" href="gdk-Selections.html" title="Selections">
-<meta name="generator" content="GTK-Doc V1.12 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.13 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 <link rel="reference" href="reference.html" title="API Reference">
 <link rel="index" href="api-index-full.html" title="Index of all symbols">
@@ -83,6 +83,8 @@
 <a href="/usr/share/gtk-doc/html/pango/pango-Bidirectional-Text.html#PangoDirection"><span class="returnvalue">PangoDirection</span></a>      <a class="link" href="gdk-Keyboard-Handling.html#gdk-keymap-get-direction" title="gdk_keymap_get_direction ()">gdk_keymap_get_direction</a>            (<a class="link" href="gdk-Keyboard-Handling.html#GdkKeymap"><span class="returnvalue">GdkKeymap</span></a> *keymap);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gdk-Keyboard-Handling.html#gdk-keymap-have-bidi-layouts" title="gdk_keymap_have_bidi_layouts ()">gdk_keymap_have_bidi_layouts</a>        (<a class="link" href="gdk-Keyboard-Handling.html#GdkKeymap"><span class="returnvalue">GdkKeymap</span></a> *keymap);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gdk-Keyboard-Handling.html#gdk-keymap-get-caps-lock-state" title="gdk_keymap_get_caps_lock_state ()">gdk_keymap_get_caps_lock_state</a>      (<a class="link" href="gdk-Keyboard-Handling.html#GdkKeymap"><span class="returnvalue">GdkKeymap</span></a> *keymap);
+<span class="returnvalue">void</span>                <a class="link" href="gdk-Keyboard-Handling.html#gdk-keymap-add-virtual-modifiers" title="gdk_keymap_add_virtual_modifiers ()">gdk_keymap_add_virtual_modifiers</a>    (<a class="link" href="gdk-Keyboard-Handling.html#GdkKeymap"><span class="returnvalue">GdkKeymap</span></a> *keymap,
+                                                         <a class="link" href="gdk-Windows.html#GdkModifierType" title="enum GdkModifierType"><span class="returnvalue">GdkModifierType</span></a> *state);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gdk-Keyboard-Handling.html#gdk-keymap-map-virtual-modifiers" title="gdk_keymap_map_virtual_modifiers ()">gdk_keymap_map_virtual_modifiers</a>    (<a class="link" href="gdk-Keyboard-Handling.html#GdkKeymap"><span class="returnvalue">GdkKeymap</span></a> *keymap,
                                                          <a class="link" href="gdk-Windows.html#GdkModifierType" title="enum GdkModifierType"><span class="returnvalue">GdkModifierType</span></a> *state);
 
@@ -349,53 +351,27 @@ symbol is shifted, so when comparing a key press to a
 <code class="literal">&lt;Control&gt;plus</code> accelerator &lt;Shift&gt; should
 be masked out.
 </p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> We want to ignore irrelevant modifiers like ScrollLock </span><span class="comment">*/</span>
-<span class="preproc">#define ALL_ACCELS_MASK (GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK)</span>
+<div class="informalexample"><pre class="programlisting">
+/* We want to ignore irrelevant modifiers like ScrollLock */
+#define ALL_ACCELS_MASK (GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK)
 gdk_keymap_translate_keyboard_state (keymap, event-&gt;hardware_keycode,
                                      event-&gt;state, event-&gt;group,
-                                     &amp;keyval, <span class="number">NULL</span>, <span class="number">NULL</span>, &amp;consumed);
-<span class="keyword">if</span> (keyval == GDK_PLUS &amp;&amp;
+                                     &amp;keyval, NULL, NULL, &amp;consumed);
+if (keyval == GDK_PLUS &amp;&amp;
     (event-&gt;state &amp; ~consumed &amp; ALL_ACCELS_MASK) == GDK_CONTROL_MASK)
-  <span class="comment">/*</span><span class="comment"> Control was pressed </span><span class="comment">*/</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  /* Control was pressed */
+</pre></div>
 <p>
 An older interpretation <em class="parameter"><code>consumed_modifiers</code></em> was that it contained
 all modifiers that might affect the translation of the key;
 this allowed accelerators to be stored with irrelevant consumed
 modifiers, by doing:</p>
-<div class="informalexample">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="comment">/*</span><span class="comment"> </span><span class="Todo">XXX</span><span class="comment"> Don't do this </span><span class="Todo">XXX</span><span class="comment"> </span><span class="comment">*/</span>
-<span class="keyword">if</span> (keyval == accel_keyval &amp;&amp;
+<div class="informalexample"><pre class="programlisting">
+/* XXX Don't do this XXX */
+if (keyval == accel_keyval &amp;&amp;
     (event-&gt;state &amp; ~consumed &amp; ALL_ACCELS_MASK) == (accel_mods &amp; ~consumed))
-  <span class="comment">/*</span><span class="comment"> Accelerator was pressed </span><span class="comment">*/</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  /* Accelerator was pressed */
+</pre></div>
 <p>
 However, this did not work if multi-modifier combinations were
 used in the keymap, since, for instance, <code class="literal">&lt;Control&gt;</code>
@@ -632,6 +608,42 @@ Returns whether the Caps Lock modifer is locked.</p>
 </tbody>
 </table></div>
 <p class="since">Since 2.16</p>
+</div>
+<hr>
+<div class="refsect2" title="gdk_keymap_add_virtual_modifiers ()">
+<a name="gdk-keymap-add-virtual-modifiers"></a><h3>gdk_keymap_add_virtual_modifiers ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gdk_keymap_add_virtual_modifiers    (<a class="link" href="gdk-Keyboard-Handling.html#GdkKeymap"><span class="returnvalue">GdkKeymap</span></a> *keymap,
+                                                         <a class="link" href="gdk-Windows.html#GdkModifierType" title="enum GdkModifierType"><span class="returnvalue">GdkModifierType</span></a> *state);</pre>
+<p>
+Adds virtual modifiers (i.e. Super, Hyper and Meta) which correspond
+to the real modifiers (i.e Mod2, Mod3, ...) in <em class="parameter"><code>modifiers</code></em>.
+are set in <em class="parameter"><code>state</code></em> to their non-virtual counterparts (i.e. Mod2,
+Mod3,...) and set the corresponding bits in <em class="parameter"><code>modifiers</code></em>.
+</p>
+<p>
+GDK already does this before delivering key events, but for
+compatibility reasons, it only sets the first virtual modifier
+it finds, whereas this function sets all matching virtual modifiers.
+</p>
+<p>
+This function is useful when matching key events against
+accelerators.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>keymap</code></em> :</span></p></td>
+<td> a <a class="link" href="gdk-Keyboard-Handling.html#GdkKeymap"><span class="type">GdkKeymap</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
+<td>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
 </div>
 <hr>
 <div class="refsect2" title="gdk_keymap_map_virtual_modifiers ()">
@@ -975,6 +987,6 @@ See <a class="link" href="gdk-Keyboard-Handling.html#gdk-keymap-get-caps-lock-st
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.12</div>
+          Generated by GTK-Doc V1.13</div>
 </body>
 </html>

@@ -319,7 +319,10 @@ See also gdk_app_launch_context_set_icon_name()."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="icon" transfer-ownership="none">
+          <parameter name="icon"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GIcon, or %NULL">
             <type name="Gio.Icon" c:type="GIcon*"/>
           </parameter>
         </parameters>
@@ -338,7 +341,10 @@ for the launched application itself."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="icon_name" transfer-ownership="none">
+          <parameter name="icon_name"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="an icon name, or %NULL">
             <type name="utf8" c:type="char*"/>
           </parameter>
         </parameters>
@@ -1174,7 +1180,11 @@ representing the red, green and blue components respectively."
            glib:type-name="GdkColormap"
            glib:get-type="gdk_colormap_get_type"
            glib:type-struct="ColormapClass">
-      <constructor name="new" c:identifier="gdk_colormap_new">
+      <constructor name="new"
+                   c:identifier="gdk_colormap_new"
+                   doc="a private colormap, and all colors in it will be
+allocated for the applications use.
+Creates a new colormap for the given visual.">
         <return-value transfer-ownership="full">
           <type name="Colormap" c:type="GdkColormap*"/>
         </return-value>
@@ -1196,7 +1206,10 @@ gdk_colormap_get_system_for_screen ())">
         </return-value>
       </function>
       <function name="get_system_size"
-                c:identifier="gdk_colormap_get_system_size">
+                c:identifier="gdk_colormap_get_system_size"
+                doc="Returns the size of the system&apos;s default colormap.
+(See the description of struct #GdkColormap for an
+explanation of the size of a colormap.)">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
@@ -1219,12 +1232,20 @@ gdk_colormap_get_system_for_screen ())">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="get_screen" c:identifier="gdk_colormap_get_screen">
+      <method name="get_screen"
+              c:identifier="gdk_colormap_get_screen"
+              doc="Gets the screen for which this colormap was created."
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="Screen" c:type="GdkScreen*"/>
         </return-value>
       </method>
-      <method name="change" c:identifier="gdk_colormap_change">
+      <method name="change"
+              c:identifier="gdk_colormap_change"
+              doc="Changes the value of the first @ncolors in a private colormap
+to match the values in the &lt;structfield&gt;colors&lt;/structfield&gt;
+array in the colormap. This function is obsolete and
+should not be used. See gdk_color_change().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1234,7 +1255,16 @@ gdk_colormap_get_system_for_screen ())">
           </parameter>
         </parameters>
       </method>
-      <method name="alloc_colors" c:identifier="gdk_colormap_alloc_colors">
+      <method name="alloc_colors"
+              c:identifier="gdk_colormap_alloc_colors"
+              doc="values for allocated colors will be filled in.
+(their values can later be changed using gdk_color_change()).
+Writeable colors cannot be shared between applications.
+existing colors if the colors cannot be allocated as requested.
+indicates whether the corresponding color in @colors was
+successfully allocated or not.
+Allocates colors from a colormap.
+allocated.">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
@@ -1279,7 +1309,9 @@ Allocates a single color from a colormap.">
           </parameter>
         </parameters>
       </method>
-      <method name="free_colors" c:identifier="gdk_colormap_free_colors">
+      <method name="free_colors"
+              c:identifier="gdk_colormap_free_colors"
+              doc="Frees previously allocated colors.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1292,7 +1324,17 @@ Allocates a single color from a colormap.">
           </parameter>
         </parameters>
       </method>
-      <method name="query_color" c:identifier="gdk_colormap_query_color">
+      <method name="query_color"
+              c:identifier="gdk_colormap_query_color"
+              doc="Locates the RGB color in @colormap corresponding to the given
+hardware pixel @pixel. @pixel must be a valid pixel in the
+colormap; it&apos;s a programmer error to call this function with a
+pixel which is not in the colormap. Hardware pixels are normally
+obtained from gdk_colormap_alloc_colors(), or from a #GdkImage. (A
+#GdkImage contains image data in hardware format, a #GdkPixbuf
+contains image data in a canonical 24-bit RGB format.)
+This function is rarely useful; it&apos;s used for example to
+implement the eyedropper feature in #GtkColorSelection.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -1393,7 +1435,66 @@ Allocates a single color from a colormap.">
         <type name="uint" c:type="guint"/>
       </field>
       <constructor name="new_for_display"
-                   c:identifier="gdk_cursor_new_for_display">
+                   c:identifier="gdk_cursor_new_for_display"
+                   doc="Creates a new cursor from the set of builtin cursors.
+Some useful ones are:
+&lt;itemizedlist&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;right_ptr.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_RIGHT_PTR (right-facing arrow)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;crosshair.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_CROSSHAIR (crosshair)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;xterm.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_XTERM (I-beam)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;watch.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_WATCH (busy)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;fleur.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_FLEUR (for moving objects)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;hand1.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_HAND1 (a right-pointing hand)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;hand2.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_HAND2 (a left-pointing hand)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;left_side.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_LEFT_SIDE (resize left side)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;right_side.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_RIGHT_SIDE (resize right side)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;top_left_corner.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_TOP_LEFT_CORNER (resize northwest corner)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;top_right_corner.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_TOP_RIGHT_CORNER (resize northeast corner)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;bottom_left_corner.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_BOTTOM_LEFT_CORNER (resize southwest corner)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;bottom_right_corner.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_BOTTOM_RIGHT_CORNER (resize southeast corner)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;top_side.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_TOP_SIDE (resize top side)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;bottom_side.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_BOTTOM_SIDE (resize bottom side)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;sb_h_double_arrow.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_SB_H_DOUBLE_ARROW (move vertical splitter)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+&lt;inlinegraphic format=&quot;PNG&quot; fileref=&quot;sb_v_double_arrow.png&quot;&gt;&lt;/inlinegraphic&gt; #GDK_SB_V_DOUBLE_ARROW (move horizontal splitter)
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;
+#GDK_BLANK_CURSOR (Blank cursor). Since 2.16
+&lt;/para&gt;&lt;/listitem&gt;
+&lt;/itemizedlist&gt;"
+                   version="2.2">
         <return-value transfer-ownership="full">
           <type name="Cursor" c:type="GdkCursor*"/>
         </return-value>
@@ -1421,7 +1522,41 @@ To make the cursor invisible, use %GDK_BLANK_CURSOR.">
         </parameters>
       </constructor>
       <constructor name="new_from_pixmap"
-                   c:identifier="gdk_cursor_new_from_pixmap">
+                   c:identifier="gdk_cursor_new_from_pixmap"
+                   doc="The color does not have to be allocated first.
+The color does not have to be allocated first.
+Creates a new cursor from a given pixmap and mask. Both the pixmap and mask
+must have a depth of 1 (i.e. each pixel has only 2 values - on or off).
+The standard cursor size is 16 by 16 pixels. You can create a bitmap
+from inline data as in the below example.
+&lt;example&gt;&lt;title&gt;Creating a custom cursor&lt;/title&gt;
+&lt;programlisting&gt;
+/&lt;!-- --&gt;* This data is in X bitmap format, and can be created with the &apos;bitmap&apos;
+utility. *&lt;!-- --&gt;/
+&amp;num;define cursor1_width 16
+&amp;num;define cursor1_height 16
+static unsigned char cursor1_bits[] = {
+0x80, 0x01, 0x40, 0x02, 0x20, 0x04, 0x10, 0x08, 0x08, 0x10, 0x04, 0x20,
+0x82, 0x41, 0x41, 0x82, 0x41, 0x82, 0x82, 0x41, 0x04, 0x20, 0x08, 0x10,
+0x10, 0x08, 0x20, 0x04, 0x40, 0x02, 0x80, 0x01};
+static unsigned char cursor1mask_bits[] = {
+0x80, 0x01, 0xc0, 0x03, 0x60, 0x06, 0x30, 0x0c, 0x18, 0x18, 0x8c, 0x31,
+0xc6, 0x63, 0x63, 0xc6, 0x63, 0xc6, 0xc6, 0x63, 0x8c, 0x31, 0x18, 0x18,
+0x30, 0x0c, 0x60, 0x06, 0xc0, 0x03, 0x80, 0x01};
+GdkCursor *cursor;
+GdkPixmap *source, *mask;
+GdkColor fg = { 0, 65535, 0, 0 }; /&lt;!-- --&gt;* Red. *&lt;!-- --&gt;/
+GdkColor bg = { 0, 0, 0, 65535 }; /&lt;!-- --&gt;* Blue. *&lt;!-- --&gt;/
+source = gdk_bitmap_create_from_data (NULL, cursor1_bits,
+cursor1_width, cursor1_height);
+mask = gdk_bitmap_create_from_data (NULL, cursor1mask_bits,
+cursor1_width, cursor1_height);
+cursor = gdk_cursor_new_from_pixmap (source, mask, &amp;amp;fg, &amp;amp;bg, 8, 8);
+g_object_unref (source);
+g_object_unref (mask);
+gdk_window_set_cursor (widget-&gt;window, cursor);
+&lt;/programlisting&gt;
+&lt;/example&gt;">
         <return-value transfer-ownership="full">
           <type name="Cursor" c:type="GdkCursor*"/>
         </return-value>
@@ -1447,7 +1582,19 @@ To make the cursor invisible, use %GDK_BLANK_CURSOR.">
         </parameters>
       </constructor>
       <constructor name="new_from_pixbuf"
-                   c:identifier="gdk_cursor_new_from_pixbuf">
+                   c:identifier="gdk_cursor_new_from_pixbuf"
+                   doc="Creates a new cursor from a pixbuf.
+Not all GDK backends support RGBA cursors. If they are not
+supported, a monochrome approximation will be displayed.
+The functions gdk_display_supports_cursor_alpha() and
+gdk_display_supports_cursor_color() can be used to determine
+whether RGBA cursors are supported;
+gdk_display_get_default_cursor_size() and
+gdk_display_get_maximal_cursor_size() give information about
+cursor sizes.
+On the X backend, support for RGBA cursors requires a
+sufficently new version of the X Render extension."
+                   version="2.4">
         <return-value transfer-ownership="full">
           <type name="Cursor" c:type="GdkCursor*"/>
         </return-value>
@@ -1467,7 +1614,11 @@ To make the cursor invisible, use %GDK_BLANK_CURSOR.">
         </parameters>
       </constructor>
       <constructor name="new_from_name"
-                   c:identifier="gdk_cursor_new_from_name">
+                   c:identifier="gdk_cursor_new_from_name"
+                   doc="Creates a new cursor by looking up @name in the current cursor
+theme.
+the given name"
+                   version="2.8">
         <return-value transfer-ownership="full">
           <type name="Cursor" c:type="GdkCursor*"/>
         </return-value>
@@ -1500,7 +1651,13 @@ if no references remain.">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="get_image" c:identifier="gdk_cursor_get_image">
+      <method name="get_image"
+              c:identifier="gdk_cursor_get_image"
+              doc="Returns a #GdkPixbuf with the image used to display the cursor.
+Note that depending on the capabilities of the windowing system and
+on the cursor, GDK may not be able to obtain the image data. In this
+case, %NULL is returned."
+              version="2.8">
         <return-value transfer-ownership="full">
           <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
         </return-value>
@@ -2165,12 +2322,17 @@ if no references remain.">
            glib:type-name="GdkDevice"
            glib:get-type="gdk_device_get_type"
            glib:type-struct="DeviceClass">
-      <function name="free_history" c:identifier="gdk_device_free_history">
+      <function name="free_history"
+                c:identifier="gdk_device_free_history"
+                doc="Frees an array of #GdkTimeCoord that was returned by gdk_device_get_history().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="events" transfer-ownership="none">
+          <parameter name="events"
+                     direction="inout"
+                     transfer-ownership="none"
+                     doc="an array of #GdkTimeCoord.">
             <type name="TimeCoord" c:type="GdkTimeCoord**"/>
           </parameter>
           <parameter name="n_events" transfer-ownership="none">
@@ -2235,7 +2397,10 @@ display and should not be freed.">
           </parameter>
         </parameters>
       </method>
-      <method name="get_state" c:identifier="gdk_device_get_state">
+      <method name="get_state"
+              c:identifier="gdk_device_get_state"
+              doc="or %NULL.
+Gets the current state of a device.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2251,7 +2416,15 @@ display and should not be freed.">
           </parameter>
         </parameters>
       </method>
-      <method name="get_history" c:identifier="gdk_device_get_history">
+      <method name="get_history"
+              c:identifier="gdk_device_get_history"
+              doc="Obtains the motion history for a device; given a starting and
+ending timestamp, return all events in the motion history for
+the device in the given range of time. Some windowing systems
+do not support motion history, in which case, %FALSE will
+be returned. (This is not distinguishable from the case where
+motion history is supported and no events were found.)
+at least one event was found.">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -2265,15 +2438,23 @@ display and should not be freed.">
           <parameter name="stop" transfer-ownership="none">
             <type name="uint32" c:type="guint32"/>
           </parameter>
-          <parameter name="events" transfer-ownership="none">
-            <type name="TimeCoord" c:type="GdkTimeCoord***"/>
+          <parameter name="events"
+                     direction="out"
+                     transfer-ownership="none"
+                     doc="location to store a newly-allocated array of #GdkTimeCoord, or %NULL">
+            <array length="5" c:type="GdkTimeCoord***">
+              <type name="TimeCoord"/>
+            </array>
           </parameter>
           <parameter name="n_events" direction="out" transfer-ownership="full">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
       </method>
-      <method name="get_axis" c:identifier="gdk_device_get_axis">
+      <method name="get_axis"
+              c:identifier="gdk_device_get_axis"
+              doc="Interprets an array of double as axis values for a given device,
+and locates the value in the array for a given axis use.">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -2346,7 +2527,11 @@ display and should not be freed.">
            glib:type-name="GdkDisplay"
            glib:get-type="gdk_display_get_type"
            glib:type-struct="DisplayClass">
-      <function name="open" c:identifier="gdk_display_open">
+      <function name="open"
+                c:identifier="gdk_display_open"
+                doc="could not be opened.
+Opens a display."
+                version="2.2">
         <return-value transfer-ownership="full">
           <type name="Display" c:type="GdkDisplay*"/>
         </return-value>
@@ -2405,17 +2590,27 @@ otherwise %NULL.">
           <type name="Screen" c:type="GdkScreen*"/>
         </return-value>
       </virtual-method>
-      <method name="get_name" c:identifier="gdk_display_get_name">
+      <method name="get_name"
+              c:identifier="gdk_display_get_name"
+              doc="Gets the name of the display.
+by GDK and should not be modified or freed."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
       </method>
-      <method name="get_n_screens" c:identifier="gdk_display_get_n_screens">
+      <method name="get_n_screens"
+              c:identifier="gdk_display_get_n_screens"
+              doc="Gets the number of screen managed by the @display."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
-      <method name="get_screen" c:identifier="gdk_display_get_screen">
+      <method name="get_screen"
+              c:identifier="gdk_display_get_screen"
+              doc="Returns a screen object for one of the screens of the display."
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="Screen" c:type="GdkScreen*"/>
         </return-value>
@@ -2426,12 +2621,17 @@ otherwise %NULL.">
         </parameters>
       </method>
       <method name="get_default_screen"
-              c:identifier="gdk_display_get_default_screen">
+              c:identifier="gdk_display_get_default_screen"
+              doc="Get the default #GdkScreen for @display."
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="Screen" c:type="GdkScreen*"/>
         </return-value>
       </method>
-      <method name="pointer_ungrab" c:identifier="gdk_display_pointer_ungrab">
+      <method name="pointer_ungrab"
+              c:identifier="gdk_display_pointer_ungrab"
+              doc="Release any pointer grab."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2442,7 +2642,9 @@ otherwise %NULL.">
         </parameters>
       </method>
       <method name="keyboard_ungrab"
-              c:identifier="gdk_display_keyboard_ungrab">
+              c:identifier="gdk_display_keyboard_ungrab"
+              doc="Release any keyboard grab"
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2460,17 +2662,40 @@ otherwise %NULL.">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
-      <method name="beep" c:identifier="gdk_display_beep">
+      <method name="beep"
+              c:identifier="gdk_display_beep"
+              doc="Emits a short beep on @display"
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="sync" c:identifier="gdk_display_sync">
+      <method name="sync"
+              c:identifier="gdk_display_sync"
+              doc="Flushes any requests queued for the windowing system and waits until all
+requests have been handled. This is often used for making sure that the
+display is synchronized with the current state of the program. Calling
+gdk_display_sync() before gdk_error_trap_pop() makes sure that any errors
+generated from earlier requests are handled before the error trap is
+removed.
+This is most useful for X11. On windowing systems where requests are
+handled synchronously, this function will do nothing."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="flush" c:identifier="gdk_display_flush">
+      <method name="flush"
+              c:identifier="gdk_display_flush"
+              doc="Flushes any requests queued for the windowing system; this happens automatically
+when the main loop blocks waiting for new events, but if your application
+is drawing without returning control to the main loop, you may need
+to call this function explicitely. A common case where this function
+needs to be called is when an application is executing drawing commands
+from a thread other than the thread where the main loop is running.
+This is most useful for X11. On windowing systems where requests are
+handled synchronously, this function will do nothing."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2484,7 +2709,11 @@ and cleans up associated resources."
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="list_devices" c:identifier="gdk_display_list_devices">
+      <method name="list_devices"
+              c:identifier="gdk_display_list_devices"
+              doc="Returns the list of available input devices attached to @display.
+The list is statically allocated and should not be freed."
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="GLib.List" c:type="GList*"/>
         </return-value>
@@ -2527,7 +2756,13 @@ queue for @display."
         </parameters>
       </method>
       <method name="add_client_message_filter"
-              c:identifier="gdk_display_add_client_message_filter">
+              c:identifier="gdk_display_add_client_message_filter"
+              doc="This will be checked against the @message_type field
+of the XClientMessage event struct.
+Adds a filter to be called when X ClientMessage events are received.
+See gdk_window_add_filter() if you are interested in filtering other
+types of events."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2604,18 +2839,21 @@ mask for a given display."
           <parameter name="x"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="location to store root window X coordinate of pointer, or %NULL.">
             <type name="int" c:type="gint*"/>
           </parameter>
           <parameter name="y"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="location to store root window Y coordinate of pointer, or %NULL.">
             <type name="int" c:type="gint*"/>
           </parameter>
           <parameter name="mask"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="location to store current modifier mask, or %NULL">
             <type name="ModifierType" c:type="GdkModifierType*"/>
           </parameter>
@@ -2651,7 +2889,19 @@ belongs to another application)."
           </parameter>
         </parameters>
       </method>
-      <method name="warp_pointer" c:identifier="gdk_display_warp_pointer">
+      <method name="warp_pointer"
+              c:identifier="gdk_display_warp_pointer"
+              doc="Warps the pointer of @display to the point @x,@y on
+the screen @screen, unless the pointer is confined
+to a window by a grab, in which case it will be moved
+as far as allowed by the grab. Warping the pointer
+creates events as if the user had moved the mouse
+instantaneously to the destination.
+Note that the pointer should normally be under the
+control of the user. This function was added to cover
+some rare use cases like keyboard navigation support
+for the color picker in the #GtkColorSelectionDialog."
+              version="2.8">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -2687,51 +2937,82 @@ reason to use this facility."
         </parameters>
       </method>
       <method name="supports_cursor_alpha"
-              c:identifier="gdk_display_supports_cursor_alpha">
+              c:identifier="gdk_display_supports_cursor_alpha"
+              doc="Returns %TRUE if cursors can use an 8bit alpha channel
+on @display. Otherwise, cursors are restricted to bilevel
+alpha (i.e. a mask)."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="supports_cursor_color"
-              c:identifier="gdk_display_supports_cursor_color">
+              c:identifier="gdk_display_supports_cursor_color"
+              doc="Returns %TRUE if multicolored cursors are supported
+on @display. Otherwise, cursors have only a forground
+and a background color."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="get_default_cursor_size"
-              c:identifier="gdk_display_get_default_cursor_size">
+              c:identifier="gdk_display_get_default_cursor_size"
+              doc="Returns the default size to use for cursors on @display."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="uint" c:type="guint"/>
         </return-value>
       </method>
       <method name="get_maximal_cursor_size"
-              c:identifier="gdk_display_get_maximal_cursor_size">
+              c:identifier="gdk_display_get_maximal_cursor_size"
+              doc="Gets the maximal size to use for cursors on @display."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="the return location for the maximal cursor width">
             <type name="uint" c:type="guint*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="the return location for the maximal cursor height">
             <type name="uint" c:type="guint*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get_default_group"
-              c:identifier="gdk_display_get_default_group">
+              c:identifier="gdk_display_get_default_group"
+              doc="Returns the default group leader window for all toplevel windows
+on @display. This window is implicitly created by GDK.
+See gdk_window_set_group()."
+              version="2.4">
         <return-value transfer-ownership="full">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
       </method>
       <method name="supports_selection_notification"
-              c:identifier="gdk_display_supports_selection_notification">
+              c:identifier="gdk_display_supports_selection_notification"
+              doc="Returns whether #GdkEventOwnerChange events will be
+sent when the owner of a selection changes.
+be sent."
+              version="2.6">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="request_selection_notification"
-              c:identifier="gdk_display_request_selection_notification">
+              c:identifier="gdk_display_request_selection_notification"
+              doc="ownership change notification is requested
+Request #GdkEventOwnerChange events for ownership changes
+of the selection named by the given atom.
+be sent."
+              version="2.6">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -2768,19 +3049,30 @@ reason to use this facility."
         </parameters>
       </method>
       <method name="supports_shapes"
-              c:identifier="gdk_display_supports_shapes">
+              c:identifier="gdk_display_supports_shapes"
+              doc="Returns %TRUE if gdk_window_shape_combine_mask() can
+be used to create shaped windows on @display."
+              version="2.10">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="supports_input_shapes"
-              c:identifier="gdk_display_supports_input_shapes">
+              c:identifier="gdk_display_supports_input_shapes"
+              doc="Returns %TRUE if gdk_window_input_shape_combine_mask() can
+be used to modify the input shape of windows on @display."
+              version="2.10">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="supports_composite"
-              c:identifier="gdk_display_supports_composite">
+              c:identifier="gdk_display_supports_composite"
+              doc="Returns %TRUE if gdk_window_set_composited() can be used
+to redirect drawing on the window using compositing.
+Currently this only works on X11 with XComposite and
+XDamage extensions available."
+              version="2.12">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -3076,17 +3368,27 @@ Free this list with g_slist_free() when you are done with it."
            glib:type-name="GdkDragContext"
            glib:get-type="gdk_drag_context_get_type"
            glib:type-struct="DragContextClass">
-      <constructor name="new" c:identifier="gdk_drag_context_new">
+      <constructor name="new"
+                   c:identifier="gdk_drag_context_new"
+                   doc="Creates a new #GdkDragContext.">
         <return-value transfer-ownership="full">
           <type name="DragContext" c:type="GdkDragContext*"/>
         </return-value>
       </constructor>
-      <method name="ref" c:identifier="gdk_drag_context_ref">
+      <method name="ref"
+              c:identifier="gdk_drag_context_ref"
+              doc="Deprecated function; use g_object_ref() instead."
+              deprecated="Use g_object_ref() instead."
+              deprecated-version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="unref" c:identifier="gdk_drag_context_unref">
+      <method name="unref"
+              c:identifier="gdk_drag_context_unref"
+              doc="Deprecated function; use g_object_unref() instead."
+              deprecated="Use g_object_unref() instead."
+              deprecated-version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -3733,7 +4035,10 @@ the #GObject variant should be used instead.">
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy_func" transfer-ownership="none">
+          <parameter name="destroy_func"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="function to free @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -3764,12 +4069,14 @@ event, rather than the current size on the X server.">
           <parameter name="width"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="location to store drawable&apos;s width, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
           <parameter name="height"
                      direction="out"
                      transfer-ownership="full"
+                     allow-none="1"
                      doc="location to store drawable&apos;s height, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
@@ -3907,7 +4214,10 @@ of @drawable"
           <type name="Image" c:type="GdkImage*"/>
         </return-value>
         <parameters>
-          <parameter name="image" transfer-ownership="none">
+          <parameter name="image"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GdkDrawable, or %NULL if a new @image should be created.">
             <type name="Image" c:type="GdkImage*"/>
           </parameter>
           <parameter name="src_x" transfer-ownership="none">
@@ -6085,12 +6395,18 @@ If the result is zero, destroys the font.">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="id" c:identifier="gdk_font_id">
+      <method name="id"
+              c:identifier="gdk_font_id"
+              doc="Returns the X Font ID for the given font.">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
-      <method name="equal" c:identifier="gdk_font_equal">
+      <method name="equal"
+              c:identifier="gdk_font_equal"
+              doc="Compares two fonts for equality. Single fonts compare equal
+if they have the same X font ID. This operation does
+not currently work correctly for fontsets.">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -6647,7 +6963,10 @@ Calling this function for a GC without a colormap is an error.">
           </parameter>
         </parameters>
       </method>
-      <method name="get_screen" c:identifier="gdk_gc_get_screen">
+      <method name="get_screen"
+              c:identifier="gdk_gc_get_screen"
+              doc="Gets the #GdkScreen for which @gc was created"
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="Screen" c:type="GdkScreen*"/>
         </return-value>
@@ -8352,7 +8671,13 @@ gdk_image_set_colormap().">
           </parameter>
         </parameters>
       </function>
-      <method name="lookup_key" c:identifier="gdk_keymap_lookup_key">
+      <method name="lookup_key"
+              c:identifier="gdk_keymap_lookup_key"
+              doc="Looks up the keyval mapped to a keycode/group/level triplet.
+If no keyval is bound to @key, returns 0. For normal user input,
+you want to use gdk_keymap_translate_keyboard_state() instead of
+this function, since the effective group/level may not be
+the same as the current keyboard state.">
         <return-value transfer-ownership="none">
           <type name="uint" c:type="guint"/>
         </return-value>
@@ -8363,7 +8688,56 @@ gdk_image_set_colormap().">
         </parameters>
       </method>
       <method name="translate_keyboard_state"
-              c:identifier="gdk_keymap_translate_keyboard_state">
+              c:identifier="gdk_keymap_translate_keyboard_state"
+              doc="determine the group or level, or %NULL
+Translates the contents of a #GdkEventKey into a keyval, effective
+group, and level. Modifiers that affected the translation and
+are thus unavailable for application use are returned in
+groups and levels.  The @effective_group is the group that was
+actually used for the translation; some keys such as Enter are not
+affected by the active keyboard group. The @level is derived from
+keyval, so this function isn&apos;t as useful as you might think.
+&lt;note&gt;&lt;para&gt;
+from @state when comparing this key press to a hot key. For
+instance, on a US keyboard, the &lt;literal&gt;plus&lt;/literal&gt;
+symbol is shifted, so when comparing a key press to a
+&lt;literal&gt;&amp;lt;Control&amp;gt;plus&lt;/literal&gt; accelerator &amp;lt;Shift&amp;gt; should
+be masked out.
+&lt;/para&gt;
+&lt;informalexample&gt;&lt;programlisting&gt;
+&amp;sol;* We want to ignore irrelevant modifiers like ScrollLock *&amp;sol;
+&amp;num;define ALL_ACCELS_MASK (GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK)
+gdk_keymap_translate_keyboard_state (keymap, event-&gt;hardware_keycode,
+event-&gt;state, event-&gt;group,
+&amp;amp;keyval, NULL, NULL, &amp;amp;consumed);
+if (keyval == GDK_PLUS &amp;&amp;
+(event-&gt;state &amp;amp; ~consumed &amp;amp; ALL_ACCELS_MASK) == GDK_CONTROL_MASK)
+&amp;sol;* Control was pressed *&amp;sol;
+&lt;/programlisting&gt;&lt;/informalexample&gt;
+&lt;para&gt;
+An older interpretation @consumed_modifiers was that it contained
+all modifiers that might affect the translation of the key;
+this allowed accelerators to be stored with irrelevant consumed
+modifiers, by doing:&lt;/para&gt;
+&lt;informalexample&gt;&lt;programlisting&gt;
+&amp;sol;* XXX Don&apos;t do this XXX *&amp;sol;
+if (keyval == accel_keyval &amp;&amp;
+(event-&gt;state &amp;amp; ~consumed &amp;amp; ALL_ACCELS_MASK) == (accel_mods &amp;amp; ~consumed))
+&amp;sol;* Accelerator was pressed *&amp;sol;
+&lt;/programlisting&gt;&lt;/informalexample&gt;
+&lt;para&gt;
+However, this did not work if multi-modifier combinations were
+used in the keymap, since, for instance, &lt;literal&gt;&amp;lt;Control&amp;gt;&lt;/literal&gt;
+would be masked out even if only &lt;literal&gt;&amp;lt;Control&amp;gt;&amp;lt;Alt&amp;gt;&lt;/literal&gt;
+was used in the keymap. To support this usage as well as well as
+possible, all &lt;emphasis&gt;single modifier&lt;/emphasis&gt; combinations
+that could affect the key for any combination of modifiers will
+be returned in @consumed_modifiers; multi-modifier combinations
+are returned only when actually found in @state. When you store
+accelerators, you should always store them with consumed modifiers
+removed. Store &lt;literal&gt;&amp;lt;Control&amp;gt;plus&lt;/literal&gt;,
+not &lt;literal&gt;&amp;lt;Control&amp;gt;&amp;lt;Shift&amp;gt;plus&lt;/literal&gt;,
+&lt;/para&gt;&lt;/note&gt;">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -8377,24 +8751,49 @@ gdk_image_set_colormap().">
           <parameter name="group" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="keyval" direction="out" transfer-ownership="full">
+          <parameter name="keyval"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for keyval, or %NULL">
             <type name="uint" c:type="guint*"/>
           </parameter>
           <parameter name="effective_group"
                      direction="out"
-                     transfer-ownership="full">
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for effective group, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="level" direction="out" transfer-ownership="full">
+          <parameter name="level"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for level, or %NULL">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="consumed_modifiers" transfer-ownership="none">
+          <parameter name="consumed_modifiers"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for modifiers that were used to">
             <type name="ModifierType" c:type="GdkModifierType*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get_entries_for_keyval"
-              c:identifier="gdk_keymap_get_entries_for_keyval">
+              c:identifier="gdk_keymap_get_entries_for_keyval"
+              doc="Obtains a list of keycode/group/level combinations that will
+generate @keyval. Groups and levels are two kinds of keyboard mode;
+in general, the level determines whether the top or bottom symbol
+on a key is used, and the group determines whether the left or
+right symbol is used. On US keyboards, the shift key changes the
+keyboard level, and there are no groups. A group switch key might
+convert a keyboard between Hebrew to English modes, for example.
+#GdkEventKey contains a %group field that indicates the active
+keyboard group. The level is computed from the modifier mask.
+The returned array should be freed
+with g_free().">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -8402,16 +8801,28 @@ gdk_image_set_colormap().">
           <parameter name="keyval" transfer-ownership="none">
             <type name="uint" c:type="guint"/>
           </parameter>
-          <parameter name="keys" transfer-ownership="none">
+          <parameter name="keys"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="return location for an array of #GdkKeymapKey">
             <type name="KeymapKey" c:type="GdkKeymapKey**"/>
           </parameter>
-          <parameter name="n_keys" direction="out" transfer-ownership="full">
+          <parameter name="n_keys"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="return location for number of elements in returned array">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get_entries_for_keycode"
-              c:identifier="gdk_keymap_get_entries_for_keycode">
+              c:identifier="gdk_keymap_get_entries_for_keycode"
+              doc="Returns the keyvals bound to @hardware_keycode.
+The Nth #GdkKeymapKey in @keys is bound to the Nth
+keyval in @keyvals. Free the returned arrays with g_free().
+When a keycode is pressed by the user, the keyval from
+this list of entries is selected by considering the effective
+keyboard group and level. See gdk_keymap_translate_keyboard_state().">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -8419,10 +8830,16 @@ gdk_image_set_colormap().">
           <parameter name="hardware_keycode" transfer-ownership="none">
             <type name="uint" c:type="guint"/>
           </parameter>
-          <parameter name="keys" transfer-ownership="none">
+          <parameter name="keys"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="return location for array of #GdkKeymapKey, or %NULL">
             <type name="KeymapKey" c:type="GdkKeymapKey**"/>
           </parameter>
-          <parameter name="keyvals" direction="out" transfer-ownership="full">
+          <parameter name="keyvals"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="return location for array of keyvals, or %NULL">
             <type name="uint" c:type="guint**"/>
           </parameter>
           <parameter name="n_entries"
@@ -8444,13 +8861,45 @@ gdk_image_set_colormap().">
         </return-value>
       </method>
       <method name="get_caps_lock_state"
-              c:identifier="gdk_keymap_get_caps_lock_state">
+              c:identifier="gdk_keymap_get_caps_lock_state"
+              doc="Returns whether the Caps Lock modifer is locked."
+              version="2.16">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
+      <method name="add_virtual_modifiers"
+              c:identifier="gdk_keymap_add_virtual_modifiers"
+              doc="Adds virtual modifiers (i.e. Super, Hyper and Meta) which correspond
+to the real modifiers (i.e Mod2, Mod3, ...) in @modifiers.
+are set in @state to their non-virtual counterparts (i.e. Mod2,
+Mod3,...) and set the corresponding bits in @modifiers.
+GDK already does this before delivering key events, but for
+compatibility reasons, it only sets the first virtual modifier
+it finds, whereas this function sets all matching virtual modifiers.
+This function is useful when matching key events against
+accelerators."
+              version="2.20">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="state" transfer-ownership="none">
+            <type name="ModifierType" c:type="GdkModifierType*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="map_virtual_modifiers"
-              c:identifier="gdk_keymap_map_virtual_modifiers">
+              c:identifier="gdk_keymap_map_virtual_modifiers"
+              doc="Maps the virtual modifiers (i.e. Super, Hyper and Meta) which
+are set in @state to their non-virtual counterparts (i.e. Mod2,
+Mod3,...) and set the corresponding bits in @state.
+This function is useful when matching key events against
+accelerators.
+same non-virtual modifier. Note that %FALSE is also returned
+if a virtual modifier is mapped to a non-virtual modifier that
+was already set in @state."
+              version="2.20">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -9206,7 +9655,10 @@ screen is closed."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="drawable" transfer-ownership="none">
+          <parameter name="drawable"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the new target drawable, or %NULL">
             <type name="Drawable" c:type="GdkDrawable*"/>
           </parameter>
         </parameters>
@@ -9223,7 +9675,10 @@ original GC."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="gc" transfer-ownership="none">
+          <parameter name="gc"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the new GC to use for drawing, or %NULL">
             <type name="GC" c:type="GdkGC*"/>
           </parameter>
         </parameters>
@@ -9263,7 +9718,10 @@ renderered with this renderer."
           <parameter name="part" transfer-ownership="none">
             <type name="Pango.RenderPart" c:type="PangoRenderPart"/>
           </parameter>
-          <parameter name="color" transfer-ownership="none">
+          <parameter name="color"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="the color to use, or %NULL to unset a previously">
             <type name="Color" c:type="GdkColor*"/>
           </parameter>
         </parameters>
@@ -9480,7 +9938,13 @@ colormap.">
           </parameter>
         </parameters>
       </function>
-      <function name="foreign_new" c:identifier="gdk_pixmap_foreign_new">
+      <function name="foreign_new"
+                c:identifier="gdk_pixmap_foreign_new"
+                doc="Wraps a native window for the default display in a #GdkPixmap.
+This may fail if the pixmap has been destroyed.
+For example in the X backend, a native pixmap handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+native pixmap or %NULL if the pixmap has been destroyed.">
         <return-value transfer-ownership="full">
           <type name="Pixmap" c:type="GdkPixmap*"/>
         </return-value>
@@ -9490,7 +9954,12 @@ colormap.">
           </parameter>
         </parameters>
       </function>
-      <function name="lookup" c:identifier="gdk_pixmap_lookup">
+      <function name="lookup"
+                c:identifier="gdk_pixmap_lookup"
+                doc="Looks up the #GdkPixmap that wraps the given native pixmap handle.
+For example in the X backend, a native pixmap handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+or %NULL if there is none.">
         <return-value transfer-ownership="full">
           <type name="Pixmap" c:type="GdkPixmap*"/>
         </return-value>
@@ -9501,7 +9970,13 @@ colormap.">
         </parameters>
       </function>
       <function name="foreign_new_for_display"
-                c:identifier="gdk_pixmap_foreign_new_for_display">
+                c:identifier="gdk_pixmap_foreign_new_for_display"
+                doc="Wraps a native pixmap in a #GdkPixmap.
+This may fail if the pixmap has been destroyed.
+For example in the X backend, a native pixmap handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+native pixmap or %NULL if the pixmap has been destroyed."
+                version="2.2">
         <return-value transfer-ownership="full">
           <type name="Pixmap" c:type="GdkPixmap*"/>
         </return-value>
@@ -9515,7 +9990,12 @@ colormap.">
         </parameters>
       </function>
       <function name="lookup_for_display"
-                c:identifier="gdk_pixmap_lookup_for_display">
+                c:identifier="gdk_pixmap_lookup_for_display"
+                doc="Looks up the #GdkPixmap that wraps the given native pixmap handle.
+For example in the X backend, a native pixmap handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+or %NULL if there is none."
+                version="2.2">
         <return-value transfer-ownership="full">
           <type name="Pixmap" c:type="GdkPixmap*"/>
         </return-value>
@@ -9529,7 +10009,16 @@ colormap.">
         </parameters>
       </function>
       <function name="foreign_new_for_screen"
-                c:identifier="gdk_pixmap_foreign_new_for_screen">
+                c:identifier="gdk_pixmap_foreign_new_for_screen"
+                doc="Wraps a native pixmap in a #GdkPixmap.
+This may fail if the pixmap has been destroyed.
+For example in the X backend, a native pixmap handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+This function is an alternative to gdk_pixmap_foreign_new_for_display()
+for cases where the dimensions of the pixmap are known. For the X
+backend, this avoids a roundtrip to the server.
+native pixmap or %NULL if the pixmap has been destroyed."
+                version="2.10">
         <return-value transfer-ownership="full">
           <type name="Pixmap" c:type="GdkPixmap*"/>
         </return-value>
@@ -9838,7 +10327,10 @@ pass %NULL for @dest.">
           <parameter name="src2" transfer-ownership="none">
             <type name="Rectangle" c:type="GdkRectangle*"/>
           </parameter>
-          <parameter name="dest" transfer-ownership="none">
+          <parameter name="dest"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="return location for the intersection of @src1 and @src2, or %NULL">
             <type name="Rectangle" c:type="GdkRectangle*"/>
           </parameter>
         </parameters>
@@ -10271,13 +10763,18 @@ though it is not always correct.">
         </return-value>
       </function>
       <method name="get_default_colormap"
-              c:identifier="gdk_screen_get_default_colormap">
-        <return-value transfer-ownership="full">
+              c:identifier="gdk_screen_get_default_colormap"
+              doc="Gets the default colormap for @screen."
+              version="2.2">
+        <return-value transfer-ownership="none"
+                      doc="the default #GdkColormap.">
           <type name="Colormap" c:type="GdkColormap*"/>
         </return-value>
       </method>
       <method name="set_default_colormap"
-              c:identifier="gdk_screen_set_default_colormap">
+              c:identifier="gdk_screen_set_default_colormap"
+              doc="Sets the default @colormap for @screen."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10288,14 +10785,21 @@ though it is not always correct.">
         </parameters>
       </method>
       <method name="get_system_colormap"
-              c:identifier="gdk_screen_get_system_colormap">
-        <return-value transfer-ownership="full">
+              c:identifier="gdk_screen_get_system_colormap"
+              doc="Gets the system&apos;s default colormap for @screen"
+              version="2.2">
+        <return-value transfer-ownership="none"
+                      doc="the default colormap for @screen.">
           <type name="Colormap" c:type="GdkColormap*"/>
         </return-value>
       </method>
       <method name="get_system_visual"
-              c:identifier="gdk_screen_get_system_visual">
-        <return-value transfer-ownership="full">
+              c:identifier="gdk_screen_get_system_visual"
+              doc="Get the system&apos;s default visual for @screen.
+This is the visual for the root window of the display.
+The return value should not be freed."
+              version="2.2">
+        <return-value transfer-ownership="none" doc="the system visual">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
       </method>
@@ -10325,57 +10829,117 @@ drawables with any visual."
         </return-value>
       </method>
       <method name="get_rgba_colormap"
-              c:identifier="gdk_screen_get_rgba_colormap">
-        <return-value transfer-ownership="full">
+              c:identifier="gdk_screen_get_rgba_colormap"
+              doc="Gets a colormap to use for creating windows or pixmaps with an
+alpha channel. The windowing system on which GTK+ is running
+may not support this capability, in which case %NULL will
+be returned. Even if a non-%NULL value is returned, its
+possible that the window&apos;s alpha channel won&apos;t be honored
+X an appropriate windowing manager and compositing manager
+must be running to provide appropriate display.
+This functionality is not implemented in the Windows backend.
+For setting an overall opacity for a top-level window, see
+gdk_window_set_opacity().
+an alpha channel or %NULL if the capability is not available."
+              version="2.8">
+        <return-value transfer-ownership="none"
+                      doc="a colormap to use for windows with">
           <type name="Colormap" c:type="GdkColormap*"/>
         </return-value>
       </method>
-      <method name="get_rgba_visual" c:identifier="gdk_screen_get_rgba_visual">
-        <return-value transfer-ownership="full">
+      <method name="get_rgba_visual"
+              c:identifier="gdk_screen_get_rgba_visual"
+              doc="Gets a visual to use for creating windows or pixmaps with an
+alpha channel. See the docs for gdk_screen_get_rgba_colormap()
+for caveats.
+alpha channel or %NULL if the capability is not available."
+              version="2.8">
+        <return-value transfer-ownership="none"
+                      doc="a visual to use for windows with an">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
       </method>
-      <method name="is_composited" c:identifier="gdk_screen_is_composited">
+      <method name="is_composited"
+              c:identifier="gdk_screen_is_composited"
+              doc="Returns whether windows with an RGBA visual can reasonably
+be expected to have their alpha channel drawn correctly on
+the screen.
+On X11 this function returns whether a compositing manager is
+compositing @screen.
+expected to have their alpha channels drawn correctly on the screen."
+              version="2.10">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
-      <method name="get_root_window" c:identifier="gdk_screen_get_root_window">
-        <return-value transfer-ownership="full">
+      <method name="get_root_window"
+              c:identifier="gdk_screen_get_root_window"
+              doc="Gets the root window of @screen."
+              version="2.2">
+        <return-value transfer-ownership="none" doc="the root window">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
       </method>
-      <method name="get_display" c:identifier="gdk_screen_get_display">
+      <method name="get_display"
+              c:identifier="gdk_screen_get_display"
+              doc="Gets the display to which the @screen belongs."
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="Display" c:type="GdkDisplay*"/>
         </return-value>
       </method>
-      <method name="get_number" c:identifier="gdk_screen_get_number">
+      <method name="get_number"
+              c:identifier="gdk_screen_get_number"
+              doc="Gets the index of @screen among the screens in the display
+to which it belongs. (See gdk_screen_get_display())"
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
-      <method name="get_width" c:identifier="gdk_screen_get_width">
+      <method name="get_width"
+              c:identifier="gdk_screen_get_width"
+              doc="Gets the width of @screen in pixels"
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
-      <method name="get_height" c:identifier="gdk_screen_get_height">
+      <method name="get_height"
+              c:identifier="gdk_screen_get_height"
+              doc="Gets the height of @screen in pixels"
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
-      <method name="get_width_mm" c:identifier="gdk_screen_get_width_mm">
+      <method name="get_width_mm"
+              c:identifier="gdk_screen_get_width_mm"
+              doc="Gets the width of @screen in millimeters.
+Note that on some X servers this value will not be correct."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
-      <method name="get_height_mm" c:identifier="gdk_screen_get_height_mm">
+      <method name="get_height_mm"
+              c:identifier="gdk_screen_get_height_mm"
+              doc="Returns the height of @screen in millimeters.
+Note that on some X servers this value will not be correct."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
-      <method name="list_visuals" c:identifier="gdk_screen_list_visuals">
+      <method name="list_visuals"
+              c:identifier="gdk_screen_list_visuals"
+              doc="Lists the available visuals for the specified @screen.
+A visual describes a hardware image data format.
+For example, a visual might support 24-bit color, or 8-bit color,
+and might expect pixels to be in a certain format.
+Call g_list_free() on the return value when you&apos;re finished with it.
+contents"
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="GLib.List" c:type="GList*"/>
         </return-value>
@@ -10393,24 +10957,43 @@ its elements need not be freed."
         </return-value>
       </method>
       <method name="make_display_name"
-              c:identifier="gdk_screen_make_display_name">
+              c:identifier="gdk_screen_make_display_name"
+              doc="Determines the name to pass to gdk_display_open() to get
+a #GdkDisplay with this screen as the default screen."
+              version="2.2">
         <return-value transfer-ownership="full">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
       </method>
-      <method name="get_n_monitors" c:identifier="gdk_screen_get_n_monitors">
+      <method name="get_n_monitors"
+              c:identifier="gdk_screen_get_n_monitors"
+              doc="Returns the number of monitors which @screen consists of."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
       <method name="get_primary_monitor"
-              c:identifier="gdk_screen_get_primary_monitor">
+              c:identifier="gdk_screen_get_primary_monitor"
+              doc="Gets the primary monitor for @screen.  The primary monitor
+is considered the monitor where the &apos;main desktop&apos; lives.
+While normal application windows typically allow the window
+manager to place the windows, specialized desktop applications
+such as panels should place themselves on the primary monitor.
+If no primary monitor is configured by the user, the return value
+will be 0, defaulting to the first monitor."
+              version="2.20">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </method>
       <method name="get_monitor_geometry"
-              c:identifier="gdk_screen_get_monitor_geometry">
+              c:identifier="gdk_screen_get_monitor_geometry"
+              doc="Retrieves the #GdkRectangle representing the size and position of
+the individual monitor within the entire screen area.
+Note that the size of the entire screen area can be retrieved via
+gdk_screen_get_width() and gdk_screen_get_height()."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10457,7 +11040,9 @@ bounding rectangle of @window resides."
         </parameters>
       </method>
       <method name="get_monitor_width_mm"
-              c:identifier="gdk_screen_get_monitor_width_mm">
+              c:identifier="gdk_screen_get_monitor_width_mm"
+              doc="Gets the width in millimeters of the specified monitor, if available."
+              version="2.14">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
@@ -10468,7 +11053,9 @@ bounding rectangle of @window resides."
         </parameters>
       </method>
       <method name="get_monitor_height_mm"
-              c:identifier="gdk_screen_get_monitor_height_mm">
+              c:identifier="gdk_screen_get_monitor_height_mm"
+              doc="Gets the height in millimeters of the specified monitor."
+              version="2.14">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
@@ -10479,7 +11066,12 @@ bounding rectangle of @window resides."
         </parameters>
       </method>
       <method name="get_monitor_plug_name"
-              c:identifier="gdk_screen_get_monitor_plug_name">
+              c:identifier="gdk_screen_get_monitor_plug_name"
+              doc="Returns the output name of the specified monitor.
+Usually something like VGA, DVI, or TV, not the actual
+product name of the display device.
+or %NULL if the name cannot be determined"
+              version="2.14">
         <return-value transfer-ownership="full">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -10490,7 +11082,16 @@ bounding rectangle of @window resides."
         </parameters>
       </method>
       <method name="broadcast_client_message"
-              c:identifier="gdk_screen_broadcast_client_message">
+              c:identifier="gdk_screen_broadcast_client_message"
+              doc="On X11, sends an X ClientMessage event to all toplevel windows on
+Toplevel windows are determined by checking for the WM_STATE property,
+as described in the Inter-Client Communication Conventions Manual (ICCCM).
+If no windows are found with the WM_STATE property set, the message is
+sent to all children of the root window.
+On Windows, broadcasts a message registered with the name
+GDK_WIN32_CLIENT_MESSAGE to all top-level windows. The amount of
+data is limited to one long, i.e. four bytes."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10500,7 +11101,14 @@ bounding rectangle of @window resides."
           </parameter>
         </parameters>
       </method>
-      <method name="get_setting" c:identifier="gdk_screen_get_setting">
+      <method name="get_setting"
+              c:identifier="gdk_screen_get_setting"
+              doc="Retrieves a desktop-wide setting such as double-click time
+for the #GdkScreen @screen.
+FIXME needs a list of valid settings here, or a link to
+more information.
+in @value, %FALSE otherwise."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -10526,7 +11134,10 @@ have already been created."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="options" transfer-ownership="none">
+          <parameter name="options"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #cairo_font_options_t, or %NULL to unset any">
             <type name="cairo.FontOptions" c:type="cairo_font_options_t*"/>
           </parameter>
         </parameters>
@@ -11434,33 +12045,47 @@ height of a screen changes."
            glib:type-name="GdkVisual"
            glib:get-type="gdk_visual_get_type"
            glib:type-struct="VisualClass">
-      <function name="get_best_depth" c:identifier="gdk_visual_get_best_depth">
+      <function name="get_best_depth"
+                c:identifier="gdk_visual_get_best_depth"
+                doc="Get the best available depth for the default GDK screen.  &quot;Best&quot;
+means &quot;largest,&quot; i.e. 32 preferred over 24 preferred over 8 bits
+per pixel.">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </function>
-      <function name="get_best_type" c:identifier="gdk_visual_get_best_type">
+      <function name="get_best_type"
+                c:identifier="gdk_visual_get_best_type"
+                doc="Return the best available visual type for the default GDK screen.">
         <return-value transfer-ownership="full">
           <type name="VisualType" c:type="GdkVisualType"/>
         </return-value>
       </function>
       <function name="get_system"
                 c:identifier="gdk_visual_get_system"
-                doc="Get the system&apos;sdefault visual for the default GDK screen.
+                doc="Get the system&apos;s default visual for the default GDK screen.
 This is the visual for the root window of the display.
 The return value should not be freed.">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none" doc="system visual">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
       </function>
-      <function name="get_best" c:identifier="gdk_visual_get_best">
-        <return-value transfer-ownership="full">
+      <function name="get_best"
+                c:identifier="gdk_visual_get_best"
+                doc="Get the visual with the most available colors for the default
+GDK screen. The return value should not be freed.">
+        <return-value transfer-ownership="none" doc="best visual">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
       </function>
       <function name="get_best_with_depth"
-                c:identifier="gdk_visual_get_best_with_depth">
-        <return-value transfer-ownership="full">
+                c:identifier="gdk_visual_get_best_with_depth"
+                doc="Get the best visual with depth @depth for the default GDK screen.
+Color visuals and visuals with mutable colormaps are preferred
+over grayscale or fixed-colormap visuals. The return value should not
+be freed. %NULL may be returned if no visual supports @depth.">
+        <return-value transfer-ownership="none"
+                      doc="best visual for the given depth">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
         <parameters>
@@ -11470,8 +12095,12 @@ The return value should not be freed.">
         </parameters>
       </function>
       <function name="get_best_with_type"
-                c:identifier="gdk_visual_get_best_with_type">
-        <return-value transfer-ownership="full">
+                c:identifier="gdk_visual_get_best_with_type"
+                doc="Get the best visual of the given @visual_type for the default GDK screen.
+Visuals with higher color depths are considered better. The return value
+should not be freed. %NULL may be returned if no visual has type">
+        <return-value transfer-ownership="none"
+                      doc="best visual of the given type">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
         <parameters>
@@ -11481,8 +12110,10 @@ The return value should not be freed.">
         </parameters>
       </function>
       <function name="get_best_with_both"
-                c:identifier="gdk_visual_get_best_with_both">
-        <return-value transfer-ownership="full">
+                c:identifier="gdk_visual_get_best_with_both"
+                doc="Combines gdk_visual_get_best_with_depth() and gdk_visual_get_best_with_type().">
+        <return-value transfer-ownership="none"
+                      doc="best visual with both @depth and">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
         <parameters>
@@ -11494,8 +12125,12 @@ The return value should not be freed.">
           </parameter>
         </parameters>
       </function>
-      <method name="get_screen" c:identifier="gdk_visual_get_screen">
-        <return-value transfer-ownership="full">
+      <method name="get_screen"
+              c:identifier="gdk_visual_get_screen"
+              doc="Gets the screen to which this visual belongs"
+              version="2.2">
+        <return-value transfer-ownership="none"
+                      doc="the screen to which this visual belongs.">
           <type name="Screen" c:type="GdkScreen*"/>
         </return-value>
       </method>
@@ -11746,7 +12381,12 @@ native window or %NULL if the window has been destroyed.">
           </parameter>
         </parameters>
       </function>
-      <function name="lookup" c:identifier="gdk_window_lookup">
+      <function name="lookup"
+                c:identifier="gdk_window_lookup"
+                doc="Looks up the #GdkWindow that wraps the given native window handle.
+For example in the X backend, a native window handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+or %NULL if there is none.">
         <return-value transfer-ownership="full">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
@@ -11757,7 +12397,16 @@ native window or %NULL if the window has been destroyed.">
         </parameters>
       </function>
       <function name="foreign_new_for_display"
-                c:identifier="gdk_window_foreign_new_for_display">
+                c:identifier="gdk_window_foreign_new_for_display"
+                doc="Wraps a native window in a #GdkWindow.
+This may fail if the window has been destroyed. If the window
+was already known to GDK, a new reference to the existing
+#GdkWindow is returned.
+For example in the X backend, a native window handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+%NULL if the window has been destroyed. The wrapper will be
+newly created, if one doesn&apos;t exist already."
+                version="2.2">
         <return-value transfer-ownership="full">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
@@ -11771,7 +12420,12 @@ native window or %NULL if the window has been destroyed.">
         </parameters>
       </function>
       <function name="lookup_for_display"
-                c:identifier="gdk_window_lookup_for_display">
+                c:identifier="gdk_window_lookup_for_display"
+                doc="Looks up the #GdkWindow that wraps the given native window handle.
+For example in the X backend, a native window handle is an Xlib
+&lt;type&gt;XID&lt;/type&gt;.
+or %NULL if there is none."
+                version="2.2">
         <return-value transfer-ownership="full">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
@@ -12113,7 +12767,10 @@ requests the restack, does not guarantee it."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="sibling" transfer-ownership="none">
+          <parameter name="sibling"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GdkWindow that is a sibling of @window, or %NULL">
             <type name="Window" c:type="GdkWindow*"/>
           </parameter>
           <parameter name="above" transfer-ownership="none">
@@ -12121,7 +12778,10 @@ requests the restack, does not guarantee it."
           </parameter>
         </parameters>
       </method>
-      <method name="focus" c:identifier="gdk_window_focus">
+      <method name="focus"
+              c:identifier="gdk_window_focus"
+              doc="Sets keyboard focus to @window. In most cases, gtk_window_present()
+should be used on a #GtkWindow, rather than calling this function.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12150,7 +12810,14 @@ user data is a #GtkWidget, and forward the event to that widget.">
         </parameters>
       </method>
       <method name="set_override_redirect"
-              c:identifier="gdk_window_set_override_redirect">
+              c:identifier="gdk_window_set_override_redirect"
+              doc="An override redirect window is not under the control of the window manager.
+This means it won&apos;t have a titlebar, won&apos;t be minimizable, etc. - it will
+be entirely under the control of the application. The window manager
+can&apos;t see the override redirect window at all.
+Override redirect should only be used for short-lived temporary
+windows, such as popup menus. #GtkMenu uses an override redirect
+window in its implementation, for example.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12161,7 +12828,12 @@ user data is a #GtkWidget, and forward the event to that widget.">
         </parameters>
       </method>
       <method name="set_accept_focus"
-              c:identifier="gdk_window_set_accept_focus">
+              c:identifier="gdk_window_set_accept_focus"
+              doc="Setting @accept_focus to %FALSE hints the desktop environment that the
+window doesn&apos;t want to receive input focus.
+On X, it is the responsibility of the window manager to interpret this
+hint. ICCCM-compliant window manager usually respect it."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12172,7 +12844,15 @@ user data is a #GtkWidget, and forward the event to that widget.">
         </parameters>
       </method>
       <method name="set_focus_on_map"
-              c:identifier="gdk_window_set_focus_on_map">
+              c:identifier="gdk_window_set_focus_on_map"
+              doc="Setting @focus_on_map to %FALSE hints the desktop environment that the
+window doesn&apos;t want to receive input focus when it is mapped.
+focus_on_map should be turned off for windows that aren&apos;t triggered
+interactively (such as popups from network activity).
+On X, it is the responsibility of the window manager to interpret
+this hint. Window managers following the freedesktop.org window
+manager extension specification should respect it."
+              version="2.6">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12408,7 +13088,10 @@ function does nothing."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="mask" transfer-ownership="none">
+          <parameter name="mask"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="shape mask, or %NULL">
             <type name="Bitmap" c:type="GdkBitmap*"/>
           </parameter>
           <parameter name="x" transfer-ownership="none">
@@ -12516,7 +13199,13 @@ windowing system. Don&apos;t worry about it unless you have to.">
           </parameter>
         </parameters>
       </method>
-      <method name="set_hints" c:identifier="gdk_window_set_hints">
+      <method name="set_hints"
+              c:identifier="gdk_window_set_hints"
+              doc="This function is broken and useless and you should ignore it.
+If using GTK+, use functions such as gtk_window_resize(), gtk_window_set_size_request(),
+gtk_window_move(), gtk_window_parse_geometry(), and gtk_window_set_geometry_hints(),
+depending on what you&apos;re trying to do.
+If using GDK directly, use gdk_window_set_geometry_hints().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12544,7 +13233,13 @@ windowing system. Don&apos;t worry about it unless you have to.">
           </parameter>
         </parameters>
       </method>
-      <method name="set_type_hint" c:identifier="gdk_window_set_type_hint">
+      <method name="set_type_hint"
+              c:identifier="gdk_window_set_type_hint"
+              doc="The application can use this call to provide a hint to the window
+manager about the functionality of a window. The window manager
+can use this information when determining the decoration and behaviour
+of the window.
+The hint must be set before the window is mapped.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12554,12 +13249,22 @@ windowing system. Don&apos;t worry about it unless you have to.">
           </parameter>
         </parameters>
       </method>
-      <method name="get_type_hint" c:identifier="gdk_window_get_type_hint">
+      <method name="get_type_hint"
+              c:identifier="gdk_window_get_type_hint"
+              doc="This function returns the type hint set for a window."
+              version="2.10">
         <return-value transfer-ownership="full">
           <type name="WindowTypeHint" c:type="GdkWindowTypeHint"/>
         </return-value>
       </method>
-      <method name="set_modal_hint" c:identifier="gdk_window_set_modal_hint">
+      <method name="set_modal_hint"
+              c:identifier="gdk_window_set_modal_hint"
+              doc="The application can use this hint to tell the window manager
+that a certain window has modal behaviour. The window manager
+can use this information to handle modal windows in a special
+way.
+You should only use this on windows for which you have
+previously called gdk_window_set_transient_for()">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12570,7 +13275,14 @@ windowing system. Don&apos;t worry about it unless you have to.">
         </parameters>
       </method>
       <method name="set_skip_taskbar_hint"
-              c:identifier="gdk_window_set_skip_taskbar_hint">
+              c:identifier="gdk_window_set_skip_taskbar_hint"
+              doc="Toggles whether a window should appear in a task list or window
+list. If a window&apos;s semantic type as specified with
+gdk_window_set_type_hint() already fully describes the window, this
+function should &lt;emphasis&gt;not&lt;/emphasis&gt; be called in addition,
+instead you should allow the window to be treated according to
+standard policy for its semantic type."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12581,7 +13293,16 @@ windowing system. Don&apos;t worry about it unless you have to.">
         </parameters>
       </method>
       <method name="set_skip_pager_hint"
-              c:identifier="gdk_window_set_skip_pager_hint">
+              c:identifier="gdk_window_set_skip_pager_hint"
+              doc="Toggles whether a window should appear in a pager (workspace
+switcher, or other desktop utility program that displays a small
+thumbnail representation of the windows on the desktop). If a
+window&apos;s semantic type as specified with gdk_window_set_type_hint()
+already fully describes the window, this function should
+&lt;emphasis&gt;not&lt;/emphasis&gt; be called in addition, instead you should
+allow the window to be treated according to standard policy for
+its semantic type."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12592,7 +13313,10 @@ windowing system. Don&apos;t worry about it unless you have to.">
         </parameters>
       </method>
       <method name="set_urgency_hint"
-              c:identifier="gdk_window_set_urgency_hint">
+              c:identifier="gdk_window_set_urgency_hint"
+              doc="Toggles whether a window needs the user&apos;s
+urgent attention."
+              version="2.8">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12603,7 +13327,25 @@ windowing system. Don&apos;t worry about it unless you have to.">
         </parameters>
       </method>
       <method name="set_geometry_hints"
-              c:identifier="gdk_window_set_geometry_hints">
+              c:identifier="gdk_window_set_geometry_hints"
+              doc="Sets the geometry hints for @window. Hints flagged in @geom_mask
+are set, hints not flagged in @geom_mask are unset.
+To unset all hints, use a @geom_mask of 0 and a @geometry of %NULL.
+This function provides hints to the windowing system about
+acceptable sizes for a toplevel window. The purpose of
+this is to constrain user resizing, but the windowing system
+will typically  (but is not required to) also constrain the
+current size of the window to the provided values and
+constrain programatic resizing via gdk_window_resize() or
+gdk_window_move_resize().
+Note that on X11, this effect has no effect on windows
+of type %GDK_WINDOW_TEMP or windows where override redirect
+has been turned on via gdk_window_set_override_redirect()
+since these windows are not resizable by the user.
+Since you can&apos;t count on the windowing system doing the
+constraints for programmatic resizes, you should generally
+call gdk_window_constrain_size() yourself to determine
+appropriate sizes.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12709,7 +13451,12 @@ will be called automatically before sending the expose event."
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="set_title" c:identifier="gdk_window_set_title">
+      <method name="set_title"
+              c:identifier="gdk_window_set_title"
+              doc="Sets the title of a toplevel window, to be displayed in the titlebar.
+If you haven&apos;t explicitly set the icon name for the window
+(using gdk_window_set_icon_name()), the icon name will be set to
+user-readable strings in GDK/GTK+). @title may not be %NULL.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12719,7 +13466,19 @@ will be called automatically before sending the expose event."
           </parameter>
         </parameters>
       </method>
-      <method name="set_role" c:identifier="gdk_window_set_role">
+      <method name="set_role"
+              c:identifier="gdk_window_set_role"
+              doc="When using GTK+, typically you should use gtk_window_set_role() instead
+of this low-level function.
+The window manager and session manager use a window&apos;s role to
+distinguish it from other kinds of window in the same application.
+When an application is restarted after being saved in a previous
+session, all windows with the same title and role are treated as
+interchangeable.  So if you have two windows with the same title
+that should be distinguished for session management purposes, you
+should set the role on those windows. It doesn&apos;t matter what string
+you use for the role, as long as you have a different role for each
+non-interchangeable kind of window.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12729,7 +13488,11 @@ will be called automatically before sending the expose event."
           </parameter>
         </parameters>
       </method>
-      <method name="set_startup_id" c:identifier="gdk_window_set_startup_id">
+      <method name="set_startup_id"
+              c:identifier="gdk_window_set_startup_id"
+              doc="When using GTK+, typically you should use gtk_window_set_startup_id()
+instead of this low-level function."
+              version="2.12">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12740,7 +13503,13 @@ will be called automatically before sending the expose event."
         </parameters>
       </method>
       <method name="set_transient_for"
-              c:identifier="gdk_window_set_transient_for">
+              c:identifier="gdk_window_set_transient_for"
+              doc="Indicates to the window manager that @window is a transient dialog
+associated with the application window @parent. This allows the
+window manager to do things like center @window on @parent and
+keep @window above @parent.
+See gtk_window_set_transient_for() if you&apos;re using #GtkWindow or
+#GtkDialog.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12789,7 +13558,10 @@ gdk_window_clear().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="pixmap" transfer-ownership="none">
+          <parameter name="pixmap"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="a #GdkPixmap, or %NULL">
             <type name="Pixmap" c:type="GdkPixmap*"/>
           </parameter>
           <parameter name="parent_relative" transfer-ownership="none">
@@ -12964,7 +13736,10 @@ It&apos;s deprecated for that reason.">
           </parameter>
         </parameters>
       </method>
-      <method name="get_root_origin" c:identifier="gdk_window_get_root_origin">
+      <method name="get_root_origin"
+              c:identifier="gdk_window_get_root_origin"
+              doc="Obtains the top-left corner of the window manager frame in root
+window coordinates.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -12978,7 +13753,11 @@ It&apos;s deprecated for that reason.">
         </parameters>
       </method>
       <method name="get_frame_extents"
-              c:identifier="gdk_window_get_frame_extents">
+              c:identifier="gdk_window_get_frame_extents"
+              doc="Obtains the bounding box of the window, including window manager
+titlebar/borders if any. The frame position is given in root window
+coordinates. To get the position of the window itself (rather than
+the frame) in root window coordinates, use gdk_window_get_origin().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13090,7 +13869,15 @@ is the bitwise OR of values from the #GdkEventMask enumeration.">
           </parameter>
         </parameters>
       </method>
-      <method name="set_icon_list" c:identifier="gdk_window_set_icon_list">
+      <method name="set_icon_list"
+              c:identifier="gdk_window_set_icon_list"
+              doc="Sets a list of icons for the window. One of these will be used
+to represent the window when it has been iconified. The icon is
+usually shown in an icon box or some sort of task bar. Which icon
+size is shown depends on the window manager. The window manager
+can scale the icon  but setting several size icons can give better
+image quality since the window manager may only need to scale the
+icon by a small amount or not at all.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13100,7 +13887,13 @@ is the bitwise OR of values from the #GdkEventMask enumeration.">
           </parameter>
         </parameters>
       </method>
-      <method name="set_icon" c:identifier="gdk_window_set_icon">
+      <method name="set_icon"
+              c:identifier="gdk_window_set_icon"
+              doc="Sets the icon of @window as a pixmap or window. If using GTK+, investigate
+gtk_window_set_default_icon_list() first, and then gtk_window_set_icon_list()
+and gtk_window_set_icon(). If those don&apos;t meet your needs, look at
+gdk_window_set_icon_list(). Only if all those are too high-level do you
+want to fall back to gdk_window_set_icon().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13111,12 +13904,23 @@ is the bitwise OR of values from the #GdkEventMask enumeration.">
           <parameter name="pixmap" transfer-ownership="none">
             <type name="Pixmap" c:type="GdkPixmap*"/>
           </parameter>
-          <parameter name="mask" transfer-ownership="none">
+          <parameter name="mask"
+                     transfer-ownership="none"
+                     doc="to use as mask for @pixmap, or %NULL to have none">
             <type name="Bitmap" c:type="GdkBitmap*"/>
           </parameter>
         </parameters>
       </method>
-      <method name="set_icon_name" c:identifier="gdk_window_set_icon_name">
+      <method name="set_icon_name"
+              c:identifier="gdk_window_set_icon_name"
+              doc="Windows may have a name used while minimized, distinct from the
+name they display in their titlebar. Most of the time this is a bad
+idea from a user interface standpoint. But you can set such a name
+with this function, if you like.
+After calling this with a non-%NULL @name, calls to gdk_window_set_title()
+will not update the icon title.
+Using %NULL for @name unsets the icon title; further calls to
+gdk_window_set_title() will again update the icon title as well.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13126,7 +13930,17 @@ is the bitwise OR of values from the #GdkEventMask enumeration.">
           </parameter>
         </parameters>
       </method>
-      <method name="set_group" c:identifier="gdk_window_set_group">
+      <method name="set_group"
+              c:identifier="gdk_window_set_group"
+              doc="Sets the group leader window for @window. By default,
+GDK sets the group leader for all toplevel windows
+to a global window implicitly created by GDK. With this function
+you can override this default.
+The group leader window allows the window manager to distinguish
+all windows that belong to a single application. It may for example
+allow users to minimize/unminimize all windows belonging to an
+application at once. You should only set a non-default group window
+if your application pretends to be multiple applications.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13136,12 +13950,28 @@ is the bitwise OR of values from the #GdkEventMask enumeration.">
           </parameter>
         </parameters>
       </method>
-      <method name="get_group" c:identifier="gdk_window_get_group">
+      <method name="get_group"
+              c:identifier="gdk_window_get_group"
+              doc="Returns the group leader window for @window. See gdk_window_set_group()."
+              version="2.4">
         <return-value transfer-ownership="full">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
       </method>
-      <method name="set_decorations" c:identifier="gdk_window_set_decorations">
+      <method name="set_decorations"
+              c:identifier="gdk_window_set_decorations"
+              doc="&quot;Decorations&quot; are the features the window manager adds to a toplevel #GdkWindow.
+This function sets the traditional Motif window manager hints that tell the
+window manager which decorations you would like your window to have.
+Usually you should use gtk_window_set_decorated() on a #GtkWindow instead of
+using the GDK function directly.
+The @decorations argument is the logical OR of the fields in
+the #GdkWMDecoration enumeration. If #GDK_DECOR_ALL is included in the
+mask, the other bits indicate which decorations should be turned off.
+If #GDK_DECOR_ALL is not included, then the other bits indicate
+which decorations should be turned on.
+Most window managers honor a decorations hint of 0 to disable all decorations,
+but very few honor all possible combinations of bits.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13151,7 +13981,9 @@ is the bitwise OR of values from the #GdkEventMask enumeration.">
           </parameter>
         </parameters>
       </method>
-      <method name="get_decorations" c:identifier="gdk_window_get_decorations">
+      <method name="get_decorations"
+              c:identifier="gdk_window_get_decorations"
+              doc="Returns the decorations set on the GdkWindow with #gdk_window_set_decorations">
         <return-value transfer-ownership="none">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
@@ -13161,7 +13993,19 @@ is the bitwise OR of values from the #GdkEventMask enumeration.">
           </parameter>
         </parameters>
       </method>
-      <method name="set_functions" c:identifier="gdk_window_set_functions">
+      <method name="set_functions"
+              c:identifier="gdk_window_set_functions"
+              doc="Sets hints about the window management functions to make available
+via buttons on the window frame.
+On the X backend, this function sets the traditional Motif window
+manager hint for this purpose. However, few window managers do
+anything reliable or interesting with this hint. Many ignore it
+entirely.
+The @functions argument is the logical OR of values from the
+#GdkWMFunction enumeration. If the bitmask includes #GDK_FUNC_ALL,
+then the other bits indicate which functions to disable; if
+it doesn&apos;t include #GDK_FUNC_ALL, it indicates which functions to
+enable.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13181,47 +14025,124 @@ the display just as gdk_display_beep()."
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="iconify" c:identifier="gdk_window_iconify">
+      <method name="iconify"
+              c:identifier="gdk_window_iconify"
+              doc="Asks to iconify (minimize) @window. The window manager may choose
+to ignore the request, but normally will honor it. Using
+gtk_window_iconify() is preferred, if you have a #GtkWindow widget.
+This function only makes sense when @window is a toplevel window.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="deiconify" c:identifier="gdk_window_deiconify">
+      <method name="deiconify"
+              c:identifier="gdk_window_deiconify"
+              doc="Attempt to deiconify (unminimize) @window. On X11 the window manager may
+choose to ignore the request to deiconify. When using GTK+,
+use gtk_window_deiconify() instead of the #GdkWindow variant. Or better yet,
+you probably want to use gtk_window_present(), which raises the window, focuses it,
+unminimizes it, and puts it on the current desktop.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="stick" c:identifier="gdk_window_stick">
+      <method name="stick"
+              c:identifier="gdk_window_stick"
+              doc="&quot;Pins&quot; a window such that it&apos;s on all workspaces and does not scroll
+with viewports, for window managers that have scrollable viewports.
+(When using #GtkWindow, gtk_window_stick() may be more useful.)
+On the X11 platform, this function depends on window manager
+support, so may have no effect with many window managers. However,
+GDK will do the best it can to convince the window manager to stick
+the window. For window managers that don&apos;t support this operation,
+there&apos;s nothing you can do to force it to happen.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="unstick" c:identifier="gdk_window_unstick">
+      <method name="unstick"
+              c:identifier="gdk_window_unstick"
+              doc="Reverse operation for gdk_window_stick(); see gdk_window_stick(),
+and gtk_window_unstick().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="maximize" c:identifier="gdk_window_maximize">
+      <method name="maximize"
+              c:identifier="gdk_window_maximize"
+              doc="Maximizes the window. If the window was already maximized, then
+this function does nothing.
+On X11, asks the window manager to maximize @window, if the window
+manager supports this operation. Not all window managers support
+this, and some deliberately ignore it or don&apos;t have a concept of
+&quot;maximized&quot;; so you can&apos;t rely on the maximization actually
+happening. But it will happen with most standard window managers,
+and GDK makes a best effort to get it to happen.
+On Windows, reliably maximizes the window.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="unmaximize" c:identifier="gdk_window_unmaximize">
+      <method name="unmaximize"
+              c:identifier="gdk_window_unmaximize"
+              doc="Unmaximizes the window. If the window wasn&apos;t maximized, then this
+function does nothing.
+On X11, asks the window manager to unmaximize @window, if the
+window manager supports this operation. Not all window managers
+support this, and some deliberately ignore it or don&apos;t have a
+concept of &quot;maximized&quot;; so you can&apos;t rely on the unmaximization
+actually happening. But it will happen with most standard window
+managers, and GDK makes a best effort to get it to happen.
+On Windows, reliably unmaximizes the window.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="fullscreen" c:identifier="gdk_window_fullscreen">
+      <method name="fullscreen"
+              c:identifier="gdk_window_fullscreen"
+              doc="Moves the window into fullscreen mode. This means the
+window covers the entire screen and is above any panels
+or task bars.
+If the window was already fullscreen, then this function does nothing.
+On X11, asks the window manager to put @window in a fullscreen
+state, if the window manager supports this operation. Not all
+window managers support this, and some deliberately ignore it or
+don&apos;t have a concept of &quot;fullscreen&quot;; so you can&apos;t rely on the
+fullscreenification actually happening. But it will happen with
+most standard window managers, and GDK makes a best effort to get
+it to happen."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="unfullscreen" c:identifier="gdk_window_unfullscreen">
+      <method name="unfullscreen"
+              c:identifier="gdk_window_unfullscreen"
+              doc="Moves the window out of fullscreen mode. If the window was not
+fullscreen, does nothing.
+On X11, asks the window manager to move @window out of the fullscreen
+state, if the window manager supports this operation. Not all
+window managers support this, and some deliberately ignore it or
+don&apos;t have a concept of &quot;fullscreen&quot;; so you can&apos;t rely on the
+unfullscreenification actually happening. But it will happen with
+most standard window managers, and GDK makes a best effort to get
+it to happen."
+              version="2.2">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
-      <method name="set_keep_above" c:identifier="gdk_window_set_keep_above">
+      <method name="set_keep_above"
+              c:identifier="gdk_window_set_keep_above"
+              doc="Set if @window must be kept above other windows. If the
+window was already above, then this function does nothing.
+On X11, asks the window manager to keep @window above, if the window
+manager supports this operation. Not all window managers support
+this, and some deliberately ignore it or don&apos;t have a concept of
+&quot;keep above&quot;; so you can&apos;t rely on the window being kept above.
+But it will happen with most standard window managers,
+and GDK makes a best effort to get it to happen."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13231,7 +14152,17 @@ the display just as gdk_display_beep()."
           </parameter>
         </parameters>
       </method>
-      <method name="set_keep_below" c:identifier="gdk_window_set_keep_below">
+      <method name="set_keep_below"
+              c:identifier="gdk_window_set_keep_below"
+              doc="Set if @window must be kept below other windows. If the
+window was already below, then this function does nothing.
+On X11, asks the window manager to keep @window below, if the window
+manager supports this operation. Not all window managers support
+this, and some deliberately ignore it or don&apos;t have a concept of
+&quot;keep below&quot;; so you can&apos;t rely on the window being kept below.
+But it will happen with most standard window managers,
+and GDK makes a best effort to get it to happen."
+              version="2.4">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13241,7 +14172,17 @@ the display just as gdk_display_beep()."
           </parameter>
         </parameters>
       </method>
-      <method name="set_opacity" c:identifier="gdk_window_set_opacity">
+      <method name="set_opacity"
+              c:identifier="gdk_window_set_opacity"
+              doc="Request the windowing system to make @window partially transparent,
+with opacity 0 being fully transparent and 1 fully opaque. (Values
+of the opacity parameter are clamped to the [0,1] range.)
+On X11, this works only on X screens with a compositing manager
+running.
+For setting up per-pixel alpha, see gdk_screen_get_rgba_colormap().
+For making non-toplevel windows translucent, see
+gdk_window_set_composited()."
+              version="2.12">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13257,7 +14198,12 @@ the display just as gdk_display_beep()."
         </return-value>
       </method>
       <method name="begin_resize_drag"
-              c:identifier="gdk_window_begin_resize_drag">
+              c:identifier="gdk_window_begin_resize_drag"
+              doc="Begins a window resize operation (for a toplevel window).
+You might use this function to implement a &quot;window resize grip,&quot; for
+example; in fact #GtkStatusbar uses it. The function works best
+with window managers that support the &lt;ulink url=&quot;http://www.freedesktop.org/Standards/wm-spec&quot;&gt;Extended Window Manager Hints&lt;/ulink&gt;, but has a
+fallback implementation for other window managers.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13279,7 +14225,14 @@ the display just as gdk_display_beep()."
           </parameter>
         </parameters>
       </method>
-      <method name="begin_move_drag" c:identifier="gdk_window_begin_move_drag">
+      <method name="begin_move_drag"
+              c:identifier="gdk_window_begin_move_drag"
+              doc="Begins a window move operation (for a toplevel window).  You might
+use this function to implement a &quot;window move grip,&quot; for
+example. The function works best with window managers that support
+the &lt;ulink url=&quot;http://www.freedesktop.org/Standards/wm-spec&quot;&gt;Extended
+Window Manager Hints&lt;/ulink&gt;, but has a fallback implementation for
+other window managers.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -13308,7 +14261,10 @@ gdk_window_invalidate_region() for details.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="rect" transfer-ownership="none">
+          <parameter name="rect"
+                     transfer-ownership="none"
+                     allow-none="1"
+                     doc="rectangle to invalidate or %NULL to invalidate the whole">
             <type name="Rectangle" c:type="GdkRectangle*"/>
           </parameter>
           <parameter name="invalidate_children" transfer-ownership="none">
@@ -13491,13 +14447,31 @@ likely to change in future releases of GDK.">
         </parameters>
       </method>
       <method name="enable_synchronized_configure"
-              c:identifier="gdk_window_enable_synchronized_configure">
+              c:identifier="gdk_window_enable_synchronized_configure"
+              doc="Indicates that the application will cooperate with the window
+system in synchronizing the window repaint with the window
+manager during resizing operations. After an application calls
+this function, it must call gdk_window_configure_finished() every
+time it has finished all processing associated with a set of
+Configure events. Toplevel GTK+ windows automatically use this
+protocol.
+On X, calling this function makes @window participate in the
+_NET_WM_SYNC_REQUEST window manager protocol."
+              version="2.6">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
       <method name="configure_finished"
-              c:identifier="gdk_window_configure_finished">
+              c:identifier="gdk_window_configure_finished"
+              doc="Signal to the window system that the application has finished
+handling Configure events it has received. Window Managers can
+use this to better synchronize the frame repaint with the
+application. GTK+ applications will automatically call this
+function when appropriate.
+This function can only be called if gdk_window_enable_synchronized_configure()
+was called previously."
+              version="2.6">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -14069,7 +15043,11 @@ See also #GtkWindow::from-embedder."
       <type name="int"/>
     </constant>
     <function name="add_client_message_filter"
-              c:identifier="gdk_add_client_message_filter">
+              c:identifier="gdk_add_client_message_filter"
+              doc="checked against the &lt;structfield&gt;message_type&lt;/structfield&gt; field of the
+XClientMessage event struct.
+Adds a filter to the default display to be called when X ClientMessage events
+are received. See gdk_display_add_client_message_filter().">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -14160,7 +15138,17 @@ not public API and must not be used by applications.">
       </parameters>
     </function>
     <function name="atom_intern_static_string"
-              c:identifier="gdk_atom_intern_static_string">
+              c:identifier="gdk_atom_intern_static_string"
+              doc="Finds or creates an atom corresponding to a given string.
+Note that this function is identical to gdk_atom_intern() except
+that if a new #GdkAtom is created the string itself is used rather
+than a copy. This saves memory, but can only be used if the string
+will &lt;emphasis&gt;always&lt;/emphasis&gt; exist. It can be used with statically
+allocated strings in the main program, but not with statically
+allocated memory in dynamically loaded modules, if you expect to
+ever unload the module again (e.g. do not use this function in
+GTK+ theme engines)."
+              version="2.10">
       <return-value transfer-ownership="full">
         <type name="Atom" c:type="GdkAtom"/>
       </return-value>
@@ -15352,7 +16340,14 @@ value has already been allocated.">
         </parameter>
       </parameters>
     </function>
-    <function name="color_change" c:identifier="gdk_color_change">
+    <function name="color_change"
+              c:identifier="gdk_color_change"
+              doc="in the &lt;structfield&gt;pixel&lt;/structfield&gt; field,
+and the new value in the remaining fields.
+Changes the value of a color that has already
+been allocated. If @colormap is not a private
+colormap, then the color must have been allocated
+using gdk_colormap_alloc_colors() with the">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -15410,7 +16405,14 @@ value has already allocated been allocated.">
         </parameter>
       </parameters>
     </function>
-    <function name="colors_alloc" c:identifier="gdk_colors_alloc">
+    <function name="colors_alloc"
+              c:identifier="gdk_colors_alloc"
+              doc="in contiguous color cells.
+to indicate that the color allocation should not be planar.)
+Allocates colors from a colormap. This function
+is obsolete. See gdk_colormap_alloc_colors().
+For full documentation of the fields, see
+the Xlib documentation for &lt;function&gt;XAllocColorCells()&lt;/function&gt;.">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -15435,7 +16437,10 @@ value has already allocated been allocated.">
         </parameter>
       </parameters>
     </function>
-    <function name="colors_free" c:identifier="gdk_colors_free">
+    <function name="colors_free"
+              c:identifier="gdk_colors_free"
+              doc="Frees colors allocated with gdk_colors_alloc(). This
+function is obsolete. See gdk_colormap_free_colors().">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -15657,7 +16662,10 @@ should not be used. See gdk_color_change().">
     <constant name="degree" value="176">
       <type name="int"/>
     </constant>
-    <function name="devices_list" c:identifier="gdk_devices_list">
+    <function name="devices_list"
+              c:identifier="gdk_devices_list"
+              doc="Returns the list of available input devices for the default display.
+The list is statically allocated and should not be freed.">
       <return-value transfer-ownership="full">
         <type name="GLib.List" c:type="GList*"/>
       </return-value>
@@ -15707,7 +16715,10 @@ should not be used. See gdk_color_change().">
     <constant name="downtack" value="3010">
       <type name="int"/>
     </constant>
-    <function name="drag_abort" c:identifier="gdk_drag_abort">
+    <function name="drag_abort"
+              c:identifier="gdk_drag_abort"
+              doc="Aborts a drag without dropping.
+This function is called by the drag source.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -15720,7 +16731,10 @@ should not be used. See gdk_color_change().">
         </parameter>
       </parameters>
     </function>
-    <function name="drag_begin" c:identifier="gdk_drag_begin">
+    <function name="drag_begin"
+              c:identifier="gdk_drag_begin"
+              doc="Starts a drag and creates a new drag context for it.
+This function is called by the drag source.">
       <return-value transfer-ownership="full">
         <type name="DragContext" c:type="GdkDragContext*"/>
       </return-value>
@@ -15733,7 +16747,10 @@ should not be used. See gdk_color_change().">
         </parameter>
       </parameters>
     </function>
-    <function name="drag_drop" c:identifier="gdk_drag_drop">
+    <function name="drag_drop"
+              c:identifier="gdk_drag_drop"
+              doc="Drops on the current destination.
+This function is called by the drag source.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -15747,7 +16764,12 @@ should not be used. See gdk_color_change().">
       </parameters>
     </function>
     <function name="drag_drop_succeeded"
-              c:identifier="gdk_drag_drop_succeeded">
+              c:identifier="gdk_drag_drop_succeeded"
+              doc="Returns whether the dropped data has been successfully
+transferred. This function is intended to be used while
+handling a %GDK_DROP_FINISHED event, its return value is
+meaningless at other times."
+              version="2.6">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
       </return-value>
@@ -15794,7 +16816,12 @@ This function is called by the drag source to obtain the">
       </parameters>
     </function>
     <function name="drag_find_window_for_screen"
-              c:identifier="gdk_drag_find_window_for_screen">
+              c:identifier="gdk_drag_find_window_for_screen"
+              doc="should be ignored, since it is put up by the drag source as an icon.
+Finds the destination window and DND protocol to use at the
+given pointer position.
+This function is called by the drag source to obtain the"
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -15814,10 +16841,16 @@ This function is called by the drag source to obtain the">
         <parameter name="y_root" transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </parameter>
-        <parameter name="dest_window" transfer-ownership="none">
+        <parameter name="dest_window"
+                   direction="out"
+                   transfer-ownership="full"
+                   doc="location to store the destination window in.">
           <type name="Window" c:type="GdkWindow**"/>
         </parameter>
-        <parameter name="protocol" transfer-ownership="none">
+        <parameter name="protocol"
+                   direction="out"
+                   transfer-ownership="full"
+                   doc="location to store the DND protocol in.">
           <type name="DragProtocol" c:type="GdkDragProtocol*"/>
         </parameter>
       </parameters>
@@ -15840,7 +16873,11 @@ window, or zero if @xid doesn&apos;t support Drag and Drop.">
       </parameters>
     </function>
     <function name="drag_get_protocol_for_display"
-              c:identifier="gdk_drag_get_protocol_for_display">
+              c:identifier="gdk_drag_get_protocol_for_display"
+              doc="may be @xid or the id of a proxy window, or zero if @xid doesn&apos;t
+support Drag and Drop.
+Finds out the DND protocol supported by a window."
+              version="2.2">
       <return-value transfer-ownership="full">
         <type name="NativeWindow" c:type="GdkNativeWindow"/>
       </return-value>
@@ -15856,7 +16893,9 @@ window, or zero if @xid doesn&apos;t support Drag and Drop.">
         </parameter>
       </parameters>
     </function>
-    <function name="drag_get_selection" c:identifier="gdk_drag_get_selection">
+    <function name="drag_get_selection"
+              c:identifier="gdk_drag_get_selection"
+              doc="Returns the selection atom for the current source window.">
       <return-value transfer-ownership="full">
         <type name="Atom" c:type="GdkAtom"/>
       </return-value>
@@ -15866,7 +16905,12 @@ window, or zero if @xid doesn&apos;t support Drag and Drop.">
         </parameter>
       </parameters>
     </function>
-    <function name="drag_motion" c:identifier="gdk_drag_motion">
+    <function name="drag_motion"
+              c:identifier="gdk_drag_motion"
+              doc="gdk_drag_find_window().
+Updates the drag context when the pointer moves or the
+set of actions changes.
+This function is called by the drag source.">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
       </return-value>
@@ -15897,7 +16941,12 @@ window, or zero if @xid doesn&apos;t support Drag and Drop.">
         </parameter>
       </parameters>
     </function>
-    <function name="drag_status" c:identifier="gdk_drag_status">
+    <function name="drag_status"
+              c:identifier="gdk_drag_status"
+              doc="or 0 to indicate that a drop will not be accepted.
+Selects one of the actions offered by the drag source.
+This function is called by the drag destination in response to
+gdk_drag_motion() called by the drag source.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -16053,7 +17102,10 @@ See also gdk_draw_glyphs(), gdk_draw_layout()."
         <parameter name="gc" transfer-ownership="none">
           <type name="GC" c:type="GdkGC*"/>
         </parameter>
-        <parameter name="matrix" transfer-ownership="none">
+        <parameter name="matrix"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="a #PangoMatrix, or %NULL to use an identity transformation">
           <type name="Pango.Matrix" c:type="PangoMatrix*"/>
         </parameter>
         <parameter name="font" transfer-ownership="none">
@@ -16265,10 +17317,16 @@ device coordinates.">
         <parameter name="line" transfer-ownership="none">
           <type name="Pango.LayoutLine" c:type="PangoLayoutLine*"/>
         </parameter>
-        <parameter name="foreground" transfer-ownership="none">
+        <parameter name="foreground"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="foreground override color, or %NULL for none">
           <type name="Color" c:type="GdkColor*"/>
         </parameter>
-        <parameter name="background" transfer-ownership="none">
+        <parameter name="background"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="background override color, or %NULL for none">
           <type name="Color" c:type="GdkColor*"/>
         </parameter>
       </parameters>
@@ -16300,10 +17358,16 @@ is gtk_widget_create_pango_layout().">
         <parameter name="layout" transfer-ownership="none">
           <type name="Pango.Layout" c:type="PangoLayout*"/>
         </parameter>
-        <parameter name="foreground" transfer-ownership="none">
+        <parameter name="foreground"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="foreground override color, or %NULL for none">
           <type name="Color" c:type="GdkColor*"/>
         </parameter>
-        <parameter name="background" transfer-ownership="none">
+        <parameter name="background"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="background override color, or %NULL for none">
           <type name="Color" c:type="GdkColor*"/>
         </parameter>
       </parameters>
@@ -16382,7 +17446,10 @@ variable."
         <parameter name="drawable" transfer-ownership="none">
           <type name="Drawable" c:type="GdkDrawable*"/>
         </parameter>
-        <parameter name="gc" transfer-ownership="none">
+        <parameter name="gc"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="a #GdkGC, used for clipping, or %NULL">
           <type name="GC" c:type="GdkGC*"/>
         </parameter>
         <parameter name="pixbuf" transfer-ownership="none">
@@ -16829,7 +17896,10 @@ likely not useful for applications."
         </parameter>
       </parameters>
     </function>
-    <function name="drop_finish" c:identifier="gdk_drop_finish">
+    <function name="drop_finish"
+              c:identifier="gdk_drop_finish"
+              doc="Ends the drag operation after a drop.
+This function is called by the drag destination.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -16845,7 +17915,11 @@ likely not useful for applications."
         </parameter>
       </parameters>
     </function>
-    <function name="drop_reply" c:identifier="gdk_drop_reply">
+    <function name="drop_reply"
+              c:identifier="gdk_drop_reply"
+              doc="Accepts or rejects a drop.
+This function is called by the drag destination in response
+to a drop initiated by the drag source.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -17002,7 +18076,12 @@ are pending. The returned #GdkEvent should be freed with gdk_event_free().">
       </return-value>
     </function>
     <function name="event_get_graphics_expose"
-              c:identifier="gdk_event_get_graphics_expose">
+              c:identifier="gdk_event_get_graphics_expose"
+              doc="Waits for a GraphicsExpose or NoExpose event from the X server.
+This is used in the #GtkText and #GtkCList widgets in GTK+ to make sure any
+GraphicsExpose events are handled before the widget is scrolled.
+NoExpose event was received."
+              deprecated="2.18:">
       <return-value transfer-ownership="full">
         <type name="Event" c:type="GdkEvent*"/>
       </return-value>
@@ -17077,7 +18156,14 @@ gdk_event_request_motions (motion_event); /&amp;ast; handles is_hint events &amp
       </parameters>
     </function>
     <function name="event_send_client_message_for_display"
-              c:identifier="gdk_event_send_client_message_for_display">
+              c:identifier="gdk_event_send_client_message_for_display"
+              doc="On X11, sends an X ClientMessage event to a given window. On
+Windows, sends a message registered with the name
+GDK_WIN32_CLIENT_MESSAGE.
+This could be used for communicating between different
+applications, though the amount of data is limited to 20 bytes on
+X11, and to just four bytes on Windows."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
       </return-value>
@@ -17093,7 +18179,9 @@ gdk_event_request_motions (motion_event); /&amp;ast; handles is_hint events &amp
         </parameter>
       </parameters>
     </function>
-    <function name="events_pending" c:identifier="gdk_events_pending">
+    <function name="events_pending"
+              c:identifier="gdk_events_pending"
+              doc="Checks if any events are ready to be processed for any display.">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
       </return-value>
@@ -17179,7 +18267,14 @@ cannot be loaded.">
       </parameters>
     </function>
     <function name="font_from_description_for_display"
-              c:identifier="gdk_font_from_description_for_display">
+              c:identifier="gdk_font_from_description_for_display"
+              doc="Loads a #GdkFont based on a Pango font description for use on @display.
+This font will only be an approximation of the Pango font, and
+internationalization will not be handled correctly. This function
+should only be used for legacy code that cannot be easily converted
+to use Pango. Using Pango directly will produce better results.
+cannot be loaded."
+              version="2.2">
       <return-value transfer-ownership="full">
         <type name="Font" c:type="GdkFont*"/>
       </return-value>
@@ -17207,7 +18302,11 @@ You should make no assumptions about the initial reference count.">
       </parameters>
     </function>
     <function name="font_load_for_display"
-              c:identifier="gdk_font_load_for_display">
+              c:identifier="gdk_font_load_for_display"
+              doc="Loads a font for use on @display.
+The font may be newly loaded or looked up the font in a cache.
+You should make no assumptions about the initial reference count."
+              version="2.2">
       <return-value transfer-ownership="full">
         <type name="Font" c:type="GdkFont*"/>
       </return-value>
@@ -17220,7 +18319,12 @@ You should make no assumptions about the initial reference count.">
         </parameter>
       </parameters>
     </function>
-    <function name="fontset_load" c:identifier="gdk_fontset_load">
+    <function name="fontset_load"
+              c:identifier="gdk_fontset_load"
+              doc="the component fonts of the fontset to load.
+Loads a fontset.
+The fontset may be newly loaded or looked up in a cache.
+You should make no assumptions about the initial reference count.">
       <return-value transfer-ownership="full">
         <type name="Font" c:type="GdkFont*"/>
       </return-value>
@@ -17231,7 +18335,12 @@ You should make no assumptions about the initial reference count.">
       </parameters>
     </function>
     <function name="fontset_load_for_display"
-              c:identifier="gdk_fontset_load_for_display">
+              c:identifier="gdk_fontset_load_for_display"
+              doc="the component fonts of the fontset to load.
+Loads a fontset for use on @display.
+The fontset may be newly loaded or looked up in a cache.
+You should make no assumptions about the initial reference count."
+              version="2.2">
       <return-value transfer-ownership="full">
         <type name="Font" c:type="GdkFont*"/>
       </return-value>
@@ -18184,7 +19293,12 @@ Call g_list_free() on the return value when you&apos;re finished with it.">
     <constant name="masculine" value="186">
       <type name="int"/>
     </constant>
-    <function name="mbstowcs" c:identifier="gdk_mbstowcs">
+    <function name="mbstowcs"
+              c:identifier="gdk_mbstowcs"
+              doc="Converts a multi-byte string to a wide character string.
+(The function name comes from an acronym of &apos;Multi-Byte String TO Wide
+Character String&apos;).
+the conversion failed.">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -18258,13 +19372,29 @@ Call g_list_free() on the return value when you&apos;re finished with it.">
       <type name="int"/>
     </constant>
     <function name="notify_startup_complete"
-              c:identifier="gdk_notify_startup_complete">
+              c:identifier="gdk_notify_startup_complete"
+              doc="Indicates to the GUI environment that the application has finished
+loading. If the applications opens windows, this function is
+normally called after opening the application&apos;s initial set of
+windows.
+GTK+ will call this function automatically after opening the first
+#GtkWindow unless gtk_window_set_auto_startup_notification() is called
+to disable that feature."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
     </function>
     <function name="notify_startup_complete_with_id"
-              c:identifier="gdk_notify_startup_complete_with_id">
+              c:identifier="gdk_notify_startup_complete_with_id"
+              doc="process should be completed
+Indicates to the GUI environment that the application has finished
+loading, using a given identifier.
+GTK+ will call this function automatically for #GtkWindow with custom
+startup-notification identifier unless
+gtk_window_set_auto_startup_notification() is called to disable
+that feature."
+              version="2.12">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -18691,7 +19821,10 @@ pixbuf with a reference count of 1 if no destination pixbuf was specified, or %N
         <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
       </return-value>
       <parameters>
-        <parameter name="dest" transfer-ownership="none">
+        <parameter name="dest"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="Destination pixbuf, or %NULL if a new pixbuf should be created.">
           <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
         </parameter>
         <parameter name="src" transfer-ownership="none">
@@ -18728,13 +19861,19 @@ an image.">
         <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
       </return-value>
       <parameters>
-        <parameter name="dest" transfer-ownership="none">
+        <parameter name="dest"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="Destination pixbuf, or %NULL if a new pixbuf should be created.">
           <type name="GdkPixbuf.Pixbuf" c:type="GdkPixbuf*"/>
         </parameter>
         <parameter name="src" transfer-ownership="none">
           <type name="Image" c:type="GdkImage*"/>
         </parameter>
-        <parameter name="cmap" transfer-ownership="none">
+        <parameter name="cmap"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="A colormap, or %NULL to use the one for @src">
           <type name="Colormap" c:type="GdkColormap*"/>
         </parameter>
         <parameter name="src_x" transfer-ownership="none">
@@ -19159,20 +20298,40 @@ application.">
     <constant name="quad" value="3020">
       <type name="int"/>
     </constant>
-    <function name="query_depths" c:identifier="gdk_query_depths">
+    <function name="query_depths"
+              c:identifier="gdk_query_depths"
+              doc="This function returns the available bit depths for the default
+screen. It&apos;s equivalent to listing the visuals
+(gdk_list_visuals()) and then looking at the depth field in each
+visual, removing duplicates.
+The array returned by this function should not be freed.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="depths" direction="out" transfer-ownership="full">
-          <type name="int" c:type="gint**"/>
+        <parameter name="depths"
+                   direction="out"
+                   transfer-ownership="full"
+                   doc="return location for available depths">
+          <array c:type="gint**">
+            <type name="int"/>
+          </array>
         </parameter>
-        <parameter name="count" direction="out" transfer-ownership="full">
+        <parameter name="count"
+                   direction="out"
+                   transfer-ownership="full"
+                   doc="return location for number of available depths">
           <type name="int" c:type="gint*"/>
         </parameter>
       </parameters>
     </function>
-    <function name="query_visual_types" c:identifier="gdk_query_visual_types">
+    <function name="query_visual_types"
+              c:identifier="gdk_query_visual_types"
+              doc="This function returns the available visual types for the default
+screen. It&apos;s equivalent to listing the visuals
+(gdk_list_visuals()) and then looking at the type field in each
+visual, removing duplicates.
+The array returned by this function should not be freed.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -19484,7 +20643,14 @@ any visual.">
       </parameters>
     </function>
     <function name="selection_owner_get_for_display"
-              c:identifier="gdk_selection_owner_get_for_display">
+              c:identifier="gdk_selection_owner_get_for_display"
+              doc="Determine the owner of the given selection.
+Note that the return value may be owned by a different
+process if a foreign window was previously created for that
+window, but a new foreign window will never be created by this call.
+window known to the current process, the #GdkWindow that owns the
+selection, otherwise %NULL."
+              version="2.2">
       <return-value transfer-ownership="full">
         <type name="Window" c:type="GdkWindow*"/>
       </return-value>
@@ -19518,7 +20684,14 @@ any visual.">
       </parameters>
     </function>
     <function name="selection_owner_set_for_display"
-              c:identifier="gdk_selection_owner_set_for_display">
+              c:identifier="gdk_selection_owner_set_for_display"
+              doc="the given should be unset.
+If this is older than the timestamp given last time the owner was
+set for the given selection, the request will be ignored.
+owner, the current owner will be sent a SelectionClear event.
+Sets the #GdkWindow @owner as the current owner of the selection @selection.
+otherwise %FALSE."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
       </return-value>
@@ -19541,7 +20714,17 @@ any visual.">
       </parameters>
     </function>
     <function name="selection_property_get"
-              c:identifier="gdk_selection_property_get">
+              c:identifier="gdk_selection_property_get"
+              doc="the retrieval failed, %NULL we be stored here, otherwise, it
+ll be non-%NULL and the returned data should be freed with g_free()
+en you are finished using it. The length of the
+located memory is one more than the length
+the returned data, and the final byte will always
+zero, to ensure nul-termination of strings.
+Retrieves selection data that was stored by the selection
+data in response to a call to gdk_selection_convert(). This function
+will not be used by applications, who should use the #GtkClipboard
+API instead.">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -19586,7 +20769,10 @@ any visual.">
       </parameters>
     </function>
     <function name="selection_send_notify_for_display"
-              c:identifier="gdk_selection_send_notify_for_display">
+              c:identifier="gdk_selection_send_notify_for_display"
+              doc="or %GDK_NONE to indicate that the request was rejected.
+Send a response to SelectionRequest event."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -19767,6 +20953,13 @@ in @value, %FALSE otherwise.">
     </constant>
     <function name="spawn_command_line_on_screen"
               c:identifier="gdk_spawn_command_line_on_screen"
+              doc="Like g_spawn_command_line_async(), except the child process is
+spawned in such an environment that on calling gdk_display_open()
+it would be returned a #GdkDisplay with @screen as the default
+screen.
+This is useful for applications which wish to launch an application
+on a specific screen."
+              version="2.4"
               throws="1">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
@@ -19782,6 +20975,13 @@ in @value, %FALSE otherwise.">
     </function>
     <function name="spawn_on_screen"
               c:identifier="gdk_spawn_on_screen"
+              doc="inherit parent&apos;s
+Like g_spawn_async(), except the child process is spawned in such
+an environment that on calling gdk_display_open() it would be
+returned a #GdkDisplay with @screen as the default screen.
+This is useful for applications which wish to launch an application
+on a specific screen."
+              version="2.4"
               throws="1">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
@@ -19819,6 +21019,17 @@ in @value, %FALSE otherwise.">
     </function>
     <function name="spawn_on_screen_with_pipes"
               c:identifier="gdk_spawn_on_screen_with_pipes"
+              doc="inherit parent&apos;s
+child&apos;s stdin, or %NULL
+stdout, or %NULL
+stderr, or %NULL
+Like g_spawn_async_with_pipes(), except the child process is
+spawned in such an environment that on calling gdk_display_open()
+it would be returned a #GdkDisplay with @screen as the default
+screen.
+This is useful for applications which wish to launch an application
+on a specific screen."
+              version="2.4"
               throws="1">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
@@ -19972,7 +21183,11 @@ See gdk_string_width().">
       </parameters>
     </function>
     <function name="string_to_compound_text_for_display"
-              c:identifier="gdk_string_to_compound_text_for_display">
+              c:identifier="gdk_string_to_compound_text_for_display"
+              doc="(to be used as the type for the property).
+Convert a string from the encoding of the current
+locale into a form suitable for storing in a window property."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -20050,7 +21265,13 @@ should be drawn)">
     <constant name="telephonerecorder" value="2810">
       <type name="int"/>
     </constant>
-    <function name="test_render_sync" c:identifier="gdk_test_render_sync">
+    <function name="test_render_sync"
+              c:identifier="gdk_test_render_sync"
+              doc="This function retrieves a pixel from @window to force the windowing
+system to carry out any pending rendering commands.
+This function is intended to be used to syncronize with rendering
+pipelines, to benchmark windowing system rendering operations."
+              version="2.14">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -20111,7 +21332,11 @@ should be drawn)">
         </parameter>
       </parameters>
     </function>
-    <function name="text_extents" c:identifier="gdk_text_extents">
+    <function name="text_extents"
+              c:identifier="gdk_text_extents"
+              doc="font is a 16-bit font, this is twice the length
+of the text in characters.)
+Gets the metrics of a string.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -20142,7 +21367,9 @@ should be drawn)">
         </parameter>
       </parameters>
     </function>
-    <function name="text_extents_wc" c:identifier="gdk_text_extents_wc">
+    <function name="text_extents_wc"
+              c:identifier="gdk_text_extents_wc"
+              doc="Gets the metrics of a string of wide characters.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -20242,7 +21469,17 @@ See gdk_text_width().">
       </parameters>
     </function>
     <function name="text_property_to_text_list_for_display"
-              c:identifier="gdk_text_property_to_text_list_for_display">
+              c:identifier="gdk_text_property_to_text_list_for_display"
+              doc="common values for this are STRING, or COMPOUND_TEXT.
+This is value used as the type for the property.
+the encoding of the current locale. This array should be
+freed using gdk_free_text_list().
+Convert a text string from the encoding as it is stored
+in a property into an array of strings in the encoding of
+the current locale. (The elements of the array represent the
+nul-separated elements of the original text string.)
+if the conversion failed."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -20293,13 +21530,21 @@ list.">
         <parameter name="length" transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </parameter>
-        <parameter name="list" transfer-ownership="none">
+        <parameter name="list"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="location to store the list of strings or %NULL. The">
           <type name="utf8" c:type="gchar***"/>
         </parameter>
       </parameters>
     </function>
     <function name="text_property_to_utf8_list_for_display"
-              c:identifier="gdk_text_property_to_utf8_list_for_display">
+              c:identifier="gdk_text_property_to_utf8_list_for_display"
+              doc="list should be freed with g_strfreev().
+Converts a text property in the given encoding to
+a list of UTF-8 strings.
+list."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -20326,7 +21571,9 @@ list.">
         </parameter>
       </parameters>
     </function>
-    <function name="text_width" c:identifier="gdk_text_width">
+    <function name="text_width"
+              c:identifier="gdk_text_width"
+              doc="Determines the width of a given string.">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -20342,7 +21589,9 @@ list.">
         </parameter>
       </parameters>
     </function>
-    <function name="text_width_wc" c:identifier="gdk_text_width_wc">
+    <function name="text_width_wc"
+              c:identifier="gdk_text_width_wc"
+              doc="Determines the width of a given wide-character string.">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -20440,7 +21689,10 @@ G_OBJECT_CLASS (parent_class)-&gt;finalize (object);
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="notify" transfer-ownership="none">
+        <parameter name="notify"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="function to call when the idle is removed, or %NULL">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -20525,7 +21777,10 @@ G_OBJECT_CLASS (parent_class)-&gt;finalize (object);
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="notify" transfer-ownership="none">
+        <parameter name="notify"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="function to call when the timeout is removed, or %NULL">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -20578,7 +21833,10 @@ a good idea to use this function if you don&apos;t need finer granularity."
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="notify" transfer-ownership="none">
+        <parameter name="notify"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="function to call when the timeout is removed, or %NULL">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -20830,7 +22088,11 @@ false.">
       </parameters>
     </function>
     <function name="utf8_to_compound_text_for_display"
-              c:identifier="gdk_utf8_to_compound_text_for_display">
+              c:identifier="gdk_utf8_to_compound_text_for_display"
+              doc="stored in @ctext
+Converts from UTF-8 to compound text.
+%FALSE."
+              version="2.2">
       <return-value transfer-ownership="none">
         <type name="boolean" c:type="gboolean"/>
       </return-value>
@@ -20856,7 +22118,14 @@ false.">
       </parameters>
     </function>
     <function name="utf8_to_string_target"
-              c:identifier="gdk_utf8_to_string_target">
+              c:identifier="gdk_utf8_to_string_target"
+              doc="Converts an UTF-8 string into the best possible representation
+as a STRING. The representation of characters not in STRING
+is not specified; it may be as pseudo-escape sequences
+\x{ABCD}, or it may be in some other form of approximation.
+conversion failed. (It should not fail for
+any properly formed UTF-8 string unless system
+limits like memory or file descriptors are exceeded.)">
       <return-value transfer-ownership="full">
         <type name="utf8" c:type="gchar*"/>
       </return-value>
@@ -20896,7 +22165,13 @@ false.">
     <constant name="wcircumflex" value="16777589">
       <type name="int"/>
     </constant>
-    <function name="wcstombs" c:identifier="gdk_wcstombs">
+    <function name="wcstombs"
+              c:identifier="gdk_wcstombs"
+              doc="Converts a wide character string to a multi-byte string.
+(The function name comes from an acronym of &apos;Wide Character String TO
+Multi-Byte String&apos;).
+conversion failed. The returned string should be freed with g_free() when no
+longer needed.">
       <return-value transfer-ownership="full">
         <type name="utf8" c:type="gchar*"/>
       </return-value>
