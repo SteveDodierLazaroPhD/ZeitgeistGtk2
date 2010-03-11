@@ -152,6 +152,7 @@ typedef enum
 #define GTK_WIDGET_TYPE(wid)		  (GTK_OBJECT_TYPE (wid))
 #endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_STATE:
  * @wid: a #GtkWidget.
@@ -161,7 +162,7 @@ typedef enum
  * Deprecated: 2.20: Use gtk_widget_get_state() instead.
  */
 #define GTK_WIDGET_STATE(wid)		  (GTK_WIDGET (wid)->state)
-/* FIXME: Deprecating GTK_WIDGET_STATE requires fixing GTK internals. */
+#endif
 
 #ifndef GTK_DISABLE_DEPRECATED
 /**
@@ -205,6 +206,7 @@ typedef enum
 #define GTK_WIDGET_TOPLEVEL(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_TOPLEVEL) != 0)
 #endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_NO_WINDOW:
  * @wid: a #GtkWidget.
@@ -214,64 +216,92 @@ typedef enum
  * Deprecated: 2.20: Use gtk_widget_get_has_window() instead.
  */
 #define GTK_WIDGET_NO_WINDOW(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_NO_WINDOW) != 0)
-/* FIXME: Deprecating GTK_WIDGET_NO_WINDOW requires fixing GTK internals. */
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_REALIZED:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is realized.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_realized() instead.
  */
 #define GTK_WIDGET_REALIZED(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_REALIZED) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_MAPPED:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is mapped.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_mapped() instead.
  */
 #define GTK_WIDGET_MAPPED(wid)		  ((GTK_WIDGET_FLAGS (wid) & GTK_MAPPED) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_VISIBLE:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is visible.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_visible() instead.
  */
 #define GTK_WIDGET_VISIBLE(wid)		  ((GTK_WIDGET_FLAGS (wid) & GTK_VISIBLE) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_DRAWABLE:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is mapped and visible.
+ *
+ * Deprecated: 2.20: Use gtk_widget_is_drawable() instead.
  */
 #define GTK_WIDGET_DRAWABLE(wid)	  (GTK_WIDGET_VISIBLE (wid) && GTK_WIDGET_MAPPED (wid))
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_SENSITIVE:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the #GTK_SENSITIVE flag has be set on the widget.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_sensitive() instead.
  */
 #define GTK_WIDGET_SENSITIVE(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_SENSITIVE) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_PARENT_SENSITIVE:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the #GTK_PARENT_SENSITIVE flag has be set on the widget.
+ *
+ * Deprecated: 2.20: Use gtk_widget_get_sensitive() on the parent widget instead.
  */
 #define GTK_WIDGET_PARENT_SENSITIVE(wid)  ((GTK_WIDGET_FLAGS (wid) & GTK_PARENT_SENSITIVE) != 0)
+#endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_IS_SENSITIVE:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget is effectively sensitive.
+ *
+ * Deprecated: 2.20: Use gtk_widget_is_sensitive() instead.
  */
 #define GTK_WIDGET_IS_SENSITIVE(wid)	  (GTK_WIDGET_SENSITIVE (wid) && \
 					   GTK_WIDGET_PARENT_SENSITIVE (wid))
+#endif
 
 #ifndef GTK_DISABLE_DEPRECATED
 /**
@@ -285,14 +315,18 @@ typedef enum
 #define GTK_WIDGET_CAN_FOCUS(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_CAN_FOCUS) != 0)
 #endif
 
+#ifndef GTK_DISABLE_DEPRECATED
 /**
  * GTK_WIDGET_HAS_FOCUS:
  * @wid: a #GtkWidget.
  *
  * Evaluates to %TRUE if the widget has grabbed the focus and no other
  * widget has done so more recently.
+ *
+ * Deprecated: 2.20: Use gtk_widget_has_focus() instead.
  */
 #define GTK_WIDGET_HAS_FOCUS(wid)	  ((GTK_WIDGET_FLAGS (wid) & GTK_HAS_FOCUS) != 0)
+#endif
 
 #ifndef GTK_DISABLE_DEPRECATED
 /**

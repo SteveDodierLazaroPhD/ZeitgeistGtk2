@@ -152,7 +152,7 @@ gtk_menu_tool_button_state_changed (GtkWidget    *widget,
   GtkMenuToolButton *button = GTK_MENU_TOOL_BUTTON (widget);
   GtkMenuToolButtonPrivate *priv = button->priv;
 
-  if (!GTK_WIDGET_IS_SENSITIVE (widget) && priv->menu)
+  if (!gtk_widget_is_sensitive (widget) && priv->menu)
     {
       gtk_menu_shell_deactivate (GTK_MENU_SHELL (priv->menu));
     }
@@ -344,7 +344,7 @@ arrow_button_toggled_cb (GtkToggleButton   *togglebutton,
     return;
 
   if (gtk_toggle_button_get_active (togglebutton) &&
-      !GTK_WIDGET_VISIBLE (priv->menu))
+      !gtk_widget_get_visible (GTK_WIDGET (priv->menu)))
     {
       /* we get here only when the menu is activated by a key
        * press, so that we can select the first menu item */
@@ -544,7 +544,7 @@ gtk_menu_tool_button_set_menu (GtkMenuToolButton *button,
 
   if (priv->menu != GTK_MENU (menu))
     {
-      if (priv->menu && GTK_WIDGET_VISIBLE (priv->menu))
+      if (priv->menu && gtk_widget_get_visible (GTK_WIDGET (priv->menu)))
         gtk_menu_shell_deactivate (GTK_MENU_SHELL (priv->menu));
 
       if (priv->menu)

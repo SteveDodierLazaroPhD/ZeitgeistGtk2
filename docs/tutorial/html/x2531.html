@@ -280,7 +280,7 @@ create_input_dialog ()
     }
   else
     {
-      if (!GTK_WIDGET_MAPPED(inputd))
+      if (!gtk_widget_get_mapped(inputd))
 	gtk_widget_show(inputd);
       else
 	gdk_window_raise(inputd-&#62;window);
@@ -444,7 +444,7 @@ draw_brush (GtkWidget *widget, GdkInputSource source,
   switch (source)
     {
     case GDK_SOURCE_MOUSE:
-      gc = widget-&#62;style-&#62;dark_gc[GTK_WIDGET_STATE (widget)];
+      gc = widget-&#62;style-&#62;dark_gc[gtk_widget_get_state (widget)];
       break;
     case GDK_SOURCE_PEN:
       gc = widget-&#62;style-&#62;black_gc;
@@ -453,7 +453,7 @@ draw_brush (GtkWidget *widget, GdkInputSource source,
       gc = widget-&#62;style-&#62;white_gc;
       break;
     default:
-      gc = widget-&#62;style-&#62;light_gc[GTK_WIDGET_STATE (widget)];
+      gc = widget-&#62;style-&#62;light_gc[gtk_widget_get_state (widget)];
     }
 
   update_rect.x = x - 10 * pressure;

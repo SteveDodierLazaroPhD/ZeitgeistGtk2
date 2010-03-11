@@ -3534,7 +3534,7 @@ gtk_default_draw_box (GtkStyle      *style,
       
       if (state_type == GTK_STATE_SELECTED && detail && strcmp (detail, "paned") == 0)
 	{
-	  if (widget && !GTK_WIDGET_HAS_FOCUS (widget))
+	  if (widget && !gtk_widget_has_focus (widget))
 	    gc = style->base_gc[GTK_STATE_ACTIVE];
 	}
 
@@ -3548,7 +3548,7 @@ gtk_default_draw_box (GtkStyle      *style,
     }
   else
     gtk_style_apply_default_background (style, window,
-                                        widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                        widget && gtk_widget_get_has_window (widget),
                                         state_type, area, x, y, width, height);
 
   if (is_spinbutton_box)
@@ -3658,7 +3658,7 @@ gtk_default_draw_flat_box (GtkStyle      *style,
 		   !strcmp ("cell_even_ruled_sorted", detail))
             {
 	      /* This has to be really broken; alex made me do it. -jrb */
-	      if (widget && GTK_WIDGET_HAS_FOCUS (widget))
+	      if (widget && gtk_widget_has_focus (widget))
 		gc1 = style->base_gc[state_type];
 	      else
 	        gc1 = style->base_gc[GTK_STATE_ACTIVE];
@@ -3666,7 +3666,7 @@ gtk_default_draw_flat_box (GtkStyle      *style,
 	  else if (!strcmp ("cell_odd_ruled", detail) ||
 		   !strcmp ("cell_odd_ruled_sorted", detail))
 	    {
-	      if (widget && GTK_WIDGET_HAS_FOCUS (widget))
+	      if (widget && gtk_widget_has_focus (widget))
 	        freeme = get_darkened_gc (window, &style->base[state_type], 1);
 	      else
 	        freeme = get_darkened_gc (window, &style->base[GTK_STATE_ACTIVE], 1);
@@ -3824,7 +3824,7 @@ gtk_default_draw_flat_box (GtkStyle      *style,
     }
   else
     gtk_style_apply_default_background (style, window,
-                                        widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                        widget && gtk_widget_get_has_window (widget),
                                         state_type, area, x, y, width, height);
 
 
@@ -4360,7 +4360,7 @@ gtk_default_draw_box_gap (GtkStyle       *style,
   GdkGC *gc4 = NULL;
   
   gtk_style_apply_default_background (style, window,
-                                      widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                      widget && gtk_widget_get_has_window (widget),
                                       state_type, area, x, y, width, height);
   
   sanitize_size (window, &width, &height);
@@ -4576,7 +4576,7 @@ gtk_default_draw_extension (GtkStyle       *style,
   GdkGC *gc4 = NULL;
   
   gtk_style_apply_default_background (style, window,
-                                      widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                      widget && gtk_widget_get_has_window (widget),
                                       GTK_STATE_NORMAL, area, x, y, width, height);
   
   sanitize_size (window, &width, &height);
@@ -4630,7 +4630,7 @@ gtk_default_draw_extension (GtkStyle       *style,
         {
         case GTK_POS_TOP:
           gtk_style_apply_default_background (style, window,
-                                              widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                              widget && gtk_widget_get_has_window (widget),
                                               state_type, area,
                                               x + style->xthickness, 
                                               y, 
@@ -4652,7 +4652,7 @@ gtk_default_draw_extension (GtkStyle       *style,
           break;
         case GTK_POS_BOTTOM:
           gtk_style_apply_default_background (style, window,
-                                              widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                              widget && gtk_widget_get_has_window (widget),
                                               state_type, area,
                                               x + style->xthickness, 
                                               y + style->ythickness, 
@@ -4674,7 +4674,7 @@ gtk_default_draw_extension (GtkStyle       *style,
           break;
         case GTK_POS_LEFT:
           gtk_style_apply_default_background (style, window,
-                                              widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                              widget && gtk_widget_get_has_window (widget),
                                               state_type, area,
                                               x, 
                                               y + style->ythickness, 
@@ -4696,7 +4696,7 @@ gtk_default_draw_extension (GtkStyle       *style,
           break;
         case GTK_POS_RIGHT:
           gtk_style_apply_default_background (style, window,
-                                              widget && !GTK_WIDGET_NO_WINDOW (widget),
+                                              widget && gtk_widget_get_has_window (widget),
                                               state_type, area,
                                               x + style->xthickness, 
                                               y + style->ythickness, 
@@ -4916,7 +4916,7 @@ gtk_default_draw_handle (GtkStyle      *style,
       xthick = 0;
       ythick = 0;
 
-      if (state_type == GTK_STATE_SELECTED && widget && !GTK_WIDGET_HAS_FOCUS (widget))
+      if (state_type == GTK_STATE_SELECTED && widget && !gtk_widget_has_focus (widget))
 	{
 	  GdkColor unfocused_light;
 
@@ -7057,7 +7057,7 @@ GdkGC *
 _gtk_widget_get_cursor_gc (GtkWidget *widget)
 {
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
-  g_return_val_if_fail (GTK_WIDGET_REALIZED (widget), NULL);
+  g_return_val_if_fail (gtk_widget_get_realized (widget), NULL);
   return get_insertion_cursor_gc (widget, TRUE);
 }
 

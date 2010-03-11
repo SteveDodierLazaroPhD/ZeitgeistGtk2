@@ -654,7 +654,7 @@ gtk_range_get_property (GObject      *object,
 static void
 gtk_range_init (GtkRange *range)
 {
-  GTK_WIDGET_SET_FLAGS (range, GTK_NO_WINDOW);
+  gtk_widget_set_has_window (GTK_WIDGET (range), FALSE);
 
   range->orientation = GTK_ORIENTATION_HORIZONTAL;
   range->adjustment = NULL;
@@ -1476,7 +1476,7 @@ gtk_range_size_allocate (GtkWidget     *widget,
   range->need_recalc = TRUE;
   gtk_range_calc_layout (range, range->adjustment->value);
 
-  if (GTK_WIDGET_REALIZED (range))
+  if (gtk_widget_get_realized (widget))
     gdk_window_move_resize (range->event_window,
 			    widget->allocation.x,
 			    widget->allocation.y,
@@ -1495,7 +1495,7 @@ gtk_range_realize (GtkWidget *widget)
 
   gtk_range_calc_layout (range, range->adjustment->value);
   
-  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+  gtk_widget_set_realized (widget, TRUE);
 
   widget->window = gtk_widget_get_parent_window (widget);
   g_object_ref (widget->window);
@@ -1652,7 +1652,7 @@ draw_stepper (GtkRange     *range,
       arrow_sensitive = range->layout->lower_sensitive;
     }
 
-  if (!GTK_WIDGET_IS_SENSITIVE (range) || !arrow_sensitive)
+  if (!gtk_widget_is_sensitive (GTK_WIDGET (range)) || !arrow_sensitive)
     state_type = GTK_STATE_INSENSITIVE;
   else if (clicked)
     state_type = GTK_STATE_ACTIVE;
@@ -1741,7 +1741,7 @@ gtk_range_expose (GtkWidget      *widget,
   gtk_range_calc_marks (range);
   gtk_range_calc_layout (range, range->adjustment->value);
 
-  sensitive = GTK_WIDGET_IS_SENSITIVE (widget);
+  sensitive = gtk_widget_is_sensitive (widget);
 
   /* Just to be confusing, we draw the trough for the whole
    * range rectangle, not the trough rectangle (the trough
@@ -1928,9 +1928,8 @@ gtk_range_expose (GtkWidget      *widget,
                          fill_width, fill_height);
 	}
 
-      if (sensitive &&
-          GTK_WIDGET_HAS_FOCUS (range))
-        gtk_paint_focus (widget->style, widget->window, GTK_WIDGET_STATE (widget),
+      if (sensitive && gtk_widget_has_focus (widget))
+        gtk_paint_focus (widget->style, widget->window, gtk_widget_get_state (widget),
                          &area, widget, "trough",
                          widget->allocation.x + range->range_rect.x,
                          widget->allocation.y + range->range_rect.y,
@@ -2182,7 +2181,7 @@ gtk_range_button_press (GtkWidget      *widget,
 {
   GtkRange *range = GTK_RANGE (widget);
   
-  if (!GTK_WIDGET_HAS_FOCUS (widget))
+  if (!gtk_widget_has_focus (widget))
     gtk_widget_grab_focus (widget);
 
   /* ignore presses when we're already doing something else. */
@@ -2453,7 +2452,7 @@ gtk_range_scroll_event (GtkWidget      *widget,
 {
   GtkRange *range = GTK_RANGE (widget);
 
-  if (GTK_WIDGET_REALIZED (range))
+  if (gtk_widget_get_realized (widget))
     {
       GtkAdjustment *adj = GTK_RANGE (range)->adjustment;
       gdouble delta;
@@ -2541,7 +2540,7 @@ static void
 gtk_range_state_changed (GtkWidget    *widget,
 			 GtkStateType  previous_state)
 {
-  if (!GTK_WIDGET_IS_SENSITIVE (widget)) 
+  if (!gtk_widget_is_sensitive (widget))
     stop_scrolling (GTK_RANGE (widget));
 }
 
@@ -2599,9 +2598,11 @@ static gboolean
 force_repaint (gpointer data)
 {
   GtkRange *range = GTK_RANGE (data);
+
   range->layout->repaint_id = 0;
-  if (GTK_WIDGET_DRAWABLE (range))
+  if (gtk_widget_is_drawable (GTK_WIDGET (range)))
     gdk_window_process_updates (GTK_WIDGET (range)->window, FALSE);
+
   return FALSE;
 }
 

@@ -1021,7 +1021,7 @@ gtk_label_init (GtkLabel *label)
 {
   GtkLabelPrivate *priv;
 
-  GTK_WIDGET_SET_FLAGS (label, GTK_NO_WINDOW);
+  gtk_widget_set_has_window (GTK_WIDGET (label), FALSE);
 
   priv = GTK_LABEL_GET_PRIVATE (label);
   priv->width_chars = -1;
@@ -2339,9 +2339,9 @@ gtk_label_set_markup_internal (GtkLabel    *label,
 
       if (!(enable_mnemonics && priv->mnemonics_visible &&
             (!auto_mnemonics ||
-             (GTK_WIDGET_IS_SENSITIVE (label) &&
+             (gtk_widget_is_sensitive (GTK_WIDGET (label)) &&
               (!label->mnemonic_widget ||
-               GTK_WIDGET_IS_SENSITIVE (label->mnemonic_widget))))))
+               gtk_widget_is_sensitive (label->mnemonic_widget))))))
         {
           gchar *tmp;
           gchar *pattern;
@@ -2537,9 +2537,9 @@ gtk_label_set_pattern_internal (GtkLabel    *label,
 
       if (enable_mnemonics && priv->mnemonics_visible && pattern &&
           (!auto_mnemonics ||
-           (GTK_WIDGET_IS_SENSITIVE (label) &&
+           (gtk_widget_is_sensitive (GTK_WIDGET (label)) &&
             (!label->mnemonic_widget ||
-             GTK_WIDGET_IS_SENSITIVE (label->mnemonic_widget)))))
+             gtk_widget_is_sensitive (label->mnemonic_widget)))))
         attrs = gtk_label_pattern_to_attrs (label, pattern);
       else
         attrs = NULL;
@@ -3257,17 +3257,21 @@ gtk_label_size_allocate (GtkWidget     *widget,
 static void
 gtk_label_update_cursor (GtkLabel *label)
 {
+  GtkWidget *widget;
+
   if (!label->select_info)
     return;
 
-  if (GTK_WIDGET_REALIZED (label))
+  widget = GTK_WIDGET (label);
+
+  if (gtk_widget_get_realized (widget))
     {
       GdkDisplay *display;
       GdkCursor *cursor;
 
-      if (GTK_WIDGET_IS_SENSITIVE (label))
+      if (gtk_widget_is_sensitive (widget))
         {
-          display = gtk_widget_get_display (GTK_WIDGET (label));
+          display = gtk_widget_get_display (widget);
 
           if (label->select_info->active_link)
             cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
@@ -3449,13 +3453,15 @@ get_cursor_direction (GtkLabel *label)
 static void
 gtk_label_draw_cursor (GtkLabel  *label, gint xoffset, gint yoffset)
 {
+  GtkWidget *widget;
+
   if (label->select_info == NULL)
     return;
-  
-  if (GTK_WIDGET_DRAWABLE (label))
-    {
-      GtkWidget *widget = GTK_WIDGET (label);
 
+  widget = GTK_WIDGET (label);
+  
+  if (gtk_widget_is_drawable (widget))
+    {
       PangoDirection keymap_direction;
       PangoDirection cursor_direction;
       PangoRectangle strong_pos, weak_pos;
@@ -3555,14 +3561,14 @@ gtk_label_expose (GtkWidget      *widget,
 
   gtk_label_ensure_layout (label);
   
-  if (GTK_WIDGET_VISIBLE (widget) && GTK_WIDGET_MAPPED (widget) &&
+  if (gtk_widget_get_visible (widget) && gtk_widget_get_mapped (widget) &&
       label->text && (*label->text != '\0'))
     {
       get_layout_location (label, &x, &y);
 
       gtk_paint_layout (widget->style,
                         widget->window,
-                        GTK_WIDGET_STATE (widget),
+                        gtk_widget_get_state (widget),
 			FALSE,
                         &event->area,
                         widget,
@@ -3601,7 +3607,7 @@ gtk_label_expose (GtkWidget      *widget,
 
 
 	  state = GTK_STATE_SELECTED;
-	  if (!GTK_WIDGET_HAS_FOCUS (widget))
+	  if (!gtk_widget_has_focus (widget))
 	    state = GTK_STATE_ACTIVE;
 
           gdk_draw_layout_with_colors (widget->window,
@@ -3626,7 +3632,7 @@ gtk_label_expose (GtkWidget      *widget,
           GdkColor *link_color;
           GdkColor *visited_link_color;
 
-          if (info->selectable && GTK_WIDGET_HAS_FOCUS (widget))
+          if (info->selectable && gtk_widget_has_focus (widget))
 	    gtk_label_draw_cursor (label, x, y);
 
           focus_link = gtk_label_get_focus_link (label);
@@ -3665,7 +3671,7 @@ gtk_label_expose (GtkWidget      *widget,
               gdk_region_destroy (clip);
             }
 
-          if (focus_link && GTK_WIDGET_HAS_FOCUS (widget))
+          if (focus_link && gtk_widget_has_focus (widget))
             {
               range[0] = focus_link->start;
               range[1] = focus_link->end;
@@ -3676,7 +3682,7 @@ gtk_label_expose (GtkWidget      *widget,
                                                        1);
               gdk_region_get_clipbox (clip, &rect);
 
-              gtk_paint_focus (widget->style, widget->window, GTK_WIDGET_STATE (widget),
+              gtk_paint_focus (widget->style, widget->window, gtk_widget_get_state (widget),
                                &event->area, widget, "label",
                                rect.x, rect.y, rect.width, rect.height);
 
@@ -4188,7 +4194,7 @@ gtk_label_button_press (GtkWidget      *widget,
 
   if (event->button == 1)
     {
-      if (!GTK_WIDGET_HAS_FOCUS (widget))
+      if (!gtk_widget_has_focus (widget))
 	{
 	  label->in_click = TRUE;
 	  gtk_widget_grab_focus (widget);
@@ -4544,12 +4550,11 @@ gtk_label_create_window (GtkLabel *label)
   gint attributes_mask;
   
   g_assert (label->select_info);
-  g_assert (GTK_WIDGET_REALIZED (label));
+  widget = GTK_WIDGET (label);
+  g_assert (gtk_widget_get_realized (widget));
   
   if (label->select_info->window)
     return;
-  
-  widget = GTK_WIDGET (label);
 
   attributes.x = widget->allocation.x;
   attributes.y = widget->allocation.y;
@@ -4566,7 +4571,7 @@ gtk_label_create_window (GtkLabel *label)
     GDK_POINTER_MOTION_MASK      |
     GDK_POINTER_MOTION_HINT_MASK;
   attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_NOREDIR;
-  if (GTK_WIDGET_IS_SENSITIVE (widget))
+  if (gtk_widget_is_sensitive (widget))
     {
       attributes.cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget),
 						      GDK_XTERM);
@@ -4602,12 +4607,12 @@ gtk_label_ensure_select_info (GtkLabel *label)
     {
       label->select_info = g_new0 (GtkLabelSelectionInfo, 1);
 
-      GTK_WIDGET_SET_FLAGS (label, GTK_CAN_FOCUS);
+      gtk_widget_set_can_focus (GTK_WIDGET (label), TRUE);
 
-      if (GTK_WIDGET_REALIZED (label))
+      if (gtk_widget_get_realized (GTK_WIDGET (label)))
 	gtk_label_create_window (label);
 
-      if (GTK_WIDGET_MAPPED (label))
+      if (gtk_widget_get_mapped (GTK_WIDGET (label)))
         gdk_window_show (label->select_info->window);
     }
 }
@@ -4625,7 +4630,7 @@ gtk_label_clear_select_info (GtkLabel *label)
       g_free (label->select_info);
       label->select_info = NULL;
 
-      GTK_WIDGET_UNSET_FLAGS (label, GTK_CAN_FOCUS);
+      gtk_widget_set_can_focus (GTK_WIDGET (label), FALSE);
     }
 }
 
@@ -5589,7 +5594,7 @@ popup_position_func (GtkMenu   *menu,
   label = GTK_LABEL (user_data);
   widget = GTK_WIDGET (label);
 
-  g_return_if_fail (GTK_WIDGET_REALIZED (label));
+  g_return_if_fail (gtk_widget_get_realized (widget));
 
   screen = gtk_widget_get_screen (widget);
   gdk_window_get_origin (widget->window, x, y);
@@ -5860,7 +5865,7 @@ gtk_label_activate_current_link (GtkLabel *label)
           if (window &&
               window->default_widget != widget &&
               !(widget == window->focus_widget &&
-                (!window->default_widget || !GTK_WIDGET_IS_SENSITIVE (window->default_widget))))
+                (!window->default_widget || !gtk_widget_is_sensitive (window->default_widget))))
             gtk_window_activate_default (window);
         }
     }

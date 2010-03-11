@@ -1143,7 +1143,7 @@ gtk_container_set_border_width (GtkContainer *container,
       container->border_width = border_width;
       g_object_notify (G_OBJECT (container), "border-width");
       
-      if (GTK_WIDGET_REALIZED (container))
+      if (gtk_widget_get_realized (GTK_WIDGET (container)))
 	gtk_widget_queue_resize (GTK_WIDGET (container));
     }
 }
@@ -1379,8 +1379,9 @@ _gtk_container_queue_resize (GtkContainer *container)
       
   if (resize_container)
     {
-      if (GTK_WIDGET_VISIBLE (resize_container) &&
- 	  (gtk_widget_is_toplevel (GTK_WIDGET (resize_container)) || GTK_WIDGET_REALIZED (resize_container)))
+      if (gtk_widget_get_visible (GTK_WIDGET (resize_container)) &&
+          (gtk_widget_is_toplevel (GTK_WIDGET (resize_container)) ||
+           gtk_widget_get_realized (GTK_WIDGET (resize_container))))
 	{
 	  switch (resize_container->resize_mode)
 	    {
@@ -1811,11 +1812,11 @@ gtk_container_focus (GtkWidget        *widget,
 
   return_val = FALSE;
 
-  if (gtk_widget_get_can_focus (GTK_WIDGET (container)))
+  if (gtk_widget_get_can_focus (widget))
     {
-      if (!GTK_WIDGET_HAS_FOCUS (container))
+      if (!gtk_widget_has_focus (widget))
 	{
-	  gtk_widget_grab_focus (GTK_WIDGET (container));
+	  gtk_widget_grab_focus (widget);
 	  return_val = TRUE;
 	}
     }
@@ -2250,7 +2251,7 @@ _gtk_container_focus_sort (GtkContainer     *container,
 
   while (children)
     {
-      if (GTK_WIDGET_REALIZED (children->data))
+      if (gtk_widget_get_realized (children->data))
 	visible_children = g_list_prepend (visible_children, children->data);
       children = children->next;
     }
@@ -2301,7 +2302,7 @@ gtk_container_focus_move (GtkContainer     *container,
 		  return TRUE;
             }
         }
-      else if (GTK_WIDGET_DRAWABLE (child) &&
+      else if (gtk_widget_is_drawable (child) &&
                gtk_widget_is_ancestor (child, GTK_WIDGET (container)))
         {
           if (gtk_widget_child_focus (child, direction))
@@ -2638,7 +2639,7 @@ gtk_container_expose (GtkWidget      *widget,
   g_return_val_if_fail (event != NULL, FALSE);
 
   
-  if (GTK_WIDGET_DRAWABLE (widget)) 
+  if (gtk_widget_is_drawable (widget))
     {
       data.container = widget;
       data.event = event;
@@ -2655,16 +2656,16 @@ static void
 gtk_container_map_child (GtkWidget *child,
 			 gpointer   client_data)
 {
-  if (GTK_WIDGET_VISIBLE (child) &&
+  if (gtk_widget_get_visible (child) &&
       GTK_WIDGET_CHILD_VISIBLE (child) &&
-      !GTK_WIDGET_MAPPED (child))
+      !gtk_widget_get_mapped (child))
     gtk_widget_map (child);
 }
 
 static void
 gtk_container_map (GtkWidget *widget)
 {
-  GTK_WIDGET_SET_FLAGS (widget, GTK_MAPPED);
+  gtk_widget_set_mapped (widget, TRUE);
 
   gtk_container_forall (GTK_CONTAINER (widget),
 			gtk_container_map_child,
@@ -2677,7 +2678,7 @@ gtk_container_map (GtkWidget *widget)
 static void
 gtk_container_unmap (GtkWidget *widget)
 {
-  GTK_WIDGET_UNSET_FLAGS (widget, GTK_MAPPED);
+  gtk_widget_set_mapped (widget, FALSE);
 
   if (gtk_widget_get_has_window (widget))
     gdk_window_hide (widget->window);
@@ -2720,7 +2721,7 @@ gtk_container_propagate_expose (GtkContainer   *container,
 
   g_assert (child->parent == GTK_WIDGET (container));
   
-  if (GTK_WIDGET_DRAWABLE (child) &&
+  if (gtk_widget_is_drawable (child) &&
       !gtk_widget_get_has_window (child) &&
       (child->window == event->window))
     {

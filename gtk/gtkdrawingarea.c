@@ -85,7 +85,7 @@ gtk_drawing_area_realize (GtkWidget *widget)
     }
   else
     {
-      GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+      gtk_widget_set_realized (widget, TRUE);
 
       attributes.window_type = GDK_WINDOW_CHILD;
       attributes.x = widget->allocation.x;
@@ -119,7 +119,7 @@ gtk_drawing_area_size_allocate (GtkWidget     *widget,
 
   widget->allocation = *allocation;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       if (gtk_widget_get_has_window (widget))
         gdk_window_move_resize (widget->window,

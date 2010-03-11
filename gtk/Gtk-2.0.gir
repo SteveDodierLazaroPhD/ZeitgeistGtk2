@@ -4595,7 +4595,7 @@ can do any preparation which are necessary before showing @page."
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="1906">
+    <constant name="BINARY_AGE" value="1907">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -5749,9 +5749,10 @@ its child (for instance a #GtkTreeView that depends on its
               c:identifier="gtk_builder_get_object"
               doc="Gets the object named @name. Note that this function does not
 increment the reference count of the returned object.
-found in the object tree."
+it could not be found in the object tree."
               version="2.12">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none"
+                      doc="the object named @name or %NULL if">
           <type name="GObject.Object" c:type="GObject*"/>
         </return-value>
         <parameters>
@@ -10868,8 +10869,6 @@ the children of a container, see gtk_container_foreach().">
                glib:type-name="GtkCellEditable"
                glib:get-type="gtk_cell_editable_get_type"
                glib:type-struct="CellEditableIface">
-      <prerequisite name="GObject.InitiallyUnowned"/>
-      <prerequisite name="Object"/>
       <prerequisite name="Widget"/>
       <virtual-method name="start_editing" invoker="start_editing">
         <return-value transfer-ownership="none">
@@ -21816,8 +21815,6 @@ gtk_expander_set_label_widget()."
                c:type="GtkFileChooser"
                glib:type-name="GtkFileChooser"
                glib:get-type="gtk_file_chooser_get_type">
-      <prerequisite name="GObject.InitiallyUnowned"/>
-      <prerequisite name="Object"/>
       <prerequisite name="Widget"/>
       <method name="set_action"
               c:identifier="gtk_file_chooser_set_action"
@@ -34032,7 +34029,7 @@ will be moved to the end of the list."
     <constant name="MAX_COMPOSE_LEN" value="7">
       <type name="int"/>
     </constant>
-    <constant name="MICRO_VERSION" value="6">
+    <constant name="MICRO_VERSION" value="7">
       <type name="int"/>
     </constant>
     <constant name="MINOR_VERSION" value="19">
@@ -65565,8 +65562,6 @@ directions of the GtkToolpalette."
                glib:type-name="GtkToolShell"
                glib:get-type="gtk_tool_shell_get_type"
                glib:type-struct="ToolShellIface">
-      <prerequisite name="GObject.InitiallyUnowned"/>
-      <prerequisite name="Object"/>
       <prerequisite name="Widget"/>
       <virtual-method name="get_icon_size" invoker="get_icon_size">
         <return-value transfer-ownership="full">
@@ -74609,7 +74604,9 @@ just before any action is activated."
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
       <implements name="Orientable"/>
-      <constructor name="new" c:identifier="gtk_vbox_new">
+      <constructor name="new"
+                   c:identifier="gtk_vbox_new"
+                   doc="Creates a new #GtkVBox.">
         <return-value transfer-ownership="full">
           <type name="VBox" c:type="GtkWidget*"/>
         </return-value>
@@ -74744,6 +74741,8 @@ just before any action is activated."
     </record>
     <class name="VScale"
            c:type="GtkVScale"
+           doc="The #GtkVScale struct contains private data only, and
+should be accessed using the functions below."
            parent="Scale"
            glib:type-name="GtkVScale"
            glib:get-type="gtk_vscale_get_type"
@@ -74751,7 +74750,9 @@ just before any action is activated."
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
       <implements name="Orientable"/>
-      <constructor name="new" c:identifier="gtk_vscale_new">
+      <constructor name="new"
+                   c:identifier="gtk_vscale_new"
+                   doc="Creates a new #GtkVScale.">
         <return-value transfer-ownership="full">
           <type name="VScale" c:type="GtkWidget*"/>
         </return-value>
@@ -74800,6 +74801,8 @@ needs, use gtk_scale_set_digits() to correct it.">
     </record>
     <class name="VScrollbar"
            c:type="GtkVScrollbar"
+           doc="The #GtkVScrollbar struct contains private data and should be accessed
+using the functions below."
            parent="Scrollbar"
            glib:type-name="GtkVScrollbar"
            glib:get-type="gtk_vscrollbar_get_type"
@@ -74835,6 +74838,8 @@ needs, use gtk_scale_set_digits() to correct it.">
     </record>
     <class name="VSeparator"
            c:type="GtkVSeparator"
+           doc="The #GtkVSeparator struct contains private data only, and
+should be accessed using the functions below."
            parent="Separator"
            glib:type-name="GtkVSeparator"
            glib:get-type="gtk_vseparator_get_type"
@@ -74842,7 +74847,9 @@ needs, use gtk_scale_set_digits() to correct it.">
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
       <implements name="Orientable"/>
-      <constructor name="new" c:identifier="gtk_vseparator_new">
+      <constructor name="new"
+                   c:identifier="gtk_vseparator_new"
+                   doc="Creates a new #GtkVSeparator.">
         <return-value transfer-ownership="full">
           <type name="VSeparator" c:type="GtkWidget*"/>
         </return-value>
@@ -80651,7 +80658,7 @@ gtk_widget_grab_focus() instead of this function.">
               doc="Retrieves the current focused widget within the window.
 Note that this is the widget that would have the focus
 if the toplevel window focused; if the toplevel window
-is not focused then  &lt;literal&gt;GTK_WIDGET_HAS_FOCUS (widget)&lt;/literal&gt; will
+is not focused then  &lt;literal&gt;gtk_widget_has_focus (widget)&lt;/literal&gt; will
 not be %TRUE for the widget.">
         <return-value transfer-ownership="none"
                       doc="the currently focused widget, or %NULL if there is none.">
@@ -80708,6 +80715,7 @@ dialog on top of the main window, or center the dialog over the
 main window. gtk_dialog_new_with_buttons() and other convenience
 functions in GTK+ will sometimes call
 gtk_window_set_transient_for() on your behalf.
+Passing %NULL for @parent unsets the current transient window.
 On Windows, this function puts the child window on top of the parent,
 much as the window manager would have done on X.">
         <return-value transfer-ownership="none">
@@ -80717,7 +80725,7 @@ much as the window manager would have done on X.">
           <parameter name="parent"
                      transfer-ownership="none"
                      allow-none="1"
-                     doc="parent window">
+                     doc="parent window, or %NULL">
             <type name="Window" c:type="GtkWindow*"/>
           </parameter>
         </parameters>
@@ -83233,8 +83241,9 @@ emit ::drag-motion signals."
     </function>
     <function name="drag_dest_set"
               c:identifier="gtk_drag_dest_set"
-              doc="the drop types that this @widget will accept. Later you can access the list
-with gtk_drag_dest_get_target_list() and gtk_drag_dest_find_target().
+              doc="indicating the drop types that this @widget will accept, or %NULL.
+Later you can access the list with gtk_drag_dest_get_target_list()
+and gtk_drag_dest_find_target().
 Sets a widget as a potential drop destination, and adds default behaviors.
 The default behaviors listed in @flags have an effect similar
 to installing default handlers for the widget&apos;s drag-and-drop signals
@@ -83280,8 +83289,13 @@ gdk_drag_status (context, GDK_ACTION_MOVE, time);
         <parameter name="flags" transfer-ownership="none">
           <type name="DestDefaults" c:type="GtkDestDefaults"/>
         </parameter>
-        <parameter name="targets" transfer-ownership="none">
-          <type name="TargetEntry" c:type="GtkTargetEntry*"/>
+        <parameter name="targets"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="a pointer to an array of #GtkTargetEntry&lt;!-- --&gt;s">
+          <array length="3" c:type="GtkTargetEntry*">
+            <type name="TargetEntry"/>
+          </array>
         </parameter>
         <parameter name="n_targets" transfer-ownership="none">
           <type name="int" c:type="gint"/>
@@ -83436,7 +83450,10 @@ changing the stock pixbuf for #GTK_STOCK_DND instead."
         <parameter name="pixmap" transfer-ownership="none">
           <type name="Gdk.Pixmap" c:type="GdkPixmap*"/>
         </parameter>
-        <parameter name="mask" transfer-ownership="none">
+        <parameter name="mask"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="the transparency mask for an image, or %NULL">
           <type name="Gdk.Bitmap" c:type="GdkBitmap*"/>
         </parameter>
         <parameter name="hot_x" transfer-ownership="none">
@@ -83655,7 +83672,11 @@ drag-and-drop."
         </parameter>
       </parameters>
     </function>
-    <function name="drag_source_set" c:identifier="gtk_drag_source_set">
+    <function name="drag_source_set"
+              c:identifier="gtk_drag_source_set"
+              doc="may be %NULL
+Sets up a widget so that GTK+ will start a drag operation when the user
+clicks and drags on the widget. The widget must have a window.">
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -83666,8 +83687,13 @@ drag-and-drop."
         <parameter name="start_button_mask" transfer-ownership="none">
           <type name="Gdk.ModifierType" c:type="GdkModifierType"/>
         </parameter>
-        <parameter name="targets" transfer-ownership="none">
-          <type name="TargetEntry" c:type="GtkTargetEntry*"/>
+        <parameter name="targets"
+                   transfer-ownership="none"
+                   allow-none="1"
+                   doc="the table of targets that the drag will support,">
+          <array length="3" c:type="GtkTargetEntry*">
+            <type name="TargetEntry"/>
+          </array>
         </parameter>
         <parameter name="n_targets" transfer-ownership="none">
           <type name="int" c:type="gint"/>

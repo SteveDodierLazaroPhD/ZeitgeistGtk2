@@ -308,7 +308,7 @@ gtk_tool_item_class_init (GtkToolItemClass *klass)
 static void
 gtk_tool_item_init (GtkToolItem *toolitem)
 {
-  GTK_WIDGET_UNSET_FLAGS (toolitem, GTK_CAN_FOCUS);  
+  gtk_widget_set_can_focus (GTK_WIDGET (toolitem), FALSE);
 
   toolitem->priv = GTK_TOOL_ITEM_GET_PRIVATE (toolitem);
 
@@ -425,7 +425,7 @@ gtk_tool_item_property_notify (GObject    *object,
 
   if (tool_item->priv->menu_item && strcmp (pspec->name, "sensitive") == 0)
     gtk_widget_set_sensitive (tool_item->priv->menu_item,
-			      GTK_WIDGET_SENSITIVE (tool_item));
+			      gtk_widget_get_sensitive (GTK_WIDGET (tool_item)));
 }
 
 static void
@@ -462,7 +462,7 @@ gtk_tool_item_realize (GtkWidget *widget)
   GtkToolItem *toolitem;
 
   toolitem = GTK_TOOL_ITEM (widget);
-  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+  gtk_widget_set_realized (widget, TRUE);
 
   widget->window = gtk_widget_get_parent_window (widget);
   g_object_ref (widget->window);
@@ -524,7 +524,7 @@ gtk_tool_item_size_request (GtkWidget      *widget,
 {
   GtkWidget *child = GTK_BIN (widget)->child;
 
-  if (child && GTK_WIDGET_VISIBLE (child))
+  if (child && gtk_widget_get_visible (child))
     {
       gtk_widget_size_request (child, requisition);
     }
@@ -557,7 +557,7 @@ gtk_tool_item_size_allocate (GtkWidget     *widget,
                             widget->allocation.width - border_width * 2,
                             widget->allocation.height - border_width * 2);
   
-  if (child && GTK_WIDGET_VISIBLE (child))
+  if (child && gtk_widget_get_visible (child))
     {
       child_allocation.x = allocation->x + border_width;
       child_allocation.y = allocation->y + border_width;
@@ -1196,10 +1196,11 @@ gtk_tool_item_set_use_drag_window (GtkToolItem *toolitem,
       
       if (use_drag_window)
 	{
-	  if (!toolitem->priv->drag_window && GTK_WIDGET_REALIZED (toolitem))
+	  if (!toolitem->priv->drag_window &&
+              gtk_widget_get_realized (GTK_WIDGET (toolitem)))
 	    {
 	      create_drag_window(toolitem);
-	      if (GTK_WIDGET_MAPPED (toolitem))
+	      if (gtk_widget_get_mapped (GTK_WIDGET (toolitem)))
 		gdk_window_show (toolitem->priv->drag_window);
 	    }
 	}
@@ -1445,7 +1446,7 @@ gtk_tool_item_set_proxy_menu_item (GtkToolItem *tool_item,
 	  g_object_ref_sink (menu_item);
 
 	  gtk_widget_set_sensitive (menu_item,
-				    GTK_WIDGET_SENSITIVE (tool_item));
+				    gtk_widget_get_sensitive (GTK_WIDGET (tool_item)));
 	}
       
       tool_item->priv->menu_item = menu_item;

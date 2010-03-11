@@ -353,7 +353,7 @@ gtk_drag_highlight_expose (GtkWidget      *widget,
 {
   gint x, y, width, height;
   
-  if (GTK_WIDGET_DRAWABLE (widget))
+  if (gtk_widget_is_drawable (widget))
     {
       cairo_t *cr;
       
@@ -521,7 +521,7 @@ gtk_drag_dest_set (GtkWidget            *widget,
 
   gtk_drag_dest_unset (widget);
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gtk_drag_dest_realized (widget, site);
 
   g_signal_connect (widget, "realize",
@@ -667,7 +667,7 @@ gtk_drag_find_widget (GtkWidget       *widget,
   gint x_offset = 0;
   gint y_offset = 0;
 
-  if (data->found || !GTK_WIDGET_MAPPED (widget) || !GTK_WIDGET_SENSITIVE (widget))
+  if (data->found || !gtk_widget_get_mapped (widget) || !gtk_widget_get_sensitive (widget))
     return;
 
   /* Note that in the following code, we only count the
@@ -757,7 +757,7 @@ gtk_drag_find_widget (GtkWidget       *widget,
 	  gtk_container_forall (GTK_CONTAINER (widget), prepend_and_ref_widget, &children);
 	  for (tmp_list = children; tmp_list; tmp_list = tmp_list->next)
 	    {
-	      if (!new_data.found && GTK_WIDGET_DRAWABLE (tmp_list->data))
+	      if (!new_data.found && gtk_widget_is_drawable (tmp_list->data))
 		gtk_drag_find_widget (tmp_list->data, &new_data);
 	      g_object_unref (tmp_list->data);
 	    }
@@ -1218,7 +1218,7 @@ gtk_drag_begin (GtkWidget         *widget,
 		GdkEvent          *event)
 {
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
-  g_return_val_if_fail (GTK_WIDGET_REALIZED (widget), NULL);
+  g_return_val_if_fail (gtk_widget_get_realized (widget), NULL);
   g_return_val_if_fail (targets != NULL, NULL);
 
   return gtk_drag_begin_internal (widget, NULL, targets,

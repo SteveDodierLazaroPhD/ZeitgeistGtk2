@@ -482,7 +482,7 @@ gail_widget_ref_state_set (AtkObject *accessible)
     }
   else
     {
-      if (GTK_WIDGET_IS_SENSITIVE (widget))
+      if (gtk_widget_is_sensitive (widget))
         {
           atk_state_set_add_state (state_set, ATK_STATE_SENSITIVE);
           atk_state_set_add_state (state_set, ATK_STATE_ENABLED);
@@ -511,17 +511,17 @@ gail_widget_ref_state_set (AtkObject *accessible)
        * GailWidget data structure so we can determine whether the value has 
        * changed.
        */
-      if (GTK_WIDGET_VISIBLE (widget))
+      if (gtk_widget_get_visible (widget))
         {
           atk_state_set_add_state (state_set, ATK_STATE_VISIBLE);
-          if (gail_widget_on_screen (widget) && GTK_WIDGET_MAPPED (widget) &&
+          if (gail_widget_on_screen (widget) && gtk_widget_get_mapped (widget) &&
               gail_widget_all_parents_visible (widget))
             {
               atk_state_set_add_state (state_set, ATK_STATE_SHOWING);
             }
         }
   
-      if (GTK_WIDGET_HAS_FOCUS (widget) && (widget == focus_widget))
+      if (gtk_widget_has_focus (widget) && (widget == focus_widget))
         {
           AtkObject *focus_obj;
 
@@ -666,7 +666,7 @@ gail_widget_get_extents (AtkComponent   *component,
 
   *width = widget->allocation.width;
   *height = widget->allocation.height;
-  if (!gail_widget_on_screen (widget) || (!GTK_WIDGET_DRAWABLE (widget)))
+  if (!gail_widget_on_screen (widget) || (!gtk_widget_is_drawable (widget)))
     {
       *x = G_MININT;
       *y = G_MININT;
@@ -937,7 +937,7 @@ gail_widget_map_gtk (GtkWidget     *widget)
 
   accessible = gtk_widget_get_accessible (widget);
   atk_object_notify_state_change (accessible, ATK_STATE_SHOWING,
-                                  GTK_WIDGET_MAPPED (widget));
+                                  gtk_widget_get_mapped (widget));
   return 1;
 }
 
@@ -986,12 +986,12 @@ gail_widget_real_notify_gtk (GObject     *obj,
   else if (strcmp (pspec->name, "visible") == 0)
     {
       state = ATK_STATE_VISIBLE;
-      value = GTK_WIDGET_VISIBLE (widget);
+      value = gtk_widget_get_visible (widget);
     }
   else if (strcmp (pspec->name, "sensitive") == 0)
     {
       state = ATK_STATE_SENSITIVE;
-      value = GTK_WIDGET_SENSITIVE (widget);
+      value = gtk_widget_get_sensitive (widget);
     }
   else
     return;
@@ -1093,7 +1093,7 @@ static gboolean gail_widget_all_parents_visible (GtkWidget *widget)
   for (iter_parent = gtk_widget_get_parent (widget); iter_parent;
        iter_parent = gtk_widget_get_parent (iter_parent))
     {
-      if (!GTK_WIDGET_VISIBLE (iter_parent))
+      if (!gtk_widget_get_visible (iter_parent))
         {
           result = FALSE;
           break;

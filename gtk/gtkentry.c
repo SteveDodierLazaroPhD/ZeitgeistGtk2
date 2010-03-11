@@ -1809,6 +1809,7 @@ gtk_entry_set_property (GObject         *object,
 {
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (object);
   GtkEntry *entry = GTK_ENTRY (object);
+  GtkWidget *widget;
 
   switch (prop_id)
     {
@@ -1822,10 +1823,11 @@ gtk_entry_set_property (GObject         *object,
 
       	if (new_value != entry->editable)
 	  {
+            widget = GTK_WIDGET (entry);
 	    if (!new_value)
 	      {
 		_gtk_entry_reset_im_context (entry);
-		if (GTK_WIDGET_HAS_FOCUS (entry))
+		if (gtk_widget_has_focus (widget))
 		  gtk_im_context_focus_out (entry->im_context);
 
 		entry->preedit_length = 0;
@@ -1834,7 +1836,7 @@ gtk_entry_set_property (GObject         *object,
 
 	    entry->editable = new_value;
 
-	    if (new_value && GTK_WIDGET_HAS_FOCUS (entry))
+	    if (new_value && gtk_widget_has_focus (widget))
 	      gtk_im_context_focus_in (entry->im_context);
 	    
 	    gtk_entry_queue_draw (entry);
@@ -2292,7 +2294,7 @@ gtk_entry_init (GtkEntry *entry)
 {
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
 
-  GTK_WIDGET_SET_FLAGS (entry, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (GTK_WIDGET (entry), TRUE);
 
   entry->editable = TRUE;
   entry->visible = TRUE;
@@ -2365,7 +2367,7 @@ get_icon_allocations (GtkEntry      *entry,
 
   get_text_area_size (entry, &x, &y, &width, &height);
 
-  if (GTK_WIDGET_HAS_FOCUS (entry) && !priv->interior_focus)
+  if (gtk_widget_has_focus (GTK_WIDGET (entry)) && !priv->interior_focus)
     y += priv->focus_width;
 
   primary->y = y;
@@ -2619,7 +2621,7 @@ update_cursors (GtkWidget *widget)
            * here is that for the entry, insensitive => arrow cursor, but for 
            * an icon in a sensitive entry, insensitive => xterm cursor.
            */
-          if (GTK_WIDGET_IS_SENSITIVE (widget) && 
+          if (gtk_widget_is_sensitive (widget) &&
               (icon_info->insensitive || 
                (icon_info->nonactivatable && icon_info->target_list == NULL)))
             {
@@ -2672,7 +2674,7 @@ realize_icon_info (GtkWidget            *widget,
                                       attributes_mask);
   gdk_window_set_user_data (icon_info->window, widget);
   gdk_window_set_background (icon_info->window,
-                             &widget->style->base[GTK_WIDGET_STATE (widget)]);
+                             &widget->style->base[gtk_widget_get_state (widget)]);
 
   gtk_widget_queue_resize (widget);
 }
@@ -2689,7 +2691,7 @@ construct_icon_info (GtkWidget            *widget,
   icon_info = g_slice_new0 (EntryIconInfo);
   priv->icons[icon_pos] = icon_info;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     realize_icon_info (widget, icon_pos);
 
   return icon_info;
@@ -2702,7 +2704,7 @@ gtk_entry_map (GtkWidget *widget)
   EntryIconInfo *icon_info = NULL;
   gint i;
 
-  if (GTK_WIDGET_REALIZED (widget) && !GTK_WIDGET_MAPPED (widget))
+  if (gtk_widget_get_realized (widget) && !gtk_widget_get_mapped (widget))
     {
       GTK_WIDGET_CLASS (gtk_entry_parent_class)->map (widget);
 
@@ -2726,7 +2728,7 @@ gtk_entry_unmap (GtkWidget *widget)
   EntryIconInfo *icon_info = NULL;
   gint i;
 
-  if (GTK_WIDGET_MAPPED (widget))
+  if (gtk_widget_get_mapped (widget))
     {
       for (i = 0; i < MAX_ICONS; i++)
         {
@@ -2751,7 +2753,7 @@ gtk_entry_realize (GtkWidget *widget)
   gint attributes_mask;
   int i;
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+  gtk_widget_set_realized (widget, TRUE);
   entry = GTK_ENTRY (widget);
   priv = GTK_ENTRY_GET_PRIVATE (entry);
 
@@ -2779,7 +2781,7 @@ gtk_entry_realize (GtkWidget *widget)
 
   get_text_area_size (entry, &attributes.x, &attributes.y, &attributes.width, &attributes.height);
  
-  if (GTK_WIDGET_IS_SENSITIVE (widget))
+  if (gtk_widget_is_sensitive (widget))
     {
       attributes.cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget), GDK_XTERM);
       attributes_mask |= GDK_WA_CURSOR;
@@ -2794,8 +2796,8 @@ gtk_entry_realize (GtkWidget *widget)
 
   widget->style = gtk_style_attach (widget->style, widget->window);
 
-  gdk_window_set_background (widget->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
-  gdk_window_set_background (entry->text_area, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+  gdk_window_set_background (widget->window, &widget->style->base[gtk_widget_get_state (widget)]);
+  gdk_window_set_background (entry->text_area, &widget->style->base[gtk_widget_get_state (widget)]);
 
   gdk_window_show (entry->text_area);
 
@@ -2944,6 +2946,7 @@ gtk_entry_size_request (GtkWidget      *widget,
 static void
 place_windows (GtkEntry *entry)
 {
+  GtkWidget *widget = GTK_WIDGET (entry);
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
   gint x, y, width, height;
   GtkAllocation primary;
@@ -2953,10 +2956,10 @@ place_windows (GtkEntry *entry)
   get_text_area_size (entry, &x, &y, &width, &height);
   get_icon_allocations (entry, &primary, &secondary);
 
-  if (GTK_WIDGET_HAS_FOCUS (entry) && !priv->interior_focus)
+  if (gtk_widget_has_focus (widget) && !priv->interior_focus)
     y += priv->focus_width;
 
-  if (gtk_widget_get_direction (GTK_WIDGET (entry)) == GTK_TEXT_DIR_RTL)
+  if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
     x += secondary.width;
   else
     x += primary.width;
@@ -2972,7 +2975,7 @@ place_windows (GtkEntry *entry)
                             secondary.x, secondary.y,
                             secondary.width, secondary.height);
 
-  gdk_window_move_resize (GTK_ENTRY (entry)->text_area, x, y, width, height);
+  gdk_window_move_resize (entry->text_area, x, y, width, height);
 }
 
 static void
@@ -2991,12 +2994,12 @@ gtk_entry_get_text_area_size (GtkEntry *entry,
   gtk_widget_get_child_requisition (widget, &requisition);
   _gtk_entry_get_borders (entry, &xborder, &yborder);
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gdk_drawable_get_size (widget->window, NULL, &frame_height);
   else
     frame_height = requisition.height;
 
-  if (GTK_WIDGET_HAS_FOCUS (widget) && !priv->interior_focus)
+  if (gtk_widget_has_focus (widget) && !priv->interior_focus)
     frame_height -= 2 * priv->focus_width;
 
   if (x)
@@ -3099,7 +3102,7 @@ gtk_entry_size_allocate (GtkWidget     *widget,
   
   widget->allocation = *allocation;
   
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       /* We call gtk_widget_get_child_requisition, since we want (for
        * backwards compatibility reasons) the realization here to
@@ -3115,7 +3118,7 @@ gtk_entry_size_allocate (GtkWidget     *widget,
       gtk_entry_recompute (entry);
 
       completion = gtk_entry_get_completion (entry);
-      if (completion && GTK_WIDGET_MAPPED (completion->priv->popup_window))
+      if (completion && gtk_widget_get_mapped (completion->priv->popup_window))
         _gtk_entry_completion_resize_popup (completion);
     }
 }
@@ -3236,7 +3239,7 @@ draw_icon (GtkWidget            *widget,
   x = (width  - gdk_pixbuf_get_width (pixbuf)) / 2;
   y = (height - gdk_pixbuf_get_height (pixbuf)) / 2;
 
-  if (!GTK_WIDGET_IS_SENSITIVE (widget) ||
+  if (!gtk_widget_is_sensitive (widget) ||
       icon_info->insensitive)
     {
       GdkPixbuf *temp_pixbuf;
@@ -3291,7 +3294,7 @@ gtk_entry_draw_frame (GtkWidget      *widget,
       width += xborder * 2;
     }
 
-  if (GTK_WIDGET_HAS_FOCUS (widget) && !priv->interior_focus)
+  if (gtk_widget_has_focus (widget) && !priv->interior_focus)
     {
       x += priv->focus_width;
       y += priv->focus_width;
@@ -3301,8 +3304,8 @@ gtk_entry_draw_frame (GtkWidget      *widget,
 
   gtk_widget_style_get (widget, "state-hint", &state_hint, NULL);
   if (state_hint)
-      state = GTK_WIDGET_HAS_FOCUS (widget) ?
-        GTK_STATE_ACTIVE : GTK_WIDGET_STATE (widget);
+      state = gtk_widget_has_focus (widget) ?
+        GTK_STATE_ACTIVE : gtk_widget_get_state (widget);
   else
       state = GTK_STATE_NORMAL;
 
@@ -3313,14 +3316,15 @@ gtk_entry_draw_frame (GtkWidget      *widget,
 
   gtk_entry_draw_progress (widget, event);
 
-  if (GTK_WIDGET_HAS_FOCUS (widget) && !priv->interior_focus)
+  if (gtk_widget_has_focus (widget) && !priv->interior_focus)
     {
       x -= priv->focus_width;
       y -= priv->focus_width;
       width += 2 * priv->focus_width;
       height += 2 * priv->focus_width;
       
-      gtk_paint_focus (widget->style, widget->window, GTK_WIDGET_STATE (widget), 
+      gtk_paint_focus (widget->style, widget->window,
+                       gtk_widget_get_state (widget),
 		       &event->area, widget, "entry",
 		       0, 0, width, height);
     }
@@ -3368,7 +3372,7 @@ get_progress_area (GtkWidget *widget,
   *width -= progress_border.left + progress_border.right;
   *height -= progress_border.top + progress_border.bottom;
 
-  if (GTK_WIDGET_HAS_FOCUS (widget) && !private->interior_focus)
+  if (gtk_widget_has_focus (widget) && !private->interior_focus)
     {
       *x += private->focus_width;
       *y += private->focus_width;
@@ -3430,7 +3434,7 @@ gtk_entry_draw_progress (GtkWidget      *widget,
     }
 
   state = GTK_STATE_SELECTED;
-  if (!GTK_WIDGET_SENSITIVE (widget))
+  if (!gtk_widget_get_sensitive (widget))
     state = GTK_STATE_INSENSITIVE;
 
   gtk_paint_box (widget->style, event->window,
@@ -3451,10 +3455,10 @@ gtk_entry_expose (GtkWidget      *widget,
 
   gtk_widget_style_get (widget, "state-hint", &state_hint, NULL);
   if (state_hint)
-    state = GTK_WIDGET_HAS_FOCUS (widget) ?
-      GTK_STATE_ACTIVE : GTK_WIDGET_STATE (widget);
+    state = gtk_widget_has_focus (widget) ?
+      GTK_STATE_ACTIVE : gtk_widget_get_state (widget);
   else
-    state = GTK_WIDGET_STATE(widget);
+    state = gtk_widget_get_state(widget);
 
   if (widget->window == event->window)
     {
@@ -3480,7 +3484,7 @@ gtk_entry_expose (GtkWidget      *widget,
 
       /* When no text is being displayed at all, don't show the cursor */
       if (gtk_entry_get_display_mode (entry) != DISPLAY_BLANK &&
-	  GTK_WIDGET_HAS_FOCUS (widget) &&
+	  gtk_widget_has_focus (widget) &&
 	  entry->selection_bound == entry->current_pos && entry->cursor_visible) 
         gtk_entry_draw_cursor (GTK_ENTRY (widget), CURSOR_STANDARD);
     }
@@ -3499,7 +3503,7 @@ gtk_entry_expose (GtkWidget      *widget,
               gdk_drawable_get_size (icon_info->window, &width, &height);
 
               gtk_paint_flat_box (widget->style, icon_info->window,
-                                  GTK_WIDGET_STATE (widget), GTK_SHADOW_NONE,
+                                  gtk_widget_get_state (widget), GTK_SHADOW_NONE,
                                   NULL, widget, "entry_bg",
                                   0, 0, width, height);
 
@@ -3682,7 +3686,7 @@ gtk_entry_button_press (GtkWidget      *widget,
 
   entry->button = event->button;
   
-  if (!GTK_WIDGET_HAS_FOCUS (widget))
+  if (!gtk_widget_has_focus (widget))
     {
       entry->in_click = TRUE;
       gtk_widget_grab_focus (widget);
@@ -4239,18 +4243,18 @@ gtk_entry_state_changed (GtkWidget      *widget,
   GdkCursor *cursor;
   gint i;
   
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
-      gdk_window_set_background (widget->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
-      gdk_window_set_background (entry->text_area, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+      gdk_window_set_background (widget->window, &widget->style->base[gtk_widget_get_state (widget)]);
+      gdk_window_set_background (entry->text_area, &widget->style->base[gtk_widget_get_state (widget)]);
       for (i = 0; i < MAX_ICONS; i++) 
         {
           EntryIconInfo *icon_info = priv->icons[i];
           if (icon_info && icon_info->window)
-            gdk_window_set_background (icon_info->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+            gdk_window_set_background (icon_info->window, &widget->style->base[gtk_widget_get_state (widget)]);
         }
 
-      if (GTK_WIDGET_IS_SENSITIVE (widget))
+      if (gtk_widget_is_sensitive (widget))
         cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget), GDK_XTERM);
       else 
         cursor = NULL;
@@ -4265,7 +4269,7 @@ gtk_entry_state_changed (GtkWidget      *widget,
       update_cursors (widget);
     }
 
-  if (!GTK_WIDGET_IS_SENSITIVE (widget))
+  if (!gtk_widget_is_sensitive (widget))
     {
       /* Clear any selection */
       gtk_editable_select_region (GTK_EDITABLE (entry), entry->current_pos, entry->current_pos);      
@@ -4457,15 +4461,15 @@ gtk_entry_style_set (GtkWidget *widget,
 
   gtk_entry_recompute (entry);
 
-  if (previous_style && GTK_WIDGET_REALIZED (widget))
+  if (previous_style && gtk_widget_get_realized (widget))
     {
-      gdk_window_set_background (widget->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
-      gdk_window_set_background (entry->text_area, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+      gdk_window_set_background (widget->window, &widget->style->base[gtk_widget_get_state (widget)]);
+      gdk_window_set_background (entry->text_area, &widget->style->base[gtk_widget_get_state (widget)]);
       for (i = 0; i < MAX_ICONS; i++) 
         {
           EntryIconInfo *icon_info = priv->icons[i];
           if (icon_info && icon_info->window)
-            gdk_window_set_background (icon_info->window, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+            gdk_window_set_background (icon_info->window, &widget->style->base[gtk_widget_get_state (widget)]);
         }
     }
 
@@ -5139,7 +5143,7 @@ gtk_entry_real_activate (GtkEntry *entry)
 	  if (window &&
 	      widget != window->default_widget &&
 	      !(widget == window->focus_widget &&
-		(!window->default_widget || !GTK_WIDGET_SENSITIVE (window->default_widget))))
+		(!window->default_widget || !gtk_widget_get_sensitive (window->default_widget))))
 	    gtk_window_activate_default (window);
 	}
     }
@@ -5407,7 +5411,7 @@ gtk_entry_create_layout (GtkEntry *entry,
 
       if (pango_dir == PANGO_DIRECTION_NEUTRAL)
         {
-          if (GTK_WIDGET_HAS_FOCUS (widget))
+          if (gtk_widget_has_focus (widget))
 	    {
 	      GdkDisplay *display = gtk_widget_get_display (widget);
 	      GdkKeymap *keymap = gdk_keymap_get_for_display (display);
@@ -5535,7 +5539,7 @@ draw_text_with_color (GtkEntry *entry, cairo_t *cr, GdkColor *default_color)
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
       gtk_entry_get_pixel_ranges (entry, &ranges, &n_ranges);
 
-      if (GTK_WIDGET_HAS_FOCUS (entry))
+      if (gtk_widget_has_focus (widget))
         {
           selection_color = &widget->style->base [GTK_STATE_SELECTED];
           text_color = &widget->style->text [GTK_STATE_SELECTED];
@@ -5579,7 +5583,7 @@ gtk_entry_draw_text (GtkEntry *entry)
   if (gtk_entry_get_display_mode (entry) == DISPLAY_BLANK)
     return;
   
-  if (GTK_WIDGET_DRAWABLE (entry))
+  if (gtk_widget_is_drawable (widget))
     {
       GdkColor text_color, bar_text_color;
       gint pos_x, pos_y;
@@ -5588,7 +5592,7 @@ gtk_entry_draw_text (GtkEntry *entry)
       GtkStateType state;
 
       state = GTK_STATE_SELECTED;
-      if (!GTK_WIDGET_SENSITIVE (widget))
+      if (!gtk_widget_get_sensitive (widget))
         state = GTK_STATE_INSENSITIVE;
       text_color = widget->style->text[widget->state];
       bar_text_color = widget->style->fg[state];
@@ -5664,12 +5668,12 @@ static void
 gtk_entry_draw_cursor (GtkEntry  *entry,
 		       CursorType type)
 {
+  GtkWidget *widget = GTK_WIDGET (entry);
   GdkKeymap *keymap = gdk_keymap_get_for_display (gtk_widget_get_display (GTK_WIDGET (entry)));
   PangoDirection keymap_direction = gdk_keymap_get_direction (keymap);
   
-  if (GTK_WIDGET_DRAWABLE (entry))
+  if (gtk_widget_is_drawable (widget))
     {
-      GtkWidget *widget = GTK_WIDGET (entry);
       GdkRectangle cursor_location;
       gboolean split_cursor;
       PangoRectangle cursor_rect;
@@ -5786,7 +5790,7 @@ gtk_entry_draw_cursor (GtkEntry  *entry,
 static void
 gtk_entry_queue_draw (GtkEntry *entry)
 {
-  if (GTK_WIDGET_DRAWABLE (entry))
+  if (gtk_widget_is_drawable (GTK_WIDGET (entry)))
     gdk_window_invalidate_rect (entry->text_area, NULL, FALSE);
 }
 
@@ -5904,7 +5908,7 @@ gtk_entry_adjust_scroll (GtkEntry *entry)
   PangoLayoutLine *line;
   PangoRectangle logical_rect;
 
-  if (!GTK_WIDGET_REALIZED (entry))
+  if (!gtk_widget_get_realized (GTK_WIDGET (entry)))
     return;
 
   _gtk_entry_effective_inner_border (entry, &inner_border);
@@ -6276,7 +6280,7 @@ paste_received (GtkClipboard *clipboard,
 
       if (completion)
 	{
-	  if (GTK_WIDGET_MAPPED (completion->priv->popup_window))
+	  if (gtk_widget_get_mapped (completion->priv->popup_window))
 	    _gtk_entry_completion_popdown (completion);
 
           if (!popup_completion && completion->priv->changed_id > 0)
@@ -6346,7 +6350,7 @@ gtk_entry_update_primary_selection (GtkEntry *entry)
   gint start, end;
   gint n_targets;
 
-  if (!GTK_WIDGET_REALIZED (entry))
+  if (!gtk_widget_get_realized (GTK_WIDGET (entry)))
     return;
 
   list = gtk_target_list_new (NULL, 0);
@@ -6445,15 +6449,18 @@ gtk_entry_ensure_pixbuf (GtkEntry             *entry,
 {
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
   EntryIconInfo *icon_info = priv->icons[icon_pos];
-  GdkScreen *screen;
+  GtkIconInfo *info;
   GtkIconTheme *icon_theme;
   GtkSettings *settings;
+  GtkStateType state;
+  GtkWidget *widget;
+  GdkScreen *screen;
   gint width, height;
-  GtkIconInfo *info;
-  gint state;
 
   if (!icon_info || icon_info->pixbuf)
     return;
+
+  widget = GTK_WIDGET (entry);
 
   switch (icon_info->storage_type)
     {
@@ -6461,22 +6468,22 @@ gtk_entry_ensure_pixbuf (GtkEntry             *entry,
     case GTK_IMAGE_PIXBUF:
       break;
     case GTK_IMAGE_STOCK:
-      state = GTK_WIDGET_STATE (entry);
-      GTK_WIDGET_STATE (entry) = GTK_STATE_NORMAL;
-      icon_info->pixbuf = gtk_widget_render_icon (GTK_WIDGET (entry),
+      state = gtk_widget_get_state (widget);
+      gtk_widget_set_state (widget, GTK_STATE_NORMAL);
+      icon_info->pixbuf = gtk_widget_render_icon (widget,
                                                   icon_info->stock_id,
                                                   GTK_ICON_SIZE_MENU,
                                                   NULL);
       if (!icon_info->pixbuf)
-        icon_info->pixbuf = gtk_widget_render_icon (GTK_WIDGET (entry),
+        icon_info->pixbuf = gtk_widget_render_icon (widget,
                                                     GTK_STOCK_MISSING_IMAGE,
                                                     GTK_ICON_SIZE_MENU,
                                                     NULL);
-      GTK_WIDGET_STATE (entry) = state;
+      gtk_widget_set_state (widget, state);
       break;
 
     case GTK_IMAGE_ICON_NAME:
-      screen = gtk_widget_get_screen (GTK_WIDGET (entry));
+      screen = gtk_widget_get_screen (widget);
       if (screen)
         {
           icon_theme = gtk_icon_theme_get_for_screen (screen);
@@ -6493,19 +6500,19 @@ gtk_entry_ensure_pixbuf (GtkEntry             *entry,
 
           if (icon_info->pixbuf == NULL)
             {
-              state = GTK_WIDGET_STATE (entry);
-              GTK_WIDGET_STATE (entry) = GTK_STATE_NORMAL;
-              icon_info->pixbuf = gtk_widget_render_icon (GTK_WIDGET (entry),
+              state = gtk_widget_get_state (widget);
+              gtk_widget_set_state (widget, GTK_STATE_NORMAL);
+              icon_info->pixbuf = gtk_widget_render_icon (widget,
                                                           GTK_STOCK_MISSING_IMAGE,
                                                           GTK_ICON_SIZE_MENU,
                                                           NULL);
-              GTK_WIDGET_STATE (entry) = state;
+              gtk_widget_set_state (widget, state);
             }
         }
       break;
 
     case GTK_IMAGE_GICON:
-      screen = gtk_widget_get_screen (GTK_WIDGET (entry));
+      screen = gtk_widget_get_screen (widget);
       if (screen)
         {
           icon_theme = gtk_icon_theme_get_for_screen (screen);
@@ -6527,13 +6534,13 @@ gtk_entry_ensure_pixbuf (GtkEntry             *entry,
 
           if (icon_info->pixbuf == NULL)
             {
-              state = GTK_WIDGET_STATE (entry);
-              GTK_WIDGET_STATE (entry) = GTK_STATE_NORMAL;
-              icon_info->pixbuf = gtk_widget_render_icon (GTK_WIDGET (entry),
+              state = gtk_widget_get_state (widget);
+              gtk_widget_set_state (widget, GTK_STATE_NORMAL);
+              icon_info->pixbuf = gtk_widget_render_icon (widget,
                                                           GTK_STOCK_MISSING_IMAGE,
                                                           GTK_ICON_SIZE_MENU,
                                                           NULL);
-              GTK_WIDGET_STATE (entry) = state;
+              gtk_widget_set_state (widget, state);
             }
         }
       break;
@@ -7594,13 +7601,13 @@ gtk_entry_set_icon_from_pixbuf (GtkEntry             *entry,
           g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
 
-      if (GTK_WIDGET_MAPPED (entry))
+      if (gtk_widget_get_mapped (GTK_WIDGET (entry)))
           gdk_window_show_unraised (icon_info->window);
     }
 
   gtk_entry_ensure_pixbuf (entry, icon_pos);
   
-  if (GTK_WIDGET_VISIBLE (entry))
+  if (gtk_widget_get_visible (GTK_WIDGET (entry)))
     gtk_widget_queue_resize (GTK_WIDGET (entry));
 
   g_object_thaw_notify (G_OBJECT (entry));
@@ -7661,13 +7668,13 @@ gtk_entry_set_icon_from_stock (GtkEntry             *entry,
           g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
 
-      if (GTK_WIDGET_MAPPED (entry))
+      if (gtk_widget_get_mapped (GTK_WIDGET (entry)))
           gdk_window_show_unraised (icon_info->window);
     }
 
   gtk_entry_ensure_pixbuf (entry, icon_pos);
 
-  if (GTK_WIDGET_VISIBLE (entry))
+  if (gtk_widget_get_visible (GTK_WIDGET (entry)))
     gtk_widget_queue_resize (GTK_WIDGET (entry));
 
   g_object_thaw_notify (G_OBJECT (entry));
@@ -7731,13 +7738,13 @@ gtk_entry_set_icon_from_icon_name (GtkEntry             *entry,
           g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
 
-      if (GTK_WIDGET_MAPPED (entry))
+      if (gtk_widget_get_mapped (GTK_WIDGET (entry)))
           gdk_window_show_unraised (icon_info->window);
     }
 
   gtk_entry_ensure_pixbuf (entry, icon_pos);
 
-  if (GTK_WIDGET_VISIBLE (entry))
+  if (gtk_widget_get_visible (GTK_WIDGET (entry)))
     gtk_widget_queue_resize (GTK_WIDGET (entry));
 
   g_object_thaw_notify (G_OBJECT (entry));
@@ -7798,13 +7805,13 @@ gtk_entry_set_icon_from_gicon (GtkEntry             *entry,
           g_object_notify (G_OBJECT (entry), "secondary-icon-storage-type");
         }
 
-      if (GTK_WIDGET_MAPPED (entry))
+      if (gtk_widget_get_mapped (GTK_WIDGET (entry)))
           gdk_window_show_unraised (icon_info->window);
     }
 
   gtk_entry_ensure_pixbuf (entry, icon_pos);
 
-  if (GTK_WIDGET_VISIBLE (entry))
+  if (gtk_widget_get_visible (GTK_WIDGET (entry)))
     gtk_widget_queue_resize (GTK_WIDGET (entry));
 
   g_object_thaw_notify (G_OBJECT (entry));
@@ -7842,7 +7849,7 @@ gtk_entry_set_icon_activatable (GtkEntry             *entry,
     {
       icon_info->nonactivatable = !activatable;
 
-      if (GTK_WIDGET_REALIZED (GTK_WIDGET (entry)))
+      if (gtk_widget_get_realized (GTK_WIDGET (entry)))
         update_cursors (GTK_WIDGET (entry));
 
       g_object_notify (G_OBJECT (entry),
@@ -8046,7 +8053,7 @@ gtk_entry_set_icon_sensitive (GtkEntry             *entry,
       icon_info->pressed = FALSE;
       icon_info->prelight = FALSE;
 
-      if (GTK_WIDGET_REALIZED (GTK_WIDGET (entry)))
+      if (gtk_widget_get_realized (GTK_WIDGET (entry)))
         update_cursors (GTK_WIDGET (entry));
 
       gtk_widget_queue_draw (GTK_WIDGET (entry));
@@ -8563,7 +8570,7 @@ popup_position_func (GtkMenu   *menu,
   GtkBorder inner_border;
   gint monitor_num, strong_x, height;
  
-  g_return_if_fail (GTK_WIDGET_REALIZED (entry));
+  g_return_if_fail (gtk_widget_get_realized (widget));
 
   gdk_window_get_origin (entry->text_area, x, y);
 
@@ -8620,7 +8627,7 @@ popup_targets_received (GtkClipboard     *clipboard,
   PopupInfo *info = user_data;
   GtkEntry *entry = info->entry;
   
-  if (GTK_WIDGET_REALIZED (entry))
+  if (gtk_widget_get_realized (GTK_WIDGET (entry)))
     {
       DisplayMode mode;
       gboolean clipboard_contains_text;
@@ -9049,7 +9056,7 @@ gtk_entry_drag_data_delete (GtkWidget      *widget,
 static gboolean
 cursor_blinks (GtkEntry *entry)
 {
-  if (GTK_WIDGET_HAS_FOCUS (entry) &&
+  if (gtk_widget_has_focus (GTK_WIDGET (entry)) &&
       entry->editable &&
       entry->selection_bound == entry->current_pos)
     {
@@ -9090,24 +9097,30 @@ get_cursor_blink_timeout (GtkEntry *entry)
 static void
 show_cursor (GtkEntry *entry)
 {
+  GtkWidget *widget;
+
   if (!entry->cursor_visible)
     {
       entry->cursor_visible = TRUE;
 
-      if (GTK_WIDGET_HAS_FOCUS (entry) && entry->selection_bound == entry->current_pos)
-	gtk_widget_queue_draw (GTK_WIDGET (entry));
+      widget = GTK_WIDGET (entry);
+      if (gtk_widget_has_focus (widget) && entry->selection_bound == entry->current_pos)
+	gtk_widget_queue_draw (widget);
     }
 }
 
 static void
 hide_cursor (GtkEntry *entry)
 {
+  GtkWidget *widget;
+
   if (entry->cursor_visible)
     {
       entry->cursor_visible = FALSE;
 
-      if (GTK_WIDGET_HAS_FOCUS (entry) && entry->selection_bound == entry->current_pos)
-	gtk_widget_queue_draw (GTK_WIDGET (entry));
+      widget = GTK_WIDGET (entry);
+      if (gtk_widget_has_focus (widget) && entry->selection_bound == entry->current_pos)
+	gtk_widget_queue_draw (widget);
     }
 }
 
@@ -9124,7 +9137,7 @@ blink_cb (gpointer data)
   entry = GTK_ENTRY (data);
   priv = GTK_ENTRY_GET_PRIVATE (entry);
  
-  if (!GTK_WIDGET_HAS_FOCUS (entry))
+  if (!gtk_widget_has_focus (GTK_WIDGET (entry)))
     {
       g_warning ("GtkEntry - did not receive focus-out-event. If you\n"
 		 "connect a handler to this signal, it must return\n"
@@ -9252,7 +9265,7 @@ gtk_entry_completion_timeout (gpointer data)
       g_object_get (completion, "popup-single-match", &popup_single, NULL);
       if ((matches > (popup_single ? 0: 1)) || actions > 0)
 	{ 
-	  if (GTK_WIDGET_VISIBLE (completion->priv->popup_window))
+	  if (gtk_widget_get_visible (completion->priv->popup_window))
 	    _gtk_entry_completion_resize_popup (completion);
           else
 	    _gtk_entry_completion_popup (completion);
@@ -9260,7 +9273,7 @@ gtk_entry_completion_timeout (gpointer data)
       else 
 	_gtk_entry_completion_popdown (completion);
     }
-  else if (GTK_WIDGET_VISIBLE (completion->priv->popup_window))
+  else if (gtk_widget_get_visible (completion->priv->popup_window))
     _gtk_entry_completion_popdown (completion);
 
   return FALSE;
@@ -9292,7 +9305,7 @@ gtk_entry_completion_key_press (GtkWidget   *widget,
   gint matches, actions = 0;
   GtkEntryCompletion *completion = GTK_ENTRY_COMPLETION (user_data);
 
-  if (!GTK_WIDGET_MAPPED (completion->priv->popup_window))
+  if (!gtk_widget_get_mapped (completion->priv->popup_window))
     return FALSE;
 
   matches = gtk_tree_model_iter_n_children (GTK_TREE_MODEL (completion->priv->filter_model), NULL);
@@ -9569,7 +9582,7 @@ gtk_entry_completion_changed (GtkWidget *entry,
   if (completion->priv->minimum_key_length > 0 &&
       strcmp ("", gtk_entry_get_text (GTK_ENTRY (entry))) == 0)
     {
-      if (GTK_WIDGET_VISIBLE (completion->priv->popup_window))
+      if (gtk_widget_get_visible (completion->priv->popup_window))
         _gtk_entry_completion_popdown (completion);
       return;
     }
@@ -9742,7 +9755,7 @@ gtk_entry_set_completion (GtkEntry           *entry,
           old->priv->completion_timeout = 0;
         }
 
-      if (GTK_WIDGET_MAPPED (old->priv->popup_window))
+      if (gtk_widget_get_mapped (old->priv->popup_window))
         _gtk_entry_completion_popdown (old);
 
       disconnect_completion_signals (entry, old);
@@ -9856,6 +9869,7 @@ void
 gtk_entry_set_progress_fraction (GtkEntry *entry,
                                  gdouble   fraction)
 {
+  GtkWidget       *widget;
   GtkEntryPrivate *private;
   gdouble          old_fraction;
   gint x, y, width, height;
@@ -9863,6 +9877,7 @@ gtk_entry_set_progress_fraction (GtkEntry *entry,
 
   g_return_if_fail (GTK_IS_ENTRY (entry));
 
+  widget = GTK_WIDGET (entry);
   private = GTK_ENTRY_GET_PRIVATE (entry);
 
   if (private->progress_pulse_mode)
@@ -9870,8 +9885,8 @@ gtk_entry_set_progress_fraction (GtkEntry *entry,
   else
     old_fraction = private->progress_fraction;
 
-  if (GTK_WIDGET_DRAWABLE (GTK_WIDGET (entry)))
-    get_progress_area (GTK_WIDGET(entry), &old_x, &old_y, &old_width, &old_height);
+  if (gtk_widget_is_drawable (widget))
+    get_progress_area (widget, &old_x, &old_y, &old_width, &old_height);
 
   fraction = CLAMP (fraction, 0.0, 1.0);
 
@@ -9879,12 +9894,12 @@ gtk_entry_set_progress_fraction (GtkEntry *entry,
   private->progress_pulse_mode = FALSE;
   private->progress_pulse_current = 0.0;
 
-  if (GTK_WIDGET_DRAWABLE (GTK_WIDGET (entry)))
+  if (gtk_widget_is_drawable (widget))
     {
-      get_progress_area (GTK_WIDGET(entry), &x, &y, &width, &height);
+      get_progress_area (widget, &x, &y, &width, &height);
 
       if ((x != old_x) || (y != old_y) || (width != old_width) || (height != old_height))
-        gtk_widget_queue_draw (GTK_WIDGET (entry));
+        gtk_widget_queue_draw (widget);
     }
 
   if (fraction != old_fraction)

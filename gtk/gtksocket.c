@@ -238,7 +238,7 @@ gtk_socket_steal (GtkSocket      *socket,
   g_return_if_fail (GTK_IS_SOCKET (socket));
   g_return_if_fail (GTK_WIDGET_ANCHORED (socket));
 
-  if (!GTK_WIDGET_REALIZED (socket))
+  if (!gtk_widget_get_realized (GTK_WIDGET (socket)))
     gtk_widget_realize (GTK_WIDGET (socket));
 
   _gtk_socket_add_window (socket, wid, TRUE);
@@ -269,7 +269,7 @@ gtk_socket_add_id (GtkSocket      *socket,
   g_return_if_fail (GTK_IS_SOCKET (socket));
   g_return_if_fail (GTK_WIDGET_ANCHORED (socket));
 
-  if (!GTK_WIDGET_REALIZED (socket))
+  if (!gtk_widget_get_realized (GTK_WIDGET (socket)))
     gtk_widget_realize (GTK_WIDGET (socket));
 
   _gtk_socket_add_window (socket, window_id, TRUE);
@@ -294,7 +294,7 @@ gtk_socket_get_id (GtkSocket *socket)
   g_return_val_if_fail (GTK_IS_SOCKET (socket), 0);
   g_return_val_if_fail (GTK_WIDGET_ANCHORED (socket), 0);
 
-  if (!GTK_WIDGET_REALIZED (socket))
+  if (!gtk_widget_get_realized (GTK_WIDGET (socket)))
     gtk_widget_realize (GTK_WIDGET (socket));
 
   return _gtk_socket_windowing_get_id (socket);
@@ -326,7 +326,7 @@ gtk_socket_realize (GtkWidget *widget)
   GdkWindowAttr attributes;
   gint attributes_mask;
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+  gtk_widget_set_realized (widget, TRUE);
 
   attributes.window_type = GDK_WINDOW_CHILD;
   attributes.x = widget->allocation.x;
@@ -390,7 +390,7 @@ gtk_socket_unrealize (GtkWidget *widget)
 {
   GtkSocket *socket = GTK_SOCKET (widget);
 
-  GTK_WIDGET_UNSET_FLAGS (widget, GTK_REALIZED);
+  gtk_widget_set_realized (widget, FALSE);
 
   if (socket->plug_widget)
     {
@@ -439,7 +439,7 @@ gtk_socket_size_allocate (GtkWidget     *widget,
   GtkSocket *socket = GTK_SOCKET (widget);
 
   widget->allocation = *allocation;
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gdk_window_move_resize (widget->window,
 			      allocation->x, allocation->y,
@@ -693,7 +693,7 @@ gtk_socket_key_event (GtkWidget   *widget,
 {
   GtkSocket *socket = GTK_SOCKET (widget);
   
-  if (GTK_WIDGET_HAS_FOCUS (socket) && socket->plug_window && !socket->plug_widget)
+  if (gtk_widget_has_focus (widget) && socket->plug_window && !socket->plug_widget)
     {
       _gtk_socket_windowing_send_key_event (socket, (GdkEvent *) event, FALSE);
 
@@ -724,14 +724,16 @@ void
 _gtk_socket_claim_focus (GtkSocket *socket,
 			 gboolean   send_event)
 {
+  GtkWidget *widget = GTK_WIDGET (socket);
+
   if (!send_event)
     socket->focus_in = TRUE;	/* Otherwise, our notify handler will send FOCUS_IN  */
       
   /* Oh, the trickery... */
   
-  GTK_WIDGET_SET_FLAGS (socket, GTK_CAN_FOCUS);
-  gtk_widget_grab_focus (GTK_WIDGET (socket));
-  GTK_WIDGET_UNSET_FLAGS (socket, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (widget, TRUE);
+  gtk_widget_grab_focus (widget);
+  gtk_widget_set_can_focus (widget, FALSE);
 }
 
 static gboolean

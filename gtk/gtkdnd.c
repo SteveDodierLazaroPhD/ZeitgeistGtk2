@@ -1102,7 +1102,7 @@ gtk_drag_highlight_expose (GtkWidget      *widget,
 {
   gint x, y, width, height;
   
-  if (GTK_WIDGET_DRAWABLE (widget))
+  if (gtk_widget_is_drawable (widget))
     {
       cairo_t *cr;
       
@@ -1200,7 +1200,7 @@ gtk_drag_dest_set_internal (GtkWidget       *widget,
       site->track_motion = old_site->track_motion;
     }
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gtk_drag_dest_realized (widget);
 
   g_signal_connect (widget, "realize",
@@ -1216,10 +1216,11 @@ gtk_drag_dest_set_internal (GtkWidget       *widget,
  * gtk_drag_dest_set:
  * @widget: a #GtkWidget
  * @flags: which types of default drag behavior to use
- * @targets: a pointer to an array of #GtkTargetEntry<!-- -->s indicating
- * the drop types that this @widget will accept. Later you can access the list
- * with gtk_drag_dest_get_target_list() and gtk_drag_dest_find_target().
- * @n_targets: the number of entries in @targets.
+ * @targets: (allow-none) (array length=n_targets): a pointer to an array of #GtkTargetEntry<!-- -->s
+ *     indicating the drop types that this @widget will accept, or %NULL.
+ *     Later you can access the list with gtk_drag_dest_get_target_list()
+ *     and gtk_drag_dest_find_target().
+ * @n_targets: the number of entries in @targets
  * @actions: a bitmask of possible actions for a drop onto this @widget.
  *
  * Sets a widget as a potential drop destination, and adds default behaviors.
@@ -1844,7 +1845,7 @@ gtk_drag_find_widget (GtkWidget       *widget,
   gint x_offset = 0;
   gint y_offset = 0;
 
-  if (data->found || !GTK_WIDGET_MAPPED (widget) || !GTK_WIDGET_SENSITIVE (widget))
+  if (data->found || !gtk_widget_get_mapped (widget) || !gtk_widget_get_sensitive (widget))
     return;
 
   /* Note that in the following code, we only count the
@@ -1934,7 +1935,7 @@ gtk_drag_find_widget (GtkWidget       *widget,
 	  gtk_container_forall (GTK_CONTAINER (widget), prepend_and_ref_widget, &children);
 	  for (tmp_list = children; tmp_list; tmp_list = tmp_list->next)
 	    {
-	      if (!new_data.found && GTK_WIDGET_DRAWABLE (tmp_list->data))
+	      if (!new_data.found && gtk_widget_is_drawable (tmp_list->data))
 		gtk_drag_find_widget (tmp_list->data, &new_data);
 	      g_object_unref (tmp_list->data);
 	    }
@@ -2089,7 +2090,7 @@ gtk_drag_dest_hierarchy_changed (GtkWidget *widget,
 {
   GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
 
-  if (gtk_widget_is_toplevel (toplevel) && GTK_WIDGET_REALIZED (toplevel))
+  if (gtk_widget_is_toplevel (toplevel) && gtk_widget_get_realized (toplevel))
     gdk_window_register_dnd (toplevel->window);
 }
 
@@ -2571,26 +2572,26 @@ gtk_drag_begin (GtkWidget         *widget,
 		GdkEvent          *event)
 {
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
-  g_return_val_if_fail (GTK_WIDGET_REALIZED (widget), NULL);
+  g_return_val_if_fail (gtk_widget_get_realized (widget), NULL);
   g_return_val_if_fail (targets != NULL, NULL);
 
   return gtk_drag_begin_internal (widget, NULL, targets,
 				  actions, button, event);
 }
 
-/*************************************************************
+/**
  * gtk_drag_source_set:
- *     Register a drop site, and possibly add default behaviors.
- *   arguments:
- *     widget:
- *     start_button_mask: Mask of allowed buttons to start drag
- *     targets:           Table of targets for this source
- *     n_targets:
- *     actions:           Actions allowed for this source
- *   results:
- *************************************************************/
-
-void 
+ * @widget: a #GtkWidget
+ * @start_button_mask: the bitmask of buttons that can start the drag
+ * @targets: (allow-none) (array length=n_targets): the table of targets that the drag will support,
+ *     may be %NULL
+ * @n_targets: the number of items in @targets
+ * @actions: the bitmask of possible actions for a drag from this widget
+ *
+ * Sets up a widget so that GTK+ will start a drag operation when the user
+ * clicks and drags on the widget. The widget must have a window.
+ */
+void
 gtk_drag_source_set (GtkWidget            *widget,
 		     GdkModifierType       start_button_mask,
 		     const GtkTargetEntry *targets,
@@ -3049,7 +3050,7 @@ gtk_drag_update_icon (GtkDragSourceInfo *info)
 		       info->cur_x - hot_x, 
 		       info->cur_y - hot_y);
 
-      if (GTK_WIDGET_VISIBLE (icon_window))
+      if (gtk_widget_get_visible (icon_window))
 	gdk_window_raise (icon_window->window);
       else
 	gtk_widget_show (icon_window);
@@ -3409,7 +3410,7 @@ gtk_drag_set_icon_default (GdkDragContext *context)
  * gtk_drag_set_default_icon:
  * @colormap: the colormap of the icon
  * @pixmap: the image data for the icon
- * @mask: the transparency mask for an image.
+ * @mask: (allow-none): the transparency mask for an image, or %NULL
  * @hot_x: The X offset within @widget of the hotspot.
  * @hot_y: The Y offset within @widget of the hotspot.
  * 

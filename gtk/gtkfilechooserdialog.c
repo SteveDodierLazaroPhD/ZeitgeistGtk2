@@ -187,7 +187,7 @@ file_chooser_widget_default_size_changed (GtkWidget            *widget,
   /* Unset any previously set size */
   gtk_widget_set_size_request (GTK_WIDGET (dialog), -1, -1);
 
-  if (GTK_WIDGET_DRAWABLE (widget))
+  if (gtk_widget_is_drawable (widget))
     {
       /* Force a size request of everything before we start.  This will make sure
        * that widget->requisition is meaningful. */
@@ -200,7 +200,7 @@ file_chooser_widget_default_size_changed (GtkWidget            *widget,
 
   gtk_window_resize (GTK_WINDOW (dialog), default_width, default_height);
 
-  if (!GTK_WIDGET_MAPPED (dialog))
+  if (!gtk_widget_get_mapped (GTK_WIDGET (dialog)))
     {
 #if 0
       /* FIXME: the code to restore the position does not work yet.  It is not
@@ -358,7 +358,7 @@ gtk_file_chooser_dialog_map (GtkWidget *widget)
 
   ensure_default_response (dialog);
 
-  if (!GTK_WIDGET_MAPPED (priv->widget))
+  if (!gtk_widget_get_mapped (priv->widget))
     gtk_widget_map (priv->widget);
 
   _gtk_file_chooser_embed_initial_focus (GTK_FILE_CHOOSER_EMBED (priv->widget));

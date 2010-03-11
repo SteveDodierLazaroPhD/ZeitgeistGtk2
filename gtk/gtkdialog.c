@@ -414,12 +414,11 @@ gtk_dialog_map (GtkWidget *widget)
 	  if (first_focus == NULL)
 	    first_focus = window->focus_widget;
 	  else if (first_focus == window->focus_widget)
-	    break;
-
+            break;
 	  if (!GTK_IS_LABEL (window->focus_widget))
 	    break;
-	  else
-	    gtk_label_select_region (GTK_LABEL (window->focus_widget), 0, 0);
+          if (!gtk_label_get_current_uri (GTK_LABEL (window->focus_widget)))
+            gtk_label_select_region (GTK_LABEL (window->focus_widget), 0, 0);
 	}
       while (TRUE);
 
@@ -709,7 +708,7 @@ gtk_dialog_add_button (GtkDialog   *dialog,
 
   button = gtk_button_new_from_stock (button_text);
 
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_widget_set_can_default (button, TRUE);
   
   gtk_widget_show (button);
   
@@ -1057,7 +1056,7 @@ gtk_dialog_run (GtkDialog *dialog)
   if (!was_modal)
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 
-  if (!GTK_WIDGET_VISIBLE (dialog))
+  if (!gtk_widget_get_visible (GTK_WIDGET (dialog)))
     gtk_widget_show (GTK_WIDGET (dialog));
   
   response_handler =

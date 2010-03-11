@@ -373,7 +373,7 @@ gtk_layout_put (GtkLayout     *layout,
 
   layout->children = g_list_append (layout->children, child);
   
-  if (GTK_WIDGET_REALIZED (layout))
+  if (gtk_widget_get_realized (GTK_WIDGET (layout)))
     gtk_widget_set_parent_window (child->widget, layout->bin_window);
 
   gtk_widget_set_parent (child_widget, GTK_WIDGET (layout));
@@ -409,8 +409,9 @@ gtk_layout_move_internal (GtkLayout       *layout,
 
   gtk_widget_thaw_child_notify (widget);
   
-  if (GTK_WIDGET_VISIBLE (widget) && GTK_WIDGET_VISIBLE (layout))
-    gtk_widget_queue_resize (GTK_WIDGET (widget));
+  if (gtk_widget_get_visible (widget) &&
+      gtk_widget_get_visible (GTK_WIDGET (layout)))
+    gtk_widget_queue_resize (widget);
 }
 
 /**
@@ -502,7 +503,7 @@ gtk_layout_set_size (GtkLayout     *layout,
   if (layout->vadjustment)
     gtk_layout_set_adjustment_upper (layout->vadjustment, layout->height, FALSE);
 
-  if (GTK_WIDGET_REALIZED (layout))
+  if (gtk_widget_get_realized (widget))
     {
       width = MAX (width, widget->allocation.width);
       height = MAX (height, widget->allocation.height);
@@ -846,7 +847,7 @@ gtk_layout_realize (GtkWidget *widget)
   GdkWindowAttr attributes;
   gint attributes_mask;
 
-  GTK_WIDGET_SET_FLAGS (layout, GTK_REALIZED);
+  gtk_widget_set_realized (widget, TRUE);
 
   attributes.window_type = GDK_WINDOW_CHILD;
   attributes.x = widget->allocation.x;
@@ -895,7 +896,7 @@ gtk_layout_style_set (GtkWidget *widget,
 {
   GTK_WIDGET_CLASS (gtk_layout_parent_class)->style_set (widget, old_style);
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gtk_style_set_background (widget->style, GTK_LAYOUT (widget)->bin_window, GTK_STATE_NORMAL);
     }
@@ -907,7 +908,7 @@ gtk_layout_map (GtkWidget *widget)
   GtkLayout *layout = GTK_LAYOUT (widget);
   GList *tmp_list;
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_MAPPED);
+  gtk_widget_set_mapped (widget, TRUE);
 
   tmp_list = layout->children;
   while (tmp_list)
@@ -915,9 +916,9 @@ gtk_layout_map (GtkWidget *widget)
       GtkLayoutChild *child = tmp_list->data;
       tmp_list = tmp_list->next;
 
-      if (GTK_WIDGET_VISIBLE (child->widget))
+      if (gtk_widget_get_visible (child->widget))
 	{
-	  if (!GTK_WIDGET_MAPPED (child->widget))
+	  if (!gtk_widget_get_mapped (child->widget))
 	    gtk_widget_map (child->widget);
 	}
     }
@@ -980,7 +981,7 @@ gtk_layout_size_allocate (GtkWidget     *widget,
       gtk_layout_allocate_child (layout, child);
     }
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gdk_window_move_resize (widget->window,
 			      allocation->x, allocation->y,
@@ -1102,7 +1103,7 @@ gtk_layout_adjustment_changed (GtkAdjustment *adjustment,
   if (layout->freeze_count)
     return;
 
-  if (GTK_WIDGET_REALIZED (layout))
+  if (gtk_widget_get_realized (GTK_WIDGET (layout)))
     {
       gdk_window_move (layout->bin_window,
 		       - layout->hadjustment->value,

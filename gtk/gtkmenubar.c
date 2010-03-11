@@ -291,7 +291,7 @@ gtk_menu_bar_size_request (GtkWidget      *widget,
   requisition->width = 0;
   requisition->height = 0;
   
-  if (GTK_WIDGET_VISIBLE (widget))
+  if (gtk_widget_get_visible (widget))
     {
       menu_bar = GTK_MENU_BAR (widget);
       menu_shell = GTK_MENU_SHELL (widget);
@@ -305,7 +305,7 @@ gtk_menu_bar_size_request (GtkWidget      *widget,
 	  child = children->data;
 	  children = children->next;
 
-	  if (GTK_WIDGET_VISIBLE (child))
+	  if (gtk_widget_get_visible (child))
 	    {
               gint toggle_size;
 
@@ -378,7 +378,7 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
   direction = gtk_widget_get_direction (widget);
 
   widget->allocation = *allocation;
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gdk_window_move_resize (widget->window,
 			    allocation->x, allocation->y,
 			    allocation->width, allocation->height);
@@ -432,7 +432,7 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
 		  ltr_x = allocation->width -
 		    child_requisition.width - offset;
 		}
-	      if (GTK_WIDGET_VISIBLE (child))
+	      if (gtk_widget_get_visible (child))
 		{
 		  if ((direction == GTK_TEXT_DIR_LTR) == (priv->pack_direction == GTK_PACK_DIRECTION_LTR))
 		    child_allocation.x = ltr_x;
@@ -482,7 +482,7 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
 		  ltr_y = allocation->height -
 		    child_requisition.height - offset;
 		}
-	      if (GTK_WIDGET_VISIBLE (child))
+	      if (gtk_widget_get_visible (child))
 		{
 		  if ((direction == GTK_TEXT_DIR_LTR) ==
 		      (priv->pack_direction == GTK_PACK_DIRECTION_TTB))
@@ -509,7 +509,7 @@ gtk_menu_bar_paint (GtkWidget    *widget,
 {
   g_return_if_fail (GTK_IS_MENU_BAR (widget));
 
-  if (GTK_WIDGET_DRAWABLE (widget))
+  if (gtk_widget_is_drawable (widget))
     {
       gint border;
 
@@ -517,7 +517,7 @@ gtk_menu_bar_paint (GtkWidget    *widget,
       
       gtk_paint_box (widget->style,
 		     widget->window,
-                     GTK_WIDGET_STATE (widget),
+                     gtk_widget_get_state (widget),
                      get_shadow_type (GTK_MENU_BAR (widget)),
 		     area, widget, "menubar",
 		     border, border,
@@ -533,7 +533,7 @@ gtk_menu_bar_expose (GtkWidget      *widget,
   g_return_val_if_fail (GTK_IS_MENU_BAR (widget), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
 
-  if (GTK_WIDGET_DRAWABLE (widget))
+  if (gtk_widget_is_drawable (widget))
     {
       gtk_menu_bar_paint (widget, &event->area);
 
@@ -564,7 +564,7 @@ get_viewable_menu_bars (GtkWindow *window)
       
       while (widget)
 	{
-	  if (!GTK_WIDGET_MAPPED (widget))
+	  if (!gtk_widget_get_mapped (widget))
 	    viewable = FALSE;
 	  
 	  widget = widget->parent;

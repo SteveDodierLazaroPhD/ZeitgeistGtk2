@@ -365,6 +365,7 @@ enum                <a class="link" href="GtkWidget.html#GtkTextDirection" title
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-style-get-valist" title="gtk_widget_style_get_valist ()">gtk_widget_style_get_valist</a>         (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
                                                          const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *first_property_name,
                                                          <span class="returnvalue">va_list</span> var_args);
+<span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-style-attach" title="gtk_widget_style_attach ()">gtk_widget_style_attach</a>             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *style);
 <a href="/usr/share/gtk-doc/html/atk/AtkObject.html"><span class="returnvalue">AtkObject</span></a>*          <a class="link" href="GtkWidget.html#gtk-widget-get-accessible" title="gtk_widget_get_accessible ()">gtk_widget_get_accessible</a>           (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkWidget.html#gtk-widget-child-focus" title="gtk_widget_child_focus ()">gtk_widget_child_focus</a>              (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
                                                          <a class="link" href="gtk-Standard-Enumerations.html#GtkDirectionType" title="enum GtkDirectionType"><span class="returnvalue">GtkDirectionType</span></a> direction);
@@ -459,6 +460,9 @@ enum                <a class="link" href="GtkWidget.html#GtkTextDirection" title
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkWidget.html#gtk-widget-get-realized" title="gtk_widget_get_realized ()">gtk_widget_get_realized</a>             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-set-mapped" title="gtk_widget_set_mapped ()">gtk_widget_set_mapped</a>               (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
                                                          <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a> mapped);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkWidget.html#gtk-widget-get-mapped" title="gtk_widget_get_mapped ()">gtk_widget_get_mapped</a>               (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);
+<span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-widget-get-requisition" title="gtk_widget_get_requisition ()">gtk_widget_get_requisition</a>          (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
+                                                         <a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *requisition);
 
 <a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *    <a class="link" href="GtkWidget.html#gtk-requisition-copy" title="gtk_requisition_copy ()">gtk_requisition_copy</a>                (const <a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *requisition);
 <span class="returnvalue">void</span>                <a class="link" href="GtkWidget.html#gtk-requisition-free" title="gtk_requisition_free ()">gtk_requisition_free</a>                (<a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *requisition);
@@ -655,7 +659,7 @@ custom &lt;accelerator&gt; element, which has attributes named key,
 modifiers and signal and allows to specify accelerators.
 </p>
 <div class="example">
-<a name="id1325793"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
+<a name="id1372056"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkButton"&gt;
   &lt;accelerator key="q" modifiers="GDK_CONTROL_MASK" signal="clicked"/&gt;
@@ -669,7 +673,7 @@ Properties on the accessible implementation of an object can be set by accessing
 internal child "accessible" of a <span class="structname">GtkWidget</span>.
 </p>
 <div class="example">
-<a name="id1325822"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
+<a name="id1372084"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;object class="GtkButton" id="label1"/&gt;
   &lt;property name="label"&gt;I am a Label for a Button&lt;/property&gt;
@@ -1064,6 +1068,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <a name="GTK-WIDGET-REALIZED:CAPS"></a><h3>GTK_WIDGET_REALIZED()</h3>
 <pre class="programlisting">#define GTK_WIDGET_REALIZED(wid)	  ((GTK_WIDGET_FLAGS (wid) &amp; GTK_REALIZED) != 0)
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_REALIZED</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-get-realized" title="gtk_widget_get_realized ()"><code class="function">gtk_widget_get_realized()</code></a> instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the widget is realized.</p>
 <div class="variablelist"><table border="0">
@@ -1080,6 +1088,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <a name="GTK-WIDGET-MAPPED:CAPS"></a><h3>GTK_WIDGET_MAPPED()</h3>
 <pre class="programlisting">#define GTK_WIDGET_MAPPED(wid)		  ((GTK_WIDGET_FLAGS (wid) &amp; GTK_MAPPED) != 0)
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_MAPPED</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-get-mapped" title="gtk_widget_get_mapped ()"><code class="function">gtk_widget_get_mapped()</code></a> instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the widget is mapped.</p>
 <div class="variablelist"><table border="0">
@@ -1096,6 +1108,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <a name="GTK-WIDGET-VISIBLE:CAPS"></a><h3>GTK_WIDGET_VISIBLE()</h3>
 <pre class="programlisting">#define GTK_WIDGET_VISIBLE(wid)		  ((GTK_WIDGET_FLAGS (wid) &amp; GTK_VISIBLE) != 0)
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_VISIBLE</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-get-visible" title="gtk_widget_get_visible ()"><code class="function">gtk_widget_get_visible()</code></a> instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the widget is visible.</p>
 <div class="variablelist"><table border="0">
@@ -1112,6 +1128,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <a name="GTK-WIDGET-DRAWABLE:CAPS"></a><h3>GTK_WIDGET_DRAWABLE()</h3>
 <pre class="programlisting">#define GTK_WIDGET_DRAWABLE(wid)	  (GTK_WIDGET_VISIBLE (wid) &amp;&amp; GTK_WIDGET_MAPPED (wid))
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_DRAWABLE</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-is-drawable" title="gtk_widget_is_drawable ()"><code class="function">gtk_widget_is_drawable()</code></a> instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the widget is mapped and visible.</p>
 <div class="variablelist"><table border="0">
@@ -1128,6 +1148,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <a name="GTK-WIDGET-SENSITIVE:CAPS"></a><h3>GTK_WIDGET_SENSITIVE()</h3>
 <pre class="programlisting">#define GTK_WIDGET_SENSITIVE(wid)	  ((GTK_WIDGET_FLAGS (wid) &amp; GTK_SENSITIVE) != 0)
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_SENSITIVE</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-get-sensitive" title="gtk_widget_get_sensitive ()"><code class="function">gtk_widget_get_sensitive()</code></a> instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a class="link" href="GtkWidget.html#GTK-SENSITIVE:CAPS"><span class="type">GTK_SENSITIVE</span></a> flag has be set on the widget.</p>
 <div class="variablelist"><table border="0">
@@ -1144,6 +1168,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <a name="GTK-WIDGET-PARENT-SENSITIVE:CAPS"></a><h3>GTK_WIDGET_PARENT_SENSITIVE()</h3>
 <pre class="programlisting">#define GTK_WIDGET_PARENT_SENSITIVE(wid)  ((GTK_WIDGET_FLAGS (wid) &amp; GTK_PARENT_SENSITIVE) != 0)
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_PARENT_SENSITIVE</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-get-sensitive" title="gtk_widget_get_sensitive ()"><code class="function">gtk_widget_get_sensitive()</code></a> on the parent widget instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a class="link" href="GtkWidget.html#GTK-PARENT-SENSITIVE:CAPS"><span class="type">GTK_PARENT_SENSITIVE</span></a> flag has be set on the widget.</p>
 <div class="variablelist"><table border="0">
@@ -1159,6 +1187,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <div class="refsect2" title="GTK_WIDGET_IS_SENSITIVE()">
 <a name="GTK-WIDGET-IS-SENSITIVE:CAPS"></a><h3>GTK_WIDGET_IS_SENSITIVE()</h3>
 <pre class="programlisting">#define             GTK_WIDGET_IS_SENSITIVE(wid)</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_IS_SENSITIVE</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-is-sensitive" title="gtk_widget_is_sensitive ()"><code class="function">gtk_widget_is_sensitive()</code></a> instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the widget is effectively sensitive.</p>
 <div class="variablelist"><table border="0">
@@ -1195,6 +1227,10 @@ Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <a name="GTK-WIDGET-HAS-FOCUS:CAPS"></a><h3>GTK_WIDGET_HAS_FOCUS()</h3>
 <pre class="programlisting">#define GTK_WIDGET_HAS_FOCUS(wid)	  ((GTK_WIDGET_FLAGS (wid) &amp; GTK_HAS_FOCUS) != 0)
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GTK_WIDGET_HAS_FOCUS</code> has been deprecated since version 2.20 and should not be used in newly-written code. Use <a class="link" href="GtkWidget.html#gtk-widget-has-focus" title="gtk_widget_has_focus ()"><code class="function">gtk_widget_has_focus()</code></a> instead.</p>
+</div>
 <p>
 Evaluates to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the widget has grabbed the focus and no other
 widget has done so more recently.</p>
@@ -4815,6 +4851,36 @@ bindings.</p>
 </table></div>
 </div>
 <hr>
+<div class="refsect2" title="gtk_widget_style_attach ()">
+<a name="gtk-widget-style-attach"></a><h3>gtk_widget_style_attach ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_widget_style_attach             (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *style);</pre>
+<p>
+This function attaches the widget's <a class="link" href="GtkStyle.html" title="Styles"><span class="type">GtkStyle</span></a> to the widget's
+<a href="http://library.gnome.org/devel/gdk/unstable/gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>. It is a replacement for
+</p>
+<p>
+</p>
+<pre class="programlisting">
+widget-&gt;style = gtk_style_attach (widget-&gt;style, widget-&gt;window);
+</pre>
+<p>
+</p>
+<p>
+and should only ever be called in a derived widget's "realize"
+implementation which does not chain up to its parent class'
+"realize" implementation, because one of the parent classes
+(finally <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>) would attach the style itself.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
+<td>
+</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
 <div class="refsect2" title="gtk_widget_get_accessible ()">
 <a name="gtk-widget-get-accessible"></a><h3>gtk_widget_get_accessible ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/atk/AtkObject.html"><span class="returnvalue">AtkObject</span></a>*          gtk_widget_get_accessible           (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);</pre>
@@ -6752,6 +6818,62 @@ This function should only ever be called in a derived widget's
 <td><p><span class="term"><em class="parameter"><code>mapped</code></em> :</span></p></td>
 <td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to mark the widget as mapped
 </td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_widget_get_mapped ()">
+<a name="gtk-widget-get-mapped"></a><h3>gtk_widget_get_mapped ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gtk_widget_get_mapped               (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget);</pre>
+<p>
+Whether the widget is mapped.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the widget is mapped, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.20</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_widget_get_requisition ()">
+<a name="gtk-widget-get-requisition"></a><h3>gtk_widget_get_requisition ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_widget_get_requisition          (<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *widget,
+                                                         <a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="returnvalue">GtkRequisition</span></a> *requisition);</pre>
+<p>
+Retrieves the widget's requisition.
+</p>
+<p>
+This function should only be used by widget implementations in
+order to figure whether the widget's requisition has actually
+changed after some internal state change (so that they can call
+<a class="link" href="GtkWidget.html#gtk-widget-queue-resize" title="gtk_widget_queue_resize ()"><code class="function">gtk_widget_queue_resize()</code></a> instead of <a class="link" href="GtkWidget.html#gtk-widget-queue-draw" title="gtk_widget_queue_draw ()"><code class="function">gtk_widget_queue_draw()</code></a>).
+</p>
+<p>
+Normally, <a class="link" href="GtkWidget.html#gtk-widget-size-request" title="gtk_widget_size_request ()"><code class="function">gtk_widget_size_request()</code></a> should be used.</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>requisition</code></em> :</span></p></td>
+<td> a pointer to a <a class="link" href="GtkWidget.html#GtkRequisition" title="GtkRequisition"><span class="type">GtkRequisition</span></a> to copy to. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
 </tr>
 </tbody>
 </table></div>

@@ -193,8 +193,8 @@ static void             gail_tree_view_changed_gtk      (GtkTreeSelection       
 static void             columns_changed                 (GtkTreeView            *tree_view);
 static void             cursor_changed                  (GtkTreeView            *tree_view);
 static gint             idle_cursor_changed             (gpointer               data);
-static void             focus_in                        (GtkWidget		*widget);
-static void             focus_out                       (GtkWidget              *widget);
+static gboolean         focus_in                        (GtkWidget		*widget);
+static gboolean         focus_out                       (GtkWidget              *widget);
 
 static void             model_row_changed               (GtkTreeModel           *tree_model,
                                                          GtkTreePath            *path,
@@ -2442,7 +2442,7 @@ gail_tree_view_changed_gtk (GtkTreeSelection *selection,
 	  gtk_tree_path_free (path);
       }
     }
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     g_signal_emit_by_name (gailview, "selection_changed");
 }
 
@@ -2644,7 +2644,7 @@ idle_cursor_changed (gpointer data)
             }
           gail_tree_view->focus_cell = cell;
 
-          if (GTK_WIDGET_HAS_FOCUS (widget))
+          if (gtk_widget_has_focus (widget))
             {
               gail_cell_add_state (GAIL_CELL (cell), ATK_STATE_ACTIVE, FALSE);
               gail_cell_add_state (GAIL_CELL (cell), ATK_STATE_FOCUSED, FALSE);
@@ -2660,7 +2660,7 @@ idle_cursor_changed (gpointer data)
   return FALSE;
 }
 
-static void
+static gboolean
 focus_in (GtkWidget *widget)
 {
   GtkTreeView *tree_view;
@@ -2692,9 +2692,10 @@ focus_in (GtkWidget *widget)
             }
         }
     }
+  return FALSE;
 }
 
-static void
+static gboolean
 focus_out (GtkWidget *widget)
 {
   GailTreeView *gail_tree_view;
@@ -2707,6 +2708,7 @@ focus_out (GtkWidget *widget)
     g_object_unref (gail_tree_view->focus_cell);
     gail_tree_view->focus_cell = NULL;
   }
+  return FALSE;
 }
 
 static void
@@ -3049,7 +3051,7 @@ set_cell_visibility (GtkTreeView       *tree_view,
   GdkRectangle cell_rect;
 
   /* Get these three values in tree coords */
-  if (GTK_WIDGET_REALIZED (GTK_WIDGET (tree_view)))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     gtk_tree_view_get_cell_area (tree_view, tree_path, tv_col, &cell_rect);
   else
     cell_rect.height = 0;

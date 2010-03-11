@@ -484,12 +484,12 @@ gtk_statusbar_set_has_resize_grip (GtkStatusbar *statusbar,
       gtk_widget_queue_resize (statusbar->label);
       gtk_widget_queue_draw (GTK_WIDGET (statusbar));
 
-      if (GTK_WIDGET_REALIZED (statusbar))
+      if (gtk_widget_get_realized (GTK_WIDGET (statusbar)))
         {
           if (statusbar->has_resize_grip && statusbar->grip_window == NULL)
 	    {
 	      gtk_statusbar_create_window (statusbar);
-	      if (GTK_WIDGET_MAPPED (statusbar))
+	      if (gtk_widget_get_mapped (GTK_WIDGET (statusbar)))
 		gdk_window_show (statusbar->grip_window);
 	    }
           else if (!statusbar->has_resize_grip && statusbar->grip_window != NULL)
@@ -647,7 +647,7 @@ set_grip_cursor (GtkStatusbar *statusbar)
       GdkCursorType cursor_type;
       GdkCursor *cursor;
       
-      if (GTK_WIDGET_IS_SENSITIVE (widget))
+      if (gtk_widget_is_sensitive (widget))
         {
           if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
 	    cursor_type = GDK_BOTTOM_RIGHT_CORNER;
@@ -671,10 +671,10 @@ gtk_statusbar_create_window (GtkStatusbar *statusbar)
   gint attributes_mask;
   GdkRectangle rect;
 
-  g_return_if_fail (GTK_WIDGET_REALIZED (statusbar));
-  g_return_if_fail (statusbar->has_resize_grip);
-
   widget = GTK_WIDGET (statusbar);
+
+  g_return_if_fail (gtk_widget_get_realized (widget));
+  g_return_if_fail (statusbar->has_resize_grip);
 
   get_grip_rect (statusbar, &rect);
 
@@ -837,7 +837,7 @@ gtk_statusbar_expose_event (GtkWidget      *widget,
 
       gtk_paint_resize_grip (widget->style,
                              widget->window,
-                             GTK_WIDGET_STATE (widget),
+                             gtk_widget_get_state (widget),
                              &event->area,
                              widget,
                              "statusbar",
@@ -894,7 +894,7 @@ has_extra_children (GtkStatusbar *statusbar)
     {
       child = l->data;
 
-      if (!GTK_WIDGET_VISIBLE (child->widget))
+      if (!gtk_widget_get_visible (child->widget))
 	continue;
 
       if (frame->pack == GTK_PACK_START || child->pack == GTK_PACK_END)

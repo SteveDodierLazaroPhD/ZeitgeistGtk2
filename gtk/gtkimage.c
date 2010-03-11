@@ -357,7 +357,7 @@ gtk_image_init (GtkImage *image)
 {
   GtkImagePrivate *priv = GTK_IMAGE_GET_PRIVATE (image);
 
-  GTK_WIDGET_SET_FLAGS (image, GTK_NO_WINDOW);
+  gtk_widget_set_has_window (GTK_WIDGET (image), FALSE);
 
   image->storage_type = GTK_IMAGE_EMPTY;
   image->icon_size = DEFAULT_ICON_SIZE;
@@ -1618,7 +1618,7 @@ animation_timeout (gpointer data)
 
       gtk_widget_queue_draw (GTK_WIDGET (image));
 
-      if (GTK_WIDGET_DRAWABLE (image))
+      if (gtk_widget_is_drawable (GTK_WIDGET (image)))
         gdk_window_process_updates (GTK_WIDGET (image)->window, TRUE);
     }
 
@@ -1834,7 +1834,7 @@ gtk_image_expose (GtkWidget      *widget,
   g_return_val_if_fail (GTK_IS_IMAGE (widget), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
   
-  if (GTK_WIDGET_MAPPED (widget) &&
+  if (gtk_widget_get_mapped (widget) &&
       GTK_IMAGE (widget)->storage_type != GTK_IMAGE_EMPTY)
     {
       GtkImage *image;
@@ -1883,7 +1883,7 @@ gtk_image_expose (GtkWidget      *widget,
 
       mask = NULL;
       pixbuf = NULL;
-      needs_state_transform = GTK_WIDGET_STATE (widget) != GTK_STATE_NORMAL;
+      needs_state_transform = gtk_widget_get_state (widget) != GTK_STATE_NORMAL;
       
       switch (image->storage_type)
         {
@@ -1971,7 +1971,7 @@ gtk_image_expose (GtkWidget      *widget,
             gtk_icon_set_render_icon (image->data.icon_set.icon_set,
                                       widget->style,
                                       gtk_widget_get_direction (widget),
-                                      GTK_WIDGET_STATE (widget),
+                                      gtk_widget_get_state (widget),
                                       image->icon_size,
                                       widget,
                                       NULL);
@@ -2066,7 +2066,7 @@ gtk_image_expose (GtkWidget      *widget,
                   rendered = gtk_style_render_icon (widget->style,
                                                     source,
                                                     gtk_widget_get_direction (widget),
-                                                    GTK_WIDGET_STATE (widget),
+                                                    gtk_widget_get_state (widget),
                                                     /* arbitrary */
                                                     (GtkIconSize)-1,
                                                     widget,
@@ -2319,7 +2319,7 @@ gtk_image_calc_size (GtkImage *image)
       pixbuf = gtk_icon_set_render_icon (image->data.icon_set.icon_set,
                                          widget->style,
                                          gtk_widget_get_direction (widget),
-                                         GTK_WIDGET_STATE (widget),
+                                         gtk_widget_get_state (widget),
                                          image->icon_size,
                                          widget,
                                          NULL);
@@ -2395,11 +2395,13 @@ gtk_image_update_size (GtkImage *image,
                        gint      image_width,
                        gint      image_height)
 {
-  GTK_WIDGET (image)->requisition.width = image_width + GTK_MISC (image)->xpad * 2;
-  GTK_WIDGET (image)->requisition.height = image_height + GTK_MISC (image)->ypad * 2;
+  GtkWidget *widget = GTK_WIDGET (image);
 
-  if (GTK_WIDGET_VISIBLE (image))
-    gtk_widget_queue_resize (GTK_WIDGET (image));
+  widget->requisition.width = image_width + GTK_MISC (image)->xpad * 2;
+  widget->requisition.height = image_height + GTK_MISC (image)->ypad * 2;
+
+  if (gtk_widget_get_visible (widget))
+    gtk_widget_queue_resize (widget);
 }
 
 

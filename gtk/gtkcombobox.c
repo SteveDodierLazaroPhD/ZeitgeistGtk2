@@ -1096,11 +1096,11 @@ gtk_combo_box_state_changed (GtkWidget    *widget,
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
   GtkComboBoxPrivate *priv = combo_box->priv;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       if (priv->tree_view && priv->cell_view)
 	gtk_cell_view_set_background_color (GTK_CELL_VIEW (priv->cell_view), 
-					    &widget->style->base[GTK_WIDGET_STATE (widget)]);
+					    &widget->style->base[gtk_widget_get_state (widget)]);
     }
 
   gtk_widget_queue_draw (widget);
@@ -1114,16 +1114,16 @@ gtk_combo_box_button_state_changed (GtkWidget    *widget,
   GtkComboBox *combo_box = GTK_COMBO_BOX (data);
   GtkComboBoxPrivate *priv = combo_box->priv;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       if (!priv->tree_view && priv->cell_view)
 	{
-	  if ((GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE) !=
-	      (GTK_WIDGET_STATE (priv->cell_view) == GTK_STATE_INSENSITIVE))
-	    gtk_widget_set_sensitive (priv->cell_view, GTK_WIDGET_SENSITIVE (widget));
+	  if ((gtk_widget_get_state (widget) == GTK_STATE_INSENSITIVE) !=
+	      (gtk_widget_get_state (priv->cell_view) == GTK_STATE_INSENSITIVE))
+	    gtk_widget_set_sensitive (priv->cell_view, gtk_widget_get_sensitive (widget));
 	  
 	  gtk_widget_set_state (priv->cell_view, 
-				GTK_WIDGET_STATE (widget));
+				gtk_widget_get_state (widget));
 	}
     }
 
@@ -1183,7 +1183,7 @@ gtk_combo_box_style_set (GtkWidget *widget,
 
   if (priv->tree_view && priv->cell_view)
     gtk_cell_view_set_background_color (GTK_CELL_VIEW (priv->cell_view), 
-					&widget->style->base[GTK_WIDGET_STATE (widget)]);
+					&widget->style->base[gtk_widget_get_state (widget)]);
 
   if (GTK_IS_ENTRY (GTK_BIN (combo_box)->child))
     g_object_set (GTK_BIN (combo_box)->child, "shadow-type",
@@ -1573,7 +1573,7 @@ gtk_combo_box_menu_position_over (GtkMenu  *menu,
       if (active == child)
 	break;
 
-      if (GTK_WIDGET_VISIBLE (child))
+      if (gtk_widget_get_visible (child))
 	{
 	  gtk_widget_get_child_requisition (child, &requisition);
 	  menu_ypos -= requisition.height;
@@ -1627,7 +1627,7 @@ gtk_combo_box_menu_position (GtkMenu  *menu,
       gtk_combo_box_menu_position_over (menu, x, y, push_in, user_data);
     }
 
-  if (!GTK_WIDGET_VISIBLE (GTK_MENU (priv->popup_widget)->toplevel))
+  if (!gtk_widget_get_visible (GTK_MENU (priv->popup_widget)->toplevel))
     gtk_window_set_type_hint (GTK_WINDOW (GTK_MENU (priv->popup_widget)->toplevel),
                               GDK_WINDOW_TYPE_HINT_COMBO);
 }
@@ -1911,10 +1911,10 @@ gtk_combo_box_real_popup (GtkComboBox *combo_box)
   GtkTreePath *path = NULL, *ppath;
   GtkWidget *toplevel;
 
-  if (!GTK_WIDGET_REALIZED (combo_box))
+  if (!gtk_widget_get_realized (GTK_WIDGET (combo_box)))
     return;
 
-  if (GTK_WIDGET_MAPPED (priv->popup_widget))
+  if (gtk_widget_get_mapped (priv->popup_widget))
     return;
 
   if (GTK_IS_MENU (priv->popup_widget))
@@ -1962,7 +1962,7 @@ gtk_combo_box_real_popup (GtkComboBox *combo_box)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->button),
                                 TRUE);
 
-  if (!GTK_WIDGET_HAS_FOCUS (priv->tree_view))
+  if (!gtk_widget_has_focus (priv->tree_view))
     gtk_widget_grab_focus (priv->tree_view);
 
   if (!popup_grab_on_window (priv->popup_window->window,
@@ -2011,7 +2011,7 @@ gtk_combo_box_popdown (GtkComboBox *combo_box)
       return;
     }
 
-  if (!GTK_WIDGET_REALIZED (GTK_WIDGET (combo_box)))
+  if (!gtk_widget_get_realized (GTK_WIDGET (combo_box)))
     return;
 
   gtk_grab_remove (priv->popup_window);
@@ -2318,7 +2318,7 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
               child.width -= child.x;
             }
 
-          if (GTK_WIDGET_VISIBLE (priv->popup_widget))
+          if (gtk_widget_get_visible (priv->popup_widget))
             {
               gint width;
               GtkRequisition requisition;
@@ -2405,7 +2405,7 @@ gtk_combo_box_size_allocate (GtkWidget     *widget,
           child.height -= delta_y * 2;
         }
 
-      if (GTK_WIDGET_VISIBLE (priv->popup_window))
+      if (gtk_widget_get_visible (priv->popup_window))
         {
           gint x, y, width, height;
           gtk_combo_box_list_position (combo_box, &x, &y, &width, &height);
@@ -2512,7 +2512,7 @@ gtk_combo_box_expose_event (GtkWidget      *widget,
   GtkComboBox *combo_box = GTK_COMBO_BOX (widget);
   GtkComboBoxPrivate *priv = combo_box->priv;
 
-  if (GTK_WIDGET_DRAWABLE (widget) &&
+  if (gtk_widget_is_drawable (widget) &&
       GTK_SHADOW_NONE != priv->shadow_type)
     {
       gtk_paint_shadow (widget->style, widget->window,
@@ -3168,7 +3168,7 @@ gtk_combo_box_menu_button_press (GtkWidget      *widget,
       event->type == GDK_BUTTON_PRESS && event->button == 1)
     {
       if (priv->focus_on_click && 
-	  !GTK_WIDGET_HAS_FOCUS (priv->button))
+	  !gtk_widget_has_focus (priv->button))
 	gtk_widget_grab_focus (priv->button);
 
       gtk_combo_box_menu_popup (combo_box, event->button, event->time);
@@ -3328,7 +3328,7 @@ list_popup_resize_idle (gpointer user_data)
   GtkComboBoxPrivate *priv = combo_box->priv;
   gint x, y, width, height;
 
-  if (priv->tree_view && GTK_WIDGET_MAPPED (priv->popup_window))
+  if (priv->tree_view && gtk_widget_get_mapped (priv->popup_window))
     {
       gtk_combo_box_list_position (combo_box, &x, &y, &width, &height);
   
@@ -3675,6 +3675,8 @@ gtk_combo_box_list_setup (GtkComboBox *combo_box)
 {
   GtkComboBoxPrivate *priv = combo_box->priv;
   GtkTreeSelection *sel;
+  GtkStyle *style;
+  GtkWidget *widget = GTK_WIDGET (combo_box);
 
   priv->button = gtk_toggle_button_new ();
   gtk_widget_set_parent (priv->button,
@@ -3691,8 +3693,9 @@ gtk_combo_box_list_setup (GtkComboBox *combo_box)
 
   if (priv->cell_view)
     {
-      gtk_cell_view_set_background_color (GTK_CELL_VIEW (priv->cell_view), 
-					  &GTK_WIDGET (combo_box)->style->base[GTK_WIDGET_STATE (combo_box)]);
+      style = gtk_widget_get_style (widget);
+      gtk_cell_view_set_background_color (GTK_CELL_VIEW (priv->cell_view),
+                                          &style->base[gtk_widget_get_state (widget)]);
 
       priv->box = gtk_event_box_new ();
       gtk_event_box_set_visible_window (GTK_EVENT_BOX (priv->box), 
@@ -3890,7 +3893,7 @@ gtk_combo_box_list_button_pressed (GtkWidget      *widget,
     return FALSE;
 
   if (priv->focus_on_click && 
-      !GTK_WIDGET_HAS_FOCUS (priv->button))
+      !gtk_widget_has_focus (priv->button))
     gtk_widget_grab_focus (priv->button);
 
   gtk_combo_box_popup (combo_box);
@@ -5612,7 +5615,7 @@ gtk_combo_box_start_editing (GtkCellEditable *cell_editable,
 			       cell_editable, 0);  
 
       gtk_widget_grab_focus (GTK_WIDGET (GTK_BIN (combo_box)->child));
-      GTK_WIDGET_UNSET_FLAGS (combo_box->priv->button, GTK_CAN_FOCUS);
+      gtk_widget_set_can_focus (combo_box->priv->button, FALSE);
     }
 
   /* we do the immediate popup only for the optionmenu-like 

@@ -118,8 +118,8 @@ gtk_radio_button_class_init (GtkRadioButtonClass *class)
 static void
 gtk_radio_button_init (GtkRadioButton *radio_button)
 {
-  GTK_WIDGET_SET_FLAGS (radio_button, GTK_NO_WINDOW);
-  GTK_WIDGET_UNSET_FLAGS (radio_button, GTK_RECEIVES_DEFAULT);
+  gtk_widget_set_has_window (GTK_WIDGET (radio_button), FALSE);
+  gtk_widget_set_receives_default (GTK_WIDGET (radio_button), FALSE);
 
   GTK_TOGGLE_BUTTON (radio_button)->active = TRUE;
 
@@ -498,7 +498,7 @@ gtk_radio_button_focus (GtkWidget         *widget,
 	    {
 	      GtkWidget *child = tmp_list->data;
 	      
-	      if (GTK_WIDGET_MAPPED (child) && GTK_WIDGET_IS_SENSITIVE (child))
+	      if (gtk_widget_get_mapped (child) && gtk_widget_is_sensitive (child))
 		{
 		  new_focus = child;
 		  break;
@@ -534,7 +534,7 @@ gtk_radio_button_focus (GtkWidget         *widget,
 	    {
 	      GtkWidget *child = tmp_list->data;
 	      
-	      if (GTK_WIDGET_MAPPED (child) && GTK_WIDGET_IS_SENSITIVE (child))
+	      if (gtk_widget_get_mapped (child) && gtk_widget_is_sensitive (child))
 		{
 		  new_focus = child;
 		  break;
@@ -653,7 +653,7 @@ gtk_radio_button_clicked (GtkButton *button)
   else
     depressed = toggle_button->active;
 
-  if (GTK_WIDGET_STATE (button) != new_state)
+  if (gtk_widget_get_state (GTK_WIDGET (button)) != new_state)
     gtk_widget_set_state (GTK_WIDGET (button), new_state);
 
   if (toggled)
@@ -686,9 +686,10 @@ gtk_radio_button_draw_indicator (GtkCheckButton *check_button,
   gint focus_pad;
   gboolean interior_focus;
 
-  if (GTK_WIDGET_DRAWABLE (check_button))
+  widget = GTK_WIDGET (check_button);
+
+  if (gtk_widget_is_drawable (widget))
     {
-      widget = GTK_WIDGET (check_button);
       button = GTK_BUTTON (check_button);
       toggle_button = GTK_TOGGLE_BUTTON (check_button);
 
@@ -704,7 +705,7 @@ gtk_radio_button_draw_indicator (GtkCheckButton *check_button,
       y = widget->allocation.y + (widget->allocation.height - indicator_size) / 2;
 
       child = GTK_BIN (check_button)->child;
-      if (!interior_focus || !(child && GTK_WIDGET_VISIBLE (child)))
+      if (!interior_focus || !(child && gtk_widget_get_visible (child)))
 	x += focus_width + focus_pad;      
 
       if (toggle_button->inconsistent)
@@ -718,7 +719,7 @@ gtk_radio_button_draw_indicator (GtkCheckButton *check_button,
 	state_type = GTK_STATE_ACTIVE;
       else if (button->in_button)
 	state_type = GTK_STATE_PRELIGHT;
-      else if (!GTK_WIDGET_IS_SENSITIVE (widget))
+      else if (!gtk_widget_is_sensitive (widget))
 	state_type = GTK_STATE_INSENSITIVE;
       else
 	state_type = GTK_STATE_NORMAL;
@@ -726,7 +727,7 @@ gtk_radio_button_draw_indicator (GtkCheckButton *check_button,
       if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
 	x = widget->allocation.x + widget->allocation.width - (indicator_size + x - widget->allocation.x);
 
-      if (GTK_WIDGET_STATE (toggle_button) == GTK_STATE_PRELIGHT)
+      if (gtk_widget_get_state (widget) == GTK_STATE_PRELIGHT)
 	{
 	  GdkRectangle restrict_area;
 	  GdkRectangle new_area;

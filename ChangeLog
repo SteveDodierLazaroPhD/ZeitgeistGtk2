@@ -1,3 +1,1961 @@
+commit 0eb89bf378a113959ad567b6808ed6a932eb20ad
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 9 12:07:35 2010 -0500
+
+    Updates
+
+ NEWS |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 44 insertions(+), 0 deletions(-)
+
+commit 6a513f2289eb734f9b9cfb83e47e0f7e992fffbd
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Mar 9 17:14:50 2010 +0100
+
+    Fix compilation warning: use entry var correctly initilized
+
+    The warning was added in
+    commit c744594b2099d03af6b7654de6c8ed5565acd1a9
+
+ demos/gtk-demo/search_entry.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 718bf7771248903fd10b730614d7cc661f7d330b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 9 02:23:39 2010 -0500
+
+    Remove conflicting legacy compose sequences in favour of X.org
+    sequences
+
+    Patch by Jeroen Hoek. See bug 557420 for a prolonged discussion.
+    Quick summary of the removed sequences:
+
+    <Multi_key> <asciicircum> <0>
+    Consistency. <Multi_key> <asciicircum> [1..9] gives the superscript
+    digit,
+    legacy sequence for zero is inconsistent.
+
+    <Multi_key> <c> <o>
+    <Multi_key> <c> <O>
+    Consistency. <Multi_key> <c> [:letter:] already gives vowel plus
+    caron, legacy
+    sequence for c is inconsistent.
+
+    <Multi_key> <comma> <e>
+    <Multi_key> <comma> <E>
+    Consistency. <Multi_key> <comma> [:letter:] is for letter with
+    cedilla,
+    <Multi_key> <semicolon> [:letter:] is for letter with ogolek
+
+    <Multi_key> <C> <slash>
+    <Multi_key> <slash> <C>
+    Unintuitive. ¢ is visually a vertical bar through a lowercase c,
+    not a slash
+    through an uppercase C. ₡ has no alternatives, whilst ¢ can be
+    typed as
+    <Multi_key> <bar> <c>.
+
+    <Multi_key> <d> <minus>
+    đ can be input through <Multi_key> <minus> <d>. <Multi_key> <d>
+    <minus> is used
+    for ₫.
+
+    <Multi_key> <equal> <L>
+    <Multi_key> <L> <equal>
+    Unintuitive. ₤ has two dashes, £ one; therefore L + = > ₤,
+    and L + - = £.
+
+    <Multi_key> <exclam> <s>
+    <Multi_key> <exclam> <S>
+    Consistency. <Multi_key> <exclam> [:letter:] is used for letter with
+    dot below.
+    § can be input using <Multi_key> <o> <s>.
+
+    <Multi_key> <period> <period>
+    Might need an alternative for ˙, but … (upstream) has no
+    alternative either.
+
+    <Multi_key> <underscore> <a>
+    <Multi_key> <underscore> <A>
+    <Multi_key> <underscore> <o>
+    <Multi_key> <underscore> <O>
+    Consistency. <Multi_key> <underscore> [:vowel:] gives vowel with
+    macron for ȳ ū
+    ī ē too.
+
+    <Multi_key> <minus> <d>
+    <Multi_key> <minus> <D>
+    <Multi_key> <o> <e>
+    <Multi_key> <O> <E>
+    Redundant. In upstream as is.
+
+ gtk/gtk-compose-lookaside.txt |   18 ------------------
+ gtk/gtkimcontextsimpleseqs.h  |   32 ++++++++++++++++----------------
+ 2 files changed, 16 insertions(+), 34 deletions(-)
+
+commit 0ffc31d7624376e9a13b37031870ad2194392cd5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 9 02:15:20 2010 -0500
+
+    Regenerated compose tables
+
+    Now without non-BMP keysyms.
+
+ gtk/gtkimcontextsimpleseqs.h |   82
+ +++++++++++-------------------------------
+ 1 files changed, 21 insertions(+), 61 deletions(-)
+
+commit a152f7360ddb4224580c8c2ce8d708c1e9e33c9b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 9 02:12:33 2010 -0500
+
+    Updates to the compose-parse.py script
+
+    Get gdkkeysyms.h from git, instead of the outdated copy from svn.
+    Get Unicode 5.2.0 data. Fix a few issues with missing keysyms in
+    keysyms.txt. Make the filtering of non-BMP keysyms work.
+
+ gtk/compose-parse.py |   42 ++++++++++++++++++++++++------------------
+ 1 files changed, 24 insertions(+), 18 deletions(-)
+
+commit 0fca5a3ccacb6499174f64fcd823d221a513f875
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 9 00:54:08 2010 -0500
+
+    Add some keysyms missing from keysyms.txt
+
+ gtk/compose-parse.py |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+commit 6ab9b851591123ca2b39e175b82c015368ae19d6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 9 00:52:26 2010 -0500
+
+    fix file permissions
+
+ 0 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 09b64dab0d6e00d4f49033fa65ec122007b55dc5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 9 00:12:57 2010 -0500
+
+    Add some more annotation to the DND api
+
+ gtk/gtkdnd.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit bf88eee1318eb4c47c31ad1b32f515bb6c5d37f2
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 23:56:43 2010 -0500
+
+    Fix file chooser refcounting issues
+
+    This was reported in bug 600992.
+
+ gtk/gtkfilechooserbutton.c  |   21 +++++++++++++--------
+ gtk/gtkfilechooserdefault.c |   22 ++++++++++++++--------
+ gtk/gtkfilesystem.c         |   24 +++++++++++++++++++++++-
+ gtk/gtkfilesystem.h         |    3 ++-
+ gtk/gtkpathbar.c            |    2 +-
+ 5 files changed, 53 insertions(+), 19 deletions(-)
+
+commit 2036d9262e84feed7d89e22a25cf1918c598c797
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 21:34:17 2010 -0500
+
+    Add missing colons
+
+ gtk/gtkdnd.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit bc284541a95c97dbcc92b2f50958d97952fa272d
+Author: Christian Dywan <christian@lanedo.com>
+Date:   Mon Mar 8 21:22:54 2010 -0500
+
+    Document the use of NULL in gtk_window_set_transient_for
+
+    This fixes bug 611319.
+
+ gtk/gtkwindow.c |   13 +++++++------
+ 1 files changed, 7 insertions(+), 6 deletions(-)
+
+commit 9c8dbc292f9c2f2c216e33f448b32105d8401cf8
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 20:59:27 2010 -0500
+
+    Minor doc clarification for gdk_drag_begin
+
+    Mention that targets is a list of atoms. Bug 611317.
+
+ gdk/x11/gdkdnd-x11.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 32b9aeaadd6dbd084344d97c573b0289c1584923
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Mar 3 21:49:33 2010 +0100
+
+    Don't use GTK_WIDGET_STATE in internal code anymore
+
+    Use gtk_widget_get/set_state() instead
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ demos/gtk-demo/drawingarea.c                |    2 +-
+ docs/reference/gtk/tmpl/gtkdrawingarea.sgml |    2 +-
+ docs/tutorial/gtk-tut.sgml                  |   16 +++---
+ examples/scribble-simple/scribble-simple.c  |    2 +-
+ examples/scribble-xinput/scribble-xinput.c  |    6 +-
+ gtk/gtkaccellabel.c                         |    2 +-
+ gtk/gtkbutton.c                             |    6 +-
+ gtk/gtkcalendar.c                           |   18 ++++----
+ gtk/gtkcellrendererpixbuf.c                 |    2 +-
+ gtk/gtkcellrendererspinner.c                |    2 +-
+ gtk/gtkcellrenderertext.c                   |    4 +-
+ gtk/gtkcellrenderertoggle.c                 |    2 +-
+ gtk/gtkcellview.c                           |    4 +-
+ gtk/gtkcheckbutton.c                        |    6 +-
+ gtk/gtkcheckmenuitem.c                      |   12 ++--
+ gtk/gtkcombobox.c                           |   17 ++++---
+ gtk/gtkentry.c                              |   68
+ ++++++++++++++-------------
+ gtk/gtkexpander.c                           |    2 +-
+ gtk/gtkhandlebox.c                          |   16 +++---
+ gtk/gtkhsv.c                                |    4 +-
+ gtk/gtkiconview.c                           |   12 ++--
+ gtk/gtkimage.c                              |    8 ++--
+ gtk/gtklabel.c                              |    4 +-
+ gtk/gtklist.c                               |   10 +++-
+ gtk/gtklistitem.c                           |   12 ++++-
+ gtk/gtkmenu.c                               |    2 +-
+ gtk/gtkmenubar.c                            |    2 +-
+ gtk/gtkmenushell.c                          |    4 +-
+ gtk/gtknotebook.c                           |    4 +-
+ gtk/gtkoptionmenu.c                         |    6 +-
+ gtk/gtkpaned.c                              |    2 +-
+ gtk/gtkpixmap.c                             |    2 +-
+ gtk/gtkradiobutton.c                        |    4 +-
+ gtk/gtkrange.c                              |    2 +-
+ gtk/gtkruler.c                              |    4 +-
+ gtk/gtkseparator.c                          |    8 ++--
+ gtk/gtkspinbutton.c                         |    2 +-
+ gtk/gtkstatusbar.c                          |    2 +-
+ gtk/gtktext.c                               |   16 +++---
+ gtk/gtktextutil.c                           |    8 ++--
+ gtk/gtktextview.c                           |   20 ++++----
+ gtk/gtktogglebutton.c                       |    2 +-
+ gtk/gtktoolbar.c                            |   10 ++--
+ gtk/gtktrayicon-x11.c                       |    2 +-
+ gtk/gtktreeitem.c                           |    2 +-
+ gtk/gtktreeview.c                           |   25 +++++-----
+ gtk/gtktreeviewcolumn.c                     |    2 +-
+ gtk/gtkwidget.c                             |   26 +++++-----
+ gtk/gtkwidget.h                             |    3 +-
+ modules/other/gail/gailbutton.c             |    4 +-
+ tests/testgtk.c                             |    2 +-
+ tests/testinput.c                           |    8 ++--
+ tests/testtext.c                            |    2 +-
+ 53 files changed, 218 insertions(+), 197 deletions(-)
+
+commit b61fe506408c8ccd0ddb8ae67630ef2b942aac25
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 20:14:37 2010 -0500
+
+    Remove obsolete translator comments
+
+    Reported in bug 611217
+
+ gtk/gen-paper-names.c     |  103 ++++++++++++++--------------
+ gtk/paper_names_offsets.c |  165
+ ---------------------------------------------
+ 2 files changed, 51 insertions(+), 217 deletions(-)
+
+commit c744594b2099d03af6b7654de6c8ed5565acd1a9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 19:59:24 2010 -0500
+
+    Add accessible alternatives to entry icon functionality
+
+    Inspired by the complaint in bug 611051.
+
+ demos/gtk-demo/search_entry.c |  224
+ +++++++++++++++++++++++++----------------
+ 1 files changed, 138 insertions(+), 86 deletions(-)
+
+commit ac6525b27c3f8a98dfabfec12c98c724dfb7b28a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 19:21:32 2010 -0500
+
+    Add introspection annotations to gtk_drag_(source|dest)_set
+
+    Also move docs inline at the same time. Bug 610905.
+
+ docs/reference/gtk/tmpl/gtkdnd.sgml |   15 ++++++---------
+ gtk/gtkdnd.c                        |   31
+ ++++++++++++++++---------------
+ 2 files changed, 22 insertions(+), 24 deletions(-)
+
+commit fcc43e7b6ddce3c9451bc9a0b197d9055732f957
+Author: Ryan Lortie <desrt@desrt.ca>
+Date:   Mon Mar 8 12:11:33 2010 -0500
+
+    Update release HOWTO
+
+    - 'cvs' -> 'git'
+    - gnome-hackers is now closed.  Reply-to: desktop-devel-list instead.
+
+ docs/RELEASE-HOWTO |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit d84a83142329c725eaad3492d9f1eb62415f9d24
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 11:25:26 2010 -0500
+
+    Don't scroll to insert after middle-click paste
+
+    Patch by Ignacio Casal Quinteiro, bug 612119.
+
+ gtk/gtktextview.c |   25 +++++++++++++++++++++++--
+ 1 files changed, 23 insertions(+), 2 deletions(-)
+
+commit 87f48634f45ac6de1959971dd5dee99a59bbad8c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 8 10:36:11 2010 -0500
+
+    Fix an infinite loop in gtk_dialog_map()
+
+    The new focus handling with links in labels tripped up the code
+    that tries to avoid focussing labels. Bug 612066
+
+ gtk/gtkdialog.c |    7 +++----
+ 1 files changed, 3 insertions(+), 4 deletions(-)
+
+commit e629a9c7a85e028eb153cf9e25679a751f156d67
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Mon Mar 8 11:41:52 2010 +0100
+
+    Updated LowGerman translation
+
+ po/nds.po |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 770ebc707bdfe22f0c018980ffe109d98134cec6
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Mon Mar 8 11:37:14 2010 +0100
+
+    Updated LowGerman translation
+
+ po/nds.po |   44 ++++++++++++++++++++++----------------------
+ 1 files changed, 22 insertions(+), 22 deletions(-)
+
+commit 8d78ae44daaa5fd93e707e720d4cdd052ad87422
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Mon Mar 8 11:37:04 2010 +0100
+
+    Updated LowGerman translation
+
+ po-properties/nds.po | 2643
+ ++++++++++++++++++++------------------------------
+ 1 files changed, 1057 insertions(+), 1586 deletions(-)
+
+commit f32d4c104f2f51426d2acfd77a46e4d32ec7143b
+Author: Alexander Shopov <ash@contact.bg>
+Date:   Mon Mar 8 07:02:00 2010 +0200
+
+    Updated Bulgarian translation
+
+ po/bg.po |   54 +++++++++++++++++++++++++++---------------------------
+ 1 files changed, 27 insertions(+), 27 deletions(-)
+
+commit 0a49865ec4dbe7b085f52d9ec2a2120b0d9f82d3
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Sun Mar 7 12:15:33 2010 +0100
+
+    gtk: remove begin-user-action/end-user-action around copying
+
+    Copying to the clipboard is not a buffer mutation, so calling
+    gtk_text_buffer_begin_user_action() and _end_user_action() is only
+    confusing apps which connect to these signals in order to build undo
+    stacks or otherwise track buffer changes. Most likely, these apps
+    either didn't notice the bugus undo step or simply work around it.
+
+ gtk/gtktextbuffer.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit 85611bedcd721c3026d1112f2eccbc58806197eb
+Author: Jennie Petoumenou <jenniepet@src.gnome.org>
+Date:   Sun Mar 7 06:56:23 2010 +0100
+
+    Updated Greek translation.
+
+ po-properties/el.po | 3785
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1881 insertions(+), 1904 deletions(-)
+
+commit 7253ed5dd461b7be95553c194ff80519262e4415
+Author: Jennie Petoumenou <jenniepet@src.gnome.org>
+Date:   Sun Mar 7 00:07:43 2010 +0100
+
+    Updated Greek translation.
+
+ po/el.po | 2284
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1141 insertions(+), 1143 deletions(-)
+
+commit dbda10d03e365b6947caca851e3c6e65a3d13e40
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Sat Mar 6 15:22:12 2010 +0100
+
+    Updated French translation
+
+ po/fr.po | 2251
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1120 insertions(+), 1131 deletions(-)
+
+commit 72948f46bd99cac4123459b4065ea93ae609d9c0
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Mar 6 13:17:56 2010 +0100
+
+    Don't use GTK_WIDGET_SET_FLAGS() in gtk_widget_init()
+
+ gtk/gtkwidget.c |    9 ++++-----
+ 1 files changed, 4 insertions(+), 5 deletions(-)
+
+commit 691c13c42408eba0b1b59d704ca2967abed76d82
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Mar 6 13:13:01 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_PARENT_SENSITIVE)
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkwidget.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit a7efb2eaa045761eb7ec24686a4179794ee1edee
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Mar 6 13:01:58 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_RC_STYLE)
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkwidget.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 24491f8224a8c9cd68e6a59dcdeefd4fb9ce92f8
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Mar 6 12:29:26 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_APP_PAINTABLE)
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkwidget.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 74ed719fa4e005ca2134489eb3cc1206e00018ee
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Mar 6 12:02:21 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_MAPPED)
+
+    Use new API instead: gtk_widget_set_mapped ()
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkassistant.c        |    4 ++--
+ gtk/gtkclist.c            |    6 +++---
+ gtk/gtkcontainer.c        |    4 ++--
+ gtk/gtkhandlebox.c        |    4 ++--
+ gtk/gtklayout.c           |    2 +-
+ gtk/gtklist.c             |    2 +-
+ gtk/gtknotebook.c         |    4 ++--
+ gtk/gtkplug.c             |    4 ++--
+ gtk/gtktree.c             |    4 ++--
+ gtk/gtktreeitem.c         |    4 ++--
+ gtk/gtktreeview.c         |    2 +-
+ gtk/gtkwidget.c           |   13 +++++++------
+ gtk/gtkwin32embedwidget.c |    4 ++--
+ gtk/gtkwindow.c           |    4 ++--
+ 14 files changed, 31 insertions(+), 30 deletions(-)
+
+commit 1934de4b652e96af40db796191aff72dfdfd6b82
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Mar 6 11:51:33 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_REALIZED)
+
+    Use new API instead: gtk_widget_set_realized ()
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ demos/gtk-demo/offscreen_window.c  |    2 +-
+ demos/gtk-demo/offscreen_window2.c |    2 +-
+ docs/tutorial/gtk-tut.sgml         |    4 ++--
+ examples/gtkdial/gtkdial.c         |    2 +-
+ gtk/gtkbutton.c                    |    2 +-
+ gtk/gtkcalendar.c                  |    2 +-
+ gtk/gtkclist.c                     |    2 +-
+ gtk/gtkdrawingarea.c               |    2 +-
+ gtk/gtkentry.c                     |    2 +-
+ gtk/gtkeventbox.c                  |    2 +-
+ gtk/gtkexpander.c                  |    2 +-
+ gtk/gtkfixed.c                     |    2 +-
+ gtk/gtkhandlebox.c                 |    2 +-
+ gtk/gtkhsv.c                       |    2 +-
+ gtk/gtkiconview.c                  |    2 +-
+ gtk/gtkinvisible.c                 |    2 +-
+ gtk/gtkitem.c                      |    2 +-
+ gtk/gtklayout.c                    |    2 +-
+ gtk/gtklist.c                      |    2 +-
+ gtk/gtklistitem.c                  |    2 +-
+ gtk/gtkmenu.c                      |    2 +-
+ gtk/gtkmenuitem.c                  |    2 +-
+ gtk/gtkmenushell.c                 |    2 +-
+ gtk/gtkmisc.c                      |    2 +-
+ gtk/gtknotebook.c                  |    3 ++-
+ gtk/gtkoffscreenwindow.c           |    2 +-
+ gtk/gtkpaned.c                     |    2 +-
+ gtk/gtkpathbar.c                   |    2 +-
+ gtk/gtkplug.c                      |    2 +-
+ gtk/gtkpreview.c                   |    2 +-
+ gtk/gtkprogress.c                  |    2 +-
+ gtk/gtkrange.c                     |    2 +-
+ gtk/gtkruler.c                     |    3 ++-
+ gtk/gtksocket.c                    |    4 ++--
+ gtk/gtktext.c                      |    2 +-
+ gtk/gtktextview.c                  |    3 ++-
+ gtk/gtktoolbar.c                   |    2 +-
+ gtk/gtktoolitem.c                  |    2 +-
+ gtk/gtktoolitemgroup.c             |    2 +-
+ gtk/gtktoolpalette.c               |    2 +-
+ gtk/gtktree.c                      |    2 +-
+ gtk/gtktreeview.c                  |    2 +-
+ gtk/gtkviewport.c                  |    2 +-
+ gtk/gtkwidget.c                    |    8 ++++----
+ gtk/gtkwin32embedwidget.c          |    2 +-
+ gtk/gtkwindow.c                    |    2 +-
+ tests/gtkoffscreenbox.c            |    2 +-
+ 47 files changed, 55 insertions(+), 52 deletions(-)
+
+commit 24bafd8693e88b9b1635bbd6d1401ceb68ca7809
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Mar 6 11:29:31 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_NO_WINDOW)
+
+    Use new API instead: gtk_widget_set_has_window ()
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ demos/gtk-demo/offscreen_window.c  |    2 +-
+ demos/gtk-demo/offscreen_window2.c |    2 +-
+ gtk/gtkalignment.c                 |    2 +-
+ gtk/gtkarrow.c                     |    2 +-
+ gtk/gtkbin.c                       |    2 +-
+ gtk/gtkbox.c                       |    2 +-
+ gtk/gtkbutton.c                    |    2 +-
+ gtk/gtkcellview.c                  |    2 +-
+ gtk/gtkcheckbutton.c               |    2 +-
+ gtk/gtkclist.c                     |    2 +-
+ gtk/gtkexpander.c                  |    2 +-
+ gtk/gtkhandlebox.c                 |    2 +-
+ gtk/gtkhsv.c                       |    2 +-
+ gtk/gtkimage.c                     |    2 +-
+ gtk/gtkinvisible.c                 |    2 +-
+ gtk/gtkitem.c                      |    2 +-
+ gtk/gtklabel.c                     |    2 +-
+ gtk/gtkmenuitem.c                  |    2 +-
+ gtk/gtknotebook.c                  |    2 +-
+ gtk/gtkpaned.c                     |    2 +-
+ gtk/gtkpathbar.c                   |    2 +-
+ gtk/gtkpixmap.c                    |    2 +-
+ gtk/gtkprintunixdialog.c           |    4 ++--
+ gtk/gtkradiobutton.c               |    2 +-
+ gtk/gtkrange.c                     |    2 +-
+ gtk/gtkscrolledwindow.c            |    2 +-
+ gtk/gtkseparator.c                 |    2 +-
+ gtk/gtkspinner.c                   |    2 +-
+ gtk/gtktable.c                     |    2 +-
+ gtk/gtktoolbar.c                   |    2 +-
+ gtk/gtkviewport.c                  |    2 +-
+ gtk/gtkwidget.c                    |    4 ++--
+ gtk/gtkwindow.c                    |    2 +-
+ tests/gtkoffscreenbox.c            |    2 +-
+ 34 files changed, 36 insertions(+), 36 deletions(-)
+
+commit 2d4b7b263013fb20af740311af1f2890963737c5
+Author: Daniel Nylander <po@danielnylander.se>
+Date:   Sat Mar 6 00:26:05 2010 +0100
+
+    Updated Swedish translation
+
+ po-properties/sv.po | 4936
+ ++++++++++++++++++++++++---------------------------
+ 1 files changed, 2361 insertions(+), 2575 deletions(-)
+
+commit 44a8c5f3ff30780579cd899270dc3ed83b3d0f63
+Author: Daniel Nylander <po@danielnylander.se>
+Date:   Sat Mar 6 00:24:37 2010 +0100
+
+    Updated Swedish translation
+
+ po/sv.po | 2887
+ ++++++++++++++++++++++++++++----------------------------------
+ 1 files changed, 1313 insertions(+), 1574 deletions(-)
+
+commit 4759da26348fd1063e2da2e8f85d7a7fa7b41acd
+Author: Joanmarie Diggs <joanmarie.diggs@gmail.com>
+Date:   Fri Mar 5 14:48:23 2010 +0800
+
+    Add/Remove ATK_STATE_SENSITIVE according to cells' state.
+
+    Bug #569042.
+
+ modules/other/gail/gailbooleancell.c |   19 ++++++++++++++++++-
+ modules/other/gail/gailbooleancell.h |    1 +
+ 2 files changed, 19 insertions(+), 1 deletions(-)
+
+commit 7ab2155aef8e2069a9e5680ca2cd68f70eec43fd
+Author: Patrick Bernaud <patrickb@chez.com>
+Date:   Fri Mar 5 05:34:16 2010 +0100
+
+    Move documentation to inline comments: GtkPlug
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=611707
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkplug.sgml |  126
+ ----------------------------------
+ gtk/gtkplug.c                        |   21 ++++++
+ 2 files changed, 21 insertions(+), 126 deletions(-)
+
+commit 3f579a7a936b9b6cbd08aa2331eae932b1a68491
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Thu Mar 4 13:21:16 2010 -0500
+
+    Move documentation to inline comments: GtkVBox
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611831
+
+ docs/reference/gtk/tmpl/gtkvbox.sgml |   49
+ ----------------------------------
+ gtk/gtkvbox.c                        |   23 ++++++++++++++++
+ 2 files changed, 23 insertions(+), 49 deletions(-)
+
+commit a5e496cf87f46a5fe186d9346de9898b655ad221
+Author: Fran Diéguez <frandieguez@ubuntu.com>
+Date:   Fri Mar 5 00:25:31 2010 +0100
+
+    Update Galician translation
+
+ po-properties/gl.po | 3696
+ ++++++++++++++++++++++++++-------------------------
+ po/gl.po            | 2550 ++++++++++++++++++------------------
+ 2 files changed, 3124 insertions(+), 3122 deletions(-)
+
+commit 01593516f1a54316ddbd1190753b9512216ec95e
+Author: Friedel Wolff <friedel@translate.org.za>
+Date:   Thu Mar 4 11:35:33 2010 +0100
+
+    Update Afrikaans translation
+
+ po/af.po | 3663
+ +++++++++++++++++++++++++++-----------------------------------
+ 1 files changed, 1578 insertions(+), 2085 deletions(-)
+
+commit 8c30affb6eba3202c2814e824428f91fd490bd22
+Author: Li Yuan <li.yuan@sun.com>
+Date:   Thu Mar 4 16:30:00 2010 +0800
+
+    Return FALSE in signal handlers to make the signals be propagated
+
+    Bug #611686.
+
+ modules/other/gail/gailtreeview.c |   10 ++++++----
+ 1 files changed, 6 insertions(+), 4 deletions(-)
+
+commit 15d1d8bb3b3c408002aaac19566b5d1f23a04aa0
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Wed Mar 3 18:35:45 2010 -0500
+
+    Move documentation to inline comments: GtkVSeparator
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611662
+
+ docs/reference/gtk/tmpl/gtkvseparator.sgml |   41
+ ----------------------------
+ gtk/gtkvseparator.c                        |   18 ++++++++++++
+ gtk/gtkvseparator.h                        |    6 ++++
+ 3 files changed, 24 insertions(+), 41 deletions(-)
+
+commit f0f3b01876a8cb3d905ae472ab55ca2b68a8913e
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Wed Mar 3 18:21:56 2010 -0500
+
+    Move documentation to inline comments: GtkVScrollbar
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611658
+
+ docs/reference/gtk/tmpl/gtkvscrollbar.sgml |   40
+ ----------------------------
+ gtk/gtkvscrollbar.c                        |   14 ++++++++++
+ gtk/gtkvscrollbar.h                        |    6 ++++
+ 3 files changed, 20 insertions(+), 40 deletions(-)
+
+commit 244ae204dac676fce55a17eb9b13e19c8f9155e3
+Author: Gabor Kelemen <kelemeng@gnome.hu>
+Date:   Thu Mar 4 00:34:04 2010 +0100
+
+    Updated Hungarian translation
+
+ po/hu.po |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 69279262bc0afdd6a92e4049b24cc80e10889581
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Wed Mar 3 16:39:29 2010 -0500
+
+    Update gtkvscale documentation for in code comments. Removed template
+    document
+
+ docs/reference/gtk/tmpl/gtkvscale.sgml |   51
+ --------------------------------
+ gtk/gtkvscale.c                        |   20 ++++++++++++-
+ gtk/gtkvscale.h                        |    6 ++++
+ 3 files changed, 25 insertions(+), 52 deletions(-)
+
+commit 24ba8f315efeb298c2b85150ba2ad4fd5111c1d4
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Wed Mar 3 23:19:47 2010 +0100
+
+    Updated Basque language
+
+ po/eu.po |  828
+ ++++++++++++++++++++++++++------------------------------------
+ 1 files changed, 350 insertions(+), 478 deletions(-)
+
+commit 62a829dd309bf3ce1471265b1f0478e17f160e66
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Mar 3 23:03:13 2010 +0100
+
+    Add version info about the deprecation of GTK_WIDGET_SENSITIVE
+
+    This completes the patch of
+    commit 64f526d34e1adc609944078e2fea38b2792f8230
+
+ gtk/gtkwidget.h |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit f6d54ac7be9c5bec8ead7be1b84e6e9ad2dad99d
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Wed Mar 3 22:43:01 2010 +0100
+
+    Updated Basque language
+
+ po-properties/eu.po | 3982
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1937 insertions(+), 2045 deletions(-)
+
+commit 16a59ad9129c680833c584768e6a81b2ba365268
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Mar 2 07:16:02 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_REALIZED
+
+    Use gtk_widget_get_realized() instead
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ demos/gtk-demo/offscreen_window.c  |    4 +-
+ demos/gtk-demo/offscreen_window2.c |    4 +-
+ docs/tutorial/gtk-tut.sgml         |    4 +-
+ examples/gtkdial/gtkdial.c         |    2 +-
+ gtk/gtkassistant.c                 |    2 +-
+ gtk/gtkbutton.c                    |    4 +-
+ gtk/gtkcalendar.c                  |    8 ++--
+ gtk/gtkcheckbutton.c               |    2 +-
+ gtk/gtkclist.c                     |   36 +++++++++---------
+ gtk/gtkcolorbutton.c               |    2 +-
+ gtk/gtkcolorsel.c                  |    2 +-
+ gtk/gtkcombobox.c                  |    8 ++--
+ gtk/gtkcontainer.c                 |    7 ++-
+ gtk/gtkctree.c                     |   26 ++++++------
+ gtk/gtkdnd-quartz.c                |    4 +-
+ gtk/gtkdnd.c                       |    6 +-
+ gtk/gtkdrawingarea.c               |    2 +-
+ gtk/gtkentry.c                     |   24 ++++++------
+ gtk/gtkeventbox.c                  |    6 +-
+ gtk/gtkexpander.c                  |    8 ++--
+ gtk/gtkfilechooserdefault.c        |    4 +-
+ gtk/gtkfixed.c                     |    4 +-
+ gtk/gtkhandlebox.c                 |   10 ++--
+ gtk/gtkhsv.c                       |    2 +-
+ gtk/gtkiconview.c                  |   21 +++++-----
+ gtk/gtkinvisible.c                 |    2 +-
+ gtk/gtklabel.c                     |   19 +++++----
+ gtk/gtklayout.c                    |   10 ++--
+ gtk/gtklinkbutton.c                |    4 +-
+ gtk/gtklist.c                      |    4 +-
+ gtk/gtklistitem.c                  |    4 +-
+ gtk/gtkmain.c                      |    2 +-
+ gtk/gtkmenu.c                      |   18 ++++----
+ gtk/gtkmenubar.c                   |    2 +-
+ gtk/gtkmenuitem.c                  |    2 +-
+ gtk/gtknotebook.c                  |    2 +-
+ gtk/gtkoffscreenwindow.c           |    4 +-
+ gtk/gtkoldeditable.c               |   10 +++--
+ gtk/gtkoptionmenu.c                |    2 +-
+ gtk/gtkpaned.c                     |    8 ++--
+ gtk/gtkpathbar.c                   |    2 +-
+ gtk/gtkplug.c                      |   10 ++--
+ gtk/gtkpreview.c                   |    2 +-
+ gtk/gtkprintunixdialog.c           |    2 +-
+ gtk/gtkprogress.c                  |    8 ++--
+ gtk/gtkrange.c                     |    4 +-
+ gtk/gtkrecentchooserdefault.c      |    4 +-
+ gtk/gtkruler.c                     |    2 +-
+ gtk/gtkselection.c                 |    6 +-
+ gtk/gtksocket-win32.c              |    2 +-
+ gtk/gtksocket.c                    |    8 ++--
+ gtk/gtkspinbutton.c                |    6 +-
+ gtk/gtkspinner.c                   |    2 +-
+ gtk/gtkstatusbar.c                 |    8 ++--
+ gtk/gtkstatusicon.c                |    2 +-
+ gtk/gtkstyle.c                     |    2 +-
+ gtk/gtktext.c                      |   24 ++++++------
+ gtk/gtktextview.c                  |   34 ++++++++--------
+ gtk/gtktipsquery.c                 |    2 +-
+ gtk/gtktoolbar.c                   |    4 +-
+ gtk/gtktoolitem.c                  |    3 +-
+ gtk/gtktoolitemgroup.c             |    6 +-
+ gtk/gtktrayicon-x11.c              |    2 +-
+ gtk/gtktree.c                      |    2 +-
+ gtk/gtktreeitem.c                  |    2 +-
+ gtk/gtktreeview.c                  |   67
+ +++++++++++++++++----------------
+ gtk/gtktreeviewcolumn.c            |   18 ++++----
+ gtk/gtkviewport.c                  |    8 ++--
+ gtk/gtkwidget.c                    |   72
+ ++++++++++++++++++------------------
+ gtk/gtkwidget.h                    |    4 ++
+ gtk/gtkwin32embedwidget.c          |    4 +-
+ gtk/gtkwindow.c                    |   64 ++++++++++++++++---------------
+ modules/other/gail/gailtreeview.c  |    4 +-
+ tests/gtkoffscreenbox.c            |    6 +-
+ tests/testgtk.c                    |    6 +-
+ tests/testsocket_common.c          |    2 +-
+ 76 files changed, 357 insertions(+), 342 deletions(-)
+
+commit 1fe7d3cefd1aeabd6d8cab2a68673bb1f7876988
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Mar 2 05:19:28 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_MAPPED
+
+    Use gtk_widget_get_mapped() instead.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ docs/tutorial/gtk-tut.sgml                 |    4 +-
+ examples/scribble-xinput/scribble-xinput.c |    2 +-
+ gtk/gtkassistant.c                         |   12 +++++-----
+ gtk/gtkclist.c                             |   10 ++++----
+ gtk/gtkcombobox.c                          |    4 +-
+ gtk/gtkcontainer.c                         |    2 +-
+ gtk/gtkdnd-quartz.c                        |    2 +-
+ gtk/gtkdnd.c                               |    2 +-
+ gtk/gtkentry.c                             |   20 +++++++++---------
+ gtk/gtkentrycompletion.c                   |   14 ++++++------
+ gtk/gtkfilechooserdefault.c                |    5 ++-
+ gtk/gtkfilechooserdialog.c                 |    4 +-
+ gtk/gtkframe.c                             |    2 +-
+ gtk/gtkhandlebox.c                         |    2 +-
+ gtk/gtkimage.c                             |    2 +-
+ gtk/gtklabel.c                             |    4 +-
+ gtk/gtklayout.c                            |    2 +-
+ gtk/gtklist.c                              |    2 +-
+ gtk/gtkmenu.c                              |    4 +-
+ gtk/gtkmenubar.c                           |    2 +-
+ gtk/gtkmenuitem.c                          |    2 +-
+ gtk/gtkmnemonichash.c                      |    2 +-
+ gtk/gtknotebook.c                          |   27
+ +++++++++++++------------
+ gtk/gtkpaned.c                             |    8 +++---
+ gtk/gtkplug.c                              |    4 +-
+ gtk/gtkradiobutton.c                       |    4 +-
+ gtk/gtkrecentchooserdialog.c               |    2 +-
+ gtk/gtkscale.c                             |    2 +-
+ gtk/gtksizegroup.c                         |    2 +-
+ gtk/gtkspinbutton.c                        |    4 +-
+ gtk/gtkstatusbar.c                         |    2 +-
+ gtk/gtktoolbar.c                           |    6 ++--
+ gtk/gtktoolitem.c                          |    2 +-
+ gtk/gtktoolitemgroup.c                     |    2 +-
+ gtk/gtktree.c                              |    8 +++---
+ gtk/gtktreeitem.c                          |   10 ++++----
+ gtk/gtktreeview.c                          |   12 +++++-----
+ gtk/gtkviewport.c                          |    2 +-
+ gtk/gtkwidget.c                            |   30
+ ++++++++++++++--------------
+ gtk/gtkwidget.h                            |    4 +++
+ gtk/gtkwin32embedwidget.c                  |    2 +-
+ gtk/gtkwindow.c                            |   28
+ ++++++++++++++-----------
+ modules/other/gail/gail.c                  |    4 +-
+ modules/other/gail/gailbutton.c            |    2 +-
+ modules/other/gail/gailcombo.c             |    2 +-
+ modules/other/gail/gailcombobox.c          |    2 +-
+ modules/other/gail/gailexpander.c          |    2 +-
+ modules/other/gail/gailitem.c              |    2 +-
+ modules/other/gail/gaillabel.c             |    2 +-
+ modules/other/gail/gailmenuitem.c          |    4 +-
+ modules/other/gail/gailnotebookpage.c      |    2 +-
+ modules/other/gail/gailwidget.c            |    4 +-
+ modules/other/gail/gailwindow.c            |    2 +-
+ perf/gtkwidgetprofiler.c                   |    2 +-
+ tests/testgtk.c                            |   18 ++++++++--------
+ tests/testinput.c                          |    2 +-
+ tests/testtext.c                           |    2 +-
+ 57 files changed, 164 insertions(+), 154 deletions(-)
+
+commit f4d9c7be2b8d76c720ae8c38ca27f7618f5bf029
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Wed Mar 3 15:51:31 2010 +0100
+
+    Updated LowGerman translation
+
+ po-properties/nds.po | 3356
+ ++++++++++++++++++++++++++++----------------------
+ 1 files changed, 1866 insertions(+), 1490 deletions(-)
+
+commit 42f1789c1eaa716172f4b0b322c554edcfe7292d
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Wed Mar 3 15:24:51 2010 +0100
+
+    Updated Low German translation
+
+ po-properties/nds.po |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit fc82769a8885b7546d42bab7d37d18d69bd220e4
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Wed Mar 3 15:21:42 2010 +0100
+
+    Updated Low German translation
+
+ po-properties/nds.po | 3397
+ ++++++++++++++++++++++----------------------------
+ 1 files changed, 1491 insertions(+), 1906 deletions(-)
+
+commit 6520046f035756235ce3803e76c102aba30b848b
+Author: Kjartan Maraas <kmaraas@gnome.org>
+Date:   Wed Mar 3 13:51:43 2010 +0100
+
+    Updated Norwegian bokmål translation
+
+ po/nb.po | 2239
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1122 insertions(+), 1117 deletions(-)
+
+commit 32d043535bf3c8fb59d101efaa564f2e04fbbe00
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Mar 3 02:37:17 2010 +0100
+
+    Fix gtk_widget_is_sensitive() function. Second try
+
+    Use GTK_PARENT_SENSITIVE flag instead
+    gtk_widget_get_sensitive(widget->parent)
+
+ gtk/gtkwidget.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit f61016f554012e793049d305998f49cceb35c734
+Author: Gabor Kelemen <kelemeng@gnome.hu>
+Date:   Wed Mar 3 00:56:00 2010 +0100
+
+    Updated Hungarian translation
+
+ po-properties/hu.po | 3953
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1928 insertions(+), 2025 deletions(-)
+
+commit 491ed58420883ad68ff72691541d578422985d7d
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Mar 2 18:24:21 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_NO_SHOW_ALL)
+
+ gtk/gtkwidget.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+commit f8fb228752a2873d5395fe71981c8dc57ca2a301
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Mar 2 17:54:16 2010 +0100
+
+    Fix gtk_widget_is_sensitive() function
+
+    The bug was introduced in
+    commit a27d5a2c9eba7af5b056de32ff9b2b4dd1eb97e1
+
+ gtk/gtkwidget.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit e8e95d4c5ee4c7c78971597c53f0b6e3f0e81b7a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Mar 2 07:58:05 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_CAN_DEFAULT)
+
+    Use new API instead: gtk_widget_set_can_default ()
+
+ demos/gtk-demo/menus.c               |    2 +-
+ demos/gtk-demo/ui_manager.c          |    2 +-
+ docs/tutorial/gtk-tut.sgml           |   12 +++---
+ examples/calendar/calendar.c         |    2 +-
+ examples/entry/entry.c               |    2 +-
+ examples/progressbar/progressbar.c   |    2 +-
+ examples/radiobuttons/radiobuttons.c |    2 +-
+ examples/rangewidgets/rangewidgets.c |    2 +-
+ examples/scrolledwin/scrolledwin.c   |    2 +-
+ examples/text/text.c                 |    2 +-
+ gtk/gtkaboutdialog.c                 |    4 +-
+ gtk/gtkassistant.c                   |    6 +-
+ gtk/gtkdialog.c                      |    2 +-
+ gtk/gtkfilechooserdefault.c          |    2 +-
+ gtk/gtkfilesel.c                     |    4 +-
+ gtk/gtkgamma.c                       |    2 +-
+ gtk/gtkinfobar.c                     |    2 +-
+ gtk/gtkinputdialog.c                 |    4 +-
+ gtk/gtkmain.c                        |    2 +-
+ gtk/gtkoptionmenu.c                  |    8 ++-
+ gtk/gtkprintunixdialog.c             |    2 +-
+ gtk/gtkwidget.c                      |    4 +-
+ tests/testcalendar.c                 |    2 +-
+ tests/testgtk.c                      |   72
+ +++++++++++++++++-----------------
+ tests/testmenubars.c                 |    2 +-
+ tests/testmenus.c                    |    2 +-
+ tests/testrecentchoosermenu.c        |    2 +-
+ tests/testtext.c                     |    6 +-
+ 28 files changed, 80 insertions(+), 78 deletions(-)
+
+commit 483a5a9e1a55f01cbd20b7bbd301ee59efaa4c64
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Mar 2 04:40:38 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_CAN_FOCUS)
+
+    Use new API instead: gtk_widget_set_can_focus ()
+
+ gtk/gtkbutton.c         |    2 +-
+ gtk/gtkcalendar.c       |    2 +-
+ gtk/gtkclist.c          |    6 +++---
+ gtk/gtkcolorsel.c       |    2 +-
+ gtk/gtkcombo.c          |   10 +++++-----
+ gtk/gtkcombobox.c       |    2 +-
+ gtk/gtkentry.c          |    2 +-
+ gtk/gtkexpander.c       |    2 +-
+ gtk/gtkhsv.c            |    2 +-
+ gtk/gtkiconview.c       |    2 +-
+ gtk/gtklabel.c          |    4 ++--
+ gtk/gtklistitem.c       |    2 +-
+ gtk/gtknotebook.c       |    6 +++---
+ gtk/gtkoldeditable.c    |    2 +-
+ gtk/gtkoptionmenu.c     |    2 +-
+ gtk/gtkpaned.c          |    7 ++++---
+ gtk/gtkscale.c          |    2 +-
+ gtk/gtkscrolledwindow.c |    3 ++-
+ gtk/gtksocket.c         |    8 +++++---
+ gtk/gtkstatusicon.c     |    2 +-
+ gtk/gtktext.c           |    2 +-
+ gtk/gtktextview.c       |    6 +++---
+ gtk/gtktoolbar.c        |    2 +-
+ gtk/gtktoolitem.c       |    2 +-
+ gtk/gtktreeitem.c       |    2 +-
+ gtk/gtktreeviewcolumn.c |    4 ++--
+ gtk/gtkwidget.c         |    4 ++--
+ tests/testinput.c       |    2 +-
+ 28 files changed, 49 insertions(+), 45 deletions(-)
+
+commit f19dc0bd4b117f3e80c2487e73db63bd672e9c1b
+Author: Gabor Kelemen <kelemeng@gnome.hu>
+Date:   Tue Mar 2 00:29:40 2010 +0100
+
+    Updated Hungarian translation
+
+ po/hu.po | 2375
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1176 insertions(+), 1199 deletions(-)
+
+commit 1ec18b92581c93d5e73ca0bcf0a53a45d518387f
+Author: Petr Kovar <pknbe@volny.cz>
+Date:   Mon Mar 1 20:12:54 2010 +0100
+
+    Update Czech translation
+
+ po/cs.po | 2237
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1121 insertions(+), 1116 deletions(-)
+
+commit c3d09e5627c1e59e4d181d1d4674d9af2a4eca45
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Mar 1 18:24:28 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_SENSITIVE)
+
+ gtk/gtkwidget.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 27b64f50e6c3ab1d90116ec584e3efa8b6ad5343
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Mar 1 18:14:05 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_DOUBLE_BUFFERED)
+
+    Use new API instead: gtk_widget_set_double_buffered ()
+
+ docs/reference/gtk/drawing-model.xml |    2 +-
+ gtk/gtkwidget.c                      |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit b909abaa622127c308388769e125a654a1371ba9
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Mar 1 17:41:37 2010 +0100
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_RECEIVES_DEFAULT)
+
+    Use new API instead: gtk_widget_set_receives_default ()
+
+ gtk/gtkbutton.c      |    3 ++-
+ gtk/gtkcheckbutton.c |    2 +-
+ gtk/gtkoptionmenu.c  |    3 ++-
+ gtk/gtkradiobutton.c |    2 +-
+ gtk/gtkwidget.c      |    4 ++--
+ 5 files changed, 8 insertions(+), 6 deletions(-)
+
+commit b4b95d07f8b012cf29c0546f425ea3b78f2ad502
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Feb 27 04:10:17 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_PARENT_SENSITIVE
+
+    Use gtk_widget_get_sensitive() on the parent widget instead.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkwidget.h |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 214a023e9160fa008db069f5ec10ce3a4999a4dc
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Mar 1 07:47:38 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_VISIBLE
+
+    Use gtk_widget_get_visible() instead
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ demos/gtk-demo/appwindow.c           |    2 +-
+ demos/gtk-demo/assistant.c           |    2 +-
+ demos/gtk-demo/builder.c             |    2 +-
+ demos/gtk-demo/button_box.c          |    2 +-
+ demos/gtk-demo/clipboard.c           |    2 +-
+ demos/gtk-demo/colorsel.c            |    2 +-
+ demos/gtk-demo/combobox.c            |    2 +-
+ demos/gtk-demo/dialog.c              |    2 +-
+ demos/gtk-demo/drawingarea.c         |    2 +-
+ demos/gtk-demo/editable_cells.c      |    2 +-
+ demos/gtk-demo/entry_buffer.c        |    2 +-
+ demos/gtk-demo/entry_completion.c    |    2 +-
+ demos/gtk-demo/expander.c            |    2 +-
+ demos/gtk-demo/hypertext.c           |    2 +-
+ demos/gtk-demo/iconview.c            |    2 +-
+ demos/gtk-demo/iconview_edit.c       |    2 +-
+ demos/gtk-demo/images.c              |    2 +-
+ demos/gtk-demo/infobar.c             |    2 +-
+ demos/gtk-demo/links.c               |    2 +-
+ demos/gtk-demo/list_store.c          |    2 +-
+ demos/gtk-demo/menus.c               |    2 +-
+ demos/gtk-demo/offscreen_window.c    |   16 ++--
+ demos/gtk-demo/offscreen_window2.c   |   16 ++--
+ demos/gtk-demo/panes.c               |    2 +-
+ demos/gtk-demo/pickers.c             |    2 +-
+ demos/gtk-demo/pixbufs.c             |    2 +-
+ demos/gtk-demo/rotated_text.c        |    2 +-
+ demos/gtk-demo/search_entry.c        |    2 +-
+ demos/gtk-demo/sizegroup.c           |    2 +-
+ demos/gtk-demo/spinner.c             |    2 +-
+ demos/gtk-demo/stock_browser.c       |    2 +-
+ demos/gtk-demo/textscroll.c          |    2 +-
+ demos/gtk-demo/textview.c            |    2 +-
+ demos/gtk-demo/toolpalette.c         |    2 +-
+ demos/gtk-demo/tree_store.c          |    2 +-
+ examples/calendar/calendar.c         |    2 +-
+ gtk/gtkalignment.c                   |    4 +-
+ gtk/gtkaspectframe.c                 |    2 +-
+ gtk/gtkassistant.c                   |   20 +++---
+ gtk/gtkbbox.c                        |    7 +-
+ gtk/gtkbin.c                         |    4 +-
+ gtk/gtkbox.c                         |   18 +++--
+ gtk/gtkbutton.c                      |    4 +-
+ gtk/gtkcheckbutton.c                 |    8 +-
+ gtk/gtkclist.c                       |   22 +++---
+ gtk/gtkcombo.c                       |    2 +-
+ gtk/gtkcombobox.c                    |    8 +-
+ gtk/gtkcontainer.c                   |    4 +-
+ gtk/gtkdialog.c                      |    2 +-
+ gtk/gtkdnd.c                         |    2 +-
+ gtk/gtkentry.c                       |   14 ++--
+ gtk/gtkentrycompletion.c             |    4 +-
+ gtk/gtkeventbox.c                    |   10 +-
+ gtk/gtkexpander.c                    |   20 +++--
+ gtk/gtkfilechooserbutton.c           |    2 +-
+ gtk/gtkfilechooserdefault.c          |    4 +-
+ gtk/gtkfixed.c                       |   15 ++--
+ gtk/gtkfontbutton.c                  |    2 +-
+ gtk/gtkframe.c                       |   14 ++--
+ gtk/gtkhandlebox.c                   |    6 +-
+ gtk/gtkiconview.c                    |    2 +-
+ gtk/gtkimage.c                       |   10 ++-
+ gtk/gtkimagemenuitem.c               |   11 ++-
+ gtk/gtklabel.c                       |    2 +-
+ gtk/gtklayout.c                      |    7 +-
+ gtk/gtklist.c                        |    8 +-
+ gtk/gtklistitem.c                    |    2 +-
+ gtk/gtkmain.c                        |    2 +-
+ gtk/gtkmenu.c                        |   18 ++--
+ gtk/gtkmenubar.c                     |    8 +-
+ gtk/gtkmenuitem.c                    |    8 +-
+ gtk/gtkmenushell.c                   |   16 ++--
+ gtk/gtkmenutoolbutton.c              |    4 +-
+ gtk/gtknotebook.c                    |  104 ++++++++++++++-------------
+ gtk/gtkoffscreenwindow.c             |    6 +-
+ gtk/gtkoptionmenu.c                  |   11 ++-
+ gtk/gtkpaned.c                       |   32 ++++----
+ gtk/gtkpathbar.c                     |    2 +-
+ gtk/gtkpixmap.c                      |    4 +-
+ gtk/gtkplug.c                        |    8 +-
+ gtk/gtkradiobutton.c                 |    2 +-
+ gtk/gtkscale.c                       |    7 +-
+ gtk/gtkscrolledwindow.c              |   14 ++--
+ gtk/gtkstatusbar.c                   |    2 +-
+ gtk/gtktable.c                       |   32 ++++----
+ gtk/gtktextview.c                    |    7 +-
+ gtk/gtktogglebutton.c                |    2 +-
+ gtk/gtktoolbar.c                     |    8 +-
+ gtk/gtktoolitem.c                    |    4 +-
+ gtk/gtktoolitemgroup.c               |   19 +++--
+ gtk/gtktooltip.c                     |    2 +-
+ gtk/gtktree.c                        |   14 ++--
+ gtk/gtktreeitem.c                    |   14 ++--
+ gtk/gtktreeview.c                    |   14 ++--
+ gtk/gtkuimanager.c                   |    4 +-
+ gtk/gtkviewport.c                    |   12 ++--
+ gtk/gtkwidget.c                      |   38 +++++-----
+ gtk/gtkwidget.h                      |    4 +
+ gtk/gtkwin32embedwidget.c            |    4 +-
+ gtk/gtkwindow.c                      |   33 ++++-----
+ gtk/tests/filechooser.c              |    4 +-
+ modules/other/gail/gailbutton.c      |    4 +-
+ modules/other/gail/gailcombo.c       |    4 +-
+ modules/other/gail/gailcombobox.c    |    4 +-
+ modules/other/gail/gailentry.c       |    4 +-
+ modules/other/gail/gailexpander.c    |    4 +-
+ modules/other/gail/gailmenuitem.c    |    6 +-
+ modules/other/gail/gailoptionmenu.c  |    4 +-
+ modules/other/gail/gailrange.c       |    4 +-
+ modules/other/gail/gailscalebutton.c |    2 +-
+ modules/other/gail/gailtoplevel.c    |    2 +-
+ modules/other/gail/gailwidget.c      |    6 +-
+ modules/other/gail/gailwindow.c      |    2 +-
+ modules/other/gail/tests/ferret.c    |    2 +-
+ perf/gtkwidgetprofiler.c             |    2 +-
+ tests/gtkoffscreenbox.c              |   30 ++++----
+ tests/testassistant.c                |   10 +-
+ tests/testgtk.c                      |  134
+ +++++++++++++++++-----------------
+ tests/testmenubars.c                 |    2 +-
+ tests/testmenus.c                    |    2 +-
+ 120 files changed, 529 insertions(+), 502 deletions(-)
+
+commit 4232115e22c8ea41d6a3faf89bcaadfc9933d5e3
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Mar 1 04:21:41 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_HAS_FOCUS
+
+    Use gtk_widget_has_focus() instead
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkbutton.c                        |    6 ++--
+ gtk/gtkcalendar.c                      |   16 +++++-----
+ gtk/gtkcellrendererpixbuf.c            |    2 +-
+ gtk/gtkcellrendererspinner.c           |    2 +-
+ gtk/gtkcellrenderertext.c              |    4 +-
+ gtk/gtkcellrenderertoggle.c            |    2 +-
+ gtk/gtkcheckbutton.c                   |    2 +-
+ gtk/gtkclist.c                         |   18 +++++-----
+ gtk/gtkcolorsel.c                      |    2 +-
+ gtk/gtkcombo.c                         |    4 +-
+ gtk/gtkcombobox.c                      |    6 ++--
+ gtk/gtkcontainer.c                     |    6 ++--
+ gtk/gtkctree.c                         |    4 +-
+ gtk/gtkentry.c                         |   53
+ ++++++++++++++++++-------------
+ gtk/gtkentrycompletion.c               |    2 +-
+ gtk/gtkexpander.c                      |    2 +-
+ gtk/gtkfilechooserdefault.c            |    2 +-
+ gtk/gtkfilechooserentry.c              |    2 +-
+ gtk/gtkhsv.c                           |    6 ++--
+ gtk/gtkiconview.c                      |   18 +++++-----
+ gtk/gtklabel.c                         |    8 ++--
+ gtk/gtklinkbutton.c                    |    2 +-
+ gtk/gtklist.c                          |   10 +++---
+ gtk/gtklistitem.c                      |    4 +-
+ gtk/gtknotebook.c                      |    4 +-
+ gtk/gtkoptionmenu.c                    |    4 +-
+ gtk/gtkrange.c                         |    5 +--
+ gtk/gtksocket.c                        |    2 +-
+ gtk/gtkspinbutton.c                    |    6 ++--
+ gtk/gtkstyle.c                         |    8 ++--
+ gtk/gtktext.c                          |    6 ++--
+ gtk/gtktextdisplay.c                   |   12 +++---
+ gtk/gtktextview.c                      |   18 +++++-----
+ gtk/gtktrayicon-x11.c                  |    2 +-
+ gtk/gtktreeitem.c                      |    8 ++--
+ gtk/gtktreeview.c                      |   50
+ +++++++++++++++--------------
+ gtk/gtktreeviewcolumn.c                |    2 +-
+ gtk/gtkwidget.c                        |    6 ++--
+ gtk/gtkwidget.h                        |    4 ++
+ gtk/gtkwindow.c                        |    8 ++--
+ gtk/tests/builder.c                    |    2 +-
+ gtk/tests/testing.c                    |    2 +-
+ modules/engines/ms-windows/msw_style.c |    4 +-
+ modules/other/gail/gail.c              |    2 +-
+ modules/other/gail/gailtreeview.c      |    2 +-
+ modules/other/gail/gailwidget.c        |    2 +-
+ 46 files changed, 178 insertions(+), 164 deletions(-)
+
+commit 64f526d34e1adc609944078e2fea38b2792f8230
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Mar 1 05:58:37 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_SENSITIVE
+
+    Use gtk_widget_get_sensitive() instead
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkassistant.c                  |    2 +-
+ gtk/gtkbutton.c                     |    2 +-
+ gtk/gtkclist.c                      |    2 +-
+ gtk/gtkcombobox.c                   |    2 +-
+ gtk/gtkdnd-quartz.c                 |    2 +-
+ gtk/gtkdnd.c                        |    2 +-
+ gtk/gtkentry.c                      |    6 +++---
+ gtk/gtkfilechooserdefault.c         |    2 +-
+ gtk/gtkfontsel.c                    |    2 +-
+ gtk/gtkoptionmenu.c                 |    4 ++--
+ gtk/gtkpaned.c                      |    2 +-
+ gtk/gtktoolitem.c                   |    4 ++--
+ gtk/gtkwidget.c                     |    6 +++---
+ gtk/gtkwidget.h                     |    2 ++
+ modules/other/gail/gailcombo.c      |    4 ++--
+ modules/other/gail/gailcombobox.c   |    4 ++--
+ modules/other/gail/gailentry.c      |    4 ++--
+ modules/other/gail/gailmenuitem.c   |    4 ++--
+ modules/other/gail/gailoptionmenu.c |    4 ++--
+ modules/other/gail/gailrange.c      |    4 ++--
+ modules/other/gail/gailwidget.c     |    2 +-
+ 21 files changed, 34 insertions(+), 32 deletions(-)
+
+commit f5bde06e82334995fca90ac6f103c8b2c7aa878a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Feb 27 05:55:12 2010 +0100
+
+    Don't use GTK_WIDGET_NO_WINDOW in internal code anymore
+
+    Use gtk_widget_get_has_window() instead
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkstyle.c  |   16 +++++++-------
+ gtk/gtkwidget.c |   58
+ +++++++++++++++++++++++++++---------------------------
+ gtk/gtkwidget.h |    3 +-
+ 3 files changed, 39 insertions(+), 38 deletions(-)
+
+commit a27d5a2c9eba7af5b056de32ff9b2b4dd1eb97e1
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sat Feb 27 05:24:24 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_IS_SENSITIVE
+
+    Use gtk_widget_is_sensitive() instead
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkbutton.c                      |    2 +-
+ gtk/gtkcalendar.c                    |    6 +++---
+ gtk/gtkcheckbutton.c                 |    2 +-
+ gtk/gtkcheckmenuitem.c               |    2 +-
+ gtk/gtkclist.c                       |    2 +-
+ gtk/gtkcolorbutton.c                 |    2 +-
+ gtk/gtkcurve.c                       |    2 +-
+ gtk/gtkentry.c                       |   10 +++++-----
+ gtk/gtkexpander.c                    |    2 +-
+ gtk/gtklabel.c                       |   14 +++++++-------
+ gtk/gtkmain.c                        |   16 ++++++++--------
+ gtk/gtkmenu.c                        |    2 +-
+ gtk/gtkmenuitem.c                    |    6 +++---
+ gtk/gtkmenutoolbutton.c              |    2 +-
+ gtk/gtkmnemonichash.c                |    2 +-
+ gtk/gtknotebook.c                    |    2 +-
+ gtk/gtkoptionmenu.c                  |    8 ++++----
+ gtk/gtkpaned.c                       |    4 ++--
+ gtk/gtkpathbar.c                     |    6 +++---
+ gtk/gtkprintunixdialog.c             |   10 +++++-----
+ gtk/gtkradiobutton.c                 |    6 +++---
+ gtk/gtkrange.c                       |    6 +++---
+ gtk/gtkscale.c                       |    2 +-
+ gtk/gtkspinbutton.c                  |    2 +-
+ gtk/gtkspinner.c                     |    2 +-
+ gtk/gtkstatusbar.c                   |    2 +-
+ gtk/gtktextview.c                    |    6 +++---
+ gtk/gtktreeitem.c                    |   10 +++++-----
+ gtk/gtktreeview.c                    |    2 +-
+ gtk/gtkwidget.c                      |   30
+ ++++++++++++++++--------------
+ gtk/gtkwidget.h                      |    4 ++++
+ gtk/gtkwindow.c                      |    8 ++++----
+ modules/other/gail/gailbutton.c      |    4 ++--
+ modules/other/gail/gailexpander.c    |    4 ++--
+ modules/other/gail/gailscalebutton.c |    2 +-
+ modules/other/gail/gailwidget.c      |    2 +-
+ tests/testgtk.c                      |    2 +-
+ 37 files changed, 101 insertions(+), 95 deletions(-)
+
+commit 4f78f70b15f861cca115f578b0f3f4ad3ad087e7
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jan 7 16:47:35 2010 +0100
+
+    Deprecate widget flag: GTK_WIDGET_DRAWABLE
+
+    Use gtk_widget_is_drawable() instead.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ demos/gtk-demo/offscreen_window.c  |    2 +-
+ demos/gtk-demo/offscreen_window2.c |    2 +-
+ gtk/gtkaccellabel.c                |    2 +-
+ gtk/gtkarrow.c                     |    9 ++++++---
+ gtk/gtkassistant.c                 |    8 ++++----
+ gtk/gtkbutton.c                    |   13 +++++++------
+ gtk/gtkcalendar.c                  |    6 +++---
+ gtk/gtkcellview.c                  |    2 +-
+ gtk/gtkcheckbutton.c               |   11 ++++++-----
+ gtk/gtkcheckmenuitem.c             |    2 +-
+ gtk/gtkcolorsel.c                  |    2 +-
+ gtk/gtkcombobox.c                  |    2 +-
+ gtk/gtkcontainer.c                 |    6 +++---
+ gtk/gtkdnd-quartz.c                |    4 ++--
+ gtk/gtkdnd.c                       |    4 ++--
+ gtk/gtkentry.c                     |   20 +++++++++++---------
+ gtk/gtkeventbox.c                  |    2 +-
+ gtk/gtkexpander.c                  |    2 +-
+ gtk/gtkfilechooserdialog.c         |    2 +-
+ gtk/gtkframe.c                     |   13 ++++++++-----
+ gtk/gtkhandlebox.c                 |    2 +-
+ gtk/gtkhsv.c                       |    2 +-
+ gtk/gtkimage.c                     |    2 +-
+ gtk/gtklabel.c                     |    8 +++++---
+ gtk/gtklistitem.c                  |    2 +-
+ gtk/gtkmenu.c                      |    4 ++--
+ gtk/gtkmenubar.c                   |    4 ++--
+ gtk/gtkmenuitem.c                  |    4 ++--
+ gtk/gtkmisc.c                      |   14 ++++++--------
+ gtk/gtknotebook.c                  |   16 ++++++++--------
+ gtk/gtkprogressbar.c               |    8 ++++----
+ gtk/gtkradiobutton.c               |    5 +++--
+ gtk/gtkrange.c                     |    4 +++-
+ gtk/gtkruler.c                     |   10 +++++-----
+ gtk/gtkscrolledwindow.c            |    4 ++--
+ gtk/gtkseparator.c                 |    2 +-
+ gtk/gtkspinbutton.c                |    4 ++--
+ gtk/gtktearoffmenuitem.c           |    2 +-
+ gtk/gtktextview.c                  |    2 +-
+ gtk/gtktogglebutton.c              |    2 +-
+ gtk/gtktoolbar.c                   |    2 +-
+ gtk/gtktooltip.c                   |    2 +-
+ gtk/gtktreeitem.c                  |    8 ++++----
+ gtk/gtkviewport.c                  |    4 ++--
+ gtk/gtkwidget.c                    |   12 ++++++------
+ gtk/gtkwidget.h                    |    4 ++++
+ gtk/tests/filechooser.c            |   12 ++++++------
+ modules/other/gail/gailwidget.c    |    2 +-
+ modules/other/gail/gailwindow.c    |    2 +-
+ tests/gtkoffscreenbox.c            |    2 +-
+ tests/testgtk.c                    |    4 ++--
+ tests/testoffscreenwindow.c        |    2 +-
+ 52 files changed, 144 insertions(+), 127 deletions(-)
+
+commit 6a9d4d82031a3a51a0c0ac8197766b75cd38a0a4
+Author: Mario Blättermann <mariobl@gnome.org>
+Date:   Sat Feb 27 20:33:02 2010 +0100
+
+    Updated German translation
+
+ po-properties/de.po | 3836
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1927 insertions(+), 1909 deletions(-)
+
+commit 8864b8190368152333713ec592e8807ced412dc2
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Fri Feb 26 13:56:29 2010 +0100
+
+    Updated LowGerman translation
+
+ po-properties/nds.po | 1566
+ +++++++++++++++++++++++++-------------------------
+ 1 files changed, 771 insertions(+), 795 deletions(-)
+
+commit a9e0010ff887cf10d2ff61975d5118ce51962c9b
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Fri Feb 26 13:41:30 2010 +0100
+
+    Updated LowGerman translation
+
+ po-properties/nds.po | 1564
+ +++++++++++++++++++++++++-------------------------
+ 1 files changed, 794 insertions(+), 770 deletions(-)
+
+commit c4a3a7bdfd8470667d869efbd332366c4d838637
+Author: Florian Müllner <fmuellner@src.gnome.org>
+Date:   Thu Feb 25 21:28:39 2010 +0100
+
+    Add introspection annotation for gtk_builder_get_object
+
+ gtk/gtkbuilder.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit ab3d86d44d6444ff7c7e05c0d55627d4fe345018
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Thu Feb 25 19:30:59 2010 +0100
+
+    Updated LowGerman translation
+
+ po-properties/nds.po | 3379
+ ++++++++++++++++++++++++++++----------------------
+ 1 files changed, 1875 insertions(+), 1504 deletions(-)
+
+commit 93ed6885a1cc51da0155e8a0080185822a33c0bd
+Author: Piotr Drąg <piotrdrag@gmail.com>
+Date:   Thu Feb 25 14:32:38 2010 +0100
+
+    Updated Polish translation
+
+ po/pl.po |  646
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 324 insertions(+), 322 deletions(-)
+
+commit 0807dd65122c70bf4c7fbc927028e76ee2b91c3d
+Author: Piotr Drąg <piotrdrag@gmail.com>
+Date:   Thu Feb 25 13:50:21 2010 +0100
+
+    Updated Polish translation
+
+ po/pl.po | 2522
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1267 insertions(+), 1255 deletions(-)
+
+commit 973dbbf6344ce7abbf16d576d9797c2bf57a42a1
+Author: Leonid Kanter <leon@asplinux.ru>
+Date:   Thu Feb 25 13:57:08 2010 +0200
+
+    Update Russian translation
+
+ po/ru.po | 2441
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1206 insertions(+), 1235 deletions(-)
+
+commit 31abb05273156e49182f145d3b9a1de43dcde463
+Author: Leonid Kanter <leon@asplinux.ru>
+Date:   Thu Feb 25 13:56:15 2010 +0200
+
+    Update Russian translation
+
+ po-properties/ru.po | 3677
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1839 insertions(+), 1838 deletions(-)
+
+commit 707bec3ec234e881730c2c93a98405ca6763e86c
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Thu Feb 25 12:44:26 2010 +0100
+
+    Updated LowGerman translation
+
+ po/nds.po |  933
+ +++++++++++++++++++++++++++++++++----------------------------
+ 1 files changed, 507 insertions(+), 426 deletions(-)
+
+commit 211c17458026f97708e2fb557afd0a1bae911463
+Author: Duarte Loreto <happyguy_pt@hotmail.com>
+Date:   Thu Feb 25 02:43:25 2010 +0000
+
+    Updated Portuguese translation
+
+ po-properties/pt.po | 3664
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1833 insertions(+), 1831 deletions(-)
+
+commit 8d475898ab723f3360ae4389be076ea16b7de0eb
+Author: Duarte Loreto <happyguy_pt@hotmail.com>
+Date:   Thu Feb 25 02:30:32 2010 +0000
+
+    Updated Portuguese translation
+
+ po/pt.po | 2331
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1161 insertions(+), 1170 deletions(-)
+
+commit 4ba5e0e5d625d4fe8344fc644b41935008742209
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Wed Feb 24 21:18:37 2010 +0200
+
+    Updated Arabic translation
+
+ po/ar.po |   36 +++++++++++++++---------------------
+ 1 files changed, 15 insertions(+), 21 deletions(-)
+
+commit 868e1b07c3a1efc18ed2440a00bc7162d22985fa
+Author: Bruce Cowan <bcowan@fastmail.co.uk>
+Date:   Wed Feb 24 16:40:46 2010 +0000
+
+    Updated British English translation
+
+ po-properties/en_GB.po | 3669
+ ++++++++++++++++++++++++------------------------
+ po/en_GB.po            | 2309 +++++++++++++++---------------
+ 2 files changed, 2992 insertions(+), 2986 deletions(-)
+
+commit 7d2f616bc64769aedb836365fe13c07058575bae
+Author: Matej Urbančič <mateju@svn.gnome.org>
+Date:   Wed Feb 24 15:32:09 2010 +0100
+
+    Updated Slovenian translation
+
+ po/sl.po | 2823
+ +++++++++++++++++++++++++++++---------------------------------
+ 1 files changed, 1309 insertions(+), 1514 deletions(-)
+
+commit 62954b2f487d99d847dd1d6f70a9c422a5d1192d
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Wed Feb 24 12:47:20 2010 +0100
+
+    Updated LowGerman translation
+
+ po-properties/nds.po | 1248
+ +++++++++++++++++++++++++-------------------------
+ 1 files changed, 624 insertions(+), 624 deletions(-)
+
+commit e173212e458b7712f0ab49b1cedd25fb64b3798e
+Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
+Date:   Wed Feb 24 12:39:51 2010 +0100
+
+    Updated LowGerman translation
+
+ po-properties/nds.po | 9106
+ +++++++++++++++++++++++++++++---------------------
+ 1 files changed, 5280 insertions(+), 3826 deletions(-)
+
+commit 0305a39900dbfa700eff17ff20ad2f3fd68372f2
+Author: Alexander Shopov <ash@contact.bg>
+Date:   Wed Feb 24 07:18:26 2010 +0200
+
+    Updated Bulgarian translation
+
+ po/bg.po | 2234
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1120 insertions(+), 1114 deletions(-)
+
+commit 00a404c5151dbb98d21b47de044ce577ab528ed1
+Author: Gintautas Miliauskas <gintautas@miliauskas.lt>
+Date:   Wed Feb 24 00:04:14 2010 +0200
+
+    Updated Lithuanian translation.
+
+ po-properties/lt.po | 3557
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1792 insertions(+), 1765 deletions(-)
+
+commit 49429b07a9e717ae1050451a14b01b94576f149f
+Author: Gintautas Miliauskas <gintautas@miliauskas.lt>
+Date:   Wed Feb 24 00:02:51 2010 +0200
+
+    Updated Lithuanian translation.
+
+ po/lt.po | 2251
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1128 insertions(+), 1123 deletions(-)
+
+commit e8e29861d3edbb626e94ea242bb1c06e673b0e3b
+Author: Ask H. Larsen <asklarsen@gmail.com>
+Date:   Tue Feb 23 22:17:20 2010 +0100
+
+    Updated Danish translation
+
+ po-properties/da.po | 3683
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1837 insertions(+), 1846 deletions(-)
+
+commit cc6e4d04505b332a1d87b1f9297e89b10a356561
+Author: Ask H. Larsen <asklarsen@gmail.com>
+Date:   Tue Feb 23 22:14:45 2010 +0100
+
+    Updated Danish translation
+
+ po/da.po | 2309
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1152 insertions(+), 1157 deletions(-)
+
+commit e1ddcf84668364dad507820cc3e0550d16f6c681
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 23 15:53:03 2010 -0500
+
+    Bump version
+
+ configure.in |    2 +-
+ po/es.po     |    8 --------
+ 2 files changed, 1 insertions(+), 9 deletions(-)
+
+commit 1364b49e67367ca5b52164d8caf53c3ce08c0559
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 23 15:50:45 2010 -0500
+
+    2.19.6
+
+ po-properties/af.po          |    2 +-
+ po-properties/am.po          |    2 +-
+ po-properties/ang.po         |    2 +-
+ po-properties/ar.po          |    2 +-
+ po-properties/as.po          |    2 +-
+ po-properties/ast.po         |    2 +-
+ po-properties/az.po          |    2 +-
+ po-properties/az_IR.po       |    2 +-
+ po-properties/be.po          |    2 +-
+ po-properties/be@latin.po    |    2 +-
+ po-properties/bg.po          | 3551 +++++++++++++++----------------
+ po-properties/bn.po          |    2 +-
+ po-properties/bn_IN.po       |    2 +-
+ po-properties/br.po          |    2 +-
+ po-properties/bs.po          |    2 +-
+ po-properties/ca.po          |    2 +-
+ po-properties/ca@valencia.po |    2 +-
+ po-properties/crh.po         |    2 +-
+ po-properties/cs.po          |    2 +-
+ po-properties/cy.po          |    2 +-
+ po-properties/da.po          |    2 +-
+ po-properties/de.po          |    2 +-
+ po-properties/dz.po          |    2 +-
+ po-properties/el.po          |    2 +-
+ po-properties/en_CA.po       |    2 +-
+ po-properties/en_GB.po       |    2 +-
+ po-properties/eo.po          |    2 +-
+ po-properties/es.po          |    2 +-
+ po-properties/et.po          |    2 +-
+ po-properties/eu.po          |    2 +-
+ po-properties/fa.po          |    2 +-
+ po-properties/fi.po          |    2 +-
+ po-properties/fr.po          |    2 +-
+ po-properties/ga.po          |    2 +-
+ po-properties/gl.po          |    2 +-
+ po-properties/gu.po          |    2 +-
+ po-properties/he.po          |    2 +-
+ po-properties/hi.po          |    2 +-
+ po-properties/hr.po          |    2 +-
+ po-properties/hu.po          |    2 +-
+ po-properties/hy.po          |    2 +-
+ po-properties/ia.po          |    2 +-
+ po-properties/id.po          |    2 +-
+ po-properties/io.po          |    2 +-
+ po-properties/is.po          |    2 +-
+ po-properties/it.po          |    2 +-
+ po-properties/ja.po          |    2 +-
+ po-properties/ka.po          |    2 +-
+ po-properties/kn.po          |    2 +-
+ po-properties/ko.po          | 3564 +++++++++++++++----------------
+ po-properties/ku.po          |    2 +-
+ po-properties/li.po          |    2 +-
+ po-properties/lt.po          | 3557 +++++++++++++++----------------
+ po-properties/lv.po          |    2 +-
+ po-properties/mai.po         |    2 +-
+ po-properties/mi.po          |    2 +-
+ po-properties/mk.po          |    2 +-
+ po-properties/ml.po          |    2 +-
+ po-properties/mn.po          |    2 +-
+ po-properties/mr.po          |    2 +-
+ po-properties/ms.po          |    2 +-
+ po-properties/my.po          |    2 +-
+ po-properties/nb.po          |    2 +-
+ po-properties/nds.po         |    2 +-
+ po-properties/ne.po          |    2 +-
+ po-properties/nl.po          |    2 +-
+ po-properties/nn.po          |    2 +-
+ po-properties/nso.po         |    2 +-
+ po-properties/oc.po          |    2 +-
+ po-properties/or.po          |    2 +-
+ po-properties/pa.po          |    2 +-
+ po-properties/pl.po          | 3551 +++++++++++++++----------------
+ po-properties/ps.po          |    2 +-
+ po-properties/pt.po          |    2 +-
+ po-properties/pt_BR.po       |    2 +-
+ po-properties/ro.po          | 3554 +++++++++++++++----------------
+ po-properties/ru.po          |    2 +-
+ po-properties/rw.po          |    2 +-
+ po-properties/si.po          |    2 +-
+ po-properties/sk.po          |    2 +-
+ po-properties/sl.po          | 4859
+ ++++++++++++++++++++++--------------------
+ po-properties/sq.po          |    2 +-
+ po-properties/sr.po          |    2 +-
+ po-properties/sr@ije.po      |    2 +-
+ po-properties/sr@latin.po    |    2 +-
+ po-properties/sv.po          |    2 +-
+ po-properties/ta.po          |    2 +-
+ po-properties/te.po          |    2 +-
+ po-properties/th.po          |    2 +-
+ po-properties/tk.po          |    2 +-
+ po-properties/tr.po          |    2 +-
+ po-properties/tt.po          |    2 +-
+ po-properties/uk.po          |    2 +-
+ po-properties/ur.po          |    2 +-
+ po-properties/uz.po          |    2 +-
+ po-properties/uz@cyrillic.po |    2 +-
+ po-properties/vi.po          |    2 +-
+ po-properties/wa.po          |    2 +-
+ po-properties/xh.po          |    2 +-
+ po-properties/yi.po          |    2 +-
+ po-properties/zh_CN.po       |    2 +-
+ po-properties/zh_HK.po       |    2 +-
+ po-properties/zh_TW.po       |    2 +-
+ po/af.po                     |   32 +-
+ po/am.po                     |   28 +-
+ po/ang.po                    |   28 +-
+ po/ar.po                     |   32 +-
+ po/as.po                     |   32 +-
+ po/ast.po                    |   32 +-
+ po/az.po                     |   32 +-
+ po/az_IR.po                  |   28 +-
+ po/be.po                     |   32 +-
+ po/be@latin.po               |   32 +-
+ po/bg.po                     | 2232 ++++++++++----------
+ po/bn.po                     |   32 +-
+ po/bn_IN.po                  |   32 +-
+ po/br.po                     |   28 +-
+ po/bs.po                     |   32 +-
+ po/ca.po                     |   32 +-
+ po/ca@valencia.po            |   32 +-
+ po/crh.po                    |   34 +-
+ po/cs.po                     | 2235 ++++++++++----------
+ po/cy.po                     |   32 +-
+ po/da.po                     |   32 +-
+ po/de.po                     | 2252 ++++++++++----------
+ po/dz.po                     |   32 +-
+ po/el.po                     |   32 +-
+ po/en_CA.po                  |   32 +-
+ po/en_GB.po                  |   32 +-
+ po/eo.po                     |   32 +-
+ po/es.po                     | 2252 ++++++++++----------
+ po/et.po                     | 1142 ++++++++++-
+ po/eu.po                     |   32 +-
+ po/fa.po                     |   32 +-
+ po/fi.po                     |   32 +-
+ po/fr.po                     |   30 +-
+ po/ga.po                     |   32 +-
+ po/gl.po                     |   32 +-
+ po/gu.po                     |   32 +-
+ po/he.po                     |   32 +-
+ po/hi.po                     |   32 +-
+ po/hr.po                     |   32 +-
+ po/hu.po                     |   32 +-
+ po/hy.po                     |   32 +-
+ po/ia.po                     |   28 +-
+ po/id.po                     |   32 +-
+ po/io.po                     |   31 +-
+ po/is.po                     |   32 +-
+ po/it.po                     |   32 +-
+ po/ja.po                     | 2240 ++++++++++----------
+ po/ka.po                     |   32 +-
+ po/kn.po                     |   32 +-
+ po/ko.po                     | 2249 ++++++++++----------
+ po/ku.po                     |   32 +-
+ po/li.po                     |   32 +-
+ po/lt.po                     | 2262 ++++++++++----------
+ po/lv.po                     |   32 +-
+ po/mai.po                    |   32 +-
+ po/mi.po                     |   32 +-
+ po/mk.po                     |   32 +-
+ po/ml.po                     |   32 +-
+ po/mn.po                     |   34 +-
+ po/mr.po                     |   32 +-
+ po/ms.po                     |   32 +-
+ po/my.po                     |   32 +-
+ po/nb.po                     | 2235 ++++++++++----------
+ po/nds.po                    |   28 +-
+ po/ne.po                     |   32 +-
+ po/nl.po                     |   32 +-
+ po/nn.po                     |   32 +-
+ po/nso.po                    |   32 +-
+ po/oc.po                     |   29 +-
+ po/or.po                     | 2286 ++++++++++----------
+ po/pa.po                     |   32 +-
+ po/pl.po                     | 2235 ++++++++++----------
+ po/ps.po                     |   28 +-
+ po/pt.po                     |   32 +-
+ po/pt_BR.po                  |   30 +-
+ po/ro.po                     | 2262 ++++++++++----------
+ po/ru.po                     |   32 +-
+ po/rw.po                     |   32 +-
+ po/si.po                     |   32 +-
+ po/sk.po                     |   32 +-
+ po/sl.po                     | 2821 +++++++++++++------------
+ po/sq.po                     |   32 +-
+ po/sr.po                     |   32 +-
+ po/sr@ije.po                 |   32 +-
+ po/sr@latin.po               |   32 +-
+ po/sv.po                     |   32 +-
+ po/ta.po                     |   32 +-
+ po/te.po                     |   32 +-
+ po/th.po                     |   30 +-
+ po/tk.po                     |   28 +-
+ po/tr.po                     |   34 +-
+ po/tt.po                     |   28 +-
+ po/uk.po                     |   32 +-
+ po/ur.po                     |   28 +-
+ po/uz.po                     |   28 +-
+ po/uz@cyrillic.po            |   28 +-
+ po/vi.po                     |   32 +-
+ po/wa.po                     |   32 +-
+ po/xh.po                     |   32 +-
+ po/yi.po                     |   32 +-
+ po/zh_CN.po                  |   32 +-
+ po/zh_HK.po                  |   32 +-
+ po/zh_TW.po                  |   32 +-
+ 206 files changed, 28139 insertions(+), 26222 deletions(-)
+
+commit 980326a2313e9f1892567bfd2d0a1f5b793e12e3
+Author: Jorge González <jorgegonz@svn.gnome.org>
+Date:   Tue Feb 23 21:51:30 2010 +0100
+
+    Updated Spanish translation
+
+ po/es.po |    8 +++-----
+ 1 files changed, 3 insertions(+), 5 deletions(-)
+
 commit 18d065c109a2e39c488b968b05a77228cfcce807
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Tue Feb 23 15:14:28 2010 -0500

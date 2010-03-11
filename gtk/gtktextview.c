@@ -109,6 +109,7 @@ struct _GtkTextViewPrivate
   guint blink_time;  /* time in msec the cursor has blinked since last user event */
   guint im_spot_idle;
   gchar *im_module;
+  guint scroll_after_paste : 1;
 };
 
 
@@ -1290,8 +1291,11 @@ gtk_text_view_init (GtkTextView *text_view)
 {
   GtkWidget *widget = GTK_WIDGET (text_view);
   GtkTargetList *target_list;
+  GtkTextViewPrivate *priv;
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_FOCUS);
+  priv = GTK_TEXT_VIEW_GET_PRIVATE (text_view);
+
+  gtk_widget_set_can_focus (widget, TRUE);
 
   /* Set up default style */
   text_view->wrap_mode = GTK_WRAP_NONE;
@@ -1304,6 +1308,8 @@ gtk_text_view_init (GtkTextView *text_view)
   text_view->indent = 0;
   text_view->tabs = NULL;
   text_view->editable = TRUE;
+
+  priv->scroll_after_paste = TRUE;
 
   gtk_drag_dest_set (widget, 0, NULL, 0,
                      GDK_ACTION_COPY | GDK_ACTION_MOVE);
@@ -1440,7 +1446,7 @@ gtk_text_view_set_buffer (GtkTextView   *text_view,
                                             gtk_text_view_paste_done_handler,
                                             text_view);
 
-      if (GTK_WIDGET_REALIZED (text_view))
+      if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
 	{
 	  GtkClipboard *clipboard = gtk_widget_get_clipboard (GTK_WIDGET (text_view),
 							      GDK_SELECTION_PRIMARY);
@@ -1491,7 +1497,7 @@ gtk_text_view_set_buffer (GtkTextView   *text_view,
 
       gtk_text_view_target_list_notify (text_view->buffer, NULL, text_view);
 
-      if (GTK_WIDGET_REALIZED (text_view))
+      if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
 	{
 	  GtkClipboard *clipboard = gtk_widget_get_clipboard (GTK_WIDGET (text_view),
 							      GDK_SELECTION_PRIMARY);
@@ -1501,7 +1507,7 @@ gtk_text_view_set_buffer (GtkTextView   *text_view,
 
   g_object_notify (G_OBJECT (text_view), "buffer");
   
-  if (GTK_WIDGET_VISIBLE (text_view))
+  if (gtk_widget_get_visible (GTK_WIDGET (text_view)))
     gtk_widget_queue_draw (GTK_WIDGET (text_view));
 
   DV(g_print ("Invalidating due to set_buffer\n"));
@@ -2371,13 +2377,13 @@ gtk_text_view_set_editable (GtkTextView *text_view,
       if (!setting)
 	{
 	  gtk_text_view_reset_im_context(text_view);
-	  if (GTK_WIDGET_HAS_FOCUS (text_view))
+	  if (gtk_widget_has_focus (GTK_WIDGET (text_view)))
 	    gtk_im_context_focus_out (text_view->im_context);
 	}
 
       text_view->editable = setting;
 
-      if (setting && GTK_WIDGET_HAS_FOCUS (text_view))
+      if (setting && gtk_widget_has_focus (GTK_WIDGET (text_view)))
 	gtk_im_context_focus_in (text_view->im_context);
 
       if (text_view->layout)
@@ -2806,7 +2812,7 @@ gtk_text_view_set_cursor_visible (GtkTextView *text_view,
     {
       text_view->cursor_visible = setting;
 
-      if (GTK_WIDGET_HAS_FOCUS (text_view))
+      if (gtk_widget_has_focus (GTK_WIDGET (text_view)))
         {
           if (text_view->layout)
             {
@@ -3364,7 +3370,7 @@ gtk_text_view_size_allocate (GtkWidget *widget,
   
   widget->allocation = *allocation;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gdk_window_move_resize (widget->window,
                               allocation->x, allocation->y,
@@ -3516,7 +3522,7 @@ gtk_text_view_size_allocate (GtkWidget *widget,
   /* widget->window doesn't get auto-redrawn as the layout is computed, so has to
    * be invalidated
    */
-  if (size_changed && GTK_WIDGET_REALIZED (widget))
+  if (size_changed && gtk_widget_get_realized (widget))
     gdk_window_invalidate_rect (widget->window, NULL, FALSE);
 }
 
@@ -3702,7 +3708,7 @@ changed_handler (GtkTextLayout     *layout,
   
   DV(g_print(">Lines Validated ("G_STRLOC")\n"));
 
-  if (GTK_WIDGET_REALIZED (text_view))
+  if (gtk_widget_get_realized (widget))
     {      
       gtk_text_view_get_visible_rect (text_view, &visible_rect);
 
@@ -3827,7 +3833,8 @@ gtk_text_view_realize (GtkWidget *widget)
   GSList *tmp_list;
   
   text_view = GTK_TEXT_VIEW (widget);
-  GTK_WIDGET_SET_FLAGS (text_view, GTK_REALIZED);
+
+  gtk_widget_set_realized (widget, TRUE);
 
   attributes.window_type = GDK_WINDOW_CHILD;
   attributes.x = widget->allocation.x;
@@ -3849,7 +3856,7 @@ gtk_text_view_realize (GtkWidget *widget)
   widget->style = gtk_style_attach (widget->style, widget->window);
 
   gdk_window_set_background (widget->window,
-                             &widget->style->bg[GTK_WIDGET_STATE (widget)]);
+                             &widget->style->bg[gtk_widget_get_state (widget)]);
 
   text_window_realize (text_view->text_window, widget);
 
@@ -3935,25 +3942,25 @@ gtk_text_view_set_background (GtkTextView *text_view)
   GtkWidget *widget = GTK_WIDGET (text_view);
 
   gdk_window_set_background (widget->window,
-			     &widget->style->bg[GTK_WIDGET_STATE (widget)]);
+			     &widget->style->bg[gtk_widget_get_state (widget)]);
   
   gdk_window_set_background (text_view->text_window->bin_window,
-			     &widget->style->base[GTK_WIDGET_STATE (widget)]);
+			     &widget->style->base[gtk_widget_get_state (widget)]);
   
   if (text_view->left_window)
     gdk_window_set_background (text_view->left_window->bin_window,
-			       &widget->style->bg[GTK_WIDGET_STATE (widget)]);
+			       &widget->style->bg[gtk_widget_get_state (widget)]);
   if (text_view->right_window)
     gdk_window_set_background (text_view->right_window->bin_window,
-			       &widget->style->bg[GTK_WIDGET_STATE (widget)]);
+			       &widget->style->bg[gtk_widget_get_state (widget)]);
   
   if (text_view->top_window)
     gdk_window_set_background (text_view->top_window->bin_window,
-			       &widget->style->bg[GTK_WIDGET_STATE (widget)]);
+			       &widget->style->bg[gtk_widget_get_state (widget)]);
   
   if (text_view->bottom_window)
     gdk_window_set_background (text_view->bottom_window->bin_window,
-			       &widget->style->bg[GTK_WIDGET_STATE (widget)]);
+			       &widget->style->bg[gtk_widget_get_state (widget)]);
 }
 
 static void
@@ -3963,7 +3970,7 @@ gtk_text_view_style_set (GtkWidget *widget,
   GtkTextView *text_view = GTK_TEXT_VIEW (widget);
   PangoContext *ltr_context, *rtl_context;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gtk_text_view_set_background (text_view);
     }
@@ -4008,11 +4015,11 @@ gtk_text_view_state_changed (GtkWidget      *widget,
   GtkTextView *text_view = GTK_TEXT_VIEW (widget);
   GdkCursor *cursor;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gtk_text_view_set_background (text_view);
 
-      if (GTK_WIDGET_IS_SENSITIVE (widget))
+      if (gtk_widget_is_sensitive (widget))
         cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget), GDK_XTERM);
       else
         cursor = NULL;
@@ -4025,7 +4032,7 @@ gtk_text_view_state_changed (GtkWidget      *widget,
       text_view->mouse_cursor_obscured = FALSE;
     }
 
-  if (!GTK_WIDGET_IS_SENSITIVE (widget))
+  if (!gtk_widget_is_sensitive (widget))
     {
       /* Clear any selection */
       gtk_text_view_unselect (text_view);
@@ -4377,6 +4384,12 @@ gtk_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
       else if (event->button == 2)
         {
           GtkTextIter iter;
+          GtkTextViewPrivate *priv;
+
+          /* We do not want to scroll back to the insert iter when we paste
+             with the middle button */
+          priv = GTK_TEXT_VIEW_GET_PRIVATE (text_view);
+          priv->scroll_after_paste = FALSE;
 
           gtk_text_layout_get_iter_at_pixel (text_view->layout,
                                              &iter,
@@ -4679,11 +4692,11 @@ gtk_text_view_draw_focus (GtkWidget *widget)
 			"interior-focus", &interior_focus,
 			NULL);
   
-  if (GTK_WIDGET_DRAWABLE (widget))
+  if (gtk_widget_is_drawable (widget))
     {
-      if (GTK_WIDGET_HAS_FOCUS (widget) && !interior_focus)
+      if (gtk_widget_has_focus (widget) && !interior_focus)
         {          
-          gtk_paint_focus (widget->style, widget->window, GTK_WIDGET_STATE (widget), 
+          gtk_paint_focus (widget->style, widget->window, gtk_widget_get_state (widget),
                            NULL, widget, "textview",
                            0, 0,
                            widget->allocation.width,
@@ -4717,9 +4730,9 @@ gtk_text_view_focus (GtkWidget        *widget,
        * Unset CAN_FOCUS flag so that gtk_container_focus() allows
        * children to get the focus
        */
-      GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS); 
+      gtk_widget_set_can_focus (widget, FALSE);
       result = GTK_WIDGET_CLASS (gtk_text_view_parent_class)->focus (widget, direction);
-      GTK_WIDGET_SET_FLAGS (widget, GTK_CAN_FOCUS); 
+      gtk_widget_set_can_focus (widget, TRUE);
 
       return result;
     }
@@ -4888,7 +4901,7 @@ blink_cb (gpointer data)
   text_view = GTK_TEXT_VIEW (data);
   priv = GTK_TEXT_VIEW_GET_PRIVATE (text_view);
 
-  if (!GTK_WIDGET_HAS_FOCUS (text_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (text_view)))
     {
       g_warning ("GtkTextView - did not receive focus-out-event. If you\n"
                  "connect a handler to this signal, it must return\n"
@@ -4958,7 +4971,7 @@ gtk_text_view_check_cursor_blink (GtkTextView *text_view)
 {
   if (text_view->layout != NULL &&
       text_view->cursor_visible &&
-      GTK_WIDGET_HAS_FOCUS (text_view))
+      gtk_widget_has_focus (GTK_WIDGET (text_view)))
     {
       if (cursor_blinks (text_view))
 	{
@@ -4989,7 +5002,7 @@ gtk_text_view_pend_cursor_blink (GtkTextView *text_view)
 {
   if (text_view->layout != NULL &&
       text_view->cursor_visible &&
-      GTK_WIDGET_HAS_FOCUS (text_view) &&
+      gtk_widget_has_focus (GTK_WIDGET (text_view)) &&
       cursor_blinks (text_view))
     {
       gtk_text_view_stop_cursor_blink (text_view);
@@ -5810,8 +5823,17 @@ gtk_text_view_paste_done_handler (GtkTextBuffer *buffer,
                                   gpointer       data)
 {
   GtkTextView *text_view = data;
-  DV(g_print (G_STRLOC": scrolling onscreen\n"));
-  gtk_text_view_scroll_mark_onscreen (text_view, gtk_text_buffer_get_insert (buffer));
+  GtkTextViewPrivate *priv;
+
+  priv = GTK_TEXT_VIEW_GET_PRIVATE (text_view);
+
+  if (priv->scroll_after_paste)
+    {
+      DV(g_print (G_STRLOC": scrolling onscreen\n"));
+      gtk_text_view_scroll_mark_onscreen (text_view, gtk_text_buffer_get_insert (buffer));
+    }
+
+  priv->scroll_after_paste = TRUE;
 }
 
 static void
@@ -6425,7 +6447,7 @@ gtk_text_view_ensure_layout (GtkTextView *text_view)
       if (get_buffer (text_view))
         gtk_text_layout_set_buffer (text_view->layout, get_buffer (text_view));
 
-      if ((GTK_WIDGET_HAS_FOCUS (text_view) && text_view->cursor_visible))
+      if ((gtk_widget_has_focus (widget) && text_view->cursor_visible))
         gtk_text_view_pend_cursor_blink (text_view);
       else
         gtk_text_layout_set_cursor_visible (text_view->layout, FALSE);
@@ -7122,9 +7144,9 @@ adjust_allocation_recurse (GtkWidget *widget,
    * into widget->allocation if the widget is not realized.
    * FIXME someone figure out why this was.
    */
-  if (!GTK_WIDGET_REALIZED (widget))
+  if (!gtk_widget_get_realized (widget))
     {
-      if (GTK_WIDGET_VISIBLE (widget))
+      if (gtk_widget_get_visible (widget))
 	{
 	  GdkRectangle tmp_rectangle = widget->allocation;
 	  tmp_rectangle.x += scroll_data->dx;
@@ -7155,7 +7177,7 @@ adjust_allocation (GtkWidget *widget,
 {
   ScrollData scroll_data;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     scroll_data.window = ALLOCATION_WINDOW (widget);
   else
     scroll_data.window = NULL;
@@ -7196,7 +7218,7 @@ gtk_text_view_value_changed (GtkAdjustment *adj,
        */
       if (text_view->width_changed)
 	{
-	  if (GTK_WIDGET_REALIZED (text_view))
+	  if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
 	    gdk_window_invalidate_rect (text_view->text_window->bin_window, NULL, FALSE);
 	  
 	  text_view->width_changed = FALSE;
@@ -7221,7 +7243,7 @@ gtk_text_view_value_changed (GtkAdjustment *adj,
     {
       GSList *tmp_list;
 
-      if (GTK_WIDGET_REALIZED (text_view))
+      if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
         {
           if (dy != 0)
             {
@@ -7282,7 +7304,7 @@ gtk_text_view_value_changed (GtkAdjustment *adj,
   gtk_text_view_validate_onscreen (text_view);
   
   /* process exposes */
-  if (GTK_WIDGET_REALIZED (text_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
     {
       DV (g_print ("Processing updates (%s)\n", G_STRLOC));
       
@@ -7402,7 +7424,7 @@ gtk_text_view_preedit_changed_handler (GtkIMContext *context,
 
   if (text_view->layout)
     gtk_text_layout_set_preedit_string (text_view->layout, str, attrs, cursor_pos);
-  if (GTK_WIDGET_HAS_FOCUS (text_view))
+  if (gtk_widget_has_focus (GTK_WIDGET (text_view)))
     gtk_text_view_scroll_mark_onscreen (text_view,
 					gtk_text_buffer_get_insert (get_buffer (text_view)));
 
@@ -7683,7 +7705,7 @@ popup_position_func (GtkMenu   *menu,
   text_view = GTK_TEXT_VIEW (user_data);
   widget = GTK_WIDGET (text_view);
   
-  g_return_if_fail (GTK_WIDGET_REALIZED (text_view));
+  g_return_if_fail (gtk_widget_get_realized (widget));
   
   screen = gtk_widget_get_screen (widget);
 
@@ -7778,7 +7800,7 @@ popup_targets_received (GtkClipboard     *clipboard,
   PopupInfo *info = user_data;
   GtkTextView *text_view = info->text_view;
   
-  if (GTK_WIDGET_REALIZED (text_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
     {
       /* We implicitely rely here on the fact that if we are pasting ourself, we'll
        * have text targets as well as the private GTK_TEXT_BUFFER_CONTENTS target.
@@ -8030,7 +8052,7 @@ text_window_realize (GtkTextWindow *win,
 
   if (win->type == GTK_TEXT_WINDOW_TEXT)
     {
-      if (GTK_WIDGET_IS_SENSITIVE (widget))
+      if (gtk_widget_is_sensitive (widget))
         {
           /* I-beam cursor */
           cursor = gdk_cursor_new_for_display (gdk_drawable_get_display (widget->window),
@@ -8044,12 +8066,12 @@ text_window_realize (GtkTextWindow *win,
 
 
       gdk_window_set_background (win->bin_window,
-                                 &widget->style->base[GTK_WIDGET_STATE (widget)]);
+                                 &widget->style->base[gtk_widget_get_state (widget)]);
     }
   else
     {
       gdk_window_set_background (win->bin_window,
-                                 &widget->style->bg[GTK_WIDGET_STATE (widget)]);
+                                 &widget->style->bg[gtk_widget_get_state (widget)]);
     }
 
   g_object_set_qdata (G_OBJECT (win->window),
@@ -8654,7 +8676,7 @@ set_window_width (GtkTextView      *text_view,
                                    GTK_WIDGET (text_view),
                                    width, 0);
           /* if the widget is already realized we need to realize the child manually */
-          if (GTK_WIDGET_REALIZED (text_view))
+          if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
             text_window_realize (*winp, GTK_WIDGET (text_view));
         }
       else
@@ -8694,7 +8716,7 @@ set_window_height (GtkTextView      *text_view,
                                    0, height);
 
           /* if the widget is already realized we need to realize the child manually */
-          if (GTK_WIDGET_REALIZED (text_view))
+          if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
             text_window_realize (*winp, GTK_WIDGET (text_view));
         }
       else
@@ -8908,7 +8930,7 @@ add_child (GtkTextView      *text_view,
   text_view->children = g_slist_prepend (text_view->children,
                                          vc);
 
-  if (GTK_WIDGET_REALIZED (text_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (text_view)))
     text_view_child_set_parent_window (text_view, vc);
   
   gtk_widget_set_parent (vc->widget, GTK_WIDGET (text_view));
@@ -9025,7 +9047,8 @@ gtk_text_view_move_child (GtkTextView *text_view,
   vc->x = xpos;
   vc->y = ypos;
 
-  if (GTK_WIDGET_VISIBLE (child) && GTK_WIDGET_VISIBLE (text_view))
+  if (gtk_widget_get_visible (child) &&
+      gtk_widget_get_visible (GTK_WIDGET (text_view)))
     gtk_widget_queue_resize (child);
 }
 

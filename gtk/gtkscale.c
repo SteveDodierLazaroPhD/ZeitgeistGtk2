@@ -390,7 +390,7 @@ gtk_scale_init (GtkScale *scale)
 {
   GtkRange *range = GTK_RANGE (scale);
 
-  GTK_WIDGET_SET_FLAGS (scale, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (GTK_WIDGET (scale), TRUE);
 
   range->slider_size_fixed = TRUE;
   range->has_stepper_a = FALSE;
@@ -654,15 +654,18 @@ void
 gtk_scale_set_value_pos (GtkScale        *scale,
 			 GtkPositionType  pos)
 {
+  GtkWidget *widget;
+
   g_return_if_fail (GTK_IS_SCALE (scale));
 
   if (scale->value_pos != pos)
     {
       scale->value_pos = pos;
+      widget = GTK_WIDGET (scale);
 
       _gtk_scale_clear_layout (scale);
-      if (GTK_WIDGET_VISIBLE (scale) && GTK_WIDGET_MAPPED (scale))
-	gtk_widget_queue_resize (GTK_WIDGET (scale));
+      if (gtk_widget_get_visible (widget) && gtk_widget_get_mapped (widget))
+	gtk_widget_queue_resize (widget);
 
       g_object_notify (G_OBJECT (scale), "value-pos");
     }
@@ -973,7 +976,7 @@ gtk_scale_expose (GtkWidget      *widget,
   GTK_WIDGET_CLASS (gtk_scale_parent_class)->expose_event (widget, event);
 
   state_type = GTK_STATE_NORMAL;
-  if (!GTK_WIDGET_IS_SENSITIVE (widget))
+  if (!gtk_widget_is_sensitive (widget))
     state_type = GTK_STATE_INSENSITIVE;
 
   if (priv->marks)

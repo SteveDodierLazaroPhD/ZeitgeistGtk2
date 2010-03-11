@@ -289,7 +289,7 @@ gail_button_real_initialize (AtkObject *obj,
   label = get_label_from_button (widget, 0, FALSE);
   if (GTK_IS_LABEL (label))
     {
-      if (GTK_WIDGET_MAPPED (label))
+      if (gtk_widget_get_mapped (label))
         gail_button_init_textutil (button, label);
       else 
         g_signal_connect (label,
@@ -459,7 +459,7 @@ gail_button_do_action (AtkAction *action,
      */
     return FALSE;
 
-  if (!GTK_WIDGET_IS_SENSITIVE (widget) || !GTK_WIDGET_VISIBLE (widget))
+  if (!gtk_widget_is_sensitive (widget) || !gtk_widget_get_visible (widget))
     return FALSE;
 
   button = GAIL_BUTTON (action); 
@@ -505,7 +505,7 @@ idle_do_action (gpointer data)
   g_object_ref (gail_button);
 
   if (widget == NULL /* State is defunct */ ||
-      !GTK_WIDGET_IS_SENSITIVE (widget) || !GTK_WIDGET_VISIBLE (widget))
+      !gtk_widget_is_sensitive (widget) || !gtk_widget_get_visible (widget))
     {
       g_object_unref (gail_button);
       return FALSE;
@@ -881,7 +881,7 @@ gail_button_ref_state_set (AtkObject *obj)
   if (widget == NULL)
     return state_set;
 
-  if (GTK_WIDGET_STATE (widget) == GTK_STATE_ACTIVE)
+  if (gtk_widget_get_state (widget) == GTK_STATE_ACTIVE)
     atk_state_set_add_state (state_set, ATK_STATE_ARMED);
 
   if (!gtk_widget_get_can_focus (widget))
@@ -902,7 +902,7 @@ gail_button_pressed_enter_handler (GtkWidget       *widget)
 {
   AtkObject *accessible;
 
-  if (GTK_WIDGET_STATE (widget) == GTK_STATE_ACTIVE)
+  if (gtk_widget_get_state (widget) == GTK_STATE_ACTIVE)
     {
       accessible = gtk_widget_get_accessible (widget);
       atk_object_notify_state_change (accessible, ATK_STATE_ARMED, TRUE);

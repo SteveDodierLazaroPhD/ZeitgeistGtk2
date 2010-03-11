@@ -79,7 +79,7 @@ struct _GtkTooltipClass
   GObjectClass parent_class;
 };
 
-#define GTK_TOOLTIP_VISIBLE(tooltip) ((tooltip)->current_window && GTK_WIDGET_VISIBLE ((tooltip)->current_window))
+#define GTK_TOOLTIP_VISIBLE(tooltip) ((tooltip)->current_window && gtk_widget_get_visible (GTK_WIDGET((tooltip)->current_window)))
 
 
 static void       gtk_tooltip_class_init           (GtkTooltipClass *klass);
@@ -553,7 +553,7 @@ child_location_foreach (GtkWidget *child,
   struct ChildLocation *child_loc = data;
 
   /* Ignore invisible widgets */
-  if (!GTK_WIDGET_DRAWABLE (child))
+  if (!gtk_widget_is_drawable (child))
     return;
 
   x = 0;

@@ -762,13 +762,11 @@ shortcuts_free_row_data (GtkFileChooserDefault *impl,
       GtkFileSystemVolume *volume;
 
       volume = col_data;
-      _gtk_file_system_volume_free (volume);
+      _gtk_file_system_volume_unref (volume);
     }
-  else
+  if (shortcut_type == SHORTCUT_TYPE_FILE)
     {
       GFile *file;
-
-      g_assert (shortcut_type == SHORTCUT_TYPE_FILE);
 
       file = col_data;
       g_object_unref (file);
@@ -1109,7 +1107,7 @@ update_preview_widget_visibility (GtkFileChooserDefault *impl)
   else
     gtk_widget_hide (impl->preview_box);
 
-  if (!GTK_WIDGET_MAPPED (impl))
+  if (!gtk_widget_get_mapped (GTK_WIDGET (impl)))
     emit_default_size_changed (impl);
 }
 
@@ -2015,7 +2013,14 @@ shortcuts_add_volumes (GtkFileChooserDefault *impl)
 	    }
 	}
 
-      shortcuts_insert_file (impl, start_row + n, SHORTCUT_TYPE_VOLUME, volume, NULL, NULL, FALSE, SHORTCUTS_VOLUMES);
+      shortcuts_insert_file (impl,
+                             start_row + n,
+                             SHORTCUT_TYPE_VOLUME,
+                             _gtk_file_system_volume_ref (volume),
+                             NULL,
+                             NULL,
+                             FALSE,
+                             SHORTCUTS_VOLUMES);
       n++;
     }
 
@@ -3437,9 +3442,7 @@ shortcuts_query_tooltip_cb (GtkWidget             *widget,
       if (shortcut_type == SHORTCUT_TYPE_SEPARATOR)
 	return FALSE;
       else if (shortcut_type == SHORTCUT_TYPE_VOLUME)
-	{
-	  return FALSE;
-	}
+        return FALSE;
       else if (shortcut_type == SHORTCUT_TYPE_FILE)
 	{
 	  GFile *file;
@@ -3971,7 +3974,7 @@ browse_files_key_press_event_cb (GtkWidget   *widget,
       if (window
 	  && widget != window->default_widget
 	  && !(widget == window->focus_widget &&
-	       (!window->default_widget || !GTK_WIDGET_SENSITIVE (window->default_widget))))
+	       (!window->default_widget || !gtk_widget_get_sensitive (window->default_widget))))
 	{
 	  gtk_window_activate_default (window);
 	  return TRUE;
@@ -4279,7 +4282,7 @@ popup_position_func (GtkMenu   *menu,
   gint monitor_num;
   GdkRectangle monitor;
 
-  g_return_if_fail (GTK_WIDGET_REALIZED (widget));
+  g_return_if_fail (gtk_widget_get_realized (widget));
 
   gdk_window_get_origin (widget->window, x, y);
 
@@ -5051,7 +5054,7 @@ location_toggle_popup_handler (GtkFileChooserDefault *impl)
     }
   else if (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY)
     {
-      if (GTK_WIDGET_HAS_FOCUS (impl->location_entry))
+      if (gtk_widget_has_focus (impl->location_entry))
         {
           location_mode_set (impl, LOCATION_MODE_PATH_BAR, TRUE);
         }
@@ -6182,7 +6185,7 @@ set_busy_cursor (GtkFileChooserDefault *impl,
   GdkCursor *cursor;
 
   toplevel = get_toplevel (GTK_WIDGET (impl));
-  if (!toplevel || !GTK_WIDGET_REALIZED (toplevel))
+  if (!toplevel || !gtk_widget_get_realized (GTK_WIDGET (toplevel)))
     return;
 
   display = gtk_widget_get_display (GTK_WIDGET (toplevel));
@@ -6408,7 +6411,8 @@ pending_select_files_process (GtkFileChooserDefault *impl)
        * that case, the chooser's selection should be what the caller expects,
        * as the user can't see that something else got selected.  See bug #165264.
        */
-      if (GTK_WIDGET_MAPPED (impl) && impl->action == GTK_FILE_CHOOSER_ACTION_OPEN)
+      if (impl->action == GTK_FILE_CHOOSER_ACTION_OPEN &&
+          gtk_widget_get_mapped (GTK_WIDGET (impl)))
 	browse_files_select_first_row (impl);
     }
 
@@ -8030,14 +8034,14 @@ gtk_file_chooser_default_get_default_size (GtkFileChooserEmbed *chooser_embed,
 
       if (impl->preview_widget_active &&
 	  impl->preview_widget &&
-	  GTK_WIDGET_VISIBLE (impl->preview_widget))
+	  gtk_widget_get_visible (impl->preview_widget))
 	{
 	  gtk_widget_size_request (impl->preview_box, &req);
 	  *default_width += PREVIEW_HBOX_SPACING + req.width;
 	}
 
       if (impl->extra_widget &&
-	  GTK_WIDGET_VISIBLE (impl->extra_widget))
+	  gtk_widget_get_visible (impl->extra_widget))
 	{
 	  gtk_widget_size_request (impl->extra_align, &req);
 	  *default_height += GTK_BOX (chooser_embed)->spacing + req.height;
@@ -8145,7 +8149,7 @@ add_custom_button_to_dialog (GtkDialog   *dialog,
   GtkWidget *button;
 
   button = gtk_button_new_with_mnemonic (mnemonic_label);
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  gtk_widget_set_can_default (button, TRUE);
   gtk_button_set_image (GTK_BUTTON (button),
 			gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON));
   gtk_widget_show (button);
@@ -9769,6 +9773,9 @@ shortcuts_activate_mount_enclosing_volume (GCancellable        *cancellable,
     _gtk_file_system_get_info (data->impl->file_system, data->file,
 			       "standard::type",
 			       shortcuts_activate_get_info_cb, data);
+
+  if (volume)
+    _gtk_file_system_volume_unref (volume);
 }
 
 static void

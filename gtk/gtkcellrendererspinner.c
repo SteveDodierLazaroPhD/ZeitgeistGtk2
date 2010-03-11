@@ -360,7 +360,7 @@ gtk_cell_renderer_spinner_render (GtkCellRenderer *cellr,
     }
 
   state = GTK_STATE_NORMAL;
-  if (GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE || !cellr->sensitive)
+  if (gtk_widget_get_state (widget) == GTK_STATE_INSENSITIVE || !cellr->sensitive)
     {
       state = GTK_STATE_INSENSITIVE;
     }
@@ -368,7 +368,7 @@ gtk_cell_renderer_spinner_render (GtkCellRenderer *cellr,
     {
       if ((flags & GTK_CELL_RENDERER_SELECTED) != 0)
         {
-          if (GTK_WIDGET_HAS_FOCUS (widget))
+          if (gtk_widget_has_focus (widget))
             state = GTK_STATE_SELECTED;
           else
             state = GTK_STATE_ACTIVE;

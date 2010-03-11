@@ -814,7 +814,7 @@ color_sample_draw_sample (GtkColorSelection *colorsel, int which)
   priv = colorsel->private_data;
   
   g_return_if_fail (priv->sample_area != NULL);
-  if (!GTK_WIDGET_DRAWABLE (priv->sample_area))
+  if (!gtk_widget_is_drawable (priv->sample_area))
     return;
 
   if (which == 0)
@@ -1049,7 +1049,7 @@ palette_paint (GtkWidget    *drawing_area,
   gdk_cairo_rectangle (cr, area);
   cairo_fill (cr);
   
-  if (GTK_WIDGET_HAS_FOCUS (drawing_area))
+  if (gtk_widget_has_focus (drawing_area))
     {
       set_focus_line_attributes (drawing_area, cr, &focus_width);
 
@@ -1331,7 +1331,7 @@ popup_position_func (GtkMenu   *menu,
   
   widget = GTK_WIDGET (user_data);
   
-  g_return_if_fail (GTK_WIDGET_REALIZED (widget));
+  g_return_if_fail (gtk_widget_get_realized (widget));
 
   gdk_window_get_origin (widget->window, &root_x, &root_y);
   
@@ -1547,7 +1547,7 @@ palette_new (GtkColorSelection *colorsel)
   
   retval = gtk_drawing_area_new ();
 
-  GTK_WIDGET_SET_FLAGS (retval, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (retval, TRUE);
   
   g_object_set_data (G_OBJECT (retval), I_("color_set"), GINT_TO_POINTER (0)); 
   gtk_widget_set_events (retval, GDK_BUTTON_PRESS_MASK

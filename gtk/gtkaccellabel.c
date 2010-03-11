@@ -365,7 +365,7 @@ gtk_accel_label_expose_event (GtkWidget      *widget,
 
   direction = gtk_widget_get_direction (widget);
 
-  if (GTK_WIDGET_DRAWABLE (accel_label))
+  if (gtk_widget_is_drawable (widget))
     {
       guint ac_width;
       
@@ -413,7 +413,7 @@ gtk_accel_label_expose_event (GtkWidget      *widget,
 
           gtk_paint_layout (widget->style,
                             widget->window,
-                            GTK_WIDGET_STATE (widget),
+                            gtk_widget_get_state (widget),
 			    FALSE,
                             &event->area,
                             widget,

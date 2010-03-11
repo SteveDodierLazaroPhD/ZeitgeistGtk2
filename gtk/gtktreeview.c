@@ -1702,7 +1702,7 @@ gtk_tree_view_map_buttons (GtkTreeView *tree_view)
 {
   GList *list;
 
-  g_return_if_fail (GTK_WIDGET_MAPPED (tree_view));
+  g_return_if_fail (gtk_widget_get_mapped (GTK_WIDGET (tree_view)));
 
   if (GTK_TREE_VIEW_FLAG_SET (tree_view, GTK_TREE_VIEW_HEADERS_VISIBLE))
     {
@@ -1711,8 +1711,8 @@ gtk_tree_view_map_buttons (GtkTreeView *tree_view)
       for (list = tree_view->priv->columns; list; list = list->next)
 	{
 	  column = list->data;
-          if (GTK_WIDGET_VISIBLE (column->button) &&
-              !GTK_WIDGET_MAPPED (column->button))
+          if (gtk_widget_get_visible (column->button) &&
+              !gtk_widget_get_mapped (column->button))
             gtk_widget_map (column->button);
 	}
       for (list = tree_view->priv->columns; list; list = list->next)
@@ -1738,7 +1738,7 @@ gtk_tree_view_map (GtkWidget *widget)
   GtkTreeView *tree_view = GTK_TREE_VIEW (widget);
   GList *tmp_list;
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_MAPPED);
+  gtk_widget_set_mapped (widget, TRUE);
 
   tmp_list = tree_view->priv->children;
   while (tmp_list)
@@ -1746,9 +1746,9 @@ gtk_tree_view_map (GtkWidget *widget)
       GtkTreeViewChild *child = tmp_list->data;
       tmp_list = tmp_list->next;
 
-      if (GTK_WIDGET_VISIBLE (child->widget))
+      if (gtk_widget_get_visible (child->widget))
 	{
-	  if (!GTK_WIDGET_MAPPED (child->widget))
+	  if (!gtk_widget_get_mapped (child->widget))
 	    gtk_widget_map (child->widget);
 	}
     }
@@ -1767,7 +1767,7 @@ gtk_tree_view_realize (GtkWidget *widget)
   GdkWindowAttr attributes;
   gint attributes_mask;
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+  gtk_widget_set_realized (widget, TRUE);
 
   /* Make the main, clipping window */
   attributes.window_type = GDK_WINDOW_CHILD;
@@ -2049,7 +2049,7 @@ gtk_tree_view_size_request (GtkWidget      *widget,
 
       tmp_list = tmp_list->next;
 
-      if (GTK_WIDGET_VISIBLE (child->widget))
+      if (gtk_widget_get_visible (child->widget))
         gtk_widget_size_request (child->widget, &child_requisition);
     }
 }
@@ -2083,7 +2083,7 @@ invalidate_column (GtkTreeView       *tree_view,
   GtkWidget *widget = GTK_WIDGET (tree_view);
   gboolean rtl;
 
-  if (!GTK_WIDGET_REALIZED (widget))
+  if (!gtk_widget_get_realized (widget))
     return;
 
   rtl = (gtk_widget_get_direction (GTK_WIDGET (tree_view)) == GTK_TEXT_DIR_RTL);
@@ -2427,7 +2427,7 @@ gtk_tree_view_size_allocate (GtkWidget     *widget,
   else
     gtk_tree_view_dy_to_top_row (tree_view);
   
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gdk_window_move_resize (widget->window,
 			      allocation->x, allocation->y,
@@ -2447,7 +2447,7 @@ gtk_tree_view_size_allocate (GtkWidget     *widget,
   if (tree_view->priv->tree == NULL)
     invalidate_empty_focus (tree_view);
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gboolean has_expand_column = FALSE;
       for (tmp_list = tree_view->priv->columns; tmp_list; tmp_list = tmp_list->next)
@@ -2496,8 +2496,10 @@ gtk_tree_view_size_allocate (GtkWidget     *widget,
 static void
 grab_focus_and_unset_draw_keyfocus (GtkTreeView *tree_view)
 {
-  if (gtk_widget_get_can_focus (GTK_WIDGET (tree_view)) && !GTK_WIDGET_HAS_FOCUS (tree_view))
-    gtk_widget_grab_focus (GTK_WIDGET (tree_view));
+  GtkWidget *widget = GTK_WIDGET (tree_view);
+
+  if (gtk_widget_get_can_focus (widget) && !gtk_widget_has_focus (widget))
+    gtk_widget_grab_focus (widget);
   GTK_TREE_VIEW_UNSET_FLAG (tree_view, GTK_TREE_VIEW_DRAW_KEYFOCUS);
 }
 
@@ -2913,7 +2915,7 @@ gtk_tree_view_button_press (GtkWidget      *widget,
 	  tree_view->priv->drag_pos = i;
 	  tree_view->priv->x_drag = column->button->allocation.x + (rtl ? 0 : column->button->allocation.width);
 
-	  if (!GTK_WIDGET_HAS_FOCUS (widget))
+	  if (!gtk_widget_has_focus (widget))
 	    gtk_widget_grab_focus (widget);
 
 	  return TRUE;
@@ -3109,7 +3111,7 @@ coords_are_over_arrow (GtkTreeView *tree_view,
   GdkRectangle arrow;
   gint x2;
 
-  if (!GTK_WIDGET_REALIZED (tree_view))
+  if (!gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     return FALSE;
 
   if ((node->flags & GTK_RBNODE_IS_PARENT) == 0)
@@ -4178,7 +4180,7 @@ invalidate_empty_focus (GtkTreeView *tree_view)
 {
   GdkRectangle area;
 
-  if (!GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return;
 
   area.x = 0;
@@ -4193,9 +4195,10 @@ invalidate_empty_focus (GtkTreeView *tree_view)
 static void
 draw_empty_focus (GtkTreeView *tree_view, GdkRectangle *clip_area)
 {
+  GtkWidget *widget = GTK_WIDGET (tree_view);
   gint w, h;
 
-  if (!GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (widget))
     return;
 
   gdk_drawable_get_size (tree_view->priv->bin_window, &w, &h);
@@ -4204,11 +4207,11 @@ draw_empty_focus (GtkTreeView *tree_view, GdkRectangle *clip_area)
   h -= 2;
 
   if (w > 0 && h > 0)
-    gtk_paint_focus (GTK_WIDGET (tree_view)->style,
+    gtk_paint_focus (gtk_widget_get_style (widget),
 		     tree_view->priv->bin_window,
-		     GTK_WIDGET_STATE (tree_view),
+		     gtk_widget_get_state (widget),
 		     clip_area,
-		     GTK_WIDGET (tree_view),
+		     widget,
 		     NULL,
 		     1, 1, w, h);
 }
@@ -4785,7 +4788,7 @@ gtk_tree_view_bin_expose (GtkWidget      *widget,
 	  if (node == cursor && has_special_cell &&
 	      ((column == tree_view->priv->focus_column &&
 		GTK_TREE_VIEW_FLAG_SET (tree_view, GTK_TREE_VIEW_DRAW_KEYFOCUS) &&
-		GTK_WIDGET_HAS_FOCUS (widget)) ||
+		gtk_widget_has_focus (widget)) ||
 	       (column == tree_view->priv->edited_column)))
 	    {
 	      _gtk_tree_view_column_cell_draw_focus (column,
@@ -4832,7 +4835,7 @@ gtk_tree_view_bin_expose (GtkWidget      *widget,
 	      if (row_ending_details)
 		gtk_paint_focus (widget->style,
 			         tree_view->priv->bin_window,
-				 GTK_WIDGET_STATE (widget),
+				 gtk_widget_get_state (widget),
 				 &event->area,
 				 widget,
 				 (is_first
@@ -4845,7 +4848,7 @@ gtk_tree_view_bin_expose (GtkWidget      *widget,
 	      else
 		gtk_paint_focus (widget->style,
 			         tree_view->priv->bin_window,
-				 GTK_WIDGET_STATE (widget),
+				 gtk_widget_get_state (widget),
 				 &event->area,
 				 widget,
 				 "treeview-drop-indicator",
@@ -4859,7 +4862,7 @@ gtk_tree_view_bin_expose (GtkWidget      *widget,
           if (highlight_y >= 0)
             {
               gdk_draw_line (event->window,
-                             widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+                             widget->style->fg_gc[gtk_widget_get_state (widget)],
                              rtl ? highlight_x + expander_cell_width : highlight_x,
                              highlight_y,
                              rtl ? 0 : bin_window_width,
@@ -4870,7 +4873,7 @@ gtk_tree_view_bin_expose (GtkWidget      *widget,
       /* draw the big row-spanning focus rectangle, if needed */
       if (!has_special_cell && node == cursor &&
 	  GTK_TREE_VIEW_FLAG_SET (tree_view, GTK_TREE_VIEW_DRAW_KEYFOCUS) &&
-	  GTK_WIDGET_HAS_FOCUS (widget))
+	  gtk_widget_has_focus (widget))
         {
 	  gint tmp_y, tmp_height;
 	  gint width;
@@ -5307,7 +5310,7 @@ gtk_tree_view_key_press (GtkWidget   *widget,
         {
           GtkTreeViewColumn *column = GTK_TREE_VIEW_COLUMN (focus_column->data);
 
-          if (GTK_WIDGET_HAS_FOCUS (column->button))
+          if (gtk_widget_has_focus (column->button))
             break;
         }
 
@@ -5441,7 +5444,7 @@ gtk_tree_view_key_press (GtkWidget   *widget,
 
   /* We pass the event to the search_entry.  If its text changes, then we start
    * the typeahead find capabilities. */
-  if (GTK_WIDGET_HAS_FOCUS (tree_view)
+  if (gtk_widget_has_focus (GTK_WIDGET (tree_view))
       && tree_view->priv->enable_search
       && !tree_view->priv->search_custom_entry_set)
     {
@@ -6397,7 +6400,7 @@ presize_handler_callback (gpointer data)
 static void
 install_presize_handler (GtkTreeView *tree_view)
 {
-  if (! GTK_WIDGET_REALIZED (tree_view))
+  if (! gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     return;
 
   if (! tree_view->priv->presize_handler_timer)
@@ -6430,7 +6433,7 @@ scroll_sync_handler (GtkTreeView *tree_view)
 static void
 install_scroll_sync_handler (GtkTreeView *tree_view)
 {
-  if (! GTK_WIDGET_REALIZED (tree_view))
+  if (!gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     return;
 
   if (!tree_view->priv->scroll_sync_timer)
@@ -7950,7 +7953,7 @@ gtk_tree_view_focus (GtkWidget        *widget,
   GtkContainer *container = GTK_CONTAINER (widget);
   GtkWidget *focus_child;
 
-  if (!GTK_WIDGET_IS_SENSITIVE (container) || !gtk_widget_get_can_focus (widget))
+  if (!gtk_widget_is_sensitive (widget) || !gtk_widget_get_can_focus (widget))
     return FALSE;
 
   focus_child = container->focus_child;
@@ -7979,7 +7982,7 @@ gtk_tree_view_focus (GtkWidget        *widget,
     }
 
   /* Case 2. We don't have focus at all. */
-  if (!GTK_WIDGET_HAS_FOCUS (container))
+  if (!gtk_widget_has_focus (widget))
     {
       if (!gtk_tree_view_header_focus (tree_view, direction, FALSE))
 	gtk_widget_grab_focus (widget);
@@ -8013,7 +8016,7 @@ gtk_tree_view_style_set (GtkWidget *widget,
   GList *list;
   GtkTreeViewColumn *column;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gdk_window_set_back_pixmap (widget->window, NULL, FALSE);
       gdk_window_set_background (tree_view->priv->bin_window, &widget->style->base[widget->state]);
@@ -8137,7 +8140,7 @@ gtk_tree_view_real_move_cursor (GtkTreeView       *tree_view,
 
   if (tree_view->priv->tree == NULL)
     return FALSE;
-  if (!GTK_WIDGET_HAS_FOCUS (GTK_WIDGET (tree_view)))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return FALSE;
 
   gtk_tree_view_stop_editing (tree_view, FALSE);
@@ -8203,7 +8206,7 @@ gtk_tree_view_put (GtkTreeView *tree_view,
 
   tree_view->priv->children = g_list_append (tree_view->priv->children, child);
 
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     gtk_widget_set_parent_window (child->widget, tree_view->priv->bin_window);
   
   gtk_widget_set_parent (child_widget, GTK_WIDGET (tree_view));
@@ -8241,7 +8244,7 @@ _gtk_tree_view_child_move_resize (GtkTreeView *tree_view,
   allocation.width = child->width = width;
   allocation.height = child->height = height;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gtk_widget_size_allocate (widget, &allocation);
 }
 
@@ -8298,7 +8301,7 @@ gtk_tree_view_row_changed (GtkTreeModel *model,
       && tree_view->priv->fixed_height >= 0)
     {
       _gtk_rbtree_node_set_height (tree, node, tree_view->priv->fixed_height);
-      if (GTK_WIDGET_REALIZED (tree_view))
+      if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
 	gtk_tree_view_node_queue_redraw (tree_view, tree, node);
     }
   else
@@ -8320,7 +8323,8 @@ gtk_tree_view_row_changed (GtkTreeModel *model,
     }
 
  done:
-  if (GTK_WIDGET_REALIZED (tree_view) && !tree_view->priv->fixed_height_mode)
+  if (!tree_view->priv->fixed_height_mode &&
+      gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     install_presize_handler (tree_view);
   if (free_path)
     gtk_tree_path_free (path);
@@ -8851,7 +8855,7 @@ gtk_tree_view_clamp_node_visible (GtkTreeView *tree_view,
   gint node_dy, height;
   GtkTreePath *path = NULL;
 
-  if (!GTK_WIDGET_REALIZED (tree_view))
+  if (!gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     return;
 
   /* just return if the node is visible, avoiding a costly expose */
@@ -9377,7 +9381,7 @@ gtk_tree_view_queue_draw_arrow (GtkTreeView        *tree_view,
 {
   GdkRectangle rect;
 
-  if (!GTK_WIDGET_REALIZED (tree_view))
+  if (!gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     return;
 
   rect.x = 0;
@@ -9408,7 +9412,7 @@ _gtk_tree_view_queue_draw_node (GtkTreeView        *tree_view,
 {
   GdkRectangle rect;
 
-  if (!GTK_WIDGET_REALIZED (tree_view))
+  if (!gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     return;
 
   rect.x = 0;
@@ -9464,15 +9468,15 @@ gtk_tree_view_draw_arrow (GtkTreeView *tree_view,
   gint expander_size;
   GtkExpanderStyle expander_style;
 
-  gtk_widget_style_get (GTK_WIDGET (tree_view),
+  widget = GTK_WIDGET (tree_view);
+
+  gtk_widget_style_get (widget,
 			"vertical-separator", &vertical_separator,
 			NULL);
   expander_size = tree_view->priv->expander_size - EXPANDER_EXTRA_PADDING;
 
   if (! GTK_RBNODE_FLAG_SET (node, GTK_RBNODE_IS_PARENT))
     return;
-
-  widget = GTK_WIDGET (tree_view);
 
   gtk_tree_view_get_arrow_xrange (tree_view, tree, &x_offset, &x2);
 
@@ -9481,7 +9485,7 @@ gtk_tree_view_draw_arrow (GtkTreeView *tree_view,
   area.width = expander_size + 2;
   area.height = MAX (CELL_HEIGHT (node, vertical_separator), (expander_size - vertical_separator));
 
-  if (GTK_WIDGET_STATE (tree_view) == GTK_STATE_INSENSITIVE)
+  if (gtk_widget_get_state (widget) == GTK_STATE_INSENSITIVE)
     {
       state = GTK_STATE_INSENSITIVE;
     }
@@ -9529,7 +9533,7 @@ gtk_tree_view_focus_to_cursor (GtkTreeView *tree_view)
   GtkTreePath *cursor_path;
 
   if ((tree_view->priv->tree == NULL) ||
-      (! GTK_WIDGET_REALIZED (tree_view)))
+      (! gtk_widget_get_realized (GTK_WIDGET (tree_view))))
     return;
 
   cursor_path = NULL;
@@ -9608,7 +9612,7 @@ gtk_tree_view_move_cursor_up_down (GtkTreeView *tree_view,
   gboolean grab_focus = TRUE;
   gboolean selectable;
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (! gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return;
 
   cursor_path = NULL;
@@ -9741,7 +9745,7 @@ gtk_tree_view_move_cursor_page_up_down (GtkTreeView *tree_view,
   gint window_y;
   gint vertical_separator;
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return;
 
   if (gtk_tree_row_reference_valid (tree_view->priv->cursor))
@@ -9843,7 +9847,7 @@ gtk_tree_view_move_cursor_left_right (GtkTreeView *tree_view,
 
   rtl = (gtk_widget_get_direction (GTK_WIDGET (tree_view)) == GTK_TEXT_DIR_RTL);
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return;
 
   if (gtk_tree_row_reference_valid (tree_view->priv->cursor))
@@ -9937,7 +9941,7 @@ gtk_tree_view_move_cursor_start_end (GtkTreeView *tree_view,
   GtkTreePath *path;
   GtkTreePath *old_path;
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return;
 
   g_return_if_fail (tree_view->priv->tree != NULL);
@@ -9998,7 +10002,7 @@ cleanup:
 static gboolean
 gtk_tree_view_real_select_all (GtkTreeView *tree_view)
 {
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return FALSE;
 
   if (tree_view->priv->selection->type != GTK_SELECTION_MULTIPLE)
@@ -10012,7 +10016,7 @@ gtk_tree_view_real_select_all (GtkTreeView *tree_view)
 static gboolean
 gtk_tree_view_real_unselect_all (GtkTreeView *tree_view)
 {
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return FALSE;
 
   if (tree_view->priv->selection->type != GTK_SELECTION_MULTIPLE)
@@ -10034,7 +10038,7 @@ gtk_tree_view_real_select_cursor_row (GtkTreeView *tree_view,
   GtkTreePath *cursor_path = NULL;
   GtkTreeSelectMode mode = 0;
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return FALSE;
 
   if (tree_view->priv->cursor)
@@ -10106,7 +10110,7 @@ gtk_tree_view_real_toggle_cursor_row (GtkTreeView *tree_view)
   GtkRBNode *cursor_node = NULL;
   GtkTreePath *cursor_path = NULL;
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return FALSE;
 
   cursor_path = NULL;
@@ -10159,7 +10163,7 @@ gtk_tree_view_real_expand_collapse_cursor_row (GtkTreeView *tree_view,
   GtkRBTree *tree;
   GtkRBNode *node;
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     return FALSE;
 
   cursor_path = NULL;
@@ -10198,7 +10202,7 @@ gtk_tree_view_real_select_cursor_parent (GtkTreeView *tree_view)
   GtkTreePath *cursor_path = NULL;
   GdkModifierType state;
 
-  if (! GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (!gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     goto out;
 
   cursor_path = NULL;
@@ -10381,7 +10385,7 @@ gtk_tree_view_real_start_interactive_search (GtkTreeView *tree_view,
     return FALSE;
 
   if (tree_view->priv->search_window != NULL &&
-      GTK_WIDGET_VISIBLE (tree_view->priv->search_window))
+      gtk_widget_get_visible (tree_view->priv->search_window))
     return TRUE;
 
   for (list = tree_view->priv->columns; list; list = list->next)
@@ -10392,14 +10396,14 @@ gtk_tree_view_real_start_interactive_search (GtkTreeView *tree_view,
       if (! column->visible)
 	continue;
 
-      if (GTK_WIDGET_HAS_FOCUS (column->button))
+      if (gtk_widget_has_focus (column->button))
 	{
 	  found_focus = TRUE;
 	  break;
 	}
     }
   
-  if (GTK_WIDGET_HAS_FOCUS (tree_view))
+  if (gtk_widget_has_focus (GTK_WIDGET (tree_view)))
     found_focus = TRUE;
 
   if (!found_focus)
@@ -10513,9 +10517,9 @@ adjust_allocation_recurse (GtkWidget *widget,
    * into widget->allocation if the widget is not realized.
    * FIXME someone figure out why this was.
    */
-  if (!GTK_WIDGET_REALIZED (widget))
+  if (!gtk_widget_get_realized (widget))
     {
-      if (GTK_WIDGET_VISIBLE (widget))
+      if (gtk_widget_get_visible (widget))
 	{
 	  GdkRectangle tmp_rectangle = widget->allocation;
 	  tmp_rectangle.x += scroll_data->dx;
@@ -10546,7 +10550,7 @@ adjust_allocation (GtkWidget *widget,
 {
   ScrollData scroll_data;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     scroll_data.window = ALLOCATION_WINDOW (widget);
   else
     scroll_data.window = NULL;
@@ -10562,7 +10566,7 @@ static void
 gtk_tree_view_adjustment_changed (GtkAdjustment *adjustment,
 				  GtkTreeView   *tree_view)
 {
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     {
       gint dy;
 	
@@ -10816,7 +10820,7 @@ gtk_tree_view_set_model (GtkTreeView  *tree_view,
   if (tree_view->priv->selection)
   _gtk_tree_selection_emit_changed (tree_view->priv->selection);
 
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     gtk_widget_queue_resize (GTK_WIDGET (tree_view));
 }
 
@@ -10961,14 +10965,14 @@ gtk_tree_view_set_headers_visible (GtkTreeView *tree_view,
   else
     GTK_TREE_VIEW_UNSET_FLAG (tree_view, GTK_TREE_VIEW_HEADERS_VISIBLE);
 
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     {
       gdk_window_get_position (tree_view->priv->bin_window, &x, &y);
       if (headers_visible)
 	{
 	  gdk_window_move_resize (tree_view->priv->bin_window, x, y  + TREE_VIEW_HEADER_HEIGHT (tree_view), tree_view->priv->width, GTK_WIDGET (tree_view)->allocation.height -  + TREE_VIEW_HEADER_HEIGHT (tree_view));
 
-          if (GTK_WIDGET_MAPPED (tree_view))
+          if (gtk_widget_get_mapped (GTK_WIDGET (tree_view)))
             gtk_tree_view_map_buttons (tree_view);
  	}
       else
@@ -11188,7 +11192,7 @@ gtk_tree_view_remove_column (GtkTreeView       *tree_view,
   tree_view->priv->columns = g_list_remove (tree_view->priv->columns, column);
   tree_view->priv->n_columns--;
 
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     {
       GList *list;
 
@@ -11244,7 +11248,7 @@ gtk_tree_view_insert_column (GtkTreeView       *tree_view,
   g_object_ref_sink (column);
 
   if (tree_view->priv->n_columns == 0 &&
-      GTK_WIDGET_REALIZED (tree_view) &&
+      gtk_widget_get_realized (GTK_WIDGET (tree_view)) &&
       gtk_tree_view_get_headers_visible (tree_view))
     {
       gdk_window_show (tree_view->priv->header_window);
@@ -11259,7 +11263,7 @@ gtk_tree_view_insert_column (GtkTreeView       *tree_view,
 
   _gtk_tree_view_column_set_tree_view (column, tree_view);
 
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     {
       GList *list;
 
@@ -11469,7 +11473,7 @@ gtk_tree_view_move_column_after (GtkTreeView       *tree_view,
       base_el->next = column_list_el;
     }
 
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     {
       gtk_widget_queue_resize (GTK_WIDGET (tree_view));
       gtk_tree_view_size_allocate_columns (GTK_WIDGET (tree_view), NULL);
@@ -11594,7 +11598,7 @@ gtk_tree_view_scroll_to_point (GtkTreeView *tree_view,
   GtkAdjustment *vadj;
 
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
-  g_return_if_fail (GTK_WIDGET_REALIZED (tree_view));
+  g_return_if_fail (gtk_widget_get_realized (GTK_WIDGET (tree_view)));
 
   hadj = tree_view->priv->hadjustment;
   vadj = tree_view->priv->vadjustment;
@@ -11658,8 +11662,8 @@ gtk_tree_view_scroll_to_cell (GtkTreeView       *tree_view,
    * scrolling code, we short-circuit validate_visible_area's immplementation as
    * it is much slower than just going to the point.
    */
-  if (! GTK_WIDGET_VISIBLE (tree_view) ||
-      ! GTK_WIDGET_REALIZED (tree_view) ||
+  if (!gtk_widget_get_visible (GTK_WIDGET (tree_view)) ||
+      !gtk_widget_get_realized (GTK_WIDGET (tree_view)) ||
       GTK_WIDGET_ALLOC_NEEDED (tree_view) || 
       GTK_RBNODE_FLAG_SET (tree_view->priv->tree->root, GTK_RBNODE_DESCENDANTS_INVALID))
     {
@@ -12258,14 +12262,14 @@ gtk_tree_view_real_collapse_row (GtkTreeView *tree_view,
   if (animate)
     add_expand_collapse_timeout (tree_view, tree, node, FALSE);
   
-  if (GTK_WIDGET_MAPPED (tree_view))
+  if (gtk_widget_get_mapped (GTK_WIDGET (tree_view)))
     {
       gtk_widget_queue_resize (GTK_WIDGET (tree_view));
     }
 
   g_signal_emit (tree_view, tree_view_signals[ROW_COLLAPSED], 0, &iter, path);
 
-  if (GTK_WIDGET_MAPPED (tree_view))
+  if (gtk_widget_get_mapped (GTK_WIDGET (tree_view)))
     {
       /* now that we've collapsed all rows, we want to try to set the prelight
        * again. To do this, we fake a motion event and send it to ourselves. */
@@ -12882,7 +12886,7 @@ gtk_tree_view_get_cell_area (GtkTreeView        *tree_view,
   g_return_if_fail (column == NULL || GTK_IS_TREE_VIEW_COLUMN (column));
   g_return_if_fail (rect != NULL);
   g_return_if_fail (!column || column->tree_view == (GtkWidget *) tree_view);
-  g_return_if_fail (GTK_WIDGET_REALIZED (tree_view));
+  g_return_if_fail (gtk_widget_get_realized (GTK_WIDGET (tree_view)));
 
   gtk_widget_style_get (GTK_WIDGET (tree_view),
 			"vertical-separator", &vertical_separator,
@@ -13721,7 +13725,7 @@ gtk_tree_view_create_row_drag_icon (GtkTreeView  *tree_view,
 
   widget = GTK_WIDGET (tree_view);
 
-  if (!GTK_WIDGET_REALIZED (tree_view))
+  if (!gtk_widget_get_realized (widget))
     return NULL;
 
   depth = gtk_tree_path_get_depth (path);
@@ -13760,7 +13764,7 @@ gtk_tree_view_create_row_drag_icon (GtkTreeView  *tree_view,
   expose_area.height = background_area.height + 2;
 
   gdk_draw_rectangle (drawable,
-                      widget->style->base_gc [GTK_WIDGET_STATE (widget)],
+                      widget->style->base_gc [gtk_widget_get_state (widget)],
                       TRUE,
                       0, 0,
                       bin_window_width + 2,
@@ -14169,7 +14173,7 @@ gtk_tree_view_search_dialog_hide (GtkWidget   *search_dialog,
       tree_view->priv->typeselect_flush_timeout = 0;
     }
 	
-  if (GTK_WIDGET_VISIBLE (search_dialog))
+  if (gtk_widget_get_visible (search_dialog))
     {
       /* send focus-in event */
       send_focus_change (GTK_WIDGET (tree_view->priv->search_entry), FALSE);
@@ -14703,7 +14707,7 @@ gtk_tree_view_remove_widget (GtkCellEditable *cell_editable,
   _gtk_tree_view_column_stop_editing (tree_view->priv->edited_column);
   tree_view->priv->edited_column = NULL;
 
-  if (GTK_WIDGET_HAS_FOCUS (cell_editable))
+  if (gtk_widget_has_focus (GTK_WIDGET (cell_editable)))
     gtk_widget_grab_focus (GTK_WIDGET (tree_view));
 
   g_signal_handlers_disconnect_by_func (cell_editable,
@@ -14733,7 +14737,7 @@ gtk_tree_view_start_editing (GtkTreeView *tree_view,
 
   g_assert (tree_view->priv->focus_column);
 
-  if (! GTK_WIDGET_REALIZED (tree_view))
+  if (!gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     return FALSE;
 
   if (_gtk_tree_view_find_node (tree_view, cursor_path, &cursor_tree, &cursor_node) ||
@@ -15102,7 +15106,7 @@ gtk_tree_view_state_changed (GtkWidget      *widget,
 {
   GtkTreeView *tree_view = GTK_TREE_VIEW (widget);
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       gdk_window_set_back_pixmap (widget->window, NULL, FALSE);
       gdk_window_set_background (tree_view->priv->bin_window, &widget->style->base[widget->state]);
@@ -15156,7 +15160,7 @@ gtk_tree_view_set_grid_lines (GtkTreeView           *tree_view,
   old_grid_lines = priv->grid_lines;
   priv->grid_lines = grid_lines;
   
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       if (grid_lines == GTK_TREE_VIEW_GRID_LINES_NONE &&
 	  priv->grid_line_gc)
@@ -15244,7 +15248,7 @@ gtk_tree_view_set_enable_tree_lines (GtkTreeView *tree_view,
 
   priv->tree_lines_enabled = enabled;
 
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     {
       if (!enabled && priv->tree_line_gc)
 	{

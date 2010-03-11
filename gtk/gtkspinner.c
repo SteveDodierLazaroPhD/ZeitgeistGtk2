@@ -211,7 +211,7 @@ gtk_spinner_init (GtkSpinner *spinner)
 
   spinner->priv = priv;
 
-  GTK_WIDGET_SET_FLAGS (GTK_WIDGET (spinner), GTK_NO_WINDOW);
+  gtk_widget_set_has_window (GTK_WIDGET (spinner), FALSE);
 }
 
 static gboolean
@@ -231,7 +231,7 @@ gtk_spinner_expose (GtkWidget      *widget,
     gtk_widget_set_size_request (widget, 12, 12);
 
   state_type = GTK_STATE_NORMAL;
-  if (!GTK_WIDGET_IS_SENSITIVE (widget))
+  if (!gtk_widget_is_sensitive (widget))
    state_type = GTK_STATE_INSENSITIVE;
 
   gtk_paint_spinner (widget->style,
@@ -379,7 +379,7 @@ gtk_spinner_set_active (GtkSpinner *spinner, gboolean active)
       priv->active = active;
       g_object_notify (G_OBJECT (spinner), "active");
 
-      if (active && GTK_WIDGET_REALIZED (GTK_WIDGET (spinner)) && priv->timeout == 0)
+      if (active && gtk_widget_get_realized (GTK_WIDGET (spinner)) && priv->timeout == 0)
         {
           gtk_spinner_add_timeout (spinner);
         }

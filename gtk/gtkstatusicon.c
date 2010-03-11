@@ -861,7 +861,7 @@ gtk_status_icon_init (GtkStatusIcon *status_icon)
   g_signal_connect_swapped (priv->tray_icon, "screen-changed",
 		    	    G_CALLBACK (gtk_status_icon_screen_changed), status_icon);
   priv->image = gtk_image_new ();
-  GTK_WIDGET_SET_FLAGS (priv->image, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (priv->image, TRUE);
   gtk_container_add (GTK_CONTAINER (priv->tray_icon), priv->image);
   gtk_widget_show (priv->image);
 
@@ -2298,7 +2298,7 @@ gtk_status_icon_set_visible (GtkStatusIcon *status_icon,
 #ifdef GDK_WINDOWING_X11
       if (visible)
 	gtk_widget_show (priv->tray_icon);
-      else if (GTK_WIDGET_REALIZED (priv->tray_icon)) 
+      else if (gtk_widget_get_realized (priv->tray_icon))
         {
 	  gtk_widget_hide (priv->tray_icon);
 	  gtk_widget_unrealize (priv->tray_icon);
