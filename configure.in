@@ -11,8 +11,8 @@ AC_PREREQ(2.62)
 # set GTK_BINARY_AGE and GTK_INTERFACE_AGE to 0.
 
 m4_define([gtk_major_version], [2])
-m4_define([gtk_minor_version], [19])
-m4_define([gtk_micro_version], [7])
+m4_define([gtk_minor_version], [20])
+m4_define([gtk_micro_version], [0])
 m4_define([gtk_interface_age], [0])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
@@ -31,7 +31,7 @@ m4_define([gtk_api_version], [2.0])
 m4_define([gtk_binary_version], [2.10.0])
 
 # required versions of other packages
-m4_define([glib_required_version], [2.21.3])
+m4_define([glib_required_version], [2.23.6])
 m4_define([pango_required_version], [1.20])
 m4_define([atk_required_version], [1.29.2])
 m4_define([cairo_required_version], [1.6])
@@ -1719,7 +1719,8 @@ fi
 CFLAGS="$saved_cflags"
 LDFLAGS="$saved_ldflags"
 
-GDK_PACKAGES="$PANGO_PACKAGES gio-2.0 $X_PACKAGES cairo-$cairo_backend"
+# Pull in gio-unix for GDesktopAppInfo usage, see at least gdkapplaunchcontext-x11.c
+GDK_PACKAGES="$PANGO_PACKAGES gio-unix-2.0 $X_PACKAGES cairo-$cairo_backend"
 GDK_DEP_LIBS="$GDK_EXTRA_LIBS `$PKG_CONFIG --libs $GDK_PIXBUF_PACKAGES $GDK_PACKAGES` $GDK_PIXBUF_EXTRA_LIBS"
 GDK_DEP_CFLAGS="`$PKG_CONFIG --cflags  gthread-2.0 $GDK_PIXBUF_PACKAGES $GDK_PACKAGES` $GDK_PIXBUF_EXTRA_CFLAGS $GDK_EXTRA_CFLAGS"
 #

@@ -4595,7 +4595,7 @@ can do any preparation which are necessary before showing @page."
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="1907">
+    <constant name="BINARY_AGE" value="2000">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -13998,7 +13998,8 @@ been created, it is persistent and, since
 it is owned by GTK+, must not be freed or
 unrefd."
                 version="2.2">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none"
+                      doc="the appropriate clipboard object. If no">
           <type name="Clipboard" c:type="GtkClipboard*"/>
         </return-value>
         <parameters>
@@ -14017,7 +14018,8 @@ See gtk_clipboard_get_for_display() for complete details.
 already exists, a new one will be created. Once a clipboard
 object has been created, it is persistent and, since it is
 owned by GTK+, must not be freed or unreffed.">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none"
+                      doc="the appropriate clipboard object. If no clipboard">
           <type name="Clipboard" c:type="GtkClipboard*"/>
         </return-value>
         <parameters>
@@ -34029,10 +34031,10 @@ will be moved to the end of the list."
     <constant name="MAX_COMPOSE_LEN" value="7">
       <type name="int"/>
     </constant>
-    <constant name="MICRO_VERSION" value="7">
+    <constant name="MICRO_VERSION" value="0">
       <type name="int"/>
     </constant>
-    <constant name="MINOR_VERSION" value="19">
+    <constant name="MINOR_VERSION" value="20">
       <type name="int"/>
     </constant>
     <enumeration name="MatchType"
@@ -36979,7 +36981,7 @@ gtk_notebook_set_scrollable().">
       </method>
       <method name="popup_enable"
               c:identifier="gtk_notebook_popup_enable"
-              doc="the bookmarks, a menu with all the pages will be popped up.">
+              doc="the tab labels, a menu with all the pages will be popped up.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -37149,7 +37151,9 @@ containing @child.
               doc="Sets the packing parameters for the tab label of the page
 containing @child. See gtk_box_pack_start() for the exact meaning
 of the parameters.
-#GtkNotebook:tab-fill child properties instead."
+#GtkNotebook:tab-fill child properties instead.
+Modifying the packing of the tab label is a deprecated feature and
+shouldn&apos;t be done anymore."
               deprecated="Modify the #GtkNotebook:tab-expand and"
               deprecated-version="2.20">
         <return-value transfer-ownership="none">
@@ -61486,7 +61490,8 @@ up destroyed if you don&apos;t have a reference to it.">
       <method name="lookup"
               c:identifier="gtk_text_tag_table_lookup"
               doc="Look up a named tag.">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none"
+                      doc="The tag, or %NULL if none by that name is in the table.">
           <type name="TextTag" c:type="GtkTextTag*"/>
         </return-value>
         <parameters>
@@ -76559,7 +76564,7 @@ gtk_widget_child_focus() is called by containers as the user moves
 around the window using keyboard shortcuts. @direction indicates
 what kind of motion is taking place (up, down, left, right, tab
 forward, tab backward). gtk_widget_child_focus() emits the
-#GtkWidget::focus&quot; signal; widgets override the default handler
+#GtkWidget::focus signal; widgets override the default handler
 for this signal in order to implement appropriate focus behavior.
 The default ::focus handler for a widget should return %TRUE if
 moving in @direction left the focus on a focusable location inside

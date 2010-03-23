@@ -280,6 +280,15 @@ allows the application to retrieve them from the builder with
 <a class="link" href="GtkBuilder.html#gtk-builder-get-object" title="gtk_builder_get_object ()"><code class="function">gtk_builder_get_object()</code></a>. An id is also necessary to use the
 object as property value in other parts of the UI definition.
 </p>
+<div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Note</h3>
+<p>Prior to 2.20, GtkBuilder was setting the "name"
+property of constructed widgets to the "id" attribute. In GTK+
+2.20 or newer, you have to use <a class="link" href="gtk-gtkbuildable.html#gtk-buildable-get-name" title="gtk_buildable_get_name ()"><code class="function">gtk_buildable_get_name()</code></a> instead
+of <a class="link" href="GtkWidget.html#gtk-widget-get-name" title="gtk_widget_get_name ()"><code class="function">gtk_widget_get_name()</code></a> to obtain the "id", or set the "name"
+property in your UI definition.
+</p>
+</div>
 <p>
 Setting properties of objects is pretty straightforward with
 the &lt;property&gt; element: the "name" attribute specifies
@@ -338,7 +347,7 @@ The possible values for the "type" attribute are described in
 the sections describing the widget-specific portions of UI definitions.
 </p>
 <div class="example">
-<a name="id1349085"></a><p class="title"><b>Example 58. A GtkBuilder UI Definition</b></p>
+<a name="id1398139"></a><p class="title"><b>Example 58. A GtkBuilder UI Definition</b></p>
 <div class="example-contents"><pre class="programlisting">
 &lt;interface&gt;
   &lt;object class="GtkDialog" id="dialog1"&gt;
