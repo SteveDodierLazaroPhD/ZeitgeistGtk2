@@ -11,7 +11,7 @@ AC_PREREQ(2.62)
 # set GTK_BINARY_AGE and GTK_INTERFACE_AGE to 0.
 
 m4_define([gtk_major_version], [2])
-m4_define([gtk_minor_version], [20])
+m4_define([gtk_minor_version], [21])
 m4_define([gtk_micro_version], [0])
 m4_define([gtk_interface_age], [0])
 m4_define([gtk_binary_age],
@@ -1720,7 +1720,12 @@ CFLAGS="$saved_cflags"
 LDFLAGS="$saved_ldflags"
 
 # Pull in gio-unix for GDesktopAppInfo usage, see at least gdkapplaunchcontext-x11.c
-GDK_PACKAGES="$PANGO_PACKAGES gio-unix-2.0 $X_PACKAGES cairo-$cairo_backend"
+if test "x$gdktarget" = "xx11"; then
+  GDK_PACKAGES="$PANGO_PACKAGES gio-unix-2.0 $X_PACKAGES cairo-$cairo_backend"
+else
+  GDK_PACKAGES="$PANGO_PACKAGES $X_PACKAGES cairo-$cairo_backend"
+fi
+
 GDK_DEP_LIBS="$GDK_EXTRA_LIBS `$PKG_CONFIG --libs $GDK_PIXBUF_PACKAGES $GDK_PACKAGES` $GDK_PIXBUF_EXTRA_LIBS"
 GDK_DEP_CFLAGS="`$PKG_CONFIG --cflags  gthread-2.0 $GDK_PIXBUF_PACKAGES $GDK_PACKAGES` $GDK_PIXBUF_EXTRA_CFLAGS $GDK_EXTRA_CFLAGS"
 #
@@ -2132,6 +2137,9 @@ docs/reference/libgail-util/Makefile
 docs/faq/Makefile
 docs/tools/Makefile
 docs/tutorial/Makefile
+build/Makefile
+build/win32/Makefile
+build/win32/vs9/Makefile
 gdk-pixbuf/Makefile
 gdk-pixbuf/gdk_pixbuf.rc
 gdk-pixbuf/gdk-pixbuf-features.h

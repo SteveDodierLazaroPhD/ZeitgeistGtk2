@@ -2770,7 +2770,10 @@ types of events."
           <parameter name="message_type" transfer-ownership="none">
             <type name="Atom" c:type="GdkAtom"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="3">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="3">
             <type name="FilterFunc" c:type="GdkFilterFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -4038,6 +4041,7 @@ the #GObject variant should be used instead.">
           <parameter name="destroy_func"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="function to free @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -5240,7 +5244,7 @@ gdk_event_free().">
               doc="Frees a #GdkEvent, freeing or decrementing any resources associated with it.
 Note that this function should only be called with events returned from
 functions such as gdk_event_peek(), gdk_event_get(),
-gdk_event_get_graphics_expose() and gdk_event_copy().">
+gdk_event_get_graphics_expose() and gdk_event_copy() and gdk_event_new().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10594,7 +10598,10 @@ or the other of the two sources but not in both.">
           <parameter name="sorted" transfer-ownership="none">
             <type name="boolean" c:type="gboolean"/>
           </parameter>
-          <parameter name="function" transfer-ownership="none" closure="5">
+          <parameter name="function"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="5">
             <type name="SpanFunc" c:type="GdkSpanFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -10811,7 +10818,7 @@ image data to one colormap and visual, but in the current version
 it can render to any colormap and visual. So there&apos;s no need to
 call this function."
               version="2.2">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none" doc="the preferred colormap">
           <type name="Colormap" c:type="GdkColormap*"/>
         </return-value>
       </method>
@@ -10824,7 +10831,8 @@ current versions, it&apos;s simply the visual GdkRGB would have chosen as
 the optimal one in those previous versions. GdkRGB can now render to
 drawables with any visual."
               version="2.2">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none"
+                      doc="The #GdkVisual chosen by GdkRGB.">
           <type name="Visual" c:type="GdkVisual*"/>
         </return-value>
       </method>
@@ -12875,7 +12883,10 @@ in X ClientMessage events.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="function" transfer-ownership="none" closure="2">
+          <parameter name="function"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="FilterFunc" c:type="GdkFilterFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -12890,7 +12901,10 @@ in X ClientMessage events.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="function" transfer-ownership="none" closure="2">
+          <parameter name="function"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="FilterFunc" c:type="GdkFilterFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -13716,6 +13730,70 @@ in any position in the window, not just the origin."
           </parameter>
         </parameters>
       </method>
+      <method name="coords_to_parent"
+              c:identifier="gdk_window_coords_to_parent"
+              doc="Transforms window coordinates from a child window to its parent
+window, where the parent window is the normal parent as returned by
+gdk_window_get_parent() for normal windows, and the window&apos;s
+embedder as returned by gdk_offscreen_window_get_embedder() for
+offscreen windows.
+For normal windows, calling this function is equivalent to adding
+the return values of gdk_window_get_position() to the child coordinates.
+For offscreen windows however (which can be arbitrarily transformed),
+the coordinates.
+You should always use this function when writing generic code that
+walks up a window hierarchy."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="x" transfer-ownership="none">
+            <type name="double" c:type="gdouble"/>
+          </parameter>
+          <parameter name="y" transfer-ownership="none">
+            <type name="double" c:type="gdouble"/>
+          </parameter>
+          <parameter name="parent_x" direction="out" transfer-ownership="full">
+            <type name="double" c:type="gdouble*"/>
+          </parameter>
+          <parameter name="parent_y" direction="out" transfer-ownership="full">
+            <type name="double" c:type="gdouble*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="coords_from_parent"
+              c:identifier="gdk_window_coords_from_parent"
+              doc="Transforms window coordinates from a parent window to a child
+window, where the parent window is the normal parent as returned by
+gdk_window_get_parent() for normal windows, and the window&apos;s
+embedder as returned by gdk_offscreen_window_get_embedder() for
+offscreen windows.
+For normal windows, calling this function is equivalent to subtracting
+the return values of gdk_window_get_position() from the parent coordinates.
+For offscreen windows however (which can be arbitrarily transformed),
+the coordinates.
+You should always use this function when writing generic code that
+walks down a window hierarchy."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="parent_x" transfer-ownership="none">
+            <type name="double" c:type="gdouble"/>
+          </parameter>
+          <parameter name="parent_y" transfer-ownership="none">
+            <type name="double" c:type="gdouble"/>
+          </parameter>
+          <parameter name="x" direction="out" transfer-ownership="full">
+            <type name="double" c:type="gdouble*"/>
+          </parameter>
+          <parameter name="y" direction="out" transfer-ownership="full">
+            <type name="double" c:type="gdouble*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="get_deskrelative_origin"
               c:identifier="gdk_window_get_deskrelative_origin"
               doc="This gets the origin of a #GdkWindow relative to
@@ -13812,7 +13890,11 @@ X server; thus this returns the parent as passed to gdk_window_new(),
 not the actual parent. This should never matter unless you&apos;re using
 Xlib calls mixed with GDK calls on the X11 platform. It may also
 matter for toplevel windows, because the window manager may choose
-to reparent them.">
+to reparent them.
+Note that you should use gdk_window_get_effective_parent() when
+writing generic code that walks up a window hierarchy, because
+gdk_window_get_parent() will most likely not do what you expect if
+there are offscreen windows in the hierarchy.">
         <return-value transfer-ownership="full">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
@@ -13822,7 +13904,31 @@ to reparent them.">
               doc="Gets the toplevel window that&apos;s an ancestor of @window.
 Any window type but %GDK_WINDOW_CHILD is considered a
 toplevel window, as is a %GDK_WINDOW_CHILD window that
-has a root window as parent.">
+has a root window as parent.
+Note that you should use gdk_window_get_effective_toplevel() when
+you want to get to a window&apos;s toplevel as seen on screen, because
+gdk_window_get_toplevel() will most likely not do what you expect
+if there are offscreen windows in the hierarchy.">
+        <return-value transfer-ownership="full">
+          <type name="Window" c:type="GdkWindow*"/>
+        </return-value>
+      </method>
+      <method name="get_effective_parent"
+              c:identifier="gdk_window_get_effective_parent"
+              doc="Obtains the parent of @window, as known to GDK. Works like
+gdk_window_get_parent() for normal windows, but returns the
+window&apos;s embedder for offscreen windows."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="Window" c:type="GdkWindow*"/>
+        </return-value>
+      </method>
+      <method name="get_effective_toplevel"
+              c:identifier="gdk_window_get_effective_toplevel"
+              doc="Gets the toplevel window that&apos;s an ancestor of @window.
+Works like gdk_window_get_toplevel(), but treats an offscreen window&apos;s
+embedder as its parent, using gdk_window_get_effective_parent()."
+              version="2.22">
         <return-value transfer-ownership="full">
           <type name="Window" c:type="GdkWindow*"/>
         </return-value>
@@ -15055,7 +15161,10 @@ are received. See gdk_display_add_client_message_filter().">
         <parameter name="message_type" transfer-ownership="none">
           <type name="Atom" c:type="GdkAtom"/>
         </parameter>
-        <parameter name="func" transfer-ownership="none" closure="2">
+        <parameter name="func"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="2">
           <type name="FilterFunc" c:type="GdkFilterFunc"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -18113,7 +18222,7 @@ events to GTK+.)">
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="notify" transfer-ownership="none">
+        <parameter name="notify" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -18731,7 +18840,10 @@ gdk_input_remove()."
         <parameter name="condition" transfer-ownership="none">
           <type name="InputCondition" c:type="GdkInputCondition"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none" closure="3">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="3">
           <type name="InputFunction" c:type="GdkInputFunction"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -18767,7 +18879,7 @@ gdk_input_remove()."
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="destroy" transfer-ownership="none">
+        <parameter name="destroy" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -20484,7 +20596,7 @@ very useful function; historically, GDK could only render RGB image
 data to one colormap and visual, but in the current version it can
 render to any colormap and visual. So there&apos;s no need to call this
 function.">
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="none" doc="the preferred colormap">
         <type name="Colormap" c:type="GdkColormap*"/>
       </return-value>
     </function>
@@ -20496,7 +20608,8 @@ only visual GdkRGB could use for rendering. In current versions,
 it&apos;s simply the visual GdkRGB would have chosen as the optimal one
 in those previous versions. GdkRGB can now render to drawables with
 any visual.">
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="none"
+                    doc="The #GdkVisual chosen by GdkRGB.">
         <type name="Visual" c:type="GdkVisual*"/>
       </return-value>
     </function>
@@ -21006,7 +21119,10 @@ on a specific screen."
         <parameter name="flags" transfer-ownership="none">
           <type name="GLib.SpawnFlags" c:type="GSpawnFlags"/>
         </parameter>
-        <parameter name="child_setup" transfer-ownership="none" closure="6">
+        <parameter name="child_setup"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="6">
           <type name="GLib.SpawnChildSetupFunc" c:type="GSpawnChildSetupFunc"/>
         </parameter>
         <parameter name="user_data" transfer-ownership="none">
@@ -21054,7 +21170,10 @@ on a specific screen."
         <parameter name="flags" transfer-ownership="none">
           <type name="GLib.SpawnFlags" c:type="GSpawnFlags"/>
         </parameter>
-        <parameter name="child_setup" transfer-ownership="none" closure="6">
+        <parameter name="child_setup"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="6">
           <type name="GLib.SpawnChildSetupFunc" c:type="GSpawnChildSetupFunc"/>
         </parameter>
         <parameter name="user_data" transfer-ownership="none">
@@ -21626,7 +21745,10 @@ See gdk_threads_add_idle_full()."
         <type name="uint" c:type="guint"/>
       </return-value>
       <parameters>
-        <parameter name="function" transfer-ownership="none" closure="1">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="1">
           <type name="GLib.SourceFunc" c:type="GSourceFunc"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -21692,6 +21814,7 @@ G_OBJECT_CLASS (parent_class)-&gt;finalize (object);
         <parameter name="notify"
                    transfer-ownership="none"
                    allow-none="1"
+                   scope="call"
                    doc="function to call when the idle is removed, or %NULL">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
@@ -21711,7 +21834,10 @@ See gdk_threads_add_timeout_full()."
         <parameter name="interval" transfer-ownership="none">
           <type name="uint" c:type="guint"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none" closure="2">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="2">
           <type name="GLib.SourceFunc" c:type="GSourceFunc"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -21780,6 +21906,7 @@ G_OBJECT_CLASS (parent_class)-&gt;finalize (object);
         <parameter name="notify"
                    transfer-ownership="none"
                    allow-none="1"
+                   scope="call"
                    doc="function to call when the timeout is removed, or %NULL">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
@@ -21798,7 +21925,10 @@ For details, see gdk_threads_add_timeout_full()."
         <parameter name="interval" transfer-ownership="none">
           <type name="uint" c:type="guint"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none" closure="2">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="2">
           <type name="GLib.SourceFunc" c:type="GSourceFunc"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -21836,6 +21966,7 @@ a good idea to use this function if you don&apos;t need finer granularity."
         <parameter name="notify"
                    transfer-ownership="none"
                    allow-none="1"
+                   scope="call"
                    doc="function to call when the timeout is removed, or %NULL">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
@@ -21886,10 +22017,10 @@ be called multiple times."
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="enter_fn" transfer-ownership="none">
+        <parameter name="enter_fn" transfer-ownership="none" scope="call">
           <type name="GObject.Callback" c:type="GCallback"/>
         </parameter>
-        <parameter name="leave_fn" transfer-ownership="none">
+        <parameter name="leave_fn" transfer-ownership="none" scope="call">
           <type name="GObject.Callback" c:type="GCallback"/>
         </parameter>
       </parameters>

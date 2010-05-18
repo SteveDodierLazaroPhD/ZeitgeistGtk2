@@ -643,6 +643,10 @@ gtk_builder_new (void)
  * Parses a file containing a <link linkend="BUILDER-UI">GtkBuilder 
  * UI definition</link> and merges it with the current contents of @builder. 
  * 
+ * Upon errors 0 will be returned and @error will be assigned a
+ * #GError from the #GTK_BUILDER_ERROR, #G_MARKUP_ERROR or #G_FILE_ERROR 
+ * domain.
+ *
  * Returns: A positive value on success, 0 if an error occurred
  *
  * Since: 2.12
@@ -697,6 +701,10 @@ gtk_builder_add_from_file (GtkBuilder   *builder,
  * Parses a file containing a <link linkend="BUILDER-UI">GtkBuilder 
  * UI definition</link> building only the requested objects and merges
  * them with the current contents of @builder. 
+ *
+ * Upon errors 0 will be returned and @error will be assigned a
+ * #GError from the #GTK_BUILDER_ERROR, #G_MARKUP_ERROR or #G_FILE_ERROR 
+ * domain.
  *
  * <note><para>
  * If you are adding an object that depends on an object that is not 
@@ -760,6 +768,9 @@ gtk_builder_add_objects_from_file (GtkBuilder   *builder,
  * Parses a string containing a <link linkend="BUILDER-UI">GtkBuilder 
  * UI definition</link> and merges it with the current contents of @builder. 
  *
+ * Upon errors 0 will be returned and @error will be assigned a
+ * #GError from the #GTK_BUILDER_ERROR or #G_MARKUP_ERROR domain.
+ *
  * Returns: A positive value on success, 0 if an error occurred
  *
  * Since: 2.12
@@ -805,6 +816,9 @@ gtk_builder_add_from_string (GtkBuilder   *builder,
  * Parses a string containing a <link linkend="BUILDER-UI">GtkBuilder 
  * UI definition</link> building only the requested objects and merges
  * them with the current contents of @builder. 
+ *
+ * Upon errors 0 will be returned and @error will be assigned a
+ * #GError from the #GTK_BUILDER_ERROR or #G_MARKUP_ERROR domain.
  * 
  * <note><para>
  * If you are adding an object that depends on an object that is not 
@@ -1121,6 +1135,9 @@ gtk_builder_connect_signals_full (GtkBuilder            *builder,
  * #GtkAdjustment type values. Support for #GtkWidget type values is
  * still to come.
  *
+ * Upon errors %FALSE will be returned and @error will be assigned a
+ * #GError from the #GTK_BUILDER_ERROR domain.
+ *
  * Returns: %TRUE on success
  *
  * Since: 2.12
@@ -1169,6 +1186,9 @@ gtk_builder_value_from_string (GtkBuilder   *builder,
  * a value from a string, but takes a #GType instead of #GParamSpec.
  * This function calls g_value_init() on the @value argument, so it 
  * need not be initialised beforehand.
+ *
+ * Upon errors %FALSE will be returned and @error will be assigned a
+ * #GError from the #GTK_BUILDER_ERROR domain.
  *
  * Returns: %TRUE on success
  *
@@ -1390,14 +1410,19 @@ gtk_builder_value_from_string_type (GtkBuilder   *builder,
         ret = FALSE;
       break;
     default:
-      g_set_error (error,
-		   GTK_BUILDER_ERROR,
-		   GTK_BUILDER_ERROR_INVALID_VALUE,
-		   "Unsupported GType `%s'",
-		   g_type_name (type));
       ret = FALSE;
       break;
     }
+ 
+  /* Catch unassigned error for object types as well as any unsupported types.
+   * While parsing GtkBuilder; object types are deserialized
+   * without calling gtk_builder_value_from_string_type().
+   */
+  if (!ret && error && *error == NULL) 
+    g_set_error (error,
+		 GTK_BUILDER_ERROR,
+		 GTK_BUILDER_ERROR_INVALID_VALUE,
+		 "Unsupported GType `%s'", g_type_name (type));
 
   return ret;
 }

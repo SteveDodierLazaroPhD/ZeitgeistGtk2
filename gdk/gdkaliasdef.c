@@ -1422,6 +1422,12 @@ extern __typeof (gdk_window_clear_area_e) gdk_window_clear_area_e __attribute((a
 #undef gdk_window_constrain_size 
 extern __typeof (gdk_window_constrain_size) gdk_window_constrain_size __attribute((alias("IA__gdk_window_constrain_size"), visibility("default")));
 
+#undef gdk_window_coords_from_parent 
+extern __typeof (gdk_window_coords_from_parent) gdk_window_coords_from_parent __attribute((alias("IA__gdk_window_coords_from_parent"), visibility("default")));
+
+#undef gdk_window_coords_to_parent 
+extern __typeof (gdk_window_coords_to_parent) gdk_window_coords_to_parent __attribute((alias("IA__gdk_window_coords_to_parent"), visibility("default")));
+
 #undef gdk_window_destroy 
 extern __typeof (gdk_window_destroy) gdk_window_destroy __attribute((alias("IA__gdk_window_destroy"), visibility("default")));
 
@@ -1449,6 +1455,9 @@ extern __typeof (gdk_window_get_internal_paint_info) gdk_window_get_internal_pai
 #undef gdk_window_get_parent 
 extern __typeof (gdk_window_get_parent) gdk_window_get_parent __attribute((alias("IA__gdk_window_get_parent"), visibility("default")));
 
+#undef gdk_window_get_effective_parent 
+extern __typeof (gdk_window_get_effective_parent) gdk_window_get_effective_parent __attribute((alias("IA__gdk_window_get_effective_parent"), visibility("default")));
+
 #undef gdk_window_get_pointer 
 extern __typeof (gdk_window_get_pointer) gdk_window_get_pointer __attribute((alias("IA__gdk_window_get_pointer"), visibility("default")));
 
@@ -1460,6 +1469,9 @@ extern __typeof (gdk_window_get_state) gdk_window_get_state __attribute((alias("
 
 #undef gdk_window_get_toplevel 
 extern __typeof (gdk_window_get_toplevel) gdk_window_get_toplevel __attribute((alias("IA__gdk_window_get_toplevel"), visibility("default")));
+
+#undef gdk_window_get_effective_toplevel 
+extern __typeof (gdk_window_get_effective_toplevel) gdk_window_get_effective_toplevel __attribute((alias("IA__gdk_window_get_effective_toplevel"), visibility("default")));
 
 #ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_window_get_toplevels 
@@ -1847,6 +1859,12 @@ extern __typeof (gdk_keymap_lookup_key) gdk_keymap_lookup_key __attribute((alias
 
 #undef gdk_keymap_translate_keyboard_state 
 extern __typeof (gdk_keymap_translate_keyboard_state) gdk_keymap_translate_keyboard_state __attribute((alias("IA__gdk_keymap_translate_keyboard_state"), visibility("default")));
+
+#undef gdk_keymap_add_virtual_modifiers 
+extern __typeof (gdk_keymap_add_virtual_modifiers) gdk_keymap_add_virtual_modifiers __attribute((alias("IA__gdk_keymap_add_virtual_modifiers"), visibility("default")));
+
+#undef gdk_keymap_map_virtual_modifiers 
+extern __typeof (gdk_keymap_map_virtual_modifiers) gdk_keymap_map_virtual_modifiers __attribute((alias("IA__gdk_keymap_map_virtual_modifiers"), visibility("default")));
 
 #undef gdk_keyval_from_name 
 extern __typeof (gdk_keyval_from_name) gdk_keyval_from_name __attribute((alias("IA__gdk_keyval_from_name"), visibility("default")));

@@ -81,7 +81,7 @@ deactivate it, you can pass %NULL for @func."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -109,7 +109,7 @@ deactivate it, you can pass %NULL for @func."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -891,7 +891,10 @@ Finds the first entry in an accelerator group for which">
           <type name="AccelKey" c:type="GtkAccelKey*"/>
         </return-value>
         <parameters>
-          <parameter name="find_func" transfer-ownership="none" closure="2">
+          <parameter name="find_func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="AccelGroupFindFunc" c:type="GtkAccelGroupFindFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -1393,7 +1396,9 @@ saving during an accelerator map dump).">
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="foreach_func" transfer-ownership="none">
+          <parameter name="foreach_func"
+                     transfer-ownership="none"
+                     scope="call">
             <type name="AccelMapForeach" c:type="GtkAccelMapForeach"/>
           </parameter>
         </parameters>
@@ -1505,7 +1510,9 @@ saving during an accelerator map dump).">
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="foreach_func" transfer-ownership="none">
+          <parameter name="foreach_func"
+                     transfer-ownership="none"
+                     scope="call">
             <type name="AccelMapForeach" c:type="GtkAccelMapForeach"/>
           </parameter>
         </parameters>
@@ -1581,6 +1588,17 @@ changed::&lt;replaceable&gt;accel_path&lt;/replaceable&gt;."
           <type name="none" c:type="void"/>
         </return-value>
       </virtual-method>
+      <method name="get_widget"
+              c:identifier="gtk_accessible_get_widget"
+              doc="Gets the #GtkWidget corresponding to the #GtkAccessible. The returned widget
+does not have a reference added, so you do not need to unref it.
+the #GtkAccessible, or %NULL."
+              version="2.22">
+        <return-value transfer-ownership="none"
+                      doc="pointer to the #GtkWidget corresponding to">
+          <type name="Widget" c:type="GtkWidget*"/>
+        </return-value>
+      </method>
       <method name="connect_widget_destroyed"
               c:identifier="gtk_accessible_connect_widget_destroyed">
         <return-value transfer-ownership="none">
@@ -2719,7 +2737,10 @@ The &quot;changed&quot; signal of the first radio action is connected to the
           <parameter name="value" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="on_change" transfer-ownership="none" closure="5">
+          <parameter name="on_change"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="5">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -2745,7 +2766,7 @@ callback for @user_data."
           <parameter name="user_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -2768,7 +2789,7 @@ callback for @user_data."
           <parameter name="user_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -2802,7 +2823,7 @@ This variant of gtk_action_group_add_radio_actions() adds a
           <parameter name="user_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -2829,7 +2850,7 @@ with gtk_action_group_set_translation_domain()."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="notify" transfer-ownership="none">
+          <parameter name="notify" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -3570,15 +3591,24 @@ property is nonzero.">
            glib:type-struct="AlignmentClass">
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
-      <constructor name="new" c:identifier="gtk_alignment_new">
+      <constructor name="new"
+                   c:identifier="gtk_alignment_new"
+                   doc="(right).
+(bottom).
+unused space, from 0 to 1.
+A value of 0 indicates that the child widget should never expand.
+A value of 1 indicates that the child widget will expand to fill all of the
+space allocated for the #GtkAlignment.
+unused space, from 0 to 1. The values are similar to @xscale.
+Creates a new #GtkAlignment.">
         <return-value transfer-ownership="full">
           <type name="Alignment" c:type="GtkWidget*"/>
         </return-value>
         <parameters>
-          <parameter name="xalign" transfer-ownership="none">
+          <parameter name="xalign" transfer-ownership="none" doc="to 1">
             <type name="float" c:type="gfloat"/>
           </parameter>
-          <parameter name="yalign" transfer-ownership="none">
+          <parameter name="yalign" transfer-ownership="none" doc="to 1">
             <type name="float" c:type="gfloat"/>
           </parameter>
           <parameter name="xscale" transfer-ownership="none">
@@ -3589,15 +3619,24 @@ property is nonzero.">
           </parameter>
         </parameters>
       </constructor>
-      <method name="set" c:identifier="gtk_alignment_set">
+      <method name="set"
+              c:identifier="gtk_alignment_set"
+              doc="(right).
+(bottom).
+unused space, from 0 to 1.
+A value of 0 indicates that the child widget should never expand.
+A value of 1 indicates that the child widget will expand to fill all of the
+space allocated for the #GtkAlignment.
+unused space, from 0 to 1. The values are similar to @xscale.
+Sets the #GtkAlignment values.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="xalign" transfer-ownership="none">
+          <parameter name="xalign" transfer-ownership="none" doc="to 1">
             <type name="float" c:type="gfloat"/>
           </parameter>
-          <parameter name="yalign" transfer-ownership="none">
+          <parameter name="yalign" transfer-ownership="none" doc="to 1">
             <type name="float" c:type="gfloat"/>
           </parameter>
           <parameter name="xscale" transfer-ownership="none">
@@ -3869,7 +3908,9 @@ See gtk_alignment_set_padding ()."
            glib:type-struct="ArrowClass">
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
-      <constructor name="new" c:identifier="gtk_arrow_new">
+      <constructor name="new"
+                   c:identifier="gtk_arrow_new"
+                   doc="Creates a new #GtkArrow widget.">
         <return-value transfer-ownership="full">
           <type name="Arrow" c:type="GtkWidget*"/>
         </return-value>
@@ -3882,7 +3923,9 @@ See gtk_alignment_set_padding ()."
           </parameter>
         </parameters>
       </constructor>
-      <method name="set" c:identifier="gtk_arrow_set">
+      <method name="set"
+              c:identifier="gtk_arrow_set"
+              doc="Sets the direction and style of the #GtkArrow, @arrow.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -3965,7 +4008,14 @@ See gtk_alignment_set_padding ()."
            glib:type-struct="AspectFrameClass">
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
-      <constructor name="new" c:identifier="gtk_aspect_frame_new">
+      <constructor name="new"
+                   c:identifier="gtk_aspect_frame_new"
+                   doc="the #GtkAspectFrame. This ranges from 0.0 (left aligned)
+to 1.0 (right aligned)
+the #GtkAspectFrame. This ranges from 0.0 (left aligned)
+to 1.0 (right aligned)
+ratio is taken from the requistion of the child.
+Create a new #GtkAspectFrame.">
         <return-value transfer-ownership="full">
           <type name="AspectFrame" c:type="GtkWidget*"/>
         </return-value>
@@ -3987,7 +4037,14 @@ See gtk_alignment_set_padding ()."
           </parameter>
         </parameters>
       </constructor>
-      <method name="set" c:identifier="gtk_aspect_frame_set">
+      <method name="set"
+              c:identifier="gtk_aspect_frame_set"
+              doc="the #GtkAspectFrame. This ranges from 0.0 (left aligned)
+to 1.0 (right aligned)
+the #GtkAspectFrame. This ranges from 0.0 (left aligned)
+to 1.0 (right aligned)
+ratio is taken from the requistion of the child.
+Set parameters for an existing #GtkAspectFrame.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -4177,7 +4234,7 @@ page."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -4541,7 +4598,12 @@ can do any preparation which are necessary before showing @page."
         </callback>
       </field>
     </record>
-    <callback name="AssistantPageFunc" c:type="GtkAssistantPageFunc">
+    <callback name="AssistantPageFunc"
+              c:type="GtkAssistantPageFunc"
+              doc="A function used by gtk_assistant_set_forward_page_func() to know which
+is the next page given a current one. It&apos;s called both for computing the
+next page when the user presses the &quot;forward&quot; button and for handling
+the behavior of the &quot;last&quot; button.">
       <return-value transfer-ownership="none">
         <type name="int" c:type="gint"/>
       </return-value>
@@ -4555,6 +4617,14 @@ can do any preparation which are necessary before showing @page."
       </parameters>
     </callback>
     <enumeration name="AssistantPageType"
+                 doc="assistant task.
+changes.
+done.
+complete, blocks the assistant until the page is marked as complete.
+An enum for determining the page role inside the #GtkAssistant. It&apos;s
+used to handle buttons sensitivity and visibility.
+Note that an assistant needs to end its page flow with a page of type
+%GTK_ASSISTANT_PAGE_CONFIRM or %GTK_ASSISTANT_PAGE_SUMMARY to be correct."
                  glib:type-name="GtkAssistantPageType"
                  glib:get-type="gtk_assistant_page_type_get_type"
                  c:type="GtkAssistantPageType">
@@ -4595,7 +4665,7 @@ can do any preparation which are necessary before showing @page."
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="2000">
+    <constant name="BINARY_AGE" value="2100">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -5432,7 +5502,41 @@ is called on a builder."
     </interface>
     <record name="BuildableIface"
             c:type="GtkBuildableIface"
-            glib:is-gtype-struct-for="Buildable">
+            glib:is-gtype-struct-for="Buildable"
+            doc="#GtkWidget stores the name as object data. Implement this method if your
+object has some notion of &quot;name&quot; and it makes sense to map the XML name
+attribute to it.
+if you implement @set_name.
+differentiate the kind of child. #GtkContainer implements this
+to add add a child widget to the container, #GtkNotebook uses
+the @type to distinguish between page labels (of type &quot;page-label&quot;)
+and normal children.
+It is normally not necessary to implement this, g_object_set_property()
+is used by default. #GtkWindow implements this to delay showing itself
+(i.e. setting the #GtkWidget:visible property) until the whole interface
+is created.
+specified as &quot;constructor&quot; in the UI definition. #GtkUIManager implements
+this to reference to a widget created in a &amp;lt;ui&amp;gt; tag which is outside
+of the normal GtkBuilder UI definition hierarchy.  A reference to the
+constructed object is returned and becomes owned by the caller.
+content below &amp;lt;child&amp;gt;. To handle an element, the implementation
+must fill in the @parser structure and @user_data and return %TRUE.
+#GtkWidget implements this to parse keyboard accelerators specified
+in &amp;lt;accelerator&amp;gt; elements. #GtkContainer implements it to map
+properties defined via &amp;lt;packing&amp;gt; elements to child properties.
+Note that @user_data must be freed in @custom_tag_end or @custom_finished.
+handled by the buildable (see @custom_tag_start).
+when the builder finishes parsing (see @custom_tag_start)
+of a UI definition. It is normally not necessary to implement this,
+unless you need to perform special cleanup actions. #GtkWindow sets
+the #GtkWidget:visible property here.
+#GtkDialog implements this to give access to its @vbox, making
+it possible to add children to the vbox in a UI definition.
+Implement this if the buildable has internal children that may
+need to be accessed from a UI definition.
+The GtkBuildableIface interface contains method that are
+necessary to allow #GtkBuilder to construct an object from
+a GtkBuilder UI definition.">
       <field name="g_iface">
         <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
       </field>
@@ -5660,7 +5764,10 @@ is called on a builder."
       <method name="add_from_file"
               c:identifier="gtk_builder_add_from_file"
               doc="Parses a file containing a &lt;link linkend=&quot;BUILDER-UI&quot;&gt;GtkBuilder
-UI definition&lt;/link&gt; and merges it with the current contents of @builder."
+UI definition&lt;/link&gt; and merges it with the current contents of @builder.
+Upon errors 0 will be returned and @error will be assigned a
+#GError from the #GTK_BUILDER_ERROR, #G_MARKUP_ERROR or #G_FILE_ERROR
+domain."
               version="2.12"
               throws="1">
         <return-value transfer-ownership="none">
@@ -5675,7 +5782,9 @@ UI definition&lt;/link&gt; and merges it with the current contents of @builder."
       <method name="add_from_string"
               c:identifier="gtk_builder_add_from_string"
               doc="Parses a string containing a &lt;link linkend=&quot;BUILDER-UI&quot;&gt;GtkBuilder
-UI definition&lt;/link&gt; and merges it with the current contents of @builder."
+UI definition&lt;/link&gt; and merges it with the current contents of @builder.
+Upon errors 0 will be returned and @error will be assigned a
+#GError from the #GTK_BUILDER_ERROR or #G_MARKUP_ERROR domain."
               version="2.12"
               throws="1">
         <return-value transfer-ownership="none">
@@ -5695,6 +5804,9 @@ UI definition&lt;/link&gt; and merges it with the current contents of @builder."
               doc="Parses a file containing a &lt;link linkend=&quot;BUILDER-UI&quot;&gt;GtkBuilder
 UI definition&lt;/link&gt; building only the requested objects and merges
 them with the current contents of @builder.
+Upon errors 0 will be returned and @error will be assigned a
+#GError from the #GTK_BUILDER_ERROR, #G_MARKUP_ERROR or #G_FILE_ERROR
+domain.
 &lt;note&gt;&lt;para&gt;
 If you are adding an object that depends on an object that is not
 its child (for instance a #GtkTreeView that depends on its
@@ -5721,6 +5833,8 @@ its child (for instance a #GtkTreeView that depends on its
               doc="Parses a string containing a &lt;link linkend=&quot;BUILDER-UI&quot;&gt;GtkBuilder
 UI definition&lt;/link&gt; building only the requested objects and merges
 them with the current contents of @builder.
+Upon errors 0 will be returned and @error will be assigned a
+#GError from the #GTK_BUILDER_ERROR or #G_MARKUP_ERROR domain.
 &lt;note&gt;&lt;para&gt;
 If you are adding an object that depends on an object that is not
 its child (for instance a #GtkTreeView that depends on its
@@ -5810,7 +5924,10 @@ require GModule to function correctly."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none" closure="2">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="BuilderConnectFunc" c:type="GtkBuilderConnectFunc"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -5868,7 +5985,9 @@ initialised beforehand.
 This function can handle char, uchar, boolean, int, uint, long,
 ulong, enum, flags, float, double, string, #GdkColor and
 #GtkAdjustment type values. Support for #GtkWidget type values is
-still to come."
+still to come.
+Upon errors %FALSE will be returned and @error will be assigned a
+#GError from the #GTK_BUILDER_ERROR domain."
               version="2.12"
               throws="1">
         <return-value transfer-ownership="none">
@@ -5891,7 +6010,9 @@ still to come."
               doc="Like gtk_builder_value_from_string(), this function demarshals
 a value from a string, but takes a #GType instead of #GParamSpec.
 This function calls g_value_init() on the @value argument, so it
-need not be initialised beforehand."
+need not be initialised beforehand.
+Upon errors %FALSE will be returned and @error will be assigned a
+#GError from the #GTK_BUILDER_ERROR domain."
               version="2.12"
               throws="1">
         <return-value transfer-ownership="none">
@@ -6782,6 +6903,14 @@ Applications should never connect to this signal, but use the
       </field>
     </record>
     <enumeration name="ButtonsType"
+                 doc="Prebuilt sets of buttons for the dialog. If
+none of these choices are appropriate, simply use %GTK_BUTTONS_NONE
+then call gtk_dialog_add_buttons().
+&lt;note&gt;
+Please note that %GTK_BUTTONS_OK, %GTK_BUTTONS_YES_NO
+and %GTK_BUTTONS_OK_CANCEL are discouraged by the
+&lt;ulink url=&quot;http://library.gnome.org/devel/hig-book/stable/&quot;&gt;GNOME HIG&lt;/ulink&gt;.
+&lt;/note&gt;"
                  glib:type-name="GtkButtonsType"
                  glib:get-type="gtk_buttons_type_get_type"
                  c:type="GtkButtonsType">
@@ -7662,7 +7791,7 @@ Applications should never connect to this signal, but use the
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -7786,7 +7915,7 @@ Applications should never connect to this signal, but use the
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="cmp_func" transfer-ownership="none">
+          <parameter name="cmp_func" transfer-ownership="none" scope="call">
             <type name="CListCompareFunc" c:type="GtkCListCompareFunc"/>
           </parameter>
         </parameters>
@@ -8878,7 +9007,10 @@ Applications should never connect to this signal, but use the
           <parameter name="gnode" transfer-ownership="none">
             <type name="GLib.Node" c:type="GNode*"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="5">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="5">
             <type name="CTreeGNodeFunc" c:type="GtkCTreeGNodeFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -8900,7 +9032,10 @@ Applications should never connect to this signal, but use the
           <parameter name="node" transfer-ownership="none">
             <type name="CTreeNode" c:type="GtkCTreeNode*"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="5">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="5">
             <type name="CTreeGNodeFunc" c:type="GtkCTreeGNodeFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -8916,7 +9051,10 @@ Applications should never connect to this signal, but use the
           <parameter name="node" transfer-ownership="none">
             <type name="CTreeNode" c:type="GtkCTreeNode*"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="3">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="3">
             <type name="CTreeFunc" c:type="GtkCTreeFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -8936,7 +9074,10 @@ Applications should never connect to this signal, but use the
           <parameter name="depth" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="4">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="4">
             <type name="CTreeFunc" c:type="GtkCTreeFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -8952,7 +9093,10 @@ Applications should never connect to this signal, but use the
           <parameter name="node" transfer-ownership="none">
             <type name="CTreeNode" c:type="GtkCTreeNode*"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="3">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="3">
             <type name="CTreeFunc" c:type="GtkCTreeFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -8972,7 +9116,10 @@ Applications should never connect to this signal, but use the
           <parameter name="depth" transfer-ownership="none">
             <type name="int" c:type="gint"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none" closure="4">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="4">
             <type name="CTreeFunc" c:type="GtkCTreeFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -9086,7 +9233,7 @@ Applications should never connect to this signal, but use the
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none">
+          <parameter name="func" transfer-ownership="none" scope="call">
             <type name="GLib.CompareFunc" c:type="GCompareFunc"/>
           </parameter>
         </parameters>
@@ -9103,7 +9250,7 @@ Applications should never connect to this signal, but use the
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="func" transfer-ownership="none">
+          <parameter name="func" transfer-ownership="none" scope="call">
             <type name="GLib.CompareFunc" c:type="GCompareFunc"/>
           </parameter>
         </parameters>
@@ -9664,7 +9811,7 @@ Applications should never connect to this signal, but use the
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -9766,7 +9913,7 @@ Applications should never connect to this signal, but use the
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="cmp_func" transfer-ownership="none">
+          <parameter name="cmp_func" transfer-ownership="none" scope="call">
             <type name="CTreeCompareDragFunc"
                   c:type="GtkCTreeCompareDragFunc"/>
           </parameter>
@@ -10377,7 +10524,7 @@ properties."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -10924,7 +11071,7 @@ Implementations of #GtkCellEditable are responsible for
 emitting this signal when they are done editing, e.g.
 #GtkEntry is emitting it when the user presses Enter.
 gtk_cell_editable_editing_done() is a convenience method
-for emitting ::editing-done.">
+for emitting GtkCellEditable::editing-done.">
         <return-value transfer-ownership="full">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10938,7 +11085,7 @@ be emitted after the #GtkCellEditable::editing-done signal,
 to give the cell renderer a chance to update the cell&apos;s value
 before the widget is removed.
 gtk_cell_editable_remove_widget() is a convenience method
-for emitting ::remove-widget.">
+for emitting GtkCellEditable::remove-widget.">
         <return-value transfer-ownership="full">
           <type name="none" c:type="void"/>
         </return-value>
@@ -11215,7 +11362,7 @@ as appropriate. @func may be %NULL to remove and older one."
           <parameter name="func_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -13462,7 +13609,7 @@ to it, and makes its show @text."
       <constructor name="new_with_markup"
                    c:identifier="gtk_cell_view_new_with_markup"
                    doc="Creates a new #GtkCellView widget, adds a #GtkCellRendererText
-to it, and makes its show @markup. The text can text can be
+to it, and makes it show @markup. The text can be
 marked up with the &lt;link linkend=&quot;PangoMarkupFormat&quot;&gt;Pango text
 markup language&lt;/link&gt;."
                    version="2.6">
@@ -14055,10 +14202,13 @@ will be ignored.">
           <parameter name="n_targets" transfer-ownership="none">
             <type name="uint" c:type="guint"/>
           </parameter>
-          <parameter name="get_func" transfer-ownership="none">
+          <parameter name="get_func" transfer-ownership="none" scope="call">
             <type name="ClipboardGetFunc" c:type="GtkClipboardGetFunc"/>
           </parameter>
-          <parameter name="clear_func" transfer-ownership="none" closure="5">
+          <parameter name="clear_func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="5">
             <type name="ClipboardClearFunc" c:type="GtkClipboardClearFunc"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -14089,10 +14239,10 @@ will be ignored.">
           <parameter name="n_targets" transfer-ownership="none">
             <type name="uint" c:type="guint"/>
           </parameter>
-          <parameter name="get_func" transfer-ownership="none">
+          <parameter name="get_func" transfer-ownership="none" scope="call">
             <type name="ClipboardGetFunc" c:type="GtkClipboardGetFunc"/>
           </parameter>
-          <parameter name="clear_func" transfer-ownership="none">
+          <parameter name="clear_func" transfer-ownership="none" scope="call">
             <type name="ClipboardClearFunc" c:type="GtkClipboardClearFunc"/>
           </parameter>
           <parameter name="owner" transfer-ownership="none">
@@ -14172,7 +14322,10 @@ will be called.">
           <parameter name="target" transfer-ownership="none">
             <type name="Gdk.Atom" c:type="GdkAtom"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="3">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="3">
             <type name="ClipboardReceivedFunc"
                   c:type="GtkClipboardReceivedFunc"/>
           </parameter>
@@ -14195,7 +14348,10 @@ contents of the clipboard could not be converted into text form.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="callback" transfer-ownership="none" closure="2">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="ClipboardTextReceivedFunc"
                   c:type="GtkClipboardTextReceivedFunc"/>
           </parameter>
@@ -14223,7 +14379,10 @@ contents of the clipboard could not be converted into rich text form."
           <parameter name="buffer" transfer-ownership="none">
             <type name="TextBuffer" c:type="GtkTextBuffer*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="3">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="3">
             <type name="ClipboardRichTextReceivedFunc"
                   c:type="GtkClipboardRichTextReceivedFunc"/>
           </parameter>
@@ -14248,7 +14407,10 @@ converted into an image."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="callback" transfer-ownership="none" closure="2">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="ClipboardImageReceivedFunc"
                   c:type="GtkClipboardImageReceivedFunc"/>
           </parameter>
@@ -14272,7 +14434,10 @@ contents of the clipboard could not be converted into URI form."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="callback" transfer-ownership="none" closure="2">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="ClipboardURIReceivedFunc"
                   c:type="GtkClipboardURIReceivedFunc"/>
           </parameter>
@@ -14294,7 +14459,10 @@ the request succeeded, or %NULL if it failed."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="callback" transfer-ownership="none" closure="2">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="ClipboardTargetsReceivedFunc"
                   c:type="GtkClipboardTargetsReceivedFunc"/>
           </parameter>
@@ -14967,7 +15135,7 @@ Use gtk_color_selection_set_change_palette_with_screen_hook() instead."
                 c:type="GtkColorSelectionChangePaletteFunc"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none">
+          <parameter name="func" transfer-ownership="none" scope="call">
             <type name="ColorSelectionChangePaletteFunc"
                   c:type="GtkColorSelectionChangePaletteFunc"/>
           </parameter>
@@ -14985,7 +15153,7 @@ the new palette contents, and update the GtkSettings property
                 c:type="GtkColorSelectionChangePaletteWithScreenFunc"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none">
+          <parameter name="func" transfer-ownership="none" scope="call">
             <type name="ColorSelectionChangePaletteWithScreenFunc"
                   c:type="GtkColorSelectionChangePaletteWithScreenFunc"/>
           </parameter>
@@ -15819,6 +15987,7 @@ function is %NULL, no separators are drawn. This is the default value."
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -16521,7 +16690,10 @@ gtk_container_foreach(), rather than gtk_container_forall().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="callback" transfer-ownership="none" closure="2">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="Callback" c:type="GtkCallback"/>
           </parameter>
           <parameter name="callback_data" transfer-ownership="none">
@@ -16534,7 +16706,7 @@ gtk_container_foreach(), rather than gtk_container_forall().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="callback" transfer-ownership="none">
+          <parameter name="callback" transfer-ownership="none" scope="call">
             <type name="Callback" c:type="GtkCallback"/>
           </parameter>
           <parameter name="marshal"
@@ -16547,7 +16719,7 @@ gtk_container_foreach(), rather than gtk_container_forall().">
           <parameter name="callback_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="notify" transfer-ownership="none">
+          <parameter name="notify" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -16863,7 +17035,10 @@ rather than gtk_container_forall().">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="callback" transfer-ownership="none" closure="2">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="Callback" c:type="GtkCallback"/>
           </parameter>
           <parameter name="callback_data" transfer-ownership="none">
@@ -19593,6 +19768,37 @@ See also gtk_entry_get_text_window()."
           </parameter>
         </parameters>
       </method>
+      <method name="im_context_filter_keypress"
+              c:identifier="gtk_entry_im_context_filter_keypress"
+              doc="Allow the #GtkEntry input method to internally handle key press
+and release events. If this function returns %TRUE, then no further
+processing should be done for this key event. See
+gtk_im_context_filter_keypress().
+Note that you are expected to call this function from your handler
+when overriding key event handling. This is needed in the case when
+you need to insert your own key handling between the input method
+and the default key event handling of the #GtkEntry.
+See gtk_text_view_reset_im_context() for an example of use."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="event" transfer-ownership="none">
+            <type name="Gdk.EventKey" c:type="GdkEventKey*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="reset_im_context"
+              c:identifier="gtk_entry_reset_im_context"
+              doc="Reset the input method context of the entry if needed.
+This can be necessary in the case where modifying the buffer
+would confuse on-going input method behavior."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+      </method>
       <method name="append_text"
               c:identifier="gtk_entry_append_text"
               doc="Appends the given text to the contents of the widget."
@@ -20936,7 +21142,7 @@ list."
           <parameter name="func_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="func_notify" transfer-ownership="none">
+          <parameter name="func_notify" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -23430,7 +23636,7 @@ it isn&apos;t needed by the filter."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="notify" transfer-ownership="none">
+          <parameter name="notify" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -24818,7 +25024,9 @@ gtk_frame_set_shadow_type().">
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
       <implements name="Orientable"/>
-      <constructor name="new" c:identifier="gtk_hbox_new">
+      <constructor name="new"
+                   c:identifier="gtk_hbox_new"
+                   doc="Creates a new #GtkHBox.">
         <return-value transfer-ownership="full">
           <type name="HBox" c:type="GtkWidget*"/>
         </return-value>
@@ -28140,7 +28348,10 @@ selection cannot be modified from within this function."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none" closure="2">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="IconViewForeachFunc" c:type="GtkIconViewForeachFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -31213,7 +31424,7 @@ as the @button and @activation_time parameters for gtk_menu_popup()."
           <parameter name="popup_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
           <parameter name="x" transfer-ownership="none">
@@ -31262,7 +31473,7 @@ are displayed."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="notify" transfer-ownership="none">
+          <parameter name="notify" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -32787,6 +32998,7 @@ If no uri hook has been set, GTK+ defaults to calling gtk_show_uri()."
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="a #GDestroyNotify that gets called when @data is no longer needed, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -34034,7 +34246,7 @@ will be moved to the end of the list."
     <constant name="MICRO_VERSION" value="0">
       <type name="int"/>
     </constant>
-    <constant name="MINOR_VERSION" value="20">
+    <constant name="MINOR_VERSION" value="21">
       <type name="int"/>
     </constant>
     <enumeration name="MatchType"
@@ -34131,6 +34343,7 @@ be used instead.">
           <parameter name="func"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      closure="4"
                      doc="a user supplied function used to position the menu, or %NULL">
             <type name="MenuPositionFunc" c:type="GtkMenuPositionFunc"/>
@@ -34214,7 +34427,7 @@ be used instead.">
           <parameter name="attach_widget" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="detacher" transfer-ownership="none">
+          <parameter name="detacher" transfer-ownership="none" scope="call">
             <type name="MenuDetachFunc" c:type="GtkMenuDetachFunc"/>
           </parameter>
         </parameters>
@@ -36102,6 +36315,7 @@ See pango_parse_markup().">
       </field>
     </record>
     <enumeration name="MessageType"
+                 doc="The type of message being displayed in the dialog."
                  glib:type-name="GtkMessageType"
                  glib:get-type="gtk_message_type_get_type"
                  c:type="GtkMessageType">
@@ -36501,6 +36715,7 @@ when a detached tab is dropped in an empty area."
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -37895,7 +38110,10 @@ right after a page has been reordered."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="notify" transfer-ownership="none" closure="2">
+          <parameter name="notify"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -37908,7 +38126,10 @@ right after a page has been reordered."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="notify" transfer-ownership="none" closure="2">
+          <parameter name="notify"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -37940,7 +38161,7 @@ right after a page has been reordered."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -38016,7 +38237,7 @@ right after a page has been reordered."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -46343,6 +46564,7 @@ a negative integer if the first item comes after the second."
           <parameter name="data_destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="destroy notifier for @sort_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -47271,7 +47493,9 @@ it isn&apos;t needed by the filter."
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="data_destroy" transfer-ownership="none">
+          <parameter name="data_destroy"
+                     transfer-ownership="none"
+                     scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -50332,7 +50556,7 @@ screen, then returns %NULL.">
           <parameter name="pspec" transfer-ownership="none">
             <type name="GObject.ParamSpec" c:type="GParamSpec*"/>
           </parameter>
-          <parameter name="parser" transfer-ownership="none">
+          <parameter name="parser" transfer-ownership="none" scope="call">
             <type name="RcPropertyParser" c:type="GtkRcPropertyParser"/>
           </parameter>
         </parameters>
@@ -57451,7 +57675,9 @@ format&apos;s mime-type."
           <parameter name="user_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="user_data_destroy" transfer-ownership="none">
+          <parameter name="user_data_destroy"
+                     transfer-ownership="none"
+                     scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -57510,7 +57736,9 @@ format&apos;s mime-type."
           <parameter name="user_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="user_data_destroy" transfer-ownership="none">
+          <parameter name="user_data_destroy"
+                     transfer-ownership="none"
+                     scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -59599,7 +59827,10 @@ If @pred never returns %TRUE, @iter is set to @limit if">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="pred" transfer-ownership="none" closure="2">
+          <parameter name="pred"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="TextCharPredicate" c:type="GtkTextCharPredicate"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -59620,7 +59851,10 @@ If @pred never returns %TRUE, @iter is set to @limit if">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="pred" transfer-ownership="none" closure="2">
+          <parameter name="pred"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="TextCharPredicate" c:type="GtkTextCharPredicate"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -61509,7 +61743,10 @@ over it (you can&apos;t add/remove tags).">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none" closure="2">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="TextTagTableForeach" c:type="GtkTextTagTableForeach"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -62043,6 +62280,24 @@ gtk_text_view_set_border_window_size()).">
           </parameter>
         </parameters>
       </method>
+      <method name="get_hadjustment"
+              c:identifier="gtk_text_view_get_hadjustment"
+              doc="Gets the horizontal-scrolling #GtkAdjustment."
+              version="2.22">
+        <return-value transfer-ownership="none"
+                      doc="pointer to the horizontal #GtkAdjustment">
+          <type name="Adjustment" c:type="GtkAdjustment*"/>
+        </return-value>
+      </method>
+      <method name="get_vadjustment"
+              c:identifier="gtk_text_view_get_vadjustment"
+              doc="Gets the vertical-scrolling #GtkAdjustment."
+              version="2.22">
+        <return-value transfer-ownership="none"
+                      doc="pointer to the vertical #GtkAdjustment">
+          <type name="Adjustment" c:type="GtkAdjustment*"/>
+        </return-value>
+      </method>
       <method name="get_window"
               c:identifier="gtk_text_view_get_window"
               doc="Retrieves the #GdkWindow corresponding to an area of the text view;
@@ -62223,6 +62478,50 @@ is moved off of the end of a run.">
             <type name="int" c:type="gint"/>
           </parameter>
         </parameters>
+      </method>
+      <method name="im_context_filter_keypress"
+              c:identifier="gtk_text_view_im_context_filter_keypress"
+              doc="Allow the #GtkTextView input method to internally handle key press
+and release events. If this function returns %TRUE, then no further
+processing should be done for this key event. See
+gtk_im_context_filter_keypress().
+Note that you are expected to call this function from your handler
+when overriding key event handling. This is needed in the case when
+you need to insert your own key handling between the input method
+and the default key event handling of the #GtkTextView.
+|[
+static gboolean
+gtk_foo_bar_key_press_event (GtkWidget   *widget,
+GdkEventKey *event)
+{
+if ((key-&gt;keyval == GDK_Return || key-&gt;keyval == GDK_KP_Enter))
+{
+if (gtk_text_view_im_context_filter_keypress (GTK_TEXT_VIEW (view), event))
+return TRUE;
+}
+/&amp;ast; Do some stuff &amp;ast;/
+return GTK_WIDGET_CLASS (gtk_foo_bar_parent_class)-&gt;key_press_event (widget, event);
+}
+]|"
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="event" transfer-ownership="none">
+            <type name="Gdk.EventKey" c:type="GdkEventKey*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="reset_im_context"
+              c:identifier="gtk_text_view_reset_im_context"
+              doc="Reset the input method context of the text view if needed.
+This can be necessary in the case where modifying the buffer
+would confuse on-going input method behavior."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
       </method>
       <method name="add_child_at_anchor"
               c:identifier="gtk_text_view_add_child_at_anchor"
@@ -64042,7 +64341,7 @@ label."
           <parameter name="icon_widget"
                      transfer-ownership="none"
                      allow-none="1"
-                     doc="a widget that will be used as icon widget, or %NULL">
+                     doc="a #GtkMisc widget that will be used as icon widget, or %NULL">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
           <parameter name="label"
@@ -66106,7 +66405,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="icon" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="6">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="6">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -66136,7 +66438,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="icon" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="6">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="6">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -66167,7 +66472,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="icon" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="6">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="6">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -66199,7 +66507,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="tooltip_private_text" transfer-ownership="none">
             <type name="utf8" c:type="char*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="5">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="5">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -66291,7 +66602,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="icon" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="8">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="8">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -66334,7 +66648,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="icon" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="8">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="8">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -66378,7 +66695,10 @@ arguments. Use G_CALLBACK() to cast the function to #GCallback."
           <parameter name="icon" transfer-ownership="none">
             <type name="Widget" c:type="GtkWidget*"/>
           </parameter>
-          <parameter name="callback" transfer-ownership="none" closure="8">
+          <parameter name="callback"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="8">
             <type name="GObject.Callback" c:type="GCallback"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -67928,7 +68248,10 @@ gtk_tree_model_foreach() returns.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none" closure="2">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="TreeModelForeachFunc"
                   c:type="GtkTreeModelForeachFunc"/>
           </parameter>
@@ -68191,6 +68514,7 @@ return visible;
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier of @data, or %NULL.">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -68233,6 +68557,7 @@ modify function."
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier of @data, or %NULL.">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -69340,7 +69665,7 @@ and %FALSE if the state of the node should be left unchanged.">
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -69437,7 +69762,10 @@ gtk_tree_selection_get_selected_rows() might be more useful.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none" closure="2">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="TreeSelectionForeachFunc"
                   c:type="GtkTreeSelectionForeachFunc"/>
           </parameter>
@@ -69838,6 +70166,7 @@ the model will sort using this function.">
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier of @user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -69873,6 +70202,7 @@ is %GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, the model will be unsorted.">
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier of @user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -70859,7 +71189,7 @@ If @tree_view has &quot;fixed_height&quot; mode enabled, then the new column wil
           <parameter name="data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="dnotify" transfer-ownership="none">
+          <parameter name="dnotify" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -70961,6 +71291,7 @@ dropped everywhere.">
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier for @user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -71104,7 +71435,10 @@ path will be modified to reflect this change.">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="func" transfer-ownership="none" closure="2">
+          <parameter name="func"
+                     transfer-ownership="none"
+                     scope="call"
+                     closure="2">
             <type name="TreeViewMappingFunc" c:type="GtkTreeViewMappingFunc"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -71697,6 +72031,7 @@ that somewhat like strcmp() returning 0 for equality
           <parameter name="search_destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier for @search_user_data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -71767,6 +72102,7 @@ Sets the function to use when positioning the search dialog."
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -71938,6 +72274,7 @@ user collapses a row, or a row is deleted.">
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="Destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -72086,6 +72423,7 @@ function is %NULL, no separators are drawn. This is the default value."
           <parameter name="destroy"
                      transfer-ownership="none"
                      allow-none="1"
+                     scope="call"
                      doc="destroy notifier for @data, or %NULL">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
@@ -73038,7 +73376,7 @@ older one.">
           <parameter name="func_data" transfer-ownership="none">
             <type name="any" c:type="gpointer"/>
           </parameter>
-          <parameter name="destroy" transfer-ownership="none">
+          <parameter name="destroy" transfer-ownership="none" scope="call">
             <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
           </parameter>
         </parameters>
@@ -74644,19 +74982,29 @@ just before any action is activated."
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
       <implements name="Orientable"/>
-      <constructor name="new" c:identifier="gtk_vbutton_box_new">
+      <constructor name="new"
+                   c:identifier="gtk_vbutton_box_new"
+                   doc="Creates a new vertical button box.">
         <return-value transfer-ownership="full">
           <type name="VButtonBox" c:type="GtkWidget*"/>
         </return-value>
       </constructor>
       <function name="get_spacing_default"
-                c:identifier="gtk_vbutton_box_get_spacing_default">
+                c:identifier="gtk_vbutton_box_get_spacing_default"
+                doc="Retrieves the current default spacing for vertical button boxes. This is the number of pixels
+to be placed between the buttons when they are arranged."
+                deprecated="Use gtk_box_get_spacing() instead."
+                deprecated-version="2.0">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </return-value>
       </function>
       <function name="set_spacing_default"
-                c:identifier="gtk_vbutton_box_set_spacing_default">
+                c:identifier="gtk_vbutton_box_set_spacing_default"
+                doc="Changes the default spacing that is placed between widgets in an
+vertical button box."
+                deprecated="Use gtk_box_set_spacing() instead."
+                deprecated-version="2.0">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -74667,13 +75015,19 @@ just before any action is activated."
         </parameters>
       </function>
       <function name="get_layout_default"
-                c:identifier="gtk_vbutton_box_get_layout_default">
+                c:identifier="gtk_vbutton_box_get_layout_default"
+                doc="Retrieves the current layout used to arrange buttons in button box widgets."
+                deprecated="Use gtk_button_box_get_layout() instead."
+                deprecated-version="2.0">
         <return-value transfer-ownership="full">
           <type name="ButtonBoxStyle" c:type="GtkButtonBoxStyle"/>
         </return-value>
       </function>
       <function name="set_layout_default"
-                c:identifier="gtk_vbutton_box_set_layout_default">
+                c:identifier="gtk_vbutton_box_set_layout_default"
+                doc="Sets a new layout mode that will be used by all button boxes."
+                deprecated="Use gtk_button_box_set_layout() instead."
+                deprecated-version="2.0">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -74703,7 +75057,9 @@ just before any action is activated."
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
       <implements name="Orientable"/>
-      <constructor name="new" c:identifier="gtk_vpaned_new">
+      <constructor name="new"
+                   c:identifier="gtk_vpaned_new"
+                   doc="Create a new #GtkVPaned">
         <return-value transfer-ownership="full">
           <type name="VPaned" c:type="GtkWidget*"/>
         </return-value>
@@ -74728,7 +75084,9 @@ just before any action is activated."
       <implements name="Atk.ImplementorIface"/>
       <implements name="Buildable"/>
       <implements name="Orientable"/>
-      <constructor name="new" c:identifier="gtk_vruler_new">
+      <constructor name="new"
+                   c:identifier="gtk_vruler_new"
+                   doc="Creates a new vertical ruler">
         <return-value transfer-ownership="full">
           <type name="VRuler" c:type="GtkWidget*"/>
         </return-value>
@@ -75821,6 +76179,36 @@ with a call to gdk_window_process_updates().
 the event was handled)">
         <return-value transfer-ownership="none">
           <type name="int" c:type="gint"/>
+        </return-value>
+        <parameters>
+          <parameter name="event" transfer-ownership="none">
+            <type name="Gdk.Event" c:type="GdkEvent*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="send_focus_change"
+              c:identifier="gtk_widget_send_focus_change"
+              doc="Sends the focus change @event to @widget
+This function is not meant to be used by applications. The only time it
+should be used is when it is necessary for a #GtkWidget to assign focus
+to a widget that is semantically owned by the first widget even though
+it&apos;s not a direct child - for instance, a search entry in a floating
+window similar to the quick search in #GtkTreeView.
+An example of its usage is:
+|[
+GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
+fevent-&gt;focus_change.type = GDK_FOCUS_CHANGE;
+fevent-&gt;focus_change.in = TRUE;
+fevent-&gt;focus_change.window = gtk_widget_get_window (widget);
+if (fevent-&gt;focus_change.window != NULL)
+g_object_ref (fevent-&gt;focus_change.window);
+gtk_widget_send_focus_change (widget, fevent);
+gdk_event_free (event);
+]|
+if the event was handled, and %FALSE otherwise"
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <parameter name="event" transfer-ownership="none">
@@ -80155,7 +80543,7 @@ style property is determined by the value type of @pspec.">
           <parameter name="pspec" transfer-ownership="none">
             <type name="GObject.ParamSpec" c:type="GParamSpec*"/>
           </parameter>
-          <parameter name="parser" transfer-ownership="none">
+          <parameter name="parser" transfer-ownership="none" scope="call">
             <type name="RcPropertyParser" c:type="GtkRcPropertyParser"/>
           </parameter>
         </parameters>
@@ -82761,6 +83149,9 @@ format looks like &quot;&amp;lt;Control&amp;gt;a&quot; or &quot;&amp;lt;Shift&am
 &quot;&amp;lt;Release&amp;gt;z&quot; (the last one is for key release).
 The parser is fairly liberal and allows lower or upper case,
 and also abbreviations such as &quot;&amp;lt;Ctl&amp;gt;&quot; and &quot;&amp;lt;Ctrl&amp;gt;&quot;.
+Key names are parsed using gdk_keyval_from_name(). For character keys the
+name is not the symbol, but the lowercase name, e.g. one would use
+&quot;&amp;lt;Ctrl&amp;gt;minus&quot; instead of &quot;&amp;lt;Ctrl&amp;gt;-&quot;.
 If the parse fails, @accelerator_key and @accelerator_mods will
 be set to 0 (zero).">
       <return-value transfer-ownership="none">
@@ -84889,7 +85280,10 @@ will return @target.">
         <type name="uint" c:type="guint"/>
       </return-value>
       <parameters>
-        <parameter name="function" transfer-ownership="none" closure="1">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="1">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -84905,7 +85299,7 @@ will return @target.">
         <parameter name="priority" transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none">
+        <parameter name="function" transfer-ownership="none" scope="call">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="marshal"
@@ -84918,7 +85312,7 @@ will return @target.">
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="destroy" transfer-ownership="none">
+        <parameter name="destroy" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -84931,7 +85325,10 @@ will return @target.">
         <parameter name="priority" transfer-ownership="none">
           <type name="int" c:type="gint"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none" closure="2">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="2">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -85011,7 +85408,10 @@ similar things.
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="function" transfer-ownership="none" closure="1">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="1">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -85095,7 +85495,7 @@ be terminated after writing out the help output.
         <parameter name="condition" transfer-ownership="none">
           <type name="Gdk.InputCondition" c:type="GdkInputCondition"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none">
+        <parameter name="function" transfer-ownership="none" scope="call">
           <type name="Gdk.InputFunction" c:type="GdkInputFunction"/>
         </parameter>
         <parameter name="marshal"
@@ -85108,7 +85508,7 @@ be terminated after writing out the help output.
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="destroy" transfer-ownership="none">
+        <parameter name="destroy" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -85129,7 +85529,10 @@ be terminated after writing out the help output.
         <type name="uint" c:type="guint"/>
       </return-value>
       <parameters>
-        <parameter name="snooper" transfer-ownership="none" closure="1">
+        <parameter name="snooper"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="1">
           <type name="KeySnoopFunc" c:type="GtkKeySnoopFunc"/>
         </parameter>
         <parameter name="func_data" transfer-ownership="none">
@@ -86465,7 +86868,10 @@ from a signal handler for the ::response signal of the dialog."
         <parameter name="settings" transfer-ownership="none">
           <type name="PrintSettings" c:type="GtkPrintSettings*"/>
         </parameter>
-        <parameter name="done_cb" transfer-ownership="none" closure="4">
+        <parameter name="done_cb"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="4">
           <type name="PageSetupDoneFunc" c:type="GtkPageSetupDoneFunc"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -86510,7 +86916,10 @@ gtk_widget_queue_draw() instead of making up expose events.">
         <parameter name="main_level" transfer-ownership="none">
           <type name="uint" c:type="guint"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none" closure="2">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="2">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -86539,7 +86948,7 @@ gtk_widget_queue_draw() instead of making up expose events.">
         <parameter name="main_level" transfer-ownership="none">
           <type name="uint" c:type="guint"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none">
+        <parameter name="function" transfer-ownership="none" scope="call">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="marshal"
@@ -86552,7 +86961,7 @@ gtk_widget_queue_draw() instead of making up expose events.">
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="destroy" transfer-ownership="none">
+        <parameter name="destroy" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -87347,7 +87756,10 @@ and gnome_url_show()."
         <parameter name="object" transfer-ownership="none">
           <type name="Object" c:type="GtkObject*"/>
         </parameter>
-        <parameter name="func" transfer-ownership="none" closure="2">
+        <parameter name="func"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="2">
           <type name="GObject.Callback" c:type="GCallback"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -87373,7 +87785,7 @@ and gnome_url_show()."
         <parameter name="name" transfer-ownership="none">
           <type name="utf8" c:type="gchar*"/>
         </parameter>
-        <parameter name="func" transfer-ownership="none">
+        <parameter name="func" transfer-ownership="none" scope="call">
           <type name="GObject.Callback" c:type="GCallback"/>
         </parameter>
         <parameter name="unsupported"
@@ -87386,7 +87798,7 @@ and gnome_url_show()."
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="destroy_func" transfer-ownership="none">
+        <parameter name="destroy_func" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
         <parameter name="object_signal" transfer-ownership="none">
@@ -87409,7 +87821,7 @@ and gnome_url_show()."
         <parameter name="name" transfer-ownership="none">
           <type name="utf8" c:type="gchar*"/>
         </parameter>
-        <parameter name="func" transfer-ownership="none">
+        <parameter name="func" transfer-ownership="none" scope="call">
           <type name="GObject.Callback" c:type="GCallback"/>
         </parameter>
         <parameter name="alive_object" transfer-ownership="none">
@@ -87429,7 +87841,10 @@ and gnome_url_show()."
         <parameter name="name" transfer-ownership="none">
           <type name="utf8" c:type="gchar*"/>
         </parameter>
-        <parameter name="func" transfer-ownership="none" closure="3">
+        <parameter name="func"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="3">
           <type name="GObject.Callback" c:type="GCallback"/>
         </parameter>
         <parameter name="func_data" transfer-ownership="none">
@@ -87694,7 +88109,7 @@ gtk_stock_set_translate_func (&quot;even-item-domain&quot;, my_translate_func, &
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="notify" transfer-ownership="none">
+        <parameter name="notify" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>
@@ -88072,7 +88487,10 @@ processed and stripped from @argc and @argv."
         <parameter name="interval" transfer-ownership="none">
           <type name="uint32" c:type="guint32"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none" closure="2">
+        <parameter name="function"
+                   transfer-ownership="none"
+                   scope="call"
+                   closure="2">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="data" transfer-ownership="none">
@@ -88088,7 +88506,7 @@ processed and stripped from @argc and @argv."
         <parameter name="interval" transfer-ownership="none">
           <type name="uint32" c:type="guint32"/>
         </parameter>
-        <parameter name="function" transfer-ownership="none">
+        <parameter name="function" transfer-ownership="none" scope="call">
           <type name="Function" c:type="GtkFunction"/>
         </parameter>
         <parameter name="marshal"
@@ -88101,7 +88519,7 @@ processed and stripped from @argc and @argv."
         <parameter name="data" transfer-ownership="none">
           <type name="any" c:type="gpointer"/>
         </parameter>
-        <parameter name="destroy" transfer-ownership="none">
+        <parameter name="destroy" transfer-ownership="none" scope="call">
           <type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
         </parameter>
       </parameters>

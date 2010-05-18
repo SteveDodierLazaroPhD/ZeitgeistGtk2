@@ -1,3 +1,1971 @@
+commit bec4cfc758d004b043af175b581a442794913588
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri May 7 16:08:23 2010 -0400
+
+    Update
+
+ NEWS |   60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 60 insertions(+), 0 deletions(-)
+
+commit 1fb1f6a7b1b55cf7d3df2e1e0413ee70c14b4f0c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri May 7 13:34:36 2010 -0400
+
+    Correct a Since: tag
+
+ gtk/gtkwidget.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 0e7f5332d30b6b796b2c411cf5a7128010cc0d55
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri May 7 09:28:21 2010 -0400
+
+    Add an index for 2.22 api additions
+
+ docs/reference/gtk/gtk-docs.sgml |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 489657f305a2c3fb7328f54dae7fd963c1d2a9a0
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed May 5 03:52:38 2010 +0200
+
+    Use event instead key in the previous patch
+
+ gtk/gtkentry.c    |    4 ++--
+ gtk/gtkentry.h    |    2 +-
+ gtk/gtktextview.c |    4 ++--
+ gtk/gtktextview.h |    2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+commit fc35cd9bfe63b777c9c42466cf4591d8ba081554
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed May 5 01:16:55 2010 +0200
+
+    Added api to reset the im context in GtkTextView and GtkEntry
+
+    Also, added api to allow an input method to internally handle
+    key press and release events in the GtkTextView and GtkEntry
+    cases.
+    This is simply a wrapper to the gtk_im_context_filter_keypress()
+    function, but It's added to not access the ->im_context
+    directly.
+    Based on a Christian Dywan patch
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=163251
+
+ docs/reference/gtk/gtk-sections.txt |    4 ++
+ gtk/gtk.symbols                     |    4 ++
+ gtk/gtkentry.c                      |   49 ++++++++++++++++++++++++++++
+ gtk/gtkentry.h                      |    4 ++
+ gtk/gtktextview.c                   |   61
+ +++++++++++++++++++++++++++++++++-
+ gtk/gtktextview.h                   |    4 ++
+ 6 files changed, 124 insertions(+), 2 deletions(-)
+
+commit 501098e946869372ceb958e6493fc57d09b105e5
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue May 4 15:27:08 2010 +0200
+
+    Remove the definition of libpixbufloader_gdip_png_la_*
+
+    libstatic-pixbufloader-gdip-png.la should not be built or at least not
+    included in STATIC_GDIPLUS_LIBS as we don't want to use the GDI+-based
+    loader for PNG, because if we do, we can't get (or was it set?) the
+    options of a PNG pixbuf that for instance some code in GIMP wants
+    to do.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=607839
+
+ gdk-pixbuf/Makefile.am |   14 --------------
+ 1 files changed, 0 insertions(+), 14 deletions(-)
+
+commit bd873014ca5c970c69d1a4e2f7c9b61a266d69a7
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sun May 2 14:32:18 2010 +0200
+
+    filechooser: Fix a crash when removing files
+
+    The file removal code was not properly clearing the file=>array index
+    cache, so later lookups into that cache would return invalid array
+    indexes.
+
+    The easiest way to reproduce it is to create a directory with
+    two files
+    and deleting both of them.
+
+    Reported-by: Javier Jardón <jjardon@gnome.org>
+
+ gtk/gtkfilesystemmodel.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 3cc9575323b4ca8c6d82572f1bfe3eb23555fdb3
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Apr 28 04:29:41 2010 +0200
+
+    Move documentation to inline comments: GtkHBox
+
+ docs/reference/gtk/tmpl/.gitignore   |    1 +
+ docs/reference/gtk/tmpl/gtkhbox.sgml |   49
+ ----------------------------------
+ gtk/gtkhbox.c                        |   25 +++++++++++++++++
+ 3 files changed, 26 insertions(+), 49 deletions(-)
+
+commit a6ed128abfbbe74a4c87908744c24c25e061b5a3
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Apr 28 04:20:10 2010 +0200
+
+    Move documentation to inline comments: Testing utilities
+
+ docs/reference/gtk/tmpl/.gitignore      |    1 +
+ docs/reference/gtk/tmpl/gtktesting.sgml |  177
+ -------------------------------
+ gtk/gtktestutils.c                      |    7 +-
+ 3 files changed, 7 insertions(+), 178 deletions(-)
+
+commit 1e2dabf31d6e4aeeb767f3f31f088b5e7f31e187
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Apr 27 03:26:11 2010 +0200
+
+    Allow NULL as 'icon_widget' in gtk_tool_button_new()
+
+    This completes the patch of
+    commit b8ec73a52fe3dc3012db78f45bfcafa2cb3e14ae
+
+ gtk/gtktoolbutton.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit d3d4cf0e841df6573a41ef4ebb609ff7b81dbb0f
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Mar 25 19:46:01 2010 +0100
+
+    Deprecate GTK_WIDGET_*SET_FLAGS() macro
+
+    The macro GTK_WIDGET_SET_FLAGS(w, GTK_VISIBLE) should
+    still be fixed internally.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=69872
+
+ gtk/gtkwidget.h |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
+
+commit 5eaff47e85e5a6cb8bd370ce1cccf5fad5cba5fe
+Author: Mirsal Ennaime <mirsal.ennaime@gmail.com>
+Date:   Sat Apr 17 23:49:49 2010 +0200
+
+    Add accessors for GtkTextView adjustments
+
+    GtkTextView is missing accessors for its sealed hadjustment
+    and vadjustment members.
+    This patch adds gtk_text_view_get_hadjustment() and
+    gtk_text_view_get_vadjustment() to GtkTextView
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=616053
+
+ gtk/gtk.symbols   |    2 ++
+ gtk/gtktextview.c |   36 ++++++++++++++++++++++++++++++++++++
+ gtk/gtktextview.h |    3 +++
+ 3 files changed, 41 insertions(+), 0 deletions(-)
+
+commit 41a073263a5b16c2ecde58d7ef0f6ad2d296b3ac
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Apr 14 14:18:25 2010 +0200
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_HAS_DEFAULT)
+
+    Introduce internal _gtk_widget_set_has_default() for this
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=614515
+
+ gtk/gtkwidget.c |   10 ++++++++++
+ gtk/gtkwidget.h |    2 ++
+ gtk/gtkwindow.c |   12 ++++++------
+ 3 files changed, 18 insertions(+), 6 deletions(-)
+
+commit 45257e31c721d1ffbd2cdcfb25ae637d7e1e7b29
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Apr 12 17:48:09 2010 +0200
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_TOPLEVEL)
+
+    Introduce internal _gtk_widget_set_is_toplvel() for this
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=614510
+
+ gtk/gtkinvisible.c        |    2 +-
+ gtk/gtkwidget.c           |   10 ++++++++++
+ gtk/gtkwidget.h           |    3 +++
+ gtk/gtkwin32embedwidget.c |    2 +-
+ gtk/gtkwindow.c           |   14 +++++++++-----
+ 5 files changed, 24 insertions(+), 7 deletions(-)
+
+commit 560e426f16fc5a8a8eaaac2cf6feb85d26e69388
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sun Apr 11 23:19:42 2010 +0200
+
+    Don't use GTK_WIDGET_*SET_FLAGS (wid, GTK_HAS_GRAB)
+
+    Introduce internal _gtk_widget_set_has_grab() for this
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=614513
+
+ gtk/gtkmain.c   |    4 ++--
+ gtk/gtkwidget.c |   10 ++++++++++
+ gtk/gtkwidget.h |    2 ++
+ 3 files changed, 14 insertions(+), 2 deletions(-)
+
+commit b8ec73a52fe3dc3012db78f45bfcafa2cb3e14ae
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Apr 26 20:05:51 2010 +0200
+
+    Only a GtkMisc widget should be passed to gtk_tool_button_new()
+
+    Reported by Hernando Torque here:
+    https://bugzilla.gnome.org/show_bug.cgi?id=616851
+
+ gtk/gtktoolbutton.c |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+commit 621b415e5b3d0f4f1ad59e032b049815d3624519
+Author: Emmanuele Bassi <ebassi@linux.intel.com>
+Date:   Mon Apr 12 14:54:41 2010 +0100
+
+    tree-view: Use gtk_widget_send_focus_change()
+
+    Remove the second (and last) internal user of the GTK_HAS_FOCUS flag.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=593671
+
+ gtk/gtktreeview.c |   16 +++-------------
+ 1 files changed, 3 insertions(+), 13 deletions(-)
+
+commit 91930f86b2b38d9f73723b36ffe9f75cc579190d
+Author: Emmanuele Bassi <ebassi@linux.intel.com>
+Date:   Mon Apr 12 14:53:50 2010 +0100
+
+    window: Use gtk_widget_send_focus_change()
+
+    Remove the original user of the GTK_HAS_FOCUS flags.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=593671
+
+ gtk/gtkwindow.c |   16 +++-------------
+ 1 files changed, 3 insertions(+), 13 deletions(-)
+
+commit f04a7203484685e0ed6088927f053133b4079c7c
+Author: Emmanuele Bassi <ebassi@linux.intel.com>
+Date:   Mon Apr 12 14:49:21 2010 +0100
+
+    widget: Add send_focus_change()
+
+    Currently the only users of the GTK_HAS_FOCUS flag are setting it
+    before sending a focus change event. This is normally needed by
+    GtkWindow, but there are widgets that require controlling the focus
+    of widgets that are semantically their children even though they are
+    parented to another top-level. Case in point: the quick search entry
+    for GtkTreeView.
+
+    Over the years people have been hacking the focus change out of
+    gtkwindow.c and gtktreeview.c, thus leaking the direct access of the
+    GTK_HAS_FOCUS flag.
+
+    The simplest way to avoid that is to add a function that sends the
+    focus change event and controls the setting of the flag, thus removing
+    the need for external widgets to do the same.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=593671
+
+ docs/reference/gtk/gtk-sections.txt |    1 +
+ gtk/gtk.symbols                     |    1 +
+ gtk/gtkwidget.c                     |   66
+ +++++++++++++++++++++++++++++++++++
+ gtk/gtkwidget.h                     |    2 +
+ 4 files changed, 70 insertions(+), 0 deletions(-)
+
+commit 15482528a588bbe97a898786304da6a883122237
+Author: Mike Gorse <mgorse@novell.com>
+Date:   Mon Apr 26 16:12:59 2010 +0800
+
+    Implement action interface for gailcell.
+
+    Bug #580889.
+
+ modules/other/gail/gailbooleancell.c |    3 +--
+ modules/other/gail/gailcell.c        |   13 +++----------
+ 2 files changed, 4 insertions(+), 12 deletions(-)
+
+commit 52887f00061b8dac2071a39aed3e05e536ec8d6e
+Author: Peteris Krisjanis <pecisk@gmail.com>
+Date:   Sat Apr 24 21:40:15 2010 +0300
+
+    Updated Latvian translation.
+
+ po/lv.po | 3146
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1560 insertions(+), 1586 deletions(-)
+
+commit 1ab3fc02f9ee28f50deb1966d5085085b4e68aa4
+Author: Baurzhan Muftakhidinov <baurthefirst@gmail.com>
+Date:   Sat Apr 24 12:29:42 2010 +0200
+
+    Added Kazakh translation
+
+ po-properties/kk.po | 8603
+ +++++++++++++++++++++++++++++++++++++++++++++++++++
+ po/LINGUAS          |    1 +
+ po/kk.po            | 5336 ++++++++++++++++++++++++++++++++
+ 3 files changed, 13940 insertions(+), 0 deletions(-)
+
+commit 53fae3247c2d283d45a0ecbad0425331b072983a
+Author: Florian Scandella <flo@chilicode.com>
+Date:   Fri Apr 9 17:22:51 2010 +0200
+
+    Add heuristic for primary monitor
+
+    Use the first monitor returned by RANDR as primary, if primary
+    is not set and no LVDS is found.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=615128
+
+ gdk/x11/gdkscreen-x11.c |   18 ++++++++++++++++--
+ 1 files changed, 16 insertions(+), 2 deletions(-)
+
+commit 093722fcc8df2c495b02731cd398dbe5e56d258d
+Author: Carles Ferrando <carles.ferrando@gmail.com>
+Date:   Fri Apr 23 00:15:03 2010 +0200
+
+    Updated Catalan (Valencian) translation
+
+ po-properties/ca@valencia.po | 3959
+ +++++++++++++++++++++---------------------
+ 1 files changed, 1979 insertions(+), 1980 deletions(-)
+
+commit e816ab7cfffa9c294ebecf8874ca918532c7556c
+Author: Carles Ferrando <carles.ferrando@gmail.com>
+Date:   Fri Apr 23 00:08:03 2010 +0200
+
+    Updated Catalan (Valencian) translation
+
+ po/ca@valencia.po | 3305
+ +++++++++++++++++++++++++++++++++--------------------
+ 1 files changed, 2037 insertions(+), 1268 deletions(-)
+
+commit 85d166fbb98c1657ed15ca12558c8b63748e082d
+Author: Torsten Schönfeld <kaffeetisch@gmx.de>
+Date:   Thu Apr 22 22:52:58 2010 +0200
+
+    [docs] Fix a typo in the offscreen windows docs
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=616565
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gdk/tmpl/windows.sgml |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit 5e22dd4e437224bf0356742bcc52ee6c96186b35
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Thu Apr 22 21:11:53 2010 +0200
+
+    Revert "Make GTK+ Tutorial gnome-doc-utils compliant"
+
+    This reverts commit 4d1cf25080c2208936580667df544e14638db06f.
+    GTK+ maintainers should first approved the gnome-doc-utils dependency
+    before this migration.
+
+ docs/tutorial/C/gtk-tut.xml             |16110
+ ------------------------------
+ docs/tutorial/C/images/arrow.eps        | 1147 ---
+ docs/tutorial/C/images/arrow.png        |  Bin 3802 -> 0 bytes
+ docs/tutorial/C/images/aspectframe.eps  | 5448 -----------
+ docs/tutorial/C/images/aspectframe.png  |  Bin 5163 -> 0 bytes
+ docs/tutorial/C/images/base.eps         | 4287 --------
+ docs/tutorial/C/images/base.png         |  Bin 4462 -> 0 bytes
+ docs/tutorial/C/images/buttonbox.eps    |16247
+ -------------------------------
+ docs/tutorial/C/images/buttonbox.png    |  Bin 23400 -> 0 bytes
+ docs/tutorial/C/images/buttons.eps      | 1302 ---
+ docs/tutorial/C/images/buttons.png      |  Bin 4063 -> 0 bytes
+ docs/tutorial/C/images/calendar.eps     |12855 ------------------------
+ docs/tutorial/C/images/calendar.png     |  Bin 11252 -> 0 bytes
+ docs/tutorial/C/images/colorsel.eps     | 6838 -------------
+ docs/tutorial/C/images/colorsel.png     |  Bin 28063 -> 0 bytes
+ docs/tutorial/C/images/entry.eps        | 2528 -----
+ docs/tutorial/C/images/entry.png        |  Bin 5273 -> 0 bytes
+ docs/tutorial/C/images/eventbox.eps     | 1077 --
+ docs/tutorial/C/images/eventbox.png     |  Bin 3673 -> 0 bytes
+ docs/tutorial/C/images/filesel.eps      | 8678 -----------------
+ docs/tutorial/C/images/filesel.png      |  Bin 11063 -> 0 bytes
+ docs/tutorial/C/images/fixed.eps        | 4755 ---------
+ docs/tutorial/C/images/fixed.png        |  Bin 5653 -> 0 bytes
+ docs/tutorial/C/images/frame.eps        | 8778 -----------------
+ docs/tutorial/C/images/frame.png        |  Bin 5827 -> 0 bytes
+ docs/tutorial/C/images/gtkdial.eps      | 2201 -----
+ docs/tutorial/C/images/gtkdial.png      |  Bin 4758 -> 0 bytes
+ docs/tutorial/C/images/helloworld.eps   |  914 --
+ docs/tutorial/C/images/helloworld.png   |  Bin 3264 -> 0 bytes
+ docs/tutorial/C/images/helloworld2.eps  | 1136 ---
+ docs/tutorial/C/images/helloworld2.png  |  Bin 3911 -> 0 bytes
+ docs/tutorial/C/images/label.eps        | 8264 ----------------
+ docs/tutorial/C/images/label.png        |  Bin 17358 -> 0 bytes
+ docs/tutorial/C/images/menu.eps         | 2528 -----
+ docs/tutorial/C/images/menu.png         |  Bin 4857 -> 0 bytes
+ docs/tutorial/C/images/notebook.eps     | 2617 -----
+ docs/tutorial/C/images/notebook.png     |  Bin 8005 -> 0 bytes
+ docs/tutorial/C/images/packbox1.eps     | 6606 -------------
+ docs/tutorial/C/images/packbox1.png     |  Bin 10366 -> 0 bytes
+ docs/tutorial/C/images/packbox2.eps     | 4966 ----------
+ docs/tutorial/C/images/packbox2.png     |  Bin 9302 -> 0 bytes
+ docs/tutorial/C/images/paned.eps        | 9533 ------------------
+ docs/tutorial/C/images/paned.png        |  Bin 12050 -> 0 bytes
+ docs/tutorial/C/images/progressbar.eps  | 3581 -------
+ docs/tutorial/C/images/progressbar.png  |  Bin 6135 -> 0 bytes
+ docs/tutorial/C/images/radiobuttons.eps | 1695 ----
+ docs/tutorial/C/images/radiobuttons.png |  Bin 3936 -> 0 bytes
+ docs/tutorial/C/images/rangewidgets.eps | 9087 -----------------
+ docs/tutorial/C/images/rangewidgets.png |  Bin 9284 -> 0 bytes
+ docs/tutorial/C/images/rulers.eps       | 6588 -------------
+ docs/tutorial/C/images/rulers.png       |  Bin 8466 -> 0 bytes
+ docs/tutorial/C/images/scribble.eps     | 4709 ---------
+ docs/tutorial/C/images/scribble.png     |  Bin 5533 -> 0 bytes
+ docs/tutorial/C/images/scrolledwin.eps  | 8778 -----------------
+ docs/tutorial/C/images/scrolledwin.png  |  Bin 7745 -> 0 bytes
+ docs/tutorial/C/images/spinbutton.eps   | 6635 -------------
+ docs/tutorial/C/images/spinbutton.png   |  Bin 8515 -> 0 bytes
+ docs/tutorial/C/images/statusbar.eps    | 2528 -----
+ docs/tutorial/C/images/statusbar.png    |  Bin 5155 -> 0 bytes
+ docs/tutorial/C/images/table.eps        | 1834 ----
+ docs/tutorial/C/images/table.png        |  Bin 4395 -> 0 bytes
+ docs/tutorial/C/images/tictactoe.eps    | 1097 ---
+ docs/tutorial/C/images/tictactoe.png    |  Bin 3100 -> 0 bytes
+ docs/tutorial/Makefile.am               |   52 +-
+ docs/tutorial/gtk-tut.omf.in            |    9 -
+ docs/tutorial/gtk-tut.sgml              |16110
+ ++++++++++++++++++++++++++++++
+ docs/tutorial/images/arrow.eps          | 1147 +++
+ docs/tutorial/images/arrow.png          |  Bin 0 -> 3802 bytes
+ docs/tutorial/images/aspectframe.eps    | 5448 +++++++++++
+ docs/tutorial/images/aspectframe.png    |  Bin 0 -> 5163 bytes
+ docs/tutorial/images/base.eps           | 4287 ++++++++
+ docs/tutorial/images/base.png           |  Bin 0 -> 4462 bytes
+ docs/tutorial/images/buttonbox.eps      |16247
+ +++++++++++++++++++++++++++++++
+ docs/tutorial/images/buttonbox.png      |  Bin 0 -> 23400 bytes
+ docs/tutorial/images/buttons.eps        | 1302 +++
+ docs/tutorial/images/buttons.png        |  Bin 0 -> 4063 bytes
+ docs/tutorial/images/calendar.eps       |12855 ++++++++++++++++++++++++
+ docs/tutorial/images/calendar.png       |  Bin 0 -> 11252 bytes
+ docs/tutorial/images/colorsel.eps       | 6838 +++++++++++++
+ docs/tutorial/images/colorsel.png       |  Bin 0 -> 28063 bytes
+ docs/tutorial/images/entry.eps          | 2528 +++++
+ docs/tutorial/images/entry.png          |  Bin 0 -> 5273 bytes
+ docs/tutorial/images/eventbox.eps       | 1077 ++
+ docs/tutorial/images/eventbox.png       |  Bin 0 -> 3673 bytes
+ docs/tutorial/images/filesel.eps        | 8678 +++++++++++++++++
+ docs/tutorial/images/filesel.png        |  Bin 0 -> 11063 bytes
+ docs/tutorial/images/fixed.eps          | 4755 +++++++++
+ docs/tutorial/images/fixed.png          |  Bin 0 -> 5653 bytes
+ docs/tutorial/images/frame.eps          | 8778 +++++++++++++++++
+ docs/tutorial/images/frame.png          |  Bin 0 -> 5827 bytes
+ docs/tutorial/images/gtkdial.eps        | 2201 +++++
+ docs/tutorial/images/gtkdial.png        |  Bin 0 -> 4758 bytes
+ docs/tutorial/images/helloworld.eps     |  914 ++
+ docs/tutorial/images/helloworld.png     |  Bin 0 -> 3264 bytes
+ docs/tutorial/images/helloworld2.eps    | 1136 +++
+ docs/tutorial/images/helloworld2.png    |  Bin 0 -> 3911 bytes
+ docs/tutorial/images/label.eps          | 8264 ++++++++++++++++
+ docs/tutorial/images/label.png          |  Bin 0 -> 17358 bytes
+ docs/tutorial/images/menu.eps           | 2528 +++++
+ docs/tutorial/images/menu.png           |  Bin 0 -> 4857 bytes
+ docs/tutorial/images/notebook.eps       | 2617 +++++
+ docs/tutorial/images/notebook.png       |  Bin 0 -> 8005 bytes
+ docs/tutorial/images/packbox1.eps       | 6606 +++++++++++++
+ docs/tutorial/images/packbox1.png       |  Bin 0 -> 10366 bytes
+ docs/tutorial/images/packbox2.eps       | 4966 ++++++++++
+ docs/tutorial/images/packbox2.png       |  Bin 0 -> 9302 bytes
+ docs/tutorial/images/paned.eps          | 9533 ++++++++++++++++++
+ docs/tutorial/images/paned.png          |  Bin 0 -> 12050 bytes
+ docs/tutorial/images/progressbar.eps    | 3581 +++++++
+ docs/tutorial/images/progressbar.png    |  Bin 0 -> 6135 bytes
+ docs/tutorial/images/radiobuttons.eps   | 1695 ++++
+ docs/tutorial/images/radiobuttons.png   |  Bin 0 -> 3936 bytes
+ docs/tutorial/images/rangewidgets.eps   | 9087 +++++++++++++++++
+ docs/tutorial/images/rangewidgets.png   |  Bin 0 -> 9284 bytes
+ docs/tutorial/images/rulers.eps         | 6588 +++++++++++++
+ docs/tutorial/images/rulers.png         |  Bin 0 -> 8466 bytes
+ docs/tutorial/images/scribble.eps       | 4709 +++++++++
+ docs/tutorial/images/scribble.png       |  Bin 0 -> 5533 bytes
+ docs/tutorial/images/scrolledwin.eps    | 8778 +++++++++++++++++
+ docs/tutorial/images/scrolledwin.png    |  Bin 0 -> 7745 bytes
+ docs/tutorial/images/spinbutton.eps     | 6635 +++++++++++++
+ docs/tutorial/images/spinbutton.png     |  Bin 0 -> 8515 bytes
+ docs/tutorial/images/statusbar.eps      | 2528 +++++
+ docs/tutorial/images/statusbar.png      |  Bin 0 -> 5155 bytes
+ docs/tutorial/images/table.eps          | 1834 ++++
+ docs/tutorial/images/table.png          |  Bin 0 -> 4395 bytes
+ docs/tutorial/images/tictactoe.eps      | 1097 +++
+ docs/tutorial/images/tictactoe.png      |  Bin 0 -> 3100 bytes
+ docs/tutorial/package-db-tutorial.sh    |  137 +
+ 129 files changed, 175529 insertions(+), 175363 deletions(-)
+
+commit 4d1cf25080c2208936580667df544e14638db06f
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Wed Mar 10 22:12:06 2010 +0100
+
+    Make GTK+ Tutorial gnome-doc-utils compliant
+
+ docs/tutorial/C/gtk-tut.xml             |16110
+ ++++++++++++++++++++++++++++++
+ docs/tutorial/C/images/arrow.eps        | 1147 +++
+ docs/tutorial/C/images/arrow.png        |  Bin 0 -> 3802 bytes
+ docs/tutorial/C/images/aspectframe.eps  | 5448 +++++++++++
+ docs/tutorial/C/images/aspectframe.png  |  Bin 0 -> 5163 bytes
+ docs/tutorial/C/images/base.eps         | 4287 ++++++++
+ docs/tutorial/C/images/base.png         |  Bin 0 -> 4462 bytes
+ docs/tutorial/C/images/buttonbox.eps    |16247
+ +++++++++++++++++++++++++++++++
+ docs/tutorial/C/images/buttonbox.png    |  Bin 0 -> 23400 bytes
+ docs/tutorial/C/images/buttons.eps      | 1302 +++
+ docs/tutorial/C/images/buttons.png      |  Bin 0 -> 4063 bytes
+ docs/tutorial/C/images/calendar.eps     |12855 ++++++++++++++++++++++++
+ docs/tutorial/C/images/calendar.png     |  Bin 0 -> 11252 bytes
+ docs/tutorial/C/images/colorsel.eps     | 6838 +++++++++++++
+ docs/tutorial/C/images/colorsel.png     |  Bin 0 -> 28063 bytes
+ docs/tutorial/C/images/entry.eps        | 2528 +++++
+ docs/tutorial/C/images/entry.png        |  Bin 0 -> 5273 bytes
+ docs/tutorial/C/images/eventbox.eps     | 1077 ++
+ docs/tutorial/C/images/eventbox.png     |  Bin 0 -> 3673 bytes
+ docs/tutorial/C/images/filesel.eps      | 8678 +++++++++++++++++
+ docs/tutorial/C/images/filesel.png      |  Bin 0 -> 11063 bytes
+ docs/tutorial/C/images/fixed.eps        | 4755 +++++++++
+ docs/tutorial/C/images/fixed.png        |  Bin 0 -> 5653 bytes
+ docs/tutorial/C/images/frame.eps        | 8778 +++++++++++++++++
+ docs/tutorial/C/images/frame.png        |  Bin 0 -> 5827 bytes
+ docs/tutorial/C/images/gtkdial.eps      | 2201 +++++
+ docs/tutorial/C/images/gtkdial.png      |  Bin 0 -> 4758 bytes
+ docs/tutorial/C/images/helloworld.eps   |  914 ++
+ docs/tutorial/C/images/helloworld.png   |  Bin 0 -> 3264 bytes
+ docs/tutorial/C/images/helloworld2.eps  | 1136 +++
+ docs/tutorial/C/images/helloworld2.png  |  Bin 0 -> 3911 bytes
+ docs/tutorial/C/images/label.eps        | 8264 ++++++++++++++++
+ docs/tutorial/C/images/label.png        |  Bin 0 -> 17358 bytes
+ docs/tutorial/C/images/menu.eps         | 2528 +++++
+ docs/tutorial/C/images/menu.png         |  Bin 0 -> 4857 bytes
+ docs/tutorial/C/images/notebook.eps     | 2617 +++++
+ docs/tutorial/C/images/notebook.png     |  Bin 0 -> 8005 bytes
+ docs/tutorial/C/images/packbox1.eps     | 6606 +++++++++++++
+ docs/tutorial/C/images/packbox1.png     |  Bin 0 -> 10366 bytes
+ docs/tutorial/C/images/packbox2.eps     | 4966 ++++++++++
+ docs/tutorial/C/images/packbox2.png     |  Bin 0 -> 9302 bytes
+ docs/tutorial/C/images/paned.eps        | 9533 ++++++++++++++++++
+ docs/tutorial/C/images/paned.png        |  Bin 0 -> 12050 bytes
+ docs/tutorial/C/images/progressbar.eps  | 3581 +++++++
+ docs/tutorial/C/images/progressbar.png  |  Bin 0 -> 6135 bytes
+ docs/tutorial/C/images/radiobuttons.eps | 1695 ++++
+ docs/tutorial/C/images/radiobuttons.png |  Bin 0 -> 3936 bytes
+ docs/tutorial/C/images/rangewidgets.eps | 9087 +++++++++++++++++
+ docs/tutorial/C/images/rangewidgets.png |  Bin 0 -> 9284 bytes
+ docs/tutorial/C/images/rulers.eps       | 6588 +++++++++++++
+ docs/tutorial/C/images/rulers.png       |  Bin 0 -> 8466 bytes
+ docs/tutorial/C/images/scribble.eps     | 4709 +++++++++
+ docs/tutorial/C/images/scribble.png     |  Bin 0 -> 5533 bytes
+ docs/tutorial/C/images/scrolledwin.eps  | 8778 +++++++++++++++++
+ docs/tutorial/C/images/scrolledwin.png  |  Bin 0 -> 7745 bytes
+ docs/tutorial/C/images/spinbutton.eps   | 6635 +++++++++++++
+ docs/tutorial/C/images/spinbutton.png   |  Bin 0 -> 8515 bytes
+ docs/tutorial/C/images/statusbar.eps    | 2528 +++++
+ docs/tutorial/C/images/statusbar.png    |  Bin 0 -> 5155 bytes
+ docs/tutorial/C/images/table.eps        | 1834 ++++
+ docs/tutorial/C/images/table.png        |  Bin 0 -> 4395 bytes
+ docs/tutorial/C/images/tictactoe.eps    | 1097 +++
+ docs/tutorial/C/images/tictactoe.png    |  Bin 0 -> 3100 bytes
+ docs/tutorial/Makefile.am               |   52 +-
+ docs/tutorial/gtk-tut.omf.in            |    9 +
+ docs/tutorial/gtk-tut.sgml              |16110
+ ------------------------------
+ docs/tutorial/images/arrow.eps          | 1147 ---
+ docs/tutorial/images/arrow.png          |  Bin 3802 -> 0 bytes
+ docs/tutorial/images/aspectframe.eps    | 5448 -----------
+ docs/tutorial/images/aspectframe.png    |  Bin 5163 -> 0 bytes
+ docs/tutorial/images/base.eps           | 4287 --------
+ docs/tutorial/images/base.png           |  Bin 4462 -> 0 bytes
+ docs/tutorial/images/buttonbox.eps      |16247
+ -------------------------------
+ docs/tutorial/images/buttonbox.png      |  Bin 23400 -> 0 bytes
+ docs/tutorial/images/buttons.eps        | 1302 ---
+ docs/tutorial/images/buttons.png        |  Bin 4063 -> 0 bytes
+ docs/tutorial/images/calendar.eps       |12855 ------------------------
+ docs/tutorial/images/calendar.png       |  Bin 11252 -> 0 bytes
+ docs/tutorial/images/colorsel.eps       | 6838 -------------
+ docs/tutorial/images/colorsel.png       |  Bin 28063 -> 0 bytes
+ docs/tutorial/images/entry.eps          | 2528 -----
+ docs/tutorial/images/entry.png          |  Bin 5273 -> 0 bytes
+ docs/tutorial/images/eventbox.eps       | 1077 --
+ docs/tutorial/images/eventbox.png       |  Bin 3673 -> 0 bytes
+ docs/tutorial/images/filesel.eps        | 8678 -----------------
+ docs/tutorial/images/filesel.png        |  Bin 11063 -> 0 bytes
+ docs/tutorial/images/fixed.eps          | 4755 ---------
+ docs/tutorial/images/fixed.png          |  Bin 5653 -> 0 bytes
+ docs/tutorial/images/frame.eps          | 8778 -----------------
+ docs/tutorial/images/frame.png          |  Bin 5827 -> 0 bytes
+ docs/tutorial/images/gtkdial.eps        | 2201 -----
+ docs/tutorial/images/gtkdial.png        |  Bin 4758 -> 0 bytes
+ docs/tutorial/images/helloworld.eps     |  914 --
+ docs/tutorial/images/helloworld.png     |  Bin 3264 -> 0 bytes
+ docs/tutorial/images/helloworld2.eps    | 1136 ---
+ docs/tutorial/images/helloworld2.png    |  Bin 3911 -> 0 bytes
+ docs/tutorial/images/label.eps          | 8264 ----------------
+ docs/tutorial/images/label.png          |  Bin 17358 -> 0 bytes
+ docs/tutorial/images/menu.eps           | 2528 -----
+ docs/tutorial/images/menu.png           |  Bin 4857 -> 0 bytes
+ docs/tutorial/images/notebook.eps       | 2617 -----
+ docs/tutorial/images/notebook.png       |  Bin 8005 -> 0 bytes
+ docs/tutorial/images/packbox1.eps       | 6606 -------------
+ docs/tutorial/images/packbox1.png       |  Bin 10366 -> 0 bytes
+ docs/tutorial/images/packbox2.eps       | 4966 ----------
+ docs/tutorial/images/packbox2.png       |  Bin 9302 -> 0 bytes
+ docs/tutorial/images/paned.eps          | 9533 ------------------
+ docs/tutorial/images/paned.png          |  Bin 12050 -> 0 bytes
+ docs/tutorial/images/progressbar.eps    | 3581 -------
+ docs/tutorial/images/progressbar.png    |  Bin 6135 -> 0 bytes
+ docs/tutorial/images/radiobuttons.eps   | 1695 ----
+ docs/tutorial/images/radiobuttons.png   |  Bin 3936 -> 0 bytes
+ docs/tutorial/images/rangewidgets.eps   | 9087 -----------------
+ docs/tutorial/images/rangewidgets.png   |  Bin 9284 -> 0 bytes
+ docs/tutorial/images/rulers.eps         | 6588 -------------
+ docs/tutorial/images/rulers.png         |  Bin 8466 -> 0 bytes
+ docs/tutorial/images/scribble.eps       | 4709 ---------
+ docs/tutorial/images/scribble.png       |  Bin 5533 -> 0 bytes
+ docs/tutorial/images/scrolledwin.eps    | 8778 -----------------
+ docs/tutorial/images/scrolledwin.png    |  Bin 7745 -> 0 bytes
+ docs/tutorial/images/spinbutton.eps     | 6635 -------------
+ docs/tutorial/images/spinbutton.png     |  Bin 8515 -> 0 bytes
+ docs/tutorial/images/statusbar.eps      | 2528 -----
+ docs/tutorial/images/statusbar.png      |  Bin 5155 -> 0 bytes
+ docs/tutorial/images/table.eps          | 1834 ----
+ docs/tutorial/images/table.png          |  Bin 4395 -> 0 bytes
+ docs/tutorial/images/tictactoe.eps      | 1097 ---
+ docs/tutorial/images/tictactoe.png      |  Bin 3100 -> 0 bytes
+ docs/tutorial/package-db-tutorial.sh    |  137 -
+ 129 files changed, 175363 insertions(+), 175529 deletions(-)
+
+commit 78e68d4548800585f94a699ecca4addb3bfbabbc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Apr 22 14:13:35 2010 -0400
+
+    Update the gdk_event_free docs
+
+    Bug 616118
+
+ gdk/gdkevents.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit af06c64edb8243a1cee7eadffeb4abcfe2524928
+Author: Shankar Prasad <sprasad@git.gnome.org>
+Date:   Thu Apr 22 16:33:24 2010 +0530
+
+    Updated Kannada translations
+
+ po-properties/kn.po | 3796
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1878 insertions(+), 1918 deletions(-)
+
+commit 206f2bbfa865bd0e2f957844d4b94e9880c8afd9
+Author: Shankar Prasad <sprasad@git.gnome.org>
+Date:   Thu Apr 22 16:30:17 2010 +0530
+
+    Updated Kannada translations
+
+ po/kn.po | 2293
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1143 insertions(+), 1150 deletions(-)
+
+commit 3f7877386237f8926e33412de53af591ac3d8489
+Author: Mike Gorse <mgorse@novell.com>
+Date:   Thu Apr 22 12:24:41 2010 +0800
+
+    Notify ATK_STATE_ENABLED change when ATK_STATE_SENSITIVE changes
+    if necessary.
+
+    Bug #615999.
+
+ modules/other/gail/gailcheckmenuitem.c    |   14 +++++++++++++-
+ modules/other/gail/gailchecksubmenuitem.c |   14 +++++++++++++-
+ modules/other/gail/gailtogglebutton.c     |   14 +++++++++++++-
+ modules/other/gail/gailwidget.c           |    3 +++
+ 4 files changed, 42 insertions(+), 3 deletions(-)
+
+commit 95fd5011c2e7251f424e583237023a937e47303c
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Dec 18 05:00:56 2009 +0100
+
+    Move documentation to inline comments: GtkMessageDialog
+
+    Also, add a note about GTK_BUTTONS_OK, GTK_BUTTONS_YES_NO
+    and GTK_BUTTONS_OK_CANCEL are discouraged by the GNOME HIG.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=597865
+
+ docs/reference/gtk/tmpl/.gitignore            |    1 +
+ docs/reference/gtk/tmpl/gtkmessagedialog.sgml |  213
+ -------------------------
+ gtk/gtkenums.h                                |   10 ++
+ gtk/gtkmessagedialog.c                        |   47 ++++++
+ gtk/gtkmessagedialog.h                        |   37 ++++-
+ 5 files changed, 86 insertions(+), 222 deletions(-)
+
+commit 51a1af7aa4209bc602dafc058f87e3ed7a901764
+Author: Claudio Saavedra <csaavedra@igalia.com>
+Date:   Fri Apr 16 00:12:29 2010 +0300
+
+    Use the proper screen in _gdk_windowing_get_shape_for_mask()
+
+    Bug 615853 - BadMatch when pressing keyboard volume keys while
+    pointer in
+                 secondary X screen
+
+    _gdk_windowing_get_shape_for_mask() is using the default screen,
+    not taking
+    into account that its GdkBitmap could have been created for a
+    different one,
+    causing BadMatch errors.
+
+ gdk/x11/gdkwindow-x11.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 4e507244718b60970b5861c651b6d99aea345444
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Apr 19 17:46:51 2010 +0200
+
+    Bump version to 2.21.0
+
+ configure.in |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 791962e06d0511c5e9435acb569a60b34fc279cf
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Apr 8 17:46:45 2010 +0200
+
+    Include <X11/Xutil.h> in gdkdnd-x11.c
+
+    Otherwise, inclusion of shape.h triggers an unknown type error
+    for Region, and compile fails, at least in Solaris.
+
+    Reported by Philip Brown here:
+    https://bugzilla.gnome.org/show_bug.cgi?id=615028
+
+ gdk/x11/gdkdnd-x11.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 72d5cc8cd51f8bc3f66186c668f2d4cfd191f6ca
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sun Apr 18 19:40:17 2010 +0200
+
+    [docs] Move documentation to inline comments: GailTextUtil and
+    GailMisc
+
+ docs/reference/libgail-util/tmpl/gailmisc.sgml     |  125
+ --------------------
+ docs/reference/libgail-util/tmpl/gailtextutil.sgml |   95 ---------------
+ modules/other/gail/libgail-util/gailmisc.c         |   12 ++
+ modules/other/gail/libgail-util/gailtextutil.c     |   15 +++
+ 4 files changed, 27 insertions(+), 220 deletions(-)
+
+commit 508ed4bbabfc519269efe33331f2d49a8fcb6a4a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Sun Apr 18 17:48:02 2010 +0200
+
+    [docs] Move documentation to inline comments: GtkArrow
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611957
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkarrow.sgml |   82
+ ---------------------------------
+ gtk/gtkarrow.c                        |   37 +++++++++++++++
+ 2 files changed, 37 insertions(+), 82 deletions(-)
+
+commit c3d5faf6b7a6a16c5e177eeaf727224495821de1
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Thu Mar 4 13:31:44 2010 -0500
+
+    [docs] Move documentation to inline comments: GtkVButtonBox
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611833
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkvbbox.sgml |   98
+ ---------------------------------
+ gtk/gtkvbbox.c                        |   80 ++++++++++++++++++++++----
+ 2 files changed, 67 insertions(+), 111 deletions(-)
+
+commit 5f767e2c48080d59b55879ac7b9b642dd0e42b0f
+Author: Tadej Borovšak <tadeboro@gmail.com>
+Date:   Fri Mar 5 23:44:31 2010 +0100
+
+    [docs] Move documentation to inline comments: GtkAssistant
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkassistant.sgml |  344
+ -----------------------------
+ gtk/gtkassistant.c                        |   24 ++-
+ gtk/gtkassistant.h                        |   30 +++
+ 3 files changed, 53 insertions(+), 345 deletions(-)
+
+commit 51e32fe67ab36fe92f727c6e9521168ee9ec93ec
+Author: Tadej Borovšak <tadeboro@gmail.com>
+Date:   Thu Mar 4 17:09:36 2010 +0100
+
+    [docs] Move documentation to inline comments: GtkBuildable
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611741
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkbuildable.sgml |  193
+ -----------------------------
+ gtk/gtkbuildable.c                        |   17 +++
+ gtk/gtkbuildable.h                        |   49 ++++++++
+ 3 files changed, 66 insertions(+), 193 deletions(-)
+
+commit 8e8d302d106e38d9b23db1afb22d80fc05b06194
+Author: Tadej Borovšak <tadeboro@gmail.com>
+Date:   Tue Mar 9 23:32:53 2010 +0100
+
+    [docs] Move documentation to inline comments: GtkBin
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=612351
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkbin.sgml |   54
+ -----------------------------------
+ gtk/gtkbin.c                        |   13 ++++++++
+ 2 files changed, 13 insertions(+), 54 deletions(-)
+
+commit 4c0cf04688ec42035d7733a5fe3f08b72a0b75c3
+Author: Tadej Borovšak <tadeboro@gmail.com>
+Date:   Fri Mar 5 23:42:25 2010 +0100
+
+    [docs] Move documentation to inline comments: GtkAspectFrame
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611958
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkaspectframe.sgml |   88
+ ---------------------------
+ gtk/gtkaspectframe.c                        |   46 ++++++++++++++
+ 2 files changed, 46 insertions(+), 88 deletions(-)
+
+commit b802be45b3365699d73c51bb508ffab3a3ea6558
+Author: Tadej Borovšak <tadeboro@gmail.com>
+Date:   Fri Mar 5 23:38:44 2010 +0100
+
+    [docs] Move documentation to inline comments: GtkAlignment.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611956
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkalignment.sgml |  141
+ -----------------------------
+ gtk/gtkalignment.c                        |   54 +++++++++++
+ 2 files changed, 54 insertions(+), 141 deletions(-)
+
+commit b6a61425562fc9ffcb4a0a9a19d2e85184dfcd1e
+Author: Tadej Borovšak <tadeboro@gmail.com>
+Date:   Fri Mar 5 23:33:29 2010 +0100
+
+    [docs] Move documentation to inline comments: GtkAction
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611952
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkaction.sgml |  560
+ --------------------------------
+ gtk/gtkaction.c                        |   39 +++
+ 2 files changed, 39 insertions(+), 560 deletions(-)
+
+commit 6cdeb370a11b81ded06203bd5af12e8207830f46
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Wed Mar 3 19:11:46 2010 -0500
+
+    [docs] Move documentation to inline comments: GtkVRuler
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611656
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkvruler.sgml |   50
+ --------------------------------
+ gtk/gtkvruler.c                        |   29 ++++++++++++++++++
+ 2 files changed, 29 insertions(+), 50 deletions(-)
+
+commit 25b6994cbabea88b64f047e0b645054d23c96c9a
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Thu Mar 4 13:05:45 2010 -0500
+
+    [docs] Move documentation to inline comments: GtkVolumeButton
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611827
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkvolumebutton.sgml |   35
+ --------------------------
+ gtk/gtkvolumebutton.c                        |   10 +++++++
+ 2 files changed, 10 insertions(+), 35 deletions(-)
+
+commit 7693026e4471bfb18d3347e9e4a7fa741723e75f
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Thu Mar 4 13:13:45 2010 -0500
+
+    [docs] Move documentation to inline comments: GtkViewport
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611829x
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkviewport.sgml |  134
+ ------------------------------
+ gtk/gtkviewport.c                        |   19 ++++
+ 2 files changed, 19 insertions(+), 134 deletions(-)
+
+commit 75ffa7983ae05a6b9f3bdeeb80b83a587b4d310c
+Author: Steven Harms <sharms@ubuntu.com>
+Date:   Wed Mar 3 19:51:16 2010 -0500
+
+    [docs] Move documentation to inline comments: GtkVPaned
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=611634
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ docs/reference/gtk/tmpl/gtkvpaned.sgml |   35
+ --------------------------------
+ gtk/gtkvpaned.c                        |   18 ++++++++++++++++
+ 2 files changed, 18 insertions(+), 35 deletions(-)
+
+commit 6a9b72525ac5324897693d564dd283e50b58c222
+Author: Patrick Bernaud <patrickb@chez.com>
+Date:   Fri Mar 5 22:58:13 2010 +0100
+
+    [docs] Move documentation to inline comments: GtkSocket
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=611707
+
+ docs/reference/gtk/tmpl/gtksocket.sgml |  170
+ --------------------------------
+ gtk/gtksocket.c                        |   71 +++++++++++++
+ 2 files changed, 71 insertions(+), 170 deletions(-)
+
+commit d4a159d488344e4087eaa1dae5c4a0aa4b633173
+Author: Stefan Kost <ensonic@users.sf.net>
+Date:   Fri Apr 16 21:26:25 2010 +0300
+
+    [docs] improve docs for gtk_accelerator_parse().
+
+    Link to gdk_keyval_from_name() and give example for non obvious
+    accelerator
+    strings.
+
+ gtk/gtkaccelgroup.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit edfcc3dd418cad6d65b5a64eaa5cd0188a982ac9
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Apr 15 22:56:07 2010 +0200
+
+    [docs] Fix GtkWidget and GtkFileChooser documentation
+
+    gtk-doc version >= 1.14 is more strict, It produces valid xml
+    if the source is valid.
+
+ gtk/gtkfilechooser.c |    1 +
+ gtk/gtkwidget.c      |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 06f66c185ab6315be6d429dceeb2f2e4873b654e
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Apr 15 21:10:32 2010 +0200
+
+    Fix compilation warning: set a default case in switchs
+
+ gtk/gtktoolbar.c |   10 +++++++++-
+ 1 files changed, 9 insertions(+), 1 deletions(-)
+
+commit 8cde95bc5f48ca09a3f13fb0621727efa2ee5cdd
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Apr 15 16:19:42 2010 +0200
+
+    Fix compilation warning: remove unused variable
+
+ gtk/gtksearchenginetracker.c |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit 66802660931c098222f38865f9b6f54e02a9bf05
+Author: Andika Triwidada <andika@gmail.com>
+Date:   Thu Apr 15 20:31:54 2010 +0700
+
+    Updated Indonesian translation
+
+ po/id.po | 4504
+ ++++++++++++++++++++++++--------------------------------------
+ 1 files changed, 1748 insertions(+), 2756 deletions(-)
+
+commit 9cac8f23d54aee4814adf5118feeff55c1108c3c
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Apr 15 13:16:17 2010 +0200
+
+    gdk: remove convert_coords_to_child()
+
+    and use the new public gdk_window_coords_from_parent().
+
+ gdk/gdkwindow.c |   33 +++++++--------------------------
+ 1 files changed, 7 insertions(+), 26 deletions(-)
+
+commit 878cde53d07e1ac7dec50ec5ab41cccee1008897
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Apr 15 13:08:47 2010 +0200
+
+    gdk: use gdk_window_is_offscreen() instead of checking manually
+
+ gdk/gdkwindow.c |   14 +++++++-------
+ 1 files changed, 7 insertions(+), 7 deletions(-)
+
+commit ece97b23597b8ec3c761d3d90030876b81ca7b09
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Apr 15 13:03:43 2010 +0200
+
+    Bug 615162 - Fix tooltips on offscreen widgets
+
+    Fix the "widget under pointer" logic and keyboard tooltip positioning
+    to do the right thing on offscreen widgets.
+
+ gtk/gtktooltip.c |   86
+ +++++++++++++++++++++++++++++++++++++-----------------
+ 1 files changed, 59 insertions(+), 27 deletions(-)
+
+commit fdf936b5ad62818a6e9dfc4b906175de94af8224
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Apr 15 13:02:04 2010 +0200
+
+    gtk: fixes for offscreen widgets
+
+    Fix gtk_widget_translate_coordinates() and
+    _gtk_widget_synthesize_crossing() so they work in hierarchies with
+    offscreen widgets.
+
+ gtk/gtkwidget.c |   55
+ +++++++++++++++++++++++++++++++++----------------------
+ 1 files changed, 33 insertions(+), 22 deletions(-)
+
+commit 5a52d2a2f09c1999488190d935339e75dbe44c48
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Apr 15 12:59:44 2010 +0200
+
+    gdk: add API to convert coords between parent and child windows
+
+    which also works for offscreen windows and their embedder.
+    Also add gdk_window_get_effective_parent() and
+    gdk_window_get_effective_toplevel() which are offscreen aware.
+
+ gdk/gdk.symbols |    4 +
+ gdk/gdkwindow.c |  239
+ ++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ gdk/gdkwindow.h |   13 +++
+ 3 files changed, 237 insertions(+), 19 deletions(-)
+
+commit 615f91daddf983307b93092fd5a1b52f41b8cb94
+Author: Sandeep Shedmake <sshedmak@redhat.com>
+Date:   Wed Apr 14 17:51:16 2010 +0530
+
+    Updated Marathi Translations
+
+ po-properties/mr.po | 3857
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1896 insertions(+), 1961 deletions(-)
+
+commit 9990b14d1a8eb081c441defe9408d256de70b7a0
+Author: Sandeep Shedmake <sshedmak@redhat.com>
+Date:   Wed Apr 14 15:53:53 2010 +0530
+
+    Updated Marathi Translations
+
+ po/mr.po | 2370
+ ++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1166 insertions(+), 1204 deletions(-)
+
+commit 9b34203cb6b384448ba1f48c196c4af27ea56ddd
+Author: Vincent Untz <vuntz@gnome.org>
+Date:   Thu Mar 11 00:02:57 2010 +0100
+
+    No accessor for GtkAccessible.widget
+
+    Add gtk_accessible_get_widget().
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=612509
+
+ gtk/gtk.symbols     |    1 +
+ gtk/gtkaccessible.c |   20 ++++++++++++++++++++
+ gtk/gtkaccessible.h |    3 ++-
+ 3 files changed, 23 insertions(+), 1 deletions(-)
+
+commit 7dcb7ec35750c04f350ed7d51152eb3c07cbdd2a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Apr 13 20:49:29 2010 +0200
+
+    [docs] Fix gtk_button_box_set_child_size() documentation
+
+    Changing these variables is not supported anymore and can
+    only be set through the theme.
+
+ docs/reference/gtk/tmpl/gtkbbox.sgml |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 100ecea239c299c1dd8f46932cf37baa2ebf8850
+Author: Martyn Russell <martyn@lanedo.com>
+Date:   Tue Apr 13 11:22:45 2010 +0100
+
+    Fixed build failure for gtkorientable
+
+ gtk/gtkorientable.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 72c51a5a6a39ed8379a24531ad4a0dacafa3ff53
+Author: Martyn Russell <martyn@lanedo.com>
+Date:   Fri Apr 9 14:21:45 2010 +0100
+
+    tracker-search-engine: Fixed whitespace issues and copyright/authors
+
+ gtk/gtksearchenginetracker.c |  108
+ +++++++++++++++++++++++-------------------
+ 1 files changed, 59 insertions(+), 49 deletions(-)
+
+commit f5781b42cff4cf0159c618f77cb7a3c62636409e
+Author: Martyn Russell <martyn@lanedo.com>
+Date:   Fri Apr 9 14:23:02 2010 +0100
+
+    tracker-search-engine: Improve search query to order by rank and title
+
+ gtk/gtksearchenginetracker.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit f6c1d54b3f68416fcc7dde1296f0975a3bc1dfd9
+Author: Martyn Russell <martyn@lanedo.com>
+Date:   Fri Apr 9 14:21:45 2010 +0100
+
+    tracker-search-engine: Fixed 0.7/0.8 issues and add 0.9 cases
+
+ gtk/gtksearchenginetracker.c |   84
+ +++++++++++++++++++++---------------------
+ 1 files changed, 42 insertions(+), 42 deletions(-)
+
+commit af0a7aea5f6fc508ef0f5dd83babc39dc61225c6
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Apr 9 02:50:52 2010 +0200
+
+    Use G_DEFINE_INTERFACE macro in gtkbuildable
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=605186
+
+ gtk/gtkbuildable.c |   15 +++++----------
+ 1 files changed, 5 insertions(+), 10 deletions(-)
+
+commit 9f6e03f2310762f437e298208182098e0fdad86d
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Apr 9 02:29:51 2010 +0200
+
+    Use G_DEFINE_INTERFACE macro in gtkorientable
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=605186
+
+ gtk/gtkorientable.c |   35 +++--------------------------------
+ 1 files changed, 3 insertions(+), 32 deletions(-)
+
+commit e53489721644bf8b267edf2b2a665c75c5008423
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Dec 22 00:47:18 2009 +0100
+
+    Use G_DEFINE_INTERFACE macro in gtkcelleditable
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=605186
+
+ gtk/gtkcelleditable.c |  155
+ +++++++++++++++++++------------------------------
+ 1 files changed, 60 insertions(+), 95 deletions(-)
+
+commit d5585745f1cb07aa0e174326ed22fa2575983a38
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Mon Apr 12 23:47:52 2010 +0300
+
+    Need to include Makefile.decl in the new Makefile.am files
+
+    Otherwise make check breaks.
+
+ build/Makefile.am           |    2 ++
+ build/win32/Makefile.am     |    2 ++
+ build/win32/vs9/Makefile.am |    2 ++
+ 3 files changed, 6 insertions(+), 0 deletions(-)
+
+commit 5bcf3ba72a7d54625b3996cefb05dba0aae6da42
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Apr 12 21:22:34 2010 +0200
+
+    Fix compilation warning: move function to proper location
+
+    Move _count_nodes() auxiliar function inside the
+    G_ENABLE_DEBUG define, where other auxiliar functions are.
+
+ gtk/gtkrbtree.c |   42 ++++++++++++++++++++----------------------
+ 1 files changed, 20 insertions(+), 22 deletions(-)
+
+commit 3e5d49f52bacab047e7a36bb5329f84ba6c5fd1a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Apr 12 20:43:18 2010 +0200
+
+    Fix compilation warning: Use G_ENABLE_DEBUG to enable the var
+
+ gtk/gtktrayicon-x11.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit b3bd16e8bb9d78a55b6c0e6f6cb0bdd8d4f111ba
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Mon Apr 12 13:44:59 2010 +0300
+
+    Use a honestly bogus GTK_LOCALEDIR in config.h.win32.in
+
+    Instead of something that looks like it might actually be intended to
+    exist.
+
+ config.h.win32.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 34916b01ecb9df19300245bf4b46608a4705a7d6
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Mon Apr 12 13:40:43 2010 +0300
+
+    Some people use a hacked libtool that doesn't even install .la files
+
+ sanitize-la.sh |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+commit e5446020650ad9d3a00f68c5e4a3276bef685178
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Sun Mar 21 18:24:24 2010 +0200
+
+    Add Visual Studio 2008 project files
+
+    Similar setup as in GLib and Pango. Also here we use a build/win32/vs9
+    subfolder, even if there is nothing else in build or build/win32.
+
+ Makefile.am                                     |    2 +-
+ build/Makefile.am                               |    2 +
+ build/win32/Makefile.am                         |    2 +
+ build/win32/vs9/Makefile.am                     |   14 +
+ build/win32/vs9/README.txt                      |   22 ++
+ build/win32/vs9/gdk-pixbuf-csource.vcproj       |  166 ++++++++++
+ build/win32/vs9/gdk-pixbuf-query-loaders.vcproj |  166 ++++++++++
+ build/win32/vs9/gdk-pixbuf.vcproj               |  258 +++++++++++++++
+ build/win32/vs9/gdk-win32.vcproj                |  153 +++++++++
+ build/win32/vs9/gdk.vcprojin                    |  220 +++++++++++++
+ build/win32/vs9/gtk+.sln                        |  122 +++++++
+ build/win32/vs9/gtk+.vsprops                    |  390
+ +++++++++++++++++++++++
+ build/win32/vs9/gtk-demo.vcproj                 |  209 ++++++++++++
+ build/win32/vs9/gtk.vcprojin                    |  235 ++++++++++++++
+ build/win32/vs9/install.vcproj                  |   78 +++++
+ configure.in                                    |    3 +
+ gdk/Makefile.am                                 |   12 +
+ gtk/Makefile.am                                 |   16 +-
+ 18 files changed, 2067 insertions(+), 3 deletions(-)
+
+commit 8d17d157ba815659d187a5f51e88b11075f944f6
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Sun Mar 21 18:05:37 2010 +0200
+
+    Update to match what configure produces
+
+    Just trivial irrelevant stuff.
+
+ config.h.win32.in |   22 ++++++++++++++++++----
+ 1 files changed, 18 insertions(+), 4 deletions(-)
+
+commit d36b281a58e97d61b2e39d609b88eaa60c66ee32
+Author: Johan Bilien <jobi@litl.com>
+Date:   Fri Apr 9 13:53:19 2010 -0400
+
+    Fixed annotation of gdk_screen_get_rgb_colormap and similar
+
+    These return an object with no extra references, need to be transfer
+    none.
+
+ gdk/gdkrgb.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit eb7121c4e6dc1bd124fc2410fc9f65a95c1aa302
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Apr 9 18:08:10 2010 +0200
+
+    [directfb] Fix compile error on DirectFB backend.
+
+    Add a stub for gdk_keymap_add_virtual_modifiers()
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=613988
+
+ gdk/directfb/gdkkeys-directfb.c |    7 +++++++
+ gdk/gdk.symbols                 |    1 +
+ 2 files changed, 8 insertions(+), 0 deletions(-)
+
+commit b4adea747780fb05a7923707fe431d924c2ada9d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Apr 9 09:05:38 2010 -0400
+
+    Fix a silly mistake in primary_monitor handling
+
+    It doesn't make sense to determine an index into an array, if
+    you are going to sort the array afterwards...pointed out in
+    bug 615128 by Florian Scandella.
+
+ gdk/x11/gdkscreen-x11.c |   41 ++++++++++++++++++++++++-----------------
+ 1 files changed, 24 insertions(+), 17 deletions(-)
+
+commit f5344f8d930836262c81a70011970f2df6c19a08
+Author: Thanos Lefteris <alefteris@gmail.com>
+Date:   Fri Apr 9 01:45:17 2010 +0300
+
+    Updated Greek translation for gtk+
+
+ po/el.po | 2234
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1120 insertions(+), 1114 deletions(-)
+
+commit faf0beede02932923290ac3d69eb5102f2ca72c2
+Author: Tomas Bzatek <tbzatek@redhat.com>
+Date:   Wed Apr 7 15:07:05 2010 +0200
+
+    FileChooser: Initialize search engines on demand
+
+    We postpone initialization of the search engines until
+    it's really needed. See bug 614971 for reference.
+
+ gtk/gtkfilechooserdefault.c |   14 +-------------
+ 1 files changed, 1 insertions(+), 13 deletions(-)
+
+commit a812fcb305a18db3efbbb168c8648dcaf0e08aed
+Author: Tomas Bzatek <tbzatek@redhat.com>
+Date:   Wed Apr 7 15:02:18 2010 +0200
+
+    Support for tracker 0.8 stable release
+
+ gtk/gtksearchenginetracker.c |   13 +++++++++----
+ 1 files changed, 9 insertions(+), 4 deletions(-)
+
+commit 0efb24f589a74c4a4e78a1803d6e7205be9c1984
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Apr 6 20:30:39 2010 -0400
+
+    Yet another fix for shape handling
+
+    This should fix problems with awn and notify-osd.
+
+ gdk/x11/gdkwindow-x11.c |    5 +----
+ 1 files changed, 1 insertions(+), 4 deletions(-)
+
+commit b9516e70f55b59c9ef8c1c510cc5683dba5cec66
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Tue Apr 6 16:27:40 2010 -0400
+
+    Add notes to GtkBuilder docs about the possible error domains,
+    closed bgo #560147
+
+ gtk/gtkbuilder.c |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+
+commit d92ee6dc68b6bc5464cb512e53396b834879843d
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Tue Apr 6 16:23:13 2010 -0400
+
+    Fixed gtk_builder_value_from_string_type() to always assign the GError
+    when returning FALSE, fixes bgo #615000.
+
+ gtk/gtkbuilder.c |   15 ++++++++++-----
+ 1 files changed, 10 insertions(+), 5 deletions(-)
+
+commit b9002febd845dd601306e2aa4f8f32ae56f505a6
+Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Date:   Tue Apr 6 15:08:47 2010 +0700
+
+    Updated Thai translation.
+
+ po/th.po |   13 +++++--------
+ 1 files changed, 5 insertions(+), 8 deletions(-)
+
+commit 20dacce4d8b74a6e4be152547f7266ab5ad6b539
+Author: Adel Gadllah <adel.gadllah@gmail.com>
+Date:   Tue Apr 6 02:41:55 2010 +0200
+
+    [GdkScreenX11] Fix check in gdk_screen_get_primary_monitor
+
+    Fix bug in last commit.
+
+ gdk/x11/gdkscreen-x11.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 5651cbc4b4478032238fc376f89e480c71cfa87b
+Author: Adel Gadllah <adel.gadllah@gmail.com>
+Date:   Tue Apr 6 02:36:53 2010 +0200
+
+    [GdkScreenX11] Add heuristic for pre XRandR 1.3 drivers
+
+    Currently gdk_screen_get_primary_monitor just returns the first
+    monitor,
+    in this case but both the panel and now gnome-shell use an additional
+    heuristic to prefer LVDS as primary if present.
+
+    Move this heuristic to gdk_screen_get_primary_monitor to avoid
+    duplicating
+    it all over the place.
+
+    The fallback heuristic is also used when no primary output is set.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=614894
+
+ gdk/x11/gdkscreen-x11.c |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
+
+commit e13ab6c53adae9c69d26d004c5ef49e1653057d4
+Author: Fran Diéguez <frandieguez@ubuntu.com>
+Date:   Mon Apr 5 20:58:52 2010 +0300
+
+    Updated Galician translation
+
+ po/gl.po | 2237
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1122 insertions(+), 1115 deletions(-)
+
+commit b6d9bb6e1e6e916fc2ef25f5729b30ba91979597
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Mon Apr 5 12:57:33 2010 -0500
+
+    Fix for bug #557689 and bug #402349, where opening a file chooser in
+    folder browse mode would require the user to click on something
+    before clicking "Open".
+
+ gtk/gtkfilechooserdefault.c |   12 ++++++++++--
+ 1 files changed, 10 insertions(+), 2 deletions(-)
+
+commit 0c90bacff80cc4e3a56036d06f5cff0673b4ee45
+Author: Jordi Serratosa <jordis.lists@gmail.com>
+Date:   Fri Apr 2 18:26:35 2010 +0200
+
+    Fixes to Catalan translation
+
+ po/ca.po |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit b416198a1864fccf612445490bfa7cd698821c09
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Apr 1 10:07:11 2010 -0400
+
+    Don't use gio-unix on win32
+
+    We only need gio-unix when building the x11 backend.
+    Reported by Yevgen Muntyan in bug 614540.
+
+ configure.in |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
+
+commit 9d2168ded2bbcee457701c945f6e79c5d5aff3e9
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Wed Mar 31 12:22:17 2010 +0200
+
+    Updated Basque language
+
+ po/eu.po |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit da3efeb746f826666c434a0f583da20f3c3a0866
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Sat Mar 27 13:47:55 2010 +0100
+
+    Updated Basque language
+
+ po-properties/eu.po |  362
+ ++++++++++++++++++---------------------------------
+ 1 files changed, 124 insertions(+), 238 deletions(-)
+
+commit 8809f33b65a6c19d43e67ea414d31b2a3f9df873
+Author: Inaki Larranaga Murgoitio <dooteo@zundan.com>
+Date:   Sat Mar 27 13:27:40 2010 +0100
+
+    Updated Basque language
+
+ po/eu.po |   64
+ +++++++++++++++++++++++--------------------------------------
+ 1 files changed, 24 insertions(+), 40 deletions(-)
+
+commit 0a1ad1a4e233f584984969b0d8ac026fc153e237
+Author: Kenneth Nielsen <k.nielsen81@gmail.com>
+Date:   Wed Mar 31 00:21:05 2010 +0200
+
+    Updated Danish translation
+
+ po/da.po |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 6ced4f526ca6853dd6588c1e850ff4338f589365
+Author: Runa Bhattacharjee <runab@redhat.com>
+Date:   Tue Mar 30 15:53:06 2010 +0530
+
+    Updated Bengali India Translation
+
+ po-properties/bn_IN.po | 3892
+ ++++++++++++++++++++++++------------------------
+ 1 files changed, 1907 insertions(+), 1985 deletions(-)
+
+commit 0cbffefde85f6173db928e4118f6409716349cfe
+Author: Runa Bhattacharjee <runab@redhat.com>
+Date:   Tue Mar 30 15:06:26 2010 +0530
+
+    Updated Bengali India Translation
+
+ po/bn_IN.po | 2358
+ +++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 1162 insertions(+), 1196 deletions(-)
+
+commit e1f73a198439cbb9341c1eaf30db6587eab66b40
+Author: Jordi Serratosa <jordis.lists@gmail.com>
+Date:   Mon Mar 29 20:27:08 2010 +0200
+
+    Fixes to Catalan translation
+
+ po-properties/ca.po |   20 ++++++++++----------
+ 1 files changed, 10 insertions(+), 10 deletions(-)
+
+commit b4d09fd5fb5491bfeda98fd5767206c503a5ee18
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Mon Mar 29 13:27:40 2010 -0400
+
+    Fixed possible devision by zero in size negotiations
+
+    Fixed GtkToolItemGroup to avoid deviding by zero when all children
+    are invisible or there are no children. bgo #613974.
+
+ gtk/gtktoolitemgroup.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+commit 7e43059e841d0455227e6e64b4853700d8df89c4
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Mon Mar 29 13:22:18 2010 -0400
+
+    Added missing default events in realize() implementations
+
+    Added gtk_widget_get_events() to the event masks declared by
+    GtkToolPalette & GtkToolItemGroup.
+
+ gtk/gtktoolitemgroup.c |    7 ++++---
+ gtk/gtktoolpalette.c   |    7 ++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+commit 133e3e84a7ddfc3ff403540834fde983a9f16085
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Mon Mar 29 13:16:01 2010 -0400
+
+    Added missing break statement to mutator:
+    gtk_tool_item_group_set_property()
+
+ gtk/gtktoolitemgroup.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 9514e741cd153fc36d9e9d7982db5d7f6aad097e
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Mar 29 16:26:14 2010 +0200
+
+    Fix error case in filesystem model
+
+    We should not unref the model here, it might not even exist anymore.
+    Instead check if it exists and only use it if it does.
+    The unref was leftover from a previous fix in
+    ba9f53397ff0b86ad56166c7fc91b4d499f7aefc.
+
+    Spotted by Matthias Clasen in
+    https://bugzilla.gnome.org/show_bug.cgi?id=614099
+
+ gtk/gtkfilesystemmodel.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
+
+commit b84d4a308e1540efb63e657b645d1d45bcda5b68
+Author: David Planella <david.planella@gmail.com>
+Date:   Mon Mar 29 09:22:08 2010 +0200
+
+    Updated Catalan translation with a couple of fixes
+
+ po-properties/ca.po |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 9e607a572b1f28e7c01a73d74dc5f255c83733a3
+Author: David Planella <david.planella@gmail.com>
+Date:   Mon Mar 29 09:16:43 2010 +0200
+
+    Updated Catalan translation
+
+ po-properties/ca.po | 3785
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1898 insertions(+), 1887 deletions(-)
+
+commit 7d90caca4ffba70f4db0f490208417d2ce3324d8
+Author: Jamil Ahmed <itsjamil@gmail.com>
+Date:   Sun Mar 28 15:49:58 2010 +0600
+
+    Updated Bengali translation
+
+ po/bn.po |  933
+ ++++++++++++++++++++++++++------------------------------------
+ 1 files changed, 386 insertions(+), 547 deletions(-)
+
+commit 23fa7fcc6ed48365015d01b476941627f0c2ad70
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Sun Mar 28 04:21:47 2010 +0200
+
+    Fix a misspelling in gtk_cell_view_new_with_markup
+
+    This fixes bug 613887.
+
+ gtk/gtkcellview.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit a34ddc38b691b7df4f794fe9f6e1607a7fcb8d8b
+Author: Ask H. Larsen <asklarsen@gmail.com>
+Date:   Sun Mar 28 00:15:48 2010 +0100
+
+    Updated Danish translation
+
+ po/da.po | 2238
+ +++++++++++++++++++++++++++++++-------------------------------
+ 1 files changed, 1121 insertions(+), 1117 deletions(-)
+
+commit 484c40bab00e543b1e0c3443d585fb5cb96d11ff
+Author: Maxim V. Dziumanenko <dziumanenko@gmail.com>
+Date:   Sat Mar 27 14:42:07 2010 +0200
+
+    Updated Ukrainian translation
+
+ po-properties/uk.po | 3658
+ +++++++++++++++++++++++++--------------------------
+ 1 files changed, 1820 insertions(+), 1838 deletions(-)
+
+commit e11db0ea01ef8123a717d8894751b1b60958acc7
+Author: Maxim V. Dziumanenko <dziumanenko@gmail.com>
+Date:   Sat Mar 27 14:29:08 2010 +0200
+
+    Updated Ukrainian translation
+
+ po/uk.po | 2953
+ ++++++++++++++++++++++++--------------------------------------
+ 1 files changed, 1134 insertions(+), 1819 deletions(-)
+
+commit f896f48dcc9a46e0514b016799c16477714cfc8b
+Author: Jamil Ahmed <itsjamil@gmail.com>
+Date:   Sat Mar 27 18:10:02 2010 +0600
+
+    Updated Bengali translation
+
+ po/bn.po | 3568
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 1863 insertions(+), 1705 deletions(-)
+
+commit 9c1ad44ed96ed71afacf8ef6308f00b27896f7e7
+Author: Jamil Ahmed <itsjamil@gmail.com>
+Date:   Sat Mar 27 18:02:54 2010 +0600
+
+    Updated Bengali translation
+
+ po-properties/bn.po | 3848
+ ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 1930 insertions(+), 1918 deletions(-)
+
+commit ffbd007c50636b0a01fbb95194800593acd67dc7
+Author: Hiroyuki Ikezoe <poincare@ikezoe.net>
+Date:   Tue Dec 22 10:12:29 2009 +0900
+
+    [directfb] Fix compile error on DirectFB backend.
+
+    Add a stub for gdk_keymap_map_virtual_modifiers.
+
+ gdk/directfb/gdkkeys-directfb.c |    8 ++++++++
+ gdk/gdk.symbols                 |    1 +
+ 2 files changed, 9 insertions(+), 0 deletions(-)
+
+commit 22b0149b784f6814829c9f2457923ec5edabcc6c
+Author: Hiroyuki Ikezoe <poincare@ikezoe.net>
+Date:   Mon Dec 21 15:34:06 2009 +0900
+
+    Use g_value_take_string to avoid redundant invoking g_free.
+
+ gtk/gtkwidget.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+commit 014c28c20820a5c943ae50b473d96fe8569b2b70
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Mar 25 14:51:40 2010 +0100
+
+    Fix compilation warning: Use GtkWidget instead GtkMenuItem
+
+ gtk/tests/action.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit a0f23e1706b34bca6a65183040d1f1498cce2a50
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Mar 25 00:55:15 2010 -0400
+
+    Fix a 64bit issue
+
+    Thank you libpng, for typedef unsigned long png_uint_32.
+
+ gdk-pixbuf/io-png.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit eb42c9e9cee8de4626da345113e1b40058d96354
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 23 11:08:28 2010 -0400
+
+    Add notes about gobject-introspection
+
+ INSTALL.in                       |    2 ++
+ README.in                        |    5 +++++
+ docs/reference/gtk/building.sgml |   20 ++++++++++++++++++--
+ 3 files changed, 25 insertions(+), 2 deletions(-)
+
+commit 42ef281ea4229fc7125be3187e1ef9e2e36131dc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 23 10:24:51 2010 -0400
+
+    Bump version to 2.20.1
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 7e36ea7010ba8e104ee2780d130bec17ff463fc9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 23 10:18:29 2010 -0400
+
+    2.20.0
+
+ po-properties/af.po          |    6 +-
+ po-properties/am.po          |    6 +-
+ po-properties/ang.po         |    6 +-
+ po-properties/ar.po          |    6 +-
+ po-properties/as.po          |    6 +-
+ po-properties/ast.po         |    6 +-
+ po-properties/az.po          |    6 +-
+ po-properties/az_IR.po       |    6 +-
+ po-properties/be.po          |    6 +-
+ po-properties/be@latin.po    |    6 +-
+ po-properties/bg.po          |    6 +-
+ po-properties/bn.po          |    6 +-
+ po-properties/bn_IN.po       |    6 +-
+ po-properties/br.po          |    6 +-
+ po-properties/bs.po          |    6 +-
+ po-properties/ca.po          |    6 +-
+ po-properties/ca@valencia.po |    6 +-
+ po-properties/crh.po         |    6 +-
+ po-properties/cs.po          |    6 +-
+ po-properties/cy.po          |    6 +-
+ po-properties/da.po          |    6 +-
+ po-properties/de.po          |    6 +-
+ po-properties/dz.po          |    6 +-
+ po-properties/el.po          |    6 +-
+ po-properties/en_CA.po       |    6 +-
+ po-properties/en_GB.po       |    6 +-
+ po-properties/eo.po          |    6 +-
+ po-properties/es.po          |    6 +-
+ po-properties/et.po          |    6 +-
+ po-properties/eu.po          |  356 ++-
+ po-properties/fa.po          |    6 +-
+ po-properties/fi.po          | 3551 +++++++++++++++---------------
+ po-properties/fr.po          |    6 +-
+ po-properties/ga.po          |    6 +-
+ po-properties/gl.po          |    6 +-
+ po-properties/gu.po          |    6 +-
+ po-properties/he.po          |    6 +-
+ po-properties/hi.po          |    6 +-
+ po-properties/hr.po          |    6 +-
+ po-properties/hu.po          |    6 +-
+ po-properties/hy.po          |    6 +-
+ po-properties/ia.po          |    6 +-
+ po-properties/id.po          |    6 +-
+ po-properties/io.po          |    6 +-
+ po-properties/is.po          |    6 +-
+ po-properties/it.po          | 3554 +++++++++++++++---------------
+ po-properties/ja.po          |    6 +-
+ po-properties/ka.po          |    6 +-
+ po-properties/kn.po          |    6 +-
+ po-properties/ko.po          |    6 +-
+ po-properties/ku.po          |    6 +-
+ po-properties/li.po          |    6 +-
+ po-properties/lt.po          |    6 +-
+ po-properties/lv.po          |    6 +-
+ po-properties/mai.po         |    6 +-
+ po-properties/mi.po          |    6 +-
+ po-properties/mk.po          |    6 +-
+ po-properties/ml.po          |    6 +-
+ po-properties/mn.po          |    6 +-
+ po-properties/mr.po          |    6 +-
+ po-properties/ms.po          |    6 +-
+ po-properties/my.po          |    6 +-
+ po-properties/nb.po          |    6 +-
+ po-properties/nds.po         |    6 +-
+ po-properties/ne.po          |    6 +-
+ po-properties/nl.po          |    6 +-
+ po-properties/nn.po          |    6 +-
+ po-properties/nso.po         |    6 +-
+ po-properties/oc.po          |    6 +-
+ po-properties/or.po          |    6 +-
+ po-properties/pa.po          | 3711 ++++++++++++++++----------------
+ po-properties/pl.po          |    6 +-
+ po-properties/ps.po          |    6 +-
+ po-properties/pt.po          |    6 +-
+ po-properties/pt_BR.po       |    6 +-
+ po-properties/ro.po          |    6 +-
+ po-properties/ru.po          |    6 +-
+ po-properties/rw.po          |    6 +-
+ po-properties/si.po          |    6 +-
+ po-properties/sk.po          |    6 +-
+ po-properties/sl.po          |    6 +-
+ po-properties/sq.po          |    6 +-
+ po-properties/sr.po          | 3554 +++++++++++++++---------------
+ po-properties/sr@ije.po      |    6 +-
+ po-properties/sr@latin.po    | 3668 ++++++++++++++++----------------
+ po-properties/sv.po          | 4932
+ ++++++++++++++++++++++--------------------
+ po-properties/ta.po          |    6 +-
+ po-properties/te.po          |    6 +-
+ po-properties/th.po          |    6 +-
+ po-properties/tk.po          |    6 +-
+ po-properties/tr.po          |    6 +-
+ po-properties/tt.po          |    6 +-
+ po-properties/uk.po          |    6 +-
+ po-properties/ur.po          |    6 +-
+ po-properties/uz.po          |    6 +-
+ po-properties/uz@cyrillic.po |    6 +-
+ po-properties/vi.po          | 4957
+ ++++++++++++++++++++++--------------------
+ po-properties/wa.po          |    6 +-
+ po-properties/xh.po          |    6 +-
+ po-properties/yi.po          |    6 +-
+ po-properties/zh_CN.po       |    6 +-
+ po-properties/zh_HK.po       | 3648 ++++++++++++++++---------------
+ po-properties/zh_TW.po       | 3551 +++++++++++++++---------------
+ po/af.po                     |  186 +-
+ po/am.po                     |  186 +-
+ po/ang.po                    |  186 +-
+ po/ar.po                     |  186 +-
+ po/as.po                     |  186 +-
+ po/ast.po                    |  186 +-
+ po/az.po                     |  186 +-
+ po/az_IR.po                  |  186 +-
+ po/be.po                     |  186 +-
+ po/be@latin.po               |  186 +-
+ po/bg.po                     |  186 +-
+ po/bn.po                     |  186 +-
+ po/bn_IN.po                  |  186 +-
+ po/br.po                     |  186 +-
+ po/bs.po                     |  186 +-
+ po/ca.po                     | 2229 ++++++++++----------
+ po/ca@valencia.po            |  186 +-
+ po/crh.po                    |  186 +-
+ po/cs.po                     |  186 +-
+ po/cy.po                     |  186 +-
+ po/da.po                     |  186 +-
+ po/de.po                     |  186 +-
+ po/dz.po                     |  186 +-
+ po/el.po                     |  186 +-
+ po/en_CA.po                  |  186 +-
+ po/en_GB.po                  |  186 +-
+ po/eo.po                     |  186 +-
+ po/es.po                     | 2253 ++++++++++----------
+ po/et.po                     | 1133 ++++++++++-
+ po/eu.po                     |  238 ++-
+ po/fa.po                     |  186 +-
+ po/fi.po                     | 2229 ++++++++++----------
+ po/fr.po                     |  186 +-
+ po/ga.po                     |  186 +-
+ po/gl.po                     | 2245 ++++++++++----------
+ po/gu.po                     | 2530 +++++++++++-----------
+ po/he.po                     |  186 +-
+ po/hi.po                     |  186 +-
+ po/hr.po                     |  186 +-
+ po/hu.po                     |  186 +-
+ po/hy.po                     |  186 +-
+ po/ia.po                     |  186 +-
+ po/id.po                     |  186 +-
+ po/io.po                     |  186 +-
+ po/is.po                     |  186 +-
+ po/it.po                     | 2444 ++++++++++-----------
+ po/ja.po                     |  186 +-
+ po/ka.po                     |  186 +-
+ po/kn.po                     |  186 +-
+ po/ko.po                     |  186 +-
+ po/ku.po                     |  186 +-
+ po/li.po                     |  186 +-
+ po/lt.po                     |  186 +-
+ po/lv.po                     |  186 +-
+ po/mai.po                    |  186 +-
+ po/mi.po                     |  186 +-
+ po/mk.po                     |  186 +-
+ po/ml.po                     |  186 +-
+ po/mn.po                     |  186 +-
+ po/mr.po                     |  186 +-
+ po/ms.po                     |  186 +-
+ po/my.po                     |  186 +-
+ po/nb.po                     |  186 +-
+ po/nds.po                    |  186 +-
+ po/ne.po                     |  186 +-
+ po/nl.po                     | 2257 ++++++++++----------
+ po/nn.po                     |  186 +-
+ po/nso.po                    |  186 +-
+ po/oc.po                     |  186 +-
+ po/or.po                     |  186 +-
+ po/pa.po                     | 2278 ++++++++++----------
+ po/pl.po                     |  186 +-
+ po/ps.po                     |  186 +-
+ po/pt.po                     |  186 +-
+ po/pt_BR.po                  | 2229 ++++++++++----------
+ po/ro.po                     | 2257 ++++++++++----------
+ po/ru.po                     |  186 +-
+ po/rw.po                     |  186 +-
+ po/si.po                     |  186 +-
+ po/sk.po                     |  186 +-
+ po/sl.po                     |  186 +-
+ po/sq.po                     |  186 +-
+ po/sr.po                     | 2256 ++++++++++----------
+ po/sr@ije.po                 |  186 +-
+ po/sr@latin.po               | 2287 ++++++++++----------
+ po/sv.po                     | 2229 ++++++++++----------
+ po/ta.po                     |  186 +-
+ po/te.po                     |  186 +-
+ po/th.po                     |  186 +-
+ po/tk.po                     |  186 +-
+ po/tr.po                     |  186 +-
+ po/tt.po                     |  186 +-
+ po/uk.po                     |  186 +-
+ po/ur.po                     |  186 +-
+ po/uz.po                     |  186 +-
+ po/uz@cyrillic.po            |  186 +-
+ po/vi.po                     | 2599 +++++++++++-----------
+ po/wa.po                     |  186 +-
+ po/xh.po                     |  186 +-
+ po/yi.po                     |  186 +-
+ po/zh_CN.po                  |  186 +-
+ po/zh_HK.po                  | 2240 ++++++++++----------
+ po/zh_TW.po                  | 2230 ++++++++++----------
+ 206 files changed, 45679 insertions(+), 44334 deletions(-)
+
 commit f31e6568fa8db3d2b9213f600148b935b25ef70e
 Author: Miloš Popović <mpopovic@src.gnome.org>
 Date:   Tue Mar 23 10:39:34 2010 +0100

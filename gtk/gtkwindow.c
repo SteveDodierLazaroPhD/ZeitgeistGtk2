@@ -901,7 +901,7 @@ gtk_window_init (GtkWindow *window)
   GtkWindowPrivate *priv = GTK_WINDOW_GET_PRIVATE (window);
   
   gtk_widget_set_has_window (GTK_WIDGET (window), TRUE);
-  GTK_WIDGET_SET_FLAGS (window, GTK_TOPLEVEL);
+  _gtk_widget_set_is_toplevel (GTK_WIDGET (window), TRUE);
 
   GTK_PRIVATE_SET_FLAG (window, GTK_ANCHORED);
 
@@ -1664,7 +1664,7 @@ gtk_window_set_default (GtkWindow *window,
 	  
 	  if (window->focus_widget != window->default_widget ||
 	      !gtk_widget_get_receives_default (window->default_widget))
-	    GTK_WIDGET_UNSET_FLAGS (window->default_widget, GTK_HAS_DEFAULT);
+            _gtk_widget_set_has_default (window->default_widget, FALSE);
 	  gtk_widget_queue_draw (window->default_widget);
 	}
 
@@ -1674,7 +1674,7 @@ gtk_window_set_default (GtkWindow *window,
 	{
 	  if (window->focus_widget == NULL ||
 	      !gtk_widget_get_receives_default (window->focus_widget))
-	    GTK_WIDGET_SET_FLAGS (window->default_widget, GTK_HAS_DEFAULT);
+            _gtk_widget_set_has_default (window->default_widget, TRUE);
 	  gtk_widget_queue_draw (window->default_widget);
 	}
 
@@ -5280,24 +5280,14 @@ do_focus_change (GtkWidget *widget,
 {
   GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
   
-  g_object_ref (widget);
-  
-  if (in)
-    GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
-  else
-    GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
-  
   fevent->focus_change.type = GDK_FOCUS_CHANGE;
   fevent->focus_change.window = widget->window;
+  fevent->focus_change.in = in;
   if (widget->window)
     g_object_ref (widget->window);
-  fevent->focus_change.in = in;
-  
-  gtk_widget_event (widget, fevent);
-  
-  g_object_notify (G_OBJECT (widget), "has-focus");
 
-  g_object_unref (widget);
+  gtk_widget_send_focus_change (widget, fevent);
+
   gdk_event_free (fevent);
 }
 
@@ -5490,11 +5480,11 @@ gtk_window_real_set_focus (GtkWindow *window,
       if (gtk_widget_get_receives_default (window->focus_widget) &&
 	  (window->focus_widget != window->default_widget))
         {
-	  GTK_WIDGET_UNSET_FLAGS (window->focus_widget, GTK_HAS_DEFAULT);
+          _gtk_widget_set_has_default (window->focus_widget, FALSE);
 	  gtk_widget_queue_draw (window->focus_widget);
 	  
 	  if (window->default_widget)
-	    GTK_WIDGET_SET_FLAGS (window->default_widget, GTK_HAS_DEFAULT);
+            _gtk_widget_set_has_default (window->default_widget, TRUE);
 	}
 
       window->focus_widget = NULL;
@@ -5516,10 +5506,10 @@ gtk_window_real_set_focus (GtkWindow *window,
 	  (window->focus_widget != window->default_widget))
 	{
 	  if (gtk_widget_get_can_default (window->focus_widget))
-	    GTK_WIDGET_SET_FLAGS (window->focus_widget, GTK_HAS_DEFAULT);
+            _gtk_widget_set_has_default (window->focus_widget, TRUE);
 
 	  if (window->default_widget)
-	    GTK_WIDGET_UNSET_FLAGS (window->default_widget, GTK_HAS_DEFAULT);
+            _gtk_widget_set_has_default (window->default_widget, FALSE);
 	}
 
       if (window->has_focus)
@@ -8389,22 +8379,26 @@ void
 _gtk_window_set_is_toplevel (GtkWindow *window,
 			     gboolean   is_toplevel)
 {
-  if (gtk_widget_is_toplevel (GTK_WIDGET (window)))
+  GtkWidget *widget;
+
+  widget = GTK_WIDGET (window);
+
+  if (gtk_widget_is_toplevel (widget))
     g_assert (g_slist_find (toplevel_list, window) != NULL);
   else
     g_assert (g_slist_find (toplevel_list, window) == NULL);
 
-  if (is_toplevel == gtk_widget_is_toplevel (GTK_WIDGET (window)))
+  if (is_toplevel == gtk_widget_is_toplevel (widget))
     return;
 
   if (is_toplevel)
     {
-      GTK_WIDGET_SET_FLAGS (window, GTK_TOPLEVEL);
+      _gtk_widget_set_is_toplevel (widget, TRUE);
       toplevel_list = g_slist_prepend (toplevel_list, window);
     }
   else
     {
-      GTK_WIDGET_UNSET_FLAGS (window, GTK_TOPLEVEL);
+      _gtk_widget_set_is_toplevel (widget, FALSE);
       toplevel_list = g_slist_remove (toplevel_list, window);
     }
 }

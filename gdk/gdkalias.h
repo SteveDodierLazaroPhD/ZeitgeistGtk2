@@ -1419,6 +1419,12 @@ extern __typeof (gdk_window_clear_area_e) IA__gdk_window_clear_area_e __attribut
 extern __typeof (gdk_window_constrain_size) IA__gdk_window_constrain_size __attribute((visibility("hidden")));
 #define gdk_window_constrain_size IA__gdk_window_constrain_size
 
+extern __typeof (gdk_window_coords_from_parent) IA__gdk_window_coords_from_parent __attribute((visibility("hidden")));
+#define gdk_window_coords_from_parent IA__gdk_window_coords_from_parent
+
+extern __typeof (gdk_window_coords_to_parent) IA__gdk_window_coords_to_parent __attribute((visibility("hidden")));
+#define gdk_window_coords_to_parent IA__gdk_window_coords_to_parent
+
 extern __typeof (gdk_window_destroy) IA__gdk_window_destroy __attribute((visibility("hidden")));
 #define gdk_window_destroy IA__gdk_window_destroy
 
@@ -1446,6 +1452,9 @@ extern __typeof (gdk_window_get_internal_paint_info) IA__gdk_window_get_internal
 extern __typeof (gdk_window_get_parent) IA__gdk_window_get_parent __attribute((visibility("hidden")));
 #define gdk_window_get_parent IA__gdk_window_get_parent
 
+extern __typeof (gdk_window_get_effective_parent) IA__gdk_window_get_effective_parent __attribute((visibility("hidden")));
+#define gdk_window_get_effective_parent IA__gdk_window_get_effective_parent
+
 extern __typeof (gdk_window_get_pointer) IA__gdk_window_get_pointer __attribute((visibility("hidden")));
 #define gdk_window_get_pointer IA__gdk_window_get_pointer
 
@@ -1457,6 +1466,9 @@ extern __typeof (gdk_window_get_state) IA__gdk_window_get_state __attribute((vis
 
 extern __typeof (gdk_window_get_toplevel) IA__gdk_window_get_toplevel __attribute((visibility("hidden")));
 #define gdk_window_get_toplevel IA__gdk_window_get_toplevel
+
+extern __typeof (gdk_window_get_effective_toplevel) IA__gdk_window_get_effective_toplevel __attribute((visibility("hidden")));
+#define gdk_window_get_effective_toplevel IA__gdk_window_get_effective_toplevel
 
 #ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_window_get_toplevels) IA__gdk_window_get_toplevels __attribute((visibility("hidden")));
@@ -1844,6 +1856,12 @@ extern __typeof (gdk_keymap_lookup_key) IA__gdk_keymap_lookup_key __attribute((v
 
 extern __typeof (gdk_keymap_translate_keyboard_state) IA__gdk_keymap_translate_keyboard_state __attribute((visibility("hidden")));
 #define gdk_keymap_translate_keyboard_state IA__gdk_keymap_translate_keyboard_state
+
+extern __typeof (gdk_keymap_add_virtual_modifiers) IA__gdk_keymap_add_virtual_modifiers __attribute((visibility("hidden")));
+#define gdk_keymap_add_virtual_modifiers IA__gdk_keymap_add_virtual_modifiers
+
+extern __typeof (gdk_keymap_map_virtual_modifiers) IA__gdk_keymap_map_virtual_modifiers __attribute((visibility("hidden")));
+#define gdk_keymap_map_virtual_modifiers IA__gdk_keymap_map_virtual_modifiers
 
 extern __typeof (gdk_keyval_from_name) IA__gdk_keyval_from_name __attribute((visibility("hidden")));
 #define gdk_keyval_from_name IA__gdk_keyval_from_name

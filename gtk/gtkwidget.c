@@ -62,6 +62,7 @@
  *
  * GtkWidget is the base class all widgets in GTK+ derive from. It manages the
  * widget lifecycle, states and style.
+ *
  * <refsect2 id="style-properties">
  * <para>
  * <structname>GtkWidget</structname> introduces <firstterm>style
@@ -2794,8 +2795,7 @@ gtk_widget_get_property (GObject         *object,
         if (escaped && !pango_parse_markup (escaped, -1, 0, NULL, &text, NULL, NULL))
           g_assert (NULL == text); /* text should still be NULL in case of markup errors */
 
-        g_value_set_string (value, text);
-        g_free (text);
+        g_value_take_string (value, text);
       }
       break;
     case PROP_TOOLTIP_MARKUP:
@@ -4184,6 +4184,7 @@ gtk_widget_translate_coordinates (GtkWidget  *src_widget,
 {
   GtkWidget *ancestor;
   GdkWindow *window;
+  GList *dest_list = NULL;
 
   g_return_val_if_fail (GTK_IS_WIDGET (src_widget), FALSE);
   g_return_val_if_fail (GTK_IS_WIDGET (dest_widget), FALSE);
@@ -4211,14 +4212,14 @@ gtk_widget_translate_coordinates (GtkWidget  *src_widget,
   window = src_widget->window;
   while (window != ancestor->window)
     {
-      gint dx, dy;
-      
-      gdk_window_get_position (window, &dx, &dy);
-      
-      src_x += dx;
-      src_y += dy;
-      
-      window = gdk_window_get_parent (window);
+      gdouble dx, dy;
+
+      gdk_window_coords_to_parent (window, src_x, src_y, &dx, &dy);
+
+      src_x = dx;
+      src_y = dy;
+
+      window = gdk_window_get_effective_parent (window);
 
       if (!window)		/* Handle GtkHandleBox */
 	return FALSE;
@@ -4228,17 +4229,27 @@ gtk_widget_translate_coordinates (GtkWidget  *src_widget,
   window = dest_widget->window;
   while (window != ancestor->window)
     {
-      gint dx, dy;
-      
-      gdk_window_get_position (window, &dx, &dy);
-      
-      src_x -= dx;
-      src_y -= dy;
-      
-      window = gdk_window_get_parent (window);
-      
+      dest_list = g_list_prepend (dest_list, window);
+
+      window = gdk_window_get_effective_parent (window);
+
       if (!window)		/* Handle GtkHandleBox */
-	return FALSE;
+        {
+          g_list_free (dest_list);
+          return FALSE;
+        }
+    }
+
+  while (dest_list)
+    {
+      gdouble dx, dy;
+
+      gdk_window_coords_from_parent (dest_list->data, src_x, src_y, &dx, &dy);
+
+      src_x = dx;
+      src_y = dy;
+
+      dest_list = g_list_remove (dest_list, dest_list->data);
     }
 
   /* Translate from window relative to allocation relative */
@@ -5601,6 +5612,16 @@ gtk_widget_has_default (GtkWidget *widget)
   return (GTK_OBJECT_FLAGS (widget) & GTK_HAS_DEFAULT) != 0;
 }
 
+void
+_gtk_widget_set_has_default (GtkWidget *widget,
+                             gboolean   has_default)
+{
+  if (has_default)
+    GTK_OBJECT_FLAGS (widget) |= GTK_HAS_DEFAULT;
+  else
+    GTK_OBJECT_FLAGS (widget) &= ~(GTK_HAS_DEFAULT);
+}
+
 /**
  * gtk_widget_grab_default:
  * @widget: a #GtkWidget
@@ -5701,6 +5722,16 @@ gtk_widget_has_grab (GtkWidget *widget)
   g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
 
   return (GTK_OBJECT_FLAGS (widget) & GTK_HAS_GRAB) != 0;
+}
+
+void
+_gtk_widget_set_has_grab (GtkWidget *widget,
+                          gboolean   has_grab)
+{
+  if (has_grab)
+    GTK_OBJECT_FLAGS (widget) |= GTK_HAS_GRAB;
+  else
+    GTK_OBJECT_FLAGS (widget) &= ~(GTK_HAS_GRAB);
 }
 
 /**
@@ -5930,6 +5961,16 @@ gtk_widget_is_toplevel (GtkWidget *widget)
   g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
 
   return (GTK_OBJECT_FLAGS (widget) & GTK_TOPLEVEL) != 0;
+}
+
+void
+_gtk_widget_set_is_toplevel (GtkWidget *widget,
+                             gboolean   is_toplevel)
+{
+  if (is_toplevel)
+    GTK_OBJECT_FLAGS (widget) |= GTK_TOPLEVEL;
+  else
+    GTK_OBJECT_FLAGS (widget) &= ~(GTK_TOPLEVEL);
 }
 
 /**
@@ -9031,7 +9072,7 @@ _gtk_widget_synthesize_crossing (GtkWidget      *from,
 
       while (from_ancestor != NULL)
 	{
-	  from_ancestor = gdk_window_get_parent (from_ancestor);
+	  from_ancestor = gdk_window_get_effective_parent (from_ancestor);
           if (from_ancestor == NULL)
             break;
           from_ancestors = g_list_prepend (from_ancestors, from_ancestor);
@@ -9056,7 +9097,7 @@ _gtk_widget_synthesize_crossing (GtkWidget      *from,
 
       while (to_ancestor != NULL)
 	{
-	  to_ancestor = gdk_window_get_parent (to_ancestor);
+	  to_ancestor = gdk_window_get_effective_parent (to_ancestor);
 	  if (to_ancestor == NULL)
             break;
           to_ancestors = g_list_prepend (to_ancestors, to_ancestor);
@@ -9085,7 +9126,7 @@ _gtk_widget_synthesize_crossing (GtkWidget      *from,
 	{
 	  if (from_ancestor != NULL)
 	    {
-	      from_ancestor = gdk_window_get_parent (from_ancestor);
+	      from_ancestor = gdk_window_get_effective_parent (from_ancestor);
 	      if (from_ancestor == to_window)
 		break;
               if (from_ancestor)
@@ -9093,7 +9134,7 @@ _gtk_widget_synthesize_crossing (GtkWidget      *from,
 	    }
 	  if (to_ancestor != NULL)
 	    {
-	      to_ancestor = gdk_window_get_parent (to_ancestor);
+	      to_ancestor = gdk_window_get_effective_parent (to_ancestor);
 	      if (to_ancestor == from_window)
 		break;
               if (to_ancestor)
@@ -11271,6 +11312,72 @@ gtk_widget_get_window (GtkWidget *widget)
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
 
   return widget->window;
+}
+
+static void
+_gtk_widget_set_has_focus (GtkWidget *widget,
+                           gboolean   has_focus)
+{
+  if (has_focus)
+    GTK_OBJECT_FLAGS (widget) |= GTK_HAS_FOCUS;
+  else
+    GTK_OBJECT_FLAGS (widget) &= ~(GTK_HAS_FOCUS);
+}
+
+/**
+ * gtk_widget_send_focus_change:
+ * @widget: a #GtkWidget
+ * @event: a #GdkEvent of type GDK_FOCUS_CHANGE
+ *
+ * Sends the focus change @event to @widget
+ *
+ * This function is not meant to be used by applications. The only time it
+ * should be used is when it is necessary for a #GtkWidget to assign focus
+ * to a widget that is semantically owned by the first widget even though
+ * it's not a direct child - for instance, a search entry in a floating
+ * window similar to the quick search in #GtkTreeView.
+ *
+ * An example of its usage is:
+ *
+ * |[
+ *   GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
+ *
+ *   fevent->focus_change.type = GDK_FOCUS_CHANGE;
+ *   fevent->focus_change.in = TRUE;
+ *   fevent->focus_change.window = gtk_widget_get_window (widget);
+ *   if (fevent->focus_change.window != NULL)
+ *     g_object_ref (fevent->focus_change.window);
+ *
+ *   gtk_widget_send_focus_change (widget, fevent);
+ *
+ *   gdk_event_free (event);
+ * ]|
+ *
+ * Return value: the return value from the event signal emission: %TRUE
+ *   if the event was handled, and %FALSE otherwise
+ *
+ * Since: 2.22
+ */
+gboolean
+gtk_widget_send_focus_change (GtkWidget *widget,
+                              GdkEvent  *event)
+{
+  gboolean res;
+
+  g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+  g_return_val_if_fail (event != NULL && event->type == GDK_FOCUS_CHANGE, FALSE);
+
+  g_object_ref (widget);
+
+  _gtk_widget_set_has_focus (widget, event->focus_change.in);
+
+  res = gtk_widget_event (widget, event);
+
+  g_object_notify (G_OBJECT (widget), "has-focus");
+
+  g_object_unref (widget);
+
+  return res;
 }
 
 #define __GTK_WIDGET_C__

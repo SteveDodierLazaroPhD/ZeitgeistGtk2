@@ -434,6 +434,7 @@ gtk_tool_item_group_set_property (GObject      *object,
 
       case PROP_LABEL_WIDGET:
         gtk_tool_item_group_set_label_widget (group, g_value_get_object (value));
+	break;
 
       case PROP_COLLAPSED:
         gtk_tool_item_group_set_collapsed (group, g_value_get_boolean (value));
@@ -629,6 +630,9 @@ gtk_tool_item_group_real_size_query (GtkWidget      *widget,
     item_size.width = MIN (item_size.width, allocation->width);
   else
     item_size.height = MIN (item_size.height, allocation->height);
+
+  item_size.width  = MAX (item_size.width, 1);
+  item_size.height = MAX (item_size.height, 1);
 
   item_area.width = 0;
   item_area.height = 0;
@@ -902,6 +906,9 @@ gtk_tool_item_group_real_size_allocate (GtkWidget     *widget,
   /* figure out the size of homogeneous items */
   gtk_tool_item_group_get_item_size (group, &item_size, TRUE, &min_rows);
 
+  item_size.width  = MAX (item_size.width, 1);
+  item_size.height = MAX (item_size.height, 1);
+
   /* figure out the available columns and size of item_area */
   if (GTK_ORIENTATION_VERTICAL == orientation)
     {
@@ -1166,9 +1173,10 @@ gtk_tool_item_group_realize (GtkWidget *widget)
   attributes.wclass = GDK_INPUT_OUTPUT;
   attributes.visual = gtk_widget_get_visual (widget);
   attributes.colormap = gtk_widget_get_colormap (widget);
-  attributes.event_mask = GDK_VISIBILITY_NOTIFY_MASK | GDK_EXPOSURE_MASK
-                        | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK
-                        | GDK_BUTTON_MOTION_MASK;
+  attributes.event_mask = gtk_widget_get_events (widget)
+                         | GDK_VISIBILITY_NOTIFY_MASK | GDK_EXPOSURE_MASK
+                         | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK
+                         | GDK_BUTTON_MOTION_MASK;
 
   widget->window = gdk_window_new (gtk_widget_get_parent_window (widget),
                                    &attributes, attributes_mask);
