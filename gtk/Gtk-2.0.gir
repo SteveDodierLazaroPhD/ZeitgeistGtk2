@@ -4665,7 +4665,7 @@ Note that an assistant needs to end its page flow with a page of type
               glib:nick="shrink"/>
       <member name="fill" value="4" c:identifier="GTK_FILL" glib:nick="fill"/>
     </bitfield>
-    <constant name="BINARY_AGE" value="2100">
+    <constant name="BINARY_AGE" value="2101">
       <type name="int"/>
     </constant>
     <constant name="BUTTONBOX_DEFAULT" value="-1">
@@ -5124,7 +5124,21 @@ same packing type that appear earlier in the list.">
         <type name="uint" c:type="guint"/>
       </field>
     </class>
-    <record name="BoxChild" c:type="GtkBoxChild">
+    <record name="BoxChild"
+            c:type="GtkBoxChild"
+            doc="neighbors, set when packed, zero by default.
+Any extra space given to the parent GtkBox is divided up among all children
+with this attribute set to %TRUE; set when packed, %TRUE by default.
+being used as padding around the widget; set when packed, %TRUE by default.
+reference to the start (top/left) or end (bottom/right) of the GtkBox.
+The #GtkBoxChild holds a child widget of #GtkBox and describes how the child
+is to be packed into the #GtkBox. All fields of this #GtkBoxChild should be
+considered read-only and they should never be set directly by an application.
+Use gtk_box_query_child_packing() and gtk_box_set_child_packing() to query
+and set the #GtkBoxChild.padding, #GtkBoxChild.expand, #GtkBoxChild.fill and
+#GtkBoxChild.pack fields."
+            deprecated="Use gtk_container_get_children() instead."
+            deprecated-version="2.22">
       <field name="widget" writable="1">
         <type name="Widget" c:type="GtkWidget*"/>
       </field>
@@ -28420,6 +28434,34 @@ selected. If @path does not point to a valid location, %FALSE is returned."
           </parameter>
         </parameters>
       </method>
+      <method name="get_item_row"
+              c:identifier="gtk_icon_view_get_item_row"
+              doc="Gets the row in which the item @path is currently
+displayed. Row numbers start at 0."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+        <parameters>
+          <parameter name="path" transfer-ownership="none">
+            <type name="TreePath" c:type="GtkTreePath*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_item_column"
+              c:identifier="gtk_icon_view_get_item_column"
+              doc="Gets the column in which the item @path is currently
+displayed. Column numbers start at 0."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+        <parameters>
+          <parameter name="path" transfer-ownership="none">
+            <type name="TreePath" c:type="GtkTreePath*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="get_selected_items"
               c:identifier="gtk_icon_view_get_selected_items"
               doc="Creates a list of paths of all selected items. Additionally, if you are
@@ -34243,7 +34285,7 @@ will be moved to the end of the list."
     <constant name="MAX_COMPOSE_LEN" value="7">
       <type name="int"/>
     </constant>
-    <constant name="MICRO_VERSION" value="0">
+    <constant name="MICRO_VERSION" value="1">
       <type name="int"/>
     </constant>
     <constant name="MINOR_VERSION" value="21">
@@ -67969,7 +68011,7 @@ during the lifecycle of the @tree_model.">
       <method name="get_column_type"
               c:identifier="gtk_tree_model_get_column_type"
               doc="Returns the type of the column.">
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" doc="The type of the column.">
           <type name="GType" c:type="GType"/>
         </return-value>
         <parameters>
@@ -68066,7 +68108,7 @@ to free any allocated memory.">
             <type name="int" c:type="gint"/>
           </parameter>
           <parameter name="value"
-                     direction="inout"
+                     direction="out"
                      transfer-ownership="none"
                      doc="An empty #GValue to set.">
             <type name="GObject.Value" c:type="GValue*"/>
@@ -69705,7 +69747,7 @@ use @selection is #GTK_SELECTION_MULTIPLE.">
         <parameters>
           <parameter name="model"
                      direction="out"
-                     transfer-ownership="full"
+                     transfer-ownership="none"
                      allow-none="1"
                      doc="A pointer to set to the #GtkTreeModel, or NULL.">
             <type name="TreeModel" c:type="GtkTreeModel**"/>
@@ -70951,7 +70993,8 @@ to the start of the level."
               c:identifier="gtk_tree_view_get_model"
               doc="Returns the model the #GtkTreeView is based on.  Returns %NULL if the
 model is unset.">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none"
+                      doc="A #GtkTreeModel, or %NULL if none is currently being used.">
           <type name="TreeModel" c:type="GtkTreeModel*"/>
         </return-value>
       </method>
@@ -70975,7 +71018,8 @@ then it will unset the old model.">
       <method name="get_selection"
               c:identifier="gtk_tree_view_get_selection"
               doc="Gets the #GtkTreeSelection associated with @tree_view.">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none"
+                      doc="A #GtkTreeSelection object.">
           <type name="TreeSelection" c:type="GtkTreeSelection*"/>
         </return-value>
       </method>
@@ -82445,6 +82489,14 @@ window group."
         <return-value transfer-ownership="none"
                       doc="the #GtkWindowGroup for a window or the default group">
           <type name="WindowGroup" c:type="GtkWindowGroup*"/>
+        </return-value>
+      </method>
+      <method name="has_group"
+              c:identifier="gtk_window_has_group"
+              doc="Returns whether @window has an explicit window group.
+Since 2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="reshow_with_initial_size"

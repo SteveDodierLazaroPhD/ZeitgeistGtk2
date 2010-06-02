@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Colormaps-and-Colors.html" title="Colormaps and Colors">
 <link rel="next" href="gdk-Fonts.html" title="Fonts">
-<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -110,23 +110,23 @@ then <a class="link" href="gdk-Visuals.html#GDK-VISUAL-STATIC-GRAY:CAPS"><code c
 <pre class="programlisting">typedef struct {
   GObject parent_instance;
   
-  GdkVisualType type;
-  gint depth;
-  GdkByteOrder byte_order;
-  gint colormap_size;
-  gint bits_per_rgb;
+  GdkVisualType GSEAL (type);
+  gint GSEAL (depth);
+  GdkByteOrder GSEAL (byte_order);
+  gint GSEAL (colormap_size);
+  gint GSEAL (bits_per_rgb);
 
-  guint32 red_mask;
-  gint red_shift;
-  gint red_prec;
+  guint32 GSEAL (red_mask);
+  gint GSEAL (red_shift);
+  gint GSEAL (red_prec);
 
-  guint32 green_mask;
-  gint green_shift;
-  gint green_prec;
+  guint32 GSEAL (green_mask);
+  gint GSEAL (green_shift);
+  gint GSEAL (green_prec);
 
-  guint32 blue_mask;
-  gint blue_shift;
-  gint blue_prec;
+  guint32 GSEAL (blue_mask);
+  gint GSEAL (blue_shift);
+  gint GSEAL (blue_prec);
 } GdkVisual;
 </pre>
 <p>
@@ -163,105 +163,11 @@ a particular visual.
 </div>
 <br class="example-break"><div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody>
-<tr>
+<tbody><tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> <em class="structfield"><code><a name="GdkVisual.parent-instance"></a>parent_instance</code></em>;</span></p></td>
 <td>inherited portion from <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>
 </td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Visuals.html#GdkVisualType" title="enum GdkVisualType"><span class="type">GdkVisualType</span></a> <em class="structfield"><code><a name="GdkVisual.type"></a>type</code></em>;</span></p></td>
-<td>The type of this visual.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.depth"></a>depth</code></em>;</span></p></td>
-<td>The number of bits per pixel.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Visuals.html#GdkByteOrder" title="enum GdkByteOrder"><span class="type">GdkByteOrder</span></a> <em class="structfield"><code><a name="GdkVisual.byte-order"></a>byte_order</code></em>;</span></p></td>
-<td>The byte-order for this visual.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.colormap-size"></a>colormap_size</code></em>;</span></p></td>
-<td>The number of entries in the colormap, for
-    visuals of type <a class="link" href="gdk-Visuals.html#GDK-VISUAL-PSEUDO-COLOR:CAPS"><code class="literal">GDK_VISUAL_PSEUDO_COLOR</code></a> or
-    <code class="literal">GDK_VISUAL_GRAY_SCALE</code>. For other visual types, it
-    is the number of possible levels per color component.
-    If the visual has different numbers of levels for
-    different components, the value of this field is undefined.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.bits-per-rgb"></a>bits_per_rgb</code></em>;</span></p></td>
-<td>The number of significant bits per red, green, or blue
-    when specifying colors for this visual. (For instance, for
-    <a class="link" href="gdk-Colormaps-and-Colors.html#gdk-colormap-alloc-color" title="gdk_colormap_alloc_color ()"><code class="function">gdk_colormap_alloc_color()</code></a>)
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GdkVisual.red-mask"></a>red_mask</code></em>;</span></p></td>
-<td>A mask giving the bits in a pixel value that
-    correspond to the red field. Significant only for
-    <code class="literal">GDK_VISUAL_PSEUDOCOLOR</code> and <code class="literal">GDK_VISUAL_DIRECTCOLOR</code>.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.red-shift"></a>red_shift</code></em>;</span></p></td>
-<td>The <em class="structfield"><code>red_shift</code></em> and
-    <em class="structfield"><code>red_prec</code></em> give an alternate presentation
-    of the information in <em class="structfield"><code>red_mask</code></em>.
-    <em class="structfield"><code>red_mask</code></em> is a contiguous sequence
-    of <em class="structfield"><code>red_prec</code></em> bits starting at bit
-    number <em class="structfield"><code>red_shift</code></em>. For example,
-    <a class="xref" href="gdk-Visuals.html#rgbmask" title="Example 5. Constructing a pixel value from components">Example 5, “Constructing a pixel value from components”</a> shows constructing a pixel value
-    out of three 16 bit color values.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.red-prec"></a>red_prec</code></em>;</span></p></td>
-<td>See above.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GdkVisual.green-mask"></a>green_mask</code></em>;</span></p></td>
-<td>A mask giving the bits in a pixel value that
-    correspond to the green field.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.green-shift"></a>green_shift</code></em>;</span></p></td>
-<td>The <em class="structfield"><code>green_shift</code></em> and
-    <em class="structfield"><code>green_prec</code></em> give an alternate presentation
-    of the information in <em class="structfield"><code>green_mask</code></em>.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.green-prec"></a>green_prec</code></em>;</span></p></td>
-<td>See above.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GdkVisual.blue-mask"></a>blue_mask</code></em>;</span></p></td>
-<td>A mask giving the bits in a pixel value that
-    correspond to the blue field.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.blue-shift"></a>blue_shift</code></em>;</span></p></td>
-<td>The <em class="structfield"><code>blue_shift</code></em> and
-    <em class="structfield"><code>blue_prec</code></em> give an alternate presentation
-    of the information in <em class="structfield"><code>blue_mask</code></em>.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkVisual.blue-prec"></a>blue_prec</code></em>;</span></p></td>
-<td>See above.
-</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table></div>
 </div>
 <hr>
@@ -379,11 +285,13 @@ The array returned by this function should not be freed.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>depths</code></em> :</span></p></td>
-<td> return location for available depths. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. <acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>. </td>
+<td> return location for available depths. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>count</code></em> :</span></p></td>
-<td> return location for number of available depths. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
+<td> return location for number of available depths. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -488,7 +396,8 @@ The return value should not be freed.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> system visual. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
+<td> system visual. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -504,7 +413,8 @@ GDK screen. The return value should not be freed.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> best visual. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
+<td> best visual. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -528,7 +438,8 @@ be freed. <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:C
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> best visual for the given depth. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
+<td> best visual for the given depth. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -553,7 +464,8 @@ should not be freed. <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> best visual of the given type. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
+<td> best visual of the given type. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -582,7 +494,8 @@ Combines <a class="link" href="gdk-Visuals.html#gdk-visual-get-best-with-depth" 
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> best visual with both <em class="parameter"><code>depth</code></em> and
-    <em class="parameter"><code>visual_type</code></em>, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
+    <em class="parameter"><code>visual_type</code></em>, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -653,8 +566,8 @@ Gets the screen to which this visual belongs
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> the screen to which this visual belongs.
-. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
+<td> the screen to which this visual belongs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -670,6 +583,6 @@ Gets the screen to which this visual belongs
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.14</div>
+          Generated by GTK-Doc V1.15</div>
 </body>
 </html>

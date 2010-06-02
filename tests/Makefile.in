@@ -47,7 +47,8 @@ noinst_PROGRAMS = $(am__EXEEXT_1) simple$(EXEEXT) flicker$(EXEEXT) \
 	testellipsise$(EXEEXT) testentrycompletion$(EXEEXT) \
 	testentryicons$(EXEEXT) testfilechooser$(EXEEXT) \
 	testfilechooserbutton$(EXEEXT) testframe$(EXEEXT) \
-	testgtk$(EXEEXT) testiconview$(EXEEXT) testicontheme$(EXEEXT) \
+	testgtk$(EXEEXT) testiconview$(EXEEXT) \
+	testiconview-keynav$(EXEEXT) testicontheme$(EXEEXT) \
 	testimage$(EXEEXT) testinput$(EXEEXT) testmenus$(EXEEXT) \
 	testmenubars$(EXEEXT) testmountoperation$(EXEEXT) \
 	testmultidisplay$(EXEEXT) testmultiscreen$(EXEEXT) \
@@ -173,6 +174,9 @@ testicontheme_SOURCES = testicontheme.c
 testicontheme_OBJECTS = testicontheme.$(OBJEXT)
 am_testiconview_OBJECTS = testiconview.$(OBJEXT) prop-editor.$(OBJEXT)
 testiconview_OBJECTS = $(am_testiconview_OBJECTS)
+testiconview_keynav_SOURCES = testiconview-keynav.c
+testiconview_keynav_OBJECTS = testiconview-keynav.$(OBJEXT)
+testiconview_keynav_DEPENDENCIES = $(am__DEPENDENCIES_2)
 testimage_SOURCES = testimage.c
 testimage_OBJECTS = testimage.$(OBJEXT)
 testinput_SOURCES = testinput.c
@@ -311,19 +315,20 @@ SOURCES = $(autotestkeywords_SOURCES) flicker.c pixbuf-lowmem.c \
 	$(testfilechooser_SOURCES) $(testfilechooserbutton_SOURCES) \
 	$(testframe_SOURCES) $(testgrouping_SOURCES) \
 	$(testgtk_SOURCES) testicontheme.c $(testiconview_SOURCES) \
-	testimage.c testinput.c testmenubars.c testmenus.c \
-	$(testmerge_SOURCES) testmountoperation.c testmultidisplay.c \
-	testmultiscreen.c testnotebookdnd.c testnouiprint.c \
-	$(testoffscreen_SOURCES) $(testoffscreenwindow_SOURCES) \
-	testorientable.c $(testprint_SOURCES) \
-	$(testrecentchooser_SOURCES) $(testrecentchoosermenu_SOURCES) \
-	testrgb.c testrichtext.c testscale.c testselection.c \
-	$(testsocket_SOURCES) $(testsocket_child_SOURCES) \
-	$(testspinbutton_SOURCES) $(teststatusicon_SOURCES) \
-	$(testtext_SOURCES) $(testtoolbar_SOURCES) \
-	$(testtooltips_SOURCES) testtreecolumns.c \
-	testtreecolumnsizing.c $(testtreeedit_SOURCES) testtreeflow.c \
-	testtreefocus.c $(testtreemodel_SOURCES) testtreesort.c \
+	testiconview-keynav.c testimage.c testinput.c testmenubars.c \
+	testmenus.c $(testmerge_SOURCES) testmountoperation.c \
+	testmultidisplay.c testmultiscreen.c testnotebookdnd.c \
+	testnouiprint.c $(testoffscreen_SOURCES) \
+	$(testoffscreenwindow_SOURCES) testorientable.c \
+	$(testprint_SOURCES) $(testrecentchooser_SOURCES) \
+	$(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c \
+	testscale.c testselection.c $(testsocket_SOURCES) \
+	$(testsocket_child_SOURCES) $(testspinbutton_SOURCES) \
+	$(teststatusicon_SOURCES) $(testtext_SOURCES) \
+	$(testtoolbar_SOURCES) $(testtooltips_SOURCES) \
+	testtreecolumns.c testtreecolumnsizing.c \
+	$(testtreeedit_SOURCES) testtreeflow.c testtreefocus.c \
+	$(testtreemodel_SOURCES) testtreesort.c \
 	$(testtreeview_SOURCES) $(testvolumebutton_SOURCES) \
 	$(testwindows_SOURCES) testxinerama.c treestoretest.c
 DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) flicker.c \
@@ -337,10 +342,10 @@ DIST_SOURCES = $(am__autotestkeywords_SOURCES_DIST) flicker.c \
 	$(testentryicons_SOURCES) $(testfilechooser_SOURCES) \
 	$(testfilechooserbutton_SOURCES) $(testframe_SOURCES) \
 	$(testgrouping_SOURCES) $(testgtk_SOURCES) testicontheme.c \
-	$(testiconview_SOURCES) testimage.c testinput.c testmenubars.c \
-	testmenus.c $(testmerge_SOURCES) testmountoperation.c \
-	testmultidisplay.c testmultiscreen.c testnotebookdnd.c \
-	testnouiprint.c $(testoffscreen_SOURCES) \
+	$(testiconview_SOURCES) testiconview-keynav.c testimage.c \
+	testinput.c testmenubars.c testmenus.c $(testmerge_SOURCES) \
+	testmountoperation.c testmultidisplay.c testmultiscreen.c \
+	testnotebookdnd.c testnouiprint.c $(testoffscreen_SOURCES) \
 	$(testoffscreenwindow_SOURCES) testorientable.c \
 	$(testprint_SOURCES) $(testrecentchooser_SOURCES) \
 	$(testrecentchoosermenu_SOURCES) testrgb.c testrichtext.c \
@@ -524,6 +529,8 @@ PANGO_PREFIX = @PANGO_PREFIX@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 POFILES = @POFILES@
 POSUB = @POSUB@
 PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
@@ -749,6 +756,7 @@ testfilechooserbutton_LDADD = $(LDADDS)
 testgtk_LDADD = $(LDADDS)
 testicontheme_LDADD = $(LDADDS)
 testiconview_LDADD = $(LDADDS)
+testiconview_keynav_LDADD = $(LDADDS)
 testinput_LDADD = $(LDADDS)
 testimage_LDADD = $(LDADDS)
 testmenus_LDADD = $(LDADDS)
@@ -872,6 +880,9 @@ testframe_SOURCES = \
 testiconview_SOURCES = \
 	testiconview.c		\
 	prop-editor.c
+
+testiconview__keynav_SOURCES = \
+	testiconview-keynav.c
 
 testrecentchooser_SOURCES = \
 	prop-editor.c 		\
@@ -1039,6 +1050,9 @@ testicontheme$(EXEEXT): $(testicontheme_OBJECTS) $(testicontheme_DEPENDENCIES)
 testiconview$(EXEEXT): $(testiconview_OBJECTS) $(testiconview_DEPENDENCIES) 
 	@rm -f testiconview$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(testiconview_OBJECTS) $(testiconview_LDADD) $(LIBS)
+testiconview-keynav$(EXEEXT): $(testiconview_keynav_OBJECTS) $(testiconview_keynav_DEPENDENCIES) 
+	@rm -f testiconview-keynav$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(testiconview_keynav_OBJECTS) $(testiconview_keynav_LDADD) $(LIBS)
 testimage$(EXEEXT): $(testimage_OBJECTS) $(testimage_DEPENDENCIES) 
 	@rm -f testimage$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(testimage_OBJECTS) $(testimage_LDADD) $(LIBS)
@@ -1196,6 +1210,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgrouping.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgtk.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testicontheme.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testiconview-keynav.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testiconview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testimage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testinput.Po@am__quote@

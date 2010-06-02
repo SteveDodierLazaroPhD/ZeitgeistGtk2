@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Selections.html" title="Selections">
 <link rel="next" href="gdk-Properties-and-Atoms.html" title="Properties and Atoms">
-<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -277,11 +277,13 @@ This function is called by the drag source to obtain the
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest_window</code></em> :</span></p></td>
-<td> location to store the destination window in.. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
+<td> location to store the destination window in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>protocol</code></em> :</span></p></td>
-<td> location to store the DND protocol in.. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
+<td> location to store the DND protocol in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -335,11 +337,13 @@ should be ignored, since it is put up by the drag source as an icon.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest_window</code></em> :</span></p></td>
-<td> location to store the destination window in.. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
+<td> location to store the destination window in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>protocol</code></em> :</span></p></td>
-<td> location to store the DND protocol in.. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>. </td>
+<td> location to store the DND protocol in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -658,19 +662,19 @@ Deprecated function; use <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Ba
   GObject parent_instance;
 
   
-  GdkDragProtocol protocol;
-  
-  gboolean is_source;
-  
-  GdkWindow *source_window;
-  GdkWindow *dest_window;
+  GdkDragProtocol GSEAL (protocol);
 
-  GList *targets;
-  GdkDragAction actions;
-  GdkDragAction suggested_action;
-  GdkDragAction action; 
+  gboolean GSEAL (is_source);
+  
+  GdkWindow *GSEAL (source_window);
+  GdkWindow *GSEAL (dest_window);
 
-  guint32 start_time;
+  GList *GSEAL (targets);
+  GdkDragAction GSEAL (actions);
+  GdkDragAction GSEAL (suggested_action);
+  GdkDragAction GSEAL (action);
+
+  guint32 GSEAL (start_time);
 } GdkDragContext;
 </pre>
 <p>
@@ -679,60 +683,11 @@ drag in progress. It is used on both source and destination sides.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody>
-<tr>
+<tbody><tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> <em class="structfield"><code><a name="GdkDragContext.parent-instance"></a>parent_instance</code></em>;</span></p></td>
 <td>the parent instance
 </td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Drag-and-Drop.html#GdkDragProtocol" title="enum GdkDragProtocol"><span class="type">GdkDragProtocol</span></a> <em class="structfield"><code><a name="GdkDragContext.protocol"></a>protocol</code></em>;</span></p></td>
-<td>the DND protocol which governs this drag.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GdkDragContext.is-source"></a>is_source</code></em>;</span></p></td>
-<td>
-<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the context is used on the source side.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *<em class="structfield"><code><a name="GdkDragContext.source-window"></a>source_window</code></em>;</span></p></td>
-<td>the source of this drag.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *<em class="structfield"><code><a name="GdkDragContext.dest-window"></a>dest_window</code></em>;</span></p></td>
-<td>the destination window of this drag.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GdkDragContext.targets"></a>targets</code></em>;</span></p></td>
-<td>a list of targets offered by the source.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Drag-and-Drop.html#GdkDragAction" title="enum GdkDragAction"><span class="type">GdkDragAction</span></a> <em class="structfield"><code><a name="GdkDragContext.actions"></a>actions</code></em>;</span></p></td>
-<td>a bitmask of actions proposed by the source when 
-   <em class="parameter"><code>suggested_action</code></em> is <a class="link" href="gdk-Drag-and-Drop.html#GDK-ACTION-ASK:CAPS"><code class="literal">GDK_ACTION_ASK</code></a>.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Drag-and-Drop.html#GdkDragAction" title="enum GdkDragAction"><span class="type">GdkDragAction</span></a> <em class="structfield"><code><a name="GdkDragContext.suggested-action"></a>suggested_action</code></em>;</span></p></td>
-<td>the action suggested by the source.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Drag-and-Drop.html#GdkDragAction" title="enum GdkDragAction"><span class="type">GdkDragAction</span></a> <em class="structfield"><code><a name="GdkDragContext.action"></a>action</code></em>;</span></p></td>
-<td>the action chosen by the destination.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GdkDragContext.start-time"></a>start_time</code></em>;</span></p></td>
-<td>a timestamp recording the start time of this drag.
-</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table></div>
 </div>
 <hr>
@@ -858,6 +813,6 @@ meaningless at other times.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.14</div>
+          Generated by GTK-Doc V1.15</div>
 </body>
 </html>

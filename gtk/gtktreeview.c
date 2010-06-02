@@ -1811,6 +1811,8 @@ gtk_tree_view_realize (GtkWidget *widget)
   attributes.height = tree_view->priv->header_height;
   attributes.event_mask = (GDK_EXPOSURE_MASK |
                            GDK_SCROLL_MASK |
+                           GDK_ENTER_NOTIFY_MASK |
+                           GDK_LEAVE_NOTIFY_MASK |
                            GDK_BUTTON_PRESS_MASK |
                            GDK_BUTTON_RELEASE_MASK |
                            GDK_KEY_PRESS_MASK |
@@ -10652,7 +10654,7 @@ gtk_tree_view_new_with_model (GtkTreeModel *model)
  * Returns the model the #GtkTreeView is based on.  Returns %NULL if the
  * model is unset.
  *
- * Return value: A #GtkTreeModel, or %NULL if none is currently being used.
+ * Return value: (transfer none): A #GtkTreeModel, or %NULL if none is currently being used.
  **/
 GtkTreeModel *
 gtk_tree_view_get_model (GtkTreeView *tree_view)
@@ -10820,7 +10822,7 @@ gtk_tree_view_set_model (GtkTreeView  *tree_view,
  *
  * Gets the #GtkTreeSelection associated with @tree_view.
  *
- * Return value: A #GtkTreeSelection object.
+ * Return value: (transfer none): A #GtkTreeSelection object.
  **/
 GtkTreeSelection *
 gtk_tree_view_get_selection (GtkTreeView *tree_view)

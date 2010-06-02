@@ -2348,6 +2348,71 @@ display and should not be freed.">
           <type name="Device" c:type="GdkDevice*"/>
         </return-value>
       </function>
+      <method name="get_name"
+              c:identifier="gdk_device_get_name"
+              doc="Determines the name of the device."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+      </method>
+      <method name="get_source"
+              c:identifier="gdk_device_get_source"
+              doc="Determines the type of the device."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="InputSource" c:type="GdkInputSource"/>
+        </return-value>
+      </method>
+      <method name="get_mode"
+              c:identifier="gdk_device_get_mode"
+              doc="Determines the mode of the device."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="InputMode" c:type="GdkInputMode"/>
+        </return-value>
+      </method>
+      <method name="get_has_cursor"
+              c:identifier="gdk_device_get_has_cursor"
+              doc="Determines whether the pointer follows device motion."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
+      <method name="get_key"
+              c:identifier="gdk_device_get_key"
+              doc="If @index has a valid keyval, this function will
+fill in @keyval and @modifiers with the keyval settings."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="index" transfer-ownership="none">
+            <type name="uint" c:type="guint"/>
+          </parameter>
+          <parameter name="keyval" direction="out" transfer-ownership="full">
+            <type name="uint" c:type="guint*"/>
+          </parameter>
+          <parameter name="modifiers" transfer-ownership="none">
+            <type name="ModifierType" c:type="GdkModifierType*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_axis_use"
+              c:identifier="gdk_device_get_axis_use"
+              doc="Returns the axis use for @index."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="AxisUse" c:type="GdkAxisUse"/>
+        </return-value>
+        <parameters>
+          <parameter name="index" transfer-ownership="none">
+            <type name="uint" c:type="guint"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_source" c:identifier="gdk_device_set_source">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -3378,6 +3443,39 @@ Free this list with g_slist_free() when you are done with it."
           <type name="DragContext" c:type="GdkDragContext*"/>
         </return-value>
       </constructor>
+      <method name="list_targets"
+              c:identifier="gdk_drag_context_list_targets"
+              doc="Retrieves the list of targets of the context."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="GLib.List" c:type="GList*"/>
+        </return-value>
+      </method>
+      <method name="get_actions"
+              c:identifier="gdk_drag_context_get_actions"
+              doc="Determines the bitmask of actions proposed by the source if
+gdk_drag_context_suggested_action() returns GDK_ACTION_ASK."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="DragAction" c:type="GdkDragAction"/>
+        </return-value>
+      </method>
+      <method name="get_suggested_action"
+              c:identifier="gdk_drag_context_get_suggested_action"
+              doc="Determines the suggested drag action of the context."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="DragAction" c:type="GdkDragAction"/>
+        </return-value>
+      </method>
+      <method name="get_action"
+              c:identifier="gdk_drag_context_get_action"
+              doc="Determines the action chosen by the drag destination."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="DragAction" c:type="GdkDragAction"/>
+        </return-value>
+      </method>
       <method name="ref"
               c:identifier="gdk_drag_context_ref"
               doc="Deprecated function; use g_object_ref() instead."
@@ -8328,6 +8426,78 @@ gdk_image_set_colormap().">
           <type name="Colormap" c:type="GdkColormap*"/>
         </return-value>
       </method>
+      <method name="get_image_type"
+              c:identifier="gdk_image_get_image_type"
+              doc="Determines the type of a given image."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="ImageType" c:type="GdkImageType"/>
+        </return-value>
+      </method>
+      <method name="get_visual"
+              c:identifier="gdk_image_get_visual"
+              doc="Determines the visual that was used to create the image."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="Visual" c:type="GdkVisual*"/>
+        </return-value>
+      </method>
+      <method name="get_byte_order"
+              c:identifier="gdk_image_get_byte_order"
+              doc="Determines the byte order of the image."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="ByteOrder" c:type="GdkByteOrder"/>
+        </return-value>
+      </method>
+      <method name="get_width"
+              c:identifier="gdk_image_get_width"
+              doc="Determines the width of the image."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+      </method>
+      <method name="get_height"
+              c:identifier="gdk_image_get_height"
+              doc="Determines the height of the image."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+      </method>
+      <method name="get_depth"
+              c:identifier="gdk_image_get_depth"
+              doc="Determines the depth of the image."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="uint16" c:type="guint16"/>
+        </return-value>
+      </method>
+      <method name="get_bytes_per_pixel"
+              c:identifier="gdk_image_get_bytes_per_pixel"
+              doc="Determines the number of bytes per pixel of the image."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="uint16" c:type="guint16"/>
+        </return-value>
+      </method>
+      <method name="get_bytes_per_line"
+              c:identifier="gdk_image_get_bytes_per_line"
+              doc="Determines the number of bytes per line of the image."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="uint16" c:type="guint16"/>
+        </return-value>
+      </method>
+      <method name="get_bits_per_pixel"
+              c:identifier="gdk_image_get_bits_per_pixel"
+              doc="Determines the number of bits per pixel of the image."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="uint16" c:type="guint16"/>
+        </return-value>
+      </method>
       <field name="parent_instance">
         <type name="GObject.Object" c:type="GObject"/>
       </field>
@@ -12142,6 +12312,151 @@ should not be freed. %NULL may be returned if no visual has type">
           <type name="Screen" c:type="GdkScreen*"/>
         </return-value>
       </method>
+      <method name="get_visual_type"
+              c:identifier="gdk_visual_get_visual_type"
+              doc="Returns the type of visual this is (PseudoColor, TrueColor, etc)."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="VisualType" c:type="GdkVisualType"/>
+        </return-value>
+      </method>
+      <method name="get_depth"
+              c:identifier="gdk_visual_get_depth"
+              doc="Returns the bit depth of this visual."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+      </method>
+      <method name="get_byte_order"
+              c:identifier="gdk_visual_get_byte_order"
+              doc="Returns the byte order of this visual."
+              version="2.22">
+        <return-value transfer-ownership="full">
+          <type name="ByteOrder" c:type="GdkByteOrder"/>
+        </return-value>
+      </method>
+      <method name="get_colormap_size"
+              c:identifier="gdk_visual_get_colormap_size"
+              doc="Returns the size of a colormap for this visual."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+      </method>
+      <method name="get_bits_per_rgb"
+              c:identifier="gdk_visual_get_bits_per_rgb"
+              doc="Returns the number of significant bits per red, green and blue value."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="int" c:type="gint"/>
+        </return-value>
+      </method>
+      <method name="get_red_pixel_details"
+              c:identifier="gdk_visual_get_red_pixel_details"
+              doc="Obtains values that are needed to calculate red pixel values in TrueColor
+and DirectColor.  The &quot;mask&quot; is the significant bits within the pixel.
+The &quot;shift&quot; is the number of bits left we must shift a primary for it
+to be in position (according to the &quot;mask&quot;).  Finally, &quot;precision&quot; refers
+to how much precision the pixel value contains for a particular primary."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="mask"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #guint32 to be filled in, or %NULL.">
+            <type name="uint32" c:type="guint32*"/>
+          </parameter>
+          <parameter name="shift"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #gint to be filled in, or %NULL.">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+          <parameter name="precision"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #gint to be filled in, or %NULL.">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_green_pixel_details"
+              c:identifier="gdk_visual_get_green_pixel_details"
+              doc="Obtains values that are needed to calculate green pixel values in TrueColor
+and DirectColor.  The &quot;mask&quot; is the significant bits within the pixel.
+The &quot;shift&quot; is the number of bits left we must shift a primary for it
+to be in position (according to the &quot;mask&quot;).  Finally, &quot;precision&quot; refers
+to how much precision the pixel value contains for a particular primary."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="mask"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #guint32 to be filled in, or %NULL.">
+            <type name="uint32" c:type="guint32*"/>
+          </parameter>
+          <parameter name="shift"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #gint to be filled in, or %NULL.">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+          <parameter name="precision"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #gint to be filled in, or %NULL.">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_blue_pixel_details"
+              c:identifier="gdk_visual_get_blue_pixel_details"
+              doc="Obtains values that are needed to calculate blue pixel values in TrueColor
+and DirectColor.  The &quot;mask&quot; is the significant bits within the pixel.
+The &quot;shift&quot; is the number of bits left we must shift a primary for it
+to be in position (according to the &quot;mask&quot;).  Finally, &quot;precision&quot; refers
+to how much precision the pixel value contains for a particular primary."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="mask"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #guint32 to be filled in, or %NULL.">
+            <type name="uint32" c:type="guint32*"/>
+          </parameter>
+          <parameter name="shift"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #gint to be filled in, or %NULL.">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+          <parameter name="precision"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="A pointer to a #gint to be filled in, or %NULL.">
+            <type name="int" c:type="gint*"/>
+          </parameter>
+        </parameters>
+      </method>
       <field name="parent_instance">
         <type name="GObject.Object" c:type="GObject"/>
       </field>
@@ -12835,6 +13150,15 @@ window in its implementation, for example.">
           </parameter>
         </parameters>
       </method>
+      <method name="get_accept_focus"
+              c:identifier="gdk_window_get_accept_focus"
+              doc="Determines whether or not the desktop environment shuld be hinted that
+the window does not want to receive input focus."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
       <method name="set_accept_focus"
               c:identifier="gdk_window_set_accept_focus"
               doc="Setting @accept_focus to %FALSE hints the desktop environment that the
@@ -12850,6 +13174,16 @@ hint. ICCCM-compliant window manager usually respect it."
             <type name="boolean" c:type="gboolean"/>
           </parameter>
         </parameters>
+      </method>
+      <method name="get_focus_on_map"
+              c:identifier="gdk_window_get_focus_on_map"
+              doc="Determines whether or not the desktop environment should be hinted that the
+window does not want to receive input focus when it is mapped.
+it is mapped."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
       </method>
       <method name="set_focus_on_map"
               c:identifier="gdk_window_set_focus_on_map"
@@ -13037,6 +13371,15 @@ the shape mask of @window in the masks to be merged.">
           <type name="none" c:type="void"/>
         </return-value>
       </method>
+      <method name="get_composited"
+              c:identifier="gdk_window_get_composited"
+              doc="Determines whether @window is composited.
+See gdk_window_set_composited()."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
       <method name="set_composited"
               c:identifier="gdk_window_set_composited"
               doc="Sets a #GdkWindow as composited, or unsets it. Composited
@@ -13190,6 +13533,22 @@ window.)">
           <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
+      <method name="is_input_only"
+              c:identifier="gdk_window_is_input_only"
+              doc="Determines whether or not the window is an input only window."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
+      <method name="is_shaped"
+              c:identifier="gdk_window_is_shaped"
+              doc="Determines whether or not the window is shaped."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
+        </return-value>
+      </method>
       <method name="get_state"
               c:identifier="gdk_window_get_state"
               doc="Gets the bitwise OR of the currently active window state flags,
@@ -13269,6 +13628,15 @@ The hint must be set before the window is mapped.">
               version="2.10">
         <return-value transfer-ownership="full">
           <type name="WindowTypeHint" c:type="GdkWindowTypeHint"/>
+        </return-value>
+      </method>
+      <method name="get_modal_hint"
+              c:identifier="gdk_window_get_modal_hint"
+              doc="Determines whether or not the window manager is hinted that @window
+has modal behaviour."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="boolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="set_modal_hint"
@@ -13533,6 +13901,22 @@ See gtk_window_set_transient_for() if you&apos;re using #GtkWindow or
           </parameter>
         </parameters>
       </method>
+      <method name="get_background"
+              c:identifier="gdk_window_get_background"
+              doc="Sets @color to equal the current background color of @window."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="color"
+                     direction="out"
+                     transfer-ownership="full"
+                     doc="a #GdkColor to be filled in">
+            <type name="Color" c:type="GdkColor*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_background"
               c:identifier="gdk_window_set_background"
               doc="Sets the background color of @window. (However, when using GTK+,
@@ -13541,13 +13925,40 @@ you&apos;re an application - or gtk_style_set_background() - if you&apos;re
 implementing a custom widget.)
 The @color must be allocated; gdk_rgb_find_color() is the best way
 to allocate a color.
-See also gdk_window_set_back_pixmap().">
+See also gdk_window_set_background_pixmap().">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
           <parameter name="color" transfer-ownership="none">
             <type name="Color" c:type="GdkColor*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="get_back_pixmap"
+              c:identifier="gdk_window_get_back_pixmap"
+              doc="Sets @pixmap to the current background pixmap of @window.  You do not
+own the pointer that is returned and this pointer should not be freeed
+or unreferenced.  Sets @parent_relative to %TRUE if the tiling is done
+based on the origin of the parent window."
+              version="2.22">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="pixmap"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="a #GdkPixmap to be filled in, or %NULL.">
+            <type name="Pixmap" c:type="GdkPixmap**"/>
+          </parameter>
+          <parameter name="parent_relative"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="a pointer to a #gboolean to be filled in, or %NULL.">
+            <type name="boolean" c:type="gboolean*"/>
           </parameter>
         </parameters>
       </method>
@@ -13732,7 +14143,9 @@ in any position in the window, not just the origin."
       </method>
       <method name="coords_to_parent"
               c:identifier="gdk_window_coords_to_parent"
-              doc="Transforms window coordinates from a child window to its parent
+              doc="in parent&apos;s coordinate system, or %NULL
+in parent&apos;s coordinate system, or %NULL
+Transforms window coordinates from a child window to its parent
 window, where the parent window is the normal parent as returned by
 gdk_window_get_parent() for normal windows, and the window&apos;s
 embedder as returned by gdk_offscreen_window_get_embedder() for
@@ -13754,10 +14167,18 @@ walks up a window hierarchy."
           <parameter name="y" transfer-ownership="none">
             <type name="double" c:type="gdouble"/>
           </parameter>
-          <parameter name="parent_x" direction="out" transfer-ownership="full">
+          <parameter name="parent_x"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for X coordinate">
             <type name="double" c:type="gdouble*"/>
           </parameter>
-          <parameter name="parent_y" direction="out" transfer-ownership="full">
+          <parameter name="parent_y"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for Y coordinate">
             <type name="double" c:type="gdouble*"/>
           </parameter>
         </parameters>
@@ -13786,10 +14207,18 @@ walks down a window hierarchy."
           <parameter name="parent_y" transfer-ownership="none">
             <type name="double" c:type="gdouble"/>
           </parameter>
-          <parameter name="x" direction="out" transfer-ownership="full">
+          <parameter name="x"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for X coordinate in child&apos;s coordinate system">
             <type name="double" c:type="gdouble*"/>
           </parameter>
-          <parameter name="y" direction="out" transfer-ownership="full">
+          <parameter name="y"
+                     direction="out"
+                     transfer-ownership="full"
+                     allow-none="1"
+                     doc="return location for Y coordinate in child&apos;s coordinate system">
             <type name="double" c:type="gdouble*"/>
           </parameter>
         </parameters>

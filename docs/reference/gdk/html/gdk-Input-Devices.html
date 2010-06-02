@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Input.html" title="Input">
 <link rel="next" href="gdk-Pango-Interaction.html" title="Pango Interaction">
-<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -99,7 +99,7 @@ X, the support for extended devices is done through the
 Because handling extended input devices may involve considerable
 overhead, they need to be turned on for each <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
 individually using <a class="link" href="gdk-Input-Devices.html#gdk-input-set-extension-events" title="gdk_input_set_extension_events ()"><code class="function">gdk_input_set_extension_events()</code></a>.
-(Or, more typically, for GtkWidgets, using <a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html#gtk-widget-set-extension-events"><code class="function">gtk_widget_set_extension_events()</code></a>).
+(Or, more typically, for GtkWidgets, using <a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html#gtk-widget-set-extension-events"><code class="function">gtk_widget_set_extension_events()</code></a>).
 As an additional complication, depending on the support from
 the windowing system, its possible that a normal mouse
 cursor will not be displayed for a particular extension
@@ -168,16 +168,16 @@ and <em class="structfield"><code>ytilt</code></em>.
   GObject parent_instance;
   /* All fields are read-only */
 	  
-  gchar *name;
-  GdkInputSource source;
-  GdkInputMode mode;
-  gboolean has_cursor;	     /* TRUE if the X pointer follows device motion */
+  gchar *GSEAL (name);
+  GdkInputSource GSEAL (source);
+  GdkInputMode GSEAL (mode);
+  gboolean GSEAL (has_cursor);   /* TRUE if the X pointer follows device motion */
 	  
-  gint num_axes;
-  GdkDeviceAxis *axes;
+  gint GSEAL (num_axes);
+  GdkDeviceAxis *GSEAL (axes);
 	  
-  gint num_keys;
-  GdkDeviceKey *keys;
+  gint GSEAL (num_keys);
+  GdkDeviceKey *GSEAL (keys);
 } GdkDevice;
 </pre>
 <p>
@@ -189,55 +189,11 @@ to configure various aspects of the device.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody>
-<tr>
+<tbody><tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> <em class="structfield"><code><a name="GdkDevice.parent-instance"></a>parent_instance</code></em>;</span></p></td>
 <td>the parent instance
 </td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GdkDevice.name"></a>name</code></em>;</span></p></td>
-<td>the name of this device.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Input-Devices.html#GdkInputSource" title="enum GdkInputSource"><span class="type">GdkInputSource</span></a> <em class="structfield"><code><a name="GdkDevice.source"></a>source</code></em>;</span></p></td>
-<td>the type of this device.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Input-Devices.html#GdkInputMode" title="enum GdkInputMode"><span class="type">GdkInputMode</span></a> <em class="structfield"><code><a name="GdkDevice.mode"></a>mode</code></em>;</span></p></td>
-<td>the mode of this device
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GdkDevice.has-cursor"></a>has_cursor</code></em>;</span></p></td>
-<td>
-<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pointer follows device motion.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkDevice.num-axes"></a>num_axes</code></em>;</span></p></td>
-<td>the length of the <em class="parameter"><code>axes</code></em> array.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Input-Devices.html#GdkDeviceAxis" title="GdkDeviceAxis"><span class="type">GdkDeviceAxis</span></a> *<em class="structfield"><code><a name="GdkDevice.axes"></a>axes</code></em>;</span></p></td>
-<td>an array of <a class="link" href="gdk-Input-Devices.html#GdkDeviceAxis" title="GdkDeviceAxis"><span class="type">GdkDeviceAxis</span></a>, describing the axes of this device.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GdkDevice.num-keys"></a>num_keys</code></em>;</span></p></td>
-<td>the length of the <em class="parameter"><code>keys</code></em> array.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a class="link" href="gdk-Input-Devices.html#GdkDeviceKey" title="GdkDeviceKey"><span class="type">GdkDeviceKey</span></a> *<em class="structfield"><code><a name="GdkDevice.keys"></a>keys</code></em>;</span></p></td>
-<td>an array of <a class="link" href="gdk-Input-Devices.html#GdkDeviceKey" title="GdkDeviceKey"><span class="type">GdkDeviceKey</span></a>, describing the mapped macro buttons 
-  of this device.
-</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table></div>
 </div>
 <hr>
@@ -687,7 +643,8 @@ motion history is supported and no events were found.)
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>events</code></em> :</span></p></td>
-<td> location to store a newly-allocated array of <a class="link" href="gdk-Input-Devices.html#GdkTimeCoord" title="GdkTimeCoord"><span class="type">GdkTimeCoord</span></a>, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_events. <acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> length=n_events. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym> length=n_events. </td>
+<td> location to store a newly-allocated array of <a class="link" href="gdk-Input-Devices.html#GdkTimeCoord" title="GdkTimeCoord"><span class="type">GdkTimeCoord</span></a>, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_events][<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> length=n_events][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym> length=n_events]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>n_events</code></em> :</span></p></td>
@@ -719,7 +676,8 @@ Frees an array of <a class="link" href="gdk-Input-Devices.html#GdkTimeCoord" tit
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>events</code></em> :</span></p></td>
-<td> an array of <a class="link" href="gdk-Input-Devices.html#GdkTimeCoord" title="GdkTimeCoord"><span class="type">GdkTimeCoord</span></a>.. <acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>. <acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>. </td>
+<td> an array of <a class="link" href="gdk-Input-Devices.html#GdkTimeCoord" title="GdkTimeCoord"><span class="type">GdkTimeCoord</span></a>. <span class="annotation">[<acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>n_events</code></em> :</span></p></td>
@@ -870,6 +828,6 @@ are desired for a particular widget.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.14</div>
+          Generated by GTK-Doc V1.15</div>
 </body>
 </html>

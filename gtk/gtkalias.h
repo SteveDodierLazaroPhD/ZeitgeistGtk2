@@ -4929,6 +4929,12 @@ extern __typeof (gtk_icon_view_set_tooltip_column) IA__gtk_icon_view_set_tooltip
 extern __typeof (gtk_icon_view_get_tooltip_column) IA__gtk_icon_view_get_tooltip_column __attribute((visibility("hidden")));
 #define gtk_icon_view_get_tooltip_column IA__gtk_icon_view_get_tooltip_column
 
+extern __typeof (gtk_icon_view_get_item_row) IA__gtk_icon_view_get_item_row __attribute((visibility("hidden")));
+#define gtk_icon_view_get_item_row IA__gtk_icon_view_get_item_row
+
+extern __typeof (gtk_icon_view_get_item_column) IA__gtk_icon_view_get_item_column __attribute((visibility("hidden")));
+#define gtk_icon_view_get_item_column IA__gtk_icon_view_get_item_column
+
 #endif
 #endif
 #if IN_HEADER(__GTK_IMAGE_H__)
@@ -12770,6 +12776,9 @@ extern __typeof (gtk_window_group_remove_window) IA__gtk_window_group_remove_win
 
 extern __typeof (gtk_window_group_list_windows) IA__gtk_window_group_list_windows __attribute((visibility("hidden")));
 #define gtk_window_group_list_windows IA__gtk_window_group_list_windows
+
+extern __typeof (gtk_window_has_group) IA__gtk_window_has_group __attribute((visibility("hidden")));
+#define gtk_window_has_group IA__gtk_window_has_group
 
 extern __typeof (gtk_window_has_toplevel_focus) IA__gtk_window_has_toplevel_focus __attribute((visibility("hidden")));
 #define gtk_window_has_toplevel_focus IA__gtk_window_has_toplevel_focus

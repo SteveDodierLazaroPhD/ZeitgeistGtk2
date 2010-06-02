@@ -8,7 +8,7 @@
 <link rel="up" href="AbstractObjects.html" title="Abstract Base Classes">
 <link rel="prev" href="GtkBin.html" title="GtkBin">
 <link rel="next" href="GtkButtonBox.html" title="GtkButtonBox">
-<meta name="generator" content="GTK-Doc V1.14 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -212,6 +212,18 @@ They should never be set by an application.)
   guint is_secondary : 1;
 } GtkBoxChild;
 </pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">GtkBoxChild</code> has been deprecated since version 2.22 and should not be used in newly-written code. Use <a class="link" href="GtkContainer.html#gtk-container-get-children" title="gtk_container_get_children ()"><code class="function">gtk_container_get_children()</code></a> instead.</p>
+</div>
+<p>
+The <a class="link" href="GtkBox.html#GtkBoxChild" title="GtkBoxChild"><span class="type">GtkBoxChild</span></a> holds a child widget of <a class="link" href="GtkBox.html" title="GtkBox"><span class="type">GtkBox</span></a> and describes how the child
+is to be packed into the <a class="link" href="GtkBox.html" title="GtkBox"><span class="type">GtkBox</span></a>. All fields of this <a class="link" href="GtkBox.html#GtkBoxChild" title="GtkBoxChild"><span class="type">GtkBoxChild</span></a> should be
+considered read-only and they should never be set directly by an application.
+Use <a class="link" href="GtkBox.html#gtk-box-query-child-packing" title="gtk_box_query_child_packing ()"><code class="function">gtk_box_query_child_packing()</code></a> and <a class="link" href="GtkBox.html#gtk-box-set-child-packing" title="gtk_box_set_child_packing ()"><code class="function">gtk_box_set_child_packing()</code></a> to query
+and set the <a class="link" href="GtkBox.html#GtkBoxChild.padding"><span class="type">GtkBoxChild.padding</span></a>, <a class="link" href="GtkBox.html#GtkBoxChild.expand"><span class="type">GtkBoxChild.expand</span></a>, <a class="link" href="GtkBox.html#GtkBoxChild.fill"><span class="type">GtkBoxChild.fill</span></a> and
+<a class="link" href="GtkBox.html#GtkBoxChild.pack"><span class="type">GtkBoxChild.pack</span></a> fields.
+</p>
 <p>
 The <span class="type">GtkBoxChild</span> holds a child widget of GtkBox and describes
 how the child is to be packed into the GtkBox.  Use
@@ -236,29 +248,27 @@ application.)
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GtkBoxChild.padding"></a>padding</code></em>;</span></p></td>
 <td>the number of extra pixels to put between this child and its
-  neighbors, set when packed, zero by default.
+ neighbors, set when packed, zero by default.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GtkBoxChild.expand"></a>expand</code></em> : 1;</span></p></td>
-<td>flag indicates whether extra space should be given to this
-  child. Any extra space given to the parent GtkBox is divided up
-  among all children with this attribute set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>; set when packed,
-  <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> by default.
+<td>flag indicates whether extra space should be given to this child.
+ Any extra space given to the parent GtkBox is divided up among all children
+ with this attribute set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>; set when packed, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> by default.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GtkBoxChild.fill"></a>fill</code></em> : 1;</span></p></td>
-<td>flag indicates whether any extra space given to this child due 
-  to its <em class="parameter"><code>expand</code></em> attribute being set is actually allocated to the child,
-  rather than being used as padding around the widget; set when packed,
-  <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> by default.
+<td>flag indicates whether any extra space given to this child due to its
+ <em class="parameter"><code>expand</code></em> attribute being set is actually allocated to the child, rather than
+ being used as padding around the widget; set when packed, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> by default.
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GtkBoxChild.pack"></a>pack</code></em> : 1;</span></p></td>
-<td>one of <a class="link" href="gtk-Standard-Enumerations.html#GtkPackType" title="enum GtkPackType"><span class="type">GtkPackType</span></a> indicating whether the child is packed with 
-  reference to the start (top/left) or end (bottom/right) of the GtkBox.
+<td>one of <a class="link" href="gtk-Standard-Enumerations.html#GtkPackType" title="enum GtkPackType"><span class="type">GtkPackType</span></a> indicating whether the child is packed with
+ reference to the start (top/left) or end (bottom/right) of the GtkBox.
 </td>
 </tr>
 <tr>
@@ -783,6 +793,6 @@ layouts.</p></td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.14</div>
+          Generated by GTK-Doc V1.15</div>
 </body>
 </html>

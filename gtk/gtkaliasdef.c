@@ -4932,6 +4932,12 @@ extern __typeof (gtk_icon_view_set_tooltip_column) gtk_icon_view_set_tooltip_col
 #undef gtk_icon_view_get_tooltip_column 
 extern __typeof (gtk_icon_view_get_tooltip_column) gtk_icon_view_get_tooltip_column __attribute((alias("IA__gtk_icon_view_get_tooltip_column"), visibility("default")));
 
+#undef gtk_icon_view_get_item_row 
+extern __typeof (gtk_icon_view_get_item_row) gtk_icon_view_get_item_row __attribute((alias("IA__gtk_icon_view_get_item_row"), visibility("default")));
+
+#undef gtk_icon_view_get_item_column 
+extern __typeof (gtk_icon_view_get_item_column) gtk_icon_view_get_item_column __attribute((alias("IA__gtk_icon_view_get_item_column"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GTK_IMAGE_H__)
@@ -12773,6 +12779,9 @@ extern __typeof (gtk_window_group_remove_window) gtk_window_group_remove_window 
 
 #undef gtk_window_group_list_windows 
 extern __typeof (gtk_window_group_list_windows) gtk_window_group_list_windows __attribute((alias("IA__gtk_window_group_list_windows"), visibility("default")));
+
+#undef gtk_window_has_group 
+extern __typeof (gtk_window_has_group) gtk_window_has_group __attribute((alias("IA__gtk_window_has_group"), visibility("default")));
 
 #undef gtk_window_has_toplevel_focus 
 extern __typeof (gtk_window_has_toplevel_focus) gtk_window_has_toplevel_focus __attribute((alias("IA__gtk_window_has_toplevel_focus"), visibility("default")));
