@@ -133,7 +133,7 @@ gdk_drag_context_get_suggested_action (GdkDragContext *context)
 }
 
 /**
- * gdk_drag_context_get_action:
+ * gdk_drag_context_get_selected_action:
  * @context: a #GdkDragContext
  *
  * Determines the action chosen by the drag destination.
@@ -143,11 +143,29 @@ gdk_drag_context_get_suggested_action (GdkDragContext *context)
  * Since: 2.22
  **/
 GdkDragAction
-gdk_drag_context_get_action (GdkDragContext *context)
+gdk_drag_context_get_selected_action (GdkDragContext *context)
 {
   g_return_val_if_fail (GDK_IS_DRAG_CONTEXT (context), 0);
 
   return context->action;
+}
+
+/**
+ * gdk_drag_context_get_source_window:
+ * @context: a #GdkDragContext
+ *
+ * Returns the #GdkWindow where the DND operation started.
+ *
+ * Return value: (transfer none): a #GdkWindow
+ *
+ * Since: 2.22
+ **/
+GdkWindow *
+gdk_drag_context_get_source_window (GdkDragContext *context)
+{
+  g_return_val_if_fail (GDK_IS_DRAG_CONTEXT (context), NULL);
+
+  return context->source_window;
 }
 
 #define __GDK_DND_C__

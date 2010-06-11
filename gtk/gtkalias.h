@@ -689,6 +689,9 @@ extern __typeof (gtk_assistant_remove_action_widget) IA__gtk_assistant_remove_ac
 extern __typeof (gtk_assistant_update_buttons_state) IA__gtk_assistant_update_buttons_state __attribute((visibility("hidden")));
 #define gtk_assistant_update_buttons_state IA__gtk_assistant_update_buttons_state
 
+extern __typeof (gtk_assistant_commit) IA__gtk_assistant_commit __attribute((visibility("hidden")));
+#define gtk_assistant_commit IA__gtk_assistant_commit
+
 #endif
 #endif
 #if IN_HEADER(__GTK_TYPE_BUILTINS_H__)
@@ -9156,6 +9159,9 @@ extern __typeof (gtk_statusbar_push) IA__gtk_statusbar_push __attribute((visibil
 extern __typeof (gtk_statusbar_remove) IA__gtk_statusbar_remove __attribute((visibility("hidden")));
 #define gtk_statusbar_remove IA__gtk_statusbar_remove
 
+extern __typeof (gtk_statusbar_remove_all) IA__gtk_statusbar_remove_all __attribute((visibility("hidden")));
+#define gtk_statusbar_remove_all IA__gtk_statusbar_remove_all
+
 extern __typeof (gtk_statusbar_set_has_resize_grip) IA__gtk_statusbar_set_has_resize_grip __attribute((visibility("hidden")));
 #define gtk_statusbar_set_has_resize_grip IA__gtk_statusbar_set_has_resize_grip
 
@@ -12007,6 +12013,9 @@ extern __typeof (gtk_viewport_get_vadjustment) IA__gtk_viewport_get_vadjustment 
 
 extern __typeof (gtk_viewport_get_bin_window) IA__gtk_viewport_get_bin_window __attribute((visibility("hidden")));
 #define gtk_viewport_get_bin_window IA__gtk_viewport_get_bin_window
+
+extern __typeof (gtk_viewport_get_view_window) IA__gtk_viewport_get_view_window __attribute((visibility("hidden")));
+#define gtk_viewport_get_view_window IA__gtk_viewport_get_view_window
 
 extern __typeof (gtk_viewport_new) IA__gtk_viewport_new __attribute((visibility("hidden")));
 #define gtk_viewport_new IA__gtk_viewport_new

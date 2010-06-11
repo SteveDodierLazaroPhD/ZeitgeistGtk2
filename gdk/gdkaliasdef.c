@@ -1065,17 +1065,20 @@ extern __typeof (gdk_drop_reply) gdk_drop_reply __attribute((alias("IA__gdk_drop
 #endif
 #if IN_HEADER(__GDK_DND_H__)
 #if IN_FILE(__GDK_DND_C__)
-#undef gdk_drag_context_get_action 
-extern __typeof (gdk_drag_context_get_action) gdk_drag_context_get_action __attribute((alias("IA__gdk_drag_context_get_action"), visibility("default")));
-
 #undef gdk_drag_context_get_actions 
 extern __typeof (gdk_drag_context_get_actions) gdk_drag_context_get_actions __attribute((alias("IA__gdk_drag_context_get_actions"), visibility("default")));
+
+#undef gdk_drag_context_get_selected_action 
+extern __typeof (gdk_drag_context_get_selected_action) gdk_drag_context_get_selected_action __attribute((alias("IA__gdk_drag_context_get_selected_action"), visibility("default")));
 
 #undef gdk_drag_context_get_suggested_action 
 extern __typeof (gdk_drag_context_get_suggested_action) gdk_drag_context_get_suggested_action __attribute((alias("IA__gdk_drag_context_get_suggested_action"), visibility("default")));
 
 #undef gdk_drag_context_list_targets 
 extern __typeof (gdk_drag_context_list_targets) gdk_drag_context_list_targets __attribute((alias("IA__gdk_drag_context_list_targets"), visibility("default")));
+
+#undef gdk_drag_context_get_source_window 
+extern __typeof (gdk_drag_context_get_source_window) gdk_drag_context_get_source_window __attribute((alias("IA__gdk_drag_context_get_source_window"), visibility("default")));
 
 #undef gdk_drag_find_window 
 extern __typeof (gdk_drag_find_window) gdk_drag_find_window __attribute((alias("IA__gdk_drag_find_window"), visibility("default")));

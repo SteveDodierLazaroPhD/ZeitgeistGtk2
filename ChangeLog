@@ -1,3 +1,631 @@
+commit 75afa7d8d3953262c9e43cd1ce1f6d4db2c84273
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 10 12:42:20 2010 -0400
+
+    Don't call update-po at dist time
+
+    Since we want to not commit changes after distcheck
+
+ po-properties/Makefile.in.in |    2 +-
+ po/Makefile.in.in            |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 68f31098ad56a537dfbe9904a4113b24173aedf8
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 10 10:16:41 2010 -0400
+
+    Updates
+
+ NEWS |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 5b41e388c9be4a985e5d42b29b3600ed1991a3f7
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Thu Jun 10 15:53:48 2010 +0200
+
+    Add missing methods to the GdkDragContext docs.
+
+ docs/reference/gdk/gdk-sections.txt |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit b5fdb452594610df28e0507e39192a2f5cbcc13d
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Thu Jun 10 15:52:45 2010 +0200
+
+    Add a missing accessor for GdkDragContext->source_window.
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkdnd.c                        |   18 ++++++++++++++++++
+ gdk/gdkdnd.h                        |    2 ++
+ 4 files changed, 22 insertions(+), 0 deletions(-)
+
+commit 52c7ad6de3bce82c9cda9ae2b30cb00ef24a122a
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Thu Jun 3 10:13:17 2010 +0200
+
+    Test connection to all given addresses when printing
+
+    Go to the next address given by CUPS if we fail to connect to
+    previous address (#603637).
+    (cherry picked from commit f8ac1231923fe77eb243fe2333e83b03c29c8868)
+
+ modules/printbackends/cups/gtkcupsutils.c |   18 ++++++++++++++++--
+ modules/printbackends/cups/gtkcupsutils.h |    1 +
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+commit 05dad359e799179903ff6c4c7473b8df59ffe34b
+Author: Johan Dahlin <johan@gnome.org>
+Date:   Fri May 28 09:26:31 2010 -0300
+
+    [gtktreeview] Add a couple of annotations
+    (cherry picked from commit 5c283cacbe4ee9eb21a579612b86d328bc54e4b2)
+
+ gtk/gtktextview.c |   24 ++++++++++++------------
+ 1 files changed, 12 insertions(+), 12 deletions(-)
+
+commit eade6b23be735d5734af43a96b3fc9368999fa75
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 10 09:06:02 2010 -0400
+
+    Updates
+
+ NEWS |   21 +++++++++++++++++++++
+ 1 files changed, 21 insertions(+), 0 deletions(-)
+
+commit e494ec1d61e627db44a6bcc678ee8b37c8eb038c
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Jun 10 13:15:12 2010 +0200
+
+    gdk: fix typo in the docs for gdk_drag_context_get_selected_action()
+
+ gdk/gdkdnd.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 54e959ef9666f9192dc4397231645502e6195b7a
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Wed Jun 9 13:02:46 2010 +0200
+
+    Add an accessor for GtkViewport->view_window (#621081).
+
+ docs/reference/gtk/gtk-sections.txt |    1 +
+ gtk/gtk.symbols                     |    1 +
+ gtk/gtkviewport.c                   |   18 ++++++++++++++++++
+ gtk/gtkviewport.h                   |    1 +
+ 4 files changed, 21 insertions(+), 0 deletions(-)
+
+commit 1a00cb9df572e6b7975422416c5f7454c933a639
+Author: Steve Frécinaux <code@istique.net>
+Date:   Tue Jun 8 20:32:12 2010 +0200
+
+    [gtkwidget] Add type annotations for the event signals.
+
+ gtk/gtkwidget.c |   65
+ +++++++++++++++++++++++++++++++++++-------------------
+ 1 files changed, 42 insertions(+), 23 deletions(-)
+
+commit af7f95207e2f45efd096f218167241653e9151a3
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jun 8 21:45:15 2010 +0200
+
+    menu: Fix wrong comparison causing navigation region to not get
+    removed
+
+    The navigation region that got created for right-facing submenus when
+    moving the cursor up would have two negative values which caused the
+    check to go wrong.
+
+    I refactored the code to make that check into a separate function
+    as it
+    makes the check not only harder to get wrong, but also the code easier
+    to read.
+
+    http://bugzilla.gnome.org/show_bug.cgi?id=620863
+
+ gtk/gtkmenu.c |   83
+ +++++++++++++++++++++++++++++++-------------------------
+ 1 files changed, 46 insertions(+), 37 deletions(-)
+
+commit 4acbc2fdb0f4312e8b991761994429f25f79f195
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Tue Jun 8 12:09:48 2010 -0500
+
+    bgo#608537 - Make the file chooser's sort arrows consistent with
+    the HIG
+
+    ... Although I think the HIG gets things backwards anyway.
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 070afc587cde9b4fb34643b2fc56f4898f02e882
+Author: Hib Eris <hib@hiberis.nl>
+Date:   Tue Jun 8 15:29:22 2010 +0200
+
+    [gdk/win32] Fix typo
+
+ gdk/win32/gdkinput.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 3b50f22873d38f00e42d37d0053e3822610061c4
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Mon Jun 7 18:20:36 2010 -0400
+
+    add transfer-none to return value of gtk_widget_get_window
+
+ gtk/gtkwidget.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit d3adde0116fed1054ad2c7420df49a774325dcf0
+Author: Steve Frécinaux <code@istique.net>
+Date:   Mon Jun 7 23:47:14 2010 +0200
+
+    [gdkevents] Add annotations for GdkEvent getters.
+
+ gdk/gdkevents.c |   14 +++++++-------
+ 1 files changed, 7 insertions(+), 7 deletions(-)
+
+commit 88dbf5cabfe66d3df87413639346be51ee598352
+Author: Steve Frécinaux <code@istique.net>
+Date:   Mon Jun 7 23:45:43 2010 +0200
+
+    [gtktextbuffer] Annotate gtk_text_buffer_create_mark()
+
+    Add (transfer none) to the return value of
+    gtk_text_buffer_create_mark(),
+    as the documentation clearly states the caller doesn't have
+    ownership of
+    the returned value.
+
+ gtk/gtktextbuffer.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 1bd94d731b969af3aecfa96ce733f3f68fd25392
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Mon Jun 7 16:15:39 2010 -0400
+
+    annotate allow-none for gtk_image_menu_item_new_from_stock accel_group
+    param
+
+ gtk/gtkimagemenuitem.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 5ac10f45f1e03ee220f6287d3a37565bc02cb0e1
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Mon Jun 7 13:15:27 2010 -0400
+
+    add allow-none annotation to gtk_clipboard_set_can_store's targets
+    parameter
+
+ gtk/gtkclipboard.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+commit f14fc8bc374f7e06343a80dff0b80efc8de3c014
+Author: Stanislas Marquis <stnsls@gmail.com>
+Date:   Sat Jun 5 00:33:06 2010 +0200
+
+    [docs] Fix GtkWindow: activate-default => activate-focus.
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+
+ gtk/gtkwindow.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit d780a23746163690ad4c89e562dc176ec58f6d27
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 3 13:43:42 2010 -0400
+
+    Silence a few warnings in !HAVE_RANDR builds
+    (cherry picked from commit b96a05b81f2de9949da94c376be533114025765b)
+
+ gdk/x11/gdkscreen-x11.c |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
+
+commit e6b02c883fa83e33e1263086ea5c4fb2b78c8fc0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 3 13:38:15 2010 -0400
+
+    Silence a few configure warnings about datarootdir
+    (cherry picked from commit 112d97d498ddf0d9b652cfd8b8fb6cf8686e18f1)
+
+ po-properties/Makefile.in.in |    1 +
+ po/Makefile.in.in            |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 429b728fe1e1378d4b52dc290fe0f0efe512df74
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 3 13:36:09 2010 -0400
+
+    Fix a typo
+    (cherry picked from commit 354086bafc0187df023bab625f86a29c71e43a3b)
+
+ tests/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit c3a971377593d7a24bd10edbfe6c615736f4bc08
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 3 13:22:31 2010 -0400
+
+    Avoid a 'EXTRA_DIST multiply defined' warning
+    (cherry picked from commit 974d7137a0f6c5523bc76f04549ec667c91f23b5)
+
+ build/win32/vs9/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit e4ece66c9cb9aa4a6515799a5f6ab099f509cd23
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Jun 4 16:28:11 2010 +0200
+
+    gtktoolshell: Fix some "Since" tags
+
+    get_ellipsize_mode(), get_text_alignment(), get_text_orientation()
+    and get_text_size_group() were added in GTK+ 2.20,  not 2.14.
+
+    Reported by Stanislas Marquis on IRC.
+
+ gtk/gtktoolshell.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit c8262d39fa3c251d34da0425eea932318a330a28
+Author: Colin Walters <walters@verbum.org>
+Date:   Thu Jun 3 16:24:38 2010 -0400
+
+    Use g_source_set_name for all custom GSources in GTK+
+
+    Naming the sources allows easier debugging with e.g. SystemTap
+    probes.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=620511
+
+ gdk/quartz/gdkeventloop-quartz.c                 |    1 +
+ gdk/win32/gdkevents-win32.c                      |    1 +
+ gdk/x11/gdkevents-x11.c                          |    5 +++++
+ modules/printbackends/cups/gtkprintbackendcups.c |    1 +
+ 4 files changed, 8 insertions(+), 0 deletions(-)
+
+commit e16a965ef6b987067aa0e9657db087dc0c493c62
+Author: Colin Walters <walters@verbum.org>
+Date:   Thu Jun 3 21:31:25 2010 -0400
+
+    Require glib git (for upcoming g_source_set_name patch)
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 01e2fc5b5a99fc9c5096b13bfe6323174465fd35
+Author: Matthew Barnes <mbarnes@redhat.com>
+Date:   Wed Jun 2 16:00:16 2010 -0400
+
+    Bug 596428 - GtkAssistant: Support ending with a progress page
+
+    - Add gtk_assistant_commit()
+
+      This function discards the visited pages list so the back button
+      is not
+      shown on the current page, and removes the cancel button from
+      subsequent
+      pages.  Use this when information provided thus far cannot be
+      revisited.
+
+    - Don't show the Forward button on a GTK_ASSISTANT_PAGE_PROGRESS
+    if it's
+      the last page (according to the forward page function).
+
+    - Append a progress page to the GtkAssistant demo.
+
+ demos/gtk-demo/assistant.c          |   55 +++++++++++++++++++++++++++++-
+ docs/reference/gtk/gtk-sections.txt |    1 +
+ gtk/gtk.symbols                     |    1 +
+ gtk/gtkassistant.c                  |   64
+ +++++++++++++++++++++++++++++++----
+ gtk/gtkassistant.h                  |    4 ++-
+ 5 files changed, 115 insertions(+), 10 deletions(-)
+
+commit 22c61e0c8f0028cb4da8b4a107f8018f5a0ed5dc
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Wed Jun 2 21:11:45 2010 +0200
+
+    app: forgot to update API docs in the last commit
+
+ gdk/gdkdnd.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit d393cb377c60a4de9cab1d026acccafed1e34ec1
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Wed Jun 2 20:42:11 2010 +0200
+
+    gdk: rename gdk_drag_context_get_action() to
+    gdk_drag_context_get_selected_action()
+
+    so its purpose is clear.
+
+ gdk/gdk.symbols |    2 +-
+ gdk/gdkdnd.c    |    2 +-
+ gdk/gdkdnd.h    |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 8a6f6b54217fa2a6e23b495a6732cf6396076b8f
+Author: Didier Roche <didrocks@ubuntu.com>
+Date:   Wed Mar 24 12:15:49 2010 +0100
+
+    Fix fail to build when building with introspection
+
+    In debian/ubuntu, builddir != srcdir. This trigger an error on
+    introspection_files where srcdir is added to x11/*.c. Indeed,
+    srcdir is added again later: $(addprefix
+    $(srcdir)/,$(introspection_files))
+    making $(srcdir)/$(srcdir)/x11/*.c (not an issue on jhbuild as srcdir
+    = .)
+
+ gdk/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 75e48d68bc326a75ef99307957f4be3c2c96df19
+Author: Garrett Regier <alias301@gmail.com>
+Date:   Sat May 15 13:58:30 2010 -0700
+
+    Bug 611709 - Add gtk_statusbar_remove_all
+
+ gtk/gtk.symbols    |    1 +
+ gtk/gtkstatusbar.c |   66
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkstatusbar.h |    3 ++
+ 3 files changed, 70 insertions(+), 0 deletions(-)
+
+commit 6c0ff288b0433fe86e499abf19a242d017b75205
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Tue Jun 1 10:32:18 2010 -0500
+
+    Bug 608218 - GtkOffscreenWindow causes bad window with GtkEntry
+
+    We now exit early from gdk_window_register_dnd() to avoid crashing
+    if the
+    window type is GDK_WINDOW_OFFSCREEN and does not support dnd
+    operations.
+    This makes it possible to use any dnd-enabled widgets, such as
+    GtkEntry,
+    within a GtkOffscreenWindow.
+
+ gdk/x11/gdkdnd-x11.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit ae7cfc70c7dd3d97c9d62c664c1ee4ea31a17279
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun May 30 18:33:09 2010 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 27883221355aeb11c1a80f101435ca4fc2d52636
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun May 30 18:30:16 2010 -0400
+
+    2.21.1
+
+ docs/reference/gdk/tmpl/colors.sgml        |    6 -
+ docs/reference/gdk/tmpl/cursors.sgml       |    1 -
+ docs/reference/gdk/tmpl/dnd.sgml           |   10 -
+ docs/reference/gdk/tmpl/general.sgml       |    7 -
+ docs/reference/gdk/tmpl/images.sgml        |   11 -
+ docs/reference/gdk/tmpl/input_devices.sgml |    9 -
+ docs/reference/gdk/tmpl/visuals.sgml       |   36 -
+ docs/reference/gdk/tmpl/windows.sgml       |    1 +
+ docs/reference/gtk/tmpl/gtkiconview.sgml   |   20 +
+ po-properties/af.po                        |  164 +-
+ po-properties/am.po                        |  164 +-
+ po-properties/ang.po                       |  164 +-
+ po-properties/ar.po                        |  164 +-
+ po-properties/as.po                        |  165 +-
+ po-properties/ast.po                       |  165 +-
+ po-properties/az.po                        |  164 +-
+ po-properties/az_IR.po                     |  164 +-
+ po-properties/be.po                        |  164 +-
+ po-properties/be@latin.po                  |  164 +-
+ po-properties/bg.po                        |  165 +-
+ po-properties/bn.po                        |  165 +-
+ po-properties/bn_IN.po                     |  165 +-
+ po-properties/br.po                        |  164 +-
+ po-properties/bs.po                        |  164 +-
+ po-properties/ca.po                        |  165 +-
+ po-properties/ca@valencia.po               |  165 +-
+ po-properties/crh.po                       |  164 +-
+ po-properties/cs.po                        |  165 +-
+ po-properties/cy.po                        |  164 +-
+ po-properties/da.po                        |  165 +-
+ po-properties/de.po                        |  165 +-
+ po-properties/dz.po                        |  164 +-
+ po-properties/el.po                        |  165 +-
+ po-properties/en_CA.po                     |  164 +-
+ po-properties/en_GB.po                     |  165 +-
+ po-properties/eo.po                        |  164 +-
+ po-properties/es.po                        |  165 +-
+ po-properties/et.po                        |  164 +-
+ po-properties/eu.po                        |  165 +-
+ po-properties/fa.po                        |  164 +-
+ po-properties/fi.po                        |  165 +-
+ po-properties/fr.po                        |  165 +-
+ po-properties/ga.po                        |  164 +-
+ po-properties/gl.po                        |  165 +-
+ po-properties/gu.po                        |  165 +-
+ po-properties/he.po                        |  165 +-
+ po-properties/hi.po                        |  165 +-
+ po-properties/hr.po                        |  164 +-
+ po-properties/hu.po                        |  165 +-
+ po-properties/hy.po                        |  164 +-
+ po-properties/ia.po                        |  164 +-
+ po-properties/id.po                        |  164 +-
+ po-properties/io.po                        |  164 +-
+ po-properties/is.po                        |  164 +-
+ po-properties/it.po                        |  165 +-
+ po-properties/ja.po                        |  165 +-
+ po-properties/ka.po                        |  164 +-
+ po-properties/kk.po                        |  164 +-
+ po-properties/kn.po                        |  165 +-
+ po-properties/ko.po                        |  165 +-
+ po-properties/ku.po                        |  164 +-
+ po-properties/li.po                        |  164 +-
+ po-properties/lt.po                        |  165 +-
+ po-properties/lv.po                        |  164 +-
+ po-properties/mai.po                       |  165 +-
+ po-properties/mi.po                        |  164 +-
+ po-properties/mk.po                        |  164 +-
+ po-properties/ml.po                        |  165 +-
+ po-properties/mn.po                        |  164 +-
+ po-properties/mr.po                        |  165 +-
+ po-properties/ms.po                        |  164 +-
+ po-properties/my.po                        |  165 +-
+ po-properties/nb.po                        |  165 +-
+ po-properties/nds.po                       |  164 +-
+ po-properties/ne.po                        |  164 +-
+ po-properties/nl.po                        |  164 +-
+ po-properties/nn.po                        |  164 +-
+ po-properties/nso.po                       |  164 +-
+ po-properties/oc.po                        |  164 +-
+ po-properties/or.po                        |  165 +-
+ po-properties/pa.po                        |  165 +-
+ po-properties/pl.po                        |  165 +-
+ po-properties/ps.po                        |  164 +-
+ po-properties/pt.po                        |  165 +-
+ po-properties/pt_BR.po                     |  165 +-
+ po-properties/ro.po                        |  165 +-
+ po-properties/ru.po                        |  165 +-
+ po-properties/rw.po                        |  164 +-
+ po-properties/si.po                        |  164 +-
+ po-properties/sk.po                        |  164 +-
+ po-properties/sl.po                        |  165 +-
+ po-properties/sq.po                        |  164 +-
+ po-properties/sr.po                        |  165 +-
+ po-properties/sr@ije.po                    |  164 +-
+ po-properties/sr@latin.po                  |  165 +-
+ po-properties/sv.po                        |  165 +-
+ po-properties/ta.po                        |  165 +-
+ po-properties/te.po                        |  165 +-
+ po-properties/th.po                        |  164 +-
+ po-properties/tk.po                        |  164 +-
+ po-properties/tr.po                        |  164 +-
+ po-properties/tt.po                        |  164 +-
+ po-properties/uk.po                        |  165 +-
+ po-properties/ur.po                        |  164 +-
+ po-properties/uz.po                        |  164 +-
+ po-properties/uz@cyrillic.po               |  164 +-
+ po-properties/vi.po                        |  165 +-
+ po-properties/wa.po                        |  164 +-
+ po-properties/xh.po                        |  164 +-
+ po-properties/yi.po                        |  164 +-
+ po-properties/zh_CN.po                     |  165 +-
+ po-properties/zh_HK.po                     |  165 +-
+ po-properties/zh_TW.po                     |  165 +-
+ po/af.po                                   |  170 ++--
+ po/am.po                                   |  170 ++--
+ po/ang.po                                  |  170 ++--
+ po/ar.po                                   |  170 ++--
+ po/as.po                                   |  170 ++--
+ po/ast.po                                  |  170 ++--
+ po/az.po                                   |  170 ++--
+ po/az_IR.po                                |  170 ++--
+ po/be.po                                   |  170 ++--
+ po/be@latin.po                             |  170 ++--
+ po/bg.po                                   |  170 ++--
+ po/bn.po                                   |  170 ++--
+ po/bn_IN.po                                |  170 ++--
+ po/br.po                                   |  170 ++--
+ po/bs.po                                   |  170 ++--
+ po/ca.po                                   |  170 ++--
+ po/ca@valencia.po                          |  170 ++--
+ po/crh.po                                  |  170 ++--
+ po/cs.po                                   |  170 ++--
+ po/cy.po                                   |  170 ++--
+ po/da.po                                   |  170 ++--
+ po/de.po                                   |  170 ++--
+ po/dz.po                                   |  170 ++--
+ po/el.po                                   |  170 ++--
+ po/en_CA.po                                |  170 ++--
+ po/en_GB.po                                |  170 ++--
+ po/eo.po                                   |  170 ++--
+ po/es.po                                   |  170 ++--
+ po/et.po                                   |  170 ++--
+ po/eu.po                                   |  170 ++--
+ po/fa.po                                   |  170 ++--
+ po/fi.po                                   |  170 ++--
+ po/fr.po                                   |  170 ++--
+ po/ga.po                                   |  170 ++--
+ po/gl.po                                   |  170 ++--
+ po/gu.po                                   |  170 ++--
+ po/he.po                                   |  170 ++--
+ po/hi.po                                   |  170 ++--
+ po/hr.po                                   |  170 ++--
+ po/hu.po                                   |  170 ++--
+ po/hy.po                                   |  170 ++--
+ po/ia.po                                   |  170 ++--
+ po/id.po                                   |  170 ++--
+ po/io.po                                   |  170 ++--
+ po/is.po                                   |  170 ++--
+ po/it.po                                   | 2238
+ ++++++++++++++--------------
+ po/ja.po                                   |  170 ++--
+ po/ka.po                                   |  170 ++--
+ po/kk.po                                   |  170 ++--
+ po/kn.po                                   |  170 ++--
+ po/ko.po                                   |  170 ++--
+ po/ku.po                                   |  170 ++--
+ po/li.po                                   |  170 ++--
+ po/lt.po                                   |  170 ++--
+ po/lv.po                                   |  170 ++--
+ po/mai.po                                  |  170 ++--
+ po/mi.po                                   |  170 ++--
+ po/mk.po                                   |  170 ++--
+ po/ml.po                                   |  170 ++--
+ po/mn.po                                   |  170 ++--
+ po/mr.po                                   |  170 ++--
+ po/ms.po                                   |  170 ++--
+ po/my.po                                   |  170 ++--
+ po/nb.po                                   |  170 ++--
+ po/nds.po                                  |  170 ++--
+ po/ne.po                                   |  170 ++--
+ po/nl.po                                   |  170 ++--
+ po/nn.po                                   |  170 ++--
+ po/nso.po                                  |  170 ++--
+ po/oc.po                                   |  170 ++--
+ po/or.po                                   |  170 ++--
+ po/pa.po                                   |  170 ++--
+ po/pl.po                                   |  170 ++--
+ po/ps.po                                   |  170 ++--
+ po/pt.po                                   |  170 ++--
+ po/pt_BR.po                                |  170 ++--
+ po/ro.po                                   |  170 ++--
+ po/ru.po                                   |  170 ++--
+ po/rw.po                                   |  170 ++--
+ po/si.po                                   |  170 ++--
+ po/sk.po                                   |  170 ++--
+ po/sl.po                                   |  170 ++--
+ po/sq.po                                   |  170 ++--
+ po/sr.po                                   |  170 ++--
+ po/sr@ije.po                               |  170 ++--
+ po/sr@latin.po                             |  170 ++--
+ po/sv.po                                   |  170 ++--
+ po/ta.po                                   |  170 ++--
+ po/te.po                                   |  170 ++--
+ po/th.po                                   |  170 ++--
+ po/tk.po                                   |  170 ++--
+ po/tr.po                                   |  170 ++--
+ po/tt.po                                   |  170 ++--
+ po/uk.po                                   |  170 ++--
+ po/ur.po                                   |  170 ++--
+ po/uz.po                                   |  170 ++--
+ po/uz@cyrillic.po                          |  170 ++--
+ po/vi.po                                   |  170 ++--
+ po/wa.po                                   |  170 ++--
+ po/xh.po                                   |  170 ++--
+ po/yi.po                                   |  170 ++--
+ po/zh_CN.po                                |  170 ++--
+ po/zh_HK.po                                |  170 ++--
+ po/zh_TW.po                                |  170 ++--
+ 217 files changed, 18469 insertions(+), 18485 deletions(-)
+
 commit 7cfdf8fa323c2233c2849f3d917db19287081fd2
 Author: Michael Natterer <mitch@gimp.org>
 Date:   Sun May 30 15:34:27 2010 +0200

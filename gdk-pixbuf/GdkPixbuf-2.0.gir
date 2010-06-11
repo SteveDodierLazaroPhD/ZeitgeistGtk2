@@ -53,7 +53,7 @@ and/or use gtk-doc annotations.  -->
     <constant name="MAJOR" value="2">
       <type name="int"/>
     </constant>
-    <constant name="MICRO" value="1">
+    <constant name="MICRO" value="2">
       <type name="int"/>
     </constant>
     <constant name="MINOR" value="21">
@@ -205,8 +205,7 @@ allocate the image buffer, or the image file contained invalid data."
       </constructor>
       <constructor name="new_from_data"
                    c:identifier="gdk_pixbuf_new_from_data"
-                   doc="drops to zero, or %NULL if the data should not be freed
-Creates a new #GdkPixbuf out of in-memory image data.  Currently only RGB
+                   doc="Creates a new #GdkPixbuf out of in-memory image data.  Currently only RGB
 images with 8 bits per sample are supported.">
         <return-value transfer-ownership="full">
           <type name="Pixbuf" c:type="GdkPixbuf*"/>
@@ -238,7 +237,8 @@ images with 8 bits per sample are supported.">
           <parameter name="destroy_fn"
                      transfer-ownership="none"
                      scope="call"
-                     closure="8">
+                     closure="8"
+                     doc=" drops to zero, or %NULL if the data should not be freed">
             <type name="PixbufDestroyNotify" c:type="GdkPixbufDestroyNotify"/>
           </parameter>
           <parameter name="destroy_fn_data" transfer-ownership="none">
@@ -263,8 +263,7 @@ the result of including an XPM file into a program&apos;s C source.">
       </constructor>
       <constructor name="new_from_inline"
                    c:identifier="gdk_pixbuf_new_from_inline"
-                   doc="disable length checks
-Create a #GdkPixbuf from a flat representation that is suitable for
+                   doc="Create a #GdkPixbuf from a flat representation that is suitable for
 storing as inline data in a program. This is useful if you want to
 ship a program with images, but don&apos;t want to depend on any
 external files.
@@ -296,7 +295,9 @@ count of 1, or %NULL if an error occurred."
           <type name="Pixbuf" c:type="GdkPixbuf*"/>
         </return-value>
         <parameters>
-          <parameter name="data_length" transfer-ownership="none">
+          <parameter name="data_length"
+                     transfer-ownership="none"
+                     doc=" disable length checks">
             <type name="int" c:type="gint"/>
           </parameter>
           <parameter name="data" transfer-ownership="none">
@@ -400,18 +401,23 @@ is owned by GdkPixbuf and should not be freed."
           <parameter name="filename" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     caller-allocates="0"
+                     transfer-ownership="full">
             <type name="int" c:type="gint*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     caller-allocates="0"
+                     transfer-ownership="full">
             <type name="int" c:type="gint*"/>
           </parameter>
         </parameters>
       </function>
       <function name="from_pixdata"
                 c:identifier="gdk_pixbuf_from_pixdata"
-                doc="pixel data is always copied.
-Converts a #GdkPixdata to a #GdkPixbuf. If @copy_pixels is %TRUE or
+                doc="Converts a #GdkPixdata to a #GdkPixbuf. If @copy_pixels is %TRUE or
 if the pixel data is run-length-encoded, the pixel data is copied into
 newly-allocated memory; otherwise it is reused."
                 throws="1">
@@ -422,7 +428,9 @@ newly-allocated memory; otherwise it is reused."
           <parameter name="pixdata" transfer-ownership="none">
             <type name="Pixdata" c:type="GdkPixdata*"/>
           </parameter>
-          <parameter name="copy_pixels" transfer-ownership="none">
+          <parameter name="copy_pixels"
+                     transfer-ownership="none"
+                     doc=" pixel data is always copied.">
             <type name="boolean" c:type="gboolean"/>
           </parameter>
         </parameters>
@@ -516,15 +524,16 @@ not enough memory could be allocated.">
       </method>
       <method name="fill"
               c:identifier="gdk_pixbuf_fill"
-              doc="(0xffffffff is opaque white, 0x00000000 transparent black)
-Clears a pixbuf to the given RGBA value, converting the RGBA value into
+              doc="Clears a pixbuf to the given RGBA value, converting the RGBA value into
 the pixbuf&apos;s pixel format. The alpha will be ignored if the pixbuf
 doesn&apos;t have an alpha channel.">
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="pixel" transfer-ownership="none">
+          <parameter name="pixel"
+                     transfer-ownership="none"
+                     doc=" (0xffffffff is opaque white, 0x00000000 transparent black)">
             <type name="uint32" c:type="guint32"/>
           </parameter>
         </parameters>
@@ -633,8 +642,7 @@ See gdk_pixbuf_save () for more details."
       </method>
       <method name="save_to_callback"
               c:identifier="gdk_pixbuf_save_to_callback"
-              doc="the save routine generates.
-Saves pixbuf in format @type by feeding the produced data to a
+              doc="Saves pixbuf in format @type by feeding the produced data to a
 callback. Can be used when you want to store the image to something
 other than a file, such as an in-memory buffer or a socket.
 If @error is set, %FALSE will be returned. Possible errors
@@ -649,7 +657,8 @@ See gdk_pixbuf_save() for more details."
           <parameter name="save_func"
                      transfer-ownership="none"
                      scope="call"
-                     closure="2">
+                     closure="2"
+                     doc=" the save routine generates.">
             <type name="PixbufSaveFunc" c:type="GdkPixbufSaveFunc"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -672,8 +681,7 @@ See gdk_pixbuf_save() for more details."
       </method>
       <method name="save_to_callbackv"
               c:identifier="gdk_pixbuf_save_to_callbackv"
-              doc="the save routine generates.
-Saves pixbuf to a callback in format @type, which is currently &quot;jpeg&quot;,
+              doc="Saves pixbuf to a callback in format @type, which is currently &quot;jpeg&quot;,
 &quot;png&quot;, &quot;tiff&quot;, &quot;ico&quot; or &quot;bmp&quot;.  If @error is set, %FALSE will be returned. See
 gdk_pixbuf_save_to_callback () for more details."
               version="2.4"
@@ -685,7 +693,8 @@ gdk_pixbuf_save_to_callback () for more details."
           <parameter name="save_func"
                      transfer-ownership="none"
                      scope="call"
-                     closure="2">
+                     closure="2"
+                     doc=" the save routine generates.">
             <type name="PixbufSaveFunc" c:type="GdkPixbufSaveFunc"/>
           </parameter>
           <parameter name="user_data" transfer-ownership="none">
@@ -728,6 +737,7 @@ See gdk_pixbuf_save() for more details."
           </parameter>
           <parameter name="buffer_size"
                      direction="out"
+                     caller-allocates="0"
                      transfer-ownership="full">
             <type name="size_t" c:type="gsize*"/>
           </parameter>
@@ -764,6 +774,7 @@ for more details."
           </parameter>
           <parameter name="buffer_size"
                      direction="out"
+                     caller-allocates="0"
                      transfer-ownership="full">
             <type name="size_t" c:type="gsize*"/>
           </parameter>
@@ -809,8 +820,7 @@ for more details."
       </method>
       <method name="add_alpha"
               c:identifier="gdk_pixbuf_add_alpha"
-              doc="is %FALSE, then the (@r, @g, @b) arguments will be ignored.
-Takes an existing pixbuf and adds an alpha channel to it.
+              doc="Takes an existing pixbuf and adds an alpha channel to it.
 If the existing pixbuf already had an alpha channel, the channel
 values are copied from the original; otherwise, the alpha channel
 is initialized to 255 (full opacity).
@@ -821,7 +831,9 @@ substitute color, all white pixels will become fully transparent.">
           <type name="Pixbuf" c:type="GdkPixbuf*"/>
         </return-value>
         <parameters>
-          <parameter name="substitute_color" transfer-ownership="none">
+          <parameter name="substitute_color"
+                     transfer-ownership="none"
+                     doc=" is %FALSE, then the (@r, @g, @b) arguments will be ignored.">
             <type name="boolean" c:type="gboolean"/>
           </parameter>
           <parameter name="r" transfer-ownership="none">
@@ -1286,10 +1298,16 @@ allocate the image buffer, or the image file contained invalid data."
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="width" direction="out" transfer-ownership="full">
+          <parameter name="width"
+                     direction="out"
+                     caller-allocates="0"
+                     transfer-ownership="full">
             <type name="int" c:type="int*"/>
           </parameter>
-          <parameter name="height" direction="out" transfer-ownership="full">
+          <parameter name="height"
+                     direction="out"
+                     caller-allocates="0"
+                     transfer-ownership="full">
             <type name="int" c:type="int*"/>
           </parameter>
         </parameters>
@@ -1439,10 +1457,16 @@ A delay time of -1 is possible, indicating &quot;infinite.&quot;">
             <parameter name="anim" transfer-ownership="none">
               <type name="PixbufAnimation" c:type="GdkPixbufAnimation*"/>
             </parameter>
-            <parameter name="width" direction="out" transfer-ownership="full">
+            <parameter name="width"
+                       direction="out"
+                       caller-allocates="0"
+                       transfer-ownership="full">
               <type name="int" c:type="int*"/>
             </parameter>
-            <parameter name="height" direction="out" transfer-ownership="full">
+            <parameter name="height"
+                       direction="out"
+                       caller-allocates="0"
+                       transfer-ownership="full">
               <type name="int" c:type="int*"/>
             </parameter>
           </parameters>
@@ -2177,10 +2201,16 @@ the desired size to which the image should be scaled.">
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="width" direction="out" transfer-ownership="full">
+        <parameter name="width"
+                   direction="out"
+                   caller-allocates="0"
+                   transfer-ownership="full">
           <type name="int" c:type="gint*"/>
         </parameter>
-        <parameter name="height" direction="out" transfer-ownership="full">
+        <parameter name="height"
+                   direction="out"
+                   caller-allocates="0"
+                   transfer-ownership="full">
           <type name="int" c:type="gint*"/>
         </parameter>
         <parameter name="user_data" transfer-ownership="none" closure="2">
@@ -2350,11 +2380,7 @@ was constructed."
     </class>
     <record name="Pixdata"
             c:type="GdkPixdata"
-            doc="#GDK_PIXBUF_MAGIC_NUMBER here.
-#GDK_PIXDATA_HEADER_LENGTH + length of @pixel_data.
-encoding, in a #GdkPixdataType.
-and @rowstride.
-A #GdkPixdata contains pixbuf information in a form suitable for
+            doc="A #GdkPixdata contains pixbuf information in a form suitable for
 serialization and streaming.">
       <field name="magic" writable="1">
         <type name="uint32" c:type="guint32"/>
@@ -2392,6 +2418,7 @@ bytes the structure points to.
         <parameters>
           <parameter name="stream_length_p"
                      direction="out"
+                     caller-allocates="0"
                      transfer-ownership="full">
             <type name="uint" c:type="guint*"/>
           </parameter>
@@ -2442,8 +2469,7 @@ for the run-length encoded pixel data, otherwise %NULL.">
       </method>
       <method name="to_csource"
               c:identifier="gdk_pixdata_to_csource"
-              doc="source to be generated.
-Generates C source code suitable for compiling images directly
+              doc="Generates C source code suitable for compiling images directly
 into programs.
 GTK+ ships with a program called &lt;command&gt;gdk-pixbuf-csource&lt;/command&gt;
 which offers a command line interface to this function.
@@ -2455,7 +2481,9 @@ of @pixdata.">
           <parameter name="name" transfer-ownership="none">
             <type name="utf8" c:type="gchar*"/>
           </parameter>
-          <parameter name="dump_type" transfer-ownership="none">
+          <parameter name="dump_type"
+                     transfer-ownership="none"
+                     doc=" source to be generated.">
             <type name="PixdataDumpType" c:type="GdkPixdataDumpType"/>
           </parameter>
         </parameters>
@@ -2482,12 +2510,7 @@ of @pixdata.">
               c:identifier="GDK_PIXDATA_DUMP_RLE_DECODER"/>
     </bitfield>
     <bitfield name="PixdataType"
-              doc="and an alpha value.
-be up to 127 bytes long; their length is stored in a single byte
-preceding the pixel data for the run. If a run is constant, its length
-byte has the high bit set and the pixel data consists of a single pixel
-which must be repeated.
-An enumeration containing three sets of flags for a #GdkPixdata struct:
+              doc="An enumeration containing three sets of flags for a #GdkPixdata struct:
 one for the used colorspace, one for the width of the samples and one
 for the encoding of the pixel data."
               c:type="GdkPixdataType">
@@ -2516,7 +2539,7 @@ for the encoding of the pixel data."
               value="251658240"
               c:identifier="GDK_PIXDATA_ENCODING_MASK"/>
     </bitfield>
-    <constant name="VERSION" value="2.21.1">
+    <constant name="VERSION" value="2.21.2">
       <type name="utf8"/>
     </constant>
   </namespace>

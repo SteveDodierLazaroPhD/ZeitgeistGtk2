@@ -1062,17 +1062,20 @@ extern __typeof (gdk_drop_reply) IA__gdk_drop_reply __attribute((visibility("hid
 #endif
 #if IN_HEADER(__GDK_DND_H__)
 #if IN_FILE(__GDK_DND_C__)
-extern __typeof (gdk_drag_context_get_action) IA__gdk_drag_context_get_action __attribute((visibility("hidden")));
-#define gdk_drag_context_get_action IA__gdk_drag_context_get_action
-
 extern __typeof (gdk_drag_context_get_actions) IA__gdk_drag_context_get_actions __attribute((visibility("hidden")));
 #define gdk_drag_context_get_actions IA__gdk_drag_context_get_actions
+
+extern __typeof (gdk_drag_context_get_selected_action) IA__gdk_drag_context_get_selected_action __attribute((visibility("hidden")));
+#define gdk_drag_context_get_selected_action IA__gdk_drag_context_get_selected_action
 
 extern __typeof (gdk_drag_context_get_suggested_action) IA__gdk_drag_context_get_suggested_action __attribute((visibility("hidden")));
 #define gdk_drag_context_get_suggested_action IA__gdk_drag_context_get_suggested_action
 
 extern __typeof (gdk_drag_context_list_targets) IA__gdk_drag_context_list_targets __attribute((visibility("hidden")));
 #define gdk_drag_context_list_targets IA__gdk_drag_context_list_targets
+
+extern __typeof (gdk_drag_context_get_source_window) IA__gdk_drag_context_get_source_window __attribute((visibility("hidden")));
+#define gdk_drag_context_get_source_window IA__gdk_drag_context_get_source_window
 
 extern __typeof (gdk_drag_find_window) IA__gdk_drag_find_window __attribute((visibility("hidden")));
 #define gdk_drag_find_window IA__gdk_drag_find_window

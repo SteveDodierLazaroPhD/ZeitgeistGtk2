@@ -692,6 +692,9 @@ extern __typeof (gtk_assistant_remove_action_widget) gtk_assistant_remove_action
 #undef gtk_assistant_update_buttons_state 
 extern __typeof (gtk_assistant_update_buttons_state) gtk_assistant_update_buttons_state __attribute((alias("IA__gtk_assistant_update_buttons_state"), visibility("default")));
 
+#undef gtk_assistant_commit 
+extern __typeof (gtk_assistant_commit) gtk_assistant_commit __attribute((alias("IA__gtk_assistant_commit"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GTK_TYPE_BUILTINS_H__)
@@ -9159,6 +9162,9 @@ extern __typeof (gtk_statusbar_push) gtk_statusbar_push __attribute((alias("IA__
 #undef gtk_statusbar_remove 
 extern __typeof (gtk_statusbar_remove) gtk_statusbar_remove __attribute((alias("IA__gtk_statusbar_remove"), visibility("default")));
 
+#undef gtk_statusbar_remove_all 
+extern __typeof (gtk_statusbar_remove_all) gtk_statusbar_remove_all __attribute((alias("IA__gtk_statusbar_remove_all"), visibility("default")));
+
 #undef gtk_statusbar_set_has_resize_grip 
 extern __typeof (gtk_statusbar_set_has_resize_grip) gtk_statusbar_set_has_resize_grip __attribute((alias("IA__gtk_statusbar_set_has_resize_grip"), visibility("default")));
 
@@ -12010,6 +12016,9 @@ extern __typeof (gtk_viewport_get_vadjustment) gtk_viewport_get_vadjustment __at
 
 #undef gtk_viewport_get_bin_window 
 extern __typeof (gtk_viewport_get_bin_window) gtk_viewport_get_bin_window __attribute((alias("IA__gtk_viewport_get_bin_window"), visibility("default")));
+
+#undef gtk_viewport_get_view_window 
+extern __typeof (gtk_viewport_get_view_window) gtk_viewport_get_view_window __attribute((alias("IA__gtk_viewport_get_view_window"), visibility("default")));
 
 #undef gtk_viewport_new 
 extern __typeof (gtk_viewport_new) gtk_viewport_new __attribute((alias("IA__gtk_viewport_new"), visibility("default")));

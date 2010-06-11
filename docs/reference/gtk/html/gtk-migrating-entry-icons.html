@@ -28,7 +28,7 @@
     straightforward. The main difference between the two APIs is that
     SexyIconEntry uses <a class="link" href="GtkImage.html" title="GtkImage"><span class="type">GtkImage</span></a> widgets in a somewhat awkward way as
     storage vehicles for icons, while GtkEntry allows to specify icons
-    via pixbufs, stock ids, icon names or <a href="/usr/share/gtk-doc/html/gio/GIcon.html"><span class="type">GIcons</span></a>. So, if your code uses
+    via pixbufs, stock ids, icon names or <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcons</span></a>. So, if your code uses
     e.g.:
 </p>
 <div class="informalexample">
@@ -73,8 +73,8 @@
         <td class="listing_lines" align="right"><pre>1
 2
 3</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="symbol">(*</span><span class="normal">icon_pressed</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">SexyIconEntry         </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span>
-<span class="normal">                      SexyIconEntryPosition  icon_pos</span><span class="symbol">,</span>
+        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="symbol">(*</span><span class="normal">icon_pressed</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">SexyIconEntry</span><span class="normal">         </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span>
+<span class="normal">                      </span><span class="usertype">SexyIconEntryPosition</span><span class="normal">  icon_pos</span><span class="symbol">,</span>
 <span class="normal">                      </span><span class="type">int</span><span class="normal">                    button</span><span class="symbol">)</span></pre></td>
       </tr>
     </tbody>
@@ -91,9 +91,9 @@ to
         <td class="listing_lines" align="right"><pre>1
 2
 3</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="symbol">(*</span><span class="normal">icon_press</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="GtkEntry.html">GtkEntry</a>              </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span>
-<span class="normal">                    GtkEntryIconPosition  icon_pos</span><span class="symbol">,</span>
-<span class="normal">                    <a href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEventButton">GdkEventButton</a>       </span><span class="symbol">*</span><span class="normal">event</span><span class="symbol">)</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="symbol">(*</span><span class="normal">icon_press</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkEntry</span><span class="normal">              </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span>
+<span class="normal">                    </span><span class="usertype">GtkEntryIconPosition</span><span class="normal">  icon_pos</span><span class="symbol">,</span>
+<span class="normal">                    </span><span class="usertype">GdkEventButton</span><span class="normal">       </span><span class="symbol">*</span><span class="normal">event</span><span class="symbol">)</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -123,16 +123,16 @@ to
 11
 12</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">icon_pressed_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">SexyIconEntry         </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
-<span class="normal">                 SexyIconEntryPosition  position</span><span class="symbol">,</span>
+<span class="function">icon_pressed_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">SexyIconEntry</span><span class="normal">         </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
+<span class="normal">                 </span><span class="usertype">SexyIconEntryPosition</span><span class="normal">  position</span><span class="symbol">,</span>
 <span class="normal">                 </span><span class="type">int</span><span class="normal">                    button</span><span class="symbol">,</span>
-<span class="normal">                 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer">gpointer</a>               data</span><span class="symbol">)</span>
+<span class="normal">                 </span><span class="usertype">gpointer</span><span class="normal">               data</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  <a href="GtkMenu.html">GtkMenu</a> </span><span class="symbol">*</span><span class="normal">menu </span><span class="symbol">=</span><span class="normal"> data</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="usertype">GtkMenu</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">menu </span><span class="symbol">=</span><span class="normal"> data</span><span class="symbol">;</span>
 
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">position </span><span class="symbol">==</span><span class="normal"> SEXY_ICON_ENTRY_PRIMARY</span><span class="symbol">)</span>
-<span class="normal">    </span><span class="function"><a href="GtkMenu.html#gtk-menu-popup">gtk_menu_popup</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_MENU</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">),</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span>
-<span class="normal">                    button</span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/gdk/gdk-Events.html#GDK-CURRENT-TIME:CAPS">GDK_CURRENT_TIME</a></span><span class="symbol">);</span>
+<span class="normal">    </span><span class="function"><a href="GtkMenu.html#gtk-menu-popup">gtk_menu_popup</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_MENU</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span>
+<span class="normal">                    button</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Events.html#GDK-CURRENT-TIME:CAPS">GDK_CURRENT_TIME</a></span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
     </tbody>
@@ -159,15 +159,15 @@ to
 11
 12</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">icon_press_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="GtkEntry.html">GtkEntry</a>             </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
-<span class="normal">               <a href="GtkEntry.html#GtkEntryIconPosition">GtkEntryIconPosition</a>  position</span><span class="symbol">,</span>
-<span class="normal">               <a href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEventButton">GdkEventButton</a>       </span><span class="symbol">*</span><span class="normal">event</span><span class="symbol">,</span>
-<span class="normal">               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer">gpointer</a>              data</span><span class="symbol">)</span>
+<span class="function">icon_press_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkEntry</span><span class="normal">             </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
+<span class="normal">               </span><span class="usertype">GtkEntryIconPosition</span><span class="normal">  position</span><span class="symbol">,</span>
+<span class="normal">               </span><span class="usertype">GdkEventButton</span><span class="normal">       </span><span class="symbol">*</span><span class="normal">event</span><span class="symbol">,</span>
+<span class="normal">               </span><span class="usertype">gpointer</span><span class="normal">              data</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  <a href="GtkMenu.html">GtkMenu</a> </span><span class="symbol">*</span><span class="normal">menu </span><span class="symbol">=</span><span class="normal"> data</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="usertype">GtkMenu</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">menu </span><span class="symbol">=</span><span class="normal"> data</span><span class="symbol">;</span>
 
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">position </span><span class="symbol">==</span><span class="normal"> <a href="GtkEntry.html#GTK-ENTRY-ICON-PRIMARY:CAPS">GTK_ENTRY_ICON_PRIMARY</a></span><span class="symbol">)</span>
-<span class="normal">    </span><span class="function"><a href="GtkMenu.html#gtk-menu-popup">gtk_menu_popup</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_MENU</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">),</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span>
+<span class="normal">    </span><span class="function"><a href="GtkMenu.html#gtk-menu-popup">gtk_menu_popup</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_MENU</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span>
 <span class="normal">                    event</span><span class="symbol">-&gt;</span><span class="normal">button</span><span class="symbol">,</span><span class="normal"> event</span><span class="symbol">-&gt;</span><span class="normal">time</span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
@@ -243,21 +243,21 @@ to
 35
 36</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">icon_pressed_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="GtkEntry.html">GtkEntry</a>       </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
-<span class="normal">                 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint">gint</a>            position</span><span class="symbol">,</span>
-<span class="normal">                 <a href="/usr/share/gtk-doc/html/gdk/gdk-Event-Structures.html#GdkEventButton">GdkEventButton</a> </span><span class="symbol">*</span><span class="normal">event</span><span class="symbol">,</span>
-<span class="normal">                 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer">gpointer</a>        data</span><span class="symbol">)</span>
+<span class="function">icon_pressed_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkEntry</span><span class="normal">       </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
+<span class="normal">                 </span><span class="usertype">gint</span><span class="normal">            position</span><span class="symbol">,</span>
+<span class="normal">                 </span><span class="usertype">GdkEventButton</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">event</span><span class="symbol">,</span>
+<span class="normal">                 </span><span class="usertype">gpointer</span><span class="normal">        data</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">position </span><span class="symbol">==</span><span class="normal"> <a href="GtkEntry.html#GTK-ENTRY-ICON-SECONDARY:CAPS">GTK_ENTRY_ICON_SECONDARY</a></span><span class="symbol">)</span>
 <span class="normal">    </span><span class="function"><a href="GtkEntry.html#gtk-entry-set-text">gtk_entry_set_text</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span><span class="string">""</span><span class="symbol">);</span>
 <span class="cbracket">}</span>
 
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">text_changed_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="GtkEntry.html">GtkEntry</a>   </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
-<span class="normal">                 <a href="/usr/share/gtk-doc/html/gobject/gobject-GParamSpec.html#GParamSpec">GParamSpec</a> </span><span class="symbol">*</span><span class="normal">pspec</span><span class="symbol">,</span>
-<span class="normal">                 <a href="GtkWidget.html">GtkWidget</a>  </span><span class="symbol">*</span><span class="normal">button</span><span class="symbol">)</span>
+<span class="function">text_changed_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkEntry</span><span class="normal">   </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">,</span>
+<span class="normal">                 </span><span class="usertype">GParamSpec</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">pspec</span><span class="symbol">,</span>
+<span class="normal">                 </span><span class="usertype">GtkWidget</span><span class="normal">  </span><span class="symbol">*</span><span class="normal">button</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean">gboolean</a> has_text</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="usertype">gboolean</span><span class="normal"> has_text</span><span class="symbol">;</span>
 
 <span class="normal">  has_text </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkEntry.html#gtk-entry-get-text-length">gtk_entry_get_text_length</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">&gt;</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
 <span class="normal">  </span><span class="function"><a href="GtkEntry.html#gtk-entry-set-icon-sensitive">gtk_entry_set_icon_sensitive</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">,</span>
@@ -272,10 +272,10 @@ to
 <span class="normal">  </span><span class="function"><a href="GtkEntry.html#gtk-entry-set-icon-from-stock">gtk_entry_set_icon_from_stock</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_ENTRY</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">),</span>
 <span class="normal">                                 <a href="GtkEntry.html#GTK-ENTRY-ICON-SECONDARY:CAPS">GTK_ENTRY_ICON_SECONDARY</a></span><span class="symbol">,</span>
 <span class="normal">                                 <a href="gtk-Stock-Items.html#GTK-STOCK-CLEAR:CAPS">GTK_STOCK_CLEAR</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"icon-press"</span><span class="symbol">,</span>
-<span class="normal">                    </span><span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">icon_pressed_cb</span><span class="symbol">),</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"notify::text"</span><span class="symbol">,</span>
-<span class="normal">                    </span><span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">text_changed_cb</span><span class="symbol">),</span><span class="normal"> find_button</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"icon-press"</span><span class="symbol">,</span>
+<span class="normal">                    </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">icon_pressed_cb</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">entry</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"notify::text"</span><span class="symbol">,</span>
+<span class="normal">                    </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">text_changed_cb</span><span class="symbol">),</span><span class="normal"> find_button</span><span class="symbol">);</span>
 <span class="normal"> </span>
 <span class="normal">  </span><span class="comment">/* ... */</span></pre></td>
       </tr>
