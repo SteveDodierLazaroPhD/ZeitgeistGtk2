@@ -289,6 +289,9 @@ extern __typeof (gtk_accessible_get_type) IA__gtk_accessible_get_type __attribut
 extern __typeof (gtk_accessible_get_widget) IA__gtk_accessible_get_widget __attribute((visibility("hidden")));
 #define gtk_accessible_get_widget IA__gtk_accessible_get_widget
 
+extern __typeof (gtk_accessible_set_widget) IA__gtk_accessible_set_widget __attribute((visibility("hidden")));
+#define gtk_accessible_set_widget IA__gtk_accessible_set_widget
+
 #endif
 #endif
 #if IN_HEADER(__GTK_ACTION_H__)
@@ -1306,6 +1309,9 @@ extern __typeof (gtk_button_enter) IA__gtk_button_enter __attribute((visibility(
 #endif
 extern __typeof (gtk_button_get_alignment) IA__gtk_button_get_alignment __attribute((visibility("hidden")));
 #define gtk_button_get_alignment IA__gtk_button_get_alignment
+
+extern __typeof (gtk_button_get_event_window) IA__gtk_button_get_event_window __attribute((visibility("hidden")));
+#define gtk_button_get_event_window IA__gtk_button_get_event_window
 
 extern __typeof (gtk_button_get_focus_on_click) IA__gtk_button_get_focus_on_click __attribute((visibility("hidden")));
 #define gtk_button_get_focus_on_click IA__gtk_button_get_focus_on_click
@@ -4184,6 +4190,9 @@ extern __typeof (gtk_font_selection_dialog_get_cancel_button) IA__gtk_font_selec
 extern __typeof (gtk_font_selection_dialog_get_font_name) IA__gtk_font_selection_dialog_get_font_name __attribute((visibility("hidden")));
 #define gtk_font_selection_dialog_get_font_name IA__gtk_font_selection_dialog_get_font_name
 
+extern __typeof (gtk_font_selection_dialog_get_font_selection) IA__gtk_font_selection_dialog_get_font_selection __attribute((visibility("hidden")));
+#define gtk_font_selection_dialog_get_font_selection IA__gtk_font_selection_dialog_get_font_selection
+
 extern __typeof (gtk_font_selection_dialog_get_ok_button) IA__gtk_font_selection_dialog_get_ok_button __attribute((visibility("hidden")));
 #define gtk_font_selection_dialog_get_ok_button IA__gtk_font_selection_dialog_get_ok_button
 
@@ -6176,6 +6185,9 @@ extern __typeof (gtk_message_dialog_format_secondary_markup) IA__gtk_message_dia
 
 extern __typeof (gtk_message_dialog_format_secondary_text) IA__gtk_message_dialog_format_secondary_text __attribute((visibility("hidden"))) G_GNUC_PRINTF(2,3);
 #define gtk_message_dialog_format_secondary_text IA__gtk_message_dialog_format_secondary_text
+
+extern __typeof (gtk_message_dialog_get_message_area) IA__gtk_message_dialog_get_message_area __attribute((visibility("hidden")));
+#define gtk_message_dialog_get_message_area IA__gtk_message_dialog_get_message_area
 
 extern __typeof (gtk_message_dialog_get_type) IA__gtk_message_dialog_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_message_dialog_get_type IA__gtk_message_dialog_get_type
@@ -9215,6 +9227,9 @@ extern __typeof (gtk_table_get_homogeneous) IA__gtk_table_get_homogeneous __attr
 extern __typeof (gtk_table_get_row_spacing) IA__gtk_table_get_row_spacing __attribute((visibility("hidden")));
 #define gtk_table_get_row_spacing IA__gtk_table_get_row_spacing
 
+extern __typeof (gtk_table_get_size) IA__gtk_table_get_size __attribute((visibility("hidden")));
+#define gtk_table_get_size IA__gtk_table_get_size
+
 extern __typeof (gtk_table_get_type) IA__gtk_table_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_table_get_type IA__gtk_table_get_type
 
@@ -11082,6 +11097,9 @@ extern __typeof (gtk_tree_path_get_depth) IA__gtk_tree_path_get_depth __attribut
 extern __typeof (gtk_tree_path_get_indices) IA__gtk_tree_path_get_indices __attribute((visibility("hidden")));
 #define gtk_tree_path_get_indices IA__gtk_tree_path_get_indices
 
+extern __typeof (gtk_tree_path_get_indices_with_depth) IA__gtk_tree_path_get_indices_with_depth __attribute((visibility("hidden")));
+#define gtk_tree_path_get_indices_with_depth IA__gtk_tree_path_get_indices_with_depth
+
 extern __typeof (gtk_tree_path_get_type) IA__gtk_tree_path_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_tree_path_get_type IA__gtk_tree_path_get_type
 
@@ -12785,6 +12803,9 @@ extern __typeof (gtk_window_group_remove_window) IA__gtk_window_group_remove_win
 
 extern __typeof (gtk_window_group_list_windows) IA__gtk_window_group_list_windows __attribute((visibility("hidden")));
 #define gtk_window_group_list_windows IA__gtk_window_group_list_windows
+
+extern __typeof (gtk_window_group_get_current_grab) IA__gtk_window_group_get_current_grab __attribute((visibility("hidden")));
+#define gtk_window_group_get_current_grab IA__gtk_window_group_get_current_grab
 
 extern __typeof (gtk_window_has_group) IA__gtk_window_has_group __attribute((visibility("hidden")));
 #define gtk_window_has_group IA__gtk_window_has_group

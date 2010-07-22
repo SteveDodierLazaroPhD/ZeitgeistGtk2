@@ -40,10 +40,8 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/Makefile.decl
 noinst_PROGRAMS = testpixbuf-drawable$(EXEEXT) testanimation$(EXEEXT) \
 	testpixbuf-color$(EXEEXT) testpixbuf-save$(EXEEXT) \
-	testpixbuf-scale$(EXEEXT) pixbuf-demo$(EXEEXT) $(am__EXEEXT_1)
-
-# Need to build test-inline-pixbufs.h for testpixbuf
-@HAVE_PNG_TRUE@am__append_1 = testpixbuf
+	testpixbuf-scale$(EXEEXT) pixbuf-demo$(EXEEXT) \
+	testpixbuf$(EXEEXT)
 subdir = demos
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
@@ -54,13 +52,11 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-@HAVE_PNG_TRUE@am__EXEEXT_1 = testpixbuf$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 am_pixbuf_demo_OBJECTS = pixbuf-demo.$(OBJEXT) pixbuf-init.$(OBJEXT)
 pixbuf_demo_OBJECTS = $(am_pixbuf_demo_OBJECTS)
 am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la \
-	$(top_builddir)/gdk/$(gdktargetlib) \
+am__DEPENDENCIES_2 = $(top_builddir)/gdk/$(gdktargetlib) \
 	$(top_builddir)/gtk/$(gtktargetlib) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_$(V))
@@ -216,20 +212,7 @@ GDK_EXTRA_CFLAGS = @GDK_EXTRA_CFLAGS@
 GDK_EXTRA_LIBS = @GDK_EXTRA_LIBS@
 GDK_PACKAGES = @GDK_PACKAGES@
 GDK_PIXBUF_CSOURCE = @GDK_PIXBUF_CSOURCE@
-GDK_PIXBUF_DEP_CFLAGS = @GDK_PIXBUF_DEP_CFLAGS@
-GDK_PIXBUF_DEP_LIBS = @GDK_PIXBUF_DEP_LIBS@
-GDK_PIXBUF_EXTRA_CFLAGS = @GDK_PIXBUF_EXTRA_CFLAGS@
-GDK_PIXBUF_EXTRA_LIBS = @GDK_PIXBUF_EXTRA_LIBS@
-GDK_PIXBUF_MAJOR = @GDK_PIXBUF_MAJOR@
-GDK_PIXBUF_MICRO = @GDK_PIXBUF_MICRO@
-GDK_PIXBUF_MINOR = @GDK_PIXBUF_MINOR@
-GDK_PIXBUF_PACKAGES = @GDK_PIXBUF_PACKAGES@
-GDK_PIXBUF_VERSION = @GDK_PIXBUF_VERSION@
-GDK_PIXBUF_XLIB_DEP_CFLAGS = @GDK_PIXBUF_XLIB_DEP_CFLAGS@
-GDK_PIXBUF_XLIB_DEP_LIBS = @GDK_PIXBUF_XLIB_DEP_LIBS@
-GDK_PIXBUF_XLIB_EXTRA_CFLAGS = @GDK_PIXBUF_XLIB_EXTRA_CFLAGS@
-GDK_PIXBUF_XLIB_EXTRA_LIBS = @GDK_PIXBUF_XLIB_EXTRA_LIBS@
-GDK_PIXBUF_XLIB_PACKAGES = @GDK_PIXBUF_XLIB_PACKAGES@
+GDK_PIXBUF_LIBS = @GDK_PIXBUF_LIBS@
 GDK_WLIBS = @GDK_WLIBS@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
@@ -264,8 +247,6 @@ HAVE_HTTP_AUTHSTRING = @HAVE_HTTP_AUTHSTRING@
 HTML_DIR = @HTML_DIR@
 INCLUDED_IMMODULE_DEFINE = @INCLUDED_IMMODULE_DEFINE@
 INCLUDED_IMMODULE_OBJ = @INCLUDED_IMMODULE_OBJ@
-INCLUDED_LOADER_DEFINE = @INCLUDED_LOADER_DEFINE@
-INCLUDED_LOADER_OBJ = @INCLUDED_LOADER_OBJ@
 INDENT = @INDENT@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -284,12 +265,8 @@ INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
 INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LIBJASPER = @LIBJASPER@
-LIBJPEG = @LIBJPEG@
 LIBOBJS = @LIBOBJS@
-LIBPNG = @LIBPNG@
 LIBS = @LIBS@
-LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
 LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
@@ -330,7 +307,6 @@ PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
 PO_IN_DATADIR_TRUE = @PO_IN_DATADIR_TRUE@
 RANLIB = @RANLIB@
 REBUILD = @REBUILD@
-REBUILD_PNGS = @REBUILD_PNGS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -387,7 +363,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 ms_librarian = @ms_librarian@
@@ -446,22 +421,16 @@ INCLUDES = \
 	$(GTK_DEP_CFLAGS)
 
 DEPS = \
-	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la	\
 	$(top_builddir)/gdk/$(gdktargetlib) 				\
 	$(top_builddir)/gtk/$(gtktargetlib)
 
 LDADDS = \
-	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la	\
 	$(top_builddir)/gdk/$(gdktargetlib)        			\
 	$(top_builddir)/gtk/$(gtktargetlib)				\
 	$(GTK_DEP_LIBS)							\
 	$(MATH_LIB)
 
-@HAVE_PNG_TRUE@BUILT_SOURCES = test-inline-pixbufs.h
-@CROSS_COMPILING_FALSE@pixbuf_csource = GDK_PIXBUF_MODULE_FILE=$(top_builddir)/gdk-pixbuf/gdk-pixbuf.loaders $(top_builddir)/gdk-pixbuf/gdk-pixbuf-csource
-@CROSS_COMPILING_TRUE@pixbuf_csource = $(GDK_PIXBUF_CSOURCE)
-@CROSS_COMPILING_FALSE@pixbuf_csource_deps = $(top_builddir)/gdk-pixbuf/gdk-pixbuf-csource $(top_builddir)/gdk-pixbuf/gdk-pixbuf.loaders 
-@CROSS_COMPILING_TRUE@pixbuf_csource_deps = 
+BUILT_SOURCES = test-inline-pixbufs.h
 testpixbuf_DEPENDENCIES = $(DEPS)
 testpixbuf_drawable_DEPENDENCIES = $(DEPS)
 testpixbuf_save_DEPENDENCIES = $(DEPS)
@@ -967,8 +936,8 @@ test-report perf-report full-report:	${TEST_PROGS}
 # run make test as part of make check
 check-local: test
 
-test-inline-pixbufs.h: $(pixbuf_csource_deps) apple-red.png gnome-foot.png
-	$(pixbuf_csource) --raw --build-list		\
+test-inline-pixbufs.h: apple-red.png gnome-foot.png
+	$(GDK_PIXBUF_CSOURCE) --raw --build-list		\
 	        apple_red  $(srcdir)/apple-red.png	\
                 gnome_foot $(srcdir)/gnome-foot.png	\
         > test-inline-pixbufs.h				\

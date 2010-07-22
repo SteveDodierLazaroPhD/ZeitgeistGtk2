@@ -1225,6 +1225,8 @@ gtk_menu_attach_to_widget (GtkMenu	       *menu,
 
   /* Fallback title for menu comes from attach widget */
   gtk_menu_update_title (menu);
+
+  g_object_notify (G_OBJECT (menu), "attach-widget");
 }
 
 GtkWidget*
@@ -5294,7 +5296,7 @@ gtk_menu_grab_notify (GtkWidget *widget,
 
   toplevel = gtk_widget_get_toplevel (widget);
   group = gtk_window_get_group (GTK_WINDOW (toplevel));
-  grab = _gtk_window_group_get_current_grab (group); 
+  grab = gtk_window_group_get_current_grab (group);
 
   if (!was_grabbed)
     {

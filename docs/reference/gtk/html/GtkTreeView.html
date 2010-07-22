@@ -466,10 +466,11 @@ former you can use <a class="link" href="GtkTreeView.html#gtk-tree-view-convert-
 <a name="GtkTreeView-BUILDER-UI"></a><h3>GtkTreeView as GtkBuildable</h3>
 <p>
 The GtkTreeView implementation of the GtkBuildable interface accepts
-GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
+GtkTreeViewColumn objects as &lt;child&gt; elements and exposes the
+internal GtkTreeSelection in UI definitions.
 </p>
 <div class="example">
-<a name="id855090"></a><p class="title"><b>Example 22. A UI definition fragment with GtkTreeView</b></p>
+<a name="id1077247"></a><p class="title"><b>Example 22. A UI definition fragment with GtkTreeView</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -487,7 +488,12 @@ GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
 11
 12
 13
-14</pre></td>
+14
+15
+16
+17
+18
+19</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="symbol">&lt;</span><span class="usertype">object</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"GtkTreeView"</span><span class="normal"> id</span><span class="symbol">=</span><span class="string">"treeview"</span><span class="symbol">&gt;</span>
 <span class="normal">  </span><span class="symbol">&lt;</span><span class="usertype">property</span><span class="normal"> name</span><span class="symbol">=</span><span class="string">"model"</span><span class="symbol">&gt;</span><span class="normal">liststore1</span><span class="symbol">&lt;/</span><span class="normal">property</span><span class="symbol">&gt;</span>
 <span class="normal">  </span><span class="symbol">&lt;</span><span class="normal">child</span><span class="symbol">&gt;</span>
@@ -499,6 +505,11 @@ GtkTreeViewColumn objects as &lt;child&gt; elements in UI definitions.
 <span class="normal">          </span><span class="symbol">&lt;</span><span class="usertype">attribute</span><span class="normal"> name</span><span class="symbol">=</span><span class="string">"text"</span><span class="symbol">&gt;</span><span class="number">1</span><span class="symbol">&lt;/</span><span class="normal">attribute</span><span class="symbol">&gt;</span>
 <span class="normal">        </span><span class="symbol">&lt;/</span><span class="normal">attributes</span><span class="symbol">&gt;</span>
 <span class="normal">      </span><span class="symbol">&lt;/</span><span class="normal">child</span><span class="symbol">&gt;</span>
+<span class="normal">    </span><span class="symbol">&lt;/</span><span class="normal">object</span><span class="symbol">&gt;</span>
+<span class="normal">  </span><span class="symbol">&lt;/</span><span class="normal">child</span><span class="symbol">&gt;</span>
+<span class="normal">  </span><span class="symbol">&lt;</span><span class="usertype">child</span><span class="normal"> internal</span><span class="symbol">-</span><span class="normal">child</span><span class="symbol">=</span><span class="string">"selection"</span><span class="symbol">&gt;</span>
+<span class="normal">    </span><span class="symbol">&lt;</span><span class="usertype">object</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"GtkTreeSelection"</span><span class="normal"> id</span><span class="symbol">=</span><span class="string">"selection"</span><span class="symbol">&gt;</span>
+<span class="normal">      </span><span class="symbol">&lt;</span><span class="usertype">signal</span><span class="normal"> name</span><span class="symbol">=</span><span class="string">"changed"</span><span class="normal"> handler</span><span class="symbol">=</span><span class="string">"on_treeview_selection_changed"</span><span class="symbol">/&gt;</span>
 <span class="normal">    </span><span class="symbol">&lt;/</span><span class="normal">object</span><span class="symbol">&gt;</span>
 <span class="normal">  </span><span class="symbol">&lt;/</span><span class="normal">child</span><span class="symbol">&gt;</span>
 <span class="symbol">&lt;/</span><span class="normal">object</span><span class="symbol">&gt;</span></pre></td>
@@ -4041,17 +4052,17 @@ to be relative to <em class="parameter"><code>tree_view</code></em>'s bin_window
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>model</code></em> :</span></p></td>
-<td> a pointer to receive a <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td> a pointer to receive a <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
-<td> a pointer to receive a <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td> a pointer to receive a <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td> a pointer to receive a <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td> a pointer to receive a <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>

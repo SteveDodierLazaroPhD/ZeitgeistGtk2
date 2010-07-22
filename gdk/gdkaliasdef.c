@@ -412,9 +412,11 @@ extern __typeof (gdk_event_type_get_type) gdk_event_type_get_type __attribute((a
 #undef gdk_fill_get_type 
 extern __typeof (gdk_fill_get_type) gdk_fill_get_type __attribute((alias("IA__gdk_fill_get_type"), visibility("default")));
 
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_fill_rule_get_type 
 extern __typeof (gdk_fill_rule_get_type) gdk_fill_rule_get_type __attribute((alias("IA__gdk_fill_rule_get_type"), visibility("default")));
 
+#endif
 #undef gdk_filter_return_get_type 
 extern __typeof (gdk_filter_return_get_type) gdk_filter_return_get_type __attribute((alias("IA__gdk_filter_return_get_type"), visibility("default")));
 
@@ -1538,6 +1540,9 @@ extern __typeof (gdk_window_get_user_data) gdk_window_get_user_data __attribute(
 #undef gdk_window_get_window_type 
 extern __typeof (gdk_window_get_window_type) gdk_window_get_window_type __attribute((alias("IA__gdk_window_get_window_type"), visibility("default")));
 
+#undef gdk_window_has_native 
+extern __typeof (gdk_window_has_native) gdk_window_has_native __attribute((alias("IA__gdk_window_has_native"), visibility("default")));
+
 #undef gdk_window_invalidate_maybe_recurse 
 extern __typeof (gdk_window_invalidate_maybe_recurse) gdk_window_invalidate_maybe_recurse __attribute((alias("IA__gdk_window_invalidate_maybe_recurse"), visibility("default")));
 
@@ -1817,6 +1822,9 @@ extern __typeof (gdk_image_unref) gdk_image_unref __attribute((alias("IA__gdk_im
 extern __typeof (gdk_image_get) gdk_image_get __attribute((alias("IA__gdk_image_get"), visibility("default")));
 
 #endif
+#undef gdk_image_get_pixels 
+extern __typeof (gdk_image_get_pixels) gdk_image_get_pixels __attribute((alias("IA__gdk_image_get_pixels"), visibility("default")));
+
 #undef gdk_image_set_colormap 
 extern __typeof (gdk_image_set_colormap) gdk_image_set_colormap __attribute((alias("IA__gdk_image_set_colormap"), visibility("default")));
 
@@ -2176,9 +2184,11 @@ extern __typeof (gdk_region_empty) gdk_region_empty __attribute((alias("IA__gdk_
 #undef gdk_region_equal 
 extern __typeof (gdk_region_equal) gdk_region_equal __attribute((alias("IA__gdk_region_equal"), visibility("default")));
 
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_region_rect_equal 
 extern __typeof (gdk_region_rect_equal) gdk_region_rect_equal __attribute((alias("IA__gdk_region_rect_equal"), visibility("default")));
 
+#endif
 #undef gdk_region_get_clipbox 
 extern __typeof (gdk_region_get_clipbox) gdk_region_get_clipbox __attribute((alias("IA__gdk_region_get_clipbox"), visibility("default")));
 
@@ -2203,12 +2213,14 @@ extern __typeof (gdk_region_rectangle) gdk_region_rectangle __attribute((alias("
 #undef gdk_region_rect_in 
 extern __typeof (gdk_region_rect_in) gdk_region_rect_in __attribute((alias("IA__gdk_region_rect_in"), visibility("default")));
 
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_region_shrink 
 extern __typeof (gdk_region_shrink) gdk_region_shrink __attribute((alias("IA__gdk_region_shrink"), visibility("default")));
 
 #undef gdk_region_spans_intersect_foreach 
 extern __typeof (gdk_region_spans_intersect_foreach) gdk_region_spans_intersect_foreach __attribute((alias("IA__gdk_region_spans_intersect_foreach"), visibility("default")));
 
+#endif
 #undef gdk_region_subtract 
 extern __typeof (gdk_region_subtract) gdk_region_subtract __attribute((alias("IA__gdk_region_subtract"), visibility("default")));
 
@@ -2218,16 +2230,20 @@ extern __typeof (gdk_region_union) gdk_region_union __attribute((alias("IA__gdk_
 #undef gdk_region_union_with_rect 
 extern __typeof (gdk_region_union_with_rect) gdk_region_union_with_rect __attribute((alias("IA__gdk_region_union_with_rect"), visibility("default")));
 
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_region_xor 
 extern __typeof (gdk_region_xor) gdk_region_xor __attribute((alias("IA__gdk_region_xor"), visibility("default")));
 
 #endif
 #endif
+#endif
 #if IN_HEADER(__GDK_REGION_H__)
 #if IN_FILE(__GDK_POLYREG_GENERIC_C__)
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_region_polygon 
 extern __typeof (gdk_region_polygon) gdk_region_polygon __attribute((alias("IA__gdk_region_polygon"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GDK_RGB_H__)

@@ -328,7 +328,7 @@ gtk_tree_selection_get_tree_view (GtkTreeSelection *selection)
  * gtk_tree_selection_get_selected:
  * @selection: A #GtkTreeSelection.
  * @model: (out) (allow-none) (transfer none): A pointer to set to the #GtkTreeModel, or NULL.
- * @iter: (allow-none): The #GtkTreeIter, or NULL.
+ * @iter: (out) (allow-none): The #GtkTreeIter, or NULL.
  *
  * Sets @iter to the currently selected node if @selection is set to
  * #GTK_SELECTION_SINGLE or #GTK_SELECTION_BROWSE.  @iter may be NULL if you
@@ -1024,7 +1024,7 @@ unselect_all_helper (GtkRBTree  *tree,
     }
 }
 
-static gint
+static gboolean
 gtk_tree_selection_real_unselect_all (GtkTreeSelection *selection)
 {
   struct _TempTuple *tuple;

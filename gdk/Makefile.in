@@ -38,11 +38,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-DIST_COMMON = $(am__dist_gir_DATA_DIST) $(gdkinclude_HEADERS) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(top_srcdir)/Makefile.decl COPYING
+DIST_COMMON = $(gdkinclude_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl COPYING
 @HAVE_INTROSPECTION_TRUE@am__append_1 = Gdk-2.0.gir
-@HAVE_INTROSPECTION_TRUE@am__append_2 = $(dist_gir_DATA) $(typelibs_DATA)
+@HAVE_INTROSPECTION_TRUE@am__append_2 = $(gir_DATA) $(typelibs_DATA)
 subdir = gdk
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
@@ -79,8 +78,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libgdk_directfb_2_0_la_DEPENDENCIES = directfb/libgdk-directfb.la \
-	$(am__DEPENDENCIES_1) \
-	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
+	$(am__DEPENDENCIES_1)
 am__libgdk_directfb_2_0_la_SOURCES_DIST = gdkinternals.h gdkintl.h \
 	gdkpoly-generic.h gdkregion-generic.h gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
@@ -114,8 +112,7 @@ libgdk_directfb_2_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_CFLAGS) $(CFLAGS) $(libgdk_directfb_2_0_la_LDFLAGS) \
 	$(LDFLAGS) -o $@
 libgdk_quartz_2_0_la_DEPENDENCIES = quartz/libgdk-quartz.la \
-	$(am__DEPENDENCIES_1) \
-	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
+	$(am__DEPENDENCIES_1)
 am__libgdk_quartz_2_0_la_SOURCES_DIST = gdkinternals.h gdkintl.h \
 	gdkpoly-generic.h gdkregion-generic.h gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
@@ -151,8 +148,7 @@ libgdk_win32_2_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_CFLAGS) $(CFLAGS) $(libgdk_win32_2_0_la_LDFLAGS) \
 	$(LDFLAGS) -o $@
 libgdk_x11_2_0_la_DEPENDENCIES = x11/libgdk-x11.la \
-	$(am__DEPENDENCIES_1) \
-	$(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
+	$(am__DEPENDENCIES_1)
 am__libgdk_x11_2_0_la_SOURCES_DIST = gdkinternals.h gdkintl.h \
 	gdkpoly-generic.h gdkregion-generic.h gdkmedialib.c gdk.c \
 	gdkapplaunchcontext.c gdkcairo.c gdkcolor.c gdkcursor.c \
@@ -209,8 +205,7 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-pdf-recursive install-ps-recursive install-recursive \
 	installcheck-recursive installdirs-recursive pdf-recursive \
 	ps-recursive uninstall-recursive
-am__dist_gir_DATA_DIST = Gdk-2.0.gir
-DATA = $(dist_gir_DATA) $(noinst_DATA) $(typelibs_DATA)
+DATA = $(gir_DATA) $(noinst_DATA) $(typelibs_DATA)
 HEADERS = $(gdkinclude_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -307,20 +302,7 @@ GDK_EXTRA_CFLAGS = @GDK_EXTRA_CFLAGS@
 GDK_EXTRA_LIBS = @GDK_EXTRA_LIBS@
 GDK_PACKAGES = @GDK_PACKAGES@
 GDK_PIXBUF_CSOURCE = @GDK_PIXBUF_CSOURCE@
-GDK_PIXBUF_DEP_CFLAGS = @GDK_PIXBUF_DEP_CFLAGS@
-GDK_PIXBUF_DEP_LIBS = @GDK_PIXBUF_DEP_LIBS@
-GDK_PIXBUF_EXTRA_CFLAGS = @GDK_PIXBUF_EXTRA_CFLAGS@
-GDK_PIXBUF_EXTRA_LIBS = @GDK_PIXBUF_EXTRA_LIBS@
-GDK_PIXBUF_MAJOR = @GDK_PIXBUF_MAJOR@
-GDK_PIXBUF_MICRO = @GDK_PIXBUF_MICRO@
-GDK_PIXBUF_MINOR = @GDK_PIXBUF_MINOR@
-GDK_PIXBUF_PACKAGES = @GDK_PIXBUF_PACKAGES@
-GDK_PIXBUF_VERSION = @GDK_PIXBUF_VERSION@
-GDK_PIXBUF_XLIB_DEP_CFLAGS = @GDK_PIXBUF_XLIB_DEP_CFLAGS@
-GDK_PIXBUF_XLIB_DEP_LIBS = @GDK_PIXBUF_XLIB_DEP_LIBS@
-GDK_PIXBUF_XLIB_EXTRA_CFLAGS = @GDK_PIXBUF_XLIB_EXTRA_CFLAGS@
-GDK_PIXBUF_XLIB_EXTRA_LIBS = @GDK_PIXBUF_XLIB_EXTRA_LIBS@
-GDK_PIXBUF_XLIB_PACKAGES = @GDK_PIXBUF_XLIB_PACKAGES@
+GDK_PIXBUF_LIBS = @GDK_PIXBUF_LIBS@
 GDK_WLIBS = @GDK_WLIBS@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
@@ -355,8 +337,6 @@ HAVE_HTTP_AUTHSTRING = @HAVE_HTTP_AUTHSTRING@
 HTML_DIR = @HTML_DIR@
 INCLUDED_IMMODULE_DEFINE = @INCLUDED_IMMODULE_DEFINE@
 INCLUDED_IMMODULE_OBJ = @INCLUDED_IMMODULE_OBJ@
-INCLUDED_LOADER_DEFINE = @INCLUDED_LOADER_DEFINE@
-INCLUDED_LOADER_OBJ = @INCLUDED_LOADER_OBJ@
 INDENT = @INDENT@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -375,12 +355,8 @@ INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
 INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LIBJASPER = @LIBJASPER@
-LIBJPEG = @LIBJPEG@
 LIBOBJS = @LIBOBJS@
-LIBPNG = @LIBPNG@
 LIBS = @LIBS@
-LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
 LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
@@ -421,7 +397,6 @@ PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
 PO_IN_DATADIR_TRUE = @PO_IN_DATADIR_TRUE@
 RANLIB = @RANLIB@
 REBUILD = @REBUILD@
-REBUILD_PNGS = @REBUILD_PNGS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -478,7 +453,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 ms_librarian = @ms_librarian@
@@ -531,13 +505,10 @@ XVFB_START = \
 	&& DISPLAY=:$$XID && export DISPLAY
 
 INTROSPECTION_GIRS = $(am__append_1)
-INTROSPECTION_SCANNER_ARGS = \
-   --add-include-path=../gdk-pixbuf
-
+INTROSPECTION_SCANNER_ARGS = 
 INTROSPECTION_COMPILER_ARGS = \
    --includedir=$(srcdir) \
-   --includedir=. \
-   --includedir=../gdk-pixbuf
+   --includedir=.
 
 SUBDIRS = $(gdktarget) . tests
 DIST_SUBDIRS = win32 x11 quartz directfb tests
@@ -547,7 +518,6 @@ INCLUDES = \
 	-DGDK_COMPILATION		\
 	-I$(top_srcdir)			\
 	-I$(top_builddir)/gdk		\
-	-I$(top_srcdir)/gdk-pixbuf 	\
 	$(GTK_DEBUG_FLAGS) 		\
 	$(GDK_DEP_CFLAGS)
 
@@ -674,25 +644,17 @@ common_sources = \
 	gdkmarshalers.c		\
 	gdkmarshalers.h
 
-libgdk_directfb_2_0_la_SOURCES = $(common_sources) 
-libgdk_directfb_2_0_la_LIBADD = directfb/libgdk-directfb.la $(GDK_DEP_LIBS) \
-  $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
-
+libgdk_directfb_2_0_la_SOURCES = $(common_sources)
+libgdk_directfb_2_0_la_LIBADD = directfb/libgdk-directfb.la $(GDK_DEP_LIBS)
 libgdk_directfb_2_0_la_LDFLAGS = $(LDADD)
 libgdk_x11_2_0_la_SOURCES = $(common_sources)
-libgdk_x11_2_0_la_LIBADD = x11/libgdk-x11.la $(GDK_DEP_LIBS) \
-  $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
-
+libgdk_x11_2_0_la_LIBADD = x11/libgdk-x11.la $(GDK_DEP_LIBS)
 libgdk_x11_2_0_la_LDFLAGS = $(LDADD)
 libgdk_quartz_2_0_la_SOURCES = $(common_sources) gdkkeynames.c
-libgdk_quartz_2_0_la_LIBADD = quartz/libgdk-quartz.la $(GDK_DEP_LIBS) \
-  $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
-
+libgdk_quartz_2_0_la_LIBADD = quartz/libgdk-quartz.la $(GDK_DEP_LIBS)
 libgdk_quartz_2_0_la_LDFLAGS = $(LDADD)
 libgdk_win32_2_0_la_SOURCES = $(common_sources) gdkkeynames.c
-libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la $(GDK_DEP_LIBS) \
-  $(top_builddir)/gdk-pixbuf/libgdk_pixbuf-$(GTK_API_VERSION).la
-
+libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la $(GDK_DEP_LIBS)
 libgdk_win32_2_0_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o gdk.def
 libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(srcdir)/gdk.def $(LDADD)
 @HAVE_INTROSPECTION_TRUE@introspection_files = \
@@ -702,13 +664,13 @@ libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(src
 @HAVE_INTROSPECTION_TRUE@        gdkenumtypes.h \
 @HAVE_INTROSPECTION_TRUE@        x11/*.c
 
-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_SCANNERFLAGS = --strip-prefix=Gdk --add-include-path=../gdk-pixbuf
+@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_SCANNERFLAGS = --strip-prefix=Gdk
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_LIBS = $(gdktargetlib)
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_files))
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_CFLAGS = $(INCLUDES)
 @HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
-@HAVE_INTROSPECTION_TRUE@dist_gir_DATA = $(INTROSPECTION_GIRS)
+@HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
 @HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0
 @HAVE_INTROSPECTION_TRUE@typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 @MS_LIB_AVAILABLE_TRUE@noinst_DATA = gdk-win32-$(GTK_API_VERSION).lib
@@ -874,10 +836,10 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-dist_girDATA: $(dist_gir_DATA)
+install-girDATA: $(gir_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(girdir)" || $(MKDIR_P) "$(DESTDIR)$(girdir)"
-	@list='$(dist_gir_DATA)'; test -n "$(girdir)" || list=; \
+	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
@@ -887,9 +849,9 @@ install-dist_girDATA: $(dist_gir_DATA)
 	  $(INSTALL_DATA) $$files "$(DESTDIR)$(girdir)" || exit $$?; \
 	done
 
-uninstall-dist_girDATA:
+uninstall-girDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_gir_DATA)'; test -n "$(girdir)" || list=; \
+	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$files" || exit 0; \
 	echo " ( cd '$(DESTDIR)$(girdir)' && rm -f" $$files ")"; \
@@ -1286,8 +1248,8 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-data-local install-dist_girDATA \
-	install-gdkincludeHEADERS install-typelibsDATA
+install-data-am: install-data-local install-gdkincludeHEADERS \
+	install-girDATA install-typelibsDATA
 
 install-dvi: install-dvi-recursive
 
@@ -1334,7 +1296,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-dist_girDATA uninstall-gdkincludeHEADERS \
+uninstall-am: uninstall-gdkincludeHEADERS uninstall-girDATA \
 	uninstall-libLTLIBRARIES uninstall-local \
 	uninstall-typelibsDATA
 
@@ -1349,9 +1311,9 @@ uninstall-am: uninstall-dist_girDATA uninstall-gdkincludeHEADERS \
 	distclean-generic distclean-libtool distclean-local \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
-	install-data-local install-dist_girDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-exec-hook \
-	install-exec-local install-gdkincludeHEADERS install-html \
+	install-data-local install-dvi install-dvi-am install-exec \
+	install-exec-am install-exec-hook install-exec-local \
+	install-gdkincludeHEADERS install-girDATA install-html \
 	install-html-am install-info install-info-am \
 	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip install-typelibsDATA \
@@ -1359,7 +1321,7 @@ uninstall-am: uninstall-dist_girDATA uninstall-gdkincludeHEADERS \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
 	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
-	uninstall-dist_girDATA uninstall-gdkincludeHEADERS \
+	uninstall-gdkincludeHEADERS uninstall-girDATA \
 	uninstall-libLTLIBRARIES uninstall-local \
 	uninstall-typelibsDATA
 

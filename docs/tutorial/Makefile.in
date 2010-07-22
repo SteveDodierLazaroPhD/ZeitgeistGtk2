@@ -116,20 +116,7 @@ GDK_EXTRA_CFLAGS = @GDK_EXTRA_CFLAGS@
 GDK_EXTRA_LIBS = @GDK_EXTRA_LIBS@
 GDK_PACKAGES = @GDK_PACKAGES@
 GDK_PIXBUF_CSOURCE = @GDK_PIXBUF_CSOURCE@
-GDK_PIXBUF_DEP_CFLAGS = @GDK_PIXBUF_DEP_CFLAGS@
-GDK_PIXBUF_DEP_LIBS = @GDK_PIXBUF_DEP_LIBS@
-GDK_PIXBUF_EXTRA_CFLAGS = @GDK_PIXBUF_EXTRA_CFLAGS@
-GDK_PIXBUF_EXTRA_LIBS = @GDK_PIXBUF_EXTRA_LIBS@
-GDK_PIXBUF_MAJOR = @GDK_PIXBUF_MAJOR@
-GDK_PIXBUF_MICRO = @GDK_PIXBUF_MICRO@
-GDK_PIXBUF_MINOR = @GDK_PIXBUF_MINOR@
-GDK_PIXBUF_PACKAGES = @GDK_PIXBUF_PACKAGES@
-GDK_PIXBUF_VERSION = @GDK_PIXBUF_VERSION@
-GDK_PIXBUF_XLIB_DEP_CFLAGS = @GDK_PIXBUF_XLIB_DEP_CFLAGS@
-GDK_PIXBUF_XLIB_DEP_LIBS = @GDK_PIXBUF_XLIB_DEP_LIBS@
-GDK_PIXBUF_XLIB_EXTRA_CFLAGS = @GDK_PIXBUF_XLIB_EXTRA_CFLAGS@
-GDK_PIXBUF_XLIB_EXTRA_LIBS = @GDK_PIXBUF_XLIB_EXTRA_LIBS@
-GDK_PIXBUF_XLIB_PACKAGES = @GDK_PIXBUF_XLIB_PACKAGES@
+GDK_PIXBUF_LIBS = @GDK_PIXBUF_LIBS@
 GDK_WLIBS = @GDK_WLIBS@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
@@ -164,8 +151,6 @@ HAVE_HTTP_AUTHSTRING = @HAVE_HTTP_AUTHSTRING@
 HTML_DIR = @HTML_DIR@
 INCLUDED_IMMODULE_DEFINE = @INCLUDED_IMMODULE_DEFINE@
 INCLUDED_IMMODULE_OBJ = @INCLUDED_IMMODULE_OBJ@
-INCLUDED_LOADER_DEFINE = @INCLUDED_LOADER_DEFINE@
-INCLUDED_LOADER_OBJ = @INCLUDED_LOADER_OBJ@
 INDENT = @INDENT@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -184,12 +169,8 @@ INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
 INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LIBJASPER = @LIBJASPER@
-LIBJPEG = @LIBJPEG@
 LIBOBJS = @LIBOBJS@
-LIBPNG = @LIBPNG@
 LIBS = @LIBS@
-LIBTIFF = @LIBTIFF@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
 LIB_EXE_MACHINE_FLAG = @LIB_EXE_MACHINE_FLAG@
@@ -230,7 +211,6 @@ PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
 PO_IN_DATADIR_TRUE = @PO_IN_DATADIR_TRUE@
 RANLIB = @RANLIB@
 REBUILD = @REBUILD@
-REBUILD_PNGS = @REBUILD_PNGS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -287,7 +267,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 ms_librarian = @ms_librarian@
@@ -427,7 +406,8 @@ distdir: $(DISTFILES)
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-local
 check: check-am
-all-am: Makefile
+@HAVE_DOCBOOK_FALSE@all-local:
+all-am: Makefile all-local
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -518,17 +498,17 @@ uninstall-am:
 
 .MAKE: check-am install-am install-strip
 
-.PHONY: all all-am check check-am check-local clean clean-generic \
-	clean-libtool dist-hook distclean distclean-generic \
-	distclean-libtool distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-am
+.PHONY: all all-am all-local check check-am check-local clean \
+	clean-generic clean-libtool dist-hook distclean \
+	distclean-generic distclean-libtool distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
 
 # call as: $(XVFB_START) && someprogram
 
@@ -586,7 +566,7 @@ check-local: test
 
 .PHONY: html pdf
 
-@HAVE_DOCBOOK_TRUE@html:
+@HAVE_DOCBOOK_TRUE@html: gtk-tut.sgml
 @HAVE_DOCBOOK_TRUE@	if test -w $(srcdir); then \
 @HAVE_DOCBOOK_TRUE@	  (cd $(srcdir); \
 @HAVE_DOCBOOK_TRUE@	   db2html gtk-tut.sgml; \
@@ -596,10 +576,12 @@ check-local: test
 @HAVE_DOCBOOK_TRUE@	   cp images/*.png html/images); \
 @HAVE_DOCBOOK_TRUE@	fi
 
-@HAVE_DOCBOOK_TRUE@pdf:
+@HAVE_DOCBOOK_TRUE@pdf: gtk-tut.sgml
 @HAVE_DOCBOOK_TRUE@	if test -w $(srcdir); then \
 @HAVE_DOCBOOK_TRUE@	  (cd $(srcdir); db2pdf gtk-tut.sgml); \
 @HAVE_DOCBOOK_TRUE@	fi
+
+@HAVE_DOCBOOK_TRUE@all-local: html
 
 @HAVE_DOCBOOK_TRUE@dist-hook: html
 @HAVE_DOCBOOK_TRUE@	cp -Rp $(srcdir)/html $(distdir)

@@ -47,6 +47,7 @@
 *tp++ = gdk_pixbuf_animation_get_type();
 *tp++ = gdk_pixbuf_animation_iter_get_type();
 *tp++ = gdk_pixbuf_error_get_type();
+*tp++ = gdk_pixbuf_format_get_type();
 *tp++ = gdk_pixbuf_get_type();
 *tp++ = gdk_pixbuf_loader_get_type();
 *tp++ = gdk_pixbuf_rotation_get_type();

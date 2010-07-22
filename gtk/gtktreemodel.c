@@ -623,6 +623,31 @@ gtk_tree_path_get_indices (GtkTreePath *path)
 }
 
 /**
+ * gtk_tree_path_get_indices_with_depth:
+ * @path: A #GtkTreePath.
+ * @depth: Number of elements returned in the integer array
+ *
+ * Returns the current indices of @path.
+ * This is an array of integers, each representing a node in a tree.
+ * It also returns the number of elements in the array.
+ * The array should not be freed.
+ *
+ * Return value: (array length=depth) (transfer none): The current indices, or %NULL.
+ *
+ * Since: 2.22
+ **/
+gint *
+gtk_tree_path_get_indices_with_depth (GtkTreePath *path, gint *depth)
+{
+  g_return_val_if_fail (path != NULL, NULL);
+
+  if (depth)
+    *depth = path->depth;
+
+  return path->indices;
+}
+
+/**
  * gtk_tree_path_free:
  * @path: A #GtkTreePath.
  *
@@ -973,7 +998,7 @@ gtk_tree_model_get_column_type (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_iter:
  * @tree_model: A #GtkTreeModel.
- * @iter: The uninitialized #GtkTreeIter.
+ * @iter: (out): The uninitialized #GtkTreeIter.
  * @path: The #GtkTreePath.
  *
  * Sets @iter to a valid iterator pointing to @path.
@@ -1003,7 +1028,7 @@ gtk_tree_model_get_iter (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_iter_from_string:
  * @tree_model: A #GtkTreeModel.
- * @iter: An uninitialized #GtkTreeIter.
+ * @iter: (out): An uninitialized #GtkTreeIter.
  * @path_string: A string representation of a #GtkTreePath.
  *
  * Sets @iter to a valid iterator pointing to @path_string, if it
@@ -1069,7 +1094,7 @@ gtk_tree_model_get_string_from_iter (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_iter_first:
  * @tree_model: A #GtkTreeModel.
- * @iter: The uninitialized #GtkTreeIter.
+ * @iter: (out): The uninitialized #GtkTreeIter.
  * 
  * Initializes @iter with the first iterator in the tree (the one at the path
  * "0") and returns %TRUE.  Returns %FALSE if the tree is empty.
@@ -1123,7 +1148,7 @@ gtk_tree_model_get_path (GtkTreeModel *tree_model,
  * @tree_model: A #GtkTreeModel.
  * @iter: The #GtkTreeIter.
  * @column: The column to lookup the value at.
- * @value: (out) (transfer none) An empty #GValue to set.
+ * @value: (out) (transfer none): An empty #GValue to set.
  *
  * Initializes and sets @value to that at @column.
  * When done with @value, g_value_unset() needs to be called 
@@ -1175,7 +1200,7 @@ gtk_tree_model_iter_next (GtkTreeModel  *tree_model,
 /**
  * gtk_tree_model_iter_children:
  * @tree_model: A #GtkTreeModel.
- * @iter: The new #GtkTreeIter to be set to the child.
+ * @iter: (out): The new #GtkTreeIter to be set to the child.
  * @parent: (allow-none): The #GtkTreeIter, or %NULL
  *
  * Sets @iter to point to the first child of @parent.  If @parent has no
@@ -1256,7 +1281,7 @@ gtk_tree_model_iter_n_children (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_nth_child:
  * @tree_model: A #GtkTreeModel.
- * @iter: The #GtkTreeIter to set to the nth child.
+ * @iter: (out): The #GtkTreeIter to set to the nth child.
  * @parent: (allow-none): The #GtkTreeIter to get the child from, or %NULL.
  * @n: Then index of the desired child.
  *
@@ -1291,7 +1316,7 @@ gtk_tree_model_iter_nth_child (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_parent:
  * @tree_model: A #GtkTreeModel
- * @iter: The new #GtkTreeIter to set to the parent.
+ * @iter: (out): The new #GtkTreeIter to set to the parent.
  * @child: The #GtkTreeIter.
  *
  * Sets @iter to be the parent of @child.  If @child is at the toplevel, and

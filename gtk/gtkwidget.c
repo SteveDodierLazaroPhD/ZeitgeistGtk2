@@ -8012,8 +8012,8 @@ gtk_widget_set_size_request (GtkWidget *widget,
 /**
  * gtk_widget_get_size_request:
  * @widget: a #GtkWidget
- * @width: (allow-none): (out): return location for width, or %NULL
- * @height: (allow-none): (out): return location for height, or %NULL
+ * @width: (out) (allow-none): return location for width, or %NULL
+ * @height: (out) (allow-none): return location for height, or %NULL
  *
  * Gets the size request that was explicitly set for the widget using
  * gtk_widget_set_size_request(). A value of -1 stored in @width or
@@ -10069,8 +10069,8 @@ gtk_widget_path (GtkWidget *widget,
  * gtk_widget_class_path:
  * @widget: a #GtkWidget
  * @path_length: (out) (allow-none): location to store the length of the class path, or %NULL
- * @path: (out) (allow-none) location to store the class path as an allocated string, or %NULL
- * @path_reversed: (out) (allow-none) location to store the reverse class path as an allocated
+ * @path: (out) (allow-none): location to store the class path as an allocated string, or %NULL
+ * @path_reversed: (out) (allow-none): location to store the reverse class path as an allocated
  *    string, or %NULL
  *
  * Same as gtk_widget_path(), but always uses the name of a widget's type,

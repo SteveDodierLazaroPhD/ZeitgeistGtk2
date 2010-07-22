@@ -108,6 +108,7 @@ enum                <a class="link" href="gdk-Windows.html#GdkWindowAttributesTy
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> dx</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> dy</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gdk-Windows.html#gdk-window-flush" title="gdk_window_flush ()">gdk_window_flush</a>                    (<em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gdk-Windows.html#gdk-window-has-native" title="gdk_window_has_native ()">gdk_window_has_native</a>               (<em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gdk-Windows.html#gdk-window-ensure-native" title="gdk_window_ensure_native ()">gdk_window_ensure_native</a>            (<em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gdk-Windows.html#gdk-window-reparent" title="gdk_window_reparent ()">gdk_window_reparent</a>                 (<em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *new_parent</code></em>,
@@ -535,7 +536,7 @@ application to render the window contents at the right spot.
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">cairo_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">cr</span><span class="symbol">;</span>
 <span class="normal">  cr </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gdk-Cairo-Interaction.html#gdk-cairo-create">gdk_cairo_create</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">widget</span><span class="symbol">-&gt;</span><span class="normal">window</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-set-operator">cairo_set_operator</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> CAIRO_OPERATOR_CLEAR</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-set-operator">cairo_set_operator</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#CAIRO-OPERATOR-CLEAR:CAPS">CAIRO_OPERATOR_CLEAR</a></span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="gdk-Cairo-Interaction.html#gdk-cairo-region">gdk_cairo_region</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> event</span><span class="symbol">-&gt;</span><span class="normal">region</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-fill">cairo_fill</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-destroy">cairo_destroy</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
@@ -576,7 +577,7 @@ application to render the window contents at the right spot.
 <span class="normal">  </span><span class="function"><a href="gdk-Cairo-Interaction.html#gdk-cairo-region">gdk_cairo_region</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> region</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-clip">cairo_clip</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="comment">/* composite, with a 50% opacity */</span>
-<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-set-operator">cairo_set_operator</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> CAIRO_OPERATOR_OVER</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-set-operator">cairo_set_operator</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#CAIRO-OPERATOR-OVER:CAPS">CAIRO_OPERATOR_OVER</a></span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-paint-with-alpha">cairo_paint_with_alpha</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0.5</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="comment">/* we're done */</span>
 <span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-context.html#cairo-destroy">cairo_destroy</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
@@ -2374,6 +2375,32 @@ will be called automatically before sending the expose event.
 </tr></tbody>
 </table></div>
 <p class="since">Since 2.18</p>
+</div>
+<hr>
+<div class="refsect2" title="gdk_window_has_native ()">
+<a name="gdk-window-has-native"></a><h3>gdk_window_has_native ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gdk_window_has_native               (<em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);</pre>
+<p>
+Checks whether the window has a native window or not. Note that
+you can use <a class="link" href="gdk-Windows.html#gdk-window-ensure-native" title="gdk_window_ensure_native ()"><code class="function">gdk_window_ensure_native()</code></a> if a native window is needed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td>a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <code class="literal">window</code> has a native window, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.22</p>
 </div>
 <hr>
 <div class="refsect2" title="gdk_window_ensure_native ()">
@@ -4237,7 +4264,7 @@ parent window. Most windows should use this default.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cursor</code></em> :</span></p></td>
-<td>a cursor
+<td> a cursor. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 </tbody>

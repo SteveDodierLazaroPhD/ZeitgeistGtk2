@@ -292,6 +292,9 @@ extern __typeof (gtk_accessible_get_type) gtk_accessible_get_type __attribute((a
 #undef gtk_accessible_get_widget 
 extern __typeof (gtk_accessible_get_widget) gtk_accessible_get_widget __attribute((alias("IA__gtk_accessible_get_widget"), visibility("default")));
 
+#undef gtk_accessible_set_widget 
+extern __typeof (gtk_accessible_set_widget) gtk_accessible_set_widget __attribute((alias("IA__gtk_accessible_set_widget"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GTK_ACTION_H__)
@@ -1309,6 +1312,9 @@ extern __typeof (gtk_button_enter) gtk_button_enter __attribute((alias("IA__gtk_
 #endif
 #undef gtk_button_get_alignment 
 extern __typeof (gtk_button_get_alignment) gtk_button_get_alignment __attribute((alias("IA__gtk_button_get_alignment"), visibility("default")));
+
+#undef gtk_button_get_event_window 
+extern __typeof (gtk_button_get_event_window) gtk_button_get_event_window __attribute((alias("IA__gtk_button_get_event_window"), visibility("default")));
 
 #undef gtk_button_get_focus_on_click 
 extern __typeof (gtk_button_get_focus_on_click) gtk_button_get_focus_on_click __attribute((alias("IA__gtk_button_get_focus_on_click"), visibility("default")));
@@ -4187,6 +4193,9 @@ extern __typeof (gtk_font_selection_dialog_get_cancel_button) gtk_font_selection
 #undef gtk_font_selection_dialog_get_font_name 
 extern __typeof (gtk_font_selection_dialog_get_font_name) gtk_font_selection_dialog_get_font_name __attribute((alias("IA__gtk_font_selection_dialog_get_font_name"), visibility("default")));
 
+#undef gtk_font_selection_dialog_get_font_selection 
+extern __typeof (gtk_font_selection_dialog_get_font_selection) gtk_font_selection_dialog_get_font_selection __attribute((alias("IA__gtk_font_selection_dialog_get_font_selection"), visibility("default")));
+
 #undef gtk_font_selection_dialog_get_ok_button 
 extern __typeof (gtk_font_selection_dialog_get_ok_button) gtk_font_selection_dialog_get_ok_button __attribute((alias("IA__gtk_font_selection_dialog_get_ok_button"), visibility("default")));
 
@@ -6179,6 +6188,9 @@ extern __typeof (gtk_message_dialog_format_secondary_markup) gtk_message_dialog_
 
 #undef gtk_message_dialog_format_secondary_text 
 extern __typeof (gtk_message_dialog_format_secondary_text) gtk_message_dialog_format_secondary_text __attribute((alias("IA__gtk_message_dialog_format_secondary_text"), visibility("default")));
+
+#undef gtk_message_dialog_get_message_area 
+extern __typeof (gtk_message_dialog_get_message_area) gtk_message_dialog_get_message_area __attribute((alias("IA__gtk_message_dialog_get_message_area"), visibility("default")));
 
 #undef gtk_message_dialog_get_type 
 extern __typeof (gtk_message_dialog_get_type) gtk_message_dialog_get_type __attribute((alias("IA__gtk_message_dialog_get_type"), visibility("default")));
@@ -9218,6 +9230,9 @@ extern __typeof (gtk_table_get_homogeneous) gtk_table_get_homogeneous __attribut
 #undef gtk_table_get_row_spacing 
 extern __typeof (gtk_table_get_row_spacing) gtk_table_get_row_spacing __attribute((alias("IA__gtk_table_get_row_spacing"), visibility("default")));
 
+#undef gtk_table_get_size 
+extern __typeof (gtk_table_get_size) gtk_table_get_size __attribute((alias("IA__gtk_table_get_size"), visibility("default")));
+
 #undef gtk_table_get_type 
 extern __typeof (gtk_table_get_type) gtk_table_get_type __attribute((alias("IA__gtk_table_get_type"), visibility("default")));
 
@@ -11085,6 +11100,9 @@ extern __typeof (gtk_tree_path_get_depth) gtk_tree_path_get_depth __attribute((a
 #undef gtk_tree_path_get_indices 
 extern __typeof (gtk_tree_path_get_indices) gtk_tree_path_get_indices __attribute((alias("IA__gtk_tree_path_get_indices"), visibility("default")));
 
+#undef gtk_tree_path_get_indices_with_depth 
+extern __typeof (gtk_tree_path_get_indices_with_depth) gtk_tree_path_get_indices_with_depth __attribute((alias("IA__gtk_tree_path_get_indices_with_depth"), visibility("default")));
+
 #undef gtk_tree_path_get_type 
 extern __typeof (gtk_tree_path_get_type) gtk_tree_path_get_type __attribute((alias("IA__gtk_tree_path_get_type"), visibility("default")));
 
@@ -12788,6 +12806,9 @@ extern __typeof (gtk_window_group_remove_window) gtk_window_group_remove_window 
 
 #undef gtk_window_group_list_windows 
 extern __typeof (gtk_window_group_list_windows) gtk_window_group_list_windows __attribute((alias("IA__gtk_window_group_list_windows"), visibility("default")));
+
+#undef gtk_window_group_get_current_grab 
+extern __typeof (gtk_window_group_get_current_grab) gtk_window_group_get_current_grab __attribute((alias("IA__gtk_window_group_get_current_grab"), visibility("default")));
 
 #undef gtk_window_has_group 
 extern __typeof (gtk_window_has_group) gtk_window_has_group __attribute((alias("IA__gtk_window_has_group"), visibility("default")));

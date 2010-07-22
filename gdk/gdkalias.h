@@ -409,9 +409,11 @@ extern __typeof (gdk_event_type_get_type) IA__gdk_event_type_get_type __attribut
 extern __typeof (gdk_fill_get_type) IA__gdk_fill_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gdk_fill_get_type IA__gdk_fill_get_type
 
+#ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_fill_rule_get_type) IA__gdk_fill_rule_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gdk_fill_rule_get_type IA__gdk_fill_rule_get_type
 
+#endif
 extern __typeof (gdk_filter_return_get_type) IA__gdk_filter_return_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gdk_filter_return_get_type IA__gdk_filter_return_get_type
 
@@ -1535,6 +1537,9 @@ extern __typeof (gdk_window_get_user_data) IA__gdk_window_get_user_data __attrib
 extern __typeof (gdk_window_get_window_type) IA__gdk_window_get_window_type __attribute((visibility("hidden")));
 #define gdk_window_get_window_type IA__gdk_window_get_window_type
 
+extern __typeof (gdk_window_has_native) IA__gdk_window_has_native __attribute((visibility("hidden")));
+#define gdk_window_has_native IA__gdk_window_has_native
+
 extern __typeof (gdk_window_invalidate_maybe_recurse) IA__gdk_window_invalidate_maybe_recurse __attribute((visibility("hidden")));
 #define gdk_window_invalidate_maybe_recurse IA__gdk_window_invalidate_maybe_recurse
 
@@ -1814,6 +1819,9 @@ extern __typeof (gdk_image_get) IA__gdk_image_get __attribute((visibility("hidde
 #define gdk_image_get IA__gdk_image_get
 
 #endif
+extern __typeof (gdk_image_get_pixels) IA__gdk_image_get_pixels __attribute((visibility("hidden")));
+#define gdk_image_get_pixels IA__gdk_image_get_pixels
+
 extern __typeof (gdk_image_set_colormap) IA__gdk_image_set_colormap __attribute((visibility("hidden")));
 #define gdk_image_set_colormap IA__gdk_image_set_colormap
 
@@ -2173,9 +2181,11 @@ extern __typeof (gdk_region_empty) IA__gdk_region_empty __attribute((visibility(
 extern __typeof (gdk_region_equal) IA__gdk_region_equal __attribute((visibility("hidden")));
 #define gdk_region_equal IA__gdk_region_equal
 
+#ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_region_rect_equal) IA__gdk_region_rect_equal __attribute((visibility("hidden")));
 #define gdk_region_rect_equal IA__gdk_region_rect_equal
 
+#endif
 extern __typeof (gdk_region_get_clipbox) IA__gdk_region_get_clipbox __attribute((visibility("hidden")));
 #define gdk_region_get_clipbox IA__gdk_region_get_clipbox
 
@@ -2200,12 +2210,14 @@ extern __typeof (gdk_region_rectangle) IA__gdk_region_rectangle __attribute((vis
 extern __typeof (gdk_region_rect_in) IA__gdk_region_rect_in __attribute((visibility("hidden")));
 #define gdk_region_rect_in IA__gdk_region_rect_in
 
+#ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_region_shrink) IA__gdk_region_shrink __attribute((visibility("hidden")));
 #define gdk_region_shrink IA__gdk_region_shrink
 
 extern __typeof (gdk_region_spans_intersect_foreach) IA__gdk_region_spans_intersect_foreach __attribute((visibility("hidden")));
 #define gdk_region_spans_intersect_foreach IA__gdk_region_spans_intersect_foreach
 
+#endif
 extern __typeof (gdk_region_subtract) IA__gdk_region_subtract __attribute((visibility("hidden")));
 #define gdk_region_subtract IA__gdk_region_subtract
 
@@ -2215,16 +2227,20 @@ extern __typeof (gdk_region_union) IA__gdk_region_union __attribute((visibility(
 extern __typeof (gdk_region_union_with_rect) IA__gdk_region_union_with_rect __attribute((visibility("hidden")));
 #define gdk_region_union_with_rect IA__gdk_region_union_with_rect
 
+#ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_region_xor) IA__gdk_region_xor __attribute((visibility("hidden")));
 #define gdk_region_xor IA__gdk_region_xor
 
 #endif
 #endif
+#endif
 #if IN_HEADER(__GDK_REGION_H__)
 #if IN_FILE(__GDK_POLYREG_GENERIC_C__)
+#ifndef GDK_DISABLE_DEPRECATED
 extern __typeof (gdk_region_polygon) IA__gdk_region_polygon __attribute((visibility("hidden")));
 #define gdk_region_polygon IA__gdk_region_polygon
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GDK_RGB_H__)

@@ -1,3 +1,1414 @@
+commit 0e99667286cf88a71d9a908b9ce6ef220eccf95f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 12 13:09:44 2010 -0400
+
+    Fix the build
+
+ gtk/gtk.symbols    |    1 +
+ gtk/gtktreemodel.c |    2 +-
+ gtk/gtktreemodel.h |    2 ++
+ 3 files changed, 4 insertions(+), 1 deletions(-)
+
+commit 5af7597e2ee752c0b20db400a61c32863c00c314
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 12 12:54:50 2010 -0400
+
+    Updates
+
+ NEWS |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
+
+commit 266fbce3a38e5330284137eb5702794544b501dc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 9 21:40:46 2010 -0400
+
+    Small GtkTable doc improvement
+    (cherry picked from commit ab6927e4faf661bbd89a087599a98278ebebbd64)
+
+ docs/reference/gtk/tmpl/gtktable.sgml |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 47836a3af185ab173795d24911bf2f97dc29f8c9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 9 22:23:25 2010 -0400
+
+    Respect GtkEntry::state-hint when drawing spinbutton features
+
+    As proposed in bug 589904 by Thomas Wood.
+    (cherry picked from commit bcbb976d916dfeda5ca4ca9695b3035e22aee85b)
+
+ gtk/gtkspinbutton.c |   11 ++++++++++-
+ 1 files changed, 10 insertions(+), 1 deletions(-)
+
+commit 1a30c3f27208e6c104622097a7e171b8b4053c16
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Thu Jul 8 15:26:55 2010 -0400
+
+    annotation (transfer-none) fix that somehow got dropped from last
+    patch
+
+    * gtk_tree_path_get_indices_with_depth - annotate the return as
+    'transfer none'
+      to avoid double frees
+
+ gtk/gtktreemodel.c |   25 +++++++++++++++++++++++++
+ 1 files changed, 25 insertions(+), 0 deletions(-)
+
+commit 72cd4207b7086e27ff25af4cc261da1748b10b94
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Thu Jul 8 15:06:55 2010 -0400
+
+    fix some tree model annotations
+
+    * gtk_tree_model_iter_next - 'inout' is poorly defined and causes
+    bugs so
+      revert back to the default 'in' annotation
+    * gtk_tree_path_get_indices_with_depth - annotate the return as
+    'transfer none'
+      to avoid double frees
+    (cherry picked from commit b5f878dec852329ff57f799f1abf4bd360ab7eab)
+
+ gtk/gtktreemodel.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 9a71ad7ca9b68a5c59ab833824c76436b0c6f1f5
+Author: Philip Withnall <philip@tecnocode.co.uk>
+Date:   Wed Jul 7 18:20:37 2010 +0200
+
+    Add (out) annotations to GtkTreeIter parameters
+    (cherry picked from commit 0b51abbfdf5db1d29e28ddc62f74e7e9a40ae010)
+
+ gtk/gtktreemodel.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 1af84d33f74228deadb8aee8d3a71ea98b778fab
+Author: Colin Walters <walters@verbum.org>
+Date:   Tue Jul 6 15:49:41 2010 -0400
+
+    Fix annotation syntax for gtk_widget_class_path
+    (cherry picked from commit c609c4e807b9029ca5b3ba90d084980ef4a64a21)
+
+ gtk/gtkwidget.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 3511fe4355419dff729d5be7484abdc8d9b94dbc
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Tue Jul 6 15:46:14 2010 -0400
+
+    fix annotation for gtk_window_set_default_icon_list
+
+ gtk/gtkwindow.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit b27d39ee235729632325f7b45a1652481a1fb3ec
+Author: Colin Walters <walters@verbum.org>
+Date:   Tue Jul 6 15:01:56 2010 -0400
+
+    Fix annotation on gtk_tree_model_get_value
+    (cherry picked from commit aff8fb2ea24520ed7c0d3c2c6ff003dd0a15f421)
+
+ gtk/gtktreemodel.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit ef3ec85bac99839491bb1becb4000a086e3fe9ce
+Author: Ignacio Casal Quinteiro <icq@gnome.org>
+Date:   Mon Jul 5 18:25:09 2010 +0200
+
+    Bind get_bounds and use out instead of out caller-allocates.
+
+    There is no need to use caller-allocates if the scanner already
+    detects it.
+    (cherry picked from commit f50d06baea6176436aadb625727cd1c0a912900d)
+
+ gtk/gtktextbuffer.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 3b62411040295bcc085081d3db6aca544a1d4c27
+Author: Xan Lopez <xan@gnome.org>
+Date:   Fri Jul 2 22:38:39 2010 +0200
+
+    Remove leftover uses/references of GtkNotebook::group-id
+    (cherry picked from commit 533ea97c67b2490d20305f60c65e173069159f3f)
+
+ gtk/gtknotebook.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+commit 10ebcedf56ae60675494d08ad9c64c08acd1a00a
+Author: Tomeu Vizoso <tomeu.vizoso@collabora.co.uk>
+Date:   Fri Jul 2 10:51:45 2010 +0200
+
+    Annotate gdk_display_manager_list_displays return value
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=623307
+    (cherry picked from commit eae60c34d2f38206ce063251a862a109af41a881)
+
+ gdk/gdkdisplaymanager.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 89743a6370a96a7e4fa1d2252bbddac82e38d08d
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Thu Jul 8 15:11:27 2010 -0400
+
+    revert inout annotation for gtk_tree_model_iter_next parameter
+
+    * 'inout' is poorly defined and causes bugs so revert back to
+    the default
+      'in' annotation
+
+ gtk/gtktreemodel.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit f1e0b236978031b73535b37645e7963b8b039497
+Author: Philip Withnall <philip@tecnocode.co.uk>
+Date:   Wed Jul 7 18:20:37 2010 +0200
+
+    Add (out) annotations to GtkTreeIter parameters
+
+ gtk/gtkcombobox.c        |    2 +-
+ gtk/gtkiconview.c        |    6 +++---
+ gtk/gtkliststore.c       |   14 +++++++-------
+ gtk/gtktreemodel.c       |   14 +++++++-------
+ gtk/gtktreemodelfilter.c |    4 ++--
+ gtk/gtktreemodelsort.c   |    4 ++--
+ gtk/gtktreeselection.c   |    2 +-
+ gtk/gtktreestore.c       |   14 +++++++-------
+ gtk/gtktreeview.c        |    6 +++---
+ 9 files changed, 33 insertions(+), 33 deletions(-)
+
+commit f2d6ab406286184ebd9755e1f6a3182188f26777
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Mon Jul 5 15:05:28 2010 +0300
+
+    Drop leftover reference to local gdk-pixbuf library
+
+ modules/engines/ms-windows/Makefile.am |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit 91728b089087489da78564e62e878cae70876064
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Mon Jul 5 14:57:04 2010 +0300
+
+    Drop gdk-pixbuf stuff
+
+ gtk-zip.sh.in |    6 ------
+ 1 files changed, 0 insertions(+), 6 deletions(-)
+
+commit 130c42c4c9dbce0b17b9a4f33f0ebc808c68c2e5
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Mon Jun 28 00:20:44 2010 +0300
+
+    We need to link gdk with the gio library for non-X11 backends
+
+    (For X11, we link with gio-unix which takes care of it.)
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 3805dc36052d87e4ee8b3e57c9f216671bf59b07
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Jun 15 21:11:14 2010 +0200
+
+    Deprecate GtkWindow:allow-grow and GtkWindow::allow_shrink properties
+
+    Bump required Glib version to 2.15.10 as we are using the
+    new G_PARAM_DEPRECATED
+
+ configure.in    |    2 +-
+ gtk/gtkwindow.c |   19 +++++++++++++++++--
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+
+commit e339a9b0da727eb8a8026b5b9543080d8ab1ff08
+Author: Colin Walters <walters@verbum.org>
+Date:   Thu Jul 1 15:16:25 2010 -0400
+
+    Actually build faq if enabled
+
+    Previously we required an explicit "make html" in this subdirectory
+    for no reason.  Just build it if make is invoked at the toplevel
+    and we have docbook.
+
+ docs/faq/Makefile.am |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 6de36e580ba8acec2fdfc35c17435851fcad06cc
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jul 1 02:39:39 2010 +0200
+
+    [gdk] Add gdk_window_has_native() function
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=622677
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkwindow.c                     |   23 +++++++++++++++++++++++
+ gdk/gdkwindow.h                     |    1 +
+ 4 files changed, 26 insertions(+), 0 deletions(-)
+
+commit b1cc8b9cd88cf1eab4e9ec8c3cdbfb1307b6e79c
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon May 3 18:22:42 2010 +0200
+
+    Make toolbutton not call functions on non-GtkMisc
+
+ gtk/gtktoolbutton.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 807c14741fb1ae2179afed5f7763f5d872b8d199
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Wed Jun 30 16:25:03 2010 +0200
+
+    Deprecate GdkRegion symbols that have no Cairo equivalent
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=613284
+
+ gdk/gdk.symbols          |   10 ++++++++++
+ gdk/gdkpolyreg-generic.c |    3 +++
+ gdk/gdkregion-generic.c  |   11 +++++++++++
+ gdk/gdkregion.h          |   12 ++++++++++++
+ 4 files changed, 36 insertions(+), 0 deletions(-)
+
+commit b404a437c777725348228097e2a69a40219f457f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jun 29 22:36:15 2010 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit ce8a190b25ca0c956424177b12332c790600cd5f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jun 29 21:11:34 2010 -0400
+
+    Update NEWS for GTK+ 2.21.4
+
+ NEWS |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
+
+commit f23c956473bb8cbb44ece39a4df1046a56708a1c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jun 29 21:07:54 2010 -0400
+
+    Revert commit a9b778931c6ba0d1bb37eb29b5ec13dc76339820
+
+    The change turned out to break the pygtk build. So add the
+    pointless return values back, and document them as going
+    away in the future.
+
+ gtk/gtkcalendar.c |   38 +++++++++++++++++++++++++++++++-------
+ gtk/gtkcalendar.h |    6 +++---
+ 2 files changed, 34 insertions(+), 10 deletions(-)
+
+commit c47c91cd3af0eb8ec13a4fd52fdeaa7ef6b440e5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jun 29 07:56:32 2010 -0400
+
+    Make sure we always include gdk-pixbuf in the gdk requires
+
+    This is needed since we include gdk-pixbuf.h in public gdk headers
+    (cherry picked from commit b6cc7dbd21942081e846399e3ed54aa29ff38e30)
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit d89ac0ba69963834ec0a7dc0072394b5486fa54e
+Author: Colin Walters <walters@verbum.org>
+Date:   Mon Jun 28 17:16:44 2010 -0400
+
+    Support NOCONFIGURE (from gnome-common)
+
+    gnome-common's autogen.sh uses NOCONFIGURE to skip running configure.
+    Support that in addition to the current AUTOGEN_SUBDIR_MODE.
+
+ autogen.sh |    9 +++++++--
+ 1 files changed, 7 insertions(+), 2 deletions(-)
+
+commit bdbe090dc0687fc998b226aa64a77c26e54fce04
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 28 13:31:57 2010 -0400
+
+    Silence the build
+
+ gtk/gtkcombo.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 6af981739294d3e30835e5eceee47b969de5f20f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 28 12:38:38 2010 -0400
+
+    Fix dynamic module check
+
+    Also, prevent a stray 'yes' in configure output by putting the
+    corresponding AC_MSG_CHECKING call back
+
+    Bug 623016
+
+ configure.in |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit b89dcab5a5400b58340d394e06208cc7fa3ac24c
+Author: Philip Withnall <philip@tecnocode.co.uk>
+Date:   Sun Jun 27 15:39:02 2010 +0100
+
+    Add allow-none to gdk_window_set_cursor()
+
+ gdk/gdkwindow.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit e634f3fbe0498afc560530d9b92eb4709d7c7f97
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sun Jun 27 10:32:12 2010 +0200
+
+    Move Leopard-specific type definitions to gdkquartz.h
+
+    Update includes subsequently where it matters.  Fixes build on Mac OS
+    X 10.4.
+
+ gdk/quartz/GdkQuartzView.c     |    1 +
+ gdk/quartz/gdkprivate-quartz.h |    1 +
+ gdk/quartz/gdkquartz.h         |   13 +++++++++++++
+ gdk/quartz/gdkwindow-quartz.h  |   13 -------------
+ gtk/gtkquartz.c                |    1 +
+ 5 files changed, 16 insertions(+), 13 deletions(-)
+
+commit 3770d914ec3ac30248f8d187ccc9f5369d3a5fcc
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sun Jun 27 10:22:36 2010 +0200
+
+    Refactor to use API that's available in OS X 10.4 as well
+
+ gdk/quartz/gdkcolor-quartz.c |   26 ++++++++++++++++----------
+ 1 files changed, 16 insertions(+), 10 deletions(-)
+
+commit 093a867e51b383b5c1877415b410cc3c122c72da
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Jun 26 18:17:30 2010 +0200
+
+    Bug 622333 - Crash in gdk_window_impl_quartz_begin_paint_region
+
+ gdk/quartz/gdkwindow-quartz.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 9f5f47f8be10fe4bf8145498cf9158ed8e922d9c
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sat Jun 26 17:12:35 2010 +0200
+
+    Flip clip mask image when setting clip mask on GC
+
+ gdk/quartz/gdkgc-quartz.c |   65
+ ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 64 insertions(+), 1 deletions(-)
+
+commit 49f72c1fb4bf90fde0ba9c4b40794672b775d2a8
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sat Jun 26 17:08:15 2010 +0200
+
+    Rework color translation to support gray scale and bitmaps
+
+ gdk/quartz/gdkcolor-quartz.c   |   54 +++++++++++++++-----
+ gdk/quartz/gdkgc-quartz.c      |  104
+ ++++++++++++++++++++++++++-------------
+ gdk/quartz/gdkprivate-quartz.h |    8 +--
+ gdk/quartz/gdkwindow-quartz.c  |   10 ++--
+ 4 files changed, 116 insertions(+), 60 deletions(-)
+
+commit 42d07ad6ce643a2fdb3c38506e85afa07e7cd17f
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Fri Jun 25 22:40:27 2010 +0200
+
+    Add gray visual, implement "get_best" functions
+
+ gdk/quartz/gdkvisual-quartz.c |   77
+ ++++++++++++++++++++++++++++++++--------
+ 1 files changed, 61 insertions(+), 16 deletions(-)
+
+commit 75585d16de356fe20ca9671335290aaab7bdd13c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Jun 27 01:52:12 2010 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit f1b158bacdf6b9d0d9119aaf4d81b0401f7791ea
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Jun 27 00:54:16 2010 -0400
+
+    Updates
+
+ NEWS |   31 +++++++++++++++++++++++++++++++
+ 1 files changed, 31 insertions(+), 0 deletions(-)
+
+commit 674b1965775c34ee7f1ae860f59d17c59876cde5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Jun 26 21:57:04 2010 -0400
+
+    Adapt to the new, external gdk-pixbuf
+
+ gdk-2.0.pc.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 2417a819ef4e1c40310aba55cd1efbe6fb070077
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Jun 26 21:30:21 2010 -0400
+
+    Remove gdk-pixbuf pc files.
+
+    Noticed in bug 622847
+
+ gdk-pixbuf-2.0-uninstalled.pc.in |    9 ---------
+ gdk-pixbuf-2.0.pc.in             |   12 ------------
+ 2 files changed, 0 insertions(+), 21 deletions(-)
+
+commit 1607efc0b54e5ea72b496a4ab4541e1729900341
+Author: Mirsal Ennaime <mirsal.ennaime@gmail.com>
+Date:   Sat Jun 26 21:22:02 2010 -0400
+
+    Add an accessor for the GSEALed Gtkbutton's event_window attribute
+
+     * Add the gtk_button_get_event_window() function
+
+    Closes: bgo#622581
+    (cherry picked from commit 23a61525f6f21248b151bfb2cd1c1dfa5a132c43)
+
+ docs/reference/gtk/gtk-sections.txt |    1 +
+ gtk/gtk.symbols                     |    1 +
+ gtk/gtkbutton.c                     |   19 +++++++++++++++++++
+ gtk/gtkbutton.h                     |    2 ++
+ 4 files changed, 23 insertions(+), 0 deletions(-)
+
+commit 47f0af609273a3e7788bca25d7959e4931cf9182
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Jun 26 21:04:31 2010 -0400
+
+    Add context to detail strings when drawing steppers
+
+    As usual, this is protected by a style property:
+    GtkRange::stepper-position-details
+    The detail strings are
+    <detail>_start, <detail>_end and <detail>_middle.
+
+    See bug 621250
+    (cherry picked from commit e73a2e56541d97c69a3aa11c8444ecc58c65b8b2)
+
+ gtk/gtkrange.c |  125
+ ++++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 files changed, 104 insertions(+), 21 deletions(-)
+
+commit cbf303d8c6428eb6eb87b72af700ee8dfa921689
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Jun 26 17:00:39 2010 -0400
+
+    Add an accessor for GdkImage->mem
+
+    See bug # 522756
+    (cherry picked from commit 53796b7f1fe0d85fcac8fde8f24eef7290706afd)
+
+ docs/reference/gdk/gdk-sections.txt |   10 ++++++++++
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkimage.c                      |   18 ++++++++++++++++++
+ gdk/gdkimage.h                      |    1 +
+ 4 files changed, 30 insertions(+), 0 deletions(-)
+
+commit 1adba9e908daf124770107fe2d1b0cb66363dc0b
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Fri Jun 25 12:14:28 2010 -0400
+
+    Exposed GtkTreeView's internal GtkTreeSelection for builder files
+    (cherry picked from commit 17516dc83c890de42584264e225284dc4d957283)
+
+ docs/reference/gtk/tmpl/gtktreeview.sgml |    8 +++++-
+ gtk/gtktreeview.c                        |   43
+ +++++++++++++++++++++--------
+ 2 files changed, 38 insertions(+), 13 deletions(-)
+
+commit 63a276654d8fdbd128ca8cfbbb69111dc23280f9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 24 09:34:51 2010 -0400
+
+    Make the message area available in gtkbuilder as well
+
+    See bug 32069.
+
+ gtk/gtkmessagedialog.c |   41 ++++++++++++++++++++++++++++++++++++++++-
+ gtk/tests/builder.c    |   31 +++++++++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+), 1 deletions(-)
+
+commit eb1ec05da384bb215e842726f93993763dfd7afe
+Author: Ignacio Casal Quinteiro <icq@gnome.org>
+Date:   Wed Jun 23 15:52:59 2010 +0200
+
+    Fix annotation of gtk_text_iter_(forward/backward)_search.
+    (cherry picked from commit 7e3e2bf29a52a27cb42072af64f546cecf8fb967)
+
+ gtk/gtktextiter.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit c1c367071115562213a7d726303bfaac9fd62571
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Thu Jun 24 09:27:16 2010 +0200
+
+    Don't handle CUPS' "connecting-to-device" state reason
+
+    CUPS backend shouldn't handle "connecting-to-device" state reason.
+    It shows "Printer '%s' may not be connected" for this state,
+    which is not true in almost all cases. Better is to use
+    "printer-state-message" which contains correct message (#622011).
+    (cherry picked from commit 998459afb7ae8be77c138a879d82765785f3f54e)
+
+ modules/printbackends/cups/gtkprintbackendcups.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit 081eaf4484506c40748f2b659d196471f73dbf1a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jun 24 01:32:23 2010 +0200
+
+    Remove unnused variable
+    (cherry picked from commit 7ea1556cd0b5081d99523b7820378c7d47837402)
+
+ gtk/gtkmessagedialog.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 85ed5256821ecef96d79f920fd0bfcf0d6cab5cd
+Author: Chris Kühl <chrisk@openismus.com>
+Date:   Mon Jun 21 18:29:38 2010 +0200
+
+    [docs] Fixes issue with GtkEntryBuffer signal documentation
+    (cherry picked from commit 078da34a26d4bb0e971789866829133d8dd881be)
+
+ gtk/gtkentrybuffer.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 82c89e94564359025aa655eb79d6cb586951bb1d
+Author: Stanislas Marquis <stnsls@gmail.com>
+Date:   Thu Jun 17 18:21:32 2010 +0200
+
+    [docs] Fix gtk_tree_sortable_set_sort_column_id()
+
+    @sortable => @sort_column_id
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+    (cherry picked from commit a14c820aa9218fe5c476e78be65ad3636f5fc69c)
+
+ gtk/gtktreesortable.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 70094721aad73c0457624014947d064825744431
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jun 17 17:42:28 2010 +0200
+
+    [docs/gtk-faq] Close <para> tag
+    (cherry picked from commit d581c619dbb2c376a85bd6e0aaceac59b9c15205)
+
+ docs/faq/gtk-faq.sgml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 6eebe91b7aeeb3b53812188060ef8ed5375ebcf4
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Jun 16 20:18:39 2010 +0200
+
+    [gtk/gtkmenu] Emit an "attach-widget" event in
+    gtk_menu_attach_to_widget()
+
+    Reported by ageorge@datasys.net in bug
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=621683
+    (cherry picked from commit 318fa1e1799792e9eaeffcf4b19fb4140549e901)
+
+ gtk/gtkmenu.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 90dd7e2990c103e9371dfb2bc0ef13d76c5de7b6
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Jun 16 19:51:04 2010 +0200
+
+    [docs] Fix missing comma in gtkrc docs
+
+    Reported by Alexander Saprykin in bug
+    https://bugzilla.gnome.org/show_bug.cgi?id=621775
+
+ docs/reference/gtk/tmpl/gtkrc.sgml |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit f0fa511457a30ba13eb2c68b6f53596a691375b4
+Author: Stanislas Marquis <stnsls@gmail.com>
+Date:   Wed Jun 16 19:39:14 2010 +0200
+
+    [docs] Add 'Since: 2.16' tag to GtkEntryIconPosition
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+    (cherry picked from commit 972e75e8b0f463386e495ac095b7c6e5cbff8e61)
+
+ docs/reference/gtk/tmpl/gtkentry.sgml |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit a9b778931c6ba0d1bb37eb29b5ec13dc76339820
+Author: Thomas Wood <thos@gnome.org>
+Date:   Tue Jun 15 00:00:40 2010 -0400
+
+    GtkCalendar: some functions always return TRUE, so change them to void
+
+    Certain functions for GtkCalendar always return the same
+    value. Therefore
+    they do not actually need to return a value at all.
+    Bug #621136.
+    (cherry picked from commit e19c50b538d7a7d2b683f9965a2ba6cc1047df51)
+
+ gtk/gtkcalendar.c |   49
+ +++++++++++++++++++------------------------------
+ gtk/gtkcalendar.h |    6 +++---
+ 2 files changed, 22 insertions(+), 33 deletions(-)
+
+commit ace3ea4a89e01e2b641f4c4156a6cffad0a9d834
+Author: Paolo Borelli <pborelli@gnome.org>
+Date:   Mon Jun 14 19:04:47 2010 +0200
+
+    Annotate the methods to get TextBuffer iters
+    (cherry picked from commit cf14d4f368278fcb74780b18c00ef57902a25291)
+
+ gtk/gtktextbuffer.c |   20 ++++++++++----------
+ 1 files changed, 10 insertions(+), 10 deletions(-)
+
+commit 95b7dca983fef94d3fbee7261612c8e7d162673d
+Author: John (J5) Palmieri <johnp@redhat.com>
+Date:   Thu Jun 10 14:53:12 2010 -0400
+
+    annotate gtk_color_selection_get_current_color color param as out
+    (cherry picked from commit 76db7d69f19ec6388cb8d78d88c02ab5dd0ff952)
+
+ gtk/gtkcolorsel.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit cb29d2770714943af7b488a6a94f1f37b7466c8f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Jun 26 02:29:29 2010 -0400
+
+    Make GTK+ build against an external gdk-pixbuf
+
+ INSTALL.in                                         |    4 +-
+ Makefile.am                                        |    4 +-
+ configure.in                                       |  479 +--
+ contrib/Makefile.am                                |    8 -
+ contrib/gdk-pixbuf-xlib/ChangeLog                  |  354 --
+ contrib/gdk-pixbuf-xlib/Makefile.am                |   42 -
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlib-2.0.pc.in  |   11 -
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlib-drawable.c | 1338 -----
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlib-private.h  |   30 -
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlib-render.c   |  398 --
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlib.c          |   63 -
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlib.h          |   87 -
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlibrgb.c       | 3724 ------------
+ contrib/gdk-pixbuf-xlib/gdk-pixbuf-xlibrgb.h       |  188 -
+ demos/Makefile.am                                  |   18 +-
+ demos/gtk-demo/Makefile.am                         |    5 +-
+ docs/reference/Makefile.am                         |    2 +-
+ docs/reference/gdk-pixbuf/Makefile.am              |   99 -
+ docs/reference/gdk-pixbuf/apple-red-1a.png         |  Bin 29895 ->
+ 0 bytes
+ docs/reference/gdk-pixbuf/apple-red-2c.png         |  Bin 19103 ->
+ 0 bytes
+ docs/reference/gdk-pixbuf/composite.dia            |  Bin 2351 -> 0 bytes
+ docs/reference/gdk-pixbuf/composite.png            |  Bin 106599 ->
+ 0 bytes
+ docs/reference/gdk-pixbuf/gdk-pixbuf-csource.xml   |  177 -
+ .../gdk-pixbuf/gdk-pixbuf-from-drawables.sgml      |   29 -
+ .../gdk-pixbuf/gdk-pixbuf-query-loaders.xml        |   55 -
+ .../reference/gdk-pixbuf/gdk-pixbuf-rendering.sgml |   32 -
+ docs/reference/gdk-pixbuf/gdk-pixbuf-sections.txt  |  302 -
+ docs/reference/gdk-pixbuf/gdk-pixbuf.sgml          |  192 -
+ docs/reference/gdk-pixbuf/gdk-pixbuf.types         |    8 -
+ docs/reference/gdk-pixbuf/gnome-gmush-1.png        |  Bin 23814 ->
+ 0 bytes
+ docs/reference/gdk-pixbuf/porting-from-imlib.sgml  |  358 --
+ docs/reference/gdk-pixbuf/tmpl/animation.sgml      |  200 -
+ docs/reference/gdk-pixbuf/tmpl/creating.sgml       |  129 -
+ docs/reference/gdk-pixbuf/tmpl/file-loading.sgml   |  109 -
+ docs/reference/gdk-pixbuf/tmpl/file-saving.sgml    |  143 -
+ .../gdk-pixbuf/tmpl/gdk-pixbuf-loader.sgml         |  209 -
+ .../gdk-pixbuf/tmpl/gdk-pixbuf-unused.sgml         |  569 --
+ .../tmpl/gdk-pixbuf-xlib-from-drawables.sgml       |   54 -
+ .../gdk-pixbuf/tmpl/gdk-pixbuf-xlib-init.sgml      |   52 -
+ .../gdk-pixbuf/tmpl/gdk-pixbuf-xlib-rendering.sgml |  100 -
+ .../gdk-pixbuf/tmpl/gdk-pixbuf-xlib-rgb.sgml       |  290 -
+ docs/reference/gdk-pixbuf/tmpl/gdk-pixbuf.sgml     |  294 -
+ .../gdk-pixbuf/tmpl/initialization_versions.sgml   |  106 -
+ docs/reference/gdk-pixbuf/tmpl/inline.sgml         |  137 -
+ .../gdk-pixbuf/tmpl/module_interface.sgml          |  382 --
+ docs/reference/gdk-pixbuf/tmpl/refcounting.sgml    |   84 -
+ docs/reference/gdk-pixbuf/tmpl/scaling.sgml        |  246 -
+ docs/reference/gdk-pixbuf/tmpl/util.sgml           |   87 -
+ docs/reference/gdk-pixbuf/version.xml.in           |    1 -
+ docs/reference/gdk/Makefile.am                     |    2 +-
+ docs/reference/gtk/Makefile.am                     |    4 +-
+ docs/reference/gtk/building.sgml                   |   21 +-
+ docs/tools/Makefile.am                             |    9 +-
+ gdk-pixbuf/ChangeLog                               | 6289
+ --------------------
+ gdk-pixbuf/Makefile.am                             |  748 ---
+ gdk-pixbuf/abicheck.sh                             |    5 -
+ gdk-pixbuf/gdk-pixbuf-animation.c                  |  734 ---
+ gdk-pixbuf/gdk-pixbuf-animation.h                  |  151 -
+ gdk-pixbuf/gdk-pixbuf-core.h                       |  267 -
+ gdk-pixbuf/gdk-pixbuf-csource.1                    |   91 -
+ gdk-pixbuf/gdk-pixbuf-csource.c                    |  304 -
+ gdk-pixbuf/gdk-pixbuf-data.c                       |   83 -
+ gdk-pixbuf/gdk-pixbuf-enum-types.c.template        |   38 -
+ gdk-pixbuf/gdk-pixbuf-enum-types.h.template        |   28 -
+ gdk-pixbuf/gdk-pixbuf-features.h.in                |   39 -
+ gdk-pixbuf/gdk-pixbuf-i18n.h                       |   32 -
+ gdk-pixbuf/gdk-pixbuf-io.c                         | 2678 ---------
+ gdk-pixbuf/gdk-pixbuf-io.h                         |  172 -
+ gdk-pixbuf/gdk-pixbuf-loader.c                     |  785 ---
+ gdk-pixbuf/gdk-pixbuf-loader.h                     |  102 -
+ gdk-pixbuf/gdk-pixbuf-marshal.list                 |   28 -
+ gdk-pixbuf/gdk-pixbuf-private.h                    |  102 -
+ gdk-pixbuf/gdk-pixbuf-scale.c                      |  463 --
+ gdk-pixbuf/gdk-pixbuf-scaled-anim.c                |  286 -
+ gdk-pixbuf/gdk-pixbuf-scaled-anim.h                |   47 -
+ gdk-pixbuf/gdk-pixbuf-simple-anim.c                |  553 --
+ gdk-pixbuf/gdk-pixbuf-simple-anim.h                |   61 -
+ gdk-pixbuf/gdk-pixbuf-transform.h                  |  119 -
+ gdk-pixbuf/gdk-pixbuf-util.c                       |  337 --
+ gdk-pixbuf/gdk-pixbuf-xform.c                      |  104 -
+ gdk-pixbuf/gdk-pixbuf.c                            |  765 ---
+ gdk-pixbuf/gdk-pixbuf.h                            |   45 -
+ gdk-pixbuf/gdk-pixbuf.symbols                      |  210 -
+ gdk-pixbuf/gdk-pixdata.c                           |  903 ---
+ gdk-pixbuf/gdk-pixdata.h                           |  170 -
+ gdk-pixbuf/gdk_pixbuf.rc.in                        |   30 -
+ gdk-pixbuf/gen-color-table.pl                      |   74 -
+ gdk-pixbuf/io-ani-animation.c                      |  347 --
+ gdk-pixbuf/io-ani-animation.h                      |  113 -
+ gdk-pixbuf/io-ani.c                                |  720 ---
+ gdk-pixbuf/io-bmp.c                                | 1429 -----
+ gdk-pixbuf/io-gdip-animation.c                     |  383 --
+ gdk-pixbuf/io-gdip-animation.h                     |  117 -
+ gdk-pixbuf/io-gdip-bmp.c                           |   87 -
+ gdk-pixbuf/io-gdip-emf.c                           |   64 -
+ gdk-pixbuf/io-gdip-gif.c                           |   85 -
+ gdk-pixbuf/io-gdip-ico.c                           |   64 -
+ gdk-pixbuf/io-gdip-jpeg.c                          |  141 -
+ gdk-pixbuf/io-gdip-native.h                        |  264 -
+ gdk-pixbuf/io-gdip-png.c                           |  138 -
+ gdk-pixbuf/io-gdip-propertytags.h                  |  228 -
+ gdk-pixbuf/io-gdip-tiff.c                          |   87 -
+ gdk-pixbuf/io-gdip-utils.c                         | 1022 ----
+ gdk-pixbuf/io-gdip-utils.h                         |   52 -
+ gdk-pixbuf/io-gdip-wmf.c                           |   63 -
+ gdk-pixbuf/io-gif-animation.c                      |  602 --
+ gdk-pixbuf/io-gif-animation.h                      |  175 -
+ gdk-pixbuf/io-gif.c                                | 1698 ------
+ gdk-pixbuf/io-icns.c                               |  404 --
+ gdk-pixbuf/io-ico.c                                | 1254 ----
+ gdk-pixbuf/io-jasper.c                             |  313 -
+ gdk-pixbuf/io-jpeg.c                               | 1315 ----
+ gdk-pixbuf/io-pcx.c                                |  761 ---
+ gdk-pixbuf/io-png.c                                | 1117 ----
+ gdk-pixbuf/io-pnm.c                                | 1086 ----
+ gdk-pixbuf/io-qtif.c                               |  608 --
+ gdk-pixbuf/io-ras.c                                |  551 --
+ gdk-pixbuf/io-tga.c                                | 1013 ----
+ gdk-pixbuf/io-tiff.c                               |  875 ---
+ gdk-pixbuf/io-wbmp.c                               |  380 --
+ gdk-pixbuf/io-xbm.c                                |  497 --
+ gdk-pixbuf/io-xpm.c                                |  821 ---
+ gdk-pixbuf/make-inline-pixbuf.c                    |  230 -
+ gdk-pixbuf/makefile.msc                            |  197 -
+ gdk-pixbuf/makegdkpixbufalias.pl                   |  137 -
+ gdk-pixbuf/pixops/DETAILS                          |  355 --
+ gdk-pixbuf/pixops/Makefile.am                      |   34 -
+ gdk-pixbuf/pixops/README                           |  163 -
+ gdk-pixbuf/pixops/composite_line_22_4a4_mmx.S      |  241 -
+ .../pixops/composite_line_color_22_4a4_mmx.S       |  253 -
+ gdk-pixbuf/pixops/have_mmx.S                       |   76 -
+ gdk-pixbuf/pixops/makefile.msc                     |   65 -
+ gdk-pixbuf/pixops/pixbuf-transform-math.ltx        |  112 -
+ gdk-pixbuf/pixops/pixops-internal.h                |   25 -
+ gdk-pixbuf/pixops/pixops.c                         | 2560 --------
+ gdk-pixbuf/pixops/pixops.h                         |  120 -
+ gdk-pixbuf/pixops/scale_line_22_33_mmx.S           |  206 -
+ gdk-pixbuf/pixops/timescale.c                      |  267 -
+ gdk-pixbuf/pltcheck.sh                             |   17 -
+ gdk-pixbuf/queryloaders.c                          |  327 -
+ gdk-pixbuf/test-gdk-pixbuf.c                       |  241 -
+ gdk-pixbuf/xpm-color-table.h                       | 1521 -----
+ gdk/Makefile.am                                    |   23 +-
+ gdk/gdkdraw.c                                      |   41 +-
+ gdk/gdkpixbuf-drawable.c                           |   31 +-
+ gdk/gdkpixbuf-render.c                             |   26 +-
+ gdk/x11/Makefile.am                                |    2 +-
+ gtk/Makefile.am                                    |   18 +-
+ gtk/tests/Makefile.am                              |    2 -
+ gtk/theme-bits/Makefile.am                         |    4 +-
+ modules/engines/pixbuf/Makefile.am                 |    3 +-
+ modules/input/Makefile.am                          |    2 -
+ modules/other/gail/Makefile.am                     |    1 -
+ perf/Makefile.am                                   |    2 -
+ po-properties/POTFILES.in                          |   24 -
+ po/POTFILES.in                                     |   32 -
+ tests/Makefile.am                                  |   15 +-
+ 157 files changed, 111 insertions(+), 54214 deletions(-)
+
+commit 946c1ca1367e9ada8f19bdcbcf44233235ed8bf6
+Author: Colin Walters <walters@verbum.org>
+Date:   Fri Jun 25 21:03:34 2010 -0400
+
+    Actually build the tutorial if enabled
+
+    Previously we required an explicit "make html" in this subdirectory
+    for no reason.  Just build it if make is invoked at the toplevel
+    and we have docbook.
+
+ docs/tutorial/Makefile.am |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+commit fa7ace866cf794e3f320fe736eede93876e3b074
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 24 12:44:57 2010 -0400
+
+    Fix the build
+
+    Forgot to update callers of _gtk_window_group_get_current_grab.
+
+ gtk/gtkmenu.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 7d6d1af7a19e16351d898426f8fd5b3f6a045555
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jun 24 18:13:17 2010 +0200
+
+    [docs] Fix annotations: "(allow-none): (out)" -> "(out) (allow-none)"
+
+ gdk/gdkdisplay.c |    6 +++---
+ gdk/gdkdraw.c    |    4 ++--
+ gtk/gtktable.c   |    4 ++--
+ gtk/gtkwidget.c  |    4 ++--
+ gtk/gtkwindow.c  |   12 ++++++------
+ 5 files changed, 15 insertions(+), 15 deletions(-)
+
+commit 022f88a6ac1da6de09f3fd2867dab66d3025d96b
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Jun 24 17:49:30 2010 +0200
+
+    [GtkTable] Add gtk_table_get_size()
+
+    Add accessor function to retrieve the number of rows and columns
+    in the table.
+
+ docs/reference/gtk/gtk-sections.txt |    1 +
+ gtk/gtk.symbols                     |    1 +
+ gtk/gtktable.c                      |   26 ++++++++++++++++++++++++++
+ gtk/gtktable.h                      |    3 +++
+ 4 files changed, 31 insertions(+), 0 deletions(-)
+
+commit 5c93288199bd9a261466e3db321eb28892a95434
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 24 11:16:09 2010 -0400
+
+    Make gtk_window_group_get_current_grab public
+
+    See bug #620832.
+
+ docs/reference/gtk/gtk-sections.txt |    1 +
+ gtk/gtk.symbols                     |    1 +
+ gtk/gtkwindow.c                     |   13 +++++++++++--
+ gtk/gtkwindow.h                     |    2 +-
+ 4 files changed, 14 insertions(+), 3 deletions(-)
+
+commit c0c4ab09465e31315a90e9a3a4f50edd0578ffd4
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Jun 23 01:38:36 2010 +0200
+
+    [gtk] Add gtk_font_selection_dialog_get_font_selection()
+
+    This is needed to access the fontsel sealed member.
+
+ gtk/gtk.symbols  |    1 +
+ gtk/gtkfontsel.c |   18 ++++++++++++++++++
+ gtk/gtkfontsel.h |    1 +
+ 3 files changed, 20 insertions(+), 0 deletions(-)
+
+commit a39c3b43b246be9f7235070c1bc7f6c28b4a0701
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Jun 22 22:46:29 2010 +0200
+
+    [test] Exclude message-area as it's a object property
+
+ gtk/tests/defaultvalue.c |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+commit 8ceef86cf857401403e73ae0bb25b73ea7b2c00b
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Jun 22 21:50:33 2010 +0200
+
+    Add new api to gtk.symbols
+
+    Add newly added api gtk_accessible_set_widget() and
+    gtk_message_dialog_get_message_area()
+
+ gtk/gtk.symbols |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 200896e9b9ccc9e726026316785b388bf79807db
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Jun 22 21:10:23 2010 +0200
+
+    Use the correct guards in gtk_accessible_set_widget()
+
+    Also, allow the widget variable to be NULL
+
+ gtk/gtkaccessible.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+commit bba451147b551ccf6607fe122ff553f8f6579501
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Tue Jun 22 21:30:13 2010 +0300
+
+    Generate correct grab broken event for WM_KILLFOCUS
+
+    WM_KILLFOCUS means that a keyboard grab (not a pointer grab), if any,
+    has been broken. I don't think this bug has matterd much as gtk
+    generates a grab-broken-event signal for both keybord and pointer
+    grabs being broken anyway.
+
+ gdk/win32/gdkevents-win32.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit ce504e221781ab49ccc8b00606a0b732decb12fc
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Tue Jun 22 13:10:52 2010 -0500
+
+    bgo#328069 - Add gtk_message_dialog_get_message_area()
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkmessagedialog.c |   57
+ +++++++++++++++++++++++++++++++++++++++++++----
+ gtk/gtkmessagedialog.h |    2 +
+ 2 files changed, 54 insertions(+), 5 deletions(-)
+
+commit 49943be22b6a7267cbe92801a00eb317b34cda37
+Author: Vincent Untz <vuntz@gnome.org>
+Date:   Tue Jun 22 12:24:38 2010 +0200
+
+    bgo#622371 - Add gtk_accessible_set_widget() - the widget field
+    was GSEAL()ed.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=622371
+
+ gtk/gtkaccessible.c |   19 +++++++++++++++++++
+ gtk/gtkaccessible.h |    2 ++
+ 2 files changed, 21 insertions(+), 0 deletions(-)
+
+commit 6922490fa5af6567037c36a0edc8f52af9fcb98a
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Tue Jun 15 21:48:16 2010 -0500
+
+    Do not dist gir_DATA
+
+    GIR files contain a shared-library attribute which varies per
+    platform,
+    and therefore must not be disted; see bug 621611 for rationale.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=621719
+
+ gdk-pixbuf/Makefile.am |    4 ++--
+ gdk/Makefile.am        |    4 ++--
+ gtk/Makefile.am        |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+commit cbb01e6063f98572dc3958f95934a7b53419a5d1
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jun 18 22:40:50 2010 -0400
+
+    Prevent concurrent use of GTK+ 2 and 3
+
+    If we detect a gtk3-only symbol, error out early.
+
+ gtk/gtkmain.c |   18 ++++++++++++++++++
+ 1 files changed, 18 insertions(+), 0 deletions(-)
+
+commit 606180b746fc647c0269262614d5cd4117de985b
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Jun 16 20:50:29 2010 +0200
+
+    Deprecate GTK_OBJECT_FLAGS() and GtkObjectFlags enum
+
+    This macro will be moved to a private header in GTK+3.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=615666
+
+ docs/reference/gtk/tmpl/gtkobject.sgml |    6 ++++++
+ gtk/gtkobject.h                        |    4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+commit 8fc7a585046121dca54ecc260bedbc3ebc60cd06
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Jun 16 20:37:54 2010 +0200
+
+    gail: do not use removed GTK_WIDGET_*SET macros
+
+    In the absence of new API to port to, left the code commented
+    with a /* FIXME */ state, for somebody with better gail knowledge
+    to fix.
+
+ modules/other/gail/gailmenuitem.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit a8e3ce6bb486a4c89799a77abe153d647fea1a69
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Wed Jun 16 12:41:40 2010 +0200
+
+    Can't select file on file browser after changing sort order
+
+    The row values are 1-indexed not 0-indexed, this has to be taken into
+    account when producing the new_order array.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=621414
+
+ gtk/gtkfilesystemmodel.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 6138f23f5b477a4d7de1c1495c79c1868526a5c9
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Wed Jun 16 11:54:41 2010 +0200
+
+    Make declaration return a boolean when the function does that
+
+ gtk/gtktreeselection.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit d9250dfa1faa9164ece8d642de0ace9a1268c485
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 10 14:13:37 2010 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit a36bfa14247b9497894891004c82dc420ddc299b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jun 10 14:11:20 2010 -0400
+
+    2.21.2
+
+ docs/reference/gdk/tmpl/dnd.sgml     |   45 +++++++++++
+ docs/reference/gdk/tmpl/windows.sgml |    2 +
+ po-properties/af.po                  |   90 +++++++++++-----------
+ po-properties/am.po                  |   90 +++++++++++-----------
+ po-properties/ang.po                 |   90 +++++++++++-----------
+ po-properties/ar.po                  |   90 +++++++++++-----------
+ po-properties/as.po                  |   90 +++++++++++-----------
+ po-properties/ast.po                 |   90 +++++++++++-----------
+ po-properties/az.po                  |   90 +++++++++++-----------
+ po-properties/az_IR.po               |   90 +++++++++++-----------
+ po-properties/be.po                  |   90 +++++++++++-----------
+ po-properties/be@latin.po            |   90 +++++++++++-----------
+ po-properties/bg.po                  |   90 +++++++++++-----------
+ po-properties/bn.po                  |   90 +++++++++++-----------
+ po-properties/bn_IN.po               |   90 +++++++++++-----------
+ po-properties/br.po                  |   90 +++++++++++-----------
+ po-properties/bs.po                  |   90 +++++++++++-----------
+ po-properties/ca.po                  |   90 +++++++++++-----------
+ po-properties/ca@valencia.po         |   90 +++++++++++-----------
+ po-properties/crh.po                 |   90 +++++++++++-----------
+ po-properties/cs.po                  |   90 +++++++++++-----------
+ po-properties/cy.po                  |   90 +++++++++++-----------
+ po-properties/da.po                  |   90 +++++++++++-----------
+ po-properties/de.po                  |   90 +++++++++++-----------
+ po-properties/dz.po                  |   90 +++++++++++-----------
+ po-properties/el.po                  |   90 +++++++++++-----------
+ po-properties/en_CA.po               |   90 +++++++++++-----------
+ po-properties/en_GB.po               |   90 +++++++++++-----------
+ po-properties/eo.po                  |   90 +++++++++++-----------
+ po-properties/es.po                  |   90 +++++++++++-----------
+ po-properties/et.po                  |   90 +++++++++++-----------
+ po-properties/eu.po                  |   90 +++++++++++-----------
+ po-properties/fa.po                  |   90 +++++++++++-----------
+ po-properties/fi.po                  |   90 +++++++++++-----------
+ po-properties/fr.po                  |   90 +++++++++++-----------
+ po-properties/ga.po                  |   90 +++++++++++-----------
+ po-properties/gl.po                  |   90 +++++++++++-----------
+ po-properties/gu.po                  |   90 +++++++++++-----------
+ po-properties/he.po                  |   90 +++++++++++-----------
+ po-properties/hi.po                  |   90 +++++++++++-----------
+ po-properties/hr.po                  |   90 +++++++++++-----------
+ po-properties/hu.po                  |   90 +++++++++++-----------
+ po-properties/hy.po                  |   90 +++++++++++-----------
+ po-properties/ia.po                  |   90 +++++++++++-----------
+ po-properties/id.po                  |   90 +++++++++++-----------
+ po-properties/io.po                  |   90 +++++++++++-----------
+ po-properties/is.po                  |   90 +++++++++++-----------
+ po-properties/it.po                  |   90 +++++++++++-----------
+ po-properties/ja.po                  |   90 +++++++++++-----------
+ po-properties/ka.po                  |   90 +++++++++++-----------
+ po-properties/kk.po                  |   90 +++++++++++-----------
+ po-properties/kn.po                  |   90 +++++++++++-----------
+ po-properties/ko.po                  |   90 +++++++++++-----------
+ po-properties/ku.po                  |   90 +++++++++++-----------
+ po-properties/li.po                  |   90 +++++++++++-----------
+ po-properties/lt.po                  |   90 +++++++++++-----------
+ po-properties/lv.po                  |   90 +++++++++++-----------
+ po-properties/mai.po                 |   90 +++++++++++-----------
+ po-properties/mi.po                  |   90 +++++++++++-----------
+ po-properties/mk.po                  |   90 +++++++++++-----------
+ po-properties/ml.po                  |   90 +++++++++++-----------
+ po-properties/mn.po                  |   90 +++++++++++-----------
+ po-properties/mr.po                  |   90 +++++++++++-----------
+ po-properties/ms.po                  |   90 +++++++++++-----------
+ po-properties/my.po                  |   90 +++++++++++-----------
+ po-properties/nb.po                  |   90 +++++++++++-----------
+ po-properties/nds.po                 |   90 +++++++++++-----------
+ po-properties/ne.po                  |   90 +++++++++++-----------
+ po-properties/nl.po                  |   90 +++++++++++-----------
+ po-properties/nn.po                  |   90 +++++++++++-----------
+ po-properties/nso.po                 |   90 +++++++++++-----------
+ po-properties/oc.po                  |   90 +++++++++++-----------
+ po-properties/or.po                  |   90 +++++++++++-----------
+ po-properties/pa.po                  |   90 +++++++++++-----------
+ po-properties/pl.po                  |   90 +++++++++++-----------
+ po-properties/ps.po                  |   90 +++++++++++-----------
+ po-properties/pt.po                  |   90 +++++++++++-----------
+ po-properties/pt_BR.po               |   90 +++++++++++-----------
+ po-properties/ro.po                  |   90 +++++++++++-----------
+ po-properties/ru.po                  |   90 +++++++++++-----------
+ po-properties/rw.po                  |   90 +++++++++++-----------
+ po-properties/si.po                  |   90 +++++++++++-----------
+ po-properties/sk.po                  |   90 +++++++++++-----------
+ po-properties/sl.po                  |   90 +++++++++++-----------
+ po-properties/sq.po                  |   90 +++++++++++-----------
+ po-properties/sr.po                  |   90 +++++++++++-----------
+ po-properties/sr@ije.po              |   90 +++++++++++-----------
+ po-properties/sr@latin.po            |   90 +++++++++++-----------
+ po-properties/sv.po                  |   90 +++++++++++-----------
+ po-properties/ta.po                  |   90 +++++++++++-----------
+ po-properties/te.po                  |   90 +++++++++++-----------
+ po-properties/th.po                  |   90 +++++++++++-----------
+ po-properties/tk.po                  |   90 +++++++++++-----------
+ po-properties/tr.po                  |   90 +++++++++++-----------
+ po-properties/tt.po                  |   90 +++++++++++-----------
+ po-properties/uk.po                  |   90 +++++++++++-----------
+ po-properties/ur.po                  |   90 +++++++++++-----------
+ po-properties/uz.po                  |   90 +++++++++++-----------
+ po-properties/uz@cyrillic.po         |   90 +++++++++++-----------
+ po-properties/vi.po                  |   90 +++++++++++-----------
+ po-properties/wa.po                  |   90 +++++++++++-----------
+ po-properties/xh.po                  |   90 +++++++++++-----------
+ po-properties/yi.po                  |   90 +++++++++++-----------
+ po-properties/zh_CN.po               |   90 +++++++++++-----------
+ po-properties/zh_HK.po               |   90 +++++++++++-----------
+ po-properties/zh_TW.po               |   90 +++++++++++-----------
+ po/af.po                             |  134
+ +++++++++++++++++-----------------
+ po/am.po                             |  134
+ +++++++++++++++++-----------------
+ po/ang.po                            |  134
+ +++++++++++++++++-----------------
+ po/ar.po                             |  134
+ +++++++++++++++++-----------------
+ po/as.po                             |  134
+ +++++++++++++++++-----------------
+ po/ast.po                            |  134
+ +++++++++++++++++-----------------
+ po/az.po                             |  134
+ +++++++++++++++++-----------------
+ po/az_IR.po                          |  134
+ +++++++++++++++++-----------------
+ po/be.po                             |  134
+ +++++++++++++++++-----------------
+ po/be@latin.po                       |  134
+ +++++++++++++++++-----------------
+ po/bg.po                             |  134
+ +++++++++++++++++-----------------
+ po/bn.po                             |  134
+ +++++++++++++++++-----------------
+ po/bn_IN.po                          |  134
+ +++++++++++++++++-----------------
+ po/br.po                             |  134
+ +++++++++++++++++-----------------
+ po/bs.po                             |  134
+ +++++++++++++++++-----------------
+ po/ca.po                             |  134
+ +++++++++++++++++-----------------
+ po/ca@valencia.po                    |  134
+ +++++++++++++++++-----------------
+ po/crh.po                            |  134
+ +++++++++++++++++-----------------
+ po/cs.po                             |  134
+ +++++++++++++++++-----------------
+ po/cy.po                             |  134
+ +++++++++++++++++-----------------
+ po/da.po                             |  134
+ +++++++++++++++++-----------------
+ po/de.po                             |  134
+ +++++++++++++++++-----------------
+ po/dz.po                             |  134
+ +++++++++++++++++-----------------
+ po/el.po                             |  134
+ +++++++++++++++++-----------------
+ po/en_CA.po                          |  134
+ +++++++++++++++++-----------------
+ po/en_GB.po                          |  134
+ +++++++++++++++++-----------------
+ po/eo.po                             |  134
+ +++++++++++++++++-----------------
+ po/es.po                             |  134
+ +++++++++++++++++-----------------
+ po/et.po                             |  134
+ +++++++++++++++++-----------------
+ po/eu.po                             |  134
+ +++++++++++++++++-----------------
+ po/fa.po                             |  134
+ +++++++++++++++++-----------------
+ po/fi.po                             |  134
+ +++++++++++++++++-----------------
+ po/fr.po                             |  134
+ +++++++++++++++++-----------------
+ po/ga.po                             |  134
+ +++++++++++++++++-----------------
+ po/gl.po                             |  134
+ +++++++++++++++++-----------------
+ po/gu.po                             |  134
+ +++++++++++++++++-----------------
+ po/he.po                             |  134
+ +++++++++++++++++-----------------
+ po/hi.po                             |  134
+ +++++++++++++++++-----------------
+ po/hr.po                             |  134
+ +++++++++++++++++-----------------
+ po/hu.po                             |  134
+ +++++++++++++++++-----------------
+ po/hy.po                             |  134
+ +++++++++++++++++-----------------
+ po/ia.po                             |  134
+ +++++++++++++++++-----------------
+ po/id.po                             |  134
+ +++++++++++++++++-----------------
+ po/io.po                             |  134
+ +++++++++++++++++-----------------
+ po/is.po                             |  134
+ +++++++++++++++++-----------------
+ po/it.po                             |  134
+ +++++++++++++++++-----------------
+ po/ja.po                             |  134
+ +++++++++++++++++-----------------
+ po/ka.po                             |  134
+ +++++++++++++++++-----------------
+ po/kk.po                             |  134
+ +++++++++++++++++-----------------
+ po/kn.po                             |  134
+ +++++++++++++++++-----------------
+ po/ko.po                             |  134
+ +++++++++++++++++-----------------
+ po/ku.po                             |  134
+ +++++++++++++++++-----------------
+ po/li.po                             |  134
+ +++++++++++++++++-----------------
+ po/lt.po                             |  134
+ +++++++++++++++++-----------------
+ po/lv.po                             |  134
+ +++++++++++++++++-----------------
+ po/mai.po                            |  134
+ +++++++++++++++++-----------------
+ po/mi.po                             |  134
+ +++++++++++++++++-----------------
+ po/mk.po                             |  134
+ +++++++++++++++++-----------------
+ po/ml.po                             |  134
+ +++++++++++++++++-----------------
+ po/mn.po                             |  134
+ +++++++++++++++++-----------------
+ po/mr.po                             |  134
+ +++++++++++++++++-----------------
+ po/ms.po                             |  134
+ +++++++++++++++++-----------------
+ po/my.po                             |  134
+ +++++++++++++++++-----------------
+ po/nb.po                             |  134
+ +++++++++++++++++-----------------
+ po/nds.po                            |  134
+ +++++++++++++++++-----------------
+ po/ne.po                             |  134
+ +++++++++++++++++-----------------
+ po/nl.po                             |  134
+ +++++++++++++++++-----------------
+ po/nn.po                             |  134
+ +++++++++++++++++-----------------
+ po/nso.po                            |  134
+ +++++++++++++++++-----------------
+ po/oc.po                             |  134
+ +++++++++++++++++-----------------
+ po/or.po                             |  134
+ +++++++++++++++++-----------------
+ po/pa.po                             |  134
+ +++++++++++++++++-----------------
+ po/pl.po                             |  134
+ +++++++++++++++++-----------------
+ po/ps.po                             |  134
+ +++++++++++++++++-----------------
+ po/pt.po                             |  134
+ +++++++++++++++++-----------------
+ po/pt_BR.po                          |  134
+ +++++++++++++++++-----------------
+ po/ro.po                             |  134
+ +++++++++++++++++-----------------
+ po/ru.po                             |  134
+ +++++++++++++++++-----------------
+ po/rw.po                             |  134
+ +++++++++++++++++-----------------
+ po/si.po                             |  134
+ +++++++++++++++++-----------------
+ po/sk.po                             |  134
+ +++++++++++++++++-----------------
+ po/sl.po                             |  134
+ +++++++++++++++++-----------------
+ po/sq.po                             |  134
+ +++++++++++++++++-----------------
+ po/sr.po                             |  134
+ +++++++++++++++++-----------------
+ po/sr@ije.po                         |  134
+ +++++++++++++++++-----------------
+ po/sr@latin.po                       |  134
+ +++++++++++++++++-----------------
+ po/sv.po                             |  134
+ +++++++++++++++++-----------------
+ po/ta.po                             |  134
+ +++++++++++++++++-----------------
+ po/te.po                             |  134
+ +++++++++++++++++-----------------
+ po/th.po                             |  134
+ +++++++++++++++++-----------------
+ po/tk.po                             |  134
+ +++++++++++++++++-----------------
+ po/tr.po                             |  134
+ +++++++++++++++++-----------------
+ po/tt.po                             |  134
+ +++++++++++++++++-----------------
+ po/uk.po                             |  134
+ +++++++++++++++++-----------------
+ po/ur.po                             |  134
+ +++++++++++++++++-----------------
+ po/uz.po                             |  134
+ +++++++++++++++++-----------------
+ po/uz@cyrillic.po                    |  134
+ +++++++++++++++++-----------------
+ po/vi.po                             |  134
+ +++++++++++++++++-----------------
+ po/wa.po                             |  134
+ +++++++++++++++++-----------------
+ po/xh.po                             |  134
+ +++++++++++++++++-----------------
+ po/yi.po                             |  134
+ +++++++++++++++++-----------------
+ po/zh_CN.po                          |  134
+ +++++++++++++++++-----------------
+ po/zh_HK.po                          |  134
+ +++++++++++++++++-----------------
+ po/zh_TW.po                          |  134
+ +++++++++++++++++-----------------
+ 210 files changed, 11695 insertions(+), 11648 deletions(-)
+
 commit 75afa7d8d3953262c9e43cd1ce1f6d4db2c84273
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Thu Jun 10 12:42:20 2010 -0400
@@ -8085,9 +9496,9 @@ Date:	Fri Jan 29 00:44:43 2010 +0600
 
     Updated Bengali translation
 
- po/bn.po |12331
+ po/bn.po |12365
  ++++++++++++++++++++++++++++++++++++--------------------------
- 1 files changed, 7134 insertions(+), 5197 deletions(-)
+ 1 files changed, 7151 insertions(+), 5214 deletions(-)
 
 commit cc62ab3a0cf52aa5850c6ea733a07326327da03a
 Author: Javier Jardón <jjardon@gnome.org>
@@ -8249,7 +9660,7 @@ Date:	Mon Jan 25 23:23:51 2010 -0500
  po/eo.po				    |  567 +-
  po/es.po				    | 2229 +++---
  po/et.po				    |  568 +-
- po/eu.po				    | 3988 +++++++---
+ po/eu.po				    | 4214 ++++++++----
  po/fa.po				    |  567 +-
  po/fi.po				    |  568 +-
  po/fr.po				    |  568 +-
@@ -8323,7 +9734,7 @@ Date:	Mon Jan 25 23:23:51 2010 -0500
  po/zh_CN.po				    |  568 +-
  po/zh_HK.po				    |  568 +-
  po/zh_TW.po				    |  568 +-
- 207 files changed, 62697 insertions(+), 44277 deletions(-)
+ 207 files changed, 62810 insertions(+), 44390 deletions(-)
 
 commit aa81f217ccd9cb905efd25f5dabc58ecfd494758
 Author: Matthias Clasen <mclasen@redhat.com>
@@ -8822,9 +10233,9 @@ Date:	Fri Jan 15 13:21:40 2010 +0100
 
     Updated asturian translations
 
- po-properties/ast.po | 7651
+ po-properties/ast.po | 7653
  +++++++++++++++++++++++++-------------------------
- 1 files changed, 3864 insertions(+), 3787 deletions(-)
+ 1 files changed, 3865 insertions(+), 3788 deletions(-)
 
 commit 122d2a32882f950a90bd042baa752b899d3a41af
 Author: Murray Cumming <murrayc@murrayc.com>
@@ -8867,9 +10278,9 @@ Date:	Wed Jan 13 16:32:02 2010 +0100
 
     Updated Basque language
 
- po/eu.po | 3793
+ po/eu.po | 4015
  ++++++++++++++++++++------------------------------------------
- 1 files changed, 1185 insertions(+), 2608 deletions(-)
+ 1 files changed, 1296 insertions(+), 2719 deletions(-)
 
 commit f1676cfb115f76b033836d8fb9df474ab3faeae5
 Author: Javier Jardón <jjardon@gnome.org>
@@ -9109,7 +10520,7 @@ Date:	Mon Jan 11 13:57:21 2010 -0500
  po/ang.po				       |   24 +-
  po/ar.po				       |   24 +-
  po/as.po				       |   24 +-
- po/ast.po				       |15155
+ po/ast.po				       |15183
  +++++++++++++++----------
  po/az.po				       |   24 +-
  po/az_IR.po				       |   24 +-
@@ -9134,7 +10545,7 @@ Date:	Mon Jan 11 13:57:21 2010 -0500
  po/eo.po				       |   24 +-
  po/es.po				       | 2226 ++--
  po/et.po				       | 1126 ++-
- po/eu.po				       | 3440 +++++--
+ po/eu.po				       | 3664 +++++--
  po/fa.po				       |   24 +-
  po/fi.po				       |   28 +-
  po/fr.po				       |   24 +-
@@ -9207,7 +10618,7 @@ Date:	Mon Jan 11 13:57:21 2010 -0500
  po/zh_CN.po				       |   24 +-
  po/zh_HK.po				       |   24 +-
  po/zh_TW.po				       |   24 +-
- 226 files changed, 56652 insertions(+), 49361 deletions(-)
+ 226 files changed, 56778 insertions(+), 49487 deletions(-)
 
 commit 76ae6a80ff71a4098cc03eb8a663572802285b63
 Author: Matthias Clasen <mclasen@redhat.com>
@@ -12625,9 +14036,9 @@ Date:	Sat Nov 28 13:36:06 2009 +0100
 
     Updated Low German translation
 
- po/nds.po | 9204
+ po/nds.po | 9258
  ++++++++++++++++++++++++-------------------------------------
- 1 files changed, 3662 insertions(+), 5542 deletions(-)
+ 1 files changed, 3689 insertions(+), 5569 deletions(-)
 
 commit d5395027e5de392cc49fab4859ec9822941cbe63
 Author: Nils-Christoph Fiedler <fiedler@medienkompanie.de>
@@ -12635,9 +14046,9 @@ Date:	Sat Nov 28 13:30:13 2009 +0100
 
     Updated Low German translation
 
- po/nds.po | 9204
+ po/nds.po | 9258
  +++++++++++++++++++++++++++++++++++++------------------------
- 1 files changed, 5542 insertions(+), 3662 deletions(-)
+ 1 files changed, 5569 insertions(+), 3689 deletions(-)
 
 commit cbf6c1b572e14da71ef0019b6ebe634492d58c48
 Author: Jorge González <jorgegonz@svn.gnome.org>
@@ -16366,10 +17777,10 @@ Date:	Tue Jun 30 15:15:55 2009 +0200
       up value access, which is necessary when sorting large models.
 
  gtk/gtkfilechooserdefault.c |	 68 +-
- gtk/gtkfilesystemmodel.c    | 2718
+ gtk/gtkfilesystemmodel.c    | 2832
  +++++++++++++++++++------------------------
  gtk/gtkfilesystemmodel.h    |	 54 +-
- 3 files changed, 1268 insertions(+), 1572 deletions(-)
+ 3 files changed, 1325 insertions(+), 1629 deletions(-)
 
 commit 3c9a34dba39abc24a7745d85163b8785400e7236
 Author: Benjamin Otte <otte@gnome.org>
@@ -21804,13 +23215,13 @@ Date:	Fri Aug 28 02:52:14 2009 +0200
 
     Updated Serbian translation
 
- po-properties/sr.po	   |12616
+ po-properties/sr.po	   |12656
  +++++++++++++++++++++++++--------------------
- po-properties/sr@latin.po |12616
+ po-properties/sr@latin.po |12656
  +++++++++++++++++++++++++--------------------
  po/sr.po		   | 2344 +++++-----
  po/sr@latin.po		   | 2372 +++++-----
- 4 files changed, 16340 insertions(+), 13608 deletions(-)
+ 4 files changed, 16380 insertions(+), 13648 deletions(-)
 
 commit 25cf6517e83a0f15f6010172bb50d263aa7a0499
 Author: Miloš Popović <mpopovic@src.gnome.org>
@@ -21818,11 +23229,11 @@ Date:	Fri Aug 28 02:47:28 2009 +0200
 
     Updated Serbian translation
 
- po-properties/sr.po	   |12836
+ po-properties/sr.po	   |12850
  ++++++++++++++++++++-------------------------
- po-properties/sr@latin.po |12839
+ po-properties/sr@latin.po |12853
  ++++++++++++++++++++-------------------------
- 2 files changed, 11268 insertions(+), 14407 deletions(-)
+ 2 files changed, 11282 insertions(+), 14421 deletions(-)
 
 commit 591b37d7ced7eb857afd75e570318fb0a51e07e1
 Author: Michael Natterer <mitch@gimp.org>
@@ -23641,7 +25052,7 @@ Date:	Tue Aug 11 15:06:02 2009 -0400
  po-properties/bg.po				|  360 +-
  po-properties/bn.po				|  361 +-
  po-properties/bn_IN.po				|  357 +-
- po-properties/br.po				| 3170 ++++++++--------
+ po-properties/br.po				| 3174 ++++++++--------
  po-properties/bs.po				|  357 +-
  po-properties/ca.po				|  360 +-
  po-properties/ca@valencia.po			|  360 +-
@@ -23831,7 +25242,7 @@ Date:	Tue Aug 11 15:06:02 2009 -0400
  po/zh_CN.po					|  509 ++--
  po/zh_HK.po					|  509 ++--
  po/zh_TW.po					|  509 ++--
- 208 files changed, 66999 insertions(+), 58604 deletions(-)
+ 208 files changed, 67001 insertions(+), 58606 deletions(-)
 
 commit bdffae7f6c28e0215504ebf77d0d7bb395e8df1b
 Author: Matthias Clasen <mclasen@redhat.com>
@@ -24416,9 +25827,9 @@ Date:	Sat Aug 1 01:26:38 2009 +0200
 
     Updated breton translation
 
- po-properties/br.po | 3418
+ po-properties/br.po | 3424
  ++++++++++++++++++++++++---------------------------
- 1 files changed, 1603 insertions(+), 1815 deletions(-)
+ 1 files changed, 1606 insertions(+), 1818 deletions(-)
 
 commit 1fa297c82fbef542984c808cd876401aa2b1a288
 Author: Kjartan Maraas <kmaraas@gnome.org>
@@ -24792,9 +26203,9 @@ Date:	Tue Jul 28 13:45:35 2009 +0200
 
     Updated breton translation
 
- po/br.po | 2683
+ po/br.po | 2685
  +++++++++++++++++++++++++-------------------------------------
- 1 files changed, 1063 insertions(+), 1620 deletions(-)
+ 1 files changed, 1064 insertions(+), 1621 deletions(-)
 
 commit 0e6d121b836ef0f34fbecf733d9b3d7354f03d39
 Author: Stefan Kost <ensonic@users.sf.net>
@@ -31291,12 +32702,12 @@ Date:	Mon May 11 01:23:13 2009 -0400
  demos/gtk-demo/links.c		       |   88 ++
  docs/reference/gtk/tmpl/gtklabel.sgml |   18 +
  gtk/gtk.symbols		       |    1 +
- gtk/gtklabel.c			       | 1499
+ gtk/gtklabel.c			       | 1509
  ++++++++++++++++++++++++++++-----
  gtk/gtklabel.h			       |    5 +-
  tests/testgtk.c		       |   52 ++
  tests/testgtkrc		       |    8 +
- 8 files changed, 1452 insertions(+), 222 deletions(-)
+ 8 files changed, 1457 insertions(+), 227 deletions(-)
 
 commit 141ddd99f375b8f687f5f83164c440c8a79b1364
 Author: Matthias Clasen <mclasen@redhat.com>
@@ -36848,7 +38259,7 @@ Date:	Fri Jul 18 15:03:42 2008 +0200
  gdk/gdkoffscreenwindow.c      | 1217 ++++++++++++++
  gdk/gdkpango.c		       |    3 +-
  gdk/gdkpixmap.c	       |   42 +
- gdk/gdkwindow.c	       | 3595
+ gdk/gdkwindow.c	       | 3641
  ++++++++++++++++++++++++++++++++++++-----
  gdk/gdkwindow.h	       |   61 +-
  gdk/gdkwindowimpl.h	       |   41 +-
@@ -36868,7 +38279,7 @@ Date:	Fri Jul 18 15:03:42 2008 +0200
  gdk/x11/gdkselection-x11.c    |    7 +-
  gdk/x11/gdkwindow-x11.c       |  657 +++-----
  gdk/x11/gdkwindow-x11.h       |   22 +-
- 33 files changed, 5620 insertions(+), 1979 deletions(-)
+ 33 files changed, 5643 insertions(+), 2002 deletions(-)
 
 commit e2a2ba9d9889ba96059bc1c2c141088a1baeecd3
 Author: Alexander Larsson <alex@localhost.localdomain>
@@ -37522,9 +38933,9 @@ Date:	Mon Mar 16 17:29:49 2009 +0000
     svn path=/trunk/; revision=22556
 
  po-properties/ChangeLog |    4 +
- po-properties/gl.po	 |12174
+ po-properties/gl.po	 |12224
  ++++++++++++++++++++++++++---------------------
- 2 files changed, 6720 insertions(+), 5458 deletions(-)
+ 2 files changed, 6745 insertions(+), 5483 deletions(-)
 
 commit f096b3228345fd30a89956298410e34b6a88e145
 Author: Amitakhya Phukan <amitakhya@src.gnome.org>
@@ -37799,9 +39210,9 @@ Date:	Fri Mar 13 18:36:38 2009 +0000
     svn path=/trunk/; revision=22535
 
  po-properties/ChangeLog |    4 +
- po-properties/gl.po	 |12183
+ po-properties/gl.po	 |12239
  +++++++++++++++++++++--------------------------
- 2 files changed, 5467 insertions(+), 6720 deletions(-)
+ 2 files changed, 5495 insertions(+), 6748 deletions(-)
 
 commit 0405f7372223f05e509d0461e869f221493ebc30
 Author: Matthias Clasen <matthiasc@src.gnome.org>

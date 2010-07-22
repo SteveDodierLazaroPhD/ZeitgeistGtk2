@@ -90,6 +90,9 @@
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="GtkTable.html#gtk-table-get-col-spacing" title="gtk_table_get_col_spacing ()">gtk_table_get_col_spacing</a>           (<em class="parameter"><code><a class="link" href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a> *table</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> column</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="GtkTable.html#gtk-table-get-default-col-spacing" title="gtk_table_get_default_col_spacing ()">gtk_table_get_default_col_spacing</a>   (<em class="parameter"><code><a class="link" href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a> *table</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="GtkTable.html#gtk-table-get-size" title="gtk_table_get_size ()">gtk_table_get_size</a>                  (<em class="parameter"><code><a class="link" href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a> *table</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *rows</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *columns</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Object Hierarchy">
@@ -182,7 +185,8 @@ The <span class="structname">GtkTable</span> structure holds the data for the ac
 Used to create a new table widget. An initial size must be given by
 specifying how many rows and columns the table should have, although
 this can be changed later with <a class="link" href="GtkTable.html#gtk-table-resize" title="gtk_table_resize ()"><code class="function">gtk_table_resize()</code></a>.  <em class="parameter"><code>rows</code></em> and <em class="parameter"><code>columns</code></em>
-must both be in the range 0 .. 65535.
+must both be in the range 1 .. 65535. For historical reasons, 0 is accepted
+as well and is silently interpreted as 1.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -631,6 +635,36 @@ the spacing that will be used for newly added columns.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2" title="gtk_table_get_size ()">
+<a name="gtk-table-get-size"></a><h3>gtk_table_get_size ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_table_get_size                  (<em class="parameter"><code><a class="link" href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a> *table</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *rows</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *columns</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>table</code></em> :</span></p></td>
+<td>a <a class="link" href="GtkTable.html" title="GtkTable"><span class="type">GtkTable</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rows</code></em> :</span></p></td>
+<td> return location for the number of
+  rows, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>columns</code></em> :</span></p></td>
+<td> return location for the number
+  of columns, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.22</p>
 </div>
 </div>
 <div class="refsect1" title="Property Details">

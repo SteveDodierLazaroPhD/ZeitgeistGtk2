@@ -519,6 +519,14 @@ gtk_window_class_init (GtkWindowClass *klass)
 							NULL,
 							GTK_PARAM_WRITABLE));
 
+  /**
+   * GtkWindow:allow-shrink:
+   *
+   * If %TRUE, the window has no mimimum size. Setting this to %TRUE is
+   * 99&percnt; of the time a bad idea.
+   *
+   * Deprecated: 2.22: Use GtkWindow:resizable property instead.
+   */
   g_object_class_install_property (gobject_class,
                                    PROP_ALLOW_SHRINK,
                                    g_param_spec_boolean ("allow-shrink",
@@ -526,15 +534,22 @@ gtk_window_class_init (GtkWindowClass *klass)
 							 /* xgettext:no-c-format */
 							 P_("If TRUE, the window has no mimimum size. Setting this to TRUE is 99% of the time a bad idea"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
 
+  /**
+   * GtkWindow:allow-grow:
+   *
+   * If %TRUE, users can expand the window beyond its minimum size.
+   *
+   * Deprecated: 2.22: Use GtkWindow:resizable property instead.
+   */
   g_object_class_install_property (gobject_class,
                                    PROP_ALLOW_GROW,
                                    g_param_spec_boolean ("allow-grow",
 							 P_("Allow Grow"),
 							 P_("If TRUE, users can expand the window beyond its minimum size"),
 							 TRUE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
 
   g_object_class_install_property (gobject_class,
                                    PROP_RESIZABLE,
@@ -3666,7 +3681,7 @@ gtk_window_set_icon_from_file (GtkWindow   *window,
 
 /**
  * gtk_window_set_default_icon_list:
- * @list: a list of #GdkPixbuf
+ * @list: (element-type GdkPixbuf) (transfer container): a list of #GdkPixbuf
  *
  * Sets an icon list to be used as fallback for windows that haven't
  * had gtk_window_set_icon_list() called on them to set up a
@@ -4023,8 +4038,8 @@ gtk_window_resize (GtkWindow *window,
 /**
  * gtk_window_get_size:
  * @window: a #GtkWindow
- * @width: (allow-none): (out): return location for width, or %NULL
- * @height: (allow-none): (out): return location for height, or %NULL
+ * @width: (out) (allow-none): return location for width, or %NULL
+ * @height: (out) (allow-none): return location for height, or %NULL
  *
  * Obtains the current size of @window. If @window is not onscreen,
  * it returns the size GTK+ will suggest to the <link
@@ -7346,10 +7361,10 @@ gtk_window_begin_resize_drag  (GtkWindow    *window,
 /**
  * gtk_window_get_frame_dimensions:
  * @window: a #GtkWindow
- * @left: (allow-none): location to store the width of the frame at the left, or %NULL
- * @top: (allow-none): location to store the height of the frame at the top, or %NULL
- * @right: (allow-none): location to store the width of the frame at the returns, or %NULL
- * @bottom: (allow-none): location to store the height of the frame at the bottom, or %NULL
+ * @left: (out) (allow-none): location to store the width of the frame at the left, or %NULL
+ * @top: (out) (allow-none): location to store the height of the frame at the top, or %NULL
+ * @right: (out) (allow-none): location to store the width of the frame at the returns, or %NULL
+ * @bottom: (out) (allow-none): location to store the height of the frame at the bottom, or %NULL
  *
  * (Note: this is a special-purpose function intended for the
  *  framebuffer port; see gtk_window_set_has_frame(). It will not
@@ -7761,10 +7776,19 @@ gtk_window_has_group (GtkWindow *window)
   return window->group != NULL;
 }
 
-/* Return the current grab widget of the given group 
+/**
+ * gtk_window_group_get_current_current_grab:
+ * @window_group: a #GtkWindowGroup
+ *
+ * Gets the current grab widget of the given group,
+ * see gtk_grab_add().
+ *
+ * Returns: the current grab widget of the group
+ *
+ * Since: 2.22
  */
 GtkWidget *
-_gtk_window_group_get_current_grab (GtkWindowGroup *window_group)
+gtk_window_group_get_current_grab (GtkWindowGroup *window_group)
 {
   if (window_group->grabs)
     return GTK_WIDGET (window_group->grabs->data);
