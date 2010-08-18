@@ -71,6 +71,9 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 <span class="returnvalue">void</span>                <a class="link" href="GtkExpander.html#gtk-expander-set-label-widget" title="gtk_expander_set_label_widget ()">gtk_expander_set_label_widget</a>       (<em class="parameter"><code><a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a> *expander</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *label_widget</code></em>);
 <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="GtkExpander.html#gtk-expander-get-label-widget" title="gtk_expander_get_label_widget ()">gtk_expander_get_label_widget</a>       (<em class="parameter"><code><a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a> *expander</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="GtkExpander.html#gtk-expander-set-label-fill" title="gtk_expander_set_label_fill ()">gtk_expander_set_label_fill</a>         (<em class="parameter"><code><a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a> *expander</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> label_fill</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GtkExpander.html#gtk-expander-get-label-fill" title="gtk_expander_get_label_fill ()">gtk_expander_get_label_fill</a>         (<em class="parameter"><code><a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a> *expander</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Object Hierarchy">
@@ -96,6 +99,7 @@ GtkExpander implements
 <pre class="synopsis">
   "<a class="link" href="GtkExpander.html#GtkExpander--expanded" title='The "expanded" property'>expanded</a>"                 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write / Construct
   "<a class="link" href="GtkExpander.html#GtkExpander--label" title='The "label" property'>label</a>"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write / Construct
+  "<a class="link" href="GtkExpander.html#GtkExpander--label-fill" title='The "label-fill" property'>label-fill</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write / Construct
   "<a class="link" href="GtkExpander.html#GtkExpander--label-widget" title='The "label-widget" property'>label-widget</a>"             <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>*            : Read / Write
   "<a class="link" href="GtkExpander.html#GtkExpander--spacing" title='The "spacing" property'>spacing</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
   "<a class="link" href="GtkExpander.html#GtkExpander--use-markup" title='The "use-markup" property'>use-markup</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write / Construct
@@ -172,7 +176,7 @@ A normal content child can be specified without specifying
 a &lt;child&gt; type attribute.
 </p>
 <div class="example">
-<a name="id1282488"></a><p class="title"><b>Example 44. A UI definition fragment with GtkExpander</b></p>
+<a name="id1278385"></a><p class="title"><b>Example 44. A UI definition fragment with GtkExpander</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -598,6 +602,61 @@ Retrieves the label widget for the frame. See
 </table></div>
 <p class="since">Since 2.4</p>
 </div>
+<hr>
+<div class="refsect2" title="gtk_expander_set_label_fill ()">
+<a name="gtk-expander-set-label-fill"></a><h3>gtk_expander_set_label_fill ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gtk_expander_set_label_fill         (<em class="parameter"><code><a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a> *expander</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> label_fill</code></em>);</pre>
+<p>
+Sets whether the label widget should fill all available horizontal space
+allocated to <em class="parameter"><code>expander</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>expander</code></em> :</span></p></td>
+<td>a <a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label_fill</code></em> :</span></p></td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the label should should fill all available horizontal
+             space
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.22</p>
+</div>
+<hr>
+<div class="refsect2" title="gtk_expander_get_label_fill ()">
+<a name="gtk-expander-get-label-fill"></a><h3>gtk_expander_get_label_fill ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gtk_expander_get_label_fill         (<em class="parameter"><code><a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a> *expander</code></em>);</pre>
+<p>
+Returns whether the label widget will fill all available horizontal
+space allocated to <em class="parameter"><code>expander</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>expander</code></em> :</span></p></td>
+<td>a <a class="link" href="GtkExpander.html" title="GtkExpander"><span class="type">GtkExpander</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the label widget will fill all available horizontal
+              space
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.22</p>
+</div>
 </div>
 <div class="refsect1" title="Property Details">
 <a name="GtkExpander.property-details"></a><h2>Property Details</h2>
@@ -613,6 +672,13 @@ Retrieves the label widget for the frame. See
 <pre class="programlisting">  "label"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write / Construct</pre>
 <p>Text of the expander's label.</p>
 <p>Default value: NULL</p>
+</div>
+<hr>
+<div class="refsect2" title='The "label-fill" property'>
+<a name="GtkExpander--label-fill"></a><h3>The <code class="literal">"label-fill"</code> property</h3>
+<pre class="programlisting">  "label-fill"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write / Construct</pre>
+<p>Whether the label widget should fill all available horizontal space.</p>
+<p>Default value: FALSE</p>
 </div>
 <hr>
 <div class="refsect2" title='The "label-widget" property'>

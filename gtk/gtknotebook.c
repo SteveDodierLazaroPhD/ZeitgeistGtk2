@@ -395,7 +395,7 @@ static void gtk_notebook_calc_tabs           (GtkNotebook      *notebook,
 
 /*** GtkNotebook Page Switch Methods ***/
 static void gtk_notebook_real_switch_page    (GtkNotebook      *notebook,
-					      GtkNotebookPage  *page,
+					      GtkNotebookPage  *child,
 					      guint             page_num);
 
 /*** GtkNotebook Page Switch Functions ***/
@@ -2590,7 +2590,8 @@ gtk_notebook_scroll (GtkWidget      *widget,
   for (i = 0; i < 2; i++)
     {
       if (event_widget == priv->action_widget[i] ||
-          gtk_widget_is_ancestor (event_widget, priv->action_widget[i]))
+          (priv->action_widget[i] &&
+           gtk_widget_is_ancestor (event_widget, priv->action_widget[i])))
         return FALSE;
     }
 
@@ -6094,12 +6095,14 @@ gtk_notebook_update_tab_states (GtkNotebook *notebook)
  */
 static void
 gtk_notebook_real_switch_page (GtkNotebook     *notebook,
-			       GtkNotebookPage *page,
+			       GtkNotebookPage* child,
 			       guint            page_num)
 {
+  GList *list = gtk_notebook_find_child (notebook, GTK_WIDGET (child), NULL);
+  GtkNotebookPage *page = GTK_NOTEBOOK_PAGE (list);
   gboolean child_has_focus;
 
-  if (notebook->cur_page == page || !gtk_widget_get_visible (page->child))
+  if (notebook->cur_page == page || !gtk_widget_get_visible (GTK_WIDGET (child)))
     return;
 
   /* save the value here, changing visibility changes focus */
@@ -6157,7 +6160,7 @@ gtk_notebook_switch_page (GtkNotebook     *notebook,
   g_signal_emit (notebook,
 		 notebook_signals[SWITCH_PAGE],
 		 0,
-		 page,
+		 page->child,
 		 page_num);
 }
 
@@ -6252,7 +6255,7 @@ gtk_notebook_menu_switch_page (GtkWidget       *widget,
   g_signal_emit (notebook,
 		 notebook_signals[SWITCH_PAGE],
 		 0,
-		 page,
+		 page->child,
 		 page_num);
 }
 
@@ -6828,13 +6831,15 @@ gtk_notebook_prev_page (GtkNotebook *notebook)
 /* Public GtkNotebook/Tab Style Functions
  *
  * gtk_notebook_set_show_border
+ * gtk_notebook_get_show_border
  * gtk_notebook_set_show_tabs
+ * gtk_notebook_get_show_tabs
  * gtk_notebook_set_tab_pos
- * gtk_notebook_set_homogeneous_tabs
- * gtk_notebook_set_tab_border
- * gtk_notebook_set_tab_hborder
- * gtk_notebook_set_tab_vborder
+ * gtk_notebook_get_tab_pos
  * gtk_notebook_set_scrollable
+ * gtk_notebook_get_scrollable
+ * gtk_notebook_get_tab_hborder
+ * gtk_notebook_get_tab_vborder
  */
 /**
  * gtk_notebook_set_show_border:
@@ -7109,6 +7114,43 @@ gtk_notebook_get_scrollable (GtkNotebook *notebook)
 
   return notebook->scrollable;
 }
+
+/**
+ * gtk_notebook_get_tab_hborder:
+ * @notebook: a #GtkNotebook
+ *
+ * Returns the horizontal width of a tab border.
+ *
+ * Return value: horizontal width of a tab border
+ *
+ * Since: 2.22
+ */
+guint16
+gtk_notebook_get_tab_hborder (GtkNotebook *notebook)
+{
+  g_return_val_if_fail (GTK_IS_NOTEBOOK (notebook), FALSE);
+
+  return notebook->tab_hborder;
+}
+
+/**
+ * gtk_notebook_get_tab_vborder:
+ * @notebook: a #GtkNotebook
+ *
+ * Returns the vertical width of a tab border.
+ *
+ * Return value: vertical width of a tab border
+ *
+ * Since: 2.22
+ */
+guint16
+gtk_notebook_get_tab_vborder (GtkNotebook *notebook)
+{
+  g_return_val_if_fail (GTK_IS_NOTEBOOK (notebook), FALSE);
+
+  return notebook->tab_vborder;
+}
+
 
 /* Public GtkNotebook Popup Menu Methods:
  *

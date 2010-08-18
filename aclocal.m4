@@ -513,7 +513,7 @@ msgstr ""
 
     dnl These rules are solely for the distribution goal.  While doing this
     dnl we only have to keep exactly one list of the available catalogs
-    dnl in configure.in.
+    dnl in configure.ac.
     for lang in $ALL_LINGUAS; do
       GMOFILES="$GMOFILES $lang.gmo"
       POFILES="$POFILES $lang.po"
@@ -642,7 +642,7 @@ AC_DEFINE_UNQUOTED($1, "$localedir",
 dnl
 dnl Now the definitions that aclocal will find
 dnl
-ifdef(glib_configure_in,[],[
+ifdef(glib_configure_ac,[],[
 AC_DEFUN([AM_GLIB_GNU_GETTEXT],[GLIB_GNU_GETTEXT($@)])
 AC_DEFUN([AM_GLIB_DEFINE_LOCALEDIR],[GLIB_DEFINE_LOCALEDIR($@)])
 ])dnl
@@ -8808,7 +8808,7 @@ if test -n "$PKG_CONFIG"; then
 		AC_MSG_RESULT([no])
 		PKG_CONFIG=""
 	fi
-fi[]
+fi[]dnl
 ])# PKG_PROG_PKG_CONFIG
 
 # PKG_CHECK_EXISTS(MODULES, [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
@@ -8822,12 +8822,12 @@ fi[]
 # have to call PKG_CHECK_EXISTS manually
 # --------------------------------------------------------------
 AC_DEFUN([PKG_CHECK_EXISTS],
-[AC_REQUIRE([PKG_PROG_PKG_CONFIG])
+[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
 if test -n "$PKG_CONFIG" && \
     AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "$1"]); then
   m4_default([$2], [:])
 m4_ifvaln([$3], [else
-  $3])
+  $3])dnl
 fi])
 
 # _PKG_CONFIG([VARIABLE], [COMMAND], [MODULES])
@@ -8841,7 +8841,7 @@ m4_define([_PKG_CONFIG],
 		     [pkg_failed=yes])
  else
     pkg_failed=untried
-fi[]
+fi[]dnl
 ])# _PKG_CONFIG
 
 # _PKG_SHORT_ERRORS_SUPPORTED
@@ -8852,7 +8852,7 @@ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
         _pkg_short_errors_supported=yes
 else
         _pkg_short_errors_supported=no
-fi[]
+fi[]dnl
 ])# _PKG_SHORT_ERRORS_SUPPORTED
 
 
@@ -8867,9 +8867,9 @@ fi[]
 #
 # --------------------------------------------------------------
 AC_DEFUN([PKG_CHECK_MODULES],
-[AC_REQUIRE([PKG_PROG_PKG_CONFIG])
-AC_ARG_VAR([$1][_CFLAGS], [C compiler flags for $1, overriding pkg-config])
-AC_ARG_VAR([$1][_LIBS], [linker flags for $1, overriding pkg-config])
+[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+AC_ARG_VAR([$1][_CFLAGS], [C compiler flags for $1, overriding pkg-config])dnl
+AC_ARG_VAR([$1][_LIBS], [linker flags for $1, overriding pkg-config])dnl
 
 pkg_failed=no
 AC_MSG_CHECKING([for $1])
@@ -8918,7 +8918,7 @@ else
 	$1[]_LIBS=$pkg_cv_[]$1[]_LIBS
         AC_MSG_RESULT([yes])
 	$3
-fi[]
+fi[]dnl
 ])# PKG_CHECK_MODULES
 
 # Copyright (C) 2002, 2003, 2005, 2006, 2007, 2008  Free Software Foundation, Inc.

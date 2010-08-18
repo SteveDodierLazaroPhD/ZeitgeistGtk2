@@ -41,7 +41,8 @@ host_triplet = @host@
 DIST_COMMON = $(gdkinclude_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl COPYING
 @HAVE_INTROSPECTION_TRUE@am__append_1 = Gdk-2.0.gir
-@HAVE_INTROSPECTION_TRUE@am__append_2 = $(gir_DATA) $(typelibs_DATA)
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@am__append_2 = GdkX11-2.0.gir
+@HAVE_INTROSPECTION_TRUE@am__append_3 = $(gir_DATA) $(typelibs_DATA)
 subdir = gdk
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
@@ -504,15 +505,17 @@ XVFB_START = \
 	|| { echo "Gtk+Tests:ERROR: Failed to start Xvfb environment for X11 target tests."; exit 1; } \
 	&& DISPLAY=:$$XID && export DISPLAY
 
-INTROSPECTION_GIRS = $(am__append_1)
-INTROSPECTION_SCANNER_ARGS = 
+INTROSPECTION_GIRS = $(am__append_1) $(am__append_2)
+INTROSPECTION_SCANNER_ARGS = \
+   --add-include-path=../gdk
+
 INTROSPECTION_COMPILER_ARGS = \
    --includedir=$(srcdir) \
    --includedir=.
 
 SUBDIRS = $(gdktarget) . tests
 DIST_SUBDIRS = win32 x11 quartz directfb tests
-CLEANFILES = $(am__append_2)
+CLEANFILES = $(am__append_3)
 INCLUDES = \
 	-DG_LOG_DOMAIN=\"Gdk\"		\
 	-DGDK_COMPILATION		\
@@ -528,6 +531,7 @@ gtarget = $(gdktarget)
 # since automake doesn't support conditionalized libsomething_la_LDFLAGS
 # we use the general approach here
 LDADD = \
+	$(GTK_LINK_FLAGS)						\
 	-version-info $(LT_VERSION_INFO)		 		\
 	-export-dynamic 						\
 	-rpath $(libdir) 						\
@@ -658,17 +662,53 @@ libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la $(GDK_DEP_LIBS)
 libgdk_win32_2_0_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o gdk.def
 libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(srcdir)/gdk.def $(LDADD)
 @HAVE_INTROSPECTION_TRUE@introspection_files = \
-@HAVE_INTROSPECTION_TRUE@		$(gdk_public_h_sources) \
-@HAVE_INTROSPECTION_TRUE@		$(gdk_c_sources) \
-@HAVE_INTROSPECTION_TRUE@        gdkenumtypes.c \
-@HAVE_INTROSPECTION_TRUE@        gdkenumtypes.h \
-@HAVE_INTROSPECTION_TRUE@        x11/*.c
+@HAVE_INTROSPECTION_TRUE@	$(gdk_public_h_sources)	\
+@HAVE_INTROSPECTION_TRUE@	$(gdk_c_sources)	\
+@HAVE_INTROSPECTION_TRUE@        gdkenumtypes.c		\
+@HAVE_INTROSPECTION_TRUE@        gdkenumtypes.h
 
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_SCANNERFLAGS = --strip-prefix=Gdk
-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0
+@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0 cairo-1.0
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_LIBS = $(gdktargetlib)
-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_files))
+@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_FILES = $(introspection_files)
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_CFLAGS = $(INCLUDES)
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@x11_introspection_files = \
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/checksettings.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkapplaunchcontext-x11.c	\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkasync.c			\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkcolor-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkcursor-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkdisplay-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkdnd-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkdrawable-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkgc-x11.c			\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkgeometry-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkglobals-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkimage-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkim-x11.c			\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkinput.c			\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkkeys-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkmain-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkpixmap-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkproperty-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkscreen-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkselection-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdksettings.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkspawn-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdktestutils-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkvisual-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkwindow-x11.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkxftdefaults.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/gdkxid.c			\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/xsettings-client.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/xsettings-common.c		\
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@        x11/gdkx.h
+
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_SCANNERFLAGS = --strip-prefix=gdk_x11
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_INCLUDES = Gio-2.0 Gdk-2.0 GdkPixbuf-2.0 Pango-1.0 xlib-2.0
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_LIBS = $(gdktargetlib)
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_FILES = $(x11_introspection_files)
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_CFLAGS = $(INCLUDES) -L$(top_builddir)/gdk
 @HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
 @HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
 @HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0
@@ -1328,13 +1368,17 @@ uninstall-am: uninstall-gdkincludeHEADERS uninstall-girDATA \
 # call as: $(XVFB_START) && someprogram
 
 # test: run all tests in cwd and subdirs
-test:	${TEST_PROGS}
+test: test-cwd test-recurse
+# test-cwd: run tests in cwd
+test-cwd: ${TEST_PROGS}
 	@$(SKIP_GDKTARGET) || test -z "${TEST_PROGS}" || { \
-	  $(XVFB_START) && { set -e; ${GTESTER} --verbose ${TEST_PROGS}; }; \
+	  $(XVFB_START) && { set -e; $(TESTS_ENVIRONMENT) ${GTESTER} --verbose ${TEST_PROGS}; }; \
 	}
+# test-recurse: run tests in subdirs
+test-recurse:
 	@ for subdir in $(SUBDIRS) ; do \
 	    test "$$subdir" = "." -o "$$subdir" = "po" -o "$$subdir" = "po-properties" || \
-	    ( cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $@ ) || exit $? ; \
+	    ( cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) test ) || exit $? ; \
 	  done
 # test-report: run tests in subdirs and generate report
 # perf-report: run tests in subdirs with -m perf and generate report
@@ -1375,12 +1419,14 @@ test-report perf-report full-report:	${TEST_PROGS}
 	    rm -rf "$$GTESTER_LOGDIR"/ ; \
 	    ${GTESTER_REPORT} --version 2>/dev/null 1>&2 ; test "$$?" != 0 || ${GTESTER_REPORT} $@.xml >$@.html ; \
 	  }
-.PHONY: test test-report perf-report full-report
-# run make test as part of make check
-check-local: test
+.PHONY: test test-cwd test-recurse test-report perf-report full-report
+# run make test-cwd as part of make check
+check-local: test-cwd
 -include $(INTROSPECTION_MAKEFILE)
 
 @HAVE_INTROSPECTION_TRUE@Gdk-2.0.gir: $(gdktargetlib) Makefile
+
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11-2.0.gir: $(gdktargetlib) Gdk-2.0.gir Makefile
 
 @OS_WIN32_TRUE@install-def-file: gdk.def
 @OS_WIN32_TRUE@	$(INSTALL) $(srcdir)/gdk.def $(DESTDIR)$(libdir)/gdk-win32-2.0.def

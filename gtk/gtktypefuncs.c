@@ -25,7 +25,6 @@
 *tp++ = gdk_font_get_type();
 *tp++ = gdk_font_type_get_type();
 *tp++ = gdk_function_get_type();
-*tp++ = gdk_gc_get_type();
 *tp++ = gdk_gc_values_mask_get_type();
 *tp++ = gdk_grab_status_get_type();
 *tp++ = gdk_gravity_get_type();

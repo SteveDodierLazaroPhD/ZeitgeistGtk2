@@ -3653,6 +3653,9 @@ extern __typeof (gtk_expander_get_expanded) gtk_expander_get_expanded __attribut
 #undef gtk_expander_get_label 
 extern __typeof (gtk_expander_get_label) gtk_expander_get_label __attribute((alias("IA__gtk_expander_get_label"), visibility("default")));
 
+#undef gtk_expander_get_label_fill 
+extern __typeof (gtk_expander_get_label_fill) gtk_expander_get_label_fill __attribute((alias("IA__gtk_expander_get_label_fill"), visibility("default")));
+
 #undef gtk_expander_get_label_widget 
 extern __typeof (gtk_expander_get_label_widget) gtk_expander_get_label_widget __attribute((alias("IA__gtk_expander_get_label_widget"), visibility("default")));
 
@@ -3679,6 +3682,9 @@ extern __typeof (gtk_expander_set_expanded) gtk_expander_set_expanded __attribut
 
 #undef gtk_expander_set_label 
 extern __typeof (gtk_expander_set_label) gtk_expander_set_label __attribute((alias("IA__gtk_expander_set_label"), visibility("default")));
+
+#undef gtk_expander_set_label_fill 
+extern __typeof (gtk_expander_set_label_fill) gtk_expander_set_label_fill __attribute((alias("IA__gtk_expander_set_label_fill"), visibility("default")));
 
 #undef gtk_expander_set_label_widget 
 extern __typeof (gtk_expander_set_label_widget) gtk_expander_set_label_widget __attribute((alias("IA__gtk_expander_set_label_widget"), visibility("default")));
@@ -6386,6 +6392,12 @@ extern __typeof (gtk_notebook_set_tab_label_text) gtk_notebook_set_tab_label_tex
 
 #undef gtk_notebook_set_tab_pos 
 extern __typeof (gtk_notebook_set_tab_pos) gtk_notebook_set_tab_pos __attribute((alias("IA__gtk_notebook_set_tab_pos"), visibility("default")));
+
+#undef gtk_notebook_get_tab_hborder 
+extern __typeof (gtk_notebook_get_tab_hborder) gtk_notebook_get_tab_hborder __attribute((alias("IA__gtk_notebook_get_tab_hborder"), visibility("default")));
+
+#undef gtk_notebook_get_tab_vborder 
+extern __typeof (gtk_notebook_get_tab_vborder) gtk_notebook_get_tab_vborder __attribute((alias("IA__gtk_notebook_get_tab_vborder"), visibility("default")));
 
 #undef gtk_notebook_set_window_creation_hook 
 extern __typeof (gtk_notebook_set_window_creation_hook) gtk_notebook_set_window_creation_hook __attribute((alias("IA__gtk_notebook_set_window_creation_hook"), visibility("default")));

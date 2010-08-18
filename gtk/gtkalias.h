@@ -3650,6 +3650,9 @@ extern __typeof (gtk_expander_get_expanded) IA__gtk_expander_get_expanded __attr
 extern __typeof (gtk_expander_get_label) IA__gtk_expander_get_label __attribute((visibility("hidden")));
 #define gtk_expander_get_label IA__gtk_expander_get_label
 
+extern __typeof (gtk_expander_get_label_fill) IA__gtk_expander_get_label_fill __attribute((visibility("hidden")));
+#define gtk_expander_get_label_fill IA__gtk_expander_get_label_fill
+
 extern __typeof (gtk_expander_get_label_widget) IA__gtk_expander_get_label_widget __attribute((visibility("hidden")));
 #define gtk_expander_get_label_widget IA__gtk_expander_get_label_widget
 
@@ -3676,6 +3679,9 @@ extern __typeof (gtk_expander_set_expanded) IA__gtk_expander_set_expanded __attr
 
 extern __typeof (gtk_expander_set_label) IA__gtk_expander_set_label __attribute((visibility("hidden")));
 #define gtk_expander_set_label IA__gtk_expander_set_label
+
+extern __typeof (gtk_expander_set_label_fill) IA__gtk_expander_set_label_fill __attribute((visibility("hidden")));
+#define gtk_expander_set_label_fill IA__gtk_expander_set_label_fill
 
 extern __typeof (gtk_expander_set_label_widget) IA__gtk_expander_set_label_widget __attribute((visibility("hidden")));
 #define gtk_expander_set_label_widget IA__gtk_expander_set_label_widget
@@ -6383,6 +6389,12 @@ extern __typeof (gtk_notebook_set_tab_label_text) IA__gtk_notebook_set_tab_label
 
 extern __typeof (gtk_notebook_set_tab_pos) IA__gtk_notebook_set_tab_pos __attribute((visibility("hidden")));
 #define gtk_notebook_set_tab_pos IA__gtk_notebook_set_tab_pos
+
+extern __typeof (gtk_notebook_get_tab_hborder) IA__gtk_notebook_get_tab_hborder __attribute((visibility("hidden")));
+#define gtk_notebook_get_tab_hborder IA__gtk_notebook_get_tab_hborder
+
+extern __typeof (gtk_notebook_get_tab_vborder) IA__gtk_notebook_get_tab_vborder __attribute((visibility("hidden")));
+#define gtk_notebook_get_tab_vborder IA__gtk_notebook_get_tab_vborder
 
 extern __typeof (gtk_notebook_set_window_creation_hook) IA__gtk_notebook_set_window_creation_hook __attribute((visibility("hidden")));
 #define gtk_notebook_set_window_creation_hook IA__gtk_notebook_set_window_creation_hook

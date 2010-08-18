@@ -73,6 +73,9 @@ enum                <a class="link" href="GtkTreeModel.html#GtkTreeModelFlags" t
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index_</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="GtkTreeModel.html#gtk-tree-path-get-depth" title="gtk_tree_path_get_depth ()">gtk_tree_path_get_depth</a>             (<em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> *path</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *              <a class="link" href="GtkTreeModel.html#gtk-tree-path-get-indices" title="gtk_tree_path_get_indices ()">gtk_tree_path_get_indices</a>           (<em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> *path</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *              <a class="link" href="GtkTreeModel.html#gtk-tree-path-get-indices-with-depth" title="gtk_tree_path_get_indices_with_depth ()">gtk_tree_path_get_indices_with_depth</a>
+                                                        (<em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> *path</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *depth</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GtkTreeModel.html#gtk-tree-path-free" title="gtk_tree_path_free ()">gtk_tree_path_free</a>                  (<em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> *path</code></em>);
 <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="returnvalue">GtkTreePath</span></a> *       <a class="link" href="GtkTreeModel.html#gtk-tree-path-copy" title="gtk_tree_path_copy ()">gtk_tree_path_copy</a>                  (<em class="parameter"><code>const <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> *path</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="GtkTreeModel.html#gtk-tree-path-compare" title="gtk_tree_path_compare ()">gtk_tree_path_compare</a>               (<em class="parameter"><code>const <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> *a</code></em>,
@@ -243,7 +246,7 @@ Models are accessed on a node/column level of granularity.  One can
 query for the value of a model at a certain node and a certain column
 on that node.  There are two structures used to reference a particular
 node in a model.  They are the <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> and the <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>
-<sup>[<a name="id981538" href="#ftn.id981538" class="footnote">4</a>]</sup>
+<sup>[<a name="id953942" href="#ftn.id953942" class="footnote">4</a>]</sup>
 Most of the interface consists of operations on a <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>.
 </p>
 <p>
@@ -297,7 +300,7 @@ the second is much more common, as you often get paths from callbacks.
 <p>
 </p>
 <div class="example">
-<a name="id981675"></a><p class="title"><b>Example 20. Acquiring a <span class="structname">GtkTreeIter</span></b></p>
+<a name="id954080"></a><p class="title"><b>Example 20. Acquiring a <span class="structname">GtkTreeIter</span></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -356,7 +359,7 @@ it is specific to the <a class="link" href="GtkListStore.html" title="GtkListSto
 such a function, see the <a class="link" href="GtkListStore.html" title="GtkListStore"><span class="type">GtkListStore</span></a> documentation.
 </p>
 <div class="example">
-<a name="id981724"></a><p class="title"><b>Example 21. Reading data from a <span class="structname">GtkTreeModel</span></b></p>
+<a name="id954128"></a><p class="title"><b>Example 21. Reading data from a <span class="structname">GtkTreeModel</span></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -874,6 +877,40 @@ representing a node in a tree.  This value should not be freed.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2" title="gtk_tree_path_get_indices_with_depth ()">
+<a name="gtk-tree-path-get-indices-with-depth"></a><h3>gtk_tree_path_get_indices_with_depth ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *              gtk_tree_path_get_indices_with_depth
+                                                        (<em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a> *path</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *depth</code></em>);</pre>
+<p>
+Returns the current indices of <em class="parameter"><code>path</code></em>.
+This is an array of integers, each representing a node in a tree.
+It also returns the number of elements in the array.
+The array should not be freed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
+<td>A <a class="link" href="GtkTreeModel.html#GtkTreePath" title="GtkTreePath"><span class="type">GtkTreePath</span></a>.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>depth</code></em> :</span></p></td>
+<td>Number of elements returned in the integer array
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The current indices, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=depth][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym> length=depth]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.22</p>
 </div>
 <hr>
 <div class="refsect2" title="gtk_tree_path_free ()">
@@ -1715,7 +1752,7 @@ is no next <em class="parameter"><code>iter</code></em>, <a href="http://library
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>.
+<td> The <a class="link" href="GtkTreeModel.html#GtkTreeIter" title="GtkTreeIter"><span class="type">GtkTreeIter</span></a>. <span class="annotation">[<acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2024,7 +2061,11 @@ value from column 0 with type <a href="http://library.gnome.org/devel/gobject/un
 write: <code class="literal">gtk_tree_model_get (model, iter, 0, &amp;place_string_here, -1)</code>,
 where <code class="literal">place_string_here</code> is a <span class="type">gchar*</span> to be 
 filled with the string.
-If appropriate, the returned values have to be freed or unreferenced.
+</p>
+<p>
+Returned values with type <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-TYPE-OBJECT:CAPS"><code class="literal">G_TYPE_OBJECT</code></a> have to be unreferenced, values
+with type <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-TYPE-STRING:CAPS"><code class="literal">G_TYPE_STRING</code></a> or <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-TYPE-BOXED:CAPS"><code class="literal">G_TYPE_BOXED</code></a> have to be freed. Other values are
+passed by value.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2484,7 +2525,7 @@ by removing and then reinserting the row.
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id981538" href="#id981538" class="para">4</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id953942" href="#id953942" class="para">4</a>] </sup>
 Here, <abbr class="abbrev">iter</abbr> is short for <span class="quote">“<span class="quote">iterator</span>”</span>
 </p></div>
 </div>

@@ -68,6 +68,7 @@ enum                <a class="link" href="GtkMessageDialog.html#GtkButtonsType" 
 <span class="returnvalue">void</span>                <a class="link" href="GtkMessageDialog.html#gtk-message-dialog-set-image" title="gtk_message_dialog_set_image ()">gtk_message_dialog_set_image</a>        (<em class="parameter"><code><a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> *dialog</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *image</code></em>);
 <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="GtkMessageDialog.html#gtk-message-dialog-get-image" title="gtk_message_dialog_get_image ()">gtk_message_dialog_get_image</a>        (<em class="parameter"><code><a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> *dialog</code></em>);
+<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="GtkMessageDialog.html#gtk-message-dialog-get-message-area" title="gtk_message_dialog_get_message_area ()">gtk_message_dialog_get_message_area</a> (<em class="parameter"><code><a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> *message_dialog</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GtkMessageDialog.html#gtk-message-dialog-format-secondary-text" title="gtk_message_dialog_format_secondary_text ()">gtk_message_dialog_format_secondary_text</a>
                                                         (<em class="parameter"><code><a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> *message_dialog</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *message_format</code></em>,
@@ -133,7 +134,7 @@ makes the dialog modal and waits for the user to respond to it. <a class="link" 
 returns when any dialog button is clicked.
 </p>
 <div class="example">
-<a name="id624579"></a><p class="title"><b>Example 8. A modal dialog.</b></p>
+<a name="id685905"></a><p class="title"><b>Example 8. A modal dialog.</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -164,7 +165,7 @@ returns when any dialog button is clicked.
 You might do a non-modal <a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> as follows:
 </p>
 <div class="example">
-<a name="id759145"></a><p class="title"><b>Example 9. A non-modal dialog.</b></p>
+<a name="id606928"></a><p class="title"><b>Example 9. A non-modal dialog.</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -555,6 +556,33 @@ Gets the dialog's image.
 <p class="since">Since 2.14</p>
 </div>
 <hr>
+<div class="refsect2" title="gtk_message_dialog_get_message_area ()">
+<a name="gtk-message-dialog-get-message-area"></a><h3>gtk_message_dialog_get_message_area ()</h3>
+<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *         gtk_message_dialog_get_message_area (<em class="parameter"><code><a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a> *message_dialog</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>message_dialog</code></em> :</span></p></td>
+<td>a <a class="link" href="GtkMessageDialog.html" title="GtkMessageDialog"><span class="type">GtkMessageDialog</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A <a class="link" href="GtkVBox.html" title="GtkVBox"><span class="type">GtkVBox</span></a> corresponding to the "message area" in the
+<em class="parameter"><code>message_dialog</code></em>.  This is the box where the dialog's primary and secondary
+labels are packed.  You can add your own extra content to that box and it
+will appear below those labels, on the right side of the dialog's image (or
+on the left for right-to-left languages).  See <a class="link" href="GtkDialog.html#gtk-dialog-get-content-area" title="gtk_dialog_get_content_area ()"><code class="function">gtk_dialog_get_content_area()</code></a>
+for the corresponding function in the parent <a class="link" href="GtkDialog.html" title="GtkDialog"><span class="type">GtkDialog</span></a>.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.22</p>
+</div>
+<hr>
 <div class="refsect2" title="gtk_message_dialog_format_secondary_text ()">
 <a name="gtk-message-dialog-format-secondary-text"></a><h3>gtk_message_dialog_format_secondary_text ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_message_dialog_format_secondary_text
@@ -683,7 +711,7 @@ The image for this dialog.
 <pre class="programlisting">  "message-area"             <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>*            : Read</pre>
 <p>
 The <a class="link" href="GtkVBox.html" title="GtkVBox"><span class="type">GtkVBox</span></a> that corresponds to the message area of this dialog.  See
-<a href="http://library.gnome.org/devel/gtk/unstable/GtkMessageDialog.html#gtk-message-dialog-get-message-area"><code class="function">gtk_message_dialog_get_message_area()</code></a> for a detailed description of this
+<a class="link" href="GtkMessageDialog.html#gtk-message-dialog-get-message-area" title="gtk_message_dialog_get_message_area ()"><code class="function">gtk_message_dialog_get_message_area()</code></a> for a detailed description of this
 area.
 </p>
 <p class="since">Since 2.22</p>

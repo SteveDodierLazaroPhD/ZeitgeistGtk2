@@ -8,7 +8,7 @@
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -18,34 +18,30 @@
  */
 
 /*
- * Modified by the GTK+ Team and others 1997-1999.  See the AUTHORS
+ * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
-#if defined(GTK_DISABLE_SINGLE_INCLUDES) && !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
+#if !defined (__GTK_H_INSIDE__) && !defined (GTK_COMPILATION)
 #error "Only <gtk/gtk.h> can be included directly."
 #endif
 
-#ifndef __GTK_VERSION_H__
-#define __GTK_VERSION_H__
+#ifndef __GTK_PANGO_H__
+#define __GTK_PANGO_H__
 
-/* compile time version
- */
-#define GTK_MAJOR_VERSION				(2)
-#define GTK_MINOR_VERSION				(21)
-#define GTK_MICRO_VERSION				(6)
-#define GTK_BINARY_AGE					(2106)
-#define GTK_INTERFACE_AGE				(0)
 
-/* check whether a Gtk+ version equal to or greater than
- * major.minor.micro is present.
- */
-#define	GTK_CHECK_VERSION(major,minor,micro)	\
-    (GTK_MAJOR_VERSION > (major) || \
-     (GTK_MAJOR_VERSION == (major) && GTK_MINOR_VERSION > (minor)) || \
-     (GTK_MAJOR_VERSION == (major) && GTK_MINOR_VERSION == (minor) && \
-      GTK_MICRO_VERSION >= (micro)))
+#include <pango/pangocairo.h>
 
-#endif /* __GTK_VERSION_H__ */
+
+G_BEGIN_DECLS
+
+void
+_gtk_pango_fill_layout (cairo_t     *cr,
+                        PangoLayout *layout);
+
+
+G_END_DECLS
+
+#endif /* __GTK_PANGO_H__ */

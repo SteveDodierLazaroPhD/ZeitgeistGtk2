@@ -1,3 +1,1140 @@
+commit a3689e670ef8bf3f49a40815d9e14044bafbcba2
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Aug 16 18:16:04 2010 -0400
+
+    More NEWS
+
+ NEWS |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
+
+commit 1d5a6e790a366f85b161c4ed0b445b1d948b58c6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Aug 16 17:38:23 2010 -0400
+
+    Fix up some documentation issues
+
+ docs/reference/gdk/gdk-sections.txt |   25 +++++++++++++++++++++++++
+ docs/reference/gtk/gtk-sections.txt |   14 +++++++++++++-
+ gdk/gdkdisplay.c                    |    4 +++-
+ gdk/x11/gdkinput.c                  |    4 +++-
+ 4 files changed, 44 insertions(+), 3 deletions(-)
+
+commit 315c23546dcef4455ff5d8f2907d64b6d0cccc94
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Fri Aug 6 18:03:18 2010 +0200
+
+    colorsel: Create cursor image using Cairo
+
+ gtk/gtkcolorsel.c |   65
+ ++++++++++++++++++++++++++++++++++++++++-------------
+ 1 files changed, 49 insertions(+), 16 deletions(-)
+
+commit 9f1cb0798b3f4c70603233607b049e8acc3d4497
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Aug 16 19:52:09 2010 +0200
+
+    API: Add gdk_window_get_background_pattern()
+
+    This is the suggested way for GTK3 to store a Window's background
+    so it
+    makes sense to use the same function today already.
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkinternals.h                  |    2 +
+ gdk/gdkwindow.c                     |   68
+ +++++++++++++++++++++++++++++++++++
+ gdk/gdkwindow.h                     |    2 +
+ 5 files changed, 74 insertions(+), 0 deletions(-)
+
+commit 77b703c2fc392645d52c7762a3b5f041d995021f
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sun Aug 15 13:24:58 2010 +0200
+
+    quartz: stop offscreen windows code from crashing.
+
+    This is an adapted version of commit
+    bde0f9a8f68b626aac364690e8658b28decb3ee1 on master.
+
+    Mainly fixes to properly differentiate bewteen toplevel and offscreen
+    windows, since these sometimes need different treatment.  Furthermore,
+    usage of gdk_window_get_effective_foo() instead of
+    gdk_window_get_foo()
+    where applicable.
+
+    There is an drawing issue left when scrolling e.g. tree views in
+    offscreen windows.  I think this is likely an issue with
+    gdk_quartz_draw_drawable() which is used for the copy area code in
+    offscreen windows.  It works fine in master, since this was converted
+    to Cairo.
+
+ gdk/quartz/gdkevents-quartz.c |   18 ++++++++++++------
+ gdk/quartz/gdkwindow-quartz.c |   29 +++++++++++++++++------------
+ 2 files changed, 29 insertions(+), 18 deletions(-)
+
+commit 370dfc16cacd91807c6ee2492e8efec68d7676ff
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sun Aug 15 03:31:37 2010 +0200
+
+    Remove window background getters again
+
+    They were added as accessors for 2.22 even though querying the
+    background wasn't possible previously. As GTK 3.0 will change
+    background
+    handling, it doesn't make sense at all to expose these getters.
+
+ gdk/gdk.symbols |    2 -
+ gdk/gdkwindow.c |   60
+ -------------------------------------------------------
+ gdk/gdkwindow.h |    5 ----
+ 3 files changed, 0 insertions(+), 67 deletions(-)
+
+commit 767235aabc065f214e709d32f32812420bcf4c63
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Aug 12 23:38:17 2010 +0200
+
+    gtk-demo: update drawingarea example
+
+    Use gdk_window_create_similar_surface() instead of gdk_pixmap_new()
+
+ demos/gtk-demo/drawingarea.c |   42
+ ++++++++++++++++++++++--------------------
+ 1 files changed, 22 insertions(+), 20 deletions(-)
+
+commit 3df3ff9a3ae6aebcfc91b14e06663e912a0d4356
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Aug 12 23:33:05 2010 +0200
+
+    docs: Add note to gdk_pixmap_new() about create_similar() function
+
+    gdk_window_create_similar_surface() is basically the replacement for
+    this function.
+
+ docs/reference/gdk/tmpl/pixmaps.sgml |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+commit 997d3aada688cc5b4c8c3cc401ad4560cc14b4bc
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Aug 12 23:30:19 2010 +0200
+
+    API: Add gdk_window_create_similar_surface()
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkwindow.c                     |   48
+ +++++++++++++++++++++++++++++++++++
+ gdk/gdkwindow.h                     |    6 ++++
+ 4 files changed, 56 insertions(+), 0 deletions(-)
+
+commit 00857133d41211bf1962c02aca9fce1c19f2e7f3
+Author: Sven Herzberg <herzi@gnome-de.org>
+Date:   Thu Aug 12 11:20:41 2010 +0200
+
+    avoid redundant recursion for executing tests
+
+    [cherry-picked cd00b0a from master]
+
+    * Makefile.decl: make sure that check-local does not depend on a
+      recursive target for the tests. This way check can recurse and call
+      check-local in each folder which then invokes test-cwd. This will
+      make sure that a toplevel check-local doesn't recurse into
+      subfolders
+      as well. The was resulting in test being run twice (for "/tests"),
+      tree
+      times (e.g. for "/gtk/tests") and potentially more often
+
+ Makefile.decl |   16 ++++++++++------
+ 1 files changed, 10 insertions(+), 6 deletions(-)
+
+commit 0e183fe745843daa67937a940d90e2d29e062429
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Aug 12 03:02:38 2010 +0200
+
+    pixmap: Deprecate create_from_data() constructors
+
+    And document that GdkPixmap will go away in GTK 3.
+
+ docs/reference/gdk/tmpl/pixmaps.sgml |   18 ++++++++++++++++++
+ gdk/gdkpixmap.c                      |   20 ++++++++++++++++++++
+ gdk/gdkpixmap.h                      |    2 ++
+ 3 files changed, 40 insertions(+), 0 deletions(-)
+
+commit cedf52fb81b3df8b74196f37618f49afc7d36f3b
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Aug 12 01:53:57 2010 +0200
+
+    x11: Deprecate GdkGC functions
+
+    They are gone in GTK3, just like the rest of GdkGC.
+
+ gdk/x11/gdkgc-x11.c |    4 ++++
+ gdk/x11/gdkx.h      |    2 ++
+ 2 files changed, 6 insertions(+), 0 deletions(-)
+
+commit 329b34b8cbb1baa8ba4269df1a4a4b0e92a09550
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Aug 11 07:19:10 2010 -0400
+
+    Fix a mis-merge
+
+ gtk/gtkexpander.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 9d2f8f5098a05b530e8125989c63524fc5e38c94
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Aug 10 18:25:25 2010 +0200
+
+    docs: Add paragraph about GdkRegion replacement in GTK3
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=613284
+
+ docs/reference/gdk/tmpl/regions.sgml |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+commit e8915ae422d34fd17868311d272b823b8a7108cf
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Aug 10 10:54:33 2010 +0200
+
+    gdk: Undeprecate gdk_region_xor()
+
+    cairo_region_xor() does now exist, so there's no need to deprecate
+    this
+    function.
+
+ gdk/gdkregion-generic.c |    4 ----
+ gdk/gdkregion.h         |    2 +-
+ 2 files changed, 1 insertions(+), 5 deletions(-)
+
+commit a41107b61683c46a13d569c462f5263844cc4467
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 10 09:24:51 2010 -0400
+
+    Fix another build failure
+
+ gtk/gtknotebook.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 8963e7cc46195b4ecb9eac7a44df36e736bede11
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 10 07:43:26 2010 -0400
+
+    Remove merge conflicts
+
+ gtk/gtkexpander.c |    8 +-------
+ 1 files changed, 1 insertions(+), 7 deletions(-)
+
+commit 70f65529a58458ee889b85e3a19331a96340c53f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Aug 9 23:08:39 2010 -0400
+
+    Make it possible to make the expander label fill the entire space
+
+    This adds a boolean GtkExpander::label-fill property and uses it
+    when allocating space to the label. Based on a patch by Matt Barnes,
+    bug 614049.
+
+ docs/reference/gtk/gtk-sections.txt |    2 +
+ gtk/gtk.symbols                     |    2 +
+ gtk/gtkexpander.c                   |  101
+ +++++++++++++++++++++++++++++++---
+ gtk/gtkexpander.h                   |    3 +
+ 4 files changed, 99 insertions(+), 9 deletions(-)
+
+commit 64bcdb78e04df1c475d3548f42ff0b33396ebf01
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Aug 9 22:22:03 2010 -0400
+
+    Fix gail_notebook_get_selection_count()
+
+    This function should return 0 for empty notebooks. Based on
+    a patch by Mike Gorse, bug 557263.
+    (cherry picked from commit 7844d3b8db94922ff17a598d6b36dd30ea0d569d)
+
+ modules/other/gail/gailnotebook.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 2161fb5b8c57a5bbbd24441fcddec1e8e106a056
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Aug 9 21:39:20 2010 -0400
+
+    Clarify the docs for gtk_widget_set_has_window()
+
+    The previous version of the docs did not make it clear that has-window
+    is the defaults. Pointed out by Magnus Hjorth, bug 615474.
+    (cherry picked from commit 61e34032ec0365928824900ed256c4e57ce8dc6f)
+
+ gtk/gtkwidget.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit a11e4a58c0281d10192fe109101394ec7f526431
+Author: Christian Dywan <christian@lanedo.com>
+Date:   Mon Aug 9 21:35:26 2010 -0400
+
+    Clarify memory management of tree models
+
+    It helps to be explicit about these things.
+    Bug 609264.
+    (cherry picked from commit 2a12f74c8e8334d7b1f7629b99fd3e23f0f8a3af)
+
+ gtk/gtkliststore.c |    4 +++-
+ gtk/gtktreemodel.c |    4 +++-
+ gtk/gtktreestore.c |    4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+commit fd352a10cab987ef923d35448834419fb7645dd1
+Author: Hiroyuki Ikezoe <hikezoe@gnome.org>
+Date:   Mon Aug 9 21:31:25 2010 -0400
+
+    Drop xim-related configure options from the docs
+
+    These options have been dropped from configure a while ago,
+    so they should no longer be in the docs either. Bug 605190.
+
+ docs/reference/gtk/building.sgml |   72
+ +++++++++++--------------------------
+ 1 files changed, 22 insertions(+), 50 deletions(-)
+
+commit 1fed87720e3fd092aed784a5ac3b4594861dbd88
+Author: Sam Thursfield <ssssam@gmail.com>
+Date:   Mon Aug 9 21:20:07 2010 -0400
+
+    Add missing accessors for notebook details
+
+    The ms-windows theme engine needs to access the tab-{h,v}border,
+    so add accessors. Bug 625655.
+    (cherry picked from commit a2b72c5953d4a5a13a04b60a8b1ea75c0e0ff3b1)
+
+ docs/reference/gtk/gtk-sections.txt    |    2 +
+ gtk/gtk.symbols                        |    2 +
+ gtk/gtknotebook.c                      |   47
+ +++++++++++++++++++++++++++++---
+ gtk/gtknotebook.h                      |    2 +
+ modules/engines/ms-windows/msw_style.c |   12 ++++----
+ 5 files changed, 55 insertions(+), 10 deletions(-)
+
+commit 28eebcf383dd4d6171811dcc7226f5fe44d3560a
+Author: Sam Thursfield <ssssam@gmail.com>
+Date:   Mon Aug 9 21:17:37 2010 -0400
+
+    Towards GSEAL-clean build on win32
+
+    Use accessors instead of direct member access in a few places.
+    Bug 625655.
+    (cherry picked from commit 4047d0526deffe2c0d3545d86a7fa096423b1c46)
+
+ gtk/gtkwin32embedwidget.c              |   37
+ +++++++++++++++++++-------------
+ modules/engines/ms-windows/msw_style.c |    2 +-
+ 2 files changed, 23 insertions(+), 16 deletions(-)
+
+commit db2053ac1f589d8faf08ce291810ba9e0281d78a
+Author: Szilárd Pfeiffer <mailbox@pfeifferszilard.hu>
+Date:   Mon Aug 9 21:12:46 2010 -0400
+
+    Implement GailAdjustment::get_minimium_increment
+
+    ...and use it in GailRange and GailSpinButton. Bug 625953.
+    (cherry picked from commit 93fa95e79fb03add226954c0e679d2cf52f6392e)
+
+ modules/other/gail/gailadjustment.c |   44
+ +++++++++++++++++++++++++++++++++++
+ modules/other/gail/gailrange.c      |   20 ++++++++++++++++
+ modules/other/gail/gailspinbutton.c |   20 ++++++++++++++++
+ 3 files changed, 84 insertions(+), 0 deletions(-)
+
+commit 85f8f64d781d0a3ba1adc4527eb57333c73f1202
+Author: Szilárd Pfeiffer <mailbox@pfeifferszilard.hu>
+Date:   Mon Aug 9 21:09:30 2010 -0400
+
+    Make Gail work with custom treemodels
+
+    Gail did set the role to ATK_ROLE_TABLE for anything that is
+    not a GtkTreeStore. The propery way to do this is to look at the
+    tree model flags for list-onlyness. Bug 580291.
+    (cherry picked from commit 2686af2fbb3cd12bb5437837c891d302a0674496)
+
+ modules/other/gail/gailtreeview.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+commit 0e1342b5e57d8a4c031fd83c526eb65b35f8ddf9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Aug 9 01:38:29 2010 -0400
+
+    Update NEWS for 2.21.6
+
+ NEWS |   38 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 38 insertions(+), 0 deletions(-)
+
+commit bff0d11c4d9684c378e68ae0370f05e587d4d78c
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sun Aug 8 01:12:06 2010 +0200
+
+    gdk: Deprecate GdkRGB functions
+
+ demos/testpixbuf-drawable.c |    3 +++
+ demos/testpixbuf.c          |    3 +++
+ gdk/gdkrgb.c                |   10 ++++++++++
+ gdk/gdkrgb.h                |   19 ++++++++++---------
+ gtk/gtkpreview.c            |    1 +
+ tests/testrgb.c             |    2 ++
+ 6 files changed, 29 insertions(+), 9 deletions(-)
+
+commit 78bf0f3071fb00a6f65e4555b5bd5b677da73eee
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 17:17:19 2010 +0200
+
+    demos: Convert to drawing with Cairo instead of GdkRGB
+
+ demos/pixbuf-demo.c |   22 ++++++++--------------
+ 1 files changed, 8 insertions(+), 14 deletions(-)
+
+commit d80bc7868f4ce32bc00fe00ded18474a4b7e237d
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 17:14:14 2010 +0200
+
+    demos: No need to set the rgb colormap here
+
+ demos/testpixbuf-color.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit 244fc05cff30822457e48c2d34e3ba8e1a69b03a
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 17:49:33 2010 +0200
+
+    demos: Convert testpixbuf-save to Cairo
+
+ demos/testpixbuf-save.c |   34 +++++++++-------------------------
+ 1 files changed, 9 insertions(+), 25 deletions(-)
+
+commit d7a1973f9fe7056d55e06373dd63e70f4222d68b
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 15:57:18 2010 +0200
+
+    gtk-demo: Make pixbufs demo use Cairo
+
+ demos/gtk-demo/pixbufs.c |   17 ++++++-----------
+ 1 files changed, 6 insertions(+), 11 deletions(-)
+
+commit a907d5e2ccc4afa1a402d57ecfd6a18137ff2599
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 22:17:43 2010 +0200
+
+    Deprecate all of GdkImage
+
+ gdk/gdkimage.c |   24 ++++++++++++++++++++++++
+ gdk/gdkimage.h |    4 +---
+ 2 files changed, 25 insertions(+), 3 deletions(-)
+
+commit 8a2a736af416844c8e7d0e1eac4faaaf3777efa9
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 22:08:21 2010 +0200
+
+    Deprecated all GdkGC functions
+
+ gdk/gdkgc.c |   84
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ gdk/gdkgc.h |    6 +---
+ gtk/gtkgc.c |    3 ++
+ 3 files changed, 87 insertions(+), 6 deletions(-)
+
+commit 41b637c338e999cfb920ef92a976c01474f2a25c
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 05:40:05 2010 +0200
+
+    hsv: Remove unused variable
+
+ gtk/gtkhsv.c |   10 ----------
+ 1 files changed, 0 insertions(+), 10 deletions(-)
+
+commit 84f565505f881ba728786eeb6ed2b5a0a2cc4c77
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 21:19:02 2010 +0200
+
+    testgtk: Remove unused variable
+
+ tests/testgtk.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit 3d506df2344e7499fbe3946683647ea53f871b1b
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 04:27:24 2010 +0200
+
+    gdk: Deprecate all drawing functions
+
+    These functions will be gone in Gtk 3.0 and be replaced by Cairo
+    functions.
+
+    Includes not disabling deprecated functions in old widgets that aren't
+    going to be ported.
+
+ gdk/gdkdraw.c        |   58
+ ++++++++++++++++++++++++++++++++++++++++++++++++++
+ gdk/gdkdrawable.h    |    9 +------
+ gtk/gtkclist.c       |    1 +
+ gtk/gtkctree.c       |    1 +
+ gtk/gtkcurve.c       |    1 +
+ gtk/gtkimage.c       |    2 +
+ gtk/gtkpixmap.c      |    1 +
+ gtk/gtkprogress.c    |    1 +
+ gtk/gtkstyle.c       |    1 +
+ gtk/gtktextdisplay.c |    2 +
+ gtk/gtktreeitem.c    |    1 +
+ tests/testtext.c     |    1 +
+ 12 files changed, 72 insertions(+), 7 deletions(-)
+
+commit 99c851c72d082b43b24c0db900ad562ab370f048
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 22:12:50 2010 +0200
+
+    colorsel: Use gdk_pixbuf_get_from_drawable()
+
+    Instead of fiddling with GdkImage directly.
+
+ gtk/gtkcolorsel.c |   28 +++++++++++++++++-----------
+ 1 files changed, 17 insertions(+), 11 deletions(-)
+
+commit df120b78b334c2117da83969d1f780eea4014391
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 15:08:56 2010 +0200
+
+    testgtk: Remove image from drawable test
+
+    The test only tested old APIs.
+
+ tests/testgtk.c |  324
+ -------------------------------------------------------
+ 1 files changed, 0 insertions(+), 324 deletions(-)
+
+commit 18ac62d4598497efcf8811b98354dc523e2e3317
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 15:54:04 2010 +0200
+
+    testgtk: Remove alpha drawing test
+
+    We use Cairo for that these days.
+
+ tests/testgtk.c |   68
+ -------------------------------------------------------
+ 1 files changed, 0 insertions(+), 68 deletions(-)
+
+commit b50cdb4b5ec8271b2366113473b4582f63f3422e
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 22 01:51:59 2010 +0200
+
+    testgtk: Draw rotated text example with pangocairo
+
+ tests/testgtk.c |   73
+ ++++++++++++++++--------------------------------------
+ 1 files changed, 22 insertions(+), 51 deletions(-)
+
+commit 4150ffbbe2c7e64d662dc52904d32feedbc31211
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 12 15:45:12 2010 +0200
+
+    tests: Remove gdk_draw_pixbuf() with Cairo equivalent
+
+ tests/testgtk.c |   20 ++++++++++++++------
+ tests/testrgb.c |   12 +++++++-----
+ 2 files changed, 21 insertions(+), 11 deletions(-)
+
+commit e75fad5fbd8112b36cc57bb285362587e3230a18
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 04:03:27 2010 +0200
+
+    testgtk: Replace gdk_draw_rectangle() with Cairo
+
+ tests/testgtk.c |  100
+ +++++++++++++++++++++++++++++-------------------------
+ 1 files changed, 54 insertions(+), 46 deletions(-)
+
+commit 0d42dabf6c3616f150f9aafa35c8e731d0b82a1c
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 02:38:21 2010 +0200
+
+    tests: Use gdk_screen_get_default_colormap()
+
+    We don't need the RGB colormap here.
+
+ tests/testgtk.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 141b2ceff2cb52c1f9ad1c4d164633b9d2bc1a14
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Tue Jul 13 02:17:48 2010 +0200
+
+    tests: Use GdkPixbuf for taking a screenshot, not GdkImage
+
+ tests/testgtk.c |   15 ++++++++-------
+ 1 files changed, 8 insertions(+), 7 deletions(-)
+
+commit 8dc19e41587d07864929bb3c0dc36f0428ab3fba
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 04:01:58 2010 +0200
+
+    tests: Make testoffscreen use Cairo
+
+ tests/testoffscreen.c |   18 ++++++++++++------
+ 1 files changed, 12 insertions(+), 6 deletions(-)
+
+commit 8e537f94ac91e02cccbcd229d58969ae08520d33
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 18:37:08 2010 +0200
+
+    test: Convert testinput to Cairo
+
+    The test is broken though as it draws onto windows outside of expose
+    events.
+    And we all know you shouldn't do that.
+
+ tests/testinput.c |   39 ++++++++++++++++++++++-----------------
+ 1 files changed, 22 insertions(+), 17 deletions(-)
+
+commit 2b9b125a88d4d97f9ba88964b7990217760812d5
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Wed Jul 14 23:10:31 2010 +0200
+
+    tests: replace gdk_draw_drawable() with Cairo calls in testinput
+
+ tests/testinput.c |   40 ++++++++++++++++++++++------------------
+ 1 files changed, 22 insertions(+), 18 deletions(-)
+
+commit 970ae51e386ff6a585b469ae92846b876d892bb1
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 12 16:48:53 2010 +0200
+
+    demos: Use Cairo instead of gdk_draw_pixbuf()
+
+ demos/testpixbuf-scale.c |   13 ++++++++-----
+ demos/testpixbuf.c       |   13 ++++++++-----
+ 2 files changed, 16 insertions(+), 10 deletions(-)
+
+commit 0ba97c7aae2defe5b43c08985971d2b2d3e32d86
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 19 12:15:58 2010 +0200
+
+    gtk-demo: Blit backing pixmap using Cairo
+
+ demos/gtk-demo/drawingarea.c |   21 ++++++++-------------
+ 1 files changed, 8 insertions(+), 13 deletions(-)
+
+commit ddb905e99a6c76b2a4956f58c4228c49c6a5a35e
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Jul 17 00:18:35 2010 +0200
+
+    gtk-demo: Convert drawingarea example to Cairo
+
+ demos/gtk-demo/drawingarea.c |   60
+ +++++++++++++++--------------------------
+ 1 files changed, 22 insertions(+), 38 deletions(-)
+
+commit f69034a0792d41fc0a34cb48b5b2b0af68576bb0
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Jul 17 00:18:57 2010 +0200
+
+    gtk-demo: Convert color selection example to Cairo
+
+ demos/gtk-demo/colorsel.c |   13 ++++++++-----
+ 1 files changed, 8 insertions(+), 5 deletions(-)
+
+commit 53cf3d2edc855fa62e398774a0273dd125233e96
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 03:57:15 2010 +0200
+
+    cups: Fix cast warnings
+
+ modules/printbackends/cups/gtkcupsutils.c        |    2 +-
+ modules/printbackends/cups/gtkprintbackendcups.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 88b7857bc8b02025af151da6b0a5e833d28b8344
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 15:44:24 2010 +0200
+
+    pixbuf-engine: Draw mask with Cairo
+
+    No more gdk_pixbuf_render_threshold_alpha()
+
+ modules/engines/pixbuf/pixbuf-render.c |   16 ++++++++++------
+ 1 files changed, 10 insertions(+), 6 deletions(-)
+
+commit 9e1ae0e29a3de164bd5aefd651439c2045276e05
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 12 15:44:32 2010 +0200
+
+    pixbuf-engine: replace call to gdk_draw_pixbuf() with Cairo equivalent
+
+ modules/engines/pixbuf/pixbuf-render.c |   19 ++++++++++++-------
+ 1 files changed, 12 insertions(+), 7 deletions(-)
+
+commit 769c63c7efcf77562815c2d0660be6f764f5e37a
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 12 15:41:27 2010 +0200
+
+    pixbuf-engine: Replace gdk_draw_pixbuf() with Cairo equivalent
+
+    This replaces the tiled fill call only.
+
+ modules/engines/pixbuf/pixbuf-render.c |   36
+ ++++++++-----------------------
+ 1 files changed, 10 insertions(+), 26 deletions(-)
+
+commit 3cbdc7ac89e58432c8d92570d58463747c9cd946
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Jul 17 04:41:58 2010 +0200
+
+    imcontextxim: Draw with Cairo
+
+ modules/input/gtkimcontextxim.c |   25 +++++++++++++++----------
+ 1 files changed, 15 insertions(+), 10 deletions(-)
+
+commit e95f6da1161d604b254b3b1e42de2a47caeff223
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 01:08:03 2010 +0200
+
+    testing: Use Cairo calls instead of gdk_draw_line() to test server
+    sync
+
+ gtk/tests/testing.c |   12 +++++++-----
+ 1 files changed, 7 insertions(+), 5 deletions(-)
+
+commit d5ff6b6c66d13fda2c8c7acf902d2adad502028b
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 05:18:33 2010 +0200
+
+    treeview: Draw the dnd pixmaps with Cairo
+
+ gtk/gtktreeview.c |   25 +++++++++++++------------
+ 1 files changed, 13 insertions(+), 12 deletions(-)
+
+commit 2e1f12642bb3967588e8954820f023ae32364c48
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 05:04:46 2010 +0200
+
+    treeview: Draw lines with Cairo
+
+ gtk/gtktreeprivate.h |    6 ++-
+ gtk/gtktreeview.c    |  106
+ +++++++++++++++++++++++++++-----------------------
+ 2 files changed, 61 insertions(+), 51 deletions(-)
+
+commit c1292fe01de9b7b0a5f232b07f8e9d9463d2d452
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 03:36:07 2010 +0200
+
+    treeview: Unify all line drawing into the same function
+
+    This is useful because the dashing stuff needs to be done and it seems
+    like a good idea to unify it.
+
+ gtk/gtktreeview.c |  138
+ ++++++++++++++++++++++++++++++++++-------------------
+ 1 files changed, 88 insertions(+), 50 deletions(-)
+
+commit 7ee63c07ee778eb963be2b138d0c7e2ca6136c0b
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Jul 15 03:02:59 2010 +0200
+
+    treeview: Draw column reordering arrows with Cairo
+
+ gtk/gtktreeview.c |  103
+ ++++++++++++++++++++++-------------------------------
+ 1 files changed, 43 insertions(+), 60 deletions(-)
+
+commit 09080e3c766c5ca26e57731a07549490f8d20494
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Wed Jul 21 12:37:35 2010 +0200
+
+    textview: draw dnd icon with Pango
+
+ gtk/gtktextutil.c |    8 +++-----
+ 1 files changed, 3 insertions(+), 5 deletions(-)
+
+commit bb3c91bfda1ae0b710ad3bc3751ea1a6a00e7495
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Fri Jul 16 01:45:06 2010 +0200
+
+    textview: Draw drag icons using Cairo
+
+ gtk/gtktextutil.c |   43 +++++++++++++++++++------------------------
+ 1 files changed, 19 insertions(+), 24 deletions(-)
+
+commit fe401cdbb4558aa267d2081be65f5035b2b9f7f4
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 03:36:52 2010 +0200
+
+    ruler: Replace gdk_draw_drawable calls with Cairo
+
+    and get rid of the custom GC
+
+ gtk/gtkruler.c |   39 +++++++++++++++------------------------
+ 1 files changed, 15 insertions(+), 24 deletions(-)
+
+commit 6740d24bb8e0fa240a670363697fc731fe761697
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Wed Jul 14 21:56:15 2010 +0200
+
+    menu: replace gdk_draw_drawable() call with Cairo equivalent
+
+ gtk/gtkmenu.c |   18 ++++++++----------
+ 1 files changed, 8 insertions(+), 10 deletions(-)
+
+commit e570fe6730e7d465e13574b247f652cab4017019
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 03:22:52 2010 +0200
+
+    label: Draw all text using PangoCairo
+
+    This includes the addition of a "small" helper function,
+    _gtk_pango_fill_layout() that ignores color information. This
+    functionality is not available inside Pango and until that happens, we
+    need this fix. The bug is filed at:
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=624917
+
+ gtk/Makefile.am |    2 +
+ gtk/gtklabel.c  |   49 ++++++++----
+ gtk/gtkpango.c  |  233
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkpango.h  |   47 +++++++++++
+ 4 files changed, 314 insertions(+), 17 deletions(-)
+
+commit f36bb4d91d1a7e62a239164622309385e0b507ae
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Sat Aug 7 02:51:42 2010 +0200
+
+    gdk: Simplify deprecation guards in gdkdrawable.h
+
+ gdk/gdkdrawable.h |    6 ++----
+ 1 files changed, 2 insertions(+), 4 deletions(-)
+
+commit 32c4f471d57a5e8cfc899028a59fbbaa323eb566
+Author: John Stowers <john.stowers@gmail.com>
+Date:   Wed Jul 14 20:48:54 2010 +1200
+
+    Add gdk_display_is_closed
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=624224
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkdisplay.c                    |   16 ++++++++++++++++
+ gdk/gdkdisplay.h                    |    3 ++-
+ 4 files changed, 20 insertions(+), 1 deletions(-)
+
+commit 28f51514f91621b291cb357b9a18aa53fa40d782
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 26 17:11:34 2010 +0200
+
+    colorbutton: Render with Cairo
+
+    In particular, this gets rid of gdk_draw_pixbuf() and GdkGC usage.
+
+ gtk/gtkcolorbutton.c |  250
+ +++++++++++++-------------------------------------
+ 1 files changed, 62 insertions(+), 188 deletions(-)
+
+commit 92055d8d328a7adaa05f3c6ac6d1c496819940ec
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 12 00:00:07 2010 +0200
+
+    entry: replace gdk_draw_pixbuf() call with Cairo version
+
+ gtk/gtkentry.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
+
+commit 568865ab1bad711ccd331561aa950c5862e112cb
+Author: Tomeu Vizoso <tomeu.vizoso@collabora.co.uk>
+Date:   Mon Jul 12 17:02:06 2010 +0200
+
+    Stop assuming that priv->label_widget will be a GtkLabel.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=623603
+
+ gtk/gtktoolbutton.c |   41 ++++++++++++++++++++++-------------------
+ 1 files changed, 22 insertions(+), 19 deletions(-)
+
+commit 0a61e919e29d07b1386d0bba2dd4e61c51f66cba
+Author: Philip Withnall <philip.withnall@collabora.co.uk>
+Date:   Fri Jul 30 13:55:56 2010 +0200
+
+    Add (transfer none) annotation to
+    gtk_tree_selection_get_selected_rows()
+
+    Closes: bgo#625650
+
+ gtk/gtktreeselection.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit fa509fcc78d9116dc62f95f51beb7ff475557e46
+Author: Philip Withnall <philip.withnall@collabora.co.uk>
+Date:   Fri Jul 30 13:51:39 2010 +0200
+
+    Add (inout) annotation to gtk_tree_model_iter_next()
+
+    Closes: bgo#625650
+
+ gtk/gtktreemodel.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 996fd9dc5e63d33d28e14524fccad4a578361f68
+Author: Paolo Borelli <pborelli@gnome.org>
+Date:   Sat Jul 31 14:01:41 2010 +0200
+
+    Annotate GtkTextBuffer insert methods
+
+ gtk/gtktextbuffer.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit b41972bd96608fd4a3f80b619474578fb5972b17
+Author: Cody Russell <bratsche@gnome.org>
+Date:   Tue Aug 3 10:45:14 2010 -0500
+
+    Change GtkCalendar's inner border and separator values from hard-coded
+    ones to using style properties.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=624779
+
+ gtk/gtkcalendar.c |  196
+ ++++++++++++++++++++++++++++++++++++++---------------
+ 1 files changed, 142 insertions(+), 54 deletions(-)
+
+commit 3c7bb5b746355972745078c86df0672732d58060
+Author: Fridrich Štrba <fridrich.strba@bluewin.ch>
+Date:   Tue Aug 3 03:01:49 2010 +0200
+
+    Fix 32-bit Windows build using mingw-w64 toolchain
+
+ gtk/gtkprintoperation-win32.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 23f7d3a0ea02f726b411f9c862452dd054fed923
+Author: Tomeu Vizoso <tomeu.vizoso@collabora.co.uk>
+Date:   Wed Jul 28 16:53:14 2010 +0200
+
+    Annotate gdk_rectangle_intersect
+
+ gdk/gdkrectangle.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit fd75ced492e31daaf3d59ca2d25d435ab9ee203f
+Author: Tomeu Vizoso <tomeu.vizoso@collabora.co.uk>
+Date:   Wed Jul 28 15:01:55 2010 +0200
+
+    Generate GdkX11-2.0.typelib (backported from HEAD)
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=625491
+
+ gdk/Makefile.am |   64
+ ++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 files changed, 54 insertions(+), 10 deletions(-)
+
+commit 01fea4032f3646bd432202d1751b3629b82b859b
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 19 13:24:30 2010 +0200
+
+    gdk: Revert making get_size optional
+
+    49a0ec6e95408e3484397602ad46e274cedbf98b added this hunk without
+    explanations and it's obviously wrong because failing to have
+    a get_size
+    vfunc will now not set width and height and they'll end up with
+    invalid
+    values.
+
+    In fact, the GdkDrawableImpl{X11,Win32,Quartz} functions do not have
+    get_size implemented, so the patch was most likely an attempt to work
+    around calling this function erroneously on the impl objects.
+
+    The correct fix is to call impl->wrapper instead.
+
+ gdk/gdkdraw.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+commit e1c7ff8ee09a708c6a4802db197d7c39f3644765
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 19 13:15:10 2010 +0200
+
+    x11: Query size on real drawable
+
+    The X11 drawable does not have a clue about the real size of the
+    surface.
+
+    This might also be the cause for:
+    https://bugzilla.gnome.org/show_bug.cgi?id=599574
+
+ gdk/x11/gdkdrawable-x11.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit fafc457a0171a2c5fdf5aadc7e58f9b401348001
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Jul 12 14:40:04 2010 +0200
+
+    cups: Fix cast warnings
+
+ modules/printbackends/cups/gtkprintbackendcups.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 7a68f42d2eafd9113327b560dc3742ff0c31f77b
+Author: Emmanuele Bassi <ebassi@linux.intel.com>
+Date:   Sun Jun 27 11:28:44 2010 +0100
+
+    Do not return values from a function returning void
+
+ gdk/gdkpixbuf-render.c |   21 ++++++++++++---------
+ 1 files changed, 12 insertions(+), 9 deletions(-)
+
+commit ec332bbd424340313648234b87810397eba9944d
+Author: Szilárd Pfeiffer <mailbox@pfeifferszilard.hu>
+Date:   Sun Jul 25 14:46:57 2010 +0200
+
+    Moved the drawing of horizontal grid lines after cell drawing.
+
+    Without the change if the cell background is set the horizontal
+    grid line cannot be seen.
+
+ gtk/gtktreeview.c |   34 +++++++++++++++++-----------------
+ 1 files changed, 17 insertions(+), 17 deletions(-)
+
+commit dc2fea413b82dcfca401b13034b18047ac9f311f
+Author: John Stowers <john.stowers@gmail.com>
+Date:   Wed Jul 14 21:57:34 2010 +1200
+
+    Add gdk_device_get_n_axes
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=624221
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkinput.h                      |    1 +
+ gdk/quartz/gdkinput.c               |    8 ++++++++
+ gdk/win32/gdkinput.c                |    8 ++++++++
+ gdk/x11/gdkinput.c                  |   16 ++++++++++++++++
+ 6 files changed, 35 insertions(+), 0 deletions(-)
+
+commit 6c25cf872f765f7093d0c4687d9fe03e35f7da48
+Author: John Stowers <john.stowers@gmail.com>
+Date:   Wed Jul 14 21:55:27 2010 +1200
+
+    Add gdk_cursor_get_cursor_type
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=624087
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkcursor.c                     |   17 +++++++++++++++++
+ gdk/gdkcursor.h                     |    1 +
+ 4 files changed, 20 insertions(+), 0 deletions(-)
+
+commit 05e2004eb637296acd6cbea0ee9c07a74dff558e
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Fri Jul 23 11:51:23 2010 -0500
+
+    Clarify what the @event is used for when calling gtk_drag_begin()
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkdnd.c |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
+
+commit 186f858d86d87e06b6409e570d7a9f83d05f0e3a
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Fri Jul 23 13:52:23 2010 +0200
+
+    Correct emission of switch-page from the menu
+
+    Fixes: https://bugzilla.gnome.org/show_bug.cgi?id=624687
+
+ gtk/gtknotebook.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 13dba0a461d7fe5b3763c92d27c93a64a8c842b7
+Author: Stanislav Brabec <sbrabec@suse.cz>
+Date:   Thu Jul 22 16:19:49 2010 -0500
+
+    Fix stuck pointer grab due to passing GDK_CURRENT_TIME to
+    gtk_drag_begin()
+
+    If gtk_drag_begin() gets passed GDK_CURRENT_TIME, try to use
+    gtk_get_current_event_time().  If it fails, use GDK_CURRENT_TIME when
+    ungrabbing in gtk_drag_end().
+
+    For more see https://bugzilla.gnome.org/show_bug.cgi?id=623865
+
+ gtk/gtkdnd.c |   10 +++++++++-
+ 1 files changed, 9 insertions(+), 1 deletions(-)
+
+commit f1627fc8f5b2de8ac5832a7f9a17a886aca4d761
+Author: Kjartan Maraas <kmaraas@gnome.org>
+Date:   Mon Jul 19 21:35:48 2010 +0200
+
+    Updated Norwegian bokmål translation
+
+ po/nb.po | 3375
+ +++++++++++++++++++++++++++++---------------------------------
+ 1 files changed, 1563 insertions(+), 1812 deletions(-)
+
+commit 8f42a13ce79232fa17f1caf2a75fab4947e439af
+Author: Christian Persch <chpe@gnome.org>
+Date:   Tue Mar 23 14:45:07 2010 +0100
+
+    gtknotebook: Fix critical warnings on scroll events
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=604391
+
+ gtk/gtknotebook.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 81321b7d55cf9891bfbe45db3270957408f907f4
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Thu Jul 15 09:55:49 2010 +0100
+
+    docs: Fix GtkRecentManager:limit annotation
+
+    Fix a typo in the name that prevented cross-linking, and remove the
+    redundant deprecation text (which is added by gtk-doc by default).
+
+ gtk/gtkrecentmanager.c |   16 ++++++++--------
+ 1 files changed, 8 insertions(+), 8 deletions(-)
+
+commit 838dfd50acc70c233882cf1af9bc69401b51752c
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Jul 14 17:35:08 2010 +0200
+
+    Deprecate GtkRecenManager::limit property
+
+    The :limit property of GtkRecentManager does not serve any useful
+    purpose: the length of the list should be managed by the view
+    (implementing GtkRecentChooser), and not by the model (the recent
+    manager).
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=624333
+
+ gtk/gtkrecentmanager.c |   21 ++++++++++++++-------
+ 1 files changed, 14 insertions(+), 7 deletions(-)
+
+commit aa017fae64ef63f706c90468b61013d5a701f004
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Tue Jul 13 16:49:53 2010 +0200
+
+    Deprecate GtkNotebookPage as used in switch-page
+
+    Fixes: 618327
+
+ gtk/gtknotebook.c                     |   10 ++++++----
+ gtk/gtknotebook.h                     |   10 ++++++++++
+ modules/other/gail/gailnotebookpage.h |    4 ++++
+ tests/testgtk.c                       |    2 +-
+ 4 files changed, 21 insertions(+), 5 deletions(-)
+
+commit c492c798fc9b6e5317ba579efc4f24100feec081
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 12 13:44:36 2010 -0400
+
+    Bump version
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
 commit 0e99667286cf88a71d9a908b9ce6ef220eccf95f
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Jul 12 13:09:44 2010 -0400
