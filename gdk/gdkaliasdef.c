@@ -2532,6 +2532,19 @@ extern __typeof (gdk_window_destroy_notify) gdk_window_destroy_notify __attribut
 #endif
 #ifdef GDK_WINDOWING_WIN32
 #if IN_HEADER(__GDK_WIN32_H__)
+#if IN_FILE(__GDK_WINDOW_WIN32_C__)
+#undef gdk_win32_window_is_win32 
+extern __typeof (gdk_win32_window_is_win32) gdk_win32_window_is_win32 __attribute((alias("IA__gdk_win32_window_is_win32"), visibility("default")));
+
+#undef gdk_win32_begin_direct_draw_libgtk_only 
+extern __typeof (gdk_win32_begin_direct_draw_libgtk_only) gdk_win32_begin_direct_draw_libgtk_only __attribute((alias("IA__gdk_win32_begin_direct_draw_libgtk_only"), visibility("default")));
+
+#undef gdk_win32_end_direct_draw_libgtk_only 
+extern __typeof (gdk_win32_end_direct_draw_libgtk_only) gdk_win32_end_direct_draw_libgtk_only __attribute((alias("IA__gdk_win32_end_direct_draw_libgtk_only"), visibility("default")));
+
+#endif
+#endif
+#if IN_HEADER(__GDK_WIN32_H__)
 #if IN_FILE(__GDK_WIN32ID_C__)
 #undef gdk_win32_handle_table_lookup 
 extern __typeof (gdk_win32_handle_table_lookup) gdk_win32_handle_table_lookup __attribute((alias("IA__gdk_win32_handle_table_lookup"), visibility("default")));
