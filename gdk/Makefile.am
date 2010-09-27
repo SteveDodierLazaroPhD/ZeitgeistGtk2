@@ -88,6 +88,7 @@ gdk_public_h_sources =				\
 	gdkinput.h				\
 	gdkkeys.h				\
 	gdkkeysyms.h				\
+	gdkkeysyms-compat.h			\
 	gdkpango.h				\
 	gdkpixbuf.h				\
 	gdkpixmap.h				\
@@ -190,13 +191,13 @@ libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(src
 if HAVE_INTROSPECTION
 
 introspection_files = 		\
-	$(gdk_public_h_sources)	\
+	$(filter-out gdkkeysyms-compat.h, $(gdk_public_h_sources))	\
 	$(gdk_c_sources)	\
         gdkenumtypes.c		\
         gdkenumtypes.h
 
 Gdk-2.0.gir: $(gdktargetlib) Makefile
-Gdk_2_0_gir_SCANNERFLAGS = --strip-prefix=Gdk
+Gdk_2_0_gir_SCANNERFLAGS = --warn-all
 Gdk_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0 cairo-1.0
 Gdk_2_0_gir_LIBS = $(gdktargetlib)
 Gdk_2_0_gir_FILES = $(introspection_files)
@@ -237,12 +238,15 @@ x11_introspection_files = 		\
         x11/gdkx.h
 
 GdkX11-2.0.gir: $(gdktargetlib) Gdk-2.0.gir Makefile
-GdkX11_2_0_gir_SCANNERFLAGS = --strip-prefix=gdk_x11
+GdkX11_2_0_gir_SCANNERFLAGS = --warn-all --strip-prefix=Gdk
 GdkX11_2_0_gir_INCLUDES = Gio-2.0 Gdk-2.0 GdkPixbuf-2.0 Pango-1.0 xlib-2.0
 GdkX11_2_0_gir_LIBS = $(gdktargetlib)
 GdkX11_2_0_gir_FILES = $(x11_introspection_files)
 GdkX11_2_0_gir_CFLAGS = $(INCLUDES) -L$(top_builddir)/gdk
 INTROSPECTION_GIRS += GdkX11-2.0.gir
+
+introspection_files += $(filter-out x11/gdkx.h, $(x11_introspection_files))
+
 endif # USE_X11
 
 girdir = $(datadir)/gir-1.0

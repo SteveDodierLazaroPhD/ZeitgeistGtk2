@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkWidget</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="AbstractObjects.html" title="Abstract Base Classes">
 <link rel="prev" href="GtkSeparator.html" title="GtkSeparator">
@@ -606,7 +606,7 @@ custom &lt;accelerator&gt; element, which has attributes named key,
 modifiers and signal and allows to specify accelerators.
 </p>
 <div class="example">
-<a name="id1409130"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
+<a name="id1510820"></a><p class="title"><b>Example 54. A UI definition fragment specifying an accelerator</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -630,7 +630,7 @@ Properties on the accessible implementation of an object can be set by accessing
 internal child "accessible" of a <span class="structname">GtkWidget</span>.
 </p>
 <div class="example">
-<a name="id1409159"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
+<a name="id1510849"></a><p class="title"><b>Example 55. A UI definition fragment specifying an accessible</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -2372,8 +2372,8 @@ pass a static string, you can save some memory by interning it first with
 Lists the closures used by <em class="parameter"><code>widget</code></em> for accelerator group connections
 with <a class="link" href="gtk-Keyboard-Accelerators.html#gtk-accel-group-connect-by-path" title="gtk_accel_group_connect_by_path ()"><code class="function">gtk_accel_group_connect_by_path()</code></a> or <a class="link" href="gtk-Keyboard-Accelerators.html#gtk-accel-group-connect" title="gtk_accel_group_connect ()"><code class="function">gtk_accel_group_connect()</code></a>.
 The closures can be used to monitor accelerator changes on <em class="parameter"><code>widget</code></em>,
-by connecting to the <em class="parameter"><code>GtkAccelGroup</code></em>::accel-changed signal of the 
-<a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="type">GtkAccelGroup</span></a> of a closure which can be found out with 
+by connecting to the <em class="parameter"><code>GtkAccelGroup</code></em>::accel-changed signal of the
+<a class="link" href="gtk-Keyboard-Accelerators.html#GtkAccelGroup"><span class="type">GtkAccelGroup</span></a> of a closure which can be found out with
 <a class="link" href="gtk-Keyboard-Accelerators.html#gtk-accel-group-from-accel-closure" title="gtk_accel_group_from_accel_closure ()"><code class="function">gtk_accel_group_from_accel_closure()</code></a>.
 </p>
 <div class="variablelist"><table border="0">
@@ -2386,7 +2386,8 @@ by connecting to the <em class="parameter"><code>GtkAccelGroup</code></em>::acce
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a newly allocated <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of closures
+<td>
+    a newly allocated <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of closures. <span class="annotation">[<acronym title="Free data container after the code is done."><span class="acronym">transfer container</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GClosure]</span>
 </td>
 </tr>
 </tbody>
@@ -2593,6 +2594,11 @@ something like <a class="link" href="GtkFrame.html" title="GtkFrame"><span class
 <p>
 More precisely, it must have the <a class="link" href="GtkWidget.html#GTK-CAN-FOCUS:CAPS"><code class="literal">GTK_CAN_FOCUS</code></a> flag set. Use
 <a class="link" href="GtkWidget.html#gtk-widget-set-can-focus" title="gtk_widget_set_can_focus ()"><code class="function">gtk_widget_set_can_focus()</code></a> to modify that flag.
+</p>
+<p>
+The widget also needs to be realized and mapped. This is indicated by the
+related signals. Grabbing the focus immediately after creating the widget
+will likely fail and cause critical warnings.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

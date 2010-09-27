@@ -1863,6 +1863,13 @@ gdk_window_ensure_native (GdkWindow *window)
   screen = gdk_drawable_get_screen (window);
   visual = gdk_drawable_get_visual (window);
 
+  /* These fields are required in the attributes struct so we can't
+     ignore them by clearing a flag in the attributes mask */
+  attributes.wclass = private->input_only ? GDK_INPUT_ONLY : GDK_INPUT_OUTPUT;
+  attributes.width = private->width;
+  attributes.height = private->height;
+  attributes.window_type = private->window_type;
+
   attributes.colormap = gdk_drawable_get_colormap (window);
 
   old_impl = private->impl;
@@ -2454,7 +2461,8 @@ gdk_window_get_effective_toplevel (GdkWindow *window)
  * The returned list must be freed, but the elements in the
  * list need not be.
  *
- * Return value: list of child windows inside @window
+ * Return value: (transfer container) (element-type GdkWindow):
+ *     list of child windows inside @window
  **/
 GList*
 gdk_window_get_children (GdkWindow *window)
@@ -2474,7 +2482,8 @@ gdk_window_get_children (GdkWindow *window)
  * Like gdk_window_get_children(), but does not copy the list of
  * children, so the list does not need to be freed.
  *
- * Return value: a reference to the list of child windows in @window
+ * Return value: (transfer none) (element-type GdkWindow):
+ *     a reference to the list of child windows in @window
  **/
 GList *
 gdk_window_peek_children (GdkWindow *window)
@@ -2603,7 +2612,8 @@ gdk_window_remove_filter (GdkWindow     *window,
  * The returned list should be freed with g_list_free(), but
  * its elements need not be freed.
  *
- * Return value: list of toplevel windows, free with g_list_free()
+ * Return value: (transfer container) (element-type GdkWindow):
+ *     list of toplevel windows, free with g_list_free()
  *
  * Since: 2.2
  **/
@@ -10420,10 +10430,10 @@ _gdk_synthesize_crossing_events_for_geometry_change (GdkWindow *changed_window)
       !toplevel_priv->synthesize_crossing_event_queued)
     {
       toplevel_priv->synthesize_crossing_event_queued = TRUE;
-      g_idle_add_full (GDK_PRIORITY_EVENTS - 1,
-		       do_synthesize_crossing_event,
-		       g_object_ref (toplevel),
-		       g_object_unref);
+      gdk_threads_add_idle_full (GDK_PRIORITY_EVENTS - 1,
+                                 do_synthesize_crossing_event,
+                                 g_object_ref (toplevel),
+                                 g_object_unref);
     }
 }
 

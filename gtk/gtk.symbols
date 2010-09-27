@@ -1147,7 +1147,6 @@ gtk_dialog_add_button
 gtk_dialog_add_buttons G_GNUC_NULL_TERMINATED
 gtk_dialog_get_action_area
 gtk_dialog_get_content_area
-gtk_dialog_get_has_separator
 gtk_dialog_get_widget_for_response
 gtk_dialog_get_response_for_widget
 gtk_dialog_get_type G_GNUC_CONST
@@ -1159,7 +1158,10 @@ gtk_alternative_dialog_button_order
 gtk_dialog_set_alternative_button_order
 gtk_dialog_set_alternative_button_order_from_array
 gtk_dialog_set_default_response
+#ifndef GTK_DISABLE_DEPRECATED
+gtk_dialog_get_has_separator
 gtk_dialog_set_has_separator
+#endif
 gtk_dialog_set_response_sensitive
 #endif
 #endif
@@ -1240,8 +1242,10 @@ gtk_status_icon_set_has_tooltip
 gtk_status_icon_get_has_tooltip
 gtk_status_icon_set_visible
 gtk_status_icon_get_visible
+#ifndef GTK_DISABLE_DEPRECATED
 gtk_status_icon_set_blinking
 gtk_status_icon_get_blinking
+#endif
 gtk_status_icon_is_embedded
 gtk_status_icon_position_menu
 gtk_status_icon_get_geometry
@@ -2030,6 +2034,7 @@ gtk_icon_view_get_margin
 gtk_icon_view_get_markup_column
 gtk_icon_view_get_model
 gtk_icon_view_get_orientation
+gtk_icon_view_get_item_orientation
 gtk_icon_view_get_path_at_pos
 gtk_icon_view_get_item_at_pos
 gtk_icon_view_convert_widget_to_bin_window_coords
@@ -2058,6 +2063,7 @@ gtk_icon_view_set_margin
 gtk_icon_view_set_markup_column
 gtk_icon_view_set_model
 gtk_icon_view_set_orientation
+gtk_icon_view_set_item_orientation
 gtk_icon_view_set_pixbuf_column
 gtk_icon_view_set_row_spacing
 gtk_icon_view_set_selection_mode
@@ -2200,10 +2206,12 @@ gtk_invisible_set_screen
 
 #if IN_HEADER(__GTK_ITEM_H__)
 #if IN_FILE(__GTK_ITEM_C__)
-gtk_item_deselect
 gtk_item_get_type G_GNUC_CONST
+#ifndef GTK_DISABLE_DEPRECATED
+gtk_item_deselect
 gtk_item_select
 gtk_item_toggle
+#endif
 #endif
 #endif
 

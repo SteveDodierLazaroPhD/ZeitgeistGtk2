@@ -42,10 +42,14 @@ DIST_COMMON = $(gdkinclude_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/Makefile.decl COPYING
 @HAVE_INTROSPECTION_TRUE@am__append_1 = Gdk-2.0.gir
 @HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@am__append_2 = GdkX11-2.0.gir
-@HAVE_INTROSPECTION_TRUE@am__append_3 = $(gir_DATA) $(typelibs_DATA)
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@am__append_3 = $(filter-out x11/gdkx.h, $(x11_introspection_files))
+@HAVE_INTROSPECTION_TRUE@am__append_4 = $(gir_DATA) $(typelibs_DATA)
 subdir = gdk
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/gtk-doc.m4 \
+	$(top_srcdir)/m4/introspection.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -515,7 +519,7 @@ INTROSPECTION_COMPILER_ARGS = \
 
 SUBDIRS = $(gdktarget) . tests
 DIST_SUBDIRS = win32 x11 quartz directfb tests
-CLEANFILES = $(am__append_3)
+CLEANFILES = $(am__append_4)
 INCLUDES = \
 	-DG_LOG_DOMAIN=\"Gdk\"		\
 	-DGDK_COMPILATION		\
@@ -567,6 +571,7 @@ gdk_public_h_sources = \
 	gdkinput.h				\
 	gdkkeys.h				\
 	gdkkeysyms.h				\
+	gdkkeysyms-compat.h			\
 	gdkpango.h				\
 	gdkpixbuf.h				\
 	gdkpixmap.h				\
@@ -661,13 +666,12 @@ libgdk_win32_2_0_la_SOURCES = $(common_sources) gdkkeynames.c
 libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la $(GDK_DEP_LIBS)
 libgdk_win32_2_0_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o gdk.def
 libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(srcdir)/gdk.def $(LDADD)
-@HAVE_INTROSPECTION_TRUE@introspection_files = \
-@HAVE_INTROSPECTION_TRUE@	$(gdk_public_h_sources)	\
-@HAVE_INTROSPECTION_TRUE@	$(gdk_c_sources)	\
-@HAVE_INTROSPECTION_TRUE@        gdkenumtypes.c		\
-@HAVE_INTROSPECTION_TRUE@        gdkenumtypes.h
-
-@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_SCANNERFLAGS = --strip-prefix=Gdk
+@HAVE_INTROSPECTION_TRUE@introspection_files = $(filter-out \
+@HAVE_INTROSPECTION_TRUE@	gdkkeysyms-compat.h, \
+@HAVE_INTROSPECTION_TRUE@	$(gdk_public_h_sources)) \
+@HAVE_INTROSPECTION_TRUE@	$(gdk_c_sources) gdkenumtypes.c \
+@HAVE_INTROSPECTION_TRUE@	gdkenumtypes.h $(am__append_3)
+@HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_SCANNERFLAGS = --warn-all
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0 cairo-1.0
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_LIBS = $(gdktargetlib)
 @HAVE_INTROSPECTION_TRUE@Gdk_2_0_gir_FILES = $(introspection_files)
@@ -704,7 +708,7 @@ libgdk_win32_2_0_la_LDFLAGS = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(src
 @HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@	x11/xsettings-common.c		\
 @HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@        x11/gdkx.h
 
-@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_SCANNERFLAGS = --strip-prefix=gdk_x11
+@HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_SCANNERFLAGS = --warn-all --strip-prefix=Gdk
 @HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_INCLUDES = Gio-2.0 Gdk-2.0 GdkPixbuf-2.0 Pango-1.0 xlib-2.0
 @HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_LIBS = $(gdktargetlib)
 @HAVE_INTROSPECTION_TRUE@@USE_X11_TRUE@GdkX11_2_0_gir_FILES = $(x11_introspection_files)

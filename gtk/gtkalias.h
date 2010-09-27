@@ -2742,9 +2742,6 @@ extern __typeof (gtk_dialog_get_action_area) IA__gtk_dialog_get_action_area __at
 extern __typeof (gtk_dialog_get_content_area) IA__gtk_dialog_get_content_area __attribute((visibility("hidden")));
 #define gtk_dialog_get_content_area IA__gtk_dialog_get_content_area
 
-extern __typeof (gtk_dialog_get_has_separator) IA__gtk_dialog_get_has_separator __attribute((visibility("hidden")));
-#define gtk_dialog_get_has_separator IA__gtk_dialog_get_has_separator
-
 extern __typeof (gtk_dialog_get_widget_for_response) IA__gtk_dialog_get_widget_for_response __attribute((visibility("hidden")));
 #define gtk_dialog_get_widget_for_response IA__gtk_dialog_get_widget_for_response
 
@@ -2778,9 +2775,14 @@ extern __typeof (gtk_dialog_set_alternative_button_order_from_array) IA__gtk_dia
 extern __typeof (gtk_dialog_set_default_response) IA__gtk_dialog_set_default_response __attribute((visibility("hidden")));
 #define gtk_dialog_set_default_response IA__gtk_dialog_set_default_response
 
+#ifndef GTK_DISABLE_DEPRECATED
+extern __typeof (gtk_dialog_get_has_separator) IA__gtk_dialog_get_has_separator __attribute((visibility("hidden")));
+#define gtk_dialog_get_has_separator IA__gtk_dialog_get_has_separator
+
 extern __typeof (gtk_dialog_set_has_separator) IA__gtk_dialog_set_has_separator __attribute((visibility("hidden")));
 #define gtk_dialog_set_has_separator IA__gtk_dialog_set_has_separator
 
+#endif
 extern __typeof (gtk_dialog_set_response_sensitive) IA__gtk_dialog_set_response_sensitive __attribute((visibility("hidden")));
 #define gtk_dialog_set_response_sensitive IA__gtk_dialog_set_response_sensitive
 
@@ -2991,12 +2993,14 @@ extern __typeof (gtk_status_icon_set_visible) IA__gtk_status_icon_set_visible __
 extern __typeof (gtk_status_icon_get_visible) IA__gtk_status_icon_get_visible __attribute((visibility("hidden")));
 #define gtk_status_icon_get_visible IA__gtk_status_icon_get_visible
 
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_status_icon_set_blinking) IA__gtk_status_icon_set_blinking __attribute((visibility("hidden")));
 #define gtk_status_icon_set_blinking IA__gtk_status_icon_set_blinking
 
 extern __typeof (gtk_status_icon_get_blinking) IA__gtk_status_icon_get_blinking __attribute((visibility("hidden")));
 #define gtk_status_icon_get_blinking IA__gtk_status_icon_get_blinking
 
+#endif
 extern __typeof (gtk_status_icon_is_embedded) IA__gtk_status_icon_is_embedded __attribute((visibility("hidden")));
 #define gtk_status_icon_is_embedded IA__gtk_status_icon_is_embedded
 
@@ -4797,6 +4801,9 @@ extern __typeof (gtk_icon_view_get_model) IA__gtk_icon_view_get_model __attribut
 extern __typeof (gtk_icon_view_get_orientation) IA__gtk_icon_view_get_orientation __attribute((visibility("hidden")));
 #define gtk_icon_view_get_orientation IA__gtk_icon_view_get_orientation
 
+extern __typeof (gtk_icon_view_get_item_orientation) IA__gtk_icon_view_get_item_orientation __attribute((visibility("hidden")));
+#define gtk_icon_view_get_item_orientation IA__gtk_icon_view_get_item_orientation
+
 extern __typeof (gtk_icon_view_get_path_at_pos) IA__gtk_icon_view_get_path_at_pos __attribute((visibility("hidden")));
 #define gtk_icon_view_get_path_at_pos IA__gtk_icon_view_get_path_at_pos
 
@@ -4880,6 +4887,9 @@ extern __typeof (gtk_icon_view_set_model) IA__gtk_icon_view_set_model __attribut
 
 extern __typeof (gtk_icon_view_set_orientation) IA__gtk_icon_view_set_orientation __attribute((visibility("hidden")));
 #define gtk_icon_view_set_orientation IA__gtk_icon_view_set_orientation
+
+extern __typeof (gtk_icon_view_set_item_orientation) IA__gtk_icon_view_set_item_orientation __attribute((visibility("hidden")));
+#define gtk_icon_view_set_item_orientation IA__gtk_icon_view_set_item_orientation
 
 extern __typeof (gtk_icon_view_set_pixbuf_column) IA__gtk_icon_view_set_pixbuf_column __attribute((visibility("hidden")));
 #define gtk_icon_view_set_pixbuf_column IA__gtk_icon_view_set_pixbuf_column
@@ -5210,11 +5220,12 @@ extern __typeof (gtk_invisible_set_screen) IA__gtk_invisible_set_screen __attrib
 #endif
 #if IN_HEADER(__GTK_ITEM_H__)
 #if IN_FILE(__GTK_ITEM_C__)
-extern __typeof (gtk_item_deselect) IA__gtk_item_deselect __attribute((visibility("hidden")));
-#define gtk_item_deselect IA__gtk_item_deselect
-
 extern __typeof (gtk_item_get_type) IA__gtk_item_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_item_get_type IA__gtk_item_get_type
+
+#ifndef GTK_DISABLE_DEPRECATED
+extern __typeof (gtk_item_deselect) IA__gtk_item_deselect __attribute((visibility("hidden")));
+#define gtk_item_deselect IA__gtk_item_deselect
 
 extern __typeof (gtk_item_select) IA__gtk_item_select __attribute((visibility("hidden")));
 #define gtk_item_select IA__gtk_item_select
@@ -5222,6 +5233,7 @@ extern __typeof (gtk_item_select) IA__gtk_item_select __attribute((visibility("h
 extern __typeof (gtk_item_toggle) IA__gtk_item_toggle __attribute((visibility("hidden")));
 #define gtk_item_toggle IA__gtk_item_toggle
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_ITEM_FACTORY_H__)

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GtkContainer</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="AbstractObjects.html" title="Abstract Base Classes">
 <link rel="prev" href="GtkButtonBox.html" title="GtkButtonBox">
@@ -306,7 +306,7 @@ contain multiple &lt;property&gt; elements that specify
 child properties for the child.
 </p>
 <div class="example">
-<a name="id1306723"></a><p class="title"><b>Example 52. Child properties in UI definitions</b></p>
+<a name="id1408195"></a><p class="title"><b>Example 52. Child properties in UI definitions</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -725,7 +725,9 @@ redrawn if any of their children changed allocation.
 <a name="gtk-container-get-focus-child"></a><h3>gtk_container_get_focus_child ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *         gtk_container_get_focus_child       (<em class="parameter"><code><a class="link" href="GtkContainer.html" title="GtkContainer"><span class="type">GtkContainer</span></a> *container</code></em>);</pre>
 <p>
-Returns the current focus child widget inside <em class="parameter"><code>container</code></em>.
+Returns the current focus child widget inside <em class="parameter"><code>container</code></em>. This is not the
+currently focused widget. That can be obtained by calling
+<a class="link" href="GtkWindow.html#gtk-window-get-focus" title="gtk_window_get_focus ()"><code class="function">gtk_window_get_focus()</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -737,8 +739,8 @@ Returns the current focus child widget inside <em class="parameter"><code>contai
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The child widget which has the focus
-         inside <em class="parameter"><code>container</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none is set.
+<td> The child widget which will recieve the focus inside <em class="parameter"><code>container</code></em> when
+         the <em class="parameter"><code>conatiner</code></em> is focussed, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none is set.
 
 </td>
 </tr>
@@ -758,6 +760,10 @@ Sets, or unsets if <em class="parameter"><code>child</code></em> is <a href="htt
 This function emits the GtkContainer::set_focus_child signal of
 <em class="parameter"><code>container</code></em>. Implementations of <a class="link" href="GtkContainer.html" title="GtkContainer"><span class="type">GtkContainer</span></a> can override the
 default behaviour by overriding the class closure of this signal.
+</p>
+<p>
+This is function is mostly meant to be used by widgets. Applications can use
+<a class="link" href="GtkWidget.html#gtk-widget-grab-focus" title="gtk_widget_grab_focus ()"><code class="function">gtk_widget_grab_focus()</code></a> to manualy set the focus to a specific widget.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1358,7 +1364,8 @@ when the focus chain is actually traversed.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>focusable_widgets</code></em> :</span></p></td>
-<td>the new focus chain
+<td>
+    the new focus chain. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkWidget]</span>
 </td>
 </tr>
 </tbody>

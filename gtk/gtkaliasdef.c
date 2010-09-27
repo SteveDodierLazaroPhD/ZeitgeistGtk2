@@ -2745,9 +2745,6 @@ extern __typeof (gtk_dialog_get_action_area) gtk_dialog_get_action_area __attrib
 #undef gtk_dialog_get_content_area 
 extern __typeof (gtk_dialog_get_content_area) gtk_dialog_get_content_area __attribute((alias("IA__gtk_dialog_get_content_area"), visibility("default")));
 
-#undef gtk_dialog_get_has_separator 
-extern __typeof (gtk_dialog_get_has_separator) gtk_dialog_get_has_separator __attribute((alias("IA__gtk_dialog_get_has_separator"), visibility("default")));
-
 #undef gtk_dialog_get_widget_for_response 
 extern __typeof (gtk_dialog_get_widget_for_response) gtk_dialog_get_widget_for_response __attribute((alias("IA__gtk_dialog_get_widget_for_response"), visibility("default")));
 
@@ -2781,9 +2778,14 @@ extern __typeof (gtk_dialog_set_alternative_button_order_from_array) gtk_dialog_
 #undef gtk_dialog_set_default_response 
 extern __typeof (gtk_dialog_set_default_response) gtk_dialog_set_default_response __attribute((alias("IA__gtk_dialog_set_default_response"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
+#undef gtk_dialog_get_has_separator 
+extern __typeof (gtk_dialog_get_has_separator) gtk_dialog_get_has_separator __attribute((alias("IA__gtk_dialog_get_has_separator"), visibility("default")));
+
 #undef gtk_dialog_set_has_separator 
 extern __typeof (gtk_dialog_set_has_separator) gtk_dialog_set_has_separator __attribute((alias("IA__gtk_dialog_set_has_separator"), visibility("default")));
 
+#endif
 #undef gtk_dialog_set_response_sensitive 
 extern __typeof (gtk_dialog_set_response_sensitive) gtk_dialog_set_response_sensitive __attribute((alias("IA__gtk_dialog_set_response_sensitive"), visibility("default")));
 
@@ -2994,12 +2996,14 @@ extern __typeof (gtk_status_icon_set_visible) gtk_status_icon_set_visible __attr
 #undef gtk_status_icon_get_visible 
 extern __typeof (gtk_status_icon_get_visible) gtk_status_icon_get_visible __attribute((alias("IA__gtk_status_icon_get_visible"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_status_icon_set_blinking 
 extern __typeof (gtk_status_icon_set_blinking) gtk_status_icon_set_blinking __attribute((alias("IA__gtk_status_icon_set_blinking"), visibility("default")));
 
 #undef gtk_status_icon_get_blinking 
 extern __typeof (gtk_status_icon_get_blinking) gtk_status_icon_get_blinking __attribute((alias("IA__gtk_status_icon_get_blinking"), visibility("default")));
 
+#endif
 #undef gtk_status_icon_is_embedded 
 extern __typeof (gtk_status_icon_is_embedded) gtk_status_icon_is_embedded __attribute((alias("IA__gtk_status_icon_is_embedded"), visibility("default")));
 
@@ -4800,6 +4804,9 @@ extern __typeof (gtk_icon_view_get_model) gtk_icon_view_get_model __attribute((a
 #undef gtk_icon_view_get_orientation 
 extern __typeof (gtk_icon_view_get_orientation) gtk_icon_view_get_orientation __attribute((alias("IA__gtk_icon_view_get_orientation"), visibility("default")));
 
+#undef gtk_icon_view_get_item_orientation 
+extern __typeof (gtk_icon_view_get_item_orientation) gtk_icon_view_get_item_orientation __attribute((alias("IA__gtk_icon_view_get_item_orientation"), visibility("default")));
+
 #undef gtk_icon_view_get_path_at_pos 
 extern __typeof (gtk_icon_view_get_path_at_pos) gtk_icon_view_get_path_at_pos __attribute((alias("IA__gtk_icon_view_get_path_at_pos"), visibility("default")));
 
@@ -4883,6 +4890,9 @@ extern __typeof (gtk_icon_view_set_model) gtk_icon_view_set_model __attribute((a
 
 #undef gtk_icon_view_set_orientation 
 extern __typeof (gtk_icon_view_set_orientation) gtk_icon_view_set_orientation __attribute((alias("IA__gtk_icon_view_set_orientation"), visibility("default")));
+
+#undef gtk_icon_view_set_item_orientation 
+extern __typeof (gtk_icon_view_set_item_orientation) gtk_icon_view_set_item_orientation __attribute((alias("IA__gtk_icon_view_set_item_orientation"), visibility("default")));
 
 #undef gtk_icon_view_set_pixbuf_column 
 extern __typeof (gtk_icon_view_set_pixbuf_column) gtk_icon_view_set_pixbuf_column __attribute((alias("IA__gtk_icon_view_set_pixbuf_column"), visibility("default")));
@@ -5213,11 +5223,12 @@ extern __typeof (gtk_invisible_set_screen) gtk_invisible_set_screen __attribute(
 #endif
 #if IN_HEADER(__GTK_ITEM_H__)
 #if IN_FILE(__GTK_ITEM_C__)
-#undef gtk_item_deselect 
-extern __typeof (gtk_item_deselect) gtk_item_deselect __attribute((alias("IA__gtk_item_deselect"), visibility("default")));
-
 #undef gtk_item_get_type 
 extern __typeof (gtk_item_get_type) gtk_item_get_type __attribute((alias("IA__gtk_item_get_type"), visibility("default")));
+
+#ifndef GTK_DISABLE_DEPRECATED
+#undef gtk_item_deselect 
+extern __typeof (gtk_item_deselect) gtk_item_deselect __attribute((alias("IA__gtk_item_deselect"), visibility("default")));
 
 #undef gtk_item_select 
 extern __typeof (gtk_item_select) gtk_item_select __attribute((alias("IA__gtk_item_select"), visibility("default")));
@@ -5225,6 +5236,7 @@ extern __typeof (gtk_item_select) gtk_item_select __attribute((alias("IA__gtk_it
 #undef gtk_item_toggle 
 extern __typeof (gtk_item_toggle) gtk_item_toggle __attribute((alias("IA__gtk_item_toggle"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_ITEM_FACTORY_H__)
