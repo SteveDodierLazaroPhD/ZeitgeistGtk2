@@ -112,7 +112,6 @@ enum {
   PROP_ENABLE_POPUP,
   PROP_GROUP_ID,
   PROP_GROUP,
-  PROP_GROUP_NAME,
   PROP_HOMOGENEOUS
 };
 
@@ -667,7 +666,7 @@ gtk_notebook_class_init (GtkNotebookClass *class)
 						     -1,
 						     G_MAXINT,
 						     -1,
-						     GTK_PARAM_READWRITE|G_PARAM_DEPRECATED));
+						     GTK_PARAM_READWRITE));
 
   /**
    * GtkNotebook:group:
@@ -675,30 +674,13 @@ gtk_notebook_class_init (GtkNotebookClass *class)
    * Group for tabs drag and drop.
    *
    * Since: 2.12
-   *
-   * Deprecated: 2.24: Use #GtkNotebook:group-name instead
    */    
   g_object_class_install_property (gobject_class,
 				   PROP_GROUP,
 				   g_param_spec_pointer ("group",
 							 P_("Group"),
 							 P_("Group for tabs drag and drop"),
-							 GTK_PARAM_READWRITE|G_PARAM_DEPRECATED));
-
-  /**
-   * GtkNotebook:group-name:
-   *
-   * Group name for tabs drag and drop.
-   *
-   * Since: 2.24
-   */
-  g_object_class_install_property (gobject_class,
-                                   PROP_GROUP_NAME,
-                                   g_param_spec_string ("group-name",
-                                   P_("Group Name"),
-                                   P_("Group name for tabs drag and drop"),
-                                   NULL,
-                                   GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE));
 
   gtk_container_class_install_child_property (container_class,
 					      CHILD_PROP_TAB_LABEL,
@@ -1572,9 +1554,6 @@ gtk_notebook_set_property (GObject         *object,
     case PROP_GROUP:
       gtk_notebook_set_group (notebook, g_value_get_pointer (value));
       break;
-    case PROP_GROUP_NAME:
-      gtk_notebook_set_group_name (notebook, g_value_get_string (value));
-      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -1627,9 +1606,6 @@ gtk_notebook_get_property (GObject         *object,
       break;
     case PROP_GROUP:
       g_value_set_pointer (value, priv->group);
-      break;
-    case PROP_GROUP_NAME:
-      g_value_set_string (value, gtk_notebook_get_group_name (notebook));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -2327,8 +2303,8 @@ gtk_notebook_expose (GtkWidget      *widget,
       cairo_paint (cr);
       cairo_destroy (cr);
 
-      area.width = gdk_window_get_width (priv->drag_window);
-      area.height = gdk_window_get_height (priv->drag_window);
+      gdk_drawable_get_size (priv->drag_window,
+			     &area.width, &area.height);
       gtk_notebook_draw_tab (notebook,
 			     notebook->cur_page,
 			     &area);
@@ -3046,8 +3022,7 @@ get_pointer_position (GtkNotebook *notebook)
     return POINTER_BETWEEN;
 
   gdk_window_get_position (notebook->event_window, &wx, &wy);
-  width = gdk_window_get_width (notebook->event_window);
-  height = gdk_window_get_height (notebook->event_window);
+  gdk_drawable_get_size (GDK_DRAWABLE (notebook->event_window), &width, &height);
 
   if (notebook->tab_pos == GTK_POS_TOP ||
       notebook->tab_pos == GTK_POS_BOTTOM)
@@ -3128,8 +3103,7 @@ check_threshold (GtkNotebook *notebook,
   dnd_threshold *= DND_THRESHOLD_MULTIPLIER;
 
   gdk_window_get_position (notebook->event_window, &rectangle.x, &rectangle.y);
-  rectangle.width = gdk_window_get_width (notebook->event_window);
-  rectangle.height = gdk_window_get_height (notebook->event_window);
+  gdk_drawable_get_size (GDK_DRAWABLE (notebook->event_window), &rectangle.width, &rectangle.height);
 
   rectangle.x -= dnd_threshold;
   rectangle.width += 2 * dnd_threshold;
@@ -7738,11 +7712,9 @@ gtk_notebook_reorder_child (GtkNotebook *notebook,
  *
  * Installs a global function used to create a window
  * when a detached tab is dropped in an empty area.
- *
+ * 
  * Since: 2.10
- *
- * Deprecated: 2.24: Use the #GtkNotebook::create-window signal instead
-**/
+ **/
 void
 gtk_notebook_set_window_creation_hook (GtkNotebookWindowCreationFunc  func,
 				       gpointer                       data,
@@ -7767,7 +7739,7 @@ gtk_notebook_set_window_creation_hook (GtkNotebookWindowCreationFunc  func,
  * not be able to exchange tabs with any other notebook.
  * 
  * Since: 2.10
- * Deprecated: 2.12: use gtk_notebook_set_group_name() instead.
+ * Deprecated: 2.12: use gtk_notebook_set_group() instead.
  */
 void
 gtk_notebook_set_group_id (GtkNotebook *notebook,
@@ -7791,10 +7763,8 @@ gtk_notebook_set_group_id (GtkNotebook *notebook,
  * the same group identificator pointer will be able to exchange tabs
  * via drag and drop. A notebook with a %NULL group identificator will
  * not be able to exchange tabs with any other notebook.
- *
+ * 
  * Since: 2.12
- *
- * Deprecated: 2.24: Use gtk_notebook_set_group_name() instead
  */
 void
 gtk_notebook_set_group (GtkNotebook *notebook,
@@ -7814,32 +7784,6 @@ gtk_notebook_set_group (GtkNotebook *notebook,
 }
 
 /**
- * gtk_notebook_set_group_name:
- * @notebook: a #GtkNotebook
- * @name: (allow-none): the name of the notebook group, or %NULL to unset it
- *
- * Sets a group name for @notebook.
- *
- * Notebooks with the same name will be able to exchange tabs
- * via drag and drop. A notebook with a %NULL group name will
- * not be able to exchange tabs with any other notebook.
- *
- * Since: 2.24
- */
-void
-gtk_notebook_set_group_name (GtkNotebook *notebook,
-                             const gchar *group_name)
-{
-  gpointer group;
-
-  g_return_if_fail (GTK_IS_NOTEBOOK (notebook));
-
-  group = (gpointer)g_intern_string (group_name);
-  gtk_notebook_set_group (notebook, group);
-  g_object_notify (G_OBJECT (notebook), "group-name");
-}
-
-/**
  * gtk_notebook_get_group_id:
  * @notebook: a #GtkNotebook
  * 
@@ -7848,7 +7792,7 @@ gtk_notebook_set_group_name (GtkNotebook *notebook,
  * Return Value: the group identificator, or -1 if none is set.
  *
  * Since: 2.10
- * Deprecated: 2.12: use gtk_notebook_get_group_name() instead.
+ * Deprecated: 2.12: use gtk_notebook_get_group() instead.
  */
 gint
 gtk_notebook_get_group_id (GtkNotebook *notebook)
@@ -7863,7 +7807,6 @@ gtk_notebook_get_group_id (GtkNotebook *notebook)
   return GPOINTER_TO_INT (priv->group) - 1;
 }
 
-
 /**
  * gtk_notebook_get_group:
  * @notebook: a #GtkNotebook
@@ -7873,8 +7816,6 @@ gtk_notebook_get_group_id (GtkNotebook *notebook)
  * Return Value: the group identificator, or %NULL if none is set.
  *
  * Since: 2.12
- *
- * Deprecated: 2.24: Use gtk_notebook_get_group_name() instead
  **/
 gpointer
 gtk_notebook_get_group (GtkNotebook *notebook)
@@ -7885,31 +7826,6 @@ gtk_notebook_get_group (GtkNotebook *notebook)
 
   priv = GTK_NOTEBOOK_GET_PRIVATE (notebook);
   return priv->group;
-}
-
-/**
- * gtk_notebook_get_group_name:
- * @notebook: a #GtkNotebook
- *
- * Gets the current group name for @notebook.
- *
- * Note that this funtion can emphasis not be used
- * together with gtk_notebook_set_group() or
- * gtk_notebook_set_group_id().
- *
- Return Value: (transfer none): the group name,
- *     or %NULL if none is set.
- *
- * Since: 2.24
- */
-const gchar *
-gtk_notebook_get_group_name (GtkNotebook *notebook)
-{
-  GtkNotebookPrivate *priv;
-  g_return_val_if_fail (GTK_IS_NOTEBOOK (notebook), NULL);
-
-  priv = GTK_NOTEBOOK_GET_PRIVATE (notebook);
-  return (const gchar *)priv->group;
 }
 
 /**

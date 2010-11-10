@@ -67,11 +67,9 @@ struct _GtkComboBoxClass
 
 
 /* construction */
-GType         gtk_combo_box_get_type                 (void) G_GNUC_CONST;
-GtkWidget    *gtk_combo_box_new                      (void);
-GtkWidget    *gtk_combo_box_new_with_entry           (void);
-GtkWidget    *gtk_combo_box_new_with_model           (GtkTreeModel *model);
-GtkWidget    *gtk_combo_box_new_with_model_and_entry (GtkTreeModel *model);
+GType         gtk_combo_box_get_type         (void) G_GNUC_CONST;
+GtkWidget    *gtk_combo_box_new              (void);
+GtkWidget    *gtk_combo_box_new_with_model   (GtkTreeModel    *model);
 
 /* grids */
 gint          gtk_combo_box_get_wrap_width         (GtkComboBox *combo_box);
@@ -120,13 +118,6 @@ void               gtk_combo_box_set_button_sensitivity (GtkComboBox        *com
 							 GtkSensitivityType  sensitivity);
 GtkSensitivityType gtk_combo_box_get_button_sensitivity (GtkComboBox        *combo_box);
 
-gboolean           gtk_combo_box_get_has_entry          (GtkComboBox        *combo_box);
-void               gtk_combo_box_set_entry_text_column  (GtkComboBox        *combo_box,
-							 gint                text_column);
-gint               gtk_combo_box_get_entry_text_column  (GtkComboBox        *combo_box);
-
-#if !defined (GTK_DISABLE_DEPRECATED) || defined (GTK_COMPILATION)
-
 /* convenience -- text */
 GtkWidget    *gtk_combo_box_new_text         (void);
 void          gtk_combo_box_append_text      (GtkComboBox     *combo_box,
@@ -139,8 +130,6 @@ void          gtk_combo_box_prepend_text     (GtkComboBox     *combo_box,
 void          gtk_combo_box_remove_text      (GtkComboBox     *combo_box,
                                               gint             position);
 gchar        *gtk_combo_box_get_active_text  (GtkComboBox     *combo_box);
-
-#endif
 
 /* programmatic control */
 void          gtk_combo_box_popup            (GtkComboBox     *combo_box);

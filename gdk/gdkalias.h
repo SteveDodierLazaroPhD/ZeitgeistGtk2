@@ -621,9 +621,6 @@ extern __typeof (gdk_cairo_set_source_pixbuf) IA__gdk_cairo_set_source_pixbuf __
 extern __typeof (gdk_cairo_set_source_pixmap) IA__gdk_cairo_set_source_pixmap __attribute((visibility("hidden")));
 #define gdk_cairo_set_source_pixmap IA__gdk_cairo_set_source_pixmap
 
-extern __typeof (gdk_cairo_set_source_window) IA__gdk_cairo_set_source_window __attribute((visibility("hidden")));
-#define gdk_cairo_set_source_window IA__gdk_cairo_set_source_window
-
 extern __typeof (gdk_cairo_rectangle) IA__gdk_cairo_rectangle __attribute((visibility("hidden")));
 #define gdk_cairo_rectangle IA__gdk_cairo_rectangle
 
@@ -1132,8 +1129,15 @@ extern __typeof (gdk_draw_text) IA__gdk_draw_text __attribute((visibility("hidde
 extern __typeof (gdk_draw_text_wc) IA__gdk_draw_text_wc __attribute((visibility("hidden")));
 #define gdk_draw_text_wc IA__gdk_draw_text_wc
 
+#endif
+extern __typeof (gdk_drawable_get_depth) IA__gdk_drawable_get_depth __attribute((visibility("hidden")));
+#define gdk_drawable_get_depth IA__gdk_drawable_get_depth
+
 extern __typeof (gdk_drawable_get_display) IA__gdk_drawable_get_display __attribute((visibility("hidden")));
 #define gdk_drawable_get_display IA__gdk_drawable_get_display
+
+extern __typeof (gdk_drawable_get_image) IA__gdk_drawable_get_image __attribute((visibility("hidden")));
+#define gdk_drawable_get_image IA__gdk_drawable_get_image
 
 extern __typeof (gdk_drawable_get_screen) IA__gdk_drawable_get_screen __attribute((visibility("hidden")));
 #define gdk_drawable_get_screen IA__gdk_drawable_get_screen
@@ -1141,21 +1145,14 @@ extern __typeof (gdk_drawable_get_screen) IA__gdk_drawable_get_screen __attribut
 extern __typeof (gdk_drawable_get_size) IA__gdk_drawable_get_size __attribute((visibility("hidden")));
 #define gdk_drawable_get_size IA__gdk_drawable_get_size
 
-extern __typeof (gdk_drawable_get_visual) IA__gdk_drawable_get_visual __attribute((visibility("hidden")));
-#define gdk_drawable_get_visual IA__gdk_drawable_get_visual
-
-#endif
-extern __typeof (gdk_drawable_get_depth) IA__gdk_drawable_get_depth __attribute((visibility("hidden")));
-#define gdk_drawable_get_depth IA__gdk_drawable_get_depth
-
-extern __typeof (gdk_drawable_get_image) IA__gdk_drawable_get_image __attribute((visibility("hidden")));
-#define gdk_drawable_get_image IA__gdk_drawable_get_image
-
 extern __typeof (gdk_drawable_get_type) IA__gdk_drawable_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gdk_drawable_get_type IA__gdk_drawable_get_type
 
 extern __typeof (gdk_drawable_get_visible_region) IA__gdk_drawable_get_visible_region __attribute((visibility("hidden")));
 #define gdk_drawable_get_visible_region IA__gdk_drawable_get_visible_region
+
+extern __typeof (gdk_drawable_get_visual) IA__gdk_drawable_get_visual __attribute((visibility("hidden")));
+#define gdk_drawable_get_visual IA__gdk_drawable_get_visual
 
 extern __typeof (gdk_drawable_set_colormap) IA__gdk_drawable_set_colormap __attribute((visibility("hidden")));
 #define gdk_drawable_set_colormap IA__gdk_drawable_set_colormap
@@ -1623,21 +1620,6 @@ extern __typeof (gdk_window_geometry_changed) IA__gdk_window_geometry_changed __
 
 extern __typeof (gdk_window_ensure_native) IA__gdk_window_ensure_native __attribute((visibility("hidden")));
 #define gdk_window_ensure_native IA__gdk_window_ensure_native
-
-extern __typeof (gdk_window_get_screen) IA__gdk_window_get_screen __attribute((visibility("hidden")));
-#define gdk_window_get_screen IA__gdk_window_get_screen
-
-extern __typeof (gdk_window_get_display) IA__gdk_window_get_display __attribute((visibility("hidden")));
-#define gdk_window_get_display IA__gdk_window_get_display
-
-extern __typeof (gdk_window_get_visual) IA__gdk_window_get_visual __attribute((visibility("hidden")));
-#define gdk_window_get_visual IA__gdk_window_get_visual
-
-extern __typeof (gdk_window_get_width) IA__gdk_window_get_width __attribute((visibility("hidden")));
-#define gdk_window_get_width IA__gdk_window_get_width
-
-extern __typeof (gdk_window_get_height) IA__gdk_window_get_height __attribute((visibility("hidden")));
-#define gdk_window_get_height IA__gdk_window_get_height
 
 #endif
 #endif

@@ -907,57 +907,57 @@ capital_animation (gpointer data)
 }
 
 static void
-setup_combo_entry (GtkComboBoxText *combo)
+setup_combo_entry (GtkWidget *entry_box)
 {
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "dum de dum");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "la la la");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "la la la dum de dum la la la la la la boom de da la la");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "bloop");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "bleep");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas0");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas1");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas2");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas3");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas4");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas5");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas6");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas7");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas8");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas9");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaasa");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaasb");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaasc");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaasd");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaase");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaasf");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas10");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas11");
-  gtk_combo_box_text_append_text (combo,
+	gtk_combo_box_append_text (GTK_COMBO_BOX (entry_box),
 				   "klaas12");
 }
 
@@ -1021,7 +1021,7 @@ main (int argc, char **argv)
 	GtkTreePath *path;
 	GtkTreeIter iter;
         GdkColor color;
-
+	
         gtk_init (&argc, &argv);
 
 	if (g_getenv ("RTL"))
@@ -1265,15 +1265,15 @@ main (int argc, char **argv)
 
 
         /* GtkComboBoxEntry */
-        tmp = gtk_frame_new ("GtkComboBox with entry");
+        tmp = gtk_frame_new ("GtkComboBoxEntry");
         gtk_box_pack_start (GTK_BOX (mainbox), tmp, FALSE, FALSE, 0);
 
         boom = gtk_vbox_new (FALSE, 0);
         gtk_container_set_border_width (GTK_CONTAINER (boom), 5);
         gtk_container_add (GTK_CONTAINER (tmp), boom);
 
-        comboboxtext = gtk_combo_box_text_new_with_entry ();
-        setup_combo_entry (GTK_COMBO_BOX_TEXT (comboboxtext));
+        comboboxtext = gtk_combo_box_entry_new_text ();
+	setup_combo_entry (comboboxtext);
         gtk_container_add (GTK_CONTAINER (boom), comboboxtext);
 
 

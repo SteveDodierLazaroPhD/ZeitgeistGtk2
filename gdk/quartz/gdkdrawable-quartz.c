@@ -380,7 +380,6 @@ gdk_quartz_draw_drawable (GdkDrawable *drawable,
     {
       GdkPixmapImplQuartz *pixmap_impl = GDK_PIXMAP_IMPL_QUARTZ (src_impl);
       CGContextRef context = gdk_quartz_drawable_get_context (drawable, FALSE);
-      CGImageRef image;
 
       if (!context)
         return;
@@ -393,11 +392,9 @@ gdk_quartz_draw_drawable (GdkDrawable *drawable,
                              pixmap_impl->height);
       CGContextScaleCTM (context, 1.0, -1.0);
 
-      image = _gdk_pixmap_get_cgimage (src);
       CGContextDrawImage (context,
                           CGRectMake (0, 0, pixmap_impl->width, pixmap_impl->height),
-                          image);
-      CGImageRelease (image);
+                          pixmap_impl->image);
 
       gdk_quartz_drawable_release_context (drawable, context);
     }
@@ -565,7 +562,7 @@ gdk_quartz_draw_pixbuf (GdkDrawable     *drawable,
 
   data = gdk_pixbuf_get_pixels (pixbuf);
 
-  colorspace = CGColorSpaceCreateWithName (kCGColorSpaceGenericRGB);
+  colorspace = CGColorSpaceCreateDeviceRGB ();
   data_provider = CGDataProviderCreateWithData (NULL, data, pixbuf_height * rowstride, NULL);
 
   image = CGImageCreate (pixbuf_width, pixbuf_height, 8,
@@ -610,7 +607,7 @@ gdk_quartz_draw_image (GdkDrawable     *drawable,
   if (!context)
     return;
 
-  colorspace = CGColorSpaceCreateWithName (kCGColorSpaceGenericRGB);
+  colorspace = CGColorSpaceCreateDeviceRGB ();
   data_provider = CGDataProviderCreateWithData (NULL, image->mem, image->height * image->bpl, NULL);
 
   /* FIXME: Make sure that this function draws 32-bit images correctly,

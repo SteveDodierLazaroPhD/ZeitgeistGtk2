@@ -849,9 +849,7 @@ void	   gtk_widget_show		  (GtkWidget	       *widget);
 void       gtk_widget_show_now            (GtkWidget           *widget);
 void	   gtk_widget_hide		  (GtkWidget	       *widget);
 void	   gtk_widget_show_all		  (GtkWidget	       *widget);
-#if !defined (GTK_DISABLE_DEPRECATED) || defined (GTK_COMPILATION)
 void	   gtk_widget_hide_all		  (GtkWidget	       *widget);
-#endif
 void       gtk_widget_set_no_show_all     (GtkWidget           *widget,
 					   gboolean             no_show_all);
 gboolean   gtk_widget_get_no_show_all     (GtkWidget           *widget);

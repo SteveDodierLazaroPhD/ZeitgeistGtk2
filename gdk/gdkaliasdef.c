@@ -624,9 +624,6 @@ extern __typeof (gdk_cairo_set_source_pixbuf) gdk_cairo_set_source_pixbuf __attr
 #undef gdk_cairo_set_source_pixmap 
 extern __typeof (gdk_cairo_set_source_pixmap) gdk_cairo_set_source_pixmap __attribute((alias("IA__gdk_cairo_set_source_pixmap"), visibility("default")));
 
-#undef gdk_cairo_set_source_window 
-extern __typeof (gdk_cairo_set_source_window) gdk_cairo_set_source_window __attribute((alias("IA__gdk_cairo_set_source_window"), visibility("default")));
-
 #undef gdk_cairo_rectangle 
 extern __typeof (gdk_cairo_rectangle) gdk_cairo_rectangle __attribute((alias("IA__gdk_cairo_rectangle"), visibility("default")));
 
@@ -1135,8 +1132,15 @@ extern __typeof (gdk_draw_text) gdk_draw_text __attribute((alias("IA__gdk_draw_t
 #undef gdk_draw_text_wc 
 extern __typeof (gdk_draw_text_wc) gdk_draw_text_wc __attribute((alias("IA__gdk_draw_text_wc"), visibility("default")));
 
+#endif
+#undef gdk_drawable_get_depth 
+extern __typeof (gdk_drawable_get_depth) gdk_drawable_get_depth __attribute((alias("IA__gdk_drawable_get_depth"), visibility("default")));
+
 #undef gdk_drawable_get_display 
 extern __typeof (gdk_drawable_get_display) gdk_drawable_get_display __attribute((alias("IA__gdk_drawable_get_display"), visibility("default")));
+
+#undef gdk_drawable_get_image 
+extern __typeof (gdk_drawable_get_image) gdk_drawable_get_image __attribute((alias("IA__gdk_drawable_get_image"), visibility("default")));
 
 #undef gdk_drawable_get_screen 
 extern __typeof (gdk_drawable_get_screen) gdk_drawable_get_screen __attribute((alias("IA__gdk_drawable_get_screen"), visibility("default")));
@@ -1144,21 +1148,14 @@ extern __typeof (gdk_drawable_get_screen) gdk_drawable_get_screen __attribute((a
 #undef gdk_drawable_get_size 
 extern __typeof (gdk_drawable_get_size) gdk_drawable_get_size __attribute((alias("IA__gdk_drawable_get_size"), visibility("default")));
 
-#undef gdk_drawable_get_visual 
-extern __typeof (gdk_drawable_get_visual) gdk_drawable_get_visual __attribute((alias("IA__gdk_drawable_get_visual"), visibility("default")));
-
-#endif
-#undef gdk_drawable_get_depth 
-extern __typeof (gdk_drawable_get_depth) gdk_drawable_get_depth __attribute((alias("IA__gdk_drawable_get_depth"), visibility("default")));
-
-#undef gdk_drawable_get_image 
-extern __typeof (gdk_drawable_get_image) gdk_drawable_get_image __attribute((alias("IA__gdk_drawable_get_image"), visibility("default")));
-
 #undef gdk_drawable_get_type 
 extern __typeof (gdk_drawable_get_type) gdk_drawable_get_type __attribute((alias("IA__gdk_drawable_get_type"), visibility("default")));
 
 #undef gdk_drawable_get_visible_region 
 extern __typeof (gdk_drawable_get_visible_region) gdk_drawable_get_visible_region __attribute((alias("IA__gdk_drawable_get_visible_region"), visibility("default")));
+
+#undef gdk_drawable_get_visual 
+extern __typeof (gdk_drawable_get_visual) gdk_drawable_get_visual __attribute((alias("IA__gdk_drawable_get_visual"), visibility("default")));
 
 #undef gdk_drawable_set_colormap 
 extern __typeof (gdk_drawable_set_colormap) gdk_drawable_set_colormap __attribute((alias("IA__gdk_drawable_set_colormap"), visibility("default")));
@@ -1626,21 +1623,6 @@ extern __typeof (gdk_window_geometry_changed) gdk_window_geometry_changed __attr
 
 #undef gdk_window_ensure_native 
 extern __typeof (gdk_window_ensure_native) gdk_window_ensure_native __attribute((alias("IA__gdk_window_ensure_native"), visibility("default")));
-
-#undef gdk_window_get_screen 
-extern __typeof (gdk_window_get_screen) gdk_window_get_screen __attribute((alias("IA__gdk_window_get_screen"), visibility("default")));
-
-#undef gdk_window_get_display 
-extern __typeof (gdk_window_get_display) gdk_window_get_display __attribute((alias("IA__gdk_window_get_display"), visibility("default")));
-
-#undef gdk_window_get_visual 
-extern __typeof (gdk_window_get_visual) gdk_window_get_visual __attribute((alias("IA__gdk_window_get_visual"), visibility("default")));
-
-#undef gdk_window_get_width 
-extern __typeof (gdk_window_get_width) gdk_window_get_width __attribute((alias("IA__gdk_window_get_width"), visibility("default")));
-
-#undef gdk_window_get_height 
-extern __typeof (gdk_window_get_height) gdk_window_get_height __attribute((alias("IA__gdk_window_get_height"), visibility("default")));
 
 #endif
 #endif

@@ -131,8 +131,8 @@
 *tp++ = gtk_color_button_get_type();
 *tp++ = gtk_color_selection_dialog_get_type();
 *tp++ = gtk_color_selection_get_type();
+*tp++ = gtk_combo_box_entry_get_type();
 *tp++ = gtk_combo_box_get_type();
-*tp++ = gtk_combo_box_text_get_type();
 *tp++ = gtk_container_get_type();
 *tp++ = gtk_corner_type_get_type();
 *tp++ = gtk_ctree_expander_style_get_type();
@@ -251,6 +251,7 @@
 *tp++ = gtk_print_quality_get_type();
 *tp++ = gtk_print_settings_get_type();
 *tp++ = gtk_print_status_get_type();
+*tp++ = gtk_private_flags_get_type();
 *tp++ = gtk_progress_bar_get_type();
 *tp++ = gtk_progress_bar_orientation_get_type();
 *tp++ = gtk_progress_bar_style_get_type();

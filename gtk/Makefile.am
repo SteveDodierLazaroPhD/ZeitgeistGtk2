@@ -196,7 +196,6 @@ gtk_public_h_sources =          \
 	gtkcolorseldialog.h	\
 	gtkcombobox.h		\
 	gtkcomboboxentry.h	\
-	gtkcomboboxtext.h	\
 	gtkcontainer.h		\
 	gtkdebug.h              \
 	gtkdialog.h		\
@@ -266,6 +265,7 @@ gtk_public_h_sources =          \
 	gtkprintoperation.h	\
 	gtkprintoperationpreview.h	\
 	gtkprintsettings.h	\
+	gtkprivate.h		\
 	gtkprogressbar.h	\
 	gtkradioaction.h	\
 	gtkradiobutton.h	\
@@ -376,7 +376,6 @@ gtk_private_h_sources =		\
 	gtkfilesystem.h		\
 	gtkfilesystemmodel.h	\
 	gtkiconcache.h		\
-	gtkimcontextsimpleseqs.h   \
 	gtkintl.h		\
 	gtkkeyhash.h		\
 	gtkmnemonichash.h	\
@@ -386,7 +385,6 @@ gtk_private_h_sources =		\
 	gtkplugprivate.h	\
 	gtkprintoperation-private.h\
 	gtkprintutils.h		\
-	gtkprivate.h		\
 	gtkrbtree.h		\
 	gtkrecentchooserdefault.h \
 	gtkrecentchooserprivate.h \
@@ -456,7 +454,6 @@ gtk_base_c_sources =            \
 	gtkcolorseldialog.c	\
 	gtkcombobox.c		\
 	gtkcomboboxentry.c	\
-	gtkcomboboxtext.c 	\
 	gtkcontainer.c		\
 	gtkdialog.c		\
 	gtkdrawingarea.c	\
@@ -785,7 +782,8 @@ gtk_built_public_sources =			\
 gtk_built_private_headers =			\
 	gtkalias.h				\
 	gtkmarshalers.h				\
-	gtkbuiltincache.h
+	gtkbuiltincache.h			\
+	gtkimcontextsimpleseqs.h
 
 gtk_built_sources =				\
 	gtkaliasdef.c				\

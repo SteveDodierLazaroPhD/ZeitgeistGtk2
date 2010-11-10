@@ -222,6 +222,10 @@ GType gtk_print_operation_action_get_type (void) G_GNUC_CONST;
 GType gtk_print_error_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_PRINT_ERROR (gtk_print_error_get_type ())
 
+/* enumerations from "gtkprivate.h" */
+GType gtk_private_flags_get_type (void) G_GNUC_CONST;
+#define GTK_TYPE_PRIVATE_FLAGS (gtk_private_flags_get_type ())
+
 /* enumerations from "gtkprogressbar.h" */
 GType gtk_progress_bar_style_get_type (void) G_GNUC_CONST;
 #define GTK_TYPE_PROGRESS_BAR_STYLE (gtk_progress_bar_style_get_type ())

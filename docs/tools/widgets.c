@@ -279,24 +279,13 @@ create_combo_box_entry (void)
 {
   GtkWidget *widget;
   GtkWidget *align;
-  GtkWidget *child;
-  GtkTreeModel *model;
   
   gtk_rc_parse_string ("style \"combo-box-entry-style\" {\n"
 		       "  GtkComboBox::appears-as-list = 1\n"
 		       "}\n"
 		       "widget_class \"GtkComboBoxEntry\" style \"combo-box-entry-style\"\n" );
-
-  model = (GtkTreeModel *)gtk_list_store_new (1, G_TYPE_STRING);
-  widget = g_object_new (GTK_TYPE_COMBO_BOX,
-			 "has-entry", TRUE,
-			 "model", model,
-			 "entry-text-column", 0,
-			 NULL);
-  g_object_unref (model);
-
-  child = gtk_bin_get_child (GTK_BIN (widget));
-  gtk_entry_set_text (GTK_ENTRY (child), "Combo Box Entry");
+  widget = gtk_combo_box_entry_new_text ();
+  gtk_entry_set_text (GTK_ENTRY (GTK_BIN (widget)->child), "Combo Box Entry");
   align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
   gtk_container_add (GTK_CONTAINER (align), widget);
 
@@ -314,8 +303,8 @@ create_combo_box (void)
 		       "}\n"
 		       "widget_class \"GtkComboBox\" style \"combo-box-style\"\n" );
 
-  widget = gtk_combo_box_text_new ();
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), "Combo Box");
+  widget = gtk_combo_box_new_text ();
+  gtk_combo_box_append_text (GTK_COMBO_BOX (widget), "Combo Box");
   gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
   align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
   gtk_container_add (GTK_CONTAINER (align), widget);
