@@ -3273,7 +3273,7 @@ gtk_widget_show_now (GtkWidget *widget)
  * 
  * Reverses the effects of gtk_widget_show(), causing the widget to be
  * hidden (invisible to the user).
- **/
+ */
 void
 gtk_widget_hide (GtkWidget *widget)
 {
@@ -3359,7 +3359,9 @@ gtk_widget_show_all (GtkWidget *widget)
  * @widget: a #GtkWidget
  * 
  * Recursively hides a widget and any child widgets.
- **/
+ *
+ * Deprecated: 2.24: Use gtk_widget_hide() instead.
+ */
 void
 gtk_widget_hide_all (GtkWidget *widget)
 {
@@ -3644,7 +3646,8 @@ gtk_widget_queue_draw_area (GtkWidget *widget,
 	  x -= wx - widget->allocation.x;
 	  y -= wy - widget->allocation.y;
 	  
-	  gdk_drawable_get_size (widget->window, &wwidth, &wheight);
+	  wwidth = gdk_window_get_width (widget->window);
+	  wheight = gdk_window_get_height (widget->window);
 
 	  if (x + width <= 0 || y + height <= 0 ||
 	      x >= wwidth || y >= wheight)
@@ -8957,7 +8960,7 @@ _gtk_widget_set_pointer_window (GtkWidget *widget,
 
   if (gtk_widget_get_realized (widget))
     {
-      GdkScreen *screen = gdk_drawable_get_screen (widget->window);
+      GdkScreen *screen = gdk_window_get_screen (widget->window);
 
       g_object_set_qdata (G_OBJECT (screen), quark_pointer_window,
                           pointer_window);
@@ -8978,7 +8981,7 @@ _gtk_widget_get_pointer_window (GtkWidget *widget)
 
   if (gtk_widget_get_realized (widget))
     {
-      GdkScreen *screen = gdk_drawable_get_screen (widget->window);
+      GdkScreen *screen = gdk_window_get_screen (widget->window);
 
       return g_object_get_qdata (G_OBJECT (screen), quark_pointer_window);
     }
@@ -9554,9 +9557,8 @@ expose_window (GdkWindow *window)
   event.expose.count = 0;
   event.expose.area.x = 0;
   event.expose.area.y = 0;
-  gdk_drawable_get_size (GDK_DRAWABLE (window),
-			 &event.expose.area.width,
-			 &event.expose.area.height);
+  event.expose.area.width = gdk_window_get_width (window);
+  event.expose.area.height = gdk_window_get_height (window);
   event.expose.region = gdk_region_rectangle (&event.expose.area);
 
   /* If this is not double buffered, force a double buffer so that
@@ -9657,7 +9659,8 @@ gtk_widget_get_snapshot (GtkWidget    *widget,
             continue;
           windows = g_list_prepend (windows, subwin);
           gdk_window_get_position (subwin, &wx, &wy);
-          gdk_drawable_get_size (subwin, &ww, &wh);
+          ww = gdk_window_get_width (subwin);
+          wh = gdk_window_get_height (subwin);
           /* grow snapshot rectangle by extra widget sub window */
           if (wx < x)
             {

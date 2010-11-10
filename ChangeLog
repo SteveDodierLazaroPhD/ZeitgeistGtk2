@@ -1,3 +1,735 @@
+commit 0120304f5c2cee0d0544ae833732286a443e0e51
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Nov 5 21:41:22 2010 -0400
+
+    NEWS for 2.23.1
+
+ NEWS |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+
+commit 66da14466a2c5d57acea1717e4dfc7199e2b5db9
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Fri Nov 5 10:34:15 2010 +0100
+
+    icon-theme: always force icon sizes for emblems
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=634060
+
+ gtk/gtkicontheme.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 223f55d40392416eecf0b35cc528c9a4eaa500db
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Fri Nov 5 10:33:16 2010 +0100
+
+    icon-theme: support pixbufs implementing the GIcon interface
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=634060
+
+ gtk/gtkicontheme.c |   44 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 43 insertions(+), 1 deletions(-)
+
+commit 58de4f962e9c632ebc6bfbe2ba3a2097da5c8e60
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Fri Oct 22 16:07:25 2010 +0200
+
+    Only show Desktop in file chooser button if there is one
+
+    Fixes: https://bugzilla.gnome.org/show_bug.cgi?id=632894
+
+ gtk/gtkfilechooserbutton.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+commit bf2bac17399e5f5df30f4bdb3f9eb81b3ddfe1d6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Oct 29 12:28:42 2010 -0400
+
+    GtkComboBox: Add a constructor that takes a model and adds an entry
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=633050
+
+ docs/reference/gtk/gtk-sections.txt |    1 +
+ gtk/gtk.symbols                     |    1 +
+ gtk/gtkcombobox.c                   |   17 +++++++++++++++++
+ gtk/gtkcombobox.h                   |    9 +++++----
+ 4 files changed, 24 insertions(+), 4 deletions(-)
+
+commit c64c295e0e7afc574f8655689744d2fac8aa10c7
+Author: Emmanuele Bassi <ebassi@linux.intel.com>
+Date:   Tue Oct 19 11:38:09 2010 +0100
+
+    build: Do not install gtkprivate.h
+
+    This is a private header file, and it should *not* be installed. It
+    should also not be scanned by the introspection machinery.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=632539
+
+ gtk/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 2328795e9d0431e5c8c942d388aecee9183dd561
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Oct 19 21:06:05 2010 +0200
+
+    One more try
+
+ gtk/gtkwidget.h |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 3781aae67f4820ebedfca16a322b33753bae0757
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Oct 19 20:20:38 2010 +0200
+
+    gtkwidget: The deprecated function is gtk_widget_hide_all not
+    gtk_widget_hide
+
+    This fixes commit 7b5b230eadace2f1b8bd86c0e0f0eff2cd4e9dae
+
+ gtk/gtkwidget.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 26d5c69d4b9f8925d2097a8d92734ba6d1f1e106
+Author: Cody Russell <crussell@canonical.com>
+Date:   Tue Oct 19 19:54:32 2010 +0200
+
+    Deprecate gtk_widget_hide_all().
+
+ gtk/gtkwidget.c |    2 ++
+ gtk/gtkwidget.h |    1 +
+ 2 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 66b157d53440e2bfdca89b81ccb4a1e42a23c706
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Tue Oct 19 00:55:52 2010 +0200
+
+    quartz: Always use generic color space
+
+    Switch all usage of device color spaces to generic color spaces.
+    Since
+    the former color spaces are no longer device-dependent as of Mac OS X
+    10.4, these yielded a very costly color space conversion when drawing
+    pixmaps to the screen.  We now avoid this by using the generic color
+    space.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=624025
+
+ gdk/quartz/gdkdrawable-quartz.c |    4 ++--
+ gdk/quartz/gdkpixmap-quartz.c   |    6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+commit ff358a2fe31fca44200b501e1954c74b877e42f0
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Tue Oct 19 00:47:33 2010 +0200
+
+    Rework GdkPixmapImplQuartz to create CGImage on-demand
+
+    If the data that backs a bitmap context changes, then the CGImage that
+    is backed by this data might not always update due to caching effects.
+    By creating the CGImage on-demand, we ascertain ourselves that the
+    CGImage is up to date.
+
+ gdk/quartz/gdkdrawable-quartz.c |    5 +-
+ gdk/quartz/gdkgc-quartz.c       |   33 ++++---
+ gdk/quartz/gdkpixmap-quartz.c   |  194
+ ++++++++++++++++++++++++++++-----------
+ gdk/quartz/gdkpixmap-quartz.h   |    3 +-
+ gdk/quartz/gdkprivate-quartz.h  |    3 +
+ 5 files changed, 170 insertions(+), 68 deletions(-)
+
+commit 0c89dfe89c8177ee1bf0f82c34ea818c7a110fa5
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Tue Oct 19 10:37:15 2010 +0200
+
+    Use gdk_window_ accessors instead of gdk_drawable_ accessors if
+    possible
+
+    The gdk_drawable_ accessors were deprecated.  Removes a lot of
+    compile-time warnings and eventually also makes things work again
+    on Mac (miscompile due to the missing prototypes).
+
+ gtk/gtkcombo.c            |    2 +-
+ gtk/gtkdnd-quartz.c       |    8 +++++---
+ gtk/gtkentry.c            |   30 +++++++++++++++++++-----------
+ gtk/gtkfilechooserentry.c |    2 +-
+ gtk/gtkhandlebox.c        |   12 ++++++++----
+ gtk/gtkhsv.c              |    2 +-
+ gtk/gtkiconview.c         |    4 ++--
+ gtk/gtkimcontextsimple.c  |    4 ++--
+ gtk/gtkimmodule.c         |    2 +-
+ gtk/gtkimmulticontext.c   |    2 +-
+ gtk/gtkmain.c             |    4 ++--
+ gtk/gtkmenu.c             |   35 +++++++++++++++++++++++------------
+ gtk/gtknotebook.c         |   10 ++++++----
+ gtk/gtkoffscreenwindow.c  |    2 ++
+ gtk/gtkplug.c             |    3 ++-
+ gtk/gtkruler.c            |    2 ++
+ gtk/gtksettings.c         |    2 +-
+ gtk/gtkspinbutton.c       |    3 ++-
+ gtk/gtktextview.c         |    7 ++++---
+ gtk/gtktoolitemgroup.c    |    2 +-
+ gtk/gtktoolpalette.c      |    2 +-
+ gtk/gtktooltip.c          |    4 ++--
+ gtk/gtktreeview.c         |   38 ++++++++++++++++++--------------------
+ gtk/gtktreeviewcolumn.c   |    2 +-
+ gtk/gtkwidget.c           |   15 ++++++++-------
+ gtk/gtkwindow.c           |    6 +++---
+ 26 files changed, 119 insertions(+), 86 deletions(-)
+
+commit 87c441b4db5d2133c59796a3515f4568b5a66890
+Author: Bastien Nocera <hadess@hadess.net>
+Date:   Mon Oct 18 17:37:32 2010 +0100
+
+    testgtk: Fix build
+
+ tests/testgtk.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 9b4d1a321ee29cd2d99ff42a926f13eabf94e967
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 18 08:19:59 2010 -0400
+
+    Don't add a second cell renderer
+
+    When has-entry is TRUE, GtkComboBox already adds a cell renderer
+    for the text column, so avoid adding a second one in GtkComboBoxText.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=632381
+    (cherry picked from commit b613cc64786a95ea069d3d308906133165062315)
+
+ gtk/gtkcomboboxtext.c |   48
+ ++++++++++++++++++++++++++++++++++++------------
+ 1 files changed, 36 insertions(+), 12 deletions(-)
+
+commit 401a6eeeab622be1676b5957b2ba37a2256c2feb
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 18 08:17:50 2010 -0400
+
+    Use new GtkComboBoxEntry in all tests
+    (cherry picked from commit 6db62c66179fbe0f127b37f5c1dac41a22f304cf)
+
+ demos/gtk-demo/combobox.c |   19 ++++---------
+ tests/testcombo.c         |   64
+ +++++++++++++++++++-------------------------
+ tests/testgtk.c           |   65
+ +++++++++++++++++++++++---------------------
+ tests/testsocket_common.c |   35 +++++++++--------------
+ 4 files changed, 82 insertions(+), 101 deletions(-)
+
+commit 945bf7586e172e5f563431c1767ca8a119284d61
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Mon Oct 18 09:08:31 2010 +0200
+
+    Don't use old GtkComboBoxEntry in gail
+
+    Use gtk_combo_box_get_has_entry instead.
+    (cherry picked from commit f891c58432a08df37544d5332decedbabe677d6e)
+
+ modules/other/gail/gailcombobox.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 16a96a01557349f4eb2b51de8c672b64e26455ce
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 17:41:15 2010 -0400
+
+    Bump version to 2.23.1
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit c8b8dd3c6e24e1407cbad4abceb58a5311debd2e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 16:53:44 2010 -0400
+
+    Fix header inclusions for !srcdir builds
+
+ gdk/x11/gdkdrawable-x11.h |    2 --
+ gdk/x11/gdkprivate-x11.h  |    5 +----
+ 2 files changed, 1 insertions(+), 6 deletions(-)
+
+commit 473e3352b147de8f2ea6008638a23ae526094900
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 13:35:28 2010 -0400
+
+    Update NEWS for 2.23.0
+
+ NEWS |   35 +++++++++++++++++++++++++++++++++++
+ 1 files changed, 35 insertions(+), 0 deletions(-)
+
+commit e548f0a550252be9fb94aa688318bbbad573167f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 08:03:58 2010 -0400
+
+    Fix some issues with GtkComboBoxText
+
+ gtk/gtkcombobox.c     |   24 ++++++++++++++----------
+ gtk/gtkcomboboxtext.c |    8 ++++----
+ tests/testtreeview.c  |    9 ++++-----
+ 3 files changed, 22 insertions(+), 19 deletions(-)
+
+commit 8f72ee9bbe6f4f35b0bff9f10ab4154216697b62
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 01:06:44 2010 -0400
+
+    Fix build
+
+ gtk/gtkcombobox.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 642e158aa1a2b1acfa4b0ec1fef9bdcd90054556
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Fri Oct 15 12:08:12 2010 +0200
+
+    Parse lpoptions correctly
+
+    Parse options job-sheets, job-hold-until and sides correctly.
+    Add get_lpoption_name() for translation of lpoption names to
+    gtk option names. Usable for options which values don't need
+    conversion (e.g. number-up, number-up-layout, job-billing
+    and job-priority).
+    Rename array option_names to ppd_option_names to reflect its
+    purpose better. Rename get_option_name() to get_ppd_option_name()
+    because of the same reason.
+    (cherry picked from commit 95e69afea83e6a43163a3c2b0d2928c9e646b77b)
+
+ gtk/gtkprintunixdialog.c                         |    7 ++
+ modules/printbackends/cups/gtkprintbackendcups.c |  102
+ +++++++++++++++++++---
+ 2 files changed, 97 insertions(+), 12 deletions(-)
+
+commit 29557f4f7ba0c49b39d630ad3a85c380c6dd3b31
+Author: Christian Dywan <christian@twotoasts.de>
+Date:   Fri Oct 15 16:29:30 2010 +0200
+
+    Use property system to coerce model data to G_TYPE_STRING
+
+    Fixes: https://bugzilla.gnome.org/show_bug.cgi?id=423201
+
+ gtk/gtkcombobox.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+commit 0ace8e26cbc73f0c8dc7a60c30963cce9204b832
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 01:01:06 2010 -0400
+
+    Add docs for GtkComboBoxText
+    (cherry picked from commit 3e9bdf6fd91175907c4b74b7a242a4ee0f5dbb11)
+
+ docs/reference/gtk/gtk-docs.sgml    |    1 +
+ docs/reference/gtk/gtk-sections.txt |   24 ++++++++++++++++++++++++
+ docs/reference/gtk/gtk.types        |    1 +
+ gtk/gtkcombobox.c                   |    2 +-
+ gtk/gtkcomboboxtext.c               |   18 ++++++++++++++++++
+ 5 files changed, 45 insertions(+), 1 deletions(-)
+
+commit 16b852e30dea3936f0e67e18faa9bdd4efc24211
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Oct 15 16:33:11 2010 -0400
+
+    Deprecate the old combobox text convenience api
+    (cherry picked from commit 43250e8faf2cc008b0b829351efff651b680a85c)
+
+ gtk/gtkcombobox.c |   12 ++++++++++++
+ gtk/gtkcombobox.h |    4 ++++
+ 2 files changed, 16 insertions(+), 0 deletions(-)
+
+commit 2aba7f79ba9ca41b75bacaf4dcf0e23e98912252
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 00:59:43 2010 -0400
+
+    Use the new GtkComboBoxText API
+
+    Also remove mentions of the old text convenience API from the docs,
+    and point to GtkComboBoxText instead.
+    (cherry picked from commit e7f51ef6a411dc4c784c3edc67df294288de3f75)
+
+ demos/gtk-demo/sizegroup.c    |    4 +-
+ demos/gtk-demo/textview.c     |    8 ++--
+ demos/testpixbuf-scale.c      |   10 +++---
+ docs/tools/widgets.c          |    4 +-
+ gtk/gtkcombobox.c             |   30 ++++++++++++++++--
+ gtk/gtkfilechooserdefault.c   |    9 ++++--
+ gtk/gtkprintunixdialog.c      |   18 +++++-----
+ gtk/gtkrecentchooserdefault.c |   10 +++---
+ tests/prop-editor.c           |    6 ++--
+ tests/testbbox.c              |   22 +++++++-------
+ tests/testellipsise.c         |   18 +++++-----
+ tests/testgtk.c               |   41 +++++++------------------
+ tests/testoffscreen.c         |   31 +++++++++++--------
+ tests/testsocket_common.c     |   10 +++---
+ tests/testtoolbar.c           |   32 +++++--------------
+ tests/testtreecolumnsizing.c  |   18 +++++-----
+ tests/testtreeview.c          |   67
+ +++++++---------------------------------
+ 17 files changed, 146 insertions(+), 192 deletions(-)
+
+commit 1fdf5a8b4a9c40e2603a0e65adde7050fdcbb959
+Author: Christian Dywan <christian@lanedo.com>
+Date:   Wed May 19 17:27:47 2010 +0200
+
+    Added GtkComboBoxText api
+
+    This is a derived class of GtkComboBox to replace the
+    gtk_combo_box_*_text() convenience API.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=612396
+
+    Signed-off-by: Javier Jardón <jjardon@gnome.org>
+    (cherry picked from commit 7a5a5e9c5dee16601c8bf1df67ce12c81000bfb9)
+
+ gtk/Makefile.am       |    2 +
+ gtk/gtk.h             |    1 +
+ gtk/gtk.symbols       |   13 +++
+ gtk/gtkcombobox.c     |   11 +-
+ gtk/gtkcomboboxtext.c |  250
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkcomboboxtext.h |   77 +++++++++++++++
+ 6 files changed, 349 insertions(+), 5 deletions(-)
+
+commit f6eb2de749f9fc3a51c58f15d49f85c9c8082b58
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Oct 15 20:51:18 2010 +0200
+
+    docs: update OSX port project page
+
+ docs/reference/gtk/osx.sgml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 6657405eabb8507273eb476b7e7565bf50eaccf1
+Author: Christian Persch <chpe@gnome.org>
+Date:   Fri Oct 15 14:34:44 2010 -0400
+
+    Take cursor hotspot from pixbuf if available
+
+    Allow -1 for the hotspot coordinates in gdk_cursor_new_from_pixbuf,
+    if the pixbuf contains the x_hot/y_hot options with appropriate
+    values.
+
+    Bug #632140.
+
+ gdk/x11/gdkcursor-x11.c |   31 +++++++++++++++++++++++++++++++
+ 1 files changed, 31 insertions(+), 0 deletions(-)
+
+commit 51093802ea697ded952715ce75d9a1a7e93ebaef
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 16 00:14:00 2010 -0400
+
+    Deprecate gtk_init_add, gtk_remove_add and friends
+
+    This functions are going to be removed in GTK+ 3.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=629955
+
+ docs/reference/gtk/tmpl/gtkmain.sgml |    7 ++++++-
+ gtk/gtkmain.c                        |    3 ++-
+ gtk/gtkmain.h                        |    2 +-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+commit 8efab42b80dbcceef8a0e0adca5cc0062f357aa0
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Thu Oct 14 13:17:46 2010 -0500
+
+    Part of bgo#613728 - [GtkTreeView] Focus the list, not the headers,
+    when Tab-focusing
+
+    The idea is that it is way more common to want to manipulate the
+    actual list, rather than the headers.  Once you Tab into the treeview
+    (and the list part gets the focus), you can use Shift-Tab to focus
+    the headers.
+
+    This means that some hysteresis is added to the focus chain, but
+    it makes the treeview a lot more convenient to focus with the
+    keyboard.
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtktreeview.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+commit 45767c35a67395afb1fd1284ab0ce22cdfb673c3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Oct 13 22:43:40 2010 -0400
+
+    Deprecate GtkComboBoxEntry in favor of added properties to GtkComboBox
+
+    GtkComboBox now sports a construct-only "has-entry" property which
+    decides if it uses a GtkEntry to allow additional user input. Also
+    it has a new "entry-text-column" to fetch strings for the entry
+    from the model.
+
+    This patch deprecates the GtkComboBoxEntry and updates the rest
+    of GTK+
+    to use the new semantics on GtkComboBox instead.
+    (cherry picked from commit 9612c648176378bf237ad0e1a8c6c995b0ca7c61)
+
+ demos/gtk-demo/combobox.c           |    9 +-
+ docs/reference/gtk/gtk-sections.txt |    4 +
+ docs/tools/widgets.c                |   15 ++-
+ gtk/gtk.symbols                     |    6 +
+ gtk/gtkcellrenderercombo.c          |    7 +-
+ gtk/gtkcombobox.c                   |  364
+ +++++++++++++++++++++++++++++++++-
+ gtk/gtkcombobox.h                   |    6 +
+ gtk/gtkcomboboxentry.c              |   11 +
+ gtk/gtkcomboboxentry.h              |    3 +
+ gtk/gtkprinteroptionwidget.c        |    7 +-
+ gtk/tests/builder.c                 |    3 +-
+ gtk/tests/object.c                  |   10 +-
+ tests/testcombo.c                   |   14 +-
+ tests/testgtk.c                     |   41 ++++-
+ tests/testsocket_common.c           |   45 +++--
+ 15 files changed, 486 insertions(+), 59 deletions(-)
+
+commit 8a176351039d4dfb30dc1b129690d7d21379d321
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Oct 8 14:39:17 2010 -0400
+
+    Don't use newly deprecated gdk_drawable apis
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=631697
+
+ gtk/gtkcalendar.c |    3 ++-
+ gtk/gtkcombobox.c |    2 +-
+ gtk/gtkentry.c    |    4 ++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+commit c77313255a1d092bf3f6e904dc6e23cd4643c09a
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Wed Oct 6 12:59:44 2010 -0500
+
+    Filechooser - In OPEN or SAVE mode, typing a plain folder name should
+    switch to it
+
+    If you type 'subfolder/' and hit Enter, the file chooser will switch
+    you to
+    it.  But if you type just 'subfolder' without the trailing slash,
+    apps would
+    receive *that* filename (e.g. file:///foo/bar/subfolder) as the
+    response, and
+    they would likely print an error that they can't open that file
+    (as it is
+    a folder).  So, we change the file chooser's current folder to
+    that subfolder
+    in this case.
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |   14 +++++++++++---
+ 1 files changed, 11 insertions(+), 3 deletions(-)
+
+commit 80291bdb6beade040294960b60265a4fb12bfa5a
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed Oct 6 00:47:03 2010 +0200
+
+    docs: Fix some docs in gdkrgb
+
+    Reported by Milan Bouchet-Valat in
+    https://bugzilla.gnome.org/show_bug.cgi?id=631473
+
+ gdk/gdkrgb.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit fc6c821672eef138b240f7abbd74321a76b62295
+Author: Federico Mena Quintero <federico@novell.com>
+Date:   Tue Oct 5 14:41:51 2010 -0500
+
+    Handle the case where you type /blah/nonexistent in SELECT_FOLDER mode
+
+    Previously name_entry_get_parent_info_cb() would fail as it doesn't
+    handle SELECT_FOLDER.
+    Now we just make that function act the same as for CREATE_FOLDER mode.
+    In either
+    case, if you type "/blah/nonexistent" and hit Enter, you want a folder
+    with that name to be created (under the already-existing /blah).
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
+
+commit b474a64365064c1d542ea33962308a55159eb2bc
+Author: Stephen Shaw <sshaw@decriptor.com>
+Date:   Tue Oct 5 12:59:45 2010 -0500
+
+    Clarify the name of a callback
+
+    The old save_entry_get_info_cb() was misnamed; it is actually used
+    to see if a file's presumed parent *is* a folder.  So we rename
+    it to name_entry_get_parent_info_cb().
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |   14 ++++++++------
+ 1 files changed, 8 insertions(+), 6 deletions(-)
+
+commit 8997fa9c39a008647cdea317035c967e9e94ad0e
+Author: Stephen Shaw <sshaw@decriptor.com>
+Date:   Tue Oct 5 12:55:03 2010 -0500
+
+    bgo#629722 - file chooser should cope with typing a directory name
+    and then Enter
+
+    file_exists_get_info_cb() used to let some actions fall through to
+    the code that checks for the file type of the selected file's parent
+    (e.g. to see if /foo/bar *is* indeed a folder if you type
+    /foo/bar/baz).
+    However, we need to be more explicit for each file chooser action, as
+    in SELECT_FOLDER mode typing /foo/foldername and hitting Enter
+    would not
+    give you an immediate selection, but rather the file chooser would
+    complain that it couldn't create that directory as it already exists.
+
+    Signed-off-by: Federico Mena Quintero <federico@novell.com>
+
+ gtk/gtkfilechooserdefault.c |   87
+ ++++++++++++++++++++++++++++++++++--------
+ 1 files changed, 70 insertions(+), 17 deletions(-)
+
+commit 13222864157f14d651be58a73533b8757eab19d0
+Author: Claudio Saavedra <csaavedra@igalia.com>
+Date:   Mon Sep 27 12:22:03 2010 +0300
+
+    Fix maintainer-clean
+
+    gtkimcontextsimpleseqs.h is not really autogenerated but shipped
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=630708
+
+ gtk/Makefile.am |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 6eeb2405335ec47e8cff3ecf5a4842af6b2312dc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 27 20:35:25 2010 -0400
+
+    Backport some new GdkWindow api from 2.90
+
+    This commit adds
+    gdk_window_get_display
+    gdk_window_get_screen
+    gdk_window_get_visual
+    gdk_window_get_width
+    gdk_window_get_height
+    and deprecates the corresponding GdkDrawable APIs.
+    This will make it easier to prepare the port to GTK+ 3
+
+ docs/reference/gdk/gdk-sections.txt |    5 ++
+ gdk/gdk.symbols                     |   13 +++-
+ gdk/gdkdraw.c                       |   19 ++++--
+ gdk/gdkdrawable.h                   |   11 ++--
+ gdk/gdkwindow.c                     |  104
+ +++++++++++++++++++++++++++++++++++
+ gdk/gdkwindow.h                     |    8 ++-
+ 6 files changed, 144 insertions(+), 16 deletions(-)
+
+commit c2cd9b7bf10291e31ec0d3701dd875871f23fc51
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 27 19:00:10 2010 -0400
+
+    Add gdk_cairo_set_source_window
+
+    And deprecate gdk_cairo_set_source_pixmap.
+
+ docs/reference/gdk/gdk-sections.txt |    1 +
+ gdk/gdk.symbols                     |    1 +
+ gdk/gdkcairo.c                      |   37
+ +++++++++++++++++++++++++++++++++++
+ gdk/gdkcairo.h                      |    4 +++
+ 4 files changed, 43 insertions(+), 0 deletions(-)
+
+commit 6e4ea72a799417bfae900f8f264448082aa5db1d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 26 22:33:18 2010 -0400
+
+    Deprecate gtk_object_destroy
+
+ docs/reference/gtk/tmpl/gtkobject.sgml |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 95d2aa7c62aa5ece1fdd8cbab63676c5677d20e5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 24 12:40:53 2010 -0400
+
+    Backport the uri hook cleanup
+
+    This commit deprecates gtk_link_button_set_uri_hook(),
+    gtk_about_dialog_set_email_hook() and gtk_about_dialog_set_url_hook(),
+    and adds a GtkAboutDialog::activate-link signal.
+
+ demos/gtk-demo/appwindow.c |    2 -
+ gtk/gtk.symbols            |    6 ++-
+ gtk/gtkaboutdialog.c       |  161
+ +++++++++++++++++++++++++++++---------------
+ gtk/gtkaboutdialog.h       |    6 ++-
+ gtk/gtklinkbutton.c        |    2 +
+ gtk/gtklinkbutton.h        |    2 +
+ 6 files changed, 120 insertions(+), 59 deletions(-)
+
+commit 8114e94ad4e9cc633f93f979f43fbe23ed273bc0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 24 11:53:05 2010 -0400
+
+    Add an index for 2.24 api additions
+
+ docs/reference/gtk/gtk-docs.sgml |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 48a6d94e5e695601913f7d2f7a1a6b05d78918dd
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 24 11:50:26 2010 -0400
+
+    GtkNotebook: deprecate some tab-dnd-related functions
+
+    gtk_notebook_set_window_creation_hook has been removed in GTK+ 3,
+    deprecate it here. gtk_notebook_get/set_group has been deprecated
+    in favour of the new gtk_notebook_get/set_group_name.
+
+    http://bugzilla.gnome.org/show_bug.cgi?id=630521
+
+ docs/reference/gtk/gtk-sections.txt |    2 +
+ gtk/gtk.symbols                     |    6 ++-
+ gtk/gtknotebook.c                   |   96
+ ++++++++++++++++++++++++++++++++---
+ gtk/gtknotebook.h                   |    8 ++-
+ tests/testnotebookdnd.c             |   16 ++++--
+ 5 files changed, 110 insertions(+), 18 deletions(-)
+
+commit d4551eee12f6dd2800cd592f6ecf58089160458d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Sep 23 23:34:50 2010 -0400
+
+    Set version to 2.23.0
+
+ configure.in |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 71bec7e7adea1630dddb8d24aba69b9da65a1718
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Sep 23 13:36:09 2010 -0400
+
+    Bump version
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit b7cd904fe38581ca4c12a5cc151db553d185cd2d
+Author: Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>
+Date:   Fri Sep 24 02:13:15 2010 +0900
+
+    Updated Japanese translation (symbolic link related)
+
+ po/ja.po |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 537a2534b9ff57856708ae3024599f730974dac8
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Thu Sep 23 17:05:02 2010 +0200
+
+    INSTALL.in: the Glib required version is 2.25.10
+
+ INSTALL.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
 commit 6c95f0475f1e120e748e903089fe202c1a509334
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Thu Sep 23 08:17:42 2010 -0400

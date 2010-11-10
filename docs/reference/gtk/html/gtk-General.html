@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Main loop and Events</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="GTK+ Reference Manual">
 <link rel="up" href="gtkbase.html" title="Part II. GTK+ Core Reference">
 <link rel="prev" href="gtkbase.html" title="Part II. GTK+ Core Reference">
@@ -175,7 +175,7 @@ When your callbacks are invoked, you would typically take some action
 to the main loop and await more user input.
 </p>
 <div class="example">
-<a name="id648175"></a><p class="title"><b>Example 2. Typical <code class="function">main</code> function for a GTK+ application</b></p>
+<a name="id620536"></a><p class="title"><b>Example 2. Typical <code class="function">main</code> function for a GTK+ application</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -574,7 +574,7 @@ Checks if any events are pending. This can be used to update the GUI
 and invoke timeouts etc. while doing some time intensive computation.
 </p>
 <div class="example">
-<a name="id665658"></a><p class="title"><b>Example 3. Updating the GUI during a long computation.</b></p>
+<a name="id638213"></a><p class="title"><b>Example 3. Updating the GUI during a long computation.</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -814,7 +814,7 @@ not do this as the user expects a reaction from clicking the close
 icon of the window...
 </p>
 <div class="example">
-<a name="id666599"></a><p class="title"><b>Example 4. A persistent window</b></p>
+<a name="id639151"></a><p class="title"><b>Example 4. A persistent window</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -954,6 +954,10 @@ If <em class="parameter"><code>widget</code></em> does not have the grab, this f
 <a name="gtk-init-add"></a><h3>gtk_init_add ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_init_add                        (<em class="parameter"><code><a class="link" href="gtk-Types.html#GtkFunction" title="GtkFunction ()"><span class="type">GtkFunction</span></a> function</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_init_add</code> is deprecated and should not be used in newly-written code. This function is going to be removed in GTK+ 3.0</p>
+</div>
 <p>
 Registers a function to be called when the mainloop is started.
 </p>
@@ -978,6 +982,10 @@ Registers a function to be called when the mainloop is started.
 <a name="gtk-quit-add-destroy"></a><h3>gtk_quit_add_destroy ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_quit_add_destroy                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> main_level</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GtkObject.html" title="GtkObject"><span class="type">GtkObject</span></a> *object</code></em>);</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_quit_add_destroy</code> is deprecated and should not be used in newly-written code. This function is going to be removed in GTK+ 3.0</p>
+</div>
 <p>
 Trigger destruction of <em class="parameter"><code>object</code></em> in case the mainloop at level <em class="parameter"><code>main_level</code></em>
 is quit.
@@ -1004,6 +1012,10 @@ is quit.
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               gtk_quit_add                        (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> main_level</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gtk-Types.html#GtkFunction" title="GtkFunction ()"><span class="type">GtkFunction</span></a> function</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_quit_add</code> is deprecated and should not be used in newly-written code. This function is going to be removed in GTK+ 3.0</p>
+</div>
 <p>
 Registers a function to be called when an instance of the mainloop is left.
 </p>
@@ -1045,6 +1057,10 @@ Registers a function to be called when an instance of the mainloop is left.
                                                          <em class="parameter"><code><a class="link" href="gtk-Types.html#GtkCallbackMarshal" title="GtkCallbackMarshal ()"><span class="type">GtkCallbackMarshal</span></a> marshal</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy</code></em>);</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_quit_add_full</code> is deprecated and should not be used in newly-written code. This function is going to be removed in GTK+ 3.0</p>
+</div>
 <p>
 Registers a function to be called when an instance of the mainloop is left.
 In comparison to <a class="link" href="gtk-General.html#gtk-quit-add" title="gtk_quit_add ()"><code class="function">gtk_quit_add()</code></a> this function adds the possibility to
@@ -1101,6 +1117,10 @@ used by GTK+ wrappers for languages other than C.
 <div class="refsect2" title="gtk_quit_remove ()">
 <a name="gtk-quit-remove"></a><h3>gtk_quit_remove ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_quit_remove                     (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> quit_handler_id</code></em>);</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_quit_remove</code> is deprecated and should not be used in newly-written code. This function is going to be removed in GTK+ 3.0</p>
+</div>
 <p>
 Removes a quit handler by its identifier.
 </p>
@@ -1117,6 +1137,10 @@ Removes a quit handler by its identifier.
 <div class="refsect2" title="gtk_quit_remove_by_data ()">
 <a name="gtk-quit-remove-by-data"></a><h3>gtk_quit_remove_by_data ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_quit_remove_by_data             (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gtk_quit_remove_by_data</code> is deprecated and should not be used in newly-written code. This function is going to be removed in GTK+ 3.0</p>
+</div>
 <p>
 Removes a quit handler identified by its <em class="parameter"><code>data</code></em> field.
 </p>

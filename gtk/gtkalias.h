@@ -88,9 +88,6 @@ extern __typeof (gtk_about_dialog_set_copyright) IA__gtk_about_dialog_set_copyri
 extern __typeof (gtk_about_dialog_set_documenters) IA__gtk_about_dialog_set_documenters __attribute((visibility("hidden")));
 #define gtk_about_dialog_set_documenters IA__gtk_about_dialog_set_documenters
 
-extern __typeof (gtk_about_dialog_set_email_hook) IA__gtk_about_dialog_set_email_hook __attribute((visibility("hidden")));
-#define gtk_about_dialog_set_email_hook IA__gtk_about_dialog_set_email_hook
-
 extern __typeof (gtk_about_dialog_set_license) IA__gtk_about_dialog_set_license __attribute((visibility("hidden")));
 #define gtk_about_dialog_set_license IA__gtk_about_dialog_set_license
 
@@ -103,9 +100,14 @@ extern __typeof (gtk_about_dialog_set_logo_icon_name) IA__gtk_about_dialog_set_l
 extern __typeof (gtk_about_dialog_set_translator_credits) IA__gtk_about_dialog_set_translator_credits __attribute((visibility("hidden")));
 #define gtk_about_dialog_set_translator_credits IA__gtk_about_dialog_set_translator_credits
 
+#ifndef GTK_DISABLE_DEPRECATED
+extern __typeof (gtk_about_dialog_set_email_hook) IA__gtk_about_dialog_set_email_hook __attribute((visibility("hidden")));
+#define gtk_about_dialog_set_email_hook IA__gtk_about_dialog_set_email_hook
+
 extern __typeof (gtk_about_dialog_set_url_hook) IA__gtk_about_dialog_set_url_hook __attribute((visibility("hidden")));
 #define gtk_about_dialog_set_url_hook IA__gtk_about_dialog_set_url_hook
 
+#endif
 extern __typeof (gtk_about_dialog_set_version) IA__gtk_about_dialog_set_version __attribute((visibility("hidden")));
 #define gtk_about_dialog_set_version IA__gtk_about_dialog_set_version
 
@@ -920,9 +922,6 @@ extern __typeof (gtk_recent_filter_flags_get_type) IA__gtk_recent_filter_flags_g
 
 extern __typeof (gtk_print_operation_action_get_type) IA__gtk_print_operation_action_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_print_operation_action_get_type IA__gtk_print_operation_action_get_type
-
-extern __typeof (gtk_private_flags_get_type) IA__gtk_private_flags_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
-#define gtk_private_flags_get_type IA__gtk_private_flags_get_type
 
 extern __typeof (gtk_progress_bar_orientation_get_type) IA__gtk_progress_bar_orientation_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_progress_bar_orientation_get_type IA__gtk_progress_bar_orientation_get_type
@@ -2217,8 +2216,14 @@ extern __typeof (gtk_combo_box_get_add_tearoffs) IA__gtk_combo_box_get_add_tearo
 extern __typeof (gtk_combo_box_get_column_span_column) IA__gtk_combo_box_get_column_span_column __attribute((visibility("hidden")));
 #define gtk_combo_box_get_column_span_column IA__gtk_combo_box_get_column_span_column
 
+extern __typeof (gtk_combo_box_get_entry_text_column) IA__gtk_combo_box_get_entry_text_column __attribute((visibility("hidden")));
+#define gtk_combo_box_get_entry_text_column IA__gtk_combo_box_get_entry_text_column
+
 extern __typeof (gtk_combo_box_get_focus_on_click) IA__gtk_combo_box_get_focus_on_click __attribute((visibility("hidden")));
 #define gtk_combo_box_get_focus_on_click IA__gtk_combo_box_get_focus_on_click
+
+extern __typeof (gtk_combo_box_get_has_entry) IA__gtk_combo_box_get_has_entry __attribute((visibility("hidden")));
+#define gtk_combo_box_get_has_entry IA__gtk_combo_box_get_has_entry
 
 extern __typeof (gtk_combo_box_get_model) IA__gtk_combo_box_get_model __attribute((visibility("hidden")));
 #define gtk_combo_box_get_model IA__gtk_combo_box_get_model
@@ -2253,8 +2258,14 @@ extern __typeof (gtk_combo_box_new) IA__gtk_combo_box_new __attribute((visibilit
 extern __typeof (gtk_combo_box_new_text) IA__gtk_combo_box_new_text __attribute((visibility("hidden")));
 #define gtk_combo_box_new_text IA__gtk_combo_box_new_text
 
+extern __typeof (gtk_combo_box_new_with_entry) IA__gtk_combo_box_new_with_entry __attribute((visibility("hidden")));
+#define gtk_combo_box_new_with_entry IA__gtk_combo_box_new_with_entry
+
 extern __typeof (gtk_combo_box_new_with_model) IA__gtk_combo_box_new_with_model __attribute((visibility("hidden")));
 #define gtk_combo_box_new_with_model IA__gtk_combo_box_new_with_model
+
+extern __typeof (gtk_combo_box_new_with_model_and_entry) IA__gtk_combo_box_new_with_model_and_entry __attribute((visibility("hidden")));
+#define gtk_combo_box_new_with_model_and_entry IA__gtk_combo_box_new_with_model_and_entry
 
 extern __typeof (gtk_combo_box_popdown) IA__gtk_combo_box_popdown __attribute((visibility("hidden")));
 #define gtk_combo_box_popdown IA__gtk_combo_box_popdown
@@ -2280,6 +2291,9 @@ extern __typeof (gtk_combo_box_set_add_tearoffs) IA__gtk_combo_box_set_add_tearo
 extern __typeof (gtk_combo_box_set_column_span_column) IA__gtk_combo_box_set_column_span_column __attribute((visibility("hidden")));
 #define gtk_combo_box_set_column_span_column IA__gtk_combo_box_set_column_span_column
 
+extern __typeof (gtk_combo_box_set_entry_text_column) IA__gtk_combo_box_set_entry_text_column __attribute((visibility("hidden")));
+#define gtk_combo_box_set_entry_text_column IA__gtk_combo_box_set_entry_text_column
+
 extern __typeof (gtk_combo_box_set_focus_on_click) IA__gtk_combo_box_set_focus_on_click __attribute((visibility("hidden")));
 #define gtk_combo_box_set_focus_on_click IA__gtk_combo_box_set_focus_on_click
 
@@ -2303,8 +2317,37 @@ extern __typeof (gtk_combo_box_set_wrap_width) IA__gtk_combo_box_set_wrap_width 
 
 #endif
 #endif
+#if IN_HEADER(__GTK_COMBO_BOX_TEXT_H__)
+#if IN_FILE(__GTK_COMBO_BOX_TEXT_C__)
+extern __typeof (gtk_combo_box_text_append_text) IA__gtk_combo_box_text_append_text __attribute((visibility("hidden")));
+#define gtk_combo_box_text_append_text IA__gtk_combo_box_text_append_text
+
+extern __typeof (gtk_combo_box_text_get_active_text) IA__gtk_combo_box_text_get_active_text __attribute((visibility("hidden")));
+#define gtk_combo_box_text_get_active_text IA__gtk_combo_box_text_get_active_text
+
+extern __typeof (gtk_combo_box_text_get_type) IA__gtk_combo_box_text_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
+#define gtk_combo_box_text_get_type IA__gtk_combo_box_text_get_type
+
+extern __typeof (gtk_combo_box_text_insert_text) IA__gtk_combo_box_text_insert_text __attribute((visibility("hidden")));
+#define gtk_combo_box_text_insert_text IA__gtk_combo_box_text_insert_text
+
+extern __typeof (gtk_combo_box_text_new) IA__gtk_combo_box_text_new __attribute((visibility("hidden")));
+#define gtk_combo_box_text_new IA__gtk_combo_box_text_new
+
+extern __typeof (gtk_combo_box_text_new_with_entry) IA__gtk_combo_box_text_new_with_entry __attribute((visibility("hidden")));
+#define gtk_combo_box_text_new_with_entry IA__gtk_combo_box_text_new_with_entry
+
+extern __typeof (gtk_combo_box_text_prepend_text) IA__gtk_combo_box_text_prepend_text __attribute((visibility("hidden")));
+#define gtk_combo_box_text_prepend_text IA__gtk_combo_box_text_prepend_text
+
+extern __typeof (gtk_combo_box_text_remove) IA__gtk_combo_box_text_remove __attribute((visibility("hidden")));
+#define gtk_combo_box_text_remove IA__gtk_combo_box_text_remove
+
+#endif
+#endif
 #if IN_HEADER(__GTK_COMBO_BOX_ENTRY_H__)
 #if IN_FILE(__GTK_COMBO_BOX_ENTRY_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_combo_box_entry_get_text_column) IA__gtk_combo_box_entry_get_text_column __attribute((visibility("hidden")));
 #define gtk_combo_box_entry_get_text_column IA__gtk_combo_box_entry_get_text_column
 
@@ -2323,6 +2366,7 @@ extern __typeof (gtk_combo_box_entry_new_with_model) IA__gtk_combo_box_entry_new
 extern __typeof (gtk_combo_box_entry_set_text_column) IA__gtk_combo_box_entry_set_text_column __attribute((visibility("hidden")));
 #define gtk_combo_box_entry_set_text_column IA__gtk_combo_box_entry_set_text_column
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_SMART_COMBO_H__)
@@ -5523,9 +5567,11 @@ extern __typeof (gtk_link_button_get_uri) IA__gtk_link_button_get_uri __attribut
 extern __typeof (gtk_link_button_set_uri) IA__gtk_link_button_set_uri __attribute((visibility("hidden")));
 #define gtk_link_button_set_uri IA__gtk_link_button_set_uri
 
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_link_button_set_uri_hook) IA__gtk_link_button_set_uri_hook __attribute((visibility("hidden")));
 #define gtk_link_button_set_uri_hook IA__gtk_link_button_set_uri_hook
 
+#endif
 extern __typeof (gtk_link_button_get_visited) IA__gtk_link_button_get_visited __attribute((visibility("hidden")));
 #define gtk_link_button_get_visited IA__gtk_link_button_get_visited
 
@@ -6408,22 +6454,28 @@ extern __typeof (gtk_notebook_get_tab_hborder) IA__gtk_notebook_get_tab_hborder 
 extern __typeof (gtk_notebook_get_tab_vborder) IA__gtk_notebook_get_tab_vborder __attribute((visibility("hidden")));
 #define gtk_notebook_get_tab_vborder IA__gtk_notebook_get_tab_vborder
 
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_notebook_set_window_creation_hook) IA__gtk_notebook_set_window_creation_hook __attribute((visibility("hidden")));
 #define gtk_notebook_set_window_creation_hook IA__gtk_notebook_set_window_creation_hook
 
-#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_notebook_get_group_id) IA__gtk_notebook_get_group_id __attribute((visibility("hidden")));
 #define gtk_notebook_get_group_id IA__gtk_notebook_get_group_id
 
 extern __typeof (gtk_notebook_set_group_id) IA__gtk_notebook_set_group_id __attribute((visibility("hidden")));
 #define gtk_notebook_set_group_id IA__gtk_notebook_set_group_id
 
-#endif
 extern __typeof (gtk_notebook_get_group) IA__gtk_notebook_get_group __attribute((visibility("hidden")));
 #define gtk_notebook_get_group IA__gtk_notebook_get_group
 
 extern __typeof (gtk_notebook_set_group) IA__gtk_notebook_set_group __attribute((visibility("hidden")));
 #define gtk_notebook_set_group IA__gtk_notebook_set_group
+
+#endif
+extern __typeof (gtk_notebook_get_group_name) IA__gtk_notebook_get_group_name __attribute((visibility("hidden")));
+#define gtk_notebook_get_group_name IA__gtk_notebook_get_group_name
+
+extern __typeof (gtk_notebook_set_group_name) IA__gtk_notebook_set_group_name __attribute((visibility("hidden")));
+#define gtk_notebook_set_group_name IA__gtk_notebook_set_group_name
 
 extern __typeof (gtk_notebook_get_tab_reorderable) IA__gtk_notebook_get_tab_reorderable __attribute((visibility("hidden")));
 #define gtk_notebook_get_tab_reorderable IA__gtk_notebook_get_tab_reorderable

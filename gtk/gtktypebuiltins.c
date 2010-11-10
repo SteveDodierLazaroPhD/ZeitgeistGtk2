@@ -1532,33 +1532,6 @@ gtk_print_error_get_type (void)
     return etype;
 }
 
-/* enumerations from "gtkprivate.h" */
-GType
-gtk_private_flags_get_type (void)
-{
-    static GType etype = 0;
-    if (G_UNLIKELY(etype == 0)) {
-        static const GFlagsValue values[] = {
-            { PRIVATE_GTK_USER_STYLE, "PRIVATE_GTK_USER_STYLE", "user-style" },
-            { PRIVATE_GTK_RESIZE_PENDING, "PRIVATE_GTK_RESIZE_PENDING", "resize-pending" },
-            { PRIVATE_GTK_HAS_POINTER, "PRIVATE_GTK_HAS_POINTER", "has-pointer" },
-            { PRIVATE_GTK_SHADOWED, "PRIVATE_GTK_SHADOWED", "shadowed" },
-            { PRIVATE_GTK_HAS_SHAPE_MASK, "PRIVATE_GTK_HAS_SHAPE_MASK", "has-shape-mask" },
-            { PRIVATE_GTK_IN_REPARENT, "PRIVATE_GTK_IN_REPARENT", "in-reparent" },
-            { PRIVATE_GTK_DIRECTION_SET, "PRIVATE_GTK_DIRECTION_SET", "direction-set" },
-            { PRIVATE_GTK_DIRECTION_LTR, "PRIVATE_GTK_DIRECTION_LTR", "direction-ltr" },
-            { PRIVATE_GTK_ANCHORED, "PRIVATE_GTK_ANCHORED", "anchored" },
-            { PRIVATE_GTK_CHILD_VISIBLE, "PRIVATE_GTK_CHILD_VISIBLE", "child-visible" },
-            { PRIVATE_GTK_REDRAW_ON_ALLOC, "PRIVATE_GTK_REDRAW_ON_ALLOC", "redraw-on-alloc" },
-            { PRIVATE_GTK_ALLOC_NEEDED, "PRIVATE_GTK_ALLOC_NEEDED", "alloc-needed" },
-            { PRIVATE_GTK_REQUEST_NEEDED, "PRIVATE_GTK_REQUEST_NEEDED", "request-needed" },
-            { 0, NULL, NULL }
-        };
-        etype = g_flags_register_static (g_intern_static_string ("GtkPrivateFlags"), values);
-    }
-    return etype;
-}
-
 /* enumerations from "gtkprogressbar.h" */
 GType
 gtk_progress_bar_style_get_type (void)
