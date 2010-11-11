@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cairo Interaction</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="GDK Reference Manual">
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Pango-Interaction.html" title="Pango Interaction">
@@ -55,6 +55,10 @@
                                                          <em class="parameter"><code><a class="link" href="gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a> *pixmap</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> pixmap_x</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> pixmap_y</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-set-source-window" title="gdk_cairo_set_source_window ()">gdk_cairo_set_source_window</a>         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>,
+                                                         <em class="parameter"><code><span class="type">double</span> x</code></em>,
+                                                         <em class="parameter"><code><span class="type">double</span> y</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-rectangle" title="gdk_cairo_rectangle ()">gdk_cairo_rectangle</a>                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRectangle" title="GdkRectangle"><span class="type">GdkRectangle</span></a> *rectangle</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-region" title="gdk_cairo_region ()">gdk_cairo_region</a>                    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
@@ -66,7 +70,7 @@
 <div class="refsect1" title="Description">
 <a name="gdk-Cairo-Interaction.description"></a><h2>Description</h2>
 <p>
-<a href="/usr/share/gtk-doc/html/poppler/.html">Cairo</a> is a graphics
+Cairo is a graphics
 library that supports vector graphics and image compositing that
 can be used with GDK. Since 2.8, GTK+ does most of its drawing
 using Cairo.
@@ -246,6 +250,12 @@ so that the origin of <em class="parameter"><code>pixbuf</code></em> is <em clas
                                                          <em class="parameter"><code><a class="link" href="gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a> *pixmap</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> pixmap_x</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> pixmap_y</code></em>);</pre>
+<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gdk_cairo_set_source_pixmap</code> has been deprecated since version 2.24 and should not be used in newly-written code. This function is being removed in GTK+ 3 (together
+    with <a class="link" href="gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a>). Instead, use <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-set-source-window" title="gdk_cairo_set_source_window ()"><code class="function">gdk_cairo_set_source_window()</code></a> where
+    appropriate.</p>
+</div>
 <p>
 Sets the given pixmap as the source pattern for the Cairo context.
 The pattern has an extend mode of <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-pattern-t.html#CAIRO-EXTEND-NONE:CAPS"><code class="literal">CAIRO_EXTEND_NONE</code></a> and is aligned
@@ -277,6 +287,50 @@ so that the origin of <em class="parameter"><code>pixmap</code></em> is <em clas
 </tbody>
 </table></div>
 <p class="since">Since 2.10</p>
+</div>
+<hr>
+<div class="refsect2" title="gdk_cairo_set_source_window ()">
+<a name="gdk-cairo-set-source-window"></a><h3>gdk_cairo_set_source_window ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_set_source_window         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>,
+                                                         <em class="parameter"><code><span class="type">double</span> x</code></em>,
+                                                         <em class="parameter"><code><span class="type">double</span> y</code></em>);</pre>
+<p>
+Sets the given window as the source pattern for the Cairo context.
+The pattern has an extend mode of <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-pattern-t.html#CAIRO-EXTEND-NONE:CAPS"><code class="literal">CAIRO_EXTEND_NONE</code></a> and is aligned
+so that the origin of <em class="parameter"><code>window</code></em> is <em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em>. The window contains all its
+subwindows when rendering.
+</p>
+<p>
+Note that the contents of <em class="parameter"><code>window</code></em> are undefined outside of the
+visible part of <em class="parameter"><code>window</code></em>, so use this function with care.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cr</code></em> :</span></p></td>
+<td>a <span class="type">Cairo</span> context
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td>a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em> :</span></p></td>
+<td>X coordinate of location to place upper left corner of <em class="parameter"><code>window</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em> :</span></p></td>
+<td>Y coordinate of location to place upper left corner of <em class="parameter"><code>window</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 2.24</p>
 </div>
 <hr>
 <div class="refsect2" title="gdk_cairo_rectangle ()">

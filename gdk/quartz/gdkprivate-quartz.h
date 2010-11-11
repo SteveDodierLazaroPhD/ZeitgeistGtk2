@@ -72,6 +72,7 @@ struct _GdkGCQuartz
   CGFloat           dash_phase;
 
   CGPatternRef      ts_pattern;
+  void             *ts_pattern_info;
 
   guint             is_window : 1;
 };
@@ -208,5 +209,8 @@ void        _gdk_quartz_window_queue_translation (GdkWindow *window,
                                                   gint       dy);
 gboolean    _gdk_quartz_window_queue_antiexpose  (GdkWindow *window,
                                                   GdkRegion *area);
+
+/* Pixmap */
+CGImageRef _gdk_pixmap_get_cgimage (GdkPixmap *pixmap);
 
 #endif /* __GDK_PRIVATE_QUARTZ_H__ */

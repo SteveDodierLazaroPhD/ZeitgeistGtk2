@@ -91,9 +91,6 @@ extern __typeof (gtk_about_dialog_set_copyright) gtk_about_dialog_set_copyright 
 #undef gtk_about_dialog_set_documenters 
 extern __typeof (gtk_about_dialog_set_documenters) gtk_about_dialog_set_documenters __attribute((alias("IA__gtk_about_dialog_set_documenters"), visibility("default")));
 
-#undef gtk_about_dialog_set_email_hook 
-extern __typeof (gtk_about_dialog_set_email_hook) gtk_about_dialog_set_email_hook __attribute((alias("IA__gtk_about_dialog_set_email_hook"), visibility("default")));
-
 #undef gtk_about_dialog_set_license 
 extern __typeof (gtk_about_dialog_set_license) gtk_about_dialog_set_license __attribute((alias("IA__gtk_about_dialog_set_license"), visibility("default")));
 
@@ -106,9 +103,14 @@ extern __typeof (gtk_about_dialog_set_logo_icon_name) gtk_about_dialog_set_logo_
 #undef gtk_about_dialog_set_translator_credits 
 extern __typeof (gtk_about_dialog_set_translator_credits) gtk_about_dialog_set_translator_credits __attribute((alias("IA__gtk_about_dialog_set_translator_credits"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
+#undef gtk_about_dialog_set_email_hook 
+extern __typeof (gtk_about_dialog_set_email_hook) gtk_about_dialog_set_email_hook __attribute((alias("IA__gtk_about_dialog_set_email_hook"), visibility("default")));
+
 #undef gtk_about_dialog_set_url_hook 
 extern __typeof (gtk_about_dialog_set_url_hook) gtk_about_dialog_set_url_hook __attribute((alias("IA__gtk_about_dialog_set_url_hook"), visibility("default")));
 
+#endif
 #undef gtk_about_dialog_set_version 
 extern __typeof (gtk_about_dialog_set_version) gtk_about_dialog_set_version __attribute((alias("IA__gtk_about_dialog_set_version"), visibility("default")));
 
@@ -2220,8 +2222,14 @@ extern __typeof (gtk_combo_box_get_add_tearoffs) gtk_combo_box_get_add_tearoffs 
 #undef gtk_combo_box_get_column_span_column 
 extern __typeof (gtk_combo_box_get_column_span_column) gtk_combo_box_get_column_span_column __attribute((alias("IA__gtk_combo_box_get_column_span_column"), visibility("default")));
 
+#undef gtk_combo_box_get_entry_text_column 
+extern __typeof (gtk_combo_box_get_entry_text_column) gtk_combo_box_get_entry_text_column __attribute((alias("IA__gtk_combo_box_get_entry_text_column"), visibility("default")));
+
 #undef gtk_combo_box_get_focus_on_click 
 extern __typeof (gtk_combo_box_get_focus_on_click) gtk_combo_box_get_focus_on_click __attribute((alias("IA__gtk_combo_box_get_focus_on_click"), visibility("default")));
+
+#undef gtk_combo_box_get_has_entry 
+extern __typeof (gtk_combo_box_get_has_entry) gtk_combo_box_get_has_entry __attribute((alias("IA__gtk_combo_box_get_has_entry"), visibility("default")));
 
 #undef gtk_combo_box_get_model 
 extern __typeof (gtk_combo_box_get_model) gtk_combo_box_get_model __attribute((alias("IA__gtk_combo_box_get_model"), visibility("default")));
@@ -2256,8 +2264,14 @@ extern __typeof (gtk_combo_box_new) gtk_combo_box_new __attribute((alias("IA__gt
 #undef gtk_combo_box_new_text 
 extern __typeof (gtk_combo_box_new_text) gtk_combo_box_new_text __attribute((alias("IA__gtk_combo_box_new_text"), visibility("default")));
 
+#undef gtk_combo_box_new_with_entry 
+extern __typeof (gtk_combo_box_new_with_entry) gtk_combo_box_new_with_entry __attribute((alias("IA__gtk_combo_box_new_with_entry"), visibility("default")));
+
 #undef gtk_combo_box_new_with_model 
 extern __typeof (gtk_combo_box_new_with_model) gtk_combo_box_new_with_model __attribute((alias("IA__gtk_combo_box_new_with_model"), visibility("default")));
+
+#undef gtk_combo_box_new_with_model_and_entry 
+extern __typeof (gtk_combo_box_new_with_model_and_entry) gtk_combo_box_new_with_model_and_entry __attribute((alias("IA__gtk_combo_box_new_with_model_and_entry"), visibility("default")));
 
 #undef gtk_combo_box_popdown 
 extern __typeof (gtk_combo_box_popdown) gtk_combo_box_popdown __attribute((alias("IA__gtk_combo_box_popdown"), visibility("default")));
@@ -2283,6 +2297,9 @@ extern __typeof (gtk_combo_box_set_add_tearoffs) gtk_combo_box_set_add_tearoffs 
 #undef gtk_combo_box_set_column_span_column 
 extern __typeof (gtk_combo_box_set_column_span_column) gtk_combo_box_set_column_span_column __attribute((alias("IA__gtk_combo_box_set_column_span_column"), visibility("default")));
 
+#undef gtk_combo_box_set_entry_text_column 
+extern __typeof (gtk_combo_box_set_entry_text_column) gtk_combo_box_set_entry_text_column __attribute((alias("IA__gtk_combo_box_set_entry_text_column"), visibility("default")));
+
 #undef gtk_combo_box_set_focus_on_click 
 extern __typeof (gtk_combo_box_set_focus_on_click) gtk_combo_box_set_focus_on_click __attribute((alias("IA__gtk_combo_box_set_focus_on_click"), visibility("default")));
 
@@ -2306,8 +2323,37 @@ extern __typeof (gtk_combo_box_set_wrap_width) gtk_combo_box_set_wrap_width __at
 
 #endif
 #endif
+#if IN_HEADER(__GTK_COMBO_BOX_TEXT_H__)
+#if IN_FILE(__GTK_COMBO_BOX_TEXT_C__)
+#undef gtk_combo_box_text_append_text 
+extern __typeof (gtk_combo_box_text_append_text) gtk_combo_box_text_append_text __attribute((alias("IA__gtk_combo_box_text_append_text"), visibility("default")));
+
+#undef gtk_combo_box_text_get_active_text 
+extern __typeof (gtk_combo_box_text_get_active_text) gtk_combo_box_text_get_active_text __attribute((alias("IA__gtk_combo_box_text_get_active_text"), visibility("default")));
+
+#undef gtk_combo_box_text_get_type 
+extern __typeof (gtk_combo_box_text_get_type) gtk_combo_box_text_get_type __attribute((alias("IA__gtk_combo_box_text_get_type"), visibility("default")));
+
+#undef gtk_combo_box_text_insert_text 
+extern __typeof (gtk_combo_box_text_insert_text) gtk_combo_box_text_insert_text __attribute((alias("IA__gtk_combo_box_text_insert_text"), visibility("default")));
+
+#undef gtk_combo_box_text_new 
+extern __typeof (gtk_combo_box_text_new) gtk_combo_box_text_new __attribute((alias("IA__gtk_combo_box_text_new"), visibility("default")));
+
+#undef gtk_combo_box_text_new_with_entry 
+extern __typeof (gtk_combo_box_text_new_with_entry) gtk_combo_box_text_new_with_entry __attribute((alias("IA__gtk_combo_box_text_new_with_entry"), visibility("default")));
+
+#undef gtk_combo_box_text_prepend_text 
+extern __typeof (gtk_combo_box_text_prepend_text) gtk_combo_box_text_prepend_text __attribute((alias("IA__gtk_combo_box_text_prepend_text"), visibility("default")));
+
+#undef gtk_combo_box_text_remove 
+extern __typeof (gtk_combo_box_text_remove) gtk_combo_box_text_remove __attribute((alias("IA__gtk_combo_box_text_remove"), visibility("default")));
+
+#endif
+#endif
 #if IN_HEADER(__GTK_COMBO_BOX_ENTRY_H__)
 #if IN_FILE(__GTK_COMBO_BOX_ENTRY_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_combo_box_entry_get_text_column 
 extern __typeof (gtk_combo_box_entry_get_text_column) gtk_combo_box_entry_get_text_column __attribute((alias("IA__gtk_combo_box_entry_get_text_column"), visibility("default")));
 
@@ -2326,6 +2372,7 @@ extern __typeof (gtk_combo_box_entry_new_with_model) gtk_combo_box_entry_new_wit
 #undef gtk_combo_box_entry_set_text_column 
 extern __typeof (gtk_combo_box_entry_set_text_column) gtk_combo_box_entry_set_text_column __attribute((alias("IA__gtk_combo_box_entry_set_text_column"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_SMART_COMBO_H__)
@@ -5526,9 +5573,11 @@ extern __typeof (gtk_link_button_get_uri) gtk_link_button_get_uri __attribute((a
 #undef gtk_link_button_set_uri 
 extern __typeof (gtk_link_button_set_uri) gtk_link_button_set_uri __attribute((alias("IA__gtk_link_button_set_uri"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_link_button_set_uri_hook 
 extern __typeof (gtk_link_button_set_uri_hook) gtk_link_button_set_uri_hook __attribute((alias("IA__gtk_link_button_set_uri_hook"), visibility("default")));
 
+#endif
 #undef gtk_link_button_get_visited 
 extern __typeof (gtk_link_button_get_visited) gtk_link_button_get_visited __attribute((alias("IA__gtk_link_button_get_visited"), visibility("default")));
 
@@ -6411,22 +6460,28 @@ extern __typeof (gtk_notebook_get_tab_hborder) gtk_notebook_get_tab_hborder __at
 #undef gtk_notebook_get_tab_vborder 
 extern __typeof (gtk_notebook_get_tab_vborder) gtk_notebook_get_tab_vborder __attribute((alias("IA__gtk_notebook_get_tab_vborder"), visibility("default")));
 
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_notebook_set_window_creation_hook 
 extern __typeof (gtk_notebook_set_window_creation_hook) gtk_notebook_set_window_creation_hook __attribute((alias("IA__gtk_notebook_set_window_creation_hook"), visibility("default")));
 
-#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_notebook_get_group_id 
 extern __typeof (gtk_notebook_get_group_id) gtk_notebook_get_group_id __attribute((alias("IA__gtk_notebook_get_group_id"), visibility("default")));
 
 #undef gtk_notebook_set_group_id 
 extern __typeof (gtk_notebook_set_group_id) gtk_notebook_set_group_id __attribute((alias("IA__gtk_notebook_set_group_id"), visibility("default")));
 
-#endif
 #undef gtk_notebook_get_group 
 extern __typeof (gtk_notebook_get_group) gtk_notebook_get_group __attribute((alias("IA__gtk_notebook_get_group"), visibility("default")));
 
 #undef gtk_notebook_set_group 
 extern __typeof (gtk_notebook_set_group) gtk_notebook_set_group __attribute((alias("IA__gtk_notebook_set_group"), visibility("default")));
+
+#endif
+#undef gtk_notebook_get_group_name 
+extern __typeof (gtk_notebook_get_group_name) gtk_notebook_get_group_name __attribute((alias("IA__gtk_notebook_get_group_name"), visibility("default")));
+
+#undef gtk_notebook_set_group_name 
+extern __typeof (gtk_notebook_set_group_name) gtk_notebook_set_group_name __attribute((alias("IA__gtk_notebook_set_group_name"), visibility("default")));
 
 #undef gtk_notebook_get_tab_reorderable 
 extern __typeof (gtk_notebook_get_tab_reorderable) gtk_notebook_get_tab_reorderable __attribute((alias("IA__gtk_notebook_get_tab_reorderable"), visibility("default")));
