@@ -450,7 +450,20 @@ gtk_rc_get_im_module_file (void)
       if (im_module_file)
 	result = g_strdup (im_module_file);
       else
-	result = g_build_filename (GTK_SYSCONFDIR, "gtk-2.0", "gtk.immodules", NULL);
+        {
+#if defined(__linux__) && ( defined(__i386__) || defined (__x86_64__) || defined(__ia64__) )
+# if defined (__i386__)
+         result = g_build_filename (GTK_LIBDIR, "gtk-2.0", GTK_BINARY_VERSION, "gtk.immodules.32", NULL);
+# else
+         result = g_build_filename (GTK_LIBDIR, "gtk-2.0", GTK_BINARY_VERSION, "gtk.immodules.64", NULL);
+# endif
+          /* Prefer compat gtk.immodules file if it's usable. */
+          if (g_file_test(result, G_FILE_TEST_EXISTS))
+            return result;
+          g_free (result);
+#endif
+          result = g_build_filename (GTK_LIBDIR, "gtk-2.0", GTK_BINARY_VERSION, "gtk.immodules", NULL);
+        }
     }
 
   return result;
@@ -522,7 +535,21 @@ gtk_rc_add_initial_default_files (void)
   else
     {
       const gchar *home;
-      str = g_build_filename (GTK_SYSCONFDIR, "gtk-2.0", "gtkrc", NULL);
+#if defined(__linux__) && ( defined(__i386__) || defined (__x86_64__) || defined(__ia64__) )
+# if defined (__i386__)
+      str = g_build_filename (GTK_SYSCONFDIR, "gtk-2.0", "gtkrc.32", NULL);
+# else
+      str = g_build_filename (GTK_SYSCONFDIR, "gtk-2.0", "gtkrc.64", NULL);
+# endif
+      /* Prefer compat gtkrc if it's usable. */
+      if (!g_file_test(str, G_FILE_TEST_EXISTS))
+        {
+          g_free (str), /* continue in next line */
+#endif
+          str = g_build_filename (GTK_SYSCONFDIR, "gtk-2.0", "gtkrc", NULL);
+#if defined(__linux__) && ( defined(__i386__) || defined (__x86_64__) || defined(__ia64__) )
+        }
+#endif
 
       gtk_rc_add_default_file (str);
       g_free (str);
@@ -530,7 +557,21 @@ gtk_rc_add_initial_default_files (void)
       home = g_get_home_dir ();
       if (home)
 	{
-	  str = g_build_filename (home, ".gtkrc-2.0", NULL);
+#if defined(__linux__) && ( defined(__i386__) || defined (__x86_64__) || defined(__ia64__) )
+# if defined (__i386__)
+          str = g_build_filename (home, ".gtkrc-2.0.32", NULL);
+# else
+          str = g_build_filename (home, ".gtkrc-2.0.64", NULL);
+# endif
+          /* Prefer compat .gtkrc-2.0 if it's usable. */
+          if (!g_file_test(str, G_FILE_TEST_EXISTS))
+            {
+              g_free (str), /* continue in next line */
+#endif
+              str = g_build_filename (home, ".gtkrc-2.0", NULL);
+#if defined(__linux__) && ( defined(__i386__) || defined (__x86_64__) || defined(__ia64__) )
+            }
+#endif
 	  gtk_rc_add_default_file (str);
 	  g_free (str);
 	}
@@ -2284,8 +2325,8 @@ gtk_rc_parse_any (GtkRcContext *context,
 			msg = g_strconcat ("e.g. `", sym, "'", NULL);
 		    }
 
-		  if (scanner->token > GTK_RC_TOKEN_INVALID &&
-		      scanner->token < GTK_RC_TOKEN_LAST)
+		  if (scanner->token > (guint) GTK_RC_TOKEN_INVALID &&
+		      scanner->token < (guint) GTK_RC_TOKEN_LAST)
 		    {
 		      symbol_name = "???";
 		      for (i = 0; i < G_N_ELEMENTS (symbols); i++)
@@ -3371,7 +3412,7 @@ static guint
 gtk_rc_parse_xthickness (GScanner   *scanner,
 			 GtkRcStyle *style)
 {
-  if (g_scanner_get_next_token (scanner) != GTK_RC_TOKEN_XTHICKNESS)
+  if (g_scanner_get_next_token (scanner) != (guint) GTK_RC_TOKEN_XTHICKNESS)
     return GTK_RC_TOKEN_XTHICKNESS;
 
   if (g_scanner_get_next_token (scanner) != G_TOKEN_EQUAL_SIGN)
@@ -3389,7 +3430,7 @@ static guint
 gtk_rc_parse_ythickness (GScanner   *scanner,
 			 GtkRcStyle *style)
 {
-  if (g_scanner_get_next_token (scanner) != GTK_RC_TOKEN_YTHICKNESS)
+  if (g_scanner_get_next_token (scanner) != (guint) GTK_RC_TOKEN_YTHICKNESS)
     return GTK_RC_TOKEN_YTHICKNESS;
 
   if (g_scanner_get_next_token (scanner) != G_TOKEN_EQUAL_SIGN)

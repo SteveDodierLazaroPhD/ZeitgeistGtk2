@@ -3340,54 +3340,36 @@ gtk_entry_draw_frame (GtkWidget      *widget,
 }
 
 static void
-gtk_entry_get_progress_border (GtkWidget *widget,
-                               GtkBorder *progress_border)
-{
-  GtkBorder *tmp_border;
-
-  gtk_widget_style_get (widget, "progress-border", &tmp_border, NULL);
-  if (tmp_border)
-    {
-      *progress_border = *tmp_border;
-      gtk_border_free (tmp_border);
-    }
-  else
-    {
-      progress_border->left = widget->style->xthickness;
-      progress_border->right = widget->style->xthickness;
-      progress_border->top = widget->style->ythickness;
-      progress_border->bottom = widget->style->ythickness;
-    }
-}
-
-static void
 get_progress_area (GtkWidget *widget,
-                  gint       *x,
-                  gint       *y,
-                  gint       *width,
-                  gint       *height)
+                   gint       *x,
+                   gint       *y,
+                   gint       *width,
+                   gint       *height)
 {
   GtkEntryPrivate *private = GTK_ENTRY_GET_PRIVATE (widget);
   GtkEntry *entry = GTK_ENTRY (widget);
-  GtkBorder progress_border;
+  GtkBorder *progress_border;
 
-  gtk_entry_get_progress_border (widget, &progress_border);
+  get_text_area_size (entry, x, y, width, height);
 
-  *x = progress_border.left;
-  *y = progress_border.top;
-
-  *width = gdk_window_get_width (widget->window);
-  *height = gdk_window_get_height (widget->window);
-
-  *width -= progress_border.left + progress_border.right;
-  *height -= progress_border.top + progress_border.bottom;
-
-  if (gtk_widget_has_focus (widget) && !private->interior_focus)
+  if (!private->interior_focus)
     {
-      *x += private->focus_width;
-      *y += private->focus_width;
-      *width -= 2 * private->focus_width;
-      *height -= 2 * private->focus_width;
+      *x -= private->focus_width;
+      *y -= private->focus_width;
+      *width += 2 * private->focus_width;
+      *height += 2 * private->focus_width;
+    }
+
+  gtk_widget_style_get (widget, "progress-border", &progress_border, NULL);
+
+  if (progress_border)
+    {
+      *x += progress_border->left;
+      *y += progress_border->top;
+      *width -= progress_border->left + progress_border->right;
+      *height -= progress_border->top + progress_border->bottom;
+
+      gtk_border_free (progress_border);
     }
 
   if (private->progress_pulse_mode)
@@ -8441,8 +8423,8 @@ gtk_entry_set_icon_tooltip_text (GtkEntry             *entry,
 
   priv = GTK_ENTRY_GET_PRIVATE (entry);
 
-  if (!(icon_info = priv->icons[icon_pos]))
-    icon_info = priv->icons[icon_pos];
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
 
   if (icon_info->tooltip)
     g_free (icon_info->tooltip);
@@ -8520,8 +8502,8 @@ gtk_entry_set_icon_tooltip_markup (GtkEntry             *entry,
 
   priv = GTK_ENTRY_GET_PRIVATE (entry);
 
-  if (!(icon_info = priv->icons[icon_pos]))
-    icon_info = priv->icons[icon_pos];
+  if ((icon_info = priv->icons[icon_pos]) == NULL)
+    icon_info = construct_icon_info (GTK_WIDGET (entry), icon_pos);
 
   if (icon_info->tooltip)
     g_free (icon_info->tooltip);
@@ -8951,7 +8933,7 @@ gtk_entry_drag_motion (GtkWidget        *widget,
       gtk_drag_dest_find_target (widget, context, NULL) != GDK_NONE)
     {
       source_widget = gtk_drag_get_source_widget (context);
-      suggested_action = context->suggested_action;
+      suggested_action = gdk_drag_context_get_suggested_action (context);
 
       if (!gtk_editable_get_selection_bounds (GTK_EDITABLE (entry), &sel1, &sel2) ||
           new_position < sel1 || new_position > sel2)
@@ -8961,7 +8943,7 @@ gtk_entry_drag_motion (GtkWidget        *widget,
 	      /* Default to MOVE, unless the user has
 	       * pressed ctrl or alt to affect available actions
 	       */
-	      if ((context->actions & GDK_ACTION_MOVE) != 0)
+	      if ((gdk_drag_context_get_actions (context) & GDK_ACTION_MOVE) != 0)
 	        suggested_action = GDK_ACTION_MOVE;
 	    }
               
@@ -9035,7 +9017,7 @@ gtk_entry_drag_data_received (GtkWidget        *widget,
           end_change (entry);
 	}
       
-      gtk_drag_finish (context, TRUE, context->action == GDK_ACTION_MOVE, time);
+      gtk_drag_finish (context, TRUE, gdk_drag_context_get_selected_action (context) == GDK_ACTION_MOVE, time);
     }
   else
     {

@@ -436,15 +436,6 @@ notification of drags.
 <pre class="programlisting"><a href="http://library.gnome.org/devel/gdk/unstable/gdk-Properties-and-Atoms.html#GdkAtom"><span class="returnvalue">GdkAtom</span></a>             gtk_drag_dest_find_target           (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gdk/unstable/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gtk-Selections.html#GtkTargetList" title="GtkTargetList"><span class="type">GtkTargetList</span></a> *target_list</code></em>);</pre>
-<p>
-Looks for a match between <em class="parameter"><code>context-&gt;targets</code></em> and the
-<em class="parameter"><code>dest_target_list</code></em>, returning the first matching target, otherwise
-returning <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Properties-and-Atoms.html#GDK-NONE:CAPS"><code class="literal">GDK_NONE</code></a>. <em class="parameter"><code>dest_target_list</code></em> should usually be the return
-value from <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-dest-get-target-list" title="gtk_drag_dest_get_target_list ()"><code class="function">gtk_drag_dest_get_target_list()</code></a>, but some widgets may
-have different valid targets for different parts of the widget; in
-that case, they will have to implement a drag_motion handler that
-passes the correct target list to this function.
-</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -461,12 +452,20 @@ passes the correct target list to this function.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>target_list</code></em> :</span></p></td>
 <td> list of droppable targets, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to use
-   gtk_drag_dest_get_target_list (<em class="parameter"><code>widget</code></em>). <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+   gtk_drag_dest_get_target_list (<em class="parameter"><code>widget</code></em>).
+Looks for a match between the supported targets of <em class="parameter"><code>context</code></em> and the
+<em class="parameter"><code>dest_target_list</code></em>, returning the first matching target, otherwise
+returning <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Properties-and-Atoms.html#GDK-NONE:CAPS"><code class="literal">GDK_NONE</code></a>. <em class="parameter"><code>dest_target_list</code></em> should usually be the return
+value from <a class="link" href="gtk-Drag-and-Drop.html#gtk-drag-dest-get-target-list" title="gtk_drag_dest_get_target_list ()"><code class="function">gtk_drag_dest_get_target_list()</code></a>, but some widgets may
+have different valid targets for different parts of the widget; in
+that case, they will have to implement a drag_motion handler that
+passes the correct target list to this function. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> first target that the source offers and the dest can accept, or <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Properties-and-Atoms.html#GDK-NONE:CAPS"><code class="literal">GDK_NONE</code></a>
+<td> first target that the source offers and the dest can
+    accept, or <a href="http://library.gnome.org/devel/gdk/unstable/gdk-Properties-and-Atoms.html#GDK-NONE:CAPS"><code class="literal">GDK_NONE</code></a>
 </td>
 </tr>
 </tbody>

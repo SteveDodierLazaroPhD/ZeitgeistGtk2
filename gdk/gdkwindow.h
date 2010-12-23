@@ -475,6 +475,7 @@ gboolean gdk_window_set_static_gravities (GdkWindow *window,
 					  gboolean   use_static);   
 
 /* Functions to create/lookup windows from their native equivalents */ 
+#if !defined(GDK_DISABLE_DEPRECATED) || defined(GDK_COMPILATION)
 #ifndef GDK_MULTIHEAD_SAFE
 GdkWindow*    gdk_window_foreign_new (GdkNativeWindow anid);
 GdkWindow*    gdk_window_lookup      (GdkNativeWindow anid);
@@ -483,6 +484,7 @@ GdkWindow    *gdk_window_foreign_new_for_display (GdkDisplay      *display,
 						  GdkNativeWindow  anid);
 GdkWindow*    gdk_window_lookup_for_display (GdkDisplay      *display,
 					     GdkNativeWindow  anid);
+#endif
 
 
 /* GdkWindow */
@@ -516,7 +518,9 @@ void gdk_window_set_urgency_hint      (GdkWindow *window,
 void          gdk_window_set_geometry_hints (GdkWindow          *window,
 					     const GdkGeometry  *geometry,
 					     GdkWindowHints      geom_mask);
+#if !defined(GDK_DISABLE_DEPRECATED) || defined(GDK_COMPILATION)
 void          gdk_set_sm_client_id          (const gchar        *sm_client_id);
+#endif
 
 void	      gdk_window_begin_paint_rect   (GdkWindow          *window,
 					     const GdkRectangle *rectangle);

@@ -805,11 +805,18 @@ this function with combo boxes constructed with <a class="link" href="GtkComboBo
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             gtk_combo_box_get_active_text       (<em class="parameter"><code><a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> *combo_box</code></em>);</pre>
 <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
-<p><code class="literal">gtk_combo_box_get_active_text</code> has been deprecated since version 2.24 and should not be used in newly-written code. Use <a class="link" href="GtkComboBoxText.html" title="GtkComboBoxText"><span class="type">GtkComboBoxText</span></a></p>
+<p><code class="literal">gtk_combo_box_get_active_text</code> has been deprecated since version 2.24 and should not be used in newly-written code. If you used this with a <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> constructed with 
+<a class="link" href="GtkComboBox.html#gtk-combo-box-new-text" title="gtk_combo_box_new_text ()"><code class="function">gtk_combo_box_new_text()</code></a> then you should now use <a class="link" href="GtkComboBoxText.html" title="GtkComboBoxText"><span class="type">GtkComboBoxText</span></a> and 
+<a class="link" href="GtkComboBoxText.html#gtk-combo-box-text-get-active-text" title="gtk_combo_box_text_get_active_text ()"><code class="function">gtk_combo_box_text_get_active_text()</code></a> instead. Or if you used this with a
+<a class="link" href="GtkComboBoxEntry.html" title="GtkComboBoxEntry"><span class="type">GtkComboBoxEntry</span></a> then you should now use <a class="link" href="GtkComboBox.html" title="GtkComboBox"><span class="type">GtkComboBox</span></a> with 
+<a class="link" href="GtkComboBox.html#GtkComboBox--has-entry" title='The "has-entry" property'><span class="type">"has-entry"</span></a> as <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> and use
+gtk_entry_get_text (GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combobox))).</p>
 </div>
 <p>
 Returns the currently active string in <em class="parameter"><code>combo_box</code></em> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none
-is selected.
+is selected. Note that you can only use this function with combo
+boxes constructed with <a class="link" href="GtkComboBox.html#gtk-combo-box-new-text" title="gtk_combo_box_new_text ()"><code class="function">gtk_combo_box_new_text()</code></a> and with
+<a class="link" href="GtkComboBoxEntry.html" title="GtkComboBoxEntry"><span class="type">GtkComboBoxEntry</span></a>s.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

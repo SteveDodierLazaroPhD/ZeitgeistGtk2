@@ -168,10 +168,10 @@ extern __typeof (gdk_mbstowcs) gdk_mbstowcs __attribute((alias("IA__gdk_mbstowcs
 #undef gdk_wcstombs 
 extern __typeof (gdk_wcstombs) gdk_wcstombs __attribute((alias("IA__gdk_wcstombs"), visibility("default")));
 
-#endif
 #undef gdk_set_locale 
 extern __typeof (gdk_set_locale) gdk_set_locale __attribute((alias("IA__gdk_set_locale"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GDK_H__)
@@ -310,6 +310,7 @@ extern __typeof (gdk_screen_height_mm) gdk_screen_height_mm __attribute((alias("
 #endif
 #if IN_HEADER(__GDK_PROPERTY_H__)
 #if IN_FILE(__GDK_SELECTION_C__)
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_string_to_compound_text 
 extern __typeof (gdk_string_to_compound_text) gdk_string_to_compound_text __attribute((alias("IA__gdk_string_to_compound_text"), visibility("default")));
 
@@ -322,6 +323,7 @@ extern __typeof (gdk_text_property_to_utf8_list) gdk_text_property_to_utf8_list 
 #undef gdk_utf8_to_compound_text 
 extern __typeof (gdk_utf8_to_compound_text) gdk_utf8_to_compound_text __attribute((alias("IA__gdk_utf8_to_compound_text"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GDK_PROPERTY_H__)
@@ -348,6 +350,7 @@ extern __typeof (gdk_property_get) gdk_property_get __attribute((alias("IA__gdk_
 #endif
 #if IN_HEADER(__GDK_PROPERTY_H__)
 #if IN_FILE(__GDK_SELECTION_X11_C__)
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_free_compound_text 
 extern __typeof (gdk_free_compound_text) gdk_free_compound_text __attribute((alias("IA__gdk_free_compound_text"), visibility("default")));
 
@@ -360,14 +363,34 @@ extern __typeof (gdk_string_to_compound_text_for_display) gdk_string_to_compound
 #undef gdk_text_property_to_text_list_for_display 
 extern __typeof (gdk_text_property_to_text_list_for_display) gdk_text_property_to_text_list_for_display __attribute((alias("IA__gdk_text_property_to_text_list_for_display"), visibility("default")));
 
+#undef gdk_utf8_to_compound_text_for_display 
+extern __typeof (gdk_utf8_to_compound_text_for_display) gdk_utf8_to_compound_text_for_display __attribute((alias("IA__gdk_utf8_to_compound_text_for_display"), visibility("default")));
+
+#endif
 #undef gdk_text_property_to_utf8_list_for_display 
 extern __typeof (gdk_text_property_to_utf8_list_for_display) gdk_text_property_to_utf8_list_for_display __attribute((alias("IA__gdk_text_property_to_utf8_list_for_display"), visibility("default")));
 
 #undef gdk_utf8_to_string_target 
 extern __typeof (gdk_utf8_to_string_target) gdk_utf8_to_string_target __attribute((alias("IA__gdk_utf8_to_string_target"), visibility("default")));
 
-#undef gdk_utf8_to_compound_text_for_display 
-extern __typeof (gdk_utf8_to_compound_text_for_display) gdk_utf8_to_compound_text_for_display __attribute((alias("IA__gdk_utf8_to_compound_text_for_display"), visibility("default")));
+#endif
+#endif
+#if IN_HEADER(__GDK_X_H__)
+#if IN_FILE(__GDK_SELECTION_X11_C__)
+#undef gdk_x11_display_string_to_compound_text 
+extern __typeof (gdk_x11_display_string_to_compound_text) gdk_x11_display_string_to_compound_text __attribute((alias("IA__gdk_x11_display_string_to_compound_text"), visibility("default")));
+
+#undef gdk_x11_display_text_property_to_text_list 
+extern __typeof (gdk_x11_display_text_property_to_text_list) gdk_x11_display_text_property_to_text_list __attribute((alias("IA__gdk_x11_display_text_property_to_text_list"), visibility("default")));
+
+#undef gdk_x11_display_utf8_to_compound_text 
+extern __typeof (gdk_x11_display_utf8_to_compound_text) gdk_x11_display_utf8_to_compound_text __attribute((alias("IA__gdk_x11_display_utf8_to_compound_text"), visibility("default")));
+
+#undef gdk_x11_free_compound_text 
+extern __typeof (gdk_x11_free_compound_text) gdk_x11_free_compound_text __attribute((alias("IA__gdk_x11_free_compound_text"), visibility("default")));
+
+#undef gdk_x11_free_text_list 
+extern __typeof (gdk_x11_free_text_list) gdk_x11_free_text_list __attribute((alias("IA__gdk_x11_free_text_list"), visibility("default")));
 
 #endif
 #endif
@@ -800,6 +823,9 @@ extern __typeof (gdk_device_get_name) gdk_device_get_name __attribute((alias("IA
 #undef gdk_device_get_n_axes 
 extern __typeof (gdk_device_get_n_axes) gdk_device_get_n_axes __attribute((alias("IA__gdk_device_get_n_axes"), visibility("default")));
 
+#undef gdk_device_get_n_keys 
+extern __typeof (gdk_device_get_n_keys) gdk_device_get_n_keys __attribute((alias("IA__gdk_device_get_n_keys"), visibility("default")));
+
 #undef gdk_device_get_source 
 extern __typeof (gdk_device_get_source) gdk_device_get_source __attribute((alias("IA__gdk_device_get_source"), visibility("default")));
 
@@ -1037,10 +1063,10 @@ extern __typeof (gdk_drag_begin) gdk_drag_begin __attribute((alias("IA__gdk_drag
 #undef gdk_drag_context_get_type 
 extern __typeof (gdk_drag_context_get_type) gdk_drag_context_get_type __attribute((alias("IA__gdk_drag_context_get_type"), visibility("default")));
 
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_drag_context_new 
 extern __typeof (gdk_drag_context_new) gdk_drag_context_new __attribute((alias("IA__gdk_drag_context_new"), visibility("default")));
 
-#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_drag_context_ref 
 extern __typeof (gdk_drag_context_ref) gdk_drag_context_ref __attribute((alias("IA__gdk_drag_context_ref"), visibility("default")));
 
@@ -1094,12 +1120,20 @@ extern __typeof (gdk_drag_context_list_targets) gdk_drag_context_list_targets __
 #undef gdk_drag_context_get_source_window 
 extern __typeof (gdk_drag_context_get_source_window) gdk_drag_context_get_source_window __attribute((alias("IA__gdk_drag_context_get_source_window"), visibility("default")));
 
+#undef gdk_drag_context_get_dest_window 
+extern __typeof (gdk_drag_context_get_dest_window) gdk_drag_context_get_dest_window __attribute((alias("IA__gdk_drag_context_get_dest_window"), visibility("default")));
+
+#undef gdk_drag_context_get_protocol 
+extern __typeof (gdk_drag_context_get_protocol) gdk_drag_context_get_protocol __attribute((alias("IA__gdk_drag_context_get_protocol"), visibility("default")));
+
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_drag_find_window 
 extern __typeof (gdk_drag_find_window) gdk_drag_find_window __attribute((alias("IA__gdk_drag_find_window"), visibility("default")));
 
 #undef gdk_drag_get_protocol 
 extern __typeof (gdk_drag_get_protocol) gdk_drag_get_protocol __attribute((alias("IA__gdk_drag_get_protocol"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GDK_DRAWABLE_H__)
@@ -2063,9 +2097,11 @@ extern __typeof (gdk_visual_get_type) gdk_visual_get_type __attribute((alias("IA
 #endif
 #if IN_HEADER(__GDK_X_H__)
 #if IN_FILE(__GDK_EVENTS_X11_C__)
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_net_wm_supports 
 extern __typeof (gdk_net_wm_supports) gdk_net_wm_supports __attribute((alias("IA__gdk_net_wm_supports"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GDK_PANGO_H__)
@@ -2169,6 +2205,9 @@ extern __typeof (gdk_pixmap_colormap_create_from_xpm_d) gdk_pixmap_colormap_crea
 
 #undef gdk_pixmap_create_from_xpm_d 
 extern __typeof (gdk_pixmap_create_from_xpm_d) gdk_pixmap_create_from_xpm_d __attribute((alias("IA__gdk_pixmap_create_from_xpm_d"), visibility("default")));
+
+#undef gdk_pixmap_get_size 
+extern __typeof (gdk_pixmap_get_size) gdk_pixmap_get_size __attribute((alias("IA__gdk_pixmap_get_size"), visibility("default")));
 
 #undef gdk_pixmap_get_type 
 extern __typeof (gdk_pixmap_get_type) gdk_pixmap_get_type __attribute((alias("IA__gdk_pixmap_get_type"), visibility("default")));
@@ -2523,6 +2562,7 @@ extern __typeof (gdk_set_sm_client_id) gdk_set_sm_client_id __attribute((alias("
 #endif
 #if IN_HEADER(__GDK_SPAWN_H__)
 #if IN_FILE(__GDK_SPAWN_X11_C__)
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdk_spawn_command_line_on_screen 
 extern __typeof (gdk_spawn_command_line_on_screen) gdk_spawn_command_line_on_screen __attribute((alias("IA__gdk_spawn_command_line_on_screen"), visibility("default")));
 
@@ -2532,6 +2572,7 @@ extern __typeof (gdk_spawn_on_screen) gdk_spawn_on_screen __attribute((alias("IA
 #undef gdk_spawn_on_screen_with_pipes 
 extern __typeof (gdk_spawn_on_screen_with_pipes) gdk_spawn_on_screen_with_pipes __attribute((alias("IA__gdk_spawn_on_screen_with_pipes"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GDK_PRIVATE_H__)
@@ -2740,6 +2781,9 @@ extern __typeof (gdk_x11_grab_server) gdk_x11_grab_server __attribute((alias("IA
 #undef gdk_x11_ungrab_server 
 extern __typeof (gdk_x11_ungrab_server) gdk_x11_ungrab_server __attribute((alias("IA__gdk_x11_ungrab_server"), visibility("default")));
 
+#undef gdk_x11_set_sm_client_id 
+extern __typeof (gdk_x11_set_sm_client_id) gdk_x11_set_sm_client_id __attribute((alias("IA__gdk_x11_set_sm_client_id"), visibility("default")));
+
 #endif
 #if IN_FILE(__GDK_EVENTS_X11_C__)
 #undef gdk_x11_get_server_time 
@@ -2781,9 +2825,11 @@ extern __typeof (gdk_x11_screen_lookup_visual) gdk_x11_screen_lookup_visual __at
 #undef gdk_x11_visual_get_xvisual 
 extern __typeof (gdk_x11_visual_get_xvisual) gdk_x11_visual_get_xvisual __attribute((alias("IA__gdk_x11_visual_get_xvisual"), visibility("default")));
 
+#ifndef GDK_DISABLE_DEPRECATED
 #undef gdkx_visual_get 
 extern __typeof (gdkx_visual_get) gdkx_visual_get __attribute((alias("IA__gdkx_visual_get"), visibility("default")));
 
+#endif
 #endif
 #if IN_FILE(__GDK_WINDOW_X11_C__)
 #undef gdk_x11_window_set_user_time 
@@ -2791,6 +2837,12 @@ extern __typeof (gdk_x11_window_set_user_time) gdk_x11_window_set_user_time __at
 
 #undef gdk_x11_window_move_to_current_desktop 
 extern __typeof (gdk_x11_window_move_to_current_desktop) gdk_x11_window_move_to_current_desktop __attribute((alias("IA__gdk_x11_window_move_to_current_desktop"), visibility("default")));
+
+#undef gdk_x11_window_foreign_new_for_display 
+extern __typeof (gdk_x11_window_foreign_new_for_display) gdk_x11_window_foreign_new_for_display __attribute((alias("IA__gdk_x11_window_foreign_new_for_display"), visibility("default")));
+
+#undef gdk_x11_window_lookup_for_display 
+extern __typeof (gdk_x11_window_lookup_for_display) gdk_x11_window_lookup_for_display __attribute((alias("IA__gdk_x11_window_lookup_for_display"), visibility("default")));
 
 #endif
 #if IN_FILE(__GDK_XID_C__)

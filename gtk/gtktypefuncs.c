@@ -174,7 +174,6 @@
 *tp++ = gtk_hbox_get_type();
 *tp++ = gtk_hbutton_box_get_type();
 *tp++ = gtk_hpaned_get_type();
-*tp++ = gtk_hruler_get_type();
 *tp++ = gtk_hscale_get_type();
 *tp++ = gtk_hscrollbar_get_type();
 *tp++ = gtk_hseparator_get_type();
@@ -279,7 +278,6 @@
 *tp++ = gtk_requisition_get_type();
 *tp++ = gtk_resize_mode_get_type();
 *tp++ = gtk_response_type_get_type();
-*tp++ = gtk_ruler_get_type();
 *tp++ = gtk_scale_button_get_type();
 *tp++ = gtk_scale_get_type();
 *tp++ = gtk_scrollbar_get_type();
@@ -371,7 +369,6 @@
 *tp++ = gtk_visibility_get_type();
 *tp++ = gtk_volume_button_get_type();
 *tp++ = gtk_vpaned_get_type();
-*tp++ = gtk_vruler_get_type();
 *tp++ = gtk_vscale_get_type();
 *tp++ = gtk_vscrollbar_get_type();
 *tp++ = gtk_vseparator_get_type();

@@ -4456,12 +4456,14 @@ extern __typeof (gtk_hpaned_new) IA__gtk_hpaned_new __attribute((visibility("hid
 #endif
 #if IN_HEADER(__GTK_HRULER_H__)
 #if IN_FILE(__GTK_HRULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_hruler_get_type) IA__gtk_hruler_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_hruler_get_type IA__gtk_hruler_get_type
 
 extern __typeof (gtk_hruler_new) IA__gtk_hruler_new __attribute((visibility("hidden")));
 #define gtk_hruler_new IA__gtk_hruler_new
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_HSCALE_H__)
@@ -5776,6 +5778,9 @@ extern __typeof (gtk_get_current_event_time) IA__gtk_get_current_event_time __at
 extern __typeof (gtk_exit) IA__gtk_exit __attribute((visibility("hidden")));
 #define gtk_exit IA__gtk_exit
 
+extern __typeof (gtk_set_locale) IA__gtk_set_locale __attribute((visibility("hidden")));
+#define gtk_set_locale IA__gtk_set_locale
+
 extern __typeof (gtk_idle_add) IA__gtk_idle_add __attribute((visibility("hidden")));
 #define gtk_idle_add IA__gtk_idle_add
 
@@ -5818,9 +5823,6 @@ extern __typeof (gtk_events_pending) IA__gtk_events_pending __attribute((visibil
 
 extern __typeof (gtk_disable_setlocale) IA__gtk_disable_setlocale __attribute((visibility("hidden")));
 #define gtk_disable_setlocale IA__gtk_disable_setlocale
-
-extern __typeof (gtk_set_locale) IA__gtk_set_locale __attribute((visibility("hidden")));
-#define gtk_set_locale IA__gtk_set_locale
 
 extern __typeof (gtk_check_version) IA__gtk_check_version __attribute((visibility("hidden")));
 #define gtk_check_version IA__gtk_check_version
@@ -8640,6 +8642,7 @@ extern __typeof (gtk_text_buffer_unregister_serialize_format) IA__gtk_text_buffe
 #endif
 #if IN_HEADER(__GTK_RULER_H__)
 #if IN_FILE(__GTK_RULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_ruler_draw_pos) IA__gtk_ruler_draw_pos __attribute((visibility("hidden")));
 #define gtk_ruler_draw_pos IA__gtk_ruler_draw_pos
 
@@ -8661,6 +8664,7 @@ extern __typeof (gtk_ruler_set_metric) IA__gtk_ruler_set_metric __attribute((vis
 extern __typeof (gtk_ruler_set_range) IA__gtk_ruler_set_range __attribute((visibility("hidden")));
 #define gtk_ruler_set_range IA__gtk_ruler_set_range
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_SCALE_H__)
@@ -12150,12 +12154,14 @@ extern __typeof (gtk_vpaned_new) IA__gtk_vpaned_new __attribute((visibility("hid
 #endif
 #if IN_HEADER(__GTK_VRULER_H__)
 #if IN_FILE(__GTK_VRULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 extern __typeof (gtk_vruler_get_type) IA__gtk_vruler_get_type __attribute((visibility("hidden"))) G_GNUC_CONST;
 #define gtk_vruler_get_type IA__gtk_vruler_get_type
 
 extern __typeof (gtk_vruler_new) IA__gtk_vruler_new __attribute((visibility("hidden")));
 #define gtk_vruler_new IA__gtk_vruler_new
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_VSCALE_H__)

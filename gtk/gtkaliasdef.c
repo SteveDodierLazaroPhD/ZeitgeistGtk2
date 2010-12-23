@@ -4459,12 +4459,14 @@ extern __typeof (gtk_hpaned_new) gtk_hpaned_new __attribute((alias("IA__gtk_hpan
 #endif
 #if IN_HEADER(__GTK_HRULER_H__)
 #if IN_FILE(__GTK_HRULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_hruler_get_type 
 extern __typeof (gtk_hruler_get_type) gtk_hruler_get_type __attribute((alias("IA__gtk_hruler_get_type"), visibility("default")));
 
 #undef gtk_hruler_new 
 extern __typeof (gtk_hruler_new) gtk_hruler_new __attribute((alias("IA__gtk_hruler_new"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_HSCALE_H__)
@@ -5779,6 +5781,9 @@ extern __typeof (gtk_get_current_event_time) gtk_get_current_event_time __attrib
 #undef gtk_exit 
 extern __typeof (gtk_exit) gtk_exit __attribute((alias("IA__gtk_exit"), visibility("default")));
 
+#undef gtk_set_locale 
+extern __typeof (gtk_set_locale) gtk_set_locale __attribute((alias("IA__gtk_set_locale"), visibility("default")));
+
 #undef gtk_idle_add 
 extern __typeof (gtk_idle_add) gtk_idle_add __attribute((alias("IA__gtk_idle_add"), visibility("default")));
 
@@ -5821,9 +5826,6 @@ extern __typeof (gtk_events_pending) gtk_events_pending __attribute((alias("IA__
 
 #undef gtk_disable_setlocale 
 extern __typeof (gtk_disable_setlocale) gtk_disable_setlocale __attribute((alias("IA__gtk_disable_setlocale"), visibility("default")));
-
-#undef gtk_set_locale 
-extern __typeof (gtk_set_locale) gtk_set_locale __attribute((alias("IA__gtk_set_locale"), visibility("default")));
 
 #undef gtk_check_version 
 extern __typeof (gtk_check_version) gtk_check_version __attribute((alias("IA__gtk_check_version"), visibility("default")));
@@ -8643,6 +8645,7 @@ extern __typeof (gtk_text_buffer_unregister_serialize_format) gtk_text_buffer_un
 #endif
 #if IN_HEADER(__GTK_RULER_H__)
 #if IN_FILE(__GTK_RULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_ruler_draw_pos 
 extern __typeof (gtk_ruler_draw_pos) gtk_ruler_draw_pos __attribute((alias("IA__gtk_ruler_draw_pos"), visibility("default")));
 
@@ -8664,6 +8667,7 @@ extern __typeof (gtk_ruler_set_metric) gtk_ruler_set_metric __attribute((alias("
 #undef gtk_ruler_set_range 
 extern __typeof (gtk_ruler_set_range) gtk_ruler_set_range __attribute((alias("IA__gtk_ruler_set_range"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_SCALE_H__)
@@ -12153,12 +12157,14 @@ extern __typeof (gtk_vpaned_new) gtk_vpaned_new __attribute((alias("IA__gtk_vpan
 #endif
 #if IN_HEADER(__GTK_VRULER_H__)
 #if IN_FILE(__GTK_VRULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 #undef gtk_vruler_get_type 
 extern __typeof (gtk_vruler_get_type) gtk_vruler_get_type __attribute((alias("IA__gtk_vruler_get_type"), visibility("default")));
 
 #undef gtk_vruler_new 
 extern __typeof (gtk_vruler_new) gtk_vruler_new __attribute((alias("IA__gtk_vruler_new"), visibility("default")));
 
+#endif
 #endif
 #endif
 #if IN_HEADER(__GTK_VSCALE_H__)
