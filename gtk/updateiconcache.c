@@ -660,7 +660,7 @@ scan_directory (const gchar *base_path,
 		      directories = g_list_append (directories, g_strdup (subdir));
 		    }
 		  else
-		    continue;
+		    dir_index = 0xffff;
 		}
 		
 	      image = g_new0 (Image, 1);
@@ -1424,30 +1424,6 @@ validate_file (const gchar *file)
   return TRUE;
 }
 
-/**
- * safe_fclose:
- * @f: A FILE* stream, must have underlying fd
- *
- * Unix defaults for data preservation after system crash 
- * are unspecified, and many systems will eat your data
- * in this situation unless you explicitly fsync().
- *
- * Returns: %TRUE on success, %FALSE on failure, and will set errno()
- */
-static gboolean
-safe_fclose (FILE *f)
-{
-  int fd = fileno (f);
-  g_assert (fd >= 0);
-  if (fflush (f) == EOF)
-    return FALSE;
-  if (fsync (fd) < 0)
-    return FALSE;
-  if (fclose (f) == EOF)
-    return FALSE;
-  return TRUE;
-}
-
 static void
 build_cache (const gchar *path)
 {
@@ -1456,6 +1432,7 @@ build_cache (const gchar *path)
   gchar *bak_cache_path = NULL;
 #endif
   GHashTable *files;
+  gboolean retval;
   FILE *cache;
   struct stat path_stat, cache_stat;
   struct utimbuf utime_buf;
@@ -1513,23 +1490,18 @@ opentmp:
     }
     
   /* FIXME: Handle failure */
-  if (!write_file (cache, files, directories))
-    {
-      g_unlink (tmp_cache_path);
-      exit (1);
-    }
-
-  if (!safe_fclose (cache))
-    {
-      g_printerr (_("Failed to write cache file: %s\n"), g_strerror (errno));
-      g_unlink (tmp_cache_path);
-      exit (1);
-    }
-  cache = NULL;
+  retval = write_file (cache, files, directories);
+  fclose (cache);
 
   g_list_foreach (directories, (GFunc)g_free, NULL);
   g_list_free (directories);
   
+  if (!retval)
+    {
+      g_unlink (tmp_cache_path);
+      exit (1);
+    }
+
   if (!validate_file (tmp_cache_path))
     {
       g_printerr (_("The generated cache was invalid.\n"));

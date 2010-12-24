@@ -2,8 +2,8 @@
 <HTML
 ><HEAD
 ><TITLE
->How do I attach data to some GTK+ object/widget?
-[GTK 2.x]</TITLE
+>Why doesn't my widget (e.g. progressbar)
+update? [GTK 2.x]</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -12,15 +12,15 @@ TITLE="GTK+ FAQ"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="Development with GTK+: general questions"
-HREF="c466.html"><LINK
+HREF="c475.html"><LINK
 REL="PREVIOUS"
-TITLE="Why doesn't my widget (e.g. progressbar)
-update? [GTK 2.x]"
-HREF="x592.html"><LINK
+TITLE="How do I make my window modal? / How do I make a single
+window active?"
+HREF="x596.html"><LINK
 REL="NEXT"
-TITLE="How do I remove the data I have attached to an
-object?"
-HREF="x614.html"></HEAD
+TITLE="How do I attach data to some GTK+ object/widget?
+[GTK 2.x]"
+HREF="x610.html"></HEAD
 ><BODY
 CLASS="SECT1"
 BGCOLOR="#FFFFFF"
@@ -48,7 +48,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x592.html"
+HREF="x596.html"
 ACCESSKEY="P"
 >&#60;&#60;&#60; Previous</A
 ></TD
@@ -62,7 +62,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x614.html"
+HREF="x610.html"
 ACCESSKEY="N"
 >Next &#62;&#62;&#62;</A
 ></TD
@@ -77,30 +77,25 @@ CLASS="SECT1"
 CLASS="SECT1"
 ><A
 NAME="AEN601"
->How do I attach data to some GTK+ object/widget?
-<I
+>Why doesn't my widget (e.g. progressbar)
+update? <I
 CLASS="EMPHASIS"
 >[GTK 2.x]</I
 ></A
 ></H1
 ><P
->First of all, the attached data is stored in the
-object_data field of a GtkObject. The type of this field is
-GData, which is defined in glib.h.  So you should read the
-gdataset.c file in your glib source directory very
-carefully.</P
-><P
->There are two (easy) ways to attach some data to a gtk
-object.  Using <TT
+>You are probably doing all the changes within a function without
+returning control to <TT
 CLASS="LITERAL"
->g_object_set_data()</TT
-> and
-<TT
+>gtk_main()</TT
+>. This may
+be the case if you do some lengthy calculation in your
+code. Most drawing updates are only placed on a queue, which
+is processed within <TT
 CLASS="LITERAL"
->g_object_get_data()</TT
-> seems to be the most
-common way to do this, as it provides a powerful interface to
-connect objects and data.</P
+>gtk_main()</TT
+>. You can force the
+drawing queue to be processed using something like:</P
 ><TABLE
 BORDER="0"
 BGCOLOR="#E0E0E0"
@@ -109,46 +104,16 @@ WIDTH="100%"
 ><TD
 ><PRE
 CLASS="PROGRAMLISTING"
->void g_object_set_data(GObject *object, const gchar *key, gpointer data);
-
-gpointer g_object_get_data(GObject *object, const gchar *key);</PRE
+>while (g_main_context_iteration(NULL, FALSE));</PRE
 ></TD
 ></TR
 ></TABLE
 ><P
->Since a short example is better than any lengthy speech:</P
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
-CLASS="PROGRAMLISTING"
->struct my_struct	p1,p2,*result;
-GtkWidget		*w;
-
-g_object_set_data(G_OBJECT(w),"p1 data",(gpointer)&#38;p1);
-g_object_set_data(G_OBJECT(w),"p2 data",(gpointer)&#38;p2);
-
-result = g_object_get_data(G_OBJECT(w),"p1 data");</PRE
-></TD
-></TR
-></TABLE
+>inside you're function that changes the widget.</P
 ><P
->The <TT
-CLASS="LITERAL"
->gtk_object_set_user_data()</TT
-> and
-<TT
-CLASS="LITERAL"
->gtk_object_get_user_data()</TT
-> functions does
-exactly the same thing as the functions above, but does not
-let you specify the "key" parameter.Instead, it uses a
-standard "user_data" key. Note that the use of these functions
-is deprecated in 1.2. They only provide a compatibility mode
-with some old gtk packages.</P
+>What the above snippet does is run all pending events
+and high priority idle functions, then return immediately
+(the drawing is done in a high priority idle function).</P
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -166,7 +131,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x592.html"
+HREF="x596.html"
 ACCESSKEY="P"
 >&#60;&#60;&#60; Previous</A
 ></TD
@@ -184,7 +149,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x614.html"
+HREF="x610.html"
 ACCESSKEY="N"
 >Next &#62;&#62;&#62;</A
 ></TD
@@ -194,17 +159,14 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->Why doesn't my widget (e.g. progressbar)
-update? <I
-CLASS="EMPHASIS"
->[GTK 2.x]</I
-></TD
+>How do I make my window modal? / How do I make a single
+window active?</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c466.html"
+HREF="c475.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -212,8 +174,11 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->How do I remove the data I have attached to an
-object?</TD
+>How do I attach data to some GTK+ object/widget?
+<I
+CLASS="EMPHASIS"
+>[GTK 2.x]</I
+></TD
 ></TR
 ></TABLE
 ></DIV

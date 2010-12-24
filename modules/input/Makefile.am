@@ -176,11 +176,7 @@ dist_imconffile_DATA = im-multipress.conf
 if CROSS_COMPILING
 RUN_QUERY_IMMODULES_TEST=false
 else
-if ENABLE_STATIC
-RUN_QUERY_IMMODULES_TEST=false
-else
 RUN_QUERY_IMMODULES_TEST=test -z "$(DESTDIR)"
-endif
 endif
 
 # Running this if cross compiling or if DESTDIR is set is going to
@@ -242,18 +238,7 @@ noinst_LTLIBRARIES =				\
 included-modules: $(noinst_LTLIBRARIES)
 
 gtk.immodules: Makefile.am $(module_LTLIBRARIES)
-	@if $(RUN_QUERY_IMMODULES_TEST) ; then \
-	  echo "$(top_builddir)/gtk/gtk-query-immodules-2.0 > gtk.immodules" ; \
-	$(top_builddir)/gtk/gtk-query-immodules-2.0 $(module_LTLIBRARIES) > gtk.immodules; \
-	else \
-	  echo "***" ; \
-	  echo "*** Warning: gtk.immodules not built" ; \
-	  echo "***" ; \
-	  echo "*** Generate this file manually on host" ; \
-	  echo "*** system using gtk-query-immodules-2.0" ; \
-	  echo "***" ; \
-	  touch gtk.immodules; \
-        fi
+	$(top_builddir)/gtk/gtk-query-immodules-2.0 $(module_LTLIBRARIES) > gtk.immodules
 
 CLEANFILES = gtk.immodules
 

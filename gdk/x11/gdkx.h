@@ -127,10 +127,8 @@ gint     gdk_x11_get_default_screen       (void);
 
 GdkVisual* gdk_x11_screen_lookup_visual (GdkScreen *screen,
 					 VisualID   xvisualid);
-#ifndef GDK_DISABLE_DEPRECATED
 #ifndef GDK_MULTIHEAD_SAFE
 GdkVisual* gdkx_visual_get            (VisualID   xvisualid);
-#endif
 #endif
 
 #ifdef GDK_ENABLE_BROKEN
@@ -141,10 +139,9 @@ GdkColormap* gdkx_colormap_get (Colormap xcolormap);
 GdkColormap *gdk_x11_colormap_foreign_new (GdkVisual *visual,
 					   Colormap   xcolormap);
 
-#if !defined (GDK_DISABLE_DEPRECATED) || defined (GDK_COMPILATION)
+     /* Return the Gdk* for a particular XID */
 gpointer      gdk_xid_table_lookup_for_display (GdkDisplay *display,
 						XID         xid);
-#endif
 guint32       gdk_x11_get_server_time  (GdkWindow       *window);
 guint32       gdk_x11_display_get_user_time (GdkDisplay *display);
 
@@ -166,10 +163,8 @@ XID      gdk_x11_screen_get_monitor_output   (GdkScreen *screen,
                                               gint       monitor_num);
 
 #ifndef GDK_MULTIHEAD_SAFE
-#ifndef GDK_DISABLE_DEPRECATED
 gpointer      gdk_xid_table_lookup   (XID              xid);
 gboolean      gdk_net_wm_supports    (GdkAtom    property);
-#endif
 void          gdk_x11_grab_server    (void);
 void          gdk_x11_ungrab_server  (void);
 #endif
@@ -221,35 +216,6 @@ G_CONST_RETURN char *gdk_x11_font_get_name     (GdkFont *font);
 
 #endif /* GDK_MULTIHEAD_SAFE */
 #endif /* GDK_DISABLE_DEPRECATED */
-
-void        gdk_x11_set_sm_client_id (const gchar *sm_client_id);
-
-GdkWindow  *gdk_x11_window_foreign_new_for_display (GdkDisplay *display,
-                                                    Window      window);
-GdkWindow  *gdk_x11_window_lookup_for_display      (GdkDisplay *display,
-                                                    Window      window);
-
-gint     gdk_x11_display_text_property_to_text_list (GdkDisplay   *display,
-                                                     GdkAtom       encoding,
-                                                     gint          format,
-                                                     const guchar *text,
-                                                     gint          length,
-                                                     gchar      ***list);
-void     gdk_x11_free_text_list                     (gchar       **list);
-gint     gdk_x11_display_string_to_compound_text    (GdkDisplay   *display,
-                                                     const gchar  *str,
-                                                     GdkAtom      *encoding,
-                                                     gint         *format,
-                                                     guchar      **ctext,
-                                                     gint         *length);
-gboolean gdk_x11_display_utf8_to_compound_text      (GdkDisplay   *display,
-                                                     const gchar  *str,
-                                                     GdkAtom      *encoding,
-                                                     gint         *format,
-                                                     guchar      **ctext,
-                                                     gint         *length);
-void     gdk_x11_free_compound_text                 (guchar       *ctext);
-
 
 G_END_DECLS
 

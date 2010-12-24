@@ -49,8 +49,6 @@ INCLUDES =						\
 	-I$(top_srcdir) -I../gdk			\
 	-I$(top_srcdir)/gdk				\
 	-DGDK_DISABLE_DEPRECATED			\
-	-DMAEMO_CHANGES					\
-	-DGTK_FILE_CHOOSER_ENABLE_UNSUPPORTED		\
 	-DGTK_DISABLE_DEPRECATED			\
 	-DGTK_FILE_SYSTEM_ENABLE_UNSUPPORTED		\
 	-DGTK_PRINT_BACKEND_ENABLE_UNSUPPORTED		\
@@ -250,8 +248,6 @@ gtk_public_h_sources =          \
 	gtkmenu.h		\
 	gtkmenubar.h		\
 	gtkmenuitem.h		\
-	ubuntumenuproxy.h	\
-	ubuntumenuproxymodule.h	\
 	gtkmenushell.h		\
 	gtkmenutoolbutton.h	\
 	gtkmessagedialog.h	\
@@ -361,16 +357,12 @@ endif
 # Installed header files without compatibility guarantees
 # that are not included in gtk/gtk.h
 gtk_semi_private_h_sources =    \
-	gtktextlayout.h         \
-	gtkfilesystem.h		\
-	gtkfilesystemmodel.h	\
-	gtkfilechooserprivate.h	\
-	gtkfilechooserutils.h	\
-	gtkquery.h		\
-	gtksearchengine.h
+	gtktextlayout.h
 
 # GTK+ header files that don't get installed
 gtk_private_h_sources =		\
+	gtkquery.h		\
+	gtksearchengine.h	\
 	gtksearchenginesimple.h	\
 	gtkdndcursors.h		\
 	gtkentryprivate.h	\
@@ -379,7 +371,11 @@ gtk_private_h_sources =		\
 	gtkfilechooserdefault.h	\
 	gtkfilechooserembed.h	\
 	gtkfilechooserentry.h	\
+	gtkfilechooserprivate.h	\
 	gtkfilechoosersettings.h \
+	gtkfilechooserutils.h	\
+	gtkfilesystem.h		\
+	gtkfilesystemmodel.h	\
 	gtkiconcache.h		\
 	gtkimcontextsimpleseqs.h   \
 	gtkintl.h		\
@@ -522,8 +518,6 @@ gtk_base_c_sources =            \
 	gtkmenu.c		\
 	gtkmenubar.c		\
 	gtkmenuitem.c		\
-	ubuntumenuproxy.c	\
-	ubuntumenuproxymodule.c	\
 	gtkmenushell.c		\
 	gtkmenutoolbutton.c	\
 	gtkmessagedialog.c	\
@@ -1011,7 +1005,6 @@ Gtk_2_0_gir_CFLAGS = \
 		-DGTK_TEXT_USE_INTERNAL_UNSUPPORTED_API
 Gtk_2_0_gir_LIBS = $(gtktargetlib)
 Gtk_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
-Gtk_2_0_gir_PACKAGES = gtk+-2.0
 INTROSPECTION_GIRS += Gtk-2.0.gir
 
 girdir = $(datadir)/gir-1.0

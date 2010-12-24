@@ -4102,7 +4102,7 @@ gtk_icon_view_move_cursor_up_down (GtkIconView *icon_view,
   gint cell;
   gboolean dirty = FALSE;
   gint step;
-  GtkDirectionType direction;
+  GtkTextDirection direction;
   
   if (!gtk_widget_has_focus (GTK_WIDGET (icon_view)))
     return;
@@ -6763,7 +6763,7 @@ out:
     {
       GtkWidget *source_widget;
 
-      *suggested_action = gdk_drag_context_get_suggested_action (context);
+      *suggested_action = context->suggested_action;
       source_widget = gtk_drag_get_source_widget (context);
 
       if (source_widget == widget)
@@ -6771,7 +6771,7 @@ out:
           /* Default to MOVE, unless the user has
            * pressed ctrl or shift to affect available actions
            */
-          if ((gdk_drag_context_get_actions (context) & GDK_ACTION_MOVE) != 0)
+          if ((context->actions & GDK_ACTION_MOVE) != 0)
             *suggested_action = GDK_ACTION_MOVE;
         }
 
@@ -7224,7 +7224,7 @@ gtk_icon_view_drag_data_received (GtkWidget        *widget,
 
   gtk_drag_finish (context,
                    accepted,
-                   (gdk_drag_context_get_selected_action (context) == GDK_ACTION_MOVE),
+                   (context->action == GDK_ACTION_MOVE),
                    time);
 
   gtk_tree_path_free (dest_row);

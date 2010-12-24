@@ -736,13 +736,6 @@ GdkWindow *
 gdk_window_foreign_new_for_display (GdkDisplay      *display,
                                     GdkNativeWindow  anid)
 {
-  return gdk_win32_window_foreign_new_for_display (display, anid);
-}
-
-GdkWindow *
-gdk_win32_window_foreign_new_for_display (GdkDisplay      *display,
-                                          GdkNativeWindow  anid)
-{
   GdkWindow *window;
   GdkWindowObject *private;
   GdkWindowImplWin32 *impl;
@@ -3646,13 +3639,6 @@ gdk_win32_window_shape_combine_region (GdkWindow       *window,
 GdkWindow *
 gdk_window_lookup_for_display (GdkDisplay      *display,
                                GdkNativeWindow  anid)
-{
-  return gdk_win32_window_lookup_for_display (display, anid);
-}
-
-GdkWindow *
-gdk_win32_window_lookup_for_display (GdkDisplay      *display,
-                                     GdkNativeWindow  anid)
 {
   g_return_val_if_fail (display == _gdk_display, NULL);
 

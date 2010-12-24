@@ -793,8 +793,6 @@ construct_widgets (GtkPrinterOptionWidget *widget)
         priv->entry = gtk_entry_new ();
         priv->combo = gtk_file_chooser_button_new (source->display_text,
                                                    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (priv->combo),
-                                                   g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS));
 
         g_object_set (priv->combo, "local-only", FALSE, NULL);
         gtk_entry_set_activates_default (GTK_ENTRY (priv->entry),

@@ -21,14 +21,6 @@
 #ifndef __GTK_FILE_CHOOSER_PRIVATE_H__
 #define __GTK_FILE_CHOOSER_PRIVATE_H__
 
-/* This is a "semi-private" header; it is meant only for
- * alternate GtkFileChooser implementations; no stability guarantees 
- * are made at this point
- */
-#ifndef GTK_FILE_CHOOSER_ENABLE_UNSUPPORTED
-#error "gtkfilechooserprivate.h is not supported API for general use"
-#endif
-
 #include "gtkfilechooser.h"
 #include "gtkfilesystem.h"
 #include "gtkfilesystemmodel.h"
@@ -280,8 +272,6 @@ struct _GtkFileChooserDefault
 
   gulong settings_signal_id;
   int icon_size;
-
-  GSource *focus_entry_idle;
 
   gulong toplevel_set_focus_id;
   GtkWidget *toplevel_last_focus_widget;

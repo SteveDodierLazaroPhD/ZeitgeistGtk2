@@ -1118,8 +1118,6 @@ gtk_exit (gint errorcode)
  * result of the setlocale(); it is also used on other machines, such as 
  * Windows, where the C library returns a different result. The string is 
  * owned by GTK+ and should not be modified or freed.
- *
- * Deprecated: 2.24: Use setlocale() directly
  **/
 gchar *
 gtk_set_locale (void)
@@ -1845,14 +1843,9 @@ gtk_grab_add (GtkWidget *widget)
 {
   GtkWindowGroup *group;
   GtkWidget *old_grab_widget;
-  GtkWidget *toplevel;
-
+  
   g_return_if_fail (widget != NULL);
-
-  toplevel = gtk_widget_get_toplevel (widget);
-  if (toplevel && gdk_window_get_window_type (toplevel->window) == GDK_WINDOW_OFFSCREEN)
-    return;
-
+  
   if (!gtk_widget_has_grab (widget) && gtk_widget_is_sensitive (widget))
     {
       _gtk_widget_set_has_grab (widget, TRUE);

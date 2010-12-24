@@ -38,8 +38,6 @@
 #error "Only <gtk/gtk.h> can be included directly."
 #endif
 
-#ifndef GTK_DISABLE_DEPRECATED
-
 #ifndef __GTK_RULER_H__
 #define __GTK_RULER_H__
 
@@ -132,5 +130,3 @@ void            gtk_ruler_draw_pos   (GtkRuler       *ruler);
 G_END_DECLS
 
 #endif /* __GTK_RULER_H__ */
-
-#endif /* GTK_DISABLE_DEPRECATED */

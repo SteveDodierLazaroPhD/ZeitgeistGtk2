@@ -37,7 +37,6 @@
 #include "gtkmenubar.h"
 #include "gtkmenuitem.h"
 #include "gtkmenushell.h"
-#include "ubuntumenuproxy.h"
 #include "gtkmnemonichash.h"
 #include "gtktearoffmenuitem.h"
 #include "gtkwindow.h"
@@ -65,8 +64,7 @@ enum {
 
 enum {
   PROP_0,
-  PROP_TAKE_FOCUS,
-  PROP_LOCAL
+  PROP_TAKE_FOCUS
 };
 
 /* Terminology:
@@ -136,9 +134,6 @@ struct _GtkMenuShellPrivate
 {
   GtkMnemonicHash *mnemonic_hash;
   GtkKeyHash *key_hash;
-
-  UbuntuMenuProxy *proxy;
-  gboolean         local;
 
   guint take_focus : 1;
   guint activated_submenu : 1;
@@ -386,22 +381,6 @@ gtk_menu_shell_class_init (GtkMenuShellClass *klass)
 							 TRUE,
 							 GTK_PARAM_READWRITE));
 
-  g_object_class_install_property (object_class,
-                                   PROP_LOCAL,
-                                   g_param_spec_boolean ("ubuntu-local",
-                                                         P_("Local menu"),
-                                                         P_("Determines whether the menu is local"),
-                                                         FALSE,
-                                                         GTK_PARAM_READWRITE));
-
-
-  gtk_widget_class_install_style_property (widget_class,
-                                           g_param_spec_boolean ("window-dragging",
-                                                                 P_("Window dragging"),
-                                                                 P_("Window dragging"),
-                                                                 FALSE,
-                                                                 GTK_PARAM_READWRITE));
-
   g_type_class_add_private (object_class, sizeof (GtkMenuShellPrivate));
 }
 
@@ -409,22 +388,6 @@ static GType
 gtk_menu_shell_child_type (GtkContainer     *container)
 {
   return GTK_TYPE_MENU_ITEM;
-}
-
-static void
-show_local_notify (UbuntuMenuProxy *proxy,
-                   GParamSpec      *pspec,
-                   GtkMenuShell    *shell)
-{
-  gboolean local;
-
-  g_object_get (proxy,
-                "show-local", &local,
-                NULL);
-
-  g_object_set (shell,
-                "ubuntu-local", local,
-                NULL);
 }
 
 static void
@@ -445,13 +408,6 @@ gtk_menu_shell_init (GtkMenuShell *menu_shell)
   priv->key_hash = NULL;
   priv->take_focus = TRUE;
   priv->activated_submenu = FALSE;
-  priv->proxy = ubuntu_menu_proxy_get ();
-  priv->local = FALSE;
-
-  if (priv->proxy != NULL)
-    g_signal_connect (priv->proxy, "notify::show-local",
-                      G_CALLBACK (show_local_notify),
-                      menu_shell);
 }
 
 static void
@@ -461,15 +417,11 @@ gtk_menu_shell_set_property (GObject      *object,
                              GParamSpec   *pspec)
 {
   GtkMenuShell *menu_shell = GTK_MENU_SHELL (object);
-  GtkMenuShellPrivate *priv = GTK_MENU_SHELL_GET_PRIVATE (object);
 
   switch (prop_id)
     {
     case PROP_TAKE_FOCUS:
       gtk_menu_shell_set_take_focus (menu_shell, g_value_get_boolean (value));
-      break;
-    case PROP_LOCAL:
-      priv->local = g_value_get_boolean (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -484,22 +436,11 @@ gtk_menu_shell_get_property (GObject     *object,
                              GParamSpec  *pspec)
 {
   GtkMenuShell *menu_shell = GTK_MENU_SHELL (object);
-  GtkMenuShellPrivate *priv = GTK_MENU_SHELL_GET_PRIVATE (menu_shell);
-  gboolean local;
 
   switch (prop_id)
     {
     case PROP_TAKE_FOCUS:
       g_value_set_boolean (value, gtk_menu_shell_get_take_focus (menu_shell));
-      break;
-    case PROP_LOCAL:
-      if (priv->proxy == NULL) {
-        local = TRUE;
-      } else {
-        local = priv->local;
-      }
-
-      g_value_set_boolean (value, local);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -512,13 +453,6 @@ gtk_menu_shell_finalize (GObject *object)
 {
   GtkMenuShell *menu_shell = GTK_MENU_SHELL (object);
   GtkMenuShellPrivate *priv = GTK_MENU_SHELL_GET_PRIVATE (menu_shell);
-
-  if (priv->proxy != NULL)
-    {
-      g_signal_handlers_disconnect_by_func (priv->proxy,
-                                            show_local_notify,
-                                            menu_shell);
-    }
 
   if (priv->mnemonic_hash)
     _gtk_mnemonic_hash_free (priv->mnemonic_hash);
@@ -549,26 +483,14 @@ gtk_menu_shell_insert (GtkMenuShell *menu_shell,
 		       gint          position)
 {
   GtkMenuShellClass *class;
-  GtkMenuShellPrivate *priv;
 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
   g_return_if_fail (GTK_IS_MENU_ITEM (child));
 
   class = GTK_MENU_SHELL_GET_CLASS (menu_shell);
 
-  priv = GTK_MENU_SHELL_GET_PRIVATE (menu_shell);
-
   if (class->insert)
     class->insert (menu_shell, child, position);
-
-  /* insert to proxy */
-  if (priv->proxy != NULL)
-    ubuntu_menu_proxy_insert (priv->proxy,
-                              GTK_WIDGET (menu_shell),
-                              child,
-                              position);
-
-  g_signal_emit_by_name (menu_shell, "child-added", child);
 }
 
 static void
@@ -667,45 +589,18 @@ gtk_menu_shell_button_press (GtkWidget      *widget,
 
   if (!menu_shell->active || !menu_shell->button)
     {
-      gboolean initially_active = menu_shell->active;
+      _gtk_menu_shell_activate (menu_shell);
 
       menu_shell->button = event->button;
 
-      if (menu_item)
+      if (menu_item && _gtk_menu_item_is_selectable (menu_item) &&
+	  menu_item->parent == widget &&
+          menu_item != menu_shell->active_menu_item)
         {
-          if (_gtk_menu_item_is_selectable (menu_item) &&
-              menu_item->parent == widget &&
-              menu_item != menu_shell->active_menu_item)
+          if (GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement == GTK_TOP_BOTTOM)
             {
-              _gtk_menu_shell_activate (menu_shell);
-              menu_shell->button = event->button;
-
-              if (GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement == GTK_TOP_BOTTOM)
-                {
-                  menu_shell->activate_time = event->time;
-                  gtk_menu_shell_select_item (menu_shell, menu_item);
-                }
-            }
-        }
-      else
-        {
-          if (!initially_active)
-            {
-              gboolean window_drag = FALSE;
-
-              gtk_widget_style_get (widget,
-                                    "window-dragging", &window_drag,
-                                    NULL);
-
-              if (window_drag)
-                {
-                  gtk_menu_shell_deactivate (menu_shell);
-                  gtk_window_begin_move_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)),
-                                              event->button,
-                                              event->x_root,
-                                              event->y_root,
-                                              event->time);
-                }
+              menu_shell->activate_time = event->time;
+              gtk_menu_shell_select_item (menu_shell, menu_item);
             }
         }
     }
@@ -1918,26 +1813,6 @@ gtk_menu_shell_set_take_focus (GtkMenuShell *menu_shell,
       priv->take_focus = take_focus;
       g_object_notify (G_OBJECT (menu_shell), "take-focus");
     }
-}
-
-gboolean
-ubuntu_gtk_menu_shell_activate_mnemonic (GtkMenuShell *shell, GtkWidget *item)
-{
-  GtkMenuShellPrivate *priv;
-
-  g_return_val_if_fail (GTK_IS_MENU_SHELL (shell), FALSE);
-
-  priv = GTK_MENU_SHELL_GET_PRIVATE (shell);
-
-  if (priv->proxy && !ubuntu_menu_proxy_show_local (priv->proxy))
-    {
-      ubuntu_menu_proxy_activate_menu (priv->proxy,
-                                       item);
-
-      return TRUE;
-    }
-
-  return FALSE;
 }
 
 #define __GTK_MENU_SHELL_C__

@@ -26,8 +26,6 @@
 
 #include "config.h"
 
-#undef GTK_DISABLE_DEPRECATED
-
 #include "gtkhruler.h"
 #include "gtkorientable.h"
 #include "gtkalias.h"

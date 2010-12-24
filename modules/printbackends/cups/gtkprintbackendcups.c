@@ -344,9 +344,8 @@ cups_printer_create_cairo_surface (GtkPrinter       *printer,
  
   /* TODO: check if it is a ps or pdf printer */
   
-  surface = cairo_pdf_surface_create_for_stream  (_cairo_write_to_cups, cache_io, width, height);
+  surface = cairo_ps_surface_create_for_stream  (_cairo_write_to_cups, cache_io, width, height);
 
-  /*
   ppd_file = gtk_printer_cups_get_ppd (GTK_PRINTER_CUPS (printer));
 
   if (ppd_file != NULL)
@@ -404,7 +403,6 @@ cups_printer_create_cairo_surface (GtkPrinter       *printer,
 
   if (level == 3)
     cairo_ps_surface_restrict_to_level (surface, CAIRO_PS_LEVEL_3);
-  */
 
   cairo_surface_set_fallback_resolution (surface,
                                          2.0 * gtk_print_settings_get_printer_lpi (settings),
@@ -848,6 +846,9 @@ request_password (gpointer data)
 
       switch (dispatch->request->ipp_request->request.op.operation_id)
         {
+          case 0:
+            prompt = g_strdup_printf ( _("Authentication is required to get a file from %s"), hostname);
+            break;
           case IPP_PRINT_JOB:
             if (job_title != NULL && printer_name != NULL)
               prompt = g_strdup_printf ( _("Authentication is required to print document '%s' on printer %s"), job_title, printer_name);
@@ -873,11 +874,7 @@ request_password (gpointer data)
             prompt = g_strdup_printf ( _("Authentication is required to get printers from %s"), hostname);
             break;
           default:
-            /* work around gcc warning about 0 not being a value for this enum */
-            if (dispatch->request->ipp_request->request.op.operation_id == 0)
-              prompt = g_strdup_printf ( _("Authentication is required to get a file from %s"), hostname);
-            else
-              prompt = g_strdup_printf ( _("Authentication is required on %s"), hostname);
+            prompt = g_strdup_printf ( _("Authentication is required on %s"), hostname);
             break;
         }
 

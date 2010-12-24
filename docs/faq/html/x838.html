@@ -2,7 +2,8 @@
 <HTML
 ><HEAD
 ><TITLE
->How do I use horizontal scrollbars with a GtkText widget?</TITLE
+>How do I make a GtkEntry widget activate on pressing
+the Return key?</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -11,13 +12,14 @@ TITLE="GTK+ FAQ"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="Development with GTK+: widget specific questions"
-HREF="c698.html"><LINK
+HREF="c707.html"><LINK
 REL="PREVIOUS"
-TITLE="How do I validate/limit/filter the input to a GtkEntry? [GTK 2.x]"
+TITLE="I can't add more than (something like) 2000 chars in a
+GtkEntry. What's wrong?"
 HREF="x833.html"><LINK
 REL="NEXT"
-TITLE="How do I change the font of a GtkText widget?"
-HREF="x841.html"></HEAD
+TITLE="How do I validate/limit/filter the input to a GtkEntry? [GTK 2.x]"
+HREF="x842.html"></HEAD
 ><BODY
 CLASS="SECT1"
 BGCOLOR="#FFFFFF"
@@ -59,7 +61,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x841.html"
+HREF="x842.html"
 ACCESSKEY="N"
 >Next &#62;&#62;&#62;</A
 ></TD
@@ -74,14 +76,29 @@ CLASS="SECT1"
 CLASS="SECT1"
 ><A
 NAME="AEN838"
->How do I use horizontal scrollbars with a GtkText widget?</A
+>How do I make a GtkEntry widget activate on pressing
+the Return key?</A
 ></H1
 ><P
->The short answer is that you can't. The current version
-of the GtkText widget does not support horizontal
-scrolling. There is an intention to completely rewrite the
-GtkText widget, at which time this limitation will be
-removed.</P
+>The Entry widget emits an 'activate' signal when you
+press return in it. Just attach to the activate signal on the
+entry and do whatever you want to do. Typical code would
+be:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>  entry = gtk_entry_new();
+  gtk_signal_connect (GTK_OBJECT(entry), "activate",
+                      GTK_SIGNAL_FUNC(entry_callback),
+                      NULL);</PRE
+></TD
+></TR
+></TABLE
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -117,7 +134,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x841.html"
+HREF="x842.html"
 ACCESSKEY="N"
 >Next &#62;&#62;&#62;</A
 ></TD
@@ -127,16 +144,14 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->How do I validate/limit/filter the input to a GtkEntry? <I
-CLASS="EMPHASIS"
->[GTK 2.x]</I
-></TD
+>I can't add more than (something like) 2000 chars in a
+GtkEntry. What's wrong?</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c698.html"
+HREF="c707.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -144,7 +159,10 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->How do I change the font of a GtkText widget?</TD
+>How do I validate/limit/filter the input to a GtkEntry? <I
+CLASS="EMPHASIS"
+>[GTK 2.x]</I
+></TD
 ></TR
 ></TABLE
 ></DIV

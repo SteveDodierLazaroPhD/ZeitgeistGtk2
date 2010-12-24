@@ -38,8 +38,6 @@
 #error "Only <gtk/gtk.h> can be included directly."
 #endif
 
-#ifndef GTK_DISABLE_DEPRECATED
-
 #ifndef __GTK_VRULER_H__
 #define __GTK_VRULER_H__
 
@@ -80,5 +78,3 @@ G_END_DECLS
 
 
 #endif /* __GTK_VRULER_H__ */
-
-#endif /* GTK_DISABLE_DEPRECATED */

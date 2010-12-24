@@ -1,12 +1,7 @@
 ## Makefile.am for GTK+
 include $(top_srcdir)/Makefile.decl
 
-# don't build perf measurement tools in static builds
-if !ENABLE_STATIC
-MAYBE_PERF = perf
-endif
-
-SRC_SUBDIRS = gdk gtk modules demos tests $(MAYBE_PERF)
+SRC_SUBDIRS = gdk gtk modules demos tests perf
 SUBDIRS = po po-properties $(SRC_SUBDIRS) docs m4macros build
 
 # require automake 1.4

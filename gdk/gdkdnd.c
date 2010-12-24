@@ -45,8 +45,6 @@
  *
  * This function is called by the drag source to obtain the 
  * @dest_window and @protocol parameters for gdk_drag_motion().
- *
- * Deprecated: 2.24: Use gdk_drag_find_window_for_screen() instead.
  **/
 void
 gdk_drag_find_window (GdkDragContext  *context,
@@ -71,8 +69,6 @@ gdk_drag_find_window (GdkDragContext  *context,
  * Return value: the windowing system specific id for the window where
  *    the drop should happen. This may be @xid or the id of a proxy
  *    window, or zero if @xid doesn't support Drag and Drop.
- *
- * Deprecated: 2.24: Use gdk_drag_get_protocol_for_display() instead
  **/
 GdkNativeWindow
 gdk_drag_get_protocol (GdkNativeWindow  xid,
@@ -170,42 +166,6 @@ gdk_drag_context_get_source_window (GdkDragContext *context)
   g_return_val_if_fail (GDK_IS_DRAG_CONTEXT (context), NULL);
 
   return context->source_window;
-}
-
-/**
- * gdk_drag_context_get_dest_window:
- * @context: a #GdkDragContext
- *
- * Returns the destination windw for the DND operation.
- *
- * Return value: (transfer none): a #GdkWindow
- *
- * Since: 2.24
- */
-GdkWindow *
-gdk_drag_context_get_dest_window (GdkDragContext *context)
-{
-  g_return_val_if_fail (GDK_IS_DRAG_CONTEXT (context), NULL);
-
-  return context->dest_window;
-}
-
-/**
- * gdk_drag_context_get_protocol:
- * @context: a #GdkDragContext
- *
- * Returns the drag protocol thats used by this context.
- *
- * Returns: the drag protocol
- *
- * Since: 2.24
- */
-GdkDragProtocol
-gdk_drag_context_get_protocol (GdkDragContext *context)
-{
-  g_return_val_if_fail (GDK_IS_DRAG_CONTEXT (context), GDK_DRAG_PROTO_NONE);
-
-  return context->protocol;
 }
 
 #define __GDK_DND_C__
