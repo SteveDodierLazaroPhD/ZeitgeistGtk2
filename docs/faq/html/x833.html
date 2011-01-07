@@ -2,8 +2,7 @@
 <HTML
 ><HEAD
 ><TITLE
->I can't add more than (something like) 2000 chars in a
-GtkEntry. What's wrong?</TITLE
+>How do I validate/limit/filter the input to a GtkEntry? [GTK 2.x]</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
@@ -12,13 +11,13 @@ TITLE="GTK+ FAQ"
 HREF="book1.html"><LINK
 REL="UP"
 TITLE="Development with GTK+: widget specific questions"
-HREF="c707.html"><LINK
+HREF="c698.html"><LINK
 REL="PREVIOUS"
-TITLE="How do I configure Tooltips in a Resource File?"
-HREF="x828.html"><LINK
-REL="NEXT"
 TITLE="How do I make a GtkEntry widget activate on pressing
 the Return key?"
+HREF="x829.html"><LINK
+REL="NEXT"
+TITLE="How do I use horizontal scrollbars with a GtkText widget?"
 HREF="x838.html"></HEAD
 ><BODY
 CLASS="SECT1"
@@ -47,7 +46,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x828.html"
+HREF="x829.html"
 ACCESSKEY="P"
 >&#60;&#60;&#60; Previous</A
 ></TD
@@ -76,17 +75,19 @@ CLASS="SECT1"
 CLASS="SECT1"
 ><A
 NAME="AEN833"
->I can't add more than (something like) 2000 chars in a
-GtkEntry. What's wrong?</A
+>How do I validate/limit/filter the input to a GtkEntry? <I
+CLASS="EMPHASIS"
+>[GTK 2.x]</I
+></A
 ></H1
 ><P
->There is now a known problem in the GtkEntry widget. In
-the <TT
-CLASS="LITERAL"
->gtk_entry_insert_text()</TT
-> function, the
-following lines limit the number of chars in the entry to
-2047.</P
+>If you want to validate the text that a user enters into
+a GtkEntry widget you can attach to the "insert_text" signal
+of the entry, and modify the text within the callback
+function. The example below forces all characters to
+uppercase, and limits the range of characters to A-Z. Note
+that the entry is cast to an object of type GtkEditable, from
+which GtkEntry is derived.</P
 ><TABLE
 BORDER="0"
 BGCOLOR="#E0E0E0"
@@ -95,15 +96,66 @@ WIDTH="100%"
 ><TD
 ><PRE
 CLASS="PROGRAMLISTING"
->  /* The algorithms here will work as long as, the text size (a
-   * multiple of 2), fits into a guint16 but we specify a shorter
-   * maximum length so that if the user pastes a very long text, there
-   * is not a long hang from the slow X_LOCALE functions.  */
+>#include &#60;ctype.h&#62;
+#include &#60;gtk/gtk.h&#62;
 
-  if (entry-&#62;text_max_length == 0)
-    max_length = 2047;
-  else
-    max_length = MIN (2047, entry-&#62;text_max_length);</PRE
+void insert_text_handler (GtkEntry    *entry,
+                          const gchar *text,
+                          gint         length,
+                          gint        *position,
+                          gpointer     data)
+{
+  GtkEditable *editable = GTK_EDITABLE(entry);
+  int i, count=0;
+  gchar *result = g_new (gchar, length);
+
+  for (i=0; i &#60; length; i++) {
+    if (!isalpha(text[i]))
+      continue;
+    result[count++] = islower(text[i]) ? toupper(text[i]) : text[i];
+  }
+  
+  if (count &#62; 0) {
+    g_signal_handlers_block_by_func (G_OBJECT (editable),
+                                     G_CALLBACK (insert_text_handler),
+                                     data);
+    gtk_editable_insert_text (editable, result, count, position);
+    g_signal_handlers_unblock_by_func (G_OBJECT (editable),
+                                       G_CALLBACK (insert_text_handler),
+                                       data);
+  }
+  g_signal_stop_emission_by_name (G_OBJECT (editable), "insert_text");
+
+  g_free (result);
+}
+
+int main (int   argc,
+          char *argv[])
+{
+  GtkWidget *window;
+  GtkWidget *entry;
+  
+  gtk_init (&#38;argc, &#38;argv);
+  
+  /* create a new window */
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title(GTK_WINDOW (window), "GTK Entry");
+  g_signal_connect (G_OBJECT (window), "destroy",
+                    G_CALLBACK (gtk_main_quit),
+                    NULL);
+
+  entry = gtk_entry_new();
+  g_signal_connect(G_OBJECT(entry), "insert_text",
+		     G_CALLBACK(insert_text_handler),
+		     NULL);
+  gtk_container_add(GTK_CONTAINER (window), entry);
+  gtk_widget_show(entry);
+  
+  gtk_widget_show(window);
+  
+  gtk_main();
+  return(0);
+}</PRE
 ></TD
 ></TR
 ></TABLE
@@ -124,7 +176,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x828.html"
+HREF="x829.html"
 ACCESSKEY="P"
 >&#60;&#60;&#60; Previous</A
 ></TD
@@ -152,13 +204,14 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->How do I configure Tooltips in a Resource File?</TD
+>How do I make a GtkEntry widget activate on pressing
+the Return key?</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="c707.html"
+HREF="c698.html"
 ACCESSKEY="U"
 >Up</A
 ></TD
@@ -166,8 +219,7 @@ ACCESSKEY="U"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->How do I make a GtkEntry widget activate on pressing
-the Return key?</TD
+>How do I use horizontal scrollbars with a GtkText widget?</TD
 ></TR
 ></TABLE
 ></DIV

@@ -94,7 +94,8 @@ enum {
   PROP_GRAVITY,
   PROP_TRANSIENT_FOR,
   PROP_OPACITY,
-  
+  PROP_NO_PROXY,
+
   /* Readonly properties */
   PROP_IS_ACTIVE,
   PROP_HAS_TOPLEVEL_FOCUS,
@@ -194,6 +195,8 @@ struct _GtkWindowPrivate
   GdkWindowTypeHint type_hint;
 
   gdouble opacity;
+
+  gboolean no_proxy;
 
   gchar *startup_id;
 };
@@ -501,6 +504,14 @@ gtk_window_class_init (GtkWindowClass *klass)
 							P_("Unique identifier for the window to be used when restoring a session"),
 							NULL,
 							GTK_PARAM_READWRITE));
+
+  g_object_class_install_property (object_class,
+                                   PROP_NO_PROXY,
+                                   g_param_spec_boolean ("ubuntu-no-proxy",
+                                                         P_("Disable menu proxies for this window"),
+                                                         P_("Disable menu proxies for this window"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE));
 
   /**
    * GtkWindow:startup-id:
@@ -1084,6 +1095,9 @@ gtk_window_set_property (GObject      *object,
     case PROP_MNEMONICS_VISIBLE:
       gtk_window_set_mnemonics_visible (window, g_value_get_boolean (value));
       break;
+    case PROP_NO_PROXY:
+      priv->no_proxy = g_value_get_boolean (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -1201,6 +1215,9 @@ gtk_window_get_property (GObject      *object,
       break;
     case PROP_MNEMONICS_VISIBLE:
       g_value_set_boolean (value, priv->mnemonics_visible);
+      break;
+    case PROP_NO_PROXY:
+      g_value_set_boolean (value, priv->no_proxy);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -6658,6 +6675,7 @@ gtk_window_expose (GtkWidget      *widget,
  * windows, but it could conceivably be used by X-programs that
  * want to do their own window decorations.
  *
+ * Deprecated: 2.24: This function will be removed in GTK+ 3
  **/
 void
 gtk_window_set_has_frame (GtkWindow *window, 
@@ -6678,6 +6696,8 @@ gtk_window_set_has_frame (GtkWindow *window,
  *
  * Return value: %TRUE if a frame has been added to the window
  *   via gtk_window_set_has_frame().
+ *
+ * Deprecated: 2.24: This function will be removed in GTK+ 3
  **/
 gboolean
 gtk_window_get_has_frame (GtkWindow *window)
@@ -6702,6 +6722,8 @@ gtk_window_get_has_frame (GtkWindow *window)
  *
  * For windows with frames (see gtk_window_set_has_frame()) this function
  * can be used to change the size of the frame border.
+ *
+ * Deprecated: 2.24: This function will be removed in GTK+ 3
  **/
 void
 gtk_window_set_frame_dimensions (GtkWindow *window, 
@@ -7376,6 +7398,8 @@ gtk_window_begin_resize_drag  (GtkWindow    *window,
  * 
  * Retrieves the dimensions of the frame window for this toplevel.
  * See gtk_window_set_has_frame(), gtk_window_set_frame_dimensions().
+ *
+ * Deprecated: 2.24: This function will be removed in GTK+ 3
  **/
 void
 gtk_window_get_frame_dimensions (GtkWindow *window,

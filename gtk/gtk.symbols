@@ -1667,6 +1667,12 @@ gtk_file_chooser_dialog_new_with_backend
 #endif
 #endif
 
+#if IN_HEADER(__GTK_FILE_CHOOSER_UTILS_H__)
+#if IN_FILE(__GTK_FILE_CHOOSER_UTILS_C__)
+hildon_gtk_file_chooser_install_properties
+#endif
+#endif
+
 #if IN_HEADER(__GTK_FILE_CHOOSER_WIDGET_H__)
 #if IN_FILE(__GTK_FILE_CHOOSER_WIDGET_C__)
 gtk_file_chooser_widget_get_type G_GNUC_CONST
@@ -1881,8 +1887,10 @@ gtk_hpaned_new
 
 #if IN_HEADER(__GTK_HRULER_H__)
 #if IN_FILE(__GTK_HRULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 gtk_hruler_get_type G_GNUC_CONST
 gtk_hruler_new
+#endif
 #endif
 #endif
 
@@ -2437,6 +2445,7 @@ gtk_get_current_event_state
 gtk_get_current_event_time
 #ifndef GTK_DISABLE_DEPRECATED
 gtk_exit
+gtk_set_locale
 gtk_idle_add
 gtk_idle_add_full
 gtk_idle_add_priority
@@ -2452,7 +2461,6 @@ gtk_false G_GNUC_CONST
 gtk_true G_GNUC_CONST
 gtk_events_pending
 gtk_disable_setlocale
-gtk_set_locale
 gtk_check_version
 gtk_get_default_language
 gtk_get_event_widget
@@ -2598,6 +2606,21 @@ gtk_menu_item_remove_submenu
 #endif
 #endif
 
+#if IN_HEADER(__UBUNTU_MENU_PROXY_H__)
+#if IN_FILE(__UBUNTU_MENU_PROXY_C__)
+ubuntu_menu_proxy_get_type G_GNUC_CONST
+ubuntu_menu_proxy_get
+ubuntu_menu_proxy_insert
+#endif
+#endif
+
+#if IN_HEADER(__UBUNTU_MENU_PROXY_MODULE_H__)
+#if IN_FILE(__UBUNTU_MENU_PROXY_MODULE_C__)
+ubuntu_menu_proxy_module_get_type
+ubuntu_menu_proxy_module_get
+#endif
+#endif
+
 #if IN_HEADER(__GTK_MENU_SHELL_H__)
 #if IN_FILE(__GTK_MENU_SHELL_C__)
 gtk_menu_shell_activate_item
@@ -2612,6 +2635,7 @@ gtk_menu_shell_select_first
 gtk_menu_shell_select_item
 gtk_menu_shell_set_take_focus
 gtk_menu_shell_get_take_focus
+ubuntu_gtk_menu_shell_activate_mnemonic
 #endif
 #endif
 
@@ -3020,6 +3044,8 @@ gtk_print_capabilities_get_type G_GNUC_CONST
 #if IN_FILE(__GTK_PRINTER_C__)
 #ifdef G_OS_UNIX
 gtk_printer_new
+gtk_printer_set_accepts_pdf
+gtk_printer_set_accepts_ps
 gtk_printer_set_description
 gtk_printer_set_has_details
 gtk_printer_set_icon_name
@@ -3406,7 +3432,9 @@ gtk_range_get_show_fill_level
 gtk_range_get_slider_range
 gtk_range_get_slider_size_fixed
 gtk_range_get_type G_GNUC_CONST
+#ifndef GTK_DISABLE_DEPRECATED
 gtk_range_get_update_policy
+#endif
 gtk_range_get_upper_stepper_sensitivity
 gtk_range_get_value
 gtk_range_set_adjustment
@@ -3420,7 +3448,9 @@ gtk_range_set_range
 gtk_range_set_restrict_to_fill_level
 gtk_range_set_show_fill_level
 gtk_range_set_slider_size_fixed
+#ifndef GTK_DISABLE_DEPRECATED
 gtk_range_set_update_policy
+#endif
 gtk_range_set_upper_stepper_sensitivity
 gtk_range_set_value
 #endif
@@ -3662,6 +3692,7 @@ gtk_text_buffer_unregister_serialize_format
 
 #if IN_HEADER(__GTK_RULER_H__)
 #if IN_FILE(__GTK_RULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 gtk_ruler_draw_pos
 gtk_ruler_draw_ticks
 gtk_ruler_get_metric
@@ -3669,6 +3700,7 @@ gtk_ruler_get_range
 gtk_ruler_get_type G_GNUC_CONST
 gtk_ruler_set_metric
 gtk_ruler_set_range
+#endif
 #endif
 #endif
 
@@ -5098,8 +5130,10 @@ gtk_vpaned_new
 
 #if IN_HEADER(__GTK_VRULER_H__)
 #if IN_FILE(__GTK_VRULER_C__)
+#ifndef GTK_DISABLE_DEPRECATED
 gtk_vruler_get_type G_GNUC_CONST
 gtk_vruler_new
+#endif
 #endif
 #endif
 
@@ -5309,6 +5343,7 @@ gtk_widget_set_realized
 gtk_widget_get_realized
 gtk_widget_set_mapped
 gtk_widget_get_mapped
+ubuntu_gtk_widget_set_has_grab
 #endif
 #endif
 
@@ -5334,10 +5369,8 @@ gtk_window_get_default_size
 gtk_window_get_destroy_with_parent
 gtk_window_get_focus
 gtk_window_get_focus_on_map
-gtk_window_get_frame_dimensions
 gtk_window_get_gravity
 gtk_window_get_group
-gtk_window_get_has_frame
 gtk_window_get_icon
 gtk_window_get_icon_list
 gtk_window_get_icon_name
@@ -5400,10 +5433,14 @@ gtk_window_set_destroy_with_parent
 gtk_window_set_focus
 gtk_window_set_focus_on_map
 gtk_window_set_startup_id
-gtk_window_set_frame_dimensions
 gtk_window_set_geometry_hints
 gtk_window_set_gravity
+#ifndef GTK_DISABLE_DEPRECATED
+gtk_window_get_frame_dimensions
+gtk_window_set_frame_dimensions
+gtk_window_get_has_frame
 gtk_window_set_has_frame
+#endif
 gtk_window_set_icon
 #ifndef _WIN64
 gtk_window_set_icon_from_file PRIVATE

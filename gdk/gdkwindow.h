@@ -475,6 +475,7 @@ gboolean gdk_window_set_static_gravities (GdkWindow *window,
 					  gboolean   use_static);   
 
 /* Functions to create/lookup windows from their native equivalents */ 
+#if !defined(GDK_DISABLE_DEPRECATED) || defined(GDK_COMPILATION)
 #ifndef GDK_MULTIHEAD_SAFE
 GdkWindow*    gdk_window_foreign_new (GdkNativeWindow anid);
 GdkWindow*    gdk_window_lookup      (GdkNativeWindow anid);
@@ -483,6 +484,7 @@ GdkWindow    *gdk_window_foreign_new_for_display (GdkDisplay      *display,
 						  GdkNativeWindow  anid);
 GdkWindow*    gdk_window_lookup_for_display (GdkDisplay      *display,
 					     GdkNativeWindow  anid);
+#endif
 
 
 /* GdkWindow */
@@ -516,7 +518,9 @@ void gdk_window_set_urgency_hint      (GdkWindow *window,
 void          gdk_window_set_geometry_hints (GdkWindow          *window,
 					     const GdkGeometry  *geometry,
 					     GdkWindowHints      geom_mask);
+#if !defined(GDK_DISABLE_DEPRECATED) || defined(GDK_COMPILATION)
 void          gdk_set_sm_client_id          (const gchar        *sm_client_id);
+#endif
 
 void	      gdk_window_begin_paint_rect   (GdkWindow          *window,
 					     const GdkRectangle *rectangle);
@@ -573,7 +577,7 @@ void       gdk_window_coords_from_parent (GdkWindow       *window,
                                           gdouble         *x,
                                           gdouble         *y);
 
-#if !defined (GDK_DISABLE_DEPRECATED) || defined (GTK_COMPILATION) || defined (GDK_COMPILATION)
+#if !defined (GDK_DISABLE_DEPRECATED) || defined (GDK_COMPILATION)
 /* Used by gtk_handle_box_button_changed () */
 gboolean      gdk_window_get_deskrelative_origin (GdkWindow	  *window,
 					  gint		  *x,
@@ -698,10 +702,6 @@ void gdk_window_get_internal_paint_info (GdkWindow    *window,
 void gdk_window_enable_synchronized_configure (GdkWindow *window);
 void gdk_window_configure_finished            (GdkWindow *window);
 
-#ifndef GDK_MULTIHEAD_SAFE
-GdkPointerHooks *gdk_set_pointer_hooks (const GdkPointerHooks *new_hooks);   
-#endif /* GDK_MULTIHEAD_SAFE */
-
 GdkWindow *gdk_get_default_root_window (void);
 
 /* Offscreen redirection */
@@ -722,6 +722,10 @@ void       gdk_window_redirect_to_drawable   (GdkWindow     *window,
 void       gdk_window_remove_redirection     (GdkWindow     *window);
 
 #ifndef GDK_DISABLE_DEPRECATED
+#ifndef GDK_MULTIHEAD_SAFE
+GdkPointerHooks *gdk_set_pointer_hooks (const GdkPointerHooks *new_hooks);   
+#endif /* GDK_MULTIHEAD_SAFE */
+
 #define GDK_ROOT_PARENT()             (gdk_get_default_root_window ())
 #define gdk_window_get_size            gdk_drawable_get_size
 #define gdk_window_get_type            gdk_window_get_window_type

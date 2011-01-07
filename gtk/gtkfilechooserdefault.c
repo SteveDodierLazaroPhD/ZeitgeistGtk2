@@ -2325,6 +2325,19 @@ new_folder_button_clicked (GtkButton             *button,
   gtk_tree_path_free (path);
 }
 
+static GSource *
+add_idle_while_impl_is_alive (GtkFileChooserDefault *impl, GCallback callback)
+{
+  GSource *source;
+
+  source = g_idle_source_new ();
+  g_source_set_closure (source,
+			g_cclosure_new_object (callback, G_OBJECT (impl)));
+  g_source_attach (source, NULL);
+
+  return source;
+}
+
 /* Idle handler for creating a new folder after editing its name cell, or for
  * canceling the editing.
  */
@@ -2383,13 +2396,7 @@ queue_edited_idle (GtkFileChooserDefault *impl,
    */
 
   if (!impl->edited_idle)
-    {
-      impl->edited_idle = g_idle_source_new ();
-      g_source_set_closure (impl->edited_idle,
-			    g_cclosure_new_object (G_CALLBACK (edited_idle_cb),
-						   G_OBJECT (impl)));
-      g_source_attach (impl->edited_idle, NULL);
-    }
+    impl->edited_idle = add_idle_while_impl_is_alive (impl, G_CALLBACK (edited_idle_cb));
 
   g_free (impl->edited_new_text);
   impl->edited_new_text = g_strdup (new_text);
@@ -2425,9 +2432,6 @@ renderer_editing_canceled_cb (GtkCellRendererText   *cell_renderer_text,
 static GtkWidget *
 filter_create (GtkFileChooserDefault *impl)
 {
-  GtkCellRenderer *cell;
-  GList           *cells;
-
   impl->filter_combo = gtk_combo_box_text_new ();
   gtk_combo_box_set_focus_on_click (GTK_COMBO_BOX (impl->filter_combo), FALSE);
 
@@ -3134,11 +3138,7 @@ shortcuts_drag_leave_cb (GtkWidget             *widget,
 #if 0
   if (gtk_drag_get_source_widget (context) == widget && !impl->shortcuts_drag_outside_idle)
     {
-      impl->shortcuts_drag_outside_idle = g_idle_source_new ();
-      g_source_set_closure (impl->shortcuts_drag_outside_idle,
-			    g_cclosure_new_object (G_CALLBACK (shortcuts_drag_outside_idle_cb),
-						   G_OBJECT (impl)));
-      g_source_attach (impl->shortcuts_drag_outside_idle, NULL);
+      impl->shortcuts_drag_outside_idle = add_idle_while_impl_is_alive (impl, G_CALLBACK (shortcuts_drag_outside_idle_cb));
     }
 #endif
 
@@ -3236,11 +3236,11 @@ shortcuts_drag_motion_cb (GtkWidget             *widget,
     }
 #endif
 
-  if (context->suggested_action == GDK_ACTION_COPY ||
-      (context->actions & GDK_ACTION_COPY) != 0)
+  if (gdk_drag_context_get_suggested_action (context) == GDK_ACTION_COPY ||
+      (gdk_drag_context_get_actions (context) & GDK_ACTION_COPY) != 0)
     action = GDK_ACTION_COPY;
-  else if (context->suggested_action == GDK_ACTION_MOVE ||
-           (context->actions & GDK_ACTION_MOVE) != 0)
+  else if (gdk_drag_context_get_suggested_action (context) == GDK_ACTION_MOVE ||
+           (gdk_drag_context_get_actions (context) & GDK_ACTION_MOVE) != 0)
     action = GDK_ACTION_MOVE;
   else
     {
@@ -9079,6 +9079,37 @@ search_entry_activate_cb (GtkEntry *entry,
   search_start_query (impl, text);
 }
 
+static gboolean
+focus_entry_idle_cb (GtkFileChooserDefault *impl)
+{
+  GDK_THREADS_ENTER ();
+  
+  g_source_destroy (impl->focus_entry_idle);
+  impl->focus_entry_idle = NULL;
+
+  if (impl->search_entry)
+    gtk_widget_grab_focus (impl->search_entry);
+
+  GDK_THREADS_LEAVE ();
+
+  return FALSE;
+}
+
+static void
+focus_search_entry_in_idle (GtkFileChooserDefault *impl)
+{
+  /* bgo#634558 - When the user clicks on the Search entry in the shortcuts
+   * pane, we get a selection-changed signal and we set up the search widgets.
+   * However, gtk_tree_view_button_press() focuses the treeview *after* making
+   * the change to the selection.  So, we need to re-focus the search entry
+   * after the treeview has finished doing its work; we'll do that in an idle
+   * handler.
+   */
+
+  if (!impl->focus_entry_idle)
+    impl->focus_entry_idle = add_idle_while_impl_is_alive (impl, G_CALLBACK (focus_entry_idle_cb));
+}
+
 /* Hides the path bar and creates the search entry */
 static void
 search_setup_widgets (GtkFileChooserDefault *impl)
@@ -9147,7 +9178,7 @@ search_setup_widgets (GtkFileChooserDefault *impl)
       gtk_widget_hide (impl->location_entry_box);
     }
 
-  gtk_widget_grab_focus (impl->search_entry);
+  focus_search_entry_in_idle (impl);
 
   /* FMQ: hide the filter combo? */
 }
@@ -9191,7 +9222,7 @@ search_activate (GtkFileChooserDefault *impl)
   
   if (impl->operation_mode == OPERATION_MODE_SEARCH)
     {
-      gtk_widget_grab_focus (impl->search_entry);
+      focus_search_entry_in_idle (impl);
       return;
     }
 

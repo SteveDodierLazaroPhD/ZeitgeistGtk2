@@ -1268,8 +1268,10 @@ void	     gtk_widget_input_shape_combine_mask (GtkWidget *widget,
 						  gint       offset_x,
 						  gint       offset_y);
 
+#if !defined(GTK_DISABLE_DEPRECATED) || defined (GTK_COMPILATION)
 /* internal function */
 void	     gtk_widget_reset_shapes	   (GtkWidget *widget);
+#endif
 
 /* Compute a widget's path in the form "GtkWindow.MyLabel", and
  * return newly alocated strings.
@@ -1343,6 +1345,9 @@ GdkColormap* _gtk_widget_peek_colormap (void);
 void         _gtk_widget_buildable_finish_accelerator (GtkWidget *widget,
 						       GtkWidget *toplevel,
 						       gpointer   user_data);
+
+void   ubuntu_gtk_widget_set_has_grab  (GtkWidget *widget,
+                                        gboolean   has_grab);
 
 G_END_DECLS
 

@@ -2582,6 +2582,14 @@ gtk_widget_class_init (GtkWidgetClass *klass)
                                                              P_("The length of vertical scroll arrows"),
                                                              1, G_MAXINT, 16,
                                                              GTK_PARAM_READABLE));
+
+  gtk_widget_class_install_style_property (klass,
+                                           g_param_spec_boolean ("new-tooltip-style",
+                                                                 NULL,
+                                                                 NULL,
+                                                                 FALSE,
+                                                                 GTK_PARAM_READABLE));
+
 }
 
 static void
@@ -9488,6 +9496,8 @@ gtk_reset_shapes_recurse (GtkWidget *widget,
  * @widget: a #GtkWidget
  *
  * Recursively resets the shape on this widget and its descendants.
+ *
+ * Deprecated: This function is being removed in GTK+ 3.0. Don't use it.
  **/
 void
 gtk_widget_reset_shapes (GtkWidget *widget)
@@ -11408,6 +11418,16 @@ gtk_widget_send_focus_change (GtkWidget *widget,
   g_object_unref (widget);
 
   return res;
+}
+
+void
+ubuntu_gtk_widget_set_has_grab (GtkWidget *widget,
+                                gboolean   has_grab)
+{
+  if (has_grab)
+    GTK_OBJECT_FLAGS (widget) |= GTK_HAS_GRAB;
+  else
+    GTK_OBJECT_FLAGS (widget) &= ~(GTK_HAS_GRAB);
 }
 
 #define __GTK_WIDGET_C__

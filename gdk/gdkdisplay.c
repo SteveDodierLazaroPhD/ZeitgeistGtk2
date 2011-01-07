@@ -432,6 +432,8 @@ gdk_display_get_core_pointer (GdkDisplay *display)
  * session management and the Inter-Client Communication Conventions Manual
  * (ICCCM) for information on the <literal>WM_CLIENT_LEADER</literal> property. 
  * (Both documents are part of the X Window System distribution.)
+ *
+ * Deprecated:2.24: Use gdk_x11_set_sm_client_id() instead
  **/
 void
 gdk_set_sm_client_id (const gchar* sm_client_id)
@@ -635,6 +637,8 @@ gdk_display_get_window_at_pointer (GdkDisplay *display,
  * Return value: the previous pointer hook table
  *
  * Since: 2.2
+ *
+ * Deprecated: 2.24: This function will go away in GTK 3 for lack of use cases.
  **/
 GdkDisplayPointerHooks *
 gdk_display_set_pointer_hooks (GdkDisplay                   *display,
@@ -724,6 +728,8 @@ singlehead_default_window_at_pointer  (GdkScreen       *screen,
  * see gdk_display_set_pointer_hooks().
  * 
  * Return value: the previous pointer hook table
+ *
+ * Deprecated: 2.24: This function will go away in GTK 3 for lack of use cases.
  **/
 GdkPointerHooks *
 gdk_set_pointer_hooks (const GdkPointerHooks *new_hooks)
