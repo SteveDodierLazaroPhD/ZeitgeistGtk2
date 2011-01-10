@@ -897,7 +897,7 @@ gtk_text_buffer_emit_insert (GtkTextBuffer *buffer,
  * gtk_text_buffer_insert:
  * @buffer: a #GtkTextBuffer
  * @iter: a position in the buffer
- * @text: (array length=len) (element-type uint8): text in UTF-8 format
+ * @text: text in UTF-8 format
  * @len: length of text in bytes, or -1
  *
  * Inserts @len bytes of @text at position @iter.  If @len is -1,
@@ -925,7 +925,7 @@ gtk_text_buffer_insert (GtkTextBuffer *buffer,
 /**
  * gtk_text_buffer_insert_at_cursor:
  * @buffer: a #GtkTextBuffer
- * @text: (array length=len) (element-type uint8): text in UTF-8 format
+ * @text: text in UTF-8 format
  * @len: length of text, in bytes
  *
  * Simply calls gtk_text_buffer_insert(), using the current
@@ -1962,7 +1962,7 @@ gtk_text_buffer_insert_child_anchor (GtkTextBuffer      *buffer,
  * owned by the buffer; no reference count is returned to
  * the caller of gtk_text_buffer_create_child_anchor().
  * 
- * Return value: the created child anchor
+ * Return value: (transfer none): the created child anchor
  **/
 GtkTextChildAnchor*
 gtk_text_buffer_create_child_anchor (GtkTextBuffer *buffer,
@@ -2433,7 +2433,6 @@ gtk_text_buffer_select_range (GtkTextBuffer     *buffer,
  * @first_property_name: (allow-none): name of first property to set, or %NULL
  * @Varargs: %NULL-terminated list of property names and values
  *
- *
  * Creates a tag and adds it to the tag table for @buffer.
  * Equivalent to calling gtk_text_tag_new() and then adding the
  * tag to the buffer's tag table. The returned tag is owned by
@@ -2447,8 +2446,8 @@ gtk_text_buffer_select_range (GtkTextBuffer     *buffer,
  * The @first_property_name argument and subsequent arguments are a list
  * of properties to set on the tag, as with g_object_set().
  *
- * Return value: a new tag
- **/
+ * Return value: (transfer none): a new tag
+ */
 GtkTextTag*
 gtk_text_buffer_create_tag (GtkTextBuffer *buffer,
                             const gchar   *tag_name,
@@ -3736,10 +3735,10 @@ remove_all_selection_clipboards (GtkTextBuffer *buffer)
  *                     at the cursor
  * @default_editable: whether the buffer is editable by default
  *
- * Pastes the contents of a clipboard at the insertion point, or at
- * @override_location. (Note: pasting is asynchronous, that is, we'll 
- * ask for the paste data and return, and at some point later after 
- * the main loop runs, the paste data will be inserted.)
+ * Pastes the contents of a clipboard at the insertion point, or
+ * at @override_location. (Note: pasting is asynchronous, that is,
+ * we'll ask for the paste data and return, and at some point later
+ * after the main loop runs, the paste data will be inserted.)
  **/
 void
 gtk_text_buffer_paste_clipboard (GtkTextBuffer *buffer,

@@ -1728,7 +1728,7 @@ gtk_window_set_default (GtkWindow *window,
  * Returns the default widget for @window. See gtk_window_set_default()
  * for more details.
  *
- * Returns: the default widget, or %NULL if there is none.
+ * Returns: (transfer none): the default widget, or %NULL if there is none.
  *
  * Since: 2.14
  **/
@@ -7537,7 +7537,7 @@ gtk_window_check_screen (GtkWindow *window)
     }
 }
 
-/** 
+/**
  * gtk_window_get_screen:
  * @window: a #GtkWindow.
  *

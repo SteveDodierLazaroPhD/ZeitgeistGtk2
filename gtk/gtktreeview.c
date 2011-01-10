@@ -10911,8 +10911,8 @@ gtk_tree_view_get_selection (GtkTreeView *tree_view)
  *
  * Gets the #GtkAdjustment currently being used for the horizontal aspect.
  *
- * Return value: A #GtkAdjustment object, or %NULL if none is currently being
- * used.
+ * Return value: (transfer none): A #GtkAdjustment object, or %NULL
+ *     if none is currently being used.
  **/
 GtkAdjustment *
 gtk_tree_view_get_hadjustment (GtkTreeView *tree_view)
@@ -10951,8 +10951,8 @@ gtk_tree_view_set_hadjustment (GtkTreeView   *tree_view,
  *
  * Gets the #GtkAdjustment currently being used for the vertical aspect.
  *
- * Return value: A #GtkAdjustment object, or %NULL if none is currently being
- * used.
+ * Return value: (transfer none): A #GtkAdjustment object, or %NULL
+ *     if none is currently being used.
  **/
 GtkAdjustment *
 gtk_tree_view_get_vadjustment (GtkTreeView *tree_view)
@@ -11455,8 +11455,8 @@ gtk_tree_view_insert_column_with_data_func  (GtkTreeView               *tree_vie
  *
  * Gets the #GtkTreeViewColumn at the given position in the #tree_view.
  *
- * Return value: The #GtkTreeViewColumn, or %NULL if the position is outside the
- * range of columns.
+ * Return value: (transfer none): The #GtkTreeViewColumn, or %NULL if the
+ *     position is outside the range of columns.
  **/
 GtkTreeViewColumn *
 gtk_tree_view_get_column (GtkTreeView *tree_view,
@@ -11588,10 +11588,10 @@ gtk_tree_view_set_expander_column (GtkTreeView       *tree_view,
  * gtk_tree_view_get_expander_column:
  * @tree_view: A #GtkTreeView
  *
- * Returns the column that is the current expander column.  This
- * column has the expander arrow drawn next to it.
+ * Returns the column that is the current expander column.
+ * This column has the expander arrow drawn next to it.
  *
- * Return value: The expander column.
+ * Return value: (transfer none): The expander column.
  **/
 GtkTreeViewColumn *
 gtk_tree_view_get_expander_column (GtkTreeView *tree_view)
@@ -12429,7 +12429,7 @@ gtk_tree_view_map_expanded_rows_helper (GtkTreeView            *tree_view,
 /**
  * gtk_tree_view_map_expanded_rows:
  * @tree_view: A #GtkTreeView
- * @func: A function to be called
+ * @func: (scope call): A function to be called
  * @data: User data to be passed to the function.
  *
  * Calls @func on all expanded rows.
@@ -12770,12 +12770,13 @@ gtk_tree_view_set_cursor_on_cell (GtkTreeView       *tree_view,
 /**
  * gtk_tree_view_get_bin_window:
  * @tree_view: A #GtkTreeView
- * 
- * Returns the window that @tree_view renders to.  This is used primarily to
- * compare to <literal>event->window</literal> to confirm that the event on
- * @tree_view is on the right window.
- * 
- * Return value: A #GdkWindow, or %NULL when @tree_view hasn't been realized yet
+ *
+ * Returns the window that @tree_view renders to.
+ * This is used primarily to compare to <literal>event->window</literal>
+ * to confirm that the event on @tree_view is on the right window.
+ *
+ * Return value: (transfer none): A #GdkWindow, or %NULL when @tree_view
+ *     hasn't been realized yet
  **/
 GdkWindow *
 gtk_tree_view_get_bin_window (GtkTreeView *tree_view)
@@ -13760,10 +13761,10 @@ gtk_tree_view_get_dest_row_at_pos (GtkTreeView             *tree_view,
  * @tree_view: a #GtkTreeView
  * @path: a #GtkTreePath in @tree_view
  *
- * Creates a #GdkPixmap representation of the row at @path.  
+ * Creates a #GdkPixmap representation of the row at @path.
  * This image is used for a drag icon.
  *
- * Return value: a newly-allocated pixmap of the drag icon.
+ * Return value: (transfer none): a newly-allocated pixmap of the drag icon.
  **/
 GdkPixmap *
 gtk_tree_view_create_row_drag_icon (GtkTreeView  *tree_view,
@@ -14088,7 +14089,7 @@ gtk_tree_view_set_search_equal_func (GtkTreeView                *tree_view,
  * entry for @tree_view.  In case the built-in entry is being used, %NULL
  * will be returned.
  *
- * Return value: the entry currently in use as search entry.
+ * Return value: (transfer none): the entry currently in use as search entry.
  *
  * Since: 2.10
  */
