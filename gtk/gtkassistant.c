@@ -1413,6 +1413,9 @@ gtk_assistant_expose (GtkWidget      *widget,
     {
       container = GTK_CONTAINER (widget);
 
+      if (GTK_WIDGET_CLASS (gtk_assistant_parent_class)->expose_event)
+        GTK_WIDGET_CLASS (gtk_assistant_parent_class)->expose_event (widget, event);
+
       assistant_paint_colored_box (widget);
 
       gtk_container_propagate_expose (container, priv->header_image, event);
