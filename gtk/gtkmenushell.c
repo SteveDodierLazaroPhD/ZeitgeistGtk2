@@ -1940,5 +1940,32 @@ ubuntu_gtk_menu_shell_activate_mnemonic (GtkMenuShell *shell, GtkWidget *item)
   return FALSE;
 }
 
+gboolean
+ubuntu_gtk_menu_shell_activate_first (GtkMenuShell *menu_shell,
+			              gboolean      search_sensitive)
+{
+  GtkWidget *to_select = NULL;
+  GList *tmp_list;
+
+  tmp_list = menu_shell->children;
+  while (tmp_list)
+    {
+      GtkWidget *child = tmp_list->data;
+      
+      if ((!search_sensitive && gtk_widget_get_visible (child)) ||
+	  _gtk_menu_item_is_selectable (child))
+	{
+	  to_select = child;
+	  if (!GTK_IS_TEAROFF_MENU_ITEM (child))
+	    break;
+	}
+      
+      tmp_list = tmp_list->next;
+    }
+
+  return to_select &&
+         ubuntu_gtk_menu_shell_activate_mnemonic(menu_shell, to_select);
+}
+
 #define __GTK_MENU_SHELL_C__
 #include "gtkaliasdef.c"
