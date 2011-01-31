@@ -8099,6 +8099,12 @@ extern __typeof (gtk_range_set_upper_stepper_sensitivity) gtk_range_set_upper_st
 #undef gtk_range_set_value 
 extern __typeof (gtk_range_set_value) gtk_range_set_value __attribute((alias("IA__gtk_range_set_value"), visibility("default")));
 
+#undef gtk_range_set_round_digits 
+extern __typeof (gtk_range_set_round_digits) gtk_range_set_round_digits __attribute((alias("IA__gtk_range_set_round_digits"), visibility("default")));
+
+#undef gtk_range_get_round_digits 
+extern __typeof (gtk_range_get_round_digits) gtk_range_get_round_digits __attribute((alias("IA__gtk_range_get_round_digits"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GTK_RC_H__)

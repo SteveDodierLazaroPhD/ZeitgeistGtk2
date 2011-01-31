@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Pango-Interaction.html" title="Pango Interaction">
 <link rel="next" href="gdk-X-Window-System-Interaction.html" title="X Window System Interaction">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.16.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -26,7 +26,7 @@
                   <a href="#gdk-Cairo-Interaction.description" class="shortcut">Description</a>
 </td></tr>
 </table>
-<div class="refentry" title="Cairo Interaction">
+<div class="refentry">
 <a name="gdk-Cairo-Interaction"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -35,7 +35,7 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="gdk-Cairo-Interaction.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
 #include &lt;gdk/gdk.h&gt;
@@ -60,14 +60,14 @@
                                                          <em class="parameter"><code><span class="type">double</span> x</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> y</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-rectangle" title="gdk_cairo_rectangle ()">gdk_cairo_rectangle</a>                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRectangle" title="GdkRectangle"><span class="type">GdkRectangle</span></a> *rectangle</code></em>);
+                                                         <em class="parameter"><code>const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRectangle" title="struct GdkRectangle"><span class="type">GdkRectangle</span></a> *rectangle</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-region" title="gdk_cairo_region ()">gdk_cairo_region</a>                    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRegion" title="GdkRegion"><span class="type">GdkRegion</span></a> *region</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-reset-clip" title="gdk_cairo_reset_clip ()">gdk_cairo_reset_clip</a>                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gdk-Drawing-Primitives.html#GdkDrawable"><span class="type">GdkDrawable</span></a> *drawable</code></em>);
 </pre>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="gdk-Cairo-Interaction.description"></a><h2>Description</h2>
 <p>
 Cairo is a graphics
@@ -82,18 +82,60 @@ functions allow to convert GDK's rectangles and regions into
 Cairo paths and to use pixbufs as sources for drawing operations.
 </p>
 </div>
-<div class="refsect1" title="Details">
+<div class="refsect1">
 <a name="gdk-Cairo-Interaction.details"></a><h2>Details</h2>
-<div class="refsect2" title="gdk_window_create_similar_surface ()">
+<div class="refsect2">
 <a name="gdk-window-create-similar-surface"></a><h3>gdk_window_create_similar_surface ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-surface-t.html#cairo-surface-t"><span class="returnvalue">cairo_surface_t</span></a> *   gdk_window_create_similar_surface   (<em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-surface-t.html#cairo-content-t"><span class="type">cairo_content_t</span></a> content</code></em>,
                                                          <em class="parameter"><code><span class="type">int</span> width</code></em>,
                                                          <em class="parameter"><code><span class="type">int</span> height</code></em>);</pre>
+<p>
+Create a new surface that is as compatible as possible with the
+given <em class="parameter"><code>window</code></em>. For example the new surface will have the same
+fallback resolution and font options as <em class="parameter"><code>window</code></em>. Generally, the new
+surface will also use the same backend as <em class="parameter"><code>window</code></em>, unless that is
+not possible for some reason. The type of the returned surface may
+be examined with <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-surface-t.html#cairo-surface-get-type"><code class="function">cairo_surface_get_type()</code></a>.
+</p>
+<p>
+Initially the surface contents are all 0 (transparent if contents
+have transparency, black otherwise.)
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td>window to make new surface similar to</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>content</code></em> :</span></p></td>
+<td>the content for the new surface</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>width</code></em> :</span></p></td>
+<td>width of the new surface</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>height</code></em> :</span></p></td>
+<td>height of the new surface</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a pointer to the newly allocated surface. The caller
+owns the surface and should call <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-surface-t.html#cairo-surface-destroy"><code class="function">cairo_surface_destroy()</code></a> when done
+with it.
+This function always returns a valid pointer, but it will return a
+pointer to a "nil" surface if <em class="parameter"><code>other</code></em> is already in an error state
+or any other error occurs.</td>
+</tr>
+</tbody>
+</table></div>
 <p class="since">Since 2.22</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_create ()">
+<div class="refsect2">
 <a name="gdk-cairo-create"></a><h3>gdk_cairo_create ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="returnvalue">cairo_t</span></a> *           gdk_cairo_create                    (<em class="parameter"><code><a class="link" href="gdk-Drawing-Primitives.html#GdkDrawable"><span class="type">GdkDrawable</span></a> *drawable</code></em>);</pre>
 <p>
@@ -101,7 +143,7 @@ Creates a Cairo context for drawing to <em class="parameter"><code>drawable</cod
 </p>
 <p>
 </p>
-<div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Note</h3>
 <p>
 Note that due to double-buffering, Cairo contexts created 
@@ -121,17 +163,15 @@ between different expose events.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> A newly created Cairo context. Free with
- <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-destroy"><code class="function">cairo_destroy()</code></a> when you are done drawing.
-
-</td>
+<td>A newly created Cairo context. Free with
+<a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-destroy"><code class="function">cairo_destroy()</code></a> when you are done drawing.</td>
 </tr>
 </tbody>
 </table></div>
 <p class="since">Since 2.8</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_set_source_color ()">
+<div class="refsect2">
 <a name="gdk-cairo-set-source-color"></a><h3>gdk_cairo_set_source_color ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_set_source_color          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *color</code></em>);</pre>
@@ -156,7 +196,7 @@ Sets the specified <a class="link" href="gdk-Colormaps-and-Colors.html#GdkColor"
 <p class="since">Since 2.8</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_set_source_pixbuf ()">
+<div class="refsect2">
 <a name="gdk-cairo-set-source-pixbuf"></a><h3>gdk_cairo_set_source_pixbuf ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_set_source_pixbuf         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> *pixbuf</code></em>,
@@ -172,8 +212,7 @@ so that the origin of <em class="parameter"><code>pixbuf</code></em> is <em clas
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cr</code></em> :</span></p></td>
-<td>a <span class="type">Cairo</span> context
-</td>
+<td>a <span class="type">Cairo</span> context</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixbuf</code></em> :</span></p></td>
@@ -195,13 +234,13 @@ so that the origin of <em class="parameter"><code>pixbuf</code></em> is <em clas
 <p class="since">Since 2.8</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_set_source_pixmap ()">
+<div class="refsect2">
 <a name="gdk-cairo-set-source-pixmap"></a><h3>gdk_cairo_set_source_pixmap ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_set_source_pixmap         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a> *pixmap</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> pixmap_x</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> pixmap_y</code></em>);</pre>
-<div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">gdk_cairo_set_source_pixmap</code> has been deprecated since version 2.24 and should not be used in newly-written code. This function is being removed in GTK+ 3 (together
     with <a class="link" href="gdk-Bitmaps-and-Pixmaps.html#GdkPixmap"><span class="type">GdkPixmap</span></a>). Instead, use <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-set-source-window" title="gdk_cairo_set_source_window ()"><code class="function">gdk_cairo_set_source_window()</code></a> where
@@ -217,8 +256,7 @@ so that the origin of <em class="parameter"><code>pixmap</code></em> is <em clas
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cr</code></em> :</span></p></td>
-<td>a <span class="type">Cairo</span> context
-</td>
+<td>a <span class="type">Cairo</span> context</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pixmap</code></em> :</span></p></td>
@@ -240,19 +278,53 @@ so that the origin of <em class="parameter"><code>pixmap</code></em> is <em clas
 <p class="since">Since 2.10</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_set_source_window ()">
+<div class="refsect2">
 <a name="gdk-cairo-set-source-window"></a><h3>gdk_cairo_set_source_window ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_set_source_window         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> x</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> y</code></em>);</pre>
+<p>
+Sets the given window as the source pattern for the Cairo context.
+The pattern has an extend mode of <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-pattern-t.html#CAIRO-EXTEND-NONE:CAPS"><code class="literal">CAIRO_EXTEND_NONE</code></a> and is aligned
+so that the origin of <em class="parameter"><code>window</code></em> is <em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em>. The window contains all its
+subwindows when rendering.
+</p>
+<p>
+Note that the contents of <em class="parameter"><code>window</code></em> are undefined outside of the
+visible part of <em class="parameter"><code>window</code></em>, so use this function with care.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cr</code></em> :</span></p></td>
+<td>a <span class="type">Cairo</span> context</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td>a <a class="link" href="gdk-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>x</code></em> :</span></p></td>
+<td>X coordinate of location to place upper left corner of <em class="parameter"><code>window</code></em>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>y</code></em> :</span></p></td>
+<td>Y coordinate of location to place upper left corner of <em class="parameter"><code>window</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
 <p class="since">Since 2.24</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_rectangle ()">
+<div class="refsect2">
 <a name="gdk-cairo-rectangle"></a><h3>gdk_cairo_rectangle ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_rectangle                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRectangle" title="GdkRectangle"><span class="type">GdkRectangle</span></a> *rectangle</code></em>);</pre>
+                                                         <em class="parameter"><code>const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRectangle" title="struct GdkRectangle"><span class="type">GdkRectangle</span></a> *rectangle</code></em>);</pre>
 <p>
 Adds the given rectangle to the current path of <em class="parameter"><code>cr</code></em>.
 </p>
@@ -266,7 +338,7 @@ Adds the given rectangle to the current path of <em class="parameter"><code>cr</
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>rectangle</code></em> :</span></p></td>
-<td>a <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRectangle" title="GdkRectangle"><span class="type">GdkRectangle</span></a>
+<td>a <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRectangle" title="struct GdkRectangle"><span class="type">GdkRectangle</span></a>
 </td>
 </tr>
 </tbody>
@@ -274,7 +346,7 @@ Adds the given rectangle to the current path of <em class="parameter"><code>cr</
 <p class="since">Since 2.8</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_region ()">
+<div class="refsect2">
 <a name="gdk-cairo-region"></a><h3>gdk_cairo_region ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_region                    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gdk-Points-Rectangles-and-Regions.html#GdkRegion" title="GdkRegion"><span class="type">GdkRegion</span></a> *region</code></em>);</pre>
@@ -299,7 +371,7 @@ Adds the given region to the current path of <em class="parameter"><code>cr</cod
 <p class="since">Since 2.8</p>
 </div>
 <hr>
-<div class="refsect2" title="gdk_cairo_reset_clip ()">
+<div class="refsect2">
 <a name="gdk-cairo-reset-clip"></a><h3>gdk_cairo_reset_clip ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gdk_cairo_reset_clip                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gdk-Drawing-Primitives.html#GdkDrawable"><span class="type">GdkDrawable</span></a> *drawable</code></em>);</pre>
@@ -338,6 +410,6 @@ using <a class="link" href="gdk-Cairo-Interaction.html#gdk-cairo-create" title="
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.16.1</div>
 </body>
 </html>

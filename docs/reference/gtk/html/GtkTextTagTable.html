@@ -8,7 +8,7 @@
 <link rel="up" href="TextWidgetObjects.html" title="Multiline Text Editor">
 <link rel="prev" href="GtkTextTag.html" title="GtkTextTag">
 <link rel="next" href="GtkTextView.html" title="GtkTextView">
-<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.16.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -27,10 +27,12 @@
                    | 
                   <a href="#GtkTextTagTable.object-hierarchy" class="shortcut">Object Hierarchy</a>
                    | 
+                  <a href="#GtkTextTagTable.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                   | 
                   <a href="#GtkTextTagTable.signals" class="shortcut">Signals</a>
 </td></tr>
 </table>
-<div class="refentry" title="GtkTextTagTable">
+<div class="refentry">
 <a name="GtkTextTagTable"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
@@ -39,7 +41,7 @@
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
-<div class="refsynopsisdiv" title="Synopsis">
+<div class="refsynopsisdiv">
 <a name="GtkTextTagTable.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
 #include &lt;gtk/gtk.h&gt;
@@ -60,22 +62,28 @@
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="GtkTextTagTable.html#gtk-text-tag-table-get-size" title="gtk_text_tag_table_get_size ()">gtk_text_tag_table_get_size</a>         (<em class="parameter"><code><a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *table</code></em>);
 </pre>
 </div>
-<div class="refsect1" title="Object Hierarchy">
+<div class="refsect1">
 <a name="GtkTextTagTable.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----GtkTextTagTable
 </pre>
 </div>
-<div class="refsect1" title="Signals">
+<div class="refsect1">
+<a name="GtkTextTagTable.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+GtkTextTagTable implements
+ <a class="link" href="GtkBuildable.html" title="GtkBuildable">GtkBuildable</a>.</p>
+</div>
+<div class="refsect1">
 <a name="GtkTextTagTable.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
-  "<a class="link" href="GtkTextTagTable.html#GtkTextTagTable-tag-added" title='The "tag-added" signal'>tag-added</a>"                                      : Run Last
-  "<a class="link" href="GtkTextTagTable.html#GtkTextTagTable-tag-changed" title='The "tag-changed" signal'>tag-changed</a>"                                    : Run Last
-  "<a class="link" href="GtkTextTagTable.html#GtkTextTagTable-tag-removed" title='The "tag-removed" signal'>tag-removed</a>"                                    : Run Last
+  "<a class="link" href="GtkTextTagTable.html#GtkTextTagTable-tag-added" title='The "tag-added" signal'>tag-added</a>"                                      : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a>
+  "<a class="link" href="GtkTextTagTable.html#GtkTextTagTable-tag-changed" title='The "tag-changed" signal'>tag-changed</a>"                                    : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a>
+  "<a class="link" href="GtkTextTagTable.html#GtkTextTagTable-tag-removed" title='The "tag-removed" signal'>tag-removed</a>"                                    : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a>
 </pre>
 </div>
-<div class="refsect1" title="Description">
+<div class="refsect1">
 <a name="GtkTextTagTable.description"></a><h2>Description</h2>
 <p>
 You may wish to begin by reading the <a class="link" href="TextWidget.html" title="Text Widget Overview">text widget
@@ -84,40 +92,65 @@ types related to the text widget and how they work together.
 </p>
 <p>
 </p>
+<div class="refsect2">
+<a name="GtkTextTagTable-BUILDER-UI"></a><h3>GtkTextTagTables as GtkBuildable</h3>
+<p>
+The GtkTextTagTable implementation of the GtkBuildable interface
+supports adding tags by specifying "tag" as the "type"
+attribute of a &lt;child&gt; element.
+</p>
+<div class="example">
+<a name="id681062"></a><p class="title"><b>Example 20. A UI definition fragment specifying tags</b></p>
+<div class="example-contents">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="symbol">&lt;</span><span class="usertype">object</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"GtkTextTagTable"</span><span class="symbol">&gt;</span>
+<span class="normal"> </span><span class="symbol">&lt;</span><span class="usertype">child</span><span class="normal"> type</span><span class="symbol">=</span><span class="string">"tag"</span><span class="symbol">&gt;</span>
+<span class="normal">   </span><span class="symbol">&lt;</span><span class="usertype">object</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"GtkTextTag"</span><span class="symbol">/&gt;</span>
+<span class="normal"> </span><span class="symbol">&lt;/</span><span class="normal">child</span><span class="symbol">&gt;</span>
+<span class="symbol">&lt;/</span><span class="normal">object</span><span class="symbol">&gt;</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-<div class="refsect1" title="Details">
+
+</div>
+<br class="example-break">
+</div>
+<p>
+</p>
+<p>
+You may wish to begin by reading the <a class="link" href="TextWidget.html" title="Text Widget Overview">text widget
+conceptual overview</a> which gives an overview of all the objects and data
+types related to the text widget and how they work together.
+</p>
+<p>
+</p>
+</div>
+<div class="refsect1">
 <a name="GtkTextTagTable.details"></a><h2>Details</h2>
-<div class="refsect2" title="GtkTextTagTable">
+<div class="refsect2">
 <a name="GtkTextTagTable-struct"></a><h3>GtkTextTagTable</h3>
 <pre class="programlisting">typedef struct _GtkTextTagTable GtkTextTagTable;</pre>
 <p>
 </p>
 </div>
 <hr>
-<div class="refsect2" title="GtkTextTagTableForeach ()">
+<div class="refsect2">
 <a name="GtkTextTagTableForeach"></a><h3>GtkTextTagTableForeach ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                (*GtkTextTagTableForeach)           (<em class="parameter"><code><a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>
 </p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>
-</td>
-</tr>
-</tbody>
-</table></div>
 </div>
 <hr>
-<div class="refsect2" title="gtk_text_tag_table_new ()">
+<div class="refsect2">
 <a name="gtk-text-tag-table-new"></a><h3>gtk_text_tag_table_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="returnvalue">GtkTextTagTable</span></a> *   gtk_text_tag_table_new              (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>
@@ -128,13 +161,13 @@ default.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> a new <a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a>
+<td>a new <a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a>
 </td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="gtk_text_tag_table_add ()">
+<div class="refsect2">
 <a name="gtk-text-tag-table-add"></a><h3>gtk_text_tag_table_add ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_text_tag_table_add              (<em class="parameter"><code><a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *table</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a> *tag</code></em>);</pre>
@@ -163,7 +196,7 @@ the same name as an already-added tag.
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="gtk_text_tag_table_remove ()">
+<div class="refsect2">
 <a name="gtk-text-tag-table-remove"></a><h3>gtk_text_tag_table_remove ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_text_tag_table_remove           (<em class="parameter"><code><a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *table</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a> *tag</code></em>);</pre>
@@ -189,7 +222,7 @@ up destroyed if you don't have a reference to it.
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="gtk_text_tag_table_lookup ()">
+<div class="refsect2">
 <a name="gtk-text-tag-table-lookup"></a><h3>gtk_text_tag_table_lookup ()</h3>
 <pre class="programlisting"><a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="returnvalue">GtkTextTag</span></a> *        gtk_text_tag_table_lookup           (<em class="parameter"><code><a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *table</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
@@ -201,24 +234,23 @@ Look up a named tag.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>table</code></em> :</span></p></td>
-<td>a <a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> 
+<td>a <a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
-<td>name of a tag
-</td>
+<td>name of a tag</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> The tag, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none by that name is in the table. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+<td>The tag, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none by that name is in the table. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="gtk_text_tag_table_foreach ()">
+<div class="refsect2">
 <a name="gtk-text-tag-table-foreach"></a><h3>gtk_text_tag_table_foreach ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gtk_text_tag_table_foreach          (<em class="parameter"><code><a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *table</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GtkTextTagTable.html#GtkTextTagTableForeach" title="GtkTextTagTableForeach ()"><span class="type">GtkTextTagTableForeach</span></a> func</code></em>,
@@ -238,19 +270,18 @@ over it (you can't add/remove tags).
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
-<td>a function to call on each tag
+<td>a function to call on each tag. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>user data
-</td>
+<td>user data</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="gtk_text_tag_table_get_size ()">
+<div class="refsect2">
 <a name="gtk-text-tag-table-get-size"></a><h3>gtk_text_tag_table_get_size ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                gtk_text_tag_table_get_size         (<em class="parameter"><code><a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *table</code></em>);</pre>
 <p>
@@ -266,20 +297,20 @@ Returns the size of the table (number of tags)
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> number of tags in <em class="parameter"><code>table</code></em>
+<td>number of tags in <em class="parameter"><code>table</code></em>
 </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 </div>
-<div class="refsect1" title="Signal Details">
+<div class="refsect1">
 <a name="GtkTextTagTable.signal-details"></a><h2>Signal Details</h2>
-<div class="refsect2" title='The "tag-added" signal'>
+<div class="refsect2">
 <a name="GtkTextTagTable-tag-added"></a><h3>The <code class="literal">"tag-added"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *texttagtable,
                                                         <a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a>      *arg1,
-                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>         user_data)         : Run Last</pre>
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>         user_data)         : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -287,13 +318,7 @@ Returns the size of the table (number of tags)
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>texttagtable</code></em> :</span></p></td>
-<td>the object which received the signal.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>
-</td>
+<td>the object which received the signal.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -303,12 +328,12 @@ Returns the size of the table (number of tags)
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title='The "tag-changed" signal'>
+<div class="refsect2">
 <a name="GtkTextTagTable-tag-changed"></a><h3>The <code class="literal">"tag-changed"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *texttagtable,
                                                         <a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a>      *arg1,
                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>         arg2,
-                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>         user_data)         : Run Last</pre>
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>         user_data)         : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -316,18 +341,7 @@ Returns the size of the table (number of tags)
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>texttagtable</code></em> :</span></p></td>
-<td>the object which received the signal.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>arg2</code></em> :</span></p></td>
-<td>
-</td>
+<td>the object which received the signal.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -337,11 +351,11 @@ Returns the size of the table (number of tags)
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title='The "tag-removed" signal'>
+<div class="refsect2">
 <a name="GtkTextTagTable-tag-removed"></a><h3>The <code class="literal">"tag-removed"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="GtkTextTagTable.html" title="GtkTextTagTable"><span class="type">GtkTextTagTable</span></a> *texttagtable,
                                                         <a class="link" href="GtkTextTag.html" title="GtkTextTag"><span class="type">GtkTextTag</span></a>      *arg1,
-                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>         user_data)         : Run Last</pre>
+                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>         user_data)         : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -349,13 +363,7 @@ Returns the size of the table (number of tags)
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>texttagtable</code></em> :</span></p></td>
-<td>the object which received the signal.
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>arg1</code></em> :</span></p></td>
-<td>
-</td>
+<td>the object which received the signal.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -368,6 +376,6 @@ Returns the size of the table (number of tags)
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.15</div>
+          Generated by GTK-Doc V1.16.1</div>
 </body>
 </html>

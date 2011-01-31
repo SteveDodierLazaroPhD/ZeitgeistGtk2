@@ -8096,6 +8096,12 @@ extern __typeof (gtk_range_set_upper_stepper_sensitivity) IA__gtk_range_set_uppe
 extern __typeof (gtk_range_set_value) IA__gtk_range_set_value __attribute((visibility("hidden")));
 #define gtk_range_set_value IA__gtk_range_set_value
 
+extern __typeof (gtk_range_set_round_digits) IA__gtk_range_set_round_digits __attribute((visibility("hidden")));
+#define gtk_range_set_round_digits IA__gtk_range_set_round_digits
+
+extern __typeof (gtk_range_get_round_digits) IA__gtk_range_get_round_digits __attribute((visibility("hidden")));
+#define gtk_range_get_round_digits IA__gtk_range_get_round_digits
+
 #endif
 #endif
 #if IN_HEADER(__GTK_RC_H__)
