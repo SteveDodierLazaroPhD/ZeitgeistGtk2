@@ -73,7 +73,6 @@ static void gtk_menu_bar_size_request      (GtkWidget       *widget,
 					    GtkRequisition  *requisition);
 static void gtk_menu_bar_size_allocate     (GtkWidget       *widget,
 					    GtkAllocation   *allocation);
-static void gtk_menu_bar_show              (GtkWidget       *widget);
 static void gtk_menu_bar_paint             (GtkWidget       *widget,
 					    GdkRectangle    *area);
 static gint gtk_menu_bar_expose            (GtkWidget       *widget,
@@ -106,7 +105,6 @@ gtk_menu_bar_class_init (GtkMenuBarClass *class)
 
   widget_class->size_request = gtk_menu_bar_size_request;
   widget_class->size_allocate = gtk_menu_bar_size_allocate;
-  widget_class->show = gtk_menu_bar_show;
   widget_class->expose_event = gtk_menu_bar_expose;
   widget_class->hierarchy_changed = gtk_menu_bar_hierarchy_changed;
 
@@ -230,6 +228,9 @@ local_notify (GtkWidget  *widget,
                 "ubuntu-local", &local,
                 NULL);
 
+  gtk_widget_queue_resize (widget);
+
+  /*
   if (local)
     {
       gtk_widget_show (widget);
@@ -238,6 +239,7 @@ local_notify (GtkWidget  *widget,
     {
       gtk_widget_hide (widget);
     }
+  */
 }
 
 static void
@@ -311,12 +313,26 @@ gtk_menu_bar_size_request (GtkWidget      *widget,
   gint nchildren;
   GtkRequisition child_requisition;
   gint ipadding;
+  gboolean local = FALSE;
 
   g_return_if_fail (GTK_IS_MENU_BAR (widget));
   g_return_if_fail (requisition != NULL);
 
   requisition->width = 0;
   requisition->height = 0;
+
+  g_object_get (widget,
+                "ubuntu-local",
+                &local,
+                NULL);
+
+  if (!local)
+    {
+      requisition->width = 0;
+      requisition->height = 0;
+
+      return;
+    }
 
   if (gtk_widget_get_visible (widget))
     {
@@ -528,21 +544,6 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
 	    }
 	}
     }
-}
-
-static void
-gtk_menu_bar_show (GtkWidget *widget)
-{
-  g_return_if_fail (GTK_IS_MENU_BAR (widget));
-
-  gboolean local;
-
-  g_object_get (widget,
-                "ubuntu-local", &local,
-                NULL);
-
-  if (local)
-    GTK_WIDGET_CLASS (gtk_menu_bar_parent_class)->show (widget);
 }
 
 static void
