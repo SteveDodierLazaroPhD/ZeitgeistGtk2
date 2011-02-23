@@ -501,7 +501,10 @@ gtk_statusbar_remove_all (GtkStatusbar *statusbar,
           if (prev == NULL)
             prev = statusbar->messages;
 
-          list = prev->next;
+          if (prev)
+            list = prev->next;
+          else
+            list = NULL;
         }
       else
         {

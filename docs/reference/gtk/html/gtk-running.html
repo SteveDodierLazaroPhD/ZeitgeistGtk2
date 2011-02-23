@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Running GTK+ Applications</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
-<link rel="home" href="index.html" title="GTK+ Reference Manual">
+<link rel="home" href="index.html" title="GTK+ 2 Reference Manual">
 <link rel="up" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="prev" href="gtk-compiling.html" title="Compiling GTK+ Applications">
 <link rel="next" href="gtk-x11.html" title="Using GTK+ on the X Window System">
@@ -16,7 +16,7 @@
 <td><a accesskey="p" href="gtk-compiling.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="gtk.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GTK+ Reference Manual</th>
+<th width="100%" align="center">GTK+ 2 Reference Manual</th>
 <td><a accesskey="n" href="gtk-x11.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -31,9 +31,9 @@ How to run and debug your GTK+ application
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
-<a name="id448100"></a><h2>Running and debugging GTK+ Applications</h2>
+<a name="id575450"></a><h2>Running and debugging GTK+ Applications</h2>
 <div class="refsect2">
-<a name="id462228"></a><h3>Common commandline options</h3>
+<a name="id553936"></a><h3>Common commandline options</h3>
 <p>
 All GTK+ applications support a number of standard commandline
 options. These are removed from <code class="literal">argv</code> by gtk_init(). 
@@ -90,7 +90,7 @@ to turn off. This option is only available if GTK+ has been configured with
 </div>
 <hr>
 <div class="refsect2">
-<a name="id456733"></a><h3>Environment variables</h3>
+<a name="id596653"></a><h3>Environment variables</h3>
 <p> 
 GTK+ inspects a number of environment variables in addition to standard
 variables like <code class="envar">LANG</code>, <code class="envar">PATH</code>, <code class="envar">HOME</code> 
@@ -165,6 +165,11 @@ additional environment variables.
 <p><b><code class="envar">GTK_MODULES</code>. </b>
     A list of modules to load. Note that GTK+ also allows to specify modules to load via a commandline option (<code class="option">--gtk-module</code>) and with the <code class="literal">gtk-modules</code> setting.
   </p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+    Note that this environment variable is read by GTK+ 3 too,
+    which may not have the same set of modules available for loading.
+  </div>
 <p><b><code class="envar">GTK_PATH</code>. </b>
     Specifies a list of directories to search when GTK+ is looking for
     dynamically loaded objects such as the modules specified by
@@ -202,6 +207,13 @@ additional environment variables.
     The components of GTK_PATH are separated by the ':' character on
     Linux and Unix, and the ';' character on Windows.
   </p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+    Note that this environment variable is read by GTK+ 3 too, which
+    makes it unsuitable for setting it system-wide (or session-wide),
+    since doing so will cause either GTK+ 2.x applications or GTK+ 3
+    applications to see incompatible modules.
+  </div>
 <p><b><code class="envar">GTK_IM_MODULE</code>. </b>
     Specifies an IM module to use in preference to the one determined
     from the locale.  If this isn't set and you are running on the system
@@ -221,6 +233,13 @@ additional environment variables.
     Specifies a list of RC files to parse instead of the default ones;
     see <a class="link" href="gtk-Resource-Files.html" title="Resource Files">Resource Files</a>.
   </p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+    Note that this environment variable is read by GTK+ 3 too, which
+    makes it unsuitable for setting it system-wide (or session-wide),
+    since doing so will cause either GTK+ 2.x applications or GTK+ 3
+    applications to see the wrong list of IM modules.
+  </div>
 <p><b><code class="envar">GTK_EXE_PREFIX</code>. </b>
     If set, GTK+ uses <code class="filename">$GTK_EXE_PREFIX/lib</code> instead of 
     the libdir configured when GTK+ was compiled.
