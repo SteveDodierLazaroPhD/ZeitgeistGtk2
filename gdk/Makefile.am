@@ -194,6 +194,7 @@ if HAVE_INTROSPECTION
 introspection_files = 		\
 	$(filter-out gdkkeysyms-compat.h, $(gdk_public_h_sources))	\
 	$(gdk_c_sources)	\
+        gdkkeynames.c		\
         gdkenumtypes.c		\
         gdkenumtypes.h
 
