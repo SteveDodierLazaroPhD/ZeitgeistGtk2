@@ -1,6 +1,275 @@
+commit 89331e8e666d758af496fb408e466bb2b57c0a1a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 14 12:04:16 2011 -0400
+
+    Fix a stray + in configure.in
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 298c256c37079b21cb7bb82006d9c45a41ca9f04
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 14 11:53:45 2011 -0400
+
+    Bump version
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit a87d84225bf41d60e53499dd3ec18253a2872f59
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 14 10:35:47 2011 -0400
+
+    Update NEWS for 2.24.2
+
+ NEWS |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+commit 4ddf2c651285bf17137034083ce43d43bd8528b0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 14 10:21:54 2011 -0400
+
+    Use existing mime type for GTK_FILE stock icon
+
+    document-x-generic is not actually a mimetype. Using text-x-generic
+    instead lets us work out-of-the-box in a11y themes.
+
+ gtk/gtkiconfactory.c   |    2 +-
+ gtk/gtkrecentmanager.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 986289431725f15ab8f3e688df4f8cf4e679cefa
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 14 10:18:35 2011 -0400
+
+    Don't use GDK_NONE when GDK_SELECTION_CLIPBOARD is meant
+
+ gtk/gtkentry.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 5af547bf83bcb0bc6f62b31dff75cf30c9a8da86
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Mar 12 21:36:18 2011 -0500
+
+    Add missing annotations
+
+    This adds missing annotations for gdk_window_get_position(),
+    gtk_window_get_position() and gtk_accelerator_parse().
+    Bug 644353, patch by Ulrik Sverdrup.
+
+ gdk/gdkwindow.c     |    4 ++--
+ gtk/gtkaccelgroup.c |    4 ++--
+ gtk/gtkwindow.c     |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+commit cbe449dba49d11332332c63d4c5e098438114c45
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Mar 11 12:19:27 2011 +0800
+
+    Update README.win32
+
+    Make the information in README.win32 more up-to-date.
+
+ README.win32 |   26 ++++++++++++++++++++++----
+ 1 files changed, 22 insertions(+), 4 deletions(-)
+
+commit 3b3faee6d2299d1554cfc27e829bef7f5775ce62
+Author: Martin Pitt <martin.pitt@ubuntu.com>
+Date:   Thu Mar 10 13:25:55 2011 +0100
+
+    Fix gdk_keyval_name() and gdk_keyval_from_name() annotations
+
+    Backport annotations from master (which fixes the keyval_name()
+    crash due to
+    the wrong default transfer annotation), and ensure that the
+    g-ir-scanner
+    includes them.
+
+    https://launchnpad.net/bugs/732484
+
+ gdk/Makefile.am   |    1 +
+ gdk/gdkkeynames.c |   27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 0 deletions(-)
+
+commit f3cd3c3dd00bcca96c0e223ea836456215ad07d1
+Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
+Date:   Wed Mar 9 15:06:45 2011 +0900
+
+    Fixed GtkTreeModel::row-deleted documentation
+
+    This documentation was in direct conflict with the documentation
+    of gtk_tree_model_row_deleted() docs, the function docs are TRUE,
+    the signal docs were FALSE, fixed.
+
+ gtk/gtktreemodel.c |    9 +++------
+ 1 files changed, 3 insertions(+), 6 deletions(-)
+
+commit 70715c377e11ac81a8824e2bf156ba459db5a848
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Mar 7 17:25:31 2011 +0100
+
+    gdk: when scrolling windows, use the correct source for copying from
+
+    Previously we were copying from the toplevel window unconditionally.
+    This is wrong in two cases:
+    1) composited windows
+    2) different visuals
+
+    So when encountering such a window in the hierarchy, we stop going up
+    and just use the latest window as the source.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=643416
+
+ gdk/gdkwindow.c |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+commit 559cb5d8abd55ee8be6ce0992e449a96bb7f5737
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Mar 7 17:11:26 2011 +0100
+
+    build: Fix generation of gtktypefuncs.c with -g3 in CFLAGS
+
+    With -g3, macros are included in the output, and that caused
+    gdk_window_get_type() to be included when it shouldn't be.
+
+ gtk/Makefile.am |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+commit b18d4feaaffce04e997e2b8241a15b5bcf3d3710
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Mon Mar 7 12:05:32 2011 +0100
+
+    x11: Remove unused variable
+
+ gdk/x11/gdkdnd-x11.c |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit e229f2998b1916d6b0101ce39a64e93933d9a5e4
+Author: Sebastian Pölsterl <sebp@k-d-w.org>
+Date:   Tue Jan 18 16:21:10 2011 +0100
+
+    Fixed gtk_calendar_get_date annotations: Added missing (out)
+
+    Backported from master commit 34b573b07
+
+ gtk/gtkcalendar.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 931faeab12799a88caa8a1c41ff4ca06957582bc
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Feb 25 13:46:39 2011 +0800
+
+    Don't distribute GDK-Pixbuf VS 2008 Projects
+
+    Since GDK-Pixbuf is now in a package of its own, stop the distribution
+    of GDK-Pixbuf projects (those files are no longer referenced in the
+    GTK+ solution file already)
+
+ build/win32/vs9/Makefile.am |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+commit b6bf9112ad0316b0746f03e7458d8559eafb8481
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Feb 24 14:53:09 2011 -0600
+
+    [GtkFileChooser] Fix initial selection when hidden files are shown
+
+    We were breaking prematurely out of the loop that goes through
+    each file that is pending selection; not only does that loop
+    disable filtering and show hidden files if needed, but it also
+    selects the files themselves.  So we need to walk the whole
+    list of files.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=643170
+
+ gtk/gtkfilechooserdefault.c |   43
+ +++++++++++++++++++++++++++++++------------
+ 1 files changed, 31 insertions(+), 12 deletions(-)
+
+commit e158b9b13a9f1134f6984f131282976898cf8a46
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Oct 13 10:18:03 2010 -0400
+
+    Make GtkRecentManager use standard icon names for themed icons
+
+ gtk/gtkrecentmanager.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit b0d0bf7f7db06126427eeab64f1df01320b2e1ad
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Feb 24 19:59:00 2011 +0100
+
+    Avoid spurious emissions of monitors-changed
+
+    The monitor change detection code in _gdk_x11_screen_size_changed()
+    and
+    process_monitors_change() goes to some length to make sure its
+    only emitted
+    when there is an actual change to the data visible via the GdkScreen
+    monitors
+    api.
+
+    However, commit 662e69ad added some code that always emits
+    "monitors-changed"
+    in _gdk_x11_screen_size_changed when we have randr13 and get a
+    ConfigureNotify
+    on the root window (even though we may already have emitted it in the
+    RRScreenChangesNotify event!).
+
+    As far as I can tell this is due to a comment in the bug referenced
+    by the
+    commit (https://bugzilla.gnome.org/show_bug.cgi?id=601712#c4) where
+    it says:
+
+      This version of the patch changes GdkDisplay to emit
+      "monitors-changed" when
+      the primary monitor changes (see the change in
+      _gdk_x11_screen_size_changed).
+
+    And, if you remove this part of the change the signal is not emitted
+    when just
+    the primary is changed. However, this is not really the right
+    approach. We
+    should just also check for if the primary changes in
+    process_monitors_change()
+    to avoid spurious signal emissions.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=643216
+    (cherry picked from commit 0b0f110152df40795f473c805afd8548facf7377)
+
+    Conflicts:
+
+	gdk/x11/gdkscreen-x11.c
+
+ gdk/x11/gdkscreen-x11.c |   13 +++++++------
+ 1 files changed, 7 insertions(+), 6 deletions(-)
+
+commit 20b794812f8cac842bfa5e78e748c82038fed9ad
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:	Mon Feb 21 17:54:24 2011 -0500
+
+    Fix duplicate 'new in 2.22' index
+
+    Spotted by Dieter Verfaillie,
+    https://bugzilla.gnome.org/show_bug.cgi?id=642905
+
+ docs/reference/gtk/gtk-docs.sgml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit b2f9a53c0040594223c656559ab3f61b6b6f16b8
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:	Mon Feb 21 13:01:22 2011 -0500
+
+    Post-release version bump
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
 commit 661c0838b7cc69aa36fdcac07e2adf8a7386368f
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Feb 21 12:22:50 2011 -0500
+Date:	Mon Feb 21 12:22:50 2011 -0500
 
     Update NEWS
 
@@ -9,7 +278,7 @@ Date:   Mon Feb 21 12:22:50 2011 -0500
 
 commit 2baa2dc7f046b303c6f36856607d366e9e632041
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sun Feb 20 18:47:00 2011 -0500
+Date:	Sun Feb 20 18:47:00 2011 -0500
 
     Remove annotation that breaks the introspection build
 
@@ -18,17 +287,17 @@ Date:   Sun Feb 20 18:47:00 2011 -0500
 
 commit 7ffc605ac2e0cf23f7ceee19a895ba1ea07afecf
 Author: Gabor Kelemen <kelemeng@gnome.hu>
-Date:   Sun Feb 20 12:23:02 2011 +0100
+Date:	Sun Feb 20 12:23:02 2011 +0100
 
     Updated Hungarian translation
 
- po-properties/hu.po |  668
+ po-properties/hu.po |	668
  +++++++++++++++++++++++----------------------------
  1 files changed, 304 insertions(+), 364 deletions(-)
 
 commit ac093e25f6e0cbbadef093bad8f17d1cbc089764
 Author: Gabor Kelemen <kelemeng@gnome.hu>
-Date:   Sun Feb 20 01:38:32 2011 +0100
+Date:	Sun Feb 20 01:38:32 2011 +0100
 
     Updated Hungarian translation
 
@@ -38,19 +307,19 @@ Date:   Sun Feb 20 01:38:32 2011 +0100
 
 commit af9174693198d8263df8b20dc32a869a3b57d222
 Author: Tor Lillqvist <tml@iki.fi>
-Date:   Sun Feb 20 01:33:00 2011 +0200
+Date:	Sun Feb 20 01:33:00 2011 +0200
 
     Handle emulated keyboard input that arrives as VK_PACKET
 
     Fixes bug #642772. Thanks to the anonymous bug reporter for providing
     a test program.
 
- gdk/win32/gdkevents-win32.c |   16 ++++++++++------
+ gdk/win32/gdkevents-win32.c |	 16 ++++++++++------
  1 files changed, 10 insertions(+), 6 deletions(-)
 
 commit 44b2e88aefb4010e10d1941c05c4741fe12760f1
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Feb 19 13:30:02 2011 -0500
+Date:	Sat Feb 19 13:30:02 2011 -0500
 
     Make gtk_combo_box_text_get_active_text() behave as documented
 
@@ -63,7 +332,7 @@ Date:   Sat Feb 19 13:30:02 2011 -0500
 
 commit c14e9ee768e26a375556a30b5a45af2378cb277a
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Feb 19 12:47:04 2011 -0500
+Date:	Sat Feb 19 12:47:04 2011 -0500
 
     Fix doc comment syntax
 
@@ -72,7 +341,7 @@ Date:   Sat Feb 19 12:47:04 2011 -0500
 
 commit b609bd11498472a0ebf899104c6d02ce78271678
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Feb 19 10:16:58 2011 -0500
+Date:	Sat Feb 19 10:16:58 2011 -0500
 
     Fix doc comment
 
@@ -81,7 +350,7 @@ Date:   Sat Feb 19 10:16:58 2011 -0500
 
 commit cb3f20ecbe3698d4207f9e04935739b709d87fe8
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Thu Feb 17 19:06:19 2011 -0500
+Date:	Thu Feb 17 19:06:19 2011 -0500
 
     GailEntry: remove idle if cell editing is canceled
 
@@ -93,7 +362,7 @@ Date:   Thu Feb 17 19:06:19 2011 -0500
 
 commit 3998dd9563b2de65735ea7fb44bb835a11817f06
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Thu Feb 17 18:49:01 2011 -0500
+Date:	Thu Feb 17 18:49:01 2011 -0500
 
     gtk-demo: plug a memleak in the editable cells demo
 
@@ -102,16 +371,16 @@ Date:   Thu Feb 17 18:49:01 2011 -0500
 
 commit 856a69936b5cf94c7605e10bde875183088c6d1e
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Thu Feb 17 18:34:28 2011 -0500
+Date:	Thu Feb 17 18:34:28 2011 -0500
 
     Fix a memory leak with file chooser previews
 
- gtk/gtkfilechooserdefault.c |    7 +++++++
+ gtk/gtkfilechooserdefault.c |	  7 +++++++
  1 files changed, 7 insertions(+), 0 deletions(-)
 
 commit 5813ccc70024c2708e8b444dd4414129efb25246
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Thu Feb 17 15:56:52 2011 -0500
+Date:	Thu Feb 17 15:56:52 2011 -0500
 
     Remove a leaking get_name implementation
 
@@ -122,16 +391,16 @@ Date:   Thu Feb 17 15:56:52 2011 -0500
 
 commit 8a6bf123466cc60259b88437757b27b10a344de3
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Thu Feb 17 15:54:50 2011 -0500
+Date:	Thu Feb 17 15:54:50 2011 -0500
 
     Don't leak the GDir in the iconview example
 
- demos/gtk-demo/iconview.c |    1 +
+ demos/gtk-demo/iconview.c |	1 +
  1 files changed, 1 insertions(+), 0 deletions(-)
 
 commit f7b7346f8db129451b43371d47abfbafba20179d
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Thu Feb 17 13:29:59 2011 -0500
+Date:	Thu Feb 17 13:29:59 2011 -0500
 
     Check if the accessible is actually an AtkAction
 
@@ -141,7 +410,7 @@ Date:   Thu Feb 17 13:29:59 2011 -0500
 
 commit db550581784df99c1540a10cc3879917813e8d68
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Wed Feb 16 23:30:21 2011 -0500
+Date:	Wed Feb 16 23:30:21 2011 -0500
 
     Remove a bunch of crazy code from gail
 
@@ -154,7 +423,7 @@ Date:   Wed Feb 16 23:30:21 2011 -0500
 
 commit 6fcb3899755cf6815aabb395cfb1fbdd59e5c153
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Wed Feb 16 22:57:25 2011 -0500
+Date:	Wed Feb 16 22:57:25 2011 -0500
 
     gail: Fix the atk_add_key_event_listener implementation
 
@@ -166,7 +435,7 @@ Date:   Wed Feb 16 22:57:25 2011 -0500
 
 commit c26905747ffc7a683574344e3c745bbd701742a8
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Wed Feb 16 22:35:16 2011 -0500
+Date:	Wed Feb 16 22:35:16 2011 -0500
 
     gail: support indeterminate state of check menuitems
 
@@ -181,19 +450,19 @@ Date:   Wed Feb 16 22:35:16 2011 -0500
 
 commit fa007952bab7f1dcdf92f5bc34d7e99b3d29b5a7
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Wed Feb 16 18:46:44 2011 -0500
+Date:	Wed Feb 16 18:46:44 2011 -0500
 
     Check the return value of gtk_tree_model_get_iter
 
     Noticed in passing, didn't really see it crash there, but
     better safe than sorry.
 
- gtk/gtktreeview.c |    7 +++++--
+ gtk/gtktreeview.c |	7 +++++--
  1 files changed, 5 insertions(+), 2 deletions(-)
 
 commit de7b27159d8505494c1bf98d40003c0ddab96e2b
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Wed Feb 16 18:40:14 2011 -0500
+Date:	Wed Feb 16 18:40:14 2011 -0500
 
     gtk_tree_model_filter_row_deleted: don't emit signals too early
 
@@ -212,7 +481,7 @@ Date:   Wed Feb 16 18:40:14 2011 -0500
 
 commit 9bc8ba7e5dd7aa7684e19222c547bbd7fc4dc9ac
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Fri Feb 11 23:53:39 2011 -0500
+Date:	Fri Feb 11 23:53:39 2011 -0500
 
     Use standard icon names
 
@@ -221,7 +490,7 @@ Date:   Fri Feb 11 23:53:39 2011 -0500
 
 commit 48342ad2bdc5343cb77cae1159795c79c4203474
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Feb 19 10:02:29 2011 -0500
+Date:	Sat Feb 19 10:02:29 2011 -0500
 
     Add warnings about environment variables
 
@@ -233,7 +502,7 @@ Date:   Sat Feb 19 10:02:29 2011 -0500
 
 commit 420f2fbddcbc19830cf70503ca1ca5c1f1b842db
 Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
-Date:   Sat Feb 5 00:58:40 2011 +0900
+Date:	Sat Feb 5 00:58:40 2011 +0900
 
     Fixed gtk_recent_chooser_menu_set_current_filter to update the
     local pointer.
@@ -242,12 +511,12 @@ Date:   Sat Feb 5 00:58:40 2011 +0900
     the recent chooser menu (or unsetting the filter twice), would cause
     warnings (or invalid memory accesses).
 
- gtk/gtkrecentchoosermenu.c |    9 ++++-----
+ gtk/gtkrecentchoosermenu.c |	 9 ++++-----
  1 files changed, 4 insertions(+), 5 deletions(-)
 
 commit 45d05f52c22a7b5d37a4c70574ffc1d9e1c84789
 Author: Martin Pitt <martin.pitt@ubuntu.com>
-Date:   Wed Feb 2 15:11:06 2011 +0100
+Date:	Wed Feb 2 15:11:06 2011 +0100
 
     [GI] Mark mis-detected constructors as such
 
@@ -268,7 +537,7 @@ Date:   Wed Feb 2 15:11:06 2011 +0100
 
 commit 0e47df0ee0a87990a38227b5010b6607d5569cee
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Feb 19 09:44:05 2011 -0500
+Date:	Sat Feb 19 09:44:05 2011 -0500
 
     Add a missing include
 
@@ -279,7 +548,7 @@ Date:   Sat Feb 19 09:44:05 2011 -0500
 
 commit fa2d05ab4e9fa60d9f790a09e55679a00ed700d1
 Author: Martin Nordholts <martinn@src.gnome.org>
-Date:   Tue Feb 1 23:07:21 2011 +0100
+Date:	Tue Feb 1 23:07:21 2011 +0100
 
     Bug 633291 - Handle Shift-keys in X11 gdk_test_simulate_key()
 
@@ -287,14 +556,14 @@ Date:   Tue Feb 1 23:07:21 2011 +0100
     gdk_test_simulate_key(), raise the GDK_SHIFT_MASK flag so the reqested
     key value is generated. Also add a regression test for this fix.
 
- gdk/x11/gdktestutils-x11.c |    9 +++++++--
- gtk/tests/testing.c        |   41
+ gdk/x11/gdktestutils-x11.c |	 9 +++++++--
+ gtk/tests/testing.c	    |	41
  +++++++++++++++++++++++++++++++++++++++++
  2 files changed, 48 insertions(+), 2 deletions(-)
 
 commit e3185138acaed37acbe23127878704e267efdaa5
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Feb 12 08:06:31 2011 -0500
+Date:	Sat Feb 12 08:06:31 2011 -0500
 
     Fix the build without the Composite headers
 
@@ -307,7 +576,7 @@ Date:   Sat Feb 12 08:06:31 2011 -0500
 
 commit 8e51a22707386f21372f3b3481ac4ec7f08d0ac5
 Author: Colin Walters <walters@verbum.org>
-Date:   Fri Feb 11 12:00:05 2011 -0500
+Date:	Fri Feb 11 12:00:05 2011 -0500
 
     docs: Link to all GTK+ 2 versions, add GTK+ 3 link
 
@@ -320,7 +589,7 @@ Date:   Fri Feb 11 12:00:05 2011 -0500
 
 commit 28f82afd0e8e0ea76910a2c32e69feb4c15d861d
 Author: Michael Natterer <mitch@gimp.org>
-Date:   Fri Feb 11 10:35:25 2011 +0100
+Date:	Fri Feb 11 10:35:25 2011 +0100
 
     gtk: don't send BUTTON_RELEASE to unrealized widgets
 
@@ -333,30 +602,30 @@ Date:   Fri Feb 11 10:35:25 2011 +0100
 
 commit 64adba6e3e44551a99dfae9e9198f7645c7bec35
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Feb 8 18:02:48 2011 -0500
+Date:	Tue Feb 8 18:02:48 2011 -0500
 
     Extend the mixed-dependency check to modules as well
 
     This helps prevent accidents with GTK_PATH.
 
- gtk/gtkmain.c    |   27 +++++++++++++++++++--------
- gtk/gtkmain.h    |    3 +++
+ gtk/gtkmain.c	  |   27 +++++++++++++++++++--------
+ gtk/gtkmain.h	  |    3 +++
  gtk/gtkmodules.c |   20 +++++++++++++++++---
  3 files changed, 39 insertions(+), 11 deletions(-)
 
 commit bd0f159b6c24ea05b8f47ea502116a8def7bbd35
 Author: Piotr Drąg <piotrdrag@gmail.com>
-Date:   Wed Feb 2 18:03:09 2011 +0100
+Date:	Wed Feb 2 18:03:09 2011 +0100
 
     Updated Polish translation
 
- po-properties/pl.po |  565
+ po-properties/pl.po |	565
  +++++++++++++++++++++++++++------------------------
  1 files changed, 298 insertions(+), 267 deletions(-)
 
 commit 03bdae8dcc942ab169f7e2faf2c22f5303b390dc
 Author: Piotr Drąg <piotrdrag@gmail.com>
-Date:   Wed Feb 2 18:02:36 2011 +0100
+Date:	Wed Feb 2 18:02:36 2011 +0100
 
     Updated Polish translation
 
@@ -366,19 +635,19 @@ Date:   Wed Feb 2 18:02:36 2011 +0100
 
 commit 1d8bac64b2fb833fad9d3d9746c35e62e851e76b
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Jan 31 11:32:19 2011 -0500
+Date:	Mon Jan 31 11:32:19 2011 -0500
 
     Fix a segfault in gtk_statusbar_remove_all
 
     https://bugzilla.gnome.org/show_bug.cgi?id=640487
 
- gtk/gtkstatusbar.c  |    5 ++++-
- gtk/tests/testing.c |   21 +++++++++++++++++++++
+ gtk/gtkstatusbar.c  |	  5 ++++-
+ gtk/tests/testing.c |	 21 +++++++++++++++++++++
  2 files changed, 25 insertions(+), 1 deletions(-)
 
 commit 47b2868a087ff1dbf34c4c76df3bbc002a19c979
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sun Jan 30 23:58:44 2011 -0500
+Date:	Sun Jan 30 23:58:44 2011 -0500
 
     Add missing return type
 
@@ -390,7 +659,7 @@ Date:   Sun Jan 30 23:58:44 2011 -0500
 
 commit 66f55661add359eea4973f67b25bfa56a474e5b0
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sun Jan 30 00:33:49 2011 -0500
+Date:	Sun Jan 30 00:33:49 2011 -0500
 
     Bump version to 2.24.1
 
@@ -399,7 +668,7 @@ Date:   Sun Jan 30 00:33:49 2011 -0500
 
 commit 0b3710d762decd49547d17d8decb316c4eca0968
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sun Jan 30 00:04:04 2011 -0500
+Date:	Sun Jan 30 00:04:04 2011 -0500
 
     Fix doc format problems
 
@@ -409,16 +678,16 @@ Date:   Sun Jan 30 00:04:04 2011 -0500
 
 commit e8a0f3cfb825cbf684a4b62fca6eb6461539eb2f
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Jan 29 23:52:32 2011 -0500
+Date:	Sat Jan 29 23:52:32 2011 -0500
 
     Fix the build
 
- gtk/gtktextview.c |    2 +-
+ gtk/gtktextview.c |	2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 commit 0b5a530ef1d5a44fe16b9aafb20c558cd48f7a5c
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Jan 29 23:32:55 2011 -0500
+Date:	Sat Jan 29 23:32:55 2011 -0500
 
     More updates
 
@@ -427,7 +696,7 @@ Date:   Sat Jan 29 23:32:55 2011 -0500
 
 commit bb8e1c67c6e9b20a4a13d5d95a8d809d260e31e1
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Jan 29 22:40:41 2011 -0500
+Date:	Sat Jan 29 22:40:41 2011 -0500
 
     Check if buffer is NULL after setting it to NULL, not before.
 
@@ -437,22 +706,22 @@ Date:   Sat Jan 29 22:40:41 2011 -0500
     https://bugzilla.gnome.org/show_bug.cgi?id=634677
     (cherry picked from commit d688343a31dbe67f34228b998bbb753584d8d2e9)
 
- gtk/gtktextview.c |    5 +++--
+ gtk/gtktextview.c |	5 +++--
  1 files changed, 3 insertions(+), 2 deletions(-)
 
 commit 840c9aa8d944f7ed9dc258458fca8a4be291c3cf
 Author: Luca Ferretti <lferrett@gnome.org>
-Date:   Sat Jan 29 16:03:33 2011 +0100
+Date:	Sat Jan 29 16:03:33 2011 +0100
 
     Updated Italian translation
 
- po-properties/it.po |  415
+ po-properties/it.po |	415
  ++++++++++++++++++++++++++-------------------------
  1 files changed, 214 insertions(+), 201 deletions(-)
 
 commit f80f4f5ce3c1038068e451c50a6fe93b1ba422b5
 Author: Luca Ferretti <lferrett@gnome.org>
-Date:   Sat Jan 29 16:00:27 2011 +0100
+Date:	Sat Jan 29 16:00:27 2011 +0100
 
     Updated Italian translation
 
@@ -462,7 +731,7 @@ Date:   Sat Jan 29 16:00:27 2011 +0100
 
 commit 6dd57dfe65bd89311039e1115034348623d84e19
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Fri Jan 28 23:19:39 2011 -0500
+Date:	Fri Jan 28 23:19:39 2011 -0500
 
     Updates for 2.24.0
 
@@ -471,7 +740,7 @@ Date:   Fri Jan 28 23:19:39 2011 -0500
 
 commit 7cda5b54fb0044ff594a8b15dfc4f59641b71e00
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Fri Jan 28 23:19:14 2011 -0500
+Date:	Fri Jan 28 23:19:14 2011 -0500
 
     Bump version to 2.24.0
 
@@ -480,27 +749,27 @@ Date:   Fri Jan 28 23:19:14 2011 -0500
 
 commit b08b4cccc595707e7d3db5263263472f54b7e879
 Author: Ignacio Casal Quinteiro <icq@gnome.org>
-Date:   Fri Jan 28 13:24:26 2011 +0100
+Date:	Fri Jan 28 13:24:26 2011 +0100
 
     Remove gtk_paste_point_override mark if we don't insert any text.
 
     This patch fixes bug #590459.
 
- gtk/gtktextbuffer.c |   16 +++++++++++++---
+ gtk/gtktextbuffer.c |	 16 +++++++++++++---
  1 files changed, 13 insertions(+), 3 deletions(-)
 
 commit 461d71f6aa7f93a7a57a1d19053cd79597a09070
 Author: Martin Pitt <martin.pitt@ubuntu.com>
-Date:   Wed Jan 26 14:39:50 2011 +0100
+Date:	Wed Jan 26 14:39:50 2011 +0100
 
     [GI] Fix gtk_tree_view_get_cursor() transfer annotation
 
- gtk/gtktreeview.c |    4 ++--
+ gtk/gtktreeview.c |	4 ++--
  1 files changed, 2 insertions(+), 2 deletions(-)
 
 commit a33dceee4b1bd22a03d69312e65a407cd4953a54
 Author: Martin Pitt <martin.pitt@ubuntu.com>
-Date:   Wed Jan 26 14:09:25 2011 +0100
+Date:	Wed Jan 26 14:09:25 2011 +0100
 
     [GI] Backport transfer annotations
 
@@ -516,68 +785,68 @@ Date:   Wed Jan 26 14:09:25 2011 +0100
 
 commit 5cded4d5e29e4c841885894a6fc63f631e2c8c5c
 Author: Pavel Holejsovsky <pholejs@src.gnome.org>
-Date:   Wed Jan 26 12:49:08 2011 +0100
+Date:	Wed Jan 26 12:49:08 2011 +0100
 
     [GI] Add missing (transfer) annotations
 
     Backported from master commit 2f0d40335b.
 
- gdk/gdkcursor.c              |    2 +-
- gdk/gdkwindow.c              |   14 ++++++++------
+ gdk/gdkcursor.c	      |    2 +-
+ gdk/gdkwindow.c	      |   14 ++++++++------
  gdk/x11/gdkdisplay-x11.c     |    3 ++-
  gdk/x11/gdkvisual-x11.c      |    4 ++--
- gtk/gtkaboutdialog.c         |    6 +++---
- gtk/gtkaccelgroup.c          |    7 ++++---
- gtk/gtkaction.c              |    5 +++--
- gtk/gtkbindings.c            |    2 +-
- gtk/gtkcontainer.c           |   11 ++++++-----
- gtk/gtkdnd.c                 |   10 +++++-----
- gtk/gtkiconfactory.c         |    4 ++--
- gtk/gtklabel.c               |    3 ++-
- gtk/gtkmain.c                |    3 ++-
- gtk/gtkmenu.c                |   28 ++++++++++++++++++++++++++++
- gtk/gtknotebook.c            |    3 ++-
+ gtk/gtkaboutdialog.c	      |    6 +++---
+ gtk/gtkaccelgroup.c	      |    7 ++++---
+ gtk/gtkaction.c	      |    5 +++--
+ gtk/gtkbindings.c	      |    2 +-
+ gtk/gtkcontainer.c	      |   11 ++++++-----
+ gtk/gtkdnd.c		      |   10 +++++-----
+ gtk/gtkiconfactory.c	      |    4 ++--
+ gtk/gtklabel.c		      |    3 ++-
+ gtk/gtkmain.c		      |    3 ++-
+ gtk/gtkmenu.c		      |   28 ++++++++++++++++++++++++++++
+ gtk/gtknotebook.c	      |    3 ++-
  gtk/gtkpagesetupunixdialog.c |    4 ++--
- gtk/gtkprintcontext.c        |    2 +-
- gtk/gtkprinter.c             |    2 +-
- gtk/gtkprintjob.c            |    6 +++---
+ gtk/gtkprintcontext.c	      |    2 +-
+ gtk/gtkprinter.c	      |    2 +-
+ gtk/gtkprintjob.c	      |    6 +++---
  gtk/gtkprintoperation-unix.c |    2 +-
  gtk/gtkprintoperation.c      |    4 ++--
  gtk/gtkprintunixdialog.c     |    4 ++--
- gtk/gtkradiobutton.c         |    4 ++--
- gtk/gtkrc.c                  |    2 +-
- gtk/gtkselection.c           |    8 ++++----
- gtk/gtkstyle.c               |    2 +-
- gtk/gtktestutils.c           |    8 ++++----
- gtk/gtktextbuffer.c          |    4 ++--
+ gtk/gtkradiobutton.c	      |    4 ++--
+ gtk/gtkrc.c		      |    2 +-
+ gtk/gtkselection.c	      |    8 ++++----
+ gtk/gtkstyle.c		      |    2 +-
+ gtk/gtktestutils.c	      |    8 ++++----
+ gtk/gtktextbuffer.c	      |    4 ++--
  gtk/gtktextbufferrichtext.c  |   16 ++++++++--------
- gtk/gtkwidget.c              |    4 ++--
- gtk/gtkwindow.c              |    2 +-
+ gtk/gtkwidget.c	      |    4 ++--
+ gtk/gtkwindow.c	      |    2 +-
  31 files changed, 108 insertions(+), 71 deletions(-)
 
 commit 9b2457a67127e7c260490853295afa2c98e191c1
 Author: Pavel Holejsovsky <pholejs@src.gnome.org>
-Date:   Wed Jan 26 12:29:21 2011 +0100
+Date:	Wed Jan 26 12:29:21 2011 +0100
 
     [GI] Fixes of existing incorrect annotations
 
     Backported from master commit 3c8fc21e9b3e035b86a.
 
- gtk/gtkaction.c          |    9 +++++----
- gtk/gtkcellrenderer.c    |    2 +-
- gtk/gtkfilechooser.c     |   17 +++++++++--------
- gtk/gtkicontheme.c       |    8 ++++----
- gtk/gtkmain.c            |    3 ++-
- gtk/gtkradiobutton.c     |    4 ++--
+ gtk/gtkaction.c	  |    9 +++++----
+ gtk/gtkcellrenderer.c	  |    2 +-
+ gtk/gtkfilechooser.c	  |   17 +++++++++--------
+ gtk/gtkicontheme.c	  |    8 ++++----
+ gtk/gtkmain.c		  |    3 ++-
+ gtk/gtkradiobutton.c	  |    4 ++--
  gtk/gtkradiomenuitem.c   |    6 +++---
  gtk/gtkradiotoolbutton.c |    4 ++--
- gtk/gtkselection.c       |    2 +-
- gtk/gtktreeview.c        |    2 +-
+ gtk/gtkselection.c	  |    2 +-
+ gtk/gtktreeview.c	  |    2 +-
  10 files changed, 30 insertions(+), 27 deletions(-)
 
 commit 0455bcfda433f510ab2c1a206bf5f492fe50a255
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sun Jan 23 16:58:50 2011 -0500
+Date:	Sun Jan 23 16:58:50 2011 -0500
 
     Expose gtk-auto-mnemonics as an Xsetting
 
@@ -586,7 +855,7 @@ Date:   Sun Jan 23 16:58:50 2011 -0500
 
 commit a5d35b95f03f461ff5ed759aac31140d10dc256d
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sun Jan 23 16:52:40 2011 -0500
+Date:	Sun Jan 23 16:52:40 2011 -0500
 
     Default target version of gtk-builder-convert should be 2.0
 
@@ -595,22 +864,22 @@ Date:   Sun Jan 23 16:52:40 2011 -0500
 
 commit c44fe0bc5482842cd4f343d9a9701621845db587
 Author: Johan Dahlin <johan@gnome.org>
-Date:   Sat Sep 18 13:42:15 2010 -0300
+Date:	Sat Sep 18 13:42:15 2010 -0300
 
     Add a couple of missing annotations
 
     Backported from master commit 19cab17c.
 
- gtk/gtktoolpalette.c   |   14 +++++++-------
- gtk/gtktoolshell.c     |    2 +-
+ gtk/gtktoolpalette.c	|   14 +++++++-------
+ gtk/gtktoolshell.c	|    2 +-
  gtk/gtktreeselection.c |    8 ++++----
- gtk/gtktreestore.c     |    2 +-
- gtk/gtkuimanager.c     |    2 +-
+ gtk/gtktreestore.c	|    2 +-
+ gtk/gtkuimanager.c	|    2 +-
  5 files changed, 14 insertions(+), 14 deletions(-)
 
 commit 164149a8dc2560a95b1f88f8444550bccd82a040
 Author: Christian Persch <chpe@gnome.org>
-Date:   Wed Jan 12 19:02:20 2011 +0100
+Date:	Wed Jan 12 19:02:20 2011 +0100
 
     Add target version handling to gtk-builder-convert
 
@@ -619,49 +888,49 @@ Date:   Wed Jan 12 19:02:20 2011 +0100
 
     Bug #639327.
 
- docs/reference/gtk/gtk-builder-convert.xml |   11 ++++++++++
- gtk/gtk-builder-convert                    |   31
+ docs/reference/gtk/gtk-builder-convert.xml |	11 ++++++++++
+ gtk/gtk-builder-convert		    |	31
  ++++++++++++++++++++++++++-
  2 files changed, 40 insertions(+), 2 deletions(-)
 
 commit 78a4b090e29399e7b93c296ce3f8f241da2d37f5
 Author: Martin Pitt <martin.pitt@ubuntu.com>
-Date:   Sat Jan 15 15:26:12 2011 -0600
+Date:	Sat Jan 15 15:26:12 2011 -0600
 
     Gtk{List,Tree}Store: Fix GI array annotations
 
- gtk/gtkliststore.c |    6 +++---
- gtk/gtktreestore.c |    6 +++---
+ gtk/gtkliststore.c |	 6 +++---
+ gtk/gtktreestore.c |	 6 +++---
  2 files changed, 6 insertions(+), 6 deletions(-)
 
 commit dfa1ea8245ddfd7371826432b0be34f1f686543e
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Jan 15 00:26:08 2011 -0500
+Date:	Sat Jan 15 00:26:08 2011 -0500
 
     Add accessors for GtkRange::round-digits
 
-        Patch by Christian Dywan,
-        https://bugzilla.gnome.org/show_bug.cgi?id=351755
+	Patch by Christian Dywan,
+	https://bugzilla.gnome.org/show_bug.cgi?id=351755
 
- docs/reference/gtk/gtk-sections.txt |    4 +-
- gtk/gtk.symbols                     |    2 +
- gtk/gtkrange.c                      |   72
+ docs/reference/gtk/gtk-sections.txt |	  4 +-
+ gtk/gtk.symbols		     |	  2 +
+ gtk/gtkrange.c			     |	 72
  +++++++++++++++++++++++++++++++++-
- gtk/gtkrange.h                      |    4 ++
+ gtk/gtkrange.h			     |	  4 ++
  4 files changed, 78 insertions(+), 4 deletions(-)
 
 commit f40a129e283fe130b12b68c7351f613c5b77f3c8
 Author: Tomeu Vizoso <tomeu.vizoso@collabora.co.uk>
-Date:   Tue Aug 17 17:42:50 2010 +0200
+Date:	Tue Aug 17 17:42:50 2010 +0200
 
     gtk_tree_model_iter_next's iter is (in), not (inout)
 
- gtk/gtktreemodel.c |    2 +-
+ gtk/gtktreemodel.c |	 2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 commit e48f5b4073b9c1551dbea4ef5b15933672de3a1e
 Author: Martin Pitt <martin.pitt@ubuntu.com>
-Date:   Mon Jan 10 14:43:00 2011 -0600
+Date:	Mon Jan 10 14:43:00 2011 -0600
 
     Backport a lot of GI transfer annotations
 
@@ -670,81 +939,81 @@ Date:   Mon Jan 10 14:43:00 2011 -0600
     Taken from master commit e0aa12eb0ab8d without the non-documentation
     changes.
 
- gtk/gtkaccellabel.c      |    2 +-
- gtk/gtkaction.c          |   10 ++++----
- gtk/gtkactivatable.c     |    2 +-
- gtk/gtkassistant.c       |   23 ++++++++++---------
- gtk/gtkbuildable.c       |    6 ++--
- gtk/gtkbutton.c          |    2 +-
- gtk/gtkcellrenderer.c    |    8 +++---
- gtk/gtkcellview.c        |    2 +-
+ gtk/gtkaccellabel.c	  |    2 +-
+ gtk/gtkaction.c	  |   10 ++++----
+ gtk/gtkactivatable.c	  |    2 +-
+ gtk/gtkassistant.c	  |   23 ++++++++++---------
+ gtk/gtkbuildable.c	  |    6 ++--
+ gtk/gtkbutton.c	  |    2 +-
+ gtk/gtkcellrenderer.c	  |    8 +++---
+ gtk/gtkcellview.c	  |    2 +-
  gtk/gtkcolorseldialog.c  |    2 +-
- gtk/gtkcombobox.c        |    8 ++++--
- gtk/gtkcontainer.c       |    2 +-
- gtk/gtkdnd.c             |   19 +++++++--------
- gtk/gtkentry.c           |   16 +++++++-----
+ gtk/gtkcombobox.c	  |    8 ++++--
+ gtk/gtkcontainer.c	  |    2 +-
+ gtk/gtkdnd.c		  |   19 +++++++--------
+ gtk/gtkentry.c		  |   16 +++++++-----
  gtk/gtkentrycompletion.c |    7 +++--
- gtk/gtkexpander.c        |    5 ++-
- gtk/gtkfilechooser.c     |   42 +++++++++++++++++-----------------
- gtk/gtkfontsel.c         |   56
+ gtk/gtkexpander.c	  |    5 ++-
+ gtk/gtkfilechooser.c	  |   42 +++++++++++++++++-----------------
+ gtk/gtkfontsel.c	  |   56
  +++++++++++++++++++++++----------------------
- gtk/gtkframe.c           |    2 +-
- gtk/gtkiconfactory.c     |    4 +-
- gtk/gtkicontheme.c       |   17 +++++++------
- gtk/gtkiconview.c        |    9 ++++---
+ gtk/gtkframe.c		  |    2 +-
+ gtk/gtkiconfactory.c	  |    4 +-
+ gtk/gtkicontheme.c	  |   17 +++++++------
+ gtk/gtkiconview.c	  |    9 ++++---
  gtk/gtkimagemenuitem.c   |    5 ++-
- gtk/gtkinfobar.c         |    6 ++--
- gtk/gtkinvisible.c       |    2 +-
- gtk/gtklabel.c           |    4 +-
- gtk/gtklayout.c          |   26 ++++++++++----------
- gtk/gtkmain.c            |   11 ++++++++-
- gtk/gtkmenuitem.c        |    6 ++--
+ gtk/gtkinfobar.c	  |    6 ++--
+ gtk/gtkinvisible.c	  |    2 +-
+ gtk/gtklabel.c		  |    4 +-
+ gtk/gtklayout.c	  |   26 ++++++++++----------
+ gtk/gtkmain.c		  |   11 ++++++++-
+ gtk/gtkmenuitem.c	  |    6 ++--
  gtk/gtkmenutoolbutton.c  |    3 +-
  gtk/gtkmountoperation.c  |    6 ++--
- gtk/gtknotebook.c        |   25 ++++++++++----------
+ gtk/gtknotebook.c	  |   25 ++++++++++----------
  gtk/gtkoffscreenwindow.c |    5 ++-
- gtk/gtkpagesetup.c       |    6 ++--
- gtk/gtkpaned.c           |    6 ++--
- gtk/gtkplug.c            |    4 +-
- gtk/gtkprintcontext.c    |   12 +++++-----
+ gtk/gtkpagesetup.c	  |    6 ++--
+ gtk/gtkpaned.c		  |    6 ++--
+ gtk/gtkplug.c		  |    4 +-
+ gtk/gtkprintcontext.c	  |   12 +++++-----
  gtk/gtkprintoperation.c  |   18 +++++++-------
  gtk/gtkprintsettings.c   |   18 +++++++-------
- gtk/gtkradiobutton.c     |    6 +++-
+ gtk/gtkradiobutton.c	  |    6 +++-
  gtk/gtkradiomenuitem.c   |   27 ++++++++++++++-------
  gtk/gtkradiotoolbutton.c |   26 ++++++++++----------
- gtk/gtkrange.c           |    4 +-
- gtk/gtkrc.c              |   36 ++++++++++++++--------------
+ gtk/gtkrange.c		  |    4 +-
+ gtk/gtkrc.c		  |   36 ++++++++++++++--------------
  gtk/gtkrecentchooser.c   |    6 ++--
  gtk/gtkrecentmanager.c   |   14 ++++++-----
- gtk/gtkscale.c           |   12 +++++-----
- gtk/gtkscalebutton.c     |    8 +++---
+ gtk/gtkscale.c		  |   12 +++++-----
+ gtk/gtkscalebutton.c	  |    8 +++---
  gtk/gtkscrolledwindow.c  |   17 ++++++-------
- gtk/gtkselection.c       |    4 +-
- gtk/gtksettings.c        |   10 ++++----
- gtk/gtksocket.c          |    2 +-
- gtk/gtkspinbutton.c      |    2 +-
- gtk/gtkstatusbar.c       |    2 +-
- gtk/gtkstatusicon.c      |   11 +++++----
- gtk/gtkstyle.c           |   14 ++++++-----
- gtk/gtktextbuffer.c      |   15 +++++------
- gtk/gtktextiter.c        |   10 ++++----
- gtk/gtktexttagtable.c    |    2 +-
- gtk/gtktoolbar.c         |    8 +++---
- gtk/gtktoolbutton.c      |   26 +++++++++++----------
- gtk/gtktoolitem.c        |   28 ++++++++++++----------
+ gtk/gtkselection.c	  |    4 +-
+ gtk/gtksettings.c	  |   10 ++++----
+ gtk/gtksocket.c	  |    2 +-
+ gtk/gtkspinbutton.c	  |    2 +-
+ gtk/gtkstatusbar.c	  |    2 +-
+ gtk/gtkstatusicon.c	  |   11 +++++----
+ gtk/gtkstyle.c		  |   14 ++++++-----
+ gtk/gtktextbuffer.c	  |   15 +++++------
+ gtk/gtktextiter.c	  |   10 ++++----
+ gtk/gtktexttagtable.c	  |    2 +-
+ gtk/gtktoolbar.c	  |    8 +++---
+ gtk/gtktoolbutton.c	  |   26 +++++++++++----------
+ gtk/gtktoolitem.c	  |   28 ++++++++++++----------
  gtk/gtktoolitemgroup.c   |    6 ++--
- gtk/gtktreemodel.c       |   10 ++++----
+ gtk/gtktreemodel.c	  |   10 ++++----
  gtk/gtktreemodelsort.c   |    6 ++--
- gtk/gtktreeview.c        |   39 ++++++++++++++++---------------
+ gtk/gtktreeview.c	  |   39 ++++++++++++++++---------------
  gtk/gtktreeviewcolumn.c  |   19 ++++++++-------
- gtk/gtkviewport.c        |    8 +++---
- gtk/gtkwidget.c          |   17 +++++++------
- gtk/gtkwindow.c          |    4 +-
+ gtk/gtkviewport.c	  |    8 +++---
+ gtk/gtkwidget.c	  |   17 +++++++------
+ gtk/gtkwindow.c	  |    4 +-
  69 files changed, 425 insertions(+), 381 deletions(-)
 
 commit cc44561b611c7c611c418a9f9f3a1312d1c17d76
 Author: Tristan Van Berkom <tristan.van.berkom@gmail.com>
-Date:   Mon Jan 10 22:43:57 2011 +0900
+Date:	Mon Jan 10 22:43:57 2011 +0900
 
     Added GtkBuildable support for specifying <items> in GtkComboBoxText.
 

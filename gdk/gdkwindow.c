@@ -2301,8 +2301,8 @@ gdk_window_has_native (GdkWindow *window)
 /**
  * gdk_window_get_position:
  * @window: a #GdkWindow
- * @x: X coordinate of window
- * @y: Y coordinate of window
+ * @x: (out) (allow-none): X coordinate of window
+ * @y: (out) (allow-none): Y coordinate of window
  *
  * Obtains the position of the window as reported in the
  * most-recently-processed #GdkEventConfigure. Contrast with
@@ -3240,7 +3240,9 @@ do_move_region_bits_on_impl (GdkWindowObject *impl_window,
    * so we copy from the toplevel with INCLUDE_INFERIORS.
    */
   private = impl_window;
-  while (!gdk_window_is_toplevel (private))
+  while (!gdk_window_is_toplevel (private) &&
+         !private->composited &&
+         gdk_drawable_get_visual ((GdkDrawable *) private) == gdk_drawable_get_visual ((GdkDrawable *) private->parent))
     {
       dx -= private->parent->abs_x + private->x;
       dy -= private->parent->abs_y + private->y;
