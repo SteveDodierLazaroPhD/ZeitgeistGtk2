@@ -869,6 +869,11 @@ gtk_status_icon_init (GtkStatusIcon *status_icon)
 		    	    G_CALLBACK (gtk_status_icon_screen_changed), status_icon);
   priv->image = gtk_image_new ();
   gtk_widget_set_can_focus (priv->image, TRUE);
+
+  if (g_object_class_find_property(G_OBJECT_CLASS(GTK_IMAGE_GET_CLASS(priv->image)), "use-fallback") != NULL) {
+    g_object_set(G_OBJECT(priv->image), "use-fallback", TRUE, NULL);
+  }
+
   gtk_container_add (GTK_CONTAINER (priv->tray_icon), priv->image);
   gtk_widget_show (priv->image);
 
