@@ -127,6 +127,7 @@ GtkShadowType  gtk_scrolled_window_get_shadow_type   (GtkScrolledWindow *scrolle
 void	       gtk_scrolled_window_add_with_viewport (GtkScrolledWindow *scrolled_window,
 						      GtkWidget		*child);
 
+void ubuntu_gtk_scrolled_window_init            (void);
 gint _gtk_scrolled_window_get_scrollbar_spacing (GtkScrolledWindow *scrolled_window);
 
 
