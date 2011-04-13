@@ -407,8 +407,10 @@ gtk_image_set_property (GObject      *object,
 			GParamSpec   *pspec)
 {
   GtkImage *image;
+  GtkImagePrivate *priv;
 
   image = GTK_IMAGE (object);
+  priv = GTK_IMAGE_GET_PRIVATE (image);
   
   switch (prop_id)
     {
@@ -498,6 +500,7 @@ gtk_image_set_property (GObject      *object,
       break;
 
     case PROP_USE_FALLBACK:
+      priv->use_fallback = g_value_get_boolean(value);
       if (image->storage_type == GTK_IMAGE_ICON_NAME)
         gtk_image_set_from_icon_name (image,
 				      image->data.name.icon_name,
