@@ -1340,13 +1340,17 @@ gtk_widget_class_init (GtkWidgetClass *klass)
    *
    * The ::expose-event signal is emitted when an area of a previously
    * obscured #GdkWindow is made visible and needs to be redrawn.
-   * #GTK_NO_WINDOW widgets will get a synthesized event from their parent 
+   * #GTK_NO_WINDOW widgets will get a synthesized event from their parent
    * widget.
    *
    * To receive this signal, the #GdkWindow associated to the widget needs
    * to enable the #GDK_EXPOSURE_MASK mask.
-   * 
-   * Returns: %TRUE to stop other handlers from being invoked for the event. 
+   *
+   * Note that the ::expose-event signal has been replaced by a ::draw
+   * signal in GTK+ 3. The <link linkend="http://library.gnome.org/devel/gtk3/3.0/gtk-migrating-2-to-3.html">GTK+ 3 migration guide</link>
+   * for hints on how to port from ::expose-event to ::draw.
+   *
+   * Returns: %TRUE to stop other handlers from being invoked for the event.
    *   %FALSE to propagate the event further.
    */
   widget_signals[EXPOSE_EVENT] =
@@ -5813,7 +5817,7 @@ gtk_widget_set_name (GtkWidget	 *widget,
  * Return value: name of the widget. This string is owned by GTK+ and
  * should not be modified or freed
  **/
-G_CONST_RETURN gchar*
+const gchar*
 gtk_widget_get_name (GtkWidget *widget)
 {
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);

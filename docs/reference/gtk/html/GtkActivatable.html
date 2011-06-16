@@ -8,7 +8,7 @@
 <link rel="up" href="Actions.html" title="Action-based menus and toolbars">
 <link rel="prev" href="GtkRecentAction.html" title="GtkRecentAction">
 <link rel="next" href="SelectorWidgets.html" title="Selectors (File/Font/Color/Input Devices)">
-<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.17.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -103,11 +103,11 @@ related actions.
 <p>
 </p>
 <div class="refsect2">
-<a name="id985586"></a><h3>Implementing GtkActivatable</h3>
+<a name="id910490"></a><h3>Implementing GtkActivatable</h3>
 <p>
 When extending a class that is already <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>; it is only
 necessary to implement the <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<code class="function">sync_action_properties()</code>
-and <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<a href="http://www.flyn.org/projects/libdmapsharing/docs/libdmapsharing-3.0-dmap-share.html#update"><code class="function">update()</code></a> methods and chain up to the parent
+and <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<code class="function">update()</code> methods and chain up to the parent
 implementation, however when introducing
 a new <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> class; the <a class="link" href="GtkActivatable.html#GtkActivatable--related-action" title='The "related-action" property'><span class="type">"related-action"</span></a> and
 <a class="link" href="GtkActivatable.html#GtkActivatable--use-action-appearance" title='The "use-action-appearance" property'><span class="type">"use-action-appearance"</span></a> properties need to be handled by
@@ -117,7 +117,7 @@ the action pointer and boolean flag on your instance, and calling
 <a class="link" href="GtkActivatable.html#gtk-activatable-sync-action-properties" title="gtk_activatable_sync_action_properties ()"><code class="function">gtk_activatable_sync_action_properties()</code></a> at the appropriate times.
 </p>
 <div class="example">
-<a name="id986807"></a><p class="title"><b>Example 39. A class fragment implementing <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a></b></p>
+<a name="id971515"></a><p class="title"><b>Example 39. A class fragment implementing <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -376,7 +376,7 @@ the action pointer and boolean flag on your instance, and calling
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
 <span class="function">foo_bar_activatable_interface_init</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkActivatableIface</span><span class="normal">  </span><span class="symbol">*</span><span class="normal">iface</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  iface</span><span class="symbol">-&gt;</span><span class="normal"><a href="http://www.flyn.org/projects/libdmapsharing/docs/libdmapsharing-3.0-dmap-share.html#update">update</a> </span><span class="symbol">=</span><span class="normal"> foo_bar_activatable_update</span><span class="symbol">;</span>
+<span class="normal">  iface</span><span class="symbol">-&gt;</span><span class="normal">update </span><span class="symbol">=</span><span class="normal"> foo_bar_activatable_update</span><span class="symbol">;</span>
 <span class="normal">  iface</span><span class="symbol">-&gt;</span><span class="normal">sync_action_properties </span><span class="symbol">=</span><span class="normal"> foo_bar_activatable_sync_action_properties</span><span class="symbol">;</span>
 <span class="cbracket">}</span>
 
@@ -398,7 +398,7 @@ the action pointer and boolean flag on your instance, and calling
 <span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-CLASS:CAPS">G_OBJECT_CLASS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">foo_bar_parent_class</span><span class="symbol">)-&gt;</span><span class="function">dispose</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">object</span><span class="symbol">);</span>
 <span class="cbracket">}</span>
 
-<span class="symbol">...</span><span class="normal"> </span><span class="usertype">Handle</span><span class="normal"> the </span><span class="string">"related-action"</span><span class="normal"> and </span><span class="string">"use-action-appearance"</span><span class="normal"> <a href="/usr/share/gtk-doc/html/libbonobo/properties.html">properties</a> </span><span class="symbol">...</span>
+<span class="symbol">...</span><span class="normal"> </span><span class="usertype">Handle</span><span class="normal"> the </span><span class="string">"related-action"</span><span class="normal"> and </span><span class="string">"use-action-appearance"</span><span class="normal"> properties </span><span class="symbol">...</span>
 
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
 <span class="function">foo_bar_set_property</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GObject</span><span class="normal">         </span><span class="symbol">*</span><span class="normal">object</span><span class="symbol">,</span>
@@ -621,7 +621,7 @@ you must also use this to break references in <a href="http://library.gnome.org/
 </p>
 <p>
 This function adds a reference to the currently set related
-action for you, it also makes sure the <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<a href="http://www.flyn.org/projects/libdmapsharing/docs/libdmapsharing-3.0-dmap-share.html#update"><code class="function">update()</code></a>
+action for you, it also makes sure the <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<code class="function">update()</code>
 method is called when the related <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> properties change
 and registers to the action's proxy list.
 </p>
@@ -851,6 +851,6 @@ widget when it changes.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.17</div>
+          Generated by GTK-Doc V1.17.1</div>
 </body>
 </html>

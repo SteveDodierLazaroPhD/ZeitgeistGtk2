@@ -2600,6 +2600,12 @@ extern __typeof (gdk_win32_begin_direct_draw_libgtk_only) IA__gdk_win32_begin_di
 extern __typeof (gdk_win32_end_direct_draw_libgtk_only) IA__gdk_win32_end_direct_draw_libgtk_only __attribute((visibility("hidden")));
 #define gdk_win32_end_direct_draw_libgtk_only IA__gdk_win32_end_direct_draw_libgtk_only
 
+extern __typeof (gdk_win32_window_lookup_for_display) IA__gdk_win32_window_lookup_for_display __attribute((visibility("hidden")));
+#define gdk_win32_window_lookup_for_display IA__gdk_win32_window_lookup_for_display
+
+extern __typeof (gdk_win32_window_foreign_new_for_display) IA__gdk_win32_window_foreign_new_for_display __attribute((visibility("hidden")));
+#define gdk_win32_window_foreign_new_for_display IA__gdk_win32_window_foreign_new_for_display
+
 #endif
 #endif
 #if IN_HEADER(__GDK_WIN32_H__)

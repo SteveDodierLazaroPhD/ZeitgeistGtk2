@@ -2603,6 +2603,12 @@ extern __typeof (gdk_win32_begin_direct_draw_libgtk_only) gdk_win32_begin_direct
 #undef gdk_win32_end_direct_draw_libgtk_only 
 extern __typeof (gdk_win32_end_direct_draw_libgtk_only) gdk_win32_end_direct_draw_libgtk_only __attribute((alias("IA__gdk_win32_end_direct_draw_libgtk_only"), visibility("default")));
 
+#undef gdk_win32_window_lookup_for_display 
+extern __typeof (gdk_win32_window_lookup_for_display) gdk_win32_window_lookup_for_display __attribute((alias("IA__gdk_win32_window_lookup_for_display"), visibility("default")));
+
+#undef gdk_win32_window_foreign_new_for_display 
+extern __typeof (gdk_win32_window_foreign_new_for_display) gdk_win32_window_foreign_new_for_display __attribute((alias("IA__gdk_win32_window_foreign_new_for_display"), visibility("default")));
+
 #endif
 #endif
 #if IN_HEADER(__GDK_WIN32_H__)
