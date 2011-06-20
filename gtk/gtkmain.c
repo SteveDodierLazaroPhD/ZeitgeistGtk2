@@ -753,6 +753,8 @@ do_post_parse_initialization (int    *argc,
   _gtk_accel_map_init ();
   _gtk_rc_init ();
   ubuntu_gtk_scrolled_window_init ();
+  ubuntu_gtk_hscrollbar_init ();
+  ubuntu_gtk_vscrollbar_init ();
 
   /* Set the 'initialized' flag.
    */

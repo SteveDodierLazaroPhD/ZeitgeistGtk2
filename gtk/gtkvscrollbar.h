@@ -68,7 +68,7 @@ struct _GtkVScrollbarClass
 
 GType      gtk_vscrollbar_get_type (void) G_GNUC_CONST;
 GtkWidget* gtk_vscrollbar_new      (GtkAdjustment *adjustment);
-
+void       ubuntu_gtk_vscrollbar_init (void);
 
 G_END_DECLS
 

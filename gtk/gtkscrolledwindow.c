@@ -144,7 +144,6 @@ static void  gtk_scrolled_window_update_real_placement (GtkScrolledWindow *scrol
 
 static guint signals[LAST_SIGNAL] = {0};
 
-static GtkWidget* (*os_scrollbar_new) (GtkOrientation, GtkAdjustment*) = NULL;
 static gboolean use_overlay_scrollbar = FALSE;
 
 G_DEFINE_TYPE (GtkScrolledWindow, gtk_scrolled_window, GTK_TYPE_BIN)
@@ -437,12 +436,7 @@ gtk_scrolled_window_set_hadjustment (GtkScrolledWindow *scrolled_window,
   if (!scrolled_window->hscrollbar)
     {
       gtk_widget_push_composite_child ();
-
-      if (use_overlay_scrollbar == FALSE)
-        scrolled_window->hscrollbar = gtk_hscrollbar_new (hadjustment);
-      else
-        scrolled_window->hscrollbar = os_scrollbar_new (GTK_ORIENTATION_HORIZONTAL, hadjustment);
-
+      scrolled_window->hscrollbar = gtk_hscrollbar_new (hadjustment);
       gtk_widget_set_composite_name (scrolled_window->hscrollbar, "hscrollbar");
       gtk_widget_pop_composite_child ();
 
@@ -503,12 +497,7 @@ gtk_scrolled_window_set_vadjustment (GtkScrolledWindow *scrolled_window,
   if (!scrolled_window->vscrollbar)
     {
       gtk_widget_push_composite_child ();
-
-      if (use_overlay_scrollbar == FALSE)
-        scrolled_window->vscrollbar = gtk_vscrollbar_new (vadjustment);
-      else
-        scrolled_window->vscrollbar = os_scrollbar_new (GTK_ORIENTATION_VERTICAL, vadjustment);
-
+      scrolled_window->vscrollbar = gtk_vscrollbar_new (vadjustment);
       gtk_widget_set_composite_name (scrolled_window->vscrollbar, "vscrollbar");
       gtk_widget_pop_composite_child ();
 
@@ -1363,46 +1352,35 @@ gtk_scrolled_window_relative_allocation (GtkWidget     *widget,
 
   if (scrolled_window->vscrollbar_visible)
     {
-      if (use_overlay_scrollbar == FALSE)
-        {
-          GtkRequisition vscrollbar_requisition;
-          gboolean is_rtl;
+      GtkRequisition vscrollbar_requisition;
+      gboolean is_rtl;
 
-          gtk_widget_get_child_requisition (scrolled_window->vscrollbar,
-					    &vscrollbar_requisition);
-          is_rtl = gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL;
-      
-          if ((!is_rtl && 
-	       (priv->real_window_placement == GTK_CORNER_TOP_RIGHT ||
-	        priv->real_window_placement == GTK_CORNER_BOTTOM_RIGHT)) ||
-	      (is_rtl && 
-	       (priv->real_window_placement == GTK_CORNER_TOP_LEFT ||
-	        priv->real_window_placement == GTK_CORNER_BOTTOM_LEFT)))
-	    allocation->x += (vscrollbar_requisition.width +  scrollbar_spacing);
+      gtk_widget_get_child_requisition (scrolled_window->vscrollbar,
+					&vscrollbar_requisition);
+      is_rtl = gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL;
+  
+      if ((!is_rtl && 
+	   (priv->real_window_placement == GTK_CORNER_TOP_RIGHT ||
+	    priv->real_window_placement == GTK_CORNER_BOTTOM_RIGHT)) ||
+	  (is_rtl && 
+	   (priv->real_window_placement == GTK_CORNER_TOP_LEFT ||
+	    priv->real_window_placement == GTK_CORNER_BOTTOM_LEFT)))
+	allocation->x += (vscrollbar_requisition.width +  scrollbar_spacing);
 
-          allocation->width = MAX (1, allocation->width - (vscrollbar_requisition.width + scrollbar_spacing));
-        }
-      else
-        allocation->width = MAX (1, allocation->width);
+      allocation->width = MAX (1, allocation->width - (vscrollbar_requisition.width + scrollbar_spacing));
     }
   if (scrolled_window->hscrollbar_visible)
     {
-      if (use_overlay_scrollbar == FALSE)
-        {
-          GtkRequisition hscrollbar_requisition;
-          gtk_widget_get_child_requisition (scrolled_window->hscrollbar,
-					    &hscrollbar_requisition);
-      
-          if (priv->real_window_placement == GTK_CORNER_BOTTOM_LEFT ||
-	      priv->real_window_placement == GTK_CORNER_BOTTOM_RIGHT)
-	    allocation->y += (hscrollbar_requisition.height + scrollbar_spacing);
+      GtkRequisition hscrollbar_requisition;
+      gtk_widget_get_child_requisition (scrolled_window->hscrollbar,
+					&hscrollbar_requisition);
+  
+      if (priv->real_window_placement == GTK_CORNER_BOTTOM_LEFT ||
+	  priv->real_window_placement == GTK_CORNER_BOTTOM_RIGHT)
+	allocation->y += (hscrollbar_requisition.height + scrollbar_spacing);
 
-          allocation->height = MAX (1, allocation->height - (hscrollbar_requisition.height + scrollbar_spacing));
-        }
-      else
-        allocation->height = MAX (1, allocation->height);
+      allocation->height = MAX (1, allocation->height - (hscrollbar_requisition.height + scrollbar_spacing));
     }
-    
 }
 
 static void
@@ -1817,7 +1795,7 @@ ubuntu_gtk_scrolled_window_init (void)
         goto skip_loading;
 
       /* default extension library to use for this release */
-      gchar *path = "/usr/lib/liboverlay-scrollbar-0.1.so.0";
+      gchar *path = "/usr/lib/liboverlay-scrollbar-0.2.so.0";
 
       module = g_module_open (path, G_MODULE_BIND_LOCAL);
       if (module == NULL)
@@ -1831,24 +1809,7 @@ ubuntu_gtk_scrolled_window_init (void)
             goto skip_loading;
         }
 
-      /* if the feature was not explicitely activated by the env. 
-         variable, check the whitelist before loading */
-      if (g_getenv ("LIBOVERLAY_SCROLLBAR") == NULL)
-        {
-           if (g_module_symbol (module, "os_utils_is_whitelisted", &symbol))
-             {
-               gboolean (*os_utils_is_whitelisted) (const gchar*) = symbol;
-               if (os_utils_is_whitelisted (g_get_prgname ()) == FALSE)
-                 goto skip_loading;
-             }
-        }
-
-      /* all controls are positive: the feature can be activated now */
-      if (g_module_symbol (module, "os_scrollbar_new", &symbol))
-        {
-          os_scrollbar_new = symbol;
-          use_overlay_scrollbar = TRUE;
-        }
+      use_overlay_scrollbar = TRUE;
 
 skip_loading:
       init_once = TRUE;
@@ -1873,7 +1834,7 @@ _gtk_scrolled_window_get_scrollbar_spacing (GtkScrolledWindow *scrolled_window)
 
   class = GTK_SCROLLED_WINDOW_GET_CLASS (scrolled_window);
 
-  if (use_overlay_scrollbar == TRUE)
+  if (use_overlay_scrollbar)
     return 0;
 
   if (class->scrollbar_spacing >= 0)
