@@ -60,6 +60,7 @@ get_module_path (void)
   gchar *home_gtk_dir = NULL;
   gchar *module_path;
   gchar *default_dir;
+  gchar *pre_multiarch_dir = NULL;
   static gchar **result = NULL;
 
   if (result)
@@ -74,21 +75,23 @@ get_module_path (void)
 
   if (exe_prefix)
     default_dir = g_build_filename (exe_prefix, "lib", "gtk-2.0", NULL);
-  else
+  else {
     default_dir = g_build_filename (GTK_LIBDIR, "gtk-2.0", NULL);
+    pre_multiarch_dir = "/usr/lib/gtk-2.0";
+  }
 
   if (module_path_env && home_gtk_dir)
     module_path = g_build_path (G_SEARCHPATH_SEPARATOR_S,
-				module_path_env, home_gtk_dir, default_dir, NULL);
+				module_path_env, home_gtk_dir, default_dir, pre_multiarch_dir, NULL);
   else if (module_path_env)
     module_path = g_build_path (G_SEARCHPATH_SEPARATOR_S,
-				module_path_env, default_dir, NULL);
+				module_path_env, default_dir, pre_multiarch_dir, NULL);
   else if (home_gtk_dir)
     module_path = g_build_path (G_SEARCHPATH_SEPARATOR_S,
-				home_gtk_dir, default_dir, NULL);
+				home_gtk_dir, default_dir, pre_multiarch_dir, NULL);
   else
     module_path = g_build_path (G_SEARCHPATH_SEPARATOR_S,
-				default_dir, NULL);
+				default_dir, pre_multiarch_dir, NULL);
 
   g_free (home_gtk_dir);
   g_free (default_dir);
