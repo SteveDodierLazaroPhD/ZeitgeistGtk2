@@ -416,15 +416,7 @@ show_local_notify (UbuntuMenuProxy *proxy,
                    GParamSpec      *pspec,
                    GtkMenuShell    *shell)
 {
-  gboolean local;
-
-  g_object_get (proxy,
-                "show-local", &local,
-                NULL);
-
-  g_object_set (shell,
-                "ubuntu-local", local,
-                NULL);
+  g_object_notify (shell, "ubuntu-local");
 }
 
 static void
@@ -493,7 +485,7 @@ gtk_menu_shell_get_property (GObject     *object,
       g_value_set_boolean (value, gtk_menu_shell_get_take_focus (menu_shell));
       break;
     case PROP_LOCAL:
-      if (priv->proxy == NULL) {
+      if (priv->proxy == NULL || ubuntu_menu_proxy_show_local (priv->proxy)) {
         local = TRUE;
       } else {
         local = priv->local;
