@@ -1,3 +1,828 @@
+commit 1e114483374a81f9e2f94448a1b3a517bdce8775
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 30 16:22:14 2011 -0400
+
+    Update for 2.24.6
+
+ NEWS |   32 ++++++++++++++++++++++++++++++++
+ 1 files changed, 32 insertions(+), 0 deletions(-)
+
+commit 7667f9330ba8411ad70df4ef57119dc7324e1fd3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 30 16:21:19 2011 -0400
+
+    Disable a nonworking test
+
+    Same as on GTK+ 3.x
+
+ gtk/tests/builder.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 55e1b27c6fe5059369bdf50c2607708b03bdbc94
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 30 14:31:00 2011 -0400
+
+    trayicon-x11: Fix warnings when visual is not available.
+
+    This fixes a regression introduced in commit
+    b1a1685a33eca16979e63d79915395af0b36. gdk_visual_get_*_pixel_details()
+    should not be called with a NULL visual.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=649588
+
+ gtk/gtktrayicon-x11.c |   20 +++++++++++++-------
+ 1 files changed, 13 insertions(+), 7 deletions(-)
+
+commit 627af13e74cd13d6837429442cb18e1ddb9283ed
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 27 01:26:48 2011 -0400
+
+    Make gtk_status_icon_set_name() work reliably
+
+ gtk/gtkstatusicon.c |   13 ++++++++++++-
+ 1 files changed, 12 insertions(+), 1 deletions(-)
+
+commit c07efad261dd9cc3524e1c48298258e2e5b9314e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 30 14:11:50 2011 -0400
+
+    Explicitly link gdk and gtk against libm
+
+    We used to get an implicit -lm from gdk-pixbuf, but that has
+    recently been changed to not inject extraneous libraries into
+    link lines, so we have to do it ourselves now. This is more
+    correct, anyway.
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 89d217c90a050340c65777a34b7db8c2f27d4491
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 27 01:52:24 2011 -0400
+
+    GtkColorButton: Don't forget to close a cairo context
+
+    Patch by Jerome Lambourg, bug 655392.
+
+ gtk/gtkcolorbutton.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit dde74089f4869b894507f5ad8c81b24afcaaec21
+Author: Andika Triwidada <andika@gmail.com>
+Date:   Thu Aug 18 16:27:19 2011 +0700
+
+    Revert "Updated Indonesian translation"
+
+    This reverts commit 37230e5cc9cf18071d14e700883a6a53d0798498.
+    Commit to wrong branch, should have been to master
+
+ po/id.po | 2846
+ +++++++++++++++++++++++++++++++++-----------------------------
+ 1 files changed, 1524 insertions(+), 1322 deletions(-)
+
+commit 37230e5cc9cf18071d14e700883a6a53d0798498
+Author: Andika Triwidada <andika@gmail.com>
+Date:   Thu Aug 18 15:14:04 2011 +0700
+
+    Updated Indonesian translation
+
+ po/id.po | 2848
+ +++++++++++++++++++++++++++++---------------------------------
+ 1 files changed, 1323 insertions(+), 1525 deletions(-)
+
+commit 5afa001a8dfb97464a1c0e4395966feb1a4153a5
+Author: Michal Suchanek <hramrach@gmail.com>
+Date:   Wed Jun 8 16:24:48 2011 -0500
+
+    bgo#652045 - Initialize local_only in GtkFileChooserEntry
+
+    This has to be done also when we switch to the entry, otherwise
+    completion for
+    non-local URIs won't work.
+
+ gtk/gtkfilechooserdefault.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit a2a85a194c9a1fd3bf27e1087589e0d6c6ee9d48
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Aug 13 14:11:29 2011 -0700
+
+    Bug 655122: Lion crashes during resize.
+
+    Move resizing detection to a separate function and detect resizes
+    so that they don't result in grabs (which was causing the crash).
+
+ gdk/quartz/gdkevents-quartz.c |   85
+ +++++++++++++++++++++++++++++-----------
+ 1 files changed, 61 insertions(+), 24 deletions(-)
+
+commit 9edc6ca045499b49bf48cff5fdd36aa6cea25c86
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Aug 13 13:55:08 2011 -0700
+
+    Bug 655122: Detect OSX version for handling version-dependent special
+    cases (the one in question is resizing, which OSX 10.7 allows on
+    all edges instead of the lower-right corner as on previous versions)
+
+ gdk/quartz/gdkglobals-quartz.c |   17 +++++++++++++++++
+ gdk/quartz/gdkquartz.h         |   13 +++++++++++++
+ 2 files changed, 30 insertions(+), 0 deletions(-)
+
+commit a90d9da9e99dd96d3f7cc64a83da66a95e223e09
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Aug 13 13:20:22 2011 -0700
+
+    Bug 655087: Prevent drqwing when there are no rectangles in which
+    to draw.
+
+ gdk/quartz/gdkdrawable-quartz.c |   98
+ +++++++++++++++++++++++++--------------
+ gdk/quartz/gdkgc-quartz.c       |   11 +++-
+ gdk/quartz/gdkprivate-quartz.h  |    8 ++--
+ 3 files changed, 75 insertions(+), 42 deletions(-)
+
+commit 468deb67d50b49f922199a136c81592f080265b6
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Thu Jul 28 17:44:02 2011 +0200
+
+    quartz: Remove MAC_OS_X_VERSION_MIN_ALLOWED ifdef
+
+    I tried to suppress compiler warnings on pre-10.6 machines this way,
+    but it defeats its purpose when you compile for pre-10.6 machines on
+    a 10.6 machine.  For now, we have to live with the warnings when
+    compiling on/for pre-10.6 machines, there does not seem an easy
+    and proper
+    way to suppress the warnings.
+
+ gdk/quartz/gdkwindow-quartz.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit f0726904cbe22b32cccacf014d2b6d1668d9bcb6
+Author: Benjamin Berg <benjamin@sipsolutions.net>
+Date:   Sat Aug 6 10:40:36 2011 +0200
+
+    Fix polling for new data in cups print backend (bug #599664)
+
+ modules/printbackends/cups/gtkcupsutils.c        |   78
+ +++++++++++++---------
+ modules/printbackends/cups/gtkcupsutils.h        |    4 +-
+ modules/printbackends/cups/gtkprintbackendcups.c |   26 ++++++--
+ 3 files changed, 70 insertions(+), 38 deletions(-)
+
+commit 875e6f4bdbb8f4ee02fff11febbdca425ff915b0
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Mon Jul 25 22:02:25 2011 +0200
+
+    Bug 508601 - Copying from GTK+ applications causes crash
+
+    In GtkClipboardOwner pasteboard:provideDataForType do not call
+    _gtk_quartz_set_selection_data_for_pasteboard() is
+    selection_data.length
+    is smaller than 0.  The function relies on having a positive length,
+    since it stores the length in a uint ...
+
+ gtk/gtkclipboard-quartz.c |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
+
+commit 5c73ebf54c81e310b12e150611da5036a6eb1d31
+Author: Michael Hutchinson <m.j.hutchinson@gmail.com>
+Date:   Mon Jul 25 10:29:23 2011 +0200
+
+    Bug 655074 - Fix crash with undecorated windows on MacOS Lion
+
+ gdk/quartz/gdkwindow-quartz.c |   33 +++++++++++++++++++++------------
+ 1 files changed, 21 insertions(+), 12 deletions(-)
+
+commit 8f8da26c18a53959c6618d470097831e4f3e3c27
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Jul 25 12:20:21 2011 +0800
+
+    Update Visual C++ compilation items
+
+    -Added Visual C++ 2010 project files.  They are like the VS 2008
+    projects
+     where the GDK and GTK+ projects are filled-in templates, which
+     are filled-
+     in during 'make dist', and added related README.txt file, and
+     add them
+     into distribution
+    -Updated the VS 2008 README.txt to reflect the latest situation
+    regarding
+     dependencies etc.
+    -Updated README.win32 to tell people about the now-available VS2010
+    projects
+    -Updated config.h.win32.in as VS 2010 ships with stdint.h
+
+ README.win32                               |   14 +-
+ build/win32/Makefile.am                    |    3 +-
+ build/win32/vs10/Makefile.am               |   19 +
+ build/win32/vs10/README.txt                |   71 +++
+ build/win32/vs10/gdk-win32.vcxproj         |  147 ++++++
+ build/win32/vs10/gdk-win32.vcxproj.filters |   97 ++++
+ build/win32/vs10/gdk.vcxproj.filtersin     |   30 ++
+ build/win32/vs10/gdk.vcxprojin             |  191 ++++++++
+ build/win32/vs10/gtk+.props                |  660
+ ++++++++++++++++++++++++++++
+ build/win32/vs10/gtk+.sln                  |   65 +++
+ build/win32/vs10/gtk-demo.vcxproj          |  220 +++++++++
+ build/win32/vs10/gtk-demo.vcxproj.filters  |  132 ++++++
+ build/win32/vs10/gtk.vcxproj.filtersin     |   43 ++
+ build/win32/vs10/gtk.vcxprojin             |  206 +++++++++
+ build/win32/vs10/install.vcxproj           |  113 +++++
+ build/win32/vs9/README.txt                 |   23 +-
+ config.h.win32.in                          |    4 +
+ configure.in                               |    2 +
+ gdk/Makefile.am                            |   24 +-
+ gtk/Makefile.am                            |   22 +-
+ 20 files changed, 2067 insertions(+), 19 deletions(-)
+
+commit 119df7415e532830e8c1f744edb0014b785e9bc4
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 13 16:04:54 2011 -0500
+
+    Save selection to recent-files in the asynchronous Save cases
+
+    Various paths in SAVE or CREATE_FOLDER return from ::should_respond()
+    but
+    leave an asynchronous process running.  This process checks some
+    things
+    in the user's selection, for example, 'does the file exist, and if so
+    do we need to bring up an overwrite-confirmation dialog?'.  When these
+    async processes complete *and* it is indeed time for the dialog to
+    be terminated (via the response-requested signal), we also need to
+    save the selection to the recently-used list - as ::should_respond()
+    does
+    by itself in the cases when it can request a response immediately.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   26 +++++++++++++++++++-------
+ 1 files changed, 19 insertions(+), 7 deletions(-)
+
+commit 1a3605a23fd5e318f14fe54571a61979a9d21358
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 13 15:39:20 2011 -0500
+
+    Don't dereference a NULL
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 3822a334c53bfbe9f666a3f37a9725e107263dca
+Author: Mario Blättermann <mariobl@gnome.org>
+Date:   Wed Jul 13 20:18:14 2011 +0200
+
+    [l10n] Updated German translation
+
+ po/de.po |  670
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 346 insertions(+), 324 deletions(-)
+
+commit f9e77d7320521f4696cf55af52ced45654033b27
+Author: Daniel Mustieles <daniel.mustieles@gmail.com>
+Date:   Wed Jul 13 10:48:17 2011 +0200
+
+    Updated Spanish translation
+
+ po/es.po |  659
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 340 insertions(+), 319 deletions(-)
+
+commit d14d18e37188c808ae619b04214b9a8fde767ef1
+Author: Piotr Drąg <piotrdrag@gmail.com>
+Date:   Wed Jul 13 08:44:11 2011 +0200
+
+    Updated Polish translation
+
+ po/pl.po |  216
+ ++++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 111 insertions(+), 105 deletions(-)
+
+commit 6b0ab20bc779e7dcd450f92cc7b149f2d0f0a912
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 11:35:57 2011 -0500
+
+    Log to recent-files when confirming the file chooser
+
+    To make life easier for users, when apps don't properly update the
+    recently-used list
+    after choosing a file, we now do that directly from the file chooser.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   76
+ +++++++++++++++++++++++++++++++++---------
+ 1 files changed, 59 insertions(+), 17 deletions(-)
+
+commit 685a688470b0aa783010ddffd3f0529a7b8018b6
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Jul 1 14:59:06 2011 -0500
+
+    No need to highlight the file's basename when setting the base folder
+
+    None of the cases where _gtk_file_chooser_entry_set_base_folder()
+    appear to require
+    the entry highlighting the file's basename.  Doing the highlighting
+    actually makes
+    things look weird in Save/Recent mode if you
+
+      1. type a filename
+      2. click on a recent-folder,
+
+    as right after (2) your filename would get its basename highlighted
+    for
+    no apparent reason.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserentry.c |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+commit d4b30f53d93bd84c4f7291b4c7dd08a414415730
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Jul 1 14:54:11 2011 -0500
+
+    Hide the Create Folder button in recent-files mode when the pathbar
+    is on
+
+    The create-folder machinery doesn't handle that case yet; we may
+    enable it later
+    once we figure out the implications for the GUI.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+commit 18e27a24a018e165b77ed8a4f9be5b0e7a9ba5dc
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Jul 1 14:36:52 2011 -0500
+
+    Centralize the setting of the pathbar's widgets
+
+    It used to be that every part of the file chooser's code would
+    show/hide the widgets
+    near the pathbar as needed.  Now we have two central functions:
+
+      path_bar_update()
+      path_bar_set_mode()
+
+    These take care of all the widget shuffling;  setting the visibility
+    of the
+    pathbar, info bar, and Create Folder button as appropriate; setting
+    the contents
+    of the info bar, etc. - based on the current operation_mode and
+    action.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |  362
+ ++++++++++++++++++++++++-------------------
+ gtk/gtkfilechooserprivate.h |    5 +-
+ 2 files changed, 202 insertions(+), 165 deletions(-)
+
+commit 180774e948a927f4e50488fe7be0f00d0315b7ef
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Jul 1 12:57:44 2011 -0500
+
+    Create the recently-used widgets and infobar from the pathbar widgets
+    as well
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   64
+ ++++++++++++++++++++++++-------------------
+ 1 files changed, 36 insertions(+), 28 deletions(-)
+
+commit fef779f3b133610e661c32cf280779834abddc2a
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Jul 1 12:31:08 2011 -0500
+
+    Move the pathbar creation to its own function
+
+    We will centralize the place where all the pathbar-related widgets
+    are created:
+    the location button, the pathbar itself, the Create Folder button,
+    and in
+    subsequent commits, the info bar as well.  We will deal with the
+    pathbar/infobar
+    as a unit, instead of swapping them in and out in an ad-hoc fashion.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   52
+ +++++++++++++++++++-----------------------
+ 1 files changed, 24 insertions(+), 28 deletions(-)
+
+commit cd82e5ceb69853aef8b954862ab9d4c8acfeb443
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Jun 30 16:23:12 2011 -0500
+
+    Warn the user when he still needs to type a filename or choose
+    a folder
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |  107
+ +++++++++++++++++++++++++++++++++++++-----
+ gtk/gtkfilechooserprivate.h |    2 +
+ 2 files changed, 96 insertions(+), 13 deletions(-)
+
+commit 673de40aeddfadd055964da5573fa4142ecc7cf1
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Jun 30 14:38:27 2011 -0500
+
+    Return the recent-folder plus filename in Save mode from get_files()
+
+    Since the GtkFileChooserEntry already gets the recent-folder set
+    upon it when a recent-folder
+    is selected, it already can give us the correct fully-formed path.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   18 +++++++++++++-----
+ 1 files changed, 13 insertions(+), 5 deletions(-)
+
+commit 3449a4891a1cf9b5e78fe1277815837d490f9716
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jun 29 18:20:53 2011 -0500
+
+    Allow resolving absolute paths even if there is no base_folder
+
+    This lets us do proper completion in GtkFileChooserEntry even when
+    no base folder
+    has been set.  Completion for relative paths won't work, as usual,
+    as expected.
+
+ gtk/gtkfilechooserentry.c |    1 -
+ gtk/gtkfilesystem.c       |   17 +++++++++++++++--
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+commit 91b80433977f1df99f6922102792feb494db7145
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jun 29 17:58:10 2011 -0500
+
+    Set the filename entry's base folder when a recent-folder is selected
+
+    This lets the filename entry do completion relative to the selected
+    recent-folder.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   20 ++++++++++++++++++--
+ 1 files changed, 18 insertions(+), 2 deletions(-)
+
+commit 03b50bd9a919f4818cc0ad682ff22873a9df5b11
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jun 29 16:42:01 2011 -0500
+
+    Instruct the user to pick a folder when nothing is selected in the
+    recent-folders list
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   90
+ ++++++++++++++++++++++++++++++++++++-------
+ gtk/gtkfilechooserprivate.h |    1 +
+ 2 files changed, 77 insertions(+), 14 deletions(-)
+
+commit dacdb343db12cc2c7bce0d0a7cadfcc26dcdd690
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jun 29 12:22:42 2011 -0500
+
+    Put recently-used folders in the recently-used list
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |  106
+ +++++++++++++++++++++++-------------------
+ gtk/gtkfilechooserutils.c   |   22 +--------
+ gtk/gtkfilechooserutils.h   |    2 +-
+ 3 files changed, 62 insertions(+), 68 deletions(-)
+
+commit e4ffea1173676c307f72286a9b9bb8b4972c01eb
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jun 28 18:55:37 2011 -0500
+
+    Turn a struct field into a local variable
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    9 +++------
+ 1 files changed, 3 insertions(+), 6 deletions(-)
+
+commit dfdb51e3247395ea6017caaef6abf695a0519c21
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jun 28 18:53:48 2011 -0500
+
+    Remove unused struct field
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+commit b602220e2f1a226ec292fed0e10f9c1c259edd2d
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jun 28 17:24:53 2011 -0500
+
+    Actually highlight the 'recently used' and 'search' items in the
+    shortcuts bar
+
+    They weren't being selected in the shortcuts bar when those modes were
+    activated programmatically, instead of through the user selecting
+    them from the user interface.
+
+ gtk/gtkfilechooserdefault.c |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
+
+commit ca74dc6a873bb375bb2abc3ea7642ed41e9f6e79
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jun 28 17:17:22 2011 -0500
+
+    Start in recently-used mode when no folder is set
+
+    In RELOAD_EMPTY mode, when no folder has been selected by the calling
+    app, we now
+    start showing the recently-used list.  The rationale is as follows:
+
+      - In Open mode, the user is likely to pick a file he has used
+      recently.
+
+      - In Save mode, the user is likely to want a destination folder
+      which
+        he has used recently.
+
+    For the Save case, where we want to present the user with recent
+    folders instead
+    of recent files, we will make the recent-list do so in subsequent
+    commits.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   77
+ ++++++++++++++++++++++---------------------
+ gtk/gtkfilechooserprivate.h |    1 -
+ 2 files changed, 39 insertions(+), 39 deletions(-)
+
+commit 76c24a4a81511086d404992110f8c7a1246e5151
+Author: Stéphane Maniaci <stephane.maniaci@gmail.com>
+Date:   Thu Apr 14 14:14:26 2011 -0500
+
+    Make GtkFileChoser remember the last directory opened
+
+    Introduces a 'LastFolderUri' settings key, where we remember the
+    last-opened
+    folder from the previous instance of the file chooser.
+
+    The idea is that this works globally, across all applications,
+    so it will be
+    easy to do things like
+
+      1. Save an attachment from a mail (or some other file)
+      2. Open another program
+      3. Do File/Open and automatically get sent to the folder where
+      (1) happened.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=644426
+
+ gtk/gtkfilechooserdefault.c  |   68
+ +++++++++++++++++++++++++++++++----------
+ gtk/gtkfilechoosersettings.c |   21 +++++++++++++
+ gtk/gtkfilechoosersettings.h |    5 +++
+ 3 files changed, 77 insertions(+), 17 deletions(-)
+
+commit dd0ce5dd1eb6984ceef28134e5974a8ae8726fce
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jun 28 15:21:49 2011 -0500
+
+    Put the pathbar in the 'Save in folder:' row in Save mode
+
+    Now we reparent the browse_path_bar_hbox to that spot in Save mode,
+    or to be above the file lists in Open mode.  The pathbar makes for
+    a very
+    clear indication of the location to save in.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   94
+ ++++++++++++++++++++++++++++++-------------
+ gtk/gtkfilechooserprivate.h |    3 +-
+ 2 files changed, 68 insertions(+), 29 deletions(-)
+
+commit b9d00c42f8ca9aabd24440c333bf7fa9ff13788e
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jun 28 13:33:32 2011 -0500
+
+    Get rid of the save_folder_combo
+
+    And with this we get rid of the craziness of having a separate
+    filter model
+    for the combobox's model.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |  268
+ +------------------------------------------
+ gtk/gtkfilechooserprivate.h |    6 -
+ 2 files changed, 2 insertions(+), 272 deletions(-)
+
+commit 0d02b8a6814ea9100ecaf5c1435c82d993cee59a
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Jun 27 17:51:57 2011 -0500
+
+    Remove the expander in Save mode, and the configuration key
+
+    This effectively makes the file chooser always be in 'expanded' mode.
+    Later, we'll move the pathbar to the 'Save in folder:' line.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c  |  111
+ +++++++++---------------------------------
+ gtk/gtkfilechooserprivate.h  |    2 -
+ gtk/gtkfilechoosersettings.c |   27 ----------
+ gtk/gtkfilechoosersettings.h |    5 --
+ 4 files changed, 23 insertions(+), 122 deletions(-)
+
+commit d3e822882a193a1e9ba62d2c47685173a79c30ec
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Jun 27 15:30:59 2011 -0500
+
+    Utility function to extract folders from the recently-used list
+
+    This extracts the parent folders from the items in the recently-used
+    list.  We'll use it in the file chooser to present a list of
+    recently-used folders.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserutils.c |   72
+ +++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkfilechooserutils.h |    2 +
+ 2 files changed, 74 insertions(+), 0 deletions(-)
+
+commit 1b605ee84bb793afbb9e8cb906f4225e6a603671
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 14:23:39 2011 -0500
+
+    gtkfilechooserdefault.c update to 3.0
+
+ gtk/gtkfilechooserdefault.c |  701
+ ++++++++++++++++++-------------------------
+ 1 files changed, 293 insertions(+), 408 deletions(-)
+
+commit 0661008ebeb75a688ec3a0c6e333e640b2543347
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 13:48:57 2011 -0500
+
+    gtkfilechooserentry.c update to 3.0
+
+ gtk/gtkfilechooserentry.c |  126
+ +++++++++++++++++++++++----------------------
+ 1 files changed, 65 insertions(+), 61 deletions(-)
+
+commit 032a7e50d874ef3f18c050f8301e96c4c5c10441
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 13:36:44 2011 -0500
+
+    gtkfilechooserprivate.h update to 3.0
+
+ gtk/gtkfilechooserprivate.h |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+commit 9858099f652c08cb721b9c1a4e40966245e7f82c
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 13:35:45 2011 -0500
+
+    gtkfilechooser.c update to 3.0
+
+ gtk/gtkfilechooser.c |   76
+ ++++++++++++++++++++++++++++---------------------
+ 1 files changed, 43 insertions(+), 33 deletions(-)
+
+commit 0bbee739d31d2e80bcdc7d4393fe9635ac866a11
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 13:32:41 2011 -0500
+
+    gtkfilechooserbutton.c update to 3.0
+
+ gtk/gtkfilechooserbutton.c |  133
+ ++++++++++++++++++++++----------------------
+ 1 files changed, 67 insertions(+), 66 deletions(-)
+
+commit eec3cec225b79ef58561fd29352089006b9fb05c
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 13:23:10 2011 -0500
+
+    gtkfilechooser.h update to 3.0
+
+ gtk/gtkfilechooser.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit a0280d7f3664dafb554d440505101efd2c200632
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 12 13:21:40 2011 -0500
+
+    gtkfilechooserdialog.c update to 3.0
+
+ gtk/gtkfilechooserdialog.c |   23 -----------------------
+ 1 files changed, 0 insertions(+), 23 deletions(-)
+
+commit a5b92540d039a3246db3f33842a363f3ce127c48
+Author: Juan Pablo Ugarte <juanpablougarte@gmail.com>
+Date:   Wed Jun 29 11:45:33 2011 -0300
+
+    Make GtkBuilder do not delay construct properties that can be resolved
+    (so construct is respected when possible) and skip construct only
+    props that
+    can not.
+
+ gtk/gtkbuilder.c |   20 ++++++++++----------
+ 1 files changed, 10 insertions(+), 10 deletions(-)
+
+commit 9f83204d48c40b4a334c1e1a6e68958571ad153e
+Author: Mike Gorse <mgorse@novell.com>
+Date:   Wed Jun 22 15:23:15 2011 -0500
+
+    bgo#653191 - fix uninitialized variable in gtk_file_chooser_entry.c
+
+ gtk/gtkfilechooserentry.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit a068f575c867c2a57d7ac0a8846d53eacbe0a170
+Author: Colin Walters <walters@verbum.org>
+Date:   Wed Jun 22 11:07:37 2011 -0400
+
+    introspection.m4: Update from g-i
+
+    This fixes substitution with dash.
+
+ m4/introspection.m4 |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit 5eda0da644934780929e861607be2e0fac1fc1ca
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Jun 21 10:13:56 2011 +0800
+
+    Update VS 2008 property sheet
+
+    It seems that gdkprivate.h is needed by gdkwin32.h
+
+ build/win32/vs9/gtk+.vsprops |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit d7ac9cd71c43689672a9796e518ef3b970197bf2
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 20 08:10:36 2011 -0400
+
+    Revert "gdk: Make background changes queue a repaint"
+
+    This reverts commit 254b9a4c540e3dff1dcd17db2ceea6a9fa5df973.
+
+ gdk/gdkwindow.c |   20 ++++++--------------
+ 1 files changed, 6 insertions(+), 14 deletions(-)
+
+commit d0aa7ffc61d67b42a2343fd144bb74a20fbbe7c8
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Jun 16 13:48:56 2011 +0800
+
+    Add G_ENABLE_DEBUG #ifdef check in gdkdisplay-win32.c
+
+    Commit 88707e6912c376faedf0b8c5b02895aa18473cb4 used
+    _gdk_win32_cf_to_string, which is only defined when G_ENABLE_DEBUG
+    is defined, so add G_ENABLE_DEBUG #ifdef around that part.
+
+ gdk/win32/gdkdisplay-win32.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 5f41ce5e16e6f4ca137a294d76fca6960a213473
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Jun 16 13:34:54 2011 +0800
+
+    Update VS 2008 projects
+
+    Use G_ENABLE_DEBUG for all debug builds
+
+ build/win32/vs9/gdk-win32.vcproj |    4 ++--
+ build/win32/vs9/gdk.vcprojin     |    4 ++--
+ build/win32/vs9/gtk-demo.vcproj  |    4 ++--
+ build/win32/vs9/gtk.vcprojin     |    4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+commit 59f5aa7d72a826dce0834cdf3f93da0d491e6a88
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Jun 15 20:35:23 2011 -0400
+
+    Bump version
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
 commit 6351e8e1349f63fcd224b4806db35dd0a1bd80ac
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Wed Jun 15 19:54:20 2011 -0400

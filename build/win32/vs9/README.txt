@@ -1,5 +1,9 @@
 Note that all this is rather experimental.
 
+Please do not compile GTK+ in a path that contains spaces, as this
+may cause problems during the build and/or during the use of the
+library.
+
 This VS9 solution and the projects it includes are intented to be used
 in a GTK+ source tree unpacked from a tarball. In a git checkout you
 first need to use some Unix-like environment or manual work to expand
@@ -8,8 +12,9 @@ the files needed, like config.h.win32.in into config.h.win32 and the
 
 You will need the parts from below in the GTK+ stack: GDK-Pixbuf, Pango,
 ATK and GLib.  External dependencies are at least Cairo, zlib, libpng,
-gettext-runtime, fontconfig*, freetype*, expat*.  See the 
-build/win32/vs9/README.txt file in glib for details where to unpack them.
+gettext-runtime; and optional dependencies  are fontconfig*, freetype*
+and expat*.  See the build/win32/vs10/README.txt file in glib for
+details where to unpack them.
 
 It is recommended that one builds the dependencies with VS9 as far as
 possible, especially those from and using the GTK+ stack (i.e. GLib,
@@ -53,12 +58,12 @@ built DLLs go into <root>\vs9\<PlatformName>\bin, built LIBs into
 project files higher in the stack are supposed to look for them, not
 from a specific GLib source tree.
 
-*About the dependencies marked with *: I will see whether it is possible
- to reduce the depepdencies on building and running GTK+ by making these
- dependencies optional, as those are not compulsory components for
- building and running GTK+ itself, but note that they are needed for
- people running and building GIMP. They are referred to by components
- in Cairo and Pango mainly. 
-
+*About the dependencies marked with *: These dependencies are not
+ compulsory components for building and running GTK+ itself, but note
+ that they are needed for people running and building GIMP.
+ They are referred to by components in Cairo and Pango mainly-so decide
+ whether you will need FontConfig/FreeType support prior to building
+ Cairo and Pango, which are hard requirements for building and running
+ GTK+. 
 --Tor Lillqvist <tml@iki.fi>
 --Updated by Fan, Chun-wei <fanc999@yahoo.com.tw>

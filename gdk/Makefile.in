@@ -46,8 +46,8 @@ DIST_COMMON = $(gdkinclude_HEADERS) $(srcdir)/Makefile.am \
 @HAVE_INTROSPECTION_TRUE@am__append_4 = $(gir_DATA) $(typelibs_DATA)
 subdir = gdk
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
+	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -1506,7 +1506,7 @@ stamp-gc-h: $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status gdk/gdkconfig.h
 	echo timestamp > stamp-gc-h
 
-dist-hook: ../build/win32/vs9/gdk.vcproj
+dist-hook: ../build/win32/vs9/gdk.vcproj ../build/win32/vs10/gdk.vcxproj ../build/win32/vs10/gdk.vcxproj.filters
 
 ../build/win32/vs9/gdk.vcproj: ../build/win32/vs9/gdk.vcprojin
 	for F in $(libgdk_win32_2_0_la_SOURCES); do \
@@ -1517,6 +1517,26 @@ dist-hook: ../build/win32/vs9/gdk.vcproj
 	done >libgdk.sourcefiles
 	$(CPP) -P - <$(top_srcdir)/build/win32/vs9/gdk.vcprojin >$@
 	rm libgdk.sourcefiles
+
+../build/win32/vs10/gdk.vcxproj: ../build/win32/vs10/gdk.vcxprojin
+	for F in $(libgdk_win32_2_0_la_SOURCES); do \
+		case $$F in \
+		*.c) echo '   <ClCompile Include="..\..\..\gdk\'$$F'" />' \
+		     ;; \
+		esac; \
+	done >libgdk.vs10.sourcefiles
+	$(CPP) -P - <$(top_srcdir)/build/win32/vs10/gdk.vcxprojin >$@
+	rm libgdk.vs10.sourcefiles
+
+../build/win32/vs10/gdk.vcxproj.filters: ../build/win32/vs10/gdk.vcxproj.filtersin
+	for F in $(libgdk_win32_2_0_la_SOURCES); do \
+		case $$F in \
+		*.c) echo '   <ClCompile Include="..\..\..\gdk\'$$F'"><Filter>Source Files</Filter></ClCompile>' \
+		     ;; \
+		esac; \
+	done >libgdk.vs10.sourcefiles.filters
+	$(CPP) -P - <$(top_srcdir)/build/win32/vs10/gdk.vcxproj.filtersin >$@
+	rm libgdk.vs10.sourcefiles.filters
 
 install-data-local: install-ms-lib install-def-file
 

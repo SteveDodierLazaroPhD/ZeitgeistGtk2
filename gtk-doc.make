@@ -84,8 +84,9 @@ setup-build.stamp:
 	                cp -pu $(abs_srcdir)/$$file $(abs_builddir)/ || true; \
 	        done; \
 	    fi; \
-	    test -f $(abs_srcdir)/tmpl && \
-	        cp -rp $(abs_srcdir)/tmpl $(abs_builddir)/; \
+	    test -d $(abs_srcdir)/tmpl && \
+	        { cp -rp $(abs_srcdir)/tmpl $(abs_builddir)/; \
+	        chmod -R u+w $(abs_builddir)/tmpl; } \
 	fi
 	@touch setup-build.stamp
 
@@ -225,8 +226,8 @@ maintainer-clean-local: clean
 	@rm -rf xml html
 
 install-data-local:
-	@installfiles=`echo $(srcdir)/html/*`; \
-	if test "$$installfiles" = '$(srcdir)/html/*'; \
+	@installfiles=`echo $(builddir)/html/*`; \
+	if test "$$installfiles" = '$(builddir)/html/*'; \
 	then echo 1>&2 'Nothing to install' ; \
 	else \
 	  if test -n "$(DOC_MODULE_VERSION)"; then \
