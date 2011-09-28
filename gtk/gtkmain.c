@@ -709,6 +709,78 @@ gettext_initialization (void)
 #endif  
 }
 
+static gboolean use_overlay_scrollbar = FALSE;
+static GtkWidget* (*os_scrollbar_new) (GtkOrientation, GtkAdjustment*) = NULL;
+
+gboolean
+ubuntu_gtk_get_use_overlay_scrollbar (void)
+{
+  return use_overlay_scrollbar;
+}
+
+void
+ubuntu_gtk_set_use_overlay_scrollbar (gboolean use)
+{
+  use_overlay_scrollbar = use;
+}
+
+G_GNUC_INTERNAL
+GtkWidget*
+_ubuntu_gtk_overlay_scrollbar_new (GtkOrientation orientation, GtkAdjustment* adjustment)
+{
+  g_return_if_fail (os_scrollbar_new);
+  return os_scrollbar_new (orientation, adjustment);
+}
+
+/*
+ * _overlay_scrollbar_init:
+ *
+ * Initialize local use of the overlay-scrollbar module.
+ * 
+ * If the module is installed, this code checks both a whitelist
+ * and a blacklist to decide whether to activate the remplacement
+ * scrollbars.
+ *
+ * It is possible to force the feature to be disabled by setting
+ * the LIBOVERLAY_SCROLLBAR environment variable to either '0' or an
+ * empty value.
+ */
+static void
+_overlay_scrollbar_init (void)
+{
+  GModule *module = NULL;
+  gpointer symbol = NULL;
+
+  gchar *flag = (gchar*) g_getenv ("LIBOVERLAY_SCROLLBAR");
+
+  /* check if LIBOVERLAY_SCROLLBAR is set to 0 or an empty value
+     and disable the feature in this case */
+  if (flag != NULL && (*flag == '\0' || *flag == '0'))
+    return;
+
+  /* default extension library to use for this release */
+  gchar *path = "/usr/lib/liboverlay-scrollbar-0.2.so.0";
+
+  module = g_module_open (path, G_MODULE_BIND_LOCAL);
+  if (module == NULL)
+    return;
+
+  /* check the blacklist, in all cases */
+  if (g_module_symbol (module, "os_utils_is_blacklisted", &symbol))
+    {
+      gboolean (*os_utils_is_blacklisted) (const gchar*) = symbol;
+      if (os_utils_is_blacklisted (g_get_prgname ()) == TRUE)
+        return;
+    }
+
+  /* all controls are positive: the feature can be activated now */
+  if (g_module_symbol (module, "os_scrollbar_new", &symbol))
+    {
+      os_scrollbar_new = symbol;
+      use_overlay_scrollbar = TRUE;
+    }
+}
+
 static void
 do_post_parse_initialization (int    *argc,
 			      char ***argv)
@@ -752,9 +824,7 @@ do_post_parse_initialization (int    *argc,
 
   _gtk_accel_map_init ();
   _gtk_rc_init ();
-  ubuntu_gtk_scrolled_window_init ();
-  ubuntu_gtk_hscrollbar_init ();
-  ubuntu_gtk_vscrollbar_init ();
+  _overlay_scrollbar_init ();
 
   /* Set the 'initialized' flag.
    */

@@ -71,6 +71,8 @@
  *    under A) at least correspond to the space taken up by its scrollbars.
  */
 
+gboolean ubuntu_gtk_get_use_overlay_scrollbar(void);
+
 #define DEFAULT_SCROLLBAR_SPACING  3
 
 typedef struct {
@@ -143,8 +145,6 @@ static void     gtk_scrolled_window_adjustment_changed (GtkAdjustment     *adjus
 static void  gtk_scrolled_window_update_real_placement (GtkScrolledWindow *scrolled_window);
 
 static guint signals[LAST_SIGNAL] = {0};
-
-static gboolean use_overlay_scrollbar = FALSE;
 
 G_DEFINE_TYPE (GtkScrolledWindow, gtk_scrolled_window, GTK_TYPE_BIN)
 
@@ -1032,7 +1032,7 @@ gtk_scrolled_window_paint (GtkWidget    *widget,
 
       gtk_widget_style_get (widget, "scrollbars-within-bevel", &scrollbars_within_bevel, NULL);
       
-      if (!scrollbars_within_bevel && use_overlay_scrollbar == FALSE)
+      if (!scrollbars_within_bevel && ubuntu_gtk_get_use_overlay_scrollbar() == FALSE)
         {
           gtk_scrolled_window_relative_allocation (widget, &relative_allocation);
 
@@ -1492,7 +1492,7 @@ gtk_scrolled_window_size_allocate (GtkWidget     *widget,
 
       if (scrolled_window->shadow_type != GTK_SHADOW_NONE)
 	{
-          if (!scrollbars_within_bevel && use_overlay_scrollbar == FALSE)
+          if (!scrollbars_within_bevel && ubuntu_gtk_get_use_overlay_scrollbar() == FALSE)
             {
               child_allocation.x -= widget->style->xthickness;
               child_allocation.width += 2 * widget->style->xthickness;
@@ -1544,7 +1544,7 @@ gtk_scrolled_window_size_allocate (GtkWidget     *widget,
 
       if (scrolled_window->shadow_type != GTK_SHADOW_NONE)
 	{
-          if (!scrollbars_within_bevel && use_overlay_scrollbar == FALSE)
+          if (!scrollbars_within_bevel && ubuntu_gtk_get_use_overlay_scrollbar() == FALSE)
             {
               child_allocation.y -= widget->style->ythickness;
 	      child_allocation.height += 2 * widget->style->ythickness;
@@ -1765,58 +1765,6 @@ gtk_scrolled_window_add_with_viewport (GtkScrolledWindow *scrolled_window,
 }
 
 /*
- * ubuntu_gtk_scrolled_window_init:
- *
- * Initialize local use of the overlay-scrollbar module.
- * 
- * If the module is installed, this code checks both a whitelist
- * and a blacklist to decide whether to activate the remplacement
- * scrollbars.
- *
- * It is possible to force the feature to be disabled by setting
- * the LIBOVERLAY_SCROLLBAR environment variable to either '0' or an
- * empty value.
- */
-void
-ubuntu_gtk_scrolled_window_init (void)
-{
-  static gboolean init_once = FALSE;
-
-  if (init_once == FALSE)
-    {
-      GModule *module = NULL;
-      gpointer symbol = NULL;
-
-      gchar *flag = (gchar*) g_getenv ("LIBOVERLAY_SCROLLBAR");
-
-      /* check if LIBOVERLAY_SCROLLBAR is set to 0 or an empty value
-         and disable the feature in this case */
-      if (flag != NULL && (*flag == '\0' || *flag == '0'))
-        goto skip_loading;
-
-      /* default extension library to use for this release */
-      gchar *path = "/usr/lib/liboverlay-scrollbar-0.2.so.0";
-
-      module = g_module_open (path, G_MODULE_BIND_LOCAL);
-      if (module == NULL)
-        goto skip_loading;
-
-      /* check the blacklist, in all cases */
-      if (g_module_symbol (module, "os_utils_is_blacklisted", &symbol))
-        {
-          gboolean (*os_utils_is_blacklisted) (const gchar*) = symbol;
-          if (os_utils_is_blacklisted (g_get_prgname ()) == TRUE)
-            goto skip_loading;
-        }
-
-      use_overlay_scrollbar = TRUE;
-
-skip_loading:
-      init_once = TRUE;
-    }
-}
-
-/*
  * _gtk_scrolled_window_get_spacing:
  * @scrolled_window: a scrolled window
  * 
@@ -1834,7 +1782,7 @@ _gtk_scrolled_window_get_scrollbar_spacing (GtkScrolledWindow *scrolled_window)
 
   class = GTK_SCROLLED_WINDOW_GET_CLASS (scrolled_window);
 
-  if (use_overlay_scrollbar)
+  if (ubuntu_gtk_get_use_overlay_scrollbar())
     return 0;
 
   if (class->scrollbar_spacing >= 0)
