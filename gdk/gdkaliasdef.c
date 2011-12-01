@@ -2597,6 +2597,9 @@ extern __typeof (gdk_window_destroy_notify) gdk_window_destroy_notify __attribut
 #undef gdk_win32_window_is_win32 
 extern __typeof (gdk_win32_window_is_win32) gdk_win32_window_is_win32 __attribute((alias("IA__gdk_win32_window_is_win32"), visibility("default")));
 
+#undef gdk_win32_window_get_impl_hwnd 
+extern __typeof (gdk_win32_window_get_impl_hwnd) gdk_win32_window_get_impl_hwnd __attribute((alias("IA__gdk_win32_window_get_impl_hwnd"), visibility("default")));
+
 #undef gdk_win32_begin_direct_draw_libgtk_only 
 extern __typeof (gdk_win32_begin_direct_draw_libgtk_only) gdk_win32_begin_direct_draw_libgtk_only __attribute((alias("IA__gdk_win32_begin_direct_draw_libgtk_only"), visibility("default")));
 

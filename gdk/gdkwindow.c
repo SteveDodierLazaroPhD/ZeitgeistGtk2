@@ -8004,15 +8004,11 @@ gdk_window_set_background (GdkWindow      *window,
     }
 
   if (!GDK_WINDOW_DESTROYED (window) &&
+      gdk_window_has_impl (private) &&
       !private->input_only)
     {
-      if (gdk_window_has_impl (private))
-        {
-          impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
-          impl_iface->set_background (window, &private->bg_color);
-        }
-      else
-        gdk_window_invalidate_rect_full (window, NULL, TRUE, CLEAR_BG_ALL);
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->set_background (window, &private->bg_color);
     }
 }
 
@@ -8081,15 +8077,11 @@ gdk_window_set_back_pixmap (GdkWindow *window,
     private->bg_pixmap = GDK_NO_BG;
 
   if (!GDK_WINDOW_DESTROYED (window) &&
+      gdk_window_has_impl (private) &&
       !private->input_only)
     {
-      if (gdk_window_has_impl (private))
-        {
-          impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
-          impl_iface->set_back_pixmap (window, private->bg_pixmap);
-        }
-      else
-        gdk_window_invalidate_rect_full (window, NULL, TRUE, CLEAR_BG_ALL);
+      impl_iface = GDK_WINDOW_IMPL_GET_IFACE (private->impl);
+      impl_iface->set_back_pixmap (window, private->bg_pixmap);
     }
 }
 
@@ -10753,7 +10745,7 @@ proxy_button_event (GdkEvent *source_event,
 
       _gdk_display_add_pointer_grab  (display,
 				      pointer_window,
-				      toplevel_window,
+				      event_window,
 				      FALSE,
 				      gdk_window_get_events (pointer_window),
 				      serial,
@@ -11108,6 +11100,7 @@ static GdkWindow *
 get_extension_event_window (GdkDisplay                 *display,
 			    GdkWindow                  *pointer_window,
 			    GdkEventType                type,
+			    GdkModifierType             mask,
 			    gulong                      serial)
 {
   guint evmask;
@@ -11120,6 +11113,7 @@ get_extension_event_window (GdkDisplay                 *display,
   if (grab != NULL && !grab->owner_events)
     {
       evmask = grab->event_mask;
+      evmask = update_evmask_for_button_motion (evmask, mask);
 
       grab_window = grab->window;
 
@@ -11133,6 +11127,7 @@ get_extension_event_window (GdkDisplay                 *display,
   while (w != NULL)
     {
       evmask = w->extension_events;
+      evmask = update_evmask_for_button_motion (evmask, mask);
 
       if (evmask & type_masks[type])
 	return (GdkWindow *)w;
@@ -11144,6 +11139,7 @@ get_extension_event_window (GdkDisplay                 *display,
       grab->owner_events)
     {
       evmask = grab->event_mask;
+      evmask = update_evmask_for_button_motion (evmask, mask);
 
       if (evmask & type_masks[type])
 	return grab->window;
@@ -11158,6 +11154,7 @@ get_extension_event_window (GdkDisplay                 *display,
 GdkWindow *
 _gdk_window_get_input_window_for_event (GdkWindow *native_window,
 					GdkEventType event_type,
+					GdkModifierType mask,
 					int x, int y,
 					gulong serial)
 {
@@ -11179,6 +11176,7 @@ _gdk_window_get_input_window_for_event (GdkWindow *native_window,
   event_win = get_extension_event_window (display,
 					  pointer_window,
 					  event_type,
+					  mask,
 					  serial);
 
   return event_win;

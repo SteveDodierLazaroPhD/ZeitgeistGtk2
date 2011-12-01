@@ -1,3 +1,1867 @@
+commit 4edbdeff64a685da60e0f03e8a15fad3825b0b7b
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Nov 10 19:29:10 2011 +0100
+
+    Update NEWS for release
+
+ NEWS |   60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 60 insertions(+), 0 deletions(-)
+
+commit 1b58117bbf9c7216df42f897a72e66638278803a
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Wed Nov 9 14:43:28 2011 +0100
+
+    win32: fix GDK_DEBUG="draw" crasher
+
+    When running with GDK_DUBUG="draw", gdk_win32_draw_rectangle
+    calls _gdk_win32_drawable_description, which calls
+    gdk_drawable_get_size for a GdkWindowImplWin32.
+
+    gdk_drawable_get_size then tries to call
+    GDK_DRAWABLE_GET_CLASS (drawable)->get_size, which points
+    to NULL for GdkWindowImplWin32.
+
+    Adding the missing drawable_class->get_size implementation
+    fixes this.
+
+ gdk/win32/gdkwindow-win32.c |   24 ++++++++++++++++++++++++
+ 1 files changed, 24 insertions(+), 0 deletions(-)
+
+commit d8c2db333521063b6cce5355b749e40bd6c011f4
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Tue Nov 8 10:11:11 2011 +0100
+
+    win32: plug leak when drawing handles
+
+    The cairo context was always created but only ever used
+    and destroyed(!) in the second if block (!GTK_IS_PANED (widget))
+    so moving around the gdk_cairo_create call would have
+    been the obvious fix.
+
+    However, said if block is not used at all, so clean
+    up draw_handle instead.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=663543
+
+ modules/engines/ms-windows/msw_style.c |   97
+ ++++++--------------------------
+ 1 files changed, 17 insertions(+), 80 deletions(-)
+
+commit 2ae574ab6dd1f9810c4667920f9984ed1e95d0f7
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 9 13:25:02 2011 +0100
+
+    win32: Let cairo create DIBs for GdkPixmap
+
+    The win32 code for GdkPixmap dib creation workes as such, but
+    when creating a cairo surface for it with cairo_win32_surface_create
+    from the HDC it fails for any bitmap format than RGB24, due to
+    assumptions in cairo.
+
+    In order to create a cairo surface for e.g. A1 formats we need
+    to let cairo create the surface via
+    cairo_win32_surface_create_with_dib.
+    Additionally, we must then make sure to use this surface in
+    gdk_drawable_ref_cairo_surface, and to not create a new HDC for
+    it but reuse the cairo one (as only one HDC can write to a bitmap).
+
+    Even with this fixed there are some issues with current cairo, as
+    cairo A1 format isn't quite the same as win32 monochrome bitmaps.
+    Fixes for cairo will be submitted.
+
+ gdk/win32/gdkpixmap-win32.c |  166
+ +++++++++++-------------------------------
+ 1 files changed, 44 insertions(+), 122 deletions(-)
+
+commit 36f2f822f2fdd789791a0248e33815366e325e1f
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 9 13:20:38 2011 +0100
+
+    win32: Make sure to set is_foreign for foreign pixmaps
+
+ gdk/win32/gdkpixmap-win32.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit a9b127660b034bccabc3480c6193e87a90aa50b0
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 9 13:20:14 2011 +0100
+
+    win32: Fix up error message
+
+ gdk/win32/gdkdrawable-win32.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit b2f91bcb8fa5ecaa444d2137b222def31550871c
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 9 13:19:46 2011 +0100
+
+    win32: GDIFlush before accessing pixmap bits
+
+ gdk/win32/gdkcursor-win32.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 013c9169f6c7e524a529b1ec3b9e199e20a67a60
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Wed Nov 9 08:44:28 2011 +0100
+
+    Bug 661997 - Gtk crashes when changing the TreeView model while ...
+
+    Simply stopping rubber banding in gtk_tree_view_set_model() eliminates
+    the crash.  Reported by Thomas Perl.
+    (cherry picked from commit 91ae19768e715f71d7944fc000358dd6bdbe0ea3)
+
+ gtk/gtktreeview.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 3b5c5710daa337b61c9e2135e3e55c380e5bc991
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Wed Nov 9 00:34:45 2011 +0100
+
+    quartz: include all buttons' state in GdkEventMotion.state
+
+ gdk/quartz/gdkevents-quartz.c |   19 ++-----------------
+ 1 files changed, 2 insertions(+), 17 deletions(-)
+
+commit a381e8ea62441b6715ba9bcb0e04332fd914f8b1
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Wed Nov 9 00:25:01 2011 +0100
+
+    quartz: include all buttons' states in GdkEventButton.state
+
+ gdk/quartz/gdkevents-quartz.c |   11 ++++++-----
+ 1 files changed, 6 insertions(+), 5 deletions(-)
+
+commit d8cf87983e3f137c7a7861b344c46161d1b8a79e
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Tue Nov 8 21:41:19 2011 +0100
+
+    Bug 663605 - Fix event->state of many event types on quartz
+
+    Don't try to remember the current keyboard modifier and mouse button
+    states from the last event, because that isn't always right, and don't
+    set event.state = 0 for generated events. Instead, add private
+    functions
+    to get the current states, and implement them with API that retrieves
+    these states independently from an event.
+
+ gdk/quartz/gdkevents-quartz.c  |  103
+ ++++++++++++++++++++++++++++-----------
+ gdk/quartz/gdkprivate-quartz.h |    3 +
+ 2 files changed, 77 insertions(+), 29 deletions(-)
+
+commit 7e1e5451d44c933669a75f74f48ab074e7cc6f85
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Nov 1 21:22:14 2011 -0400
+
+    Don't use deprecated Pango api
+
+ gtk/gtkprintcontext.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit e4cee92e2285fb5f3713fa9023e7079187afe730
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Nov 1 21:13:35 2011 -0400
+
+    Don't use deprecated Pango api
+
+ gdk/gdkpango.c |    5 ++---
+ 1 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 5a03f4a6a50237d86959f596dda143dfc2f040d1
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Mon Oct 31 20:33:41 2011 -0400
+
+    iconview: layout items immediately when setting a GtkTreeModel
+
+    As the draw handler expects the items to be laid out already,
+    we cannot
+    queue a layout here to avoid a race condition with the resize that is
+    queued immediately after, which in turn would lead to a segfault later
+    in the paint_item() implementation.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=663138
+
+ gtk/gtkiconview.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit b424735a39316e1c3000ae0aea3f85e2239f5d85
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Oct 26 21:51:36 2011 -0400
+
+    Print dialog: small keynav improvement
+
+    Mark the page range entry and the copies spin button as
+    activates-default.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=662670
+
+ gtk/gtkprintunixdialog.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 0f22ef3f31650a40686603a513e19eedcdee0f74
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Nov 8 12:36:23 2011 -0500
+
+    GtkSearchEngineTracker: port to tracker 0.12
+
+    We simply use the Tracker DBus api here, caching and direct
+    access that come with libtracker-sparql are probably not needed
+    here. Based on a patch by Martyn Russell.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=658272
+
+ gtk/gtksearchenginetracker.c |  563
+ +++++++++++++++++++++---------------------
+ 1 files changed, 287 insertions(+), 276 deletions(-)
+
+commit 4a22e2ceab7e52e700bba4cb8e61ebfb508c05fb
+Author: Antoine Jacoutot <ajacoutot@openbsd.org>
+Date:   Tue Sep 20 11:57:49 2011 +0200
+
+    gtkmountoperation-x11: unbreak compilation on OpenBSD.
+
+    Add missing header to prevent undeclared definitions.
+    Bug #659565
+
+ gtk/gtkmountoperation-x11.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+commit 6a4a78d6a2e9f95d161ae3aeb0665adad9a8512a
+Author: Richard Hughes <richard@hughsie.com>
+Date:   Tue Sep 13 16:16:28 2011 +0100
+
+    Fix a segfault if the GAppInfo does not have an icon
+
+    This fixes the following backtrace:
+
+     0  g_logv (log_domain=0x7ffff60461a4 "GLib-GObject",
+     log_level=<optimized out>,
+        format=0x7ffff599c322 "%s: assertion `%s' failed",
+        args1=0x7fffffffc418) at gmessages.c:577
+     1  0x00007ffff59312d2 in g_log (log_domain=<optimized out>,
+     log_level=<optimized out>,
+        format=<optimized out>) at gmessages.c:591
+     2  0x00007ffff601c3c7 in g_object_ref (_object=0x0) at gobject.c:2648
+     3  0x00007ffff7721e22
+     in gdk_x11_app_launch_context_get_startup_notify_id
+     (context=<optimized out>,
+        info=0x7fffe8004b40, files=<optimized out>) at
+        gdkapplaunchcontext-x11.c:331
+     4  0x00007ffff62e60d0 in _g_desktop_app_info_launch_uris_internal
+     (appinfo=0x7fffe8004b40, uris=0x0,
+        launch_context=0x7fffe401c800, spawn_flags=G_SPAWN_SEARCH_PATH,
+        user_setup=0, user_setup_data=0x0,
+        pid_callback=0, pid_callback_data=0x0, error=0x7fffffffc848)
+        at gdesktopappinfo.c:1269
+     5  0x00007ffff62e630a in g_desktop_app_info_launch_uris
+     (appinfo=<optimized out>, uris=<optimized out>,
+        launch_context=<optimized out>, error=<optimized out>) at
+        gdesktopappinfo.c:1341
+     6  0x00007ffff62e636b in g_desktop_app_info_launch
+     (appinfo=0x7fffe8004b40, files=<optimized out>,
+        launch_context=0x7fffe401c800, error=0x7fffffffc848) at
+        gdesktopappinfo.c:1388
+
+ gdk/x11/gdkapplaunchcontext-x11.c |   12 +++++++-----
+ 1 files changed, 7 insertions(+), 5 deletions(-)
+
+commit 278325f611020cba8347d0f2e169630eef3aedb5
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Nov 8 12:37:15 2011 +0800
+
+    msw_style.c: Use G_PI rather than M_PI
+
+    M_PI is not universally available...
+
+ modules/engines/ms-windows/msw_style.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 7e8d3aa812056f4048c441df277651490d35c315
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Nov 8 11:09:56 2011 +0800
+
+    Update GTK+ DLL Visual C++ projects
+
+    Include the MS-Windows themes engine into the main GTK+ DLL in
+    the build
+
+ build/win32/vs10/gtk.vcxproj.filtersin |    4 ++++
+ build/win32/vs10/gtk.vcxprojin         |    4 ++++
+ build/win32/vs9/gtk.vcprojin           |    4 ++++
+ 3 files changed, 12 insertions(+), 0 deletions(-)
+
+commit fadc82ad2647277628fd140514b54473dbeb2f4c
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Mon Nov 7 13:04:59 2011 -0800
+
+    [Quartz Bug 663182] NSImage throws an exception from
+    _gtk_quartz_create_image_from_pixbuf()
+
+    If _gtk_quartz_create_image_from_pixbuf is given a pixbuf with size
+    0, 0
+    or which produces an NSImage with size 0.0, 0.0, it throws an
+    exception
+    which Gtk doesn't handle.
+
+ gtk/gtkdnd-quartz.c |    5 +++++
+ gtk/gtkquartz.c     |    8 ++++++++
+ 2 files changed, 13 insertions(+), 0 deletions(-)
+
+commit 32b70a56d13050b6d2b0a570c436da1c303814f3
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Mon Nov 7 20:09:00 2011 +0100
+
+    gdk: exclude MOD1 from the virtual modifier mapping
+
+    which effectively nails down the MOD1 == ALT assumption that is valid
+    in all other parts of GTK+. After the modifier abstraction fixes for
+    OSX, the virtual mapping is now (correctly) used in more places, and
+    caused problems with the common default PC keyboard layout on X11 that
+    colocates ALT and META on the same key.
+    (cherry picked from commit ac943bf69a87c992cfde59c6720ef08fdd20e683)
+
+ gdk/x11/gdkkeys-x11.c |   20 ++++++++++++--------
+ 1 files changed, 12 insertions(+), 8 deletions(-)
+
+commit c3601481b763c9475677af1cd6b62819127f1be2
+Merge: 6f4a6b4 fe67f04
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Nov 7 15:07:01 2011 +0100
+
+    Merge branch 'gtk-2-24-win32' into gtk-2-24
+
+commit fe67f04a16bf5edeae6a925051ed1a811638619d
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Mon Nov 7 12:30:19 2011 +0100
+
+    win32: fix scrolling artifacts
+
+    When scrolling a window partially obscured by another window,
+    artifacts of the obsuring window where being blitted into
+    the newly scrolled position. In other words, BitBlt copies
+    the covered region (basically garbage instead of what we want)
+    and does not cause a repaint (unlike how XCopyArea behaves).
+
+    Replacing BitBlt() with the old ScrollDC gymnastics (removed from
+    blit_inside_window() in commit
+    e96a41be45f82af233f5171481c3fecbe95b5b6b)
+    when being passed a Window for blit_inside_drawable() makes these
+    artifacts go away.
+
+    Thanks to Alexander Larsson for figuring out the cause and
+    pointing out possible solutions.
+
+ gdk/win32/gdkdrawable-win32.c |   56
+ ++++++++++++++++++++++++++++++++---------
+ 1 files changed, 44 insertions(+), 12 deletions(-)
+
+commit 6f4a6b4936c78b34682547de323b2afaf4559be6
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Sun Nov 6 23:12:57 2011 +0100
+
+    quartz: handle recursive CFRunLoops
+
+    Fixes e.g. crashs when dropping from finder.
+
+    Turn the "getting_events" boolean into a counter to handle poll_func()
+    being called recursively, and track the loop depth correctly by
+    changing its counter before bailing out in
+    run_loop_observer_callback().
+    This way we reallocate our autorelease pool at the right time, and
+    don't kill memory that is still in use by outer run loops.
+
+    Also drain, not release the pool, just for some defensive forward
+    compatibility.
+
+ gdk/quartz/gdkeventloop-quartz.c |   53
+ ++++++++++++++++++++++---------------
+ 1 files changed, 31 insertions(+), 22 deletions(-)
+
+commit 5123ad079ea364a1083b579da92afc7415c0b8b7
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Sun Nov 6 09:34:39 2011 +0100
+
+    quartz: make gdk_quartz_osx_version conform to coding style
+
+ gdk/quartz/gdkglobals-quartz.c |   11 +++++------
+ 1 files changed, 5 insertions(+), 6 deletions(-)
+
+commit ff75900b5308f074184e5ebc793f3567da61a978
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Sun Nov 6 09:33:50 2011 +0100
+
+    quartz: make test_resize () conform to coding style
+
+ gdk/quartz/gdkevents-quartz.c |   31 +++++++++++++++----------------
+ 1 files changed, 15 insertions(+), 16 deletions(-)
+
+commit 6725dee3aabc3335450657c5d40d54d6d217eeee
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Sun Nov 6 09:25:16 2011 +0100
+
+    quartz: Process motion events within windows bounds without window set
+
+    When an NSEvent does not have the window field set, we already assumed
+    the event was not for us and discarded it.  But for NSMouseMoved
+    events
+    we now make an exception, because such events generated after
+    using/clicking the main menu bar have the window field set to
+    NULL while
+    the application window still has focus.
+
+    We used to experience a loss of motion events after using the
+    menu bar,
+    this could be seen in buttons that stopped prelighting and first
+    clicks often being ignored unless you clicked somewhere else first.
+    These issues are fixed by this patch.
+
+ gdk/quartz/gdkevents-quartz.c |   68
+ +++++++++++++++++++++++++++++++++-------
+ 1 files changed, 56 insertions(+), 12 deletions(-)
+
+commit d0e5025694697c5f3394c2e94a58b343a13dc8c6
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Sat Nov 5 22:53:22 2011 +0100
+
+    quartz: Factor out toplevel from NSEvent code into function
+
+ gdk/quartz/gdkevents-quartz.c |   37
+ ++++++++++++++++++++++++++-----------
+ 1 files changed, 26 insertions(+), 11 deletions(-)
+
+commit cca1621e7117333ff6306b05e6508baab42e6210
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Sat Nov 5 22:43:17 2011 +0100
+
+    quartz: Separate out screen_point conversion in function
+
+    Reduces code duplication and confusion.
+
+ gdk/quartz/gdkevents-quartz.c |   69
+ ++++++++++++++--------------------------
+ 1 files changed, 24 insertions(+), 45 deletions(-)
+
+commit 0f7c96b61936dd4796a6b33a04be3ac76f6f96fc
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Sat Nov 5 22:34:41 2011 +0100
+
+    quartz: remove unused variable
+
+ gdk/quartz/gdkevents-quartz.c |    5 -----
+ 1 files changed, 0 insertions(+), 5 deletions(-)
+
+commit a37c466698db3fc1acd58cc46059d0899025515f
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Fri Nov 4 09:44:35 2011 +0100
+
+    win32: fix pasting screenshots taken with PrintScreen or
+    Alt+PrintScreen
+
+    These are found on the clipboard in the biCompression == BI_BITFIELDS
+    &&
+    biBitCount >= 16 format. In this case the BITMAPINFOHEADER is followed
+    by three DWORD specifying the masks of the red green and blue
+    components,
+    but bfOffBits was not being adjusted accordingly.
+
+    Based on Massimo's comment on bug 631384 and verified on
+    http://msdn.microsoft.com/en-us/library/dd183386%28v=VS.85%29.aspx
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=631384
+
+ gdk/win32/gdkselection-win32.c |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+commit a8e820aa7534bd4851066ea206df16fc0f38ddd6
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Fri Nov 4 07:41:55 2011 +0100
+
+    win32: fix some typos
+
+ gdk/win32/gdkselection-win32.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit b7d734bb30d468868a0c002224323394642c36d3
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Nov 3 22:38:00 2011 +0800
+
+    Update VS property sheets
+
+    Don't use G_DISABLE_DEPRECATED, so that builds with newer stable GLib
+    versions would not be broken as a result.
+
+ build/win32/vs10/gtk+.props  |    2 +-
+ build/win32/vs9/gtk+.vsprops |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 0a0fd5af99f2ae9b0f8cc6b943b98b7be43ed723
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Wed Nov 2 20:27:39 2011 +0100
+
+    Bug 662633 - Scheduled transaction editor crashes with gtk+-2.24.7
+
+    Fix commit a516d2359c9eac84bfa4682a70a62315adedb1d6: check if
+    priv->arrow_button exists in forall().
+
+ gtk/gtktoolbar.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 985fff354da4b33cac1b56009d9081d505511e60
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 2 16:49:55 2011 +0100
+
+    win32: Fix some warnings
+
+ gdk/win32/gdkdisplay-win32.c |    2 ++
+ gdk/win32/gdkevents-win32.c  |    6 +-----
+ gdk/win32/gdkfont-win32.c    |    4 ++++
+ gdk/win32/gdkgc-win32.c      |    2 ++
+ gdk/win32/gdkinput-win32.c   |    3 +++
+ gdk/win32/gdkwindow-win32.c  |    3 ++-
+ 6 files changed, 14 insertions(+), 6 deletions(-)
+
+commit 6cb04372f05188ba00464ed361331eedc82c1fd1
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 2 16:11:54 2011 +0100
+
+    win32: Hack to make statusbar menus show up visible:
+
+ gtk/gtkstatusicon.c |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
+
+commit e943d7d8e17e300206911094f12163bc11c3934e
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 2 14:48:21 2011 +0100
+
+    Don't show text in file selector bookmark toolbar
+
+    The text is empty anyway.
+
+ gtk/gtkfilechooserdefault.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 3cd9920e14acd9ace017046bc420fca5b1e36331
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 2 14:30:23 2011 +0100
+
+    win32: Ensure newly mapped toplevels are inside the workarea
+
+    This is what e.g. metacity does, and its needed to e.g. get the inital
+    position of the gimp dock window right.
+
+ gdk/win32/gdkwindow-win32.c |   52
+ +++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 52 insertions(+), 0 deletions(-)
+
+commit f7438ce4e49484fe86d66806962ca19d3c5f1fd4
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Nov 2 12:15:53 2011 +0100
+
+    win32: Fix placement at initial position
+
+    Positioning windows at 0,0 post creation failed, because it
+    was mapped with CW_USEDFAULT, but private->x/y still said 0,
+    so moving it to 0,0 did nothing. We now always position the
+    window at the right place, even when not mapped, but we
+    create it at CW_USEDEFAULT initially and store that position
+    before moving it to the right place.
+
+    This fixes the window sizing test in testgtk and the inital
+    position for the gimp toolbar.
+
+ gdk/win32/gdkwindow-win32.c |   38 ++++++++++++++++++++++++++++++++------
+ 1 files changed, 32 insertions(+), 6 deletions(-)
+
+commit 1a624ea81841551dbc06f7ffae7c4bec1634d6cc
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Nov 1 22:25:26 2011 +0100
+
+    win32: Fix synaptics trackpad issues
+
+    The synaptics trackpad driver has some weird behaviour on scroll.
+    It pops up a window over the mouse pointer (looking like a scrollbar).
+    This has two problems:
+    * We get extra enter/leave events for the trackpad window
+    * We get back the trackpad window when we look for the window
+      under the mouse to deliver the mousewheel message.
+
+    So, we add some trackpad specific hacks to avoid this (sigh) based
+    on the trackpad window window class.
+
+    This fixes bug #542777 and was partially based on a patch there
+    from Peter Clifton.
+
+ gdk/win32/gdkevents-win32.c |   67
+ ++++++++++++++++++++++++++++++++++++++----
+ 1 files changed, 60 insertions(+), 7 deletions(-)
+
+commit 718af6870f1562fc410e4f27e41a98a8f0142780
+Author: Egon Elbre <egonelbre@gmail.com>
+Date:   Mon Oct 3 12:14:31 2011 +0300
+
+    fix: win32 tilt axis range
+
+ gdk/win32/gdkinput-win32.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit c88ccc632a40142b0967fa051d893f575bdd7070
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Nov 1 21:07:14 2011 +0100
+
+    Make print-editor test use double buffering in preview
+
+    This makes preview work on win32
+
+ tests/print-editor.c |    9 +++++++--
+ 1 files changed, 7 insertions(+), 2 deletions(-)
+
+commit 49d017dcb9bf7605fe391c4a1690b040b50af5ac
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Nov 1 14:23:44 2011 +0100
+
+    win32: Default to MS-Windows theme
+
+    It really makes little sense to not look like windows apps on windows.
+    If you really want you can change this via a .gtkrc-2.0 file
+
+ gtk/gtksettings.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 8f6f64fe105e7149f06584686582e0d65b8430ae
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Oct 31 08:15:34 2011 +0100
+
+    win32: Make WINTAB support work
+
+    Lots of rework to make input events work in the csw world
+
+ gdk/gdkinternals.h           |    1 +
+ gdk/gdkwindow.c              |    6 +
+ gdk/win32/gdkevents-win32.c  |   56 +---
+ gdk/win32/gdkinput-win32.c   |  582
+ ++++++++++++++++++-----------------------
+ gdk/win32/gdkinput-win32.h   |   25 +--
+ gdk/win32/gdkinput.c         |  231 +++++++++---------
+ gdk/win32/gdkprivate-win32.h |    3 +-
+ gdk/win32/gdkwindow-win32.c  |    4 +-
+ gdk/win32/gdkwindow-win32.h  |    2 +-
+ gdk/x11/gdkinput-xfree.c     |    2 +
+ 10 files changed, 409 insertions(+), 503 deletions(-)
+
+commit 2cd09a66535a37747b802443e26dbe63eb4335ed
+Author: Martin Renold <martinxyz@gmx.ch>
+Date:   Thu Jun 16 22:24:05 2011 +0200
+
+    win32: fix invalid cast
+
+ gdk/win32/gdkinput-win32.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 2090e37ffb3aebc026ec3fb3acee10e6368b5682
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Oct 28 11:06:59 2011 +0200
+
+    win32: Fix ms-windows theme to not create native subwindows
+
+    GDK_WINDOW_HWND() calls from outside gdk calls ensure_native_window,
+    but we really want the HWND of the impl window, so call
+    the new gdk_win32_window_get_impl_hwnd() instead.
+
+ modules/engines/ms-windows/xp_theme.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
+
+commit 26b97f63c972e6b18ccc23bb4442b160bd11173b
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Fri Oct 28 11:05:53 2011 +0200
+
+    win32: Add gdk_win32_window_get_impl_hwnd
+
+    This is needed to fix the ms-windows theme not to create
+    native windows for all child windows.
+
+ gdk/gdk.symbols             |    1 +
+ gdk/win32/gdkwin32.h        |    1 +
+ gdk/win32/gdkwindow-win32.c |    9 +++++++++
+ 3 files changed, 11 insertions(+), 0 deletions(-)
+
+commit e81b6971d85c7a782269454311b022ce14787486
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Oct 28 10:19:24 2011 +0200
+
+    gtkrc.key.mac: add '"' missing from last commit
+
+ gtk/gtkrc.key.mac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit afce8c73419e86c79e3fec31fcf39a67bc96f8ee
+Author: Morten Welinder <mortenw@gnome.org>
+Date:   Fri Oct 28 09:10:40 2011 +0200
+
+    win32: Actually check for IPrintDialogCallback in configure
+
+ configure.in                  |    3 +++
+ gtk/gtkprintoperation-win32.c |    2 +-
+ 2 files changed, 4 insertions(+), 1 deletions(-)
+
+commit 4b5b28b64f2ae099682b3bd607f5a1db75131805
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Oct 27 22:13:54 2011 +0200
+
+    win32: Fix modal_hint handling
+
+    Modal hints are not really a stack. All windows that are modal
+    are allowed to get input, not just the top one.
+
+    This fixes bug #604156
+
+ gdk/win32/gdkevents-win32.c  |   22 ++++------------------
+ gdk/win32/gdkprivate-win32.h |    2 +-
+ gdk/win32/gdkwindow-win32.c  |   38
+ +++++++++++++++++++++++++++-----------
+ 3 files changed, 32 insertions(+), 30 deletions(-)
+
+commit 6d1b8185605ed210cdb19c1c01f9eaf3ee7fd962
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Oct 27 17:16:46 2011 +0200
+
+    win32: Don't use API_CALL for SetWindowLong
+
+    This can return 0 without it being an error.
+    Should fix the last issue with bug #142874
+
+ gdk/win32/gdkwindow-win32.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 47095f97d2d30ea95cb75b3d3e304352217f221b
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Oct 27 16:56:40 2011 +0200
+
+    win32: Make flush/sync work like in X
+
+    gdk_flush() should gdk_display_sync() on all open displays.
+
+    Both for display_flush and display_sync it seems useful to call
+    GdiFlush, but we don't have anything extra to do for display_sync,
+    as there is no inherent roundtrip on win32.
+
+    This should close bug #84314
+
+ gdk/win32/gdkevents-win32.c |   19 +++----------------
+ 1 files changed, 3 insertions(+), 16 deletions(-)
+
+commit 8588944cb9bf657a8ae3fe5c4a310d2315dc24d3
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Oct 27 16:09:42 2011 +0200
+
+    win32: Add custom placements for some window types
+
+    Windows with transients: center on parent
+    Splash screens: center on monitor
+    Also properly ignores initial moves of unmapped
+    windows that are not override redirect or HINT_POS
+
+    Fixes bugs #324254 and #612359
+
+ gdk/win32/gdkwindow-win32.c |   91
+ ++++++++++++++++++++++++++++++++++++++++++-
+ gdk/win32/gdkwindow-win32.h |    4 ++
+ 2 files changed, 93 insertions(+), 2 deletions(-)
+
+commit ac00340d4c67db25874f45ef9d1f85d64af5daba
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Thu Oct 27 10:42:07 2011 +0200
+
+    win32: More robust way to ensure we get a configure event after
+    move/resize
+
+    There were still cases where we didn't get a WINDOWPOSCHANGED after
+    a SetWindowPos() call, like e.g. with a larger minimum size than
+    the set size (bug #574935)
+
+    So, we revert the previous fix and now just always manually emit
+    a configure notify after the move_resize call. Also, we inhibit
+    the WINDOWPOSCHANGED configure event during the move_resize operation
+    to avoid multiple Configures.
+
+ gdk/win32/gdkevents-win32.c |    9 +++++-
+ gdk/win32/gdkwindow-win32.c |   58
+ ++++++++++++-------------------------------
+ gdk/win32/gdkwindow-win32.h |    1 +
+ 3 files changed, 24 insertions(+), 44 deletions(-)
+
+commit f44c6d66bf087b465d7b0bc2a1b9a4c525108955
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 21:46:19 2011 +0200
+
+    win32: Ensure we always send a configure event when changing size/pos
+
+    There are some cases where we don't get a WINDOWPOSCHANGE such that
+    we generate a configure event, even if we called
+    gdk_window_move_resize()
+    or similar. For instance:
+    * The window is fullscreen
+    * The window is maximized
+    * The specified pos/size is the same as the current one
+
+    However, as per X11 ConfigureNotify semantics we *always* want one, or
+    we could run into issue like e.g. bug #537296 where we're waiting for
+    the CONFIGURE to call gdk_window_thaw_toplevel_updates_libgtk_only().
+
+ gdk/win32/gdkevents-win32.c  |   14 +++++++-----
+ gdk/win32/gdkprivate-win32.h |    1 +
+ gdk/win32/gdkwindow-win32.c  |   44
+ +++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 50 insertions(+), 9 deletions(-)
+
+commit 4f9e1dd414b17442b9d656872b578ce55d325872
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 21:44:49 2011 +0200
+
+    win32: By default, allow windows larger than the screen
+
+ gdk/win32/gdkevents-win32.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 8c9963f9c3564506c836fa2b6e91142ddd564375
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 12:43:24 2011 +0200
+
+    win32: Fix size or style changes during fullscreen
+
+    When we're fullscreen we should update the cached hints, and we
+    should not apply the normal hints to the style.
+
+    This fixes bug #516822
+
+ gdk/win32/gdkwindow-win32.c |   32 ++++++++++++++++++++------------
+ 1 files changed, 20 insertions(+), 12 deletions(-)
+
+commit 9c575532fd1ad09b3acd35c36cf709c11dedc45b
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 11:41:35 2011 +0200
+
+    win32: Use WM_NCDESTROY instead of WM_DESTROY
+
+    WM_NCDESTROY gets called after children are destroyed, which is
+    the semantics DestroyNotify has in X11.
+
+ gdk/win32/gdkevents-win32.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 9da34d0ec5121469c8bacd55a74fa1d029399436
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 11:39:15 2011 +0200
+
+    win32: Don't remove the window from the handle table on destroy
+
+    We always get the WM_DESTROY message anyway, and we remove it there.
+    Bug #336416 even claims this could be a leak if the WM_DESTROY
+    message was not seen before the DestroyWindow call returned, as
+    the WM_DESTROY message could not be handled later without the
+    window in the handle table. I'm not sure this can happen, but we
+    might as well remove it.
+
+ gdk/win32/gdkwindow-win32.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit 0c0c7418850612a3cef95086ae765dcc03ecf47c
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 11:17:12 2011 +0200
+
+    win32: don't input_window_destroy twice
+
+    The common code already calls input_window_destroy
+
+ gdk/win32/gdkwindow-win32.c |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+commit 7b425eead778ba105cc8dd397fd853e44c067625
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 11:08:33 2011 +0200
+
+    win32: Make set_keep_above work also for non-mapped windows
+
+    This fixes bug #171456
+
+ gdk/win32/gdkwindow-win32.c |   42
+ +++++++++++++++++++++---------------------
+ 1 files changed, 21 insertions(+), 21 deletions(-)
+
+commit d46303066034aaed9b9bc6a50b721a11d1280e28
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 26 10:21:10 2011 +0200
+
+    win32: Send window-state-changes before configure events
+
+    This is requires to that the state of the window is right when
+    you get the configure event (and to match what X does).
+
+    Fixes bug #169811
+
+ gdk/win32/gdkevents-win32.c |   60
+ +++++++++++++++++++++---------------------
+ gdk/win32/gdkwindow-win32.c |    8 +++--
+ 2 files changed, 35 insertions(+), 33 deletions(-)
+
+commit ccf12f7b406ecbd8f0c26b0e6dc86d4593144dab
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Tue Oct 25 22:19:11 2011 +0200
+
+    gtkrc.key.mac: add Command-cursor text navigation
+
+    and some emacs-ish Control bindings that work in native widgets.
+    Patch from Michael Hutchinson.
+
+ gtk/gtkrc.key.mac |   35 +++++++++++++++++++++++++++++++++++
+ 1 files changed, 35 insertions(+), 0 deletions(-)
+
+commit 79a92f99a9dbdc7b1a651b0e8665807bd89c6632
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Tue Oct 25 17:01:25 2011 +0200
+
+    gtkrc.key.mac: remove half the file, it was an accidential double
+    paste
+
+ gtk/gtkrc.key.mac |  120
+ -----------------------------------------------------
+ 1 files changed, 0 insertions(+), 120 deletions(-)
+
+commit cd7fa0385cf122aa145ce767b9e5886ab4a0caee
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Oct 25 16:39:42 2011 +0200
+
+    win32: Send initial configure
+
+    We need to send a configure event when a window is shown.
+
+ gdk/win32/gdkevents-win32.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 5bd8485a3d504ecd78529ead37abaa2b50e027d3
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Oct 25 16:13:47 2011 +0200
+
+    win32: Ignore client requested window move/size during SIZEMOVE
+
+    This will just be fighting the user like in e.g.
+    https://bugzilla.gnome.org/show_bug.cgi?id=64428
+
+ gdk/win32/gdkevents-win32.c  |   13 +++++++++++--
+ gdk/win32/gdkglobals-win32.c |    1 +
+ gdk/win32/gdkprivate-win32.h |    2 ++
+ gdk/win32/gdkwindow-win32.c  |    5 +++++
+ 4 files changed, 19 insertions(+), 2 deletions(-)
+
+commit c87114cb140f649cb04b1e2508a99967893ee9ae
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Oct 25 15:36:13 2011 +0200
+
+    win32: Remove most special casing of WINPOSCHANGED during modal ops
+
+    There is no particular reason to special case this, we want to
+    handle all
+    sort of normal events. The only special thing we keep is that
+    as an optimization we pump the message loop extra during a
+    WINPOSCHANGED
+    in a modal operation as that will cause us to repaint faster.
+
+    Also, bump the arbitrary number of mainloop iterations for the timer.
+    I don't see why we need it at all, but at least doing more than one
+    iteration if needed should be nice.
+
+ gdk/win32/gdkevents-win32.c |  205
+ ++++++++++++++++++-------------------------
+ 1 files changed, 87 insertions(+), 118 deletions(-)
+
+commit b0d108a5c4e2ae1edc71b57b88b65e39108ee555
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Oct 25 15:34:22 2011 +0200
+
+    win32: Fix missed resize exit message
+
+    When you start a window resize or move via the window menu and
+    don't actually change anything we're not getting an exitsizemove.
+    In order to work around this we also look for WM_CAPTURECHANGED.
+
+ gdk/win32/gdkevents-win32.c |   11 ++++++++++-
+ 1 files changed, 10 insertions(+), 1 deletions(-)
+
+commit 2dfd498fd80dbfcc86c20dc452b1cf799ee11a68
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Oct 25 14:38:16 2011 +0200
+
+    win32: Handle all window changes in WINDOWPOSCHANGED
+
+    This moves all the code from WM_SIZE, WM_MOVE, and WM_SHOWWINDOW into
+    one place, cleans up the code and makes sure we only send a single
+    configure event even if both size and position changes.
+
+ gdk/win32/gdkevents-win32.c |  308
+ +++++++++++++++++++-----------------------
+ 1 files changed, 139 insertions(+), 169 deletions(-)
+
+commit e2d3bdf68ca88c42697adc16ea3955a4f538abbd
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Oct 25 14:26:22 2011 +0200
+
+    win32: Fix up window_show
+
+    We don't pass in raise anymore, but already_mapped.
+    Also, already_mapped must be used rather than MAPPED, as we already
+    synthesize the MAPPED in the generic code (and thus we don't have
+    to synthesize it again).
+
+ gdk/win32/gdkwindow-win32.c |   71
+ +++++++++----------------------------------
+ 1 files changed, 15 insertions(+), 56 deletions(-)
+
+commit c040b03c2e32a773a4d9cf4019050c2f8a5b91ce
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Sat Oct 22 23:08:32 2011 +0200
+
+    gtkquartz: don't free the string returned by get_bundle_path()
+
+    It's statically allocated.
+
+ gtk/gtkquartz.c |   43 +++++++++++++++++++------------------------
+ 1 files changed, 19 insertions(+), 24 deletions(-)
+
+commit b85176789bc9fe22cc395cf4a4580588e6ae4294
+Author: Jerome Lambourg <lambourg@adacore.com>
+Date:   Fri Oct 21 14:03:22 2011 +0200
+
+    win32: fix themed notebook tab renderering
+
+    The ms-windows engine incorrectly displays notebooks: the
+    tabs are not attached to the body, and look more like
+    regular buttons than actual notebook tabs. Also, the frame
+    around the notebooks is also incorrectly drawn.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=650300
+
+ modules/engines/ms-windows/msw_style.c |  502
+ ++++++++++++++++++--------------
+ modules/engines/ms-windows/xp_theme.c  |    3 +
+ modules/engines/ms-windows/xp_theme.h  |    1 +
+ 3 files changed, 283 insertions(+), 223 deletions(-)
+
+commit 97a0234370910ef35c76adacbff68e48097e1ad5
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Thu Oct 20 17:09:31 2011 +0200
+
+    win32: correctly handle difference between tab_pos and gap_side when
+    drawing an extension (notebook tab)
+
+ modules/engines/ms-windows/msw_style.c |   16 ++++++++++------
+ 1 files changed, 10 insertions(+), 6 deletions(-)
+
+commit 900f39d5955ff6da4d82c7cbfd9ed40d933152e4
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Thu Oct 20 14:03:31 2011 +0200
+
+    win32: add TODO mentioning GtkButton::child-displacement-x & y should
+    be 0 when XP theme is active
+
+ modules/engines/ms-windows/msw_style.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 628093a4e19566c4176ff00b0451c96d82b3e9f8
+Author: Arnaud Charlet <charlet@adacore.com>
+Date:   Thu Oct 20 13:18:19 2011 +0200
+
+    win32: fix typo in msw_style.c
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=647460
+
+ modules/engines/ms-windows/msw_style.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 12507a7cc2dcbc4f4c85acaafda8596de9364048
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Fri Oct 21 11:38:31 2011 +0200
+
+    win32: Call GetQueueStatus instead of PeekMessage PM_NOREMOVE
+
+    Calling PeekMessage can cause reentrant calls into the window
+    procedure
+    for sent (as opposed to posted) messages, so its not safe to call
+    when we're not expecting reentrancy. Instead we call GetQueueStatus
+    when we're just looking for availible messages.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=552041
+
+ gdk/win32/gdkevents-win32.c |    9 +++------
+ 1 files changed, 3 insertions(+), 6 deletions(-)
+
+commit 661cddb65003b393073a18b3e30d2c08ff14f60b
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Oct 20 16:59:36 2011 +0800
+
+    Update VS 2010 property sheet
+
+    Correct the DefDir property...
+
+ build/win32/vs10/gtk+.props |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 67c410d51b383735da9e13ae30c96a63064c9b46
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Oct 20 16:59:36 2011 +0800
+
+    Update VS 2010 property sheet
+
+    Correct the DefDir property...
+
+ build/win32/vs10/gtk+.props |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 039f5fdfb55cf3bd5093ba2c8cf565810bd92161
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 19 21:44:38 2011 +0200
+
+    Better crossing events and grab destination reporting
+
+    We new report to the right window during !owner_event grabs, and
+    we send proper enter and leave events.
+
+ gdk/win32/gdkevents-win32.c |  399
+ ++++++++++++++++++++++++++++++++++---------
+ 1 files changed, 314 insertions(+), 85 deletions(-)
+
+commit bfe27c0aef4dccadd03851310b6eb35104744de0
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 19 21:36:41 2011 +0200
+
+    win32: Record the native event mask in use
+
+ gdk/win32/gdkwindow-win32.c |   16 ++++++++++++----
+ gdk/win32/gdkwindow-win32.h |    2 ++
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+
+commit c6cab74920aaa7f1148a77d682ae091a37420393
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 19 21:35:04 2011 +0200
+
+    Use right native_window for implicit grabs
+
+    The native grab really is on the window that got the button press
+    event.
+
+ gdk/gdkwindow.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit b34ff7b3eafb553d26dd892dd110004bf31dd0eb
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Oct 19 16:15:17 2011 +0200
+
+    in window_at_pointer, ensure that we handle non-client areas correctly
+
+    We should not return a window if the pointer is in the non-client
+    area,
+    like the titlebar.
+
+ gdk/win32/gdkwindow-win32.c |   23 ++++++++++++++++++-----
+ 1 files changed, 18 insertions(+), 5 deletions(-)
+
+commit a4288a88f4c5948e5f96eb0498b5f2b3636e1ccf
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Tue Oct 18 16:52:41 2011 +0200
+
+    Handle implicit grabs
+
+ gdk/win32/gdkevents-win32.c |   23 ++++++++++++++++++++++-
+ 1 files changed, 22 insertions(+), 1 deletions(-)
+
+commit 71e187b3155e6ed4d006dfd537231ca0cfe1537d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 17 19:05:50 2011 -0400
+
+    Post release version bump
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 7299d70760f5e3b1aa2da9eb9e72538cf664838d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 17 18:42:12 2011 -0400
+
+    Fix make check
+
+ gtk/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 6d7fe306981cd2990ddb7cfbb2a2d7347b4007f6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 17 17:59:05 2011 -0400
+
+    Updates
+
+ NEWS |   44 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 43 insertions(+), 1 deletions(-)
+
+commit 3a1ad288a6334d62a02e179d3bf84e22c81e2625
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 4 23:16:07 2011 -0400
+
+    Improve the deprecation note for GDK_DISPLAY
+
+    As pointed out in bug 653847.
+
+ docs/reference/gdk/tmpl/x_interaction.sgml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit c34c302308e2874f2d6f852cf4e555a5b7c5d9a8
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Fri Oct 14 16:39:37 2011 -0700
+
+    Bug 658772: Directory paths for resource directories are hard coded.
+
+    Corrected formatting to match coding standards; introduced local
+    statics
+    to prevent leaking returned strings.
+
+ gtk/gtkquartz.c |   79
+ ++++++++++++++++++++++++++++++++++---------------------
+ 1 files changed, 49 insertions(+), 30 deletions(-)
+
+commit fb99ca1979574807f67e30509f7d8750a0b529ff
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Jul 19 20:45:25 2010 +0200
+
+    gtkentrycompletion: check return value because It can be non-UTF8
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=624270
+
+ gtk/gtkentrycompletion.c |   18 +++++++++++-------
+ 1 files changed, 11 insertions(+), 7 deletions(-)
+
+commit fff25d3a3a49120fa6d332b9896cf87555f990ab
+Author: Alex Corrado <alexander.corrado@gmail.com>
+Date:   Sun Oct 9 09:52:14 2011 -0700
+
+    Quartz, Bug 655057: Eliminate Compiler Warning
+
+    When compiled with older SDKs, the original change for this bug
+    caused a
+    compiler warning about NSWindow not being able to handle a
+    setStyleMask
+    message. This tricks the compiler into thinking that it can.
+
+ gdk/quartz/gdkwindow-quartz.c |   10 +++++++++-
+ 1 files changed, 9 insertions(+), 1 deletions(-)
+
+commit 0d0412bcc9b6cb3b326599599fb58355730c36ce
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Oct 8 18:08:29 2011 -0700
+
+    Bug 658772: Directory paths for resource directories are hard coded.
+
+    Provide dynamic path discovery functions as are provided for win32.
+
+ configure.in     |    9 +++++++
+ gtk/gtkprivate.h |    3 +-
+ gtk/gtkquartz.c  |   68
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 79 insertions(+), 1 deletions(-)
+
+commit b3314acd97e732ac44d0c615b2f758b9ed35a773
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Sat Oct 8 11:23:54 2011 +0200
+
+    quartz: also update window position on windowDidResize
+
+    When a window goes fullscreen, the resize also changes its size.
+
+ gdk/quartz/GdkQuartzWindow.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+commit 21e971b3cbddf49c3ec74c98054686cd8881a971
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Oct 7 20:13:09 2011 +0200
+
+    gtk: also define the default *virtual* accel mod mask
+
+    and use it in stock items and GtkAccelGroup. Change the non-virtual
+    one to MOD2 on OSX, so hardcoded accelerators in the IM context and
+    the treeview work.
+
+ gtk/gtkaccelgroup.c |   10 +++++-----
+ gtk/gtkprivate.h    |    4 +++-
+ gtk/gtkstock.c      |   22 +++++++++++-----------
+ 3 files changed, 19 insertions(+), 17 deletions(-)
+
+commit aeae02d3e6f50f759bd81f5c241be3acc5703a1d
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun Dec 26 15:02:36 2010 -0800
+
+    Bug 628396: Gtk build fails because of objective-c elements
+
+ gtk/Makefile.am |    7 ++-----
+ 1 files changed, 2 insertions(+), 5 deletions(-)
+
+commit 5a5d6d28c224c0837d9da12addfdf264d369fe56
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Wed Sep 28 19:01:01 2011 +0200
+
+    quartz: my last commit had merge junk in it, sorry
+
+ gdk/quartz/gdkkeys-quartz.c |    6 ------
+ 1 files changed, 0 insertions(+), 6 deletions(-)
+
+commit 931a228ce0ba3719b90afcf57c84c31e3a3ddc2f
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Wed Sep 28 13:48:52 2011 +0200
+
+    quartz: don't filter away directly encoded 24-bit UCS characters
+
+    gdk_unicode_to_keyval(uc) returning (uc | 0x01000000) is not an
+    error return value but simply the way to encode 24-bit unicode
+    characters directly as keyvals.
+
+ gdk/quartz/gdkkeys-quartz.c |   30 ++++++++++--------------------
+ 1 files changed, 10 insertions(+), 20 deletions(-)
+
+commit f333c9dc232996c31e41dadf323c5302e495940a
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Mon Sep 19 15:42:19 2011 +0200
+
+    win32: Fix DnD when drag icon is below the pointer
+
+    By reverting gdk_drag_find_window_for_screen logic to what it was
+    before eb21a7df290936223f6a80cef36b52a8c68a1d22.
+    The old logic knew how to ignore drag_window when searching
+    for dest_window, but that code was removed (I guess by accident).
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=616544
+
+ gdk/win32/gdkdnd-win32.c |   68
+ +++++++++++++++++++++++++++++++++++++---------
+ 1 files changed, 55 insertions(+), 13 deletions(-)
+
+commit c608ee0092f35be013fa3ce3b3f6addf8eccc64d
+Author: Dieter Verfaillie <dieterv@optionexplicit.be>
+Date:   Tue Sep 27 21:53:48 2011 +0200
+
+    win32: dnd should not be registerd for offscreen windows
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=616544
+
+ gdk/win32/gdkdnd-win32.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+commit 7ee5e4f2c6396fb930f40cc6e5d982d1de99833a
+Author: Peter Clifton <pcjc2@cam.ac.uk>
+Date:   Sat Sep 10 16:30:56 2011 +0100
+
+    Win32: Fix _gdk_windowing_window_at_pointer to correctly return
+    a toplevel
+
+    Commit 5ebb32d1ffa23241d562fb4d5be02bc6f156b515 didn't add the correct
+    code to find the toplevel window. The WindowFromPoint() function does
+    not return the toplevel window in the hierarchy, it returns the
+    deepest
+    non-disabled, non-invisible child. As we don't use invisible or
+    disabled
+    windows, we don't actually need to use the ChildWindowFromPoint
+    walk for
+    the non get_toplevel case, so we can remove that code path.
+
+    To find a toplevel, we need to start from the desktop and work
+    up, using
+    ChildWindowFromPointEx (to ignore invisible and disabled windows). If
+    we
+    don't ignore invisible and disabled windows (as is the case with the
+    ChildWindowFromPoint call, we are liable to get returns of hidden or
+    disabled children of the desktop which don't belong to us, but
+    notionally
+    occupy the same area under the pointer.
+
+    An alternative might be to start our walk with one of the children
+    of the
+    desktop owned by our process and thread - which we can enumerate
+    using,
+    the EnumThreadWindows call, or (presumably) determine internally. This
+    would not work when we are inside a GtkSocket though, as the
+    children of
+    the desktop would belong to the process owning the GtkPlug - we would
+    have to rely on our own list of windows.
+
+    For correctness, this commit adds tests to ensure that we don't try to
+    return either x or y window coordinates if that corresponding
+    pointer is
+    NULL.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=658842
+
+ gdk/win32/gdkwindow-win32.c |   76
+ +++++++++++++++++++++++++++++--------------
+ 1 files changed, 51 insertions(+), 25 deletions(-)
+
+commit fd01442c7e95a490607482a91987a3b72608a372
+Author: Peter Clifton <pcjc2@cam.ac.uk>
+Date:   Fri Sep 9 15:17:29 2011 +0100
+
+    Win32: Ensure native back-end for windows where the user requests
+    their handle
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=658841
+
+ gdk/win32/gdkdrawable-win32.c |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+
+commit c79d34263bfcd8645d2bef931e08e515118a24ee
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Sep 26 15:42:53 2011 +0800
+
+    Update VS property sheets
+
+    Separate intermediate folders for each project to avoid VS
+    warnings/errors
+    during the build
+
+ build/win32/vs10/gtk+.props  |    3 +--
+ build/win32/vs9/gtk+.vsprops |    2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 81c2166eb9d799771eee98a882aa518c96ab96c4
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun Sep 25 14:44:54 2011 -0700
+
+    Quartz: Fix a typo and a compilation warning
+
+ gdk/quartz/gdkglobals-quartz.c |    4 ++--
+ gtk/gtkdnd-quartz.c            |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit d08d4507c9516f1ec701147cfa2992912e9339b6
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Sep 24 18:19:56 2011 -0700
+
+    Bug 658767 - Drag and Drop NSEvent capture is racy
+
+    Create a synthetic NSMouseLeftDown to store in the
+    GtkQuartzDragSourceInfo
+    rather than relying on the NSWindow's latest event being the right
+    one (or the
+    right kind).
+
+ gtk/gtkdnd-quartz.c |   43 +++++++++++++++++++++++++++++++++++--------
+ 1 files changed, 35 insertions(+), 8 deletions(-)
+
+commit 4e64f6012f567edeacf23d3222caa9f809471b16
+Author: Kristian Rietveld <kris@gtk.org>
+Date:   Sat Sep 24 17:32:21 2011 -0700
+
+    Bug 657770 - Write to released memory in gtkdnd-quartz.c
+
+    Clear the Drag paste board just before the info->context is released.
+    This way the GtkDragSourceOwner is released just before the drag
+    context
+    is and thus can pasteboard:provideDataForType: not accidentally access
+    an already released drag context
+
+ gtk/gtkdnd-quartz.c |   14 ++++++++++++++
+ 1 files changed, 14 insertions(+), 0 deletions(-)
+
+commit 94fc15ad95cc06a42cfec5873ece84f297b40fcd
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun Jul 3 16:40:03 2011 -0700
+
+    Bug 653450 - gtkfilechooser crashes when added favorite
+
+    Ensure that display is set during drag-and-drop, and that string
+    lists'
+    memory is zeroed after allocation to prevent g_strfreev() from
+    over-running.
+
+ gdk/quartz/gdkselection-quartz.c |    4 +---
+ gtk/gtkdnd-quartz.c              |    1 +
+ gtk/gtkquartz.c                  |    3 ++-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 10352d63afe6858723636e4de40cdfb44960b178
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Fri Sep 23 15:00:03 2011 -0700
+
+    Fix typo in 24a7e798
+
+ gdk/quartz/gdkeventloop-quartz.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 224a7e798a4d7981f4ec1583f592bbde8573946b
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Mon Jan 3 11:56:20 2011 -0800
+
+    (Backport acf1345) Fix refresh of static autorelease_pool so that
+    it doesn't happen in gtk-nested loops.
+
+ gdk/quartz/gdkeventloop-quartz.c |   17 ++++++++---------
+ 1 files changed, 8 insertions(+), 9 deletions(-)
+
+commit 33154e1c7d2bc9f2faa3cc96cf7c910cb0418f82
+Author: Steffen Gutmann <muibase@yahoo.com>
+Date:   Fri Sep 23 09:01:44 2011 +0200
+
+    Bug 659907 - gdk_quartz_draw_opaque_stippled_pattern crashes
+
+ gdk/quartz/gdkgc-quartz.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 25227a715ecdedb5d82bf164f3367afd3f098674
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Tue Sep 20 08:58:03 2011 +0200
+
+    GtkLinkButton: forgot to #include "gtkprivate.h"
+
+ gtk/gtklinkbutton.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 5da4473e2713b9a7ff41f33a5a154763ed699071
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Mon Sep 19 13:48:45 2011 +0200
+
+    gtkcomboboxtext: Some documentation fixes
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=656053
+
+ docs/reference/gtk/gtk-sections.txt |    2 +-
+ gtk/gtkcomboboxtext.c               |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit a516d2359c9eac84bfa4682a70a62315adedb1d6
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Mon Sep 19 01:05:26 2011 +0200
+
+    gtk: fix warning when finalizing a GtkToolbar
+
+    Move destruction of child widgets from finalize() to dispose()
+    because unparenting emits a signal with old_parent as object
+    parameter, which tries to ref the toolbar that is being
+    finalized.
+
+ gtk/gtktoolbar.c |   30 ++++++++++++++++++++++--------
+ 1 files changed, 22 insertions(+), 8 deletions(-)
+
+commit 7be2ea823d4d51a467526a96294e943e5aa9f186
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Mon Sep 19 00:32:52 2011 +0200
+
+    Bug 659406 - Abstract what triggers a context menu
+
+    Add _gtk_button_event_triggers_context_menu() and use it instead
+    of checking for event->button == 3, so context menus are invoked
+    correctly on the Mac.
+
+ gtk/gtkcolorsel.c             |    5 ++---
+ gtk/gtkentry.c                |   18 +++++++++---------
+ gtk/gtkfilechooserdefault.c   |    4 ++--
+ gtk/gtklabel.c                |   23 ++++++++++++-----------
+ gtk/gtklinkbutton.c           |    2 +-
+ gtk/gtkmain.c                 |   21 +++++++++++++++++++++
+ gtk/gtkmountoperation.c       |    3 +--
+ gtk/gtknotebook.c             |    2 +-
+ gtk/gtkprivate.h              |    2 ++
+ gtk/gtkrecentchooserdefault.c |    4 ++--
+ gtk/gtkstatusicon.c           |    8 ++++----
+ gtk/gtktextview.c             |   12 ++++++------
+ gtk/gtktoolbar.c              |    2 +-
+ 13 files changed, 64 insertions(+), 42 deletions(-)
+
+commit 2666c0e71f802488a39363e0ac6e0469b5af5d9f
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Sat Sep 17 20:05:33 2011 +0200
+
+    app: abstract which modifiers are used for extending and modifying
+    selections
+
+    which are SHIFT and MOD2 on the Mac, and SHIFT and CONTROL otherwise.
+    Use the new define all over the place and rename variables and
+    members to not say "shift" or "control".
+
+ gtk/gtkentry.c       |    2 +-
+ gtk/gtkiconview.c    |   46 +++++++++++++++---------------
+ gtk/gtkprivate.h     |    8 +++++
+ gtk/gtktextview.c    |    4 +-
+ gtk/gtktreeprivate.h |    8 +++---
+ gtk/gtktreeview.c    |   74
+ +++++++++++++++++++++++++-------------------------
+ 6 files changed, 75 insertions(+), 67 deletions(-)
+
+commit 9ea7ae84fae2684f68c2ada101f1ed2ac654800b
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Sat Sep 17 19:37:08 2011 +0200
+
+    gtk: never undo, save, commit :( sorry...
+
+ gtk/gtkfilechooserdefault.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit b057a311e76a90a120ca0e9597bedeb9fc89b0b2
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Sat Sep 17 15:25:02 2011 +0200
+
+    gtk: use GTK_NO_TEXT_INPUT_MOD_MASK also in gtkfilechooserdefault.c
+
+ gtk/gtkfilechooserdefault.c |    7 ++-----
+ 1 files changed, 2 insertions(+), 5 deletions(-)
+
+commit 1f6a921158b5a4fa80ea2e844ce25aad04101aaf
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Sep 16 16:12:23 2011 +0200
+
+    gtk: allow to specify accelerators in a platform-independent way
+
+    Introduce <Primary> in accelerator strings, which resolves to
+    GDK_CONTROL_MASK on X11/Win23, and to GDK_META_MASK on quartz.
+    Also serialize CONTROL/META as <Primary> depending on the platform.
+
+ gtk/gtkaccelgroup.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 files changed, 36 insertions(+), 0 deletions(-)
+
+commit 812678a70c7b09b82ae449e1cb47f2c66e5eb9e8
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Sep 16 16:10:06 2011 +0200
+
+    gtk: fix entering of Option-foo symbols on the Mac
+
+    and use it in the IM contexts, so Option-foo is no longer
+    filtered away.
+
+ gtk/gtkimcontextsimple.c |    2 +-
+ gtk/gtkimmulticontext.c  |    2 +-
+ gtk/gtkprivate.h         |   10 ++++++++++
+ 3 files changed, 12 insertions(+), 2 deletions(-)
+
+commit 659df720cae60ca9a4aa57b2446bc17107c0fcba
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Sep 16 15:56:29 2011 +0200
+
+    gtk: use GTK_DEFAULT_ACCEL_MOD_MASK instead of GDK_CONTROL_MASK
+    in gtkstock.c
+
+ gtk/gtkstock.c |   23 ++++++++++++-----------
+ 1 files changed, 12 insertions(+), 11 deletions(-)
+
+commit 5e602ab0f2469ad5a8d567678c30fa7abec94aa8
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Sep 16 15:54:03 2011 +0200
+
+    quartz: resolve the modifier confusion on the Mac
+
+    - map Alt/Option to MOD1
+    - map Command to MOD2
+    - map MOD2 to the virtual Meta
+    - improve/fix (?) group handling in gdkkeys-quartz.c
+
+ gdk/quartz/gdkevents-quartz.c |    8 +++++---
+ gdk/quartz/gdkkeys-quartz.c   |   18 +++++++++++++-----
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+
+commit d83c86d42eda7063f7367057ad3afaf01e95c997
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Sep 16 15:51:33 2011 +0200
+
+    gtk: disable mnemonics in gtkrc.key.mac, they don't exist on the Mac
+
+ gtk/gtkrc.key.mac |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit be1eea612cb7beacffdc0b31e7158195004f5e2d
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Sep 16 15:39:23 2011 +0200
+
+    gtk: enable setting virtual modifiers in GtkCellRendererAccel
+
+    Call gdk_keymap_add_virtual_modifiers() on event->state,
+    so virtual modifiers get added at all.
+
+ gtk/gtkcellrendereraccel.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+commit a350b667c1c1ce19c897871806fdc1b1b484c84a
+Merge: 87ad09a 2a2edc9
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Sep 13 15:26:05 2011 -0500
+
+    Merge branch 'filechooser-recent-folders-2-24' into gtk-2-24
+
+commit 2a2edc9564a4392272109421eeec7959aaf28788
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Sep 13 15:23:33 2011 -0500
+
+    bgo#658600 - Don't try to focus the location entry in Recent-files
+    mode
+
+    We don't ever start up in Search mode, so we don't need an extra
+    check for that mode, yet.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 87ad09a8eefbaf506fde6e624ca4ec97de5f6d7d
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Mon Sep 12 14:25:45 2011 -0500
+
+    bgo#514843 - [filechooser] Deal with corrupted .gtk-bookmarks
+    gracefully
+
+    We weren't checking for the lines in that file being valid UTF-8
+    strings.
+
+ gtk/gtkfilesystem.c |   13 +++++++++----
+ 1 files changed, 9 insertions(+), 4 deletions(-)
+
+commit 9332c9f79fcc1d715d3d871053559550706e7e64
+Author: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>
+Date:   Sun Sep 11 21:49:31 2011 +0300
+
+    Updated Belarusian translation.
+
+ po/be.po |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 5aac419a38d55ad9683e397d76de97311c2ed0b7
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Fri Sep 9 15:46:13 2011 +0100
+
+    Make maintiner mode enabled by default
+
+    See
+    http://blogs.gnome.org/desrt/2011/09/08/am_maintainer_mode-is-not-cool/
+
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 45d61a5fd6d781b43e15ffec6cbff8e9366daa96
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Fri Sep 9 10:12:40 2011 +0200
+
+    Bug 617583 - Dead accents keys don't work in GTK+ applications on OSX
+
+    Handle dead keys in special_ucs_table and have them converted by
+    UCKeyTranslate(), so all dead key combinations can be entered.
+    Later, this should be handled in the input method, just as it's
+    done for X11/Win32.
+
+ gdk/quartz/gdkkeys-quartz.c |   77
+ ++++++++++++++++++++++++++++++++++++++++---
+ 1 files changed, 72 insertions(+), 5 deletions(-)
+
+commit d2d6caf00a4b1844c4ffc1bf2a166d2fc4181767
+Author: Tor Lillqvist <tml@iki.fi>
+Date:   Thu Sep 30 20:19:59 2010 +0300
+
+    Remove superfluous call to _gdk_event_button_generate()
+
+    Fixes bug #630962.
+
+ gdk/win32/gdkevents-win32.c |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+commit dafc1eda808fcd75f27ae0287f7ead617973828e
+Author: William Jon McCann <jmccann@redhat.com>
+Date:   Fri Jan 28 16:59:35 2011 -0500
+
+    Don't call object notify for something that isn't a property
+
+ gtk/gtkstatusicon.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+commit b50bb5b92aee91121a9f17f8a0cbd08279fbcd7d
+Author: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>
+Date:   Sun Sep 4 19:47:24 2011 +0300
+
+    Updated Belarusian translation.
+
+ po/be.po | 5124
+ ++++++++++++++++++++++----------------------------------------
+ 1 files changed, 1786 insertions(+), 3338 deletions(-)
+
+commit bd37724fafbd2eb5f21892bcef9555bf2fca0816
+Author: Micah Carrick <micah@greentackle.com>
+Date:   Wed May 11 16:14:14 2011 -0400
+
+    Fix annotation for Gtk.TreeView.enable_model_drag_source
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=649979
+
+ gtk/gtktreeview.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 425c2e93a8c3733e31161f174076e46fecbfda7b
+Merge: 1d94ae4 e0f3b18
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Sep 1 11:42:00 2011 -0500
+
+    Merge branch 'filechooser-recent-folders-2-24' into gtk-2-24
+
+commit e0f3b18c37f1d5e9e0b9c7745513566686c006b0
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Sep 1 11:24:19 2011 -0500
+
+    bgo#657949 - [filechooser] Don't ellipsize filter names for 2.24
+
+    That only works well in 3.0, where the natural-sizing code works to
+    get us a good default size
+    for the filters drop-down.
+
+ gtk/gtkfilechooserdefault.c |   14 --------------
+ 1 files changed, 0 insertions(+), 14 deletions(-)
+
+commit 1d94ae433a2e7143554dfe689b462d1f885fa246
+Merge: 9a4405f b229df2
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Sep 1 11:25:27 2011 -0500
+
+    Merge branch 'filechooser-recent-folders-2-24' into gtk-2-24
+
+    This contains the fixes to centralize the handling of the pathbar,
+    recent-files widgets,
+    and filename entry - the entry would sometimes be missing before
+    these fixes.
+
+    This also contains a fix to the recently-used mode, so that the file
+    list is indeed
+    sorted in newer-to-older order.
+
+commit 9a4405f376595df4c7da72a7b541e56931e234bc
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Aug 31 15:15:08 2011 +0800
+
+    Fix the VS9 property sheet
+
+    Made up for missed semicolon for the "installation" of the
+    gdkprivate.h
+    header which caused the projects not to load properly
+
+ build/win32/vs9/gtk+.vsprops |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 92e632d525461fe2ea1a344a37ac3d0e87cf80fa
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Aug 31 14:53:24 2011 +0800
+
+    Update README.win32 and Visual C++ Readme.txt's
+
+    Tell people about the GNOME Live! page which gives a more
+    detailed outline on building the GTK+ stack with Visual C++.
+
+ README.win32                |   20 +++++++++++---------
+ build/win32/vs10/README.txt |   11 +++++++----
+ build/win32/vs9/README.txt  |   11 +++++++----
+ 3 files changed, 25 insertions(+), 17 deletions(-)
+
+commit 200d038883f09ba05f30d12d929a6a16b13a1ae0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 30 16:59:44 2011 -0400
+
+    Post-release version bump
+
+ configure.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
 commit 1e114483374a81f9e2f94448a1b3a517bdce8775
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Tue Aug 30 16:22:14 2011 -0400
@@ -55,6 +1919,208 @@ Date:   Tue Aug 30 14:11:50 2011 -0400
 
  configure.in |    4 ++--
  1 files changed, 2 insertions(+), 2 deletions(-)
+
+commit b229df22c12a0f3a1043da42d576da3f5849a91b
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Aug 26 12:32:00 2011 -0500
+
+    bgo#657186 - Sort the recent-files list in newest-to-oldest order
+
+    Otherwise it's not very useful... :)
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit 6e31bc1128874da1b2ccc7c1d481c8949c48969c
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Aug 26 11:38:11 2011 -0500
+
+    Load and populate the recent-items in a single pass
+
+    There's no real asynchronicity going on, anyway, so let's do both
+    within
+    a single iteration of the idle handler.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   32 +++++++++-----------------------
+ 1 files changed, 9 insertions(+), 23 deletions(-)
+
+commit 37f9feebd24f5fcf46b6fc92ce5304af6cac1763
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Aug 25 12:57:03 2011 -0500
+
+    Don't sort the recent-items by hand
+
+    The mtime from GtkRecentManager may not the same as the file's actual
+    mtime, so the final result could appear unsorted to the user.
+    Instead,
+    we will let the view do the sorting.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   12 ------------
+ 1 files changed, 0 insertions(+), 12 deletions(-)
+
+commit 79d16aab2b0fb11f32b1c08ae0cf8e3bb2e6c98b
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 27 18:41:23 2011 -0500
+
+    Set the location mode when changing the operation mode
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+commit aa8f54b7369832aacf9d154af643524012ba278f
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 27 18:03:22 2011 -0500
+
+    Switch to OPERATION_MODE_BROWSE when switching to volume or file
+    shortcuts
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+commit 70cc1add13a1b4c21d78080f3793de52de76cb40
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 27 17:46:04 2011 -0500
+
+    Remove the unused, initial-text logic from the location entry
+
+    Years ago, when the location entry only appeared in a popup window,
+    it used to appear
+    populated with the current folder's path.  We had some logic to do
+    this, but since now
+    the location entry appears in the main dialog, we can do away with
+    that old code.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   80
+ +++----------------------------------------
+ 1 files changed, 5 insertions(+), 75 deletions(-)
+
+commit 22d84f627736ddd8e48646e1096f7cf49571cbbc
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 27 17:44:55 2011 -0500
+
+    Create the location_entry in a single function
+
+    We had duplicated code to create the entry in two cases, for Open
+    and for Save modes.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   34 ++++++++++++++++++++--------------
+ 1 files changed, 20 insertions(+), 14 deletions(-)
+
+commit dfe7018284d76a59b7f3f7515cf7d1e3de9927c4
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 27 17:30:05 2011 -0500
+
+    Only unset the entry's contents if the entry exists
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+commit 388143d563941233069adc85ecf78096c56dea1f
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 27 16:52:12 2011 -0500
+
+    Discard the search widgets in a separate function
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   16 +++++++++++++---
+ 1 files changed, 13 insertions(+), 3 deletions(-)
+
+commit db9665ae08a41d5b61b559c1f64b4d8e75d437a5
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Jul 27 16:47:55 2011 -0500
+
+    Move the widgets above the hpaned to their own box
+
+    This way we can re-create the contents of that box easily without
+    disrupting
+    the rest of the file chooser.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   19 ++++++++++++-------
+ gtk/gtkfilechooserprivate.h |    1 +
+ 2 files changed, 13 insertions(+), 7 deletions(-)
+
+commit ad82bc60ff3a889afde007480733fdddb217d068
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 26 16:43:36 2011 -0500
+
+    Make operation_mode_set() handle SEARCH and RECENT modes as well
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |  161
+ +++++++++++++++++++------------------------
+ 1 files changed, 71 insertions(+), 90 deletions(-)
+
+commit f481458576a43caeb5ff842919656cbcf504c876
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 26 16:17:43 2011 -0500
+
+    Centralize changing the operation mode in operation_mode_set()
+
+    This will be the central function to switch operation modes:  stop
+    searches or the recent-files
+    process; switch widgets, etc.
+
+    We factor out the common code from recent_switch_to_browse_mode()
+    and search_switch_to_browse_mode(),
+    and remove those functions.  All the code that switched modes by
+    hand now calls
+    the central operation_mode_set().
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |  128
+ +++++++++++++-----------------------------
+ 1 files changed, 40 insertions(+), 88 deletions(-)
+
+commit cb4b82e370c94fcb4efcc1ec6eeb6a36636bbeb2
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 26 16:04:14 2011 -0500
+
+    Remove duplicated code from *_switch_to_browse_mode()
+
+    That code indeed lives in operation_mode_stop(), so use it instead of
+    having inlined duplicates.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   10 ++--------
+ 1 files changed, 2 insertions(+), 8 deletions(-)
+
+commit 6c51b34597d2e40f9307a778b1d4f5a2426f07bd
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Jul 26 16:00:35 2011 -0500
+
+    Rename stop_operation() to operation_mode_stop()
+
+    We'll now prefix functions to change the impl->operation_mode with
+    'operation_mode',
+    for clarity.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c |   59
+ ++++++++++++++++++++++--------------------
+ 1 files changed, 31 insertions(+), 28 deletions(-)
 
 commit 89d217c90a050340c65777a34b7db8c2f27d4491
 Author: Matthias Clasen <mclasen@redhat.com>
