@@ -122,22 +122,6 @@ _gtk_file_chooser_install_properties (GObjectClass *klass)
 				    "create-folders");
 }
 
-#ifdef MAEMO_CHANGES
-/**
- * hildon_gtk_file_chooser_install_properties:
- *
- * Exactly the same as the private _gtk_file_chooser_install_properties()
- * but exported for hildon-fm.
- *
- * Since: maemo 2.0
- */
-void
-hildon_gtk_file_chooser_install_properties (GObjectClass *klass)
-{
-  _gtk_file_chooser_install_properties (klass);
-}
-#endif /* MAEMO_CHANGES */
-
 /**
  * _gtk_file_chooser_delegate_iface_init:
  * @iface: a #GtkFileChoserIface structure
@@ -435,6 +419,3 @@ _gtk_file_chooser_extract_recent_folders (GList *infos)
 
   return result;
 }
-
-#define __GTK_FILE_CHOOSER_UTILS_C__
-#include "gtkaliasdef.c"
