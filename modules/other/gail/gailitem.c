@@ -30,8 +30,6 @@
 static void                  gail_item_class_init      (GailItemClass *klass);
 static void                  gail_item_init            (GailItem      *item);
 static const gchar*          gail_item_get_name        (AtkObject     *obj);
-static void                  gail_item_set_name        (AtkObject     *obj,
-                                                        const gchar   *name);
 static gint                  gail_item_get_n_children  (AtkObject     *obj);
 static AtkObject*            gail_item_ref_child       (AtkObject     *obj,
                                                         gint          i);
@@ -105,7 +103,6 @@ gail_item_class_init (GailItemClass *klass)
   gobject_class->finalize = gail_item_finalize;
 
   class->get_name = gail_item_get_name;
-  class->set_name = gail_item_set_name;
   class->get_n_children = gail_item_get_n_children;
   class->ref_child = gail_item_ref_child;
   class->initialize = gail_item_real_initialize;
@@ -191,11 +188,6 @@ gail_item_finalize (GObject *object)
       g_free (item->text);
       item->text = NULL;
     }
-  if (item->alt_text)
-    {
-      g_free (item->alt_text);
-      item->alt_text = NULL;
-    }
   G_OBJECT_CLASS (gail_item_parent_class)->finalize (object);
 }
 
@@ -209,22 +201,6 @@ gail_item_get_name (AtkObject *obj)
   name = ATK_OBJECT_CLASS (gail_item_parent_class)->get_name (obj);
   if (name == NULL)
     {
-      /*
-       * Check for an alternate name first
-       */
-      GailItem *item;
-
-      item = GAIL_ITEM (obj);
-
-      if (item->alt_text != NULL)
-        {
-          if (item->text != NULL)
-              g_free (item->text);
-
-          item->text = g_strdup (item->alt_text);
-          return item->text;
-        }
-
       /*
        * Get the label child
        */
@@ -313,29 +289,6 @@ gail_item_get_name (AtkObject *obj)
         }
     }
   return name;
-}
-
-static void
-gail_item_set_name (AtkObject*   obj,
-                    const gchar* name)
-{
-  GailItem *item;
-
-  g_return_if_fail (GAIL_IS_ITEM (obj));
-
-  item = GAIL_ITEM (obj);
-
-  if (item->alt_text != NULL)
-    g_free (item->alt_text);
-
-  if (name != NULL)
-    {
-      item->alt_text = g_strdup (name);
-    }
-  else
-    {
-      item->alt_text = NULL;
-    }
 }
 
 /*

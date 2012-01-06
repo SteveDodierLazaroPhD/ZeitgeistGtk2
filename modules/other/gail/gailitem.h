@@ -42,7 +42,6 @@ struct _GailItem
   GailTextUtil  *textutil;
 
   gchar *text;
-  gchar *alt_text;
 };
 
 GType gail_item_get_type (void);
