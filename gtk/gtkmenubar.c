@@ -229,17 +229,6 @@ local_notify (GtkWidget  *widget,
                 NULL);
 
   gtk_widget_queue_resize (widget);
-
-  /*
-  if (local)
-    {
-      gtk_widget_show (widget);
-    }
-  else
-    {
-      gtk_widget_hide (widget);
-    }
-  */
 }
 
 static void
@@ -327,12 +316,7 @@ gtk_menu_bar_size_request (GtkWidget      *widget,
                 NULL);
 
   if (!local)
-    {
-      requisition->width = 0;
-      requisition->height = 0;
-
-      return;
-    }
+    return;
 
   if (gtk_widget_get_visible (widget))
     {
@@ -410,6 +394,7 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
   GtkTextDirection direction;
   gint ltr_x, ltr_y;
   gint ipadding;
+  gboolean local = FALSE;
 
   g_return_if_fail (GTK_IS_MENU_BAR (widget));
   g_return_if_fail (allocation != NULL);
@@ -419,6 +404,32 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
   priv = GTK_MENU_BAR_GET_PRIVATE (menu_bar);
 
   direction = gtk_widget_get_direction (widget);
+
+  g_object_get (widget,
+                "ubuntu-local",
+                &local,
+                NULL);
+
+  if (!local)
+    {
+      GtkAllocation zero = { 0, 0, 0, 0 };
+      GdkWindow *window;
+
+      /* We manually assign an empty allocation to the menubar to
+       * prevent the container from attempting to draw it at all.
+       */
+      gtk_widget_set_allocation (widget, &zero);
+
+      /* Then we move the GdkWindow belonging to the menubar outside of
+       * the clipping rectangle of the parent window so that we can't
+       * see it.
+       */
+      window = gtk_widget_get_window (widget);
+      if (window != NULL)
+        gdk_window_move_resize (window, -1, -1, 1, 1);
+
+      return;
+    }
 
   widget->allocation = *allocation;
   if (gtk_widget_get_realized (widget))
