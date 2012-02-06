@@ -3,7 +3,6 @@ include $(top_srcdir)/Makefile.decl
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = \
-   --warn-all \
    --add-include-path=../gdk
 INTROSPECTION_COMPILER_ARGS = \
    --includedir=$(srcdir) \
@@ -37,6 +36,7 @@ INCLUDES =                              \
 	-DG_LOG_DOMAIN=\"Gdk\"		\
 	-DGDK_COMPILATION		\
 	-I$(top_srcdir)			\
+	-I$(top_builddir)		\
 	-I$(top_builddir)/gdk		\
 	$(GTK_DEBUG_FLAGS) 		\
 	$(GDK_DEP_CFLAGS)
@@ -199,11 +199,10 @@ introspection_files = 		\
         gdkenumtypes.h
 
 Gdk-2.0.gir: $(gdktargetlib) Makefile
-Gdk_2_0_gir_SCANNERFLAGS = --c-include="gdk/gdk.h"
+Gdk_2_0_gir_SCANNERFLAGS = --warn-all
 Gdk_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0 cairo-1.0
 Gdk_2_0_gir_LIBS = $(gdktargetlib)
 Gdk_2_0_gir_FILES = $(introspection_files)
-Gdk_2_0_gir_EXPORT_PACKAGES = gdk-2.0
 Gdk_2_0_gir_CFLAGS = $(INCLUDES)
 INTROSPECTION_GIRS += Gdk-2.0.gir
 
@@ -241,12 +240,10 @@ x11_introspection_files = 		\
         x11/gdkx.h
 
 GdkX11-2.0.gir: $(gdktargetlib) Gdk-2.0.gir Makefile
-GdkX11_2_0_gir_SCANNERFLAGS = --identifier-prefix=Gdk --include-uninstalled=Gdk-2.0.gir
-GdkX11_2_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0 xlib-2.0
-
+GdkX11_2_0_gir_SCANNERFLAGS = --warn-all --strip-prefix=Gdk
+GdkX11_2_0_gir_INCLUDES = Gio-2.0 Gdk-2.0 GdkPixbuf-2.0 Pango-1.0 xlib-2.0
 GdkX11_2_0_gir_LIBS = $(gdktargetlib)
 GdkX11_2_0_gir_FILES = $(x11_introspection_files)
-GdkX11_2_0_gir_EXPORT_PACKAGES = gdk-x11-2.0
 GdkX11_2_0_gir_CFLAGS = $(INCLUDES) -L$(top_builddir)/gdk
 INTROSPECTION_GIRS += GdkX11-2.0.gir
 

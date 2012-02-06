@@ -8,7 +8,7 @@
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="new-features-GtkComboBox.html" title="New features">
 <link rel="next" href="gtk-migrating-GtkAboutDialog.html" title="Migrating from GnomeAbout to GtkAboutDialog">
-<meta name="generator" content="GTK-Doc V1.17 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -40,7 +40,7 @@
     To convert an application that uses <span class="structname">GnomeIconList</span> 
     to <a class="link" href="GtkIconView.html" title="GtkIconView"><span class="type">GtkIconView</span></a>, the first step is to organize your data in a <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a>. 
     <span class="structname">GnomeIconList</span> lets you directly insert data with 
-    <a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-insert"><code class="function">gnome_icon_list_insert()</code></a> and <a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-insert-pixbuf"><code class="function">gnome_icon_list_insert_pixbuf()</code></a> and their
+    <code class="function">gnome_icon_list_insert()</code> and <code class="function">gnome_icon_list_insert_pixbuf()</code> and their
     append variants. So, if you previously had a function to fill your icon 
     list similar to this one:
     </p>
@@ -59,8 +59,8 @@
         <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span>
 <span class="function">fill_icon_list</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GnomeIconList</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">icon_list</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-append">gnome_icon_list_append</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">icon_list</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"file1.png"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Icon 1"</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-append">gnome_icon_list_append</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">icon_list</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"file2.png"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Icon 2"</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gnome_icon_list_append</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">icon_list</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"file1.png"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Icon 1"</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gnome_icon_list_append</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">icon_list</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"file2.png"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Icon 2"</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="comment">/* more icons ... */</span><span class="normal"> </span>
 <span class="cbracket">}</span></pre></td>
@@ -189,8 +189,8 @@
   </p>
 <p>
     Your application may make use of extra data attached to the icons in the 
-    <span class="structname">GnomeIconList</span> via <a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-set-icon-data"><code class="function">gnome_icon_list_set_icon_data()</code></a> and 
-    <a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-get-icon-data"><code class="function">gnome_icon_list_get_icon_data()</code></a>. With <a class="link" href="GtkIconView.html" title="GtkIconView"><span class="type">GtkIconView</span></a> such data is most 
+    <span class="structname">GnomeIconList</span> via <code class="function">gnome_icon_list_set_icon_data()</code> and 
+    <code class="function">gnome_icon_list_get_icon_data()</code>. With <a class="link" href="GtkIconView.html" title="GtkIconView"><span class="type">GtkIconView</span></a> such data is most 
     conveniently stored in an extra column in the tree model, so you would 
     call a function like
     </p>
@@ -249,7 +249,7 @@
 <li class="listitem"><p>
        <span class="structname">GtkIconView</span> can not be frozen in the same 
        way as <span class="structname">GnomeIconList</span> can with 
-       <a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-freeze"><code class="function">gnome_icon_list_freeze()</code></a> and <a href="/usr/share/gtk-doc/html/libgnomeui/libgnomeui-gnome-icon-list.html#gnome-icon-list-thaw"><code class="function">gnome_icon_list_thaw()</code></a>. Instead you can 
+       <code class="function">gnome_icon_list_freeze()</code> and <code class="function">gnome_icon_list_thaw()</code>. Instead you can 
        replace the whole model of a <span class="structname">GtkIconView</span>, 
        instead of doing many small changes to the existing model.
      </p></li>
@@ -259,6 +259,6 @@
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.17</div>
+          Generated by GTK-Doc V1.18</div>
 </body>
 </html>

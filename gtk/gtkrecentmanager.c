@@ -892,21 +892,11 @@ gtk_recent_manager_add_item_query_info (GObject      *source_object,
   GtkRecentManager *manager = user_data;
   GtkRecentData recent_data;
   GFileInfo *file_info;
-  gchar *uri;
-  GError *error;
+  gchar *uri, *basename;
 
   uri = g_file_get_uri (file);
 
-  error = NULL;
-  file_info = g_file_query_info_finish (file, res, &error);
-  if (error)
-    {
-      g_warning ("Unable to retrieve the file info for `%s': %s",
-                 uri,
-                 error->message);
-      g_error_free (error);
-      goto out;
-    }
+  file_info = g_file_query_info_finish (file, res, NULL); /* NULL-GError */
 
   recent_data.display_name = NULL;
   recent_data.description = NULL;
@@ -926,7 +916,11 @@ gtk_recent_manager_add_item_query_info (GObject      *source_object,
       g_object_unref (file_info);
     }
   else
-    recent_data.mime_type = g_strdup (GTK_RECENT_DEFAULT_MIME);
+    {
+      basename = g_file_get_basename (file);
+      recent_data.mime_type = g_content_type_guess (basename, NULL, 0, NULL);
+      g_free (basename);
+    }
 
   recent_data.app_name = g_strdup (g_get_application_name ());
   recent_data.app_exec = g_strjoin (" ", g_get_prgname (), "%u", NULL);
@@ -948,7 +942,6 @@ gtk_recent_manager_add_item_query_info (GObject      *source_object,
   g_free (recent_data.app_name);
   g_free (recent_data.app_exec);
 
-out:
   g_object_unref (manager);
   g_free (uri);
 }
