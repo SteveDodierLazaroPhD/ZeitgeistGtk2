@@ -12830,6 +12830,9 @@ extern __typeof (gtk_window_get_gravity) gtk_window_get_gravity __attribute((ali
 #undef gtk_window_get_group 
 extern __typeof (gtk_window_get_group) gtk_window_get_group __attribute((alias("IA__gtk_window_get_group"), visibility("default")));
 
+#undef gtk_window_get_has_resize_grip 
+extern __typeof (gtk_window_get_has_resize_grip) gtk_window_get_has_resize_grip __attribute((alias("IA__gtk_window_get_has_resize_grip"), visibility("default")));
+
 #undef gtk_window_get_icon 
 extern __typeof (gtk_window_get_icon) gtk_window_get_icon __attribute((alias("IA__gtk_window_get_icon"), visibility("default")));
 
@@ -12853,6 +12856,9 @@ extern __typeof (gtk_window_get_position) gtk_window_get_position __attribute((a
 
 #undef gtk_window_get_resizable 
 extern __typeof (gtk_window_get_resizable) gtk_window_get_resizable __attribute((alias("IA__gtk_window_get_resizable"), visibility("default")));
+
+#undef gtk_window_get_resize_grip_area 
+extern __typeof (gtk_window_get_resize_grip_area) gtk_window_get_resize_grip_area __attribute((alias("IA__gtk_window_get_resize_grip_area"), visibility("default")));
 
 #undef gtk_window_get_role 
 extern __typeof (gtk_window_get_role) gtk_window_get_role __attribute((alias("IA__gtk_window_get_role"), visibility("default")));
@@ -12958,6 +12964,9 @@ extern __typeof (gtk_window_reshow_with_initial_size) gtk_window_reshow_with_ini
 
 #undef gtk_window_resize 
 extern __typeof (gtk_window_resize) gtk_window_resize __attribute((alias("IA__gtk_window_resize"), visibility("default")));
+
+#undef gtk_window_resize_grip_is_visible 
+extern __typeof (gtk_window_resize_grip_is_visible) gtk_window_resize_grip_is_visible __attribute((alias("IA__gtk_window_resize_grip_is_visible"), visibility("default")));
 
 #undef gtk_window_set_accept_focus 
 extern __typeof (gtk_window_set_accept_focus) gtk_window_set_accept_focus __attribute((alias("IA__gtk_window_set_accept_focus"), visibility("default")));
