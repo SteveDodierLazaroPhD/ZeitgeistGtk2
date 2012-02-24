@@ -12827,9 +12827,6 @@ extern __typeof (gtk_window_get_gravity) IA__gtk_window_get_gravity __attribute(
 extern __typeof (gtk_window_get_group) IA__gtk_window_get_group __attribute((visibility("hidden")));
 #define gtk_window_get_group IA__gtk_window_get_group
 
-extern __typeof (gtk_window_get_has_resize_grip) IA__gtk_window_get_has_resize_grip __attribute((visibility("hidden")));
-#define gtk_window_get_has_resize_grip IA__gtk_window_get_has_resize_grip
-
 extern __typeof (gtk_window_get_icon) IA__gtk_window_get_icon __attribute((visibility("hidden")));
 #define gtk_window_get_icon IA__gtk_window_get_icon
 
@@ -12853,9 +12850,6 @@ extern __typeof (gtk_window_get_position) IA__gtk_window_get_position __attribut
 
 extern __typeof (gtk_window_get_resizable) IA__gtk_window_get_resizable __attribute((visibility("hidden")));
 #define gtk_window_get_resizable IA__gtk_window_get_resizable
-
-extern __typeof (gtk_window_get_resize_grip_area) IA__gtk_window_get_resize_grip_area __attribute((visibility("hidden")));
-#define gtk_window_get_resize_grip_area IA__gtk_window_get_resize_grip_area
 
 extern __typeof (gtk_window_get_role) IA__gtk_window_get_role __attribute((visibility("hidden")));
 #define gtk_window_get_role IA__gtk_window_get_role
@@ -12961,9 +12955,6 @@ extern __typeof (gtk_window_reshow_with_initial_size) IA__gtk_window_reshow_with
 
 extern __typeof (gtk_window_resize) IA__gtk_window_resize __attribute((visibility("hidden")));
 #define gtk_window_resize IA__gtk_window_resize
-
-extern __typeof (gtk_window_resize_grip_is_visible) IA__gtk_window_resize_grip_is_visible __attribute((visibility("hidden")));
-#define gtk_window_resize_grip_is_visible IA__gtk_window_resize_grip_is_visible
 
 extern __typeof (gtk_window_set_accept_focus) IA__gtk_window_set_accept_focus __attribute((visibility("hidden")));
 #define gtk_window_set_accept_focus IA__gtk_window_set_accept_focus
