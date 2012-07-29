@@ -154,8 +154,8 @@ _gdk_windowing_pointer_grab (GdkWindow    *window,
   return GDK_GRAB_SUCCESS;
 }
 
-static void
-break_all_grabs (guint32 time)
+void
+_gdk_quartz_events_break_all_grabs (guint32 time)
 {
   GdkPointerGrabInfo *grab;
 
@@ -1119,15 +1119,13 @@ test_resize (NSEvent *event, GdkWindow *toplevel, gint x, gint y)
   GdkWindowImplQuartz *toplevel_impl;
   gboolean lion;
 
-  /* Resizing only begins if an NSLeftMouseButton event is received in
-   * the resizing area. Handle anything else.
+  /* Resizing from the resize indicator only begins if an NSLeftMouseButton
+   * event is received in the resizing area.
    */
-  if ([event type] != NSLeftMouseDown)
-    return FALSE;
-
   toplevel_private = (GdkWindowObject *)toplevel;
   toplevel_impl = (GdkWindowImplQuartz *)toplevel_private->impl;
-  if ([toplevel_impl->toplevel showsResizeIndicator])
+  if ([event type] == NSLeftMouseDown &&
+      [toplevel_impl->toplevel showsResizeIndicator])
     {
       NSRect frame;
 
@@ -1155,12 +1153,25 @@ test_resize (NSEvent *event, GdkWindow *toplevel, gint x, gint y)
    * the selector isRestorable to see if we're on 10.7.
    * This extra check is in case the user starts
    * dragging before GDK recognizes the grab.
+   *
+   * We perform this check for a button press of all buttons, because we
+   * do receive, for instance, a right mouse down event for a GDK window
+   * for x-coordinate range [-3, 0], but we do not want to forward this
+   * into GDK. Forwarding such events into GDK will confuse the pointer
+   * window finding code, because there are no GdkWindows present in
+   * the range [-3, 0].
    */
   lion = gdk_quartz_osx_version () >= GDK_OSX_LION;
-  if (lion && (x < GDK_LION_RESIZE ||
-               x > toplevel_private->width - GDK_LION_RESIZE ||
-               y > toplevel_private->height - GDK_LION_RESIZE))
-    return TRUE;
+  if (lion &&
+      ([event type] == NSLeftMouseDown ||
+       [event type] == NSRightMouseDown ||
+       [event type] == NSOtherMouseDown))
+    {
+      if (x < GDK_LION_RESIZE ||
+          x > toplevel_private->width - GDK_LION_RESIZE ||
+          y > toplevel_private->height - GDK_LION_RESIZE)
+        return TRUE;
+    }
 
   return FALSE;
 }
@@ -1183,7 +1194,7 @@ gdk_event_translate (GdkEvent *event,
   if (event_type == NSAppKitDefined)
     {
       if ([nsevent subtype] == NSApplicationDeactivatedEventType)
-        break_all_grabs (get_time_from_ns_event (nsevent));
+        _gdk_quartz_events_break_all_grabs (get_time_from_ns_event (nsevent));
 
       /* This could potentially be used to break grabs when clicking
        * on the title. The subtype 20 is undocumented so it's probably
@@ -1242,9 +1253,15 @@ gdk_event_translate (GdkEvent *event,
    */
   if ([(GdkQuartzWindow *)nswindow isInMove])
     {
-      break_all_grabs (get_time_from_ns_event (nsevent));
+      _gdk_quartz_events_break_all_grabs (get_time_from_ns_event (nsevent));
       return FALSE;
     }
+
+  /* Also when in a manual resize, we ignore events so that these are
+   * pushed to GdkQuartzWindow's sendEvent handler.
+   */
+  if ([(GdkQuartzWindow *)nswindow isInManualResize])
+    return FALSE;
 
   /* Find the right GDK window to send the event to, taking grabs and
    * event masks into consideration.

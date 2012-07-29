@@ -13,8 +13,8 @@ AC_PREREQ(2.62)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [24])
-m4_define([gtk_micro_version], [10])
-m4_define([gtk_interface_age], [10])
+m4_define([gtk_micro_version], [11])
+m4_define([gtk_interface_age], [11])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -32,7 +32,7 @@ m4_define([gtk_api_version], [2.0])
 m4_define([gtk_binary_version], [2.10.0])
 
 # required versions of other packages
-m4_define([glib_required_version], [2.27.3])
+m4_define([glib_required_version], [2.28.0])
 m4_define([pango_required_version], [1.20])
 m4_define([atk_required_version], [1.29.2])
 m4_define([cairo_required_version], [1.6])
@@ -1492,6 +1492,12 @@ else
             $CUPS_API_MAJOR -eq 1 -a $CUPS_API_MINOR -ge 2; then
       AC_DEFINE(HAVE_CUPS_API_1_2, 1, 
                 [Define to 1 if CUPS 1.2 API is available])
+    fi
+    if test $CUPS_API_MAJOR -gt 1 -o \
+	    $CUPS_API_MAJOR -eq 1 -a $CUPS_API_MINOR -ge 6; then
+      AC_DEFINE(HAVE_CUPS_API_1_6, 1,
+                [Define to 1 if CUPS 1.6 API is available])
+
     fi
 
     AC_SUBST(CUPS_API_MAJOR)

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Threads</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
 <link rel="home" href="index.html" title="GDK 2 Reference Manual">
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk-Properties-and-Atoms.html" title="Properties and Atoms">
@@ -155,10 +155,10 @@ looks like:</p>
 <span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Deprecated-Thread-APIs.html#g-thread-init">g_thread_init</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="gdk-Threads.html#gdk-threads-init">gdk_threads_init</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="function"><a href="gdk-Threads.html#gdk-threads-enter">gdk_threads_enter</a></span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/gtk3-General.html#gtk-init">gtk_init</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">argc</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">argv</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gtk_init</span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">argc</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">argv</span><span class="symbol">);</span>
 <span class="normal">  window </span><span class="symbol">=</span><span class="normal"> </span><span class="function">create_window</span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkWidget.html#gtk-widget-show">gtk_widget_show</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/gtk3-General.html#gtk-main">gtk_main</a></span><span class="normal"> </span><span class="symbol">();</span>
+<span class="normal">  </span><span class="function">gtk_widget_show</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gtk_main</span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="function"><a href="gdk-Threads.html#gdk-threads-leave">gdk_threads_leave</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="keyword">return</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
 <span class="cbracket">}</span></pre></td>
@@ -328,7 +328,7 @@ illustrate how to use threads within GTK+ programs.
 <span class="keyword">static</span><span class="normal"> </span><span class="keyword">volatile</span><span class="normal"> </span><span class="type">int</span><span class="normal"> yes_or_no </span><span class="symbol">=</span><span class="normal"> YES_IT_IS</span><span class="symbol">;</span>
 <span class="type">void</span><span class="normal"> </span><span class="function">destroy</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">widget</span><span class="symbol">,</span><span class="normal"> </span><span class="usertype">gpointer</span><span class="normal"> data</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/gtk3-General.html#gtk-main-quit">gtk_main_quit</a></span><span class="normal"> </span><span class="symbol">();</span>
+<span class="normal">  </span><span class="function">gtk_main_quit</span><span class="normal"> </span><span class="symbol">();</span>
 <span class="cbracket">}</span>
 <span class="type">void</span><span class="normal"> </span><span class="symbol">*</span><span class="function">argument_thread</span><span class="normal"> </span><span class="symbol">(</span><span class="type">void</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">args</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
@@ -355,9 +355,9 @@ illustrate how to use threads within GTK+ programs.
 <span class="normal">      </span><span class="function"><a href="gdk-Threads.html#gdk-threads-enter">gdk_threads_enter</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">      </span><span class="comment">/* set label text */</span>
 <span class="normal">      </span><span class="keyword">if</span><span class="symbol">(</span><span class="normal">data</span><span class="symbol">-&gt;</span><span class="normal">what </span><span class="symbol">==</span><span class="normal"> YES_IT_IS</span><span class="symbol">)</span>
-<span class="normal">        </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkLabel.html#gtk-label-set-text">gtk_label_set_text</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_LABEL</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">data</span><span class="symbol">-&gt;</span><span class="normal">label</span><span class="symbol">),</span><span class="normal"> </span><span class="string">"O yes, it is!"</span><span class="symbol">);</span>
+<span class="normal">        </span><span class="function">gtk_label_set_text</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_LABEL</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">data</span><span class="symbol">-&gt;</span><span class="normal">label</span><span class="symbol">),</span><span class="normal"> </span><span class="string">"O yes, it is!"</span><span class="symbol">);</span>
 <span class="normal">      </span><span class="keyword">else</span>
-<span class="normal">        </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkLabel.html#gtk-label-set-text">gtk_label_set_text</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_LABEL</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">data</span><span class="symbol">-&gt;</span><span class="normal">label</span><span class="symbol">),</span><span class="normal"> </span><span class="string">"O no, it isn't!"</span><span class="symbol">);</span>
+<span class="normal">        </span><span class="function">gtk_label_set_text</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_LABEL</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">data</span><span class="symbol">-&gt;</span><span class="normal">label</span><span class="symbol">),</span><span class="normal"> </span><span class="string">"O no, it isn't!"</span><span class="symbol">);</span>
 <span class="normal">      </span><span class="comment">/* release GTK thread lock */</span>
 <span class="normal">      </span><span class="function"><a href="gdk-Threads.html#gdk-threads-leave">gdk_threads_leave</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">    </span><span class="cbracket">}</span>
@@ -375,19 +375,19 @@ illustrate how to use threads within GTK+ programs.
 <span class="normal">  </span><span class="function"><a href="gdk-Threads.html#gdk-threads-init">gdk_threads_init</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="function"><a href="gdk-Threads.html#gdk-threads-enter">gdk_threads_enter</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="comment">/* init gtk */</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/gtk3-General.html#gtk-init">gtk_init</a></span><span class="symbol">(&amp;</span><span class="normal">argc</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">argv</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gtk_init</span><span class="symbol">(&amp;</span><span class="normal">argc</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">argv</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="comment">/* init random number generator */</span>
 <span class="normal">  </span><span class="function">srand</span><span class="normal"> </span><span class="symbol">((</span><span class="type">unsigned</span><span class="normal"> </span><span class="type">int</span><span class="symbol">)</span><span class="normal"> </span><span class="function">time</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">));</span>
 <span class="normal">  </span><span class="comment">/* create a window */</span>
-<span class="normal">  window </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkWindow.html#gtk-window-new">gtk_window_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/gtk/gtk3-Standard-Enumerations.html#GTK-WINDOW-TOPLEVEL:CAPS">GTK_WINDOW_TOPLEVEL</a></span><span class="symbol">);</span>
+<span class="normal">  window </span><span class="symbol">=</span><span class="normal"> </span><span class="function">gtk_window_new</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">GTK_WINDOW_TOPLEVEL</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"destroy"</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">destroy</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkContainer.html#gtk-container-set-border-width">gtk_container_set_border_width</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> </span><span class="number">10</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gtk_container_set_border_width</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> </span><span class="number">10</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="comment">/* create a label */</span>
-<span class="normal">  label </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkLabel.html#gtk-label-new">gtk_label_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"And now for something completely different ..."</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkContainer.html#gtk-container-add">gtk_container_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> label</span><span class="symbol">);</span>
+<span class="normal">  label </span><span class="symbol">=</span><span class="normal"> </span><span class="function">gtk_label_new</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"And now for something completely different ..."</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gtk_container_add</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> label</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="comment">/* show everything */</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkWidget.html#gtk-widget-show">gtk_widget_show</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">label</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/GtkWidget.html#gtk-widget-show">gtk_widget_show</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gtk_widget_show</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">label</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gtk_widget_show</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="comment">/* create the threads */</span>
 <span class="normal">  yes_args</span><span class="symbol">.</span><span class="normal">label </span><span class="symbol">=</span><span class="normal"> label</span><span class="symbol">;</span>
 <span class="normal">  yes_args</span><span class="symbol">.</span><span class="normal">what </span><span class="symbol">=</span><span class="normal"> YES_IT_IS</span><span class="symbol">;</span>
@@ -396,7 +396,7 @@ illustrate how to use threads within GTK+ programs.
 <span class="normal">  no_args</span><span class="symbol">.</span><span class="normal">what </span><span class="symbol">=</span><span class="normal"> NO_IT_IS_NOT</span><span class="symbol">;</span>
 <span class="normal">  </span><span class="function">pthread_create</span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">no_tid</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> argument_thread</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">no_args</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="comment">/* enter the GTK main loop */</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gtk/gtk3-General.html#gtk-main">gtk_main</a></span><span class="normal"> </span><span class="symbol">();</span>
+<span class="normal">  </span><span class="function">gtk_main</span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="function"><a href="gdk-Threads.html#gdk-threads-leave">gdk_threads_leave</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="keyword">return</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
 <span class="cbracket">}</span></pre></td>
@@ -440,7 +440,7 @@ in conjunction with <a class="link" href="gdk-Threads.html#gdk-threads-enter" ti
 </p>
 <p>
 This call must be made before any use of the main loop from
-GTK+; to be safe, call it before <a href="http://library.gnome.org/devel/gtk/gtk3-General.html#gtk-init"><code class="function">gtk_init()</code></a>.
+GTK+; to be safe, call it before <code class="function">gtk_init()</code>.
 </p>
 </div>
 <hr>
@@ -508,8 +508,11 @@ Most threaded GTK+ apps won't need to use this method.
 This method must be called before <a class="link" href="gdk-Threads.html#gdk-threads-init" title="gdk_threads_init ()"><code class="function">gdk_threads_init()</code></a>, and cannot
 be called multiple times.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>enter_fn</code></em> :</span></p></td>
@@ -535,8 +538,11 @@ assigning the default priority, <a href="http://library.gnome.org/devel/glib/uns
 <p>
 See <a class="link" href="gdk-Threads.html#gdk-threads-add-idle-full" title="gdk_threads_add_idle_full ()"><code class="function">gdk_threads_add_idle_full()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>function</code></em> :</span></p></td>
@@ -645,8 +651,11 @@ in thread B:
 
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>priority</code></em> :</span></p></td>
@@ -689,8 +698,11 @@ assigning the default priority, <a href="http://library.gnome.org/devel/glib/uns
 <p>
 See <a class="link" href="gdk-Threads.html#gdk-threads-add-timeout-full" title="gdk_threads_add_timeout_full ()"><code class="function">gdk_threads_add_timeout_full()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>interval</code></em> :</span></p></td>
@@ -804,8 +816,11 @@ for GTK+ widgets for the following use case:
 
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>priority</code></em> :</span></p></td>
@@ -852,8 +867,11 @@ assigning the default priority, <a href="http://library.gnome.org/devel/glib/uns
 <p>
 For details, see <a class="link" href="gdk-Threads.html#gdk-threads-add-timeout-full" title="gdk_threads_add_timeout_full ()"><code class="function">gdk_threads_add_timeout_full()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>interval</code></em> :</span></p></td>
@@ -890,8 +908,11 @@ A variant of <code class="function">gdk_threads_add_timout_full()</code> with se
 See <a href="http://library.gnome.org/devel/glib/unstable/glib-The-Main-Event-Loop.html#g-timeout-add-seconds-full"><code class="function">g_timeout_add_seconds_full()</code></a> for a discussion of why it is
 a good idea to use this function if you don't need finer granularity.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>priority</code></em> :</span></p></td>
