@@ -359,10 +359,17 @@ gdk_quartz_draw_drawable (GdkDrawable *drawable,
        */
       if (drawable == (GdkDrawable *)window_impl)
         {
-          [window_impl->view scrollRect:NSMakeRect (xsrc, ysrc, width, height)
-                                     by:NSMakeSize (xdest - xsrc, ydest - ysrc)];
+          NSRect rect = NSMakeRect (xsrc, ysrc, width, height);
+          NSSize offset = NSMakeSize (xdest - xsrc, ydest - ysrc);
 
+          [window_impl->view scrollRect:rect by:offset];
 
+          /* The scrollRect only "takes effect" on the next redraw, we must
+           * set that the offset rectangle needs display.
+           */
+          rect.origin.x += offset.width;
+          rect.origin.y += offset.height;
+          [window_impl->view setNeedsDisplayInRect:rect];
         }
       else
         g_warning ("Drawing with window source != dest is not supported");
@@ -586,7 +593,7 @@ gdk_quartz_draw_pixbuf (GdkDrawable     *drawable,
 
   data = gdk_pixbuf_get_pixels (pixbuf);
 
-  colorspace = CGColorSpaceCreateWithName (kCGColorSpaceGenericRGB);
+  colorspace = CGColorSpaceCreateDeviceRGB ();
   data_provider = CGDataProviderCreateWithData (NULL, data, pixbuf_height * rowstride, NULL);
 
   image = CGImageCreate (pixbuf_width, pixbuf_height, 8,
@@ -634,7 +641,7 @@ gdk_quartz_draw_image (GdkDrawable     *drawable,
   if (!context)
     return;
 
-  colorspace = CGColorSpaceCreateWithName (kCGColorSpaceGenericRGB);
+  colorspace = CGColorSpaceCreateDeviceRGB ();
   data_provider = CGDataProviderCreateWithData (NULL, image->mem, image->height * image->bpl, NULL);
 
   /* FIXME: Make sure that this function draws 32-bit images correctly,

@@ -33,10 +33,6 @@
 #include "gtkhbox.h"
 #include "gtkalignment.h"
 
-#ifdef GDK_WINDOWING_X11
-#include "gdk/x11/gdkx.h"
-#endif
-
 #include "gtkalias.h"
 
 #undef DEBUG_TOOLTIP
@@ -152,8 +148,6 @@ on_realized (GtkWidget  *window,
 static void
 gtk_tooltip_init (GtkTooltip *tooltip)
 {
-  GdkScreen *screen;
-
   tooltip->timeout_id = 0;
   tooltip->browse_mode_timeout_id = 0;
 
@@ -191,7 +185,7 @@ gtk_tooltip_init (GtkTooltip *tooltip)
   gtk_widget_show (tooltip->alignment);
 
   g_signal_connect_swapped (tooltip->window, "style-set",
-		            G_CALLBACK (gtk_tooltip_window_style_set), tooltip);
+			    G_CALLBACK (gtk_tooltip_window_style_set), tooltip);
   g_signal_connect_swapped (tooltip->window, "expose-event",
 			    G_CALLBACK (gtk_tooltip_paint_window), tooltip);
 
@@ -611,43 +605,41 @@ draw_round_rect (cairo_t *cr,
 
 static void
 fill_background (GtkWidget  *widget,
-                 cairo_t    *cr)
+                 cairo_t    *cr,
+                 GdkColor   *bg_color,
+                 GdkColor   *border_color,
+                 guchar      alpha)
 {
-  GdkColor color;
-  gdouble  r, g, b;
-  gint     radius;
-  gdouble  background_alpha;
+  gint tooltip_radius;
 
-  if (gdk_screen_is_composited (gtk_widget_get_screen (widget)))
-    background_alpha = 0.85;
-  else
-    background_alpha = 1.0;
+  if (!gtk_widget_is_composited (widget))
+    alpha = 255;
 
-  radius = MIN (widget->style->xthickness, widget->style->ythickness);
-  radius = MAX (radius, 1);
+  gtk_widget_style_get (widget,
+                        "tooltip-radius", &tooltip_radius,
+                        NULL);
 
   cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
   cairo_paint (cr);
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
   draw_round_rect (cr,
-                   1.0, 0.5, 0.5, radius,
+                   1.0, 0.5, 0.5, tooltip_radius,
                    widget->allocation.width - 1,
                    widget->allocation.height - 1);
 
-  color = widget->style->bg [GTK_STATE_NORMAL];
-  r = (float)color.red / 65535.0;
-  g = (float)color.green / 65535.0;
-  b = (float)color.blue / 65535.0;
-  cairo_set_source_rgba (cr, r, g, b, background_alpha);
+  cairo_set_source_rgba (cr,
+                         (float) bg_color->red / 65535.0,
+                         (float) bg_color->green / 65535.0,
+                         (float) bg_color->blue / 65535.0,
+                         (float) alpha / 255.0);
   cairo_fill_preserve (cr);
 
-  color = widget->style->bg [GTK_STATE_SELECTED];
-  r = (float) color.red / 65535.0;
-  g = (float) color.green / 65535.0;
-  b = (float) color.blue / 65535.0;
-
-  cairo_set_source_rgba (cr, r, g, b, background_alpha);
+  cairo_set_source_rgba (cr,
+                         (float) border_color->red / 65535.0,
+                         (float) border_color->green / 65535.0,
+                         (float) border_color->blue / 65535.0,
+                         (float) alpha / 255.0);
   cairo_set_line_width (cr, 1.0);
   cairo_stroke (cr);
 }
@@ -655,98 +647,56 @@ fill_background (GtkWidget  *widget,
 static void
 update_shape (GtkTooltip *tooltip)
 {
-  GdkScreen *screen;
   GdkBitmap *mask;
   cairo_t *cr;
-  gint width, height;
-  gboolean new_style;
-  gint radius;
+  gint width, height, tooltip_radius;
 
-  gtk_widget_style_get (tooltip->window, "new-tooltip-style", &new_style, NULL);
+  gtk_widget_style_get (tooltip->window,
+                        "tooltip-radius", &tooltip_radius,
+                        NULL);
 
-  if (!new_style)
+  if (tooltip_radius == 0 ||
+      gtk_widget_is_composited (tooltip->window))
     {
       gtk_widget_shape_combine_mask (tooltip->window, NULL, 0, 0);
-     return;
-    }
-
-  screen = gtk_widget_get_screen (tooltip->window);
-
-  gtk_window_get_size (GTK_WINDOW (tooltip->window), &width, &height);
-
-  if (gdk_screen_is_composited (screen))
-    {
-      GdkRectangle rect;
-      GdkRegion *region;
-      const char *wm;
-
-      gtk_widget_shape_combine_mask (tooltip->window, NULL, 0, 0);
-#ifdef GDK_WINDOWING_X11
-      /* This is a hack to keep the Metacity compositor from slapping a
-       * non-shaped shadow around the shaped tooltip
-       */
-      if (!gtk_widget_get_mapped (tooltip->window))
-        {
-          wm = gdk_x11_screen_get_window_manager_name (screen);
-          if (g_strcmp0 (wm, "Metacity") == 0)
-            gtk_window_set_type_hint (GTK_WINDOW (tooltip->window),
-                                     GDK_WINDOW_TYPE_HINT_DND);
-        }
-#endif
       return;
     }
 
-  radius = MIN (tooltip->window->style->xthickness,
-                tooltip->window->style->ythickness);
-  radius = MAX (radius, 1);
+  gtk_window_get_size (GTK_WINDOW (tooltip->window), &width, &height);
   mask = (GdkBitmap *) gdk_pixmap_new (NULL, width, height, 1);
   cr = gdk_cairo_create (mask);
-  if (cairo_status (cr) == CAIRO_STATUS_SUCCESS)
-    {
-      cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-      cairo_paint (cr);
 
-      cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-      cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
-      draw_round_rect (cr, 1.0, 0, 0, radius + 1, width, height);
-      cairo_fill (cr);
+  fill_background (tooltip->window, cr,
+                   &tooltip->window->style->black,
+                   &tooltip->window->style->black,
+                   255);
+  gtk_widget_shape_combine_mask (tooltip->window, mask, 0, 0);
 
-      gtk_widget_shape_combine_mask (tooltip->window, mask, 0, 0);
-    }
   cairo_destroy (cr);
-
   g_object_unref (mask);
 }
 
 static gboolean
 gtk_tooltip_paint_window (GtkTooltip *tooltip)
 {
-  gboolean new_style;
+  guchar tooltip_alpha;
+  gint tooltip_radius;
 
-  gtk_widget_style_get (tooltip->window, "new-tooltip-style", &new_style, NULL);
+  gtk_widget_style_get (tooltip->window,
+                        "tooltip-alpha", &tooltip_alpha,
+                        "tooltip-radius", &tooltip_radius,
+                        NULL);
 
-  if (new_style)
+  if (tooltip_alpha != 255 || tooltip_radius != 0)
     {
-      cairo_t         *context;
-      cairo_surface_t *surface;
-      cairo_t         *cr;
+      cairo_t *cr;
 
-      context = gdk_cairo_create (tooltip->window->window);
-
-      cairo_set_operator (context, CAIRO_OPERATOR_SOURCE);
-      surface = cairo_surface_create_similar (cairo_get_target (context),
-                                              CAIRO_CONTENT_COLOR_ALPHA,
-                                              tooltip->window->allocation.width,
-                                              tooltip->window->allocation.height);
-      cr = cairo_create (surface);
-
-      fill_background (tooltip->window, cr);
-
+      cr = gdk_cairo_create (tooltip->window->window);
+      fill_background (tooltip->window, cr,
+                       &tooltip->window->style->bg [GTK_STATE_NORMAL],
+                       &tooltip->window->style->bg [GTK_STATE_SELECTED],
+                       tooltip_alpha);
       cairo_destroy (cr);
-      cairo_set_source_surface (context, surface, 0, 0);
-      cairo_paint (context);
-      cairo_surface_destroy (surface);
-      cairo_destroy (context);
 
       update_shape (tooltip);
     }
