@@ -1,3 +1,173 @@
+commit 81bb13510b124b7023ca6c697d4d916642be73fe
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 23 16:42:08 2012 -0400
+
+    2.24.13
+
+ configure.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit b8a49d1e87fd98789b0c9294a8a80d6cd054071a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 23 16:41:44 2012 -0400
+
+    Updates
+
+ NEWS | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+commit 7336783e574a02a0d02168be4f5b71514609c063
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 23 15:04:06 2012 -0400
+
+    Change the location of the online docs
+
+    It is better to install these under gdk2/ and gtk2/, to make
+    it explicit what version they are about. Doing this will eventually
+    let us move the gtk3 docs to gtk/.
+
+ docs/reference/gdk/gdk-docs.sgml | 2 +-
+ docs/reference/gtk/gtk-docs.sgml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 8f5ab0236956e8736a79772f15cb2e44776e9b71
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Sep 18 17:56:17 2012 +0800
+
+    Visual C++ support: Add projeccts to build gailutil
+
+    This adds Visual C++ 2008/2010 projects to build the gailutil DLL,
+    like
+    the 3.x releases.
+
+ build/win32/vs10/Makefile.am              |   2 +
+ build/win32/vs10/gailutil.vcxproj         | 179
+ +++++++++++++++++++++++++++++
+ build/win32/vs10/gailutil.vcxproj.filters |  25 +++++
+ build/win32/vs10/gtk+.props               |   9 ++
+ build/win32/vs10/gtk+.sln                 |  12 +-
+ build/win32/vs10/install.vcxproj          |   6 +-
+ build/win32/vs9/Makefile.am               |   1 +
+ build/win32/vs9/gailutil.vcproj           | 181
+ ++++++++++++++++++++++++++++++
+ build/win32/vs9/gtk+.sln                  |  51 ++++++---
+ build/win32/vs9/gtk+.vsprops              |   5 +
+ 10 files changed, 451 insertions(+), 20 deletions(-)
+
+commit 79b3326eaab18b942bd7e03ae8d24544182cb3dd
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Sep 14 15:18:33 2012 +0200
+
+    quartz: Bug 674108 - Hard crash due to wrong NSAutoreleasePool
+    stacking
+
+    Apply patch from Kristian Rietveld which addresses two issues
+    in gdkeventloop-quartz.c:
+
+    This patch moves the autorelease pool drain and introduces protection
+    against
+    the invalidated ufds. Basically, when we suspect ufds has been
+    invalidated by a
+    recursive main loop instance, we refrain from calling the collect
+    function.
+
+ gdk/quartz/gdkeventloop-quartz.c | 45
+ ++++++++++++++++++++++++++--------------
+ 1 file changed, 29 insertions(+), 16 deletions(-)
+
+commit c8aa94f7a8e761982dd05cb37d16ac6355c7baf9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 9 20:06:38 2012 -0400
+
+    immulticontext: Always check if the global context id changed
+
+    This makes sure that if the gtk-im-module setting changes we update
+    our internal state immediately on the next event whichever it is.
+    In particular this fixes the case of the gtk-im-module setting
+    changing while the user is typing and the slave context remaining
+    the same, effectively ignoring the setting change.
+
+    Backport of a0f155e83938f6c3e63c312107dee2a970c2eb15.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=675365
+
+ gtk/gtkimmulticontext.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
+
+commit 1533e67ae40d938a6ee805eab5581922f4b97459
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 9 18:49:18 2012 -0400
+
+    Try harder to discriminate Shift-F10 and F10
+
+    A change in xkeyboard-config 2.4.1 made it so that function keys
+    now have a shift level which has the same symbol, but 'eats' the
+    shift modifier. This would ordinarily make it impossible for us
+    to discriminate between these key combinations.
+
+    This commit tries harder to discriminate in 2 ways:
+    - XKB has a mechanism to tell us when a modifier should not be
+      consumed even though it was used in determining the level.
+      We now respect such 'preserved' modifiers. This does not fix
+      the Shift-F10 vs F10 problem yet, since xkeyboard-config does
+      not currently mark Shift as preserved for function keys.
+    - Don't consume modifiers that do not change the symbol. For
+      the function keys, the symbol on the shift level is the same
+      as the base level, so we don't consider Shift consumed.
+
+    For more background on the xkeyboard-config change, see
+    https://bugs.freedesktop.org/show_bug.cgi?id=45008
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=661973
+
+ gdk/x11/gdkkeys-x11.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+commit b4ddf24234ccc26647bce8808e9824f268d597b8
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Fri Aug 24 11:49:43 2012 +0200
+
+    Implement gtk-primary-button-warps-slider GtkSetting
+
+    It replaces the recently added GtkRange:primary-button-warps-slider
+    style property. Implement the setting in the quartz backend,
+    it proxies the "click in the scroll bar to" property from the
+    OS X PrefPane.
+
+ gdk/quartz/gdkevents-quartz.c | 65
+ +++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkrange.c                | 12 ++------
+ gtk/gtksettings.c             | 21 +++++++++++++-
+ 3 files changed, 88 insertions(+), 10 deletions(-)
+
+commit 15999ec5f35fe7ef167bf6cfb14cfeb0fe9792d4
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Thu Sep 6 11:38:40 2012 -0400
+
+    range: make condition consistent with GTK3
+
+    cc7abf6a1cccd66a802c5272cd2ac6c944962c78 introduced the
+    primary-button-warps-slider style property, but with a different
+    condition check than the GTK3 counterpart.
+    It turns out we really need to check for the mouse click location
+    here,
+    or we'll warp the slider to pointer also in case we clicked on the
+    slider itself.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=683512
+
+ gtk/gtkrange.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1c401ea91358829e5eaf4526dc407ad61d236886
+Author: Piotr Drąg <piotrdrag@gmail.com>
+Date:   Tue Sep 4 02:28:08 2012 +0200
+
+    Updated Polish translation
+
+ po-properties/pl.po | 45 +++++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 18 deletions(-)
+
 commit 8b18b439afc31d2f0c5c9789fb54668910765d9c
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Sep 3 14:33:47 2012 -0400
