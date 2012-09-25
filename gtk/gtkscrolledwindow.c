@@ -71,8 +71,6 @@
  *    under A) at least correspond to the space taken up by its scrollbars.
  */
 
-gboolean ubuntu_gtk_get_use_overlay_scrollbar(void);
-
 #define DEFAULT_SCROLLBAR_SPACING  3
 
 typedef struct {
@@ -1032,7 +1030,7 @@ gtk_scrolled_window_paint (GtkWidget    *widget,
 
       gtk_widget_style_get (widget, "scrollbars-within-bevel", &scrollbars_within_bevel, NULL);
       
-      if (!scrollbars_within_bevel && ubuntu_gtk_get_use_overlay_scrollbar() == FALSE)
+      if (!scrollbars_within_bevel)
         {
           gtk_scrolled_window_relative_allocation (widget, &relative_allocation);
 
@@ -1492,7 +1490,7 @@ gtk_scrolled_window_size_allocate (GtkWidget     *widget,
 
       if (scrolled_window->shadow_type != GTK_SHADOW_NONE)
 	{
-          if (!scrollbars_within_bevel && ubuntu_gtk_get_use_overlay_scrollbar() == FALSE)
+          if (!scrollbars_within_bevel)
             {
               child_allocation.x -= widget->style->xthickness;
               child_allocation.width += 2 * widget->style->xthickness;
@@ -1544,7 +1542,7 @@ gtk_scrolled_window_size_allocate (GtkWidget     *widget,
 
       if (scrolled_window->shadow_type != GTK_SHADOW_NONE)
 	{
-          if (!scrollbars_within_bevel && ubuntu_gtk_get_use_overlay_scrollbar() == FALSE)
+          if (!scrollbars_within_bevel)
             {
               child_allocation.y -= widget->style->ythickness;
 	      child_allocation.height += 2 * widget->style->ythickness;
@@ -1781,9 +1779,6 @@ _gtk_scrolled_window_get_scrollbar_spacing (GtkScrolledWindow *scrolled_window)
   g_return_val_if_fail (GTK_IS_SCROLLED_WINDOW (scrolled_window), 0);
 
   class = GTK_SCROLLED_WINDOW_GET_CLASS (scrolled_window);
-
-  if (ubuntu_gtk_get_use_overlay_scrollbar())
-    return 0;
 
   if (class->scrollbar_spacing >= 0)
     return class->scrollbar_spacing;

@@ -34,9 +34,6 @@
 
 G_DEFINE_TYPE (GtkHScrollbar, gtk_hscrollbar, GTK_TYPE_SCROLLBAR)
 
-GtkWidget* _ubuntu_gtk_overlay_scrollbar_new (GtkOrientation, GtkAdjustment*);
-gboolean ubuntu_gtk_get_use_overlay_scrollbar(void);
-
 static void
 gtk_hscrollbar_class_init (GtkHScrollbarClass *class)
 {
@@ -63,9 +60,6 @@ gtk_hscrollbar_new (GtkAdjustment *adjustment)
 {
   g_return_val_if_fail (adjustment == NULL || GTK_IS_ADJUSTMENT (adjustment),
                         NULL);
-
-  if (ubuntu_gtk_get_use_overlay_scrollbar())
-    return _ubuntu_gtk_overlay_scrollbar_new (GTK_ORIENTATION_HORIZONTAL, adjustment);
 
   return g_object_new (GTK_TYPE_HSCROLLBAR,
                        "adjustment", adjustment,

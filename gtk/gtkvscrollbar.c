@@ -32,9 +32,6 @@
 #include "gtkintl.h"
 #include "gtkalias.h"
 
-GtkWidget* _ubuntu_gtk_overlay_scrollbar_new (GtkOrientation, GtkAdjustment*);
-gboolean ubuntu_gtk_get_use_overlay_scrollbar (void);
-
 /**
  * SECTION:gtkvscrollbar
  * @Short_description: A vertical scrollbar
@@ -77,9 +74,6 @@ gtk_vscrollbar_new (GtkAdjustment *adjustment)
 {
   g_return_val_if_fail (adjustment == NULL || GTK_IS_ADJUSTMENT (adjustment),
                         NULL);
-
-  if (ubuntu_gtk_get_use_overlay_scrollbar())
-    return _ubuntu_gtk_overlay_scrollbar_new (GTK_ORIENTATION_VERTICAL, adjustment);
 
   return g_object_new (GTK_TYPE_VSCROLLBAR,
                        "adjustment", adjustment,
