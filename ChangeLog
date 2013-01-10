@@ -1,3 +1,626 @@
+commit 8e4742cb00420d23ca0b39e502042512e3a36eaa
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Dec 5 06:02:12 2012 -0500
+
+    2.24.14
+
+ NEWS         | 29 +++++++++++++++++++++++++++++
+ configure.in |  4 ++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+
+commit bad6675d740b9d1d2f98fbaa92aaf77436d7ce4b
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Dec 6 11:34:44 2012 +0800
+
+    gtk-demo.vcproj: Remove unneeded macros
+
+    We don't actually need the GtkPrefixDefine when building the
+    gtk-demo demo
+    program on Windows.
+
+ build/win32/vs9/gtk-demo.vcproj | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit a4411079794ccd377ae73b6693924a0d96dafc94
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Dec 5 23:52:55 2012 +0800
+
+    Bug 687575: Update Visual C++ 2008 projects
+
+    The Visual C++ project files for GTK+-2.24.x need to be updated as the
+    Windows theme engine (libwimp) currently has to be built as a DLL.
+
+    This adds the Visual C++ 2008 project file to build libwimp as
+    a standalone
+    module/DLL, and the property sheets, .sln file and gtk.vcprojin
+    are updated
+    accordingly so that the needed stuff get built properly and go to the
+    proper places for the Windows Themes to work correctly with the
+    Visual C++
+    builds.
+
+    Thanks to nus for pointing this out.  Visual C++ 2010 projects
+    files will
+    be updated in the next 1-2 days.
+
+ build/win32/vs9/Makefile.am    |   1 +
+ build/win32/vs9/gtk+.sln       |  15 ++++
+ build/win32/vs9/gtk+.vsprops   |  43 ++++++----
+ build/win32/vs9/gtk.vcprojin   |   4 -
+ build/win32/vs9/libwimp.vcproj | 173
+ +++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 218 insertions(+), 18 deletions(-)
+
+commit f2b74db5dcbd28a1e27431f413c66d2a5d50b2bd
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Tue Dec 4 14:31:13 2012 +0100
+
+    Bug 626499 - GtkClipboard unnotified on change of OS X pasteboard
+    owner
+
+    pasteboardChangedOwner is not called as reliably as we'd want to
+    get it,
+    so keep track of [pasteboard changeCount] and drop clipboard ownership
+    when a change happened. Also better unset the clipboard content
+    redundantly
+    in a few places rather than missing one, and reorder the code in
+    gtk_clipboard_set_contents() so that the new aggressive unsetting
+    won't unset the clipboard under our feet when we call
+    [pasteboard declareTypes].
+
+ gtk/gtkclipboard-quartz.c | 63
+ ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 41 insertions(+), 22 deletions(-)
+
+commit 6056f1855bc5b0b0104138d6d4ec5d5598953702
+Merge: 1eb0d98 f52befa
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Dec 3 14:24:43 2012 -0600
+
+    Merge branch 'bgo658280-filechooser-recently-used-2-24' into gtk-2-24
+
+commit f52befa7e7a93ec09c011cd6b6d17ab09868c3e8
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Dec 3 14:23:17 2012 -0600
+
+    Revert "Add items to the shortcuts bar's popup menu to configure
+    the startup mode"
+
+    Per the gtk-devel meeting on 2012/11/29, we'll not have a UI in the
+    file chooser dialog
+    to select between those modes.  Instead, we'll show that key in
+    gtweaktool.
+
+    This reverts commit 7860500bc69da242992705995c32940ad84e066c.
+
+ gtk/gtkfilechooserdefault.c | 59
+ ---------------------------------------------
+ gtk/gtkfilechooserprivate.h |  2 --
+ 2 files changed, 61 deletions(-)
+
+commit 1eb0d98d734d96a6612e320d32a2aded423d2746
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Nov 30 15:06:48 2012 +0100
+
+    gtk: convert keyvals to unicode before committing to the imcontext
+
+ gtk/gtkimcontextsimple.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit c0102b30894401a9a1d6d93a972bcc6c37f1b5ac
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Nov 30 14:39:42 2012 +0100
+
+    gtk: add more OSX special casing for the deadacute and deaddoubleacute
+    keys
+
+    So " plus foo prduces foo-with-diaereses and ' plus c produces
+    c-with-cedilla.
+
+ gtk/gtkimcontextsimple.c | 52
+ ++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 39 insertions(+), 13 deletions(-)
+
+commit 5637ef1f97ee46666c97707ed7f6bae459007163
+Author: Alan McGovern <alan@xamarin.com>
+Date:   Fri Nov 23 15:38:34 2012 -0500
+
+    Fix broken function pointer declarations on windows
+
+    Both flashing a window and setting the window opacity were using
+    incorrect declarations for function pointers. They were missing the
+    WINAPI annotation as defined in windows.h. As a result, the stack
+    could be corrupted when these functions were invoked.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=689235
+
+ gdk/win32/gdkwindow-win32.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 9644e910a85f97aedf3f5f4fee974229f29766c3
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Nov 29 14:51:59 2012 +0100
+
+    quartz: add mountain lion as version 8 to enum GdkOSXVersion
+
+    Also use GDK_OSX_UNSUPPORTED instead of 0 in gdk_quartz_osx_version().
+
+ gdk/quartz/gdkglobals-quartz.c | 4 ++--
+ gdk/quartz/gdkquartz.h         | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+commit d6533ffc44d77b42cce7987f249fa481581b7c50
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Nov 29 14:44:04 2012 +0100
+
+    quartz: call Gestalt() only once per session in
+    gdk_quartz_osx_version()
+
+    Thanks to Paul Davis for pointing this out.
+
+ gdk/quartz/gdkglobals-quartz.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+commit b06d83f393c4f9a6380028422d58e8c4a9f5c513
+Author: Colin Walters <walters@verbum.org>
+Date:   Wed Nov 28 16:37:52 2012 -0500
+
+    git.mk: Update
+
+    The old version had race conditions with srcdir != builddir that I hit
+    sometimes in gnome-ostree.
+
+ git.mk | 90
+ ++++++++++++++++++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 66 insertions(+), 24 deletions(-)
+
+commit 7860500bc69da242992705995c32940ad84e066c
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Nov 26 20:36:44 2012 -0600
+
+    Add items to the shortcuts bar's popup menu to configure the
+    startup mode
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c | 59
+ +++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkfilechooserprivate.h |  2 ++
+ 2 files changed, 61 insertions(+)
+
+commit a591a153823bce9116bd03d6a1204756a084abf4
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Nov 26 18:07:11 2012 -0600
+
+    Switch to Recent Files or $CWD at startup
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c | 43
+ ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
+
+commit ebb2977a54798d3253556126cf404b9f381bba58
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Nov 26 18:05:18 2012 -0600
+
+    New settings key for the startup mode
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c  |  4 ++++
+ gtk/gtkfilechooserprivate.h  |  7 ++++++
+ gtk/gtkfilechoosersettings.c | 55
+ ++++++++++++++++++++++++++++++++++++++++++++
+ gtk/gtkfilechoosersettings.h |  5 ++++
+ 4 files changed, 71 insertions(+)
+
+commit 2d57ddd6ef0ef44382be7080484e2408375eb463
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Aug 29 14:03:46 2012 +0800
+
+    gtkimcontexttime.c: Check context_ime->client_window is not NULL
+
+    Be a bit more careful in get_pango_attr_list() and
+    get_utf8_preedit_string() to ensure that the client_window is properly
+    created before proceeding, to avoid access violation/segfault
+    crashes on
+    Windows with IME installed, especially when running the pickers demo.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=682919
+    (cherry picked from commit a866ed737810ea32ec55260ad512f386a4e6df5d)
+
+ modules/input/gtkimcontextime.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit ffd949132a06760bee81f1a1eb9d9f5fbfc0a899
+Author: Daniel Sabo <DanielSabo@gmail.com>
+Date:   Tue May 22 02:10:00 2012 -0700
+
+    Bug 663990 - Tablet pressure is broken on MacOSX
+
+    Add extended input support to GDK Quartz.
+
+ gdk/quartz/gdkevents-quartz.c |  19 +++
+ gdk/quartz/gdkinput.c         | 369
+ +++++++++++++++++++++++++++++++++++++-----
+ gdk/quartz/gdkinputprivate.h  |  11 +-
+ 3 files changed, 354 insertions(+), 45 deletions(-)
+
+commit 925147af70bbfe56f380b45a71ca4755caeb9b56
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Sat Nov 24 14:01:55 2012 -0600
+
+    New way to show $CWD in the shortcuts
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c | 55
+ +++++++++++++++++++++++++++++++++++++++++++--
+ gtk/gtkfilechooserprivate.h |  1 +
+ 2 files changed, 54 insertions(+), 2 deletions(-)
+
+commit f357151cc60003000865252135905c6417504dd6
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Nov 23 15:39:29 2012 +0100
+
+    Bug 668239 - texts disappear when notebook switch page at zh_CN locate
+
+    In gtkimcontextime.c, use gdk_win32_window_get_impl_hwnd() to get to
+    the impl's existing native window instead of GDK_WINDOW_HWND() which
+    implicitly ensures a native window for the widget itself. This seems
+    to work around whatever GDK problem with native subwindows and fixes
+    the bug.
+
+ modules/input/gtkimcontextime.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+commit 0596f5591f36f57b99103914ba03abbed5765e8b
+Author: Camillo Lugaresi <camillo.lugaresi@gmail.com>
+Date:   Tue Nov 20 02:52:39 2012 -0600
+
+    Bug 688710 - splashscreen shouldn't be always on top on OS X
+
+    Activate the "hides on deactivate" behavior for splashscreens,
+    torn-off menus, utility windows, tooltips and notifications: when
+    another application is brought to the front, these windows are hidden
+    so as not to obscure it. This is the expected behavior for
+    application-specific floating windows on OS X.
+
+ gdk/quartz/gdkwindow-quartz.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+commit 27f3fcf12c39d551532872cf26823993c93eb04d
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Tue Nov 20 19:10:06 2012 +0100
+
+    quartz: fix the mapping of GDK_KP_Enter in known_numeric_keys[]
+
+    so it will actually be used, instead of delivering GDK_Return
+    when it should be GDK_KP_Enter.
+
+ gdk/quartz/gdkkeys-quartz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2a24ee075657c39c907332ab6ce62e87f272ccef
+Author: Kazuki Iwamoto <iwm@maid.org>
+Date:   Mon Jun 6 19:33:23 2011 -0400
+
+    Avoid a crash in gtk_im_context_ime_reset
+
+    When GTK+ runs with inputim-ime.dll module, there is NULL
+    pointer reference. Because "context_ime->client_window" may
+    be NULL in gtk_im_context_ime_reset.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=644906
+    (cherry picked from commit 74f57ee04dfd06d4082443dee20cd8a16428d3d9)
+
+ modules/input/gtkimcontextime.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 35a9322e45bb403d34c9e4da036d9d8d559419fb
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Nov 9 17:12:30 2012 +0100
+
+    quartz: always send GDK_NOTIFY_NONLINEAR crossing events
+
+    so GtkMenu works properly. This is not right, but not more
+    wrong than always sending GDK_NOTIFY_ANCESTOR either.
+
+ gdk/quartz/gdkevents-quartz.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+commit 979e5061a040f8896f505ffbd230f52af2d61ded
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Thu Nov 8 15:11:55 2012 +0100
+
+    Bug 672193 - windows (including menus) shown multiple times don't...
+
+    Based on a patch from Paul Davis, inject synthetic enter events
+    directly
+    into the Quartz event stream, instead of trying to synthesize them
+    in GDK.
+
+    This seems to magically fix most combo box popup weirdness, I guess
+    some code is relying on a specfic order of events, or any other state
+    imposed by the "proper" code path of events coming in the usual way.
+
+    The patch also removes _gdk_quartz_events_send_enter_notify_event()
+    which is now obsolete.
+
+ gdk/quartz/GdkQuartzWindow.c   | 23 +++++++++++++++++++++--
+ gdk/quartz/gdkevents-quartz.c  | 31 -------------------------------
+ gdk/quartz/gdkprivate-quartz.h |  1 -
+ 3 files changed, 21 insertions(+), 34 deletions(-)
+
+commit 53f3e5ee9417624ed6e878528b3670127b238dea
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Nov 19 09:29:51 2012 -0500
+
+    Avoid infinite recursion in the ime input module
+
+ modules/input/gtkimcontextime.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit b4a30877a9315ade584858f7259729dbda614bab
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Sun Nov 18 20:14:32 2012 +0100
+
+    quartz: use the real current event time for generated motion events
+
+ gdk/quartz/gdkevents-quartz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1a2509a6ab7f35caae758c2b31f40ef90d4fa94a
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Sun Nov 18 17:42:31 2012 +0100
+
+    quartz: move tooltips window to the topmost level
+
+    so they can appear on top of popup menus. Also, reorder the switch()
+    statement in window_type_hint_to_level() so it resembles the stacking
+    order, to avoid confision like this in the future.
+
+ gdk/quartz/gdkwindow-quartz.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+commit e982461ad63c7ce1f052378dbf5c28f7208f396a
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Sat Oct 27 17:11:59 2012 +0200
+
+    quartz: correct deficiencies in the gdk_draw_drawable() implementation
+
+    The call to scrollRect: must be accompanied by a call to redraw the
+    newly exposed area, otherwise the scrollRect: will have no effect.
+    Secondly, compute the newly exposed area correctly.
+    Thirdly, also expose the lower window border or the area moved from
+    the lower window border if applicable, to make sure rounded corners
+    are properly drawn or don't leave garbage.
+
+ gdk/quartz/gdkdrawable-quartz.c | 89
+ +++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 82 insertions(+), 7 deletions(-)
+
+commit 4d01c56d8953d2b9f30625c32a5a8f223c0539d0
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Sat Oct 27 17:11:26 2012 +0200
+
+    quartz: add _gdk_quartz_window_set_needs_display_in_region
+
+    It's needed for the next commit, which is an actual fix.
+
+ gdk/quartz/gdkprivate-quartz.h |  2 ++
+ gdk/quartz/gdkwindow-quartz.c  | 38
+ ++++++++++++++++++++++++++++----------
+ 2 files changed, 30 insertions(+), 10 deletions(-)
+
+commit 43e1354b71640d3fb7a47b997a436dc65bbd922f
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Nov 15 11:34:15 2012 +0100
+
+    quartz: filter out button press events on the window frame
+
+    Don't try to handle button press events on the window frame, they
+    have out-of-window coordinates. Also, break grabs on such events
+    so popup menus go away.
+    Patch from Kristian Rietveld, fixes bug 684419.
+
+ gdk/quartz/gdkevents-quartz.c | 82
+ +++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 76 insertions(+), 6 deletions(-)
+
+commit 47f0e3f1e1cd6b0ae61ec7ced48cc9802f1a95a4
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Tue Nov 13 19:58:40 2012 +0100
+
+    quartz: move SPLASHSCREEN-hinted windows to NSStatusWindowLevel
+
+    which does not really have a different effect than the previously
+    used NSPopUpMenuWindowLevel, but is what all code examples I found
+    are using, and it does make more sense.
+
+ gdk/quartz/gdkwindow-quartz.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 0239ee50be0df27f1e01ddc5ea64e9c759da55ec
+Author: Timothy Arceri <t_arceri@yahoo.com.au>
+Date:   Wed Oct 31 22:05:48 2012 +1100
+
+    Remove bookmark duplicate of shortcut
+
+    Application code can set shortcut folders that are already bookmarks.
+    This code causes the bookmarks to be refreshed after the shortcut is
+    added removing any possible bookmark duplicates
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=577806
+
+ gtk/gtkfilechooserdefault.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 5934ad2e22dd04deb823abebeb2815f73522fd5d
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Thu Nov 8 15:00:38 2012 +0100
+
+    quartz: _gdk_quartz_gc_update_cg_context(): the minimum line width
+    is 1.0
+
+    not G_MINFLOAT. Patch from Kristian Rietveld.
+
+ gdk/quartz/gdkgc-quartz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 376fc4d712ab16b3770c79b55e00c1b8bc1efcfd
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Mon Nov 5 20:15:17 2012 +0100
+
+    gtk: clean up properly in GtkFileChooserEntry's dispose() to fix
+    crashes
+
+    Don't just unref the completion_store, call discard_completion_store()
+    instead which also unsets it as the GtkEntryCompletion's model.  Fixes
+    bug 681845 and probably some others, because the situation in this bug
+    is completely common.
+
+ gtk/gtkfilechooserentry.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
+
+commit c5421263e4347c94dd0481249e6ae30a9d7ebecb
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Mon Nov 5 03:19:50 2012 +0100
+
+    gail: use connect_object() for connecting to GtkTextBuffer signals
+
+    because the user_data is the GtkTextView. This used to crash when the
+    text view got destroyed, and the buffer was used for another view.
+    Fixes bug #652204.
+
+ modules/other/gail/gailtextview.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+commit de89546e30db83e6e10f72062b3b5c38814bb64d
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Fri Apr 27 12:57:50 2012 -0400
+
+    Use bookmarks file from gtk-3.0 XDG config dir if present
+
+    Will read from old location if new location isn't found, and will
+    always
+    write back to the original location the file was read from.
+
+    Adapted from commit ceb3fecd117293387547c284e8294e4cddaa8f17 on the
+    master branch, based on a patch from
+    William Jon McCann <jmccann@redhat.com>
+
+ gtk/gtkfilesystem.c | 69
+ +++++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 46 insertions(+), 23 deletions(-)
+
+commit bb867e9406ee0d9e6109bfc4c33a38585c76a242
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Oct 22 20:51:17 2012 +0200
+
+    win32: Don't leak the pixmap cairo_surface
+
+    GdkPixmapWin32 allocates a cairo_surface manually for non-foreign
+    pixmaps, instead of letting GdkDrawableWin32 create on on-demand.
+    However, the pixmap created surface is a strong ref, rather than the
+    weak ref created by gdk_win32_ref_cairo_surface() so we can't rely
+    on _gdk_win32_drawable_finish to actually free it. So, we have to
+    manually free it when we finalize or we leak it.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=685959
+
+ gdk/win32/gdkpixmap-win32.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+commit 85bb1a161c6361572fe52fa2c5a9a749c1c856d4
+Author: Hendrik Knackstedt <kn.hendrik@gmail.com>
+Date:   Fri Oct 19 13:38:27 2012 +0200
+
+    Updated German translation
+
+ po-properties/de.po | 923
+ ++++++++++++++++++++++++++++------------------------
+ 1 file changed, 494 insertions(+), 429 deletions(-)
+
+commit 0e42cf81f1dad319489e447c6c4e640bed2ab915
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Thu Oct 4 09:06:01 2012 +0200
+
+    quartz: Actually use the window background PATTERN color
+
+    Before we used a window's background color, which resulted in
+    corrupted
+    display in some cases, presumably because we didn't reset the active
+    pattern. This patch seems to eliminate the observed corruption.
+
+ gdk/quartz/GdkQuartzView.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b9575dddfd13c8cf60e089b761692daefd29a691
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Sun Oct 7 22:53:39 2012 +0800
+
+    gtk+.props: (VS2010) Update include paths
+
+    Correct the include paths for GDK-Pixbuf, as that update was somehow
+    forgotten :|
+
+    Thanks to Berke Viktor for pointing this out.
+
+ build/win32/vs10/gtk+.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 92ea94af5f1a4d0970628b58997192ccf74cab36
+Author: Kristian Rietveld <kris@lanedo.com>
+Date:   Fri Sep 28 06:50:13 2012 +0200
+
+    Fix garbage content when windows are initially mapped
+
+    The garbage would be visible if any widget enabled the toplevel
+    NSView's CALayer in order to do custom native rendering.
+
+ gdk/quartz/GdkQuartzView.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+commit 9b613303801b35b1f1fea80797df0cad1cb34c72
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Sep 27 20:12:21 2012 -0400
+
+    Really move the docs to a new location
+
+    It turns out that library.gnome.org is looking for DOC_MODULE
+    when deciding how to name the directory. So, we have to change
+    that to gtk2/.
+
+ docs/reference/gdk/Makefile.am       |    2 +-
+ docs/reference/gdk/gdk-sections.txt  | 1452 -------
+ docs/reference/gdk/gdk.types         |   11 -
+ docs/reference/gdk/gdk2-sections.txt | 1452 +++++++
+ docs/reference/gdk/gdk2.types        |   11 +
+ docs/reference/gtk/Makefile.am       |    2 +-
+ docs/reference/gtk/gtk-sections.txt  | 7348
+ ----------------------------------
+ docs/reference/gtk/gtk.types         |  200 -
+ docs/reference/gtk/gtk2-sections.txt | 7348
+ ++++++++++++++++++++++++++++++++++
+ docs/reference/gtk/gtk2.types        |  200 +
+ 10 files changed, 9013 insertions(+), 9013 deletions(-)
+
+commit 6389671336d8ebabf278833a6f603da3fe245f4a
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Sep 26 18:57:13 2012 +0800
+
+    Update Visual C++ property sheets
+
+    "Install" the gtk-demo program and data files more like the way done
+    by the
+    autotools build.
+
+ build/win32/vs10/gtk+.props  | 16 ++++++++--------
+ build/win32/vs9/gtk+.vsprops | 16 ++++++++--------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
+
 commit 81bb13510b124b7023ca6c697d4d916642be73fe
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Sun Sep 23 16:42:08 2012 -0400

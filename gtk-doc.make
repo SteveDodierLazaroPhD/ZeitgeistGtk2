@@ -222,7 +222,7 @@ distclean-local:
 	    rm -rf tmpl; \
 	fi
 
-maintainer-clean-local:
+maintainer-clean-local: clean
 	@rm -rf xml html
 
 install-data-local:
@@ -259,7 +259,7 @@ uninstall-local:
 # Require gtk-doc when making dist
 #
 if ENABLE_GTK_DOC
-dist-check-gtkdoc: docs
+dist-check-gtkdoc:
 else
 dist-check-gtkdoc:
 	@echo "*** gtk-doc must be installed and enabled in order to make dist"

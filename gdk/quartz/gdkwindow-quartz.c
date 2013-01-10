@@ -373,12 +373,37 @@ _gdk_quartz_window_set_needs_display_in_rect (GdkWindow    *window,
 }
 
 void
-_gdk_windowing_window_process_updates_recurse (GdkWindow *window,
-                                               GdkRegion *region)
+_gdk_quartz_window_set_needs_display_in_region (GdkWindow    *window,
+                                                GdkRegion    *region)
 {
+  GdkWindowObject *private;
+  GdkWindowImplQuartz *impl;
   int i, n_rects;
   GdkRectangle *rects;
 
+  private = GDK_WINDOW_OBJECT (window);
+  impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
+
+  if (!impl->needs_display_region)
+    impl->needs_display_region = gdk_region_new ();
+
+  gdk_region_union (impl->needs_display_region, region);
+
+  gdk_region_get_rectangles (region, &rects, &n_rects);
+
+  for (i = 0; i < n_rects; i++)
+    [impl->view setNeedsDisplayInRect:NSMakeRect (rects[i].x, rects[i].y,
+                                                  rects[i].width,
+                                                  rects[i].height)];
+
+  g_free (rects);
+
+}
+
+void
+_gdk_windowing_window_process_updates_recurse (GdkWindow *window,
+                                               GdkRegion *region)
+{
   /* Make sure to only flush each toplevel at most once if we're called
    * from process_all_updates.
    */
@@ -410,14 +435,7 @@ _gdk_windowing_window_process_updates_recurse (GdkWindow *window,
     }
 
   if (WINDOW_IS_TOPLEVEL (window))
-    {
-      gdk_region_get_rectangles (region, &rects, &n_rects);
-
-      for (i = 0; i < n_rects; i++)
-        _gdk_quartz_window_set_needs_display_in_rect (window, &rects[i]);
-
-      g_free (rects);
-    }
+    _gdk_quartz_window_set_needs_display_in_region (window, region);
   else
     _gdk_window_process_updates_recurse (window, region);
 
@@ -2373,28 +2391,31 @@ gdk_window_set_hints (GdkWindow *window,
   /* FIXME: Implement */
 }
 
-static
-gint window_type_hint_to_level (GdkWindowTypeHint hint)
+static gint
+window_type_hint_to_level (GdkWindowTypeHint hint)
 {
+  /*  the order in this switch statement corresponds to the actual
+   *  stacking order: the first group is top, the last group is bottom
+   */
   switch (hint)
     {
-    case GDK_WINDOW_TYPE_HINT_DOCK:
-    case GDK_WINDOW_TYPE_HINT_UTILITY:
-      return NSFloatingWindowLevel;
+    case GDK_WINDOW_TYPE_HINT_POPUP_MENU:
+    case GDK_WINDOW_TYPE_HINT_COMBO:
+    case GDK_WINDOW_TYPE_HINT_DND:
+    case GDK_WINDOW_TYPE_HINT_TOOLTIP:
+      return NSPopUpMenuWindowLevel;
+
+    case GDK_WINDOW_TYPE_HINT_NOTIFICATION:
+    case GDK_WINDOW_TYPE_HINT_SPLASHSCREEN:
+      return NSStatusWindowLevel;
 
     case GDK_WINDOW_TYPE_HINT_MENU: /* Torn-off menu */
     case GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU: /* Menu from menubar */
       return NSTornOffMenuWindowLevel;
 
-    case GDK_WINDOW_TYPE_HINT_NOTIFICATION:
-    case GDK_WINDOW_TYPE_HINT_TOOLTIP:
-      return NSStatusWindowLevel;
-
-    case GDK_WINDOW_TYPE_HINT_SPLASHSCREEN:
-    case GDK_WINDOW_TYPE_HINT_POPUP_MENU:
-    case GDK_WINDOW_TYPE_HINT_COMBO:
-    case GDK_WINDOW_TYPE_HINT_DND:
-      return NSPopUpMenuWindowLevel;
+    case GDK_WINDOW_TYPE_HINT_DOCK:
+    case GDK_WINDOW_TYPE_HINT_UTILITY:
+      return NSFloatingWindowLevel;
 
     case GDK_WINDOW_TYPE_HINT_NORMAL:  /* Normal toplevel window */
     case GDK_WINDOW_TYPE_HINT_DIALOG:  /* Dialog window */
@@ -2409,7 +2430,7 @@ gint window_type_hint_to_level (GdkWindowTypeHint hint)
   return NSNormalWindowLevel;
 }
 
-static gboolean 
+static gboolean
 window_type_hint_to_shadow (GdkWindowTypeHint hint)
 {
   switch (hint)
@@ -2439,13 +2460,31 @@ window_type_hint_to_shadow (GdkWindowTypeHint hint)
   return FALSE;
 }
 
+static gboolean
+window_type_hint_to_hides_on_deactivate (GdkWindowTypeHint hint)
+{
+  switch (hint)
+    {
+    case GDK_WINDOW_TYPE_HINT_UTILITY:
+    case GDK_WINDOW_TYPE_HINT_MENU: /* Torn-off menu */
+    case GDK_WINDOW_TYPE_HINT_SPLASHSCREEN:
+    case GDK_WINDOW_TYPE_HINT_NOTIFICATION:
+    case GDK_WINDOW_TYPE_HINT_TOOLTIP:
+      return TRUE;
+
+    default:
+      break;
+    }
+
+  return FALSE;
+}
 
 void
 gdk_window_set_type_hint (GdkWindow        *window,
 			  GdkWindowTypeHint hint)
 {
   GdkWindowImplQuartz *impl;
-  
+
   if (GDK_WINDOW_DESTROYED (window) ||
       !WINDOW_IS_TOPLEVEL (window))
     return;
@@ -2460,6 +2499,7 @@ gdk_window_set_type_hint (GdkWindow        *window,
 
   [impl->toplevel setHasShadow: window_type_hint_to_shadow (hint)];
   [impl->toplevel setLevel: window_type_hint_to_level (hint)];
+  [impl->toplevel setHidesOnDeactivate: window_type_hint_to_hides_on_deactivate (hint)];
 }
 
 GdkWindowTypeHint
@@ -2681,6 +2721,7 @@ gdk_window_set_decorations (GdkWindow       *window,
                                                                     defer:NO];
           [impl->toplevel setHasShadow: window_type_hint_to_shadow (impl->type_hint)];
           [impl->toplevel setLevel: window_type_hint_to_level (impl->type_hint)];
+          [impl->toplevel setHidesOnDeactivate: window_type_hint_to_hides_on_deactivate (impl->type_hint)];
           [impl->toplevel setContentView:old_view];
         }
 

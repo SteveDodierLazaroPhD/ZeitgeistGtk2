@@ -62,7 +62,10 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/gtk-doc.make
 subdir = docs/reference/gtk
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/gtk-doc.m4 \
+	$(top_srcdir)/m4/introspection.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -388,7 +391,7 @@ XVFB_START = \
 AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module.
-DOC_MODULE = gtk
+DOC_MODULE = gtk2
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE = gtk-docs.sgml
@@ -1267,7 +1270,7 @@ distclean-local:
 	    rm -rf tmpl; \
 	fi
 
-maintainer-clean-local:
+maintainer-clean-local: clean
 	@rm -rf xml html
 
 install-data-local:
@@ -1303,7 +1306,7 @@ uninstall-local:
 #
 # Require gtk-doc when making dist
 #
-@ENABLE_GTK_DOC_TRUE@dist-check-gtkdoc: docs
+@ENABLE_GTK_DOC_TRUE@dist-check-gtkdoc:
 @ENABLE_GTK_DOC_FALSE@dist-check-gtkdoc:
 @ENABLE_GTK_DOC_FALSE@	@echo "*** gtk-doc must be installed and enabled in order to make dist"
 @ENABLE_GTK_DOC_FALSE@	@false
