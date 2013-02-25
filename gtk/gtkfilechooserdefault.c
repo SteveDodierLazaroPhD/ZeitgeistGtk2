@@ -279,8 +279,6 @@ static void     gtk_file_chooser_default_style_set      (GtkWidget             *
 							 GtkStyle              *previous_style);
 static void     gtk_file_chooser_default_screen_changed (GtkWidget             *widget,
 							 GdkScreen             *previous_screen);
-static void     gtk_file_chooser_default_size_allocate  (GtkWidget             *widget,
-							 GtkAllocation         *allocation);
 
 static gboolean       gtk_file_chooser_default_set_current_folder 	   (GtkFileChooser    *chooser,
 									    GFile             *folder,
@@ -501,7 +499,6 @@ _gtk_file_chooser_default_class_init (GtkFileChooserDefaultClass *class)
   widget_class->hierarchy_changed = gtk_file_chooser_default_hierarchy_changed;
   widget_class->style_set = gtk_file_chooser_default_style_set;
   widget_class->screen_changed = gtk_file_chooser_default_screen_changed;
-  widget_class->size_allocate = gtk_file_chooser_default_size_allocate;
 
   signals[LOCATION_POPUP] =
     g_signal_new_class_handler (I_("location-popup"),
@@ -5579,18 +5576,6 @@ cancel_all_operations (GtkFileChooserDefault *impl)
 
   pending_select_files_free (impl);
 
-  /* cancel all pending operations */
-  if (impl->pending_cancellables)
-    {
-      for (l = impl->pending_cancellables; l; l = l->next)
-        {
-	  GCancellable *cancellable = G_CANCELLABLE (l->data);
-	  g_cancellable_cancel (cancellable);
-        }
-      g_slist_free (impl->pending_cancellables);
-      impl->pending_cancellables = NULL;
-    }
-
   if (impl->reload_icon_cancellables)
     {
       for (l = impl->reload_icon_cancellables; l; l = l->next)
@@ -5629,6 +5614,12 @@ cancel_all_operations (GtkFileChooserDefault *impl)
     {
       g_cancellable_cancel (impl->should_respond_get_info_cancellable);
       impl->should_respond_get_info_cancellable = NULL;
+    }
+
+  if (impl->file_exists_get_info_cancellable)
+    {
+      g_cancellable_cancel (impl->file_exists_get_info_cancellable);
+      impl->file_exists_get_info_cancellable = NULL;
     }
 
   if (impl->update_from_entry_cancellable)
@@ -5886,17 +5877,6 @@ gtk_file_chooser_default_screen_changed (GtkWidget *widget,
 }
 
 static void
-gtk_file_chooser_default_size_allocate (GtkWidget     *widget,
-					GtkAllocation *allocation)
-{
-  GtkFileChooserDefault *impl;
-
-  impl = GTK_FILE_CHOOSER_DEFAULT (widget);
-
-  GTK_WIDGET_CLASS (_gtk_file_chooser_default_parent_class)->size_allocate (widget, allocation);
-}
-
-static void
 set_sort_column (GtkFileChooserDefault *impl)
 {
   GtkTreeSortable *sortable;
@@ -5971,21 +5951,8 @@ static void
 settings_save (GtkFileChooserDefault *impl)
 {
   GtkFileChooserSettings *settings;
-  char *current_folder_uri;
 
   settings = _gtk_file_chooser_settings_new ();
-
-  /* Current folder */
-
-  if (impl->current_folder)
-    current_folder_uri = g_file_get_uri (impl->current_folder);
-  else
-    current_folder_uri = "";
-
-  _gtk_file_chooser_settings_set_last_folder_uri (settings, current_folder_uri);
-
-  if (impl->current_folder)
-    g_free (current_folder_uri);
 
   /* All the other state */
 
@@ -6015,30 +5982,6 @@ gtk_file_chooser_default_realize (GtkWidget *widget)
   GTK_WIDGET_CLASS (_gtk_file_chooser_default_parent_class)->realize (widget);
 
   emit_default_size_changed (impl);
-}
-
-static GFile *
-get_file_for_last_folder_opened (GtkFileChooserDefault *impl)
-{
-  char *last_folder_uri;
-  GFile *file;
-  GtkFileChooserSettings *settings;
-
-  settings = _gtk_file_chooser_settings_new ();
-  last_folder_uri = _gtk_file_chooser_settings_get_last_folder_uri (settings);
-  g_object_unref (settings);
-
-  /* If no last folder is set, we use the user's home directory, since
-   * this is the starting point for most documents.
-   */
-  if (last_folder_uri == NULL || last_folder_uri[0] == '\0')
-    file = g_file_new_for_path (g_get_home_dir ());
-  else
-    file = g_file_new_for_uri (last_folder_uri);
-
-  g_free (last_folder_uri);
-
-  return file;
 }
 
 /* Changes the current folder to $CWD */
@@ -7334,16 +7277,6 @@ gtk_file_chooser_default_get_current_folder (GtkFileChooser *chooser)
       impl->operation_mode == OPERATION_MODE_RECENT)
     return NULL;
  
-  if (impl->reload_state == RELOAD_EMPTY)
-    {
-      /* We are unmapped, or we had an error while loading the last folder.
-       * We'll return the folder used by the last invocation of the file chooser
-       * since once we get (re)mapped, we'll load *that* folder anyway unless
-       * the caller explicitly calls set_current_folder() on us.
-       */
-      return get_file_for_last_folder_opened (impl);
-    }
-
   if (impl->current_folder)
     return g_object_ref (impl->current_folder);
 
@@ -8064,13 +7997,11 @@ find_good_size_from_style (GtkWidget *widget,
 			   gint      *width,
 			   gint      *height)
 {
-  GtkFileChooserDefault *impl;
   int font_size;
   GdkScreen *screen;
   double resolution;
 
   g_assert (widget->style != NULL);
-  impl = GTK_FILE_CHOOSER_DEFAULT (widget);
 
   screen = gtk_widget_get_screen (widget);
   if (screen)

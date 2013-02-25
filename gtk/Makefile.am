@@ -3,6 +3,7 @@ include $(top_srcdir)/Makefile.decl
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = \
+	--warn-all \
 	--add-include-path=../gdk
 INTROSPECTION_COMPILER_ARGS = \
 	--includedir=$(srcdir) \
@@ -51,6 +52,7 @@ INCLUDES =						\
 	-DGTK_DISABLE_DEPRECATED			\
 	-DGTK_FILE_SYSTEM_ENABLE_UNSUPPORTED		\
 	-DGTK_PRINT_BACKEND_ENABLE_UNSUPPORTED		\
+	$(GMODULE_CFLAGS)				\
 	$(GTK_DEBUG_FLAGS)				\
 	$(GTK_DEP_CFLAGS)				\
 	$(INCLUDED_IMMODULE_DEFINE)
@@ -120,6 +122,7 @@ endif
 libgtkincludedir = $(includedir)/gtk-2.0/gtk
 libadd =								\
 	$(top_builddir)/gdk/$(gdktargetlib)				\
+	$(GMODULE_LIBS) \
 	$(GTK_DEP_LIBS)
 deps =
 
@@ -1014,11 +1017,11 @@ introspection_files = \
     gtktypebuiltins.c
 
 Gtk-2.0.gir: $(INTROSPECTION_SCANNER) $(gtktargetlib) $(top_builddir)/gdk/Gdk-2.0.gir Makefile
-Gtk_2_0_gir_SCANNERFLAGS = --warn-all --add-include-path=$(top_builddir)/gdk
+Gtk_2_0_gir_SCANNERFLAGS = --include-uninstalled=$(top_builddir)/gdk/Gdk-2.0.gir
 if USE_X11
 Gtk_2_0_gir_SCANNERFLAGS += --add-include-path=$(top_builddir)/gdk/x11
 endif
-Gtk_2_0_gir_INCLUDES = Atk-1.0 Gdk-2.0
+Gtk_2_0_gir_INCLUDES = Atk-1.0
 Gtk_2_0_gir_CFLAGS = \
 		$(INCLUDES) \
 		-UGDK_DISABLE_DEPRECATED \
@@ -1026,6 +1029,7 @@ Gtk_2_0_gir_CFLAGS = \
 		-DGTK_TEXT_USE_INTERNAL_UNSUPPORTED_API
 Gtk_2_0_gir_LIBS = $(gtktargetlib)
 Gtk_2_0_gir_FILES = $(introspection_files)
+Gtk_2_0_gir_EXPORT_PACKAGES = gtk+-2.0
 INTROSPECTION_GIRS += Gtk-2.0.gir
 
 girdir = $(datadir)/gir-1.0

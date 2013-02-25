@@ -588,6 +588,8 @@ gtk_spin_button_unrealize (GtkWidget *widget)
 {
   GtkSpinButton *spin = GTK_SPIN_BUTTON (widget);
 
+  gtk_spin_button_stop_spinning (GTK_SPIN_BUTTON (widget));
+
   GTK_WIDGET_CLASS (gtk_spin_button_parent_class)->unrealize (widget);
 
   if (spin->panel)
@@ -766,7 +768,34 @@ gtk_spin_button_expose (GtkWidget      *widget,
 	  gtk_spin_button_draw_arrow (spin, &event->area, GTK_ARROW_DOWN);
 	}
       else
-	GTK_WIDGET_CLASS (gtk_spin_button_parent_class)->expose_event (widget, event);
+        {
+          if (event->window == widget->window)
+            {
+              gint text_x, text_y, text_width, text_height, slice_x;
+
+              /* Since we reuse xthickness for the buttons panel on one side, and GtkEntry
+               * always sizes its background to (allocation->width - 2 * xthickness), we
+               * have to manually render the missing slice of the background on the panel
+               * side.
+               */
+              GTK_ENTRY_GET_CLASS (spin)->get_text_area_size (GTK_ENTRY (spin),
+                                                              &text_x, &text_y,
+                                                              &text_width, &text_height);
+
+              if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
+                slice_x = text_x - widget->style->xthickness;
+              else
+                slice_x = text_x + text_width;
+
+              gtk_paint_flat_box (widget->style, widget->window,
+                                  gtk_widget_get_state (widget), GTK_SHADOW_NONE,
+                                  &event->area, widget, "entry_bg",
+                                  slice_x, text_y,
+                                  widget->style->xthickness, text_height);
+            }
+
+          GTK_WIDGET_CLASS (gtk_spin_button_parent_class)->expose_event (widget, event);
+        }
     }
   
   return FALSE;

@@ -13,8 +13,8 @@ AC_PREREQ(2.62)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [24])
-m4_define([gtk_micro_version], [14])
-m4_define([gtk_interface_age], [14])
+m4_define([gtk_micro_version], [16])
+m4_define([gtk_interface_age], [16])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -44,14 +44,13 @@ AC_INIT([gtk+], [gtk_version],
 	[gtk+])
 
 AC_CONFIG_SRCDIR([gdk/gdktypes.h])
-
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 # Save this value here, since automake will set cflags later
 cflags_set=${CFLAGS+set}
 
 AM_INIT_AUTOMAKE([no-define -Wno-portability dist-bzip2])
-AM_CONFIG_HEADER(config.h)
 
 # Support silent build rules, requires at least automake-1.11. Enable
 # by either passing --enable-silent-rules to configure or passing V=0
@@ -313,7 +312,6 @@ AM_SANITY_CHECK
 
 # Checks for programs.
 AC_ISC_POSIX
-AM_PROG_CC_STDC
 AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET

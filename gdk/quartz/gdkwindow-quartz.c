@@ -2685,7 +2685,7 @@ gdk_window_set_decorations (GdkWindow       *window,
     {
       NSRect rect;
 
-      old_view = [impl->toplevel contentView];
+      old_view = [[impl->toplevel contentView] retain];
 
       rect = [impl->toplevel frame];
 
@@ -2704,34 +2704,64 @@ gdk_window_set_decorations (GdkWindow       *window,
           rect = [NSWindow contentRectForFrameRect:rect styleMask:old_mask];
         }
 
-      /* Note, before OS 10.6 there doesn't seem to be a way to change this without
-       * recreating the toplevel. There might be bad side-effects of doing
-       * that, but it seems alright.
+      /* Note, before OS 10.6 there doesn't seem to be a way to change this
+       * without recreating the toplevel. From 10.6 onward, a simple call to
+       * setStyleMask takes care of most of this, except for ensuring that the
+       * title is set.
        */
       if ([impl->toplevel respondsToSelector:@selector(setStyleMask:)])
         {
+          NSString *title = [impl->toplevel title];
+
           [(id<CanSetStyleMask>)impl->toplevel setStyleMask:new_mask];
+
+          /* It appears that unsetting and then resetting NSTitledWindowMask
+           * does not reset the title in the title bar as might be expected.
+           *
+           * In theory we only need to set this if new_mask includes
+           * NSTitledWindowMask. This behaved extremely oddly when
+           * conditionalized upon that and since it has no side effects (i.e.
+           * if NSTitledWindowMask is not requested, the title will not be
+           * displayed) just do it unconditionally.
+           */
+          [impl->toplevel setTitle:title];
         }
       else
         {
-          [impl->toplevel release];
+          NSString *title = [impl->toplevel title];
+          NSColor *bg = [impl->toplevel backgroundColor];
+          NSScreen *screen = [impl->toplevel screen];
+
+          /* Make sure the old window is closed, recall that releasedWhenClosed
+           * is set on GdkQuartzWindows.
+           */
+          [impl->toplevel close];
+
           impl->toplevel = [[GdkQuartzWindow alloc] initWithContentRect:rect
-                                                                styleMask:new_mask
-                                                                  backing:NSBackingStoreBuffered
-                                                                    defer:NO];
+                                                              styleMask:new_mask
+                                                                backing:NSBackingStoreBuffered
+                                                                  defer:NO
+                                                                 screen:screen];
           [impl->toplevel setHasShadow: window_type_hint_to_shadow (impl->type_hint)];
           [impl->toplevel setLevel: window_type_hint_to_level (impl->type_hint)];
+          [impl->toplevel setTitle:title];
+          [impl->toplevel setBackgroundColor:bg];
           [impl->toplevel setHidesOnDeactivate: window_type_hint_to_hides_on_deactivate (impl->type_hint)];
           [impl->toplevel setContentView:old_view];
         }
 
-      [impl->toplevel setFrame:rect display:YES];
+      if (new_mask == NSBorderlessWindowMask)
+        [impl->toplevel setContentSize:rect.size];
+      else
+        [impl->toplevel setFrame:rect display:YES];
 
       /* Invalidate the window shadow for non-opaque views that have shadow
        * enabled, to get the shadow shape updated.
        */
       if (![old_view isOpaque] && [impl->toplevel hasShadow])
         [(GdkQuartzView*)old_view setNeedsInvalidateShadow:YES];
+
+      [old_view release];
     }
 
   GDK_QUARTZ_RELEASE_POOL;
@@ -2921,6 +2951,7 @@ gdk_window_fullscreen (GdkWindow *window)
 {
   FullscreenSavedGeometry *geometry;
   GdkWindowObject *private = (GdkWindowObject *) window;
+  GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
   NSRect frame;
 
   if (GDK_WINDOW_DESTROYED (window) ||
@@ -2946,10 +2977,14 @@ gdk_window_fullscreen (GdkWindow *window)
 
       gdk_window_set_decorations (window, 0);
 
-      frame = [[NSScreen mainScreen] frame];
+      frame = [[impl->toplevel screen] frame];
       move_resize_window_internal (window,
                                    0, 0, 
                                    frame.size.width, frame.size.height);
+      [impl->toplevel setContentSize:frame.size];
+      [impl->toplevel makeKeyAndOrderFront:impl->toplevel];
+
+      clear_toplevel_order ();
     }
 
   SetSystemUIMode (kUIModeAllHidden, kUIOptionAutoShowMenuBar);
@@ -2960,6 +2995,8 @@ gdk_window_fullscreen (GdkWindow *window)
 void
 gdk_window_unfullscreen (GdkWindow *window)
 {
+  GdkWindowObject *private = (GdkWindowObject *) window;
+  GdkWindowImplQuartz *impl = GDK_WINDOW_IMPL_QUARTZ (private->impl);
   FullscreenSavedGeometry *geometry;
 
   if (GDK_WINDOW_DESTROYED (window) ||
@@ -2980,6 +3017,9 @@ gdk_window_unfullscreen (GdkWindow *window)
       gdk_window_set_decorations (window, geometry->decor);
 
       g_object_set_data (G_OBJECT (window), FULLSCREEN_DATA, NULL);
+
+      [impl->toplevel makeKeyAndOrderFront:impl->toplevel];
+      clear_toplevel_order ();
 
       gdk_synthesize_window_state (window, GDK_WINDOW_STATE_FULLSCREEN, 0);
     }

@@ -1,4 +1,999 @@
-commit 8e4742cb00420d23ca0b39e502042512e3a36eaa
+commit e99827cb19352589919c072dbc18f0520c79956a (HEAD, gtk-2-24)
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Mon Feb 18 13:49:24 2013 -0500
+
+    release: update NEWS for 2.24.16
+
+ INSTALL.in | 2 +-
+ NEWS       | 8 ++++++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+commit c25c2f0a41425e95456184e01039be878aa8191c
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Mon Feb 18 13:58:19 2013 -0500
+
+    Comment out a file chooser test that doesn't pass
+
+ gtk/tests/filechooser.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 950084ae18b6ce47cc2d3f5ef4f103438707156a (origin/gtk-2-24)
+Author: William Hua <william@attente.ca>
+Date:   Mon Feb 18 06:42:17 2013 -0500
+
+    Make GtkItemFactory produce GtkSeparatorMenuItems.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=694077
+
+ gtk/gtkitemfactory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0004fe6cd44bf1033f606c0f9fe9a3784eeb4e73
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 17:44:38 2013 -0600
+
+    filechooser: Remove test directory from testfilechooserbutton
+
+ tests/testfilechooserbutton.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 81df0059cbff1f658bf8ea70905ed2c01a1fec8c
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 15:21:12 2013 -0600
+
+    filechooserbutton: Add tests for SELECT_FOLDER mode with the dialog
+    active
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 51
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+commit 747a514cfb32a22b15f14c64c1f3a7e11544cf60
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 15:07:33 2013 -0600
+
+    filechooser: Oops, cancel a file operation that was missing
+
+    In addition, remove a list of pending_cancellables that was no longer
+    being used.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c | 18 ++++++------------
+ gtk/gtkfilechooserprivate.h |  1 -
+ 2 files changed, 6 insertions(+), 13 deletions(-)
+
+commit 670fcf2c4110445b8ff766dc8f3d7f348fec66e0
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 13:42:38 2013 -0600
+
+    filechooserbutton: Add a battery of tests for GtkFileChooserButton
+
+    These are generic tests that can test the button in all of its modes,
+    instead of hand-written tests for each combination.
+
+    Some tests fail currently.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 658
+ +++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 545 insertions(+), 113 deletions(-)
+
+commit 27eea79537bbbb08360680fec79f9cf3d16536e6
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 12:12:50 2013 -0600
+
+    filechooserbutton: In SELECT_FOLDER mode, consider an empty selection
+    to mean current_folder
+
+    If the user didn't explicitly select anything, BUT the file chooser
+    button has
+    a current_folder set, do the same as what GtkFileChooserDefault
+    would do:
+    return the current folder as the selection.
+
+    This makes the tests in tests/filechooser pass!
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+commit ea3a1ecbd1259f1bb95b5482106344587cb47119
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 11:47:35 2013 -0600
+
+    filechooserbutton: Keep track of the current_folder while the dialog
+    is inactive
+
+    This is analogous to keeping the selection while the dialog is
+    inactive.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 87
+ ++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 80 insertions(+), 7 deletions(-)
+
+commit c7cae86568a7f0e617704b488603c885f370ebc0
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 11:14:36 2013 -0600
+
+    filechooser: Fix cast
+
+ gtk/tests/filechooser.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 97aaba834330cccb7867901b5d1dffe05c539ac6
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 11:14:17 2013 -0600
+
+    filechooserbutton: Remove unused function prototypes
+
+ gtk/gtkfilechooserprivate.h | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+commit bfcaa4228c35d994bccb91c7369fa152d1df5d75
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Feb 13 11:01:50 2013 -0600
+
+    filechooserbutton: Restore to an empty previous selection properly
+
+    If no file was originally selected in the GtkFileChooserButton,
+    then its
+    internal dialog is brought up and cancelled, then we need to
+    restore the
+    selection back to none.  GtkFileChooser, though, doesn't like to
+    select a NULL file, so call _unselect_all() in that condition.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+commit 5de08612dc8cf6970d2c795ec204482c18101c9d
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Wed Feb 13 14:35:45 2013 +0100
+
+    gtk: reliably stop spinning when a GtkSpinButton is hidden
+
+    Call stop_spinning() also in unrealize() because unmap() is not
+    reliably called in GTK+ 2.x. This is not an issue in GTK+ 3.x.
+
+ gtk/gtkspinbutton.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 30a2f8edcc6d2ea912f582b621a82ea44ef4985b
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 23:12:20 2013 -0600
+
+    filechooserbutton: Add test for setting/getting the current folder;
+    currently fails
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+commit 1cfd1f372a897cc480478afb87a7835a7d2d1cf6
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 23:03:26 2013 -0600
+
+    filechooserbutton: Fix preserving the selection after cancelling
+    the dialog
+
+    The button's underlying file chooser dialog should not be used to
+    store the file selection
+    while the dialog is unmapped.  Instead, the file chooser button now
+    stores the
+    selection itself.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 141
+ ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 127 insertions(+), 14 deletions(-)
+
+commit e6f629f2bbdc009552f9b2eb99d4746014f095a5
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 20:12:32 2013 -0600
+
+    filechooser: Remove some unused code
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
+
+commit 69bf331c980c576ad474e2388c6a7d4be8dd19f0
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 19:33:17 2013 -0600
+
+    filechooserbutton: Simplify the code to preserve the selection while
+    the dialog is running
+
+    It used to fetch a possibly multiple selection from the
+    GtkFileChooserDialog, and then
+    pick just the first item from the selection list.  But since
+    GtkFileChooserButton
+    operates in single-selection mode only, it can simply use
+    gtk_file_chooser_get_file()
+    instead.
+
+    Also, the right way to reset the selection for
+    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+    is with gtk_file_chooser_select_file(), not with
+    _set_current_folder_file().
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 30 +++---------------------------
+ 1 file changed, 3 insertions(+), 27 deletions(-)
+
+commit 0e79a04b66c588154e2b07be9c010fe9536dc843
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 19:11:33 2013 -0600
+
+    filechooserbutton: Don't set a starting folder in the underlying
+    dialog
+
+    Let the dialog decide by itself.
+
+ gtk/gtkfilechooserbutton.c | 25 -------------------------
+ 1 file changed, 25 deletions(-)
+
+commit 2900fa9b62f594f780a4c9f69075f6221bbb1448
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 18:19:45 2013 -0600
+
+    filechooser: Test canceling the dialog inside a GtkFileChooserButton
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 48
+ ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+commit 1130a7c6f2ddb79a3b8351eab0d096125d1e1652
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 18:19:26 2013 -0600
+
+    Remove unused variable
+
+ gtk/gtkfilechooserbutton.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+commit 71505d982b0f8ce719885f5f9c4c36b0042efb01
+Author: Sebastian Geiger <sbastig@gmx.net>
+Date:   Fri Aug 31 12:02:00 2012 -0500
+
+    [GtkFileChooserButton] bgo#645065 - Restore the previously-selected
+    file when the button's GtkFileChooserDialog is canceled
+
+    The file chooser is asynchronous, so doing 'select_file (old_file)'
+    and subsequently querying
+    the file for updating the labels is not going to work.  However,
+    the underlying file chooser
+    will emit 'selection-changed' as appropriate when it finishes
+    restoring the old file.  So,
+    we only need to update the labels when the file chooser dialog is
+    confirmed, not cancelled.
+
+ gtk/gtkfilechooserbutton.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit e0cfc911fdfa603b23e4b2d5da5639a38a4d3fc1
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 17:50:33 2013 -0600
+
+    filechooser: Add a couple of tests for GtkFileChooserButton; they
+    fail now
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 62
+ +++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 58 insertions(+), 4 deletions(-)
+
+commit 5807a190315aac93496a40a349409ee5b903d025
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 15:20:46 2013 -0600
+
+    filechooser: Do tests with g_assert_cmpstr(), not g_assert(passed)
+
+    This lets us see exactly what failed, instead of just seeing a
+    boolean error value.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 58
+ ++++++++++++++-----------------------------------
+ 1 file changed, 16 insertions(+), 42 deletions(-)
+
+commit 96602b29e263a03e813132fd31d0df196b181f17
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 15:11:26 2013 -0600
+
+    filechooser: Move some of the tests to GTestDataFunc
+
+    This code came from a home-grown testing mechanism, which didn't
+    aggregate tests
+    into a test suite; it just ran them one by one.  Here we move some
+    of that machinery
+    to GTestDataFunc for more flexibility in running tests.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 117
+ ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 68 insertions(+), 49 deletions(-)
+
+commit e14808fdd32c8d09b0c2c3eb4081df8773ca5357
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Feb 11 13:38:58 2013 -0600
+
+    filechooser: Get the filechooser tests to build
+
+    Some are ifdef-ed out with BROKEN_TESTS, but at least the tests will
+    compile for now.
+
+ gtk/tests/Makefile.am         |  2 +-
+ gtk/tests/filechooser.c       | 25 ++++++++++++++++---------
+ tests/testfilechooserbutton.c |  2 ++
+ 3 files changed, 19 insertions(+), 10 deletions(-)
+
+commit 2ffaa468e5e6d565f72c0c3e2c2e1b4e7b287af3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Feb 9 18:33:04 2013 -0500
+
+    post-release version bump
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 84e1e808398a5a2679547e4b4c23ab50ba745ccf (tag: 2.24.15)
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Feb 6 07:46:34 2013 -0500
+
+    Updates for 2.24.15
+
+ NEWS | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+commit 65ea14d42151941a2c53843b13b244f38ece3b9d
+Author: Emanuele Aina <emanuele.aina@collabora.com>
+Date:   Tue Jan 29 14:56:14 2013 +0100
+
+    build: Fix building with the gold linker by referencing gmodule-2.0
+
+    With the binutils-gold linker the '--no-copy-dt-needed-entries'
+    flag is
+    active by default and using any symbol from indirectly loaded
+    libraries
+    will result in undefined reference errors.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=692810
+
+ gtk/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 5ada51d3c7d3b476d954c4fdddb4895c3de00220
+Author: William Hua <william@attente.ca>
+Date:   Mon Jan 28 17:21:31 2013 -0500
+
+    Signalify (already existing) GtkMenuShell.insert()
+
+    gtk_menu_shell_insert() is a virtual function that was being directly
+    invoked from the class vtable.
+
+    Turn it into a proper signal and emit it in the usual way.
+
+    See https://bugzilla.gnome.org/show_bug.cgi?id=656565.
+
+    This is a backport of Ryan Lortie's commit
+    05aeaeef9ea41282a8859cbff2116d3fba5d31ea from the GTK+ 3 branch.
+
+ gtk/gtkmenushell.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
+
+commit 55642822fed69f1dd93e034065963f634a837d4b (wip/spinbutton-bg-fix)
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Fri Jan 25 16:57:10 2013 -0500
+
+    spinbutton: paint an additional slice of background
+
+    Normally, the xthickness in the style maps to the space on the
+    sides of
+    the widget, to accommodate for its border - GtkEntry's text area
+    background width is calculated as (allocation->width - 2 *
+    xthickness),
+    and the border is rendered in that area.
+    GtkSpinButton has an additional panel for the buttons though,
+    which will
+    render the right-side (left-side for RTL) border itself, taking
+    xthickness into account. This results in the xthickness for that side
+    being applied twice, both to the spinbutton panel and to the entry's
+    text area.
+    Visually, a slice with no painted background can be seen in
+    spinbuttons
+    on the right side (left side when RTL) of the text area, where the
+    border would be rendered by the entry, which looks bad.
+
+    This patch makes GtkSpinButton render the same background of the entry
+    in that slice, to compensate for the xthickness being allocated to the
+    button panel instead.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=683511
+
+ gtk/gtkspinbutton.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+commit 87115e00a81e9d6a2c4d18106af422765004fe2a
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Fri Jan 25 14:40:22 2013 -0500
+
+    entry: never use GTK_STATE_ACTIVE to paint the background
+
+    When state-hint is TRUE, GTK_STATE_ACTIVE was used to paint the entry
+    background and frame, since commit
+    207f3f8685f21bbade8ae0a6551a0e92d6baad89.
+
+    Given that everywhere else in GTK2 - including GtkEntry itself in
+    draw_text_with_color() - GTK_STATE_ACTIVE is used for non-toggleable
+    widgets to indicate selected but not focused text, this leads to the
+    entry painting itself with the wrong background color when focused.
+    This is unsolvable from the theme, as changing the ACTIVE background
+    color to be the same as NORMAL would give a wrong background to
+    selected
+    but not focused text as per above.
+
+    This patch avoids using GTK_STATE_ACTIVE to paint GtkEntry's
+    background,
+    changing the code so that the widget state is always used instead.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=692554
+
+ gtk/gtkentry.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+commit cfb09e565460fd463a0822c8c8dbb0521d9fcab9
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Jan 24 17:57:03 2013 -0600
+
+    GtkFileChooserButton: return correct selection for SELECT_FOLDER mode
+
+    The old code to load the last_folder_uri state from the settings
+    was not actually
+    ensuring that the settings were read from disk.  The result was this:
+
+    1. user chooses a folder in SELECT_FOLDER mode
+    2. user dismisses the file chooser dialog inside a
+    GtkFileChooserButton
+    3. The dialog unmaps itself and saves the last_folder_uri with the
+    user's selection
+    4. The file chooser button gets queried for the selection
+    5. GtkFileChooserDefault sees that it is unmapped, and falls back
+    to the last_folder_uri
+    6. But since that key is not ensured as read by the temporary instance
+    of GtkFileChooserSettings,
+       it returns nothing.
+    7. The file chooser falls back to returning the user's home directory.
+
+    However, *we don't use the last_folder_uri* anymore, for anything!
+    So, removed
+    that code and now everything falls back to ->current_folder correctly.
+    This
+    is the correct selection value for SELECT_FOLDER mode anyway.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=674556
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c  | 47
+ --------------------------------------------
+ gtk/gtkfilechoosersettings.c | 21 --------------------
+ gtk/gtkfilechoosersettings.h |  5 -----
+ 3 files changed, 73 deletions(-)
+
+commit 0c5877215b755f4d2bd639124a400eb471cf7d24
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Jan 20 22:07:14 2013 -0500
+
+    Fix a critical warning in notebook dnd with rgba colormaps
+
+    Pointed out by Nick Schermer in
+    https://bugzilla.gnome.org/show_bug.cgi?id=690788
+
+ gtk/gtknotebook.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit adf68f977cd41748b35b1aca88367d3d5cb459da
+Author: Nuno Araujo <nuno.araujo@russo79.com>
+Date:   Tue Jan 15 18:30:48 2013 +0100
+
+    Enable support for automake 1.13 in autogen.sh
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=692099
+
+ autogen.sh | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+commit 85825ebaf2c16bb48602d5d3ced5e9ecd6605852
+Author: Jan Rękorajski <baggins@pld-linux.org>
+Date:   Wed Dec 14 14:09:48 2011 +0100
+
+    print dialog: Fix authentication logic
+
+    Reset state of CUPS requests correctly during authentization and
+    check CUPS requests for errors.
+    Don't initialize variables holding password and username with empty
+    string (#664640).
+
+ modules/printbackends/cups/gtkcupsutils.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+commit f9e2130765170fafe56ff1b0458472c35a52b228
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jan 15 18:24:54 2013 -0500
+
+    Rename configure.in to configure.ac
+
+    Its the new thing...
+
+ configure.ac | 1775
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ configure.in | 1775
+ ----------------------------------------------------------
+ 2 files changed, 1775 insertions(+), 1775 deletions(-)
+
+commit bc3f1893aa26761c0009ddc993b48623bcfbe4ed
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Tue Jan 15 11:48:23 2013 +0100
+
+    quartz: really don't call a NULL function in gtk_clipboard_store()
+
+    Need to check targets and get_func in each loop iteration because
+    calling get_func the fist time might do whatever to the clipboard.
+    Re-fixes bug #626499. Also free the target table after we're done.
+
+ gtk/gtkclipboard-quartz.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+commit f895cd44afbc4b4fd3b07e90f532395f6eea71b7
+Author: Kjartan Maraas <kmaraas@gnome.org>
+Date:   Thu Jan 10 13:39:33 2013 +0100
+
+    Updated Norwegian bokmål translation
+
+ po/nb.po | 749
+ ++++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 378 insertions(+), 371 deletions(-)
+
+commit 3bfc67f1c1d724a1a5a1fea7651534c49cd83d95
+Author: Marko Lindqvist <cazfi74@gmail.com>
+Date:   Mon Jan 7 06:23:36 2013 +0200
+
+    configure.in: fix autoreconf with automake-1.13
+
+    Replace long obsolete AM_CONFIG_HEADER with proper AC_CONFIG_HEADERS.
+    automake-1.13 errors out upon seeing former.
+    Similarly remove AM_PROG_CC_STDC. It's proper replacement, AC_PROG_CC,
+    is already present.
+
+    Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
+
+ configure.in | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+commit 184407309f83a06b9215c8123091263d483edc8b
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Fri Dec 28 22:11:13 2012 +0100
+
+    quartz: retain content view when switching over toplevel.
+
+ gdk/quartz/gdkwindow-quartz.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 30deba453a045107eadd4deea572e29192c298c1
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Fri Dec 28 22:06:32 2012 +0100
+
+    quartz: Make sure the old toplevel is closed on recreation
+
+ gdk/quartz/gdkwindow-quartz.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit a8008b796f14444dff3ac46af884238fc4f214f6
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Fri Dec 28 21:59:02 2012 +0100
+
+    quartz: make sure all old properties are set on the new toplevel
+
+    Apply patch by Paul Davies; part of bug 669808.
+
+ gdk/quartz/gdkwindow-quartz.c | 39
+ ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 7 deletions(-)
+
+commit 62f1d871b70a8e08b899942827386d6f3222c986
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Fri Dec 28 21:04:09 2012 +0100
+
+    quartz: ensure window being (un)fullscreened is visible
+
+    Patch by Paul Davis; part of bug 669808.
+
+ gdk/quartz/gdkwindow-quartz.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+commit 1f0f3994694ec3f1baa43932c186db78814b2abd
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Dec 28 11:26:46 2012 -0500
+
+    Move single-include guards inside include guards
+
+    gcc has optimizations for include guards that only work
+    if they are outermost in the the header.
+    https://bugzilla.gnome.org/show_bug.cgi?id=689810
+
+ gdk/gdkapplaunchcontext.h      | 6 +++---
+ gdk/gdkcairo.h                 | 6 +++---
+ gdk/gdkcolor.h                 | 6 +++---
+ gdk/gdkcursor.h                | 6 +++---
+ gdk/gdkdisplay.h               | 6 +++---
+ gdk/gdkdisplaymanager.h        | 6 +++---
+ gdk/gdkdnd.h                   | 6 +++---
+ gdk/gdkdrawable.h              | 6 +++---
+ gdk/gdkevents.h                | 6 +++---
+ gdk/gdkgc.h                    | 6 +++---
+ gdk/gdkimage.h                 | 6 +++---
+ gdk/gdkinput.h                 | 6 +++---
+ gdk/gdkkeys.h                  | 6 +++---
+ gdk/gdkpango.h                 | 6 +++---
+ gdk/gdkpixbuf.h                | 6 +++---
+ gdk/gdkpixmap.h                | 6 +++---
+ gdk/gdkproperty.h              | 6 +++---
+ gdk/gdkregion.h                | 6 +++---
+ gdk/gdkrgb.h                   | 6 +++---
+ gdk/gdkscreen.h                | 6 +++---
+ gdk/gdkselection.h             | 6 +++---
+ gdk/gdkspawn.h                 | 6 +++---
+ gdk/gdktestutils.h             | 6 +++---
+ gdk/gdktypes.h                 | 6 +++---
+ gdk/gdkvisual.h                | 6 +++---
+ gdk/gdkwindow.h                | 6 +++---
+ gtk/gtkaboutdialog.h           | 6 +++---
+ gtk/gtkaccelgroup.h            | 8 ++++----
+ gtk/gtkaccellabel.h            | 8 ++++----
+ gtk/gtkaccelmap.h              | 8 ++++----
+ gtk/gtkaccessible.h            | 6 +++---
+ gtk/gtkaction.h                | 6 +++---
+ gtk/gtkactiongroup.h           | 6 +++---
+ gtk/gtkactivatable.h           | 6 +++---
+ gtk/gtkadjustment.h            | 8 ++++----
+ gtk/gtkalignment.h             | 8 ++++----
+ gtk/gtkarrow.h                 | 8 ++++----
+ gtk/gtkaspectframe.h           | 8 ++++----
+ gtk/gtkassistant.h             | 6 +++---
+ gtk/gtkbbox.h                  | 6 +++---
+ gtk/gtkbin.h                   | 8 ++++----
+ gtk/gtkbindings.h              | 8 ++++----
+ gtk/gtkbox.h                   | 8 ++++----
+ gtk/gtkbuildable.h             | 6 +++---
+ gtk/gtkbuilder.h               | 6 +++---
+ gtk/gtkbutton.h                | 8 ++++----
+ gtk/gtkcalendar.h              | 8 ++++----
+ gtk/gtkcelleditable.h          | 6 +++---
+ gtk/gtkcelllayout.h            | 6 +++---
+ gtk/gtkcellrenderer.h          | 6 +++---
+ gtk/gtkcellrendereraccel.h     | 6 +++---
+ gtk/gtkcellrenderercombo.h     | 6 +++---
+ gtk/gtkcellrendererpixbuf.h    | 6 +++---
+ gtk/gtkcellrendererprogress.h  | 6 +++---
+ gtk/gtkcellrendererspin.h      | 6 +++---
+ gtk/gtkcellrendererspinner.h   | 6 +++---
+ gtk/gtkcellrenderertext.h      | 8 ++++----
+ gtk/gtkcellrenderertoggle.h    | 6 +++---
+ gtk/gtkcellview.h              | 6 +++---
+ gtk/gtkcheckbutton.h           | 8 ++++----
+ gtk/gtkcheckmenuitem.h         | 8 ++++----
+ gtk/gtkclipboard.h             | 6 +++---
+ gtk/gtkcolorbutton.h           | 8 ++++----
+ gtk/gtkcolorsel.h              | 6 +++---
+ gtk/gtkcolorseldialog.h        | 6 +++---
+ gtk/gtkcombobox.h              | 6 +++---
+ gtk/gtkcomboboxentry.h         | 6 +++---
+ gtk/gtkcomboboxtext.h          | 6 +++---
+ gtk/gtkcontainer.h             | 8 ++++----
+ gtk/gtkdebug.h                 | 6 +++---
+ gtk/gtkdialog.h                | 8 ++++----
+ gtk/gtkdnd.h                   | 8 ++++----
+ gtk/gtkdrawingarea.h           | 8 ++++----
+ gtk/gtkeditable.h              | 8 ++++----
+ gtk/gtkentry.h                 | 8 ++++----
+ gtk/gtkentrybuffer.h           | 6 +++---
+ gtk/gtkentrycompletion.h       | 6 +++---
+ gtk/gtkenums.h                 | 6 +++---
+ gtk/gtkeventbox.h              | 8 ++++----
+ gtk/gtkexpander.h              | 6 +++---
+ gtk/gtkfilechooser.h           | 6 +++---
+ gtk/gtkfilechooserbutton.h     | 6 +++---
+ gtk/gtkfilechooserdialog.h     | 6 +++---
+ gtk/gtkfilechooserwidget.h     | 6 +++---
+ gtk/gtkfilefilter.h            | 6 +++---
+ gtk/gtkfixed.h                 | 8 ++++----
+ gtk/gtkfontbutton.h            | 6 +++---
+ gtk/gtkfontsel.h               | 8 ++++----
+ gtk/gtkframe.h                 | 8 ++++----
+ gtk/gtkgc.h                    | 8 ++++----
+ gtk/gtkhandlebox.h             | 8 ++++----
+ gtk/gtkhbbox.h                 | 8 ++++----
+ gtk/gtkhbox.h                  | 8 ++++----
+ gtk/gtkhpaned.h                | 6 +++---
+ gtk/gtkhscale.h                | 8 ++++----
+ gtk/gtkhscrollbar.h            | 8 ++++----
+ gtk/gtkhseparator.h            | 8 ++++----
+ gtk/gtkhsv.h                   | 6 +++---
+ gtk/gtkiconfactory.h           | 6 +++---
+ gtk/gtkicontheme.h             | 6 +++---
+ gtk/gtkiconview.h              | 6 +++---
+ gtk/gtkimage.h                 | 8 ++++----
+ gtk/gtkimagemenuitem.h         | 8 ++++----
+ gtk/gtkimcontext.h             | 8 ++++----
+ gtk/gtkimcontextsimple.h       | 6 +++---
+ gtk/gtkimmulticontext.h        | 6 +++---
+ gtk/gtkinfobar.h               | 6 +++---
+ gtk/gtkinvisible.h             | 6 +++---
+ gtk/gtkitem.h                  | 8 ++++----
+ gtk/gtklabel.h                 | 8 ++++----
+ gtk/gtklayout.h                | 8 ++++----
+ gtk/gtklinkbutton.h            | 6 +++---
+ gtk/gtkliststore.h             | 6 +++---
+ gtk/gtkmain.h                  | 8 ++++----
+ gtk/gtkmenu.h                  | 8 ++++----
+ gtk/gtkmenubar.h               | 8 ++++----
+ gtk/gtkmenuitem.h              | 8 ++++----
+ gtk/gtkmenushell.h             | 8 ++++----
+ gtk/gtkmenutoolbutton.h        | 6 +++---
+ gtk/gtkmessagedialog.h         | 6 +++---
+ gtk/gtkmisc.h                  | 8 ++++----
+ gtk/gtkmodules.h               | 6 +++---
+ gtk/gtkmountoperation.h        | 6 +++---
+ gtk/gtknotebook.h              | 8 ++++----
+ gtk/gtkobject.h                | 8 ++++----
+ gtk/gtkoffscreenwindow.h       | 6 +++---
+ gtk/gtkorientable.h            | 6 +++---
+ gtk/gtkpagesetup.h             | 8 ++++----
+ gtk/gtkpagesetupunixdialog.h   | 6 +++---
+ gtk/gtkpaned.h                 | 6 +++---
+ gtk/gtkpango.h                 | 8 ++++----
+ gtk/gtkpapersize.h             | 8 ++++----
+ gtk/gtkplug.h                  | 8 ++++----
+ gtk/gtkprintcontext.h          | 8 ++++----
+ gtk/gtkprinter.h               | 6 +++---
+ gtk/gtkprintjob.h              | 6 +++---
+ gtk/gtkprintoperation.h        | 8 ++++----
+ gtk/gtkprintoperationpreview.h | 6 +++---
+ gtk/gtkprintsettings.h         | 6 +++---
+ gtk/gtkprintunixdialog.h       | 6 +++---
+ gtk/gtkprogressbar.h           | 8 ++++----
+ gtk/gtkradioaction.h           | 6 +++---
+ gtk/gtkradiobutton.h           | 8 ++++----
+ gtk/gtkradiomenuitem.h         | 8 ++++----
+ gtk/gtkradiotoolbutton.h       | 6 +++---
+ gtk/gtkrange.h                 | 8 ++++----
+ gtk/gtkrc.h                    | 8 ++++----
+ gtk/gtkrecentaction.h          | 6 +++---
+ gtk/gtkrecentchooser.h         | 6 +++---
+ gtk/gtkrecentchooserdialog.h   | 6 +++---
+ gtk/gtkrecentchoosermenu.h     | 6 +++---
+ gtk/gtkrecentchooserwidget.h   | 6 +++---
+ gtk/gtkrecentfilter.h          | 6 +++---
+ gtk/gtkrecentmanager.h         | 6 +++---
+ gtk/gtkscale.h                 | 8 ++++----
+ gtk/gtkscalebutton.h           | 6 +++---
+ gtk/gtkscrollbar.h             | 8 ++++----
+ gtk/gtkscrolledwindow.h        | 8 ++++----
+ gtk/gtkselection.h             | 8 ++++----
+ gtk/gtkseparator.h             | 8 ++++----
+ gtk/gtkseparatormenuitem.h     | 8 ++++----
+ gtk/gtkseparatortoolitem.h     | 6 +++---
+ gtk/gtksettings.h              | 6 +++---
+ gtk/gtkshow.h                  | 6 +++---
+ gtk/gtksizegroup.h             | 6 +++---
+ gtk/gtksocket.h                | 6 +++---
+ gtk/gtkspinbutton.h            | 8 ++++----
+ gtk/gtkspinner.h               | 6 +++---
+ gtk/gtkstatusbar.h             | 6 +++---
+ gtk/gtkstatusicon.h            | 6 +++---
+ gtk/gtkstock.h                 | 8 ++++----
+ gtk/gtkstyle.h                 | 8 ++++----
+ gtk/gtktable.h                 | 8 ++++----
+ gtk/gtktearoffmenuitem.h       | 8 ++++----
+ gtk/gtktestutils.h             | 6 +++---
+ gtk/gtktextbuffer.h            | 6 +++---
+ gtk/gtktextbufferrichtext.h    | 6 +++---
+ gtk/gtktextchild.h             | 6 +++---
+ gtk/gtktextiter.h              | 6 +++---
+ gtk/gtktextmark.h              | 6 +++---
+ gtk/gtktexttag.h               | 8 ++++----
+ gtk/gtktexttagtable.h          | 6 +++---
+ gtk/gtktextview.h              | 6 +++---
+ gtk/gtktoggleaction.h          | 6 +++---
+ gtk/gtktogglebutton.h          | 8 ++++----
+ gtk/gtktoggletoolbutton.h      | 6 +++---
+ gtk/gtktoolbar.h               | 8 ++++----
+ gtk/gtktoolbutton.h            | 6 +++---
+ gtk/gtktoolitem.h              | 6 +++---
+ gtk/gtktoolitemgroup.h         | 6 +++---
+ gtk/gtktoolpalette.h           | 6 +++---
+ gtk/gtktoolshell.h             | 8 ++++----
+ gtk/gtktooltip.h               | 6 +++---
+ gtk/gtktreednd.h               | 6 +++---
+ gtk/gtktreemodel.h             | 6 +++---
+ gtk/gtktreemodelfilter.h       | 6 +++---
+ gtk/gtktreemodelsort.h         | 6 +++---
+ gtk/gtktreeselection.h         | 6 +++---
+ gtk/gtktreesortable.h          | 8 ++++----
+ gtk/gtktreestore.h             | 6 +++---
+ gtk/gtktreeview.h              | 6 +++---
+ gtk/gtktreeviewcolumn.h        | 6 +++---
+ gtk/gtktypeutils.h             | 6 +++---
+ gtk/gtkuimanager.h             | 6 +++---
+ gtk/gtkvbbox.h                 | 8 ++++----
+ gtk/gtkvbox.h                  | 8 ++++----
+ gtk/gtkviewport.h              | 8 ++++----
+ gtk/gtkvolumebutton.h          | 6 +++---
+ gtk/gtkvpaned.h                | 6 +++---
+ gtk/gtkvscale.h                | 8 ++++----
+ gtk/gtkvscrollbar.h            | 8 ++++----
+ gtk/gtkvseparator.h            | 8 ++++----
+ gtk/gtkwidget.h                | 6 +++---
+ gtk/gtkwindow.h                | 8 ++++----
+ 214 files changed, 723 insertions(+), 723 deletions(-)
+
+commit 44402df7dd412730e2128deb51a3885437ca7caf
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Dec 28 15:10:34 2012 +0800
+
+    Fix gailutil Visual C++ projects
+
+    ...so that we will include the correct gdkconfig.h, which would be
+    in $(srcroot)\gdk\ during the Visual C++ build.
+
+    Also prepare support for Visual Studio 2012 in this project, so
+    it would
+    be easy to use a script to copy and replace the necessary items in the
+    Visual Studio 2010 project set to make it a Visual Studio 2012 set.
+
+ build/win32/vs10/gailutil.vcxproj | 10 ++++++++--
+ build/win32/vs9/gailutil.vcproj   |  6 ++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+commit f1c105b94fc3c3572a234c93c47252a3ff82218b
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Dec 20 23:37:06 2012 +0100
+
+    quartz: don't call a NULL get_func() in gtk_clipboard_store()
+
+    Assume the clipboard is not set and bail out silently (bug #626499).
+
+ gtk/gtkclipboard-quartz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e3e055f8551ac8ee033f361261c849c612554184
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Mon Dec 17 22:20:40 2012 +0100
+
+    quartz: make setting_same_owner member of GtkClipboardOwner @public
+
+    to fix the build, thanks to parafin for the patch.
+
+ gtk/gtkclipboard-quartz.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d9f9925878773fb37d1a385a929ddcbb4ef8fb80
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Tue Sep 18 14:18:15 2012 +0200
+
+    printing: Add "Custom." prefix only once to paper size
+
+    Check whether "Custom." prefix is already present in the name
+    of selected paper size. (#679883)
+    (cherry picked from commit be7752183eb07274b67036362f895b31aa28eb25)
+
+ modules/printbackends/cups/gtkprintbackendcups.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 31ae1a0b5bb257c86cc2393e065ded8506b4ef4a
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Dec 14 14:30:31 2012 +0100
+
+    gtk: fix scrolling in modal dialogs when event_widget is insensitive
+
+    When checking for modal grabs in gtk_main_do_event(), forward
+    GDK_SCROLL events to event_widget, even if it is insensitive.
+
+ gtk/gtkmain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e8535149e4b52eb06cfe41eb36d3f127bd81c0b7
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Mon Dec 10 09:32:00 2012 -0800
+
+    Bug 689982: Random Crash
+
+    Update Cairo_Win32 error handling to respond correctly to
+    cairo_win32_foo_create() functions returning a "nil" surface.
+
+ gdk/win32/gdkpixmap-win32.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+commit 4a8df7a33c298d22bf78b947d0e861fc03ec70e1
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri Dec 7 12:19:52 2012 +0100
+
+    quartz: fix crash in the recent clipboard "fix", and really fix it
+
+    We must not release the GtkClipboardOwner in pasteboardChangedOwner
+    becaue we don't own a reference to ourselves (NSPasteboard does).
+    Instead, release the owner right after setting it, transferring
+    ownership to NSPasteboard
+
+    Also, fix repeated setting of the same owner by keeping the
+    owner around in GtkCLipboard, and re-use it if "user_data"
+    doesn't change. To avoid clipboard_unset()ting our own contents
+    in the process, add an ugly "setting_same_owner" boolean to
+    GtkClipboardOwner, set it during re-setting the same owner,
+    and avoid calling clipboard_unset() from pasteboardChangedOwner
+    if it's TRUE.
+
+ gtk/gtkclipboard-quartz.c | 55
+ +++++++++++++++++++++++++++++++----------------
+ 1 file changed, 36 insertions(+), 19 deletions(-)
+
+commit b7c30152d0a6f964be8458f0a57a9bad908d8ce5
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Dec 6 12:19:49 2012 +0800
+
+    Bug 687575: Update Visual C++ 2010 projects
+
+    The Visual C++ project files for GTK+-2.24.x need to be updated as the
+    Windows theme engine (libwimp) currently has to be built as a DLL.
+
+    This adds the Visual C++ 2010 project file to build libwimp as a
+    standalone module/DLL, and the property sheets, .sln file and
+    gtk.vcxprojin/gtk.vcxproj.filtersin/install.vcxproj are updated
+    accordingly so that the needed stuff get built properly and go
+    to the proper places for the Windows Themes to work correctly
+    with the Visual C++ builds.
+
+    Thanks to nus for pointing this out.
+
+ build/win32/vs10/Makefile.am             |   2 +
+ build/win32/vs10/gtk+.props              |  67 ++++++++----
+ build/win32/vs10/gtk+.sln                |  10 ++
+ build/win32/vs10/gtk-demo.vcxproj        |   8 +-
+ build/win32/vs10/gtk.vcxproj.filtersin   |   4 -
+ build/win32/vs10/gtk.vcxprojin           |   4 -
+ build/win32/vs10/install.vcxproj         |   4 +
+ build/win32/vs10/libwimp.vcxproj         | 170
+ +++++++++++++++++++++++++++++++
+ build/win32/vs10/libwimp.vcxproj.filters |  31 ++++++
+ 9 files changed, 266 insertions(+), 34 deletions(-)
+
+commit ad5a0dbb9d3e9ed1ed050bc048347d11352d34bc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Dec 5 23:10:22 2012 -0500
+
+    Post-release version bump
+
+ configure.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 8e4742cb00420d23ca0b39e502042512e3a36eaa (tag: 2.24.14)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Wed Dec 5 06:02:12 2012 -0500
 
@@ -80,6 +1075,7 @@ Date:   Mon Dec 3 14:24:43 2012 -0600
     Merge branch 'bgo658280-filechooser-recently-used-2-24' into gtk-2-24
 
 commit f52befa7e7a93ec09c011cd6b6d17ab09868c3e8
+(origin/bgo658280-filechooser-recently-used-2-24)
 Author: Federico Mena Quintero <federico@gnome.org>
 Date:   Mon Dec 3 14:23:17 2012 -0600
 
@@ -621,7 +1617,7 @@ Date:   Wed Sep 26 18:57:13 2012 +0800
  build/win32/vs9/gtk+.vsprops | 16 ++++++++--------
  2 files changed, 16 insertions(+), 16 deletions(-)
 
-commit 81bb13510b124b7023ca6c697d4d916642be73fe
+commit 81bb13510b124b7023ca6c697d4d916642be73fe (tag: 2.24.13)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Sun Sep 23 16:42:08 2012 -0400
 
@@ -791,7 +1787,7 @@ Date:   Tue Sep 4 02:28:08 2012 +0200
  po-properties/pl.po | 45 +++++++++++++++++++++++++++------------------
  1 file changed, 27 insertions(+), 18 deletions(-)
 
-commit 8b18b439afc31d2f0c5c9789fb54668910765d9c
+commit 8b18b439afc31d2f0c5c9789fb54668910765d9c (tag: 2.24.12)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Sep 3 14:33:47 2012 -0400
 
@@ -1002,7 +1998,7 @@ Date:   Sun Jul 15 15:49:50 2012 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 2b67dc0e8d244d87c39d52ae627711ebc9de2f71
+commit 2b67dc0e8d244d87c39d52ae627711ebc9de2f71 (tag: 2.24.11)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Sun Jul 15 15:10:41 2012 -0400
 
@@ -1668,7 +2664,7 @@ Date:	Mon Feb 6 11:36:01 2012 -0500
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 3319bcf033351b02bcbe155dde0bdb0f824a7a99
+commit 3319bcf033351b02bcbe155dde0bdb0f824a7a99 (tag: 2.24.10)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Feb 6 09:44:09 2012 -0500
 
@@ -1769,7 +2765,7 @@ Date:	Tue Jan 24 20:29:12 2012 +0000
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 131f24a4f50c9a0d2f17e9711c10378800f04075
+commit 131f24a4f50c9a0d2f17e9711c10378800f04075 (tag: 2.24.9)
 Author: Javier Jardón <jjardon@gnome.org>
 Date:	Tue Jan 24 18:52:48 2012 +0000
 
@@ -2317,7 +3313,7 @@ Date:	Thu Nov 10 19:54:38 2011 +0100
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 758fec0a2d78efdf3c585cbe2a3e8be332266f56
+commit 758fec0a2d78efdf3c585cbe2a3e8be332266f56 (tag: 2.24.8)
 Author: Alexander Larsson <alexl@redhat.com>
 Date:	Thu Nov 10 19:49:52 2011 +0100
 
@@ -3545,7 +4541,7 @@ Date:	Mon Oct 17 19:05:50 2011 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 7299d70760f5e3b1aa2da9eb9e72538cf664838d
+commit 7299d70760f5e3b1aa2da9eb9e72538cf664838d (tag: 2.24.7)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Oct 17 18:42:12 2011 -0400
 
@@ -4050,6 +5046,7 @@ Date:	Tue Sep 13 15:26:05 2011 -0500
     Merge branch 'filechooser-recent-folders-2-24' into gtk-2-24
 
 commit 2a2edc9564a4392272109421eeec7959aaf28788
+(origin/filechooser-recent-folders-2-24)
 Author: Federico Mena Quintero <federico@gnome.org>
 Date:	Tue Sep 13 15:23:33 2011 -0500
 
@@ -4226,7 +5223,7 @@ Date:	Tue Aug 30 16:59:44 2011 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 1e114483374a81f9e2f94448a1b3a517bdce8775
+commit 1e114483374a81f9e2f94448a1b3a517bdce8775 (tag: 2.24.6)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Aug 30 16:22:14 2011 -0400
 
@@ -5253,7 +6250,7 @@ Date:	Wed Jun 15 20:35:23 2011 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 6351e8e1349f63fcd224b4806db35dd0a1bd80ac
+commit 6351e8e1349f63fcd224b4806db35dd0a1bd80ac (tag: 2.24.5)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Wed Jun 15 19:54:20 2011 -0400
 
@@ -5673,7 +6670,7 @@ Date:	Fri Apr 1 18:31:25 2011 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit b0d55a306114e5ab753cc56d460b940ef16e51ba
+commit b0d55a306114e5ab753cc56d460b940ef16e51ba (tag: 2.24.4)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Fri Apr 1 17:40:39 2011 -0400
 
@@ -5863,7 +6860,7 @@ Date:	Mon Mar 14 14:30:40 2011 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 89331e8e666d758af496fb408e466bb2b57c0a1a
+commit 89331e8e666d758af496fb408e466bb2b57c0a1a (tag: 2.24.3)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Mar 14 12:04:16 2011 -0400
 
@@ -5881,7 +6878,7 @@ Date:	Mon Mar 14 11:53:45 2011 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit a87d84225bf41d60e53499dd3ec18253a2872f59
+commit a87d84225bf41d60e53499dd3ec18253a2872f59 (tag: 2.24.2)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Mar 14 10:35:47 2011 -0400
 
@@ -6132,7 +7129,7 @@ Date:	Mon Feb 21 13:01:22 2011 -0500
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 661c0838b7cc69aa36fdcac07e2adf8a7386368f
+commit 661c0838b7cc69aa36fdcac07e2adf8a7386368f (tag: 2.24.1)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Feb 21 12:22:50 2011 -0500
 
@@ -6528,7 +7525,7 @@ Date:	Sun Jan 30 00:33:49 2011 -0500
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 0b3710d762decd49547d17d8decb316c4eca0968
+commit 0b3710d762decd49547d17d8decb316c4eca0968 (tag: 2.24.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Sun Jan 30 00:04:04 2011 -0500
 
@@ -7019,7 +8016,7 @@ Date:	Thu Jan 6 17:29:24 2011 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 832f1de519b4d18e3b5d74842c2aea2823c1b865
+commit 832f1de519b4d18e3b5d74842c2aea2823c1b865 (tag: 2.23.90)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Thu Jan 6 17:27:05 2011 -0500
 
@@ -7410,7 +8407,7 @@ Date:	Tue Dec 21 23:19:09 2010 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 5383f20c7e9f0862b9f7277e2170034bb3d9eb62
+commit 5383f20c7e9f0862b9f7277e2170034bb3d9eb62 (tag: 2.23.3)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Dec 21 21:46:11 2010 -0500
 
@@ -8090,7 +9087,7 @@ Date:	Wed Nov 10 10:22:47 2010 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit e01ae1ee12e429f6df2d13f8415d22156786bfda
+commit e01ae1ee12e429f6df2d13f8415d22156786bfda (tag: 2.32.2, tag: 2.23.2)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Wed Nov 10 09:22:51 2010 -0500
 
@@ -8563,7 +9560,7 @@ Date:	Sat Oct 16 17:41:15 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 0200763126d07c6f852cf09854f2d98f0befc73f
+commit 0200763126d07c6f852cf09854f2d98f0befc73f (tag: 2.23.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Sat Oct 16 16:53:44 2010 -0400
 
@@ -9056,7 +10053,7 @@ Date:	Thu Sep 23 17:05:02 2010 +0200
  INSTALL.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 6c95f0475f1e120e748e903089fe202c1a509334
+commit 6c95f0475f1e120e748e903089fe202c1a509334 (tag: 2.22.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Thu Sep 23 08:17:42 2010 -0400
 
@@ -9370,7 +10367,7 @@ Date:	Tue Sep 14 07:53:19 2010 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit f9473472ddc101efdc847d0ceff88cd386d8c960
+commit f9473472ddc101efdc847d0ceff88cd386d8c960 (tag: 2.21.8)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Sep 13 23:30:04 2010 -0400
 
@@ -11254,7 +12251,7 @@ Date:	Mon Aug 30 19:57:42 2010 +0200
  +++++++++++++++------------------
  1 file changed, 15 insertions(+), 18 deletions(-)
 
-commit a5ee5feed05416fa7b0e2ac28ce83ca53887ae8b
+commit a5ee5feed05416fa7b0e2ac28ce83ca53887ae8b (tag: 2.21.7)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Aug 30 13:46:08 2010 -0400
 
@@ -11688,7 +12685,7 @@ Date:	Mon Aug 16 20:05:25 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit a3689e670ef8bf3f49a40815d9e14044bafbcba2
+commit a3689e670ef8bf3f49a40815d9e14044bafbcba2 (tag: 2.21.6)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Aug 16 18:16:04 2010 -0400
 
@@ -12825,7 +13822,7 @@ Date:	Mon Jul 12 13:44:36 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 0e99667286cf88a71d9a908b9ce6ef220eccf95f
+commit 0e99667286cf88a71d9a908b9ce6ef220eccf95f (tag: 2.21.5)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Jul 12 13:09:44 2010 -0400
 
@@ -13103,7 +14100,7 @@ Date:	Tue Jun 29 22:36:15 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit ce8a190b25ca0c956424177b12332c790600cd5f
+commit ce8a190b25ca0c956424177b12332c790600cd5f (tag: 2.21.4)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Jun 29 21:11:34 2010 -0400
 
@@ -13258,7 +14255,7 @@ Date:	Sun Jun 27 01:52:12 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit f1b158bacdf6b9d0d9119aaf4d81b0401f7791ea
+commit f1b158bacdf6b9d0d9119aaf4d81b0401f7791ea (tag: 2.21.3)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Sun Jun 27 00:54:16 2010 -0400
 
@@ -13538,6 +14535,7 @@ Date:	Sat Jun 26 02:29:29 2010 -0400
  0 bytes
  docs/reference/gdk-pixbuf/gdk-pixbuf-csource.xml   |  177 -
  .../gdk-pixbuf/gdk-pixbuf-from-drawables.sgml	    |	29 -
+ docs/reference/gdk-pixbuf/gdk-pixbuf-overrides.txt |	 0
  .../gdk-pixbuf/gdk-pixbuf-query-loaders.xml	    |	55 -
  .../reference/gdk-pixbuf/gdk-pixbuf-rendering.sgml |	32 -
  docs/reference/gdk-pixbuf/gdk-pixbuf-sections.txt  |  302 -
@@ -13673,7 +14671,7 @@ Date:	Sat Jun 26 02:29:29 2010 -0400
  po-properties/POTFILES.in			    |	24 -
  po/POTFILES.in					    |	32 -
  tests/Makefile.am				    |	15 +-
- 157 files changed, 110 insertions(+), 54213 deletions(-)
+ 158 files changed, 110 insertions(+), 54213 deletions(-)
 
 commit 946c1ca1367e9ada8f19bdcbcf44233235ed8bf6
 Author: Colin Walters <walters@verbum.org>
@@ -13913,7 +14911,7 @@ Date:	Thu Jun 10 14:13:37 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit a36bfa14247b9497894891004c82dc420ddc299b
+commit a36bfa14247b9497894891004c82dc420ddc299b (tag: 2.21.2)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Thu Jun 10 14:11:20 2010 -0400
 
@@ -14637,7 +15635,7 @@ Date:	Sun May 30 18:33:09 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 27883221355aeb11c1a80f101435ca4fc2d52636
+commit 27883221355aeb11c1a80f101435ca4fc2d52636 (tag: 2.21.1)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Sun May 30 18:30:16 2010 -0400
 
@@ -15458,7 +16456,7 @@ Date:	Fri May 7 17:17:37 2010 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit f2f0ae89ae9f3112fbc8bd9e4f928aeccf80e59c
+commit f2f0ae89ae9f3112fbc8bd9e4f928aeccf80e59c (tag: 2.21.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Fri May 7 17:13:56 2010 -0400
 
@@ -16662,12 +17660,13 @@ Date:	Sun Apr 18 19:40:17 2010 +0200
     [docs] Move documentation to inline comments: GailTextUtil and
     GailMisc
 
+ .../tmpl/gail-libgail-util-unused.sgml		    |	0
  docs/reference/libgail-util/tmpl/gailmisc.sgml     | 125
  ---------------------
  docs/reference/libgail-util/tmpl/gailtextutil.sgml |  95 ----------------
  modules/other/gail/libgail-util/gailmisc.c	    |  12 ++
  modules/other/gail/libgail-util/gailtextutil.c     |  15 +++
- 4 files changed, 27 insertions(+), 220 deletions(-)
+ 5 files changed, 27 insertions(+), 220 deletions(-)
 
 commit 508ed4bbabfc519269efe33331f2d49a8fcb6a4a
 Author: Javier Jardón <jjardon@gnome.org>
@@ -17649,7 +18648,7 @@ Date:	Tue Mar 23 10:24:51 2010 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 7e36ea7010ba8e104ee2780d130bec17ff463fc9
+commit 7e36ea7010ba8e104ee2780d130bec17ff463fc9 (tag: 2.20.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Mar 23 10:18:29 2010 -0400
 
@@ -18549,7 +19548,7 @@ Date:	Tue Mar 9 13:56:16 2010 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 3737c34b44066ff2f71e7566fe742599c90e99b2
+commit 3737c34b44066ff2f71e7566fe742599c90e99b2 (tag: 2.19.7)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Mar 9 13:52:34 2010 -0500
 
@@ -18899,7 +19898,8 @@ Date:	Tue Mar 9 00:52:26 2010 -0500
 
     fix file permissions
 
- 0 files changed
+ gtk/gtkstatusicon.h | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
 
 commit 09b64dab0d6e00d4f49033fa65ec122007b55dc5
 Author: Matthias Clasen <mclasen@redhat.com>
@@ -21502,7 +22502,7 @@ Date:	Tue Feb 9 15:58:13 2010 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit d034007df35aba3821bc7dd38eaf8fea63278fc9
+commit d034007df35aba3821bc7dd38eaf8fea63278fc9 (tag: 2.19.5)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Feb 9 15:53:41 2010 -0500
 
@@ -22343,7 +23343,7 @@ Date:	Mon Jan 25 23:25:17 2010 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 7ad6567d77ad60f933cd51f477934d1124278475
+commit 7ad6567d77ad60f933cd51f477934d1124278475 (tag: 2.19.4)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Jan 25 23:23:51 2010 -0500
 
@@ -23206,7 +24206,7 @@ Date:	Mon Jan 11 13:58:16 2010 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit c54219da2485b71fb5d891b89ea4cfab9f727efc
+commit c54219da2485b71fb5d891b89ea4cfab9f727efc (tag: 2.19.3)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Jan 11 13:57:21 2010 -0500
 
@@ -24496,7 +25496,7 @@ Date:	Mon Dec 21 22:26:43 2009 -0500
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 53b9a41b47ef981b9ab812c0a56a371750f6f273
+commit 53b9a41b47ef981b9ab812c0a56a371750f6f273 (tag: 2.19.2)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Dec 21 22:24:59 2009 -0500
 
@@ -26343,7 +27343,7 @@ Date:	Mon Nov 30 18:36:56 2009 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit eb662b4b58eb9ac8b86406918f0a73cdc13a086f
+commit eb662b4b58eb9ac8b86406918f0a73cdc13a086f (tag: 2.19.1)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Nov 30 17:23:48 2009 -0500
 
@@ -27218,7 +28218,7 @@ Date:	Fri Nov 27 00:32:14 2009 -0500
  docs/reference/gtk/running.sgml | 31 ++++++++++++++++++++++++++++++-
  1 file changed, 30 insertions(+), 1 deletion(-)
 
-commit 1f8d468123eba7b5037e0d58a54899d803e48a43
+commit 1f8d468123eba7b5037e0d58a54899d803e48a43 (origin/toolpalette)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Fri Nov 27 00:14:37 2009 -0500
 
@@ -28325,7 +29325,7 @@ Date:	Sun Nov 1 19:37:53 2009 -0500
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 6f3a73cfb91c722a2a8d1c823ef8a16cd9015c03
+commit 6f3a73cfb91c722a2a8d1c823ef8a16cd9015c03 (tag: 2.19.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Sun Nov 1 19:23:05 2009 -0500
 
@@ -31234,7 +32234,7 @@ Date:	Mon Oct 5 17:44:25 2009 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 68f25328e48b0885788baa6e9d5a44e65d353735
+commit 68f25328e48b0885788baa6e9d5a44e65d353735 (tag: 2.18.2)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Oct 5 17:42:00 2009 -0400
 
@@ -31600,7 +32600,7 @@ Date:	Wed Sep 30 18:02:46 2009 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit df3775821d766b0619236cf0213d80850b7acd91
+commit df3775821d766b0619236cf0213d80850b7acd91 (tag: 2.18.1)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Wed Sep 30 18:00:21 2009 -0400
 
@@ -32572,7 +33572,7 @@ Date:	Wed Sep 23 00:08:43 2009 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit b841251ca79c332fd9922973b2a40e1298ae7f47
+commit b841251ca79c332fd9922973b2a40e1298ae7f47 (tag: 2.18.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Wed Sep 23 00:02:47 2009 -0400
 
@@ -34356,7 +35356,7 @@ Date:	Sat Sep 5 00:36:49 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit e1cd3e06109acd4244d757c0ae992585488ddb52
+commit e1cd3e06109acd4244d757c0ae992585488ddb52 (tag: 2.17.11)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Sat Sep 5 00:35:08 2009 -0400
 
@@ -36394,7 +37394,7 @@ Date:	Mon Aug 24 19:45:14 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit e6cfb7b19fc80b06115c807a4ad17c0983b01251
+commit e6cfb7b19fc80b06115c807a4ad17c0983b01251 (tag: 2.17.9)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Aug 24 18:54:51 2009 -0400
 
@@ -37173,7 +38173,7 @@ Date:	Mon Aug 17 23:53:36 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit a84f36028ecc270abec6899d0317adfbbcf52959
+commit a84f36028ecc270abec6899d0317adfbbcf52959 (tag: 2.17.8)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Aug 17 23:51:50 2009 -0400
 
@@ -37839,7 +38839,7 @@ Date:	Tue Aug 11 15:07:15 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 4df049d21891cb0e1de8a377ef456a11908e771d
+commit 4df049d21891cb0e1de8a377ef456a11908e771d (tag: 2.17.7)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Aug 11 15:06:02 2009 -0400
 
@@ -39005,7 +40005,8 @@ Date:	Tue Jul 28 13:46:41 2009 +0200
 
     Updated breton translation
 
- 0 files changed
+ po/br.po | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
 
 commit 29870ca2f95a6ba6f3c6ebbd318e7d46b5864b6f
 Author: Jamy <jamybzh@free.fr>
@@ -39205,7 +40206,7 @@ Date:	Fri Jul 24 23:51:47 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit a99a4d35e4da8ef68b6db791eb1a4cd6cd2d34a1
+commit a99a4d35e4da8ef68b6db791eb1a4cd6cd2d34a1 (tag: 2.17.6)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Fri Jul 24 23:49:37 2009 -0400
 
@@ -39958,7 +40959,7 @@ Date:	Fri Jul 17 23:11:12 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 37b1a1acf66e95dfb01e04937f5cfd83cef0a524
+commit 37b1a1acf66e95dfb01e04937f5cfd83cef0a524 (tag: 2.17.5)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Fri Jul 17 23:08:51 2009 -0400
 
@@ -40991,7 +41992,7 @@ Date:	Fri Jul 10 19:45:21 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 4ff4eb544db60bdcc18167caacf54a1aa32e8e8c
+commit 4ff4eb544db60bdcc18167caacf54a1aa32e8e8c (tag: 2.17.4)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Fri Jul 10 19:02:32 2009 -0400
 
@@ -41778,7 +42779,7 @@ Date:	Tue Jul 7 01:07:27 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit b3969a3d7540dfd7e2a933707fca3f934d628816
+commit b3969a3d7540dfd7e2a933707fca3f934d628816 (tag: 2.17.3)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Tue Jul 7 01:05:29 2009 -0400
 
@@ -42382,6 +43383,7 @@ Date:	Wed Jul 1 16:13:31 2009 +0200
  8 files changed, 25 insertions(+), 24 deletions(-)
 
 commit 10bf7ca74459a68440e23ecb26c2b037b81aefd1
+(origin/client-side-windows)
 Author: Alexander Larsson <alexl@redhat.com>
 Date:	Wed Jul 1 14:36:36 2009 +0200
 
@@ -43288,7 +44290,7 @@ Date:	Mon Jun 15 21:48:53 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit b645bb9e02f7735e7240bfa61caf1ce4cfbc2bd0
+commit b645bb9e02f7735e7240bfa61caf1ce4cfbc2bd0 (tag: 2.17.2)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon Jun 15 21:45:40 2009 -0400
 
@@ -44633,7 +45635,7 @@ Date:	Fri May 29 19:46:56 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 44690f17c865af8d28c033c5deee93ee98c2939e
+commit 44690f17c865af8d28c033c5deee93ee98c2939e (tag: 2.17.1)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Fri May 29 19:29:49 2009 -0400
 
@@ -45697,7 +46699,7 @@ Date:	Mon May 4 02:09:12 2009 -0400
  configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit cc4cf97d62bb22a3d464b84d999975db985e6dde
+commit cc4cf97d62bb22a3d464b84d999975db985e6dde (tag: 2.17.0)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Mon May 4 01:54:06 2009 -0400
 
@@ -46913,7 +47915,7 @@ Date:	Sat Apr 11 18:09:33 2009 -0400
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 035be761f4df2d41bb1684bba77cb87758af9c05
+commit 035be761f4df2d41bb1684bba77cb87758af9c05 (tag: 2.16.1)
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:	Sat Apr 11 18:05:34 2009 -0400
 
@@ -52061,7 +53063,7 @@ Date:	Fri Mar 13 15:09:54 2009 +0000
  configure.in | 4 ++--
  2 files changed, 6 insertions(+), 2 deletions(-)
 
-commit ba150f5ecc627c0d8d0d7e5e0d71f8f2798b0670
+commit ba150f5ecc627c0d8d0d7e5e0d71f8f2798b0670 (tag: GTK_2_16_0)
 Author: Matthias Clasen <matthiasc@src.gnome.org>
 Date:	Fri Mar 13 15:06:47 2009 +0000
 
