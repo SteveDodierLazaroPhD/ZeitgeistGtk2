@@ -1298,12 +1298,10 @@ GtkFileSystemVolume *
 _gtk_file_system_get_volume_for_file (GtkFileSystem *file_system,
 				      GFile         *file)
 {
-  GtkFileSystemPrivate *priv;
   GMount *mount;
 
   DEBUG ("get_volume_for_file");
 
-  priv = GTK_FILE_SYSTEM_GET_PRIVATE (file_system);
   mount = g_file_find_enclosing_mount (file, NULL, NULL);
 
   if (!mount && g_file_is_native (file))
@@ -1927,3 +1925,16 @@ _gtk_file_info_consider_as_directory (GFileInfo *info)
           type == G_FILE_TYPE_SHORTCUT);
 }
 
+gboolean
+_gtk_file_has_native_path (GFile *file)
+{
+  char *local_file_path;
+  gboolean has_native_path;
+
+  /* Don't use g_file_is_native(), as we want to support FUSE paths if available */
+  local_file_path = g_file_get_path (file);
+  has_native_path = (local_file_path != NULL);
+  g_free (local_file_path);
+
+  return has_native_path;
+}

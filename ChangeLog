@@ -1,3 +1,853 @@
+commit 9f16fc1b003c6e4c5095fe277f67be6bf8c8ffee
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon May 13 08:02:50 2013 -0400
+
+    2.24.18
+
+ NEWS | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+commit 8b719abcbb05005c359027675a89eb1512886979
+Author: Rémi Cardona <remi@gentoo.org>
+Date:   Mon Feb 25 23:53:38 2013 +0100
+
+    Remove dangling weak-refs to TreeModel object
+
+    When a tree view is detroyed, its GailTreeView is destroyed as well
+    but the
+    weak references are kept and thus point to a freed memory block. A
+    segfault may arise when the model is destroyed in turn and the
+    weak-ref
+    mechanism tries to clear the pointers in freed memory.
+
+    This patch removes the weak references either when the GailTreeView is
+    being freed or when a new model is attached to the underlying
+    GtkTreeView.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=694711
+
+ modules/other/gail/gailtreeview.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+commit 0df60513cb97a2f33566e0c69308ff3dc20a7fa6
+Author: Aleksander Morgado <aleksander@lanedo.com>
+Date:   Mon Apr 22 14:50:33 2013 +0200
+
+    win32: ensure proper error is reported when CreateDIBSection() fails
+
+    GetLastError() should be called immediately after the failure, so call
+    WIN32_GDI_FAILED() just after the CreateDIBSection() error, not after
+    ReleaseDC().
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=698563
+
+ gdk/win32/gdkpixmap-win32.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 330b9635b0a49f100fc4a59652f993868c2a92fb
+Author: Nik Kalach <nikka@fedoraproject.org>
+Date:   Wed Apr 24 16:00:03 2013 +0200
+
+    [l10n] Update Interlingua translation
+
+ po/ia.po | 4929
+ ++++++++++++++++++++++++--------------------------------------
+ 1 file changed, 1925 insertions(+), 3004 deletions(-)
+
+commit ba5ac33cdc18fe252de9baac6a2927f9ea77e6ab
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Sun Apr 21 05:09:52 2013 +0200
+
+    entry: unset the completion in dispose() not finalize()
+
+    Most likely fixes whatever evil gail interaction causing a crash I
+    could never reproduce but has been reported several times against
+    GIMP.
+    The same fix is in GTK+ 3.x already (bug #683983).
+
+ gtk/gtkentry.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+commit 692a0e5906c5da7f85c16c9d6cbb0d3ed8b4a576
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Apr 10 14:32:15 2013 +0200
+
+    gdkwindow: Handle updates created by outstanding moves in same update
+
+    If gdk_window_flush_outstanding_moves() creates new update area
+    we handle this directly in the same draw to avoid flashing.
+
+    This mainly affects win32 as X11 does its exposes from moves async.
+    However, its important for win32 since ScrollDC seems to sometimes
+    invalidate (and not copy) unexected regions.
+
+    http://bugzilla.gnome.org/show_bug.cgi?674051
+
+ gdk/gdkwindow.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+commit ea66a8a580ad496dc375ce6afeb2ee29f585a7fb
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Apr 10 14:25:26 2013 +0200
+
+    win32: Report ScrollDC update region directly
+
+    Rather than set the window update region and repaint this region
+    when we get a WM_PAINT we just directly add it to the update
+    region. No need to roundtrip via win32.
+
+    This lets us also make sure we do this drawing in the same update
+    cycle. This seems especially important on Win7, because ScrollDC
+    seems to act kind of weird there, not using bitblt in areas where
+    it seemingly could, which makes scrolling look really flashy.
+
+    http://bugzilla.gnome.org/show_bug-cgi?id=674051
+
+ gdk/win32/gdkdrawable-win32.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+commit 4f2725630679966dd1148644105fd5592ac95ec8
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Wed Apr 10 14:04:26 2013 +0200
+
+    Make gdk_flush_outstanding_moves "reentrant"
+
+    If the do_move_region_bits_on_impl causes updates they will
+    only be affected by the moves we haven't done yet.
+    We do this by making sure the outstanding_moves list is uptodate
+    on ever iteration of the loop.
+
+ gdk/gdkwindow.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+commit f1921f8c2f813628006abf9d345ef6d42625db7c
+Author: Alexander Larsson <alexl@redhat.com>
+Date:   Mon Feb 18 11:20:40 2013 +0100
+
+    win32: Fix build
+
+    gdkwindown-win32.c included windows.h directly rather than via
+    gdkwin32.h
+    which broke the build for me at least. Instead rely on it being
+    included in
+    gdkwin32.h and things work right.
+
+ gdk/win32/gdkwindow-win32.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit d7e3f6f9f89f0acb7fd40179cc4246726deafef1
+Author: Carlos Garnacho <carlos@lanedo.com>
+Date:   Mon Apr 8 17:25:19 2013 +0200
+
+    quartz: Fix call to missing symbol
+
+    This patch can be considered a leftover of commit a269c2f8d26a ,
+    replace the no longer existing function with the GDK function
+    meant to replace it.
+
+    This was noticeable on regular clipboard operations in quartz
+
+ gtk/gtkclipboard-quartz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3acacc0384dcce55927e8e4e7e6e12bab2243104
+Author: Christophe Fergeau <cfergeau@redhat.com>
+Date:   Thu Nov 22 18:04:48 2012 +0000
+
+    Sanitize memory handling in cups_request_printer_list_cb
+
+    gtk+ was trying to display already freed strings, leaking memory,
+    ...I noticed this because I was getting weird blinking characters
+    as the status of my cups printers, and valgrind confirmed something
+    was wrong.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=683072
+
+ modules/printbackends/cups/gtkprintbackendcups.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+commit 8f3a3403ffa4458c2e210a04d0c49ebf99601edc
+Author: Balázs Úr <urbalazs@src.gnome.org>
+Date:   Thu Apr 4 21:58:15 2013 +0200
+
+    Updated Hungarian translation
+
+ po-properties/hu.po | 838
+ ++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 482 insertions(+), 356 deletions(-)
+
+commit 0909d7cee613477744a19f2c030564cf5916bd1f
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Sat Mar 30 08:42:58 2013 +0100
+
+    Revert "gdk: merge all 3.x changes to gdk_keysym_to_unicode_tab[]
+    in gdkkeyuni.c"
+
+    This reverts commit 67438e0e49f83215376c76cc2de979a3134a46ff.
+
+    There must be some other change in 3.x that goes along with these
+    table changes, they completely break e.g. GtkEntry.
+
+ gdk/gdkkeyuni.c | 32 +++++++-------------------------
+ 1 file changed, 7 insertions(+), 25 deletions(-)
+
+commit 67438e0e49f83215376c76cc2de979a3134a46ff
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Thu Mar 28 14:31:20 2013 +0100
+
+    gdk: merge all 3.x changes to gdk_keysym_to_unicode_tab[] in
+    gdkkeyuni.c
+
+ gdk/gdkkeyuni.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
+
+commit a269c2f8d26a588c4b61ad605ef496e89759cc03
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Sun Dec 30 17:09:22 2012 +0100
+
+    quartz: move atom/pasteboard type conversions functions to GDK
+
+ gdk/quartz/gdkquartz.h              |  4 ++++
+ gdk/quartz/gdkselection-quartz.c    | 40
+ ++++++++++++++++++++++++++++++++++
+ gtk/gtkdnd-quartz.c                 |  2 +-
+ gtk/gtkquartz.c                     | 43
+ ++++---------------------------------
+ gtk/gtkquartz.h                     |  1 -
+ tests/dummy-headers/AppKit/AppKit.h |  3 +++
+ 6 files changed, 52 insertions(+), 41 deletions(-)
+
+commit e6cf7a8d812565d7f451d3efde1c76116bfd99af
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Sun Dec 30 16:56:46 2012 +0100
+
+    quartz: define GDK_NATIVE_WINDOW_POINTER
+
+ configure.ac                     |  2 ++
+ gdk/quartz/gdkdnd-quartz.c       |  4 ++--
+ gdk/quartz/gdkselection-quartz.c | 12 ++++++------
+ 3 files changed, 10 insertions(+), 8 deletions(-)
+
+commit 9582638a6b77f8d0cc35f18a2439520d531a07dd
+Author: Balázs Úr <urbalazs@src.gnome.org>
+Date:   Wed Mar 20 22:20:43 2013 +0100
+
+    Updated Hungarian translation
+
+ po/hu.po | 843
+ +++++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 440 insertions(+), 403 deletions(-)
+
+commit 7674fc9683b8f16362d5e066881be7aa1630e932
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Mar 18 17:26:40 2013 +0800
+
+    Visual Studio builds: Fix the Debug configs
+
+    The debug builds must link to the Debug version of the CRT, otherwise
+    trouble will arise due to the mixing of different CRTs
+
+ build/win32/vs10/gdk-win32.vcxproj | 5 +----
+ build/win32/vs10/gdk.vcxprojin     | 3 +--
+ build/win32/vs10/gtk-demo.vcxproj  | 3 +--
+ build/win32/vs10/gtk.vcxprojin     | 2 +-
+ build/win32/vs9/gdk-win32.vcproj   | 2 +-
+ build/win32/vs9/gdk.vcprojin       | 2 +-
+ build/win32/vs9/gtk-demo.vcproj    | 2 +-
+ build/win32/vs9/gtk.vcprojin       | 2 +-
+ 8 files changed, 8 insertions(+), 13 deletions(-)
+
+commit 011bb7ccdcfa82583996e495087790dfe738b754
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Mar 18 17:23:43 2013 +0800
+
+    VS2008 Projects: Drop gdk-pixbuf Projects
+
+    The GDK-Pixbuf Visual Studio 2008 project files have long been
+    moved and
+    maintain in the gdk-pixbuf project, soon after that was made
+    independent
+    from the GTK+ project, so these files should no longer exist in
+    the GTK+
+    git repo, especially as they are no longer distributed for a long
+    time.
+
+ build/win32/vs9/gdk-pixbuf-csource.vcproj       | 166 ---------------
+ build/win32/vs9/gdk-pixbuf-query-loaders.vcproj | 166 ---------------
+ build/win32/vs9/gdk-pixbuf.vcproj               | 258
+ ------------------------
+ 3 files changed, 590 deletions(-)
+
+commit e11b1943c7f728c6fdf5ef483db8f9f1d05b4306
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 13:34:13 2013 -0600
+
+    filechooserbutton: Duh, remove all the timeouts after tests
+
+    Otherwise tests may start failing if they start after an old timeout
+    triggers.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+commit 1dee58ba87cdac188a1fe813e3bb3358ac17fd93
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 12:36:14 2013 -0600
+
+    filechooserbutton: Add a description string to assertions about
+    emitted signals
+
+    On failed tests, this lets us more easily see see which assertion
+    failed.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit ca7fe8417a149524157ac65fdaa94b71cbd8f61f
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 12:24:06 2013 -0600
+
+    filechooserbutton: Give proper names to the SELECT_FOLDER tests with
+    cancelled dialog
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 140
+ ++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 119 insertions(+), 21 deletions(-)
+
+commit 852c2f06f026759a148f2a6761c8012e9ad4f0ea
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 12:06:07 2013 -0600
+
+    filechooserbutton: Don't duplicate tests for GTK_RESPONSE_DELETE_EVENT
+
+    Instead, re-run tests made for GTK_RESPONSE_CANCEL with the
+    delete-event response.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 308
+ +++---------------------------------------------
+ 1 file changed, 19 insertions(+), 289 deletions(-)
+
+commit aaa922bedbbe7d18d511709134822056dc7ed291
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 11:21:35 2013 -0600
+
+    filechooserbutton: Do not propagate state from the dialog unless it
+    is active
+
+    Change of plans to match the tests from the previous commit.
+
+    The state of the underlying dialog is never reflected by
+    GtkFileChooserButton's API,
+    as the dialog is a transient thing.  The file chooser button only
+    updates its state from the dialog,
+    and reflects the dialog's state, when the dialog has been confirmed
+    and dismissed by the user.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 241
+ ++++++++++++---------------------------------
+ 1 file changed, 63 insertions(+), 178 deletions(-)
+
+commit aa958f089dc908a2f849dac597c2e1366b6376d4
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 11:02:38 2013 -0600
+
+    filechooserbutton: whitespace fixes
+
+ gtk/gtkfilechooserbutton.c | 76
+ +++++++++++++++++++++++-----------------------
+ 1 file changed, 38 insertions(+), 38 deletions(-)
+
+commit 29ed8d781ea661049028fb2b982b1c74fc2820fe
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 10:59:43 2013 -0600
+
+    filechooserbutton: For the open-dialog-cancel-* tests, add a real
+    nomenclature and test all the combinations
+
+    We used to have numeric names, which are a pain to maintain when
+    new tests are added.
+    Now we have a real nomenclature (see the comment at the beginning
+    of the open-dialog-cancel-* tests),
+    which lets us see easily if we have tested all the combinations.
+
+    Also, added all the combinations that were missing and removed
+    redundant tests.
+    Not all the tests pass currently.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 347
+ +++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 302 insertions(+), 45 deletions(-)
+
+commit 9cfec7d3dbb054ced18a3e8f18a38a4c809ef4ea
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 12 10:05:22 2013 -0600
+
+    filechooserbutton: Update the button's state only on programmatic
+    changes to the filechooser's state
+
+    The idea is that the button will only update its state of the
+    selection and current folder
+    when changes to those are done either by the calling program (with
+    the filechooser's API)
+    or when the user actually confirms and dismisses the underlying
+    GtkFileChooserDialog.
+
+    If the user makes changes to the dialog but has not dismissed it yet,
+    those changes
+    will not be reflected in the button (as one would expect).
+
+    This commit also makes sure the current-folder-changed and
+    selection-changed signals
+    are emitted at the right times.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 100
+ +++++++++++++++++++++++++++++----------------
+ 1 file changed, 65 insertions(+), 35 deletions(-)
+
+commit f9f76a3a0fb93fa54adbc38a08de5eaa67abeb02
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 21:54:22 2013 -0600
+
+    filechooserbutton: Emit 'selection-changed' when changing the
+    selection programmatically
+
+    We only emitted that signal when the selection changed through the
+    underlying GtkFileChooserDialog.
+
+    To do this when the dialog is not active and the selection is changed
+    by the calling program
+    (instead of by the user), we need to wait until the
+    GtkFileChooserButton's UI has been updated
+    via an async callback from GIO.  So, we keep track of whether an
+    entry point into the
+    button's API caused a programmatic change in the selection.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+commit 2b6db9fb317a662cefbf32a5618a794e44f70a99
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 21:17:34 2013 -0600
+
+    filechooserbutton: For tests, wait for signals instead of just
+    sleeping
+
+    This should let tests complete faster.  Also, this will let us test
+    that the correct signals are actually being emitted.
+
+    The tests now fail, as the signals are not being emitted when they
+    should.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 167
+ ++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 154 insertions(+), 13 deletions(-)
+
+commit bc604fe9f0be093c3c25ba953809f04f72b73a71
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 20:06:10 2013 -0600
+
+    filechooserbutton: whitespace fixes
+
+ gtk/tests/filechooser.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit d09b75b9ed03f15ac6fd4a02b8b82285d7c5edea
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 18:12:23 2013 -0600
+
+    filechooserbutton: During unselect_all(), update the widgets in
+    all situations
+
+    Not just if we thought we had a selection.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c |  6 +++---
+ gtk/tests/filechooser.c    | 13 -------------
+ 2 files changed, 3 insertions(+), 16 deletions(-)
+
+commit 2368a31984a9b87c92d7011b4d917f6d0eeb27c7
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 17:32:28 2013 -0600
+
+    filechooserbutton: Add tests for unselect_all()
+
+    These all pass except one.
+
+ gtk/tests/filechooser.c | 93
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
+
+commit 15f9422adf529d9cb58af67f9975aba056a40fcb
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 17:27:44 2013 -0600
+
+    filechooserbutton: HACK: Set a reasonable size for the dialog in
+    the tests' second iteration
+
+    Something is causing the GtkFileChooserDialog to be resized really
+    small on the second time it is run
+    during each test for GtkFileChooserButton.  So as a temporary hack
+    we set it to 500x500 pixels on
+    the second run, so the size allocation code doesn't bomb on us.
+
+ gtk/tests/filechooser.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit a37a8158bbcb9a44a2656df9a9757a20fcd99966
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 17:11:34 2013 -0600
+
+    gtkfilechooserbutton: In tests, allow the possibility of doing
+    unselect_all
+
+ gtk/tests/filechooser.c | 126
+ ++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 95 insertions(+), 31 deletions(-)
+
+commit 82a5a0240c3c59f4a7e0babe24a65f195580928a
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Mar 11 16:48:17 2013 -0600
+
+    filechooserbutton: When the combo box changes, set the *file*,
+    not the current folder
+
+    The currently-selected file *is* the selection even in SELECT_FOLDER
+    mode.  Do not confuse this
+    with the current folder.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit b994bcd4f2e866a6c6d2360cb9b6fe64f1457d41
+Author: Aleksander Morgado <aleksander@lanedo.com>
+Date:   Tue Mar 5 16:43:58 2013 +0100
+
+    combobox: popdown the combobox when on 'grab-broken-event'
+
+    And also explicitly remove pointer/keyboard grabs from the display.
+
+    Whenever the grab is reported lost, we should popdown the combobox,
+    so that the
+    GDK_WINDOW_TEMP window is hidden and removed from the toplevel,
+    as done with
+    the menu for example.
+
+    Leaving the GDK_WINDOW_TEMP window open when re-activating the
+    application
+    triggers several issues in the win32 backend, due to restacking
+    windows of the
+    non-toplevel group into the toplevel group:
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=695200
+
+ gtk/gtkcombobox.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+commit 979e8bd9ec9599fd902fef8c531846c7fed72b01
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Mar 8 12:43:10 2013 -0600
+
+    filechooserbutton: Update the combo box even after the dialog is
+    cancelled
+
+    We assumed that we didn't have to update the combo box if the dialog
+    got cancelled,
+    as it should simply retain its previous contents.  But this assumption
+    doesn't work
+    as the dialog is brought up with the 'Other...' item - we don't
+    want the
+    combo box to keep showing 'Other...' if the dialog is cancelled.
+
+    The test from the previous commit now passes.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit e16591780d27bca240623f7499c5aae43119a7ea
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Mar 8 12:37:20 2013 -0600
+
+    filechooserbutton: New test for opening the Other item in the combo
+    box and then canceling the dialog
+
+    There is this bug:
+
+    1. Start with a file chooser button in SELECT_FOLDER mode, and select
+    a folder from the combo box.
+
+    2. Click on the button's combo box, select 'Other...'
+
+    3. You get the file chooser dialog. Cancel the dialog.
+
+    4. The file chooser button's combo box still shows 'Other...' instead
+    of
+       showing the selection from (1).
+
+    This is a test to ensure that the original selection is restored.
+    The test fails right now.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/tests/filechooser.c | 131
+ ++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 115 insertions(+), 16 deletions(-)
+
+commit dc5c12b4376654a3d8263aaab19fc55cfccebbe7
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Fri Mar 8 11:13:12 2013 -0600
+
+    filechooserbutton: Sync the tests a bit with the master branch
+
+    The tests fail right now in gtk-2-24 because accessibility is not
+    available out of the box.
+
+ gtk/tests/filechooser.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+commit 6dc11c26a880753c95bc420a2bec7ada270adbbb
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Mar 7 17:20:16 2013 -0600
+
+    filechooserbutton: Don't show the (None) item when the combo box is
+    popped up
+
+    This is surprisingly tricky, since the (None) item *has* to be a
+    visible item while
+    the combo box is *not* popped up, so that it can show its contents.
+    But the item
+    has to be *not* visible when the combo box is popped up.
+
+    Also, update the whole button's selection, not just the underlying
+    dialog's, when
+    the combo box changes its selection - based on a patch by Paul
+    Davis in
+    https://bugzilla.gnome.org/show_bug.cgi?id=691040#c20
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 120
+ ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 101 insertions(+), 19 deletions(-)
+
+commit b714446fd8dcb5f8ea6b749fb940b8382dfa45b3
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Mar 7 14:14:47 2013 -0600
+
+    filechooserbutton: In SELECT_FOLDER, when the selection is empty,
+    show (None) in the combo box
+
+    We do this by adding a new row type, ROW_TYPE_EMPTY_SELECTION.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 76
+ ++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 57 insertions(+), 19 deletions(-)
+
+commit a72b31bac14864daf412343030196e9198e1b6ef
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Mar 7 13:50:34 2013 -0600
+
+    filechooserbutton: Update the button/combo at construction time
+
+    This way the internal labels will show the correct selection even
+    if nothing
+    has been selected programmatically.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 6fb708775879699d430f639fb1f2d64f74e63ef7
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Mar 7 13:44:33 2013 -0600
+
+    filechooserbutton: Update the button/combo whenever the selection
+    is changed programmatically
+
+    We didn't change it when the file chooser button's dialog was
+    inactive, and so
+    the actual file chooser button would not visually reflect the
+    current selection.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c | 58
+ ++++++++++++++++++++++++++++------------------
+ 1 file changed, 35 insertions(+), 23 deletions(-)
+
+commit c4b47464a230de18382b5724411ea3a00f7882a3
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Thu Mar 7 12:53:00 2013 -0600
+
+    filechooserbutton: Test that the expected filename is shown
+
+    We do some gymnastics to pull the string out of the GtkButton or
+    the GtkComboBox that is
+    being used in GtkFileChooserButton to show the current selection
+    when the dialog
+    is inactive - namely, we look for the subwidget with the correct
+    ATK role, and pull its
+    accessible name.
+
+    Currently the test fails; this is
+    https://bugzilla.gnome.org/show_bug.cgi?id=691040#c18
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c |   2 +-
+ gtk/tests/filechooser.c    | 158
+ +++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 140 insertions(+), 20 deletions(-)
+
+commit b2a65ebfb67f093e88d6bcc80d5643b94d6c985d
+Author: Aleksander Morgado <aleksander@lanedo.com>
+Date:   Wed Mar 6 19:16:25 2013 +0100
+
+    spinbutton: don't override initial text in non-numeric-only spin
+    buttons
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=695312
+
+ gtk/gtkspinbutton.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+commit 461c1a547efb13c7a2f22ab9bf4c7b5aaf5fc5c3
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Wed Mar 6 12:42:24 2013 -0600
+
+    Remove some unused variables
+
+ gtk/gtkfilesystem.c | 2 --
+ gtk/gtkpathbar.c    | 5 -----
+ 2 files changed, 7 deletions(-)
+
+commit 3c993547a4d26cf0946ce5d0b0e020726c6d306d
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 5 17:17:00 2013 -0600
+
+    filechooser: Use _gtk_file_has_native_path() throughout when testing
+    for local_only
+
+    In the case of checking for local_only, g_file_is_native() is not
+    useful, since it
+    will return FALSE for something in a FUSE mount.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserbutton.c  | 10 +++++-----
+ gtk/gtkfilechooserdefault.c |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+commit 7a93355977b7d92c51e53d4bf78636c774d6fa1f
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 5 14:20:12 2013 -0600
+
+    filechooser: Also convert get_uris() to returning native paths
+
+    It was only being done in gtk_file_chooser_get_uri().
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooser.c | 34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
+
+commit f907d16329123e77823997724c2e662bfcf77533
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Tue Mar 5 13:59:04 2013 -0600
+
+    filechooser: Rename _gtk_file_is_path_not_local() to
+    _gtk_file_has_native_path()
+
+    Negatives in names of boolean functions are confusing.
+
+    Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+
+ gtk/gtkfilechooserdefault.c | 10 +++++-----
+ gtk/gtkfilechooserentry.c   |  2 +-
+ gtk/gtkfilesystem.c         | 11 +++++------
+ gtk/gtkfilesystem.h         |  2 +-
+ 4 files changed, 12 insertions(+), 13 deletions(-)
+
+commit 5d32c05578869c4c5eff9b9c3ee058fd9afc5dc5
+Author: Timothy Arceri <t_arceri@yahoo.com.au>
+Date:   Sun Nov 18 19:39:11 2012 +1100
+
+    filechooser: Show FUSE mounted locations in shortcuts
+
+    Since FUSE locations can be handled safely by applications
+    show these mounted locations regardless of whether
+    gtk_file_chooser_set_local_only()
+    is set to TRUE
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=586367
+
+ gtk/gtkfilechooser.c        | 22 ++++++++++++++++++++--
+ gtk/gtkfilechooserdefault.c | 10 +++++-----
+ gtk/gtkfilechooserentry.c   |  2 +-
+ gtk/gtkfilesystem.c         | 14 ++++++++++++++
+ gtk/gtkfilesystem.h         |  3 +++
+ 5 files changed, 43 insertions(+), 8 deletions(-)
+
+commit 776fc82bd507fa50973d63f16790cb990d6677eb
+Author: Alan McGovern <alan@xamarin.com>
+Date:   Wed Mar 6 11:06:09 2013 +0000
+
+    quartz: Null check title before setting it
+
+    This avoids a crash in objective-c.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=695278
+
+ gdk/quartz/gdkwindow-quartz.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+commit 3087e8b74eaf6f12eefb8a40bbcde857509a10ac
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Tue Mar 5 17:42:28 2013 -0500
+
+    Revert "entry: never use GTK_STATE_ACTIVE to paint the background"
+
+    This reverts commit 87115e00a81e9d6a2c4d18106af422765004fe2a.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=695003
+
+ gtk/gtkentry.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+commit eb89bf17296727d7a3f5d0561ff7e062b4ac03b4
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 4 11:10:33 2013 -0500
+
+    Bump version
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 commit ed543bdccfdee4970943b25db307aa76da40d8e9
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Mar 4 08:50:35 2013 -0500

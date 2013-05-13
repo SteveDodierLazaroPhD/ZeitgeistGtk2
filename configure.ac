@@ -13,8 +13,8 @@ AC_PREREQ(2.62)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [24])
-m4_define([gtk_micro_version], [17])
-m4_define([gtk_interface_age], [17])
+m4_define([gtk_micro_version], [18])
+m4_define([gtk_interface_age], [18])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -1701,6 +1701,8 @@ elif test "x$gdktarget" = "xwin32" ; then
 #define GDK_WINDOWING_WIN32'
 elif test "x$gdktarget" = "xquartz" ; then
   gdk_windowing='
+#define GDK_NATIVE_WINDOW_POINTER
+
 #define GDK_WINDOWING_QUARTZ'
 elif test "x$gdktarget" = "xdirectfb" ; then
   gdk_windowing='
