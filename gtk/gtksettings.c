@@ -126,7 +126,8 @@ enum {
   PROP_TOOLBAR_STYLE,
   PROP_TOOLBAR_ICON_SIZE,
   PROP_AUTO_MNEMONICS,
-  PROP_PRIMARY_BUTTON_WARPS_SLIDER
+  PROP_PRIMARY_BUTTON_WARPS_SLIDER,
+  PROP_SHELL_SHOWS_MENUBAR
 };
 
 
@@ -1042,6 +1043,16 @@ gtk_settings_class_init (GtkSettingsClass *class)
                                              NULL);
 
   g_assert (result == PROP_PRIMARY_BUTTON_WARPS_SLIDER);
+
+  result = settings_install_property_parser (class,
+                                             g_param_spec_boolean ("gtk-shell-shows-menubar",
+                                                                   P_("Desktop shell shows the menubar"),
+                                                                   P_("Set to TRUE if the desktop environment "
+                                                                      "is displaying the menubar, FALSE if "
+                                                                      "the app should display it itself."),
+                                                                   FALSE, GTK_PARAM_READWRITE),
+                                             NULL);
+  g_assert (result == PROP_SHELL_SHOWS_MENUBAR);
 }
 
 static void

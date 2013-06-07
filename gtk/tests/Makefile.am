@@ -45,10 +45,6 @@ TEST_PROGS			+= recentmanager
 recentmanager_SOURCES 		 = recentmanager.c
 recentmanager_LDADD   		 = $(progs_ldadd)
 
-TEST_PROGS                      += menuproxy
-menuproxy_SOURCES                = menuproxy.c
-menuproxy_LDADD                  = $(progs_ldadd)
-
 TEST_PROGS			+= floating
 floating_SOURCES		 = floating.c
 floating_LDADD			 = $(progs_ldadd)

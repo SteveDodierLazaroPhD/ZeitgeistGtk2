@@ -107,7 +107,7 @@ gtk_menu_bar_class_init (GtkMenuBarClass *class)
   widget_class->size_allocate = gtk_menu_bar_size_allocate;
   widget_class->expose_event = gtk_menu_bar_expose;
   widget_class->hierarchy_changed = gtk_menu_bar_hierarchy_changed;
-
+  
   menu_shell_class->submenu_placement = GTK_TOP_BOTTOM;
   menu_shell_class->get_popup_delay = gtk_menu_bar_get_popup_delay;
   menu_shell_class->move_current = gtk_menu_bar_move_current;
@@ -218,26 +218,8 @@ gtk_menu_bar_class_init (GtkMenuBarClass *class)
 }
 
 static void
-local_notify (GtkWidget  *widget,
-              GParamSpec *pspec,
-              gpointer    user_data)
-{
-  gboolean local;
-
-  g_object_get (widget,
-                "ubuntu-local", &local,
-                NULL);
-
-  gtk_widget_queue_resize (widget);
-}
-
-static void
 gtk_menu_bar_init (GtkMenuBar *object)
 {
-  g_signal_connect (object,
-                    "notify::ubuntu-local",
-                    G_CALLBACK (local_notify),
-                    NULL);
 }
 
 GtkWidget*
@@ -302,22 +284,13 @@ gtk_menu_bar_size_request (GtkWidget      *widget,
   gint nchildren;
   GtkRequisition child_requisition;
   gint ipadding;
-  gboolean local = FALSE;
 
   g_return_if_fail (GTK_IS_MENU_BAR (widget));
   g_return_if_fail (requisition != NULL);
 
   requisition->width = 0;
   requisition->height = 0;
-
-  g_object_get (widget,
-                "ubuntu-local",
-                &local,
-                NULL);
-
-  if (!local)
-    return;
-
+  
   if (gtk_widget_get_visible (widget))
     {
       menu_bar = GTK_MENU_BAR (widget);
@@ -394,7 +367,6 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
   GtkTextDirection direction;
   gint ltr_x, ltr_y;
   gint ipadding;
-  gboolean local = FALSE;
 
   g_return_if_fail (GTK_IS_MENU_BAR (widget));
   g_return_if_fail (allocation != NULL);
@@ -404,32 +376,6 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
   priv = GTK_MENU_BAR_GET_PRIVATE (menu_bar);
 
   direction = gtk_widget_get_direction (widget);
-
-  g_object_get (widget,
-                "ubuntu-local",
-                &local,
-                NULL);
-
-  if (!local)
-    {
-      GtkAllocation zero = { 0, 0, 0, 0 };
-      GdkWindow *window;
-
-      /* We manually assign an empty allocation to the menubar to
-       * prevent the container from attempting to draw it at all.
-       */
-      gtk_widget_set_allocation (widget, &zero);
-
-      /* Then we move the GdkWindow belonging to the menubar outside of
-       * the clipping rectangle of the parent window so that we can't
-       * see it.
-       */
-      window = gtk_widget_get_window (widget);
-      if (window != NULL)
-        gdk_window_move_resize (window, -1, -1, 1, 1);
-
-      return;
-    }
 
   widget->allocation = *allocation;
   if (gtk_widget_get_realized (widget))
@@ -680,15 +626,8 @@ window_key_press_handler (GtkWidget   *widget,
 	      GtkMenuShell *menu_shell = GTK_MENU_SHELL (menubars->data);
 
               _gtk_menu_shell_set_keyboard_mode (menu_shell, TRUE);
-              if (ubuntu_gtk_menu_shell_activate_first (GTK_MENU_SHELL (menu_shell), FALSE))
-		{
-		  //g_print ("send activate to remote!\n");
-		}
-	      else
-		{
-		  _gtk_menu_shell_activate (menu_shell);
-		  gtk_menu_shell_select_first (menu_shell, FALSE);
-		}
+	      _gtk_menu_shell_activate (menu_shell);
+	      gtk_menu_shell_select_first (menu_shell, FALSE);
 	      
 	      g_list_free (menubars);
 	      
