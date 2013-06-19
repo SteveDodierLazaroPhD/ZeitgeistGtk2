@@ -1,3 +1,198 @@
+commit 0828a34333e6a4af6a21436e408ec57ce620d170
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Jun 16 11:04:03 2013 -0400
+
+    2.24.19
+
+ NEWS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+commit 162430fe5aadd8544efc00190ea2b7183773ddb4
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Tue Oct 19 11:47:40 2010 +0100
+
+    settings: Move setting property registration in gtksettings.c
+
+    Some GtkSettings property are registered by other classes. This leads
+    to the "interesting" issue that setting GtkSettings:gtk-button-images
+    requires that the GtkButton class is referenced first - or that a
+    GtkButton is created.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=632538
+
+    This commit is a cherry-pick from master which (sadly) fixed the issue
+    only after we started the 2.9x work, and I completely forgot to
+    backport
+    it. This is needed because GTK 2.x started tripping the warning
+    added in
+    GObject by this bug:
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=698614
+
+    Cherry-picked-from: 9f9edb662eb0f282e98f988b1658972303390036
+    Signed-off-by: Emmanuele Bassi <ebassi@gnome.org>
+
+ gtk/gtkbutton.c                 |  13 ----
+ gtk/gtkcolorsel.c               |  28 ++++---
+ gtk/gtkentry.c                  |  21 -----
+ gtk/gtkimagemenuitem.c          |  10 +--
+ gtk/gtklabel.c                  |   7 --
+ gtk/gtkmenu.c                   |  25 ------
+ gtk/gtkmenubar.c                |  10 +--
+ gtk/gtkscrolledwindow.c         |  23 +++---
+ gtk/gtksettings.c               | 169
+ +++++++++++++++++++++++++++++++++++++++-
+ modules/input/gtkimcontextxim.c |  19 -----
+ 10 files changed, 191 insertions(+), 134 deletions(-)
+
+commit 59d49e1566faeed80d2b2052c42fe6c5e9153190
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Jun 6 15:39:53 2013 +0200
+
+    quartz: move dialogs to the same window level as utility windows
+
+    window_type_hint_to_level(): applied patch from Paul Davis which moves
+    dialogs to NSFloatingWindowLevel. This is not quite the perfect
+    solution, but it's a pragmatic fix that makes apps which have both
+    window types much more usable, and prevents dialog from disappearing
+    under an application's main window.
+
+ gdk/quartz/gdkwindow-quartz.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit 7b5e7a72fcd0fd5ad204356e3a848555589688b7
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Wed Jun 5 18:00:54 2013 +0200
+
+    printing: Show correct status of a job
+
+    "job-state" is IPP_TAG_ENUM not IPP_TAG_INTEGER.
+
+ modules/printbackends/cups/gtkprintbackendcups.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1a4132a72e9ceb78e692a1439d17025966b8f87c
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Mon Jun 3 16:33:57 2013 +0200
+
+    gtk: queue_resize() the GtkCellView when its cells change
+
+    in pack_start(), pack_end(), clear(), also queue_resize() in
+    set_model().  Remove calls to queue_draw() in other functions that
+    already call queue_resize().
+
+ gtk/gtkcellview.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+commit efa63c5970a2cc3fd7b9a4deddcaf85528b9b688
+Author: Hendrik Knackstedt <hendrik.knackstedt@t-online.de>
+Date:   Thu May 30 23:37:10 2013 +0200
+
+    Updated German translation
+
+ po/de.po | 758
+ ++++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 382 insertions(+), 376 deletions(-)
+
+commit c9aec6da0260e27a6d569e24dfeb53b2496f434d
+Author: Wolfgang Stoeggl <c72578@yahoo.de>
+Date:   Tue Oct 30 19:44:05 2012 +0100
+
+    Updated German translation
+
+ po-properties/de.po | 6461
+ ++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 3567 insertions(+), 2894 deletions(-)
+
+commit 3b82c12d3e28272fa65e37ffd4a292b09f1783c3
+Author: Tilman Sauerbek <tilman@code-monkey.de>
+Date:   Thu May 30 10:21:55 2013 -0500
+
+    filechooser: Fix leak when a shortcut disappears from the filesystem
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=432386
+
+ gtk/gtkfilechooserdefault.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 9754c51349d14fcb1438fac3ddc7565b4d77b53c
+Author: Michael Natterer <mitch@lanedo.com>
+Date:   Fri May 17 15:24:15 2013 +0200
+
+    quartz: honor more source image properties in
+    _gdk_quartz_image_copy_to_image()
+
+    Particularly look at the source image's byte order when making a
+    screenshot of the "root window" (which is the window stack). Make
+    the code more generic so it can handle all sorts of pixel formats.
+
+ gdk/quartz/gdkimage-quartz.c | 75
+ +++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 63 insertions(+), 12 deletions(-)
+
+commit 8368de2bc35056d466f0a536eadc353c69c0e6e3
+Author: Jehan <jehan@girinstud.io>
+Date:   Fri May 17 23:04:40 2013 +0900
+
+    Bug 575767: fix crashes when XInput device disappears.
+
+    Ignore X11 errors from querying state of unplugged input devices.
+    GTK+ 3 handle this better with hotplugging support in XInput 2, but
+    this is working workaround for avoiding ugly crashes and data loss
+    with GTK+ 2.
+
+ gdk/x11/gdkinput-x11.c   | 38 +++++++++++++++++++++++++++++++++++++-
+ gdk/x11/gdkinput-xfree.c | 35 +++++++++++++++++++++++++++++++----
+ 2 files changed, 68 insertions(+), 5 deletions(-)
+
+commit 28ac40f0f9458a309e3c5fe8c741193e9251a7f2
+Author: Colin Walters <walters@verbum.org>
+Date:   Mon May 20 14:06:32 2013 -0400
+
+    modules/input: Only build quartz module if we're targeting quartz
+
+    Otherwise the build is broken on GNU/Linux and Win32.
+
+ modules/input/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 21c775a2c811662881ae0b2f7606ab6c0875011b
+Author: E K Kato <ek.kato@gmail.com>
+Date:   Tue Apr 30 14:15:10 2013 -0700
+
+    Bug 694273 - Support for NSTextInputClient in text widgets
+
+ configure.ac               |   4 +
+ gdk/quartz/GdkQuartzView.c | 530
+ +++++++++++++++++++++++++++++++++++++++++++--
+ gdk/quartz/GdkQuartzView.h |  27 ++-
+ modules/input/Makefile.am  |  13 ++
+ modules/input/imquartz.c   | 393 +++++++++++++++++++++++++++++++++
+ 5 files changed, 941 insertions(+), 26 deletions(-)
+
+commit 1e96603577af5f7ae76d894180091047aaeb977e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat May 18 19:09:39 2013 -0400
+
+    Fix drawing of treeview grid lines
+
+    In the presence of invisible columns, the grid line drawing
+    code was malfunctioning.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=700578
+
+ gtk/gtktreeview.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 8fe6659eb65a719b83ab9e2160ddf600a119e0bc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon May 13 09:16:07 2013 -0400
+
+    Bump version
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 commit 9f16fc1b003c6e4c5095fe277f67be6bf8c8ffee
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon May 13 08:02:50 2013 -0400

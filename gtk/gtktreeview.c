@@ -4302,7 +4302,7 @@ gtk_tree_view_draw_grid_lines (GtkTreeView    *tree_view,
     return;
 
   /* Only draw the lines for visible rows and columns */
-  for (list = tree_view->priv->columns; list; list = list->next, i++)
+  for (list = tree_view->priv->columns; list; list = list->next)
     {
       GtkTreeViewColumn *column = list->data;
 
@@ -4312,6 +4312,8 @@ gtk_tree_view_draw_grid_lines (GtkTreeView    *tree_view,
 
       if (! column->visible)
 	continue;
+
+      i++;
 
       current_x += column->width;
 
