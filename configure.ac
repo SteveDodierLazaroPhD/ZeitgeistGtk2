@@ -13,8 +13,8 @@ AC_PREREQ(2.62)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [24])
-m4_define([gtk_micro_version], [19])
-m4_define([gtk_interface_age], [19])
+m4_define([gtk_micro_version], [20])
+m4_define([gtk_interface_age], [20])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -1499,7 +1499,7 @@ else
 	    $CUPS_API_MAJOR -eq 1 -a $CUPS_API_MINOR -ge 6; then
       AC_DEFINE(HAVE_CUPS_API_1_6, 1,
                 [Define to 1 if CUPS 1.6 API is available])
-
+      have_cups_api_1_6=yes
     fi
 
     AC_SUBST(CUPS_API_MAJOR)

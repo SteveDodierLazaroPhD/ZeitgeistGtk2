@@ -1,3 +1,159 @@
+commit 158fc5d9e0f541420708a22ce0b120f25df996dc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jul 4 09:51:49 2013 -0400
+
+    2.24.20
+
+ NEWS         | 21 +++++++++++++++++++++
+ configure.ac |  4 ++--
+ 2 files changed, 23 insertions(+), 2 deletions(-)
+
+commit 54c020204fba25aae4fdfed78af3f553125bf82e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon May 17 22:58:25 2010 -0400
+
+    Let query utilities update the cache file directly
+
+    This is much more convenient for packagers than having to
+    redirect the output into the cache file, and much less error-prone.
+
+ docs/reference/gtk/gtk-query-immodules-2.0.xml | 16 ++++-
+ gtk/queryimmodules.c                           | 97
+ ++++++++++++++++----------
+ 2 files changed, 75 insertions(+), 38 deletions(-)
+
+commit c8849046860a9b17fa943247d85ddadb29262b48
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jul 4 09:27:17 2013 -0400
+
+    Move the module cache files below libdir
+
+    These files contain architecture-dependent paths, and thus placing
+    them into sysconfdir causes unnecessary hassle. Now the immodule cache
+    file is looked for in libdir/gtk-2.0/2.10.0/immodules.cache.
+
+    Belated backport of a change that was done in the run-up to 3.0.
+
+ docs/reference/gtk/gtk-query-immodules-2.0.xml |   6 ++
+ docs/reference/gtk/running.sgml                |   9 +-
+ gtk/gtkrc.c                                    |   2 +-
+ gtk/queryimmodules.c                           | 118
+ ++++++++++++-------------
+ 4 files changed, 70 insertions(+), 65 deletions(-)
+
+commit 602b44020adbae882b5d7df378081969cf639692
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jul 4 09:05:07 2013 -0400
+
+    Look for rc files in system config dirs as well
+
+    This will allow us to ship package defaults in /usr instead
+    of /etc.
+
+ gtk/gtkrc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+commit 4c6cd0fa12dde050ee13597d34c0b05e04cb388e
+Author: Piotr Drąg <piotrdrag@gmail.com>
+Date:   Wed Jun 26 16:38:58 2013 +0200
+
+    Updated Polish translation
+
+ po/pl.po | 443
+ ++++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 224 insertions(+), 219 deletions(-)
+
+commit a057ed26dc623dff0fc0c62ef287f6583b2710d0
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Tue Jun 25 14:34:15 2013 +0200
+
+    printing: List Avahi printers
+
+    Show printers advertised by avahi on local network. CUPS
+    backend now looks for _ipps._tcp and _ipp._tcp services
+    offered by avahi. If it finds such a service (printer)
+    it requests its attributes through IPP_GET_PRINTER_ATTRIBUTES
+    ipp request and adds it to the list of printers. Such printer
+    behaves like a remote printer then.
+    If an avahi printer is a default printer then it is considered
+    default by the backend only if there is no local or remote
+    default printer.
+    This functionality is enabled when building Gtk+ with CUPS 1.6
+    or later because it replaces browsing protocol removed in CUPS 1.6.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=702455
+
+ configure.ac                                     |    2 +-
+ modules/printbackends/cups/gtkcupsutils.c        |   22 +
+ modules/printbackends/cups/gtkcupsutils.h        |    3 +
+ modules/printbackends/cups/gtkprintbackendcups.c | 1290
+ +++++++++++++++++++---
+ modules/printbackends/cups/gtkprintercups.c      |   29 +-
+ modules/printbackends/cups/gtkprintercups.h      |   11 +
+ 6 files changed, 1205 insertions(+), 152 deletions(-)
+
+commit 4292fb433ce331c57bcf997dfcfd0f9be06c44be
+Author: Valerio Messina <efa@iol.it>
+Date:   Fri Jun 14 21:50:35 2013 +0200
+
+    GtkFileChooser: Missing hour on today's files for it&hu locales
+    on Win32
+
+    The file chooser does not show the hours for files modified today
+    when using it & hu locales on Win32.  This is due to the %k format
+    conversion
+    for strftime() that is in Olson's Timezone Package, which msvcrt.dll
+    doesn't have.
+    Cygwin has it, though.
+
+    So for now, we just use a %H format.  While %k would render
+    six-in-the-morning as " 6" (6 preceded by a space), %H will render it
+    as "06".
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=560337
+
+ po/hu.po | 4 ++--
+ po/it.po | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+commit e62709da2ee6619f26c8446b545418e5f1b9e151
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Jun 20 17:21:25 2013 +0200
+
+    quartz: remove check for keymap changes from update_keymap()
+
+    The function is now only called when the keymap has actually
+    changed. bug #698183.
+
+ gdk/quartz/gdkkeys-quartz.c | 424
+ +++++++++++++++++++++-----------------------
+ 1 file changed, 206 insertions(+), 218 deletions(-)
+
+commit c2919a6e9144cb0e916af61a21e11de6ca13c6fe
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Jun 20 16:55:49 2013 +0200
+
+    quartz: update the keymap only if the input method changed
+
+    and not on each keystroke, which for some IMs apparently caused a full
+    update on each keystroke, not just a check for changes. Patch from
+    Takuro Ashie, bug #698183.
+
+ gdk/quartz/gdkkeys-quartz.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
+
+commit 99e3d072d6676d7a219594f05e0409b9eadd5a52
+Author: Aleksander Morgado <aleksander@lanedo.com>
+Date:   Wed Feb 27 09:22:27 2013 +0100
+
+    win32: don't convert '\n' to '\r\n' when copying if it already is
+    '\r\n'
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=649390
+
+ gdk/win32/gdkproperty-win32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 commit 0828a34333e6a4af6a21436e408ec57ce620d170
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Sun Jun 16 11:04:03 2013 -0400
