@@ -13,8 +13,8 @@ AC_PREREQ(2.62)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [24])
-m4_define([gtk_micro_version], [20])
-m4_define([gtk_interface_age], [20])
+m4_define([gtk_micro_version], [21])
+m4_define([gtk_interface_age], [21])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -1621,7 +1621,7 @@ AM_CONDITIONAL(HAVE_DOCBOOK, $DB2HTML)
 
 AC_ARG_ENABLE(man,
               [AC_HELP_STRING([--enable-man],
-                              [regenerate man pages from Docbook [default=no]])],enable_man=yes,
+                              [regenerate man pages from Docbook [default=no]])],,
               enable_man=no)
 
 if test "${enable_man}" != no; then

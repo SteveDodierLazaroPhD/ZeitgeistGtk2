@@ -1,3 +1,360 @@
+commit 51f4e42591394157a8edd0c828359df4079fa346
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 17 09:08:29 2013 -0400
+
+    2.24.21
+
+ NEWS         | 30 ++++++++++++++++++++++++++++++
+ configure.ac |  4 ++--
+ 2 files changed, 32 insertions(+), 2 deletions(-)
+
+commit c915afe98c3ee77adb7bdfa3bf57b20fade98316
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 17 10:45:05 2013 -0400
+
+    Disable filechooser test
+
+    It does't work in make distcheck.
+
+ gtk/tests/Makefile.am | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit b81e8de3ffb7ed6b927d55a1de27c7a7d37b8be7
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 17 10:21:36 2013 -0400
+
+    Make filechooser test pass
+
+ gtk/tests/filechooser.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4437ccb89f60cf7435f0701b0f236359b79284c0
+Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Date:   Wed Sep 11 17:32:28 2013 +0700
+
+    Updated Thai translation.
+
+ po/th.po | 3435
+ +++++++++++++++++++++++++++++---------------------------------
+ 1 file changed, 1609 insertions(+), 1826 deletions(-)
+
+commit 2eade26e68e6379755762f05ac909d5e3f80aa31
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Sep 9 12:07:25 2013 -0400
+
+    [gdkcairo] Fix color premultiplication
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=513812
+
+ gdk/gdkcairo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 956f5e3f6b250251d111388c8d26734dffe52454
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 6 09:49:30 2013 -0400
+
+    Fix config dir <> data dir confusion
+
+    We added code to look for gtkrc in system config dirs,
+    and then proceeded to move it to /usr/share/gtk-2.0 :-(.
+    So, look in that location as well.
+
+ gtk/gtkrc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 541aa72f86b910558954ff46c7fbee345da6d172
+Author: Ek Kato <ek.kato@gmail.com>
+Date:   Thu Aug 29 14:12:09 2013 -0700
+
+    Fix missing return from quartz_filter_keypress
+
+    (cherry picked from commit 0ae728e2424406f1dab3878a31942d9dd8862c1a)
+
+ modules/input/imquartz.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit eb3d9dc3ddecd05e92d880b20349bb57901e1516
+Author: David King <amigadave@amigadave.com>
+Date:   Thu Aug 22 20:19:38 2013 +0100
+
+    combobox: Add missing Since tags for entry constructors
+
+ gtk/gtkcombobox.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit a2149a671aeff4200f3a72a350e503366ce99da8
+Author: Ek Kato <ek.kato@gmail.com>
+Date:   Fri Aug 16 09:54:34 2013 -0700
+
+    Bug 705750 Quartz input method doesn't work correctly for Chinese
+    characters
+
+ gdk/quartz/GdkQuartzView.c     |  35 ++++++++++++--
+ gdk/quartz/GdkQuartzView.h     |   1 +
+ gdk/quartz/gdkevents-quartz.c  |  15 ++++++
+ gdk/quartz/gdkprivate-quartz.h |   1 +
+ modules/input/imquartz.c       | 103
+ ++++++++++++++++++++++++++---------------
+ 5 files changed, 114 insertions(+), 41 deletions(-)
+
+commit 36e26c8a031bab3365e7a2818666ec41bbb6693b
+Author: Cody Russell <cody@jhu.edu>
+Date:   Thu Aug 15 15:08:34 2013 -0500
+
+    Fix a crasher that was introduced by
+    9ca802161ec6387419d160f21fe477008a567477
+    due to preedit_str being initialized as an empty string rather
+    than NULL.
+
+ modules/input/imquartz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5af66c3f0d1de5d384908c846149a391776afc1a
+Author: Michael Hutchison <m.j.hutchison@gmail.com>
+Date:   Thu Aug 15 09:44:02 2013 -0700
+
+    Bug 705182 Reset Cocoa IME state when immodule is reset
+
+    Commits the pre-edit string on receipt of focus_out and reset
+    commands.
+    Patch refinements by Cody Russell <bratsche@gnome.org> and
+    Ek Kato <ek.kato@gmail.com>
+
+ modules/input/imquartz.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+commit cc2d29771daee4f88474497c3b596968a4ebb31a
+Author: Aleksander Morgado <aleksander@lanedo.com>
+Date:   Mon Apr 29 17:32:31 2013 +0200
+
+    win32: avoid assertion when creating a GdkPixmap fails
+
+    If gdk_pixmap_new() fails (e.g. CreateDIBSection() failure) we end up
+    g_object_unref()-ing the temporary GdkPixmap, and we do this before
+    having set
+    the drawable_impl->hdc and drawable_impl->hdc_count. Now, this could
+    have just
+    been a couple of warnings being dumped, but instead it really
+    crashes the
+    application because in win32-specific GdkDrawable's finalize()
+    we assert if
+    drawable_impl->hdc_count is not zero:
+
+    Gdk:ERROR:gdkdrawable-win32.c:2047:_gdk_win32_drawable_finish:
+    assertion failed: (impl->hdc_count == 0)
+
+    In order to avoid this crash, we make sure we don't decrement the
+    hdc_count in
+    the GdkPixmap's finalize() unless we have it set first (i.e. we
+    avoid hdc_count
+    going down to -1).
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=699236
+
+ gdk/win32/gdkpixmap-win32.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+commit 8fa5cf0554567df92c4aa384aa754655e8f12259
+Author: Ek Kato <ek.kato@gmail.com>
+Date:   Tue Aug 13 11:14:29 2013 -0700
+
+    Bug 705181 Annoying beep on arrow keys
+
+    Original patch was a bit excessive, just needed to not forward
+    the command.
+
+ gdk/quartz/GdkQuartzView.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+commit 49fd2b2b469c5edfc741099070a31d0b79014857
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Aug 10 14:11:49 2013 -0700
+
+    Bug 701571 NSApp doesn't notice NSWindow destruction
+
+    Part 1 of the fix; part 2 awaits Glib developer approval (see
+    https://bugzilla.gnome.org/show_bug.cgi?id=704374) and is more
+    correctly associated with
+    https://bugzilla.gnome.org/show_bug.cgi?id=674108
+
+ gdk/quartz/gdkeventloop-quartz.c | 42
+ +++++++++++++++++++++++++---------------
+ 1 file changed, 26 insertions(+), 16 deletions(-)
+
+commit 80aabf4f1c5758027c38c72b3a00cf5110212b9d
+Author: Daniel Sabo <DanielSabo@gmail.com>
+Date:   Thu Aug 8 09:36:28 2013 -0500
+
+    Reset cursor when mouse leaves a toplevel window.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=692548
+
+ gdk/quartz/gdkevents-quartz.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 91bcca6f395ba6d5aa5a688d6d629633bbea539f
+Author: Michael Hutchinson <m.j.hutchinson@gmail.com>
+Date:   Tue Jul 2 19:04:36 2013 -0400
+
+    Bug 705181: Fix annoying beeping introduced by Mac IME
+
+    NSTextInputClient should not chain unhandled commands to super
+
+ gdk/quartz/GdkQuartzView.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+commit 4ecbef0791d420c014ecca911cd2a1cc18122e9a
+Author: Aleksander Morgado <aleksander@lanedo.com>
+Date:   Fri Mar 15 10:56:27 2013 +0100
+
+    win32: always recreate the cairo surface if requested to do so
+
+    When _gdk_windowing_create_cairo_surface() gets called, we should
+    always create
+    a fully new cairo surface, instead of just referencing the available
+    one, which
+    may already be finished (i.e. in CAIRO_STATUS_SURFACE_FINISHED state).
+
+    A new user_data key is added to the surface to explicitly release
+    the acquired
+    DC when the surface is destroyed, independent to the user_data key
+    added to
+    clear the impl->user_data pointer.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=695636
+
+ gdk/win32/gdkdrawable-win32.c | 44
+ ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 11 deletions(-)
+
+commit d33c1cf4122e5ad028176f0bfde92c79f16880fd
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 29 22:34:53 2013 -0400
+
+    Limit includes in gtksignal.h
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=536767
+
+ gtk/gtksignal.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 280cf4ca949cb403bf4e61611a349fd59644cf6e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 29 20:57:00 2013 -0400
+
+    X11: Fix the cut-off for too large windows
+
+    We can only handle 2^15-1 pixels, not 2^16-1.
+    Pointed out by Morten Welinder.
+
+    http://bugzilla.gnome.org/show_bug.cgi?id=698758
+
+ gdk/x11/gdkwindow-x11.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+commit 12fe6a9a1ad65a46de63d619925bd1e5e7f1f9b4
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun Jul 28 13:59:55 2013 -0700
+
+    Bug Bug 703789 - gtk.immodules still referenced
+
+    After switch to immodules.cache
+
+ README.win32              |  4 ++--
+ demos/gtk-demo/main.c     |  2 +-
+ gtk+.spec.in              |  2 +-
+ gtk-zip.sh.in             |  2 +-
+ gtk/Makefile.am           |  6 +++---
+ gtk/gtkimcontext.c        |  2 +-
+ gtk/gtkimmodule.c         |  2 +-
+ modules/input/Makefile.am | 16 ++++++++--------
+ tests/testcombochange.c   |  2 +-
+ tests/testdnd.c           |  2 +-
+ tests/testgtk.c           |  2 +-
+ tests/testtext.c          |  7 +------
+ 12 files changed, 22 insertions(+), 27 deletions(-)
+
+commit 43ed68aa33b8e5efde01f7ef10d081b979cd451f
+Author: Ek Kato <ek.kato@gmail.com>
+Date:   Sat Jul 27 13:55:39 2013 -0700
+
+    Bug 701332 - Patch for minor glitch in NSTextInput
+
+ gdk/quartz/GdkQuartzView.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+commit c064e188943ad6bd79d8476a0f53e27bfddb4a1f
+Author: Takuro Ashie <ashie@clear-code.com>
+Date:   Sat Jul 27 10:34:39 2013 +0900
+
+    imquartz: Fallback to slave IM context if no NSEvent exists.
+
+    When an application translates a key event and drop its native event
+    before passing to imquartz, it can't recognize the NSEvent. On this
+    case imquartz doesn't emit any signals such as "commit" signal so
+    that the application doesn't insert any text. To avoid no response,
+    at least imquartz should fallback to slave GtkIMContextSimple.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=694273#c27
+
+ modules/input/imquartz.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit 71b73e04d56a90c6ae2b3312727f30d5e8c75e36
+Author: Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
+Date:   Fri Jul 26 13:58:21 2013 +0200
+
+    build: fix --disable-man
+
+    The third argument to AC_ARG_ENABLE is the action done when
+    the argument is specified, not when it is enabled.
+    This resulted in --disable-man enabling those.
+
+    Signed-off-by: Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bbcde7e380c9abeb4083255e7c06d297a6bec8f9
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Thu Jul 25 16:34:21 2013 +0200
+
+    quartz: fix crashes that sometimes happened on the first key press
+
+    because nobody has called gdk_keymap_get_for_display() before.
+    Now we simply make sure the default display's keymap exists
+    if somebody calls any gdk_keymap_*() function with a NULL
+    keymap (which is an allowed value).
+
+ gdk/quartz/gdkkeys-quartz.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+commit 561d1c6358333732bbd11040d7fefa2a0c04031a
+Author: Jehan <jehan@girinstud.io>
+Date:   Wed Jul 17 19:05:21 2013 +0900
+
+    gtkdialog - more informative warning when ordering unexisting
+    response_id
+    (cherry picked from commit 0e4d9b7793c16fd98b396ffe6b8db48b8e09f1d2)
+
+ gtk/gtkdialog.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+commit c8d52c018b33b13498c53b607acb1347db249a26
+Author: Hib Eris <hib@hiberis.nl>
+Date:   Mon May 13 15:45:18 2013 +0200
+
+    Define INITGUID only for mingw.org compiler
+
+    Defining INITGUID causes a build failure with mingw-w64 > r5589.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=699673
+
+    (cherry picked from commit 6a71820ff399b32c4a95e7b17979513783c4e052)
+
+ gdk/win32/gdkdnd-win32.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
 commit 158fc5d9e0f541420708a22ce0b120f25df996dc
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Thu Jul 4 09:51:49 2013 -0400

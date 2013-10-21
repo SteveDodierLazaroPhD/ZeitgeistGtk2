@@ -206,11 +206,11 @@ install-data-hook:
 	@if $(RUN_QUERY_IMMODULES_TEST) ; then \
 	  echo $(mkinstalldirs) $(DESTDIR)$(sysconfdir)/gtk-2.0 ; \
 	  $(mkinstalldirs) $(DESTDIR)$(sysconfdir)/gtk-2.0 ; \
-	  echo "$(top_builddir)/gtk/gtk-query-immodules-2.0 > $(DESTDIR)$(sysconfdir)/gtk-2.0/gtk.immodules" ; \
-	  $(top_builddir)/gtk/gtk-query-immodules-2.0 > $(DESTDIR)$(sysconfdir)/gtk-2.0/gtk.immodules ; \
+	  echo "$(DESTDOR)$(bindir)/gtk-query-immodules-2.0 > $(DESTDIR)$(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/immodules.cache" ; \
+	  $(DESTDIR)/$(bindir)/gtk-query-immodules-2.0 > $(DESTDIR)$(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/immodules.cache ; \
 	else \
 	  echo "***" ; \
-	  echo "*** Warning: gtk.immodules not built" ; \
+	  echo "*** Warning: immodules.cache not built" ; \
 	  echo "***" ; \
 	  echo "*** Generate this file manually on host" ; \
 	  echo "*** system using gtk-query-immodules-2.0" ; \
@@ -218,7 +218,7 @@ install-data-hook:
         fi
 
 uninstall-local:
-	rm -f $(DESTDIR)$(sysconfdir)/gtk-2.0/gtk.immodules
+	rm -f $(DESTDIR)$(libdir)/gtk-2.0/2.10.0/immodules.cache
 
 if BUILD_DYNAMIC_MODULES
 
@@ -256,25 +256,25 @@ noinst_LTLIBRARIES =				\
 
 included-modules: $(noinst_LTLIBRARIES)
 
-gtk.immodules: Makefile.am $(module_LTLIBRARIES)
+immodules.cache: Makefile.am $(module_LTLIBRARIES)
 	@if $(RUN_QUERY_IMMODULES_TEST) ; then \
-	  echo "$(top_builddir)/gtk/gtk-query-immodules-2.0 > gtk.immodules" ; \
-	$(top_builddir)/gtk/gtk-query-immodules-2.0 $(module_LTLIBRARIES) > gtk.immodules; \
+	  echo "$(top_builddir)/gtk/gtk-query-immodules-2.0 > immodules.cache" ; \
+	  $(top_builddir)/gtk/gtk-query-immodules-2.0 $(module_LTLIBRARIES) > immodules.cache; \
 	else \
 	  echo "***" ; \
-	  echo "*** Warning: gtk.immodules not built" ; \
+	  echo "*** Warning: immodules.cache not built" ; \
 	  echo "***" ; \
 	  echo "*** Generate this file manually on host" ; \
 	  echo "*** system using gtk-query-immodules-2.0" ; \
 	  echo "***" ; \
-	  touch gtk.immodules; \
+	  touch immodules.cache; \
         fi
 
-CLEANFILES = gtk.immodules
+CLEANFILES = immodules.cache
 
 if CROSS_COMPILING
 else
-all-local: gtk.immodules
+all-local: immodules.cache
 endif
 
 -include $(top_srcdir)/git.mk
