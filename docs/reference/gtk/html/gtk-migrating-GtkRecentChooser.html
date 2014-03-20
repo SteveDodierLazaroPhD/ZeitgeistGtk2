@@ -2,22 +2,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Migrating from EggRecent to GtkRecentChooser</title>
+<title>GTK+ 2 Reference Manual: Migrating from EggRecent to GtkRecentChooser</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 2 Reference Manual">
 <link rel="up" href="migrating.html" title="Part IV. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="setting-the-page-flow.html" title="Setting the page flow">
 <link rel="next" href="gtkrecent-chooser.html" title="Displaying the Recently Used Documents">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
-<td><a accesskey="p" href="setting-the-page-flow.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="migrating.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GTK+ 2 Reference Manual</th>
-<td><a accesskey="n" href="gtkrecent-chooser.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts"></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="migrating.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="setting-the-page-flow.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gtkrecent-chooser.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="chapter">
 <div class="titlepage"><div>
@@ -73,18 +73,18 @@
 <a name="gtkrecent-manager"></a>Managing the Recently Used Documents</h2></div></div></div>
 <p>
       <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> is used to manage the Recently Used Documents. To
-      create a new <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a>, you simply call <a class="link" href="GtkRecentManager.html#gtk-recent-manager-new" title="gtk_recent_manager_new ()"><code class="function">gtk_recent_manager_new()</code></a>.
+      create a new <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a>, you simply call <a class="link" href="GtkRecentManager.html#gtk-recent-manager-new" title="gtk_recent_manager_new ()"><code class="function">gtk_recent_manager_new()</code></a>.
       Like the <span class="structname">EggRecentModel</span> inside EggRecent, the
       <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> loads the list of the recent documents and notifies
       you of changes inside the list.
     </p>
 <p>
       Usually, instead of creating a new <a class="link" href="GtkRecentManager.html" title="GtkRecentManager"><span class="type">GtkRecentManager</span></a> each time you
-      need it, you'll want to use the <a class="link" href="GtkRecentManager.html#gtk-recent-manager-get-default" title="gtk_recent_manager_get_default ()"><code class="function">gtk_recent_manager_get_default()</code></a>
+      need it, you'll want to use the <a class="link" href="GtkRecentManager.html#gtk-recent-manager-get-default" title="gtk_recent_manager_get_default ()"><code class="function">gtk_recent_manager_get_default()</code></a>
       function.
     </p>
 <p>
-      To add a document to the list, you can use <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item" title="gtk_recent_manager_add_item ()"><code class="function">gtk_recent_manager_add_item()</code></a>,
+      To add a document to the list, you can use <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item" title="gtk_recent_manager_add_item ()"><code class="function">gtk_recent_manager_add_item()</code></a>,
       like:
       </p>
 <div class="informalexample">
@@ -117,10 +117,10 @@
 </div>
 
 <p>
-      The <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item" title="gtk_recent_manager_add_item ()"><code class="function">gtk_recent_manager_add_item()</code></a> function will try and guess some of the
+      The <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-item" title="gtk_recent_manager_add_item ()"><code class="function">gtk_recent_manager_add_item()</code></a> function will try and guess some of the
       meta-data associated to a URI. If you know some of meta-data about the
       document yourself, set the desired fields of a <a class="link" href="GtkRecentManager.html#GtkRecentData" title="struct GtkRecentData"><span class="type">GtkRecentData</span></a> structure
-      and pass it to the <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-full" title="gtk_recent_manager_add_full ()"><code class="function">gtk_recent_manager_add_full()</code></a> function instead:
+      and pass it to the <a class="link" href="GtkRecentManager.html#gtk-recent-manager-add-full" title="gtk_recent_manager_add_full ()"><code class="function">gtk_recent_manager_add_full()</code></a> function instead:
       </p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
@@ -305,6 +305,6 @@
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.20.1</div>
 </body>
 </html>

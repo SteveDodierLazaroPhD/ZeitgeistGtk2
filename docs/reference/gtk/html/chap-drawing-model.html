@@ -2,22 +2,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>The GTK+ Drawing Model</title>
+<title>GTK+ 2 Reference Manual: The GTK+ Drawing Model</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 2 Reference Manual">
 <link rel="up" href="gtk.html" title="Part I. GTK+ Overview">
 <link rel="prev" href="gtk-question-index.html" title="Common Questions">
 <link rel="next" href="gtkbase.html" title="Part II. GTK+ Core Reference">
-<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
-<td><a accesskey="p" href="gtk-question-index.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
-<td><a accesskey="u" href="gtk.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
-<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GTK+ 2 Reference Manual</th>
-<td><a accesskey="n" href="gtkbase.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts"></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="gtk.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="gtk-question-index.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gtkbase.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="chap-drawing-model"></a><div class="titlepage"></div>
@@ -28,7 +28,7 @@
     The GTK+ drawing model in detail
 </p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
 <a name="drawing-overview"></a><h2>Overview of the drawing model</h2>
@@ -104,7 +104,7 @@
 	<code class="classname">GdkWindow</code>, GDK generates an event of
 	type <code class="constant">GDK_EVENT_EXPOSE</code>
 	for that window.  The GTK+ widget layer in turn finds the
-	widget that corresponds to that window, and emits the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event signal</a>
+	widget that corresponds to that window, and emits the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title="The “expose-event” signal">expose-event signal</a>
 	for that widget.
       </p>
 <p>
@@ -113,7 +113,7 @@
 	scheme, the drawing cycle would be trivial:  when GDK notifies
 	the GTK layer about an exposure event for a
 	<code class="classname">GdkWindow</code>, the GTK layer would simply
-	emit the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event
+	emit the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title="The “expose-event” signal">expose-event
 	signal</a> for that widget.  The widget's expose event
 	handler would subsequently repaint the widget.  No further
 	work would be necessary; the windowing system would generate
@@ -125,7 +125,7 @@
 	not have a <code class="classname">GdkWindow</code> of their own, but
 	rather share the one from their parent widget.  Such widgets
 	have called <code class="function">gtk_widget_set_has_window</code> to
-	disable it; this can be tested easily with the <a class="link" href="GtkWidget.html#gtk-widget-get-has-window" title="gtk_widget_get_has_window ()"><code class="function">gtk_widget_get_has_window()</code></a>
+	disable it; this can be tested easily with the <a class="link" href="GtkWidget.html#gtk-widget-get-has-window" title="gtk_widget_get_has_window ()"><code class="function">gtk_widget_get_has_window()</code></a>
 	function.  As such, these are called <em class="firstterm">no-window
 	widgets</em>.
       </p>
@@ -293,7 +293,7 @@
 	drawing gets clipped by any child windows that it may
 	intersect.  Sometimes you need to draw over your child windows
 	as well; for example, when drawing a drag-handle to resize
-	something.  In this case, turn on the <a href="../gdk2/gdk2-Graphics-Contexts.html#GDK-INCLUDE-INFERIORS:CAPS">GDK_INCLUDE_INFERIORS</a>
+	something.  In this case, turn on the GDK_INCLUDE_INFERIORS
 	subwindow mode for the GdkGC which you use for
 	drawing.
       </p>
@@ -304,7 +304,7 @@
 <p>
       When the GTK layer receives an exposure event from GDK, it first finds
       the <code class="literal">!<code class="constant">GTK_NO_WINDOW</code></code> widget that
-      corresponds to the event's window.  Then, it emits the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event signal</a> for that
+      corresponds to the event's window.  Then, it emits the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title="The “expose-event” signal">expose-event signal</a> for that
       widget.  As described above, that widget will first draw its background,
       and then ask each of its <code class="constant">GTK_NO_WINDOW</code> children to
       draw themselves.
@@ -451,7 +451,7 @@ gtk_window_expose (GtkWidget      *widget,
       is implemented in a similar fashion.
     </p>
 <p>
-      Since the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title='The "expose-event" signal'>expose-event
+      Since the <a class="link" href="GtkWidget.html#GtkWidget-expose-event" title="The “expose-event” signal">expose-event
 	signal</a> runs user-connected handlers
       <span class="emphasis"><em>before</em></span> the widget's default handler, what
       happens is this:
@@ -491,6 +491,6 @@ gtk_window_expose (GtkWidget      *widget,
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.19</div>
+          Generated by GTK-Doc V1.20.1</div>
 </body>
 </html>

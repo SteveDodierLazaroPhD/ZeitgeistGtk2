@@ -1,3 +1,413 @@
+commit 03014aa9c7b390f6aaf88dda2600710b029ab361
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 17 21:34:01 2014 -0400
+
+    2.24.23
+
+ NEWS | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+commit 82310d48a8c9aedc39acc1b2bf6a89d0bb7de918
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sun Mar 16 13:59:06 2014 +0100
+
+    Bug 634146 - Check
+    g_win32_get_package_installation_directory_of_module() return value
+
+    Remaining part of patch from Joshua Element Green.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=634146
+
+ gtk/gtkmain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 95985a2181b49a92ec7b8f0eed0dd26052444d86
+Author: Marc-André Lureau <marcandre.lureau@gmail.com>
+Date:   Mon Apr 8 22:45:50 2013 +0200
+
+    win32: free allocated gdi objects in 16bpp
+
+    In 16bpp, Gdk is creating hbitmap with CreateDIBSection() and a
+    hdc with
+    CreateCompatibleDC(). Those 2 objects need to be released when the
+    pixmap is finalized.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=671538
+
+    Signed-off-by: Hans Breuer <hans@breuer.org>
+
+ gdk/win32/gdkpixmap-win32.c | 6 ++++++
+ gdk/win32/gdkpixmap-win32.h | 1 +
+ 2 files changed, 7 insertions(+)
+
+commit 7ff6e601c3300d4adb0aa224ab128ce3f4f56f5f
+Author: Pavel <pavel@pamsoft.cz>
+Date:   Mon Jan 21 20:31:20 2013 +0100
+
+    exstyle changed after the window size adjustment
+
+    Originaly the size of the window based on the client area size has
+    been calculated first and then variables dwStyle and dwExStyle have
+    been changed. Thus the window size has been calculated for different
+    windows type then eventually used when calling CreateWindowEx. This
+    caused for example the Gimp tool windows to have different size than
+    formerly saved in session. The whole code calculating the window size
+    is moved after the last adjustment of dwExStyle variable in this
+    patch.
+
+    Signed-off-by: Hans Breuer <hans@breuer.org>
+
+ gdk/win32/gdkwindow-win32.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+commit 6d329406ae6adf8aca964998fdddf0251aab32b6
+Author: Hans Breuer <hans@breuer.org>
+Date:   Tue Oct 16 22:58:37 2012 +0200
+
+    Bug 665507 - Pixmap via cairo DIB breaks gdk_gc_set_stipple() use
+
+    Only one bitmap can be selected into a device context. Using the
+    DIB created by cairo consumes the one opportunity, so every further
+    SelectObject into the same DC in GDK code will fail.
+
+ gdk/win32/gdkdrawable-win32.c | 39
+ +++++++++++----------------------------
+ 1 file changed, 11 insertions(+), 28 deletions(-)
+
+commit 479bc6e5509f845652b7cd3831d17744b2148ff3
+Author: Hans Breuer <hans@breuer.org>
+Date:   Sat Dec 3 17:42:45 2011 +0100
+
+    win32: restore effect of _gdk_selection_property_delete
+
+    Can not find in the changelog entry why it was disabled at all,
+    see: http://git.gnome.org/browse/gtk+/commit/?id=3f4c73
+
+    The ill effect is somewhat hidden: if you try to copy images
+    via clipboard only the first one is pastable, i.e. Gdk keeps
+    the reference to the first image and provides it for later
+    paste.
+
+ gdk/win32/gdkselection-win32.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit e84bb08ded46bf3c96dd53bfffd372296de047b4
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Wed Mar 12 10:52:05 2014 +0100
+
+    printing: Don't crash because of missing g_clear_pointer()
+
+    g_clear_pointer() is not available in glib-2.28 which is minimal
+    required version for gtk+-2.24.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=708783
+
+ modules/printbackends/cups/gtkprintbackendcups.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+commit c5561f7e8c197117f964feb58e247f113fb08a7f
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun Dec 1 14:02:11 2013 -0800
+
+    Bug 711298 - "Edit Scheduled Transaction" window way too modal
+
+    Put dialogs and utility windows in the same level as normal and
+    toolbar windows so that Gtk can control their stacking instead of
+    forcing them, rather unnaturally, to be on top of all other windows,
+    even other application windows, even when another application has
+    focus.
+
+ gdk/quartz/gdkwindow-quartz.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+commit ba2dc987605e51933dcbfc7b4620abca94654302
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 11 19:27:25 2012 -0400
+
+    Update docs for GtkEntry::activate
+
+    Remove the 'you shall not connect' message from this signal.
+    While it is a keybinding signal, using it from applications is
+    fine and, in fact, expected.
+
+ gtk/gtkentry.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 8e721922f116df1821361248164f1a5bd06c6c6e
+Author: William Jon McCann <william.jon.mccann@gmail.com>
+Date:   Wed Jan 22 01:08:39 2014 -0500
+
+    docs: Fix gdk_pixmap_new arguments in tutorial
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=708119
+
+ docs/tutorial/gtk-tut.sgml | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+commit b7c6954f6f6d3754dc8a28bed1d3ec099bfe59f8
+Author: Giovanni Campagna <gcampagna@src.gnome.org>
+Date:   Sat Jan 18 16:12:39 2014 +0100
+
+    GtkFileChooser: fix documentation
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=722496
+
+ gtk/gtkfilechooser.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit a0a005def7d2c37e350ad494cd020107548cd248
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Jan 6 15:05:44 2014 -0600
+
+    filechooser: Document the settings keys
+
+    This is so people can modify gnome-tweak-tool or whatever without
+    directly diving into
+    the source.
+
+ gtk/gtkfilechooser.c | 91
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+
+commit 4a61ca28b1daeab70d89db6ec2f00511e0db2dd5
+Author: Luis Menina <liberforce@freeside.fr>
+Date:   Sat Dec 21 15:54:29 2013 +0100
+
+    Fixed GtkLabel documentation on links
+
+    An escaped '&lt;' wasn't complete, the 'lt' part was missing.
+
+ docs/reference/gtk/tmpl/gtklabel.sgml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 090159cec92921182f8eeb59762ceba11c1581f4
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Wed Dec 18 18:28:39 2013 +0100
+
+    gdkwindow: Don't add the same window to "update_windows" twice
+
+    This prevents passing of such window to another GMainLoop.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=711552
+
+ gdk/gdkwindow.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+commit c212cb8f32c02cf2fe691372b753d334f6e25d69
+Author: Marek Kasik <mkasik@redhat.com>
+Date:   Mon Dec 16 18:04:14 2013 +0100
+
+    gdkwindow: Handle references in "update_windows" list correctly
+
+    Since update_windows list is a static variable in GdkWindow.c which
+    contains pointers to windows which needs to be updated, it can happen
+    that it contains a pointer to a window even after quit from a
+    gtk_main().
+    If another gtk_main() is called in the same process it tries to
+    process
+    windows in the list which leads to a crash.
+    Correct reference count handling of added windows prevents such
+    applications
+    from crash.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=711552
+
+ gdk/gdkwindow.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+commit 2c01e7e78d29011ad086613428933ac8c1ac32d6
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sat Sep 28 10:55:22 2013 -0700
+
+    Bug 651224 - Potential NULL display ptr from quartz
+    gtk_clipboard_wait_for_contents
+
+ gtk/gtkclipboard-quartz.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit b7ab0ed129026207b37717d565feb932a6219612
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Thu Sep 9 23:09:07 2010 +0200
+
+    iconfactory: Initialize varibale to NULL in failure path
+
+    Otherwise we use random memory and that is not good.
+
+ gtk/gtkiconfactory.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit e048de9cab0a2593e47cac736513213d413702d9
+Author: Carlos Garnacho <carlosg@gnome.org>
+Date:   Fri Jul 26 17:45:19 2013 +0200
+
+    ime: Add builtin handling of dead keys
+
+    The IME input method has been both ignoring keypresses of
+    non-spacing characters (ditching these as non displayable),
+    and not letting IME do anything about those.
+
+    Even though, the sparse documentation on IMM/IME seems to
+    hint that applications can't pipe non-spacing characters to
+    the input method manager, and experimentation shown that
+    those characters are indeed handled differently than how
+    it'd be expected.
+
+    Then, add basic handling of dead keys on the IME input method
+    itself , as it's not mutually exclusive with regular keymaps
+    with dead keys.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=704937
+
+ modules/input/gtkimcontextime.c | 97
+ ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 92 insertions(+), 5 deletions(-)
+
+commit aa8704aa9f5b1c1c47395cd4ff392e8158f0af05
+Author: Jehan <jehan@girinstud.io>
+Date:   Sat Nov 23 18:35:18 2013 +1300
+
+    Bug 712536 - Themes with gap_(start|end)_file but no actual file crash
+
+    Code factorization in commit 34fd123 reintroduced bug fixed in 0d396ab
+    with non-equivalent factorized tests.
+
+ modules/engines/pixbuf/pixbuf-rc-style.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+commit 4f47aa6ef5fe4796635e2c211831c78e76cb2240
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Dec 1 17:13:01 2013 -0500
+
+    GtkFileChooser: avoid a memory leak
+
+    The directory enumeration code was leaking references to
+    GtkFolder objects.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=705367
+
+ gtk/gtkfilesystem.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 9559c707d59c5e5c34596f8f75c7ed0b97b4a196
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Dec 1 17:10:31 2013 -0500
+
+    Avoid a crash in the pixbuf engine
+
+    This is fallout from e4c83bbfdb60fdfe0bae207b1ddae295dc267a23,
+    which removed a necessary check.
+
+ modules/engines/pixbuf/pixbuf-rc-style.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3d0abd5cb00bd8a9c4e11d05936d41c363c78808
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Dec 1 16:56:54 2013 -0500
+
+    Remove an unused struct member
+
+    AsyncFuncData.folder was entirely unused. Drop it.
+
+ gtk/gtkfilesystem.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+commit e4c83bbfdb60fdfe0bae207b1ddae295dc267a23
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Mon Nov 18 11:05:39 2013 +0000
+
+    pixbuf-engine: Clean up error conditions and destructors
+
+    Simplify the error checks and move all common behaviour into a utility
+    function.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=712536
+
+ modules/engines/pixbuf/pixbuf-rc-style.c | 59
+ +++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 36 deletions(-)
+
+commit e2aabc016a818de99fae3661c65ebd224c5cce11
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Mon Nov 18 11:04:37 2013 +0000
+
+    pixbuf-engine: Improve ThemePixbuf clean up functions
+
+    Make theme_pixbuf_destroy() NULL-safe like g_free(), and add a clear
+    function in the spirit of the g_clear_* family of functions.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=712536
+
+ modules/engines/pixbuf/pixbuf-render.c | 21 +++++++++++++++++++--
+ modules/engines/pixbuf/pixbuf.h        |  1 +
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+commit c988a258cc73d225ccd98a478da99963ec604cfa
+Author: Jehan <jehan@girinstud.io>
+Date:   Mon Nov 18 00:55:54 2013 +1300
+
+    Themes with specified gap images but no actual file crash.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=712536
+
+ modules/engines/pixbuf/pixbuf-rc-style.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+commit e09719b12d034568bbb50b7e6aaff78138d6b58c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Nov 9 23:51:50 2013 -0500
+
+    Prevent a possible warning
+
+    When doing updates, gtk_progress_bar_real_update can calculate
+    compute a negative value for activity_pos.
+
+    If the allocation width is smaller than (xthickness + size),
+    pbar->activity_pos will be set to a negative value and this will
+    cause the drawing code to emit a warning about coordinates being
+    out of bounds.
+
+    Prevent this by keeping the value at least 0.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=701751
+
+ gtk/gtkprogressbar.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 280fc402be5fb46b66bcd32056963bb1afb8b54b
+Author: Cody Russell <cody@jhu.edu>
+Date:   Thu Oct 31 15:54:28 2013 -0500
+
+    Win32: Honor the geometry when GDK_HINT_MAX_SIZE is set.
+
+    The MINMAXINFO struct was being populated based upon geometry
+    hints when
+    GDK_HINT_MAX_SIZE flag was enabled, then promptly having its values
+    blown
+    away with default values.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=711110
+
+ gdk/win32/gdkevents-win32.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 352257a9c1dde874a9341e09a95ed73c15f632be
+Author: Federico Mena Quintero <federico@gnome.org>
+Date:   Mon Oct 28 15:00:23 2013 -0600
+
+    bgo#710936 - Fix typo in Japanese translation
+
+ po/ja.po | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit fc201ba87c7ade29468e0d557cbe3b7dea4c83ce
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Oct 11 08:43:20 2013 -0400
+
+    Bump version
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 commit d4538cf96c901ba852fa20f1b0b63bed91ab6d24
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Fri Oct 11 05:57:31 2013 -0400
