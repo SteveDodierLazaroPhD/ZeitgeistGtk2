@@ -2701,6 +2701,8 @@ static gboolean
 gtk_toolbar_button_press (GtkWidget      *toolbar,
     			  GdkEventButton *event)
 {
+  GtkWidget *window;
+
   if (_gtk_button_event_triggers_context_menu (event))
     {
       gboolean return_value;
@@ -2711,7 +2713,29 @@ gtk_toolbar_button_press (GtkWidget      *toolbar,
       
       return return_value;
     }
-  
+
+  window = gtk_widget_get_toplevel (toolbar);
+
+  if (window)
+    {
+      gboolean window_drag = FALSE;
+
+      gtk_widget_style_get (toolbar,
+                            "window-dragging", &window_drag,
+                            NULL);
+
+      if (window_drag)
+        {
+          gtk_window_begin_move_drag (GTK_WINDOW (window),
+                                      event->button,
+                                      event->x_root,
+                                      event->y_root,
+                                      event->time);
+
+          return TRUE;
+        }
+    }
+
   return FALSE;
 }
 
