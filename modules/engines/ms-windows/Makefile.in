@@ -84,8 +84,8 @@ DIST_COMMON = $(top_srcdir)/Makefile.decl $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/depcomp
 subdir = modules/engines/ms-windows
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -123,7 +123,8 @@ am__installdirs = "$(DESTDIR)$(enginedir)"
 LTLIBRARIES = $(engine_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(top_builddir)/gdk/$(gdktargetlib) \
-	$(top_builddir)/gtk/$(gtktargetlib) $(am__DEPENDENCIES_1)
+	$(top_builddir)/gtk/$(gtktargetlib) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 libwimp_la_DEPENDENCIES = $(am__DEPENDENCIES_2)
 am_libwimp_la_OBJECTS = msw_rc_style.lo msw_style.lo msw_theme_main.lo \
 	xp_theme.lo
@@ -509,12 +510,14 @@ INCLUDES = \
 	-I$(top_srcdir)/gdk		\
 	-I$(top_builddir)/gdk		\
 	-DGDK_DISABLE_DEPRECATED	\
-	$(GTK_DEP_CFLAGS)
+	$(GTK_DEP_CFLAGS)	\
+	$(GMODULE_CFLAGS)
 
 LDADDS = \
 	$(top_builddir)/gdk/$(gdktargetlib)		\
 	$(top_builddir)/gtk/$(gtktargetlib)		\
-	$(GTK_DEP_LIBS)
+	$(GTK_DEP_LIBS)		\
+	$(GMODULE_LIBS)
 
 enginedir = $(libdir)/gtk-2.0/$(GTK_BINARY_VERSION)/engines
 engine_LTLIBRARIES = libwimp.la

@@ -1,3 +1,265 @@
+commit 7f99fdbe909e7fc1c9bc781426eaccd79ef8bd8e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Oct 10 11:28:04 2014 -0400
+
+    2.24.25
+
+ NEWS         | 22 ++++++++++++++++++++++
+ configure.ac |  4 ++--
+ 2 files changed, 24 insertions(+), 2 deletions(-)
+
+commit 43ece862f326673639f68dc1fabd860a22f91526
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Oct 10 11:44:54 2014 -0400
+
+    Disable deprecation warnings for tests
+
+    This is a change in newer GLib which breaks make check if we
+    don't disable it.
+
+ gtk/tests/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 1d0e2d58385bd01fdb753bf40ba2f4c32ccd0cc8
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 29 16:05:57 2014 -0400
+
+    pixbuf engine: Avoid a crash if widget is NULL
+
+    Commit 85f2a721cf introduced an unconditional call to
+    gtk_widget_get_direction(). This does not work for 'foreign'
+    uses of the theme engine, e.g. in Qt, where widget is NULL.
+
+    This was reported as a crash in Fedora here:
+    https://bugzilla.redhat.com/show_bug.cgi?id=924683
+
+ modules/engines/pixbuf/pixbuf-draw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 03c53357f682f26bd94deae28d9e27acb8045c9e
+Author: Jehan <jehan@girinstud.io>
+Date:   Fri Aug 15 18:19:36 2014 +0000
+
+    win32: provide an implementation for gdk_test_simulate_key().
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=734879
+
+ gdk/win32/gdktestutils-win32.c | 79
+ +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 78 insertions(+), 1 deletion(-)
+
+commit fbf38d16bcc26630f0f721d266509f5bc292f606
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Tue Aug 26 12:07:34 2014 +0100
+
+    threads: Do not release the GDK lock if it hasn't been acquired yet
+
+    Since GLib ≥ 2.41, attempting to release an unlocked mutex will
+    abort(),
+    as it happens on most systems already.
+
+    Given the lack of proper documentation on how to use GDK with threads,
+    there is code in the wild that does:
+
+        gdk_threads_init ();
+        gdk_init ();
+
+        ...
+
+        gtk_main ();
+
+    instead of the idiomatically correct:
+
+        gdk_threads_init ();
+        gdk_threads_enter ();
+
+        gtk_init ();
+
+        ...
+
+        gtk_main ();
+
+        ...
+
+        gdk_threads_leave ();
+
+    Which means that gtk_main() will try to release the GDK lock, and thus
+    trigger an error from GLib.
+
+    we cannot really fix all the wrong code everywhere, and since it does
+    not cost us anything, we can work around the issue inside GDK
+    itself, by
+    trying to acquire the GDK lock inside gdk_threads_leave() with
+    trylock().
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735428
+
+ gdk/gdk.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+commit d9164e9c6075f95aad11012ec4114d97b26aa7c5
+Author: Sebastian Gerhardt <sebgerhardt@gmx.net>
+Date:   Mon Aug 18 18:40:48 2014 +0200
+
+    gdk_drawable_get_screen() used for mask, which is a pixmap, not
+    a window
+
+    The function gtk_drag_set_icon_pixmap() triggered failing
+    assertions. This was because it called the function
+    gdk_window_get_screen(mask), where "mask" is a pixmap, but not
+    a window.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735005
+
+ gtk/gtkdnd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ab3e3b1834ff0e8a98fd689bbb85b84f3cbbc962
+Author: Jehan <jehan@girinstud.io>
+Date:   Thu Oct 24 19:42:44 2013 +1300
+
+    Makefiles: cross-compilation on Linux for Windows failing.
+
+    Missing linking information for some modules.
+
+ modules/engines/ms-windows/Makefile.am | 6 ++++--
+ modules/other/gail/Makefile.am         | 7 +++++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+commit 267d004fd9b18168c8bd3b403c80cba068adbe1d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Aug 10 07:58:05 2014 -0400
+
+    Fix a typo
+
+    $(bindir) starts with a slash, so no need to add an extra one in
+    $(DESTDIR)$(bindir)...
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=734563
+
+ modules/input/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 825e0358336f3d0eea64b6a42343a529d19d5f8c
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun May 25 16:58:16 2014 -0700
+
+    Bug 729924 - Crash trying to print in OSX
+
+ modules/printbackends/cups/gtkprintbackendcups.c | 44
+ ++++++++++++++----------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
+
+commit d0c0d657b4c231bd0175142b838938b3780b587c
+Author: Руслан Ижбулатов <lrn1986@gmail.com>
+Date:   Thu Jul 31 16:34:52 2014 +0000
+
+    Embed manifest into gtk-update-icon-cache.exe
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=705054
+
+ gtk/Makefile.am | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+commit 3c8f0c44e149f9fc3c20a7a0aba6d4f578a1acf7
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jul 29 12:23:13 2014 +0200
+
+    GtkEntry: Properly remove the completion timeout
+
+    There were some code paths where we removed the source, but
+    failed to reset the id to zero.
+
+    Pointed out by John Coppens in
+    https://bugzilla.gnome.org/show_bug.cgi?id=733689
+
+ gtk/gtkentry.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit f566f8811eac0eafcddf4d5a233f6a15053f2619
+Author: Michał Górny <mgorny@gentoo.org>
+Date:   Thu Jun 12 17:29:53 2014 +0200
+
+    Use AC_PATH_TOOL to find build tools.
+
+    This improves support for cross-compilation & multilib on Gentoo,
+    where
+    tools proper for target arch/ABI are prefixed with CHOST.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=731582
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 0b5b2779a2ec17b633c0c58c8907cc5d0c369c4b
+Author: Andreas Müller <schnitzeltony@googlemail.com>
+Date:   Fri Nov 16 22:07:28 2012 +0100
+
+    GtkButton: do not prelight in touchscreen mode
+
+    Code was copied from GtkToggleButton.
+
+    Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=689138
+
+ gtk/gtkbutton.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 6a6885c5c0bf12d5e11a1a06a6289c7e9f0d205e
+Author: Balázs Úr <urbalazs@gmail.com>
+Date:   Tue Jul 8 15:04:53 2014 +0000
+
+    Updated Hungarian translation
+
+ po/hu.po | 235
+ ++++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 120 insertions(+), 115 deletions(-)
+
+commit 8e5f8440a69668a70decf3aac8dd9222d44412ab
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Jul 1 16:39:32 2014 +0800
+
+    Build: Provide Simple Support for MSVC 2012/2013
+
+    As the Visual Studio 2012/2013 are only slightly different from
+    the Visual
+    Studio 2010 projects, we can provide support for them by using
+    scripts to
+    copy the Visual Studio 2010 projects, and update the specific parts as
+    necessary.  This is being provided to help people still needing
+    GTK+-2.x
+    and also to help them to transition to GTK+-3.x easier.
+
+    Thus, there would be little maintenance overhead for these as only
+    the 2010
+    projects need to be kept up-to-date as a result.  This might change
+    when we
+    do get the stack working with WinRT/Metro, but that's going to
+    be another
+    totally different issue.
+
+ build/Makefile-newvs.am      | 37 +++++++++++++++++++++++++++++++++++++
+ build/win32/Makefile.am      |  8 +++++---
+ build/win32/vs11/Makefile.am | 32 ++++++++++++++++++++++++++++++++
+ build/win32/vs12/Makefile.am | 32 ++++++++++++++++++++++++++++++++
+ configure.ac                 |  2 ++
+ 5 files changed, 108 insertions(+), 3 deletions(-)
+
+commit 6e9781c32b4ee79902b5345b8563f03aca34520a
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Jul 1 16:36:26 2014 +0800
+
+    Fix "Installation" for Visual Studio 2010+
+
+    We need to enclose paths containing $(BinDir) with double quotes as it
+    points to something like c:\foo\gtk+-x.yy.zz, which the copy
+    command on
+    Windows does not like "+" in paths unless enclosed in quotes.
+
+ build/win32/vs10/gtk-install.props | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
 commit 9de65a11bbf974e62520c18c1d193a5655d02ca3
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Jun 23 10:12:17 2014 -0400

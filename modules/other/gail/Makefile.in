@@ -86,8 +86,8 @@ DIST_COMMON = $(top_srcdir)/Makefile.decl $(srcdir)/Makefile.in \
 	$(libgailinclude_HEADERS) ChangeLog
 subdir = modules/other/gail
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -125,10 +125,12 @@ am__installdirs = "$(DESTDIR)$(moduledir)" \
 	"$(DESTDIR)$(libgailincludedir)"
 LTLIBRARIES = $(module_LTLIBRARIES)
 am__DEPENDENCIES_1 =
+@PLATFORM_WIN32_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 libgail_la_DEPENDENCIES = $(top_builddir)/gdk/$(gdktargetlib) \
 	$(top_builddir)/gtk/$(gtktargetlib) \
 	$(top_builddir)/modules/other/gail/libgail-util/libgailutil.la \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_1)
 am__objects_1 = libgail_la-gail.lo libgail_la-gailadjustment.lo \
 	libgail_la-gailarrow.lo libgail_la-gailbooleancell.lo \
 	libgail_la-gailbox.lo libgail_la-gailbutton.lo \
@@ -683,9 +685,12 @@ libgail_la_CPPFLAGS = \
 	-DGTK_DISABLE_DEPRECATED	\
 	$(AM_CPPFLAGS)
 
+@PLATFORM_WIN32_TRUE@WIN32_ADDITIONAL_CFLAGS = $(GMODULE_CFLAGS)
+@PLATFORM_WIN32_TRUE@WIN32_ADDITIONAL_LIBS = $(GMODULE_LIBS)
 libgail_la_CFLAGS = \
 	$(GTK_DEP_CFLAGS)	\
 	$(GTK_DEBUG_FLAGS)	\
+	$(WIN32_ADDITIONAL_CFLAGS)		\
 	$(AM_CFLAGS)
 
 libgail_la_LIBADD = \
@@ -693,6 +698,7 @@ libgail_la_LIBADD = \
 	$(top_builddir)/gtk/$(gtktargetlib)				\
 	$(top_builddir)/modules/other/gail/libgail-util/libgailutil.la	\
 	$(GTK_DEP_LIBS)							\
+	$(WIN32_ADDITIONAL_LIBS)		\
 	$(INTLLIBS)
 
 libgail_la_LDFLAGS = \
