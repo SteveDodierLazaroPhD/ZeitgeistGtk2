@@ -51,6 +51,7 @@ struct _GtkPrintBackendPrivate
   GtkPrintBackendStatus status;
   char **auth_info_required;
   char **auth_info;
+  gboolean store_auth_info;
 };
 
 enum {
@@ -366,7 +367,8 @@ static void                 request_password                       (GtkPrintBack
                                                                     gpointer             auth_info_default,
                                                                     gpointer             auth_info_display,
                                                                     gpointer             auth_info_visible,
-                                                                    const gchar         *prompt);
+                                                                    const gchar         *prompt,
+                                                                    gboolean             can_store_auth_info);
   
 static void
 gtk_print_backend_class_init (GtkPrintBackendClass *class)
@@ -445,9 +447,9 @@ gtk_print_backend_class_init (GtkPrintBackendClass *class)
 		  G_TYPE_FROM_CLASS (class),
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GtkPrintBackendClass, request_password),
-		  NULL, NULL,
-		  _gtk_marshal_VOID__POINTER_POINTER_POINTER_POINTER_STRING,
-		  G_TYPE_NONE, 5, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING);
+		  NULL, NULL, NULL,
+		  G_TYPE_NONE, 6, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER,
+		  G_TYPE_POINTER, G_TYPE_STRING, G_TYPE_BOOLEAN);
 }
 
 static void
@@ -670,12 +672,24 @@ gtk_print_backend_print_stream (GtkPrintBackend        *backend,
 void 
 gtk_print_backend_set_password (GtkPrintBackend  *backend,
                                 gchar           **auth_info_required,
-                                gchar           **auth_info)
+                                gchar           **auth_info,
+                                gboolean          store_auth_info)
 {
   g_return_if_fail (GTK_IS_PRINT_BACKEND (backend));
 
   if (GTK_PRINT_BACKEND_GET_CLASS (backend)->set_password)
-    GTK_PRINT_BACKEND_GET_CLASS (backend)->set_password (backend, auth_info_required, auth_info);
+    GTK_PRINT_BACKEND_GET_CLASS (backend)->set_password (backend,
+                                                         auth_info_required,
+                                                         auth_info,
+                                                         store_auth_info);
+}
+
+static void
+store_auth_info_toggled (GtkCheckButton *chkbtn,
+                         gpointer        user_data)
+{
+  gboolean *data = (gboolean *) user_data;
+  *data = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (chkbtn));
 }
 
 static void
@@ -702,9 +716,9 @@ password_dialog_response (GtkWidget       *dialog,
   gint i;
 
   if (response_id == GTK_RESPONSE_OK)
-    gtk_print_backend_set_password (backend, priv->auth_info_required, priv->auth_info);
+    gtk_print_backend_set_password (backend, priv->auth_info_required, priv->auth_info, priv->store_auth_info);
   else
-    gtk_print_backend_set_password (backend, priv->auth_info_required, NULL);
+    gtk_print_backend_set_password (backend, priv->auth_info_required, NULL, FALSE);
 
   for (i = 0; i < g_strv_length (priv->auth_info_required); i++)
     if (priv->auth_info[i] != NULL)
@@ -729,10 +743,11 @@ request_password (GtkPrintBackend  *backend,
                   gpointer          auth_info_default,
                   gpointer          auth_info_display,
                   gpointer          auth_info_visible,
-                  const gchar      *prompt)
+                  const gchar      *prompt,
+                  gboolean          can_store_auth_info)
 {
   GtkPrintBackendPrivate *priv = backend->priv;
-  GtkWidget *dialog, *box, *main_box, *label, *icon, *vbox, *entry;
+  GtkWidget *dialog, *box, *main_box, *label, *icon, *vbox, *entry, *chkbtn;
   GtkWidget *focus = NULL;
   gchar     *markup;
   gint       length;
@@ -744,7 +759,8 @@ request_password (GtkPrintBackend  *backend,
 
   priv->auth_info_required = g_strdupv (ai_required);
   length = g_strv_length (ai_required);
-  priv->auth_info = g_new0 (gchar *, length);
+  priv->auth_info = g_new0 (gchar *, length + 1);
+  priv->store_auth_info = FALSE;
 
   dialog = gtk_dialog_new_with_buttons ( _("Authentication"), NULL, GTK_DIALOG_MODAL, 
                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -811,6 +827,16 @@ request_password (GtkPrintBackend  *backend,
           g_signal_connect (entry, "changed",
                             G_CALLBACK (store_entry), &(priv->auth_info[i]));
         }
+    }
+
+  if (can_store_auth_info)
+    {
+      chkbtn = gtk_check_button_new_with_mnemonic (_("_Remember password"));
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (chkbtn), FALSE);
+      gtk_box_pack_start (GTK_BOX (vbox), chkbtn, FALSE, FALSE, 6);
+      g_signal_connect (chkbtn, "toggled",
+                        G_CALLBACK (store_auth_info_toggled),
+                        &(priv->store_auth_info));
     }
 
   if (focus != NULL)

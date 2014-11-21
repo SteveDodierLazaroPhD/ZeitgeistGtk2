@@ -60,6 +60,7 @@
 #include "gtkprintercups.h"
 
 #include "gtkcupsutils.h"
+#include "gtkcupssecretsutils.h"
 
 
 typedef struct _GtkPrintBackendCupsClass GtkPrintBackendCupsClass;
@@ -152,6 +153,9 @@ struct _GtkPrintBackendCups
   gchar           *avahi_service_browser_paths[2];
   GCancellable    *avahi_cancellable;
 #endif
+  gboolean      secrets_service_available;
+  guint         secrets_service_watch_id;
+  GCancellable *secrets_service_cancellable;
 };
 
 static GObjectClass *backend_parent_class;
@@ -212,15 +216,25 @@ static cairo_surface_t *    cups_printer_create_cairo_surface      (GtkPrinter  
 
 static void                 gtk_print_backend_cups_set_password    (GtkPrintBackend                   *backend, 
                                                                     gchar                            **auth_info_required,
-                                                                    gchar                            **auth_info);
+                                                                    gchar                            **auth_info,
+                                                                    gboolean                           store_auth_info);
 
 void                        overwrite_and_free                      (gpointer                          data);
 static gboolean             is_address_local                        (const gchar                      *address);
 static gboolean             request_auth_info                       (gpointer                          data);
+static void                 lookup_auth_info                        (gpointer                          data);
 
 #ifdef HAVE_CUPS_API_1_6
 static void                 avahi_request_printer_list              (GtkPrintBackendCups              *cups_backend);
 #endif
+
+static void                 secrets_service_appeared_cb             (GDBusConnection *connection,
+                                                                     const gchar *name,
+                                                                     const gchar *name_owner,
+                                                                     gpointer user_data);
+static void                 secrets_service_vanished_cb             (GDBusConnection *connection,
+                                                                     const gchar *name,
+                                                                     gpointer user_data);
 
 static void
 gtk_print_backend_cups_register_type (GTypeModule *module)
@@ -788,6 +802,13 @@ gtk_print_backend_cups_init (GtkPrintBackendCups *backend_cups)
 #endif
 
   cups_get_local_default_printer (backend_cups);
+
+  backend_cups->secrets_service_available = FALSE;
+  backend_cups->secrets_service_cancellable = g_cancellable_new ();
+  backend_cups->secrets_service_watch_id =
+    gtk_cups_secrets_service_watch (secrets_service_appeared_cb,
+                                    secrets_service_vanished_cb,
+                                    backend_cups);
 }
 
 static void
@@ -819,6 +840,12 @@ gtk_print_backend_cups_finalize (GObject *object)
   backend_cups->avahi_default_printer = NULL;
   g_clear_object (&backend_cups->dbus_connection);
 #endif
+
+  g_clear_object (&backend_cups->secrets_service_cancellable);
+  if (backend_cups->secrets_service_watch_id != 0)
+    {
+      g_bus_unwatch_name (backend_cups->secrets_service_watch_id);
+    }
 
   backend_parent_class->finalize (object);
 }
@@ -935,7 +962,8 @@ httpGetHostname(http_t *http,
 static void
 gtk_print_backend_cups_set_password (GtkPrintBackend  *backend,
                                      gchar           **auth_info_required,
-                                     gchar           **auth_info)
+                                     gchar           **auth_info,
+                                     gboolean          store_auth_info)
 {
   GtkPrintBackendCups *cups_backend = GTK_PRINT_BACKEND_CUPS (backend);
   GList *l;
@@ -970,7 +998,7 @@ gtk_print_backend_cups_set_password (GtkPrintBackend  *backend,
   cups_backend->username = g_strdup (username);
 
   GTK_NOTE (PRINTING,
-            g_print ("CUPS backend: storing password for %s\n", key));
+            g_print ("CUPS backend: caching password for %s\n", key));
 
   for (l = cups_backend->requests; l; l = l->next)
     {
@@ -987,6 +1015,17 @@ gtk_print_backend_cups_set_password (GtkPrintBackend  *backend,
               dispatch->request->auth_info = g_new0 (gchar *, length + 1);
               for (i = 0; i < length; i++)
                 dispatch->request->auth_info[i] = g_strdup (auth_info[i]);
+            }
+          /* Save the password if the user requested it */
+          if (password != NULL && store_auth_info)
+            {
+              const gchar *printer_uri =
+                  gtk_cups_request_ipp_get_string (dispatch->request,
+                                                   IPP_TAG_URI,
+                                                   "printer-uri");
+
+              gtk_cups_secrets_service_store (auth_info, auth_info_required,
+                                              printer_uri);
             }
           dispatch->backend->authentication_lock = FALSE;
           dispatch->request->need_auth_info = FALSE;
@@ -1115,8 +1154,9 @@ request_password (gpointer data)
       g_free (printer_name);
 
       g_signal_emit_by_name (dispatch->backend, "request-password", 
-                             auth_info_required, auth_info_default, auth_info_display, auth_info_visible, prompt);
-
+                             auth_info_required, auth_info_default,
+                             auth_info_display, auth_info_visible, prompt,
+                             FALSE); /* Cups password is only cached not stored. */
       g_free (prompt);
     }
 
@@ -1223,6 +1263,98 @@ check_auth_info (gpointer user_data)
   return TRUE;
 }
 
+static void
+lookup_auth_info_cb (GObject      *source_object,
+                     GAsyncResult *res,
+                     gpointer      user_data)
+{
+  GTask                      *task;
+  GtkPrintCupsDispatchWatch  *dispatch;
+  gchar                     **auth_info;
+  GError                     *error = NULL;
+  gint                        i;
+
+  task = (GTask *) res;
+  dispatch = user_data;
+  auth_info = g_task_propagate_pointer (task, &error);
+
+  if (auth_info == NULL)
+    {
+      if (error != NULL)
+        {
+          GTK_NOTE (PRINTING,
+                    g_print ("Failed to look up auth info: %s\n", error->message));
+          g_error_free (error);
+        }
+      else
+        {
+          /* Error note should have been shown by the function causing this */
+          GTK_NOTE (PRINTING, g_print ("Failed to look up auth info.\n"));
+        }
+      dispatch->backend->authentication_lock = FALSE;
+      g_object_unref (task);
+      request_auth_info (dispatch);
+      return;
+    }
+
+  gtk_print_backend_cups_set_password (GTK_PRINT_BACKEND (dispatch->backend),
+                                       dispatch->request->auth_info_required, auth_info,
+                                       FALSE);
+  for (i = 0; auth_info[i] != NULL; i++)
+    {
+      overwrite_and_free (auth_info[i]);
+      auth_info[i] = NULL;
+    }
+  g_clear_pointer (auth_info, g_free);
+
+  g_object_unref (task);
+}
+
+static void
+lookup_auth_info (gpointer user_data)
+{
+  GtkPrintCupsDispatchWatch  *dispatch;
+  gsize                       length,
+                              i;
+  gboolean                    need_secret_auth_info = FALSE;
+  const gchar                *printer_uri;
+
+  dispatch = user_data;
+
+  if (dispatch->backend->authentication_lock)
+    return;
+
+  length = g_strv_length (dispatch->request->auth_info_required);
+
+  for (i = 0; i < length; i++)
+    {
+      if (g_strcmp0 (dispatch->request->auth_info_required[i], "password") == 0)
+        {
+          need_secret_auth_info = TRUE;
+          break;
+        }
+    }
+
+  g_idle_add (check_auth_info, user_data);
+
+  if (dispatch->backend->secrets_service_available && need_secret_auth_info)
+    {
+      dispatch->backend->authentication_lock = TRUE;
+      printer_uri = gtk_cups_request_ipp_get_string (dispatch->request,
+                                                     IPP_TAG_URI,
+                                                     "printer-uri");
+      gtk_cups_secrets_service_query_task (dispatch->backend,
+                                           dispatch->backend->secrets_service_cancellable,
+                                           lookup_auth_info_cb,
+                                           dispatch,
+                                           printer_uri,
+                                           dispatch->request->auth_info_required);
+      return;
+    }
+
+  request_auth_info (user_data);
+}
+
 static gboolean
 request_auth_info (gpointer user_data)
 {
@@ -1299,7 +1431,8 @@ request_auth_info (gpointer user_data)
                          auth_info_default,
                          auth_info_display,
                          auth_info_visible,
-                         prompt);
+                         prompt,
+                         dispatch->backend->secrets_service_available);
 
   for (i = 0; i < length; i++)
     {
@@ -1311,8 +1444,6 @@ request_auth_info (gpointer user_data)
   g_free (auth_info_display);
   g_free (printer_name);
   g_free (prompt);
-
-  g_idle_add (check_auth_info, user_data);
 
   return FALSE;
 }
@@ -1514,7 +1645,7 @@ cups_request_execute (GtkPrintBackendCups              *print_backend,
     {
       dispatch->callback = callback;
       dispatch->callback_data = user_data;
-      request_auth_info (dispatch);
+      lookup_auth_info (dispatch);
     }
   else
     {
@@ -5780,4 +5911,25 @@ cups_printer_get_capabilities (GtkPrinter *printer)
     }
 
   return capabilities;
+}
+
+static void
+secrets_service_appeared_cb (GDBusConnection *connection,
+                             const gchar     *name,
+                             const gchar     *name_owner,
+                             gpointer         user_data)
+{
+  GtkPrintBackendCups *backend = GTK_PRINT_BACKEND_CUPS (user_data);
+
+  backend->secrets_service_available = TRUE;
+}
+
+static void
+secrets_service_vanished_cb (GDBusConnection *connection,
+                             const gchar     *name,
+                             gpointer         user_data)
+{
+  GtkPrintBackendCups *backend = GTK_PRINT_BACKEND_CUPS (user_data);
+
+  backend->secrets_service_available = FALSE;
 }

@@ -125,12 +125,14 @@ struct _GtkPrintBackendClass
                                                               gpointer             auth_info_default,
                                                               gpointer             auth_info_display,
                                                               gpointer             auth_info_visible,
-                                                              const gchar         *prompt);
+                                                              const gchar         *prompt,
+                                                              gboolean             can_store_auth_info);
 
   /* not a signal */
   void                  (*set_password)                      (GtkPrintBackend     *backend,
                                                               gchar              **auth_info_required,
-                                                              gchar              **auth_info);
+                                                              gchar              **auth_info,
+                                                              gboolean             store_auth_info);
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
@@ -155,7 +157,8 @@ GList *     gtk_print_backend_load_modules         (void);
 void        gtk_print_backend_destroy              (GtkPrintBackend         *print_backend);
 void        gtk_print_backend_set_password         (GtkPrintBackend         *backend, 
                                                     gchar                  **auth_info_required,
-                                                    gchar                  **auth_info);
+                                                    gchar                  **auth_info,
+                                                    gboolean                 can_store_auth_info);
 
 /* Backend-only functions for GtkPrintBackend */
 
