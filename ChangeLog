@@ -1,3 +1,187 @@
+commit eb0e67217ebe6274b08a6b14b90283c498117ccc
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Feb 16 13:17:34 2015 -0500
+
+    2.24.26
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 9169b6aa69292bc1ff1d0cdef8faf1de2ef793d4
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Feb 16 10:31:46 2015 -0500
+
+    Fix distcheck
+
+ docs/reference/gtk/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit dea9eae3af525adc69849dea60b653ceaa19766e
+Author: Ting-Wei Lan <lantw@src.gnome.org>
+Date:   Tue Jan 27 15:45:24 2015 +0800
+
+    Support automake 1.15
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=743544
+
+ autogen.sh | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit 5364ede826b2e5b96b8d22c18634a6ad2ebdce68
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Feb 13 13:40:46 2015 -0500
+
+    gailbutton: Avoid a possible NULL dereference
+
+    We were using widget->window before checking widget for being NULL.
+
+    Pointed out by Sami Farin,
+    https://bugzilla.redhat.com/show_bug.cgi?id=1140414
+
+ modules/other/gail/gailbutton.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+commit 69319811142665613cbf2f4c9d8c5874ac2628c9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Feb 13 13:39:47 2015 -0500
+
+    label: Avoid a possible NULL dereference
+
+    We were setting attr->start before checking attr for being NULL.
+
+    Pointed out by Sami Farin,
+    https://bugzilla.redhat.com/show_bug.cgi?id=1140414
+
+ gtk/gtklabel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit ee95f3d7259c0859ce41189b781b4339b4cd64aa
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Feb 13 13:12:39 2015 -0500
+
+    Make gdk_event_apply_filters safe against changes in filter list
+
+    An event filter may add or remove filters itself. This patch does
+    two things to address this case. The first is to take a temporary
+    reference to the filter while it is being used. The second is
+    to wait until after the filter function is run before determining
+    the next node in the list to process. This guards against
+    changes to the next node. It also does not run functions
+    that have been marked as removed. Though I'm not sure if this
+    case can arise.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=635380
+
+    Backport of 323df2b2800383832ed3c2e43626f2c6821c33ec to
+    the gtk-2-24 branch by Wolfgang Ulbrich.
+
+ gdk/gdkinternals.h            |  6 +++++
+ gdk/gdkwindow.c               | 30 +++++++++++++++--------
+ gdk/quartz/gdkevents-quartz.c | 55
+ ++++++++++++++++++++++++++++++-------------
+ gdk/win32/gdkevents-win32.c   | 37 ++++++++++++++++++++++-------
+ gdk/x11/gdkevents-x11.c       | 37 ++++++++++++++++++++++-------
+ 5 files changed, 122 insertions(+), 43 deletions(-)
+
+commit 436fe38cae8f035f737aad28781183a0becdcec9
+Author: Lars Uebernickel <lars@uebernic.de>
+Date:   Tue Feb 3 11:21:59 2015 +0100
+
+    Add support for loading gtk2-only modules
+
+    Introduce GTK2_MODULES environment variable for modules that
+    don't work
+    in gtk3. The list of modules is now $GTK2_MODULES:$GTK_MODULES.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=743917
+
+ docs/reference/gtk/running.sgml | 14 ++++++++++++--
+ gtk/gtkmain.c                   | 13 ++++++++++++-
+ 2 files changed, 24 insertions(+), 3 deletions(-)
+
+commit e48ae6f85bc9411344aa935562571181a7753398
+Author: Holin <holin@iki.fi>
+Date:   Sun Dec 28 10:46:13 2014 -0800
+
+    Bug 741959 - text input broken on OS X 10.5 from 2.24.19 onwards
+
+    Alias insertText:replacementRange: to insertText: for SDK > 10.6,
+    and implement insertText: for SDK < 10.6.
+
+ gdk/quartz/GdkQuartzView.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 456f80a0cf477873a67e3bf150ee8de28b83afe5
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun Jan 4 12:06:57 2015 -0800
+
+    Revert "Bug 741959 - text input broken on OS X 10.5 from 2.24.19
+    onwards"
+
+    This reverts commit 4d1c065 because with further testing it's
+    found that
+    imquartz works on Leopard without it and is broken with it.
+
+ gdk/quartz/GdkQuartzView.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+commit 4d1c065ae800050acd5f825d387c9c2dc817e5af
+Author: Holin <holin@iki.fi>
+Date:   Sun Dec 28 10:46:13 2014 -0800
+
+    Bug 741959 - text input broken on OS X 10.5 from 2.24.19 onwards
+
+    Alias insertText:replacementRange: to insertText: for SDK > 10.6,
+    and implement insertText: for SDK < 10.6.
+
+ gdk/quartz/GdkQuartzView.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit ad6271eca90e6139acd624209e10931d0dffbd73
+Author: John Lindgren <john.lindgren@aol.com>
+Date:   Wed Dec 3 10:33:00 2014 +0000
+
+    gdk_window_begin_paint_region() - always reuse the same surface
+
+    When using the implicit paint pixmap, always draw to the same surface
+    (the standard one for the pixmap) each time rather than creating a new
+    one each time. This is both more effective and more natural.
+
+    It also fixes a redraw issue on win32, where using multiple surfaces
+    on the same HDC sometimes causes issues.  This seems to be due to
+    leftover state on the HDC from previous surfaces.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=741060
+
+ gdk/gdkwindow.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+commit 5bafcca63f8d065461c311f1ab768e7d0d290813
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Oct 22 22:10:56 2014 -0400
+
+    Ignore gdk-pixbuf deprecations
+
+    We're not going to start updating the 2.24 branch to newer
+    gdk-pixbuf APIs, so ignore deprecations.
+
+ configure.ac | 2 --
+ 1 file changed, 2 deletions(-)
+
+commit aff976ef0dad471edc35d65b9d1b5ba97da1698e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 20 06:17:56 2014 -0400
+
+    Do not leak a cairo region
+
+    This memory leak fix was present in GTK+ 3 since 3.10. We forgot
+    to backport it to GTK+ 2.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=738837
+
+ gdk/gdkwindow.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
 commit 7f99fdbe909e7fc1c9bc781426eaccd79ef8bd8e
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Fri Oct 10 11:28:04 2014 -0400

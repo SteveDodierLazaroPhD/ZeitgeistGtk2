@@ -2545,13 +2545,18 @@ gdk_window_add_filter (GdkWindow     *window,
     {
       filter = (GdkEventFilter *)tmp_list->data;
       if ((filter->function == function) && (filter->data == data))
-	return;
+        {
+          filter->ref_count++;
+          return;
+        }
       tmp_list = tmp_list->next;
     }
 
   filter = g_new (GdkEventFilter, 1);
   filter->function = function;
   filter->data = data;
+  filter->ref_count = 1;
+  filter->flags = 0;
 
   if (private)
     private->filters = g_list_append (private->filters, filter);
@@ -2593,16 +2598,21 @@ gdk_window_remove_filter (GdkWindow     *window,
       tmp_list = tmp_list->next;
 
       if ((filter->function == function) && (filter->data == data))
-	{
-	  if (private)
-	    private->filters = g_list_remove_link (private->filters, node);
-	  else
-	    _gdk_default_filters = g_list_remove_link (_gdk_default_filters, node);
-	  g_list_free_1 (node);
-	  g_free (filter);
+        {
+          filter->flags |= GDK_EVENT_FILTER_REMOVED;
+          filter->ref_count--;
+          if (filter->ref_count != 0)
+            return;
 
-	  return;
-	}
+          if (private)
+            private->filters = g_list_remove_link (private->filters, node);
+          else
+            _gdk_default_filters = g_list_remove_link (_gdk_default_filters, node);
+          g_list_free_1 (node);
+          g_free (filter);
+
+          return;
+        }
     }
 }
 
@@ -2984,15 +2994,10 @@ gdk_window_begin_paint_region (GdkWindow       *window,
 
   if (implicit_paint)
     {
-      int width, height;
-
       paint->uses_implicit = TRUE;
       paint->pixmap = g_object_ref (implicit_paint->pixmap);
       paint->x_offset = -private->abs_x + implicit_paint->x_offset;
       paint->y_offset = -private->abs_y + implicit_paint->y_offset;
-
-      gdk_drawable_get_size (paint->pixmap, &width, &height);
-      paint->surface = _gdk_drawable_create_cairo_surface (paint->pixmap, width, height);
     }
   else
     {
@@ -3002,8 +3007,9 @@ gdk_window_begin_paint_region (GdkWindow       *window,
       paint->pixmap =
 	gdk_pixmap_new (window,
 			MAX (clip_box.width, 1), MAX (clip_box.height, 1), -1);
-      paint->surface = _gdk_drawable_ref_cairo_surface (paint->pixmap);
     }
+
+  paint->surface = _gdk_drawable_ref_cairo_surface (paint->pixmap);
 
   if (paint->surface)
     cairo_surface_set_device_offset (paint->surface,
@@ -8747,6 +8753,8 @@ do_child_shapes (GdkWindow *window,
     gdk_region_subtract (region, private->shape);
 
   gdk_window_shape_combine_region (window, region, 0, 0);
+
+  cairo_region_destroy (region);
 }
 
 /**

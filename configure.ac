@@ -13,8 +13,8 @@ AC_PREREQ(2.62)
 
 m4_define([gtk_major_version], [2])
 m4_define([gtk_minor_version], [24])
-m4_define([gtk_micro_version], [25])
-m4_define([gtk_interface_age], [25])
+m4_define([gtk_micro_version], [26])
+m4_define([gtk_interface_age], [26])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -633,8 +633,6 @@ GLIB_REQUIRED_VERSION_MAJOR_MINOR=`echo glib_required_version | sed "s/\.@<:@^.@
 if test "x$GLIB_VERSION_MAJOR_MINOR" = "x$GLIB_REQUIRED_VERSION_MAJOR_MINOR"; then
   CFLAGS="-DG_DISABLE_DEPRECATED $CFLAGS"
 fi
-
-CFLAGS="-DGDK_PIXBUF_DISABLE_DEPRECATED $CFLAGS"
 
 
 dnl
