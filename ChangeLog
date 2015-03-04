@@ -1,3 +1,177 @@
+commit e6333a1a374591fef456f7fe73942226b5b8b388
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 24 20:54:38 2015 -0500
+
+    2.24.27
+
+ NEWS         | 24 ++++++++++++++++++++++++
+ configure.ac |  4 ++--
+ 2 files changed, 26 insertions(+), 2 deletions(-)
+
+commit 22eb70adab72a5c14f063ea15f8195087ff1dcd8
+Author: Colin Walters <walters@verbum.org>
+Date:   Fri Dec 17 15:36:51 2010 -0500
+
+    gdkwindow: Fix event unref iteration
+
+    We were double looping previously which caused a NULL deref.
+
+    (cherry picked from commit d08ff485f28f23427bff1b3aac64ab3f77a8664d)
+
+ gdk/gdkwindow.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit 5efefdb6550b3f00d5ca159c2ff74326bfd0e94b
+Author: Christophe Fergeau <cfergeau@redhat.com>
+Date:   Tue Mar 3 15:37:41 2015 +0100
+
+    gdk: Fix GdkWindowFilter internal refcounting
+
+    Running gnome-shell under valgrind, I saw the attached invalid write.
+    Basically we can destroy a window during event processing, and the old
+    window_remove_filters simply called g_free() on the filter, ignoring
+    the refcount.  Then later in event processing we call
+    filter->refcount--,
+    which is writing to free()d memory.
+
+    Fix this by centralizing list mutation and refcount handling inside
+    a new shared _gdk_window_filter_unref() function, and using that
+    everywhere.
+
+    ==13876== Invalid write of size 4
+    ==13876==    at 0x446B181: gdk_event_apply_filters
+    (gdkeventsource.c:86)
+    ==13876==    by 0x446B411: _gdk_events_queue (gdkeventsource.c:188)
+    ==13876==    by 0x44437EF: gdk_display_get_event (gdkdisplay.c:410)
+    ==13876==    by 0x446B009: gdk_event_source_dispatch
+    (gdkeventsource.c:317)
+    ==13876==    by 0x4AB7159: g_main_context_dispatch (gmain.c:2436)
+    ==13876==    by 0x4AB7957: g_main_context_iterate.clone.5
+    (gmain.c:3087)
+    ==13876==    by 0x4AB806A: g_main_loop_run (gmain.c:3295)
+    ==13876==    by 0x8084D6B: main (main.c:722)
+    ==13876==  Address 0x1658bcac is 12 bytes inside a block of size
+    16 free'd
+    ==13876==    at 0x4005EAD: free (vg_replace_malloc.c:366)
+    ==13876==    by 0x4ABE515: g_free (gmem.c:263)
+    ==13876==    by 0x444BCC9: window_remove_filters (gdkwindow.c:1873)
+    ==13876==    by 0x4454BA3: _gdk_window_destroy_hierarchy
+    (gdkwindow.c:2043)
+    ==13876==    by 0x447BF6E: gdk_window_destroy_notify
+    (gdkwindow-x11.c:1115)
+    ==13876==    by 0x43588E2: _gtk_socket_windowing_filter_func
+    (gtksocket-x11.c:518)
+    ==13876==    by 0x446B170: gdk_event_apply_filters
+    (gdkeventsource.c:79)
+    ==13876==    by 0x446B411: _gdk_events_queue (gdkeventsource.c:188)
+    ==13876==    by 0x44437EF: gdk_display_get_event (gdkdisplay.c:410)
+    ==13876==    by 0x446B009: gdk_event_source_dispatch
+    (gdkeventsource.c:317)
+    ==13876==    by 0x4AB7159: g_main_context_dispatch (gmain.c:2436)
+    ==13876==    by 0x4AB7957: g_main_context_iterate.clone.5
+    (gmain.c:3087)
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=637464
+
+    Backport of 806c04411d306680353cf90cffee98ce73e122f2 to
+    the gtk-2-24 branch. 806c0441 was authored by Colin Walters
+    <walters@verbum.org>
+
+    Without this patch, the spotify linux client was crashing during
+    playback of some songs when using gtk+ 2.24.26
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=745536
+
+ gdk/gdkinternals.h      |  3 +++
+ gdk/gdkwindow.c         | 68
+ +++++++++++++++++++++++++++++++++++--------------
+ gdk/x11/gdkevents-x11.c | 35 ++++++++++++-------------
+ 3 files changed, 70 insertions(+), 36 deletions(-)
+
+commit de7ec7a0a9bcde801c529a08e9f094034f75e671
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Mar 3 18:40:32 2015 +0800
+
+    MSVC 2008 Builds: Speed Up Release Builds
+
+    Use the /MP compiler option, where the build time for release
+    builds can
+    be cut down by quite a bit.  This will however cause a brief
+    warning with
+    debug builds due to the use of /Gm, but the code will otherwise build
+    normally.  Unlike the Visual Studio 2010+ builds, we can't use
+    /d2Zi+ as
+    Visual Studio 2008 does not support that, so we can't get a better
+    debugging experience for release builds here.
+
+ build/win32/vs9/gtk-build-defines.vsprops | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 639845d21edbefb61f728a8b2d054ae146b0c821
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Mar 3 14:07:26 2015 +0800
+
+    MSVC Builds: Improve Build Speed and Debugging
+
+    Use Multiprocessor compilation which can cut down build times by
+    quite a
+    bit and use the /d2Zi+ flag to have better debugging info being
+    logged to
+    the .pdb for release builds.
+
+    These are only applicable for Visual Studio 2010/2012 and later.
+
+ build/win32/vs10/gtk-build-defines.props | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit c5afe319ad87840dc579b75806121434f02dd14e
+Author: Daniel Drake <drake@endlessm.com>
+Date:   Mon Feb 23 14:49:08 2015 -0600
+
+    icontheme: allow directories with mtime 0
+
+    In order to provide a constant mtime between OS build and deploy time,
+    while also maintaining a hardlink content-addressed model independent
+    of
+    timestamps, ostree sets all mtimes to 0.
+
+    The icon cache code currently ignores directories with mtime 0,
+    assuming
+    they don't exist.
+
+    Track directory existence in a more precise way.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=745052
+
+ gtk/gtkicontheme.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+commit e01cc5bf5f2d1e9c0b0d1878aa6bf2cf6ad4f8ce
+Author: Arnav Singh <arnavion@gmail.com>
+Date:   Sat Feb 21 15:57:25 2015 +0100
+
+    statusicon: fix crash storing pointer in UINT
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=696505
+
+ gtk/gtkstatusicon.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+commit 79c05314c60bc1fc45f80f8a2c54b9e1d309f04b
+Author: Benjamin Otte <otte@redhat.com>
+Date:   Fri Feb 20 20:49:14 2015 +0100
+
+    gdkcairo: Don't leak pixel data
+
+    If we fail to attach pixel data to a cairo surface, free it
+    immediately.
+    We still want to cairo_set_source() the surface to popagate the error.
+
+    Spotted by Christian Boxdörfer
+
+ gdk/gdkcairo.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
 commit eb0e67217ebe6274b08a6b14b90283c498117ccc
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Feb 16 13:17:34 2015 -0500
