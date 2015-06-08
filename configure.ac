@@ -529,7 +529,7 @@ dnl ************************************
 PKG_CHECK_EXISTS(zeitgeist-1.0, [have_zeitgeist_deps=true], [have_zeitgeist_deps=false])
 
 AC_MSG_CHECKING(zeitgeist-1.0)
-if $PKG_CONFIG --exists zeitgeist-1.0 ; then
+if $have_zeitgeist_deps; then
   AC_DEFINE(__ZEITGEIST_TRACKER__, 1, [Have Zeitgeist])
 
   CFLAGS="$CFLAGS `$PKG_CONFIG --cflags zeitgeist-1.0`"
