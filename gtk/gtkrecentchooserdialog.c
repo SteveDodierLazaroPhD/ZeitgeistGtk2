@@ -29,13 +29,6 @@
 
 #include <stdarg.h>
 
-struct _GtkRecentChooserDialogPrivate
-{
-  GtkRecentManager *manager;
-  
-  GtkWidget *chooser;
-};
-
 #define GTK_RECENT_CHOOSER_DIALOG_GET_PRIVATE(obj)	(GTK_RECENT_CHOOSER_DIALOG (obj)->priv)
 
 static void gtk_recent_chooser_dialog_class_init (GtkRecentChooserDialogClass *klass);
@@ -262,10 +255,25 @@ gtk_recent_chooser_dialog_new_valist (const gchar      *title,
                          "title", title,
                          "recent-manager", manager,
                          NULL);
-  
-  if (parent)
+
+  GtkRecentChooserDialogPrivate *priv = GTK_RECENT_CHOOSER_DIALOG (result)->priv;
+  priv->parent_xid = 0;
+
+  if (parent) {
     gtk_window_set_transient_for (GTK_WINDOW (result), parent);
-  
+
+    #ifdef GDK_WINDOWING_X11
+    GdkWindow *gwin = gtk_widget_get_window (GTK_WIDGET (parent));
+    GdkDisplay *dsp = NULL;
+      if (gwin)
+        dsp = gdk_window_get_display (gwin);
+
+      if (dsp) {
+        priv->parent_xid = (Window) gdk_x11_drawable_get_xid (gwin);
+      }
+    #endif
+  }
+
   while (button_text)
     {
       response_id = va_arg (varargs, gint);

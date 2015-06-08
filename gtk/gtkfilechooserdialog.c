@@ -33,6 +33,10 @@
 
 #include <stdarg.h>
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
+
 #define GTK_FILE_CHOOSER_DIALOG_GET_PRIVATE(o)  (GTK_FILE_CHOOSER_DIALOG (o)->priv)
 
 static void gtk_file_chooser_dialog_finalize   (GObject                   *object);
@@ -400,8 +404,22 @@ gtk_file_chooser_dialog_new_valist (const gchar          *title,
 			 "action", action,
 			 NULL);
 
-  if (parent)
+  GtkFileChooserDialogPrivate *priv = GTK_FILE_CHOOSER_DIALOG (result)->priv;
+  priv->parent_xid = 0;
+
+  if (parent) {
     gtk_window_set_transient_for (GTK_WINDOW (result), parent);
+
+    #ifdef GDK_WINDOWING_X11
+    GdkWindow *gwin = gtk_widget_get_window (GTK_WIDGET (parent));
+    GdkDisplay *dsp = NULL;
+      if (gwin)
+        dsp = gdk_window_get_display (gwin);
+
+      if (dsp)
+        priv->parent_xid = (Window) gdk_x11_drawable_get_xid (gwin);
+    #endif
+  }
 
   while (button_text)
     {

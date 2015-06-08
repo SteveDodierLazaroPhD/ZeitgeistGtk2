@@ -66,6 +66,7 @@
 #include "gtkiconfactory.h"
 #include "gtkicontheme.h"
 #include "gtkalias.h"
+#include "gtkclipboard.h"
 
 #define GTK_ENTRY_COMPLETION_KEY "gtk-entry-completion-key"
 
@@ -5779,6 +5780,10 @@ _gtk_entry_reset_im_context (GtkEntry *entry)
     }
 }
 
+#include <zeitgeist.h>
+#include <glib/gprintf.h>
+#include "zgtrackutils.h"
+
 /**
  * gtk_entry_reset_im_context:
  * @entry: a #GtkEntry
@@ -6269,6 +6274,58 @@ truncate_multiline (const gchar *text)
 }
 
 static void
+_log_zeitgeist_event_paste (GtkClipboard *clipboard,
+                            GtkEntry     *entry,
+                            const gchar  *text)
+{
+  // Ignore PRIMARY (but try to process when there is no selection, e.g. the selection's owner died)
+  if (clipboard->have_selection && clipboard->selection != GDK_SELECTION_CLIPBOARD)
+    return;
+
+  // Get access to Zeitgeist logger daemon
+  ZeitgeistLog *log = zeitgeist_log_get_default ();
+
+  // Create the event to be added, with the known information
+  gchar *actor_name = _get_actor_name_from_pid (getpid());
+  ZeitgeistEvent *event = zeitgeist_event_new_full (
+              ZG_INTERPRETATION_CLIPBOARD_PASTE,
+              ZEITGEIST_ZG_USER_ACTIVITY,
+              actor_name,
+              NULL);
+  g_free (actor_name);
+
+  // Len is used to distinguish empty pastes, which might be needed by the ML algorithm later
+  gint         len                   = text? strlen (text) : -1;
+  gchar       *uri                   = g_strdup_printf ("clipboard://%s/len:%d", "UTF8_STRING", len);
+  gchar       *display_name          = "Clipboard content";
+
+  // Add the subject now that all information has been calculated
+  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full(uri,
+                                   ZG_INTERPRETATION_DATA_CLIPBOARD,
+                                   ZEITGEIST_NFO_SOFTWARE_SERVICE,
+                                   "UTF8_STRING",
+                                   NULL,
+                                   display_name,
+                                   NULL));
+  g_free (uri);
+
+  // Add the UCL metadata
+  char *window_id = _get_window_id_from_widget (GTK_WIDGET (entry));
+  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://%s///", getpid(), window_id);
+  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
+                                        ZEITGEIST_NFO_SOFTWARE,
+                                        ZEITGEIST_ZG_WORLD_ACTIVITY,
+                                        "application/octet-stream",
+                                        NULL,
+                                        "ucl-study-metadata",
+                                        NULL));
+  g_free (study_uri);
+  g_free (window_id);
+
+  zeitgeist_log_insert_events_no_reply (log, event, NULL);
+}
+
+static void
 paste_received (GtkClipboard *clipboard,
 		const gchar  *text,
 		gpointer      data)
@@ -6276,7 +6333,9 @@ paste_received (GtkClipboard *clipboard,
   GtkEntry *entry = GTK_ENTRY (data);
   GtkEditable *editable = GTK_EDITABLE (entry);
   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
-      
+
+  _log_zeitgeist_event_paste (clipboard, entry, text);
+
   if (entry->button == 2)
     {
       gint pos, start, end;
@@ -6285,7 +6344,7 @@ paste_received (GtkClipboard *clipboard,
       if (!((start <= pos && pos <= end) || (end <= pos && pos <= start)))
 	gtk_editable_select_region (editable, pos, pos);
     }
-      
+
   if (text)
     {
       gint pos, start, end;

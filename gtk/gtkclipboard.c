@@ -31,6 +31,9 @@
 #include "gtkintl.h"
 #include "gtkalias.h"
 
+#include <zeitgeist.h>
+#include "zgtrackutils.h"
+
 #ifdef GDK_WINDOWING_X11
 #include "x11/gdkx.h"
 #endif
@@ -53,32 +56,6 @@ typedef struct _RequestImageInfo RequestImageInfo;
 typedef struct _RequestURIInfo RequestURIInfo;
 typedef struct _RequestTargetsInfo RequestTargetsInfo;
 
-struct _GtkClipboard 
-{
-  GObject parent_instance;
-
-  GdkAtom selection;
-
-  GtkClipboardGetFunc get_func;
-  GtkClipboardClearFunc clear_func;
-  gpointer user_data;
-  gboolean have_owner;
-
-  guint32 timestamp;
-
-  gboolean have_selection;
-  GdkDisplay *display;
-
-  GdkAtom *cached_targets;
-  gint     n_cached_targets;
-
-  guint      notify_signal_id;
-  gboolean   storing_selection;
-  GMainLoop *store_loop;
-  guint      store_timeout;
-  gint       n_storable_targets;
-  GdkAtom   *storable_targets;
-};
 
 struct _GtkClipboardClass
 {
@@ -494,7 +471,133 @@ clipboard_remove_owner_notify (GtkClipboard *clipboard)
 					      clipboard),
 			      clipboard_owner_destroyed);
 }
-	  
+
+static void
+_log_zeitgeist_event_copy (GtkClipboard         *clipboard,
+                           const GtkTargetEntry *targets,
+                           guint                 n_targets)
+{
+  // Test for Clipboard and presence of content
+  g_return_if_fail (GTK_IS_CLIPBOARD (clipboard));
+  g_return_if_fail (targets != NULL || n_targets == 0);
+
+  // Ignore PRIMARY
+  if (clipboard->selection != GDK_SELECTION_CLIPBOARD)
+    return;
+
+  // Get access to Zeitgeist logger daemon
+  ZeitgeistLog *log = zeitgeist_log_get_default ();
+
+  // Create the event to be added, with the known information
+  gchar *actor_name = _get_actor_name_from_pid (getpid());
+  ZeitgeistEvent *event = zeitgeist_event_new_full (
+              ZG_INTERPRETATION_CLIPBOARD_COPY,
+              ZEITGEIST_ZG_USER_ACTIVITY,
+              actor_name,
+              NULL);
+  g_free (actor_name);
+
+  // Loop through targets
+  int i = 0;
+  for (; i<n_targets; ++i)
+  {
+    //TODO call clipboard->get_func (clipboard, selection_data, info, clipboard->user_data); and loop from callback to callback to calculate lengths...
+    /*gchar       *len_str               = NULL;
+    if (!g_strcmp0 (targets[i].target, "UTF8_STRING") || !g_strcmp0 (targets[i].target, "text/plain;charset=utf-8")) {
+      len_str = g_strdup_printf ("len:%s", g_utf8_strlen (TODO, -1));
+    } else if (!g_strcmp0 (targets[i].target, "TEXT") || !g_strcmp0 (targets[i].target, "COMPOUND_TEXT") || !g_strcmp0 (targets[i].target, "text/plain")) {
+      len_str = g_strdup_printf ("len:%s", strlen (TODO));
+    } else {
+      len_str = g_strdup ("len:n/a");
+    }*/
+    gchar       *uri                   = g_strdup_printf ("clipboard://%s/%s", targets[i].target, /*len_str*/ "len:n/a");
+    gchar       *mime_type             = g_strdup (targets[i].target);
+    gchar       *display_name          = "Clipboard content";
+
+    // Add the subject now that all information has been calculated
+    zeitgeist_event_add_subject (event, zeitgeist_subject_new_full(uri,
+                                      ZG_INTERPRETATION_DATA_CLIPBOARD,
+                                      ZEITGEIST_NFO_SOFTWARE_SERVICE,
+                                      mime_type,
+                                      NULL,
+                                      display_name,
+                                      NULL));
+
+    g_free (mime_type);
+    /*g_free (len_str);*/
+    g_free (uri);
+  }
+
+  // Add the UCL metadata
+  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://n/a///", getpid());
+  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
+                                          ZEITGEIST_NFO_SOFTWARE,
+                                          ZEITGEIST_ZG_WORLD_ACTIVITY,
+                                          "application/octet-stream",
+                                          NULL,
+                                          "ucl-study-metadata",
+                                          NULL));
+  g_free (study_uri);
+
+  zeitgeist_log_insert_events_no_reply (log, event, NULL);
+}
+
+static void
+_log_zeitgeist_event_paste (GtkClipboard           *clipboard,
+                            const GtkSelectionData *data)
+{
+  // Test for Clipboard and presence of content
+  g_return_if_fail (data != NULL);
+
+  // Ignore PRIMARY
+  if (clipboard->selection != GDK_SELECTION_CLIPBOARD)
+    return;
+
+  GdkAtom   data_type   = gtk_selection_data_get_data_type (data);
+  gint      len         = gtk_selection_data_get_length (data);
+
+  // Get access to Zeitgeist logger daemon
+  ZeitgeistLog *log = zeitgeist_log_get_default ();
+
+  // Create the event to be added, with the known information
+  gchar *actor_name = _get_actor_name_from_pid (getpid());
+  ZeitgeistEvent *event = zeitgeist_event_new_full (
+              ZG_INTERPRETATION_CLIPBOARD_PASTE,
+              ZEITGEIST_ZG_USER_ACTIVITY,
+              actor_name,
+              NULL);
+  g_free (actor_name);
+
+  // Len is used to distinguish empty pastes, which might be needed by the ML algorithm later
+  gchar       *mime_type             = gdk_atom_name (data_type);
+  gchar       *uri                   = g_strdup_printf ("clipboard://%s/len:%d", mime_type, len);
+  gchar       *display_name          = "Clipboard content";
+
+  // Add the subject now that all information has been calculated
+  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full(uri,
+                                   ZG_INTERPRETATION_DATA_CLIPBOARD,
+                                   ZEITGEIST_NFO_SOFTWARE_SERVICE,
+                                   mime_type,
+                                   NULL,
+                                   display_name,
+                                   NULL));
+  g_free (mime_type);
+  g_free (uri);
+
+  // Add the UCL metadata
+  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://n/a///", getpid());
+  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
+                                        ZEITGEIST_NFO_SOFTWARE,
+                                        ZEITGEIST_ZG_WORLD_ACTIVITY,
+                                        "application/octet-stream",
+                                        NULL,
+                                        "ucl-study-metadata",
+                                        NULL));
+  g_free (study_uri);
+
+  zeitgeist_log_insert_events_no_reply (log, event, NULL);
+}
+
 static gboolean
 gtk_clipboard_set_contents (GtkClipboard         *clipboard,
 			    const GtkTargetEntry *targets,
@@ -548,6 +651,9 @@ gtk_clipboard_set_contents (GtkClipboard         *clipboard,
 	    }
 	  
  	}
+
+  // We're already tracking this across all of X via GPaste but here we can get the content type/len
+  _log_zeitgeist_event_copy (clipboard, targets, n_targets);
 
       clipboard->get_func = get_func;
       clipboard->clear_func = clear_func;
@@ -950,6 +1056,8 @@ request_text_received_func (GtkClipboard     *clipboard,
 	}
     }
 
+  _log_zeitgeist_event_paste (clipboard, selection_data);
+
   info->callback (clipboard, result, info->user_data);
   g_free (info);
   g_free (result);
@@ -1012,6 +1120,8 @@ request_rich_text_received_func (GtkClipboard     *clipboard,
                                       info);
       return;
     }
+
+  _log_zeitgeist_event_paste (clipboard, selection_data);
 
   info->callback (clipboard, selection_data->target, result, length,
                   info->user_data);
@@ -1105,6 +1215,8 @@ request_image_received_func (GtkClipboard     *clipboard,
 	}
     }
 
+  _log_zeitgeist_event_paste (clipboard, selection_data);
+
   info->callback (clipboard, result, info->user_data);
   g_free (info);
 
@@ -1160,6 +1272,8 @@ request_uris_received_func (GtkClipboard     *clipboard,
   RequestURIInfo *info = data;
   gchar **uris;
 
+  _log_zeitgeist_event_paste (clipboard, selection_data);
+
   uris = gtk_selection_data_get_uris (selection_data);
   info->callback (clipboard, uris, info->user_data);
   g_strfreev (uris);
@@ -1214,6 +1328,8 @@ request_targets_received_func (GtkClipboard     *clipboard,
   gint n_targets = 0;
 
   gtk_selection_data_get_targets (selection_data, &targets, &n_targets);
+
+  _log_zeitgeist_event_paste (clipboard, selection_data);
 
   info->callback (clipboard, targets, n_targets, info->user_data);
 

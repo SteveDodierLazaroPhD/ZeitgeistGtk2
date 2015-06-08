@@ -34,9 +34,30 @@
 #include "gtktreeview.h"
 #include "gtkvbox.h"
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
+
 G_BEGIN_DECLS
 
 #define GTK_FILE_CHOOSER_GET_IFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GTK_TYPE_FILE_CHOOSER, GtkFileChooserIface))
+
+typedef struct __ZeitgeistFileDialogData {
+	gchar          *actor_name;
+	GFile          *current_file;
+	const gchar    *interpretation;
+	GSList         *files;
+	GSList         *fileinfos;
+	GtkFileChooser *chooser;
+	gboolean        internal_report_type;
+} _ZeitgeistFileDialogData;
+
+typedef struct __ZeitgeistFileDialogFileData {
+	gchar *uri;
+	gchar *display_name;
+	gchar *origin;
+	gchar *mime_type;
+} _ZeitgeistFileDialogFileData;
 
 typedef struct _GtkFileChooserIface GtkFileChooserIface;
 
@@ -84,6 +105,8 @@ struct _GtkFileChooserIface
   GtkFileChooserConfirmation (*confirm_overwrite) (GtkFileChooser *chooser);
 };
 
+GSList        *_gtk_file_chooser_get_files               (GtkFileChooser    *chooser,
+                                                          const gboolean     internal);
 GtkFileSystem *_gtk_file_chooser_get_file_system         (GtkFileChooser    *chooser);
 gboolean       _gtk_file_chooser_add_shortcut_folder     (GtkFileChooser    *chooser,
 							  GFile             *folder,
@@ -98,13 +121,18 @@ GSList *       _gtk_file_chooser_list_shortcut_folder_files (GtkFileChooser *cho
 struct _GtkFileChooserDialogPrivate
 {
   GtkWidget *widget;
-  
+
   char *file_system;
+
+  Window parent_xid;
 
   /* for use with GtkFileChooserEmbed */
   gboolean response_requested;
 };
 
+void           _gtk_file_chooser_log_zeitgeist_event     (GtkFileChooser *chooser,
+                                                          GSList         *files,
+                                                          gboolean        internal_report_type);
 
 /* GtkFileChooserWidget private */
 

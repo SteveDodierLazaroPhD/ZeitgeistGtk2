@@ -113,6 +113,7 @@ struct _GtkRecentChooserIface
    */
   void		    (* item_activated)     (GtkRecentChooser  *chooser);
   void		    (* selection_changed)  (GtkRecentChooser  *chooser);
+  gchar *           (* get_window_id)      (GtkRecentChooser  *chooser);
 };
 
 GType   gtk_recent_chooser_get_type    (void) G_GNUC_CONST;

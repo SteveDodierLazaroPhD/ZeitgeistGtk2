@@ -27,6 +27,12 @@
 #include "config.h"
 
 #include "gtkrecentchooserutils.h"
+#include "gtkrecentchooserwidget.h"
+#include "gtkrecentchooserdialog.h"
+
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
 #include "gtkalias.h"
 
 /* Methods */
@@ -48,6 +54,7 @@ static GList    *delegate_get_items                  (GtkRecentChooser  *chooser
 static GtkRecentManager *delegate_get_recent_manager (GtkRecentChooser  *chooser);
 static void      delegate_select_all                 (GtkRecentChooser  *chooser);
 static void      delegate_unselect_all               (GtkRecentChooser  *chooser);
+static gchar *   delegate_get_window_id              (GtkRecentChooser  *chooser);
 static gboolean  delegate_set_current_uri            (GtkRecentChooser  *chooser,
 						      const gchar       *uri,
 						      GError           **error);
@@ -122,6 +129,7 @@ _gtk_recent_chooser_install_properties (GObjectClass *klass)
 void
 _gtk_recent_chooser_delegate_iface_init (GtkRecentChooserIface *iface)
 {
+  iface->get_window_id = delegate_get_window_id;
   iface->set_current_uri = delegate_set_current_uri;
   iface->get_current_uri = delegate_get_current_uri;
   iface->select_uri = delegate_select_uri;
@@ -254,6 +262,36 @@ delegate_unselect_all (GtkRecentChooser *chooser)
   gtk_recent_chooser_unselect_all (get_delegate (chooser));
 }
 
+static gchar *
+delegate_get_window_id (GtkRecentChooser  *chooser)
+{
+  gchar *window_id = NULL;
+
+  #ifdef GDK_WINDOWING_X11
+  if (GTK_IS_RECENT_CHOOSER_DIALOG (chooser))
+  {
+    GtkRecentChooserDialogPrivate *dlgpriv = (GTK_RECENT_CHOOSER_DIALOG (chooser))->priv;
+    if (dlgpriv->parent_xid)
+      window_id = g_strdup_printf ("%lu", dlgpriv->parent_xid);
+  }
+  else if (GTK_IS_RECENT_CHOOSER_WIDGET (chooser))
+  {
+    GdkWindow *gwin = gtk_widget_get_window (GTK_WIDGET (chooser));
+
+    GdkDisplay *dsp = NULL;
+    if (gwin)
+      dsp = gdk_window_get_display (gwin);
+
+    if (dsp) {
+      Window xid = (Window) gdk_x11_drawable_get_xid (gwin);
+      window_id = g_strdup_printf ("%lu", xid);
+    }
+  }
+  #endif
+
+  return window_id;
+}
+
 static gboolean
 delegate_set_current_uri (GtkRecentChooser  *chooser,
 			  const gchar       *uri,
@@ -265,7 +303,8 @@ delegate_set_current_uri (GtkRecentChooser  *chooser,
 static gchar *
 delegate_get_current_uri (GtkRecentChooser *chooser)
 {
-  return gtk_recent_chooser_get_current_uri (get_delegate (chooser));
+  GtkRecentChooser *delegate = get_delegate (chooser);
+  return _gtk_recent_chooser_get_current_uri (delegate, TRUE);
 }
 
 static void

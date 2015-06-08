@@ -86,6 +86,9 @@ enum
   PROP_ACTIVATABLE_USE_ACTION_APPEARANCE
 };
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
 
 struct _GtkRecentChooserDefault
 {
@@ -188,6 +191,7 @@ static void     gtk_recent_chooser_default_get_property (GObject                
 
 /* GtkRecentChooserIface */
 static void              gtk_recent_chooser_iface_init                 (GtkRecentChooserIface  *iface);
+static gchar *           gtk_recent_chooser_default_get_window_id      (GtkRecentChooser       *chooser);
 static gboolean          gtk_recent_chooser_default_set_current_uri    (GtkRecentChooser       *chooser,
 								        const gchar            *uri,
 								        GError                **error);
@@ -304,6 +308,7 @@ G_DEFINE_TYPE_WITH_CODE (GtkRecentChooserDefault,
 static void
 gtk_recent_chooser_iface_init (GtkRecentChooserIface *iface)
 {
+  iface->get_window_id = gtk_recent_chooser_default_get_window_id;
   iface->set_current_uri = gtk_recent_chooser_default_set_current_uri;
   iface->get_current_uri = gtk_recent_chooser_default_get_current_uri;
   iface->select_uri = gtk_recent_chooser_default_select_uri;
@@ -1105,6 +1110,33 @@ scan_for_uri_cb (GtkTreeModel *model,
   return FALSE;
 }
 
+static gchar *gtk_recent_chooser_default_get_window_id (GtkRecentChooser *chooser)
+{
+  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER_DEFAULT (chooser), NULL);
+
+
+  GtkRecentChooserDefault *impl = GTK_RECENT_CHOOSER_DEFAULT (chooser);
+  gchar *window_id = NULL;
+
+  #ifdef GDK_WINDOWING_X11
+  if (impl->recent_view)
+  {
+    GdkWindow *gwin = gtk_widget_get_window (impl->recent_view);
+
+    GdkDisplay *dsp = NULL;
+    if (gwin)
+      dsp = gdk_window_get_display (gwin);
+
+    if (dsp) {
+      Window xid = (Window) gdk_x11_drawable_get_xid (gwin);
+      window_id = g_strdup_printf ("%lu", xid);
+    }
+  }
+  #endif
+
+  return window_id;
+}
+
 static gboolean
 gtk_recent_chooser_default_set_current_uri (GtkRecentChooser  *chooser,
 					    const gchar       *uri,
@@ -1639,7 +1671,7 @@ remove_selected_from_list (GtkRecentChooserDefault *impl)
   if (impl->select_multiple)
     return;
   
-  uri = gtk_recent_chooser_get_current_uri (GTK_RECENT_CHOOSER (impl));
+  uri = _gtk_recent_chooser_get_current_uri (GTK_RECENT_CHOOSER (impl), TRUE);
   if (!uri)
     return;
   

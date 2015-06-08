@@ -1,0 +1,1891 @@
+Index: lpgtk/configure.ac
+===================================================================
+--- lpgtk.orig/configure.ac
++++ lpgtk/configure.ac
+@@ -523,6 +523,23 @@ if test "$gtk_ok" = "yes"; then
+             [Define to 1 if sigsetjmp is available])
+ fi
+ 
++dnl ************************************
++dnl *** Check for libzeitgeist (GIO) ***
++dnl ************************************
++PKG_CHECK_EXISTS(zeitgeist-1.0, [have_zeitgeist_deps=true], [have_zeitgeist_deps=false])
++
++AC_MSG_CHECKING(zeitgeist-1.0)
++if $PKG_CONFIG --exists zeitgeist-1.0 ; then
++  AC_DEFINE(__ZEITGEIST_TRACKER__, 1, [Have Zeitgeist])
++
++  CFLAGS="$CFLAGS `$PKG_CONFIG --cflags zeitgeist-1.0`"
++  AC_SUBST(CFLAGS)
++  AC_MSG_RESULT($CFLAGS)
++
++else
++  AC_MSG_ERROR([*** Working Zeitgeist library and headers not found ***])
++fi
++
+ # i18n stuff
+ ALL_LINGUAS="`grep -v '^#' "$srcdir/po/LINGUAS" | tr '\n' ' '`"
+ AM_GLIB_GNU_GETTEXT
+Index: lpgtk/gtk/Makefile.am
+===================================================================
+--- lpgtk.orig/gtk/Makefile.am
++++ lpgtk/gtk/Makefile.am
+@@ -126,6 +126,9 @@ libadd =								\
+ 	$(GTK_DEP_LIBS)
+ deps =
+ 
++AM_CFLAGS = -I/usr/include/zeitgeist-1.0 -I/usr/include/glib-2.0
++libadd += -lzeitgeist-1.0 -lgobject-2.0 -lglib-2.0
++
+ # libtool stuff: set version and export symbols for resolving
+ # since automake doesn't support conditionalized libsomething_la_LDFLAGS
+ # we use the general approach here
+@@ -344,6 +347,7 @@ gtk_public_h_sources =          \
+ 	gtkvscrollbar.h		\
+ 	gtkvseparator.h		\
+ 	gtkwidget.h		\
++	zgtrackutils.h		\
+ 	gtkwindow.h
+ 
+ if OS_UNIX
+@@ -631,6 +635,7 @@ gtk_base_c_sources =            \
+ 	gtkwidget.c		\
+ 	gtkwindow-decorate.c    \
+ 	gtkwindow.c		\
++	zgtrackutils.c \
+ 	$(gtk_clipboard_dnd_c_sources)
+ 
+ # Broken
+Index: lpgtk/gtk/gtkclipboard.c
+===================================================================
+--- lpgtk.orig/gtk/gtkclipboard.c
++++ lpgtk/gtk/gtkclipboard.c
+@@ -31,6 +31,9 @@
+ #include "gtkintl.h"
+ #include "gtkalias.h"
+ 
++#include <zeitgeist.h>
++#include "zgtrackutils.h"
++
+ #ifdef GDK_WINDOWING_X11
+ #include "x11/gdkx.h"
+ #endif
+@@ -53,32 +56,6 @@ typedef struct _RequestImageInfo Request
+ typedef struct _RequestURIInfo RequestURIInfo;
+ typedef struct _RequestTargetsInfo RequestTargetsInfo;
+ 
+-struct _GtkClipboard 
+-{
+-  GObject parent_instance;
+-
+-  GdkAtom selection;
+-
+-  GtkClipboardGetFunc get_func;
+-  GtkClipboardClearFunc clear_func;
+-  gpointer user_data;
+-  gboolean have_owner;
+-
+-  guint32 timestamp;
+-
+-  gboolean have_selection;
+-  GdkDisplay *display;
+-
+-  GdkAtom *cached_targets;
+-  gint     n_cached_targets;
+-
+-  guint      notify_signal_id;
+-  gboolean   storing_selection;
+-  GMainLoop *store_loop;
+-  guint      store_timeout;
+-  gint       n_storable_targets;
+-  GdkAtom   *storable_targets;
+-};
+ 
+ struct _GtkClipboardClass
+ {
+@@ -494,7 +471,133 @@ clipboard_remove_owner_notify (GtkClipbo
+ 					      clipboard),
+ 			      clipboard_owner_destroyed);
+ }
+-	  
++
++static void
++_log_zeitgeist_event_copy (GtkClipboard         *clipboard,
++                           const GtkTargetEntry *targets,
++                           guint                 n_targets)
++{
++  // Test for Clipboard and presence of content
++  g_return_if_fail (GTK_IS_CLIPBOARD (clipboard));
++  g_return_if_fail (targets != NULL || n_targets == 0);
++
++  // Ignore PRIMARY
++  if (clipboard->selection != GDK_SELECTION_CLIPBOARD)
++    return;
++
++  // Get access to Zeitgeist logger daemon
++  ZeitgeistLog *log = zeitgeist_log_get_default ();
++
++  // Create the event to be added, with the known information
++  gchar *actor_name = _get_actor_name_from_pid (getpid());
++  ZeitgeistEvent *event = zeitgeist_event_new_full (
++              ZG_INTERPRETATION_CLIPBOARD_COPY,
++              ZEITGEIST_ZG_USER_ACTIVITY,
++              actor_name,
++              NULL);
++  g_free (actor_name);
++
++  // Loop through targets
++  int i = 0;
++  for (; i<n_targets; ++i)
++  {
++    //TODO call clipboard->get_func (clipboard, selection_data, info, clipboard->user_data); and loop from callback to callback to calculate lengths...
++    /*gchar       *len_str               = NULL;
++    if (!g_strcmp0 (targets[i].target, "UTF8_STRING") || !g_strcmp0 (targets[i].target, "text/plain;charset=utf-8")) {
++      len_str = g_strdup_printf ("len:%s", g_utf8_strlen (TODO, -1));
++    } else if (!g_strcmp0 (targets[i].target, "TEXT") || !g_strcmp0 (targets[i].target, "COMPOUND_TEXT") || !g_strcmp0 (targets[i].target, "text/plain")) {
++      len_str = g_strdup_printf ("len:%s", strlen (TODO));
++    } else {
++      len_str = g_strdup ("len:n/a");
++    }*/
++    gchar       *uri                   = g_strdup_printf ("clipboard://%s/%s", targets[i].target, /*len_str*/ "len:n/a");
++    gchar       *mime_type             = g_strdup (targets[i].target);
++    gchar       *display_name          = "Clipboard content";
++
++    // Add the subject now that all information has been calculated
++    zeitgeist_event_add_subject (event, zeitgeist_subject_new_full(uri,
++                                      ZG_INTERPRETATION_DATA_CLIPBOARD,
++                                      ZEITGEIST_NFO_SOFTWARE_SERVICE,
++                                      mime_type,
++                                      NULL,
++                                      display_name,
++                                      NULL));
++
++    g_free (mime_type);
++    /*g_free (len_str);*/
++    g_free (uri);
++  }
++
++  // Add the UCL metadata
++  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://n/a///", getpid());
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
++                                          ZEITGEIST_NFO_SOFTWARE,
++                                          ZEITGEIST_ZG_WORLD_ACTIVITY,
++                                          "application/octet-stream",
++                                          NULL,
++                                          "ucl-study-metadata",
++                                          NULL));
++  g_free (study_uri);
++
++  zeitgeist_log_insert_events_no_reply (log, event, NULL);
++}
++
++static void
++_log_zeitgeist_event_paste (GtkClipboard           *clipboard,
++                            const GtkSelectionData *data)
++{
++  // Test for Clipboard and presence of content
++  g_return_if_fail (data != NULL);
++
++  // Ignore PRIMARY
++  if (clipboard->selection != GDK_SELECTION_CLIPBOARD)
++    return;
++
++  GdkAtom   data_type   = gtk_selection_data_get_data_type (data);
++  gint      len         = gtk_selection_data_get_length (data);
++
++  // Get access to Zeitgeist logger daemon
++  ZeitgeistLog *log = zeitgeist_log_get_default ();
++
++  // Create the event to be added, with the known information
++  gchar *actor_name = _get_actor_name_from_pid (getpid());
++  ZeitgeistEvent *event = zeitgeist_event_new_full (
++              ZG_INTERPRETATION_CLIPBOARD_PASTE,
++              ZEITGEIST_ZG_USER_ACTIVITY,
++              actor_name,
++              NULL);
++  g_free (actor_name);
++
++  // Len is used to distinguish empty pastes, which might be needed by the ML algorithm later
++  gchar       *mime_type             = gdk_atom_name (data_type);
++  gchar       *uri                   = g_strdup_printf ("clipboard://%s/len:%d", mime_type, len);
++  gchar       *display_name          = "Clipboard content";
++
++  // Add the subject now that all information has been calculated
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full(uri,
++                                   ZG_INTERPRETATION_DATA_CLIPBOARD,
++                                   ZEITGEIST_NFO_SOFTWARE_SERVICE,
++                                   mime_type,
++                                   NULL,
++                                   display_name,
++                                   NULL));
++  g_free (mime_type);
++  g_free (uri);
++
++  // Add the UCL metadata
++  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://n/a///", getpid());
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
++                                        ZEITGEIST_NFO_SOFTWARE,
++                                        ZEITGEIST_ZG_WORLD_ACTIVITY,
++                                        "application/octet-stream",
++                                        NULL,
++                                        "ucl-study-metadata",
++                                        NULL));
++  g_free (study_uri);
++
++  zeitgeist_log_insert_events_no_reply (log, event, NULL);
++}
++
+ static gboolean
+ gtk_clipboard_set_contents (GtkClipboard         *clipboard,
+ 			    const GtkTargetEntry *targets,
+@@ -549,6 +652,9 @@ gtk_clipboard_set_contents (GtkClipboard
+ 	  
+  	}
+ 
++  // We're already tracking this across all of X via GPaste but here we can get the content type/len
++  _log_zeitgeist_event_copy (clipboard, targets, n_targets);
++
+       clipboard->get_func = get_func;
+       clipboard->clear_func = clear_func;
+ 
+@@ -950,6 +1056,8 @@ request_text_received_func (GtkClipboard
+ 	}
+     }
+ 
++  _log_zeitgeist_event_paste (clipboard, selection_data);
++
+   info->callback (clipboard, result, info->user_data);
+   g_free (info);
+   g_free (result);
+@@ -1013,6 +1121,8 @@ request_rich_text_received_func (GtkClip
+       return;
+     }
+ 
++  _log_zeitgeist_event_paste (clipboard, selection_data);
++
+   info->callback (clipboard, selection_data->target, result, length,
+                   info->user_data);
+   g_free (info->atoms);
+@@ -1105,6 +1215,8 @@ request_image_received_func (GtkClipboar
+ 	}
+     }
+ 
++  _log_zeitgeist_event_paste (clipboard, selection_data);
++
+   info->callback (clipboard, result, info->user_data);
+   g_free (info);
+ 
+@@ -1160,6 +1272,8 @@ request_uris_received_func (GtkClipboard
+   RequestURIInfo *info = data;
+   gchar **uris;
+ 
++  _log_zeitgeist_event_paste (clipboard, selection_data);
++
+   uris = gtk_selection_data_get_uris (selection_data);
+   info->callback (clipboard, uris, info->user_data);
+   g_strfreev (uris);
+@@ -1215,6 +1329,8 @@ request_targets_received_func (GtkClipbo
+ 
+   gtk_selection_data_get_targets (selection_data, &targets, &n_targets);
+ 
++  _log_zeitgeist_event_paste (clipboard, selection_data);
++
+   info->callback (clipboard, targets, n_targets, info->user_data);
+ 
+   g_free (info);
+Index: lpgtk/gtk/gtkclipboard.h
+===================================================================
+--- lpgtk.orig/gtk/gtkclipboard.h
++++ lpgtk/gtk/gtkclipboard.h
+@@ -28,12 +28,17 @@
+ 
+ #include <gtk/gtkselection.h>
+ 
++#define ZG_INTERPRETATION_CLIPBOARD_COPY     "activity://gui-toolkit/gtk2/Clipboard/Copy"
++#define ZG_INTERPRETATION_CLIPBOARD_PASTE    "activity://gui-toolkit/gtk2/Clipboard/Paste"
++#define ZG_INTERPRETATION_DATA_CLIPBOARD     "activity://gui-toolkit/gtk2/Clipboard/ContentType"
++
+ G_BEGIN_DECLS
+ 
+ #define GTK_TYPE_CLIPBOARD            (gtk_clipboard_get_type ())
+ #define GTK_CLIPBOARD(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_CLIPBOARD, GtkClipboard))
+ #define GTK_IS_CLIPBOARD(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_CLIPBOARD))
+ 
++
+ typedef void (* GtkClipboardReceivedFunc)         (GtkClipboard     *clipboard,
+ 					           GtkSelectionData *selection_data,
+ 					           gpointer          data);
+@@ -152,6 +157,34 @@ void     _gtk_clipboard_handle_event
+ 
+ void     _gtk_clipboard_store_all       (void);
+ 
++
++struct _GtkClipboard
++{
++  GObject parent_instance;
++
++  GdkAtom selection;
++
++  GtkClipboardGetFunc get_func;
++  GtkClipboardClearFunc clear_func;
++  gpointer user_data;
++  gboolean have_owner;
++
++  guint32 timestamp;
++
++  gboolean have_selection;
++  GdkDisplay *display;
++
++  GdkAtom *cached_targets;
++  gint     n_cached_targets;
++
++  guint      notify_signal_id;
++  gboolean   storing_selection;
++  GMainLoop *store_loop;
++  guint      store_timeout;
++  gint       n_storable_targets;
++  GdkAtom   *storable_targets;
++};
++
+ G_END_DECLS
+ 
+ #endif /* __GTK_CLIPBOARD_H__ */
+Index: lpgtk/gtk/gtkentry.c
+===================================================================
+--- lpgtk.orig/gtk/gtkentry.c
++++ lpgtk/gtk/gtkentry.c
+@@ -66,6 +66,7 @@
+ #include "gtkiconfactory.h"
+ #include "gtkicontheme.h"
+ #include "gtkalias.h"
++#include "gtkclipboard.h"
+ 
+ #define GTK_ENTRY_COMPLETION_KEY "gtk-entry-completion-key"
+ 
+@@ -5779,6 +5780,10 @@ _gtk_entry_reset_im_context (GtkEntry *e
+     }
+ }
+ 
++#include <zeitgeist.h>
++#include <glib/gprintf.h>
++#include "zgtrackutils.h"
++
+ /**
+  * gtk_entry_reset_im_context:
+  * @entry: a #GtkEntry
+@@ -6269,6 +6274,58 @@ truncate_multiline (const gchar *text)
+ }
+ 
+ static void
++_log_zeitgeist_event_paste (GtkClipboard *clipboard,
++                            GtkEntry     *entry,
++                            const gchar  *text)
++{
++  // Ignore PRIMARY (but try to process when there is no selection, e.g. the selection's owner died)
++  if (clipboard->have_selection && clipboard->selection != GDK_SELECTION_CLIPBOARD)
++    return;
++
++  // Get access to Zeitgeist logger daemon
++  ZeitgeistLog *log = zeitgeist_log_get_default ();
++
++  // Create the event to be added, with the known information
++  gchar *actor_name = _get_actor_name_from_pid (getpid());
++  ZeitgeistEvent *event = zeitgeist_event_new_full (
++              ZG_INTERPRETATION_CLIPBOARD_PASTE,
++              ZEITGEIST_ZG_USER_ACTIVITY,
++              actor_name,
++              NULL);
++  g_free (actor_name);
++
++  // Len is used to distinguish empty pastes, which might be needed by the ML algorithm later
++  gint         len                   = text? strlen (text) : -1;
++  gchar       *uri                   = g_strdup_printf ("clipboard://%s/len:%d", "UTF8_STRING", len);
++  gchar       *display_name          = "Clipboard content";
++
++  // Add the subject now that all information has been calculated
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full(uri,
++                                   ZG_INTERPRETATION_DATA_CLIPBOARD,
++                                   ZEITGEIST_NFO_SOFTWARE_SERVICE,
++                                   "UTF8_STRING",
++                                   NULL,
++                                   display_name,
++                                   NULL));
++  g_free (uri);
++
++  // Add the UCL metadata
++  char *window_id = _get_window_id_from_widget (GTK_WIDGET (entry));
++  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://%s///", getpid(), window_id);
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
++                                        ZEITGEIST_NFO_SOFTWARE,
++                                        ZEITGEIST_ZG_WORLD_ACTIVITY,
++                                        "application/octet-stream",
++                                        NULL,
++                                        "ucl-study-metadata",
++                                        NULL));
++  g_free (study_uri);
++  g_free (window_id);
++
++  zeitgeist_log_insert_events_no_reply (log, event, NULL);
++}
++
++static void
+ paste_received (GtkClipboard *clipboard,
+ 		const gchar  *text,
+ 		gpointer      data)
+@@ -6276,7 +6333,9 @@ paste_received (GtkClipboard *clipboard,
+   GtkEntry *entry = GTK_ENTRY (data);
+   GtkEditable *editable = GTK_EDITABLE (entry);
+   GtkEntryPrivate *priv = GTK_ENTRY_GET_PRIVATE (entry);
+-      
++
++  _log_zeitgeist_event_paste (clipboard, entry, text);
++
+   if (entry->button == 2)
+     {
+       gint pos, start, end;
+@@ -6285,7 +6344,7 @@ paste_received (GtkClipboard *clipboard,
+       if (!((start <= pos && pos <= end) || (end <= pos && pos <= start)))
+ 	gtk_editable_select_region (editable, pos, pos);
+     }
+-      
++
+   if (text)
+     {
+       gint pos, start, end;
+Index: lpgtk/gtk/gtkfilechooser.c
+===================================================================
+--- lpgtk.orig/gtk/gtkfilechooser.c
++++ lpgtk/gtk/gtkfilechooser.c
+@@ -28,6 +28,22 @@
+ #include "gtkalias.h"
+ 
+ 
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
++
++#include <zeitgeist.h>
++#include "gtkfilechooserdialog.h"
++#include "gtkfilechooserbutton.h"
++
++#define ZG_INTERPRETATION_FILE_ACCESS           "activity://gui-toolkit/gtk2/FileChooser/FileAccess"
++#define ZG_INTERPRETATION_FILE_CREATE           "activity://gui-toolkit/gtk2/FileChooser/FileCreate"
++#define ZG_INTERPRETATION_FILE_MODIFY           "activity://gui-toolkit/gtk2/FileChooser/FileModify"
++#define ZG_INTERPRETATION_FILE_GTK_BTN_SET      "activity://gui-toolkit/gtk2/FileChooserButton/FileSet"
++#define ZG_INTERPRETATION_FILE_GTK_BTN          "activity://gui-toolkit/gtk2/FileChooserButton"
++#define ZG_INTERPRETATION_FILE_GTK_DLG          "activity://gui-toolkit/gtk2/FileChooserDialog"
++#define ZG_INTERPRETATION_FILE_GTK_WDG          "activity://gui-toolkit/gtk2/FileChooserGenericWidget"
++
+ /**
+  * SECTION:gtkfilechooser
+  * @Short_description: File chooser interface used by GtkFileChooserWidget and GtkFileChooserDialog
+@@ -1359,7 +1375,7 @@ gtk_file_chooser_get_filenames (GtkFileC
+   
+   g_return_val_if_fail (GTK_IS_FILE_CHOOSER (chooser), NULL);
+ 
+-  files = gtk_file_chooser_get_files (chooser);
++  files = _gtk_file_chooser_get_files (chooser, FALSE);
+ 
+   result = files_to_strings (files, g_file_get_path);
+   g_slist_foreach (files, (GFunc) g_object_unref, NULL);
+@@ -1670,7 +1686,7 @@ gtk_file_chooser_get_uris (GtkFileChoose
+   
+   g_return_val_if_fail (GTK_IS_FILE_CHOOSER (chooser), NULL);
+ 
+-  files = gtk_file_chooser_get_files (chooser);
++  files = _gtk_file_chooser_get_files (chooser, FALSE);
+ 
+   if (gtk_file_chooser_get_local_only (chooser))
+     result = files_to_strings (files, file_to_uri_with_native_path);
+@@ -1845,6 +1861,267 @@ gtk_file_chooser_unselect_file (GtkFileC
+   GTK_FILE_CHOOSER_GET_IFACE (chooser)->unselect_file (chooser, file);
+ }
+ 
++void
++_gtk_file_chooser_log_event_finish (_ZeitgeistFileDialogData *data, gchar *window_id)
++{
++  // Get access to Zeitgeist logger daemon
++  ZeitgeistLog *log = zeitgeist_log_get_default ();
++
++  // Overriding, this is called by my own callback to file-set to differentiate buttons
++  if (GTK_IS_FILE_CHOOSER_BUTTON (data->chooser) && data->internal_report_type) {
++    data->interpretation = ZG_INTERPRETATION_FILE_GTK_BTN_SET;
++  }
++
++  // Create the event to be added, with the known information
++  ZeitgeistEvent *event = zeitgeist_event_new_full (
++    data->interpretation,
++    ZEITGEIST_ZG_USER_ACTIVITY,
++    data->actor_name,
++    NULL);
++  g_free (data->actor_name);
++
++  // Loop through files to insert subjects into the event
++  GSList *iterator = NULL;
++  for (iterator=data->fileinfos; iterator; iterator=iterator->next) {
++    _ZeitgeistFileDialogFileData *fdata = iterator->data;
++
++    // Add the subject now that all information has been calculated
++    zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (fdata->uri,
++                                      NULL,
++                                      NULL,
++                                      fdata->mime_type,
++                                      fdata->origin,
++                                      fdata->display_name,
++                                      NULL));
++
++    g_free (fdata->display_name);
++    g_free (fdata->origin);
++    g_free (fdata->mime_type);
++    g_free (fdata->uri);
++    g_free (fdata);
++  }
++
++  if (!window_id)
++    window_id = g_strdup ("n/a");
++
++  // Add metadata about the widget
++  gchar *widget_uri = NULL;
++  if (GTK_IS_FILE_CHOOSER_BUTTON (data->chooser))
++    widget_uri = ZG_INTERPRETATION_FILE_GTK_BTN;
++  else if (GTK_IS_FILE_CHOOSER_DIALOG (data->chooser))
++    widget_uri = ZG_INTERPRETATION_FILE_GTK_DLG;
++  else
++    widget_uri = ZG_INTERPRETATION_FILE_GTK_WDG;
++
++  gchar *widget_display = g_strdup_printf ("Widget type: %s", widget_uri);
++  ZeitgeistSubject *subject = zeitgeist_subject_new_full (widget_uri,
++    ZEITGEIST_NFO_SOFTWARE,
++    ZEITGEIST_ZG_HEURISTIC_ACTIVITY,
++    "application/octet-stream",
++    NULL,
++    widget_display,
++    NULL);
++  zeitgeist_event_add_subject (event, subject);
++  g_free (widget_display);
++
++  // Add the UCL metadata
++  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://%s///", getpid(), window_id);
++  subject = zeitgeist_subject_new_full (study_uri,
++    ZEITGEIST_NFO_SOFTWARE,
++    ZEITGEIST_ZG_WORLD_ACTIVITY,
++    "application/octet-stream",
++    NULL,
++    "ucl-study-metadata",
++    NULL);
++  zeitgeist_event_add_subject (event, subject);
++  g_free (window_id);
++  g_free (study_uri);
++
++  // Send the event
++  zeitgeist_log_insert_events_no_reply (log, event, NULL);
++
++  g_slist_free (data->fileinfos); // content freed in loop above
++  g_slist_free (data->files); // content freed by g_object_unref (file) in the callback
++  g_free (data);
++}
++
++static void
++_log_zeitgeist_event_add_file (_ZeitgeistFileDialogData *data);
++
++static void
++_log_zeitgeist_event_add_file_cb (GObject *source_object,
++                                  GAsyncResult *res,
++                                  gpointer user_data)
++{
++  _ZeitgeistFileDialogData *data = user_data;
++
++  // Add the file info to our list
++  _ZeitgeistFileDialogFileData *fdata = g_malloc (sizeof (_ZeitgeistFileDialogFileData));
++  GFile *file = data->current_file; // second transfer of ownership
++  fdata->uri = g_file_get_uri (file);
++  fdata->origin = g_path_get_dirname (fdata->uri);
++  GFileInfo *info = g_file_query_info_finish (file, res, NULL);
++
++  // Info was found!
++  if (info) {
++    fdata->display_name = g_strdup (g_file_info_get_display_name (info));
++    #ifdef __ZEITGEIST_FAST__
++    fdata->mime_type = g_content_type_get_mime_type (g_file_info_get_attribute_string (info, G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE));
++    #else
++    fdata->mime_type = g_content_type_get_mime_type (g_file_info_get_content_type (info));
++    #endif
++  } else {
++    fdata->display_name = g_path_get_basename (fdata->uri);
++    fdata->mime_type = g_content_type_guess (fdata->uri, NULL, 0, NULL);
++  }
++
++  // Last-resort solutions for display name and mime type
++  if (!fdata->display_name)
++    fdata->display_name = g_strdup (fdata->uri);
++  if (!fdata->mime_type)
++    fdata->mime_type = g_strdup ("application/octet-stream");
++  data->fileinfos = g_slist_append (data->fileinfos, fdata);
++
++  // Next file...
++  g_object_unref (file);
++  data->current_file = NULL;
++  _log_zeitgeist_event_add_file (data);
++}
++
++static void
++_log_zeitgeist_event_add_file (_ZeitgeistFileDialogData *data)
++{
++  // Still some files to process
++  if (data->files) {
++    GFile *file = data->files->data;
++    data->files = g_slist_remove (data->files, file);
++    data->current_file = file; // first transfer of ownership
++
++    g_file_query_info_async (file,
++        G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME ","
++        G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
++        G_FILE_QUERY_INFO_NONE,
++        G_PRIORITY_DEFAULT,
++        NULL,
++        _log_zeitgeist_event_add_file_cb, data);
++  } else {
++    // Calculate the window id
++    char *window_id = NULL;
++
++    #ifdef GDK_WINDOWING_X11
++    if (GTK_IS_FILE_CHOOSER_DIALOG (data->chooser)) {
++      GtkFileChooserDialog *dlg = GTK_FILE_CHOOSER_DIALOG (data->chooser);
++
++      if (dlg->priv->parent_xid)
++        window_id = g_strdup_printf ("%lu", dlg->priv->parent_xid);
++    } else {
++      GdkWindow *gwin = gtk_widget_get_parent_window (GTK_WIDGET (data->chooser));
++      if (!gwin)
++        gwin = gtk_widget_get_window (GTK_WIDGET (data->chooser));
++
++      GdkDisplay *dsp = NULL;
++      if (gwin)
++        dsp = gdk_window_get_display (gwin);
++
++      if (dsp) {
++        Window xid = (Window) gdk_x11_drawable_get_xid (gwin);
++        window_id = g_strdup_printf ("%lu", xid);
++      }
++    }
++    #endif
++
++    _gtk_file_chooser_log_event_finish (data, window_id);
++
++    // Throw the reference away, else we'll never be able to finalise chooser
++    g_object_unref (data->chooser);
++    data->chooser = NULL;
++  }
++}
++
++void
++_gtk_file_chooser_log_zeitgeist_event (GtkFileChooser *chooser,
++                                       GSList         *files,
++                                       gboolean        internal_report_type)
++{
++  g_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
++  if (!files)
++    return;
++
++  GtkFileChooserAction gtk_action     = gtk_file_chooser_get_action (chooser);
++  _ZeitgeistFileDialogData *data      = NULL;
++
++  // Get access to Zeitgeist logger daemon
++  ZeitgeistLog *log = g_object_new (ZEITGEIST_TYPE_LOG, NULL);
++  g_return_if_fail (log != NULL);
++
++  data = g_malloc (sizeof (_ZeitgeistFileDialogData));
++
++  data->internal_report_type = internal_report_type;
++
++  // Make up a plausible actor name from the name of the program
++  data->actor_name = g_strdup_printf ("application://%s.desktop", g_get_prgname ());
++  if(data->actor_name == NULL)
++    data->actor_name = g_strdup ("application://unknown.desktop");
++
++  // If the chooser has a create/modify type and the file (guaranteed unique
++  // by the API) already exists, change the interpretation of the event to
++  // ZEITGEIST_ZG_MODIFY_EVENT, else set it to ZEITGEIST_ZG_CREATE_EVENT.
++  // Note that this does not always mean a file will be modified or created as
++  // the write operation may fail for a host of reasons but it suffices to
++  // translate intent until UDAC-style file handles can report on actual writes.
++  if (gtk_action == GTK_FILE_CHOOSER_ACTION_SAVE || gtk_action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
++  {
++    if (g_file_test (g_file_get_path (files->data), G_FILE_TEST_EXISTS))
++      data->interpretation = ZG_INTERPRETATION_FILE_MODIFY;
++    else
++      data->interpretation = ZG_INTERPRETATION_FILE_CREATE;
++  }
++  else //if (gtk_action == GTK_FILE_CHOOSER_ACTION_OPEN || gtk_action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
++  {
++    data->interpretation = ZG_INTERPRETATION_FILE_ACCESS;
++  }
++
++  g_object_ref (chooser);
++  data->chooser = chooser;
++
++  data->current_file = NULL;
++  data->files = g_slist_copy_deep (files, (GCopyFunc) g_object_ref, NULL);
++  data->fileinfos = NULL;
++
++  _log_zeitgeist_event_add_file (data);
++}
++
++/**
++ * _gtk_file_chooser_get_files:
++ * @chooser: a #GtkFileChooser
++ * @internal: origin of the call (from within the #GtkFileChooser internals
++ * or from client code?). Should be true if the function is being called for
++ * another purpose than actually serving files to a client of a child widget.
++ *
++ * Lists all the selected files and subfolders in the current folder of @chooser
++ * as #GFile. An internal function, see gtk_file_chooser_get_uris().
++ *
++ * Return value: (element-type GFile) (transfer full): a #GSList
++ *   containing a #GFile for each selected file and subfolder in the
++ *   current folder.  Free the returned list with g_slist_free(), and
++ *   the files with g_object_unref().
++ *
++ * Since: 2.14
++ **/
++GSList *
++_gtk_file_chooser_get_files (GtkFileChooser *chooser, const gboolean internal)
++{
++  g_return_val_if_fail (GTK_IS_FILE_CHOOSER (chooser), NULL);
++
++  GSList *files = GTK_FILE_CHOOSER_GET_IFACE (chooser)->get_files (chooser);
++
++  if (!internal) {
++    _gtk_file_chooser_log_zeitgeist_event (chooser, files, FALSE);
++  }
++
++  return files;
++}
++
+ /**
+  * gtk_file_chooser_get_files:
+  * @chooser: a #GtkFileChooser
+@@ -1862,9 +2139,7 @@ gtk_file_chooser_unselect_file (GtkFileC
+ GSList *
+ gtk_file_chooser_get_files (GtkFileChooser *chooser)
+ {
+-  g_return_val_if_fail (GTK_IS_FILE_CHOOSER (chooser), NULL);
+-
+-  return GTK_FILE_CHOOSER_GET_IFACE (chooser)->get_files (chooser);
++  return _gtk_file_chooser_get_files(chooser, FALSE);
+ }
+ 
+ /**
+@@ -1949,7 +2224,7 @@ gtk_file_chooser_get_file (GtkFileChoose
+   
+   g_return_val_if_fail (GTK_IS_FILE_CHOOSER (chooser), NULL);
+ 
+-  list = gtk_file_chooser_get_files (chooser);
++  list = _gtk_file_chooser_get_files (chooser, FALSE);
+   if (list)
+     {
+       result = list->data;
+Index: lpgtk/gtk/gtkfilechooserbutton.c
+===================================================================
+--- lpgtk.orig/gtk/gtkfilechooserbutton.c
++++ lpgtk/gtk/gtkfilechooserbutton.c
+@@ -67,6 +67,9 @@
+ #define FALLBACK_ICON_NAME	"stock_unknown"
+ #define FALLBACK_ICON_SIZE	16
+ 
++#define ZG_INTERPRETATION_FILE_GTK_BTN_ACCESS   "activity://gui-toolkit/gtk2/FileAccessBtn"
++#define ZG_INTERPRETATION_FILE_GTK_BTN_CREATE   "activity://gui-toolkit/gtk2/FileCreateBtn"
++#define ZG_INTERPRETATION_FILE_GTK_BTN_MODIFY   "activity://gui-toolkit/gtk2/FileModifyBtn"
+ 
+ /* ********************** *
+  *  Private Enumerations  *
+@@ -309,6 +312,9 @@ static void     dialog_response_cb
+ 						  gint            response,
+ 						  gpointer        user_data);
+ 
++static void     file_set_cb                      (GtkFileChooserButton *button,
++                                                  gpointer              user_data);
++
+ static guint file_chooser_button_signals[LAST_SIGNAL] = { 0 };
+ 
+ /* ******************* *
+@@ -528,6 +534,8 @@ gtk_file_chooser_button_init (GtkFileCho
+   gtk_target_list_add_text_targets (target_list, TEXT_PLAIN);
+   gtk_drag_dest_set_target_list (GTK_WIDGET (button), target_list);
+   gtk_target_list_unref (target_list);
++
++  g_signal_connect (button, "file-set", G_CALLBACK (file_set_cb), NULL);
+ }
+ 
+ 
+@@ -1036,6 +1044,17 @@ gtk_file_chooser_button_get_property (GO
+ }
+ 
+ static void
++file_set_cb (GtkFileChooserButton *button,
++             gpointer              user_data G_GNUC_UNUSED)
++{
++  GtkFileChooser *chooser = GTK_FILE_CHOOSER (button);
++  _gtk_file_chooser_log_zeitgeist_event (chooser,
++                                         _gtk_file_chooser_get_files (chooser,
++                                                                      TRUE),
++                                         TRUE);
++}
++
++static void
+ gtk_file_chooser_button_finalize (GObject *object)
+ {
+   GtkFileChooserButton *button = GTK_FILE_CHOOSER_BUTTON (object);
+Index: lpgtk/gtk/gtkfilechooserdialog.c
+===================================================================
+--- lpgtk.orig/gtk/gtkfilechooserdialog.c
++++ lpgtk/gtk/gtkfilechooserdialog.c
+@@ -33,6 +33,10 @@
+ 
+ #include <stdarg.h>
+ 
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
++
+ #define GTK_FILE_CHOOSER_DIALOG_GET_PRIVATE(o)  (GTK_FILE_CHOOSER_DIALOG (o)->priv)
+ 
+ static void gtk_file_chooser_dialog_finalize   (GObject                   *object);
+@@ -400,9 +404,23 @@ gtk_file_chooser_dialog_new_valist (cons
+ 			 "action", action,
+ 			 NULL);
+ 
+-  if (parent)
++  GtkFileChooserDialogPrivate *priv = GTK_FILE_CHOOSER_DIALOG (result)->priv;
++  priv->parent_xid = 0;
++
++  if (parent) {
+     gtk_window_set_transient_for (GTK_WINDOW (result), parent);
+ 
++    #ifdef GDK_WINDOWING_X11
++    GdkWindow *gwin = gtk_widget_get_window (GTK_WIDGET (parent));
++    GdkDisplay *dsp = NULL;
++      if (gwin)
++        dsp = gdk_window_get_display (gwin);
++
++      if (dsp)
++        priv->parent_xid = (Window) gdk_x11_drawable_get_xid (gwin);
++    #endif
++  }
++
+   while (button_text)
+     {
+       response_id = va_arg (varargs, gint);
+Index: lpgtk/gtk/gtkfilechooserprivate.h
+===================================================================
+--- lpgtk.orig/gtk/gtkfilechooserprivate.h
++++ lpgtk/gtk/gtkfilechooserprivate.h
+@@ -34,10 +34,31 @@
+ #include "gtktreeview.h"
+ #include "gtkvbox.h"
+ 
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
++
+ G_BEGIN_DECLS
+ 
+ #define GTK_FILE_CHOOSER_GET_IFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GTK_TYPE_FILE_CHOOSER, GtkFileChooserIface))
+ 
++typedef struct __ZeitgeistFileDialogData {
++	gchar          *actor_name;
++	GFile          *current_file;
++	const gchar    *interpretation;
++	GSList         *files;
++	GSList         *fileinfos;
++	GtkFileChooser *chooser;
++	gboolean        internal_report_type;
++} _ZeitgeistFileDialogData;
++
++typedef struct __ZeitgeistFileDialogFileData {
++	gchar *uri;
++	gchar *display_name;
++	gchar *origin;
++	gchar *mime_type;
++} _ZeitgeistFileDialogFileData;
++
+ typedef struct _GtkFileChooserIface GtkFileChooserIface;
+ 
+ struct _GtkFileChooserIface
+@@ -84,6 +105,8 @@ struct _GtkFileChooserIface
+   GtkFileChooserConfirmation (*confirm_overwrite) (GtkFileChooser *chooser);
+ };
+ 
++GSList        *_gtk_file_chooser_get_files               (GtkFileChooser    *chooser,
++                                                          const gboolean     internal);
+ GtkFileSystem *_gtk_file_chooser_get_file_system         (GtkFileChooser    *chooser);
+ gboolean       _gtk_file_chooser_add_shortcut_folder     (GtkFileChooser    *chooser,
+ 							  GFile             *folder,
+@@ -98,13 +121,18 @@ GSList *       _gtk_file_chooser_list_sh
+ struct _GtkFileChooserDialogPrivate
+ {
+   GtkWidget *widget;
+-  
++
+   char *file_system;
+ 
++  Window parent_xid;
++
+   /* for use with GtkFileChooserEmbed */
+   gboolean response_requested;
+ };
+ 
++void           _gtk_file_chooser_log_zeitgeist_event     (GtkFileChooser *chooser,
++                                                          GSList         *files,
++                                                          gboolean        internal_report_type);
+ 
+ /* GtkFileChooserWidget private */
+ 
+Index: lpgtk/gtk/gtkfilechooserutils.c
+===================================================================
+--- lpgtk.orig/gtk/gtkfilechooserutils.c
++++ lpgtk/gtk/gtkfilechooserutils.c
+@@ -235,7 +235,9 @@ delegate_unselect_all (GtkFileChooser *c
+ static GSList *
+ delegate_get_files (GtkFileChooser *chooser)
+ {
+-  return gtk_file_chooser_get_files (get_delegate (chooser));
++  // From experimenting with API, it seems this call is generated twice when
++  // a child of GtkFileChooser attempts to be served files.
++  return _gtk_file_chooser_get_files (get_delegate (chooser), TRUE);
+ }
+ 
+ static GFile *
+Index: lpgtk/gtk/gtkrecentaction.c
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentaction.c
++++ lpgtk/gtk/gtkrecentaction.c
+@@ -80,6 +80,12 @@ G_DEFINE_TYPE_WITH_CODE (GtkRecentAction
+                          G_IMPLEMENT_INTERFACE (GTK_TYPE_RECENT_CHOOSER,
+                                                 gtk_recent_chooser_iface_init));
+ 
++static gchar *
++gtk_recent_action_get_window_id (GtkRecentChooser *chooser)
++{
++  return NULL;
++}
++
+ static gboolean
+ gtk_recent_action_set_current_uri (GtkRecentChooser  *chooser,
+                                    const gchar       *uri,
+@@ -276,6 +282,7 @@ gtk_recent_action_list_filters (GtkRecen
+ static void
+ gtk_recent_chooser_iface_init (GtkRecentChooserIface *iface)
+ {
++  iface->get_window_id = gtk_recent_action_get_window_id;
+   iface->set_current_uri = gtk_recent_action_set_current_uri;
+   iface->get_current_uri = gtk_recent_action_get_current_uri;
+   iface->select_uri = gtk_recent_action_select_uri;
+Index: lpgtk/gtk/gtkrecentchooser.c
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchooser.c
++++ lpgtk/gtk/gtkrecentchooser.c
+@@ -23,6 +23,9 @@
+ 
+ #include "gtkrecentchooser.h"
+ #include "gtkrecentchooserprivate.h"
++#include "gtkrecentchooserdialog.h"
++#include "gtkrecentchoosermenu.h"
++#include "gtkrecentchooserutils.h"
+ #include "gtkrecentmanager.h"
+ #include "gtkrecentaction.h"
+ #include "gtkactivatable.h"
+@@ -273,6 +276,19 @@ gtk_recent_chooser_error_quark (void)
+   return g_quark_from_static_string ("gtk-recent-chooser-error-quark");
+ }
+ 
++#include "zgtrackutils.h"
++#include <zeitgeist.h>
++#include <gio/gio.h>
++
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
++
++#define ZG_INTERPRETATION_RECENT_FILE_ACCESS      "activity://gui-toolkit/gtk2/RecentFile/FileAccess"
++#define ZG_INTERPRETATION_RECENT_GTK_MENU         "activity://gui-toolkit/gtk2/RecentChooserMenu"
++#define ZG_INTERPRETATION_RECENT_GTK_DLG          "activity://gui-toolkit/gtk2/RecentChooserDialog"
++#define ZG_INTERPRETATION_RECENT_GTK_WDG          "activity://gui-toolkit/gtk2/RecentChooserGenericWidget"
++
+ /**
+  * _gtk_recent_chooser_get_recent_manager:
+  * @chooser: a #GtkRecentChooser
+@@ -745,6 +761,185 @@ gtk_recent_chooser_set_sort_func  (GtkRe
+   							 data_destroy);
+ }
+ 
++gchar *
++gtk_recent_chooser_get_window_id (GtkRecentChooser *chooser)
++{
++  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER (chooser), NULL);
++
++  gchar *window_id = GTK_RECENT_CHOOSER_GET_IFACE (chooser)->get_window_id (chooser);
++
++  if (window_id)
++    return window_id;
++  else
++    return g_strdup ("n/a");
++}
++
++static GtkRecentInfo *
++_gtk_recent_chooser_get_current_item (GtkRecentChooser *chooser, gboolean internal)
++{
++  GtkRecentManager *manager;
++  GtkRecentInfo *retval;
++  gchar *uri;
++
++  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER (chooser), NULL);
++
++  uri = _gtk_recent_chooser_get_current_uri (chooser, internal);
++  if (!uri)
++    return NULL;
++
++  manager = _gtk_recent_chooser_get_recent_manager (chooser);
++  retval = gtk_recent_manager_lookup_item (manager, uri, NULL);
++  g_free (uri);
++
++  return retval;
++}
++
++typedef struct __ZeitgeistRecentChooserData
++{
++  gchar            *window_id;
++  GtkRecentInfo    *recent_info;
++} _ZeitgeistRecentChooserData;
++
++static void
++_log_zeitgeist_get_recent_file_cb (GObject *source_object,
++                                   GAsyncResult *res,
++                                   gpointer user_data)
++{
++  _ZeitgeistRecentChooserData *data = user_data;
++
++  GFile *file = (GFile *) source_object;
++  gchar *uri = g_file_get_uri (file);
++  gchar *origin = g_path_get_dirname (uri);
++  gchar *mime_type = NULL;
++  gchar *display_name = NULL;
++  GFileInfo *info = g_file_query_info_finish (file, res, NULL);
++
++  // Info was found!
++  if (info) {
++    display_name = g_strdup (g_file_info_get_display_name (info));
++    #ifdef __ZEITGEIST_FAST__
++    mime_type = g_content_type_get_mime_type (g_file_info_get_attribute_string (info, G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE));
++    #else
++    mime_type = g_content_type_get_mime_type (g_file_info_get_content_type (info));
++    #endif
++  } else {
++    display_name = g_path_get_basename (uri);
++    mime_type = g_content_type_guess (uri, NULL, 0, NULL);
++  }
++  g_object_unref (file);
++
++  // Last-resort solutions for display name and mime type
++  if (!display_name)
++    display_name = g_strdup (uri);
++  if (!mime_type)
++    mime_type = g_strdup ("application/octet-stream");
++
++  // Get access to Zeitgeist logger daemon
++  ZeitgeistLog *log = zeitgeist_log_get_default ();
++
++  // Create the event to be added, with the known information
++  gchar *actor_name = _get_actor_name_from_pid (getpid());
++  ZeitgeistEvent *event = zeitgeist_event_new_full (
++              ZG_INTERPRETATION_RECENT_FILE_ACCESS,
++              ZEITGEIST_ZG_USER_ACTIVITY,
++              actor_name,
++              NULL);
++  g_free (actor_name);
++
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (uri,
++                                      NULL,
++                                      NULL,
++                                      mime_type,
++                                      origin,
++                                      display_name,
++                                      NULL));
++  g_free (uri);
++  g_free (origin);
++  g_free (display_name);
++  g_free (mime_type);
++
++  // Add the UCL metadata
++  gsize len = 0, i = 0;
++  gchar **prev_owners = gtk_recent_info_get_applications (data->recent_info, &len);
++  for (; i < len; ++i)
++  {
++    gchar *display_name = g_strdup_printf ("Previous user (%lu/%lu): %s", i+1, len, prev_owners[i]);
++    zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (prev_owners[i],
++                                      ZEITGEIST_NFO_SOFTWARE,
++                                      ZEITGEIST_ZG_HEURISTIC_ACTIVITY,
++                                      "application/octet-stream",
++                                      NULL,
++                                      display_name,
++                                      NULL));
++    g_free (display_name);
++  }
++  g_strfreev (prev_owners);
++  gtk_recent_info_unref (data->recent_info);
++
++  // Add metadata about the widget -- doesn't work (returns Widget, can crash bc/ unref'd dialog)
++/*  gchar *widget_uri = NULL;
++  if (GTK_IS_RECENT_CHOOSER_MENU (chooser))
++    widget_uri = ZG_INTERPRETATION_RECENT_GTK_MENU;
++  else if (GTK_IS_RECENT_CHOOSER_DIALOG (chooser))
++    widget_uri = ZG_INTERPRETATION_RECENT_GTK_DLG;
++  else
++    widget_uri = ZG_INTERPRETATION_RECENT_GTK_WDG;
++
++  gchar *widget_display = g_strdup_printf ("Widget type: %s", widget_uri);
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (widget_uri,
++                                  ZEITGEIST_NFO_SOFTWARE,
++                                  ZEITGEIST_ZG_HEURISTIC_ACTIVITY,
++                                  "application/octet-stream",
++                                  NULL,
++                                  widget_display,
++                                  NULL));
++  g_free (widget_display); */
++
++  // Add the UCL metadata
++  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://%s///", getpid(), data->window_id);
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
++    ZEITGEIST_NFO_SOFTWARE,
++    ZEITGEIST_ZG_WORLD_ACTIVITY,
++    "application/octet-stream",
++    NULL,
++    "ucl-study-metadata",
++    NULL));
++  g_free (data->window_id);
++  g_free (study_uri);
++
++  // Send the event
++  zeitgeist_log_insert_events_no_reply (log, event, NULL);
++  g_free (data);
++}
++
++static void
++_log_zeitgeist_get_recent_file (GtkRecentChooser *chooser,
++                                gchar            *uri)
++{
++  // Test for RecentChooser and presence of files to track
++  g_return_if_fail (GTK_IS_RECENT_CHOOSER (chooser));
++  g_return_if_fail (uri != NULL);
++
++  GFile *file = g_file_new_for_uri (uri);
++  if (!file)
++  {
++    return;
++  }
++
++  _ZeitgeistRecentChooserData *data = g_malloc (sizeof (_ZeitgeistRecentChooserData));
++
++  data->window_id = gtk_recent_chooser_get_window_id (chooser);
++  data->recent_info = _gtk_recent_chooser_get_current_item (chooser, TRUE);
++
++  g_file_query_info_async (file,
++        G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME ","
++        G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
++        G_FILE_QUERY_INFO_NONE,
++        G_PRIORITY_DEFAULT,
++        NULL,
++        _log_zeitgeist_get_recent_file_cb, data);
++}
++
+ /**
+  * gtk_recent_chooser_set_current_uri:
+  * @chooser: a #GtkRecentChooser
+@@ -763,10 +958,22 @@ gtk_recent_chooser_set_current_uri (GtkR
+ 				    GError           **error)
+ {
+   g_return_val_if_fail (GTK_IS_RECENT_CHOOSER (chooser), FALSE);
+-  
++
+   return GTK_RECENT_CHOOSER_GET_IFACE (chooser)->set_current_uri (chooser, uri, error);
+ }
+ 
++gchar *
++_gtk_recent_chooser_get_current_uri (GtkRecentChooser *chooser, gboolean internal)
++{
++  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER (chooser), NULL);
++  gchar *uri = GTK_RECENT_CHOOSER_GET_IFACE (chooser)->get_current_uri (chooser);
++
++  if (uri && !internal)
++    _log_zeitgeist_get_recent_file (chooser, uri);
++
++  return uri;
++}
++
+ /**
+  * gtk_recent_chooser_get_current_uri:
+  * @chooser: a #GtkRecentChooser
+@@ -780,9 +987,7 @@ gtk_recent_chooser_set_current_uri (GtkR
+ gchar *
+ gtk_recent_chooser_get_current_uri (GtkRecentChooser *chooser)
+ {
+-  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER (chooser), NULL);
+-  
+-  return GTK_RECENT_CHOOSER_GET_IFACE (chooser)->get_current_uri (chooser);
++  return _gtk_recent_chooser_get_current_uri (chooser, FALSE);
+ }
+ 
+ /**
+@@ -799,21 +1004,7 @@ gtk_recent_chooser_get_current_uri (GtkR
+ GtkRecentInfo *
+ gtk_recent_chooser_get_current_item (GtkRecentChooser *chooser)
+ {
+-  GtkRecentManager *manager;
+-  GtkRecentInfo *retval;
+-  gchar *uri;
+-  
+-  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER (chooser), NULL);
+-  
+-  uri = gtk_recent_chooser_get_current_uri (chooser);
+-  if (!uri)
+-    return NULL;
+-  
+-  manager = _gtk_recent_chooser_get_recent_manager (chooser);
+-  retval = gtk_recent_manager_lookup_item (manager, uri, NULL);
+-  g_free (uri);
+-  
+-  return retval;
++  return _gtk_recent_chooser_get_current_item (chooser, FALSE);
+ }
+ 
+ /**
+@@ -1086,6 +1277,8 @@ _gtk_recent_chooser_item_activated (GtkR
+   g_return_if_fail (GTK_IS_RECENT_CHOOSER (chooser));
+   
+   g_signal_emit (chooser, chooser_signals[ITEM_ACTIVATED], 0);
++  gchar *uri = _gtk_recent_chooser_get_current_uri (chooser, TRUE);
++  g_free (uri);
+ }
+ 
+ void
+Index: lpgtk/gtk/gtkrecentchooser.h
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchooser.h
++++ lpgtk/gtk/gtkrecentchooser.h
+@@ -113,6 +113,7 @@ struct _GtkRecentChooserIface
+    */
+   void		    (* item_activated)     (GtkRecentChooser  *chooser);
+   void		    (* selection_changed)  (GtkRecentChooser  *chooser);
++  gchar *           (* get_window_id)      (GtkRecentChooser  *chooser);
+ };
+ 
+ GType   gtk_recent_chooser_get_type    (void) G_GNUC_CONST;
+Index: lpgtk/gtk/gtkrecentchooserdefault.c
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchooserdefault.c
++++ lpgtk/gtk/gtkrecentchooserdefault.c
+@@ -86,6 +86,9 @@ enum
+   PROP_ACTIVATABLE_USE_ACTION_APPEARANCE
+ };
+ 
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
+ 
+ struct _GtkRecentChooserDefault
+ {
+@@ -188,6 +191,7 @@ static void     gtk_recent_chooser_defau
+ 
+ /* GtkRecentChooserIface */
+ static void              gtk_recent_chooser_iface_init                 (GtkRecentChooserIface  *iface);
++static gchar *           gtk_recent_chooser_default_get_window_id      (GtkRecentChooser       *chooser);
+ static gboolean          gtk_recent_chooser_default_set_current_uri    (GtkRecentChooser       *chooser,
+ 								        const gchar            *uri,
+ 								        GError                **error);
+@@ -304,6 +308,7 @@ G_DEFINE_TYPE_WITH_CODE (GtkRecentChoose
+ static void
+ gtk_recent_chooser_iface_init (GtkRecentChooserIface *iface)
+ {
++  iface->get_window_id = gtk_recent_chooser_default_get_window_id;
+   iface->set_current_uri = gtk_recent_chooser_default_set_current_uri;
+   iface->get_current_uri = gtk_recent_chooser_default_get_current_uri;
+   iface->select_uri = gtk_recent_chooser_default_select_uri;
+@@ -1105,6 +1110,33 @@ scan_for_uri_cb (GtkTreeModel *model,
+   return FALSE;
+ }
+ 
++static gchar *gtk_recent_chooser_default_get_window_id (GtkRecentChooser *chooser)
++{
++  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER_DEFAULT (chooser), NULL);
++
++
++  GtkRecentChooserDefault *impl = GTK_RECENT_CHOOSER_DEFAULT (chooser);
++  gchar *window_id = NULL;
++
++  #ifdef GDK_WINDOWING_X11
++  if (impl->recent_view)
++  {
++    GdkWindow *gwin = gtk_widget_get_window (impl->recent_view);
++
++    GdkDisplay *dsp = NULL;
++    if (gwin)
++      dsp = gdk_window_get_display (gwin);
++
++    if (dsp) {
++      Window xid = (Window) gdk_x11_drawable_get_xid (gwin);
++      window_id = g_strdup_printf ("%lu", xid);
++    }
++  }
++  #endif
++
++  return window_id;
++}
++
+ static gboolean
+ gtk_recent_chooser_default_set_current_uri (GtkRecentChooser  *chooser,
+ 					    const gchar       *uri,
+@@ -1639,7 +1671,7 @@ remove_selected_from_list (GtkRecentChoo
+   if (impl->select_multiple)
+     return;
+   
+-  uri = gtk_recent_chooser_get_current_uri (GTK_RECENT_CHOOSER (impl));
++  uri = _gtk_recent_chooser_get_current_uri (GTK_RECENT_CHOOSER (impl), TRUE);
+   if (!uri)
+     return;
+   
+Index: lpgtk/gtk/gtkrecentchooserdialog.c
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchooserdialog.c
++++ lpgtk/gtk/gtkrecentchooserdialog.c
+@@ -29,13 +29,6 @@
+ 
+ #include <stdarg.h>
+ 
+-struct _GtkRecentChooserDialogPrivate
+-{
+-  GtkRecentManager *manager;
+-  
+-  GtkWidget *chooser;
+-};
+-
+ #define GTK_RECENT_CHOOSER_DIALOG_GET_PRIVATE(obj)	(GTK_RECENT_CHOOSER_DIALOG (obj)->priv)
+ 
+ static void gtk_recent_chooser_dialog_class_init (GtkRecentChooserDialogClass *klass);
+@@ -262,10 +255,25 @@ gtk_recent_chooser_dialog_new_valist (co
+                          "title", title,
+                          "recent-manager", manager,
+                          NULL);
+-  
+-  if (parent)
++
++  GtkRecentChooserDialogPrivate *priv = GTK_RECENT_CHOOSER_DIALOG (result)->priv;
++  priv->parent_xid = 0;
++
++  if (parent) {
+     gtk_window_set_transient_for (GTK_WINDOW (result), parent);
+-  
++
++    #ifdef GDK_WINDOWING_X11
++    GdkWindow *gwin = gtk_widget_get_window (GTK_WIDGET (parent));
++    GdkDisplay *dsp = NULL;
++      if (gwin)
++        dsp = gdk_window_get_display (gwin);
++
++      if (dsp) {
++        priv->parent_xid = (Window) gdk_x11_drawable_get_xid (gwin);
++      }
++    #endif
++  }
++
+   while (button_text)
+     {
+       response_id = va_arg (varargs, gint);
+Index: lpgtk/gtk/gtkrecentchooserdialog.h
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchooserdialog.h
++++ lpgtk/gtk/gtkrecentchooserdialog.h
+@@ -27,6 +27,7 @@
+ 
+ #include <gtk/gtkdialog.h>
+ #include <gtk/gtkrecentchooser.h>
++#include <gdk/x11/gdkx.h>
+ 
+ G_BEGIN_DECLS
+ 
+@@ -42,6 +43,16 @@ typedef struct _GtkRecentChooserDialogCl
+ 
+ typedef struct _GtkRecentChooserDialogPrivate GtkRecentChooserDialogPrivate;
+ 
++struct _GtkRecentChooserDialogPrivate
++{
++  GtkRecentManager *manager;
++
++  GtkWidget *chooser;
++
++#ifdef GDK_WINDOWING_X11
++  Window parent_xid;
++#endif
++};
+ 
+ struct _GtkRecentChooserDialog
+ {
+Index: lpgtk/gtk/gtkrecentchoosermenu.c
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchoosermenu.c
++++ lpgtk/gtk/gtkrecentchoosermenu.c
+@@ -47,6 +47,10 @@
+ #include "gtkprivate.h"
+ #include "gtkalias.h"
+ 
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
++
+ struct _GtkRecentChooserMenuPrivate
+ {
+   /* the recent manager object */
+@@ -118,6 +122,7 @@ static void gtk_recent_chooser_menu_get_
+ 						  GValue       *value,
+ 						  GParamSpec   *pspec);
+ 
++static gchar *           gtk_recent_chooser_menu_get_window_id    (GtkRecentChooser  *chooser);
+ static gboolean          gtk_recent_chooser_menu_set_current_uri    (GtkRecentChooser  *chooser,
+ 							             const gchar       *uri,
+ 							             GError           **error);
+@@ -179,6 +184,7 @@ G_DEFINE_TYPE_WITH_CODE (GtkRecentChoose
+ static void
+ gtk_recent_chooser_iface_init (GtkRecentChooserIface *iface)
+ {
++  iface->get_window_id = gtk_recent_chooser_menu_get_window_id;
+   iface->set_current_uri = gtk_recent_chooser_menu_set_current_uri;
+   iface->get_current_uri = gtk_recent_chooser_menu_get_current_uri;
+   iface->select_uri = gtk_recent_chooser_menu_select_uri;
+@@ -466,6 +472,32 @@ gtk_recent_chooser_menu_get_property (GO
+     }
+ }
+ 
++static gchar *gtk_recent_chooser_menu_get_window_id (GtkRecentChooser *chooser)
++{
++  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER_MENU (chooser), NULL);
++
++  GtkWidget *attach = gtk_menu_get_attach_widget (GTK_MENU (chooser));
++  gchar *window_id = NULL;
++
++  #ifdef GDK_WINDOWING_X11
++  if (attach)
++  {
++    GdkWindow *gwin = gtk_widget_get_window (attach);
++
++    GdkDisplay *dsp = NULL;
++    if (gwin)
++      dsp = gdk_window_get_display (gwin);
++
++    if (dsp) {
++      Window xid = (Window) gdk_x11_drawable_get_xid (gwin);
++      window_id = g_strdup_printf ("%lu", xid);
++    }
++  }
++  #endif
++
++  return window_id;
++}
++
+ static gboolean
+ gtk_recent_chooser_menu_set_current_uri (GtkRecentChooser  *chooser,
+ 					 const gchar       *uri,
+Index: lpgtk/gtk/gtkrecentchooserprivate.h
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchooserprivate.h
++++ lpgtk/gtk/gtkrecentchooserprivate.h
+@@ -50,6 +50,8 @@ void              _gtk_recent_chooser_se
+ 								 gboolean           use_appearance);
+ gboolean          _gtk_recent_chooser_get_use_action_appearance (GtkRecentChooser  *recent_chooser);
+ 
++gchar *        _gtk_recent_chooser_get_current_uri  (GtkRecentChooser  *chooser, gboolean internal);
++
+ G_END_DECLS
+ 
+ #endif /* ! __GTK_RECENT_CHOOSER_PRIVATE_H__ */
+Index: lpgtk/gtk/gtkrecentchooserutils.c
+===================================================================
+--- lpgtk.orig/gtk/gtkrecentchooserutils.c
++++ lpgtk/gtk/gtkrecentchooserutils.c
+@@ -27,6 +27,12 @@
+ #include "config.h"
+ 
+ #include "gtkrecentchooserutils.h"
++#include "gtkrecentchooserwidget.h"
++#include "gtkrecentchooserdialog.h"
++
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
+ #include "gtkalias.h"
+ 
+ /* Methods */
+@@ -48,6 +54,7 @@ static GList    *delegate_get_items
+ static GtkRecentManager *delegate_get_recent_manager (GtkRecentChooser  *chooser);
+ static void      delegate_select_all                 (GtkRecentChooser  *chooser);
+ static void      delegate_unselect_all               (GtkRecentChooser  *chooser);
++static gchar *   delegate_get_window_id              (GtkRecentChooser  *chooser);
+ static gboolean  delegate_set_current_uri            (GtkRecentChooser  *chooser,
+ 						      const gchar       *uri,
+ 						      GError           **error);
+@@ -122,6 +129,7 @@ _gtk_recent_chooser_install_properties (
+ void
+ _gtk_recent_chooser_delegate_iface_init (GtkRecentChooserIface *iface)
+ {
++  iface->get_window_id = delegate_get_window_id;
+   iface->set_current_uri = delegate_set_current_uri;
+   iface->get_current_uri = delegate_get_current_uri;
+   iface->select_uri = delegate_select_uri;
+@@ -254,6 +262,36 @@ delegate_unselect_all (GtkRecentChooser
+   gtk_recent_chooser_unselect_all (get_delegate (chooser));
+ }
+ 
++static gchar *
++delegate_get_window_id (GtkRecentChooser  *chooser)
++{
++  gchar *window_id = NULL;
++
++  #ifdef GDK_WINDOWING_X11
++  if (GTK_IS_RECENT_CHOOSER_DIALOG (chooser))
++  {
++    GtkRecentChooserDialogPrivate *dlgpriv = (GTK_RECENT_CHOOSER_DIALOG (chooser))->priv;
++    if (dlgpriv->parent_xid)
++      window_id = g_strdup_printf ("%lu", dlgpriv->parent_xid);
++  }
++  else if (GTK_IS_RECENT_CHOOSER_WIDGET (chooser))
++  {
++    GdkWindow *gwin = gtk_widget_get_window (GTK_WIDGET (chooser));
++
++    GdkDisplay *dsp = NULL;
++    if (gwin)
++      dsp = gdk_window_get_display (gwin);
++
++    if (dsp) {
++      Window xid = (Window) gdk_x11_drawable_get_xid (gwin);
++      window_id = g_strdup_printf ("%lu", xid);
++    }
++  }
++  #endif
++
++  return window_id;
++}
++
+ static gboolean
+ delegate_set_current_uri (GtkRecentChooser  *chooser,
+ 			  const gchar       *uri,
+@@ -265,7 +303,8 @@ delegate_set_current_uri (GtkRecentChoos
+ static gchar *
+ delegate_get_current_uri (GtkRecentChooser *chooser)
+ {
+-  return gtk_recent_chooser_get_current_uri (get_delegate (chooser));
++  GtkRecentChooser *delegate = get_delegate (chooser);
++  return _gtk_recent_chooser_get_current_uri (delegate, TRUE);
+ }
+ 
+ static void
+Index: lpgtk/gtk/gtktextview.c
+===================================================================
+--- lpgtk.orig/gtk/gtktextview.c
++++ lpgtk/gtk/gtktextview.c
+@@ -50,6 +50,11 @@
+ #include "gtkwindow.h"
+ #include "gtkalias.h"
+ 
++#include <zeitgeist.h>
++#include "gtkclipboard.h"
++#include "zgtrackutils.h"
++
++
+ /* How scrolling, validation, exposes, etc. work.
+  *
+  * The expose_event handler has the invariant that the onscreen lines
+@@ -5806,11 +5811,63 @@ gtk_text_view_copy_clipboard (GtkTextVie
+ }
+ 
+ static void
++_log_zeitgeist_event_paste (GtkClipboard *clipboard,
++                            GtkTextView *view)
++{
++  // Ignore PRIMARY (but try to process when there is no selection, e.g. the selection's owner died)
++  if (clipboard->have_selection && clipboard->selection != GDK_SELECTION_CLIPBOARD)
++    return;
++
++  // Get access to Zeitgeist logger daemon
++  ZeitgeistLog *log = zeitgeist_log_get_default ();
++
++  // Create the event to be added, with the known information
++  gchar *actor_name = _get_actor_name_from_pid (getpid());
++  ZeitgeistEvent *event = zeitgeist_event_new_full (
++              ZG_INTERPRETATION_CLIPBOARD_PASTE,
++              ZEITGEIST_ZG_USER_ACTIVITY,
++              actor_name,
++              NULL);
++  g_free (actor_name);
++
++  //TODO make private function in buffer that returns the copied length to the callback
++  gchar       *uri                   = g_strdup_printf ("clipboard://%s/len:n/a", "UTF8_STRING");
++  gchar       *display_name          = "Clipboard content";
++
++  // Add the subject now that all information has been calculated
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full(uri,
++                                   ZG_INTERPRETATION_DATA_CLIPBOARD,
++                                   ZEITGEIST_NFO_SOFTWARE_SERVICE,
++                                   "UTF8_STRING",
++                                   NULL,
++                                   display_name,
++                                   NULL));
++  g_free (uri);
++
++  // Add the UCL metadata
++  char *window_id = _get_window_id_from_widget (GTK_WIDGET (view));
++  char *study_uri = g_strdup_printf ("activity://null///pid://%d///winid://%s///", getpid(), window_id);
++  zeitgeist_event_add_subject (event, zeitgeist_subject_new_full (study_uri,
++                                        ZEITGEIST_NFO_SOFTWARE,
++                                        ZEITGEIST_ZG_WORLD_ACTIVITY,
++                                        "application/octet-stream",
++                                        NULL,
++                                        "ucl-study-metadata",
++                                        NULL));
++  g_free (study_uri);
++  g_free (window_id);
++
++  zeitgeist_log_insert_events_no_reply (log, event, NULL);
++}
++
++static void
+ gtk_text_view_paste_clipboard (GtkTextView *text_view)
+ {
+   GtkClipboard *clipboard = gtk_widget_get_clipboard (GTK_WIDGET (text_view),
+ 						      GDK_SELECTION_CLIPBOARD);
+-  
++
++  _log_zeitgeist_event_paste (clipboard, text_view);
++
+   gtk_text_buffer_paste_clipboard (get_buffer (text_view),
+ 				   clipboard,
+ 				   NULL,
+Index: lpgtk/gtk/zgtrackutils.c
+===================================================================
+--- /dev/null
++++ lpgtk/gtk/zgtrackutils.c
+@@ -0,0 +1,181 @@
++/* Activity Finder
++ * zgtrackutils.c: Utilities for Zeitgeist event logging
++ * Copyright (C) 2013-2016, Steve Dodier-Lazaro, UCL.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 3 of
++ *  the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this library. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "gtkwidget.h"
++#include "zgtrackutils.h"
++#include <glib.h>
++#include <glib/gprintf.h>
++#include <gdk/gdk.h>
++#include <zeitgeist.h>
++
++#ifdef GDK_WINDOWING_X11
++#include <gdk/x11/gdkx.h>
++#endif
++
++/**
++ * SECTION:zgtrackutils
++ * @Short_description: Utilities for logging events into the Zeitgeist daemon
++ * @Title: ZGTrackUtils
++ * @See_also: #GtkFileChooser
++ *
++ * #ZGTrackUtils is a set of utility functions used across parts of
++ * the GTK+ framework that were modified to send events to the Zeitgeist
++ * daemon. These utilities are not responsible for sending events as this
++ * will ultimately be the responsibility of separately-run widgets that
++ * interact with GTK+ applications through IPC, but they provide a common
++ * codebase between modified classes to determine event actors, MIME types,
++ * etc.
++ *
++ * <note>
++ * The code in this section should never be directly called by GTK+ functions.
++ * </note>
++ *
++ */
++
++/**
++ * _get_actor_name_from_pid:
++ * @pid: a process id, 0 or -1 to use self id.
++ *
++ * Returns a Zeitgeist Actor string for the process indicated by the pid
++ * parameter or for the calling process. The string is generated by retrieving
++ * the executable name, prefixing it by 'app://' and suffexing it by
++ * '.desktop'. The idea behind this is that there is no current consensus on
++ * how to name an application in FreeDesktop.org and that Zeitgeist does not
++ * actually make much use of the Actor string.
++ *
++ * Return value: (type URI): The process' corresponding Actor URI, or %NULL
++ *  if an error occurred. Free with g_free().
++ *
++ * Copyright: Steve Dodier-Lazaro, 2015, UCL
++ *            <s.dodier-lazaro@cs.ucl.ac.uk>
++ *            Licensed under GPLv3
++ *
++ * Since: 3.10.6
++ **/
++gchar *
++_get_actor_name_from_pid (pid_t pid)
++{
++    char         *link_file     = NULL;
++    char         *link_target   = NULL;
++    char        **split_target  = NULL;
++    char         *actor_name    = NULL;
++    ssize_t       read_len      = PATH_MAX; // 4096, so it's unlikely link_len ever overflows :)
++    ssize_t       link_len      = 1;
++
++    if (pid <= 0)
++    {
++        return NULL;
++    }
++
++    link_file = g_strdup_printf ("/proc/%d/exe", pid);
++    if (link_file == NULL)
++    {
++        return NULL;
++    }
++
++    // It is impossible to obtain the size of /proc link targets as /proc is
++    // not POSIX compliant. Hence, we start from the NAME_MAX limit and increase
++    // it all the way up to readlink failing. readlink will fail upon reaching
++    // the PATH_MAX limit on Linux implementations. read_len will be strictly
++    // inferior to link_len as soon as the latter is big enough to contain the
++    // path to the executable and a trailing null character.
++    while (read_len >= link_len)
++    {
++        link_len += NAME_MAX;
++
++        g_free(link_target);
++        link_target = g_malloc(link_len * sizeof (char));
++
++        if (link_target == NULL)
++        {
++            g_free (link_file);
++            g_free (link_target);
++            return NULL;
++        }
++
++        read_len= readlink (link_file, link_target, link_len);
++
++        if (read_len < 0)
++        {
++            g_free (link_file);
++            g_free (link_target);
++            return NULL;
++        }
++    }
++
++    g_free (link_file);
++
++    // readlink does not null-terminate the string
++    link_target[read_len] = '\0';
++
++    split_target = g_strsplit (link_target, "/", -1);
++    g_free (link_target);
++
++    if(split_target == NULL)
++    {
++        return NULL;
++    }
++
++    // Iterate to the last element which is the executable name
++    for (read_len = 0; split_target[read_len]; read_len++);
++
++    // Turn it into an arbitrary actor name
++    actor_name = g_strdup_printf ("application://%s.desktop", split_target[--read_len]);
++    g_strfreev (split_target);
++
++    // Better safe than sorry
++    if (!actor_name)
++      actor_name = g_strdup ("application://unknown.desktop");
++
++    return actor_name;
++}
++
++/**
++ * _get_window_id_from_widget:
++ * @widget: a #GtkWidget.
++ *
++ * Returns a string representation of the X11 window id of the window that
++ * contains the given widget, or the string "n/a" if one could not be found.
++ *
++ * Return value: (type URI): The window id as a string, or "n/a".
++ * Free with g_free().
++ *
++ * Copyright: Steve Dodier-Lazaro, 2015, UCL
++ *            <s.dodier-lazaro@cs.ucl.ac.uk>
++ *            Licensed under GPLv3
++ *
++ * Since: 3.10.6
++ **/
++char *
++_get_window_id_from_widget (GtkWidget *widget)
++{
++  char *window_id = NULL;
++  #ifdef GDK_WINDOWING_X11
++  GdkWindow *gwin = gtk_widget_get_window (GTK_WIDGET (widget));
++
++  if (gwin) {
++    GdkDisplay *dsp = gdk_window_get_display (gwin);
++    if (dsp)
++      window_id = g_strdup_printf ("%lu", gdk_x11_drawable_get_xid (gwin));
++  }
++
++  if (!window_id)
++  #endif
++    window_id = g_strdup ("n/a");
++  return window_id;
++}
+Index: lpgtk/gtk/zgtrackutils.h
+===================================================================
+--- /dev/null
++++ lpgtk/gtk/zgtrackutils.h
+@@ -0,0 +1,31 @@
++/* Activity Finder
++ * zgtrackutils.c: Utilities for Zeitgeist event logging
++ * Copyright (C) 2013-2016, Steve Dodier-Lazaro, UCL.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 3 of
++ *  the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this library. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __ZG_TRACK_UTILS_H__
++#define __ZG_TRACK_UTILS_H__
++
++#include <glib.h>
++#include <unistd.h>
++gchar *
++_get_actor_name_from_pid (pid_t pid);
++
++gchar *
++_get_window_id_from_widget (GtkWidget *widget);
++
++#endif /* __ZG_TRACK_UTILS_H__ */
++

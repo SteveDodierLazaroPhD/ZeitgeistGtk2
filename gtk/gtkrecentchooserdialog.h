@@ -27,6 +27,7 @@
 
 #include <gtk/gtkdialog.h>
 #include <gtk/gtkrecentchooser.h>
+#include <gdk/x11/gdkx.h>
 
 G_BEGIN_DECLS
 
@@ -42,6 +43,16 @@ typedef struct _GtkRecentChooserDialogClass   GtkRecentChooserDialogClass;
 
 typedef struct _GtkRecentChooserDialogPrivate GtkRecentChooserDialogPrivate;
 
+struct _GtkRecentChooserDialogPrivate
+{
+  GtkRecentManager *manager;
+
+  GtkWidget *chooser;
+
+#ifdef GDK_WINDOWING_X11
+  Window parent_xid;
+#endif
+};
 
 struct _GtkRecentChooserDialog
 {

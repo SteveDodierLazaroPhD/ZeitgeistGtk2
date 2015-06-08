@@ -28,11 +28,16 @@
 
 #include <gtk/gtkselection.h>
 
+#define ZG_INTERPRETATION_CLIPBOARD_COPY     "activity://gui-toolkit/gtk2/Clipboard/Copy"
+#define ZG_INTERPRETATION_CLIPBOARD_PASTE    "activity://gui-toolkit/gtk2/Clipboard/Paste"
+#define ZG_INTERPRETATION_DATA_CLIPBOARD     "activity://gui-toolkit/gtk2/Clipboard/ContentType"
+
 G_BEGIN_DECLS
 
 #define GTK_TYPE_CLIPBOARD            (gtk_clipboard_get_type ())
 #define GTK_CLIPBOARD(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_CLIPBOARD, GtkClipboard))
 #define GTK_IS_CLIPBOARD(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_CLIPBOARD))
+
 
 typedef void (* GtkClipboardReceivedFunc)         (GtkClipboard     *clipboard,
 					           GtkSelectionData *selection_data,
@@ -151,6 +156,34 @@ void gtk_clipboard_store         (GtkClipboard   *clipboard);
 void     _gtk_clipboard_handle_event    (GdkEventOwnerChange *event);
 
 void     _gtk_clipboard_store_all       (void);
+
+
+struct _GtkClipboard
+{
+  GObject parent_instance;
+
+  GdkAtom selection;
+
+  GtkClipboardGetFunc get_func;
+  GtkClipboardClearFunc clear_func;
+  gpointer user_data;
+  gboolean have_owner;
+
+  guint32 timestamp;
+
+  gboolean have_selection;
+  GdkDisplay *display;
+
+  GdkAtom *cached_targets;
+  gint     n_cached_targets;
+
+  guint      notify_signal_id;
+  gboolean   storing_selection;
+  GMainLoop *store_loop;
+  guint      store_timeout;
+  gint       n_storable_targets;
+  GdkAtom   *storable_targets;
+};
 
 G_END_DECLS
 

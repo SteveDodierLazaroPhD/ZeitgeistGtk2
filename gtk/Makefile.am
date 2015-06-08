@@ -126,6 +126,9 @@ libadd =								\
 	$(GTK_DEP_LIBS)
 deps =
 
+AM_CFLAGS = -I/usr/include/zeitgeist-1.0 -I/usr/include/glib-2.0
+libadd += -lzeitgeist-1.0 -lgobject-2.0 -lglib-2.0
+
 # libtool stuff: set version and export symbols for resolving
 # since automake doesn't support conditionalized libsomething_la_LDFLAGS
 # we use the general approach here
@@ -344,6 +347,7 @@ gtk_public_h_sources =          \
 	gtkvscrollbar.h		\
 	gtkvseparator.h		\
 	gtkwidget.h		\
+	zgtrackutils.h		\
 	gtkwindow.h
 
 if OS_UNIX
@@ -631,6 +635,7 @@ gtk_base_c_sources =            \
 	gtkwidget.c		\
 	gtkwindow-decorate.c    \
 	gtkwindow.c		\
+	zgtrackutils.c \
 	$(gtk_clipboard_dnd_c_sources)
 
 # Broken

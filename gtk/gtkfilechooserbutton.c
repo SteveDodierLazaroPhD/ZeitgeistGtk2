@@ -67,6 +67,9 @@
 #define FALLBACK_ICON_NAME	"stock_unknown"
 #define FALLBACK_ICON_SIZE	16
 
+#define ZG_INTERPRETATION_FILE_GTK_BTN_ACCESS   "activity://gui-toolkit/gtk2/FileAccessBtn"
+#define ZG_INTERPRETATION_FILE_GTK_BTN_CREATE   "activity://gui-toolkit/gtk2/FileCreateBtn"
+#define ZG_INTERPRETATION_FILE_GTK_BTN_MODIFY   "activity://gui-toolkit/gtk2/FileModifyBtn"
 
 /* ********************** *
  *  Private Enumerations  *
@@ -309,6 +312,9 @@ static void     dialog_response_cb               (GtkDialog      *dialog,
 						  gint            response,
 						  gpointer        user_data);
 
+static void     file_set_cb                      (GtkFileChooserButton *button,
+                                                  gpointer              user_data);
+
 static guint file_chooser_button_signals[LAST_SIGNAL] = { 0 };
 
 /* ******************* *
@@ -528,6 +534,8 @@ gtk_file_chooser_button_init (GtkFileChooserButton *button)
   gtk_target_list_add_text_targets (target_list, TEXT_PLAIN);
   gtk_drag_dest_set_target_list (GTK_WIDGET (button), target_list);
   gtk_target_list_unref (target_list);
+
+  g_signal_connect (button, "file-set", G_CALLBACK (file_set_cb), NULL);
 }
 
 
@@ -1033,6 +1041,17 @@ gtk_file_chooser_button_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
       break;
     }
+}
+
+static void
+file_set_cb (GtkFileChooserButton *button,
+             gpointer              user_data G_GNUC_UNUSED)
+{
+  GtkFileChooser *chooser = GTK_FILE_CHOOSER (button);
+  _gtk_file_chooser_log_zeitgeist_event (chooser,
+                                         _gtk_file_chooser_get_files (chooser,
+                                                                      TRUE),
+                                         TRUE);
 }
 
 static void

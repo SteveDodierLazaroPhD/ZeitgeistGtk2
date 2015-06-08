@@ -47,6 +47,10 @@
 #include "gtkprivate.h"
 #include "gtkalias.h"
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
+
 struct _GtkRecentChooserMenuPrivate
 {
   /* the recent manager object */
@@ -118,6 +122,7 @@ static void gtk_recent_chooser_menu_get_property (GObject      *object,
 						  GValue       *value,
 						  GParamSpec   *pspec);
 
+static gchar *           gtk_recent_chooser_menu_get_window_id    (GtkRecentChooser  *chooser);
 static gboolean          gtk_recent_chooser_menu_set_current_uri    (GtkRecentChooser  *chooser,
 							             const gchar       *uri,
 							             GError           **error);
@@ -179,6 +184,7 @@ G_DEFINE_TYPE_WITH_CODE (GtkRecentChooserMenu,
 static void
 gtk_recent_chooser_iface_init (GtkRecentChooserIface *iface)
 {
+  iface->get_window_id = gtk_recent_chooser_menu_get_window_id;
   iface->set_current_uri = gtk_recent_chooser_menu_set_current_uri;
   iface->get_current_uri = gtk_recent_chooser_menu_get_current_uri;
   iface->select_uri = gtk_recent_chooser_menu_select_uri;
@@ -464,6 +470,32 @@ gtk_recent_chooser_menu_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
+}
+
+static gchar *gtk_recent_chooser_menu_get_window_id (GtkRecentChooser *chooser)
+{
+  g_return_val_if_fail (GTK_IS_RECENT_CHOOSER_MENU (chooser), NULL);
+
+  GtkWidget *attach = gtk_menu_get_attach_widget (GTK_MENU (chooser));
+  gchar *window_id = NULL;
+
+  #ifdef GDK_WINDOWING_X11
+  if (attach)
+  {
+    GdkWindow *gwin = gtk_widget_get_window (attach);
+
+    GdkDisplay *dsp = NULL;
+    if (gwin)
+      dsp = gdk_window_get_display (gwin);
+
+    if (dsp) {
+      Window xid = (Window) gdk_x11_drawable_get_xid (gwin);
+      window_id = g_strdup_printf ("%lu", xid);
+    }
+  }
+  #endif
+
+  return window_id;
 }
 
 static gboolean
