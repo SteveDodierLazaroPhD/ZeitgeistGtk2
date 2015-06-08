@@ -526,7 +526,8 @@ fi
 dnl ************************************
 dnl *** Check for libzeitgeist (GIO) ***
 dnl ************************************
-PKG_CHECK_EXISTS(zeitgeist-1.0, [have_zeitgeist_deps=true], [have_zeitgeist_deps=false])
+#PKG_CHECK_EXISTS(zeitgeist-1.0, [have_zeitgeist_deps=true], [have_zeitgeist_deps=false])
+AC_CHECK_LIB(zeitgeist-1.0, zeitgeist_log_get_default, have_zeitgeist_deps=true, have_zeitgeist_deps=false)
 
 AC_MSG_CHECKING(zeitgeist-1.0)
 if $have_zeitgeist_deps; then
@@ -537,7 +538,21 @@ if $have_zeitgeist_deps; then
   AC_MSG_RESULT($CFLAGS)
 
 else
-  AC_MSG_ERROR([*** Working Zeitgeist library and headers not found ***])
+  AC_MSG_CHECKING(zeitgeist)
+  AC_CHECK_LIB(zeitgeist, zeitgeist_log_get_default, have_zeitgeist=true, have_zeitgeist=false)
+
+  if $have_zeitgeist; then
+    AC_DEFINE(__ZEITGEIST_TRACKER__, 1, [Have Zeitgeist])
+
+    CFLAGS="$CFLAGS `$PKG_CONFIG --cflags zeitgeist-1.0`"
+    AC_SUBST(CFLAGS)
+    AC_MSG_RESULT($CFLAGS)
+
+  else
+    AC_MSG_CHECKING(zeitgeist)
+    AC_CHECK_LIB(zeitgeist, zeitgeist_log_get_default, have_zeitgeist=true, have_zeitgeist=false)
+    AC_MSG_ERROR([*** Working Zeitgeist library and headers not found ***])
+  fi
 fi
 
 # i18n stuff
