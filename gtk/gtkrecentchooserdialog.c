@@ -28,6 +28,7 @@
 #include "gtkalias.h"
 
 #include <stdarg.h>
+#include <gdk/x11/gdkx.h>
 
 #define GTK_RECENT_CHOOSER_DIALOG_GET_PRIVATE(obj)	(GTK_RECENT_CHOOSER_DIALOG (obj)->priv)
 
@@ -269,7 +270,7 @@ gtk_recent_chooser_dialog_new_valist (const gchar      *title,
         dsp = gdk_window_get_display (gwin);
 
       if (dsp) {
-        priv->parent_xid = (Window) gdk_x11_drawable_get_xid (gwin);
+        priv->parent_xid = (unsigned long) gdk_x11_drawable_get_xid (gwin);
       }
     #endif
   }

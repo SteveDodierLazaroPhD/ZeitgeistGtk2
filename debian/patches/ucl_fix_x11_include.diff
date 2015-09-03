@@ -1,0 +1,44 @@
+Index: gtk+2.0-2.24.27/gtk/gtkrecentchooserdialog.h
+===================================================================
+--- gtk+2.0-2.24.27.orig/gtk/gtkrecentchooserdialog.h
++++ gtk+2.0-2.24.27/gtk/gtkrecentchooserdialog.h
+@@ -27,7 +27,6 @@
+ 
+ #include <gtk/gtkdialog.h>
+ #include <gtk/gtkrecentchooser.h>
+-#include <gdk/x11/gdkx.h>
+ 
+ G_BEGIN_DECLS
+ 
+@@ -49,9 +48,7 @@ struct _GtkRecentChooserDialogPrivate
+ 
+   GtkWidget *chooser;
+ 
+-#ifdef GDK_WINDOWING_X11
+-  Window parent_xid;
+-#endif
++  unsigned long parent_xid;
+ };
+ 
+ struct _GtkRecentChooserDialog
+Index: gtk+2.0-2.24.27/gtk/gtkrecentchooserdialog.c
+===================================================================
+--- gtk+2.0-2.24.27.orig/gtk/gtkrecentchooserdialog.c
++++ gtk+2.0-2.24.27/gtk/gtkrecentchooserdialog.c
+@@ -28,6 +28,7 @@
+ #include "gtkalias.h"
+ 
+ #include <stdarg.h>
++#include <gdk/x11/gdkx.h>
+ 
+ #define GTK_RECENT_CHOOSER_DIALOG_GET_PRIVATE(obj)	(GTK_RECENT_CHOOSER_DIALOG (obj)->priv)
+ 
+@@ -269,7 +270,7 @@ gtk_recent_chooser_dialog_new_valist (co
+         dsp = gdk_window_get_display (gwin);
+ 
+       if (dsp) {
+-        priv->parent_xid = (Window) gdk_x11_drawable_get_xid (gwin);
++        priv->parent_xid = (unsigned long) gdk_x11_drawable_get_xid (gwin);
+       }
+     #endif
+   }
